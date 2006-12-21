@@ -27,10 +27,10 @@
 			<filename name="common-build/**" />
 			<and>
 				<or>
-					<filename name="spring-webflow/build-spring-webflow/**" />
-					<filename name="spring-webflow/spring-binding/**" />
-					<filename name="spring-webflow/spring-webflow/**" />
-					<filename name="spring-webflow/spring-webflow-samples/**" />
+					<filename name="build-spring-webflow/**" />
+					<filename name="spring-binding/**" />
+					<filename name="spring-webflow/**" />
+					<filename name="spring-webflow-samples/**" />
 				</or>
 				<and>
 					<!-- exclude core project derived artifacts -->
