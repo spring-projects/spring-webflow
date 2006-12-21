@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	  xsi:schemaLocation="
+  	      http://www.springframework.org/schema/webflow
+  	      http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<attribute name="propInteger" value="12345" type="integer" />
+
+	<var name="attribute1" class="org.springframework.webflow.TestBean" />
+	<var name="attribute3" class="org.springframework.webflow.TestBean" />
+	<var name="attribute5" />
+	<var name="attribute6" bean="attribute5" scope="request" />
+	<var name="items" class="java.util.ArrayList" />
+
+	<start-actions>
+		<action bean="action1" />
+	</start-actions>
+
+	<start-state idref="actionState1" />
+
+	<action-state id="actionState1">
+		<attribute name="propBoolean" value="true" type="boolean" />
+		<attribute name="propString" value="aString" />
+		<action bean="action1">
+			<attribute name="prop1">
+				<value>prop1Value</value>
+			</attribute>
+			<attribute name="prop2" value="prop2Value" />
+		</action>
+		<action name="action2Name" bean="action2" />
+		<transition on="event1" to="viewState1">
+			<attribute name="propBigDecimal" value="12345" type="bigDecimal" />
+		</transition>
+		<transition on="event2" to="actionState2" />
+		<transition on="action2Name.event2" to="viewState2" />
+	</action-state>
+
+	<action-state id="actionState2">
+		<action bean="multiAction" method="actionMethod" />
+		<transition on="success" to="actionState3" />
+		<transition on-exception="org.springframework.webflow.TestException" to="actionState3" />
+	</action-state>
+
+	<action-state id="actionState3">
+		<bean-action bean="pojoAction" method="enumMethod">
+			<method-result name="result" />
+		</bean-action>
+		<transition on="Created" to="viewState2" />
+	</action-state>
+
+	<view-state id="viewState1" view="view1">
+		<render-actions>
+			<action bean="action1" />
+		</render-actions>
+		<transition on="event1" to="subFlowState1" />
+	</view-state>
+
+	<view-state id="viewState2">
+		<entry-actions>
+			<action bean="action2" />
+		</entry-actions>
+		<transition on="event2" to="subFlowState2" />
+	</view-state>
+
+	<subflow-state id="subFlowState1" flow="subFlow1">
+		<attribute-mapper bean="attributeMapper1" />
+		<transition on="finish" to="spawnInlineFlow" />
+		<exit-actions>
+			<action bean="action2" />
+		</exit-actions>
+	</subflow-state>
+
+	<subflow-state id="subFlowState2" flow="subFlow2">
+		<attribute-mapper>
+			<input-mapper>
+				<input-attribute name="attribute1" required="true"/>
+				<mapping source="flowScope.attribute3" target="attribute2" />
+				<mapping source="flowScope.attribute1" target="attribute4" />
+			</input-mapper>
+			<output-mapper>
+				<output-attribute name="attribute4"/>
+				<mapping source="attribute1" target="flowScope.attribute3" />
+				<mapping source="attribute4" target="flowScope.attribute1" />
+				<mapping source="attribute4" target-collection="flowScope.items" />
+			</output-mapper>
+		</attribute-mapper>
+		<transition on="finish" to="decisionState1" />
+	</subflow-state>
+
+	<subflow-state id="spawnInlineFlow" flow="inline-flow">
+		<transition on="end" to="endState1" />
+	</subflow-state>
+
+	<decision-state id="decisionState1">
+		<if test="${flowScope.attribute1 != null}" then="decisionState2" else="endState1" />
+	</decision-state>
+
+	<decision-state id="decisionState2">
+		<if test="${flowScope.attribute1 != null}" then="actionState4" />
+		<if test="${flowScope.attribute1 == null}" then="endState1" />
+	</decision-state>
+
+	<action-state id="actionState4">
+		<bean-action bean="pojoAction" method="booleanMethod" />
+		<transition on="yes" to="actionState5" />
+		<transition on="no" to="endState2" />
+	</action-state>
+
+	<action-state id="actionState5">
+		<bean-action bean="pojoAction" method="enumMethod" />
+		<transition on="Created" to="endState1" />
+		<transition on="starting" to="endState2" />
+	</action-state>
+
+	<end-state id="endState1" view="endView1" />
+
+	<end-state id="endState2" />
+
+	<global-transitions>
+		<transition on-exception="org.springframework.webflow.TestException" to="endState1" />
+	</global-transitions>
+
+	<end-actions>
+		<action bean="action1" />
+	</end-actions>
+
+	<import resource="testFlow1Context.xml" />
+
+	<inline-flow id="inline-flow">
+		<flow>
+			<var name="fooList" class="java.util.ArrayList" />
+			<input-mapper>
+				<mapping source="foo" target="flowScope.bar" />
+			</input-mapper>
+			<start-actions>
+				<action bean="action1" />
+			</start-actions>
+			<start-state idref="end" />
+			<end-state id="end">
+				<output-mapper>
+					<mapping source="flowScope.name" target="name" />
+				</output-mapper>
+			</end-state>
+			<end-actions>
+				<action bean="action1" />
+			</end-actions>
+			<output-mapper>
+				<mapping source="flowScope.foo" target="bar" />
+			</output-mapper>
+		</flow>
+	</inline-flow>
+
+</flow>

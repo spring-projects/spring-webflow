@@ -1,0 +1,26 @@
+<ivy-module version="1.3">
+
+	<info organisation="org.springframework" module="spring-binding" />
+
+	<configurations>
+		<conf name="default" extends="global" />
+		<conf name="global" visibility="private" />
+		<conf name="buildtime" visibility="private" />
+		<conf name="test" visibility="private" />
+	</configurations>
+
+	<dependencies defaultconf="global->default">
+		<!-- global dependencies -->
+		<dependency org="commons-logging" name="commons-logging" rev="1.0.4"/>
+		<dependency org="ognl" name="ognl" rev="2.6.9" />
+		<dependency org="org.springframework" name="spring-beans" rev="2.0" />
+		<dependency org="org.springframework" name="spring-context"	rev="2.0" />
+		<dependency org="org.springframework" name="spring-core" rev="2.0" />
+
+		<!-- test dependencies -->
+		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
+		<dependency org="junit" name="junit" rev="3.8.1" conf="test->default" />
+		<dependency org="log4j" name="log4j" rev="1.2.13" conf="test->default"/>
+	</dependencies>
+
+</ivy-module>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-digester.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/junit.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/myfaces-api.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/myfaces-impl.jar"/>
+	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/portlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-portlet.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-struts.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-web.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/struts.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="/spring/mock"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

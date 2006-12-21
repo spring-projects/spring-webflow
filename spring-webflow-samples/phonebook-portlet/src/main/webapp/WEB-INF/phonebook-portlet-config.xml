@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       
+	<!-- PortletMode controller Map -->
+	<bean id="portletModeControllerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+		<property name="portletModeMap">
+			<map>
+				<entry key="view" value-ref="flowController"/>
+			</map>
+		</property>
+	</bean>
+
+	<!--
+		- Front controller for VIEW PortletMode. A view that kicks off a new flow
+		- execution may parameterize this controller with a _flowId parameter.
+		- A view participating in an existing flow execution may simply pass it the
+		- appropriate _flowExecutionId and _eventId.
+	-->
+	<bean id="flowController" class="org.springframework.webflow.executor.mvc.PortletFlowController">
+		<property name="flowExecutor" ref="flowExecutor"/>
+		<property name="defaultFlowId" value="search-flow"/>
+	</bean>
+
+	<!-- ResourceViewResolver -->
+	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	</bean>
+
+</beans>

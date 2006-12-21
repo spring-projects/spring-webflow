@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configs>
+		<config>src/main/webapp/WEB-INF/flowlauncher-servlet.xml</config>
+	</configs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

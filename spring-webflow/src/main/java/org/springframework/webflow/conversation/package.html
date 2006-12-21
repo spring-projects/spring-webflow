@@ -1,0 +1,19 @@
+<html>
+<body>
+<p>
+The conversation subsystem for beginning and ending conversations that manage the state of user interactions.
+</p>
+<p>
+The central concept defined by this package is the
+{@link org.springframework.webflow.conversation.ConversationManager}, representing
+a service interface for managing conversations.
+</p>
+<p>
+This package serves as a portable conversation management abstraction and does not depend on 
+the Spring Web Flow engine. It is used by the flow execution repository subsystem to store conversation related
+state. It is important to realize that this subsystem does not define a conceptual <i>conversation</i>,
+it just servers as a technical layer to manage state associated with conversations, as implemented by the
+SWF engine.
+</p>
+</body>
+</html>

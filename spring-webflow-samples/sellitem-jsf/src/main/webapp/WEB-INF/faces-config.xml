@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+	<application>
+		<!-- Navigation handler proxy for a Spring-managed bean that is the Web Flow Navigation Handler -->
+		<navigation-handler>
+			org.springframework.web.jsf.DelegatingNavigationHandlerProxy
+		</navigation-handler>
+		<property-resolver>
+			org.springframework.webflow.executor.jsf.FlowPropertyResolver
+		</property-resolver>
+		<variable-resolver>
+			org.springframework.webflow.executor.jsf.FlowVariableResolver
+		</variable-resolver>
+		<variable-resolver>
+			org.springframework.web.jsf.DelegatingVariableResolver
+		</variable-resolver>
+		<!-- Extended "webApplicationContext" resolver -->
+		<variable-resolver>
+			org.springframework.web.jsf.WebApplicationContextVariableResolver
+		</variable-resolver>
+	</application>
+
+	<lifecycle>
+		<!-- Multi-caster that broadcast phase events to all PhaseListeners managed by Spring -->
+		<phase-listener>org.springframework.web.jsf.DelegatingPhaseListenerMulticaster</phase-listener>
+	</lifecycle>
+	
+</faces-config>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-binding</artifactId>
+  <name>Spring Binding</name>
+  <version>1.0.1-SNAPSHOT</version>
+  <description>Spring Data Binding Framework</description>
+  <url>http://www.springframework.org</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-projects</connection>
+    <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-projects</developerConnection>
+    <tag>1.0</tag>
+    <url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-projects</url>
+  </scm>
+  <organization>
+    <name>Spring Framework</name>
+    <url>http://www.springframework.org/</url>
+  </organization>
+  <dependencies>
+    <!-- External Dependencies -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>2.6.9</version>
+    </dependency>
+    <!-- Spring Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <!-- Runtime Dependencies -->    
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>        
+   <!-- Test Dependencies -->
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>        
+  </dependencies>
+</project>

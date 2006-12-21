@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:flow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd">
+
+	<!-- Creates the registry of flow definitions for this application -->
+	<flow:registry id="flowDefinitionLocator">
+		<flow:location path="/WEB-INF/flows/sellitem-flow.xml" />
+	</flow:registry>
+
+	<!-- A "Sale" managed bean created by JSF for each 'sellitem' flow execution -->
+	<bean name="sale" class="org.springframework.webflow.samples.sellitem.Sale" scope="prototype" />
+
+	<!-- A form action for applying custom validation to the Sale managed bean -->
+	<bean id="sellItemFormAction" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectName" value="sale" />
+		<property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale" />
+		<property name="formObjectScope" value="FLOW" />
+		<property name="validator">
+			<bean class="org.springframework.webflow.samples.sellitem.SaleValidator" />
+		</property>
+	</bean>
+
+	<!--
+		Spring configured flow navigation handler delegate, allowing for custom configuration
+		using standard dependency injection techniques.
+		
+		Note: this definition is optional; you may choose to simply specify your FlowNavigationHandler
+		in your faces-config.xml if its defaults meet your needs.
+	-->
+	<bean id="jsfNavigationHandler" class="org.springframework.webflow.executor.jsf.FlowNavigationHandler" />
+
+	<!--
+		Spring configured flow phase listener delegate, allowing for custom configuration using
+		standard dependency injection techniques.
+		
+		Note: this definition is optional; you may choose to simply specify your FlowPhaseListener
+		in your faces-config.xml if its defaults meet your needs.
+	-->
+	<bean id="flowPhaseListener" class="org.springframework.webflow.executor.jsf.FlowPhaseListener" />
+
+</beans>

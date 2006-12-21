@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+<wb-module deploy-name="swf-sellitem">
+<wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/standard.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-webmvc.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-webflow.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-web.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-core.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-context.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-binding.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-beans.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/ognl.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/log4j.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/junit.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/jstl.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/commons-logging.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/commons-codec.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-jdbc.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-dao.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/spring-aop.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/hsqldb.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-sellitem/lib/global/aopalliance.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<property name="java-output-path" value="target/classes"/>
+<property name="context-root" value="swf-sellitem"/>
+</wb-module>
+</project-modules>

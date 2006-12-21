@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+	<HEAD>
+	</HEAD>
+	<BODY>
+		<DIV align="left">Flow Launcher - A Spring Web Flow Sample</DIV>
+		<HR>
+		<DIV align="left">
+			<P>
+				This sample application demonstrates different ways of launching flows with
+				input parameters.
+			</P>
+			<P>
+				You can launch the Sample A flow as a top-level flow and pass it input using
+				request parameters.  This can be done using
+				<table>
+				<tr>
+					<td>an anchor:</td>
+					<td><A href="flowController.htm?_flowId=sampleA&input=someInputForSampleA">Start Sample A</A></td>
+				</tr>
+				<tr>
+					<td valign="top">or a form:</td>
+					<td>
+						<table>
+						<form action="flowController.htm" method="post">
+							<tr>
+								<td><INPUT type="text" name="input" value="someInputForSampleA"></td>
+							</tr>
+							<tr>
+								<td class="buttonBar">
+									<INPUT type="hidden" name="_flowId" value="sampleA">
+									<INPUT type="submit" value="Start Sample A">
+								</td>
+							</tr>
+						</form>
+						</table>
+					</td>
+				</tr>
+				</table>
+			</P>
+			<P>
+				The same is true for Sample B:
+				<table>
+				<tr>
+					<td>an anchor:</td>
+					<td><A href="flowController.htm?_flowId=sampleB&input=someInputForSampleB">Start Sample B</A></td>
+				</tr>
+				<tr>
+					<td valign="top">or a form:</td>
+					<td>
+						<table>
+						<form action="flowController.htm" method="post">
+							<tr>
+								<td><INPUT type="text" name="input" value="someInputForSampleB"></td>
+							</tr>
+							<tr>
+								<td class="buttonBar">
+									<INPUT type="hidden" name="_flowId" value="sampleB">
+									<INPUT type="submit" value="Start Sample B">
+								</td>
+							</tr>
+						</form>
+						</table>
+					</td>
+				</tr>
+				</table>
+			</P>
+		</DIV>
+		<HR>
+		<DIV align="right"></DIV>
+	</BODY>
+</HTML>

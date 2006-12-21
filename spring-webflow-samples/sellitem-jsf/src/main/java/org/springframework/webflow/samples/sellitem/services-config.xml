@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="saleProcessor" parent="transactionProxy">
+		<property name="target">
+			<bean class="org.springframework.webflow.samples.sellitem.JdbcSaleProcessor" autowire="byType" />
+		</property>
+	</bean>
+
+	<bean id="transactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributeSource">
+			<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:sellItem" />
+		<property name="username" value="sa" />
+	</bean>
+
+	<bean id="databaseCreator" class="org.springframework.webflow.samples.sellitem.InMemoryDatabaseCreator"
+		autowire="byType" />
+
+</beans>

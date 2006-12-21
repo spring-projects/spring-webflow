@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configExtensions>
+		<configExtension>xml</configExtension>
+	</configExtensions>
+	<configs>
+	</configs>
+	<configSets>
+		<configSet>
+			<name>higherlower</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>mastermind</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

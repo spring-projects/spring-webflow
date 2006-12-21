@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	This simple flow demonstrates the use of the FormAction: a multi-action.
+	Notice how all the actions use the same "formAction" bean, which groups
+	all actions executed by this flow in single class.
+	
+	This is a simplified alternate definition of the BirthDate flow (see birthdate.xml) that
+	uses view state render actions and transition actions to make the flow definition more compact.
+-->
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="enterBirthdate" />
+
+	<view-state id="enterBirthdate" view="birthdateForm">
+		<render-actions>
+			<action bean="formAction" method="setupForm" />
+		</render-actions>
+		<transition on="submit" to="enterCardInformation">
+			<action bean="formAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateBirthdateForm" />
+			</action>
+		</transition>
+	</view-state>
+
+	<view-state id="enterCardInformation" view="cardForm">
+		<transition on="submit" to="calculateAge">
+			<action bean="formAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateCardForm" />
+			</action>
+		</transition>
+	</view-state>
+
+	<action-state id="calculateAge">
+		<action bean="formAction" method="calculateAge" />
+		<transition on="success" to="displayAge" />
+	</action-state>
+
+	<end-state id="displayAge" view="yourAge" />
+
+</flow>

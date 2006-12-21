@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>swf-phonebook-portlet.root</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j.properties</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:org/springframework/webflow/samples/phonebook/stub/services-config.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.util.Log4jConfigListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<!-- Generated Portlet Wrapper Servlet for Apache Pluto deployment -->
+	
+	<servlet>
+		<servlet-name>phonebook</servlet-name>
+		<display-name>phonebook Wrapper</display-name>
+		<description>Automated generated Portlet Wrapper</description>
+		<servlet-class>
+			org.apache.pluto.core.PortletServlet
+		</servlet-class>
+		<init-param>
+			<param-name>portlet-guid</param-name>
+			<param-value>swf-phonebook-portlet.phonebook</param-value>
+		</init-param>
+		<init-param>
+			<param-name>portlet-class</param-name>
+			<param-value>
+				org.springframework.web.portlet.DispatcherPortlet
+			</param-value>
+		</init-param>
+	</servlet>
+
+	<!-- Portlet MVC Specific -->
+
+	<servlet>
+		<servlet-name>viewRendererServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.ViewRendererServlet
+		</servlet-class>
+	</servlet>
+
+   <servlet-mapping>
+      <servlet-name>phonebook</servlet-name>
+      <url-pattern>/phonebook/*</url-pattern>
+    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>viewRendererServlet</servlet-name>
+		<url-pattern>/WEB-INF/servlet/view</url-pattern>
+	</servlet-mapping>
+
+</web-app>

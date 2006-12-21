@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="flow-executor">
+	<title>Flow executors</title>
+	<sect1 id="executor-intro">
+		<title>Introduction</title>
+		<para>
+			Flow executors are the highest-level entry points into
+			the Spring Web Flow system, responsible for driving the execution of flows
+			across a variety of environments.
+		</para>
+		<para>
+			In this chapter you'll learn how to execute flows within Spring MVC, Struts, 
+			and Java Server Faces (JSF) based applications.
+		</para>
+    </sect1>
+    <sect1 id="executor">
+    	<title>FlowExecutor</title>
+    	<para>
+    		<literal>org.springframework.webflow.executor.FlowExecutor</literal> is the 
+    		central facade interface external systems use to drive the execution of flows.
+    		This facade acts as a simple, convenient service entry-point into
+    		the Spring Web Flow system that is reusable across environments.
+    	</para>
+    	<para>
+    		The <literal>FlowExecutor</literal> interface is shown below:
+    	</para>
+    	<programlisting>
+    public interface FlowExecutor {
+        ResponseInstruction launch(String flowDefinitionId, ExternalContext context);
+        ResponseInstruction resume(String flowExecutionKey, String eventId, ExternalContext context);
+        ResponseInstruction refresh(String flowExecutionKey, ExternalContext context);
+    }    	
+    	</programlisting>
+    	<para>
+    		As you can see there are three central use-cases fulfilled by this interface:
+    		<orderedlist>
+    			<listitem>
+    				<para>
+    					Launch (start) a new execution of a flow definition.
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					Resume a paused flow execution by signaling an event against its current state.
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					Request that the last response issued by a flow execution be re-issued. 
+    					Unlike start and signalEvent, the refresh operation is an idempotent operation
+    					that does not affect the state of a flow execution.
+    				</para>
+    			</listitem>
+    		</orderedlist>
+    	</para>
+    	<para>
+    		Each operation accepts an <literal>ExternalContext</literal> that provides normalized 
+    		access to properties of an external system that has called into Spring Web Flow, allowing
+    		access to environment-specific request parameters as well as request, session, and
+    		application-level attributes.
+    	</para>
+    	<para>
+    		Each operation returns a <literal>ResponseInstruction</literal> which the calling system is 
+    		expected to use to issue a suitable response.
+    	</para>
+    	<para>
+    		These relationships are shown graphically below:
+    	</para>
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/flowexecutorfacade-classdiagram.png" format="PNG" align="center"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/flowexecutorfacade-classdiagram.png" format="PNG" align="center"/>
+			</imageobject>
+			<caption>
+				<para>Flow executor</para>
+			</caption>
+		</mediaobject>
+		<para>
+			As you can see, an <literal>ExternalContext</literal> implementation exists for each of
+			the environments Spring Web Flow supports.  If a flow artifact such as an Action needs
+			to access native constructs of the calling environment it can downcast a context to its
+			specific implementation.  The need for such downcasting is considered a special case.
+		</para>
+    	<sect2 id="flowexecutor-impl">
+    		<title>FlowExecutorImpl</title>
+	    	<para>
+    			The default executor implementation is <literal>org.springframework.webflow.executor.FlowExecutorImpl</literal>.
+    			It allows for configuration of a <literal>FlowDefinitionLocator</literal> responsible for loading the flow definitions to execute, as well as
+    			the <literal>FlowExecutionRepository</literal> strategy responsible for persisting flow executions that remain 
+    			active beyond a single request into the server.
+    		</para>
+    		<para>
+    			The configurable <literal>FlowExecutorImpl</literal> properties are shown below:
+    		</para>
+		    <table>
+   				<title>FlowExecutorImpl properties</title>
+	   	   		<tgroup cols="3">
+    				<colspec colname="c1" colwidth="2*" />
+	   	        	<colspec colname="c2" colwidth="4*" />
+	            	<colspec colname="c3" colwidth="2*" />
+        	    	<thead>
+		        		<row>
+         		   	    	<entry>Property name</entry>
+                			<entry>Description</entry>
+    	          			<entry>Cardinality</entry>
+        	        	</row>
+   					</thead>
+   					<tbody>
+						<row>
+           					<entry>definitionLocator</entry>
+							<entry>The service for loading flow definitions to be executed, typically a <literal>FlowDefinitionRegistry</literal></entry>
+					    	<entry>
+								<emphasis>1</emphasis>
+							</entry>
+						</row>
+						<row>
+           					<entry>executionFactory</entry>
+							<entry>The factory for creating new flow executions.</entry>
+					    	<entry>
+								<emphasis>1</emphasis>
+							</entry>
+						</row>
+ 						<row>
+     						<entry>executionRepository</entry>
+							<entry>The repository for saving and loading persistent (paused) flow executions</entry>
+							<entry> 
+								<emphasis>1</emphasis>
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect2>
+    	<sect2 id="executor-simple">
+    		<title>A typical flow executor configuration with Spring 2.0</title>
+	    	<programlisting>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;	    	
+    &lt;beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:flow="http://www.springframework.org/schema/webflow-config"
+           xsi:schemaLocation="
+               http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.springframework.org/schema/webflow-config
+               http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd"&gt;
+           	    	
+        &lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+        &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"/>
+
+        &lt;!-- Creates the registry of flow definitions for this application --&gt;
+        &lt;flow:registry id="flowRegistry"&gt;
+            &lt;flow:location path="/WEB-INF/flows/**/*-flow.xml"/&gt;
+        &lt;/flow:registry&gt;
+        
+    &lt;/beans&gt;
+	        </programlisting>
+	    	<para>
+	    		This instructs Spring to create a flow executor that can execute all XML-based flow definitions 
+    			contained within the <literal>/WEB-INF/flows</literal> directory. The default flow execution 
+    			repository, <literal>continuation</literal>, is used.
+    		</para>
+    	</sect2>
+    	<sect2 id="executor-custom-repo">
+    		<title>A flow executor using a simple execution repository</title>
+	    	<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="simple"/>
+	    	</programlisting>
+	    	<para>
+	    		This executor is configured with a simple repository that manages
+	    		execution state in the user session.
+	    	</para>	
+    	</sect2>
+    	<sect2 id="executor-custom-repo2">
+    		<title>A flow executor using a client-side continuation-based execution repository</title>
+	    	<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="client"/>
+	    	</programlisting>
+	    	<para>
+	    		This executor is configured with a continuation-based repository that serializes
+    			continuation state to the client using no server-side state.
+	    	</para>	
+    	</sect2>		
+    	<sect2 id="executor-custom-repo3">
+    		<title>A flow executor using a single key execution repository</title>
+	    	<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="singleKey"/>
+	    	</programlisting>
+	    	<para>
+	    		This executor is configured with a simple repository that assigns a single 
+	    		flow execution key per conversation.  The key, once assigned, never changes
+	    		for the duration of the conversation.
+	    	</para>	
+    	</sect2>
+    	<sect2 id="executor-excution-attributes">
+    		<title>A flow executor setting system execution attributes</title>
+			<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="continuation"&gt;
+        &lt;flow:execution-attributes&gt;
+            &lt;flow:alwaysRedirectOnPause value="false"/&gt;
+            &lt;flow:attribute name="foo" value="bar"/&gt;
+        &lt;/flow:execution-attributes&gt;
+    &lt;/flow-executor&gt;
+			</programlisting>
+	    	<para>
+	    		This executor is configured to set two flow execution system attributes
+	    		<literal>alwaysRedirectOnPause=false</literal> and <literal>foo=bar</literal>.
+	    	</para>
+	    	<para>
+	    		<note>
+	    		The <literal>alwaysRedirectOnPause</literal> attribute determines if 
+	    		a flow execution redirect occurs automatically each time an execution pauses
+	    		(automated <literal>POST+REDIRECT+GET</literal> behavior).
+	    		Setting this attribute to false will disable the <emphasis>default 'true' behavior</emphasis>
+	    		where a flow execution redirect always occurs on pause.
+	    		</note>
+	    	</para>
+		</sect2>
+    	<sect2 id="executor-excution-listeners">
+    		<title>A flow executor setting custom execution listeners</title>
+			<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="continuation"&gt;
+        &lt;flow:execution-listeners&gt;
+            &lt;flow:listener ref="listener" criteria="order-flow"/&gt;
+        &lt;/flow:execution-listeners&gt;
+    &lt;/flow-executor&gt;
+
+    &lt;!-- A FlowExecutionListener to observe the lifecycle of order-flow executions --&gt;
+    &lt;bean id="listener" class="org.springframework.webflow.samples.sellitem.SellItemFlowExecutionListener"/&gt;
+			</programlisting>
+	    	<para>
+	    		This executor is configured to apply the execution listener to the "order-flow".
+	    	</para>	
+		</sect2>    	
+    	<sect2 id="executor-1.2-compatible">
+    		<title>A Spring 1.2 compatible flow executor configuration</title>
+	    	<programlisting>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;	    	
+    &lt;!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	    "http://www.springframework.org/dtd/spring-beans.dtd"&gt;
+    &lt;beans&gt;
+    
+        &lt;!-- Launches new flow executions and resumes existing executions: Spring 1.2 config version --&gt;
+        &lt;bean id="flowExecutor" class="org.springframework.webflow.config.FlowExecutorFactoryBean"&gt;
+            &lt;property name="definitionLocator" ref="flowRegistry"/&gt;
+            &lt;property name="executionAttributes"&gt;
+                &lt;map&gt;
+                    &lt;entry key="alwaysRedirectOnPause"&gt;
+                        &lt;value type="java.lang.Boolean"&gt;false&lt;/value&gt;
+                    &lt;/entry&gt;
+                &lt;/map&gt;
+            &lt;/property&gt;
+            &lt;property name="repositoryType" value="CONTINUATION"/&gt;
+        &lt;/bean&gt;
+        
+        &lt;!-- Creates the registry of flow definitions for this application: Spring 1.2 config version --&gt;
+        &lt;bean id="flowRegistry"
+           class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean"&gt;
+            &lt;property name="flowLocations"&gt;
+                &lt;list&gt;
+                    &lt;value&gt;/WEB-INF/flows/**/*-flow.xml&lt;/value&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;
+	
+    &lt;/beans&gt;
+	        </programlisting>
+	    	<para>
+	    		This achieves similar semantics as the Spring 2.0 version above.
+	    		The 2.0 version is more concise, provides stronger validation, and encapsulates
+	    		internal details such as FactoryBean class names.   The 1.2 version is Spring 1.2 or >
+	    		compatible and digestable by Spring IDE 1.3.
+    		</para>
+    	</sect2>
+	</sect1>
+	<sect1 id="executor-mvc">
+		<title>Spring MVC integration</title>
+		<para>
+			Spring Web Flow integrates with both Servlet and Portlet MVC which ship with the 
+			core Spring Framework.  Use of Portlet MVC requires Spring 2.0.
+		</para>
+		<para>
+			For both Servlet and Portlet MVC a <literal>FlowController</literal> acts as an adapter
+			between Spring MVC and Spring Web Flow.  As an adapter, this controller has knowledge 
+			of both systems and delegates to a flow executor for driving the execution of flows.
+			One controller typically executes all flows of an application, relying on 
+			parameterization to determine what flow to launch or what flow execution to resume.
+		</para>
+    	<sect2 id="executor-servletmvc">
+    		<title>A single flow controller executing all flows in a Servlet MVC environment</title>
+	    	<programlisting>
+    &lt;bean name="/flowController.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+        &lt;property name="flowExecutor" ref="flowExecutor"/&gt;
+    &lt;/bean&gt;
+	    	</programlisting>
+	    	<para>
+	    		This controller, exported at the context-relative <literal>/flowController.htm</literal> URL,
+	    		delegates to the configured flow executor for driving flow executions in a Spring Servlet 
+	    		MVC environment.
+	    	</para>
+    	</sect2>
+    	<sect2 id="executor-portletmvc">
+    		<title>A single portlet flow controller executing a flow within a Portlet</title>
+	    	<programlisting>
+    &lt;bean id="portletModeControllerMapping"
+             class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+        &lt;property name="portletModeMap">
+            &lt;map&gt;
+                &lt;entry key="view" value-ref="flowController"/&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="flowController" class="org.springframework.webflow.executor.mvc.PortletFlowController"&gt;
+        &lt;property name="flowExecutor" ref="flowExecutor"/&gt;
+        &lt;property name="defaultFlowId" ref="search-flow"/&gt;
+    &lt;/bean&gt;
+	    	</programlisting>
+	    	<para>
+	    		This controller, exported for access with the configured portlet mode,
+	    		delegates to the configured flow executor for driving flow executions in a Spring Portlet 
+	    		MVC environment (by default, an execution of the <literal>search-flow</literal>
+	    		will be launched).
+	    	</para>
+    	</sect2>
+   	</sect1>
+	<sect1 id="executor-parameterization">
+		<title>Flow executor parameterization</title>
+		<para>
+			Spring Web Flow allows for full control over how flow executor method arguments such as the
+			<literal>flowDefinitionId</literal>, <literal>flowExecutionKey</literal>, and <literal>eventId</literal> 
+			are extracted from an incoming controller request with the
+			<literal>org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor</literal>
+			strategy.
+			<note>
+			The various flow controllers typically do not use this strategy directly but instead use a
+			convenient <literal>FlowExecutorArgumentHandler</literal> implementation that takes care
+			of argument extraction as well as exposing responsibilities (in callback URLs).
+			</note>
+		</para>
+		<para>
+			The next several examples illustrate strategies for parameterizing flow controllers 
+			from the browser to launch and resume flow executions:
+		</para>
+		<sect2 id="executor-parmeterization-default">
+			<title>Request parameter-based flow executor argument extraction</title>
+			<para>
+				The default executor argument extractor strategy is request-parameter based.
+				The default request parameters are:
+			</para>
+	    	<table>
+    	        <title>Extractor request parameter names</title>
+        	    <tgroup cols="2">
+            	    <colspec colname="c1" colwidth="2*" />
+        			<colspec colname="c2" colwidth="4*" />
+	                <thead>
+       		            <row>
+               		        <entry>Parameter name</entry>
+               				<entry>Description</entry>
+           				</row>
+		  			</thead>
+				  	<tbody>
+            			<row>
+              				<entry>_flowId</entry>
+							<entry>The flow definition id, needed to launch a new flow execution.</entry>
+					    </row>
+            			<row>
+              				<entry>_flowExecutionKey</entry>
+							<entry>The flow execution key, needed to resume and refresh an existing flow execution.</entry>
+					    </row>
+            			<row>
+              				<entry>_eventId</entry>
+							<entry>The id of an event that occured, needed to resume an existing flow execution.</entry>
+					    </row>					    
+            	   </tbody>
+	          </tgroup>
+    	    </table>
+	    	<sect3 id="executor-mvc-launch-get">
+	   	 		<title>Launching a flow execution - parameter-style anchor</title>
+		    	<programlisting>
+	&lt;a href="flowController.htm?_flowId=myflow"&gt;Launch My Flow&lt;/a&gt;
+		    	</programlisting>
+   		 	</sect3>
+  		  	<sect3 id="executor-mvc-launch-post">
+  		  		<title>Launching a flow execution - form</title>
+		    	<programlisting>
+    &lt;form action="flowController.htm" method="post"&gt;
+        &lt;input type="submit" value="Launch My Flow"/>
+        &lt;input type="hidden" name="_flowId" value="myflow"&gt;
+    &lt;/form&gt;
+	    		</programlisting>
+    		</sect3>
+   		 	<sect3 id="executor-mvc-resume-anchor">
+   		 		<title>Resuming a flow execution - anchor</title>
+	   		 	<programlisting>
+    &lt;a href="flowController.htm?_flowExecutionKey=${flowExecutionKey}&amp;_eventId=submit"&gt;
+        Submit
+    &lt;/a&gt;
+	    		</programlisting>
+	    	</sect3>
+    		<sect3 id="executor-mvc-resume-form">
+    			<title>Resuming a flow execution - form</title>
+		    	<programlisting>
+    &lt;form action="flowController.htm" method="post"&gt;
+        ...
+        &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
+        &lt;input type="hidden" name="_eventId" value="submit"/>
+        &lt;input type="submit" class="button" value="Submit"&gt;
+    &lt;/form&gt;
+		    	</programlisting>
+   		 	</sect3>
+    		<sect3 id="executor-mvc-resume-form-buttons">
+   	 			<title>Resuming a flow execution - multiple form buttons</title>
+		    	<programlisting>
+    &lt;form action="flowController.htm" method="post"&gt;
+        ...
+        &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
+        &lt;input type="submit" class="button" name="_eventId_submit" value="Submit"&gt;
+        &lt;input type="submit" class="button" name="_eventId_cancel" value="Cancel"&gt;
+    &lt;/form&gt;
+		    	</programlisting>
+	   		 	<note>
+	   		 		<para>
+		  	  			In this case the <literal>eventId</literal> is determined by parsing the name of the 
+		   		 		button that was pressed.
+		   		 	</para>
+		    	</note>
+    		</sect3>
+   		 	<sect3 id="executor-mvc-refresh">
+   		 		<title>Refreshing a flow execution</title>
+	   		 	<programlisting>
+    &lt;a href="flowController.htm?_flowExecutionKey=${flowExecutionKey}"&gt;Refresh&lt;/a&gt;
+	    		</programlisting>
+	    	</sect3>    		
+    	</sect2>
+		<sect2 id="executor-extraction-requestpath">
+			<title>Request path based flow executor argument extraction</title>
+			<para>
+				The request-path based argument extractor strategy relies on executor arguments
+				being path elements as much as possible. This results in friendlier REST-style URLs such
+				as <literal>http://host/app/myflow</literal> instead of
+				<literal>http://host/app?_flowId=myflow</literal>.
+			</para>
+	    	<sect3 id="executor-servletmvc-pathextractor">
+    			<title>A flow controller with a request-path based argument extractor</title>
+	    		<programlisting>
+    &lt;bean name="/flowController.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+        &lt;property name="flowExecutor" ref="flowExecutor"/&gt;
+        &lt;property name="argumentHandler"&gt;
+            &lt;bean class="org.springframework.webflow.executor.support.RequestPathFlowExecutorArgumentHandler"/&gt;
+        &lt;/property&gt;        
+    &lt;/bean&gt;
+		    	</programlisting>
+		    </sect3>
+	    	<sect3 id="executor-mvc-launch-get-rest">
+	   	 		<title>Launching a flow execution - REST-style anchor</title>
+		    	<programlisting>
+	&lt;a href="flowController/myflow"/&gt;Launch My Flow&lt;/a&gt;
+		    	</programlisting>
+   		 	</sect3>
+    		<sect3 id="executor-mvc-resume-form-buttons-requestpath">
+   	 			<title>Resuming a flow execution - multiple form buttons</title>
+		    	<programlisting>
+    &lt;form action="${flowExecutionKey}" method="post"&gt;
+        ...
+        &lt;input type="submit" class="button" name="_eventId_submit" value="Submit"&gt;
+        &lt;input type="submit" class="button" name="_eventId_cancel" value="Cancel"&gt;
+    &lt;/form&gt;
+		    	</programlisting>
+    		</sect3>
+   		 	<sect3 id="executor-mvc-refresh-requestpath">
+   		 		<title>Refreshing a flow execution</title>
+	   		 	<programlisting>
+    &lt;a href="flowController/k/${flowExecutionKey}"&gt;Refresh&lt;/a&gt;
+	    		</programlisting>
+	    	</sect3>    		   		 	
+		</sect2>    	
+	</sect1>	
+	<sect1 id="executor-struts">
+		<title>Struts integration</title>
+		<para>
+			Spring Web Flow integrates with Struts 1.x or >.  The integration is very similiar to 
+			Spring MVC where a single front controller (FlowAction) drives the execution of all flows
+			for the application by delegating to a configured flow executor.
+		</para>
+    	<sect2 id="executor-struts-simple">
+    		<title>A single flow action executing all flows</title>
+	    	<programlisting>
+    &lt;form-beans&gt;
+        &lt;form-bean name="actionForm" type="org.springframework.web.struts.SpringBindingActionForm"/&gt;
+    &lt;/form-beans&gt;
+	    	
+    &lt;action-mappings&gt;
+        &lt;action path="/flowAction" name="actionForm" scope="request"
+                type="org.springframework.webflow.executor.struts.FlowAction"/&gt;
+    &lt;/action-mappings&gt;
+	    	</programlisting>
+    	</sect2>		
+    </sect1>
+	<sect1 id="executor-jsf">
+		<title>Java Server Faces (JSF) integration</title>
+		<para>
+			Spring Web Flow integrates with JSF.  The JSF integration relies on custom implementations of 
+			core JSF artifacts such as navigation handler and phase listener to drive the 
+			execution of flows.
+		</para>
+    	<sect2 id="executor-jsf-simple">
+    		<title>A typical faces-config.xml file</title>
+	    	<programlisting>
+&lt;faces-config&gt;
+    &lt;application&gt;
+        &lt;navigation-handler&gt;
+            org.springframework.webflow.executor.jsf.FlowNavigationHandler
+        &lt;/navigation-handler&gt;
+        &lt;property-resolver&gt;
+            org.springframework.webflow.executor.jsf.FlowPropertyResolver
+        &lt;/property-resolver&gt;
+        &lt;variable-resolver&gt;
+            org.springframework.webflow.executor.jsf.FlowVariableResolver
+        &lt;/variable-resolver&gt;
+        &lt;variable-resolver&gt;
+            org.springframework.web.jsf.DelegatingVariableResolver
+        &lt;/variable-resolver&gt;
+        &lt;variable-resolver>
+            org.springframework.web.jsf.WebApplicationContextVariableResolver
+        &lt;/variable-resolver&gt;
+    &lt;/application&gt;
+
+    &lt;lifecycle&gt;
+        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
+    &lt;/lifecycle&gt;
+&lt;/faces-config&gt;
+	    	</programlisting>
+    	</sect2>
+    	<sect2 id="executor-jsf-launch-get">
+    		<title>Launching a flow execution - command link</title>
+	    	<programlisting>
+    &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
+	    	</programlisting>
+    	</sect2>
+    	<sect2 id="executor-jsf-resume-form">
+    		<title>Resuming a flow execution - form</title>
+	    	<programlisting>
+    &lt;h:form id="form"&gt;
+        ...
+        &lt;h:inputText id="propertyName" value="#{flowScope.managedBeanName.propertyName}"/&gt;
+        ...
+        &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
+        &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
+    &lt;/h:form&gt;
+	    	</programlisting>
+    	</sect2>
+    </sect1>
+</chapter>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+           
+	<!-- a sample flow registry -->
+	
+	<bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:test-flow.xml"/>
+	</bean>
+	
+	<bean id="flowExecutor0" class="org.springframework.webflow.config.FlowExecutorFactoryBean">
+		<property name="definitionLocator" ref="flowRegistry"/>
+		<property name="repositoryType" value="CONTINUATION"/>
+		<property name="maxConversations" value="1"/>
+		<property name="maxContinuations" value="10"/>
+	</bean>
+</beans>

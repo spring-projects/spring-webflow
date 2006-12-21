@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swf:flow
+	xmlns:swf="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<swf:start-state idref="end" />
+	<swf:end-state id="end" />
+</swf:flow>

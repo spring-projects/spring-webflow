@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+<wb-module deploy-name="swf-birthdate">
+<wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/standard.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-webflow.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-web.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-core.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-context.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-binding.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-beans.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/ognl.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/log4j.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/junit.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/jstl.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-logging.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-codec.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-beanutils.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/xml-apis.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/xalan.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/struts.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/spring-struts.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/oro.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-validator.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-fileupload.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-digester.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/commons-collections.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/swf-birthdate/lib/global/antlr.jar">
+<dependency-type>uses</dependency-type>
+</dependent-module>
+<property name="java-output-path" value="target/classes"/>
+<property name="context-root" value="swf-birthdate"/>
+</wb-module>
+</project-modules>

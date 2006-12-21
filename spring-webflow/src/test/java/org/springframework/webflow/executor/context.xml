@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="executor" class="org.springframework.webflow.executor.FlowExecutorImpl">
+		<constructor-arg ref="registry" />
+		<constructor-arg ref="factory" />
+		<constructor-arg ref="repository" />
+	</bean>
+
+	<bean id="factory" class="org.springframework.webflow.engine.impl.FlowExecutionImplFactory" />
+
+	<bean id="stateRestorer" class="org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer">
+		<constructor-arg>
+			<ref bean="registry" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="registry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:org/springframework/webflow/executor/flow.xml" />
+	</bean>
+
+	<bean id="conversationManager" class="org.springframework.webflow.conversation.impl.SessionBindingConversationManager"/>
+
+</beans>

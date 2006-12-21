@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:flow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd">
+
+	<!--
+		A general purpose controller for the entire "Point of Sale (POS)" application, 
+		exposed at the /rates.htm URL.  The id of a flow to launch should be passed
+		in using the "_flowId" request parameter: e.g. /rates.htm?_flowId=getRate-flow
+	-->
+	<bean name="/rates.htm" class="org.springframework.webflow.executor.mvc.FlowController">
+		<property name="flowExecutor" ref="flowExecutor" />
+	</bean>
+
+	<!-- Launches new flow executions and resumes existing executions -->
+	<flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="simple"/>
+
+	<!-- Creates the registry of flow definitions for this application -->
+	<flow:registry id="flowRegistry">
+		<flow:location path="/WEB-INF/flows/**/*-flow.xml" />
+	</flow:registry>
+
+	<!-- Performs "form backing object" data binding and validation on input submit -->
+	<bean id="formAction" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectName" value="rateCriteria" />
+		<property name="formObjectClass" value="org.springframework.webflow.samples.shippingrate.domain.RateCriteria" />
+		<property name="formObjectScope" value="FLOW" />
+		<property name="validator">
+			<bean class="org.springframework.webflow.samples.shippingrate.domain.RateCriteriaValidator" />
+		</property>
+	</bean>
+
+	<!-- Maps flow view-state view names to JSP templates -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Resolves message codes to internationalized messages -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>MessageResources</value>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_06" class="java.beans.XMLDecoder"> 
+ <object class="com.hello2morrow.sonar.workspace.java.WorkspaceDescription"> 
+  <void property="name"> 
+   <string>Web Flow Workspace</string> 
+  </void> 
+  <void property="parentDirectory"> 
+   <string>C:/development/spring-projects/spring-webflow</string> 
+  </void> 
+  <void property="path"> 
+   <string>C:/development/spring-projects/spring-webflow/web-flow-workspace.xml</string> 
+  </void> 
+  <void property="pathsCollection"> 
+   <void method="add"> 
+    <string>./spring-webflow/src/main/java</string> 
+   </void> 
+   <void method="add"> 
+    <string>./spring-webflow/target/classes</string> 
+   </void> 
+   <void method="add"> 
+    <string>./spring-binding/target/classes</string> 
+   </void> 
+   <void method="add"> 
+    <string>./spring-binding/src/main/java</string> 
+   </void> 
+  </void> 
+ </object> 
+</java> 

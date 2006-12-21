@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configExtensions>
+		<configExtension>xml</configExtension>
+	</configExtensions>
+	<configs>
+		<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name>search-flow</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>service-layer</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/java/org/springframework/webflow/samples/phonebook/domain/services.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>webapp</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/dispatcher-portlet.xml</config>
+				<config>src/main/webapp/WEB-INF/webflow.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

@@ -1,0 +1,41 @@
+<html>
+<body>
+<p>
+Core, stable abstractions for representing flow definitions.
+</p>
+<p>
+Each flow has an indentifier and is composed of one or more states, one of which is the start state.
+States may be transitionable, and if so define one or more transitions that lead to other states.
+</p>
+<p>
+With these types a client can introspect a flow definition to reason on its attributes and traverse 
+its structure, perhaps to display a visual diagram. Note that the types defined in this package
+do not capture the behavioral characteristics of a flow.
+</p>
+<p>
+The following code shows the beginnings of a basic flow definition traversal algorithm:
+<pre class="code">
+    FlowDefinition flow = ...
+
+    // lookup start state
+    StateDefinition state = flow.getStartState();
+
+    // traverse to state transitions
+    traverse(state);
+
+    public void traverse(StateDefinition state) {
+        logger.info("State: " + state.getId());
+        while (state instanceof TransitionableStateDefinition) {
+            TransitionableStateDefinition transitionable = (TransitionableStateDefinition)state;
+            TransitionDefinition[] transitions = transitionable.getTransitions();
+            for (int i = 0; i &lt; transitions.length; i++) {
+                Transition t = transitions[i];
+                logger.info("Transition " + t.getId());
+                traverse(state.getOwner().getState(t.getTargetStateId()); 
+            }
+        }    
+    }
+</pre>
+</p>
+</body>
+</html>

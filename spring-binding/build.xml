@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="spring-binding" default="dist">
+
+  <property file="build.properties"/>
+  <property file="project.properties"/>
+  <property file="${common.build.dir}/build.properties"/>
+  <property file="${common.build.dir}/project.properties"/>
+  <property file="${user.home}/build.properties"/>
+
+  <property name="project.title" value="Spring Data Binding"/>
+  <property name="project.package" value="org.springframework.binding"/>
+  <property name="project.copyright" value="Copyright &#169; 2004-2006. All Rights Reserved."/>
+
+  <import file="${common.build.dir}/common-targets.xml"/>
+
+</project>

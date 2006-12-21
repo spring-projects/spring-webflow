@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="practical">
+	<title>Practical Use of Spring Web Flow</title>
+    <sect1 id="samples">
+    	<title>Sample applications</title>
+    	<para>
+			It is recommended that you review the Spring Web Flow sample applications included in the 
+			release distribution for best-practice illustrations of the features of this framework.
+			A description of each sample is provided below:
+    	</para>
+    	<para>
+    		<orderedlist>
+    			<listitem>
+    				<para>Phonebook - the original sample demonstrating most features (including subflows).</para>
+    			</listitem>
+    			<listitem>
+    				<para>Sellitem - demonstrates a wizard with conditional transitions, flow scope, flow execution redirects, and continuations.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Flowlauncher - demonstrates all the possible ways to launch and resume flows.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Itemlist - demonstrates REST-style URLs and inline flows.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Shippingrate - demonstrates Spring Web Flow together with Ajax technology.</para>
+    			</listitem>
+    			<listitem>
+    				<para>NumberGuess - demonstrates use of stateful middle-tier components to carry out business logic.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Birthdate - demonstrates Struts integration and the MultiAction.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Fileupload - demonstrates multipart file upload.</para>
+    			</listitem>
+    			<listitem>
+    				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
+    			</listitem>
+    			<listitem>
+    				<para>Sellitem-JSF - the sellitem sample in a JSF environment (notice how the flow definition is more concise because
+    				JSF takes care of data binding and validation).</para>
+    			</listitem>
+    		</orderedlist>
+    	</para>
+    </sect1>
+</chapter>

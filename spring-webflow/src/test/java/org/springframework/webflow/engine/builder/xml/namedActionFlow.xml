@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow
+	xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	
+	<start-state idref="actions"/>
+	
+	<action-state id="actions">
+		<action name="a" bean="aAction" method="a"/>
+		<bean-action name="b" bean="bBean" method="b"/>
+		<action name="c" bean="cAction" method="c"/>
+		<transition on="c.success" to="end"/>
+	</action-state>
+	
+	<end-state id="end"/>
+</flow>

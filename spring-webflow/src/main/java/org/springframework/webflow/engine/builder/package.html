@@ -1,0 +1,33 @@
+<html>
+<body>
+<p>
+The flow builder subsystem for building and assembling executable flow definitions.
+</p>
+<p>
+You construct a Flow using a {@link org.springframework.webflow.engine.builder.FlowBuilder}.
+This package defines the following flow builder implementations:
+<ul>
+<li>
+{@link org.springframework.webflow.engine.builder.AbstractFlowBuilder} - A
+convenience superclass to use when you want to assemble the web flow
+in Java code.
+</li>
+<li>
+{@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder} - A flow
+builder that reads an XML file containing a web flow definition and
+constructs the flow accordingly.
+</li>
+</ul>
+During flow construction, a flow builder may need to access externally
+managed <i>flow artifacts</i> referenced by the flow definition.
+The {@link org.springframework.webflow.engine.builder.FlowServiceLocator} fulfills 
+this need, acting as a facade or gateway to an external registry of
+flow artifacts (such as a Spring Bean Factory).
+</p>
+<p>
+To direct flow construction, use the
+{@link org.springframework.webflow.engine.builder.FlowAssembler}.
+This package is based on the classic GoF Builder design pattern.
+</p>
+</body>
+</html>

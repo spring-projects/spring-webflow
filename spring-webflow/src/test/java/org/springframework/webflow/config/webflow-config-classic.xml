@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+           
+	<!-- a sample flow registry -->
+	
+	<bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:test-flow.xml"/>
+	</bean>
+		
+	<!-- a sample flow execution listener and corresponding loader -->
+	
+	<bean id="flowExecutionListener" class="org.springframework.webflow.execution.MockFlowExecutionListener"/>
+	
+	<bean id="executionListenerLoader" class="org.springframework.webflow.execution.factory.ConditionalFlowExecutionListenerLoader">
+		<property name="listeners">
+			<map>
+				<entry key-ref="flowExecutionListener" value="*"/>
+				<entry key-ref="flowExecutionListener" value="test-flow"/>
+				<entry key-ref="flowExecutionListener">
+					<bean class="org.springframework.webflow.config.TestFlowExecutionListenerCriteria"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- a sample conversation manager -->
+	
+	<bean id="conversationManager" class="org.springframework.webflow.conversation.impl.SessionBindingConversationManager">
+		<property name="maxConversations" value="5"/>
+	</bean>
+	
+	<!-- relatively simple flow controller definition using factory beans -->
+	
+	<bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
+		<property name="flowExecutor" ref="flowExecutor"/>
+		<property name="defaultFlowId" value="test-flow"/>
+	</bean>
+	
+	<bean id="flowExecutor" class="org.springframework.webflow.config.FlowExecutorFactoryBean">
+		<property name="definitionLocator" ref="flowRegistry"/>
+		<property name="executionAttributes">
+			<map>
+				<entry key="foo" value="bar"/>
+			</map>
+		</property>
+		<property name="executionListenerLoader" ref="executionListenerLoader"/>
+		<property name="repositoryType" value="SINGLEKEY"/>
+		<property name="conversationManager" ref="conversationManager"/>
+		<property name="defaults">
+			<bean class="org.springframework.webflow.config.FlowSystemDefaults">
+				<property name="alwaysRedirectOnPause" value="true"/>
+			</bean>
+		</property>
+	</bean>
+    
+    <!-- very elaborate flow controller definition using straight low level bean definitions -->
+    
+	<bean id="flowController-bean" class="org.springframework.webflow.executor.mvc.FlowController">
+		<property name="flowExecutor" ref="flowExecutor-bean"/>
+		<property name="defaultFlowId" value="test-flow"/>
+	</bean>
+	
+	<bean id="flowExecutor-bean" class="org.springframework.webflow.executor.FlowExecutorImpl">
+		<constructor-arg ref="flowRegistry"/>
+		<constructor-arg>
+			<bean class="org.springframework.webflow.engine.impl.FlowExecutionImplFactory">
+				<property name="executionAttributesMap">
+					<map>
+						<entry key="foo" value="bar"/>
+						<entry key="alwaysRedirectOnPause">
+							<value type="java.lang.Boolean">true</value>
+						</entry>
+					</map>
+				</property>
+				<property name="executionListenerLoader" ref="executionListenerLoader"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="executionRepository-bean"/>
+	</bean>
+	
+	<bean id="executionRepository-bean" class="org.springframework.webflow.execution.repository.support.SimpleFlowExecutionRepository">
+		<constructor-arg>
+			<bean class="org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer">
+				<constructor-arg ref="flowRegistry"/>
+				<property name="executionAttributesMap">
+					<map>
+						<entry key="foo" value="bar"/>
+						<entry key="alwaysRedirectOnPause">
+							<value type="java.lang.Boolean">true</value>
+						</entry>
+					</map>
+				</property>
+				<property name="executionListenerLoader" ref="executionListenerLoader"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="conversationManager"/>
+		<property name="alwaysGenerateNewNextKey" value="false"/>
+	</bean>
+
+</beans>

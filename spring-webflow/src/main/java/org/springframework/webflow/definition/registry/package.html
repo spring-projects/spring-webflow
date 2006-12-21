@@ -1,0 +1,25 @@
+<html>
+<body>
+<p>
+The flow definition registry subsystem for managing containers of flow definitions.
+</p>
+<p>
+You can construct a generic, initially empty FlowDefinitionRegistry, populate it
+with flow definitions using a FlowDefinitionRegistrar, then lookup flow definitions by id.
+For example:
+<pre class="code">
+    // create registry
+    FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
+
+    // populate registry
+    FlowDefinitionRegistrar registrar = ..
+    registrar.addLocation(...);
+    registrar.addLocation(...);
+    registrar.registerFlowDefinitions(registry);
+
+    // use registry
+    FlowDefinition flow = registry.getFlow("myFlow");
+</pre>
+</p>
+</body>
+</html>

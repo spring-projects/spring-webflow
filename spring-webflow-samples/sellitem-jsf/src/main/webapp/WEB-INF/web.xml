@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+	
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>swf-sellitem-jsf.root</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j.properties</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:org/springframework/webflow/samples/sellitem/services-config.xml
+			/WEB-INF/webflow-config.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	
+    <!-- a Listener for MyFaces, that does all the startup work (configuration, init). -->
+    <listener>
+        <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
+    </listener>
+
+    <!-- Faces Servlet -->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+
+	<welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+</web-app>

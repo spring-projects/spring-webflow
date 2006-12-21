@@ -1,0 +1,32 @@
+<ivy-module version="1.1">
+
+  <info organisation="org.springframework" module="swf-sellitem-jsf"/>
+	
+  <configurations>
+    <conf name="default" extends="global"/>
+    <conf name="global" visibility="private"/>
+    <conf name="buildtime" visibility="private"/>
+    <conf name="test" visibility="private"/>
+  </configurations>
+	
+  <dependencies defaultconf="global->default">
+  	<!-- global dependencies -->
+    <dependency org="log4j" name="log4j" rev="1.2.13"/>
+    <dependency org="taglibs" name="standard" rev="1.1.2"/>
+    <dependency org="jstl" name="jstl" rev="1.1.2"/>
+	<dependency org="aopalliance" name="aopalliance" rev="1.0" />
+    <dependency org="org.springframework" name="spring-webflow" rev="latest.integration" conf="global->default,jsf"/>
+    <dependency org="org.springframework" name="spring-aop" rev="2.0"/>
+    <dependency org="org.springframework" name="spring-dao" rev="2.0"/>
+    <dependency org="org.springframework" name="spring-jdbc" rev="2.0"/>
+	<dependency org="hsqldb" name="hsqldb" rev="1.8.0.7"/>
+    
+    <!-- build-time only dependencies -->
+	<dependency	org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default"/>
+	
+	<!-- test-time only dependencies -->
+    <dependency org="junit" name="junit" rev="3.8.1" conf="test->default" />
+    <dependency org="org.springframework" name="spring-mock" rev="2.0" conf="test->default"/>
+  </dependencies>
+  
+</ivy-module>

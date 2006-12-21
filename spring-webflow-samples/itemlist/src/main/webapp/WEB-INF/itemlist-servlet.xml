@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="alwaysUseFullPath" value="true" />
+		<property name="mappings">
+			<value>/app/**/**=flowController</value>
+		</property>
+	</bean>
+
+	<!-- 
+		Exposes web flows for execution at a single request URL.
+		The id of a flow to launch should be passed in by clients using
+		the "_flowId" request parameter:
+		e.g. /app/itemlist
+	-->
+	<bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
+		<property name="flowExecutor" ref="flowExecutor" />
+		<property name="argumentHandler">
+			<bean class="org.springframework.webflow.executor.support.RequestPathFlowExecutorArgumentHandler" />
+		</property>
+	</bean>
+
+	<!-- Launches new flow executions and resumes existing executions: Spring 1.2 config version -->
+	<bean id="flowExecutor" class="org.springframework.webflow.config.FlowExecutorFactoryBean">
+		<property name="definitionLocator" ref="flowRegistry"/>
+	</bean>
+	
+	<!-- Creates the registry of flow definitions for this application: Spring 1.2 config version -->	
+	<bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations">
+			<list>
+				<value>/WEB-INF/itemlist.xml</value>
+				<value>/WEB-INF/itemlist-alternate</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Resolves flow view names to .jsp templates -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="createItemAction" class="org.springframework.webflow.samples.itemlist.NewItemAction" />
+
+	<bean id="addItemAction" class="org.springframework.webflow.samples.itemlist.AddItemAction" />
+
+	<bean id="mapItemAction" class="org.springframework.webflow.action.AttributeMapperAction">
+		<constructor-arg>
+			<bean class="org.springframework.webflow.samples.itemlist.DataMapper" />
+		</constructor-arg>
+	</bean>
+
+</beans>

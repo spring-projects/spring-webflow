@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configExtensions>
+		<configExtension>xml</configExtension>
+	</configExtensions>
+	<configs>
+		<config>src/main/java/org/springframework/webflow/samples/sellitem/services-config.xml</config>
+		<config>src/main/webapp/WEB-INF/sellitem-servlet-config.xml</config>
+		<config>src/main/webapp/WEB-INF/flows/sellitem-beans.xml</config>
+		<config>src/main/webapp/WEB-INF/sellitem-webflow-config.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name>serviceLayer</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/java/org/springframework/webflow/samples/sellitem/services-config.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>sellitemFlow</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/flows/sellitem-beans.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>webapp</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/java/org/springframework/webflow/samples/sellitem/services-config.xml</config>
+				<config>src/main/webapp/WEB-INF/flows/sellitem-beans.xml</config>
+				<config>src/main/webapp/WEB-INF/sellitem-servlet-config.xml</config>
+				<config>src/main/webapp/WEB-INF/sellitem-webflow-config.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

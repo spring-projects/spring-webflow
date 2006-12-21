@@ -1,0 +1,23 @@
+<ivy-module version="1.1">
+
+  <info organisation="org.springframework" module="swf-numberguess"/>
+	
+  <configurations>
+    <conf name="default" extends="global"/>
+    <conf name="global" visibility="private"/>
+    <conf name="buildtime" visibility="private"/>
+    <conf name="test" visibility="private"/>
+  </configurations>
+
+  <dependencies defaultconf="global->default">
+  	<!-- global (core) dependencies -->
+    <dependency org="log4j" name="log4j" rev="1.2.13"/>
+    <dependency org="taglibs" name="standard" rev="1.1.2"/>
+    <dependency org="jstl" name="jstl" rev="1.1.2"/>
+    <dependency org="org.springframework" name="spring-webflow" rev="latest.integration"/>
+
+    <!-- test time only	dependencies -->
+    <dependency org="junit" name="junit" rev="3.8.1" conf="test->default"/>
+  </dependencies>
+  
+</ivy-module>

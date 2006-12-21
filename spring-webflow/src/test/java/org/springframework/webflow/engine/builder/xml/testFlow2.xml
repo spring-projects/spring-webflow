@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="actionState1" />
+
+	<action-state id="actionState1">
+		<!-- defined in flow-local bean factory -->
+		<action bean="action1" />
+		<transition on="success" to="subFlowState1" />
+	</action-state>
+
+	<subflow-state id="subFlowState1" flow="subFlow1">
+		<transition on="end" to="endState1" />
+	</subflow-state>
+
+	<end-state id="endState1" />
+
+	<import resource="testFlow2Context.xml" />
+
+	<inline-flow id="subFlow1">
+		<flow>
+
+			<start-state idref="subActionState1" />
+
+			<action-state id="subActionState1">
+				<!-- defined in parent flow-local bean factory -->
+				<action bean="action1" />
+				<!-- defined in flow-local bean factory -->
+				<action name="foo" bean="subAction1" />
+				<transition on="foo.success" to="end" />
+			</action-state>
+
+			<end-state id="end" />
+
+			<import resource="testFlow2SubFlow1Context.xml" />
+		</flow>
+	</inline-flow>
+
+</flow>

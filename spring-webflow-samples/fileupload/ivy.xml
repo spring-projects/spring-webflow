@@ -1,0 +1,22 @@
+<ivy-module version="1.1">
+
+  <info organisation="org.springframework" module="swf-fileupload"/>
+	
+  <configurations>
+    <conf name="default" extends="global"/>
+    <conf name="global" visibility="private"/>
+    <conf name="buildtime" visibility="private"/>
+    <conf name="test" visibility="private"/>
+  </configurations>
+	
+  <dependencies defaultconf="global->default">
+   	<!-- global dependencies -->
+    <dependency org="log4j" name="log4j" rev="1.2.13"/>
+    <dependency org="commons-fileupload" name="commons-fileupload" rev="1.1.1"/>
+    <dependency org="commons-io" name="commons-io" rev="1.2"/>
+    <dependency org="taglibs" name="standard" rev="1.1.2"/>
+    <dependency org="jstl" name="jstl" rev="1.1.2"/>
+    <dependency org="org.springframework" name="spring-webflow" rev="latest.integration"/>
+  </dependencies>
+
+</ivy-module>
