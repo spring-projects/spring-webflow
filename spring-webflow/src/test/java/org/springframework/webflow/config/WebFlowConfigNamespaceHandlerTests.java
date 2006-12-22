@@ -17,6 +17,7 @@ package org.springframework.webflow.config;
 
 import junit.framework.TestCase;
 
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
@@ -66,6 +67,7 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 
 	public void testDefaultExecutor() {
 		FlowExecutorImpl flowExecutor = (FlowExecutorImpl)this.beanFactory.getBean("defaultExecutor");
+		assertTrue(flowExecutor.getExecutionRepository() instanceof ContinuationFlowExecutionRepository);
 		assertSame(this.beanFactory.getBean("withPathWithWildcards"), flowExecutor.getDefinitionLocator());
 		AttributeMap attribs = ((FlowExecutionImplFactory)flowExecutor.getExecutionFactory()).getExecutionAttributes();
 		assertEquals(1, attribs.size()); // defaults have been applied
@@ -127,6 +129,33 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		assertEquals(new Boolean(true), attribs.get(ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE));
 		assertSame(StaticFlowExecutionListenerLoader.EMPTY_INSTANCE,
 				((FlowExecutionImplFactory)flowExecutor.getExecutionFactory()).getExecutionListenerLoader());
+	}
+	
+	public void testDuplicateRepositoryType() {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+		try {		
+			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-1.xml"));
+			fail("Should have thrown an BeanDefinitionStoreException exception");
+		} catch (BeanDefinitionStoreException e) {}
+	}
+	
+	public void testConversationManagerRef() {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+		try {		
+			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-2.xml"));
+			fail("Should have thrown a BeanDefinitionStoreException exception");
+		} catch (BeanDefinitionStoreException e) {}
+	}
+	
+	public void testMaxContinuation() {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+		try {		
+			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-3.xml"));
+			fail("Should have thrown a BeanDefinitionStoreException exception");
+		} catch (BeanDefinitionStoreException e) {}
 	}
 
 }

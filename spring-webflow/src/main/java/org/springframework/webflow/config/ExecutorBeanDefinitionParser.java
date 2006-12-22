@@ -20,6 +20,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.enums.StaticLabeledEnumResolver;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -32,24 +33,41 @@ import org.w3c.dom.Element;
 class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
 	// elements and attributes
-
+	
+	private static final String CONVERSATION_MANAGER_REF_ATTRIBUTE = "conversation-manager-ref";
+	
 	private static final String EXECUTION_ATTRIBUTES_ELEMENT = "execution-attributes";
 
 	private static final String EXECUTION_LISTENERS_ELEMENT = "execution-listeners";
+	
+	private static final String MAX_CONTINUATIONS_ATTRIBUTE = "max-continuations";
+	
+	private static final String MAX_CONVERSATIONS_ATTRIBUTE = "max-conversations";
 
 	private static final String REGISTRY_REF_ATTRIBUTE = "registry-ref";
+	
+	private static final String REPOSITORY_ELEMENT = "repository";
 
 	private static final String REPOSITORY_TYPE_ATTRIBUTE = "repository-type";
+	
+	private static final String TYPE_ATTRIBUTE = "type";
 
 	// properties
 
+	private static final String CONVERSATION_MANAGER_PROPERTY = "conversationManager";
+	
 	private static final String DEFINITION_LOCATOR_PROPERTY = "definitionLocator";
 
 	private static final String EXECUTION_ATTRIBUTES_PROPERTY = "executionAttributes";
 
 	private static final String EXECUTION_LISTENER_LOADER_PROPERTY = "executionListenerLoader";
+	
+	private static final String MAX_CONTINUATIONS_PROPERTY = "maxContinuations";
+	
+	private static final String MAX_CONVERSATIONS_PROPERTY = "maxConversations";
 
 	private static final String REPOSITORY_TYPE_PROPERTY = "repositoryType";
+	
 
 	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
 		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder
@@ -57,8 +75,52 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistryRef(element));
 		addExecutionAttributes(element, parserContext, definitionBuilder);
 		addExecutionListenerLoader(element, parserContext, definitionBuilder);
-		definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getRepositoryType(element));
+		configureRepository(element, definitionBuilder);
 		return definitionBuilder.getBeanDefinition();
+	}
+
+	/**
+	 * Configures a repository based on the <code>repositoryType</code> attribute
+	 * or a <code>repository</code> tag.
+	 * @param element the root element to extract repository configuration from
+	 */
+	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder) {
+		Element repositoryElement = DomUtils.getChildElementByTagName(element, REPOSITORY_ELEMENT);
+		String repositoryTypeAttribute = getRepositoryType(element);
+		if(repositoryElement != null) {
+			if(StringUtils.hasText(repositoryTypeAttribute)) {
+				throw new IllegalArgumentException("The 'repositoryType' attribute of the 'executor' element must not have a value if there is a 'repository' element");
+			}
+			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getType(repositoryElement));
+			configureContinuations(repositoryElement, definitionBuilder);
+			configureConversationManager(repositoryElement, definitionBuilder);
+		} else if (StringUtils.hasText(repositoryTypeAttribute)) {
+			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, repositoryTypeAttribute);
+		}	
+	}
+
+	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
+		String conversationManagerRef = getConversationManagerRef(repositoryElement);
+		String maxConversations = getMaxConversations(repositoryElement);
+		if(StringUtils.hasText(conversationManagerRef)) {
+			if(StringUtils.hasText(maxConversations)) {
+				throw new IllegalArgumentException("The 'maxConversations' attribute of the 'repository' element must not have a value if there is a value for the 'conversation-manager-ref' attribute");
+			}
+			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
+		} else if (StringUtils.hasText(maxConversations)) {
+			definitionBuilder.addPropertyValue(MAX_CONVERSATIONS_PROPERTY, maxConversations);
+		}	
+	}
+	
+	private void configureContinuations(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
+		RepositoryType repositoryType = (RepositoryType) StaticLabeledEnumResolver.instance().getLabeledEnumByLabel(RepositoryType.class, getRepositoryType(repositoryElement));
+		String maxContinuations = getMaxContinuations(repositoryElement);
+		if(StringUtils.hasText(maxContinuations)) {
+			if(repositoryType != RepositoryType.CONTINUATION) {
+				throw new IllegalArgumentException("The 'maxContinuations' attribute of the 'repository' element must not have a value if the 'type' attribute is not 'continuation'");
+			}
+			definitionBuilder.addPropertyValue(MAX_CONTINUATIONS_PROPERTY, maxContinuations);
+		}
 	}
 
 	/**
@@ -82,6 +144,43 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 */
 	private String getRepositoryType(Element element) {
 		return element.getAttribute(REPOSITORY_TYPE_ATTRIBUTE).toUpperCase();
+	}
+	
+	/**
+	 * Returns the name of the repository type enum field detailed in the bean
+	 * definition.
+	 * @param element the element to extract the repository type from
+	 * @return the type of the repository
+	 */
+	private String getType(Element element) {
+		return element.getAttribute(TYPE_ATTRIBUTE).toUpperCase();
+	}
+	
+	/**
+	 * Returns the maximum number of continuations detailed in the bean definition.
+	 * @param element the element to extract the max continuations from
+	 * @return the max continuations
+	 */
+	private String getMaxContinuations(Element element) {
+		return element.getAttribute(MAX_CONTINUATIONS_ATTRIBUTE);
+	}
+	
+	/**
+	 * Returns the maximum number of conversations detailed in the bean definition.
+	 * @param element the element to extract the max conversations from
+	 * @return the max conversations
+	 */
+	private String getMaxConversations(Element element) {
+		return element.getAttribute(MAX_CONVERSATIONS_ATTRIBUTE);
+	}
+	
+	/**
+	 * Returns the name of the conversation manager detailed in the bean definition.
+	 * @param element the element to extract the conversation manager name from
+	 * @return the name of the conversation manager
+	 */
+	private String getConversationManagerRef(Element element) {
+		return element.getAttribute(CONVERSATION_MANAGER_REF_ATTRIBUTE);
 	}
 
 	/**

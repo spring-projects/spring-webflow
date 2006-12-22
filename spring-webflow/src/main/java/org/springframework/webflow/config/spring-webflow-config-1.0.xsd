@@ -94,6 +94,16 @@ an execution repository.
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
 					<xsd:sequence>
+						<xsd:element name="repository" type="repositoryType" minOccurs="0">
+						<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Explicit repository configuration for this executor.  This element is used if configuration needs
+to be more fine grained than the repositoryType attribute on executor.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
 						<xsd:element name="execution-attributes" type="execution-attributesType" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
@@ -114,7 +124,7 @@ The listeners eligible for observing the lifecycle of executions launched by thi
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="repository-type" default="continuation">
+					<xsd:attribute name="repository-type" type="repositoryTypeAttribute">
 						<xsd:annotation>
 							<xsd:documentation>
 						<![CDATA[
@@ -122,51 +132,7 @@ The type of execution repository to use.  The repository is responsible for mana
 persistence between requests.
 ]]>
 							</xsd:documentation>
-						</xsd:annotation>
-						<xsd:simpleType>
-							<xsd:restriction base="xsd:string">
-								<xsd:enumeration value="simple">
-									<xsd:annotation>
-										<xsd:documentation>
-											<![CDATA[
-The simple repository type.  Use of this strategy incurs minimal storage overhead but explicity prevents 
-resubmits using the browser back button.
-]]>
-										</xsd:documentation>
-									</xsd:annotation>
-								</xsd:enumeration>
-								<xsd:enumeration value="continuation">
-									<xsd:annotation>
-										<xsd:documentation>
-											<![CDATA[
-The continuation repository type.  Use this to snapshot flow execution state server-side to support use 
-of the browser back button.
-]]>
-										</xsd:documentation>
-									</xsd:annotation>
-								</xsd:enumeration>
-								<xsd:enumeration value="client">
-									<xsd:annotation>
-										<xsd:documentation>
-											<![CDATA[
-The client continuation repository type.  Use this to snapshot flow execution state client-side to support use of the browser 
-back button in a stateless server environment.
-]]>
-										</xsd:documentation>
-									</xsd:annotation>
-								</xsd:enumeration>
-								<xsd:enumeration value="singlekey">
-									<xsd:annotation>
-										<xsd:documentation>
-											<![CDATA[
-The "single key" repository type.  Use of this strategy assigns a single key per flow execution that remains 
-constant throughout the life of the execution.
-]]>
-										</xsd:documentation>
-									</xsd:annotation>
-								</xsd:enumeration>
-							</xsd:restriction>
-						</xsd:simpleType>			
+						</xsd:annotation>			
 					</xsd:attribute>
 					<xsd:attribute name="registry-ref" type="xsd:string" use="required">
 						<xsd:annotation>
@@ -181,6 +147,94 @@ The idref to the registry this executor will use to locate flow definitions for 
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
+	
+	<xsd:simpleType name="repositoryTypeAttribute">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="continuation">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The continuation repository type.  Use this to snapshot flow execution state server-side to support use 
+of the browser back button.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="simple">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The simple repository type.  Use of this strategy incurs minimal storage overhead but explicity prevents 
+resubmits using the browser back button.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="client">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The client continuation repository type.  Use this to snapshot flow execution state client-side to support use of the browser 
+back button in a stateless server environment.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="singlekey">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The "single key" repository type.  Use of this strategy assigns a single key per flow execution that remains 
+constant throughout the life of the execution.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:complexType name="repositoryType">
+		<xsd:attribute name="type" type="repositoryTypeAttribute" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The type of execution repository to use.  The repository is responsible for managing flow execution 
+persistence between requests.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>			
+		</xsd:attribute>
+		<xsd:attribute name="max-conversations" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The maximum number of conversations to preserve in a repository.  It is illegal to populate this
+attribute if you are also populating conversation-manager-ref.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="max-continuations" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The maximum number of continuations to preserve in a repository.  This attribute is only useful
+only useful when the repository is of type 'continuation'.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="conversation-manager-ref" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The idref to the conversation manager used by this registry to persist conversations.  Populating
+this attribute implies that that you should not populate max-conversations.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
 
 	<xsd:complexType name="execution-listenersType">
 		<xsd:sequence>
