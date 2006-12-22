@@ -140,7 +140,8 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		input.put("baz", new Integer(3));
 		FlowDefinitionRedirect redirect = new FlowDefinitionRedirect("flow", input);
 		String url = argumentHandler.createFlowDefinitionUrl(redirect, context);
-		assertEquals("/app/flows.htm?_flowId=flow&foo=bar&baz=3", url);
+		assertTrue("/app/flows.htm?_flowId=flow&foo=bar&baz=3".equals(url) ||
+				"/app/flows.htm?_flowId=flow&baz=3&foo=bar".equals(url));
 	}
 
 	public void testCreateFlowExecutionUrl() {

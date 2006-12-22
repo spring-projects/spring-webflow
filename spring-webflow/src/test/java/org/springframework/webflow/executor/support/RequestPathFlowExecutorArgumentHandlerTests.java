@@ -77,7 +77,7 @@ public class RequestPathFlowExecutorArgumentHandlerTests extends TestCase {
 		input.put("baz", new Integer(3));
 		FlowDefinitionRedirect redirect = new FlowDefinitionRedirect("flow", input);
 		String url = argumentHandler.createFlowDefinitionUrl(redirect, context);
-		assertEquals("/app/flows/flow?foo=bar&baz=3", url);
+		assertTrue("/app/flows/flow?foo=bar&baz=3".equals(url) || "/app/flows/flow?baz=3&foo=bar".equals(url));
 	}
 
 	public void testCreateFlowExecutionUrl() {
