@@ -80,49 +80,69 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	}
 
 	/**
-	 * Configures a repository based on the <code>repositoryType</code> attribute
+	 * Configures a repository based on the <code>repository-type</code> attribute
 	 * or a <code>repository</code> tag.
 	 * @param element the root element to extract repository configuration from
+	 * @param definitionBuilder the builder
 	 */
 	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder) {
 		Element repositoryElement = DomUtils.getChildElementByTagName(element, REPOSITORY_ELEMENT);
 		String repositoryTypeAttribute = getRepositoryType(element);
-		if(repositoryElement != null) {
-			if(StringUtils.hasText(repositoryTypeAttribute)) {
-				throw new IllegalArgumentException("The 'repositoryType' attribute of the 'executor' element must not have a value if there is a 'repository' element");
+		if (repositoryElement != null) {
+			if (StringUtils.hasText(repositoryTypeAttribute)) {
+				throw new IllegalArgumentException(
+						"The 'repositoryType' attribute of the 'executor' element must " +
+						"not have a value if there is a 'repository' element");
 			}
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getType(repositoryElement));
 			configureContinuations(repositoryElement, definitionBuilder);
 			configureConversationManager(repositoryElement, definitionBuilder);
-		} else if (StringUtils.hasText(repositoryTypeAttribute)) {
+		}
+		else if (StringUtils.hasText(repositoryTypeAttribute)) {
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, repositoryTypeAttribute);
 		}	
 	}
 
-	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
-		String conversationManagerRef = getConversationManagerRef(repositoryElement);
-		String maxConversations = getMaxConversations(repositoryElement);
-		if(StringUtils.hasText(conversationManagerRef)) {
-			if(StringUtils.hasText(maxConversations)) {
-				throw new IllegalArgumentException("The 'maxConversations' attribute of the 'repository' element must not have a value if there is a value for the 'conversation-manager-ref' attribute");
-			}
-			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
-		} else if (StringUtils.hasText(maxConversations)) {
-			definitionBuilder.addPropertyValue(MAX_CONVERSATIONS_PROPERTY, maxConversations);
-		}	
-	}
-	
+	/**
+	 * Configure the max continuations setting.
+	 * @param repositoryElement the repository element
+	 * @param definitionBuilder the builder
+	 */
 	private void configureContinuations(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
-		RepositoryType repositoryType = (RepositoryType) StaticLabeledEnumResolver.instance().getLabeledEnumByLabel(RepositoryType.class, getRepositoryType(repositoryElement));
+		RepositoryType repositoryType = (RepositoryType)StaticLabeledEnumResolver.instance().getLabeledEnumByLabel(
+				RepositoryType.class, getRepositoryType(repositoryElement));
 		String maxContinuations = getMaxContinuations(repositoryElement);
-		if(StringUtils.hasText(maxContinuations)) {
-			if(repositoryType != RepositoryType.CONTINUATION) {
-				throw new IllegalArgumentException("The 'maxContinuations' attribute of the 'repository' element must not have a value if the 'type' attribute is not 'continuation'");
+		if (StringUtils.hasText(maxContinuations)) {
+			if (repositoryType != RepositoryType.CONTINUATION) {
+				throw new IllegalArgumentException(
+						"The 'max-continuations' attribute of the 'repository' element must not " +
+						"have a value if the 'type' attribute is not 'continuation'");
 			}
 			definitionBuilder.addPropertyValue(MAX_CONTINUATIONS_PROPERTY, maxContinuations);
 		}
 	}
 
+	/**
+	 * Configure the conversation manager
+	 * @param repositoryElement the repository element
+	 * @param definitionBuilder the builder
+	 */
+	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
+		String conversationManagerRef = getConversationManagerRef(repositoryElement);
+		String maxConversations = getMaxConversations(repositoryElement);
+		if (StringUtils.hasText(conversationManagerRef)) {
+			if(StringUtils.hasText(maxConversations)) {
+				throw new IllegalArgumentException(
+						"The 'max-conversations' attribute of the 'repository' element must not " +
+						"have a value if there is a value for the 'conversation-manager-ref' attribute");
+			}
+			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
+		}
+		else if (StringUtils.hasText(maxConversations)) {
+			definitionBuilder.addPropertyValue(MAX_CONVERSATIONS_PROPERTY, maxConversations);
+		}	
+	}
+	
 	/**
 	 * Returns the name of the registry detailed in the bean definition.
 	 * @param element the element to extract the registry name from
@@ -131,7 +151,8 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	private String getRegistryRef(Element element) {
 		String registryRef = element.getAttribute(REGISTRY_REF_ATTRIBUTE);
 		if (!StringUtils.hasText(registryRef)) {
-			throw new IllegalArgumentException("The 'registry-ref' attribute of the 'executor' element must have a value");
+			throw new IllegalArgumentException(
+					"The 'registry-ref' attribute of the 'executor' element must have a value");
 		}
 		return registryRef;
 	}

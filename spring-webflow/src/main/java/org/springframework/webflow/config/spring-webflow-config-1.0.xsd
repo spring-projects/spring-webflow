@@ -95,7 +95,7 @@ an execution repository.
 				<xsd:extension base="beans:identifiedType">
 					<xsd:sequence>
 						<xsd:element name="repository" type="repositoryType" minOccurs="0">
-						<xsd:annotation>
+							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
 Explicit repository configuration for this executor.  This element is used if configuration needs
@@ -219,7 +219,7 @@ attribute if you are also populating conversation-manager-ref.
 				<xsd:documentation>
 				<![CDATA[
 The maximum number of continuations to preserve in a repository.  This attribute is only useful
-only useful when the repository is of type 'continuation'.
+when the repository is of type 'continuation'.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
@@ -229,7 +229,7 @@ only useful when the repository is of type 'continuation'.
 				<xsd:documentation>
 				<![CDATA[
 The idref to the conversation manager used by this registry to persist conversations.  Populating
-this attribute implies that that you should not populate max-conversations.
+this attribute implies that you should not populate max-conversations.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
