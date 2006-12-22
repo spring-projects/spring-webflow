@@ -221,7 +221,7 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 
 	/**
 	 * Setup a conversion service used by this flow service locator.
-	 * @param userConversionService a user supplied conversion service
+	 * @param userConversionService a user supplied conversion service, optional
 	 * @return the newly created conversion service
 	 */
 	protected ConversionService createConversionService(ConversionService userConversionService) {
@@ -229,7 +229,7 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 		addWebFlowConverters(defaultConversionService);
 		if (userConversionService != null) {
 			return new CompositeConversionService(
-					new ConversionService[] { userConversionService, defaultConversionService});
+					new ConversionService[] { userConversionService, defaultConversionService });
 		}
 		else {
 			return defaultConversionService;
