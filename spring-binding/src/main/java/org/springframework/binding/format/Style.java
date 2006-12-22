@@ -19,6 +19,7 @@ import org.springframework.core.enums.StaticLabeledEnum;
 
 /**
  * Format styles.
+ * 
  * @author Keith Donald
  */
 public class Style extends StaticLabeledEnum {
