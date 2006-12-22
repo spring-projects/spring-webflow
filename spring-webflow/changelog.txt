@@ -15,7 +15,8 @@ Package org.springframework.webflow.action
   existing field and object errors to the newly created Errors instance (SWF-219).
 
 Package org.springframework.webflow.config
-* Added get/setMaxConversations and get/setMaxContinuations methods to FlowExecutorFactoryBean.
+* Added get/setMaxConversations and get/setMaxContinuations methods to FlowExecutorFactoryBean. Also
+  added corresponding configuration abilities to the config schema (SWF-210).
 * Fixed bug in FlowExecutorFactoryBean where the ClientContinuationFlowExecutionRepository was being
   configured with the SessionBindingConversationManager by default (SWF-216).
 * The conversationManager argument of the createExecutionRepository hook method in the
