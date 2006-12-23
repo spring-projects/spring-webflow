@@ -202,7 +202,7 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	 * @return the target state id or null if not found
 	 */
 	private TargetStateResolver findTargetStateResolver(Class exceptionType) {
-		while (exceptionType != null && exceptionType.getClass() != Object.class) {
+		while (exceptionType != null && exceptionType != Object.class) {
 			if (exceptionTargetStateMappings.containsKey(exceptionType)) {
 				return (TargetStateResolver)exceptionTargetStateMappings.get(exceptionType);
 			}
