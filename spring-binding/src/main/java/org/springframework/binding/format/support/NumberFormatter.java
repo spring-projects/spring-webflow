@@ -23,7 +23,7 @@ import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.NumberUtils;
 
 /**
- * Converts from various <code>Number<code> specializations to
+ * Converts from various <code>Number</code> specializations to
  * <code>String</code> and back.
  * 
  * @author Keith Donald
