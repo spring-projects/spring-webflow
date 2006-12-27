@@ -27,7 +27,7 @@ import org.springframework.binding.format.Formatter;
 public class FormatterPropertyEditor extends PropertyEditorSupport {
 
 	/**
-	 * The formatter
+	 * The wrapped formatter.
 	 */
 	private Formatter formatter;
 

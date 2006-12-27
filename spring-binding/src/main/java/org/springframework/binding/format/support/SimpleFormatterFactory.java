@@ -28,9 +28,6 @@ import org.springframework.binding.format.Style;
  */
 public class SimpleFormatterFactory extends AbstractFormatterFactory {
 
-	public SimpleFormatterFactory() {
-	}
-
 	public Formatter getDateFormatter(Style style) {
 		return new DateFormatter(SimpleDateFormat.getDateInstance(style.shortValue(), getLocale()));
 	}
@@ -53,7 +50,7 @@ public class SimpleFormatterFactory extends AbstractFormatterFactory {
 	}
 
 	public Formatter getDateFormatter(String encodedFormat) {
-		return new DateFormatter(new SimpleDateFormat(encodedFormat));
+		return new DateFormatter(new SimpleDateFormat(encodedFormat, getLocale()));
 	}
 
 	public Formatter getPercentFormatter() {

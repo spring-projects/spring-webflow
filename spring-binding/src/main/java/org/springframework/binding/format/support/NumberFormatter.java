@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.format.support;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 
@@ -22,8 +23,8 @@ import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.NumberUtils;
 
 /**
- * Converts from various
- * <code>Number<code> specializations to <code>String</code> and back.
+ * Converts from various <code>Number<code> specializations to
+ * <code>String</code> and back.
  * 
  * @author Keith Donald
  */
@@ -32,7 +33,8 @@ public class NumberFormatter extends AbstractFormatter {
 	private NumberFormat numberFormat;
 	
 	/**
-	 * Default constructor.
+	 * Default constructor. The formatter will use "toString" when formatting
+	 * a value and "valueOf" when parsing a value.
 	 */
 	public NumberFormatter() {
 	}
@@ -79,6 +81,10 @@ public class NumberFormatter extends AbstractFormatter {
 	
 	// convenience methods
 
+	public Byte parseByte(String formattedString) throws InvalidFormatException {
+		return (Byte)parseValue(formattedString, Byte.class);
+	}
+
 	public Short parseShort(String formattedString) throws InvalidFormatException {
 		return (Short)parseValue(formattedString, Short.class);
 	}
@@ -91,19 +97,19 @@ public class NumberFormatter extends AbstractFormatter {
 		return (Long)parseValue(formattedString, Long.class);
 	}
 
-	public Double parseDouble(String formattedString) throws InvalidFormatException {
-		return (Double)parseValue(formattedString, Double.class);
-	}
-
 	public Float parseFloat(String formattedString) throws InvalidFormatException {
 		return (Float)parseValue(formattedString, Float.class);
+	}
+
+	public Double parseDouble(String formattedString) throws InvalidFormatException {
+		return (Double)parseValue(formattedString, Double.class);
 	}
 
 	public BigInteger parseBigInteger(String formattedString) throws InvalidFormatException {
 		return (BigInteger)parseValue(formattedString, BigInteger.class);
 	}
-
-	public Byte parseByte(String formattedString) throws InvalidFormatException {
-		return (Byte)parseValue(formattedString, Byte.class);
+	
+	public BigDecimal parseBigDecimal(String formattedString) throws InvalidFormatException {
+		return (BigDecimal)parseValue(formattedString, BigDecimal.class);
 	}
 }
