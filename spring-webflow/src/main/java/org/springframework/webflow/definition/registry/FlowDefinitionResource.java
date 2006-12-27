@@ -52,11 +52,20 @@ public class FlowDefinitionResource implements Serializable {
 	/**
 	 * Creates a new externalized flow definition resource. The flow id assigned will be
 	 * the same name as the externalized resource's filename, excluding the extension.
-	 * @param location the flow resource location.
+	 * @param location the flow resource location
 	 */
 	public FlowDefinitionResource(Resource location) {
-		Assert.notNull(location, "The location of the externalized flow definition is required");
 		init(conventionalFlowId(location), location, null);
+	}
+	
+	/**
+	 * Creates a new externalized flow definition resource. The flow id assigned will be
+	 * the same name as the externalized resource's filename, excluding the extension.
+	 * @param location the flow resource location
+	 * @param attributes flow definition attributes to be assigned
+	 */
+	public FlowDefinitionResource(Resource location, AttributeMap attributes) {
+		init(conventionalFlowId(location), location, attributes);
 	}
 
 	/**
@@ -128,12 +137,16 @@ public class FlowDefinitionResource implements Serializable {
 			this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 		}
 	}
+	
+	// public utilities
 
 	/**
 	 * Returns the flow id assigned to the flow definition contained in given resource.
 	 * By convention this will be the filename of the resource, excluding extension.
+	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource)
+	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource, AttributeMap)
 	 */
-	private String conventionalFlowId(Resource location) {
+	public static String conventionalFlowId(Resource location) {
 		String fileName = location.getFilename();
 		int extensionIndex = fileName.lastIndexOf('.');
 		if (extensionIndex != -1) {

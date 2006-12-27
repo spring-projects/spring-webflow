@@ -35,6 +35,8 @@ Package org.springframework.webflow.conversation
 
 Package org.springframework.webflow.definition
 * Added debug logging to FlowDefinitionRegistryImpl.
+* FlowDefinitionResource now has a public static helper method named conventionalFlowId that implements
+  conventions based flow id calculation logic.
 
 Package org.springframework.webflow.engine
 * The methods getMatchingCriteria, getExecutionCriteria, getTargetStateResolver, and canExecute
