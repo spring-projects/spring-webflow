@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.springframework.binding.format.Formatter;
+import org.springframework.context.i18n.SimpleLocaleContext;
 
 import junit.framework.TestCase;
 
@@ -40,15 +41,26 @@ public class NumberFormatterTests extends TestCase {
 		Locale.setDefault(systemDefaultLocale);
 	}
 	
-	public void testParseBigDecimalInUs() {
+	public void testParseUsBigDecimalInUs() {
 		Locale.setDefault(Locale.US);
-		Formatter formatter = new SimpleFormatterFactory().getNumberFormatter(BigDecimal.class);
+		SimpleFormatterFactory formatterFactory = new SimpleFormatterFactory();
+		Formatter formatter = formatterFactory.getNumberFormatter(BigDecimal.class);
 		assertEquals(new BigDecimal("123.45"), formatter.parseValue("123.45", BigDecimal.class));
 	}
 
-	public void testParseBigDecimalInGermany() {
+	public void testParseUsBigDecimalInGermany() {
 		Locale.setDefault(Locale.GERMANY);
-		Formatter formatter = new SimpleFormatterFactory().getNumberFormatter(BigDecimal.class);
+		SimpleFormatterFactory formatterFactory = new SimpleFormatterFactory();
+		// we're expressing our numbers in US notation!
+		formatterFactory.setLocaleContext(new SimpleLocaleContext(Locale.US));
+		Formatter formatter = formatterFactory.getNumberFormatter(BigDecimal.class);
 		assertEquals(new BigDecimal("123.45"), formatter.parseValue("123.45", BigDecimal.class));
+	}
+	
+	public void testParseGermanBigDecimalInGermany() {
+		Locale.setDefault(Locale.GERMANY);
+		SimpleFormatterFactory formatterFactory = new SimpleFormatterFactory();
+		Formatter formatter = formatterFactory.getNumberFormatter(BigDecimal.class);
+		assertEquals(new BigDecimal("123.45"), formatter.parseValue("123,45", BigDecimal.class));
 	}
 }
