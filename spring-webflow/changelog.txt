@@ -49,6 +49,8 @@ Package org.springframework.webflow.engine
 * TransitionExecutingStateExceptionHandler now does full logging of the exceptions that it handles.
 * Fixed bug in BaseFlowServiceLocator where it was not allowing user to override the default web flow
   converters (SWF-220).
+* Added setFlowAttributes method to XmlFlowRegistryFactoryBean to make it easier to configure
+  externally defined flow definition attributes (SWF-200).
 
 Package org.springframework.webflow.execution.factory
 * The getHolder method on ConditionalFlowExecutionListenerLoader is now private. It has a package

@@ -18,7 +18,6 @@ package org.springframework.webflow.engine.builder;
 import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -26,8 +25,6 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.StaticFlowDefinitionHolder;
 import org.springframework.webflow.engine.Flow;
-import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -45,7 +42,7 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 	protected void setUp() throws Exception {
 		TestFlowRegistryFactoryBean registryFactory = new TestFlowRegistryFactoryBean();
 		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-		beanFactory.addBean("testAction", new TestAction());
+		beanFactory.addBean("testAction", new ParameterizationTestAction());
 		registryFactory.setBeanFactory(beanFactory);
 		registryFactory.afterPropertiesSet();
 		registry = registryFactory.getRegistry();
@@ -87,30 +84,6 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 		public void buildStates() throws FlowBuilderException {
 			addActionState("test", action("testAction"), transition(on(success()), to("finish")));
 			addEndState("finish", "${activeFlow.attributes['name']}");
-		}
-	}
-	
-	public class TestAction extends AbstractAction {
-		
-		protected Event doExecute(RequestContext context) throws Exception {
-			if ("flowA".equals(context.getActiveFlow().getId())) {
-				Flow flowA = (Flow)context.getActiveFlow();
-				assertEquals(2, flowA.getAttributes().size());
-				assertEquals("A", flowA.getAttributes().get("name"));
-				assertEquals("someValue", flowA.getAttributes().get("someKey"));
-				assertNull(flowA.getAttributes().get("someOtherKey"));
-			}
-			else if ("flowB".equals(context.getActiveFlow().getId())) {
-				Flow flowB = (Flow)context.getActiveFlow();
-				assertEquals(2, flowB.getAttributes().size());
-				assertEquals("B", flowB.getAttributes().get("name"));
-				assertEquals("someOtherValue", flowB.getAttributes().get("someOtherKey"));
-				assertNull(flowB.getAttributes().get("someKey"));
-			}
-			else {
-				throw new IllegalStateException();
-			}
-			return success();
 		}
 	}
 	

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="flowRegistry0"
+		class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:org/springframework/webflow/engine/builder/xml/parameterizedFlow.xml"/>
+	</bean>
+
+	<bean id="flowRegistry1"
+		class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:org/springframework/webflow/engine/builder/xml/parameterizedFlow.xml"/>
+		<property name="flowAttributes">
+			<map>
+				<entry key="parameterizedFlow">
+					<map>
+						<entry key="foo" value="bar"/>
+					</map>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="flowRegistry2"
+		class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+		<property name="flowDefinitions">
+			<value>
+				flowA=classpath:org/springframework/webflow/engine/builder/xml/parameterizedFlow.xml
+				flowB=classpath:org/springframework/webflow/engine/builder/xml/parameterizedFlow.xml
+			</value>
+		</property>
+		<property name="flowAttributes">
+			<map>
+				<entry key="flowA">
+					<map>
+						<entry key="name" value="A"/>
+						<entry key="someKey" value="someValue"/>
+					</map>
+				</entry>
+				<entry key="flowB">
+					<map>
+						<entry key="name" value="B"/>
+						<entry key="someOtherKey" value="someOtherValue"/>
+					</map>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="testAction"
+		class="org.springframework.webflow.engine.builder.ParameterizationTestAction" />
+</beans>
