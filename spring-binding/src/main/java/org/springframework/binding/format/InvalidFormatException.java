@@ -29,7 +29,7 @@ public class InvalidFormatException extends NestedRuntimeException {
 	private String expectedFormat;
 
 	/**
-	 * Create a new invalid format exception
+	 * Create a new invalid format exception.
 	 * @param invalidValue the invalid value
 	 * @param expectedFormat the expected format
 	 */
@@ -38,19 +38,19 @@ public class InvalidFormatException extends NestedRuntimeException {
 	}
 
 	/**
-	 * Create a new invalid format exception
+	 * Create a new invalid format exception.
 	 * @param invalidValue the invalid value
 	 * @param expectedFormat the expected format
 	 * @param cause the underlying cause of this exception
 	 */
 	public InvalidFormatException(String invalidValue, String expectedFormat, Throwable cause) {
-		super("Invalid format for value " + invalidValue + "; the expected format was '" + expectedFormat + "'", cause);
+		super("Invalid format for value '" + invalidValue + "'; the expected format was '" + expectedFormat + "'", cause);
 		this.invalidValue = invalidValue;
 		this.expectedFormat = expectedFormat;
 	}
 
 	/**
-	 * Create a new invalid format exception
+	 * Create a new invalid format exception.
 	 * @param invalidValue the invalid value
 	 * @param expectedFormat the expected format
 	 * @param message a descriptive message

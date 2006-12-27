@@ -18,18 +18,30 @@ package org.springframework.binding.format;
 import org.springframework.core.enums.StaticLabeledEnum;
 
 /**
- * Format styles.
+ * Format styles, similar to those defined by {@link java.text.DateFormat}.
  * 
  * @author Keith Donald
  */
 public class Style extends StaticLabeledEnum {
 
+	/**
+	 * See {@link java.text.DateFormat#FULL}.
+	 */
 	public static final Style FULL = new Style(0, "Full");
 
+	/**
+	 * See {@link java.text.DateFormat#LONG}.
+	 */
 	public static final Style LONG = new Style(1, "Long");
 
+	/**
+	 * See {@link java.text.DateFormat#MEDIUM}.
+	 */
 	public static final Style MEDIUM = new Style(2, "Medium");
 
+	/**
+	 * See {@link java.text.DateFormat#SHORT}.
+	 */
 	public static final Style SHORT = new Style(3, "Short");
 
 	/**
