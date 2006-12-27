@@ -28,6 +28,8 @@ import org.springframework.webflow.definition.registry.StaticFlowDefinitionHolde
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -68,10 +70,12 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 	
 	public void testFlowParameterizationAtRuntime() {
 		Flow flowA = (Flow)registry.getFlowDefinition("flowA");
-		flowA.start(new MockRequestControlContext(flowA), null);
+		ViewSelection viewSelection = flowA.start(new MockRequestControlContext(flowA), null);
+		assertEquals("A", ((ApplicationView)viewSelection).getViewName());
 		
 		Flow flowB = (Flow)registry.getFlowDefinition("flowB");
-		flowB.start(new MockRequestControlContext(flowB), null);
+		viewSelection = flowB.start(new MockRequestControlContext(flowB), null);
+		assertEquals("B", ((ApplicationView)viewSelection).getViewName());
 	}
 	
 	public class TestFlowBuilder extends AbstractFlowBuilder {
@@ -82,7 +86,7 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 		
 		public void buildStates() throws FlowBuilderException {
 			addActionState("test", action("testAction"), transition(on(success()), to("finish")));
-			addEndState("finish");
+			addEndState("finish", "${activeFlow.attributes['name']}");
 		}
 	}
 	
