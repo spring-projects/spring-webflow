@@ -223,7 +223,7 @@ to see a list of all relevant targets.
 			<zipfileset dir="../spring-webflow/docs" includes="upgrade-guide.pdf" prefix="${zip.toplevel.dir}/docs" />
 			<zipfileset dir="${target.dir}/repo" prefix="${zip.toplevel.dir}/projects/repository" />
 			<!-- project sources -->
-			<zipfileset dir="../.." prefix="${zip.toplevel.dir}/projects">
+			<zipfileset dir=".." prefix="${zip.toplevel.dir}/projects">
 				<selector refid="project.source.zip.includes" />
 			</zipfileset>
 		</zip>
