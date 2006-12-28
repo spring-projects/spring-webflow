@@ -630,7 +630,7 @@
 	<sect1 id="introduction-support">
 		<title>Support</title>
 		<para>
-			Spring Web Flow 1.0 is supported on Spring Framework 1.2.7 or > for the 1.x series and 
+			Spring Web Flow 1.x is supported on Spring Framework 1.2.7 or > for the 1.x series and 
 			supported on 2.0 or > for the 2.x series.
 		</para>
 		<para>
