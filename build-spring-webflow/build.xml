@@ -34,17 +34,17 @@
 				</or>
 				<and>
 					<!-- exclude core project derived artifacts -->
+					<filename name="*/docs/**" negate="true"/>
+					<filename name="*/target/**" negate="true" />
+					<filename name="*/build.properties" negate="true" />
+					<filename name="*/lib/**" negate="true" />
+				</and>
+				<and>
+					<!-- exclude sample project derived artifacts -->
 					<filename name="*/*/docs/**" negate="true"/>
 					<filename name="*/*/target/**" negate="true" />
 					<filename name="*/*/build.properties" negate="true" />
 					<filename name="*/*/lib/**" negate="true" />
-				</and>
-				<and>
-					<!-- exclude sample project derived artifacts -->
-					<filename name="*/*/*/docs/**" negate="true"/>
-					<filename name="*/*/*/target/**" negate="true" />
-					<filename name="*/*/*/build.properties" negate="true" />
-					<filename name="*/*/*/lib/**" negate="true" />
 				</and>
 			</and>
 		</or>
