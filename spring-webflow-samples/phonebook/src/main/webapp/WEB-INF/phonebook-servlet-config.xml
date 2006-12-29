@@ -13,7 +13,6 @@
 	-->
 	<bean name="/phonebook.htm" class="org.springframework.webflow.executor.mvc.FlowController">
 		<property name="flowExecutor" ref="flowExecutor"/>
-		<property name="cacheSeconds" value="5"/>
 	</bean>
 
 	<!-- Resolves flow view names to .jsp templates -->
