@@ -149,7 +149,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 			return;
 		}
 		if (property == null || !(property instanceof String)
-				|| (property instanceof String && ((String)property).length() == 0)) {
+				|| ((String)property).length() == 0) {
 			throw new PropertyNotFoundException(
 					"Attempt to set Flow attribute with null name, empty name, or non-String name");
 		}

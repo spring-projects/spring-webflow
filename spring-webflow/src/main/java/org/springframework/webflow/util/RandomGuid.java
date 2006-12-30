@@ -103,7 +103,7 @@ import java.util.Random;
  * @version 1.2.1 11/05/02
  * @author Marc A. Mnich
  */
-public class RandomGuid extends Object {
+public class RandomGuid {
 
 	private static Random random;
 
@@ -111,9 +111,7 @@ public class RandomGuid extends Object {
 
 	private static String id;
 
-	private String valueBeforeMD5 = "";
-
-	private String valueAfterMD5 = "";
+	private String guid;
 
 	/*
 	 * Static block to take care of one time secureRandom seed. It takes a few
@@ -187,7 +185,7 @@ public class RandomGuid extends Object {
 		sbValueBeforeMD5.append(":");
 		sbValueBeforeMD5.append(Long.toString(rand));
 
-		valueBeforeMD5 = sbValueBeforeMD5.toString();
+		String valueBeforeMD5 = sbValueBeforeMD5.toString();
 		md5.update(valueBeforeMD5.getBytes());
 
 		byte[] array = md5.digest();
@@ -198,7 +196,7 @@ public class RandomGuid extends Object {
 				sb.append('0');
 			sb.append(Integer.toHexString(b));
 		}
-		valueAfterMD5 = sb.toString();
+		guid = sb.toString();
 	}
 
 	/**
@@ -207,7 +205,7 @@ public class RandomGuid extends Object {
 	 * Example: "C2FEEEAC-CFCD-11D1-8B05-00600806D9B6".
 	 */
 	public String toString() {
-		String raw = valueAfterMD5.toUpperCase();
+		String raw = guid.toUpperCase();
 		StringBuffer sb = new StringBuffer();
 		sb.append(raw.substring(0, 8));
 		sb.append("-");

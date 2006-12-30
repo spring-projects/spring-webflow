@@ -46,8 +46,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * three classes work together to form a complete flow execution implementation
  * based on a finite state machine.
  * 
- * @see org.springframework.webflow.engine.machine.FlowExecutionImpl
- * @see org.springframework.webflow.engine.machine.FlowSessionImpl
+ * @see FlowExecutionImpl
+ * @see FlowSessionImpl
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
