@@ -34,7 +34,7 @@ public class InvalidFormatException extends NestedRuntimeException {
 	 * @param expectedFormat the expected format
 	 */
 	public InvalidFormatException(String invalidValue, String expectedFormat) {
-		this(invalidValue, expectedFormat, (Throwable)null);
+		this(invalidValue, expectedFormat, null);
 	}
 
 	/**
