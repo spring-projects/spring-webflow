@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-
- Copyright 2002-2005 the original author or authors.
+ Copyright 2004-2007 the original author or authors.
   
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -34,7 +33,6 @@
 -->
 
 <!--
-
   For these tasks to work, the specified user (tomcat.username property below,
   which defaults to 'manager' but may be specified in build.properties) must be
   a user defined in the TomCat server, and that user must have the role
