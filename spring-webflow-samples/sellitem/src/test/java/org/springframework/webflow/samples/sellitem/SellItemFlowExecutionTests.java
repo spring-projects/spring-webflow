@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2006 the original author or authors.
+ * Copyright 2002-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class SellItemFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		
 		MockParameterMap parameters = new MockParameterMap();
 		parameters.put("shippingType", "E");
-		parameters.put("shipDate", "12/06/2006");
+		parameters.put("shipDate", "12/06/2007");
 		ApplicationView selectedView = applicationView(signalEvent("submit", parameters));
 		assertViewNameEquals("costOverview", selectedView);
 		assertFlowExecutionEnded();
