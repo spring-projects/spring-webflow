@@ -22,7 +22,7 @@ import junit.framework.TestCase;
  * 
  * @author Ben Hale
  */
-public class DispatchMethodInvokerTest extends TestCase {
+public class DispatchMethodInvokerTests extends TestCase {
 
 	private class MockClass {
 		private boolean methodCalled = false;
