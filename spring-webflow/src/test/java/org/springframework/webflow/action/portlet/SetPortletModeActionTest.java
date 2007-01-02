@@ -30,7 +30,7 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Ulrik Sandberg
  */
-public class SetPortletModeActionTests extends TestCase {
+public class SetPortletModeActionTest extends TestCase {
 
 	private SetPortletModeAction tested;
 
