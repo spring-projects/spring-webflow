@@ -1089,20 +1089,20 @@ The expression to evaluate when this action is invoked.
 						<![CDATA[
 An optional name qualifier for this evaluate action. When specified this action will
 qualify execution result event identifiers by this name.  For example, if this
-action is named "placeOrder" and signals a "success" result event after execution,
-the fully qualified result event the flow can respond to would be "placeOrder.success".
+action is named "firstInterviewQuestion" and signals a "success" result event after execution,
+the fully qualified result event the flow can respond to would be "firstInterviewQuestion.success".
 <br>
 This can be used to execute actions in an ordered chain, where the flow responds 
 to the the last action result in the chain:
 <pre>
     &lt;action-state id="setupForm"&gt;
+        &lt;evaluate-action name="firstInterviewQuestion" bean="flowScope.interview.firstQuestion()"/&gt;
         &lt;action name="setupForm" bean="formAction" method="setupForm"/&gt;
-        &lt;action name="loadReferenceData" bean="formAction" method="loadReferenceData"/&gt;
-        &lt;transition on="loadReferenceData.success" to="displayForm"&gt;
+        &lt;transition on="setupForm.success" to="displayForm"&gt;
     &lt;/action-state&gt;
 </pre>
-... will execute 'setupForm' followed by 'loadRefenceData', then transition the flow to
-the 'displayForm' state on a successful 'loadReferenceData' invocation.
+... will execute 'firstInterviewQuestion' followed by 'setupForm', then transition the flow to
+the 'displayForm' state on a successful 'setupForm' invocation.
 <br>
 An action with a name is often referred to as a "named action".
 ]]>
@@ -1199,20 +1199,20 @@ The attribute value expression.
 						<![CDATA[
 An optional name qualifier for this set action. When specified this action will
 qualify execution result event identifiers by this name.  For example, if this
-action is named "placeOrder" and signals a "success" result event after execution,
-the fully qualified result event the flow can respond to would be "placeOrder.success".
+action is named "setFormSubmitted" and signals a "success" result event after execution,
+the fully qualified result event the flow can respond to would be "setFormSubmitted.success".
 <br>
 This can be used to execute actions in an ordered chain, where the flow responds 
 to the the last action result in the chain:
 <pre>
-    &lt;action-state id="setupForm"&gt;
-        &lt;action name="setupForm" bean="formAction" method="setupForm"/&gt;
-        &lt;action name="loadReferenceData" bean="formAction" method="loadReferenceData"/&gt;
-        &lt;transition on="loadReferenceData.success" to="displayForm"&gt;
+    &lt;action-state id="processSubmit"&gt;
+        &lt;action name="processSubmit" bean="formAction" method="processSubmit"/&gt;
+        &lt;set name="setFormSubmitted" attribute="formSubmitted" value="true"/&gt;
+        &lt;transition on="setFormSubmitted.success" to="thankYou"&gt;
     &lt;/action-state&gt;
 </pre>
-... will execute 'setupForm' followed by 'loadRefenceData', then transition the flow to
-the 'displayForm' state on a successful 'loadReferenceData' invocation.
+... will execute 'processSubmit' followed by 'setFormSubmitted', then transition the flow to
+the 'thankYou' state on a successful 'setFormSubmitted' invocation.
 <br>
 An action with a name is often referred to as a "named action".
 ]]>
