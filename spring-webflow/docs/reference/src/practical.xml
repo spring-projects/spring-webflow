@@ -29,10 +29,14 @@
     				<para>NumberGuess - demonstrates use of stateful middle-tier components to carry out business logic.</para>
     			</listitem>
     			<listitem>
-    				<para>Birthdate - demonstrates Struts integration and the MultiAction.</para>
+    				<para>
+    					<link linkend="birthdate-sample">Birthdate</link> - demonstrates Struts integration and the MultiAction.
+    				</para>
     			</listitem>
     			<listitem>
-    				<para>Fileupload - demonstrates multipart file upload.</para>
+    				<para>
+    					<link linkend="fileupload-sample">Fileupload</link> - demonstrates multipart file upload.
+    				</para>
     			</listitem>
     			<listitem>
     				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
@@ -43,5 +47,437 @@
     			</listitem>
     		</orderedlist>
     	</para>
+    </sect1>
+    <sect1 id="running-samples">
+    	<title>Running the Samples</title>
+    	<para>
+    		The samples can be built from the command line and imported as Eclipse projects - all samples come
+    		with Eclipse project settings. It is also possible to start by importing the samples into Eclipse
+    		first and then build with Ant within Eclipse.
+    	</para>
+    	<sect2>
+    		<title>Building from the Command Line</title>
+    		<para>
+    			Java 1.5 (or greater) and Ant 1.6 (or greater) are prerequisites for running the build. Ensure
+    			those are present in the system path or are passed on the command line. Open a prompt, cd to the
+    			directory where Spring Web Flow was unzipped and run the following:
+    			<programlisting>
+cd projects/spring-webflow/build-spring-webflow
+ant dist
+				</programlisting>
+				This builds all samples preparing "target" areas within each sample project subdirectory
+				containing webapp structures in both exploded and WAR archive forms. The build provides targets
+				for deploying to Tomcat. However these webapp structures can be copied to any servlet container.
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Deploying to Tomcat</title>
+    		<para>
+    			In order to use the Ant Tomcat tasks cd to the projects/spring-webflow/build-spring-webflow
+    			subdirectory (relative to where Spring Web Flow was unzipped) and add the following property
+    			to the build.properties file (create it if it doesn't exist):
+    			<programlisting>
+tomcat.dir=c:/tomcat
+				</programlisting>
+				where c:/tomcat is the location of the Tomcat installation to deploy to. When this is done run
+				"ant tomcat-copy-war" from the same directory to copy all sample applications.		
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Importing Projects into Eclipse</title>
+    		<para>
+    			Importing the sample projects into Eclipse is easy. With a new or an existing workspace select:
+    			File &gt; Import &gt; Existing Projects into Workspace. In the resulting dialog browse to the project
+    			subdirectory where Spring Web Flow was unzipped and choose it as the root directory to import form.
+    			Press OK. Here Eclipse will list all projects it found including the samples projects. Press Finish and
+    			allow the build to complete.
+    		</para>
+    		<para>
+    			If you previously did a build from the command line Eclipse will compile with no errors. If not
+    			you will need to run the ant build once for these errors to clear and you can do that within
+    			Eclipse. Expand the build-spring-webflow project in Eclipse, right-click build.xml and select:
+    			Run As &gt; Ant Build. This will run the default Ant target and will build all sample projects.
+    			When this is done all errors in the Eclipse problems view should go away. Next you can run the
+    			"tomcat-copy-war" Ant task if you didn't alread do so (see the previous section).
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Other IDE's</title>
+    		<para>
+    			Importing samples into other IDE's should be fairly straight-forward. If using another IDE
+    			running the Ant build from the command line first may help as it will populate the lib
+    			subdirectories of each sample project. Follow steps similar as those outlined for Eclipse above.
+    		</para>
+    	</sect2>
+    </sect1>
+    <sect1 id="fileupload-sample">
+    	<title>Fileupload Example</title>
+    	<sect2>
+    		<title>Overview</title>
+    		<para>
+    			Fileupload is a simple one page web application for uploading files to a server. It is based
+    			on Spring MVC, uses a Web Flow controller and one web flow with two states: a view state for
+    			displaying the initial JSP page and an action state for processing the submit.	
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Web.xml</title>
+    		<para>
+    			The web.xml configuration maps requests for "*.htm" to the fileupload servlet - a regular
+    			Spring MVC DispatcherServlet:
+    			<programlisting>
+&lt;servlet&gt;
+	&lt;servlet-name&gt;fileupload&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+	 
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;fileupload&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+				</programlisting>
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Spring MVC Context</title>
+    		<para>
+    			The Spring MVC servlet context for the fileupload servlet (WEB-INF/fileupload-servlet.xml) defines
+    			one controller bean:
+    			<programlisting>
+&lt;bean name="/admin.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+	&lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+&lt;/bean&gt;
+				</programlisting>
+				FlowController is a Web Flow controller. It is the main point of integration between Spring MVC
+				and Spring Web Flow routing requests to one or more managed web flow executions. The
+				FlowController is injected with flowExecutor and flowRegistry beans containing one web flow
+				definition:
+				<programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="singlekey"/&gt;
+	
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+	&lt;flow:location path="/WEB-INF/fileupload.xml" /&gt;
+&lt;/flow:registry&gt;
+				</programlisting>
+				Given the above definitions the following URI can be used to invoke the "fileupload" flow:
+				<programlisting>
+/swf-fileupload/admin.htm?_flowId=fileupload
+				</programlisting>
+    		</para>
+    		<para>
+    			Both flowExecutor and flowRegistry beans are defined with Spring custom tags schema available in
+    			Spring 2.0. The custom tags make configuration less verbose and more readable. Regular Spring
+    			bean definitions can be used as well with earlier versions of Spring.
+    		</para>
+    		<para>
+				The Spring MVC context also defines a view resolver bean for resolving logical view names and a
+				multipartResolver bean for the upload component. In general Web Flow does not aim to replace the
+				flexibility of Spring MVC for view resolution. It focuses on the C in MVC.
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Fileupload Web Flow</title>
+    		<para>
+    			The start state for the fileupload flow (WEB-INF/fileupload.xml) is a view state:
+    			<programlisting>
+&lt;start-state idref="selectFile"/&gt;
+
+&lt;view-state id="selectFile" view="fileForm"&gt;
+	&lt;transition on="submit" to="uploadFile"/&gt;
+&lt;/view-state&gt;
+				</programlisting>
+				View states allow a user to participate in a flow by presenting a suitable interface.
+				The view attribute "fileForm" is a logical view name, which the Spring MVC view resolver bean
+				will resolve to /WEB-INF/jsp/fileForm.jsp.
+			</para>
+			<para>
+				The fileForm.jsp has an html form that submits back to the same controller
+				(/swf-fileupload/admin.htm) and passes a "_flowExecutionKey" parameter.
+				The value for _flowExecutionKey is provided by the FlowController - it identifies the current
+				instance of the flow and allows Web Flow to resume flow execution, which is paused each time a
+				view is displayed.
+    		</para>
+    		<para>
+    			The name of the form submit button "_eventId_submit" indicates the event id to use for deciding
+    			where to transition to next. Given an event with id of "submit" the "selectFile" view transitions
+    			to the "uploadFile" state:
+    			<programlisting>
+&lt;action-state id="uploadFile"&gt;
+	&lt;action bean="uploadAction" method="uploadFile"/&gt;
+	&lt;transition on="success" to="selectFile"&gt;
+		&lt;set attribute="fileUploaded" scope="flash" value="true"/&gt;
+	&lt;/transition&gt;
+	&lt;transition on="error" to="selectFile"/&gt;
+&lt;/action-state&gt;
+				</programlisting>
+    		</para>
+    		<para>
+    			The "uploadFile" state is an action state. Action states integrate with business application code and
+    			respond to the execution of that code by deciding what state of the flow to enter next. The code for the
+    			uploadFile state is in the "uploadAction" bean declared in the Spring web context (/WEB-INF/fileupload-servlet.xml):
+    			<programlisting>
+&lt;bean id="uploadAction" class="org.springframework.webflow.samples.fileupload.FileUploadAction" /&gt;
+				</programlisting>
+				FileUploadAction has simple logic. It picks one of two Web Flow defined events - success or error,
+				depending on whether the uploaded file size is greater than 0 or not. Both success and error
+				transition back to the "selectFile" view state. However, a success event causes an attribute named
+				"fileUploaded" to be set in flash scope
+    		</para>
+    		<para>
+    			A flash-scoped attribute called "file" is also set programmatically in the FileUploadAction bean:
+    			<programlisting>
+context.getFlashScope().put("file", new String(file.getBytes()));
+return success();
+				</programlisting>
+				This illustrates the choice to save attributes in one of several scopes either programatically or
+				declaratively. 
+    		</para>
+    	</sect2>
+    </sect1>
+    <sect1 id="birthdate-sample">
+    	<title>Birthdate Example</title>
+    	<sect2>
+    		<title>Overview</title>
+    		<para>
+    			Birthdate is a web application with 3 consequitive screens. The first two collect user input
+    			to populate a form object. The third presents the results of business calculations based on
+    			input provided in the first two screens.
+    		</para>
+    		<para>
+    			Birthdate demonstrates Spring Web Flow's Struts integration as well as the use of FormAction,
+    			a multi-action used to do the processing required for all three screens. The sample also uses JSTL
+    			taglibs in conjunction with flows.
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Web.xml</title>
+    		<para>
+    			The web.xml configuration maps requests for "*.do" to a regular Struts ActionServlet:
+    			<programlisting>
+&lt;servlet&gt;
+	&lt;servlet-name&gt;action&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;org.apache.struts.action.ActionServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+	 
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;action&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;*.do&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+				</programlisting>
+				The web.xml also sets up the loading of a Spring context at web application startup:
+				<programlisting>
+&lt;context-param&gt;
+	&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+	&lt;param-value&gt;
+		/WEB-INF/webflow-config.xml
+	&lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;listener&gt;
+	&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+				</programlisting>
+				The Spring web context contains beans to set up the Web Flow runtime environment. As will be
+				shown in the next section Struts is configured with a Web Flow action that relies on the
+				presence of a flowExecutor and a flowRegistry beans in this context.
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Struts Configuration</title>
+    		<para>
+    			The Struts configuration (WEB-INF/struts-config.xml) defines the following action mapping:
+    			<programlisting>
+&lt;action-mappings&gt;
+	&lt;action path="/flowAction" name="actionForm" scope="request"
+		type="org.springframework.webflow.executor.struts.FlowAction"/&gt;
+&lt;/action-mappings&gt;
+				</programlisting>
+				FlowAction is a Struts action acting as a front controller to the Web Flow system routing Struts
+				requests to one or more managed web flow executions. To fully configure the FlowAction a Spring
+				web context is required to define flowExecutor and flowRegistry beans (named exactly so). This is
+				an excerpt from the Spring web context (/WEB-INF/webflow-config.xml) defining these beans:
+				<programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions. --&gt;	
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"/&gt;
+	
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+	&lt;flow:location path="/WEB-INF/birthdate.xml"/&gt;
+	&lt;flow:location path="/WEB-INF/birthdate-alternate.xml"/&gt;
+&lt;/flow:registry&gt;
+				</programlisting>
+    		</para>
+    		<para>
+    			Based on the above, Web Flow is configured with two flows - birthdate and birthdate-alternate,
+    			which can be invoked as follows:
+    			<programlisting>
+/swf-birthdate/flowAction.do?_flowId=birthdate
+/swf-birthdate/flowAction.do?_flowId=birthdate-alternate
+				</programlisting>
+				The Struts configuration file also defines several global forwards: birthdateForm, cardForm,
+				and yourAge, which will be referenced from Web Flow definitions as logical view names
+				(and left to Struts to resolve to actual JSP pages). In general Web Flow does not aim to replace
+				view resolution capabilities of web frameworks such as Struts or Spring MVC.
+				It focuses on the C in MVC.
+    		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Birthdate Web Flow</title>
+    		<para>
+    			The birthdate web flow (WEB-INF/birthdate.xml) defines the following start state:
+    			<programlisting>
+&lt;view-state id="enterBirthdate" view="birthdateForm"&gt;
+	&lt;render-actions&gt;
+		&lt;action bean="formAction" method="setupForm" /&gt;
+	&lt;/render-actions&gt;
+	&lt;transition on="submit" to="processBirthdateFormSubmit" /&gt;
+&lt;/view-state&gt;
+				</programlisting>
+				The setupForm action is called to perform initializations for the enterBirthdate view state.
+				Its action bean is defined the Spring web context WEB-INF/webflow-config.xml:
+				<programlisting>
+&lt;bean id="formAction" class="org.springframework.webflow.samples.birthdate.BirthDateFormAction" /&gt;
+				</programlisting>
+				BirthDateFormAction is a FormAction - it extends Web Flow's FormAction class, which serves a
+				purpose similar to that of Spring MVC's SimpleFormController providing common form functionality
+				for data binding and validation. 
+    		</para>
+    		<para>
+    			When the BirthDateFormAction bean is instantiated it sets the name, class and scope of the form
+    			object to use for loading form data upon display and collecting form data upon submit:
+    			<programlisting>
+public BirthDateFormAction() {
+	// tell the superclass about the form object and validator we want to
+	// use you could also do this in the application context XML ofcourse
+	setFormObjectName("birthDate");
+	setFormObjectClass(BirthDate.class);
+	setFormObjectScope(ScopeType.FLOW);
+	setValidator(new BirthDateValidator());
+}
+				</programlisting>
+				The form object "birthDate" is placed in flow scope, which means it will not be re-created with
+				each request but will be obtained from flow scope instead as long as the request remains within
+				the same flow.
+    		</para>
+    		<para>
+    			Once setupForm is done, the "birthdateForm" view will be rendered.
+				The logical view name "birthdateForm" is a global-forward in struts-config.xml resolving to
+				/WEB-INF/jsp/birthdateForm.jsp. This JSP collects data for the fields "name" and "date" bound to
+				the birthDate form object and posts back to FlowAction with a submit image named
+				"_eventId_submit". An event with the id of "submit" causes a transition to the
+				processBirthdateFormSubmit action state defined as follows: 
+				<programlisting>
+&lt;action-state id="processBirthdateFormSubmit"&gt;
+	&lt;action bean="formAction" method="bindAndValidate"&gt;
+		&lt;attribute name="validatorMethod" value="validateBirthdateForm" /&gt;
+	&lt;/action&gt;
+	&lt;transition on="success" to="enterCardInformation" /&gt;
+	&lt;transition on="error" to="enterBirthdate" /&gt;
+&lt;/action-state&gt;
+				</programlisting>
+				The processBirthDateFormSubmit action state uses the same formAction bean as the one already used
+				to setup the form. This time its bindAndValidate
+				method is used to populate and validate the html form values. Also, note the "validateMethod"
+				attribute used to specify the name of the method to invoke on the Validator object setup in the
+				constructor of the BirthDateFormAction. The use of this attribute allows partial validation of
+				complex objects populated over several consecutive screens.
+    		</para>
+    		<para>
+    			On error the action returns to the view state it came from. On success it transitions to the
+    			enterCardInformation view state:
+    			<programlisting>
+&lt;view-state id="enterCardInformation" view="cardForm"&gt;
+	&lt;transition on="submit" to="processCardFormSubmit" /&gt;
+&lt;/view-state&gt;
+				</programlisting>
+				The logical view name "cardForm" is a global-forward in struts-config.xml resolving to
+				/WEB-INF/jsp/cardForm.jsp. This JSP collects data for the remaining fields of the birthDate form
+				object - "sendCard" and "emailAddress", and posts back to FlowAction with a submit image named
+				"_eventId_submit". An event with the id of "submit" causes a transition to the
+				processCardFormSubmit action state defined as follows:
+				<programlisting>
+&lt;action-state id="processCardFormSubmit"&gt;
+	&lt;action bean="formAction" method="bindAndValidate"&gt;
+		&lt;attribute name="validatorMethod" value="validateCardForm" /&gt;
+	&lt;/action&gt;
+	&lt;transition on="success" to="calculateAge" /&gt;
+	&lt;transition on="error" to="enterCardInformation" /&gt;
+&lt;/action-state&gt;
+				</programlisting>
+				For this action state the bindAndValidate method of the formAction bean is used to populate and
+				validate the remaining html form values. The "validateMethod" attribute specifies the name of the
+				method to invoke on the Validator object specific to the fields loaded on the current screen.
+    		</para>
+    		<para>
+    			On error the action returns to the view state it came from. On success it transitions to another
+    			action state called calculateAge:
+    			<programlisting>
+&lt;action-state id="calculateAge"&gt;
+	&lt;action bean="formAction" method="calculateAge" /&gt;
+	&lt;transition on="success" to="displayAge" /&gt;
+&lt;/action-state&gt;
+				</programlisting>
+				The logic for the calculateAge action state is in the calculateAge method of the same formAction
+				bean used for data binding and validation. This demonstrates the flexibility Web Flow allows in
+				properly structuring control and business logic according to function.
+	 		</para>
+	 		<para>
+	 			The caculateAge method performs business calculations and adds a string in request scope with the
+	 			calculated age. Upon successful completion the calculateAge action state transitions to the end
+	 			view state:
+	 			<programlisting>
+&lt;end-state id="displayAge" view="yourAge" /&gt;
+				</programlisting>
+				Once again the logical view name "yourAge" is a global-forward in struts-config.xml resolving to
+				/WEB-INF/jsp/yourAge.jsp. This JSP page retrieves the calculated age from request scope and
+				displays the results for the user.
+	 		</para>
+	 		<para>
+	 			The transition to the end state indicates the end of the web flow. The flow execution is cleaned up.
+	 			If the web flow is entered again a new flow execution will start, creating a new form
+	 			object named "birthDate" and placing it in flow scope.
+	 		</para>
+    	</sect2>
+    	<sect2>
+    		<title>Birthdate-alternate Web Flow</title>
+    		<para>
+    			The birthdate-alternate web flow (/WEB-INF/birthdate-alternate.xml) offers an alternative way and
+    			more compact way of defining the same web flow. For example the birthdate web flow defines two
+    			independent states for the first screen - a view state (enterBirthdate) and an action state
+    			(processBirthdateFormSubmit). In birthdate-alternate those are encapsulated in the view state
+    			enterBirthdate as follows:
+    			<programlisting>
+&lt;view-state id="enterBirthdate" view="birthdateForm"&gt;
+	&lt;render-actions&gt;
+		&lt;action bean="formAction" method="setupForm" /&gt;
+	&lt;/render-actions&gt;
+	&lt;transition on="submit" to="enterCardInformation"&gt;
+		&lt;action bean="formAction" method="bindAndValidate"&gt;
+			&lt;attribute name="validatorMethod" value="validateBirthdateForm" /&gt;
+		&lt;/action&gt;
+	&lt;/transition&gt;
+&lt;/view-state&gt;
+				</programlisting>
+				Here the setupForm action state is defined as a render-action of the enterBirthdate view state
+				while the transition to the next screen uses a nested action bean invoked before the transition
+				occurs. Notice that success is implicitly required for the transition to occur. Similarly on error
+				the transition does not occur and the same view state is displayed again.
+    		</para>
+    		<para>
+    			The second screen is also defined with a nested transition and action bean:
+    			<programlisting>
+&lt;view-state id="enterCardInformation" view="cardForm"&gt;
+	&lt;transition on="submit" to="calculateAge"&gt;
+		&lt;action bean="formAction" method="bindAndValidate"&gt;
+			&lt;attribute name="validatorMethod" value="validateCardForm" /&gt;
+		&lt;/action&gt;
+	&lt;/transition&gt;
+&lt;/view-state&gt;
+				</programlisting>
+				The remaining two states - calculateAge and displayAge are identical.
+    		</para>
+    	</sect2>
     </sect1>
 </chapter>
