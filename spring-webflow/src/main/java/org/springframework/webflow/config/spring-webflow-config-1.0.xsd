@@ -164,7 +164,7 @@ of the browser back button.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The simple repository type.  Use of this strategy incurs minimal storage overhead but explicity prevents 
+The simple repository type.  Use of this strategy incurs minimal storage overhead but explicitly prevents 
 resubmits using the browser back button.
 ]]>
 					</xsd:documentation>
@@ -198,7 +198,7 @@ constant throughout the life of the execution.
 			<xsd:annotation>
 				<xsd:documentation>
 					<![CDATA[
-The type of execution repository to use.  The repository is responsible for managing flow execution 
+The type of flow execution repository to use.  The repository is responsible for managing flow execution 
 persistence between requests.
 ]]>
 				</xsd:documentation>
@@ -208,8 +208,8 @@ persistence between requests.
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The maximum number of conversations to preserve in a repository.  It is illegal to populate this
-attribute if you are also populating conversation-manager-ref.
+The maximum number of concurrent conversations allowed by this repository.  It is illegal to set this
+attribute if you are also setting the 'conversation-manager-ref' attribute.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
@@ -218,8 +218,8 @@ attribute if you are also populating conversation-manager-ref.
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The maximum number of continuations to preserve in a repository.  This attribute is only useful
-when the repository is of type 'continuation'.
+The maximum number of flow execution continuations (snapshots) allowed by this repository per conversation.
+This attribute is only relevant when the repository type is 'continuation'.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
@@ -228,8 +228,9 @@ when the repository is of type 'continuation'.
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The idref to the conversation manager used by this registry to persist conversations.  Populating
-this attribute implies that you should not populate max-conversations.
+The idref of the conversation manager this repository should use.  Setting this attribute 
+allows full control over the conversation manager implementation and configuration.
+When used, any value for the 'max-conversations' attribute is ignored.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
