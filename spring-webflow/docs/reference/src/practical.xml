@@ -49,7 +49,7 @@
     	</para>
     </sect1>
     <sect1 id="running-samples">
-    	<title>Running the Samples</title>
+    	<title>Running the Web Flow sample applications</title>
     	<para>
     		The samples can be built from the command line and imported as Eclipse projects - all samples come
     		with Eclipse project settings. It is also possible to start by importing the samples into Eclipse
@@ -58,49 +58,73 @@
     	<sect2>
     		<title>Building from the Command Line</title>
     		<para>
-    			Java 1.5 (or greater) and Ant 1.6 (or greater) are prerequisites for running the build. Ensure
-    			those are present in the system path or are passed on the command line. Open a prompt, cd to the
-    			directory where Spring Web Flow was unzipped and run the following:
+    			Java 1.5 (or greater) and Ant 1.6 (or greater) are prerequisites for building the sample applications.
+    			Ensure those are present in the system path or are passed on the command line. To build Web Flow 
+    			samples from the command line, open a prompt, cd to the directory where Spring Web Flow was
+    			unzipped and run the following:
     			<programlisting>
 cd projects/spring-webflow/build-spring-webflow
 ant dist
 				</programlisting>
 				This builds all samples preparing "target" areas within each sample project subdirectory
-				containing webapp structures in both exploded and WAR archive forms. The build provides targets
-				for deploying to Tomcat. However these webapp structures can be copied to any servlet container.
-    		</para>
-    	</sect2>
-    	<sect2>
-    		<title>Deploying to Tomcat</title>
-    		<para>
-    			In order to use the Ant Tomcat tasks cd to the projects/spring-webflow/build-spring-webflow
-    			subdirectory (relative to where Spring Web Flow was unzipped) and add the following property
-    			to the build.properties file (create it if it doesn't exist):
-    			<programlisting>
-tomcat.dir=c:/tomcat
-				</programlisting>
-				where c:/tomcat is the location of the Tomcat installation to deploy to. When this is done run
-				"ant tomcat-copy-war" from the same directory to copy all sample applications.		
+				containing webapp structures in both exploded and WAR archive forms. The build also provides basic helper targets
+				for deploying to Tomcat from Ant; however these webapp structures can be copied to any servlet container,
+				and each project is also a Eclipse Dynamic Web Project (DWP) for easy deployment inside Eclipse 
+				with the Eclipse Webtools project (WTP).
     		</para>
     	</sect2>
     	<sect2>
     		<title>Importing Projects into Eclipse</title>
     		<para>
     			Importing the sample projects into Eclipse is easy. With a new or an existing workspace select:
-    			File &gt; Import &gt; Existing Projects into Workspace. In the resulting dialog browse to the project
+    			<emphasis>File &gt; Import &gt; Existing Projects into Workspace</emphasis>. In the resulting dialog browse to the project
     			subdirectory where Spring Web Flow was unzipped and choose it as the root directory to import form.
-    			Press OK. Here Eclipse will list all projects it found including the samples projects. Press Finish and
-    			allow the build to complete.
+    			Select OK. Here Eclipse will list all projects it found including the sample application projects.
+    			Select the projects you're interested in, and select Finish.
     		</para>
     		<para>
-    			If you previously did a build from the command line Eclipse will compile with no errors. If not
-    			you will need to run the ant build once for these errors to clear and you can do that within
-    			Eclipse. Expand the build-spring-webflow project in Eclipse, right-click build.xml and select:
-    			Run As &gt; Ant Build. This will run the default Ant target and will build all sample projects.
-    			When this is done all errors in the Eclipse problems view should go away. Next you can run the
-    			"tomcat-copy-war" Ant task if you didn't alread do so (see the previous section).
+    			If you previously built each project from the command line Eclipse will compile with no errors.
+    			If not you will need to run the Ant build <emphasis>once</emphasis> for these errors to clear
+    			and you can do that within Eclipse.
+    		</para>
+    		<para>
+    			To build all projects inside Eclipse, import and expand the <literal>build-spring-webflow</literal> project, right-click on 
+    			<literal>build.xml</literal> and select <emphasis>Run As &gt; Ant Build</emphasis>.
+    			Doing this will run the default Ant target and will build all sample projects.
+    		</para>
+    		<para>
+    			To build a single project inside Eclipse, simply select the project, right-click, and
+    			select <emphasis>Run As &gt; Ant Build</emphasis>.  You can also use the convenient
+    			shortcut ALT + SHIFT + X (Execute menu), then Q (Run Ant Build).
+    		</para>
+    		<para>
+    			After ant runs and the libraries needed to compile each project are downloaded,
+    			all errors in the Eclipse problems view should go away. Try refreshing a project (F5)
+    			if you still have errors.  In general, from this point on you no longer need Ant: you 
+    			can rely on Eclipse's incremental compile and Eclipse's 	web tools (WTP) built-in JEE support
+    			for deployment. (Ant is only needed in the system for command-line usage or when the list of
+    			jar dependencies for a project changes and new jars need to be downloaded).
     		</para>
     	</sect2>
+    	<sect2>
+    		<title>Deploying projects inside Eclipse using Eclipse Web Tools (WTP)</title>
+    		<para>
+    			Each Spring Web Flow sample application project is a Eclipse Dynamic Web Project (DWP), 
+    			for easy deployment to a server running inside the Eclipse IDE.  To take advantage 
+    			of this, you must be running Eclipse 3.2 with Web Tools 1.5.
+	    	</para>
+	    	<para>
+	    		To run a sample application as a webapp inside Eclipse, simply select the project, 
+	    		right-click, and select <emphasis>Run -> Run On Server</emphasis>.  A convenient 
+	    		shortcut for this action is ALT + SHIFT + X (Execute menu), R (Run on Server).
+	    		The first time you do this you will be asked to setup a Server, where you are 
+	    		expected to point Eclipse to a location where you have a Servlet Container
+	    		such as Apache Tomcat installed.  Once your container has been setup and you finish the 
+	    		deployment wizard, Eclipse will start the container and automatically publish 
+	    		your webapp to it.  In addition, it will launch a embedded web browser allowing you
+	    		to run the webapp fully inside the IDE.
+	    	</para>
+	    </sect2>
     	<sect2>
     		<title>Other IDE's</title>
     		<para>
