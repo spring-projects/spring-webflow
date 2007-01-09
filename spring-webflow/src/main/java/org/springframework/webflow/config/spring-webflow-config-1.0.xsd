@@ -5,7 +5,7 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	targetNamespace="http://www.springframework.org/schema/webflow-config"
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="1.0">
+	version="1.0.1">
 	
 	<xsd:annotation>
 		<xsd:documentation>
