@@ -4,7 +4,7 @@
   <groupId>org.springframework</groupId>
   <artifactId>spring-binding</artifactId>
   <name>Spring Binding</name>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <description>Spring Data Binding Framework</description>
   <url>http://www.springframework.org</url>
   <licenses>

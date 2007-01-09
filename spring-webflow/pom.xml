@@ -5,7 +5,7 @@
   <artifactId>spring-webflow</artifactId>
   <packaging>jar</packaging>
   <name>Spring Web Flow</name>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <description>Spring Web Flow</description>
   <url>http://www.springframework.org</url>
   <licenses>
