@@ -16,9 +16,9 @@
     <dependency org="jstl" name="jstl" rev="1.1.2"/>
 	<dependency org="aopalliance" name="aopalliance" rev="1.0" />
     <dependency org="org.springframework" name="spring-webflow" rev="latest.integration"/>
-    <dependency org="org.springframework" name="spring-aop" rev="2.0"/>
-    <dependency org="org.springframework" name="spring-dao" rev="2.0"/>
-    <dependency org="org.springframework" name="spring-jdbc" rev="2.0"/>
+    <dependency org="org.springframework" name="spring-aop" rev="2.0.2"/>
+    <dependency org="org.springframework" name="spring-dao" rev="2.0.2"/>
+    <dependency org="org.springframework" name="spring-jdbc" rev="2.0.2"/>
 	<dependency org="hsqldb" name="hsqldb" rev="1.8.0.7"/>
 
 	<!-- build-time only dependencies -->
@@ -27,7 +27,7 @@
 	<!-- test-time only dependencies -->
     <dependency org="junit" name="junit" rev="3.8.1" conf="test->default" />
     <dependency	org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
-    <dependency org="org.springframework" name="spring-mock" rev="2.0" conf="test->default"/>
+    <dependency org="org.springframework" name="spring-mock" rev="2.0.2" conf="test->default"/>
   </dependencies>
   
 </ivy-module>
