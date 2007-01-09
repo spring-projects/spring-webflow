@@ -51,6 +51,7 @@ Package org.springframework.webflow.engine
   converters (SWF-220).
 * Added setFlowAttributes method to XmlFlowRegistryFactoryBean to make it easier to configure
   externally defined flow definition attributes (SWF-200).
+* Added setXmlFlowRegistrar method to XmlFlowRegistryFactoryBean.
 
 Package org.springframework.webflow.execution.factory
 * The getHolder method on ConditionalFlowExecutionListenerLoader is now private. It has a package

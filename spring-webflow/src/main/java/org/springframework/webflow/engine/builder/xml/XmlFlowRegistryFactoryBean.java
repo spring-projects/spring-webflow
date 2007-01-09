@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
@@ -85,8 +86,16 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	/**
 	 * Returns the configured externalized XML flow registrar.
 	 */
-	protected XmlFlowRegistrar getXmlFlowRegistrar() {
+	public XmlFlowRegistrar getXmlFlowRegistrar() {
 		return flowRegistrar;
+	}
+	
+	/**
+	 * Set the configured externalized XML flow registrar.
+	 */
+	public void setXmlFlowRegistrar(XmlFlowRegistrar flowRegistrar) {
+		Assert.notNull(flowRegistrar, "The flowRegistrar is required");
+		this.flowRegistrar = flowRegistrar;
 	}
 
 	/**
@@ -180,7 +189,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 
 	protected void init(FlowServiceLocator flowServiceLocator) {
 		// simply wire in the locator to the registrar 
-		flowRegistrar.setFlowServiceLocator(flowServiceLocator);
+		getXmlFlowRegistrar().setFlowServiceLocator(flowServiceLocator);
 	}
 
 	protected void doPopulate(FlowDefinitionRegistry registry) {
