@@ -70,7 +70,7 @@ ant dist
 				containing webapp structures in both exploded and WAR archive forms. The build also provides basic helper targets
 				for deploying to Tomcat from Ant; however these webapp structures can be copied to any servlet container,
 				and each project is also a Eclipse Dynamic Web Project (DWP) for easy deployment inside Eclipse 
-				with the Eclipse Webtools project (WTP).
+				with the Eclipse Webtools Project (WTP).
     		</para>
     	</sect2>
     	<sect2>
@@ -78,7 +78,7 @@ ant dist
     		<para>
     			Importing the sample projects into Eclipse is easy. With a new or an existing workspace select:
     			<emphasis>File &gt; Import &gt; Existing Projects into Workspace</emphasis>. In the resulting dialog browse to the project
-    			subdirectory where Spring Web Flow was unzipped and choose it as the root directory to import form.
+    			subdirectory where Spring Web Flow was unzipped and choose it as the root directory to import from.
     			Select OK. Here Eclipse will list all projects it found including the sample application projects.
     			Select the projects you're interested in, and select Finish.
     		</para>
@@ -98,7 +98,7 @@ ant dist
     			shortcut ALT + SHIFT + X (Execute menu), then Q (Run Ant Build).
     		</para>
     		<para>
-    			After ant runs and the libraries needed to compile each project are downloaded,
+    			After Ant runs and the libraries needed to compile each project are downloaded,
     			all errors in the Eclipse problems view should go away. Try refreshing a project (F5)
     			if you still have errors.  In general, from this point on you no longer need Ant: you 
     			can rely on Eclipse's incremental compile and Eclipse's 	web tools (WTP) built-in JEE support
