@@ -13,9 +13,9 @@
 		<!-- global dependencies -->
 		<dependency org="commons-logging" name="commons-logging" rev="1.0.4"/>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
-		<dependency org="org.springframework" name="spring-beans" rev="2.0" />
-		<dependency org="org.springframework" name="spring-context"	rev="2.0" />
-		<dependency org="org.springframework" name="spring-core" rev="2.0" />
+		<dependency org="org.springframework" name="spring-beans" rev="2.0.2" />
+		<dependency org="org.springframework" name="spring-context"	rev="2.0.2" />
+		<dependency org="org.springframework" name="spring-core" rev="2.0.2" />
 
 		<!-- test dependencies -->
 		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
