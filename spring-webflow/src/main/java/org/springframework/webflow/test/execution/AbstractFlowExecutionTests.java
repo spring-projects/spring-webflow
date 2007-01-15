@@ -545,7 +545,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 
 	/**
 	 * Factory method to create the flow execution factory. Subclasses
-	 * could override this if they want to use a custom flow execution factory.
+	 * could override this if they want to use a custom flow execution factory
+	 * or custom configuration of the flow execution factory, registering
+	 * flow execution listeners for instance.
 	 * The default implementation just returns a {@link FlowExecutionImplFactory}
 	 * instance.
 	 * @return the flow execution factory
