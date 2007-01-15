@@ -21,6 +21,7 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.Flow;
@@ -30,6 +31,7 @@ import org.springframework.webflow.execution.factory.ConditionalFlowExecutionLis
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 import org.springframework.webflow.execution.repository.continuation.ClientContinuationFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.continuation.ContinuationFlowExecutionRepository;
+import org.springframework.webflow.execution.repository.support.AbstractConversationFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.SimpleFlowExecutionRepository;
 import org.springframework.webflow.executor.FlowExecutorImpl;
 
@@ -73,7 +75,7 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		assertEquals(1, attribs.size()); // defaults have been applied
 		assertEquals(new Boolean(true), attribs.get(ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE));
 	}
-	
+
 	public void testSimpleExecutor() {
 		FlowExecutorImpl flowExecutor = (FlowExecutorImpl)this.beanFactory.getBean("simpleExecutor");
 		assertSame(this.beanFactory.getBean("withPathWithWildcards"), flowExecutor.getDefinitionLocator());
@@ -87,7 +89,7 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		assertSame(StaticFlowExecutionListenerLoader.EMPTY_INSTANCE,
 				((FlowExecutionImplFactory)flowExecutor.getExecutionFactory()).getExecutionListenerLoader());
 	}
-	
+
 	public void testContinuationExecutor() {
 		FlowExecutorImpl flowExecutor = (FlowExecutorImpl)this.beanFactory.getBean("continuationExecutor");
 		assertSame(this.beanFactory.getBean("withPathWithWildcards"), flowExecutor.getDefinitionLocator());
@@ -99,8 +101,8 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 				((FlowExecutionImplFactory)flowExecutor.getExecutionFactory()).getExecutionListenerLoader();
 		assertEquals(1, ll.getListeners(new Flow("test")).length);
 		assertSame(this.beanFactory.getBean("listener1"), ll.getListeners(new Flow("test"))[0]);
- 	}
-	
+	}
+
 	public void testClientExecutor() {
 		FlowExecutorImpl flowExecutor = (FlowExecutorImpl)this.beanFactory.getBean("clientExecutor");
 		assertSame(this.beanFactory.getBean("withPathWithWildcards"), flowExecutor.getDefinitionLocator());
@@ -117,8 +119,8 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		assertSame(this.beanFactory.getBean("listener2"), ll.getListeners(new Flow("flow2"))[0]);
 		assertEquals(1, ll.getListeners(new Flow("flow3")).length);
 		assertSame(this.beanFactory.getBean("listener2"), ll.getListeners(new Flow("flow3"))[0]);
- 	}
-	
+	}
+
 	public void testSingleKeyExecutor() {
 		FlowExecutorImpl flowExecutor = (FlowExecutorImpl)this.beanFactory.getBean("singleKeyExecutor");
 		assertSame(this.beanFactory.getBean("withPathWithWildcards"), flowExecutor.getDefinitionLocator());
@@ -130,32 +132,66 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		assertSame(StaticFlowExecutionListenerLoader.EMPTY_INSTANCE,
 				((FlowExecutionImplFactory)flowExecutor.getExecutionFactory()).getExecutionListenerLoader());
 	}
-	
+
 	public void testDuplicateRepositoryType() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {		
+		try {
 			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-1.xml"));
 			fail("Should have thrown an BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {}
+		} catch (BeanDefinitionStoreException e) {
+			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
+		}
 	}
-	
+
 	public void testConversationManagerRef() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {		
+		try {
 			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-2.xml"));
 			fail("Should have thrown a BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {}
+		} catch (BeanDefinitionStoreException e) {
+			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
+		}
 	}
-	
+
 	public void testMaxContinuation() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {		
+		try {
 			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-3.xml"));
 			fail("Should have thrown a BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {}
+		} catch (BeanDefinitionStoreException e) {
+			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
+		}
+	}
+
+	public void testContinuationExtended() {
+		FlowExecutorImpl flowExecutor = (FlowExecutorImpl) this.beanFactory.getBean("continuationExtended");
+		assertTrue("Repository type should be ContinuationFlowExecutionRepository", flowExecutor.getExecutionRepository() instanceof ContinuationFlowExecutionRepository);
+	}
+
+	public void testClientExtended() {
+		FlowExecutorImpl flowExecutor = (FlowExecutorImpl) this.beanFactory.getBean("clientExtended");
+		assertTrue("Repository type should be ClientContinuationFlowExecutionRepository", flowExecutor.getExecutionRepository() instanceof ClientContinuationFlowExecutionRepository);
+	}
+
+	public void testSimpleExtended() {
+		FlowExecutorImpl flowExecutor = (FlowExecutorImpl) this.beanFactory.getBean("simpleExtended");
+		assertTrue("Repository type should be SimpleFlowExecutionRepository", flowExecutor.getExecutionRepository() instanceof SimpleFlowExecutionRepository);
+	}
+
+	public void testSinglekeyExtended() {
+		FlowExecutorImpl flowExecutor = (FlowExecutorImpl) this.beanFactory.getBean("singlekeyExtended");
+		assertTrue("Repository type should be SimpleFlowExecutionRepository", flowExecutor.getExecutionRepository() instanceof SimpleFlowExecutionRepository);
+	}
+
+	public void testConversationManagerExtended() {
+		FlowExecutorImpl flowExecutor = (FlowExecutorImpl) this.beanFactory.getBean("conversationManagerExtended");
+		assertTrue("Repository type should be SimpleFlowExecutionRepository", flowExecutor.getExecutionRepository() instanceof SimpleFlowExecutionRepository);
+		AbstractConversationFlowExecutionRepository repository = (AbstractConversationFlowExecutionRepository) flowExecutor.getExecutionRepository();
+		ConversationManager conversationManager = (ConversationManager) this.beanFactory.getBean("conversationManager");
+		assertSame("The conversation manager in the repository should be the one explicitly wired", conversationManager, repository.getConversationManager());
 	}
 
 }

@@ -47,6 +47,32 @@
 	</flow:executor>
 	
 	<flow:executor id="singleKeyExecutor" registry-ref="withPathWithWildcards" repository-type="singlekey"/>
+	
+	<flow:executor id="continuationExtended" registry-ref="withPathWithWildcards">	
+        <flow:repository type="continuation" max-conversations="1" max-continuations="30"/>
+		<flow:execution-attributes>
+           	<flow:alwaysRedirectOnPause value="false"/>
+        </flow:execution-attributes>
+	</flow:executor>
+	
+	<flow:executor id="clientExtended" registry-ref="withPathWithWildcards">
+		<flow:repository type="client" />
+	</flow:executor>
+	
+	<flow:executor id="simpleExtended" registry-ref="withPathWithWildcards">
+		<flow:repository type="simple"/>
+	</flow:executor>
+	
+	<flow:executor id="singlekeyExtended" registry-ref="withPathWithWildcards">
+		<flow:repository type="singlekey" />
+	</flow:executor>
+	
+	<flow:executor id="conversationManagerExtended" registry-ref="withPathWithWildcards">
+		<flow:repository type="simple" conversation-manager-ref="conversationManager"/>
+	</flow:executor>
+	
+	<bean id="conversationManager"
+		class="org.springframework.webflow.conversation.impl.SessionBindingConversationManager"/>
 
 	<bean id="listener1" class="org.springframework.webflow.execution.MockFlowExecutionListener" />
 	<bean id="listener2" class="org.springframework.webflow.execution.MockFlowExecutionListener" />

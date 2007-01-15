@@ -20,7 +20,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.enums.StaticLabeledEnumResolver;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -109,11 +108,9 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * @param definitionBuilder the builder
 	 */
 	private void configureContinuations(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
-		RepositoryType repositoryType = (RepositoryType)StaticLabeledEnumResolver.instance().getLabeledEnumByLabel(
-				RepositoryType.class, getRepositoryType(repositoryElement));
 		String maxContinuations = getMaxContinuations(repositoryElement);
 		if (StringUtils.hasText(maxContinuations)) {
-			if (repositoryType != RepositoryType.CONTINUATION) {
+			if (!getType(repositoryElement).equals("CONTINUATION")) {
 				throw new IllegalArgumentException(
 						"The 'max-continuations' attribute of the 'repository' element must not " +
 						"have a value if the 'type' attribute is not 'continuation'");
