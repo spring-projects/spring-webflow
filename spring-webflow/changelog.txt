@@ -2,6 +2,12 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
+Changes in version ()
+-------------------------------------
+
+Package org.springframework.webflow.action
+* FormAction methods doBind() and createBinder() now declare "throws Exception".
+
 Changes in version 1.0.1 (08.01.2007)
 -------------------------------------
 

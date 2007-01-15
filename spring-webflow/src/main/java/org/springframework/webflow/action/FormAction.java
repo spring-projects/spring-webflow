@@ -700,7 +700,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param context the current flow execution request context
 	 * @param formObject the form object for which errors will be tracked
 	 */
-	private Errors initFormErrors(RequestContext context, Object formObject) {
+	private Errors initFormErrors(RequestContext context, Object formObject) throws Exception {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating new form errors for object with name '" + getFormObjectName() + "'");
 		}
@@ -723,7 +723,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * Make sure a <i>valid</i> Errors instance for given form object is exposed
 	 * in given context.
 	 */
-	private void ensureFormErrorsExposed(RequestContext context, Object formObject) {
+	private void ensureFormErrorsExposed(RequestContext context, Object formObject) throws Exception {
 		if (!formErrorsExposed(context)) {
 			// initialize and expose a fresh errors instance to the flow with
 			// editors applied
@@ -900,11 +900,12 @@ public class FormAction extends MultiAction implements InitializingBean {
      * data in "flow scope" or "request scope"
      * @param formObject the form object to bind onto
      * @return the new binder instance
+     * @throws Exception when an unrecoverable exception occurs
      * @see WebDataBinder
      * @see #initBinder(RequestContext, DataBinder)
      * @see #setMessageCodesResolver(MessageCodesResolver)
      */
-    protected DataBinder createBinder(RequestContext context, Object formObject) {
+    protected DataBinder createBinder(RequestContext context, Object formObject) throws Exception {
         DataBinder binder = new WebDataBinder(formObject, getFormObjectName());
         if (messageCodesResolver != null) {
             binder.setMessageCodesResolver(messageCodesResolver);
@@ -920,8 +921,9 @@ public class FormAction extends MultiAction implements InitializingBean {
      * @param context the action execution context, for accessing and setting
      * data in "flow scope" or "request scope"
      * @param binder the data binder to use
+     * @throws Exception when an unrecoverable exception occurs
      */
-    protected void doBind(RequestContext context, DataBinder binder) {
+    protected void doBind(RequestContext context, DataBinder binder) throws Exception {
         if (logger.isDebugEnabled()) {
             logger.debug("Binding allowed request parameters in "
                     + StylerUtils.style(context.getExternalContext().getRequestParameterMap())
