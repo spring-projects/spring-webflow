@@ -8,6 +8,10 @@ Changes in version ()
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".
 
+Package org.springframework.webflow.config
+* Fixed bug in WebFlowConfigNamespaceHandler that caused the type attribute of the repository tag
+  not to be read properly and throw an exception (SWF-239)
+
 Changes in version 1.0.1 (08.01.2007)
 -------------------------------------
 
