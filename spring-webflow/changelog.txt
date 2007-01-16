@@ -2,7 +2,7 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
-Changes in version ()
+Changes in version 1.0.2 ()
 -------------------------------------
 
 Package org.springframework.webflow.action
@@ -10,7 +10,7 @@ Package org.springframework.webflow.action
 
 Package org.springframework.webflow.config
 * Fixed bug in WebFlowConfigNamespaceHandler that caused the type attribute of the repository tag
-  not to be read properly and throw an exception (SWF-239)
+  not to be read properly and throw an exception (SWF-239).
 
 Changes in version 1.0.1 (08.01.2007)
 -------------------------------------
