@@ -36,7 +36,7 @@ public class MastermindGame implements Serializable {
 		return data;
 	}
 
-	public Collection getGuessHistory() {
+	public Collection<GameData.GuessData> getGuessHistory() {
 		return data.getGuessHistory();
 	}
 
