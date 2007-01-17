@@ -11,7 +11,29 @@
     	<para>
     		<orderedlist>
     			<listitem>
-    				<para>Phonebook - the original sample demonstrating most features (including subflows).</para>
+    				<para>
+    					<ulink url="http://www.ervacon.com/products/swf/intro/index.html">Phonebook</ulink> - the original sample demonstrating most features (including subflows).
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					<link linkend="fileupload-sample">Fileupload</link> - demonstrates multipart file upload.
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					<link linkend="birthdate-sample">Birthdate</link> - demonstrates Struts integration and the MultiAction.
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					<link linkend="shippingrate-sample">Shippingrate</link> - demonstrates Spring Web Flow together with Ajax technology.
+    				</para>
+    			</listitem>
+    			<listitem>
+    				<para>
+    					<link linkend="numberguess-sample">NumberGuess</link> - demonstrates use of stateful middle-tier components to carry out business logic.
+    				</para>
     			</listitem>
     			<listitem>
     				<para>Sellitem - demonstrates a wizard with conditional transitions, flow scope, flow execution redirects, and continuations.</para>
@@ -21,22 +43,6 @@
     			</listitem>
     			<listitem>
     				<para>Itemlist - demonstrates REST-style URLs and inline flows.</para>
-    			</listitem>
-    			<listitem>
-    				<para>Shippingrate - demonstrates Spring Web Flow together with Ajax technology.</para>
-    			</listitem>
-    			<listitem>
-    				<para>NumberGuess - demonstrates use of stateful middle-tier components to carry out business logic.</para>
-    			</listitem>
-    			<listitem>
-    				<para>
-    					<link linkend="birthdate-sample">Birthdate</link> - demonstrates Struts integration and the MultiAction.
-    				</para>
-    			</listitem>
-    			<listitem>
-    				<para>
-    					<link linkend="fileupload-sample">Fileupload</link> - demonstrates multipart file upload.
-    				</para>
     			</listitem>
     			<listitem>
     				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
@@ -504,4 +510,465 @@ public BirthDateFormAction() {
     		</para>
     	</sect2>
     </sect1>
+    <sect1 id="shippingrate-sample">
+        <title>Shippingrate Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                The Shippingrate sample demonstrates the use of Spring Web Flow in combination with 
+                Ajaxian techniques. It consists of several wizard-style steps executed 
+                with Ajax requests and refreshing a portion of the page.
+                The input is collected from the user in incremental steps. It is stored 
+                in a flow-scoped object and is then used to calcualte a shipping rate.
+                The example also demonstrates invocation of a service-layer bean
+                defined in a Spring context to perform calculations and
+                to provide reference data such as countries and package types.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml configuration maps requests for "*.htm" to the 
+                shippingrate servlet - a regular Spring MVC DispatcherServlet:
+                <programlisting>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;shippingrate&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;shippingrate&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+                The web.xml also ensures the following Spring context file is loaded 
+                at runtime from the web application classpath:
+                <programlisting>
+&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;
+        classpath:org/springframework/webflow/samples/shippingrate/domain/services.xml
+    &lt;/param-value&gt;
+&lt;/context-param&gt;
+                </programlisting>
+                The services.xml Spring context defines a "rateService" bean providing 
+                operations for making shipping rate calculations and for retrieving 
+                reference data required for display in the JSP pages of the application.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Spring MVC Context</title>
+            <para>
+                The Spring MVC servlet context for the shippingrate servlet (WEB-INF/shippingrate-servlet.xml) 
+                defines one controller bean:
+                <programlisting>
+&lt;bean name="/rates.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+&lt;/bean&gt;
+                </programlisting>
+                FlowController is a Web Flow controller. It is the main point of integration between Spring MVC
+                and Spring Web Flow routing requests to one or more managed web flow executions. The
+                FlowController is injected with flowExecutor and flowRegistry beans:
+                <programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="simple"/&gt;
+    
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+    &lt;flow:location path="/WEB-INF/flows/**/*-flow.xml" /&gt;
+&lt;/flow:registry&gt;
+                </programlisting>
+                The flowExecutor and the flowRegistry beans collectively configure
+                the FlowController with one web flow - the getRate-flow defined in
+                /WEB-INF/flows/getRate-flow.xml. The flowExecutor uses a "simple"
+                repository, which manages execution state in the user session.
+            </para>
+            <para>
+                Given the above definitions the following URI  can be used to initiate 
+                the getRate-flow:
+                <programlisting>
+/swf-shippingrate/rates.htm?_flowId=getRate-flow
+                </programlisting>
+            </para>
+        </sect2>
+        <sect2>
+            <title>Ajax Requests</title>
+            <para>
+                The shippingrate example consists of several wizard-style steps.
+                After the initial index.jsp subsequent pages are 
+                loaded in an Ajax manner without reloading the entire page.
+            </para>
+            <warning>
+                <para>
+                    This sample has been tested successfully on Internet Explorer 6 and 7, 
+                    Firefox 2.0, and Safari 2. There are known Javascript issues 
+                    with use on Firefox 1.5.
+                </para>
+            </warning>
+            <para>
+                The Ajax requests are done with the help of the
+                <ulink url="http://prototype.conio.net">Prototype</ulink>
+                framework and a thin JavaScript layer over it providing
+                convenient functions for processing Ajax form and get requests.
+                The required Javascript libraries are included in index.jsp as follows:
+                <programlisting>
+&lt;script src="prototype.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="swf_ajax.js" type="text/javascript"&gt;&lt;/script&gt;
+                </programlisting>
+            </para>
+            <para>
+                When index.jsp is loaded the following JavaScript invokes the getRate-flow
+                and replaces the content of the getRateWizard div tag with the response
+                returned from the server:
+                <programlisting>
+&lt;div id="getRateWizard"&gt;
+    &lt;script type="text/javascript"&gt;
+    window.onload = function() {
+        new SimpleRequest('getRateWizard', 'rates.htm', 'get', '_flowId=getRate-flow');
+    };
+    &lt;/script&gt;
+&lt;/div&gt;
+                </programlisting>
+                Functions are first-class citizens and a type in JavaScript. 
+                The script above creates an instance of
+                the SimpleRequest function defined in swf_ajax.js. This function invokes
+                Prototype's Ajax.Updater with the specified URL and request parameters. On success
+                the content of the getRateWizard div is replaced with the response returned
+                from the server. On failure such as an HTTP response code other 200 (OK) 
+                an error message is displayed.
+            </para>
+            <para>
+                The next few pages are form-based JSP's - selectCustomer.jsp, selectReceiver.jsp, 
+                etc. Each of them contains the following JavaScript call at the bottom:
+                <programlisting>
+&lt;script type="text/javascript"&gt;
+    formRequest('selectCustomerTypeForm');
+&lt;/script&gt;
+                </programlisting>
+                The formRequest function is also defined in swf_ajax.js 
+                and it uses Prototype to register a handler for the form submit event:
+                <programlisting>
+function formRequest(formElementId) {
+    Event.observe(formElementId, 'submit', handleSubmitEvent, true);
+}
+                </programlisting>
+                The handleSubmitEvent function extracts the form parameters, stops the 
+                submit event, and posts an AJAX request via XMLHttpRequest. On success
+                the results returned form the server replace the content of the form.
+                On failure such as an HTTP response code other 200 (OK) an error 
+                message is displayed.
+            </para>
+            <para>
+                Although not demonstrated in this example a back button can be 
+                implemented in parallel with the Next button used to advance from
+                one screen to the next. This would be necessary because the browser
+                back button - a common issue in Ajax applications, contrary to user
+                expectation returns to the page prior to the first Ajax request.
+            </para>
+            <para>
+                As a result of the Ajax requests the entire wizard is able to 
+                function within a portion of the page without refresing 
+                the remaining information on it.
+            </para>
+        </sect2>
+        <sect2>
+            <title>getRate Web Flow</title>
+            <para>
+                The getRate-flow (/WEB-INF/jsp/flows/getRate-flow.xml) defines the following start state:
+                <programlisting>
+&lt;view-state id="selectCustomerType" view="selectCustomer"&gt;
+    &lt;transition on="submit" to="selectSender"&gt;
+        &lt;action bean="formAction" method="bind" /&gt;
+    &lt;/transition&gt;
+&lt;/view-state&gt;
+                </programlisting>
+                This is a view state, which will display the initial form using the 
+                JSP page /WEB-INF/jsp/selectCustomer.jsp. Notice, the use of a start action 
+                executed immediately before the JSP is displayed:
+                <programlisting>
+&lt;start-actions&gt;
+    &lt;action bean="formAction" method="setupForm" /&gt;
+&lt;/start-actions&gt;
+                </programlisting>                
+                The "formAction" bean is defined in the Spring servlet context 
+                (/WEB-INF/shippingrate-servlet.xml). It specifies a form object
+                and  a validator to use for form data binding and validation:
+                <programlisting>
+&lt;!-- Performs "form backing object" data binding and validation on input submit --&gt;
+&lt;bean id="formAction" class="org.springframework.webflow.action.FormAction"&gt;
+    &lt;property name="formObjectName" value="rateCriteria" /&gt;
+    &lt;property name="formObjectClass" value="org.springframework.webflow.samples.shippingrate.domain.RateCriteria" /&gt;
+    &lt;property name="formObjectScope" value="FLOW" /&gt;
+    &lt;property name="validator"&gt;
+        &lt;bean class="org.springframework.webflow.samples.shippingrate.domain.RateCriteriaValidator" /&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+                </programlisting>
+                The form object of type RateCriteria will be used to collect data 
+                from the user in several steps. The form object will be stored in FLOW scope
+                and will not be re-created with each request as long 
+                as the flow hasn't reached its end state. The actual binding of
+                html form fields to the RateCriteria object is based on
+                Spring's data binding mechanism. Html form fields are surrounded
+                with the &lt;spring:bind&gt; tag containing the path 
+                nested property field. FormAction's bindAndValidate method
+                will initiate the actual binding on the server side 
+                between HTTP request parameters and RateCriteria data fields.
+            </para>
+            <para>
+                When the selectCustomer.jsp submits back to the FlowController via
+                "/swf-shippingrate/rate.htm" it uses a submit button named 
+                "_eventId_submit". This indicates to Web Flow a transition to 
+                the "selectSender" view state. This view state is defined as follows:
+                <programlisting>
+&lt;view-state id="selectSender" view="selectSender"&gt;
+    &lt;render-actions&gt;
+        &lt;bean-action bean="rateService" method="getCountries"&gt;
+            &lt;method-result name="countries" /&gt;
+        &lt;/bean-action&gt;
+    &lt;/render-actions&gt;
+    &lt;transition on="submit" to="selectReceiver"&gt;
+        &lt;action bean="formAction" method="bindAndValidate"&gt;
+            &lt;attribute name="validatorMethod" value="validateSender" /&gt;
+        &lt;/action&gt;
+    &lt;/transition&gt;
+&lt;/view-state&gt;
+                </programlisting>
+                The selectSender view state has a render action: 
+                the "rateService" bean that was loaded through the services.xml context referenced
+                in web.xml. The purpose of the render action is to load data required 
+                to render the JSP. In this case the rateService bean has a method called
+                getCountries that returns a list of countries to be displayed in a drop-down
+                by the JSP.
+            </para>
+            <para>
+                The "selectSender" view state also defines one transition: on event with 
+                id of "submit" a transition to the "selectReceiver" view state occurs. 
+                A pre-requisite for the transition to occur is the successful completion of 
+                formAction bean's bindAndValidate method. The attribute "validatorMethod" on
+                the bean specifies the name of the method to invoke on the Validator object 
+                specifically for the fields of the current screen. 
+                If the bindAndValidate method does not succeed the transition does not take
+                place and the flow remains in the "selectSender" view 
+                state where the user can review the errors and modify the selection.
+            </para>
+            <para>
+                The next two states in the flow - selectReceiver and selectPackageDetails use similar 
+                mechnisms. The rateSevice bean is used to retrieve countries and package types for 
+                use in the JSP. The form backing object RateCriteria stored in FLOW scope 
+                is used to collect user input with each form submit. 
+            </para>
+            <para>
+                The "findRate" action state occurs after all user input has been provided. 
+                It is defined as follows:
+                <programlisting>
+&lt;action-state id="findRate"&gt;
+    &lt;bean-action bean="rateService" method="getRate"&gt;
+        &lt;method-arguments&gt;
+            &lt;argument expression="flowScope.rateCriteria" /&gt;
+        &lt;/method-arguments&gt;
+        &lt;method-result name="rate" /&gt;
+    &lt;/bean-action&gt;
+    &lt;transition on="success" to="showRate" /&gt;
+&lt;/action-state&gt;
+                </programlisting>
+                Logic for the action state is provided by the getRate method of 
+                the rateService bean. The RateCriteria object stored in FLOW scope
+                and containing the user input is passed to the rateService bean.
+                The result of the method is exposed in request scope under 
+                the name "rate". 
+            </para>
+            <para>
+                The next and final state "showRate" is a JSP page, which accesses the calculated rate 
+                information and displays it to the user.
+            </para>            
+        </sect2>
+    </sect1>    
+    <sect1 id="numberguess-sample">
+        <title>Numberguess Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                Numberguess uses Web Flow to implement two number guessing games.
+                For each game the user can enter multiple guesses and depending 
+                on the answer either transition back to the same screen or 
+                advance to the final screen. Logic for the guessing games is 
+                provided through FLOW-scoped beans, which also maintain state
+                such as the total number of guesses. The example defines transitions 
+                using event pattern matching and custom exception handlers.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml configuration maps "*.htm" requests to the numberguess servlet - 
+                a regular Spring MVC DispatcherServlet:
+                <programlisting>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;numberguess&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;/WEB-INF/dispatcher-servlet.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;numberguess&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+                The Spring web context is loaded from a file called 
+                /WEB-INF/dispatcher-servlet.xml.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Spring MVC Context</title>
+            <para>
+                The Spring MVC web context (WEB-INF/dispatcher-servlet.xml) 
+                defines one controller bean:
+                <programlisting>
+&lt;bean name="/play.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+&lt;/bean&gt;
+                </programlisting>
+                FlowController is a Web Flow controller. It is the main point of 
+                integration between Spring MVC and Spring Web Flow routing requests 
+                to one or more managed web flow executions. The FlowController is 
+                injected with flowExecutor and flowRegistry beans:
+                <programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="singlekey"/&gt;
+    
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+    &lt;flow:location path="/WEB-INF/higherlower.xml" /&gt;
+    &lt;flow:location path="/WEB-INF/mastermind.xml" /&gt;
+&lt;/flow:registry&gt;
+                </programlisting>
+                The flowExecutor and the flowRegistry beans collectively configure
+                the FlowController with two web flows - higherlower and mastermind.
+                This flowExecutor is configured with a simple repository that assigns 
+                a single flow execution key per conversation. The key, once assigned, 
+                never changes for the duration of the conversation. 
+            </para>
+            <para>
+                Given the above definitions the following URI's can be used to initiate 
+                each of the two flows:
+                <programlisting>
+/swf-numberguess/play.htm?_flowId=higherlower
+/swf-numberguess/play.htm?_flowId=mastermind
+                </programlisting>
+            </para>
+            <para>
+                The Spring MVC servlet context also defines a view resolver bean for 
+                resolving logical view names. In general Web Flow does not aim 
+                to replace the flexibility of Spring MVC for view resolution. 
+                It focuses on the C in MVC.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Higherlower Flow</title>
+            <para>
+                The Higherlower flow (/WEB-INF/higherlower.xml) starts with the following 
+                flow variable declaration:
+                <programlisting>
+&lt;var name="game" class="org.springframework.webflow.samples.numberguess.HigherLowerGame"/&gt;
+                </programlisting>
+                This variable is automatically created when an execution of the flow
+                begins and will exist in FLOW scope throughout its duration.
+            </para>
+            <para>
+                The start state for the flow is defined as follows:
+                <programlisting>
+&lt;view-state id="enterGuess" view="higherlower.enterGuess"&gt;
+    &lt;transition on="submit" to="makeGuess"/&gt;
+&lt;/view-state&gt;
+                </programlisting>
+                The view resolver bean of Spring MVC will resolve "higherlower.enterGuess" 
+                to /WEB-INF/jsp/higherlower.enterGuess.jsp.
+                This JSP has a form with one input field for the guess number.
+                The "game" variable referenced throughout the JSP 
+                is the FLOW-scoped variable that was declared at the top of 
+                the flow definition.
+            </para>
+    	    <para>
+        		The name of the form submit button "_eventId_submit" indicates the 
+                event id to use for deciding where to transition to next. Given an 
+                event with id of "submit" the "enterGuess" view state transitions
+    			to the "makeGuess" action state defined as follows:
+                <programlisting>
+&lt;action-state id="makeGuess"&gt;
+    &lt;evaluate-action expression="flowScope.game.makeGuess(requestParameters.guess)"&gt;
+        &lt;evaluation-result name="guessResult"/&gt;
+    &lt;/evaluate-action&gt;
+    &lt;transition on="CORRECT" to="showAnswer"/&gt;
+    &lt;transition on="*" to="enterGuess"/&gt;
+    &lt;transition on-exception="java.lang.NumberFormatException" to="enterGuess"/&gt;
+&lt;/action-state&gt;
+                </programlisting>
+            </para>
+            <para>
+                The makeGuess action state consists of one evaluate action and three
+                transitions. Evaluate actions are used to invoke logic encapsulated
+                in a FLOW-scoped object - in this case the game bean. 
+                The makeGuess method of the game bean returns one of several enum 
+                values it defines:
+                <programlisting>
+enum GuessResult {
+    TOO_HIGH, TOO_LOW, CORRECT, INVALID
+}
+                </programlisting>
+                Web Flow detects the returned result from the makeGuess method
+                is a JDK 1.5 enum type and 
+                creates an Event with a String id matching the enum value. If the
+                makeGuess method returns CORRECT a transition to the final 
+                showAnswer state occurs. For any other event (defined with the event 
+                pattern on="*") Web Flow returns to the enterGuess 
+                state. The makeGuess state also defines one on-exception transition
+                demonstrating how specific Exceptions can be incorporated into
+                flow transition logic.
+            </para>
+            <para>
+                The end-state showAnswer resolves to the JSP page 
+                /WEB-INF/jsp/higherlower.showAnswer.jsp, which simply shows the
+                correct guess. At this point the flow has ended and the "game" bean 
+                is no longer in scope.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Mastermind Flow</title>
+            <para>
+                The mastermind flow uses a similar flow definition to implement a 4-digit
+                guessing game:
+                <programlisting>
+&lt;var name="game" class="org.springframework.webflow.samples.numberguess.MastermindGame"/&gt;
+
+&lt;start-state idref="enterGuess"/&gt;
+
+&lt;view-state id="enterGuess" view="mastermind.enterGuess"&gt;
+    &lt;transition on="submit" to="makeGuess"/&gt;
+&lt;/view-state&gt;
+
+&lt;action-state id="makeGuess"&gt;
+    &lt;evaluate-action expression="flowScope.game.makeGuess(requestParameters.guess)"&gt;
+        &lt;evaluation-result name="guessResult"/&gt;
+    &lt;/evaluate-action&gt;
+    &lt;transition on="CORRECT" to="showAnswer"/&gt;
+    &lt;transition on="*" to="enterGuess"/&gt;
+&lt;/action-state&gt;
+
+&lt;end-state id="showAnswer" view="mastermind.showAnswer"/&gt;
+                </programlisting>
+                The MastermindGame class encapsulates the logic for the game and 
+                is stored as a FLOW-scoped bean. 
+                It returns one of three possible enum values -
+                WRONG, CORRECT, or INVALID, which Web Flow converts to events with 
+                id's matching the enum values. If the guess is INVALID the JSP page
+                /WEB-INF/jsp/mastermind.enterGuess.jsp will print an error message.
+                If the guess is CORRECT the flow will transition to the showAnswer 
+                end state and complete the flow.
+            </para>
+        </sect2>
+    </sect1>    
 </chapter>
