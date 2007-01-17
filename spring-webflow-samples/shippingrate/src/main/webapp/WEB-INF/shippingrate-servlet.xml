@@ -40,11 +40,4 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-
-	<!-- Resolves message codes to internationalized messages -->
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename">
-			<value>MessageResources</value>
-		</property>
-	</bean>
 </beans>

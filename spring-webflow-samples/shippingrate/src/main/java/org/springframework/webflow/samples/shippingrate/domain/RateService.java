@@ -19,7 +19,7 @@ import java.util.Map;
 
 public interface RateService {
 
-	public Map getCountries();
+	public Map<String, String> getCountries();
 
 	public Map getPackageTypes();
 

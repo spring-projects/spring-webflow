@@ -21,15 +21,15 @@ import java.util.Map;
 
 public class StubRateService implements RateService {
 
-	public Map getCountries() {
-		Map countries = new HashMap();
+	public Map<String, String> getCountries() {
+		Map<String, String> countries = new HashMap<String, String>();
 		countries.put("US", "United States");
 		countries.put("CA", "Canada");
 		return countries;
 	}
 
-	public Map getPackageTypes() {
-		Map packageTypes = new HashMap();
+	public Map<String, String> getPackageTypes() {
+		Map<String, String> packageTypes = new HashMap<String, String>();
 		packageTypes.put("1", "Letter Envelope");
 		packageTypes.put("2", "Express Box");
 		packageTypes.put("3", "Tube");
