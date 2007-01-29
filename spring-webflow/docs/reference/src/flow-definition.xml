@@ -653,7 +653,8 @@
     			<para>
     			    In this example <literal>state1</literal> defines one transition and an exception handler
     			    which executes a transition to <literal>state3</literal> if a <literal>MyBusinessException</literal>
-    			    is thrown within the state.
+    			    is thrown within the state. The handled exception will be put into flash scope using the
+    			    key "stateException". That way it is available for processing in the flow or display in a view.
     			</para>
    			</sect3>
 		</sect2>
