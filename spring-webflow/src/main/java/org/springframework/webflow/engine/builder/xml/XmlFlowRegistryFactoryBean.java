@@ -55,7 +55,7 @@ import org.springframework.webflow.engine.builder.FlowServiceLocator;
  * 
  * <pre>
  *     &lt;bean id=&quot;flowRegistry&quot; class=&quot;org.springframework.webflow.engine.builder.registry.XmlFlowRegistryFactoryBean&quot;&gt;
- *         &lt;property name=&quot;flowLocations&quot;&gt; value=&quot;/WEB-INF/flows/*-flow.xml&quot;/&gt; 
+ *         &lt;property name=&quot;flowLocations&quot; value=&quot;/WEB-INF/flows/*-flow.xml&quot;/&gt; 
  *     &lt;/bean&gt;
  * </pre>
  * 
@@ -110,7 +110,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 * 
 	 * <pre>
 	 *     &lt;bean id=&quot;flowRegistry&quot; class=&quot;org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean&quot;&gt;
-	 *         &lt;property name=&quot;flowLocations&quot;&gt; value=&quot;/WEB-INF/flows/*-flow.xml&quot;/&gt; 
+	 *         &lt;property name=&quot;flowLocations&quot; value=&quot;/WEB-INF/flows/*-flow.xml&quot;/&gt; 
 	 *     &lt;/bean&gt;
 	 * </pre>
 	 * 
@@ -118,7 +118,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 * 
 	 * <pre>
 	 *    &lt;bean id=&quot;flowRegistry&quot; class=&quot;org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean&quot;&gt;
-	 *          &lt;property name=&quot;flowLocations&quot;&gt; value=&quot;classpath*:/example/flows/*-flow.xml&quot;/&gt; 
+	 *          &lt;property name=&quot;flowLocations&quot; value=&quot;classpath*:/example/flows/*-flow.xml&quot;/&gt; 
 	 *    &lt;/bean&gt;
 	 * </pre>
 	 * 
