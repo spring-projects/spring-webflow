@@ -34,7 +34,7 @@
 		<property name="flowLocations">
 			<list>
 				<value>/WEB-INF/itemlist.xml</value>
-				<value>/WEB-INF/itemlist-alternate</value>
+				<value>/WEB-INF/itemlist-alternate.xml</value>
 			</list>
 		</property>
 	</bean>

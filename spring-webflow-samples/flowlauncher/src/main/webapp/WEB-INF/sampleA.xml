@@ -18,7 +18,7 @@
 	<subflow-state id="launchB" flow="sampleB">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="requestParameters.input" target="input" />
+				<mapping source="flowScope.input" target="input" />
 			</input-mapper>
 		</attribute-mapper>
 		<transition on="end" to="aPage" />
