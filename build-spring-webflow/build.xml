@@ -25,6 +25,8 @@
 	<selector id="project.source.zip.includes">
 		<or>
 			<filename name="common-build/**" />
+			<filename name="webflow-architecture.xml" />
+			<filename name="webflow-workspace.xml" />
 			<and>
 				<or>
 					<filename name="build-spring-webflow/**" />
