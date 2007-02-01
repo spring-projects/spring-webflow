@@ -36,13 +36,17 @@
     				</para>
     			</listitem>
     			<listitem>
+                    <para>
+                        <link linkend="flowlauncher-sample">Flowlauncher</link> - demonstrates all the possible ways to launch and resume flows.
+                    </para>
+    			</listitem>
+    			<listitem>
+                    <para>
+                        <link linkend="itemlist-sample">Itemlist</link> - demonstrates REST-style URLs and inline flows.
+                    </para>
+    			</listitem>
+    			<listitem>
     				<para>Sellitem - demonstrates a wizard with conditional transitions, flow scope, flow execution redirects, and continuations.</para>
-    			</listitem>
-    			<listitem>
-    				<para>Flowlauncher - demonstrates all the possible ways to launch and resume flows.</para>
-    			</listitem>
-    			<listitem>
-    				<para>Itemlist - demonstrates REST-style URLs and inline flows.</para>
     			</listitem>
     			<listitem>
     				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
@@ -968,6 +972,390 @@ enum GuessResult {
                 /WEB-INF/jsp/mastermind.enterGuess.jsp will print an error message.
                 If the guess is CORRECT the flow will transition to the showAnswer 
                 end state and complete the flow.
+            </para>
+        </sect2>
+    </sect1>    
+    <sect1 id="flowlauncher-sample">
+        <title>Flowlauncher Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                Flowlauncher demonstrates two different ways one web flow can launch 
+                another - by redirecting to it or by launching it as a subflow. 
+                Flowlauncher has two flows: Sample A and Sample B. As a root level 
+                flow Sample A either transitions to B through a subflow state or 
+                redirects to B in its end state.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml configuration maps "*.htm" requests to the flowlauncher servlet - 
+                a regular Spring MVC DispatcherServlet:
+                <programlisting>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;flowlauncher&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;flowlauncher&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+            </para>
+        </sect2>    
+        <sect2>
+            <title>Spring MVC Context</title>
+            <para>
+                The Spring MVC web context (WEB-INF/flowlauncher-servlet.xml) defines one controller bean:
+                <programlisting>
+&lt;bean name="/flowController.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+&lt;/bean&gt;
+                </programlisting>
+                FlowController is a Web Flow extension of Spring MVC's AbstractController. 
+                It contains a FlowExecutor and directs incoming requests for one
+                or more managed flow executions to it. The FlowExecutor bean is configured 
+                in the same context:
+                <programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"/&gt;
+
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+    &lt;flow:location path="/WEB-INF/sampleA.xml" /&gt;
+    &lt;flow:location path="/WEB-INF/sampleB.xml" /&gt;
+&lt;/flow:registry&gt;
+                </programlisting>
+                A single FlowController may direct all flows for an application serving as
+                a gateway to Web Flow. Based on the above definitions the flows
+                sampleA and sampleB can be invoked as follows:
+                <programlisting>
+/swf-flowlauncher/flowController.htm?_flowId=sampleA
+/swf-flowlauncher/flowController.htm?_flowId=sampleB
+                </programlisting>
+                The welcome index.html file for the web application invokes
+                the flows and passes additional input using either a URL link 
+                or a form submit.
+            </para>
+        </sect2>    
+        <sect2>
+            <title>Sample A Web Flow</title>
+            <para>
+                The Sample A web flow (/WEB-INF/sampleA.xml) begins with an input mapping declaration:
+                <programlisting>
+&lt;input-mapper&gt;
+    &lt;mapping source="input" target="flowScope.input" /&gt;
+&lt;/input-mapper&gt;
+                </programlisting>
+                This declaration reads "when a new execution of this flow starts map the 
+                input attribute named <emphasis>input</emphasis> into a flowScope attribute
+                also named input". Spring Web Flow will automatically provide the request
+                parameters as input to the flow when launching a new flow execution.
+                Following this declaration the <emphasis>input</emphasis>
+                request parameter will remain available for the duration of the flow. 
+            </para>
+            <para>
+                There are 3 states in this flow: the start state, the end state, and a subflow 
+                state. The start state is a view state - it will display a JSP page and allow
+                the user to make a choice. The subflow state initiates Sample B as a 
+                subflow of the current flow - subflows give the ability to compose independent
+                modules together to compose complex controller workflows. And the end state 
+                launches Sample B by redirecting to it.
+            </para>
+            <para>
+                The subflow state launches B with the following input attribute declaration.
+                This declaration reads "pass the value of the flow-scoped attribute named
+                <emphasis>input</emphasis> as an attribute also named <emphasis>input</emphasis>
+                to subflow B. 
+                <programlisting>
+&lt;attribute-mapper&gt;
+    &lt;input-mapper&gt;
+        &lt;mapping source="flowScope.input" target="input" /&gt;
+    &lt;/input-mapper&gt;
+&lt;/attribute-mapper&gt;
+                </programlisting>
+                The next line is a transition defining how to respond 
+                when the subflow ends: advance back to the start state for Sample A.
+                <programlisting>
+&lt;transition on="end" to="aPage" /&gt;
+                </programlisting>
+            </para>
+            <para>
+                The end state demonstrates how to redirect to Sample B upon completion of 
+                the root level flow Sample A:
+                <programlisting>
+&lt;end-state id="endAndLaunchB" view="flowRedirect:sampleB?input=${requestParameters.input}" /&gt;
+                </programlisting>
+                This declaration causes A to be terminated and B to start
+                with the given requst input parameter.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Sample B Web Flow</title>
+            <para>
+                The flow Sample B (/WEB-INF/sampleB.xml) - used as a subflow in Sample A has two 
+                simple states: a view state and an end state. From the view state "bPage" the
+                flow transitions to the end state:
+                <programlisting>
+&lt;view-state id="bPage" view="bPage"&gt;
+    &lt;transition on="end" to="end" /&gt;
+&lt;/view-state&gt;
+
+&lt;end-state id="end" /&gt;
+                </programlisting>
+                The "id" attribute of the end state matches the "on" attribute of the
+                transition in the outer flow's subflow state, which the outer flow 
+                uses to resume itself.
+            </para>
+            <para>
+                Also notice how bPage.jsp makes a check to detect if Sample B is 
+                running as a subflow of Sample A or if it is running as a top-level flow:
+                <programlisting>
+&lt;c:if test="${!flowExecutionContext.activeSession.root}"&gt;
+                </programlisting>
+            </para>
+            The FlowExecutionContext object is exposed to the views (JSPs)
+            to make information like this available during response rendering.
+        </sect2>    
+    </sect1>
+    <sect1 id="itemlist-sample">
+        <title>Iitemlist Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                Itemlist demonstrates how to configure a FlowExecutor with an argument handler
+                enabling it to process REST-style requests where the name of the target
+                flow is in the URL instead of a _flowId request parameter.
+                The example also demonstrates inner flows as well as how an output parameter 
+                can be passed from a subflow to a parent flow.
+                Finally, it serves as an illustration of how to configure Spring Web Flow
+                using classic Spring 1.x bean definitions.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml configuration maps "/app/*" requests to the itemlist servlet - 
+                a regular Spring MVC DispatcherServlet:
+                <programlisting>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;itemlist&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;itemlist&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+            </para>
+        </sect2>
+        <sect2>
+            <title>Spring MVC Context</title>
+            <para>
+                The Spring MVC web context (/WEB-INF/itemlist-serlvet.xml) defines one controller
+                and one URL handler mapping:
+                <programlisting>
+&lt;bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"&gt;
+    &lt;property name="alwaysUseFullPath" value="true" /&gt;
+    &lt;property name="mappings"&gt;
+        &lt;value&gt;/app/**/**=flowController&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+    &lt;property name="argumentHandler"&gt;
+        &lt;bean class="org.springframework.webflow.executor.support.RequestPathFlowExecutorArgumentHandler" /&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+                </programlisting>
+                All requests with a servlet path matching "/app/**/**" are mapped to the "flowController" bean.
+                The FlowController is a Web Flow extension of Spring MVC's AbstractController delegating
+                requests to one or more managed web flows. It acts as gateway to Web Flow defined control 
+                logic and a single instance can serve the application.
+            </para>
+            <para>
+                The usual way to launch a specific web flow is to pass the _flowId request parameter.
+                However, this example is configured with a RequestPathFlowExecutorArgumentHandler 
+                for processing REST-style URL's. 
+                Requests for services built around the REST concept are encoded in the URL 
+                and not as query string parameters. The way to invoke a web flow with 
+                this argument handler is to follow:
+                <programlisting>
+http://${host}/${context path}/${dispatcher path}/${flowId}
+                </programlisting>
+            </para>
+            <para>
+                The FlowController is configured with a flowExecutor and flowRegistry beans containing 
+                two web flows - itemlist and itemlist-alternate:
+                <programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions: Spring 1.2 config version --&gt;
+&lt;bean id="flowExecutor" class="org.springframework.webflow.config.FlowExecutorFactoryBean"&gt;
+    &lt;property name="definitionLocator" ref="flowRegistry"/&gt;
+&lt;/bean&gt;
+
+&lt;!-- Creates the registry of flow definitions for this application: Spring 1.2 config version --&gt;   
+&lt;bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean"&gt;
+    &lt;property name="flowLocations"&gt;
+        &lt;list&gt;
+            &lt;value&gt;/WEB-INF/itemlist.xml&lt;/value&gt;
+            &lt;value&gt;/WEB-INF/itemlist-alternate.xml&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+                </programlisting>
+                The FlowRegistry and FlowExecutor are defined with Spring 1.2 compatible bean definitions.
+                However, starting with Spring 2.0 Web Flow also offers the 
+                custom tags flow:registry and flow:executor, which are more 
+                readable and less verbose.
+            </para>
+            <para>
+                Based on the above web context definition use the following URL's to invoke 
+                the itemlist or the itemlist-alternate web flows:
+                <programlisting>
+/swf-itemlist/app/itemlist
+/swf-itemlist/app/itemlist-alternate                
+                </programlisting>
+            </para>
+            <para>    
+                Also defined in itemlist-servlet.xml are three "action" beans - createItemAction, 
+                addItemAction, and mapItemAction, which will be referenced from action states 
+                in the web flow definitions.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Itemlist Web Flow</title>
+            <para>
+                The itemlist flow allows adding items to a list. There are
+                two view states - displayItemList and displayItem, and two action states - 
+                createItem and addItem. 
+            </para>
+            <para>
+                The displayItemList view state resolves to /WEB-INF/jsp/itemList.jsp, which 
+                lists all items on the list and displays an "Add" button with the 
+                name "_eventId_add". The name of the button indicates the 
+                event id to use for deciding where to transition to next. 
+                Also, notice that instead of posting a "_flowId" parameter
+                the JSP sets the form action to the value of flowExecutionKey -
+                a value automatically made available in the page 
+                context by Web Flow:
+                <programlisting>
+&lt;form action="${flowExecutionKey}" method="post"/&gt;
+                </programlisting>
+            </para>
+            <para>
+                When the form submits an event with the "_eventId_add" button
+                the displayItemList view state transitions to the 
+                createItem action state. 
+                <programlisting>
+&lt;view-state id="displayItemlist" view="itemlist"&gt;
+    &lt;transition on="add" to="createItem" /&gt;
+&lt;/view-state&gt;
+
+&lt;action-state id="createItem"&gt;
+    &lt;action bean="createItemAction" /&gt;
+    &lt;transition on="success" to="displayItem" /&gt;
+&lt;/action-state&gt;
+                </programlisting>                
+            </para>
+            <para>
+                The "createItemAction" bean is declared in the Spring MVC context 
+                (/WEB-INF/itemlist-servlet.xml). It simply returns "success", which 
+                causes a transition to the displayItem view state.
+            </para>
+            <para>
+                The next two states displayItem and addItem allow adding an item to the
+                list variable declared at the top of the flow:
+                <programlisting>
+&lt;var name="list" class="java.util.ArrayList" /&gt;
+                </programlisting>
+                The "addItemAction" bean is also declared in the Spring MVC context.
+                It performs the add by accessing the list in flow scope and 
+                the item to be added from the request parameters as follows:
+                <programlisting>
+Collection list = context.getFlowScope().getRequiredCollection("list");
+String data = context.getRequestParameters().get("data");
+if (data != null &amp;&amp; data.length() > 0) {
+    list.add(data);
+}
+                </programlisting>
+                For any outcome the addItem state transitions back to the initial
+                displayItemList state using an event pattern match:
+                <programlisting>
+&lt;action-state id="addItem"&gt;
+    &lt;action bean="addItemAction" /&gt;
+    &lt;transition on="*" to="displayItemlist" /&gt;
+&lt;/action-state&gt;
+                </programlisting>
+            </para>
+        </sect2>
+        <sect2>
+            <title>Itemlist-alternate Web Flow</title>
+            <para>
+                The Itemlist-alternate web flow (/WEB-INF/itemlist-alternate.xml) 
+                has functionality equivalent  to that of itemlist but instead uses
+                a subflow for selecting individual items.
+                The "addItem" state is a subflow state 
+                invoking an inline flow called "item" (also defined in itemlist-alternate.xml)
+                accepting an output parameter from the subflow and adding the
+                output parameter to a flow-scoped list variable:
+                <programlisting>
+&lt;subflow-state id="addItem" flow="item"&gt;
+    &lt;attribute-mapper&gt;
+        &lt;output-mapper&gt;
+            &lt;mapping source="item" target-collection="flowScope.list" /&gt;
+        &lt;/output-mapper&gt;
+    &lt;/attribute-mapper&gt;
+    &lt;transition on="finish" to="displayItemlist" /&gt;
+&lt;/subflow-state&gt;
+                </programlisting>
+                An output-mapper is used to pass results from a subflow to a parent flow.
+                The above declaration defines an expectation on the subflow to return
+                an output parameter called "item". Accordingly the end state for the 
+                inline flow has this output mapping returning a parameter called "item":
+                <programlisting>
+&lt;end-state id="finish"&gt;
+    &lt;output-mapper&gt;
+        &lt;mapping source="flowScope.item" target="item" /&gt;
+    &lt;/output-mapper&gt;
+&lt;/end-state&gt;
+                </programlisting>
+                With the above declarations we see how a subflow can pass output 
+                parameters back to its parent flow. The remaining question is
+                what sets "flowScope.item" which appears for the first time
+                in the end state of the subflow?
+            </para>
+            <para>
+                The answer lies in the "mapItemAction" bean invoked between the 
+                view state and the end state in the subflow:
+                <programlisting>
+&lt;action-state id="mapItem"&gt;
+    &lt;action bean="mapItemAction" /&gt;
+    &lt;transition on="success" to="finish" /&gt;
+&lt;/action-state&gt;
+                </programlisting>
+                The mapItemAction bean was defined in the itemlist-servlet.xml web context
+                and is an istance of Web Flow's AttributeMapperAction. The purpose
+                of AttributeMapperAction is to invoke an AttributeMapper and to perform
+                mappings between two attribute sources. The AttributeMapper with which
+                the mapItemAction bean is configured is an instance of DataMapper. It
+                adds the following mapping:
+                <programlisting>
+addMapping(mapping.source("requestParameters.data").target("flowScope.item").value());
+                </programlisting>
+                With this declaration in place each time the AttributeMaperAction is 
+                invoked it will create the flowScoped variable "item" based on the value
+                of the "data" request parameter. Note that AttributeMapper is 
+                Web Flow API for the &lt;attribute-mapper&gt; declarations used above
+                to pass data from the inner subflow to the parent flow. 
+            </para>
+            <para>
+                Once the inner subflow flow has completed the item is passed to the parent flow
+                as an output parameter, which adds it to its flow-scoped list and transitions 
+                to the initial "displayItemList" state.
             </para>
         </sect2>
     </sect1>    
