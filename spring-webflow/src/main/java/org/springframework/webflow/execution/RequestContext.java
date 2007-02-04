@@ -166,7 +166,7 @@ public interface RequestContext {
 	/**
 	 * Returns the last event signaled during this request. The event may or may
 	 * not have caused a state transition to happen.
-	 * @return the last signaled event
+	 * @return the last signaled event, or null if no event has been signaled yet
 	 */
 	public Event getLastEvent();
 
