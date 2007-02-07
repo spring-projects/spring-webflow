@@ -207,7 +207,14 @@ public class FlowExecutorImpl implements FlowExecutor {
 			if (flowExecution.isActive()) {
 				// execution still active => store it in the repository
 				FlowExecutionKey key = executionRepository.generateKey(flowExecution);
-				executionRepository.putFlowExecution(key, flowExecution);
+				FlowExecutionLock lock = executionRepository.getLock(key);
+				lock.lock();
+				try {
+					executionRepository.putFlowExecution(key, flowExecution);
+				}
+				finally {
+					lock.unlock();
+				}
 				return new ResponseInstruction(key.toString(), flowExecution, selectedView);
 			}
 			else {

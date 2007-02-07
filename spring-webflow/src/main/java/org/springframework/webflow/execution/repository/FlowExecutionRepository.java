@@ -95,6 +95,9 @@ public interface FlowExecutionRepository {
 	 * returned flow execution represents the restored state of an executing
 	 * flow from a point in time. This should be called to resume a persistent
 	 * flow execution.
+	 * <p>
+	 * Before calling this method, you should aquire the lock for the keyed
+	 * flow execution.
 	 * @param key the flow execution key
 	 * @return the flow execution, fully hydrated and ready to signal an event
 	 * against
@@ -107,6 +110,9 @@ public interface FlowExecutionRepository {
 	 * Place the <code>FlowExecution</code> in this repository under the
 	 * provided key. This should be called to save or update the persistent
 	 * state of an active (but paused) flow execution.
+	 * <p>
+	 * Before calling this method, you should aquire the lock for the keyed
+	 * flow execution.
 	 * @param key the flow execution key
 	 * @param flowExecution the flow execution
 	 * @throws FlowExecutionRepositoryException the flow execution could not be
@@ -118,6 +124,9 @@ public interface FlowExecutionRepository {
 	/**
 	 * Remove the flow execution from the repository. This should be called when
 	 * the flow execution ends (is no longer active).
+	 * <p>
+	 * Before calling this method, you should aquire the lock for the keyed
+	 * flow execution.
 	 * @param key the flow execution key
 	 * @throws FlowExecutionRepositoryException the flow execution could not be
 	 * removed.

@@ -186,7 +186,13 @@ public class ContinuationFlowExecutionRepository extends AbstractConversationFlo
 	protected void onBegin(Conversation conversation) {
 		// setup a new continuation group for the conversation
 		FlowExecutionContinuationGroup continuationGroup = new FlowExecutionContinuationGroup(maxContinuations);
-		conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, continuationGroup);
+		conversation.lock();
+		try {
+			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, continuationGroup);
+		}
+		finally {
+			conversation.unlock();
+		}
 	}
 
 	protected Serializable generateContinuationId(FlowExecution flowExecution) {

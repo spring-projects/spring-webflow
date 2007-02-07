@@ -32,6 +32,7 @@ import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
+import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
@@ -188,7 +189,14 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 			try {
 				FlowExecutionKey key = parseFlowExecutionKey(
 						new RequestParameterFlowExecutorArgumentHandler().extractFlowExecutionKey(externalContext));
-				return getContinuationGroup(key);
+				FlowExecutionLock lock = getLock(key);
+				lock.lock();
+				try {
+					return getContinuationGroup(key);
+				}
+				finally {
+					lock.unlock();
+				}
 			}
 			finally {
 				ExternalContextHolder.setExternalContext(null);

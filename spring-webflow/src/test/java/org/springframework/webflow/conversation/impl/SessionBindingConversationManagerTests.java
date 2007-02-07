@@ -51,7 +51,9 @@ public class SessionBindingConversationManagerTests extends TestCase {
 				new ConversationParameters("test", "test", "test"));
 		ConversationId conversationId = conversation.getId();
 		assertNotNull(conversationManager.getConversation(conversationId));
+		conversation.lock();
 		conversation.end();
+		conversation.unlock();
 		try {
 			conversationManager.getConversation(conversationId);
 			fail("Conversation should have ben removed");
@@ -64,13 +66,17 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
 		Conversation conversation = conversationManager.beginConversation(
 				new ConversationParameters("test", "test", "test"));
+		conversation.lock();
 		conversation.putAttribute("testAttribute", "testValue");
 		ConversationId conversationId = conversation.getId();
 		
 		Conversation conversation2 = conversationManager.getConversation(conversationId);
 		assertSame(conversation, conversation2);
+		conversation2.lock();
 		assertEquals("testValue", conversation2.getAttribute("testAttribute"));
 		conversation.end();
+		conversation.unlock();
+		conversation2.unlock();
 	}
 	
 	public void testPassivation() throws Exception {
@@ -78,6 +84,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		ExternalContextHolder.setExternalContext(externalContext);
 		Conversation conversation = conversationManager.beginConversation(
 				new ConversationParameters("test", "test", "test"));
+		conversation.lock();
 		conversation.putAttribute("testAttribute", "testValue");
 		ConversationId conversationId = conversation.getId();
 		ExternalContextHolder.setExternalContext(null);
@@ -92,6 +99,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		assertNotSame(conversation, conversation2);
 		assertEquals("testValue", conversation2.getAttribute("testAttribute"));
 		conversation.end();
+		conversation.unlock();
 	}
 	
 	public void testMaxConversations() {

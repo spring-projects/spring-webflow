@@ -24,8 +24,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
+import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
  * Internal {@link Conversation} implementation used by the conversation
@@ -98,8 +100,18 @@ class ContainedConversation implements Conversation, Serializable {
 	public void unlock() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Unlocking conversation " + id);
-		}				
+		}
 		lock.unlock();
+		
+		// re-bind the conversation container in the session
+		// this is required to make session replication work correctly in
+		// a clustered environment
+		// we do this after releasing the lock since we're no longer
+		// manipulating the contents of the conversation
+		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
+		synchronized (sessionMap.getMutex()) {
+			sessionMap.put(SessionBindingConversationManager.CONVERSATION_CONTAINER_KEY, container);
+		}
 	}
 
 	public String toString() {

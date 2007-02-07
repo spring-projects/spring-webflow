@@ -33,7 +33,7 @@ import org.springframework.webflow.util.UidGenerator;
  * <p>
  * Using the {@link #setMaxConversations(int) maxConversations} property, you can
  * limit the number of concurrently active conversations allowed in a single
- * session. If the default is exceeded, the conversation manager will automatically
+ * session. If the maximum is exceeded, the conversation manager will automatically
  * end the oldest conversation. The default is 5, which should be fine for most
  * situations. Set it to -1 for no limit. Setting maxConversations to 1 allows
  * easy resource cleanup in situations where there should only be one active
@@ -48,7 +48,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	/**
 	 * Key of the session attribute holding the conversation container.
 	 */
-	private static final String CONVERSATION_CONTAINER_KEY = "webflow.conversation.container";
+	static final String CONVERSATION_CONTAINER_KEY = "webflow.conversation.container";
 	
 	/**
 	 * The conversation uid generation strategy to use.

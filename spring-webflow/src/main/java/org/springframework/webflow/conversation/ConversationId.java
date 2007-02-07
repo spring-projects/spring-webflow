@@ -18,7 +18,7 @@ package org.springframework.webflow.conversation;
 import java.io.Serializable;
 
 /**
- * An id that uniquely identifies a conversation managed by
+ * An id that uniquely identifies a conversation managed by a
  * {@link ConversationManager}.
  * 
  * @author Ben Hale

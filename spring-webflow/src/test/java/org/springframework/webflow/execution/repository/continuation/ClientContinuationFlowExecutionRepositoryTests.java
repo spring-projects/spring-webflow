@@ -42,6 +42,8 @@ public class ClientContinuationFlowExecutionRepositoryTests extends TestCase {
 	private FlowExecution execution;
 
 	private FlowExecutionKey key;
+	
+	private FlowExecutionLock lock;
 
 	protected void setUp() throws Exception {
 		FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
@@ -55,41 +57,51 @@ public class ClientContinuationFlowExecutionRepositoryTests extends TestCase {
 	public void testPutExecution() {
 		key = repository.generateKey(execution);
 		assertNotNull(key);
+		lock = repository.getLock(key);
+		lock.lock();
 		repository.putFlowExecution(key, execution);
 		FlowExecution persisted = repository.getFlowExecution(key);
 		assertNotNull(persisted);
+		lock.unlock();
 	}
 
 	public void testGetNextKey() {
 		key = repository.generateKey(execution);
 		assertNotNull(key);
+		lock = repository.getLock(key);
+		lock.lock();
 		repository.putFlowExecution(key, execution);
 		FlowExecutionKey nextKey = repository.getNextKey(execution, key);
 		repository.putFlowExecution(nextKey, execution);
 		FlowExecution persisted = repository.getFlowExecution(nextKey);
 		assertNotNull(persisted);
+		lock.unlock();
 	}
 
 	public void testGetNextKeyVerifyKeyChanged() {
 		key = repository.generateKey(execution);
 		assertNotNull(key);
+		lock = repository.getLock(key);
+		lock.lock();
 		repository.putFlowExecution(key, execution);
 		FlowExecutionKey nextKey = repository.getNextKey(execution, key);
 		repository.putFlowExecution(nextKey, execution);
 		repository.getFlowExecution(key);
 		repository.getFlowExecution(nextKey);
+		lock.unlock();
 	}
 
 	public void testRemove() {
 		testPutExecution();
+		lock.lock();
 		repository.removeFlowExecution(key);
 		try {
 			repository.getFlowExecution(key);
 			fail("should've throw nsfee");
 		}
 		catch (NoSuchFlowExecutionException e) {
-
 		}
+		lock.unlock();
 	}
 
 	public void testLock() {
