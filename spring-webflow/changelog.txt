@@ -7,6 +7,7 @@ Changes in version 1.0.2 ()
 
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".
+* FormAction now consistently uses the getters to get property values (SWF-251).
 
 Package org.springframework.webflow.config
 * Fixed bug in WebFlowConfigNamespaceHandler that caused the type attribute of the repository tag

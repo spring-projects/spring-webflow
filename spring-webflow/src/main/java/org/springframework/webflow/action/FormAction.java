@@ -353,7 +353,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	/**
 	 * Bean-style default constructor; creates a initially unconfigured
 	 * FormAction instance relying on default property values. Clients invoking
-	 * this constructor directly must set the {@link #formObjectClass} property
+	 * this constructor directly must set the formObjectClass property
      * or override {@link #createFormObject(RequestContext)}.
 	 * @see #setFormObjectClass(Class)
 	 */
@@ -404,8 +404,9 @@ public class FormAction extends MultiAction implements InitializingBean {
 	public void setFormObjectClass(Class formObjectClass) {
 		this.formObjectClass = formObjectClass;
 		// generate a default form object name
-		if ((formObjectName == null || formObjectName == DEFAULT_FORM_OBJECT_NAME) && formObjectClass != null) {
-			formObjectName = ClassUtils.getShortNameAsProperty(formObjectClass);
+		if ((getFormObjectName() == null || getFormObjectName() == DEFAULT_FORM_OBJECT_NAME)
+				&& formObjectClass != null) {
+			setFormObjectName(ClassUtils.getShortNameAsProperty(formObjectClass));
 		}
 	}
 
@@ -499,8 +500,8 @@ public class FormAction extends MultiAction implements InitializingBean {
 						+ "] does not support form object class [" + getFormObjectClass() + "]");
 			}
             // signature: public void ${validateMethodName}(${formObjectClass}, Errors)
-			validateMethodInvoker = new DispatchMethodInvoker(validator, new Class[] { getFormObjectClass(),
-					Errors.class });
+			validateMethodInvoker = new DispatchMethodInvoker(getValidator(),
+					new Class[] { getFormObjectClass(), Errors.class });
 		}
 	}
 
@@ -907,8 +908,8 @@ public class FormAction extends MultiAction implements InitializingBean {
      */
     protected DataBinder createBinder(RequestContext context, Object formObject) throws Exception {
         DataBinder binder = new WebDataBinder(formObject, getFormObjectName());
-        if (messageCodesResolver != null) {
-            binder.setMessageCodesResolver(messageCodesResolver);
+        if (getMessageCodesResolver() != null) {
+            binder.setMessageCodesResolver(getMessageCodesResolver());
         }
         initBinder(context, binder);
         registerPropertyEditors(context, binder);
@@ -958,17 +959,17 @@ public class FormAction extends MultiAction implements InitializingBean {
      * @throws Exception when an unrecoverable exception occurs
      */
     protected void doValidate(RequestContext context, Object formObject, Errors errors) throws Exception {
-        Assert.notNull(validator, "The validator must not be null when attempting validation -- programmer error");
+        Assert.notNull(getValidator(), "The validator must not be null when attempting validation -- programmer error");
         String validatorMethodName = context.getAttributes().getString(VALIDATOR_METHOD_ATTRIBUTE);
         if (StringUtils.hasText(validatorMethodName)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Invoking validation method '" + validatorMethodName + "' on validator " + validator);
+                logger.debug("Invoking validation method '" + validatorMethodName + "' on validator " + getValidator());
             }
             invokeValidatorMethod(validatorMethodName, formObject, errors);
         }
         else {
             if (logger.isDebugEnabled()) {
-                logger.debug("Invoking validator " + validator);
+                logger.debug("Invoking validator " + getValidator());
             }
             getValidator().validate(formObject, errors);
         }
@@ -1016,14 +1017,14 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @throws Exception when an unrecoverable exception occurs
 	 */
 	protected Object createFormObject(RequestContext context) throws Exception {
-		if (formObjectClass == null) {
+		if (getFormObjectClass() == null) {
 			throw new IllegalStateException("Cannot create form object without formObjectClass property being set -- "
 					+ "either set formObjectClass or override createFormObject");
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating new instance of form object class [" + formObjectClass + "]");
+			logger.debug("Creating new instance of form object class [" + getFormObjectClass() + "]");
 		}
-		return formObjectClass.newInstance();
+		return getFormObjectClass().newInstance();
 	}
 
 	/**
@@ -1082,11 +1083,11 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param registry the property editor registry to register editors in
 	 */
 	protected void registerPropertyEditors(PropertyEditorRegistry registry) {
-		if (propertyEditorRegistrar != null) {
+		if (getPropertyEditorRegistrar() != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Registering custom property editors using configured registrar");
 			}
-			propertyEditorRegistrar.registerCustomEditors(registry);
+			getPropertyEditorRegistrar().registerCustomEditors(registry);
 		}
 		else {
 			if (logger.isDebugEnabled()) {
