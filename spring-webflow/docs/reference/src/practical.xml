@@ -51,11 +51,15 @@
                     </para>
     			</listitem>
     			<listitem>
-    				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
+                    <para>
+                        <link linkend="sellitem-JSF-sample">Sellitem-JSF</link> - the 
+                            sellitem sample in a JSF environment (notice how the flow 
+                            definition is more concise because JSF takes care of data 
+                            binding and validation).
+                    </para>
     			</listitem>
     			<listitem>
-    				<para>Sellitem-JSF - the sellitem sample in a JSF environment (notice how the flow definition is more concise because
-    				JSF takes care of data binding and validation).</para>
+    				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
     			</listitem>
     		</orderedlist>
     	</para>
@@ -1787,4 +1791,227 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
         	</para>
         </sect2>
     </sect1>        
+    <sect1 id="sellitem-JSF-sample">
+        <title>Sellitem-JSF Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                The Sellitem-JSF example uses Web Flow and JSF to build a shopping 
+                cart wizard. Navigation logic and supporting "flow" scoped beans
+                are supplied through Spring and Spring Web Flow while JSP's and 
+                overall servlet processing is based on JSF technology.
+            </para>
+            <note>
+                <para>
+                    The underlying Web Flow definitions for the Sellitem and the Sellitem-JSF 
+                    examples are very similar. To avoid repetition the documentation for 
+                    the Sellitem-JSF example focuses primarily on the points of integration between 
+                    Web Flow and JSF. For further general information on Web Flow definitions 
+                    and supporting Java classes for the Sellitem example please refer to the 
+                    <link linkend="sellitem-sample">Sellitem</link> example documentation.
+                </para>
+            </note>
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml contains standard JSF configuration including mappings for
+                the JSF front servlet: it handles all requests ending with "*.jsf":
+                <programlisting>
+&lt;!-- Faces Servlet --&gt;
+&lt;servlet&gt;
+    &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.jsf&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+            </para>
+            <para>
+                In addition the web.xml loads to Spring contexts with the 
+                ContextLoaderListener:
+                <programlisting>
+&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;
+        classpath:org/springframework/webflow/samples/sellitem/services-config.xml
+        /WEB-INF/webflow-config.xml
+    &lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+                </programlisting>
+                The services-config.xml contains POJO beans required for the services and 
+                data access layers of the application. These declarations are very similar
+                to the Sellitem example (and explained in more detail there). 
+                The webflow-config.xml context contains Web Flow related bean 
+                definitions. These definitions will be explained a little bit 
+                further on in the context of how they fit into the JSF phases 
+                lifecycle.
+            </para>
+        </sect2>
+        <sect2>
+            <title>JSF Plumbing (faces-config.xml)</title>
+            <para>
+                The Spring framework has several classes to help JSF applications
+                to use Spring beans as JSF managed beans and to do dependency injection
+                on a navigation handler or a phase listener using Spring.
+                This is demonstrated in the faces-config.xml of Sellitem-JSF:
+                <programlisting>
+&lt;application&gt;
+    &lt;!-- Navigation handler proxy for a Spring-managed bean that is the Web Flow Navigation Handler --&gt;
+    &lt;navigation-handler&gt;
+        org.springframework.web.jsf.DelegatingNavigationHandlerProxy
+    &lt;/navigation-handler&gt;
+    ...
+    &lt;variable-resolver&gt;
+        org.springframework.web.jsf.
+    &lt;/variable-resolver&gt;
+    &lt;!-- Extended "webApplicationContext" resolver --&gt;
+    &lt;variable-resolver&gt;
+        org.springframework.web.jsf.WebApplicationContextVariableResolver
+    &lt;/variable-resolver&gt;
+&lt;/application&gt;
+&lt;lifecycle&gt;
+    &lt;!-- Multi-caster that broadcast phase events to all PhaseListeners managed by Spring --&gt;
+    &lt;phase-listener&gt;org.springframework.web.jsf.DelegatingPhaseListenerMulticaster&lt;/phase-listener&gt;
+&lt;/lifecycle&gt;
+                </programlisting>
+                The DelegatingNavigationHandlerProxy delegates to a NavigationHandler 
+                bean defined in the Spring root WebApplicationContext. For Sellitem-JSF
+                this is the jsfNavigiationHandler bean in /WEB-INF/webflow-config.xml:
+                <programlisting>
+&lt;bean id="jsfNavigationHandler" class="org.springframework.webflow.executor.jsf.FlowNavigationHandler" /&gt;
+                </programlisting>
+            </para>
+            <note>
+                <para>
+	                Web Flow's FlowNavigationHandler could have been installed directly
+	                in faces-config.xml - adding it through a delegating proxy is done for 
+	                demonstration purposes and useful for further Spring container services.
+                </para>
+            </note>
+            <para>
+                The FlowNavigationHandler provides a point of integration between Web Flow and 
+                JSF. It can delegate JSF requests to the Web Flow system (such as when 
+                a flow is initiated or is ongoing) or return control to a 
+                standard JSF navigation handler implementation (when 
+                a web flow is not ongoing). As will
+                be shown further down a web flow initiation or a continuation 
+                is detected through the 
+                presence of a _flowId or a _flowExecutionKey parameter.
+            </para>
+            <para>
+                The DelegatingVariableResolver and the WebApplicationContextVariableResolver
+                are Spring provided JSF VariableResolvers. The DelegatingVariableResolver
+                allows Spring beans to be used as JSF variables (such as in managed bean 
+                declarations). The WebApplicationContextVariableResolver exposes the 
+                Spring WebApplicationContext instance as a JSF variable named 
+                "webApplicationContext". This allows access to the Spring web context
+                for obtaining any Spring managed beans and resources.
+            </para>
+            <para>
+                The DelegatingPhaseListenerMulticaster is another Spring provided class,
+                which delegates beforePhase and afterPhase JSF events to Spring-managed
+                PhaseListener beans present in the Spring root WebApplicationContext.
+                In the case of Sellitem-JSF there is one PhaseListener bean definition
+                in its web context /WEB-INF/webflow-config.xml:
+                <programlisting>
+&lt;bean id="flowPhaseListener" class="org.springframework.webflow.executor.jsf.FlowPhaseListener" /&gt;
+                </programlisting>
+            </para>
+            <note>
+                <para>
+	                The Web Flow's FlowPhaseListener could have been installed directly
+	                in faces-config.xml - adding it through a delegating proxy is done for 
+	                demonstration purposes and useful for further Spring container services.
+                </para>
+            </note>
+            <para>
+                The FlowPhaseListener invoked during beforePhase and afterPhase JSF events
+                is responsible for managing an active FlowExecution and making it available
+                to other JSF artifacts during the lifecycle of a JSF request. 
+            </para>
+            <para>
+                The faces-config for Sellitem-JSF has two more definitions based on 
+                Web Flow provided classes:
+                <programlisting>
+&lt;property-resolver&gt;
+    org.springframework.webflow.executor.jsf.FlowPropertyResolver
+&lt;/property-resolver&gt;
+&lt;variable-resolver&gt;
+    org.springframework.webflow.executor.jsf.FlowVariableResolver
+&lt;/variable-resolver&gt;
+                </programlisting>
+                The FlowVariableResolver makes it possible to use the "flowScope" 
+                variable in JSF expressions. The "flow" scope is a unique feature of 
+                Web Flow allowing state to be retained for the duration of a flow -
+                less than session scope but typically longer than a single request.
+                The FlowPropertyResolver allows resolution of property paths from a 
+                FlowExecution context.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Web Flow Definitions</title>
+            <para>
+                Examining the definitions in faces-config.xml highlighted the ability
+                to use Spring beans as JSF managed beans as well as plug Web Flow
+                definitions for JSF navigation logic. Now we can turn to the question
+                of how to configure specific web flow definitions.
+            </para>
+            <para>
+                The Spring web context /WEB-INF/webflow-config.xml contains the following
+                flow registry bean definition:
+                <programlisting>
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowDefinitionLocator"&gt;
+    &lt;flow:location path="/WEB-INF/flows/sellitem-flow.xml" /&gt;
+&lt;/flow:registry&gt;
+                </programlisting>
+                Here the flow registry definies the path to one web flow definition - 
+                sellitem-flow.xml. The flow registry bean with an id of "flowDefinitionLocator"
+                is accessed by the FlowPhaseListener, which makes the specified web flow
+                definitions available for use in JSF. The intro.jsp page shows how the 
+                configured web flow sellitem-flow.xml can be invoked:
+                <programlisting>
+&lt;h:form&gt;
+    &lt;h:commandLink value="Sell Item" action="flowId:sellitem-flow"/&gt;
+&lt;/h:form&gt;
+                </programlisting>
+                This causes the sellitem-flow to be initiated. Once a flow is initiated
+                each next JSP page advancing through the view states of the Sellitem flow
+                definition passes a parameter called _flowExecutionKey 
+                allowing the flow to be continued by the FlowPhaseListener:
+                <programlisting>
+&lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/&gt;
+                </programlisting>
+            </para>
+            <para>
+                A few notable differences between Sellitem and  Sellite-JSF to keep in mind:
+                <orderedlist>
+                    <listitem>
+                        In its web flow definition Sellitem-JSF uses actual 
+                        JSP names (instead of the logical view names used
+                        in Sellitem) to be rendered by JSF.
+                    </listitem>
+                    <listitem>
+                        The JSP pages in Sellitem-JSF use unified EL to 
+                        access the flowScoped Sale object - e.g. #{flowScope.sale.price}.
+                    </listitem>
+                    <listitem>
+                        Sellitem-JSF uses JSF tags for UI and Sellitem uses Spring form tags.
+                    </listitem>
+                </orderedlist>
+                For more information and understanding on how the Sellitem flow
+                definition is navigated please refer to the documentation for the 
+                <link linkend="sellitem-sample">Sellitem</link> example.            
+            </para>
+        </sect2>
+    </sect1>
 </chapter>
