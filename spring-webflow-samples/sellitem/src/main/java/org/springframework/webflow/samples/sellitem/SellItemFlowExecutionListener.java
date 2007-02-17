@@ -24,6 +24,10 @@ import org.springframework.webflow.execution.EnterStateVetoException;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.RequestContext;
 
+/**
+ * Flow execution listener that makes sure a user has the required role
+ * to enter a state.
+ */
 public class SellItemFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	public void stateEntering(RequestContext context, StateDefinition nextState) throws EnterStateVetoException {

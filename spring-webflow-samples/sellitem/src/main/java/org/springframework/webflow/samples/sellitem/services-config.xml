@@ -23,6 +23,7 @@
 		<property name="username" value="sa"/>
 	</bean>
 
-	<bean id="databaseCreator" class="org.springframework.webflow.samples.sellitem.InMemoryDatabaseCreator" autowire="byType"/>
+	<bean id="databaseCreator" class="org.springframework.webflow.samples.sellitem.InMemoryDatabaseCreator"
+		autowire="byType"/>
 	
 </beans>
