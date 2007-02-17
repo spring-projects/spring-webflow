@@ -46,7 +46,9 @@
                     </para>
     			</listitem>
     			<listitem>
-    				<para>Sellitem - demonstrates a wizard with conditional transitions, flow scope, flow execution redirects, and continuations.</para>
+    				<para>
+                        <link linkend="sellitem-sample">Sellitem</link> - demonstrates a wizard with conditional transitions, flow scope, flow execution redirects, and continuations.
+                    </para>
     			</listitem>
     			<listitem>
     				<para>Phonebook-Portlet - the phonebook sample in a Portlet environment (notice how the flow definitions do not change).</para>
@@ -1358,5 +1360,431 @@ addMapping(mapping.source("requestParameters.data").target("flowScope.item").val
                 to the initial "displayItemList" state.
             </para>
         </sect2>
-    </sect1>    
+    </sect1>
+    <sect1 id="sellitem-sample">
+        <title>Sellitem Example</title>
+        <sect2>
+            <title>Overview</title>
+            <para>
+                The Sellitem example demonstrates using Web Flow to build a 
+                shopping cart wizard with
+                a shipping rate subflow, decision states, service and data access 
+                Spring POJO beans, Spring 2.0 form tags, and Web Flow's 
+                FormAction bean for data binding, validation, and 
+                error reporting.
+            </para>
+            <para>
+                The Sellitem example breaks down its Spring application configuration
+                into a number of files organized according to purpose. 
+                Although the example itself uses a small number of beans you 
+                may consider organizing a real-world application (with many more
+                beans) according to similar principles. Before going into the specifics
+                of each individual context use the diagram below to 
+                get a brief overview of all configuration files including their
+                location and purpose.
+            </para>
+            <mediaobject>
+                <imageobject role="fo">
+                    <imagedata fileref="images/sellitem-configuration.png" format="PNG" align="center"/>
+                </imageobject>
+                <imageobject role="html">
+                    <imagedata fileref="images/sellitem-configuration.png" format="PNG" align="center"/>
+                </imageobject>
+                <caption>
+                    <para>Sellitem Spring &amp; Web Flow Application Wiring</para>
+                </caption>
+            </mediaobject>
+            
+        </sect2>
+        <sect2>
+            <title>Web.xml</title>
+            <para>
+                The web.xml configuration maps "*.htm" requests to the sellitem servlet - 
+                a Spring MVC DispatcherServlet:
+                <programlisting>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;sellitem&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;
+            /WEB-INF/sellitem-servlet-config.xml
+            /WEB-INF/sellitem-webflow-config.xml
+        &lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;sellitem&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                </programlisting>
+                The contextConifgLocation parameter for the DispatcherServlet indicates the 
+                Spring MVC web context for the sellitem servlet is spread over two xml files: 
+                sellitem-servlet-config.xml and sellitem-webflow-config.xml. 
+                The web.xml also requests an additional Spring context to be loaded 
+                from the classpath through the ContextLoaderListener:
+                <programlisting>
+&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;
+        classpath:org/springframework/webflow/samples/sellitem/services-config.xml
+    &lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;listener&gt;
+	&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+                </programlisting>
+                This service layer context defines beans to be referenced from 
+                web flow definitions. The next section discusses the 
+                content of this context in more detail.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Services-config.xml</title>
+            <para>
+                The services-config.xml loaded from the classpath through Spring MVC's 
+                ContextLoaderListener defines several beans for the service 
+                and data access layers of the application. For example,
+                the service context defines a DAO bean ("saleProcessor") and injects 
+                it with a data source:
+                <programlisting>
+&lt;bean id="saleProcessor" class="org.springframework.webflow.samples.sellitem.JdbcSaleProcessor"&gt;
+    &lt;property name="dataSource" ref="dataSource"/&gt;
+&lt;/bean&gt;
+
+&lt;bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"&gt;
+    &lt;property name="driverClassName" value="org.hsqldb.jdbcDriver"/&gt;
+    &lt;property name="url" value="jdbc:hsqldb:mem:sellItem"/&gt;
+    &lt;property name="username" value="sa"/&gt;
+&lt;/bean&gt;
+                </programlisting>
+                The services context also declares a bean of type InMemoryDatabaseCreator 
+                set to autowire by type meaning that its fields will be compared against the types of
+                beans available in the context and will be automatically set when a match is found. 
+                Hence the dataSource bean is used to set the dataSource property 
+                of InMemoryDatabaseCreator:
+                <programlisting>
+&lt;bean id="databaseCreator" class="org.springframework.webflow.samples.sellitem.InMemoryDatabaseCreator"
+    autowire="byType"/&gt;
+                </programlisting>
+                Looking inside the InMemoryDatabaseCreator, its initDao() method invoked 
+                during context initialization creates a table called T_SALES for use by the sample
+                application. This table is created in an in-memory hsqldb database called
+                sellitem (based on the url property of the dataSource bean).
+                It's also worth noting the bean declarations related to declarative 
+                transaction management:
+                <programlisting>
+&lt;tx:annotation-driven/&gt;
+
+&lt;bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
+    &lt;property name="dataSource" ref="dataSource"/&gt;  
+&lt;/bean&gt;
+                </programlisting>
+                The "&lt;tx:annotation-driven&gt;"declaration indicates transaction 
+                configuration is governed by Java 5 annotations used in bean classes
+                such as this annotation in the SaleProcessor interface:
+                <programlisting>
+@Transactional
+public interface SaleProcessor {
+
+    public void process(Sale sale);
+}
+                </programlisting>
+                For annotated beans the Spring container automatically creates 
+                proxies according to the transaction semantics in the annotation 
+                metadata. The "&lt;tx:annotation-driven&gt;" tag has a transaction-manager 
+                attribute but this attribute is not required if the transaction
+                manager bean is named "transactionManager".
+            </para>
+        </sect2>
+        <sect2>
+            <title>Spring MVC Context</title>
+            <para>
+                The Spring MVC web context is split over two files - 
+                sellitem-servlet-config.xml and sellitem-webflow-config.xml. 
+                The sellitem-servlet-config.xml defines
+                a controller and a view resolver. 
+                <programlisting>
+&lt;bean name="/pos.htm" class="org.springframework.webflow.executor.mvc.FlowController"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+&lt;/bean&gt;
+
+&lt;!-- Maps flow view-state view names to JSP templates --&gt;
+&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+    &lt;property name="prefix" value="/WEB-INF/jsp/" /&gt;
+    &lt;property name="suffix" value=".jsp" /&gt;
+&lt;/bean&gt;
+                </programlisting>
+                FlowController is a web flow controller extending Spring MVC's AbstractController 
+                delegating requests (in this case for the "/pos.htm" servlet path) to the 
+                flowExecutor bean it is configured with. FlowController acts
+                as gateway to Web Flow and a single controller instance can serve 
+                the application as most of the actual control logic is encapsulated 
+                in web flow definitions.
+            </para>
+            <para>
+                The sellitem-webflow-config.xml defines web flow specific beans such as 
+                a flow executor, a flow registry and a flow listener beans:
+                <programlisting>
+&lt;!-- Launches new flow executions and resumes existing executions --&gt;
+&lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"&gt;
+    &lt;flow:execution-listeners&gt;
+        &lt;flow:listener ref="listener" criteria="sellitem-flow" /&gt;
+    &lt;/flow:execution-listeners&gt;
+&lt;/flow:executor&gt;
+
+&lt;!-- Creates the registry of flow definitions for this application --&gt;
+&lt;flow:registry id="flowRegistry"&gt;
+    &lt;flow:location path="/WEB-INF/flows/**/*-flow.xml" /&gt;
+&lt;/flow:registry&gt;
+
+&lt;!-- Observes the lifecycle of sellitem-flow executions --&gt;
+&lt;bean id="listener"
+    class="org.springframework.webflow.samples.sellitem.SellItemFlowExecutionListener" /&gt;
+                </programlisting>
+                The FlowExecutor is the central entry point into the 
+                Spring Web Flow system. It drives the execution of flow definitions 
+                configured through the flowRegistry. The flowRegistry bean is configured 
+                to load definitions from files ending with "-flow.xml" in any
+                subdirectory of /WEB-INF/flows. This matches to 
+                sellitem-flow.xml, shipping-flow.xml, sellitem-simple-flow.xml,
+                sellitem-conversation-scope-flow.xml and shipping-conversation-scope-flow.xml.
+            </para>
+            <para>
+                As shown here the flow executor can also be configured with a flow 
+                listener, which is a callback mechanism for flow execution lifecycle events. 
+                The SellItemFlowExecutionListener extends FlowExecutionListenerAdapter - 
+                a default implementation of the FlowExecutionListener interface
+                sparing the need to implement methods for all lifecycle events.
+            </para>
+            <para>
+                Looking inside SellItemFlowExecutionListener it implements the stateEntering
+                method executed whenever a new state is about to be entered. 
+                The logic in this method checks if the current web flow state
+                has an attribute named "role" and if so it ensures the user 
+                has that role:
+                <programlisting>
+String role = nextState.getAttributes().getString("role");
+if (StringUtils.hasText(role)) {
+    HttpServletRequest request = ((ServletExternalContext)context.getExternalContext()).getRequest();
+    if (!request.isUserInRole(role)) {
+        throw new EnterStateVetoException(context.getActiveFlow().getId(), context.getCurrentState().getId(),
+                nextState.getId(), "State requires role '" + role
+                        + "', but the authenticated user doesn't have it!");
+    }
+}
+                </programlisting>
+            </para>
+            <para>
+                Based on the above definitions - web.xml, Spring MVC controller bean, and
+                web flow registry, the sellitem-flow can be initiated with the 
+                following URI:
+                <programlisting>
+/swf-sellitem/pos.htm?_flowId=sellitem-flow                
+                </programlisting> 
+                <emphasis>
+                Note: although it is possible to invoke the shipping-flow directly as well,
+                it expects an input attribute and is intended to be invoked as a subflow.
+                </emphasis>
+            </para>
+        </sect2>
+        <sect2>
+            <title>Sellitem-beans.xml</title>
+            <para>
+                Before tracing the sequence of states in sellitem-flow.xml notice the 
+                import declaration at the bottom of that file:
+                <programlisting>
+&lt;import resource="sellitem-beans.xml"/&gt;
+                </programlisting>
+                The sellitem-beans.xml located in the same directory declares a 
+                web flow FormAction bean for use in the flow definition and configures 
+                it with a SaleValidator and a SellItemPropertyEditorRegistrar:
+                <programlisting>
+&lt;!-- Manages setting up, binding input to, and validating a Sale "backing wizard form object" --&gt;
+&lt;bean id="formAction" class="org.springframework.webflow.action.FormAction"&gt;
+    &lt;property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale"/&gt;
+    &lt;property name="validator"&gt;
+        &lt;bean class="org.springframework.webflow.samples.sellitem.SaleValidator"/&gt;
+    &lt;/property&gt;
+    &lt;!-- Installs property editors used to format non-String fields like 'shipDate' --&gt;
+    &lt;property name="propertyEditorRegistrar"&gt;
+        &lt;bean class="org.springframework.webflow.samples.sellitem.SellItemPropertyEditorRegistrar"/&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+                </programlisting> 
+                The SellValidator will be used to validate form input data.
+                The SellItemPropertyEditorRegistrar is responsible for registering 
+                custom property editors. Such editors are used to bind text data from 
+                HTML form fields to server-side Objects. For example 
+                SellItemPropertyEditorRegistrar registers a custom date
+                editor:
+                <programlisting>
+public void registerCustomEditors(PropertyEditorRegistry registry) {
+    registry.registerCustomEditor(Date.class,
+        new CustomDateEditor(new SimpleDateFormat("MM/dd/yyyy"), true));
+}
+                </programlisting>
+                This editor will bind the shipDate form field in shippingDetailsForm.jsp
+                to the shipDate property of the Sale object on the server side.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Sellitem-flow Flow Definition</title>
+            <para>
+                The sellitem-flow uses a start action to invoke the setupForm method of the 
+                formAction bean:
+                <programlisting>
+&lt;start-actions&gt;
+    &lt;!-- create the backing form object and initialize a empty errors collection --&gt;
+    &lt;action bean="formAction" method="setupForm"/&gt;
+&lt;/start-actions&gt;                
+                </programlisting>                
+                A start action is invoked before entering the start state. 
+                The setupForm method prepares a form object 
+                and registers custom property editors.
+                The form backing object class (as declared in sellitem-beans.xml)
+                is of type Sale and is saved in flow scope under 
+                the name of "sale" - it is possible to 
+                override both the scope and the name of the form object in the 
+                FormAction bean's declaration.
+            </para>
+            <para>
+                The start state enterPriceAndItemCount is a view state, which resolves
+                to the JSP page /WEB-INF/jsp/priceAndItemCountForm.jsp:
+                <programlisting>
+&lt;view-state id="enterPriceAndItemCount" view="priceAndItemCountForm"&gt;
+    &lt;transition on="submit" to="enterCategory"&gt;
+        &lt;action bean="formAction" method="bindAndValidate"&gt;
+            &lt;attribute name="validatorMethod" value="validatePriceAndItemCount"/&gt;
+        &lt;/action&gt;
+    &lt;/transition&gt;
+&lt;/view-state&gt;
+                </programlisting>
+                The priceAndItemCountForm.jsp page collects a price and an itemCount using
+                Spring 2.0 form input tags binding form fields to properties in the form
+                backing object "sale". When pressed, the submit button "_eventId_submit"
+                causes a web flow transition for an event with the id of "submit" to
+                the view state "enterCategory". Prior to transitioning the formAction's
+                bindAndValidate method is called to perform binding and (partial) validation 
+                using the validatePriceAndItemCount method of the validator object.
+            </para>
+            <para>
+                The next view state enterCategory (based on categoryForm.jsp) 
+                collects inputs for sale category and whether shipping is required. On 
+                submit it transitions to the requiresShipping state:
+                <programlisting>
+&lt;view-state id="enterCategory" view="categoryForm"&gt;
+    &lt;transition on="submit" to="requiresShipping"&gt;
+        &lt;action bean="formAction" method="bind"/&gt;
+    &lt;/transition&gt;
+&lt;/view-state&gt;
+                </programlisting>
+                The requiresShipping state is a decision state making 
+                flow routing decisions. It evaluates a boolean expression against the 
+                executing flow and it decides where to transition to next. 
+                Here the shipping boolean property of the "sale" form backing 
+                object is checked to decide whether to go to the enterShippingDetails
+                subflow state or proceed directly to processSale.
+                <programlisting>
+&lt;decision-state id="requiresShipping"&gt;
+    &lt;if test="${flowScope.sale.shipping}" then="enterShippingDetails" else="processSale"/&gt;
+&lt;/decision-state&gt;
+                </programlisting>
+                The enterShippingDetails subflow state is based on shipping-flow.xml 
+                located in the same directory. The form backing object "sale" is
+                passed to it as an input attribute using an attribute mapper declaration:
+                <programlisting>
+&lt;subflow-state id="enterShippingDetails" flow="shipping-flow"&gt;
+    &lt;attribute-mapper&gt;
+        &lt;input-mapper&gt;
+            &lt;input-attribute name="sale"/&gt;
+        &lt;/input-mapper&gt;
+    &lt;/attribute-mapper&gt;
+    &lt;transition on="finish" to="processSale"/&gt;
+&lt;/subflow-state&gt;
+                </programlisting>
+                The shipping-flow subflow is a simple flow with one view state. It 
+                collects the shipping details, binds the data and returns to its parent
+                flow. The id of the subflow end state "finish" is returned to the 
+                parent subflow state causing a transition to the processSale action state.
+                <programlisting>
+&lt;action-state id="processSale"&gt;
+    &lt;bean-action bean="saleProcessor" method="process"&gt;
+        &lt;method-arguments&gt;
+            &lt;argument expression="flowScope.sale"/&gt;
+        &lt;/method-arguments&gt;
+    &lt;/bean-action&gt;
+    &lt;transition on="success" to="finish"/&gt;
+&lt;/action-state&gt;
+                </programlisting>
+                The saleProcessor bean, a POJO defined in services-config.xml
+                is invoked using a "bean-action" declaration (as opposed to the "action" 
+                declation used to invoke a web flow Action such as FormAction).
+                The saleProcessor (an instance of JdbcSaleProcessor) performs a database
+                update using the values of the Sale object and upon
+                successful completion transitions to the end view state:
+                <programlisting>
+&lt;end-state id="finish" view="costOverview"&gt;
+    &lt;entry-actions&gt;
+        &lt;!-- force reinstall of property editors so costOverview can render formatted Sale values --&gt;
+        &lt;action bean="formAction" method="setupForm"/&gt;
+    &lt;/entry-actions&gt;
+&lt;/end-state&gt;
+                </programlisting>
+                Then end state calls FormAction's setupForm method again.
+                This does not re-create the "sale" form object (still in flow scope) 
+                but it does ensure any custom property editors are 
+                registered for use in rendering the JSP.
+            </para>
+        </sect2>
+        <sect2>
+            <title>Sellitem-simple-flow Flow Definition</title>
+            <para>
+            	A simpler version of the sellitem-flow is available in the sellitem-simple-flow.xml file.
+            	This version uses a view state to gather shipping details instead of using a subflow. You
+            	can launch the sellitem-simple-flow using the following URI:
+                <programlisting>
+/swf-sellitem/pos.htm?_flowId=sellitem-simple-flow
+                </programlisting> 
+            </para>
+        </sect2>
+        <sect2>
+            <title>Sellitem-conversation-scope-flow Flow Definition</title>
+            <para>
+                This web flow is equivalent in functionality to the sellitem-flow definition
+                described above. The main difference is that it uses "conversation" 
+                scope to store the form backing object declared in 
+                /WEB-INF/flows/converstation-scope/sellitem-beans.xml.
+                <programlisting>
+&lt;bean id="formAction" class="org.springframework.webflow.action.FormAction"&gt;
+    &lt;property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale"/&gt;
+    &lt;property name="formObjectScope" value="CONVERSATION"/&gt;
+    &lt;property name="formErrorsScope" value="CONVERSATION"/&gt;
+                </programlisting>
+                Conversation scope retains attributes stored in it for the life
+                of the flow execution and is shared by all flow sessions.
+                For example when invoking the shipping details subflow the parent
+                flow does not need to pass the "sale" form backing object because
+                it is now stored in conversation scope and is accessible to both flows:
+                <programlisting>
+&lt;subflow-state id="enterShippingDetails" flow="shipping-conversation-scope-flow"&gt;
+    &lt;transition on="finish" to="processSale"/&gt;
+&lt;/subflow-state&gt;
+                </programlisting>
+                Also, when the "sale" object needs to be accessed it is done by referencing
+                conversation cope:
+                <programlisting>
+&lt;decision-state id="requiresShipping"&gt;
+    &lt;if test="${conversationScope.sale.shipping}" then="enterShippingDetails" else="processSale"/&gt;
+&lt;/decision-state&gt;
+                </programlisting>
+				You can launch the sellitem-conversation-scope-flow using the following URI:
+                <programlisting>
+/swf-sellitem/pos.htm?_flowId=sellitem-conversation-scope-flow
+                </programlisting>
+        	</para>
+        </sect2>
+    </sect1>        
 </chapter>
