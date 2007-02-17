@@ -10,7 +10,7 @@
 	<xsd:annotation>
 		<xsd:documentation>
 			<![CDATA[
-Spring Web Flow 1.0.1 Configuration Schema
+Spring Web Flow Configuration Schema
 Authors: Keith Donald, Ben Hale
 <br>
 Provides an easy way to configure a flow executor and an XML flow definition registry.

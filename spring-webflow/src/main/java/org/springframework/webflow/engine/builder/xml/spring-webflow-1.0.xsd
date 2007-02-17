@@ -8,7 +8,7 @@
 	<xsd:annotation>
 		<xsd:documentation>
 			<![CDATA[
-Spring Web Flow 1.0.1 Schema
+Spring Web Flow Schema
 Authors: Keith Donald, Erwin Vervaet
 <br>
 This Schema defines the Spring Web Flow (SWF) XML syntax.
