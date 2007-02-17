@@ -30,9 +30,8 @@ public class SaleValidator implements Validator {
 	}
 
 	public void validatePriceAndItemCount(Sale sale, Errors errors) {
-		// the next two items are normallhy more appropriately handled by JSF
-		// field
-		// validation. We'll leave them here for safety
+		// the next two items are normally more appropriately handled by JSF
+		// field validation. We'll leave them here for safety
 		if (sale.getItemCount() <= 0) {
 			errors.rejectValue("itemCount", "tooLittle", "Item count must be greater than 0");
 		}
@@ -40,11 +39,9 @@ public class SaleValidator implements Validator {
 			errors.rejectValue("price", "tooLittle", "Price must be greater than 0.0");
 		}
 
-		// perhaps an artificial example, but we want to show that in the JSF
-		// integration
+		// perhaps an artificial example, but we want to show that in the JSF integration
 		// validators are best used for validation of field relationships.
-		// Individual fields
-		// are better validated with simple JSF field validation
+		// Individual fields are better validated with simple JSF field validation
 		if (sale.getItemCount() * sale.getPrice() > 1000000)
 			errors.reject("saleTooLarge", "total dollar value for sale above allowed limit");
 	}

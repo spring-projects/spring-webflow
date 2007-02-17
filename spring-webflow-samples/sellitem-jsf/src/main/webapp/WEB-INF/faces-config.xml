@@ -26,7 +26,7 @@
 	</application>
 
 	<lifecycle>
-		<!-- Multi-caster that broadcast phase events to all PhaseListeners managed by Spring -->
+		<!-- Multi-caster that broadcasts phase events to all PhaseListeners managed by Spring -->
 		<phase-listener>org.springframework.web.jsf.DelegatingPhaseListenerMulticaster</phase-listener>
 	</lifecycle>
 	
