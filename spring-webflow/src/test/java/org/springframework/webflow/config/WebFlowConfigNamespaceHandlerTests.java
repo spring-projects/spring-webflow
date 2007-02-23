@@ -17,7 +17,8 @@ package org.springframework.webflow.config;
 
 import junit.framework.TestCase;
 
-import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.parsing.Problem;
+import org.springframework.beans.factory.parsing.ProblemReporter;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
@@ -40,6 +41,7 @@ import org.springframework.webflow.executor.FlowExecutorImpl;
  * 
  * @author Ben Hale
  * @author Erwin Vervaet
+ * @author Christian Dupuis
  */
 public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 
@@ -136,34 +138,31 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 	public void testDuplicateRepositoryType() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {
-			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-1.xml"));
-			fail("Should have thrown an BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {
-			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
-		}
+		DefaultProblemReporter problemReporter = new DefaultProblemReporter();
+		reader.setProblemReporter(problemReporter);
+		reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-1.xml"));
+		assertNotNull("Should have created an error", problemReporter.getLastProblem());
+		assertTrue(problemReporter.getLastProblem().getMessage().contains("repositoryType")); 
 	}
 
 	public void testConversationManagerRef() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {
-			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-2.xml"));
-			fail("Should have thrown a BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {
-			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
-		}
+		DefaultProblemReporter problemReporter = new DefaultProblemReporter();
+		reader.setProblemReporter(problemReporter);
+		reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-2.xml"));
+		assertNotNull("Should have created an error", problemReporter.getLastProblem());
+		assertTrue(problemReporter.getLastProblem().getMessage().contains("conversation")); 
 	}
 
 	public void testMaxContinuation() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		try {
-			reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-3.xml"));
-			fail("Should have thrown a BeanDefinitionStoreException exception");
-		} catch (BeanDefinitionStoreException e) {
-			assertTrue("The nested exception should be an IllegalArgumentException", e.getCause() instanceof IllegalArgumentException);
-		}
+		DefaultProblemReporter problemReporter = new DefaultProblemReporter();
+		reader.setProblemReporter(problemReporter);
+		reader.loadBeanDefinitions(new ClassPathResource("org/springframework/webflow/config/namespace-error-3.xml"));
+		assertNotNull("Should have created an error", problemReporter.getLastProblem());
+		assertTrue(problemReporter.getLastProblem().getMessage().contains("continuation")); 
 	}
 
 	public void testContinuationExtended() {
@@ -192,6 +191,31 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 		AbstractConversationFlowExecutionRepository repository = (AbstractConversationFlowExecutionRepository) flowExecutor.getExecutionRepository();
 		ConversationManager conversationManager = (ConversationManager) this.beanFactory.getBean("conversationManager");
 		assertSame("The conversation manager in the repository should be the one explicitly wired", conversationManager, repository.getConversationManager());
+	}
+	
+	/**
+	 * {@link ProblemReporter} implementation that simply stores the last reported error
+	 */
+	static class DefaultProblemReporter implements ProblemReporter {
+		
+		private Problem problem;
+		
+		public Problem getLastProblem() {
+			return this.problem;
+		}
+		
+		public void error(Problem problem) {
+			this.problem = problem;
+		}
+
+		public void fatal(Problem problem) {
+			this.problem = problem;
+			
+		}
+
+		public void warning(Problem problem) {
+			this.problem = problem;
+		}
 	}
 
 }
