@@ -12,6 +12,8 @@ Package org.springframework.webflow.action
 Package org.springframework.webflow.config
 * Fixed bug in WebFlowConfigNamespaceHandler that caused the type attribute of the repository tag
   not to be read properly and throw an exception (SWF-239).
+* Added Spring tooling funtionality to the BeanDefinitionParser to allow tools such as SpringIDE
+  to properly interact with it (SWF-254).
 
 Package org.springframework.webflow.conversation
 * The SessionBindingConversationManager now re-binds the ConversationContainer in the session
