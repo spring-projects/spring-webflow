@@ -28,6 +28,7 @@ import org.w3c.dom.Element;
  * {@link BeanDefinitionParser} for the <code>&lt;executor&gt;</code> tag.
  * 
  * @author Ben Hale
+ * @author Christian Dupuis
  */
 class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
@@ -71,10 +72,12 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
 		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder
 				.rootBeanDefinition(FlowExecutorFactoryBean.class);
-		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistryRef(element));
+		definitionBuilder.setSource(parserContext.extractSource(element));
+		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, 
+				getRegistryRef(element, parserContext));
 		addExecutionAttributes(element, parserContext, definitionBuilder);
 		addExecutionListenerLoader(element, parserContext, definitionBuilder);
-		configureRepository(element, definitionBuilder);
+		configureRepository(element, definitionBuilder, parserContext);
 		return definitionBuilder.getBeanDefinition();
 	}
 
@@ -83,19 +86,21 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * or a <code>repository</code> tag.
 	 * @param element the root element to extract repository configuration from
 	 * @param definitionBuilder the builder
+	 * @param parserContext the parserContext
 	 */
-	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder) {
+	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder, 
+			ParserContext parserContext) {
 		Element repositoryElement = DomUtils.getChildElementByTagName(element, REPOSITORY_ELEMENT);
 		String repositoryTypeAttribute = getRepositoryType(element);
 		if (repositoryElement != null) {
 			if (StringUtils.hasText(repositoryTypeAttribute)) {
-				throw new IllegalArgumentException(
-						"The 'repositoryType' attribute of the 'executor' element must " +
-						"not have a value if there is a 'repository' element");
+				parserContext.getReaderContext().error(
+					"The 'repositoryType' attribute of the 'executor' element must " +
+					"not have a value if there is a 'repository' element", element);
 			}
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getType(repositoryElement));
-			configureContinuations(repositoryElement, definitionBuilder);
-			configureConversationManager(repositoryElement, definitionBuilder);
+			configureContinuations(repositoryElement, definitionBuilder, parserContext);
+			configureConversationManager(repositoryElement, definitionBuilder, parserContext);
 		}
 		else if (StringUtils.hasText(repositoryTypeAttribute)) {
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, repositoryTypeAttribute);
@@ -106,14 +111,16 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * Configure the max continuations setting.
 	 * @param repositoryElement the repository element
 	 * @param definitionBuilder the builder
+	 * @param parserContext the parserContext
 	 */
-	private void configureContinuations(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
+	private void configureContinuations(Element repositoryElement, BeanDefinitionBuilder definitionBuilder,
+			ParserContext parserContext) {
 		String maxContinuations = getMaxContinuations(repositoryElement);
 		if (StringUtils.hasText(maxContinuations)) {
 			if (!getType(repositoryElement).equals("CONTINUATION")) {
-				throw new IllegalArgumentException(
+				parserContext.getReaderContext().error(
 						"The 'max-continuations' attribute of the 'repository' element must not " +
-						"have a value if the 'type' attribute is not 'continuation'");
+						"have a value if the 'type' attribute is not 'continuation'", repositoryElement);
 			}
 			definitionBuilder.addPropertyValue(MAX_CONTINUATIONS_PROPERTY, maxContinuations);
 		}
@@ -123,15 +130,18 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * Configure the conversation manager
 	 * @param repositoryElement the repository element
 	 * @param definitionBuilder the builder
+	 * @param parserContext the parserContext
 	 */
-	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder) {
+	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder, 
+			ParserContext parserContext) {
 		String conversationManagerRef = getConversationManagerRef(repositoryElement);
 		String maxConversations = getMaxConversations(repositoryElement);
 		if (StringUtils.hasText(conversationManagerRef)) {
 			if(StringUtils.hasText(maxConversations)) {
-				throw new IllegalArgumentException(
+				parserContext.getReaderContext().error(
 						"The 'max-conversations' attribute of the 'repository' element must not " +
-						"have a value if there is a value for the 'conversation-manager-ref' attribute");
+						"have a value if there is a value for the 'conversation-manager-ref' attribute", 
+						repositoryElement);
 			}
 			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
 		}
@@ -144,12 +154,13 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * Returns the name of the registry detailed in the bean definition.
 	 * @param element the element to extract the registry name from
 	 * @return the name of the registry
+	 * @param parserContext the parserContext
 	 */
-	private String getRegistryRef(Element element) {
+	private String getRegistryRef(Element element, ParserContext parserContext) {
 		String registryRef = element.getAttribute(REGISTRY_REF_ATTRIBUTE);
 		if (!StringUtils.hasText(registryRef)) {
-			throw new IllegalArgumentException(
-					"The 'registry-ref' attribute of the 'executor' element must have a value");
+			parserContext.getReaderContext().error(
+					"The 'registry-ref' attribute of the 'executor' element must have a value", element);
 		}
 		return registryRef;
 	}
