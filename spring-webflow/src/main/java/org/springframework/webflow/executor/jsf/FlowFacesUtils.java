@@ -17,7 +17,6 @@ package org.springframework.webflow.executor.jsf;
 
 import javax.faces.context.FacesContext;
 
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 import org.springframework.webflow.conversation.impl.SessionBindingConversationManager;
@@ -27,7 +26,6 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.SimpleFlowExecutionRepository;
-import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
 
 /**
@@ -66,12 +64,12 @@ public class FlowFacesUtils {
 	/**
 	 * The default flow execution repository implementation to use.
 	 */
-	private static FlowExecutionRepository defaultRepository;
+	private static FlowExecutionRepository defaultExecutionRepository;
 
 	/**
 	 * The default flow execution factory implementation to use.
 	 */
-	private static FlowExecutionFactory defaultFactory;
+	private static FlowExecutionFactory defaultExecutionFactory;
 
 	/**
 	 * Returns the locator for flow definitions to use in a JSF environment.
@@ -83,15 +81,20 @@ public class FlowFacesUtils {
 	 */
 	public static FlowDefinitionLocator getDefinitionLocator(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
-		try {
+		if (ac.containsBean(FLOW_DEFINITION_LOCATOR_BEAN_NAME)) {
 			return (FlowDefinitionLocator) ac.getBean(FLOW_DEFINITION_LOCATOR_BEAN_NAME, FlowDefinitionLocator.class);
 		}
-		catch (NoSuchBeanDefinitionException e) {
-			String message = "No bean definition with id '" + FLOW_DEFINITION_LOCATOR_BEAN_NAME
-					+ "' could be found; to use Spring Web Flow with JSF you must "
-					+ "configure your context with a FlowDefinitionLocator bean with this id "
-					+ "exposing a registry of flow definitions.";
-			throw new JsfFlowConfigurationException(message, e);
+		else {
+			FlowExecutorImpl flowExecutor = getFlowExecutor(context);
+			if (flowExecutor != null) {
+				return flowExecutor.getDefinitionLocator();
+			}
+			else {
+				String message = "No bean definition with id '" + FLOW_DEFINITION_LOCATOR_BEAN_NAME + "' or '"
+						+ FLOW_EXECUTOR_BEAN_NAME
+						+ "' could be found; to use Spring Web Flow with JSF a FlowDefinitionLocator must be resolvable";
+				throw new JsfFlowConfigurationException(message);
+			}
 		}
 	}
 
@@ -112,17 +115,17 @@ public class FlowFacesUtils {
 					FlowExecutionRepository.class);
 		}
 		else {
-			if (defaultRepository == null) {
-				FlowExecutor flowExecutor = getFlowExecutor(context);
-				if (flowExecutor != null && flowExecutor instanceof FlowExecutorImpl) {
-					defaultRepository = ((FlowExecutorImpl) flowExecutor).getExecutionRepository();
+			if (defaultExecutionRepository == null) {
+				FlowExecutorImpl flowExecutor = getFlowExecutor(context);
+				if (flowExecutor != null) {
+					defaultExecutionRepository = flowExecutor.getExecutionRepository();
 				}
 				else {
-					defaultRepository = new SimpleFlowExecutionRepository(new FlowExecutionImplStateRestorer(
+					defaultExecutionRepository = new SimpleFlowExecutionRepository(new FlowExecutionImplStateRestorer(
 							getDefinitionLocator(context)), new SessionBindingConversationManager());
 				}
 			}
-			return defaultRepository;
+			return defaultExecutionRepository;
 		}
 	}
 
@@ -142,16 +145,16 @@ public class FlowFacesUtils {
 			return (FlowExecutionFactory) ac.getBean(FLOW_EXECUTION_FACTORY_BEAN_NAME, FlowExecutionFactory.class);
 		}
 		else {
-			if (defaultFactory == null) {
-				FlowExecutor flowExecutor = getFlowExecutor(context);
-				if (flowExecutor != null && flowExecutor instanceof FlowExecutorImpl) {
-					defaultFactory = ((FlowExecutorImpl) flowExecutor).getExecutionFactory();
+			if (defaultExecutionFactory == null) {
+				FlowExecutorImpl flowExecutor = getFlowExecutor(context);
+				if (flowExecutor != null) {
+					defaultExecutionFactory = flowExecutor.getExecutionFactory();
 				}
 				else {
-					defaultFactory = new FlowExecutionImplFactory();
+					defaultExecutionFactory = new FlowExecutionImplFactory();
 				}
 			}
-			return defaultFactory;
+			return defaultExecutionFactory;
 		}
 	}
 
@@ -163,10 +166,10 @@ public class FlowFacesUtils {
 	 * @param context the faces context
 	 * @return the flow executor, or null if no such bean exists
 	 */
-	private synchronized static FlowExecutor getFlowExecutor(FacesContext context) {
+	private synchronized static FlowExecutorImpl getFlowExecutor(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
 		if (ac.containsBean(FLOW_EXECUTOR_BEAN_NAME)) {
-			return (FlowExecutor) ac.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutor.class);
+			return (FlowExecutorImpl) ac.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutorImpl.class);
 		}
 		else {
 			return null;
