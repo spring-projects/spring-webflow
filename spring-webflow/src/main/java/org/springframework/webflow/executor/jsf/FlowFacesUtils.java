@@ -27,62 +27,149 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.SimpleFlowExecutionRepository;
+import org.springframework.webflow.executor.FlowExecutor;
+import org.springframework.webflow.executor.FlowExecutorImpl;
 
 /**
- * Trivial helper utility class for SWF within a JSF environment.
+ * Trivial helper utility class for SWF within a JSF environment. Used mainly to
+ * locate Web Flow services needed to run the JSF integration.
  * 
  * @author Keith Donald
  */
 public class FlowFacesUtils {
 
-	private static final String REPOSITORY_BEAN_NAME = "flowExecutionRepository";
+	/**
+	 * Bean name of a custom flow executor implementation.
+	 * 
+	 * Note the flow executor object is used only at configuration time to
+	 * extract other lower-level services needed by the JSF integration (flow
+	 * execution repository, flow execution factory). The runtime FlowExecutor
+	 * interface is never used by this JSF integration.
+	 */
+	private static final String FLOW_EXECUTOR_BEAN_NAME = "flowExecutor";
 
-	private static final String LOCATOR_BEAN_NAME = "flowDefinitionLocator";
+	/**
+	 * Bean name of a custom flow execution repository implementation.
+	 */
+	private static final String FLOW_EXECUTION_REPOSITORY_BEAN_NAME = "flowExecutionRepository";
 
-	private static final String FACTORY_BEAN_NAME = "flowExecutionFactory";
+	/**
+	 * Bean name of a custom flow definition locator implementation.
+	 */
+	private static final String FLOW_DEFINITION_LOCATOR_BEAN_NAME = "flowDefinitionLocator";
 
-	private static SimpleFlowExecutionRepository defaultRepository;
+	/**
+	 * Bean name of a custom flow execution factory implementation.
+	 */
+	private static final String FLOW_EXECUTION_FACTORY_BEAN_NAME = "flowExecutionFactory";
 
-	private static FlowExecutionImplFactory defaultFactory;
+	/**
+	 * The default flow execution repository implementation to use.
+	 */
+	private static FlowExecutionRepository defaultRepository;
 
+	/**
+	 * The default flow execution factory implementation to use.
+	 */
+	private static FlowExecutionFactory defaultFactory;
+
+	/**
+	 * Returns the locator for flow definitions to use in a JSF environment.
+	 * Searches for a bean in the root web application context named
+	 * {@link #FLOW_DEFINITION_LOCATOR_BEAN_NAME}. A bean of type
+	 * {@link FlowDefinitionLocator} must exist by this name.
+	 * @param context the faces context
+	 * @return the flow definition locator
+	 */
 	public static FlowDefinitionLocator getDefinitionLocator(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
 		try {
-			return (FlowDefinitionLocator)ac.getBean(LOCATOR_BEAN_NAME, FlowDefinitionLocator.class);
+			return (FlowDefinitionLocator) ac.getBean(FLOW_DEFINITION_LOCATOR_BEAN_NAME, FlowDefinitionLocator.class);
 		}
 		catch (NoSuchBeanDefinitionException e) {
-			String message = "No bean definition with id '" + LOCATOR_BEAN_NAME
+			String message = "No bean definition with id '" + FLOW_DEFINITION_LOCATOR_BEAN_NAME
 					+ "' could be found; to use Spring Web Flow with JSF you must "
-					+ "configure your context with a FlowDefinitionLocator "
+					+ "configure your context with a FlowDefinitionLocator bean with this id "
 					+ "exposing a registry of flow definitions.";
 			throw new JsfFlowConfigurationException(message, e);
 		}
 	}
 
+	/**
+	 * Returns the flow execution repository to use in a JSF environment.
+	 * Searches for a bean in the root web application context named
+	 * {@link #FLOW_EXECUTION_REPOSITORY_BEAN_NAME}. If no such bean exists
+	 * with this name, falls back on the repository configured by a bean with
+	 * name {@link #FLOW_EXECUTOR_BEAN_NAME}. If no bean exists with that name,
+	 * uses the default 'simple' repository implementation.
+	 * @param context the faces context
+	 * @return the flow execution repository
+	 */
 	public synchronized static FlowExecutionRepository getExecutionRepository(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
-		if (ac.containsBean(REPOSITORY_BEAN_NAME)) {
-			return (FlowExecutionRepository)ac.getBean(REPOSITORY_BEAN_NAME, FlowExecutionRepository.class);
+		if (ac.containsBean(FLOW_EXECUTION_REPOSITORY_BEAN_NAME)) {
+			return (FlowExecutionRepository) ac.getBean(FLOW_EXECUTION_REPOSITORY_BEAN_NAME,
+					FlowExecutionRepository.class);
 		}
 		else {
 			if (defaultRepository == null) {
-				defaultRepository = new SimpleFlowExecutionRepository(new FlowExecutionImplStateRestorer(
-						getDefinitionLocator(context)), new SessionBindingConversationManager());
+				FlowExecutor flowExecutor = getFlowExecutor(context);
+				if (flowExecutor != null && flowExecutor instanceof FlowExecutorImpl) {
+					defaultRepository = ((FlowExecutorImpl) flowExecutor).getExecutionRepository();
+				}
+				else {
+					defaultRepository = new SimpleFlowExecutionRepository(new FlowExecutionImplStateRestorer(
+							getDefinitionLocator(context)), new SessionBindingConversationManager());
+				}
 			}
 			return defaultRepository;
 		}
 	}
 
+	/**
+	 * Returns the flow execution factory to use in a JSF environment. Searches
+	 * for a bean in the root web application context named
+	 * {@link #FLOW_EXECUTION_FACTORY_BEAN_NAME}. If no such bean exists with
+	 * this name, falls back on the repository configured by a bean with name
+	 * {@link #FLOW_EXECUTOR_BEAN_NAME}. If no bean exists with that name, uses
+	 * the default factory implementation.
+	 * @param context the faces context
+	 * @return the flow execution factory
+	 */
 	public synchronized static FlowExecutionFactory getExecutionFactory(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
-		if (ac.containsBean(FACTORY_BEAN_NAME)) {
-			return (FlowExecutionFactory)ac.getBean(FACTORY_BEAN_NAME, FlowExecutionFactory.class);
+		if (ac.containsBean(FLOW_EXECUTION_FACTORY_BEAN_NAME)) {
+			return (FlowExecutionFactory) ac.getBean(FLOW_EXECUTION_FACTORY_BEAN_NAME, FlowExecutionFactory.class);
 		}
 		else {
 			if (defaultFactory == null) {
-				defaultFactory = new FlowExecutionImplFactory();
+				FlowExecutor flowExecutor = getFlowExecutor(context);
+				if (flowExecutor != null && flowExecutor instanceof FlowExecutorImpl) {
+					defaultFactory = ((FlowExecutorImpl) flowExecutor).getExecutionFactory();
+				}
+				else {
+					defaultFactory = new FlowExecutionImplFactory();
+				}
 			}
 			return defaultFactory;
+		}
+	}
+
+	/**
+	 * Returns the flow executor providing access to services used by the Spring
+	 * Web Flow JSF integration. Searches for a bean in the root web application
+	 * context named {@link #FLOW_EXECUTOR_BEAN_NAME}. If no such bean exists
+	 * returns null.
+	 * @param context the faces context
+	 * @return the flow executor, or null if no such bean exists
+	 */
+	private synchronized static FlowExecutor getFlowExecutor(FacesContext context) {
+		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
+		if (ac.containsBean(FLOW_EXECUTOR_BEAN_NAME)) {
+			return (FlowExecutor) ac.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutor.class);
+		}
+		else {
+			return null;
 		}
 	}
 }
