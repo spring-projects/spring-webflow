@@ -20,10 +20,10 @@ Package org.springframework.webflow.conversation
   every time a contained conversation is unlocked (SWF-244).
 
 Package org.springframework.webflow.executor
-* Added resource URL encoded to redirects in a JSF environment
-* Added support for configuring a <flow:executor> in a JSF environment, greatly simplifying JSF SWF configuration and making it 
-  consistent with Spring MVC and Struts.  This also means its much easier to benefit from defaults such as a
-  continuation-based flow execution repository and 'alwaysRedirectOnPause'.
+* Added resource URL encoding to redirects in a JSF environment (SWF-256).
+* Added support for configuring a <flow:executor> in a JSF environment, greatly simplifying JSF SWF
+  configuration and making it consistent with Spring MVC and Struts.  This also means its much easier
+  to benefit from defaults such as a continuation-based flow execution repository and 'alwaysRedirectOnPause'.
   
 Changes in version 1.0.1 (08.01.2007)
 -------------------------------------
