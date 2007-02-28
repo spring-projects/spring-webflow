@@ -19,6 +19,9 @@ Package org.springframework.webflow.conversation
 * The SessionBindingConversationManager now re-binds the ConversationContainer in the session
   every time a contained conversation is unlocked (SWF-244).
 
+Package org.springframework.webflow.executor
+* Added resource URL encoded to redirects in a JSF environment
+
 Changes in version 1.0.1 (08.01.2007)
 -------------------------------------
 

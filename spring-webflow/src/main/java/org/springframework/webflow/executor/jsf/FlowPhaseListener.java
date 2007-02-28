@@ -317,6 +317,7 @@ public class FlowPhaseListener implements PhaseListener {
 
 	private void sendRedirect(String url, JsfExternalContext context) {
 		try {
+			url = context.getFacesContext().getExternalContext().encodeResourceURL(url);
 			context.getFacesContext().getExternalContext().redirect(url);
 			context.getFacesContext().responseComplete();
 		}
