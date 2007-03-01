@@ -19,6 +19,10 @@ Package org.springframework.webflow.conversation
 * The SessionBindingConversationManager now re-binds the ConversationContainer in the session
   every time a contained conversation is unlocked (SWF-244).
 
+Package org.springframework.webflow.execution
+* Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for
+  setting flow attributes before the flow starts.
+
 Package org.springframework.webflow.executor
 * Added resource URL encoding to redirects in a JSF environment (SWF-256).
 * Added support for configuring a <flow:executor> in a JSF environment, greatly simplifying JSF SWF
