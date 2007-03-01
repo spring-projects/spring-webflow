@@ -114,7 +114,7 @@ class FlowExecutionListeners {
 
 	/**
 	 * Notify all interested listeners that a flow execution session has been
-	 * activated (created, on the stack and about to start)
+	 * activated (created, on the stack and about to start).
 	 */
 	public void fireSessionCreated(RequestContext context, FlowSession session) {
 		for (int i = 0; i < listeners.length; i++) {
