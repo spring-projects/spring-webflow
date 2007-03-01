@@ -55,7 +55,7 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	private boolean sessionEnding;
 	
 	private int exceptionsThrown;
-	
+
 	/**
 	 * Is the flow execution running: it has started but not yet ended.
 	 */
@@ -144,18 +144,28 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 		sessionStarting = true;
 	}
-
+	
+	public void sessionCreated(RequestContext context, FlowSession session) {
+		Assert.state(sessionStarting, "The session should've been starting...");
+		if (session.isRoot()) {
+			Assert.state(!started, "The flow execution was already started");
+			executing = true;
+		}
+		else {
+			assertStarted();
+			flowNestingLevel++;
+		}	
+	}
+	
 	public void sessionStarted(RequestContext context, FlowSession session) {
 		Assert.state(sessionStarting, "The session should've been starting...");
 		sessionStarting = false;
 		if (session.isRoot()) {
 			Assert.state(!started, "The flow execution was already started");
 			started = true;
-			executing = true;
 		}
 		else {
 			assertStarted();
-			flowNestingLevel++;
 		}
 	}
 

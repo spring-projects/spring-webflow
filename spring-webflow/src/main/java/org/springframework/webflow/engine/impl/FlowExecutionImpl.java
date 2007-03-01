@@ -382,7 +382,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	/**
 	 * Activate a new <code>FlowSession</code> for the flow definition.
-	 * Pushes the new flow session onto the stack.
+	 * Creates the new flow session and pushes it onto the stack.
 	 * @param flow the flow definition
 	 * @return the new flow session
 	 */

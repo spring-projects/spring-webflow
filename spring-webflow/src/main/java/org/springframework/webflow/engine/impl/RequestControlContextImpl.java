@@ -192,6 +192,7 @@ class RequestControlContextImpl implements RequestControlContext {
 		}
 		getExecutionListeners().fireSessionStarting(this, flow, input);
 		FlowSession session = flowExecution.activateSession(flow);
+		getExecutionListeners().fireSessionCreated(this, session);
 		ViewSelection selectedView = flow.start(this, input);
 		getExecutionListeners().fireSessionStarted(this, session);
 		return selectedView;

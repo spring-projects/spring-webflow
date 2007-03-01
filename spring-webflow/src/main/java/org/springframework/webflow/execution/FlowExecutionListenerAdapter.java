@@ -40,6 +40,9 @@ public abstract class FlowExecutionListenerAdapter implements FlowExecutionListe
 	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
 	}
 
+	public void sessionCreated(RequestContext context, FlowSession session) {
+	}
+
 	public void sessionStarted(RequestContext context, FlowSession session) {
 	}
 

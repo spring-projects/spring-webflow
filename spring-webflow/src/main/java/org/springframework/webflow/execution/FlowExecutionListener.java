@@ -38,7 +38,8 @@ import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
  * <p>
  * Note that flow execution listeners are registered with a flow execution when
  * that execution is created by a {@link FlowExecutionFactory factory} or
- * restored by a {@link org.springframework.webflow.execution.repository.FlowExecutionRepository}.
+ * restored by a
+ * {@link org.springframework.webflow.execution.repository.FlowExecutionRepository}.
  * Typically a listener will not be registered with a flow execution <i>at
  * runtime</i>, when the flow execution is already active.
  * 
@@ -68,19 +69,31 @@ public interface FlowExecutionListener {
 	public void requestProcessed(RequestContext context);
 
 	/**
-	 * Called immediately after a start event is signaled, indicating a new
-	 * session of the flow is starting but has not yet entered its start state.
-	 * An exception may be thrown from this method to veto the start operation.
-	 * Any type of runtime exception can be used for this purpose.
+	 * Called to indicate a new flow definition session is about to be created
+	 * and started. Called before the session is created. An exception may be
+	 * thrown from this method to veto the start operation. Any type of runtime
+	 * exception can be used for this purpose.
 	 * @param context the source of the event
 	 * @param definition the flow for which a new session is starting
-	 * @param input a mutable input map to the starting flow session
+	 * @param input a mutable input map - attributes placed in this map are
+	 * eligible for input mapping by the flow definition at startup
 	 */
 	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input);
 
 	/**
-	 * Called when a new flow session has started. At this point the start state
-	 * has been entered.
+	 * Called after a new flow session has been created but before it starts.
+	 * Useful for setting arbitrary attributes in the session before the flow
+	 * starts.
+	 * @since 1.0.2
+	 * @param context the source of the event
+	 * @param session the session that was created
+	 */
+	public void sessionCreated(RequestContext context, FlowSession session);
+
+	/**
+	 * Called after a new flow session has started. At this point the flow's
+	 * start state has been entered and any other startup behaviors have been
+	 * executed.
 	 * @param context the source of the event
 	 * @param session the session that was started
 	 */
@@ -110,7 +123,7 @@ public interface FlowExecutionListener {
 	 * @param state <i>to</i> state of the transition
 	 */
 	public void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition state);
-	
+
 	/**
 	 * Called when a flow execution is paused, for instance when it is waiting
 	 * for user input (after event processing).
@@ -131,8 +144,8 @@ public interface FlowExecutionListener {
 	 * before it has ended.
 	 * @param context the source of the event
 	 * @param session the current active session that is ending
-	 * @param output the flow output produced by the ending session, this map may
-	 * be modified by this listener to affect the output returned
+	 * @param output the flow output produced by the ending session, this map
+	 * may be modified by this listener to affect the output returned
 	 */
 	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output);
 
@@ -144,12 +157,14 @@ public interface FlowExecutionListener {
 	 * @param output final, unmodifiable output returned by the ended session
 	 */
 	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output);
-	
+
 	/**
 	 * Called when an exception is thrown during a flow execution, before the
-	 * exception is handled by any registered {@link FlowExecutionExceptionHandler handler}.
+	 * exception is handled by any registered
+	 * {@link FlowExecutionExceptionHandler handler}.
 	 * @param context the source of the exception
 	 * @param exception the exception that occurred
 	 */
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception);
+
 }
