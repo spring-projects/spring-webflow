@@ -62,6 +62,14 @@
 	</target>
 
 	<target name="clover.instrument" depends="clover.init, compile" />
+	
+	<target name="clover-xml" depends="clover.instrument, tests-local" description="Produce a test coverage xml file">
+		<clover-report>
+			<current outfile="${target.clover.dir}/coverage.xml">
+				<format type="xml"/>
+			</current>
+		</clover-report>
+	</target>
 
 	<target name="clover-report" depends="clover.instrument, tests-local" description="Produce a test coverage report">
 		<clover-report>
