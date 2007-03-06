@@ -1,0 +1,6 @@
+SPRING WEB FLOW SANDBOX (SWF) CHANGELOG
+===============================
+http://www.springframework.org
+
+Changes in version 1.0.2 ()
+-------------------------------------
