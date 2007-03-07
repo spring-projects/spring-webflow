@@ -29,6 +29,7 @@ public abstract class HibernateUtils {
     }
     @Deprecated public static List<Class> getEntityClasses( EntityManager aEntityManager ) {
         SessionFactory sessionFactory = getSession(aEntityManager).getSessionFactory();
+        @SuppressWarnings("unchecked")
         Map<String, ClassMetadata> metadataMap = sessionFactory.getAllClassMetadata();
         List<Class> retVal = new LinkedList<Class>();
         for (ClassMetadata classMetadata : metadataMap.values()) {

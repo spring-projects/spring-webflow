@@ -84,10 +84,10 @@ public class ExtendedFlowExecutionListenerInterceptor extends FlowExecutionListe
      * invoked.
      *
      * @param aContext The request aContext
+     * @param aFlowDefinition
      * @param aInput
      * @throws EnterStateVetoException
      *          The start state transition was not allowed
-     * @param aFlowDefinition
      */
     public final void sessionStarting(RequestContext aContext, FlowDefinition aFlowDefinition, MutableAttributeMap aInput) {
         aContext.getRequestScope().put(FIRST_EVENT_SIGNALED, Boolean.TRUE);

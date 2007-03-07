@@ -8,7 +8,7 @@
 	<property file="${common.build.dir}/project.properties" />
 	<property file="${user.home}/build.properties" />
 
-        <property name="build.web" value="true"/>
+	<property name="build.web" value="true"/>
 
 	<property name="project.title" value="Spring Web Flow Sandbox" />
 	<property name="project.package" value="org.springframework.webflow" />

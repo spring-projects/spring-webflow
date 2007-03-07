@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractResourceHolder<E> implements ResourceHolder<E>
         , MethodReplacer {//todo replace on injector in config
+	@SuppressWarnings("unchecked")
     public Object reimplement(Object aObj, Method aMethod, Object[] aArgs) throws Throwable {
         Object retVal = null;
         if( aArgs.length == 0 ){

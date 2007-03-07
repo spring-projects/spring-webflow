@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
  * Lifycycle controller that hide vendor specific routines for entity manager like:
  * <ul>
  * <li>Application transaction commit implementation. See, for example,
- *  {@link org.hibernate.annotations.FlushModeType.MANUAL}</li>
+ * <code>org.hibernate.annotations.FlushModeType.MANUAL</code></li>
  * <li>Binding/Unbinding persistence context resources for current thread</li>
  * </ul>
  *

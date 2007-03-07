@@ -1,19 +1,17 @@
 package org.springframework.webflow.jpa;
 
-import org.springframework.webflow.execution.ExtendedFlowExecutionListenerInterceptor;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.FlowSession;
-import org.springframework.webflow.execution.FlowExecutionContext;
-import org.springframework.webflow.execution.ConversationLifecycleListener;
-import org.springframework.webflow.execution.ConversationLifecycleListenerAdapter;
+import javax.persistence.EntityManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.EndState;
-import org.springframework.web.context.request.WebRequestInterceptor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.persistence.EntityManager;
+import org.springframework.webflow.execution.ConversationLifecycleListenerAdapter;
+import org.springframework.webflow.execution.FlowExecutionContext;
+import org.springframework.webflow.execution.FlowSession;
+import org.springframework.webflow.execution.RequestContext;
 /**
  * Intended for those wating a long session model within webflows. A entity
  * manager is created when the flow begins, and is disconnected and reconnected

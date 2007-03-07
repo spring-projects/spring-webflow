@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
+	<classpathentry kind="lib" path="lib/global/antlr.jar"/>
+	<classpathentry kind="lib" path="lib/global/aopalliance.jar"/>
+	<classpathentry kind="lib" path="lib/global/asm.jar"/>
+	<classpathentry kind="lib" path="lib/global/asm-attrs.jar"/>
+	<classpathentry kind="lib" path="lib/global/cglib.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/global/dom4j.jar"/>
+	<classpathentry kind="lib" path="lib/global/ehcache.jar"/>
+	<classpathentry kind="lib" path="lib/global/hibernate.jar"/>
+	<classpathentry kind="lib" path="lib/global/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/global/hibernate-entitymanager.jar"/>
+	<classpathentry kind="lib" path="lib/global/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/global/javassist.jar"/>
+	<classpathentry kind="lib" path="lib/global/jboss-archive-browsing.jar"/>
+	<classpathentry kind="lib" path="lib/global/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/global/jta.jar"/>
+	<classpathentry kind="lib" path="lib/global/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/global/persistence-api.jar"/>
+	<classpathentry kind="lib" path="lib/global/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-aop.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-dao.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-jdbc.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-jpa.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="lib/global/standard.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
