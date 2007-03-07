@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<bean id="saleProcessor" class="org.springframework.webflow.samples.sellitem.jpa.JpaSaleProcessor">
+        <replaced-method name="getEntityManager" replacer="entityManagerHolder" />
+	</bean>
+	<tx:annotation-driven/>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>	
+	</bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+		<property name="url" value="jdbc:hsqldb:mem:sellItem"/>
+		<property name="username" value="sa"/>
+	</bean>
+    <bean id="entityManagerLifecycleController" class="org.springframework.webflow.jpa.hibernate.EntityManagerLifecycleController">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="entityManagerHolder" class="org.springframework.webflow.jpa.TransactionSynchronizationManagerEnityManagerHolder">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="sellitem"/>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+        </property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="showSql" value="true"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+                <prop key="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</prop>
+                <prop key="hibernate.connection.url">jdbc:hsqldb:mem:sellItem</prop>
+                <prop key="hibernate.connection.release_mode">after_transaction</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+                <prop key="hibernate.current_session_context_class">org.hibernate.context.ManagedSessionContext</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
