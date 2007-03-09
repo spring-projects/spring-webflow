@@ -25,6 +25,7 @@
 	<selector id="project.source.zip.includes">
 		<or>
 			<filename name="common-build/**" />
+			<filename name="readme.txt" />
 			<filename name="webflow-architecture.xml" />
 			<filename name="webflow-workspace.xml" />
 			<and>
@@ -36,14 +37,16 @@
 				</or>
 				<and>
 					<!-- exclude core project derived artifacts -->
-					<filename name="*/docs/**" negate="true"/>
+					<filename name="*/docs/reference/lib/**" negate="true"/>
+					<filename name="*/docs/reference/target/**" negate="true"/>
 					<filename name="*/target/**" negate="true" />
 					<filename name="*/build.properties" negate="true" />
 					<filename name="*/lib/**" negate="true" />
 				</and>
 				<and>
 					<!-- exclude sample project derived artifacts -->
-					<filename name="*/*/docs/**" negate="true"/>
+					<filename name="*/*/docs/refrence/lib/**" negate="true"/>
+					<filename name="*/*/docs/refrence/target/**" negate="true"/>
 					<filename name="*/*/target/**" negate="true" />
 					<filename name="*/*/build.properties" negate="true" />
 					<filename name="*/*/lib/**" negate="true" />
