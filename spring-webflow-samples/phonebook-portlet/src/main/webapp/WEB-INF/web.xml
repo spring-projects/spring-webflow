@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app>
 
 	<context-param>
@@ -35,21 +34,12 @@
 	
 	<servlet>
 		<servlet-name>phonebook</servlet-name>
-		<display-name>phonebook Wrapper</display-name>
-		<description>Automated generated Portlet Wrapper</description>
-		<servlet-class>
-			org.apache.pluto.core.PortletServlet
-		</servlet-class>
+		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
 		<init-param>
-			<param-name>portlet-guid</param-name>
-			<param-value>swf-phonebook-portlet.phonebook</param-value>
+			<param-name>portlet-name</param-name>
+			<param-value>phonebook</param-value>
 		</init-param>
-		<init-param>
-			<param-name>portlet-class</param-name>
-			<param-value>
-				org.springframework.web.portlet.DispatcherPortlet
-			</param-value>
-		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<!-- Portlet MVC Specific -->
@@ -61,10 +51,10 @@
 		</servlet-class>
 	</servlet>
 
-   <servlet-mapping>
-      <servlet-name>phonebook</servlet-name>
-      <url-pattern>/phonebook/*</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>phonebook</servlet-name>
+		<url-pattern>/PlutoInvoker/phonebook</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>viewRendererServlet</servlet-name>

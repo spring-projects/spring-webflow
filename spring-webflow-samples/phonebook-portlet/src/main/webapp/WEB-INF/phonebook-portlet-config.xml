@@ -6,7 +6,8 @@
        http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
        
 	<!-- PortletMode controller Map -->
-	<bean id="portletModeControllerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+	<bean id="portletModeControllerMapping"
+		class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
 		<property name="portletModeMap">
 			<map>
 				<entry key="view" value-ref="flowController"/>
@@ -15,11 +16,11 @@
 	</bean>
 
 	<!--
-		- Front controller for VIEW PortletMode. A view that kicks off a new flow
-		- execution may parameterize this controller with a _flowId parameter.
-		- A view participating in an existing flow execution may simply pass it the
-		- appropriate _flowExecutionId and _eventId.
-	-->
+	  - Front controller for VIEW PortletMode. A view that kicks off a new flow
+	  - execution may parameterize this controller with a _flowId parameter.
+	  - A view participating in an existing flow execution may simply pass it the
+	  - appropriate _flowExecutionKey and _eventId.
+	  -->
 	<bean id="flowController" class="org.springframework.webflow.executor.mvc.PortletFlowController">
 		<property name="flowExecutor" ref="flowExecutor"/>
 		<property name="defaultFlowId" value="search-flow"/>

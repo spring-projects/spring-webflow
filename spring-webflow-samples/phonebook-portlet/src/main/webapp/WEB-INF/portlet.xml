@@ -6,7 +6,7 @@
 
 	<portlet>
 		<portlet-name>phonebook</portlet-name>
-		<display-name>Phone Book</display-name>
+		<display-name>Phonebook</display-name>
 
 		<portlet-class>
 			org.springframework.web.portlet.DispatcherPortlet
@@ -32,7 +32,7 @@
 		</supports>
 
 		<portlet-info>
-			<title>Phone Book</title>
+			<title>Phonebook</title>
 		</portlet-info>
 
 		<portlet-preferences>
@@ -41,7 +41,6 @@
 				<value>2</value>
 			</preference>
 		</portlet-preferences>
-
 	</portlet>
 
 </portlet-app>
