@@ -15,6 +15,9 @@ Package org.springframework.webflow.config
 * Added Spring tooling funtionality to the BeanDefinitionParser to allow tools such as SpringIDE
   to properly interact with it (SWF-254).
 
+Package org.springframework.webflow.context
+* The ThreadLocal in ExternalContextHolder is now final (SWF-262).
+
 Package org.springframework.webflow.conversation
 * The SessionBindingConversationManager now re-binds the ConversationContainer in the session
   every time a contained conversation is unlocked (SWF-244).
