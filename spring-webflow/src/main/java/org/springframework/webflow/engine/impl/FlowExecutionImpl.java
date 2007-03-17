@@ -307,14 +307,20 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Attempting to handle [" + exception + "]");
 		}
-		// the state could be null if the flow was attempting a start operation
-		ViewSelection selectedView = tryStateHandlers(exception, context);
-		if (selectedView != null) {
-			return selectedView;
+		try {
+			// the state could be null if the flow was attempting a start operation
+			ViewSelection selectedView = tryStateHandlers(exception, context);
+			if (selectedView != null) {
+				return selectedView;
+			}
+			selectedView = tryFlowHandlers(exception, context);
+			if (selectedView != null) {
+				return selectedView;
+			}
 		}
-		selectedView = tryFlowHandlers(exception, context);
-		if (selectedView != null) {
-			return selectedView;
+		catch (FlowExecutionException newException) {
+			// exception handling resulted in a new FlowExecutionException, try to handle it
+			return handleException(newException, context);
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rethrowing unhandled flow execution exception");

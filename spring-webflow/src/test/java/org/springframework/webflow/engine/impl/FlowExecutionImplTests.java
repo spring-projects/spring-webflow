@@ -50,8 +50,10 @@ import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
+import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowServiceLocator;
 
 /**
  * General flow execution tests.
@@ -61,6 +63,19 @@ import org.springframework.webflow.test.MockExternalContext;
  * @author Ben Hale
  */
 public class FlowExecutionImplTests extends TestCase {
+	
+	public void testExceptionWhileHandlingException() {
+		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
+		serviceLocator.registerBean("testAction", new ExceptionThrowingAction());
+		XmlFlowBuilder flowBuilder =
+			new XmlFlowBuilder(new ClassPathResource("exceptionHandlingFlow.xml", this.getClass()));
+		flowBuilder.setFlowServiceLocator(serviceLocator);
+		Flow flow = new FlowAssembler("flow", flowBuilder).assembleFlow();
+		FlowExecution flowExecution = new FlowExecutionImpl(flow);
+		ViewSelection view = flowExecution.start(null, new MockExternalContext());
+		assertEquals("failed", ((ApplicationView)view).getViewName());
+		assertFalse(flowExecution.isActive());
+	}
 
 	public void testFlowExecutionListener() {
 		Flow flow = new Flow("myFlow");

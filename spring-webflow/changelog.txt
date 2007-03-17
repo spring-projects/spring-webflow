@@ -22,6 +22,10 @@ Package org.springframework.webflow.conversation
 * The SessionBindingConversationManager now re-binds the ConversationContainer in the session
   every time a contained conversation is unlocked (SWF-244).
 
+Package org.springframework.webflow.engine
+* FlowExecutionImpl.handleException() now also tries to handle FlowExecutionExceptions that
+  occur during exception handling (SWF-261).
+
 Package org.springframework.webflow.execution
 * Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for
   setting flow attributes before the flow starts (SWF-223).

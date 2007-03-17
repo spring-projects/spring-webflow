@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="firstTry" />
+	
+	<action-state id="firstTry">
+		<action bean="testAction">
+			<attribute name="exceptionType" value="java.sql.SQLException"/>
+		</action>
+		<transition on-exception="java.sql.SQLException" to="secondTry"/>
+	</action-state>
+	
+	<action-state id="secondTry">
+		<action bean="testAction">
+			<attribute name="exceptionType" value="java.sql.SQLException"/>
+		</action>
+		<transition on-exception="java.sql.SQLException" to="failed"/>
+	</action-state>
+	
+	<end-state id="failed" view="failed"/>
+	
+</flow>  
