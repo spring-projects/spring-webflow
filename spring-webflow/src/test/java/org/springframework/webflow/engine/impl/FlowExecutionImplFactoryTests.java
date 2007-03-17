@@ -29,7 +29,11 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 import org.springframework.webflow.test.MockExternalContext;
 
+/**
+ * Test case for {@link FlowExecutionImplFactory}.
+ */
 public class FlowExecutionImplFactoryTests extends TestCase {
+
 	private FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 
 	private Flow flowDefinition = new SimpleFlow();

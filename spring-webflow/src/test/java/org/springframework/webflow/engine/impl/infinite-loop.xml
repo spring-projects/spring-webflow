@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
-
-	<start-state id="invokeAction" />
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+		
+	<start-state idref="invokeAction"/>
 
 	<action-state id="invokeAction">
 		<action bean="action" method="method"/>
-		<transition on="success" to="displayCustomer">
+		<transition on="success" to="end">
+			<!-- transition is not allowed to execute since second action signals error,
+			     as a result the source state will be re-entered, starting a loop... -->
 			<action bean="action" method="method"/>
 			<action bean="action" method="errorMethod"/>
 		</transition>
 	</action-state>
 		
-	<end-state id="displayCustomer" view="customer"/>
-	
-	<import resource="infinite-loop-beans.xml"/>
+	<end-state id="end"/>
 </flow>  

@@ -33,8 +33,13 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowServiceLocator;
 
+/**
+ * Miscellaneous flow execution tests.
+ */
 public class MiscFlowExecutionTests extends TestCase {
+
 	public void testRequestScopePutInEntryAction() {
 		Flow parentFlow = new Flow("parent");
 		Flow flow = new Flow("test");
@@ -76,16 +81,18 @@ public class MiscFlowExecutionTests extends TestCase {
 		}
 	}
 
-	/*
 	public void testInfiniteLoop() {
+		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
+		serviceLocator.registerBean("action", new InfiniteLoopTestAction());
 		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("infinite-loop.xml", getClass()));
+		builder.setFlowServiceLocator(serviceLocator);
 		Flow flow = new FlowAssembler("myFlow", builder).assembleFlow();
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
 		try {
 			execution.start(null, new MockExternalContext());
-		} catch (RequiredMappingException e) {
-			
+		}
+		catch (StackOverflowError e) {
+			// expected
 		}
 	}
-	*/
 }

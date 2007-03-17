@@ -40,10 +40,8 @@ import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockParameterMap;
 
 /**
- * Test case for FlowExecutionStack.
- * 
- * @see FlowExecutionImpl
- * 
+ * Test case for {@link FlowExecutionImplStateRestorer}.
+ *
  * @author Erwin Vervaet
  */
 public class FlowExecutionImplStateRestorerTests extends TestCase {
