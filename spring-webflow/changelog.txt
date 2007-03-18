@@ -25,6 +25,8 @@ Package org.springframework.webflow.conversation
 Package org.springframework.webflow.engine
 * FlowExecutionImpl.handleException() now also tries to handle FlowExecutionExceptions that
   occur during exception handling (SWF-261).
+* The XmlFlowBuilder now also supports OGNL expressions in the "to" attribute of a transition
+  when using the "on-exception" attribute (SWF-269).
 
 Package org.springframework.webflow.execution
 * Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for

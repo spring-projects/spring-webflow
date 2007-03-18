@@ -657,6 +657,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		for (Iterator it = transitionElements.iterator(); it.hasNext();) {
 			Element transitionElement = (Element)it.next();
 			if (!StringUtils.hasText(transitionElement.getAttribute(ON_EXCEPTION_ATTRIBUTE))) {
+				// the "on-exception transition" is not really a transition but rather
+				// a FlowExecutionExceptionHandler (see parseTransitionExecutingExceptionHandlers)
 				transitions.add(parseTransition(transitionElement));
 			}
 		}
@@ -1038,6 +1040,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		for (Iterator it = transitionElements.iterator(); it.hasNext();) {
 			Element transitionElement = (Element)it.next();
 			if (StringUtils.hasText(transitionElement.getAttribute(ON_EXCEPTION_ATTRIBUTE))) {
+				// the "on-exception transitions" are not really transitions but rather
+				// FlowExecutionExceptionHandlers
 				exceptionHandlers.add(parseTransitionExecutingExceptionHandler(transitionElement));
 			}
 		}
@@ -1048,7 +1052,9 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(Element element) {
 		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
 		Class exceptionClass = (Class)fromStringTo(Class.class).execute(element.getAttribute(ON_EXCEPTION_ATTRIBUTE));
-		handler.add(exceptionClass, element.getAttribute(TO_ATTRIBUTE));
+		TargetStateResolver targetStateResolver = (TargetStateResolver)fromStringTo(TargetStateResolver.class).execute(
+				element.getAttribute(TO_ATTRIBUTE));
+		handler.add(exceptionClass, targetStateResolver);
 		handler.getActionList().addAll(parseAnnotatedActions(element));
 		return handler;
 	}

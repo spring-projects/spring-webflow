@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.builder.xml;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import junit.framework.TestCase;
@@ -34,7 +35,10 @@ import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.support.ApplicationViewSelector;
 import org.springframework.webflow.engine.support.TransitionExecutingStateExceptionHandler;
 import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.execution.support.ApplicationView;
+import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
  * Test case for XML flow builder.
@@ -47,13 +51,13 @@ public class XmlFlowBuilderTests extends TestCase {
 
 	private Flow flow;
 
-	private MockRequestContext context;
+	private MockRequestControlContext context;
 
 	protected void setUp() throws Exception {
 		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("testFlow1.xml", XmlFlowBuilderTests.class),
 				new TestFlowServiceLocator());
 		flow = new FlowAssembler("testFlow1", builder).assembleFlow();
-		context = new MockRequestContext();
+		context = new MockRequestControlContext(flow);
 	}
 
 	private Event createEvent(String id) {
@@ -69,8 +73,18 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertEquals(5, flow.getVariables().length);
 		assertEquals(1, flow.getStartActionList().size());
 		assertEquals(1, flow.getEndActionList().size());
-		assertEquals(1, flow.getExceptionHandlerSet().size());
+		assertEquals(2, flow.getExceptionHandlerSet().size());
 		assertTrue(flow.getExceptionHandlerSet().toArray()[0] instanceof TransitionExecutingStateExceptionHandler);
+		assertTrue(flow.getExceptionHandlerSet().toArray()[1] instanceof TransitionExecutingStateExceptionHandler);
+		TransitionExecutingStateExceptionHandler handler =
+			(TransitionExecutingStateExceptionHandler)flow.getExceptionHandlerSet().toArray()[1];
+		FlowExecutionException exception =
+			new FlowExecutionException("testFlow1", "actionState1", "test", new IOException());
+		assertTrue(handler.handles(exception));
+		context.getFlowScope().put("testTargetState", "endState1");
+		ViewSelection view = handler.handle(exception, context);
+		assertTrue(view instanceof ApplicationView);
+		assertEquals("endView1", ((ApplicationView)view).getViewName());
 
 		ActionState actionState1 = (ActionState)flow.getState("actionState1");
 		assertNotNull(actionState1);

@@ -119,6 +119,7 @@
 
 	<global-transitions>
 		<transition on-exception="org.springframework.webflow.TestException" to="endState1" />
+		<transition on-exception="java.io.IOException" to="${flowScope.testTargetState}"/>
 	</global-transitions>
 
 	<end-actions>
