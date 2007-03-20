@@ -12,7 +12,8 @@
   @author Arjen Poutsma
   =======================================================================
 -->
-<project name="build-spring-webflow-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="build-spring-webflow-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant"
+	xmlns:aws="antlib:org.springframework.aws">
 
 	<import file="${basedir}/build.xml"/>
 
@@ -35,11 +36,11 @@
         <tstamp>
             <format property="tstamp" pattern="yyyyMMdd"/>
         </tstamp>
-        <move file="${target.release.dir}/${release.zip}"
+        <copy file="${target.release.dir}/${release.zip}"
             tofile="${upload.tmp.dir}/spring-webflow-${release.version}-${tstamp}-${build.number}.zip"/>
     </target>
     
-    <target name="upload" depends="upload-binaries"/>
+    <target name="upload" depends="upload-binaries,upload-s3"/>
 
     <!-- SCP needs an SSH library on the classpath (see Ant documentation for more info) -->
     <target name="upload-binaries" depends="init, guard.upload.tmp.dir, guard.upload.binaries.dir, guard.upload.url, guard.upload.password, guard.upload.username">
@@ -74,5 +75,34 @@
     <target name="guard.upload.password" unless="upload.password">
     	<fail message="This target requires the upload.password property to be set"/>
     </target>
-    
+
+	<target name="upload-s3" depends="init, s3.tasks, guard.s3.accessKey, guard.s3.secretKey">
+		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
+			<upload bucketName="static.springframework.org"
+			        file="${target.release.dir}/${release.zip}"
+			        toFile="SWF/spring-webflow-${release.version}-${tstamp}-${build.number}.zip"
+					publicRead="true"/>
+		</aws:s3>
+	</target>
+	
+	<target name="guard.s3.accessKey" unless ="s3.accessKey">
+		<fail message="This target requires the s3.accesskey property to be set"/>
+	</target>
+
+	<target name="guard.s3.secretKey" unless ="s3.secretKey">
+		<fail message="This target requires the s3.secretKey property to be set"/>
+	</target>
+	
+	<target name="s3.tasks">
+		<ivy:configure file="${common.build.dir}/ivyconf.xml" />
+		<property name="main.build.configs" value="global,buildtime,test" />
+		<ivy:resolve file="${basedir}/ivy.xml" conf="${main.build.configs}" />
+		<ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${main.build.configs}" />
+		<path id="aws.lib.path">
+				<fileset dir="${basedir}/lib/global" includes="*.jar"/>
+		</path>
+		<taskdef resource="org/springframework/aws/antlib.xml" uri="antlib:org.springframework.aws"
+			classpathref="aws.lib.path" />
+	</target>
+
 </project>
