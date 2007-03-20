@@ -99,7 +99,7 @@
 		<ivy:resolve file="${basedir}/ivy.xml" conf="${main.build.configs}" />
 		<ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${main.build.configs}" />
 		<path id="aws.lib.path">
-				<fileset dir="${basedir}/lib/global" includes="*.jar"/>
+				<fileset dir="${basedir}/lib" includes="*.jar"/>
 		</path>
 		<taskdef resource="org/springframework/aws/antlib.xml" uri="antlib:org.springframework.aws"
 			classpathref="aws.lib.path" />
