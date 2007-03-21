@@ -140,7 +140,7 @@ public class GenericConversionService implements ConversionService {
 		if (this.sourceClassConverters == null || this.sourceClassConverters.isEmpty()) {
 			throw new IllegalStateException("No converters have been added to this service's registry");
 		}
-		if (sourceClass.equals(targetClass)) {
+		if (targetClass.isAssignableFrom(sourceClass)) {
 			return new ConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
 		Map sourceTargetConverters = findConvertersForSource(sourceClass);

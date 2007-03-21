@@ -15,7 +15,9 @@
  */
 package org.springframework.binding.convert.support;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -30,6 +32,23 @@ import org.springframework.core.enums.ShortCodedLabeledEnum;
  * @author Keith Donald
  */
 public class DefaultConversionServiceTests extends TestCase {
+	
+	public void testConvertCompatibleTypes() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addAlias("list", List.class);
+
+		List lst = new ArrayList();
+		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
+		assertSame(lst, service.getConversionExecutorByTargetAlias(ArrayList.class, "list").execute(lst));
+		
+		try {
+			service.getConversionExecutor(List.class, ArrayList.class);
+			fail();
+		}
+		catch (ConversionException e) {
+			// expected
+		}
+	}
 	
 	public void testOverrideConverter() {
 		Converter customConverter = new TextToBoolean("ja", "nee");
