@@ -56,7 +56,7 @@ public class TextToClass extends ConversionServiceAwareConverter {
 			else {
 				// try first an aliased based lookup
 				if (getConversionService() != null) {
-					Class aliasedClass = getConversionService().getClassByAlias(text);
+					Class aliasedClass = getConversionService().getClassByAlias(classNameOrAlias);
 					if (aliasedClass != null) {
 						return aliasedClass;
 					}

@@ -856,16 +856,9 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 
 	private Object convertPropertyValue(Element element, String stringValue) {
 		if (element.hasAttribute(TYPE_ATTRIBUTE)) {
-			ConversionExecutor executor = fromStringTo(element.getAttribute(TYPE_ATTRIBUTE));
-			if (executor != null) {
-				// convert string value to instance of aliased type
-				return executor.execute(stringValue);
-			}
-			else {
-				Class targetClass = (Class)fromStringTo(Class.class).execute(element.getAttribute(TYPE_ATTRIBUTE));
-				// convert string value to instance of target class
-				return fromStringTo(targetClass).execute(stringValue);
-			}
+			Class targetClass = (Class)fromStringTo(Class.class).execute(element.getAttribute(TYPE_ATTRIBUTE));
+			// convert string value to instance of target class
+			return fromStringTo(targetClass).execute(stringValue);
 		}
 		else {
 			return stringValue;
@@ -1002,7 +995,9 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		if (StringUtils.hasText(from)) {
 			if (StringUtils.hasText(to)) {
 				ConversionService service = getLocalFlowServiceLocator().getConversionService();
-				return service.getConversionExecutor(service.getClassByAlias(from), service.getClassByAlias(to));
+				Class sourceClass = (Class)fromStringTo(Class.class).execute(from);
+				Class targetClass = (Class)fromStringTo(Class.class).execute(to);
+				return service.getConversionExecutor(sourceClass, targetClass);
 			}
 			else {
 				throw new IllegalArgumentException("Use of the 'from' attribute requires use of the 'to' attribute");

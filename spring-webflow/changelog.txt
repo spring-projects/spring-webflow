@@ -27,6 +27,7 @@ Package org.springframework.webflow.engine
   occur during exception handling (SWF-261).
 * The XmlFlowBuilder now also supports OGNL expressions in the "to" attribute of a transition
   when using the "on-exception" attribute (SWF-269).
+* The XmlFlowBuilder now consistently uses "fromStringTo(Class.class)" to resolve types (SWF-268).
 
 Package org.springframework.webflow.execution
 * Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for
