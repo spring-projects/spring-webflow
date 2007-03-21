@@ -42,7 +42,9 @@ public class MethodKey implements Serializable {
 	private String methodName;
 
 	/**
-	 * The method's actual parameter types.
+	 * The method's actual parameter types. Could contain null values
+	 * if the user did not specify a parameter type for the corresponding
+	 * parameter
 	 */
 	private Class[] parameterTypes;
 
@@ -81,7 +83,8 @@ public class MethodKey implements Serializable {
 	}
 
 	/**
-	 * Returns the method parameter types.
+	 * Returns the method parameter types. Could contain null values
+	 * if no type was specified for the corresponding parameter.
 	 */
 	public Class[] getParameterTypes() {
 		return parameterTypes;
@@ -104,7 +107,7 @@ public class MethodKey implements Serializable {
 	 */
 	protected Method resolveMethod() throws InvalidMethodKeyException {
 		try {
-			return declaredType.getMethod(methodName, getParameterTypes());
+			return declaredType.getMethod(methodName, parameterTypes);
 		}
 		catch (NoSuchMethodException e) {
 			Method method = findMethodConsiderAssignableParameterTypes();
@@ -126,7 +129,7 @@ public class MethodKey implements Serializable {
 			if (candidateMethods[i].getName().equals(methodName)) {
 				// Check if the method has the correct number of parameters.
 				Class[] candidateParameterTypes = candidateMethods[i].getParameterTypes();
-				if (candidateParameterTypes.length == getParameterTypes().length) {
+				if (candidateParameterTypes.length == parameterTypes.length) {
 					int numberOfCorrectArguments = 0;
 					for (int j = 0; j < candidateParameterTypes.length; j++) {
 						// Check if the candidate type is assignable to the sig
@@ -139,8 +142,7 @@ public class MethodKey implements Serializable {
 							}
 						}
 						else {
-							// just match on a null param type (effectively
-							// 'any')
+							// just match on a null param type (effectively 'any')
 							numberOfCorrectArguments++;
 						}
 					}
@@ -240,7 +242,12 @@ public class MethodKey implements Serializable {
 	private String parameterTypesString() {
 		StringBuffer parameterTypesString = new StringBuffer();
 		for (int i = 0; i < parameterTypes.length; i++) {
-			parameterTypesString.append(ClassUtils.getShortName(parameterTypes[i]));
+			if (parameterTypes[i] == null) {
+				parameterTypesString.append("<any>");
+			}
+			else {
+				parameterTypesString.append(ClassUtils.getShortName(parameterTypes[i]));
+			}
 			if (i < parameterTypes.length - 1) {
 				parameterTypesString.append(',');
 			}

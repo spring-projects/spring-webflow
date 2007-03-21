@@ -45,7 +45,7 @@ public class Parameter implements Serializable {
 	/**
 	 * Create a new named parameter definition.  Named parameters are capable of resolving 
 	 * parameter values (arguments) from argument sources.
-	 * @param type the type the parameter type, may be null
+	 * @param type the parameter type, may be null
 	 * @param name the name the method argument expression (required)
 	 */
 	public Parameter(Class type, Expression name) {
@@ -55,7 +55,8 @@ public class Parameter implements Serializable {
 	}
 
 	/**
-	 * Returns the parameter type.
+	 * Returns the parameter type. Could be null if no parameter type
+	 * was specified.
 	 */
 	public Class getType() {
 		return type;

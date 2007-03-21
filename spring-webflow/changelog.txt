@@ -7,7 +7,8 @@ Changes in version 1.0.2 ()
 
 Package org.springframework.binding
 * GenericConversionService.getConversionExecutor() now uses isAssignableFrom to detect situations
-  where no conversion is necessary (SWF-264). 
+  where no conversion is necessary (SWF-264).
+* Fixed possbile NullPointerException in parameterTypesString() (SWF-265).
 
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".

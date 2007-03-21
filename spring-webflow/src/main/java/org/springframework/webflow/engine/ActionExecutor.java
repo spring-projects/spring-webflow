@@ -64,7 +64,7 @@ public class ActionExecutor {
 			throw e;
 		}
 		catch (Exception e) {
-			// wrap the action as an ActionExecutionException
+			// wrap the exception as an ActionExecutionException
 			throw new ActionExecutionException(context.getActiveFlow().getId(),
 					context.getCurrentState() != null ? context.getCurrentState().getId() : null, action, context
 							.getAttributes(), e);

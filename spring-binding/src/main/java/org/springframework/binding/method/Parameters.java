@@ -96,7 +96,9 @@ public class Parameters implements Serializable {
 	}
 
 	/**
-	 * Get an array containing each parameter type.
+	 * Get an array containing each parameter type. The resulting array
+	 * could contain null values if the corresponding parameters did
+	 * not specify a parameter type.
 	 * @return the types
 	 */
 	public Class[] getTypesArray() {
