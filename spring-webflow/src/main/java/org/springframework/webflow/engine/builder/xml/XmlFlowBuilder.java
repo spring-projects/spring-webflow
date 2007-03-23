@@ -474,7 +474,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		localFlowServiceLocator.push(new LocalFlowServiceRegistry(flow, resources));
 	}
 
-	private void destroyLocalServiceRegistry(Flow flow) {
+	private void destroyLocalServiceRegistry() {
 		localFlowServiceLocator.pop();
 	}
 
@@ -548,7 +548,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		inlineFlow.setOutputMapper(parseOutputMapper(flowElement));
 		inlineFlow.getExceptionHandlerSet().addAll(parseExceptionHandlers(flowElement));
 		
-		destroyLocalServiceRegistry(inlineFlow);
+		destroyLocalServiceRegistry();
 	}
 
 	private void parseAndAddStateDefinitions(Element flowElement, Flow flow) {

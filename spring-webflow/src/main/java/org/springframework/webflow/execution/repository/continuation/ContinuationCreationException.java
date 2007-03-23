@@ -39,6 +39,7 @@ public class ContinuationCreationException extends FlowExecutionRepositoryExcept
 	 */
 	public ContinuationCreationException(FlowExecution flowExecution, String message, Throwable cause) {
 		super(message, cause);
+		this.flowExecution = flowExecution;
 	}
 
 	/**

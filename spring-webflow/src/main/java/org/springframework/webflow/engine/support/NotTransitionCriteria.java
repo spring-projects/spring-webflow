@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.support;
 
-import java.io.Serializable;
-
 import org.springframework.util.Assert;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
@@ -27,7 +25,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  */
-public class NotTransitionCriteria implements TransitionCriteria, Serializable {
+public class NotTransitionCriteria implements TransitionCriteria {
 
 	/**
 	 * The criteria to negate.

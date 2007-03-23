@@ -40,6 +40,7 @@ public class InvalidContinuationIdException extends FlowExecutionRepositoryExcep
 	 */
 	public InvalidContinuationIdException(Serializable continuationId) {
 		super("The continuation id '" + continuationId + "' is invalid.  Access to flow execution denied.");
+		this.continuationId = continuationId;
 	}
 
 	/**

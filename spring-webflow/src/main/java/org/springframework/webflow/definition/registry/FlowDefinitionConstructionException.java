@@ -38,6 +38,7 @@ public abstract class FlowDefinitionConstructionException extends FlowException 
 	 */
 	public FlowDefinitionConstructionException(String flowId, Throwable cause) {
 		super("An exception occured constructing the flow with id '" + flowId + "'", cause);
+		this.flowId = flowId;
 	}
 	
 	/**

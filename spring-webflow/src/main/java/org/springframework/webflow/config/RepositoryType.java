@@ -33,26 +33,26 @@ public class RepositoryType extends StaticLabeledEnum {
 	 * The 'simple' flow execution repository type.
 	 * @see SimpleFlowExecutionRepository
 	 */
-	public static RepositoryType SIMPLE = new RepositoryType(0, "Simple");
+	public static final RepositoryType SIMPLE = new RepositoryType(0, "Simple");
 
 	/**
 	 * The 'continuation' flow execution repository type.
 	 * @see ContinuationFlowExecutionRepository
 	 */
-	public static RepositoryType CONTINUATION = new RepositoryType(1, "Continuation");
+	public static final RepositoryType CONTINUATION = new RepositoryType(1, "Continuation");
 
 	/**
 	 * The 'client' (continuation) flow execution repository type.
 	 * @see ClientContinuationFlowExecutionRepository
 	 */
-	public static RepositoryType CLIENT = new RepositoryType(2, "Client");
+	public static final RepositoryType CLIENT = new RepositoryType(2, "Client");
 
 	/**
 	 * The 'singleKey' flow execution repository type.
 	 * @see SimpleFlowExecutionRepository
 	 * @see SimpleFlowExecutionRepository#setAlwaysGenerateNewNextKey(boolean)
 	 */
-	public static RepositoryType SINGLEKEY = new RepositoryType(3, "Single Key");
+	public static final RepositoryType SINGLEKEY = new RepositoryType(3, "Single Key");
 	
 	/**
 	 * Private constructor because this is a typesafe enum!
