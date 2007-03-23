@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.format;
 
-import java.text.Format;
-
 /**
  * Source for shared and commonly used <code>Formatters</code>.
  * <p>
@@ -24,7 +22,7 @@ import java.text.Format;
  * aren't thread safe: so implementations of this service should take care to
  * synchronize them as neccessary.
  * 
- * @see Format
+ * @see java.text.Format
  * 
  * @author Keith Donald
  */

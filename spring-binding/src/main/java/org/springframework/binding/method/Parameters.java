@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.method;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,7 +25,7 @@ import java.util.List;
  * 
  * @author Keith
  */
-public class Parameters implements Serializable {
+public class Parameters {
 
 	/**
 	 * Canonical instance for an empty parameters list.

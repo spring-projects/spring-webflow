@@ -46,6 +46,8 @@ public class MethodInvocationException extends NestedRuntimeException {
 	 */
 	public MethodInvocationException(MethodSignature methodSignature, Object[] arguments, Exception cause) {
 		super("Unable to invoke method " + methodSignature + " with arguments " + StylerUtils.style(arguments), cause);
+		this.methodSignature = methodSignature;
+		this.arguments = arguments;
 	}
 
 	/**

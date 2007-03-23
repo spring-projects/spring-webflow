@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.method;
 
-import java.io.Serializable;
-
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -28,7 +26,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class MethodSignature implements Serializable {
+public class MethodSignature {
 
 	/**
 	 * The name of the method, e.g "execute".
@@ -88,7 +86,7 @@ public class MethodSignature implements Serializable {
 			return false;
 		}
 		MethodSignature other = (MethodSignature) obj;
-		return methodName.equals(methodName) && parameters.equals(other.parameters);
+		return methodName.equals(other.methodName) && parameters.equals(other.parameters);
 	}
 
 	public int hashCode() {

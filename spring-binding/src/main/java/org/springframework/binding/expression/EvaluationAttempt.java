@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.expression;
 
-import java.io.Serializable;
-
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -24,7 +22,7 @@ import org.springframework.core.style.ToStringCreator;
  * 
  * @author Keith Donald
  */
-public class EvaluationAttempt implements Serializable {
+public class EvaluationAttempt {
 
 	/**
 	 * The expression that attempted to evaluate.

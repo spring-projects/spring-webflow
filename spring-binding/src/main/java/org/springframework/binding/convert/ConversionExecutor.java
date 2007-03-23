@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.convert;
 
-import java.io.Serializable;
-
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -29,7 +27,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class ConversionExecutor implements Serializable {
+public class ConversionExecutor {
 
 	/**
 	 * The source value type this executor will attempt to convert from.

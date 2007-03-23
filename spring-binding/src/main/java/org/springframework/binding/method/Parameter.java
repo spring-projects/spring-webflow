@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.method;
 
-import java.io.Serializable;
-
 import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
@@ -29,7 +27,7 @@ import org.springframework.util.ObjectUtils;
  * 
  * @author Keith Donald
  */
-public class Parameter implements Serializable {
+public class Parameter {
 
 	/**
 	 * The class of the parameter, e.g "springbank.AccountNumber".
