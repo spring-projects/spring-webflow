@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
-	<classpathentry kind="lib" path="lib/global/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/global/jstl.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-binding.jar" sourcepath="/spring-binding"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
