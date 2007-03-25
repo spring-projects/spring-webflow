@@ -52,8 +52,8 @@ optional, i.e. just necessary for certain functionality.
 * spring-webflow-1.0.jar
 - Contents: The Spring Web Flow system
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-web, spring-binding, OGNL
-                [Log4J, Commons Codec, Xerces, XML APIs, spring-webmvc, spring-mock, JUnit, Servlet API,
-                 Portlet API, JMX, Struts, JSF]
+                [Log4J, Xerces, XML APIs, spring-webmvc, spring-mock, JUnit, Servlet API, Portlet API, JMX,
+                 Struts, JSF]
               
 * spring-binding-1.0.jar
 - Contents: The Spring Data Binding framework, an internal library used by SWF

@@ -17,7 +17,6 @@ package org.springframework.webflow.execution.repository.continuation;
 
 import java.io.Serializable;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.Assert;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -31,6 +30,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
 import org.springframework.webflow.execution.repository.support.AbstractConversationFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
+import org.springframework.webflow.util.Base64;
 
 /**
  * Stores flow execution state client side, requiring no use of server-side
@@ -63,10 +63,6 @@ import org.springframework.webflow.execution.repository.support.FlowExecutionSta
  * {@link #encode(FlowExecution)} and {@link #decode(String)}, implementing
  * them with a secure encoding/decoding algorithm, e.g. based on public/private
  * key encryption.
- * <p>
- * This class depends on the <code>Jakarta Commons Codec</code> library to do
- * <code>BASE64</code> encoding. Codec code must be available in the classpath
- * when using this implementation.
  * 
  * @see Base64
  * 
@@ -171,7 +167,7 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	 */
 	protected Serializable encode(FlowExecution flowExecution) {
 		FlowExecutionContinuation continuation = continuationFactory.createContinuation(flowExecution);
-		return new String(Base64.encodeBase64(continuation.toByteArray()));
+		return new Base64(true).encodeToString(continuation.toByteArray());
 	}
 
 	/**
@@ -185,7 +181,7 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	 * @return the decoded flow execution instance
 	 */
 	protected FlowExecutionContinuation decode(String encodedContinuation) {
-		byte[] bytes = Base64.decodeBase64(encodedContinuation.getBytes());
+		byte[] bytes = new Base64(true).decodeFromString(encodedContinuation);
 		return continuationFactory.createContinuation(bytes);
 	}
 

@@ -333,8 +333,7 @@
             					Util,
             					Flow Definition,
             					Conversation,
-            					Flow Execution,
-            					repository.continuation requires commons-codec 1.0 if using client continuations
+            					Flow Execution
             				</entry>
         	     		</row>
            				<row>
