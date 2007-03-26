@@ -85,8 +85,8 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			return event(source, resultId, getResultAttributeName(), resultObject);
 		}
 		else if (isJdk5Enum(resultObject.getClass())) {
-			// java.lang.Enum.toString() returns the name!
-			return event(source, resultObject.toString(), getResultAttributeName(), resultObject);
+			String eventId = EnumNameResolver.getEnumName(resultObject);
+			return event(source, eventId, getResultAttributeName(), resultObject);
 		}
 		else if (isString(resultObject.getClass())) {
 			return event(source, (String)resultObject);
@@ -133,5 +133,15 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	
 	private boolean isEvent(Class type) {
 		return Event.class.isAssignableFrom(type);
+	}
+
+	/**
+	 * Simple helper class with Java 5 specific code factored out to keep
+	 * the containing class JDK 1.3 compatible.
+	 */
+	private static class EnumNameResolver {
+		public static String getEnumName(Object enumValue) {
+			return ((java.lang.Enum)enumValue).name();
+		}
 	}
 }
