@@ -9,6 +9,8 @@ Package org.springframework.binding
 * GenericConversionService.getConversionExecutor() now uses isAssignableFrom to detect situations
   where no conversion is necessary (SWF-264).
 * Fixed possbile NullPointerException in MethodKey.parameterTypesString() (SWF-265).
+* OgnlExpression now unwraps the ognl.OgnlException to make the real exception available to the
+  caller (SWF-255).
 
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".

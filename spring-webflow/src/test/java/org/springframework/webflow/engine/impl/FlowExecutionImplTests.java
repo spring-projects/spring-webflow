@@ -35,6 +35,7 @@ import org.springframework.webflow.engine.ViewSelector;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
+import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.xml.TestFlowServiceLocator;
 import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
@@ -63,6 +64,15 @@ import org.springframework.webflow.test.MockFlowServiceLocator;
  * @author Ben Hale
  */
 public class FlowExecutionImplTests extends TestCase {
+	
+	public void testExceptionHandlingWithEvaluateAction() {
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("fooFlow.xml", getClass()));
+		Flow flow = new FlowAssembler("fooFlow", flowBuilder).assembleFlow();
+		FlowExecution flowExecution = new FlowExecutionImpl(flow);
+		ViewSelection view = flowExecution.start(null, new MockExternalContext());
+		assertEquals("showFooException", ((ApplicationView)view).getViewName());
+		assertFalse(flowExecution.isActive());
+	}
 	
 	public void testExceptionWhileHandlingException() {
 		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();

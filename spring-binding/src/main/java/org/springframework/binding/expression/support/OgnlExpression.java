@@ -74,7 +74,14 @@ class OgnlExpression implements SettableExpression {
 			return Ognl.getValue(expression, contextAttributes, target);
 		}
 		catch (OgnlException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), e);
+			if (e.getReason() != null && e.getReason() != e) {
+				// unwrap the OgnlException since the actual exception is wrapped inside it
+				// and there is not generic (getCause) way to get to it later on
+				throw new EvaluationException(new EvaluationAttempt(this, target, context), e.getReason());
+			}
+			else {
+				throw new EvaluationException(new EvaluationAttempt(this, target, context), e);
+			}
 		}
 	}
 
