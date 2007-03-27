@@ -378,6 +378,11 @@
 				   ivypattern="${retrieve.to.repo.dir}/${retrieve.to.repo.pattern.ivy}"/>
   </target>
 
+  <!-- report: generate a dependencies report -->
+  <target name="report" depends="retrieve" description="Generates a dependencies report">
+  	<ivy:report todir="${target.dir}"/>
+  </target>
+
   <!-- statics: copies statics files before compiles -->
   <target name="statics" depends="retrieve, ivy.configure, statics.pre, statics.main, statics.test, statics.web, statics.post" description="Copy static files before compile, replacing tokens as needed">
   </target>
