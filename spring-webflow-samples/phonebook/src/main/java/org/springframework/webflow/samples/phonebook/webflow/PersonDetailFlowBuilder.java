@@ -20,7 +20,6 @@ import org.springframework.binding.mapping.Mapping;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
-import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.support.ConfigurableFlowAttributeMapper;
 
 /**
@@ -33,10 +32,6 @@ import org.springframework.webflow.engine.support.ConfigurableFlowAttributeMappe
  * @author Keith Donald
  */
 class PersonDetailFlowBuilder extends AbstractFlowBuilder {
-
-	public PersonDetailFlowBuilder(FlowServiceLocator flowServiceLocator) {
-		super(flowServiceLocator);
-	}
 
 	public void buildInputMapper() throws FlowBuilderException {
 		Mapping idMapping = mapping().source("id").target("flowScope.id").value();

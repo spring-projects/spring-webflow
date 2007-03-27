@@ -20,7 +20,6 @@ import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
-import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.support.ConfigurableFlowAttributeMapper;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.samples.phonebook.SearchCriteria;
@@ -38,10 +37,6 @@ import org.springframework.webflow.samples.phonebook.SearchCriteriaValidator;
  * @author Keith Donald
  */
 class SearchPersonFlowBuilder extends AbstractFlowBuilder {
-
-	public SearchPersonFlowBuilder(FlowServiceLocator flowServiceLocator) {
-		super(flowServiceLocator);
-	}
 
 	public void buildStates() throws FlowBuilderException {
 		// view search criteria

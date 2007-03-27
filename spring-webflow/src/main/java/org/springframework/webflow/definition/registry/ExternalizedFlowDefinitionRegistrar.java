@@ -26,7 +26,7 @@ import org.springframework.core.style.ToStringCreator;
 /**
  * A flow definition registrar that populates a flow definition registry from
  * flow definitions defined within externalized resources. Encapsulates
- * registration behaivior common to all externalized registrars and is not tied
+ * registration behavior common to all externalized registrars and is not tied
  * to a specific flow definition format (e.g. xml).
  * <p>
  * Concrete subclasses are expected to derive from this class to provide

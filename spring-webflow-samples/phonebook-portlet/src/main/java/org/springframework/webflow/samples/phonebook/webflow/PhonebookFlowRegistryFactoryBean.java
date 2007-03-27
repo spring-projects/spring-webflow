@@ -16,16 +16,17 @@
 package org.springframework.webflow.samples.phonebook.webflow;
 
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
-import org.springframework.webflow.engine.builder.AbstractFlowBuildingFlowRegistryFactoryBean;
+import org.springframework.webflow.engine.builder.AbstractFlowBuilderFlowRegistryFactoryBean;
 
 /**
  * Demonstrates how to populate a flow registry programatically.
  * 
  * @author Keith Donald
  */
-public class PhonebookFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistryFactoryBean {
+public class PhonebookFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
 	
 	protected void doPopulate(FlowDefinitionRegistry registry) {
-		new PhonebookFlowRegistrar(getFlowServiceLocator()).registerFlowDefinitions(registry);
+		registerFlowDefinition(registry, "detail-flow", new PersonDetailFlowBuilder());
+		registerFlowDefinition(registry, "search-flow", new SearchPersonFlowBuilder());
 	}
 }
