@@ -150,7 +150,7 @@ public class EndState extends State {
 	/**
 	 * Returns the subflow output map. This will invoke the output mapper (if any)
 	 * to map data available in the flow execution request context into a newly
-	 * creaed empty map.
+	 * created empty map.
 	 */
 	protected LocalAttributeMap createSessionOutput(RequestContext context) {
 		LocalAttributeMap outputMap = new LocalAttributeMap();
