@@ -19,6 +19,7 @@ import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.ConversionServiceAwareConverter;
+import org.springframework.binding.expression.Expression;
 import org.springframework.util.StringUtils;
 
 /**
@@ -33,13 +34,15 @@ import org.springframework.util.StringUtils;
  * the method to invoke, where the method is expected to have parameters
  * delimited by a comma. In this example, the method has two parameters. The
  * type is either the fully-qualified class of the argument OR a known type
- * alias. The name is the logical name of the argument, which is used during
- * data binding to retrieve the argument value. </li>
+ * alias OR left out althogether. The name is the logical name of the argument,
+ * which is used during data binding to retrieve the argument value
+ * (typically an expression). </li>
  * </ul>
  * 
  * @see MethodSignature
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public class TextToMethodSignature extends ConversionServiceAwareConverter {
 
@@ -83,14 +86,18 @@ public class TextToMethodSignature extends ConversionServiceAwareConverter {
 			String[] paramArray = StringUtils.commaDelimitedListToStringArray(delimParamList);
 			Parameters params = new Parameters(paramArray.length);
 			for (int i = 0; i < paramArray.length; i++) {
+				// param could be of the form "type name", "name", "type ${name}" or "${name}"
 				String param = paramArray[i].trim();
-				String[] typeAndName = StringUtils.split(param, " ");
-				if (typeAndName != null && typeAndName.length == 2) {
-					Class type = (Class)converterFor(String.class, Class.class).execute(typeAndName[0]);
-					params.add(new Parameter(type, parseExpression(typeAndName[1].trim())));
+				int space = param.indexOf(' ');
+				if (space == -1 || space > param.indexOf('$')) {
+					// "name" or "${name}"
+					params.add(new Parameter(null, parseExpression(param)));
 				}
 				else {
-					params.add(new Parameter(null, parseExpression(param)));
+					// "type name" or "type ${name}"
+					Class type = (Class)fromStringTo(Class.class).execute(param.substring(0, space).trim());
+					Expression name = parseExpression(param.substring(space + 1).trim());
+					params.add(new Parameter(type, name));
 				}
 			}
 			return new MethodSignature(methodName, params);

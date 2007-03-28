@@ -61,7 +61,7 @@ public class Parameter {
 	}
 
 	/**
-	 * Returns the method name.
+	 * Returns the parameter name.
 	 */
 	public Expression getName() {
 		return name;
