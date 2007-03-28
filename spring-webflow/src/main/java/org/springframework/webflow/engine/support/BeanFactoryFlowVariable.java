@@ -27,6 +27,7 @@ import org.springframework.webflow.execution.ScopeType;
  * {@link BeanFactory}.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public class BeanFactoryFlowVariable extends FlowVariable {
 
@@ -40,6 +41,18 @@ public class BeanFactoryFlowVariable extends FlowVariable {
 	 * The bean factory where initial variable values will be obtained.
 	 */
 	private BeanFactory beanFactory;
+	
+	/**
+	 * Convenience constructor to create a new bean factory flow variable.
+	 * Defaults the bean name to the variable name.
+	 * @param name the variable name which will also be used as the bean name
+	 * @param beanFactory the bean factory where initial variable values will be
+	 * obtained
+	 * @param scope the variable scope
+	 */
+	public BeanFactoryFlowVariable(String name, BeanFactory beanFactory, ScopeType scope) {
+		this(name, name, beanFactory, scope);
+	}
 
 	/**
 	 * Creates a new bean factory flow variable.

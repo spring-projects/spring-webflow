@@ -16,6 +16,7 @@
 package org.springframework.webflow.engine.builder;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.SettableExpression;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingBuilder;
@@ -560,13 +561,21 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Parses the expression string into a evaluatable {@link Expression}
-	 * object.
+	 * Parses the expression string into an evaluatable {@link Expression} object.
 	 * @param expressionString the expression string, e.g. flowScope.order.number
 	 * @return the evaluatable expression
 	 */
 	protected Expression expression(String expressionString) {
 		return getFlowServiceLocator().getExpressionParser().parseExpression(expressionString);
+	}
+	
+	/**
+	 * Parses the expression string into a settable {@link Expression} object.
+	 * @param expressionString the expression string, e.g. flowScope.order.number
+	 * @return the evaluatable expression
+	 */
+	protected SettableExpression settableExpression(String expressionString) {
+		return getFlowServiceLocator().getExpressionParser().parseSettableExpression(expressionString);
 	}
 
 	/**
