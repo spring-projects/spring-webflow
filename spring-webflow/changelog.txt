@@ -38,6 +38,7 @@ Package org.springframework.webflow.engine
 * The XmlFlowBuilder now consistently uses "fromStringTo(Class.class)" to resolve types (SWF-268).
 * Added AbstractFlowBuilderFlowRegistryFactoryBean for easy setup of a flow registry containing
   flows built using AbstractFlowBuilders.
+* Added DefaultFlowServiceLocator(String, BeanFactory) convenience constructor to the DefaultFlowServiceLocator.
 
 Package org.springframework.webflow.execution
 * Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for

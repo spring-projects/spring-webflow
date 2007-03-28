@@ -47,13 +47,29 @@ public class DefaultFlowServiceLocator extends BaseFlowServiceLocator {
 	/**
 	 * Creates a flow service locator that retrieves subflows from the provided
 	 * registry and additional artifacts from the provided bean factory.
-	 * @param subflowRegistry The registry for loading subflows
-	 * @param beanFactory The spring bean factory
+	 * @param subflowRegistry the registry for loading subflows
+	 * @param beanFactory the spring bean factory
 	 */
 	public DefaultFlowServiceLocator(FlowDefinitionRegistry subflowRegistry, BeanFactory beanFactory) {
 		Assert.notNull(subflowRegistry, "The subflow registry is required");
-		Assert.notNull(beanFactory, "The beanFactory is required");
+		Assert.notNull(beanFactory, "The bean factory is required");
 		this.subflowRegistry = subflowRegistry;
+		this.beanFactory = beanFactory;
+	}
+	
+	/**
+	 * Convenience flow service locator constructor that looks up a flow definition
+	 * registry using given bean id in given bean factory. The registry is used
+	 * to retrieve subflows. All additional artifacts are looked up in the provided
+	 * bean factory.
+	 * @param subflowRegistryBeanId the bean id of the subflow FlowDefinitionRegistry
+	 * @param beanFactory the Spring bean factory
+	 */
+	public DefaultFlowServiceLocator(String subflowRegistryBeanId, BeanFactory beanFactory) {
+		Assert.notNull(subflowRegistryBeanId, "The subflow registry bean id is required");
+		Assert.notNull(beanFactory, "The bean factory is required");
+		this.subflowRegistry =
+			(FlowDefinitionRegistry)beanFactory.getBean(subflowRegistryBeanId, FlowDefinitionRegistry.class);
 		this.beanFactory = beanFactory;
 	}
 
