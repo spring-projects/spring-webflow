@@ -120,7 +120,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * in "${...}" markers. For instance: "foo${expr0}bar${expr1}". The static
 	 * pieces of text will also be returned as Expressions that just return that
 	 * static piece of text. As a result, evaluating all returned expressions
-	 * and concating the results produces the complete evaluated string.
+	 * and concatenating the results produces the complete evaluated string.
 	 * @param expressionString the expression string
 	 * @return the parsed expressions
 	 * @throws ParserException when the expressions cannot be parsed
@@ -137,8 +137,18 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 						expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
 						startIdx = prefixIndex;
 					}
-					int suffixIndex = expressionString.indexOf(getExpressionSuffix(), prefixIndex);
-					if (suffixIndex == -1) {
+					int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(),
+							prefixIndex + getExpressionPrefix().length());
+					int suffixIndex;
+					if (nextPrefixIndex == -1) { 
+						// this is the last expression in the expression string
+						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix()); 
+					}
+					else { 
+						// another expression exists after this one in the expression string
+						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix(), nextPrefixIndex); 
+					} 
+					if (suffixIndex < (prefixIndex + getExpressionPrefix().length())) {
 						throw new ParserException(expressionString, "No ending suffix '" + getExpressionSuffix()
 								+ "' for expression starting at character " + prefixIndex + ": "
 								+ expressionString.substring(prefixIndex), null);

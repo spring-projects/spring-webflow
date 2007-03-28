@@ -11,6 +11,7 @@ Package org.springframework.binding
 * Fixed possbile NullPointerException in MethodKey.parameterTypesString() (SWF-265).
 * OgnlExpression now unwraps the ognl.OgnlException to make the real exception available to the
   caller (SWF-255).
+* OgnlExpressionParser now supports OGNL collection construction syntax (SWF-274).
 
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".

@@ -77,6 +77,13 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError1() {
 		try {
+			parser.parseExpression("${");
+			fail();
+		}
+		catch (ParserException e) {
+		}
+
+		try {
 			String exp = "hello ${flag} ${abcd defg";
 			parser.parseExpression(exp);
 			fail("Should've failed - not intended use");
@@ -87,6 +94,13 @@ public class OgnlExpressionParserTests extends TestCase {
 	
 	public void testSyntaxError2() {
 		try {
+			parser.parseExpression("${}");
+			fail("Should've failed - not intended use");
+		}
+		catch (ParserException e) {
+		}
+
+		try {
 			String exp = "hello ${flag} ${}";
 			parser.parseExpression(exp);
 			fail("Should've failed - not intended use");
@@ -94,7 +108,7 @@ public class OgnlExpressionParserTests extends TestCase {
 		catch (ParserException e) {
 		}
 	}
-
+	
 	public void testIsDelimitedExpression() {
 		assertTrue(parser.isDelimitedExpression("${foo}"));
 		assertTrue(parser.isDelimitedExpression("${foo ${foo}}"));
@@ -106,5 +120,26 @@ public class OgnlExpressionParserTests extends TestCase {
 		assertFalse(parser.isDelimitedExpression("foo ${"));
 		assertFalse(parser.isDelimitedExpression("$foo}"));
 		assertFalse(parser.isDelimitedExpression("foo ${}"));
+	}
+	
+	public void testCollectionContructionSyntax() {
+		// lists
+		parser.parseExpression("name in {null, \"Untitled\"}");
+		parser.parseExpression("${name in {null, \"Untitled\"}}");
+		
+		// native arrays
+		parser.parseExpression("new int[] {1, 2, 3}");
+		parser.parseExpression("${new int[] {1, 2, 3}}");
+		
+		// maps
+		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }");
+		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}");
+		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }");
+		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}");
+
+		// complex examples
+		parser.parseExpression("b,#{1:2}");
+		parser.parseExpression("${b,#{1:2}}");
+		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k");
 	}
 }
