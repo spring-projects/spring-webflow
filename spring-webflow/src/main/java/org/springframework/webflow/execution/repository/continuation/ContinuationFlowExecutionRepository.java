@@ -183,18 +183,6 @@ public class ContinuationFlowExecutionRepository extends AbstractConversationFlo
 		putConversationScope(key, flowExecution.getConversationScope());
 	}
 
-	protected void onBegin(Conversation conversation) {
-		// setup a new continuation group for the conversation
-		FlowExecutionContinuationGroup continuationGroup = new FlowExecutionContinuationGroup(maxContinuations);
-		conversation.lock();
-		try {
-			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, continuationGroup);
-		}
-		finally {
-			conversation.unlock();
-		}
-	}
-
 	protected Serializable generateContinuationId(FlowExecution flowExecution) {
 		return continuationIdGenerator.generateUid();
 	}
@@ -210,8 +198,17 @@ public class ContinuationFlowExecutionRepository extends AbstractConversationFlo
 	 * @return the continuation group
 	 */
 	FlowExecutionContinuationGroup getContinuationGroup(FlowExecutionKey key) {
+		Conversation conversation = getConversation(key);
 		FlowExecutionContinuationGroup group =
-			(FlowExecutionContinuationGroup)getConversation(key).getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
+			(FlowExecutionContinuationGroup)conversation.getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
+		if (group == null) {
+			// setup a new continuation group for the conversation
+			// no need to synchronize here since this code will only be executed
+			// during the launch of a new flow execution, at which time the
+			// key has not yet been communicated to any other threads
+			group = new FlowExecutionContinuationGroup(maxContinuations);
+			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, group);
+		}
 		return group;
 	}
 
