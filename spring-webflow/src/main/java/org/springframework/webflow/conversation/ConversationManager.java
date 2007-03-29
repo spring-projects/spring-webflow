@@ -20,6 +20,7 @@ package org.springframework.webflow.conversation;
  * the conversation subsystem.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public interface ConversationManager {
 
@@ -33,6 +34,29 @@ public interface ConversationManager {
 
 	/**
 	 * Get the conversation with the provided id.
+	 * <p>
+	 * Implementors should take care to manage conversation identity correctly.
+	 * Although it is not strictly required to return the same (==) Conversation
+	 * object every time this method is called with a particular conversation
+	 * id in a single execution thread, callers will expect to recieve an object
+	 * that allows them to manipulate the identified conversation. In other words,
+	 * the following is legal ConversationManager client code:
+	 * <pre>
+	 * 	ConversationManager manager = ...;
+	 * 	ConversationId id = ...;
+	 * 	Conversation conv = manager.getConversation(id);
+	 *  conv.lock();
+	 *  try {
+	 *  	Conversation localReference = manager.getConversation(id);
+	 *  	// no need to lock since conversation 'id' is already locked
+	 *  	// even though possibly conv != localReference
+	 *  	localReference.putAttribute("foo", "bar");
+	 *  	Object foo = conv.getAttribute("foo");
+	 * 	}
+	 * 	finally {
+	 * 		conv.unlock();
+	 * 	}
+	 * </pre>
 	 * @param id the conversation id
 	 * @return the conversation
 	 * @throws NoSuchConversationException the id provided was invalid
