@@ -35,6 +35,10 @@ import org.springframework.webflow.execution.ViewSelection;
 /**
  * A flow execution exception handler that maps the occurence of a specific type of
  * exception to a transition to a new {@link org.springframework.webflow.engine.State}.
+ * <p>
+ * The handled {@link FlowExecutionException} will be exposed in flash scope as
+ * {@link #STATE_EXCEPTION_ATTRIBUTE}. The underlying root cause of that exception
+ * will be exposed in flash scope as {@link #ROOT_CAUSE_EXCEPTION_ATTRIBUTE}.
  * 
  * @author Keith Donald
  */
@@ -44,15 +48,16 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 
 	/**
 	 * The name of the attribute to expose a handled exception under in
-	 * flash scope.
+	 * flash scope ("stateException").
 	 */
 	public static final String STATE_EXCEPTION_ATTRIBUTE = "stateException";
 
 	/**
 	 * The name of the attribute to expose a root cause of a handled exception
-	 * under in flash scope.
+	 * under in flash scope ("rootCauseException").
 	 */
 	public static final String ROOT_CAUSE_EXCEPTION_ATTRIBUTE = "rootCauseException";
+
 
 	/**
 	 * The exceptionType->targetStateResolver map.
