@@ -21,6 +21,9 @@
     <target name="upload" depends="upload-s3"/>
 
 	<target name="upload-s3" depends="init, s3.tasks, guard.s3.accessKey, guard.s3.secretKey">
+		<tstamp>
+			<format property="tstamp" pattern="yyyyMMdd"/>
+		</tstamp>
 		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
 			<upload bucketName="static.springframework.org"
 			        file="${target.release.dir}/${release.zip}"
