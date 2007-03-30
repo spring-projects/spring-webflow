@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
  * Abstract base class for expression parsers.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public abstract class AbstractExpressionParser implements ExpressionParser {
 

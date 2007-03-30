@@ -197,14 +197,37 @@ public class MethodKey implements Serializable {
 		return hash;
 	}
 
+	public String toString() {
+		return methodName + "(" + parameterTypesString() + ")";
+	}
+
+	/**
+	 * Convenience method that returns the parameter types describing the
+	 * signature of the method as a string.
+	 */
+	private String parameterTypesString() {
+		StringBuffer parameterTypesString = new StringBuffer();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			if (parameterTypes[i] == null) {
+				parameterTypesString.append("<any>");
+			}
+			else {
+				parameterTypesString.append(ClassUtils.getShortName(parameterTypes[i]));
+			}
+			if (i < parameterTypes.length - 1) {
+				parameterTypesString.append(',');
+			}
+		}
+		return parameterTypesString.toString();
+	}
+
 	// internal helpers
 
 	/**
 	 * Determine if the given target type is assignable from the given value
 	 * type, assuming setting by reflection. Considers primitive wrapper classes
 	 * as assignable to the corresponding primitive types. <p> NOTE: Pulled from
-	 * ClassUtils in Spring 2.0 for 1.2.8 compatability. Should be collapsed
-	 * when 1.2.9 is released.
+	 * ClassUtils in Spring 2.0 for 1.2.8 compatability.
 	 * @param targetType the target type
 	 * @param valueType the value type that should be assigned to the target
 	 * type
@@ -230,29 +253,4 @@ public class MethodKey implements Serializable {
 		primitiveWrapperTypeMap.put(Long.class, long.class);
 		primitiveWrapperTypeMap.put(Short.class, short.class);
 	}
-
-	public String toString() {
-		return methodName + "(" + parameterTypesString() + ")";
-	}
-
-	/**
-	 * Convenience method that returns the parameter types describing the
-	 * signature of the method as a string.
-	 */
-	private String parameterTypesString() {
-		StringBuffer parameterTypesString = new StringBuffer();
-		for (int i = 0; i < parameterTypes.length; i++) {
-			if (parameterTypes[i] == null) {
-				parameterTypesString.append("<any>");
-			}
-			else {
-				parameterTypesString.append(ClassUtils.getShortName(parameterTypes[i]));
-			}
-			if (i < parameterTypes.length - 1) {
-				parameterTypesString.append(',');
-			}
-		}
-		return parameterTypesString.toString();
-	}
-
 }
