@@ -53,7 +53,23 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
  * @author Keith Donald
  */
 public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalizedFlowExecutionTests {
+
+	/**
+	 * Constructs a default XML flow execution test.
+	 * @see #setName(String)
+	 */
+	public AbstractXmlFlowExecutionTests() {
+		super();
+	}
 	
+	/**
+	 * Constructs an XML flow execution test with given name.
+	 * @param name the name of the test
+	 */
+	public AbstractXmlFlowExecutionTests(String name) {
+		super(name);
+	}
+
 	protected final FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
 		return new XmlFlowBuilder(resource, flowServiceLocator);
 	}

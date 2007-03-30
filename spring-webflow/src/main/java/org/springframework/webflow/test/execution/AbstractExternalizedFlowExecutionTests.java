@@ -50,7 +50,23 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * resource as part of this test should be cached.
 	 */
 	private boolean cacheFlowDefinition = false;
+
+	/**
+	 * Constructs a default externalized flow execution test.
+	 * @see #setName(String)
+	 */
+	public AbstractExternalizedFlowExecutionTests() {
+		super();
+	}
 	
+	/**
+	 * Constructs an externalized flow execution test with given name.
+	 * @param name the name of the test
+	 */
+	public AbstractExternalizedFlowExecutionTests(String name) {
+		super(name);
+	}
+
 	/**
 	 * Internal helper that return the flow execution factory used by the
 	 * test cast to a {@link FlowExecutionImplFactory}.

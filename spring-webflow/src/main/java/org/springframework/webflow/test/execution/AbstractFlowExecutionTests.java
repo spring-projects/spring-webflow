@@ -93,6 +93,22 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * object).
 	 */
 	private FlowExecution flowExecution;
+	
+	/**
+	 * Constructs a default flow execution test.
+	 * @see #setName(String)
+	 */
+	public AbstractFlowExecutionTests() {
+		super();
+	}
+	
+	/**
+	 * Constructs a flow execution test with given name.
+	 * @param name the name of the test
+	 */
+	public AbstractFlowExecutionTests(String name) {
+		super(name);
+	}
 
 	/**
 	 * Set the expression parser responsible for parsing expression strings into
