@@ -54,6 +54,11 @@ import org.springframework.webflow.execution.ScopeType;
  * @author Colin Sampaleanu
  */
 public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper implements Serializable {
+	
+	/*
+	 * Note: no longer used by the Spring Web Flow code base. Kept around
+	 * for possible usage by end users.
+	 */
 
 	/**
 	 * The expression parser that will parse input and output attribute
