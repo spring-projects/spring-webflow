@@ -12,6 +12,7 @@ Package org.springframework.binding
 * OgnlExpression now unwraps the ognl.OgnlException to make the real exception available to the
   caller (SWF-255).
 * OgnlExpressionParser now supports OGNL collection construction syntax (SWF-274).
+* AbstractExpressionParser now has a doParseSettableExpression() template method.
 
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".

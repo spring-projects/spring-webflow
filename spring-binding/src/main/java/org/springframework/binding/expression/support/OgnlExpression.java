@@ -60,8 +60,7 @@ class OgnlExpression implements SettableExpression {
 		if (!(o instanceof OgnlExpression)) {
 			return false;
 		}
-		// as late as Ognl 2.6.7, their expression objects don't implement
-		// equals
+		// as late as Ognl 2.6.7, their expression objects don't implement equals
 		// so this always returns false
 		OgnlExpression other = (OgnlExpression) o;
 		return expression.equals(other.expression);

@@ -111,8 +111,16 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		}
 	}
 
-	public abstract SettableExpression parseSettableExpression(String expressionString) throws ParserException,
-			UnsupportedOperationException;
+	public final SettableExpression parseSettableExpression(String expressionString)
+			throws ParserException,	UnsupportedOperationException {
+		expressionString = expressionString.trim();
+		// a settable expression should just be a single expression
+		if (expressionString.startsWith(getExpressionPrefix()) && expressionString.endsWith(getExpressionSuffix())) {
+			expressionString = expressionString.substring(getExpressionPrefix().length(),
+					expressionString.length() - getExpressionSuffix().length());
+		}
+		return doParseSettableExpression(expressionString);
+	}
 
 	/**
 	 * Helper that parses given expression string using the configured parser.
@@ -183,13 +191,28 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		}
 		return (Expression[]) expressions.toArray(new Expression[expressions.size()]);
 	}
+	
+	// template methods
 
 	/**
 	 * Template method for parsing a filtered expression string. Subclasses should
 	 * override.
 	 * @param expressionString the expression string
 	 * @return the parsed expression
+	 * @throws ParserException an exception occured during parsing
 	 */
-	protected abstract Expression doParseExpression(String expressionString);
+	protected abstract Expression doParseExpression(String expressionString) throws ParserException;
+	
+	/**
+	 * Template method for parsing a filtered settable expression string. Subclasses
+	 * should override.
+	 * @param expressionString the expression string
+	 * @return the parsed expression
+	 * @throws ParserException an exception occured during parsing
+	 * @throws UnsupportedOperationException this parser does not support
+	 * settable expressions
+	 */
+	protected abstract SettableExpression doParseSettableExpression(String expressionString)
+			throws ParserException, UnsupportedOperationException;
 
 }

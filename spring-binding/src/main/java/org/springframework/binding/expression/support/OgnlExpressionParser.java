@@ -35,7 +35,7 @@ public class OgnlExpressionParser extends AbstractExpressionParser {
 		return parseSettableExpression(expressionString);
 	}
 
-	public SettableExpression parseSettableExpression(String expressionString) throws ParserException {
+	public SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
 		try {
 			return new OgnlExpression(Ognl.parseExpression(expressionString));
 		}

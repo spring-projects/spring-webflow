@@ -22,7 +22,7 @@ import org.springframework.binding.expression.SettableExpression;
 /**
  * An expression parser that parses bean wrapper expressions.
  * 
- * @author Keith
+ * @author Keith Donald
  */
 public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 	
@@ -30,7 +30,7 @@ public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 		return parseSettableExpression(expressionString);
 	}
 
-	public SettableExpression parseSettableExpression(String expressionString) throws ParserException {
+	public SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
 		return new BeanWrapperExpression(expressionString);
 	}
 }
