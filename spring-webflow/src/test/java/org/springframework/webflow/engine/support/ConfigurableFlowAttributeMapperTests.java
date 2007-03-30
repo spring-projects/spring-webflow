@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.support;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.expression.support.OgnlExpressionParser;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingBuilder;
 import org.springframework.webflow.action.FormAction;
@@ -48,7 +47,7 @@ public class ConfigurableFlowAttributeMapperTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		mapper = new ConfigurableFlowAttributeMapper();
-		mapping = new MappingBuilder(new OgnlExpressionParser());
+		mapping = new MappingBuilder(mapper.getExpressionParser());
 		context = new MockRequestContext();
 		parentSession = new MockFlowSession();
 		subflowSession = new MockFlowSession();
