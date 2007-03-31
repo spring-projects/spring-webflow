@@ -406,6 +406,13 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	public Object getObject() throws Exception {
+		return getFlowExecutor();
+	}
+	
+	/**
+	 * Returns the flow executor constructed by the factory bean.
+	 */
+	public FlowExecutor getFlowExecutor() {
 		return flowExecutor;
 	}
 }

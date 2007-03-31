@@ -24,6 +24,7 @@ Package org.springframework.webflow.config
   not to be read properly and throw an exception (SWF-239).
 * Added Spring tooling funtionality to the BeanDefinitionParser to allow tools such as SpringIDE
   to properly interact with it (SWF-254).
+* Added getFlowExecutor() method to FlowExecutorFactoryBean.
 
 Package org.springframework.webflow.context
 * The ThreadLocal in ExternalContextHolder is now final (SWF-262).
