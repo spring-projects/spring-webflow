@@ -30,7 +30,9 @@ import org.springframework.webflow.definition.FlowDefinition;
  * A generic registry implementation for housing one or more flow definitions.
  * <p>
  * This registry may be refreshed at runtime to "hot reload" refreshable flow
- * definitions.
+ * definitions. Note that the refresh will only reload already registered
+ * flow definitions but will not detect any new flow definitions or remove
+ * flow definitions that no longer exist.
  * 
  * @author Keith Donald
  */

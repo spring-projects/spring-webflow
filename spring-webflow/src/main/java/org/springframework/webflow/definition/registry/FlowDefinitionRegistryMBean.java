@@ -80,7 +80,7 @@ public interface FlowDefinitionRegistryMBean {
 
 	/**
 	 * Refresh the Flow definition in this registry with the <code>id</code>
-	 * provided, reloading it from it's externalized representation
+	 * provided, reloading it from it's externalized representation.
 	 * @param flowDefinitionId the id of the flow definition to refresh
 	 * @throws NoSuchFlowDefinitionException if a flow with the id provided is not
 	 * stored in this registry
