@@ -56,6 +56,8 @@ Package org.springframework.webflow.executor
 * Added support for configuring a <flow:executor> in a JSF environment, greatly simplifying JSF SWF
   configuration and making it consistent with Spring MVC and Struts.  This also means its much easier
   to benefit from defaults such as a continuation-based flow execution repository and 'alwaysRedirectOnPause'.
+* Introduced ResponseInstructionHandler convenience class and refactored FlowController, PortletFlowController,
+  FlowAction and FlowPhaseListener to use it.
 
 Package org.springframework.webflow.test
 * Added constructor taking test name argument to AbstractFlowExecutionTests, AbstractExternalizedFlowExecutionTests

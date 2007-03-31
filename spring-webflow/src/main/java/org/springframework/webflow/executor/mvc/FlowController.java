@@ -32,12 +32,14 @@ import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
+import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.FlowRequestHandler;
 import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.RequestPathFlowExecutorArgumentHandler;
+import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
  * Point of integration between Spring Web MVC and Spring Web Flow: a
@@ -186,41 +188,45 @@ public class FlowController extends AbstractController implements InitializingBe
 	 * Create a ModelAndView object based on the information in the selected
 	 * response instruction. Subclasses can override this to return a
 	 * specialized ModelAndView or to do custom processing on it.
-	 * @param response instruction the response instruction to convert
+	 * @param responseInstruction the response instruction to convert
 	 * @return a new ModelAndView object
 	 */
-	protected ModelAndView toModelAndView(ResponseInstruction response, ExternalContext context) {
-		if (response.isApplicationView()) {
-			// forward to a view as part of an active conversation
-			ApplicationView view = (ApplicationView)response.getViewSelection();
-			Map model = new HashMap(view.getModel());
-			argumentHandler.exposeFlowExecutionContext(
-					response.getFlowExecutionKey(), response.getFlowExecutionContext(), model);
-			return new ModelAndView(view.getViewName(), model);
-		}
-		else if (response.isFlowDefinitionRedirect()) {
-			// restart the flow by redirecting to flow launch URL
-			String flowUrl = argumentHandler.createFlowDefinitionUrl((FlowDefinitionRedirect)response.getViewSelection(), context);
-			return new ModelAndView(new RedirectView(flowUrl));
-		}
-		else if (response.isFlowExecutionRedirect()) {
-			// redirect to active flow execution URL
-			String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(
-					response.getFlowExecutionKey(), response.getFlowExecutionContext(), context);
-			return new ModelAndView(new RedirectView(flowExecutionUrl));
-		}
-		else if (response.isExternalRedirect()) {
-			// redirect to external URL
-			ExternalRedirect redirect = (ExternalRedirect)response.getViewSelection();
-			String externalUrl = argumentHandler.createExternalUrl(redirect, response.getFlowExecutionKey(), context);
-			return new ModelAndView(new RedirectView(externalUrl));
-		}
-		else if (response.isNull()) {
-			// no response to issue
-			return null;
-		}
-		else {
-			throw new IllegalArgumentException("Don't know how to handle response instruction " + response);
-		}
+	protected ModelAndView toModelAndView(
+			final ResponseInstruction responseInstruction, final ExternalContext context) {
+		return (ModelAndView)new ResponseInstructionHandler() {
+			protected void handleApplicationView(ApplicationView view) throws Exception {
+				// forward to a view as part of an active conversation
+				Map model = new HashMap(view.getModel());
+				argumentHandler.exposeFlowExecutionContext(responseInstruction.getFlowExecutionKey(),
+						responseInstruction.getFlowExecutionContext(), model);
+				setResult(new ModelAndView(view.getViewName(), model));
+			}
+
+			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
+				// restart the flow by redirecting to flow launch URL
+				String flowUrl = argumentHandler.createFlowDefinitionUrl(redirect, context);
+				setResult(new ModelAndView(new RedirectView(flowUrl)));
+			}
+
+			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
+				// redirect to active flow execution URL
+				String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(
+						responseInstruction.getFlowExecutionKey(),
+						responseInstruction.getFlowExecutionContext(), context);
+				setResult(new ModelAndView(new RedirectView(flowExecutionUrl)));
+			}
+
+			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
+				// redirect to external URL
+				String externalUrl = argumentHandler.createExternalUrl(redirect,
+						responseInstruction.getFlowExecutionKey(), context);
+				setResult(new ModelAndView(new RedirectView(externalUrl)));
+			}
+
+			protected void handleNull() throws Exception {
+				// no response to issue
+				setResult(null);
+			}
+		}.handleQuietly(responseInstruction).getResult();
 	}
 }

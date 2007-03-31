@@ -34,10 +34,12 @@ import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
+import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
+import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
  * Point of integration between Spring Portlet MVC and Spring Web Flow: a
@@ -186,50 +188,59 @@ public class PortletFlowController extends AbstractController implements Initial
 		}
 	}
 
-	protected void handleActionRequestInternal(ActionRequest request, ActionResponse response) throws Exception {
-		PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
-		String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
-		String eventId = argumentHandler.extractEventId(context);
+	protected void handleActionRequestInternal(final ActionRequest request, final ActionResponse response)
+			throws Exception {
+		final PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
+		final String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
+		final String eventId = argumentHandler.extractEventId(context);
+
 		// signal the event against the flow execution, returning the next
 		// response instruction
-		ResponseInstruction responseInstruction = flowExecutor.resume(flowExecutionKey, eventId, context);
-		if (responseInstruction.isApplicationView()) {
-			// response instruction is a forward to an "application view"
-			if (responseInstruction.isActiveView()) {
-				// is an "active" forward from a view-state (not end-state) --
-				// set the flow execution key render parameter to support
-				// browser refresh
+		final ResponseInstruction responseInstruction = flowExecutor.resume(flowExecutionKey, eventId, context);
+		
+		new ResponseInstructionHandler() {
+
+			protected void handleApplicationView(ApplicationView view) throws Exception {
+				// response instruction is a forward to an "application view"
+				if (responseInstruction.isActiveView()) {
+					// is an "active" forward from a view-state (not end-state) --
+					// set the flow execution key render parameter to support
+					// browser refresh
+					response.setRenderParameter(
+							argumentHandler.getFlowExecutionKeyArgumentName(),
+							responseInstruction.getFlowExecutionKey());
+				}
+				// cache response instruction for access during render phase of this
+				// portlet
+				exposeToRenderPhase(responseInstruction, request);
+			}
+
+			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
+				// set flow id render parameter to request that a new flow be
+				// launched within this portlet
+				response.setRenderParameters(redirect.getExecutionInput());
+				response.setRenderParameter(argumentHandler.getFlowIdArgumentName(), redirect.getFlowDefinitionId());
+			}
+
+			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
+				// is a flow execution redirect: simply expose key parameter to
+				// support refresh during render phase
 				response.setRenderParameter(
 						argumentHandler.getFlowExecutionKeyArgumentName(),
 						responseInstruction.getFlowExecutionKey());
 			}
-			// cache response instruction for access during render phase of this
-			// portlet
-			exposeToRenderPhase(responseInstruction, request);
-		}
-		else if (responseInstruction.isFlowExecutionRedirect()) {
-			// is a flow execution redirect: simply expose key parameter to
-			// support refresh during render phase
-			response.setRenderParameter(
-					argumentHandler.getFlowExecutionKeyArgumentName(),
-					responseInstruction.getFlowExecutionKey());
-		}
-		else if (responseInstruction.isFlowDefinitionRedirect()) {
-			// set flow id render parameter to request that a new flow be
-			// launched within this portlet
-			FlowDefinitionRedirect redirect = (FlowDefinitionRedirect)responseInstruction.getViewSelection();
-			response.setRenderParameters(redirect.getExecutionInput());
-			response.setRenderParameter(argumentHandler.getFlowIdArgumentName(), redirect.getFlowDefinitionId());
-		}
-		else if (responseInstruction.isExternalRedirect()) {
-			// issue the redirect to the external URL
-			ExternalRedirect redirect = (ExternalRedirect)responseInstruction.getViewSelection();
-			String url = argumentHandler.createExternalUrl(redirect, flowExecutionKey, context);
-			response.sendRedirect(url);
-		}
-		else {
-			throw new IllegalArgumentException("Don't know how to handle response instruction " + responseInstruction);
-		}
+
+			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
+				// issue the redirect to the external URL
+				String url = argumentHandler.createExternalUrl(redirect, flowExecutionKey, context);
+				response.sendRedirect(url);
+			}
+
+			protected void handleNull() throws Exception {
+				// nothing to do
+			}
+			
+		}.handle(responseInstruction);
 	}
 
 	// helpers
@@ -269,21 +280,22 @@ public class PortletFlowController extends AbstractController implements Initial
 	 * Convert given response instruction into a Spring Portlet MVC model and
 	 * view.
 	 */
-	protected ModelAndView toModelAndView(ResponseInstruction response) {
-		if (response.isApplicationView()) {
+	protected ModelAndView toModelAndView(ResponseInstruction responseInstruction) {
+		if (responseInstruction.isApplicationView()) {
 			// forward to a view as part of an active conversation
-			ApplicationView forward = (ApplicationView)response.getViewSelection();
+			ApplicationView forward = (ApplicationView)responseInstruction.getViewSelection();
 			Map model = new HashMap(forward.getModel());
 			argumentHandler.exposeFlowExecutionContext(
-					response.getFlowExecutionKey(), response.getFlowExecutionContext(), model);
+					responseInstruction.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), model);
 			return new ModelAndView(forward.getViewName(), model);
 		}
-		else if (response.isNull()) {
+		else if (responseInstruction.isNull()) {
 			// no response to issue
 			return null;
 		}
 		else {
-			throw new IllegalArgumentException("Don't know how to handle response instruction " + response);
+			throw new IllegalArgumentException(
+					"Don't know how to handle response instruction " + responseInstruction);
 		}
 	}
 }

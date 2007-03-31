@@ -42,8 +42,10 @@ import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
+import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
+import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
  * JSF phase listener that is responsible for managing a {@link FlowExecution}
@@ -196,7 +198,7 @@ public class FlowPhaseListener implements PhaseListener {
 		return null;
 	}
 
-	protected void prepareResponse(JsfExternalContext context, FlowExecutionHolder holder) {
+	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {
 		if (holder.needsSave()) {
 			generateKey(context, holder);
 		}
@@ -205,26 +207,38 @@ public class FlowPhaseListener implements PhaseListener {
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
 		}
-		if (selectedView instanceof ApplicationView) {
-			prepareApplicationView(context.getFacesContext(), holder);
-		}
-		else if (selectedView instanceof FlowExecutionRedirect) {
-			String url = argumentHandler.createFlowExecutionUrl(holder.getFlowExecutionKey().toString(), holder
-					.getFlowExecution(), context);
-			sendRedirect(url, context);
-		}
-		else if (selectedView instanceof ExternalRedirect) {
-			String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString()
-					: null;
-			String url = argumentHandler.createExternalUrl((ExternalRedirect) holder.getViewSelection(),
-					flowExecutionKey, context);
-			sendRedirect(url, context);
-		}
-		else if (selectedView instanceof FlowDefinitionRedirect) {
-			String url = argumentHandler.createFlowDefinitionUrl((FlowDefinitionRedirect) holder.getViewSelection(),
-					context);
-			sendRedirect(url, context);
-		}
+		
+		new ResponseInstructionHandler() {
+
+			protected void handleApplicationView(ApplicationView view) throws Exception {
+				prepareApplicationView(context.getFacesContext(), holder);
+			}
+
+			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
+				String url = argumentHandler.createFlowDefinitionUrl((FlowDefinitionRedirect) holder.getViewSelection(),
+						context);
+				sendRedirect(url, context);
+			}
+
+			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
+				String url = argumentHandler.createFlowExecutionUrl(holder.getFlowExecutionKey().toString(), holder
+						.getFlowExecution(), context);
+				sendRedirect(url, context);
+			}
+
+			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
+				String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString()
+						: null;
+				String url = argumentHandler.createExternalUrl((ExternalRedirect) holder.getViewSelection(),
+						flowExecutionKey, context);
+				sendRedirect(url, context);
+			}
+
+			protected void handleNull() throws Exception {
+				// nothing to do
+			}
+			
+		}.handleQuietly(new ResponseInstruction(holder.getFlowExecution(), selectedView));
 	}
 
 	protected void prepareApplicationView(FacesContext facesContext, FlowExecutionHolder holder) {

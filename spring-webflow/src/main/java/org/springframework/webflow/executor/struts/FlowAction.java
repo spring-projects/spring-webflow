@@ -35,11 +35,13 @@ import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
+import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.FlowRequestHandler;
 import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
+import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
  * Point of integration between Struts and Spring Web Flow: a Struts Action that
@@ -232,50 +234,52 @@ public class FlowAction extends ActionSupport {
 	 * Return a Struts ActionForward given a ResponseInstruction. Adds all
 	 * attributes from the ResponseInstruction as request attributes.
 	 */
-	protected ActionForward toActionForward(ResponseInstruction response, ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpResponse, ExternalContext context) throws Exception {
-		if (response.isApplicationView()) {
-			// forward to a view as part of an active conversation
-			ApplicationView forward = (ApplicationView)response.getViewSelection();
-			Map model = new HashMap(forward.getModel());
-			argumentHandler.exposeFlowExecutionContext(
-					response.getFlowExecutionKey(), response.getFlowExecutionContext(), model);
-			WebUtils.exposeRequestAttributes(request, model);
-			if (form instanceof SpringBindingActionForm) {
-				SpringBindingActionForm bindingForm = (SpringBindingActionForm)form;
-				// expose the form object and associated errors as the
-				// "current form object" in the request
-				Errors currentErrors = (Errors)model.get(FormObjectAccessor.getCurrentFormErrorsName());
-				bindingForm.expose(currentErrors, request);
+	protected ActionForward toActionForward(final ResponseInstruction responseInstruction,
+			final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response,
+			final ExternalContext context) throws Exception {
+		return (ActionForward)new ResponseInstructionHandler() {
+			protected void handleApplicationView(ApplicationView view) throws Exception {
+				// forward to a view as part of an active conversation
+				Map model = new HashMap(view.getModel());
+				argumentHandler.exposeFlowExecutionContext(
+						responseInstruction.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), model);
+				WebUtils.exposeRequestAttributes(request, model);
+				if (form instanceof SpringBindingActionForm) {
+					SpringBindingActionForm bindingForm = (SpringBindingActionForm)form;
+					// expose the form object and associated errors as the
+					// "current form object" in the request
+					Errors currentErrors = (Errors)model.get(FormObjectAccessor.getCurrentFormErrorsName());
+					bindingForm.expose(currentErrors, request);
+				}
+				setResult(findForward(view, mapping));
 			}
-			return findForward(forward, mapping);
 
-		}
-		else if (response.isFlowExecutionRedirect()) {
-			// redirect to active flow execution URL
-			String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(
-					response.getFlowExecutionKey(), response.getFlowExecutionContext(), context);
-			return createRedirectForward(flowExecutionUrl, httpResponse);
-		}
-		else if (response.isFlowDefinitionRedirect()) {
-			// restart the flow by redirecting to flow launch URL
-			String flowUrl = argumentHandler.createFlowDefinitionUrl(
-					(FlowDefinitionRedirect)response.getViewSelection(), context);
-			return createRedirectForward(flowUrl, httpResponse);
-		}
-		else if (response.isExternalRedirect()) {
-			// redirect to external URL
-			String externalUrl = argumentHandler.createExternalUrl(
-					(ExternalRedirect)response.getViewSelection(), response.getFlowExecutionKey(), context);
-			return createRedirectForward(externalUrl, httpResponse);
-		}
-		else if (response.isNull()) {
-			// no response to issue
-			return null;
-		}
-		else {
-			throw new IllegalArgumentException("Don't know how to handle response instruction " + response);
-		}
+			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
+				// restart the flow by redirecting to flow launch URL
+				String flowUrl = argumentHandler.createFlowDefinitionUrl(redirect, context);
+				setResult(createRedirectForward(flowUrl, response));
+			}
+
+			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
+				// redirect to active flow execution URL
+				String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(
+						responseInstruction.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), context);
+				setResult(createRedirectForward(flowExecutionUrl, response));
+			}
+
+			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
+				// redirect to external URL
+				String externalUrl = argumentHandler.createExternalUrl(
+						redirect, responseInstruction.getFlowExecutionKey(), context);
+				setResult(createRedirectForward(externalUrl, response));
+			}
+
+			protected void handleNull() throws Exception {
+				// no response to issue
+				setResult(null);
+			}
+		}.handle(responseInstruction).getResult();
 	}
 
 	/**
