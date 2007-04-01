@@ -58,6 +58,8 @@ Package org.springframework.webflow.executor
   to benefit from defaults such as a continuation-based flow execution repository and 'alwaysRedirectOnPause'.
 * Introduced ResponseInstructionHandler convenience class and refactored FlowController, PortletFlowController,
   FlowAction and FlowPhaseListener to use it.
+* JSF flow execution lifecycle now respects flow execution locking contract (SWF-229, SWF-276)
+* Fixed bug in FlowPhaseListener that resulted in a NPE on a flow that started and ended in the same request (SWF-273)
 
 Package org.springframework.webflow.test
 * Added constructor taking test name argument to AbstractFlowExecutionTests, AbstractExternalizedFlowExecutionTests
