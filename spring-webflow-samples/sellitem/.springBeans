@@ -19,7 +19,7 @@
 			</configs>
 		</configSet>
 		<configSet>
-			<name>sellitemFlow</name>
+			<name>webapp</name>
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
