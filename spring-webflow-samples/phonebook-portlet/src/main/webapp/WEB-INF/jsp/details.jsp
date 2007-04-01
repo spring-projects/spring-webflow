@@ -1,7 +1,7 @@
 <%@ page contentType="text/html" %>
 <%@ page session="false" %>
 <%@ page import="org.springframework.webflow.samples.phonebook.Person" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
 
 <portlet:defineObjects/>
@@ -10,7 +10,7 @@
 <head>
 <title>Enter Search Criteria</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" href="<%= renderResponse.encodeURL(renderRequest.getContextPath() + "style.css") %>" type="text/css">
+<link rel="stylesheet" href="<%= renderResponse.encodeURL(renderRequest.getContextPath() + "/style.css") %>" type="text/css">
 </head>
 <body>
 
