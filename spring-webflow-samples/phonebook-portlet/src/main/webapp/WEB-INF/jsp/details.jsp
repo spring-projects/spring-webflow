@@ -1,18 +1,36 @@
-<%@ include file="includeTop.jsp" %>
-
+<%@ page contentType="text/html" %>
+<%@ page session="false" %>
 <%@ page import="org.springframework.webflow.samples.phonebook.Person" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
+
+<portlet:defineObjects/>
+
+<html>
+<head>
+<title>Enter Search Criteria</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="<%= renderResponse.encodeURL(renderRequest.getContextPath() + "style.css") %>" type="text/css">
+</head>
+<body>
+
+<div id="logo">
+	<img src="<%= renderResponse.encodeURL(renderRequest.getContextPath() + "/images/spring-logo.jpg") %>" height="73" alt="Logo" border="0"> 
+</div>
 
 <div id="content">
+	
 	<div id="insert">
 		<img src="<%= renderResponse.encodeURL(renderRequest.getContextPath() + "/images/webflow-logo.jpg") %>"/>
 	</div>
+	
 	<form action="<portlet:actionURL/>" method="post">
 	<table>
 		<tr>
 			<td class="portlet-section-subheader">Person Details</td>
 		</tr>
 		<tr>
-			<td colpan="2"><hr></td>
+			<td colspan="2"><hr></td>
 		</tr>
 		<tr>
 			<td><b>First Name</b></td>
