@@ -1,7 +1,21 @@
-<%@ include file="includeTop.jsp" %>
+<%@ page contentType="text/html" %>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+
+<html>
+<head>
+<title>Sell Item - Select Category</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+
+<div id="logo">
+	<img src="images/spring-logo.jpg" alt="Logo" border="0"> 
+</div>
 
 <f:view>
-
 <div id="content">
 	<div id="insert"><img src="images/webflow-logo.jpg"/></div>
 	<h2>Select category</h2>
@@ -39,7 +53,10 @@
 	</h:form>
 	</table>
 </div>
-
 </f:view>
 
-<%@ include file="includeBottom.jsp" %>
+<div id="copyright">
+	<p>&copy; Copyright 2004-2007, <a href="http://www.springframework.org">www.springframework.org</a>, under the terms of the Apache 2.0 software license.</p>
+</div>
+</body>
+</html>

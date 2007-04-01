@@ -1,52 +1,35 @@
-<%@ page session="true" %> <%-- make sure we have a session --%>
+ <%-- make sure we have a session --%>
+<%@ page session="true" %>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 
-<HTML>
-	<BODY>
-	
-<f:view>
-	
-		<DIV align="left">Sell Item - A Spring Web Flow Sample (JSF Version)</DIV>
-		
-		<HR>
-		
-		<DIV align="left">
-			<P>
-				<h:form>
-				    <h:commandLink value="Sell Item" action="flowId:sellitem-flow"/>
-				</h:form>
-			</P>
-			
-			<P>
-				This Spring web flow sample application implements the example application
-				discussed in the article
-				<A href="http://www-128.ibm.com/developerworks/java/library/j-contin.html">
-				Use continuations to develop complex Web applications</A>. It illustrates
-				the following concepts:
-				<UL>
-				    <LI>
-				    	Spring Web Flow's JSF integration.
-				    </LI>
-					<LI>
-						Using the flowId: command link prefix to let the view tell the web
-						flow controller which flow needs to be started.
-					</LI>
-					<LI>
-						Implementing a wizard using web flows.
-					</LI>
-					<LI>
-						Using <A href="http://www.ognl.org/">OGNL</A> based conditional expressions.
-					</LI>
-				</UL>
-			</P>
-		</DIV>
-		
-		<HR>
+<html>
+<body>
 
-		<DIV align="right"></DIV>
-	</BODY>
-	
+<f:view>
+	<div align="left">
+		<p>
+			<h:form>
+			    <h:commandLink value="Sell Item" action="flowId:sellitem-flow"/>
+			</h:form>
+		</p>
+		<p>
+			This Spring Web Flow sample application is the JSF-based version of the familiar "Sell item" sample.
+			It illustrates the following concepts:
+		</p>
+		<ul>
+			<li>Using Spring Web Flow with JSF</li>
+			<li>Implementing a wizard using web flows.</li>
+			<li>Using continuations to make the flow completely stable, no matter how browser navigation buttons are used.</li>
+			<li>
+				Using "conversation invalidation after completion" to prevent duplicate submits of the same sale
+				while taking advantage of continuations to allow back button usage while the application transaction is in process.				</li>
+			<li>"Always redirect on pause" to benefit from the POST+REDIRECT+GET pattern with no special coding.</li>
+			<li>Using <A href="http://www.ognl.org/">OGNL</A> based conditional expressions.</li>
+			<li>Use of subflows to compose a multi-step business process from independently reusable modules.</li>
+		</ul>
+	</div>
 </f:view>
-	
-</HTML>
+
+</body>	
+</html>
