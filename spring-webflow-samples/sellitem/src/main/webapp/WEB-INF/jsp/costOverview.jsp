@@ -12,6 +12,10 @@
 
 <body>
 
+<div id="logo">
+	<img src="images/spring-logo.jpg" alt="Logo"> 
+</div>
+
 <div id="content">
 	<div id="insert"><img src="images/webflow-logo.jpg"/></div>
 	<h2>Purchase cost overview</h2>
