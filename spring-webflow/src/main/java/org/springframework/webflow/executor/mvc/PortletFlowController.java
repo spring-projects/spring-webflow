@@ -58,6 +58,25 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * It is also possible to customize the {@link FlowExecutorArgumentHandler}
  * strategy to allow for different types of controller parameterization, for
  * example perhaps in conjunction with a REST-style request mapper.
+ * <p>
+ * Integrating Spring Web Flow into a Portlet environment puts some minor
+ * contraints on your flows. These constraints result from technical limitations
+ * in the Portlet API, for instance the fact that a render request cannot
+ * issue a redirect. Keep the following in mind when developing Portlets
+ * using Spring Web Flow:
+ * <ul>
+ * <li>Using the well known POST-REDIRECT-GET idiom, for instance using
+ * <i>alwaysRedirectOnPause</i> or the "redirect:" view prefix, does not
+ * make sense in a Portlet environment where the Portlet container handles
+ * this using a seperate <i>render phase</i>. In other words, a
+ * {@link FlowExecutionRedirect} is not supportd.</li>
+ * <li>This controller will launch a new flow execution <i>every time</i> it handles
+ * a render request without having previously handled an action request
+ * (for the same session) or the render request containing a flow execution key.</li>
+ * <li>Launching new flow executions is done in the render phase. As a result
+ * the first view selection your flow makes cannot be a {@link FlowDefinitionRedirect}
+ * or an {@link ExternalRedirect}.</li>
+ * </ul>
  * 
  * @see org.springframework.webflow.executor.FlowExecutor
  * @see org.springframework.webflow.executor.support.FlowExecutorArgumentHandler
@@ -276,6 +295,10 @@ public class PortletFlowController extends AbstractController implements Initial
 			return null;
 		}
 		else {
+			// we can't render any of the redirect responses since 'sendRedirect' is only
+			// available on ActionResponse during the action phase
+			// furthermore, a FlowExecutionRedirect doesn't really makes sense since the
+			// portlet container handles refreshes with the render phase
 			throw new IllegalArgumentException(
 					"Don't know how to render response instruction " + responseInstruction);
 		}
