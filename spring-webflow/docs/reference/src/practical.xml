@@ -611,13 +611,6 @@ public BirthDateFormAction() {
                 After the initial index.jsp subsequent pages are 
                 loaded in an Ajax manner without reloading the entire page.
             </para>
-            <warning>
-                <para>
-                    This sample has been tested successfully on Internet Explorer 6 and 7, 
-                    Firefox 2.0, and Safari 2. There are known Javascript issues 
-                    with use on Firefox 1.5.
-                </para>
-            </warning>
             <para>
                 The Ajax requests are done with the help of the
                 <ulink url="http://prototype.conio.net">Prototype</ulink>
@@ -1305,7 +1298,7 @@ if (data != null &amp;&amp; data.length() > 0) {
             <title>Itemlist-alternate Web Flow</title>
             <para>
                 The Itemlist-alternate web flow (/WEB-INF/itemlist-alternate.xml) 
-                has functionality equivalent  to that of itemlist but instead uses
+                has functionality equivalent to that of itemlist but instead uses
                 a subflow for selecting individual items.
                 The "addItem" state is a subflow state 
                 invoking an inline flow called "item" (also defined in itemlist-alternate.xml)
@@ -1328,38 +1321,13 @@ if (data != null &amp;&amp; data.length() > 0) {
                 <programlisting>
 &lt;end-state id="finish"&gt;
     &lt;output-mapper&gt;
-        &lt;mapping source="flowScope.item" target="item" /&gt;
+        &lt;mapping source="requestParameters.data" target="item" /&gt;
     &lt;/output-mapper&gt;
 &lt;/end-state&gt;
                 </programlisting>
                 With the above declarations we see how a subflow can pass output 
-                parameters back to its parent flow. The remaining question is
-                what sets "flowScope.item" which appears for the first time
-                in the end state of the subflow?
-            </para>
-            <para>
-                The answer lies in the "mapItemAction" bean invoked between the 
-                view state and the end state in the subflow:
-                <programlisting>
-&lt;action-state id="mapItem"&gt;
-    &lt;action bean="mapItemAction" /&gt;
-    &lt;transition on="success" to="finish" /&gt;
-&lt;/action-state&gt;
-                </programlisting>
-                The mapItemAction bean was defined in the itemlist-servlet.xml web context
-                and is an istance of Web Flow's AttributeMapperAction. The purpose
-                of AttributeMapperAction is to invoke an AttributeMapper and to perform
-                mappings between two attribute sources. The AttributeMapper with which
-                the mapItemAction bean is configured is an instance of DataMapper. It
-                adds the following mapping:
-                <programlisting>
-addMapping(mapping.source("requestParameters.data").target("flowScope.item").value());
-                </programlisting>
-                With this declaration in place each time the AttributeMaperAction is 
-                invoked it will create the flowScoped variable "item" based on the value
-                of the "data" request parameter. Note that AttributeMapper is 
-                Web Flow API for the &lt;attribute-mapper&gt; declarations used above
-                to pass data from the inner subflow to the parent flow. 
+                parameters back to its parent flow - in this case the 'data' request parameter
+                is passed back as an output parameter.
             </para>
             <para>
                 Once the inner subflow flow has completed the item is passed to the parent flow

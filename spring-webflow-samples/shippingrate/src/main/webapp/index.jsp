@@ -33,10 +33,6 @@
 					Implementing a wizard using Spring Web Flow.
 				</LI>
 			</UL>
-			<P>
-				Note: this sample has been tested successfully on Internet Explorer 6 and 7, Firefox 2 and Safari 2.
-				There are currently known Javascript issues with use on Firefox 1.5.
-			</P>
 		</DIV>
 		
 		<HR>
