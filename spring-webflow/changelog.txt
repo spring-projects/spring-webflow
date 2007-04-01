@@ -70,7 +70,7 @@ Package org.springframework.webflow.test
 Package org.springframework.webflow.samples
 * Made all samples Spring IDE 2.0 projects for use with the Spring Web Flow Graphical Editor and XML Flow Definition Editor out of the box.
   To use these features, import the sample projects into Eclipse 3.2.2 with WTP 1.5.3 and Spring IDE 2.0 M3 or greater installed (See http://springide.org)
-* Featured alternate flow versions of "ItemList" and "Sellitem" flows more prominently.
+* Featured alternate versions of "ItemList" and "Sellitem" flows more prominently.
 * Enhanced the JSF-based version of SellItem to take advantage of the latest simplifications in Spring Web Flow's JSF support.  Please see this sample
   along with the practical section in the reference manual for illustrations of how to use Spring Web Flow in a JSF environment.
   
