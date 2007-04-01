@@ -100,7 +100,7 @@ public abstract class ResponseInstructionHandler {
 		}
 		catch (Exception e) {
 			throw new RuntimeException(
-					"Unexpected exception handling response instruction " + responseInstruction, e); 
+					"Unexpected exception handling response instruction " + responseInstruction + ": " + e); 
 		}
 	}
 
