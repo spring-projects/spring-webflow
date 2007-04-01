@@ -4,6 +4,7 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
+		<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -18,7 +19,6 @@
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
 			</configs>
 		</configSet>
 	</configSets>
