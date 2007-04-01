@@ -71,7 +71,7 @@ public class FlowVariableResolverTests extends TestCase {
 	public void testResolveVariableFlowScopeWithThreadLocal() {
 		FlowExecution flowExecutionMock = (FlowExecution)EasyMock.createMock(FlowExecution.class);
 		FlowExecutionKey key = null;
-		FlowExecutionHolder holder = new FlowExecutionHolder(key, flowExecutionMock);
+		FlowExecutionHolder holder = new FlowExecutionHolder(key, flowExecutionMock, null);
 		FlowExecutionHolderUtils.setFlowExecutionHolder(holder, mockFacesContext);
 		EasyMock.replay(new Object[] { flowExecutionMock });
 
