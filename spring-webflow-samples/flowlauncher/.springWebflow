@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow-project-description>
+	<configs>
+		<config>
+			<file>src/main/webapp/WEB-INF/sampleA.xml</file>
+			<name>sampleA</name>
+		</config>
+		<config>
+			<file>src/main/webapp/WEB-INF/sampleB.xml</file>
+			<name>sampleB</name>
+		</config>
+	</configs>
+</webflow-project-description>
