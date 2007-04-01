@@ -1,4 +1,16 @@
-<%@ include file="includeTop.jsp" %>
+<%@ page contentType="text/html" %>
+<%@ page session="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<html>
+<head>
+	<title>Sell Item - Order Summary</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
 
 <div id="content">
 	<div id="insert"><img src="images/webflow-logo.jpg"/></div>
@@ -68,4 +80,9 @@
 	</table>
 </div>
 
-<%@ include file="includeBottom.jsp" %>
+<div id="copyright">
+	<p>&copy; Copyright 2004-2007, <a href="http://www.springframework.org">www.springframework.org</a>, under the terms of the Apache 2.0 software license.</p>
+</div>
+
+</body>
+</html>
