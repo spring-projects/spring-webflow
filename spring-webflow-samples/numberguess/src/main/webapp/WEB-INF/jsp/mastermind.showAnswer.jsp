@@ -15,7 +15,7 @@
 
 <div id="content">
 	<div id="insert"><img src="images/webflow-logo.jpg"/></div>
-	<h2>Show answer</h2>
+	<h2>You guessed it!</h2>
 	<table>
 		<tr>
 			<td>Total number of guesses:</td>
