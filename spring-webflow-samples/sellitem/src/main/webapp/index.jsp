@@ -6,7 +6,10 @@
 	<hr>
 	<div align="left">
 		<p>
-			<a href="pos.htm?_flowId=sellitem-flow">Sell Item</A>
+			<a href="pos.htm?_flowId=sellitem-flow">Sell Item</A> (using flow scope storage for 'undo' back button behavior)
+		</p>
+		<p>
+			<a href="pos.htm?_flowId=sellitem-conversation-scope-flow">Sell Item Alternate</A> (using conversation scope storage for 'preserve' back button behavior)
 		</p>
 		<p>
 			This Spring Web Flow sample application implements the example application
