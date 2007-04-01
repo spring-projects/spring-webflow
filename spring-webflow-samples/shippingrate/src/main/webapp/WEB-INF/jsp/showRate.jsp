@@ -7,7 +7,7 @@
 
 	<fieldset>
 		<legend>Rate details</legend>
-		<label>Your shipping rate is: <span>${rate}</span>
+		<label>Your shipping rate is:</label> <span>${rate}</span>
 	</fieldset>
 	
 </form>
