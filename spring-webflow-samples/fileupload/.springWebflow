@@ -4,6 +4,7 @@
 		<config>
 			<file>src/main/webapp/WEB-INF/fileupload.xml</file>
 			<name>fileupload</name>
+			<beans-config>1:BeansModel|2:swf-fileupload|3:src/main/webapp/WEB-INF/fileupload-servlet.xml</beans-config>
 		</config>
 	</configs>
 </webflow-project-description>

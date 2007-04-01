@@ -26,17 +26,12 @@
 			<start-state idref="displayItem"/>
 			
 			<view-state id="displayItem" view="item">
-				<transition on="submit" to="mapItem" />
+				<transition on="submit" to="finish" />
 			</view-state>
-
-			<action-state id="mapItem">
-				<action bean="mapItemAction" />
-				<transition on="success" to="finish" />
-			</action-state>
 
 			<end-state id="finish">
 				<output-mapper>
-					<mapping source="flowScope.item" target="item" />
+					<mapping source="requestParameters.data" target="item" />
 				</output-mapper>
 			</end-state>
 		</flow>

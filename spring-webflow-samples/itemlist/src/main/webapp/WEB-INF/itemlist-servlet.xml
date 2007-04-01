@@ -49,10 +49,4 @@
 
 	<bean id="addItemAction" class="org.springframework.webflow.samples.itemlist.AddItemAction" />
 
-	<bean id="mapItemAction" class="org.springframework.webflow.action.AttributeMapperAction">
-		<constructor-arg>
-			<bean class="org.springframework.webflow.samples.itemlist.DataMapper" />
-		</constructor-arg>
-	</bean>
-
 </beans>

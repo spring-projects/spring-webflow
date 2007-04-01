@@ -4,23 +4,18 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
+		<config>src/main/webapp/WEB-INF/phonebook-webflow-config.xml</config>
+		<config>src/main/webapp/WEB-INF/phonebook-portlet-config.xml</config>
+		<config>src/main/java/org/springframework/webflow/samples/phonebook/stub/services-config.xml</config>
 		<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
-			<name>search-flow</name>
+			<name>serviceLayer</name>
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
-			</configs>
-		</configSet>
-		<configSet>
-			<name>service-layer</name>
-			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
-			<incomplete>false</incomplete>
-			<configs>
-				<config>src/main/java/org/springframework/webflow/samples/phonebook/domain/services.xml</config>
+				<config>src/main/java/org/springframework/webflow/samples/phonebook/stub/services-config.xml</config>
 			</configs>
 		</configSet>
 		<configSet>
@@ -28,8 +23,10 @@
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/main/webapp/WEB-INF/dispatcher-portlet.xml</config>
-				<config>src/main/webapp/WEB-INF/webflow.xml</config>
+				<config>src/main/java/org/springframework/webflow/samples/phonebook/stub/services-config.xml</config>
+				<config>src/main/webapp/WEB-INF/phonebook-portlet-config.xml</config>
+				<config>src/main/webapp/WEB-INF/phonebook-webflow-config.xml</config>
+				<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

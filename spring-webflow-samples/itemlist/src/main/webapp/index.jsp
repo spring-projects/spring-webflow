@@ -12,6 +12,9 @@
 				<A href="app/itemlist">Item List</A>
 			</P>			
 			<P>
+				<A href="app/itemlist-alternate">Item List Alternate</A> (same flow with the 'add item' process modeled as a subflow)
+			</P>
+			<P>
 				This Spring web flow sample application illustrates several features:
 			</P>
 			<UL>
