@@ -20,6 +20,7 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
 import org.springframework.webflow.conversation.ConversationId;
@@ -141,7 +142,10 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	}
 
 	public FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException {
-		Assert.hasText(encodedKey, "The string encoded flow execution key is required");
+		if (!StringUtils.hasText(encodedKey)) {
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, 
+					"The string encoded flow execution key is required");
+		}
 		
 		String[] keyParts = CompositeFlowExecutionKey.keyParts(encodedKey);
 		
