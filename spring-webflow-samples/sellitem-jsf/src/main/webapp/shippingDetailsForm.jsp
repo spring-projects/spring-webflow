@@ -46,7 +46,7 @@
 		<tr>
 			<td colspan="2" class="buttonBar">
 				<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
-				<h:commandButton type="submit" value="Next" action="submit" immediate="false" /></td>
+				<h:commandButton type="submit" value="Next" action="submit" immediate="false" />
 			</td>
 		</tr>
 		</h:form>

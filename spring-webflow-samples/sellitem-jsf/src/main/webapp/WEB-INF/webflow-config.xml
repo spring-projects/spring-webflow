@@ -19,16 +19,6 @@
 	<!-- A "Sale" managed bean created by JSF for each 'sellitem' flow execution -->
 	<bean name="sale" class="org.springframework.webflow.samples.sellitem.Sale" scope="prototype" />
 
-	<!-- A form action for applying custom validation to the Sale managed bean -->
-	<bean id="sellItemFormAction" class="org.springframework.webflow.action.FormAction">
-		<property name="formObjectName" value="sale" />
-		<property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale" />
-		<property name="formObjectScope" value="FLOW" />
-		<property name="validator">
-			<bean class="org.springframework.webflow.samples.sellitem.SaleValidator" />
-		</property>
-	</bean>
-
 	<!--
 		Spring configured flow navigation handler delegate, allowing for custom configuration
 		using standard dependency injection techniques.

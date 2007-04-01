@@ -7,11 +7,7 @@
 	<start-state idref="enterPriceAndItemCount" />
 
 	<view-state id="enterPriceAndItemCount" view="/priceAndItemCountForm.jsp">
-		<transition on="submit" to="enterCategory">
-			<action bean="sellItemFormAction" method="validate">
-				<attribute name="validatorMethod" value="validatePriceAndItemCount" />
-			</action>
-		</transition>
+		<transition on="submit" to="enterCategory"/>
 	</view-state>
 
 	<view-state id="enterCategory" view="/categoryForm.jsp">
@@ -35,6 +31,6 @@
 		<transition on="success" to="showCostOverview" />
 	</action-state>
 
-	<end-state id="showCostOverview" view="/costOverview" />
+	<end-state id="showCostOverview" view="/costOverview.sjp" />
 
 </flow>
