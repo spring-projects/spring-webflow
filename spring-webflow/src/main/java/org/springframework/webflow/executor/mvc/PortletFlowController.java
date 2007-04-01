@@ -172,25 +172,35 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
 		PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
-		
-		// look for a cached response instruction in the session put there
-		// by the action request phase
-		ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
-		if (responseInstruction != null) {
-			// found: convert it to model and view for rendering
-			return toModelAndView(responseInstruction);
-		}
-		else {
-			if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-				// flowExecutionKey render param present: this is a request to
-				// refresh an active flow execution -- extract its key
-				String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
+		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+			// this is a request to render an active flow execution -- extract its key
+			String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
+			// look for a cached response instruction in the session put there
+			// by the action request phase as part of an "active view" forward
+			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
+			if (responseInstruction == null) {
+				// no response instruction found, simply refresh the current
+				// view state of the flow execution (happens when the "refresh" browser button is clicked)
 				return toModelAndView(flowExecutor.refresh(flowExecutionKey, context));
 			}
 			else {
-				// this is a "launch" flow request
+				// found: convert the cached response instruction to model and view for rendering
+				return toModelAndView(responseInstruction);
+			}
+		}
+		else {
+			// this is either a "launch" flow request or a "confirmation view"
+			// render request. first, look for the cached "confirmation view"
+			// response instruction
+			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
+			if (responseInstruction == null) {
+				// no response instruction found in session - launch a new flow execution
 				String flowId = argumentHandler.extractFlowId(context);
 				return toModelAndView(flowExecutor.launch(flowId, context));
+			}
+			else {
+				// found: convert the cached confirmation response instruction to model and view for rendering
+				return toModelAndView(responseInstruction);
 			}
 		}
 	}
@@ -200,13 +210,10 @@ public class PortletFlowController extends AbstractController implements Initial
 		final PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
 		final String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
 		final String eventId = argumentHandler.extractEventId(context);
-
 		// signal the event against the flow execution, returning the next
 		// response instruction
 		final ResponseInstruction responseInstruction = flowExecutor.resume(flowExecutionKey, eventId, context);
-		
 		new ResponseInstructionHandler() {
-
 			protected void handleApplicationView(ApplicationView view) throws Exception {
 				// cache response instruction for access during render phase of this
 				// portlet
@@ -240,7 +247,6 @@ public class PortletFlowController extends AbstractController implements Initial
 				// of this portlet
 				exposeToRenderPhase(responseInstruction, request);
 			}
-			
 		}.handle(responseInstruction);
 	}
 
