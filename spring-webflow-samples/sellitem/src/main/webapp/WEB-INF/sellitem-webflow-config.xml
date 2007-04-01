@@ -22,7 +22,6 @@
 	</flow:registry>
 
 	<!-- Observes the lifecycle of sellitem-flow executions -->
-	<bean id="listener"
-		class="org.springframework.webflow.samples.sellitem.SellItemFlowExecutionListener" />
+	<bean id="listener" class="org.springframework.webflow.samples.sellitem.SellItemFlowExecutionListener" />
 
 </beans>
