@@ -11,7 +11,7 @@
 	
   <dependencies defaultconf="global->default">
    	<!-- global dependencies -->
-    <dependency org="log4j" name="log4j" rev="1.2.13"/>
+    <dependency org="log4j" name="log4j" rev="1.2.14"/>
     <dependency org="commons-fileupload" name="commons-fileupload" rev="1.1.1"/>
     <dependency org="commons-io" name="commons-io" rev="1.2"/>
     <dependency org="taglibs" name="standard" rev="1.1.2"/>

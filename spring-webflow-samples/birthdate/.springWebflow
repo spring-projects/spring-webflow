@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow-project-description>
+	<configs>
+		<config>
+			<file>src/main/webapp/WEB-INF/birthdate-alternate.xml</file>
+			<name>birthdate-alternate</name>
+			<beans-config>1:BeansModel|2:swf-birthdate|3:src/main/webapp/WEB-INF/webflow-config.xml</beans-config>
+		</config>
+		<config>
+			<file>src/main/webapp/WEB-INF/birthdate.xml</file>
+			<name>birthdate</name>
+			<beans-config>1:BeansModel|2:swf-birthdate|3:src/main/webapp/WEB-INF/webflow-config.xml</beans-config>
+		</config>
+	</configs>
+</webflow-project-description>

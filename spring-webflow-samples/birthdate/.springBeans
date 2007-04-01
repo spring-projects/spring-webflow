@@ -4,6 +4,7 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
+		<config>src/main/webapp/WEB-INF/webflow-config.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
