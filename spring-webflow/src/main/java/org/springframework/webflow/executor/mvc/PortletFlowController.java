@@ -82,7 +82,7 @@ public class PortletFlowController extends AbstractController implements Initial
 	private FlowExecutor flowExecutor;
 
 	/**
-	 * Delegate for handler flow executor arguments.
+	 * Delegate for handling flow executor arguments.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -153,37 +153,25 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
 		PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
-		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// flowExecutionKey render param present: this is a request to
-			// render an active flow execution -- extract its key
-			String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
-			// look for a cached response instruction in the session put there
-			// by the action request phase as part of an "active view" forward
-			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
-			if (responseInstruction == null) {
-				// no response instruction found, simply refresh the current
-				// view state of the flow execution
+		
+		// look for a cached response instruction in the session put there
+		// by the action request phase
+		ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
+		if (responseInstruction != null) {
+			// found: convert it to model and view for rendering
+			return toModelAndView(responseInstruction);
+		}
+		else {
+			if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+				// flowExecutionKey render param present: this is a request to
+				// refresh an active flow execution -- extract its key
+				String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
 				return toModelAndView(flowExecutor.refresh(flowExecutionKey, context));
 			}
 			else {
-				// found: convert it to model and view for rendering
-				return toModelAndView(responseInstruction);
-			}
-		}
-		else {
-			// this is either a "launch" flow request or a "confirmation view"
-			// render request -- look for the cached "confirmation view"
-			// response instruction
-			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
-			if (responseInstruction == null) {
-				// no response instruction found in session - launch a new flow
-				// execution
+				// this is a "launch" flow request
 				String flowId = argumentHandler.extractFlowId(context);
 				return toModelAndView(flowExecutor.launch(flowId, context));
-			}
-			else {
-				// found: convert it to model and view for rendering
-				return toModelAndView(responseInstruction);
 			}
 		}
 	}
@@ -201,15 +189,6 @@ public class PortletFlowController extends AbstractController implements Initial
 		new ResponseInstructionHandler() {
 
 			protected void handleApplicationView(ApplicationView view) throws Exception {
-				// response instruction is a forward to an "application view"
-				if (responseInstruction.isActiveView()) {
-					// is an "active" forward from a view-state (not end-state) --
-					// set the flow execution key render parameter to support
-					// browser refresh
-					response.setRenderParameter(
-							argumentHandler.getFlowExecutionKeyArgumentName(),
-							responseInstruction.getFlowExecutionKey());
-				}
 				// cache response instruction for access during render phase of this
 				// portlet
 				exposeToRenderPhase(responseInstruction, request);
@@ -219,7 +198,8 @@ public class PortletFlowController extends AbstractController implements Initial
 				// set flow id render parameter to request that a new flow be
 				// launched within this portlet
 				response.setRenderParameters(redirect.getExecutionInput());
-				response.setRenderParameter(argumentHandler.getFlowIdArgumentName(), redirect.getFlowDefinitionId());
+				response.setRenderParameter(
+						argumentHandler.getFlowIdArgumentName(), redirect.getFlowDefinitionId());
 			}
 
 			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
@@ -237,7 +217,9 @@ public class PortletFlowController extends AbstractController implements Initial
 			}
 
 			protected void handleNull() throws Exception {
-				// nothing to do
+				// make response instruction available for rendering during the render phase
+				// of this portlet
+				exposeToRenderPhase(responseInstruction, request);
 			}
 			
 		}.handle(responseInstruction);
@@ -278,7 +260,7 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	/**
 	 * Convert given response instruction into a Spring Portlet MVC model and
-	 * view.
+	 * view. Will only be called during the render phase.
 	 */
 	protected ModelAndView toModelAndView(ResponseInstruction responseInstruction) {
 		if (responseInstruction.isApplicationView()) {
@@ -295,7 +277,7 @@ public class PortletFlowController extends AbstractController implements Initial
 		}
 		else {
 			throw new IllegalArgumentException(
-					"Don't know how to handle response instruction " + responseInstruction);
+					"Don't know how to render response instruction " + responseInstruction);
 		}
 	}
 }
