@@ -37,6 +37,7 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
+import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
@@ -51,24 +52,20 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * JSF phase listener that is responsible for managing a {@link FlowExecution}
  * object representing an active user conversation so that other JSF artifacts
  * that execute in different phases of the JSF lifecycle may have access to it.
- * <p>
- * This phase listener implements the following algorithm:
- * <ul>
- * <li>On BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is
+ * <p> This phase listener implements the following algorithm: <ul> <li>On
+ * BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is
  * participating in if a call to
  * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)}
  * returns a submitted flow execution identifier. Place the restored flow
  * execution in a holder that other JSF artifacts such as VariableResolvers,
  * PropertyResolvers, and NavigationHandlers may access during the request
- * lifecycle.
- * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the
- * RESTORE_VIEW phase generate a new key for identifying the updated execution
- * within a the selected {@link FlowExecutionRepository}. Expose managed flow
- * execution attributes to the views before rendering.
- * <li>On AFTER_RENDER_RESPONSE, if a flow execution was restored in the
- * RESTORE_VIEW phase <em>save</em> the updated execution to the repository
- * using the new key generated in the BEFORE_RENDER_RESPONSE phase.
- * </ul>
+ * lifecycle. <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored
+ * in the RESTORE_VIEW phase generate a new key for identifying the updated
+ * execution within a the selected {@link FlowExecutionRepository}. Expose
+ * managed flow execution attributes to the views before rendering. <li>On
+ * AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW
+ * phase <em>save</em> the updated execution to the repository using the new
+ * key generated in the BEFORE_RENDER_RESPONSE phase. </ul>
  * 
  * @author Colin Sampaleanu
  * @author Keith Donald
@@ -138,9 +135,15 @@ public class FlowPhaseListener implements PhaseListener {
 	public void afterPhase(PhaseEvent event) {
 		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			try {
-				if (FlowExecutionHolderUtils.isFlowExecutionChanged(event.getFacesContext())) {
-					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(event
-							.getFacesContext()));
+				if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
+					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(event
+							.getFacesContext());
+					try {
+						saveFlowExecution(getCurrentContext(), holder);
+					}
+					finally {
+						holder.getFlowExecutionLock().unlock();
+					}
 				}
 			}
 			finally {
@@ -163,12 +166,13 @@ public class FlowPhaseListener implements PhaseListener {
 			FlowExecutionRepository repository = getRepository(context);
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
 					.extractFlowExecutionKey(context));
+			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded existing flow execution from repository with id '" + flowExecutionKey + "'");
 			}
-			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution),
-					facesContext);
+			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution,
+					lock), facesContext);
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
 			// launch a new flow execution (this could happen as part of a flow
@@ -183,7 +187,6 @@ public class FlowPhaseListener implements PhaseListener {
 				logger.debug("Started new flow execution");
 			}
 			holder.setViewSelection(selectedView);
-			holder.markNeedsSave();
 		}
 	}
 
@@ -199,24 +202,20 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {
-		if (holder.needsSave()) {
-			generateKey(context, holder);
-		}
+		generateKey(context, holder);
 		ViewSelection selectedView = holder.getViewSelection();
 		if (selectedView == null) {
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
 		}
-		
 		new ResponseInstructionHandler() {
-
 			protected void handleApplicationView(ApplicationView view) throws Exception {
 				prepareApplicationView(context.getFacesContext(), holder);
 			}
 
 			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
-				String url = argumentHandler.createFlowDefinitionUrl((FlowDefinitionRedirect) holder.getViewSelection(),
-						context);
+				String url = argumentHandler.createFlowDefinitionUrl(
+						(FlowDefinitionRedirect) holder.getViewSelection(), context);
 				sendRedirect(url, context);
 			}
 
@@ -227,8 +226,8 @@ public class FlowPhaseListener implements PhaseListener {
 			}
 
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
-				String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString()
-						: null;
+				String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey()
+						.toString() : null;
 				String url = argumentHandler.createExternalUrl((ExternalRedirect) holder.getViewSelection(),
 						flowExecutionKey, context);
 				sendRedirect(url, context);
@@ -237,7 +236,7 @@ public class FlowPhaseListener implements PhaseListener {
 			protected void handleNull() throws Exception {
 				// nothing to do
 			}
-			
+
 		}.handleQuietly(new ResponseInstruction(holder.getFlowExecution(), selectedView));
 	}
 
@@ -248,8 +247,8 @@ public class FlowPhaseListener implements PhaseListener {
 			updateViewRoot(facesContext, viewIdMapper.mapViewId(forward.getViewName()));
 		}
 		Map requestMap = facesContext.getExternalContext().getRequestMap();
-		argumentHandler.exposeFlowExecutionContext(holder.getFlowExecutionKey().toString(), holder.getFlowExecution(),
-				requestMap);
+		String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString() : null;
+		argumentHandler.exposeFlowExecutionContext(flowExecutionKey, holder.getFlowExecution(), requestMap);
 	}
 
 	private void updateViewRoot(FacesContext facesContext, String viewId) {

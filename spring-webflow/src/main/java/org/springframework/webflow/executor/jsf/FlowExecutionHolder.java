@@ -21,6 +21,7 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
+import org.springframework.webflow.execution.repository.FlowExecutionLock;
 
 /**
  * A holder storing a reference to a flow execution and the key of that flow
@@ -44,10 +45,16 @@ public class FlowExecutionHolder implements Serializable {
 	 */
 	private FlowExecution flowExecution;
 
+	/**
+	 * The lock obtained to exclusively manipulate the flow execution.
+	 */
+	private FlowExecutionLock flowExecutionLock;
+
+	/**
+	 * The currently selected view selection for this request.
+	 */
 	private ViewSelection viewSelection;
-	
-	private boolean needsSave;
-	
+
 	/**
 	 * Creates a new flow execution holder for a flow execution that has not yet
 	 * been placed in a repository.
@@ -58,13 +65,17 @@ public class FlowExecutionHolder implements Serializable {
 	}
 
 	/**
-	 * Creates a new flow execution holder.
+	 * Creates a new flow execution holder for a flow execution that has been
+	 * restored from a repository.
 	 * @param flowExecutionKey the continuation key
 	 * @param flowExecution the flow execution to hold
+	 * @param flowExecutionLock the lock acquired on the flow execution
 	 */
-	public FlowExecutionHolder(FlowExecutionKey flowExecutionKey, FlowExecution flowExecution) {
+	public FlowExecutionHolder(FlowExecutionKey flowExecutionKey, FlowExecution flowExecution,
+			FlowExecutionLock flowExecutionLock) {
 		this.flowExecutionKey = flowExecutionKey;
 		this.flowExecution = flowExecution;
+		this.flowExecutionLock = flowExecutionLock;
 	}
 
 	/**
@@ -87,23 +98,29 @@ public class FlowExecutionHolder implements Serializable {
 	public FlowExecution getFlowExecution() {
 		return flowExecution;
 	}
+	
+	/**
+	 * Returns the flow execution lock
+	 */
+	public FlowExecutionLock getFlowExecutionLock() {
+		return flowExecutionLock;
+	}
 
+	/**
+	 * Returns the view selected from the current flow execution request.
+	 */
 	public ViewSelection getViewSelection() {
 		return viewSelection;
 	}
 
+	/**
+	 * Sets the selected view from the current flow execution request.
+	 * @param viewSelection the view selection
+	 */
 	public void setViewSelection(ViewSelection viewSelection) {
 		this.viewSelection = viewSelection;
 	}
 
-	public boolean needsSave() {
-		return needsSave;
-	}
-	
-	public void markNeedsSave() {
-		this.needsSave = true;
-	}
-	
 	public String toString() {
 		return new ToStringCreator(this).append("flowExecutionKey", flowExecutionKey).append("flowExecution",
 				flowExecution).toString();
