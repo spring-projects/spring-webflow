@@ -1,4 +1,19 @@
-<%@ include file="includeTop.jsp" %>
+<%@ page contentType="text/html" %>
+<%@ page session="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<html>
+<head>
+	<title>Person Details</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+
+<div id="logo">
+	<img src="images/spring-logo.jpg" alt="Logo"> 
+</div>
 
 <div id="content">
 	<div id="insert">
@@ -10,7 +25,7 @@
 			<td>Person Details</td>
 		</tr>
 		<tr>
-			<td colpan="2"><hr></td>
+			<td colspan="2"><hr></td>
 		</tr>
 		<tr>
 			<td><b>First Name</b></td>
@@ -48,4 +63,11 @@
 		</tr>
 	</table>
 	</form>
-</DIV>
+</div>
+
+<div id="copyright">
+	<p>&copy; Copyright 2004-2007, <a href="http://www.springframework.org">www.springframework.org</a>, under the terms of the Apache 2.0 software license.</p>
+</div>
+
+</body>
+</html>
