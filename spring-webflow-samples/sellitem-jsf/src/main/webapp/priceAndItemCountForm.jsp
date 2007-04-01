@@ -29,7 +29,8 @@
 					<h:inputText id="price" value="#{flowScope.sale.price}" required="true">
 					  <f:validateDoubleRange minimum="0.01"/>
 					</h:inputText>
-					&nbsp;&nbsp;
+				</td>
+				<td>
 					<h:message for="price" errorClass="error"/>
 				</td>
 			</tr>
@@ -39,7 +40,8 @@
 					<h:inputText id="itemCount" value="#{flowScope.sale.itemCount}" required="true">
 					  <f:validateLongRange minimum="1"/>
 					</h:inputText>
-					&nbsp;&nbsp;
+				</td>
+				<td>
 					<h:message for="itemCount" errorClass="error"/>
 				</td>
 			</tr>
@@ -48,6 +50,7 @@
 					<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 					<h:commandButton type="submit" value="Next" action="submit" immediate="false" />
 				</td>
+				<td></td>
 			</tr>
 		</h:form>
 	</table>
