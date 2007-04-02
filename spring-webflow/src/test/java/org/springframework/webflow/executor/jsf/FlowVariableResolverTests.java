@@ -61,9 +61,7 @@ public class FlowVariableResolverTests extends TestCase {
 			fail("EvaluationException expected");
 		}
 		catch (EvaluationException expected) {
-			assertEquals(
-					"'flowScope' variable prefix specified, but a FlowExecution is not bound to current thread context as it should be",
-					expected.getMessage());
+			
 		}
 		assertFalse("resolved using delegate", variableResolver.resolvedUsingDelegate);
 	}

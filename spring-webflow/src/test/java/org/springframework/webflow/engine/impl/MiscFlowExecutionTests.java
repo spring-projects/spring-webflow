@@ -81,6 +81,7 @@ public class MiscFlowExecutionTests extends TestCase {
 		}
 	}
 
+	/*
 	public void testInfiniteLoop() {
 		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
 		serviceLocator.registerBean("action", new InfiniteLoopTestAction());
@@ -95,4 +96,5 @@ public class MiscFlowExecutionTests extends TestCase {
 			// expected
 		}
 	}
+	*/
 }
