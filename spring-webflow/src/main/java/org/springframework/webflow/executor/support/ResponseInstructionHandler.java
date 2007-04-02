@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.executor.support;
 
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
@@ -99,8 +100,8 @@ public abstract class ResponseInstructionHandler {
 			return handle(responseInstruction);
 		}
 		catch (Exception e) {
-			throw new RuntimeException(
-					"Unexpected exception handling response instruction " + responseInstruction + ": " + e); 
+			throw new RuntimeResponseHandlingException(
+					"Unexpected exception handling response instruction " + responseInstruction + "", e); 
 		}
 	}
 
@@ -149,4 +150,14 @@ public abstract class ResponseInstructionHandler {
 	 * @see ViewSelection#NULL_VIEW
 	 */
 	protected abstract void handleNull() throws Exception;
+
+	/**
+	 * Thrown during handleQuietly.
+	 * @author Keith Donald
+	 */
+	public static class RuntimeResponseHandlingException extends NestedRuntimeException {
+		public RuntimeResponseHandlingException(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
 }

@@ -165,7 +165,7 @@
     	<sect2 id="executor-custom-repo">
     		<title>A flow executor using a simple execution repository</title>
 	    	<programlisting>
-    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="simple"/>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="simple"/&gt;
 	    	</programlisting>
 	    	<para>
 	    		This executor is configured with a simple repository that manages
@@ -175,7 +175,7 @@
     	<sect2 id="executor-custom-repo2">
     		<title>A flow executor using a client-side continuation-based execution repository</title>
 	    	<programlisting>
-    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="client"/>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="client"/&gt;
 	    	</programlisting>
 	    	<para>
 	    		This executor is configured with a continuation-based repository that serializes
@@ -185,12 +185,32 @@
     	<sect2 id="executor-custom-repo3">
     		<title>A flow executor using a single key execution repository</title>
 	    	<programlisting>
-    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="singleKey"/>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry" repository-type="singleKey"/>&gt;
 	    	</programlisting>
 	    	<para>
 	    		This executor is configured with a simple repository that assigns a single 
 	    		flow execution key per conversation.  The key, once assigned, never changes
 	    		for the duration of the conversation.
+	    	</para>	
+    	</sect2>
+    	<sect2 id="executor-custom-repo4">
+    		<title>A flow executor setting custom conversation management attributes</title>
+	    	<programlisting>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry">
+        &lt;flow:repository type="continuation" max-conversations="5" max-continuations="30" conversation-manager-ref="conversationManager"/&gt;
+    &lt;/flow:executor&gt;
+
+    &lt;bean id="conversationManager" class="example.MyCustomConversationalStateManager"/&gt;
+	    	</programlisting>
+	    	<para>
+	    		This executor is configured with a continuation repository configured with custom settings for:
+	 			<orderedlist>
+					<listitem><para>The maximum number of active conversations per user session (5)</para></listitem>
+					<listitem><para>The maximum number of restorable flow execution snapshots (continuations) per conversation (30)</para></listitem>
+					<listitem><para>Where conversational state will be stored (via a custom conversationManager)</para></listitem>
+				</orderedlist>
+				The <literal>flow:repository</literal> child element is the more flexible form for configuring the flow execution repository.
+				Use it or the convenient <literal>repository-type</literal> attribute, not both.
 	    	</para>	
     	</sect2>
     	<sect2 id="executor-excution-attributes">
@@ -227,7 +247,7 @@
     &lt;/flow-executor&gt;
 
     &lt;!-- A FlowExecutionListener to observe the lifecycle of order-flow executions --&gt;
-    &lt;bean id="listener" class="org.springframework.webflow.samples.sellitem.SellItemFlowExecutionListener"/&gt;
+    &lt;bean id="listener" class="example.OrderFlowExecutionListener"/&gt;
 			</programlisting>
 	    	<para>
 	    		This executor is configured to apply the execution listener to the "order-flow".
@@ -503,7 +523,8 @@
 		<para>
 			Spring Web Flow integrates with JSF.  The JSF integration relies on custom implementations of 
 			core JSF artifacts such as navigation handler and phase listener to drive the 
-			execution of flows.
+			execution of flows.  In addition, it relies on custom Variable and Property Resolvers to 
+			access flow execution variables from JSF components.
 		</para>
     	<sect2 id="executor-jsf-simple">
     		<title>A typical faces-config.xml file</title>
@@ -513,18 +534,61 @@
         &lt;navigation-handler&gt;
             org.springframework.webflow.executor.jsf.FlowNavigationHandler
         &lt;/navigation-handler&gt;
+        &lt;variable-resolver&gt;
+            org.springframework.webflow.executor.jsf.FlowExecutionVariableResolver
+        &lt;/variable-resolver&gt;
         &lt;property-resolver&gt;
-            org.springframework.webflow.executor.jsf.FlowPropertyResolver
+            org.springframework.webflow.executor.jsf.FlowExecutionPropertyResolver
         &lt;/property-resolver&gt;
+    &lt;/application&gt;
+
+    &lt;lifecycle&gt;
+        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
+    &lt;/lifecycle&gt;
+&lt;/faces-config&gt;
+	    	</programlisting>
+		</sect>
+    	<sect2 id="executor-jsf-launch-get">
+    		<title>Launching a flow execution - command link</title>
+	    	<programlisting>
+    &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
+	    	</programlisting>
+    	</sect2>
+    	<sect2 id="executor-jsf-resume-form">
+    		<title>Resuming a flow execution - form bound to flow execution variables</title>
+	    	<programlisting>
+    &lt;h:form id="form"&gt;
+        ...
+        &lt;h:inputText id="propertyName" value="#{flowExecution.flashScope.aFlashScopeAttribute}"/&gt;
+        &lt;h:inputText id="propertyName" value="#{flowExecution.flowScope.aFlowScopeAttribute}"/&gt;
+        &lt;h:inputText id="propertyName" value="#{flowExecution.conversationScope.aConversationScopeAttribute}"/&gt;
+
+        &lt;h:inputText id="propertyName" value="#{flowExecution.anAttributeToSearchForAcrossAllScopes}"/&gt;
+        ...
+        &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
+        &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
+    &lt;/h:form&gt;
+	    	</programlisting>
+    	</sect2>
+    	<sect2 id="executor-jsf-simple">
+    		<title>A pre Spring Web Flow 1.0.2 faces-config.xml file</title>
+			<para>
+				Before Spring Web Flow 1.0.2 Spring Web Flow only supported resolving variables in flow scope
+				(and not the other scopes such as flash and conversation shown above).  This configuration is still supported
+				for backwards compatibility reasons and follows:
+			</para>
+	    	<programlisting>
+&lt;faces-config&gt;
+    &lt;application&gt;
+        &lt;navigation-handler&gt;
+            org.springframework.webflow.executor.jsf.FlowNavigationHandler
+        &lt;/navigation-handler&gt;
         &lt;variable-resolver&gt;
             org.springframework.webflow.executor.jsf.FlowVariableResolver
         &lt;/variable-resolver&gt;
-        &lt;variable-resolver&gt;
-            org.springframework.web.jsf.DelegatingVariableResolver
-        &lt;/variable-resolver&gt;
-        &lt;variable-resolver>
-            org.springframework.web.jsf.WebApplicationContextVariableResolver
-        &lt;/variable-resolver&gt;
+        &lt;property-resolver&gt;
+            org.springframework.webflow.executor.jsf.FlowPropertyResolver
+        &lt;/property-resolver&gt;
     &lt;/application&gt;
 
     &lt;lifecycle&gt;
@@ -533,18 +597,12 @@
 &lt;/faces-config&gt;
 	    	</programlisting>
     	</sect2>
-    	<sect2 id="executor-jsf-launch-get">
-    		<title>Launching a flow execution - command link</title>
-	    	<programlisting>
-    &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
-	    	</programlisting>
-    	</sect2>
     	<sect2 id="executor-jsf-resume-form">
-    		<title>Resuming a flow execution - form</title>
+    		<title>Resuming a flow execution - pre 1.0.2 form bound to flow scope variables</title>
 	    	<programlisting>
     &lt;h:form id="form"&gt;
         ...
-        &lt;h:inputText id="propertyName" value="#{flowScope.managedBeanName.propertyName}"/&gt;
+        &lt;h:inputText id="propertyName" value="#{flowScope.aFlowScopeAttribute}"/&gt;
         ...
         &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
         &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;

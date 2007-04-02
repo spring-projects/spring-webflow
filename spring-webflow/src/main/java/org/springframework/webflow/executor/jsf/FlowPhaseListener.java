@@ -52,23 +52,21 @@ import org.springframework.webflow.executor.support.RequestParameterFlowExecutor
 import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
- * JSF phase listener that is responsible for managing a {@link FlowExecution}
- * object representing an active user conversation so that other JSF artifacts
- * that execute in different phases of the JSF lifecycle may have access to it.
- * <p> This phase listener implements the following algorithm: <ul> <li>On
- * BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is
- * participating in if a call to
- * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)}
- * returns a submitted flow execution identifier. Place the restored flow
- * execution in a holder that other JSF artifacts such as VariableResolvers,
- * PropertyResolvers, and NavigationHandlers may access during the request
- * lifecycle. <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored
- * in the RESTORE_VIEW phase generate a new key for identifying the updated
- * execution within a the selected {@link FlowExecutionRepository}. Expose
- * managed flow execution attributes to the views before rendering. <li>On
- * AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW
- * phase <em>save</em> the updated execution to the repository using the new
- * key generated in the BEFORE_RENDER_RESPONSE phase. </ul>
+ * JSF phase listener that is responsible for managing a {@link FlowExecution} object representing an active user
+ * conversation so that other JSF artifacts that execute in different phases of the JSF lifecycle may have access to it.
+ * <p>
+ * This phase listener implements the following algorithm:
+ * <ul>
+ * <li>On BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is participating in if a call to
+ * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)} returns a submitted flow execution
+ * identifier. Place the restored flow execution in a holder that other JSF artifacts such as VariableResolvers,
+ * PropertyResolvers, and NavigationHandlers may access during the request lifecycle.
+ * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase generate a new key for
+ * identifying the updated execution within a the selected {@link FlowExecutionRepository}. Expose managed flow
+ * execution attributes to the views before rendering.
+ * <li>On AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase <em>save</em> the updated
+ * execution to the repository using the new key generated in the BEFORE_RENDER_RESPONSE phase.
+ * </ul>
  * 
  * @author Colin Sampaleanu
  * @author Keith Donald
@@ -79,27 +77,24 @@ public class FlowPhaseListener implements PhaseListener {
 	 * Logger, usable by subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
-	
+
 	/**
 	 * A helper for handling arguments needed by this phase listener to resume and launch flow executions.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
 	/**
-	 * The service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during the
-	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * The service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during the {@link #launch(String, ExternalContext) launch flow} operation.
 	 * <p>
-	 * This allows developers to control what attributes are made available in
-	 * the <code>inputMap</code> to new top-level flow executions. The
-	 * starting execution may then choose to map that available input into its
-	 * own local scope.
+	 * This allows developers to control what attributes are made available in the <code>inputMap</code> to new
+	 * top-level flow executions. The starting execution may then choose to map that available input into its own local
+	 * scope.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 */
 	private AttributeMapper inputMapper = new RequestParameterInputMapper();
-	
+
 	/**
 	 * Resolves selected Web Flow view names to JSF view ids.
 	 */
@@ -127,17 +122,16 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Sets the service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during a launch flow operation.
+	 * Sets the service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during a launch flow operation.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 * @see RequestParameterInputMapper
 	 */
 	public void setInputMapper(AttributeMapper inputMapper) {
 		this.inputMapper = inputMapper;
 	}
-	
+
 	/**
 	 * Returns the JSF view id resolver used by this phase listener.
 	 */
@@ -157,11 +151,7 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	public void beforePhase(PhaseEvent event) {
-		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
-			restoreFlowExecution(event.getFacesContext());
-		}
-		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 				prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(event
 						.getFacesContext()));
@@ -170,7 +160,10 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	public void afterPhase(PhaseEvent event) {
-		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
+			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
+			restoreFlowExecution(event.getFacesContext());
+		} else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			try {
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(event
@@ -191,20 +184,25 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
-	private JsfExternalContext getCurrentContext() {
-		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
-	}
-
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
-		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+		if (argumentHandler.isFlowExecutionKeyPresent(context) || isFlowExecutionKeyInViewRoot(facesContext)) {
 			// restore flow execution from repository so it will be
 			// available to variable/property resolvers and the flow
 			// navigation handler (this could happen as part of a submission or
 			// flow execution redirect)
 			FlowExecutionRepository repository = getRepository(context);
-			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
-					.extractFlowExecutionKey(context));
+			FlowExecutionKey flowExecutionKey;
+			if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+				// extract it in the "traditional way" (request parameter in url by default)
+				flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler.extractFlowExecutionKey(context));
+			}
+			else {
+				// restore the key from an attribute in the root of the component tree
+				flowExecutionKey = repository.parseFlowExecutionKey((String)facesContext.getViewRoot().getAttributes().get("_flowExecutionKey"));
+				// remove it (it should always be placed back before response rendering)
+				facesContext.getViewRoot().getAttributes().remove("_flowExecutionKey");
+			}
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			lock.lock();
 			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
@@ -231,9 +229,8 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Factory method that creates the input attribute map for a newly created
-	 * {@link FlowExecution}. This implementation uses the registered input mapper,
-	 * if any.
+	 * Factory method that creates the input attribute map for a newly created {@link FlowExecution}. This
+	 * implementation uses the registered input mapper, if any.
 	 * @param context the external context
 	 * @return the input map, or null if no input
 	 */
@@ -295,9 +292,74 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 		Map requestMap = facesContext.getExternalContext().getRequestMap();
 		String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString() : null;
+		if (flowExecutionKey != null) {
+			// expose to view root for preservation in the component tree
+			if (viewRootAttributeMapPresent(facesContext)) {
+				facesContext.getViewRoot().getAttributes().put("_flowExecutionKey", flowExecutionKey);
+			}
+		}
 		argumentHandler.exposeFlowExecutionContext(flowExecutionKey, holder.getFlowExecution(), requestMap);
 	}
 
+	/**
+	 * Updates the current flow execution in the repository.
+	 * @param context the external context
+	 * @param holder the current flow execution holder
+	 */
+	protected void saveFlowExecution(JsfExternalContext context, FlowExecutionHolder holder) {
+		FlowExecution flowExecution = holder.getFlowExecution();
+		FlowExecutionRepository repository = getRepository(context);
+		if (flowExecution.isActive()) {
+			// save the flow execution out to the repository
+			if (logger.isDebugEnabled()) {
+				logger.debug("Saving continuation to repository with key " + holder.getFlowExecutionKey());
+			}
+			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
+		}
+		else {
+			if (holder.getFlowExecutionKey() != null) {
+				// remove the flow execution from the repository
+				if (logger.isDebugEnabled()) {
+					logger.debug("Removing execution in repository with key '" + holder.getFlowExecutionKey() + "'");
+				}
+				repository.removeFlowExecution(holder.getFlowExecutionKey());
+			}
+		}
+	}
+	
+	// private helpers
+
+	private JsfExternalContext getCurrentContext() {
+		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
+	}
+	
+	/**
+	 * Returns true if the root of the component tree contains the flow execution key attribute, used
+	 * to restore the flow execution on subsequent reqests.
+	 * @param facesContext the key
+	 * @return true if yes, false otherwise
+	 */
+	private boolean isFlowExecutionKeyInViewRoot(FacesContext facesContext) {
+		if (viewRootAttributeMapPresent(facesContext)) {
+			return facesContext.getViewRoot().getAttributes().containsKey("_flowExecutionKey");
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Simple little helper that returns true if the view root attribute map is non-null.
+	 * @param facesContext the faces context 
+	 * @return true if so, false otherwise
+	 */
+	private boolean viewRootAttributeMapPresent(FacesContext facesContext) {
+		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getAttributes() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private void updateViewRoot(FacesContext facesContext, String viewId) {
 		UIViewRoot viewRoot = facesContext.getViewRoot();
 		if (viewRoot == null || hasViewChanged(viewRoot, viewId)) {
@@ -332,31 +394,9 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
-	protected void saveFlowExecution(JsfExternalContext context, FlowExecutionHolder holder) {
-		FlowExecution flowExecution = holder.getFlowExecution();
-		FlowExecutionRepository repository = getRepository(context);
-		if (flowExecution.isActive()) {
-			// save the flow execution out to the repository
-			if (logger.isDebugEnabled()) {
-				logger.debug("Saving continuation to repository with key " + holder.getFlowExecutionKey());
-			}
-			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
-		}
-		else {
-			if (holder.getFlowExecutionKey() != null) {
-				// remove the flow execution from the repository
-				if (logger.isDebugEnabled()) {
-					logger.debug("Removing execution in repository with key '" + holder.getFlowExecutionKey() + "'");
-				}
-				repository.removeFlowExecution(holder.getFlowExecutionKey());
-			}
-		}
-	}
-
 	/**
-	 * Utility method needed needed only because we can not rely on JSF
-	 * RequestMap supporting Map's putAll method. Tries putAll, falls back to
-	 * individual adds
+	 * Utility method needed needed only because we can not rely on JSF RequestMap supporting Map's putAll method. Tries
+	 * putAll, falls back to individual adds
 	 * @param targetMap the target map to add the model data to
 	 * @param map the model data to add to the target map
 	 */
@@ -387,8 +427,7 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Standard default view id resolver which uses the web flow view name as
-	 * the jsf view id
+	 * Standard default view id resolver which uses the web flow view name as the jsf view id
 	 */
 	public static class DefaultViewIdMapper implements ViewIdMapper {
 		public String mapViewId(String viewName) {
