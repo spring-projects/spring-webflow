@@ -135,7 +135,7 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 		if (FLASH_SCOPE_PROPERTY.equals(property)) {
 			return execution.getActiveSession().getFlashMap().asMap();
 		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
-			return execution.getActiveSession().getFlashMap().asMap();
+			return execution.getActiveSession().getScope().asMap();
 		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
 			return execution.getConversationScope().asMap();
 		} else {
