@@ -28,8 +28,8 @@ import org.springframework.webflow.execution.FlowExecution;
  * This class is designed to be used with a {@link FlowExecutionPropertyResolver}.
  * 
  * This class is a more flexible alternative to the {@link FlowVariableResolver} which is expected to be used ONLY with
- * a {@link FlowPropertyResolver} to resolve flow scope variables. It is more flexible because it provides access to any
- * property accessible from a {@link FlowExecution} object.
+ * a {@link FlowPropertyResolver} to resolve flow scope variables ONLY. It is more flexible because it provides access
+ * to any scope structure of a {@link FlowExecution} object.
  * 
  * @author Keith Donald
  */

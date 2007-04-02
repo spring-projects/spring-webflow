@@ -35,6 +35,21 @@ import org.springframework.webflow.execution.FlowExecution;
 public class FlowExecutionPropertyResolver extends PropertyResolver {
 
 	/**
+	 * The name of the special flash scope execution property.
+	 */
+	private static final String FLASH_SCOPE_PROPERTY = "flashScope";
+
+	/**
+	 * The name of the special flow scope execution property.
+	 */
+	private static final String FLOW_SCOPE_PROPERTY = "flowScope";
+
+	/**
+	 * The name of the special conversation scope execution property.
+	 */
+	private static final String CONVERSATION_SCOPE_PROPERTY = "conversationScope";
+
+	/**
 	 * The standard property resolver to delegate to if this one doesn't apply.
 	 */
 	private final PropertyResolver resolverDelegate;
@@ -71,23 +86,27 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 		if (!(property instanceof String)) {
 			throw new PropertyNotFoundException("Unable to get value from flow execution - key is non-String");
 		}
-		if ("flashScope".equals(property)) {
+		if (FLASH_SCOPE_PROPERTY.equals(property)) {
 			return Map.class;
-		} else if ("flowScope".equals(property)) {
+		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
 			return Map.class;
-		} else if ("conversationScope".equals(property)) {
+		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
 			return Map.class;
 		} else {
+			// perform an attribute search
 			FlowExecution execution = (FlowExecution)base;
 			String attributeName = (String)property;
+			// try flash scope
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
 				return value.getClass();
 			}
+			// try flow scope
 			value = execution.getActiveSession().getScope().get(attributeName);
 			if (value != null) {
 				return value.getClass();
 			}
+			// try conversation scope
 			value = execution.getConversationScope().get(attributeName);
 			if (value != null) {
 				return value.getClass();
@@ -113,22 +132,26 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 			throw new PropertyNotFoundException("Unable to get value from flow execution - key is non-String");
 		}
 		FlowExecution execution = (FlowExecution) base;
-		if ("flashScope".equals(property)) {
+		if (FLASH_SCOPE_PROPERTY.equals(property)) {
 			return execution.getActiveSession().getScope().asMap();
-		} else if ("flowScope".equals(property)) {
+		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
 			return execution.getConversationScope().asMap();
-		} else if ("conversationScope".equals(property)) {
+		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
 			return execution.getActiveSession().getFlashMap().asMap();
 		} else {
+			// perform an attribute search
 			String attributeName = (String)property;
+			// try flash scope
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
 				return value;
 			}
+			// try flow scope
 			value = execution.getActiveSession().getScope().get(attributeName);
 			if (value != null) {
 				return value;
 			}
+			// try conversation scope
 			value = execution.getConversationScope().get(attributeName);
 			if (value != null) {
 				return value;
@@ -171,6 +194,7 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 		}
 		FlowExecution execution = (FlowExecution)base;
 		String attributeName = (String)property;
+		// perform a search: flash, flow, conversation
 		if (execution.getActiveSession().getFlashMap().contains(attributeName)) {
 			execution.getActiveSession().getFlashMap().put(attributeName, value);
 		}
