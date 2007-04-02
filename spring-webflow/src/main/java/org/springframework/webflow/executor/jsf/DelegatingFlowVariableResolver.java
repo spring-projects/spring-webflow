@@ -22,23 +22,16 @@ import javax.faces.el.VariableResolver;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Custom variable resolver that resolves to a thread-bound FlowExecution object for binding expressions prefixed with a
- * {@link #FLOW_EXECUTION_VARIABLE_NAME}. For instance "flowExecution.conversationScope.myProperty".
+ * Custom variable resolver that searches the current flow execution for variables to resolve.
+ * The search algorithm looks in flash scope first, then flow scope, then conversation scope.
+ * If no variable is found, this resolver delegates to the next resolver in the chain.
  * 
- * This class is designed to be used with a {@link FlowExecutionPropertyResolver}.
- * 
- * This class is a more flexible alternative to the {@link FlowVariableResolver} which is expected to be used ONLY with
- * a {@link FlowPropertyResolver} to resolve flow scope variables ONLY. It is more flexible because it provides access
- * to any scope structure of a {@link FlowExecution} object.
+ * Suitable for use along side other variable resolvers to support EL binding expressions like
+ * {#bean.property} where "bean" could be a property in any supported scope.
  * 
  * @author Keith Donald
  */
-public class FlowExecutionVariableResolver extends VariableResolver {
-
-	/**
-	 * Name of the flow execution variable.
-	 */
-	public static final String FLOW_EXECUTION_VARIABLE_NAME = "flowExecution";
+public class DelegatingFlowVariableResolver extends VariableResolver {
 
 	/**
 	 * The standard variable resolver to delegate to if this one doesn't apply.
@@ -53,7 +46,7 @@ public class FlowExecutionVariableResolver extends VariableResolver {
 	 * 
 	 * @param resolverDelegate the original VariableResolver
 	 */
-	public FlowExecutionVariableResolver(VariableResolver resolverDelegate) {
+	public DelegatingFlowVariableResolver(VariableResolver resolverDelegate) {
 		this.resolverDelegate = resolverDelegate;
 	}
 
@@ -65,14 +58,24 @@ public class FlowExecutionVariableResolver extends VariableResolver {
 	}
 
 	/**
-	 * Check for the special "flow" variable first, then delegate to the original VariableResolver.
+	 * Check flash/flow/conversation scope. If the variable is not found, delegate to next variable resolver in the
+	 * chain.
 	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
-		if (!FLOW_EXECUTION_VARIABLE_NAME.equals(name)) {
-			return resolverDelegate.resolveVariable(context, name);
+		FlowExecution execution = FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
+		// try flash/flow/conversation
+		if (execution.getActiveSession().getFlashMap().contains(name)) {
+			return execution.getActiveSession().getFlashMap().get(name);
+		}
+		else if (execution.getActiveSession().getScope().contains(name)) {
+			return execution.getActiveSession().getScope().get(name);
+		}
+		else if (execution.getConversationScope().contains(name)) {
+			return execution.getConversationScope().get(name);
 		}
 		else {
-			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
+			// neither found a value, delegate to next resolver in the chain
+			return resolverDelegate.resolveVariable(context, name);
 		}
 	}
 }

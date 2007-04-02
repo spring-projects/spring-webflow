@@ -17,13 +17,15 @@ package org.springframework.webflow.executor.jsf;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
+
+import org.springframework.webflow.execution.FlowExecution;
 
 /**
  * A static utility class for accessing the current flow execution holder.
  * <p>
- * By default, the current flow execution holder is stored associated with the
- * current thread in the {@link FacesContext}'s
- * {@link ExternalContext#getRequestMap()}.
+ * By default, the current flow execution holder is stored associated with the current thread in the
+ * {@link FacesContext}'s {@link ExternalContext#getRequestMap()}.
  * 
  * @author Keith Donald
  * @author Craig McClanahan
@@ -36,7 +38,24 @@ public class FlowExecutionHolderUtils {
 	 * @return the flow execution holder, or <code>null</code> if none set.
 	 */
 	public static FlowExecutionHolder getFlowExecutionHolder(FacesContext context) {
-		return (FlowExecutionHolder)context.getExternalContext().getRequestMap().get(getFlowExecutionHolderKey());
+		return (FlowExecutionHolder) context.getExternalContext().getRequestMap().get(getFlowExecutionHolderKey());
+	}
+
+	/**
+	 * Returns the current flow execution holder for the given faces context.
+	 * @param context faces context
+	 * @return the flow execution holder or <code>null</code> if none set
+	 * @throws EvaluationException if no flow execution was bound
+	 */
+	public static FlowExecution getRequiredCurrentFlowExecution(FacesContext context) throws EvaluationException {
+		FlowExecutionHolder holder = getFlowExecutionHolder(context);
+		if (holder != null) {
+			return holder.getFlowExecution();
+		}
+		else {
+			throw new EvaluationException(
+					"FlowExecution is not bound to current thread context - has the flow ended or expired?");
+		}
 	}
 
 	/**
@@ -48,11 +67,17 @@ public class FlowExecutionHolderUtils {
 		context.getExternalContext().getRequestMap().put(getFlowExecutionHolderKey(), holder);
 	}
 
+	/**
+	 * Returns true if the flow execution has been restored in the current thread.
+	 * @param context the faces context
+	 * @return true if restored, false otherwise
+	 */
+	public static boolean isFlowExecutionRestored(FacesContext context) {
+		return getFlowExecutionHolder(context) != null;
+	}
+	
 	private static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
 
-	public static boolean isFlowExecutionRestored(FacesContext context) {
-		return getFlowExecutionHolder(context) != null;
-	}
 }

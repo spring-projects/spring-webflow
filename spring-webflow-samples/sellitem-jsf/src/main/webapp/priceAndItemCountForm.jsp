@@ -18,7 +18,6 @@
 <f:view>
 <div id="content">
 	<div id="insert"><img src="images/webflow-logo.jpg" /></div>
-
 	<h2>Enter price and item count</h2>
 	<hr>
 	<table>
@@ -26,7 +25,7 @@
 			<tr>
 				<td>Price:</td>
 				<td>
-					<h:inputText id="price" value="#{flowScope.sale.price}" required="true">
+					<h:inputText id="price" value="#{sale.price}" required="true">
 					  <f:validateDoubleRange minimum="0.01"/>
 					</h:inputText>
 				</td>
@@ -37,7 +36,7 @@
 			<tr>
 				<td>Item count:</td>
 				<td>
-					<h:inputText id="itemCount" value="#{flowScope.sale.itemCount}" required="true">
+					<h:inputText id="itemCount" value="#{sale.itemCount}" required="true">
 					  <f:validateLongRange minimum="1"/>
 					</h:inputText>
 				</td>
@@ -47,7 +46,6 @@
 			</tr>
 			<tr>
 				<td colspan="2" class="buttonBar">
-					<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 					<h:commandButton type="submit" value="Next" action="submit" immediate="false" />
 				</td>
 				<td></td>

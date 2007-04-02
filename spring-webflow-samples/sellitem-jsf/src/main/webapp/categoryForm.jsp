@@ -21,17 +21,17 @@
 	<h2>Select category</h2>
 	<table>
 	<tr class="readOnly">
-		<td>Price:</td><td><h:outputText value="#{flowScope.sale.price}"/></td>
+		<td>Price:</td><td><h:outputText value="#{sale.price} "/></td>
 	</tr>
 	<tr class="readOnly">
-		<td>Item count:</td><td><h:outputText value="#{flowScope.sale.itemCount}"/></td>
+		<td>Item count:</td><td><h:outputText value="#{sale.itemCount}"/></td>
 	</tr>
 
 	<h:form id="categoryForm">
 		<tr>
 			<td>Category:</td>
 			<td>
-				<h:selectOneMenu value="#{flowScope.sale.category}">
+				<h:selectOneMenu value="#{sale.category}">
 					<f:selectItem itemLabel="None (0.02 discount rate)" itemValue=""/>
 					<f:selectItem itemLabel="Cat. A (0.1 discount rate when more than 100 items)" itemValue="A"/>
 					<f:selectItem itemLabel="Cat. B (0.2 discount rate when more than 200 items)" itemValue="B"/>
@@ -41,12 +41,11 @@
 		<tr>
 			<td>Is shipping required?:</td>
 			<td>
-				<h:selectBooleanCheckbox value="#{flowScope.sale.shipping}"/>
+				<h:selectBooleanCheckbox value="#{sale.shipping}"/>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="buttonBar">
-				<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 				<h:commandButton type="submit" value="Next" action="submit" immediate="false" />
 			</td>
 		</tr>

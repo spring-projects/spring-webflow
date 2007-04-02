@@ -22,22 +22,22 @@
 	<hr>
 	<table>
 	<tr class="readOnly">
-		<td>Price:</td><td><h:outputText value="#{flowScope.sale.price}"/></td>
+		<td>Price:</td><td><h:outputText value="#{sale.price}"/></td>
 	</tr>
 	<tr class="readOnly">
-		<td>Item count:</td><td><h:outputText value="#{flowScope.sale.itemCount}"/></td>
+		<td>Item count:</td><td><h:outputText value="#{sale.itemCount}"/></td>
 	</tr>
 	<tr class="readOnly">
-		<td>Category:</td><td><h:outputText value="#{flowScope.sale.category}"/></td>
+		<td>Category:</td><td><h:outputText value="#{sale.category}"/></td>
 	<tr class="readOnly">
-		<td>Shipping:</td><td><h:outputText value="#{flowScope.sale.shipping}"/></td>
+		<td>Shipping:</td><td><h:outputText value="#{sale.shipping}"/></td>
 	</tr>
 	
 	<h:form id="shippingForm">
 		<tr>
 			<td>Shipping type:</td>
 			<td>
-				<h:selectOneMenu value="#{flowScope.sale.shippingType}">
+				<h:selectOneMenu value="#{sale.shippingType}">
 					<f:selectItem itemLabel="Standard (10 extra cost)" itemValue="S"/>
 					<f:selectItem itemLabel="Express (20 extra cost)" itemValue="E"/>
 				</h:selectOneMenu>
@@ -45,7 +45,6 @@
 		</tr>
 		<tr>
 			<td colspan="2" class="buttonBar">
-				<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 				<h:commandButton type="submit" value="Next" action="submit" immediate="false" />
 			</td>
 		</tr>

@@ -4,6 +4,8 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
+	<var name="sale" class="org.springframework.webflow.samples.sellitem.Sale"/>
+	
 	<start-state idref="enterPriceAndItemCount" />
 
 	<view-state id="enterPriceAndItemCount" view="/priceAndItemCountForm.jsp">
