@@ -28,9 +28,11 @@ import javax.faces.event.PhaseListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.execution.FlowExecution;
@@ -43,6 +45,7 @@ import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
+import org.springframework.webflow.executor.RequestParameterInputMapper;
 import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
@@ -76,12 +79,27 @@ public class FlowPhaseListener implements PhaseListener {
 	 * Logger, usable by subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
-
+	
 	/**
-	 * A helper for handling arguments needed by this phase listener.
+	 * A helper for handling arguments needed by this phase listener to resume and launch flow executions.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
+	/**
+	 * The service responsible for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during the
+	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * <p>
+	 * This allows developers to control what attributes are made available in
+	 * the <code>inputMap</code> to new top-level flow executions. The
+	 * starting execution may then choose to map that available input into its
+	 * own local scope.
+	 * <p>
+	 * The default implementation simply exposes all request parameters as flow
+	 * execution input attributes. May be null.
+	 */
+	private AttributeMapper inputMapper = new RequestParameterInputMapper();
+	
 	/**
 	 * Resolves selected Web Flow view names to JSF view ids.
 	 */
@@ -101,6 +119,25 @@ public class FlowPhaseListener implements PhaseListener {
 		this.argumentHandler = argumentHandler;
 	}
 
+	/**
+	 * Returns the configured flow execution input mapper.
+	 */
+	public AttributeMapper getInputMapper() {
+		return inputMapper;
+	}
+
+	/**
+	 * Sets the service responsible for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during a launch flow operation.
+	 * <p>
+	 * The default implementation simply exposes all request parameters as flow
+	 * execution input attributes. May be null.
+	 * @see RequestParameterInputMapper
+	 */
+	public void setInputMapper(AttributeMapper inputMapper) {
+		this.inputMapper = inputMapper;
+	}
+	
 	/**
 	 * Returns the JSF view id resolver used by this phase listener.
 	 */
@@ -142,7 +179,9 @@ public class FlowPhaseListener implements PhaseListener {
 						saveFlowExecution(getCurrentContext(), holder);
 					}
 					finally {
-						holder.getFlowExecutionLock().unlock();
+						if (holder.getFlowExecutionLock() != null) {
+							holder.getFlowExecutionLock().unlock();
+						}
 					}
 				}
 			}
@@ -167,6 +206,7 @@ public class FlowPhaseListener implements PhaseListener {
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
 					.extractFlowExecutionKey(context));
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
+			lock.lock();
 			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded existing flow execution from repository with id '" + flowExecutionKey + "'");
@@ -182,7 +222,7 @@ public class FlowPhaseListener implements PhaseListener {
 			FlowExecution flowExecution = getFactory(context).createFlowExecution(flowDefinition);
 			FlowExecutionHolder holder = new FlowExecutionHolder(flowExecution);
 			FlowExecutionHolderUtils.setFlowExecutionHolder(holder, facesContext);
-			ViewSelection selectedView = flowExecution.start(createInput(flowExecution, context), context);
+			ViewSelection selectedView = flowExecution.start(createInput(context), context);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Started new flow execution");
 			}
@@ -192,13 +232,20 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Factory method that creates the input attribute map for a newly created
-	 * {@link FlowExecution}. TODO - add support for input mappings here
-	 * @param flowExecution the new flow execution (yet to be started)
+	 * {@link FlowExecution}. This implementation uses the registered input mapper,
+	 * if any.
 	 * @param context the external context
-	 * @return the input map
+	 * @return the input map, or null if no input
 	 */
-	protected LocalAttributeMap createInput(FlowExecution flowExecution, ExternalContext context) {
-		return null;
+	protected MutableAttributeMap createInput(ExternalContext context) {
+		if (inputMapper != null) {
+			MutableAttributeMap inputMap = new LocalAttributeMap();
+			inputMapper.map(context, inputMap, null);
+			return inputMap;
+		}
+		else {
+			return null;
+		}
 	}
 
 	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {

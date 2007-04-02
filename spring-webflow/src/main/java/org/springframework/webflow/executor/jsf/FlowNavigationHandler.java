@@ -20,14 +20,17 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.web.jsf.DecoratingNavigationHandler;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.executor.RequestParameterInputMapper;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor;
 
 /**
@@ -81,6 +84,21 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	private FlowExecutorArgumentExtractor argumentExtractor = new FlowNavigationHandlerArgumentExtractor();
 
 	/**
+	 * The service responsible for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during the
+	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * <p>
+	 * This allows developers to control what attributes are made available in
+	 * the <code>inputMap</code> to new top-level flow executions. The
+	 * starting execution may then choose to map that available input into its
+	 * own local scope.
+	 * <p>
+	 * The default implementation simply exposes all request parameters as flow
+	 * execution input attributes. May be null.
+	 */
+	private AttributeMapper inputMapper = new RequestParameterInputMapper();
+	
+	/**
 	 * Create a new {@link FlowNavigationHandler} using the default constructor.
 	 */
 	public FlowNavigationHandler() {
@@ -110,7 +128,26 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	public void setArgumentExtractor(FlowExecutorArgumentExtractor argumentExtractor) {
 		this.argumentExtractor = argumentExtractor;
 	}
+	
+	/**
+	 * Returns the configured flow execution input mapper.
+	 */
+	public AttributeMapper getInputMapper() {
+		return inputMapper;
+	}
 
+	/**
+	 * Sets the service responsible for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during a launch flow operation.
+	 * <p>
+	 * The default implementation simply exposes all request parameters as flow
+	 * execution input attributes. May be null.
+	 * @see RequestParameterInputMapper
+	 */
+	public void setInputMapper(AttributeMapper inputMapper) {
+		this.inputMapper = inputMapper;
+	}
+	
 	public void handleNavigation(FacesContext facesContext, String fromAction, String outcome,
 			NavigationHandler originalNavigationHandler) {
 		JsfExternalContext context = new JsfExternalContext(facesContext, fromAction, outcome);
@@ -135,7 +172,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 				FlowExecution flowExecution = getFactory(context).createFlowExecution(flowDefinition);
 				FlowExecutionHolder holder = new FlowExecutionHolder(flowExecution);
 				FlowExecutionHolderUtils.setFlowExecutionHolder(holder, facesContext);
-				ViewSelection selectedView = flowExecution.start(createInput(flowExecution, context), context);
+				ViewSelection selectedView = flowExecution.start(createInput(context), context);
 				holder.setViewSelection(selectedView);
 			}
 			else {
@@ -155,12 +192,19 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	
 	/**
 	 * Factory method that creates the input attribute map for a newly created
-	 * {@link FlowExecution}. TODO - add support for input mappings here
-	 * @param flowExecution the new flow execution (yet to be started)
+	 * {@link FlowExecution}. This implementation uses the registered input mapper,
+	 * if any.
 	 * @param context the external context
-	 * @return the input map
+	 * @return the input map, or null if no input
 	 */
-	protected MutableAttributeMap createInput(FlowExecution flowExecution, ExternalContext context) {
-		return null;
+	protected MutableAttributeMap createInput(ExternalContext context) {
+		if (inputMapper != null) {
+			MutableAttributeMap inputMap = new LocalAttributeMap();
+			inputMapper.map(context, inputMap, null);
+			return inputMap;
+		}
+		else {
+			return null;
+		}
 	}
 }

@@ -29,10 +29,6 @@ import org.springframework.webflow.execution.FlowExecution;
 /**
  * Custom property resolve that resolves active flow session scope properties
  * from a thread bound flow execution.
- * <p>
- * TODO: this class probably needs to delegate to a strategy object pulled out
- * of the appcontext, to provide ability to override and configure, as JSF
- * provides no other way to customize and configure this instance.
  * 
  * @author Colin Sampaleanu
  */
