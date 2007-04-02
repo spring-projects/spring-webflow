@@ -133,11 +133,11 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 		}
 		FlowExecution execution = (FlowExecution) base;
 		if (FLASH_SCOPE_PROPERTY.equals(property)) {
-			return execution.getActiveSession().getScope().asMap();
-		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
-			return execution.getConversationScope().asMap();
-		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
 			return execution.getActiveSession().getFlashMap().asMap();
+		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
+			return execution.getActiveSession().getFlashMap().asMap();
+		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
+			return execution.getConversationScope().asMap();
 		} else {
 			// perform an attribute search
 			String attributeName = (String)property;
