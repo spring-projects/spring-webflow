@@ -71,7 +71,7 @@ public class FlowVariableResolver extends VariableResolver {
 			FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(context);
 			if (holder == null)
 				throw new EvaluationException(
-						"'flowScope' variable prefix specified, but a FlowExecution is not bound to current thread context as it should be");
+						"'flowScope' variable prefix specified but a FlowExecution is not bound to current thread context - has the flow ended or expired?");
 			return holder.getFlowExecution();
 		}
 	}
