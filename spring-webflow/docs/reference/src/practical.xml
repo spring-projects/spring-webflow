@@ -248,7 +248,7 @@ ant dist
     			to the "uploadFile" state:
     			<programlisting>
 &lt;action-state id="uploadFile"&gt;
-	&lt;action bean="uploadAction" method="uploadFile"/&gt;
+	&lt;action bean="uploadAction"/&gt;
 	&lt;transition on="success" to="selectFile"&gt;
 		&lt;set attribute="fileUploaded" scope="flash" value="true"/&gt;
 	&lt;/transition&gt;

@@ -11,7 +11,7 @@
 	</view-state>
 
 	<action-state id="uploadFile">
-		<action bean="uploadAction" method="uploadFile"/>
+		<action bean="uploadAction"/>
 		<transition on="success" to="selectFile">
 			<set attribute="fileUploaded" scope="flash" value="true"/>
 		</transition>
