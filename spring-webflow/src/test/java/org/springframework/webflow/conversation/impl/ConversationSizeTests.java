@@ -108,7 +108,7 @@ public class ConversationSizeTests extends TestCase {
 		oout.flush();
 		int objSize = bout.toByteArray().length;
 		
-		System.out.println(">>>> serialized size of '" + obj + "' is " + objSize);
+		//System.out.println(">>>> serialized size of '" + obj + "' is " + objSize);
 		
 		return objSize;
 	}
