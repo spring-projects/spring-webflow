@@ -56,6 +56,14 @@ class ConversationContainer implements Serializable {
 		this.maxConversations = maxConversations;
 		this.conversations = new ArrayList();
 	}
+	
+	/**
+	 * Returns the current size of the conversation container: the number
+	 * of conversations contained within it.
+	 */
+	public int size() {
+		return conversations.size();
+	}
 
 	/**
 	 * Create a new conversation based on given parameters and add it to the
