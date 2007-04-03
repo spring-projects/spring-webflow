@@ -4,14 +4,14 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
-	<start-actions>
-		<!-- create the backing form object and initialize a empty errors collection -->
-		<action bean="formAction" method="setupForm"/>
-	</start-actions>
-
+	<var name="sale" class="org.springframework.webflow.samples.sellitem.Sale"/>
+	
 	<start-state idref="enterPriceAndItemCount"/>
 
 	<view-state id="enterPriceAndItemCount" view="priceAndItemCountForm">
+		<render-actions>
+			<action bean="formAction" method="setupForm"/>
+		</render-actions>	
 		<transition on="submit" to="enterCategory">
 			<action bean="formAction" method="bindAndValidate">
 				<attribute name="validatorMethod" value="validatePriceAndItemCount"/>
@@ -46,7 +46,6 @@
 	
 	<end-state id="finish" view="costOverview">
 		<entry-actions>
-			<!-- force reinstall of property editors so costOverview can render formatted Sale values -->
 			<action bean="formAction" method="setupForm"/>
 		</entry-actions>
 	</end-state>

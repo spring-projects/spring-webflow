@@ -9,11 +9,8 @@
 			org.springframework.webflow.executor.jsf.FlowNavigationHandler
 		</navigation-handler>
 		<variable-resolver>
-			org.springframework.webflow.executor.jsf.FlowExecutionVariableResolver
+			org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver
 		</variable-resolver>
-		<property-resolver>
-			org.springframework.webflow.executor.jsf.FlowExecutionPropertyResolver
-		</property-resolver>
 	</application>
 	
 	<lifecycle>

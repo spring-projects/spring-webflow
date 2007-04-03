@@ -494,8 +494,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 
 	protected void initAction() {
 		if (getValidator() != null) {
-            Assert.notNull(getFormObjectClass(), "When using a validator, the form object class is required");
-			if (!getValidator().supports(getFormObjectClass())) {
+			if (getFormObjectClass() != null && !getValidator().supports(getFormObjectClass())) {
 				throw new IllegalArgumentException("Validator [" + getValidator()
 						+ "] does not support form object class [" + getFormObjectClass() + "]");
 			}
