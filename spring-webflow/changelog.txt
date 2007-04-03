@@ -17,6 +17,7 @@ Package org.springframework.binding
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".
 * FormAction now consistently uses the getters to get property values (SWF-251).
+* FormAction now allows usage of a validator when the formObjectClass is null.
 * ResultObjectBasedEventFactory now uses java.lang.Enum.name() to get the name of a Java 5 enum (SWF-250).
 
 Package org.springframework.webflow.config

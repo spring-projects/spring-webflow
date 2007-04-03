@@ -433,6 +433,26 @@ public class FormActionTests extends TestCase {
 		assertSame(formObject, action.getFormObject(context));
 		assertEquals(true, ((TestBeanValidator)action.getValidator()).invoked);
 	}
+
+	public void testFormActionWithValidatorAndNoFormActionClass() throws Exception {
+		FormAction action = new FormAction() {
+			protected Object createFormObject(RequestContext context) throws Exception {
+				return new TestBean();
+			}
+		};
+		action.setValidator(new TestBeanValidator());
+		action.initAction();
+
+		MockRequestContext context = new MockRequestContext();
+
+		Event result = action.setupForm(context);
+		assertEquals("success", result.getId());
+		
+		context.putRequestParameter("prop", "foo");
+		context.getAttributeMap().put("validatorMethod", "validateTestBean");
+		result = action.bindAndValidate(context);
+	}
+	
 	// helpers
 
 	private FormAction createFormAction(String formObjectName) {
