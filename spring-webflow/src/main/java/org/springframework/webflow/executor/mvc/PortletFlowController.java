@@ -157,34 +157,28 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
 		PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
-		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// this is a request to render an active flow execution -- extract its key
-			String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
-			// look for a cached response instruction in the session put there
-			// by the action request phase as part of an "active view" forward
-			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
-			if (responseInstruction == null) {
-				// no response instruction found, simply refresh the current
-				// view state of the flow execution (happens when the "refresh" browser button is clicked)
+
+		// look for a cached response instruction in the session put there
+		// by the action request phase
+		// the response instruction could be an "active application view" rendered
+		// from a view-state or a "confirmation view" rendered by an end-state
+		ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
+		if (responseInstruction != null) {
+			// found: convert the cached response instruction to model and view for rendering
+			return toModelAndView(responseInstruction);
+		}
+		else {
+			if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+				// this is a request to render an active flow execution -- extract its key
+				String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
+				// simply refresh the current view state of the flow execution (happens
+				// when the "refresh" browser button is clicked)
 				return toModelAndView(flowExecutor.refresh(flowExecutionKey, context));
 			}
 			else {
-				// found: convert the cached response instruction to model and view for rendering
-				return toModelAndView(responseInstruction);
-			}
-		}
-		else {
-			// this is either a "launch" flow request or a "confirmation view" render request
-			// first look for the cached "confirmation view" response instruction
-			ResponseInstruction responseInstruction = extractActionResponseInstruction(request);
-			if (responseInstruction == null) {
-				// no response instruction found in session - launch a new flow execution
+				// launch a new flow execution
 				String flowId = argumentHandler.extractFlowId(context);
 				return toModelAndView(flowExecutor.launch(flowId, context));
-			}
-			else {
-				// found: convert the cached confirmation response instruction to model and view for rendering
-				return toModelAndView(responseInstruction);
 			}
 		}
 	}
@@ -252,6 +246,11 @@ public class PortletFlowController extends AbstractController implements Initial
 	 * Expose given response instruction to the render phase by putting it in the session.
 	 */
 	private void exposeToRenderPhase(ResponseInstruction responseInstruction, ActionRequest request) {
+		// there are 2 reasons why we need to put the ResponseInstruction in the session
+		// and we can't just rely on flow execution 'refresh' during the portlet render phase:
+		// 1 - a ResponseInstruction rendered from an end-state cannot be refreshed
+		//     ("confirmation view")
+		// 2 - to make the initial contents of request scope available to the view
 		PortletSession session = request.getPortletSession(false);
 		Assert.notNull(session, "A PortletSession is required");
 		session.setAttribute(RESPONSE_INSTRUCTION_SESSION_ATTRIBUTE, responseInstruction);
