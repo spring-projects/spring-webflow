@@ -1897,7 +1897,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
 				is tracked for you).
             </para>
             <para>
-                A few notable differences between Sellitem and  Sellite-JSF to keep in mind:
+                A few notable differences between Sellitem and Sellitem-JSF to keep in mind:
                 <orderedlist>
                     <listitem>
 						<para>
@@ -1926,9 +1926,13 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
 						</para>
                     </listitem>
                 </orderedlist>
-                For more information and understanding on how the Sellitem flow
-                definition is navigated please refer to the documentation for the 
-                <link linkend="sellitem-sample">Sellitem</link> example.            
+                The combination of delegating flow variable resolution plus automatic flow execution key management
+				means JSF views selected a flow look like standard JSF views to JSF developers.  Also, JSF components
+				help simplify flow definition logic as the flow no longer has to worry about data binding and validation.
+			</para>
+			<para>
+				For more information and understanding on the Sellitem flow definition logic itself 
+				please refer to the documentation for the original <link linkend="sellitem-sample">Sellitem</link> example.            
             </para>
         </sect2>
     </sect1>
