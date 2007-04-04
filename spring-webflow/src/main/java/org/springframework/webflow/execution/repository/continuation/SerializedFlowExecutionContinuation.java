@@ -104,7 +104,7 @@ public class SerializedFlowExecutionContinuation extends FlowExecutionContinuati
 		catch (ClassNotFoundException e) {
 			throw new ContinuationUnmarshalException(
 					"ClassNotFoundException thrown deserializing the flow execution stored in this continuation -- "
-							+ "This should not happen! Make sure there are no classloader issues."
+							+ "This should not happen! Make sure there are no classloader issues. "
 							+ "For example, perhaps the Web Flow system is being loaded by a classloader "
 							+ "that is a parent of the classloader loading application classes?", e);
 		}
