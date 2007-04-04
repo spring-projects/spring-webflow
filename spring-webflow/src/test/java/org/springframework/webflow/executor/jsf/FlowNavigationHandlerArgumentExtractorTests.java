@@ -21,16 +21,25 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracti
 
 public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
 	
-	private FlowNavigationHandlerArgumentExtractor extractor = new FlowNavigationHandlerArgumentExtractor();
+	private FlowNavigationHandlerArgumentExtractor extractor;
+	
+	private MockFacesContext facesContext;
+	
+	protected void setUp() throws Exception {
+		extractor = new FlowNavigationHandlerArgumentExtractor();
+		
+		facesContext = new MockFacesContext();
+		facesContext.setExternalContext(new MockJsfExternalContext());
+	}
 
 	public void testExtractFlowId() {
-		JsfExternalContext context = new JsfExternalContext(new MockFacesContext(), "action", "flowId:foo");
+		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "flowId:foo");
 		String flowId = extractor.extractFlowId(context);
 		assertEquals("Wrong flow id", "foo", flowId);
 	}
 
 	public void testExtractFlowIdWrongFormat() {
-		JsfExternalContext context = new JsfExternalContext(new MockFacesContext(), "action", "flow:foo");
+		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "flow:foo");
 		try {
 			extractor.extractFlowId(context);
 			fail();
@@ -41,7 +50,7 @@ public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
 	}
 
 	public void testExtractEventId() {
-		JsfExternalContext context = new JsfExternalContext(new MockFacesContext(), "action", "submit");
+		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "submit");
 		String eventId = extractor.extractEventId(context);
 		assertEquals("Wrong event id", "submit", eventId);
 	}

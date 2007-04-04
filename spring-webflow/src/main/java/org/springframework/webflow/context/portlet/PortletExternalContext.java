@@ -53,6 +53,13 @@ public class PortletExternalContext implements ExternalContext {
 	 * The response.
 	 */
 	private PortletResponse response;
+	
+	private ParameterMap requestParameterMap;
+	private MutableAttributeMap requestMap;
+	private SharedAttributeMap sessionMap;
+	private SharedAttributeMap globalSessionMap;
+	private SharedAttributeMap applicationMap;
+	private MutableAttributeMap userInfoMap;
 
 	/**
 	 * Create an external context wrapping given Portlet context, request and response.
@@ -64,6 +71,14 @@ public class PortletExternalContext implements ExternalContext {
 		this.context = context;
 		this.request = request;
 		this.response = response;
+		
+		this.requestParameterMap = new LocalParameterMap(new PortletRequestParameterMap(request));
+		this.requestMap = new LocalAttributeMap(new PortletRequestMap(request));
+		this.sessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.PORTLET_SCOPE));
+		this.globalSessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.APPLICATION_SCOPE));
+		this.applicationMap = new LocalSharedAttributeMap(new PortletContextMap(context));
+		Map userInfo = (Map)request.getAttribute(PortletRequest.USER_INFO);
+		this.userInfoMap = userInfo != null ? new LocalAttributeMap(userInfo) : null;
 	}
 
 	public String getContextPath() {
@@ -79,23 +94,23 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public ParameterMap getRequestParameterMap() {
-		return new LocalParameterMap(new PortletRequestParameterMap(request));
+		return requestParameterMap;
 	}
 
 	public MutableAttributeMap getRequestMap() {
-		return new LocalAttributeMap(new PortletRequestMap(request));
+		return requestMap;
 	}
 	
 	public SharedAttributeMap getSessionMap() {
-		return new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.PORTLET_SCOPE));
+		return sessionMap;
 	}
 
 	public SharedAttributeMap getGlobalSessionMap() {
-		return new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.APPLICATION_SCOPE));
+		return globalSessionMap;
 	}
 
 	public SharedAttributeMap getApplicationMap() {
-		return new LocalSharedAttributeMap(new PortletContextMap(context));
+		return applicationMap;
 	}
 
 	/**
@@ -103,12 +118,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * @return the Portlet user info
 	 */
 	public MutableAttributeMap getUserInfoMap() {
-		Map userInfo = (Map)request.getAttribute(PortletRequest.USER_INFO);
-		if (userInfo != null) {
-			return new LocalAttributeMap(userInfo);
-		} else {
-			return null;
-		}
+		return userInfoMap;
 	}
 
 	/**

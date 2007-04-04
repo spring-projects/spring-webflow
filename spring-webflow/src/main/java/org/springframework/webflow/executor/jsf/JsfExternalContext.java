@@ -58,6 +58,11 @@ public class JsfExternalContext implements ExternalContext {
 		this.facesContext = facesContext;
 	}
 
+	private ParameterMap requestParameterMap;
+	private MutableAttributeMap requestMap;
+	private SharedAttributeMap sessionMap;
+	private SharedAttributeMap applicationMap;
+
 	/**
 	 * Creates a JSF External Context.
 	 * @param facesContext the JSF faces context.
@@ -68,6 +73,11 @@ public class JsfExternalContext implements ExternalContext {
 		this.facesContext = facesContext;
 		this.actionId = actionId;
 		this.outcome = outcome;
+		
+		this.requestParameterMap = new LocalParameterMap(facesContext.getExternalContext().getRequestParameterMap());
+		this.requestMap = new LocalAttributeMap(facesContext.getExternalContext().getRequestMap());
+		this.sessionMap = new LocalSharedAttributeMap(new SessionSharedMap(facesContext));
+		this.applicationMap = new LocalSharedAttributeMap(new ApplicationSharedMap(facesContext));
 	}
 
 	public String getContextPath() {
@@ -83,15 +93,15 @@ public class JsfExternalContext implements ExternalContext {
 	}
 
 	public ParameterMap getRequestParameterMap() {
-		return new LocalParameterMap(facesContext.getExternalContext().getRequestParameterMap());
+		return requestParameterMap;
 	}
 
 	public MutableAttributeMap getRequestMap() {
-		return new LocalAttributeMap(facesContext.getExternalContext().getRequestMap());
+		return requestMap;
 	}
 
 	public SharedAttributeMap getSessionMap() {
-		return new LocalSharedAttributeMap(new SessionSharedMap(facesContext));
+		return sessionMap;
 	}
 
 	public SharedAttributeMap getGlobalSessionMap() {
@@ -99,7 +109,7 @@ public class JsfExternalContext implements ExternalContext {
 	}
 	
 	public SharedAttributeMap getApplicationMap() {
-		return new LocalSharedAttributeMap(new ApplicationSharedMap(facesContext));
+		return applicationMap;
 	}
 
 	/**

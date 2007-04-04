@@ -51,6 +51,11 @@ public class ServletExternalContext implements ExternalContext {
 	 * The response.
 	 */
 	private HttpServletResponse response;
+	
+	private ParameterMap requestParameterMap;
+	private MutableAttributeMap requestMap;
+	private SharedAttributeMap sessionMap;
+	private SharedAttributeMap applicationMap;
 
 	/**
 	 * Create a new external context wrapping given servlet HTTP request and
@@ -63,6 +68,11 @@ public class ServletExternalContext implements ExternalContext {
 		this.context = context;
 		this.request = request;
 		this.response = response;
+		
+		this.requestParameterMap = new LocalParameterMap(new HttpServletRequestParameterMap(request));
+		this.requestMap = new LocalAttributeMap(new HttpServletRequestMap(request));
+		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(request));
+		this.applicationMap = new LocalSharedAttributeMap(new HttpServletContextMap(context));
 	}
 
 	public String getContextPath() {
@@ -78,15 +88,15 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public ParameterMap getRequestParameterMap() {
-		return new LocalParameterMap(new HttpServletRequestParameterMap(request));
+		return requestParameterMap;
 	}
 
 	public MutableAttributeMap getRequestMap() {
-		return new LocalAttributeMap(new HttpServletRequestMap(request));
+		return requestMap;
 	}
 
 	public SharedAttributeMap getSessionMap() {
-		return new LocalSharedAttributeMap(new HttpSessionMap(request));
+		return sessionMap;
 	}
 
 	public SharedAttributeMap getGlobalSessionMap() {
@@ -94,7 +104,7 @@ public class ServletExternalContext implements ExternalContext {
 	}
 	
 	public SharedAttributeMap getApplicationMap() {
-		return new LocalSharedAttributeMap(new HttpServletContextMap(context));
+		return applicationMap;
 	}
 
 	/**

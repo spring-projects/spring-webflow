@@ -46,18 +46,20 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new TextToNumber(new SimpleFormatterFactory()));
 		addConverter(new TextToBoolean());
 		addConverter(new TextToLabeledEnum());
-		addDefaultAlias(String.class);
-		addDefaultAlias(Short.class);
-		addDefaultAlias(Integer.class);
+		
+		// we're not using addDefaultAlias here for efficieny reasons
+		addAlias("string", String.class);
+		addAlias("short", Short.class);
+		addAlias("integer", Integer.class);
 		addAlias("int", Integer.class);
-		addDefaultAlias(Byte.class);
-		addDefaultAlias(Long.class);
-		addDefaultAlias(Float.class);
-		addDefaultAlias(Double.class);
-		addDefaultAlias(BigInteger.class);
-		addDefaultAlias(BigDecimal.class);
-		addDefaultAlias(Boolean.class);
-		addDefaultAlias(Class.class);
-		addDefaultAlias(LabeledEnum.class);
+		addAlias("byte", Byte.class);
+		addAlias("long", Long.class);
+		addAlias("float", Float.class);
+		addAlias("double", Double.class);
+		addAlias("bigInteger", BigInteger.class);
+		addAlias("bigDecimal", BigDecimal.class);
+		addAlias("boolean", Boolean.class);
+		addAlias("class", Class.class);
+		addAlias("labeledEnum", LabeledEnum.class);
 	}
 }
