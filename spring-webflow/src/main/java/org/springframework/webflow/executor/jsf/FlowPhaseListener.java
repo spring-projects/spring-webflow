@@ -74,6 +74,12 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 public class FlowPhaseListener implements PhaseListener {
 
 	/**
+	 * The name of the attribute the flow execution key will be tracked under in the JSF View Root for managing the
+	 * current flow execution key.
+	 */
+	private static final String FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE = "_flowExecutionKey";
+
+	/**
 	 * Logger, usable by subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -163,7 +169,8 @@ public class FlowPhaseListener implements PhaseListener {
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
 			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
 			restoreFlowExecution(event.getFacesContext());
-		} else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		}
+		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			try {
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(event
@@ -199,9 +206,10 @@ public class FlowPhaseListener implements PhaseListener {
 			}
 			else {
 				// restore the key from an attribute in the root of the component tree
-				flowExecutionKey = repository.parseFlowExecutionKey((String)facesContext.getViewRoot().getAttributes().get("_flowExecutionKey"));
+				flowExecutionKey = repository.parseFlowExecutionKey((String) facesContext.getViewRoot().getAttributes()
+						.get(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE));
 				// remove it (it should always be placed back before response rendering)
-				facesContext.getViewRoot().getAttributes().remove("_flowExecutionKey");
+				facesContext.getViewRoot().getAttributes().remove(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE);
 			}
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			lock.lock();
@@ -213,8 +221,7 @@ public class FlowPhaseListener implements PhaseListener {
 					lock), facesContext);
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
-			// launch a new flow execution (this could happen as part of a flow
-			// redirect)
+			// launch a new flow execution (this could happen as part of a flow redirect)
 			String flowId = argumentHandler.extractFlowId(context);
 			FlowDefinition flowDefinition = getLocator(context).getFlowDefinition(flowId);
 			FlowExecution flowExecution = getFactory(context).createFlowExecution(flowDefinition);
@@ -245,6 +252,11 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
+	/**
+	 * Prepare the appropriate JSF response (e.g. rendering a view, sending a redirect, etc).
+	 * @param context the context
+	 * @param holder the holder
+	 */
 	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {
 		generateKey(context, holder);
 		ViewSelection selectedView = holder.getViewSelection();
@@ -284,20 +296,28 @@ public class FlowPhaseListener implements PhaseListener {
 		}.handleQuietly(new ResponseInstruction(holder.getFlowExecution(), selectedView));
 	}
 
+	/**
+	 * Prepare the JSF view for rendering.
+	 * @param facesContext the faces context
+	 * @param holder the holder of the current flow execution
+	 */
 	protected void prepareApplicationView(FacesContext facesContext, FlowExecutionHolder holder) {
 		ApplicationView forward = (ApplicationView) holder.getViewSelection();
 		if (forward != null) {
+			// expose the view's "model map" in the request map
 			putInto(facesContext.getExternalContext().getRequestMap(), forward.getModel());
+			// update the root component if necessary
 			updateViewRoot(facesContext, viewIdMapper.mapViewId(forward.getViewName()));
 		}
-		Map requestMap = facesContext.getExternalContext().getRequestMap();
 		String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString() : null;
 		if (flowExecutionKey != null) {
 			// expose to view root for preservation in the component tree
 			if (viewRootAttributeMapPresent(facesContext)) {
-				facesContext.getViewRoot().getAttributes().put("_flowExecutionKey", flowExecutionKey);
+				facesContext.getViewRoot().getAttributes()
+						.put(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE, flowExecutionKey);
 			}
 		}
+		Map requestMap = facesContext.getExternalContext().getRequestMap();
 		argumentHandler.exposeFlowExecutionContext(flowExecutionKey, holder.getFlowExecution(), requestMap);
 	}
 
@@ -326,40 +346,42 @@ public class FlowPhaseListener implements PhaseListener {
 			}
 		}
 	}
-	
+
 	// private helpers
 
 	private JsfExternalContext getCurrentContext() {
 		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
 	}
-	
+
 	/**
-	 * Returns true if the root of the component tree contains the flow execution key attribute, used
-	 * to restore the flow execution on subsequent reqests.
+	 * Returns true if the root of the component tree contains the flow execution key attribute, used to restore the
+	 * flow execution on subsequent reqests.
 	 * @param facesContext the key
 	 * @return true if yes, false otherwise
 	 */
 	private boolean isFlowExecutionKeyInViewRoot(FacesContext facesContext) {
 		if (viewRootAttributeMapPresent(facesContext)) {
-			return facesContext.getViewRoot().getAttributes().containsKey("_flowExecutionKey");
-		} else {
+			return facesContext.getViewRoot().getAttributes().containsKey(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE);
+		}
+		else {
 			return false;
 		}
 	}
 
 	/**
 	 * Simple little helper that returns true if the view root attribute map is non-null.
-	 * @param facesContext the faces context 
+	 * @param facesContext the faces context
 	 * @return true if so, false otherwise
 	 */
 	private boolean viewRootAttributeMapPresent(FacesContext facesContext) {
 		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getAttributes() != null) {
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
-	
+
 	private void updateViewRoot(FacesContext facesContext, String viewId) {
 		UIViewRoot viewRoot = facesContext.getViewRoot();
 		if (viewRoot == null || hasViewChanged(viewRoot, viewId)) {

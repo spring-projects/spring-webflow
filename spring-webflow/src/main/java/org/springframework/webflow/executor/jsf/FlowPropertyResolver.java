@@ -57,8 +57,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 			return resolverDelegate.getType(base, index);
 		}
 		else {
-			// can't access flow scope by index, so can't determine type. Return
-			// null per JSF spec
+			// can't access flow scope by index, so can't determine type. Return null per JSF spec
 			return null;
 		}
 	}
@@ -88,7 +87,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 			return resolverDelegate.getValue(base, index);
 		}
 		else {
-			throw new ReferenceSyntaxException("Cannot apply an index value to Flow map");
+			throw new ReferenceSyntaxException("Cannot apply an index value to flow scope map");
 		}
 	}
 
@@ -97,7 +96,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 			return resolverDelegate.getValue(base, property);
 		}
 		if (!(property instanceof String)) {
-			throw new PropertyNotFoundException("Unable to get value from Flow map, as key is non-String");
+			throw new PropertyNotFoundException("Unable to get value from flow scope map - key is non-String");
 		}
 		FlowExecution execution = (FlowExecution)base;
 		String attributeName = (String)property;
@@ -108,8 +107,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 			WebApplicationContext wac = getWebApplicationContext(context);
 			if (wac.containsBean(attributeName)) {
 				// note: this resolver doesn't care, but this should normally be
-				// either a stateless singleton bean, or a stateful/stateless
-				// prototype
+				// either a stateless singleton bean, or a stateful/stateless prototype
 				value = wac.getBean(attributeName);
 				execution.getActiveSession().getScope().put(attributeName, value);
 			}
@@ -135,7 +133,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 		if (!(base instanceof FlowExecution)) {
 			resolverDelegate.setValue(base, index, value);
 		}
-		throw new ReferenceSyntaxException("Can not apply an index value to Flow map");
+		throw new ReferenceSyntaxException("Cannot apply an index value to flow scope");
 	}
 
 	public void setValue(Object base, Object property, Object value) throws EvaluationException,
@@ -147,7 +145,7 @@ public class FlowPropertyResolver extends PropertyResolver {
 		if (property == null || !(property instanceof String)
 				|| ((String)property).length() == 0) {
 			throw new PropertyNotFoundException(
-					"Attempt to set Flow attribute with null name, empty name, or non-String name");
+					"Attempt to set flow attribute with null name, empty name, or non-String name");
 		}
 		FlowExecution execution = (FlowExecution)base;
 		execution.getActiveSession().getScope().put((String)property, value);
