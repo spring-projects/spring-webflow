@@ -396,6 +396,40 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 		return getFlowExecution().getActiveSession().getScope().getRequired(attributeName, requiredType);
 	}
 
+	/**
+	 * Returns the attribute in flash scope. Flash-scoped attributes are local to
+	 * the active flow session.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 */
+	protected Object getFlashAttribute(String attributeName) {
+		return getFlowExecution().getActiveSession().getFlashMap().get(attributeName);
+	}
+
+	/**
+	 * Returns the required attribute in flash scope; asserts the attribute is
+	 * present. Flash-scoped attributes are local to the active flow session.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 * @throws IllegalStateException if the attribute was not present
+	 */
+	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getFlashMap().getRequired(attributeName);
+	}
+
+	/**
+	 * Returns the required attribute in flash scope; asserts the attribute is
+	 * present and of the correct type. Flash-scoped attributes are local to the
+	 * active flow session.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 * @throws IllegalStateException if the attribute was not present or was of
+	 * the wrong type
+	 */
+	protected Object getRequiredFlashAttribute(String attributeName, Class requiredType) throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getFlashMap().getRequired(attributeName, requiredType);
+	}
+
 	// assert helpers
 
 	/**

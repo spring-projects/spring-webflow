@@ -67,6 +67,7 @@ Package org.springframework.webflow.executor
 Package org.springframework.webflow.test
 * Added constructor taking test name argument to AbstractFlowExecutionTests, AbstractExternalizedFlowExecutionTests
   and AbstractXmlFlowExecutionTests.
+* Added getFlashAttribute and getRequiredFlashAttribute methods to AbstractFlowExecutionTests.
 
 Package org.springframework.webflow.samples
 * Made all samples Spring IDE 2.0 projects for use with the Spring Web Flow Graphical Editor and XML Flow
