@@ -547,7 +547,7 @@
     &lt;/lifecycle&gt;
 &lt;/faces-config&gt;
 	    	</programlisting>
-		</sect>
+		</sect2>
     	<sect2 id="executor-jsf-launch-get">
     		<title>Launching a flow execution - command link</title>
 	    	<programlisting>
