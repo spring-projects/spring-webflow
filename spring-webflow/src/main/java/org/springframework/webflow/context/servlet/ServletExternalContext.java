@@ -29,8 +29,7 @@ import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * Provides contextual information about an HTTP Servlet environment that has
- * interacted with Spring Web Flow.
+ * Provides contextual information about an HTTP Servlet environment that has interacted with Spring Web Flow.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -51,15 +50,29 @@ public class ServletExternalContext implements ExternalContext {
 	 * The response.
 	 */
 	private HttpServletResponse response;
-	
+
+	/**
+	 * An accessor for the HTTP request parameter map.
+	 */
 	private ParameterMap requestParameterMap;
+
+	/**
+	 * An accessor for the HTTP request attribute map.
+	 */
 	private MutableAttributeMap requestMap;
+
+	/**
+	 * An accessor for the HTTP session map.
+	 */
 	private SharedAttributeMap sessionMap;
+
+	/**
+	 * An accessor for the servlet context application map.
+	 */
 	private SharedAttributeMap applicationMap;
 
 	/**
-	 * Create a new external context wrapping given servlet HTTP request and
-	 * response and given servlet context.
+	 * Create a new external context wrapping given servlet HTTP request and response and given servlet context.
 	 * @param context the servlet context
 	 * @param request the HTTP request
 	 * @param response the HTTP response
@@ -68,7 +81,6 @@ public class ServletExternalContext implements ExternalContext {
 		this.context = context;
 		this.request = request;
 		this.response = response;
-		
 		this.requestParameterMap = new LocalParameterMap(new HttpServletRequestParameterMap(request));
 		this.requestMap = new LocalAttributeMap(new HttpServletRequestMap(request));
 		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(request));
@@ -102,7 +114,7 @@ public class ServletExternalContext implements ExternalContext {
 	public SharedAttributeMap getGlobalSessionMap() {
 		return getSessionMap();
 	}
-	
+
 	public SharedAttributeMap getApplicationMap() {
 		return applicationMap;
 	}

@@ -1826,7 +1826,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
             </para>
         </sect2>
         <sect2>
-            <title>JSF Plumbing (faces-config.xml)</title>
+            <title>JSF Setup in faces-config.xml</title>
             <para>
                 The Spring framework has several classes to help JSF applications
                 to use Spring beans as JSF managed beans and to do dependency injection
@@ -1904,6 +1904,8 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
 							The JSF version of the sellitem flow definition is simpler because JSF components
 							care for data binding and validation.
 						</para>
+					</listitem>
+					<listitem>
 						<para>
                         	In its web flow definition Sellitem-JSF uses actual 
                         	JSP	names (instead of the logical view names used

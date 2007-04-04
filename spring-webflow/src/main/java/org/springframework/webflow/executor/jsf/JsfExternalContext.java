@@ -28,8 +28,7 @@ import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * Provides contextual information about a JSF environment that has interacted
- * with SWF.
+ * Provides contextual information about a JSF environment that has interacted with SWF.
  * 
  * @author Keith Donald
  */
@@ -51,17 +50,33 @@ public class JsfExternalContext implements ExternalContext {
 	private String outcome;
 
 	/**
+	 * An accessor for the JSF request parameter map.
+	 */
+	private ParameterMap requestParameterMap;
+
+	/**
+	 * An accessor for the JSF request attribute map.
+	 */
+	private MutableAttributeMap requestMap;
+
+	/**
+	 * An accessor for the JSF session map.
+	 */
+	private SharedAttributeMap sessionMap;
+
+	/**
+	 * An accessor for the JSF application map.
+	 */
+	private SharedAttributeMap applicationMap;
+
+	/**
 	 * Creates a JSF External Context.
 	 * @param facesContext the JSF faces context
 	 */
 	public JsfExternalContext(FacesContext facesContext) {
 		this.facesContext = facesContext;
+		initMaps(facesContext);
 	}
-
-	private ParameterMap requestParameterMap;
-	private MutableAttributeMap requestMap;
-	private SharedAttributeMap sessionMap;
-	private SharedAttributeMap applicationMap;
 
 	/**
 	 * Creates a JSF External Context.
@@ -73,7 +88,14 @@ public class JsfExternalContext implements ExternalContext {
 		this.facesContext = facesContext;
 		this.actionId = actionId;
 		this.outcome = outcome;
-		
+		initMaps(facesContext);
+	}
+
+	/**
+	 * Initializes parameter and attribute maps from context data structures.
+	 * @param facesContext the faces context
+	 */
+	private void initMaps(FacesContext facesContext) {
 		this.requestParameterMap = new LocalParameterMap(facesContext.getExternalContext().getRequestParameterMap());
 		this.requestMap = new LocalAttributeMap(facesContext.getExternalContext().getRequestMap());
 		this.sessionMap = new LocalSharedAttributeMap(new SessionSharedMap(facesContext));
@@ -107,7 +129,7 @@ public class JsfExternalContext implements ExternalContext {
 	public SharedAttributeMap getGlobalSessionMap() {
 		return getSessionMap();
 	}
-	
+
 	public SharedAttributeMap getApplicationMap() {
 		return applicationMap;
 	}
@@ -133,6 +155,10 @@ public class JsfExternalContext implements ExternalContext {
 		return outcome;
 	}
 
+	/**
+	 * An accessor of a JSF session map.
+	 * @author Keith Donald
+	 */
 	private static class SessionSharedMap extends SharedMapDecorator {
 
 		private FacesContext facesContext;
@@ -147,6 +173,10 @@ public class JsfExternalContext implements ExternalContext {
 		}
 	}
 
+	/**
+	 * An accessor of an JSF application map.
+	 * @author Keith Donald
+	 */
 	private static class ApplicationSharedMap extends SharedMapDecorator {
 
 		private FacesContext facesContext;

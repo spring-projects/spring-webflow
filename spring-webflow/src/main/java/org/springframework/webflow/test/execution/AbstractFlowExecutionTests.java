@@ -398,7 +398,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 
 	/**
 	 * Returns the attribute in flash scope. Flash-scoped attributes are local to
-	 * the active flow session.
+	 * the active flow session and cleared on the next user event.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 */
@@ -408,7 +408,8 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 
 	/**
 	 * Returns the required attribute in flash scope; asserts the attribute is
-	 * present. Flash-scoped attributes are local to the active flow session.
+	 * present. Flash-scoped attributes are local to the active flow session and cleared on
+	 * the next user event.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present
@@ -420,7 +421,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	/**
 	 * Returns the required attribute in flash scope; asserts the attribute is
 	 * present and of the correct type. Flash-scoped attributes are local to the
-	 * active flow session.
+	 * active flow session and cleared on the next user event.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present or was of

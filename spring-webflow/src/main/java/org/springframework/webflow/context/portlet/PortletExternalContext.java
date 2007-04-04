@@ -54,11 +54,34 @@ public class PortletExternalContext implements ExternalContext {
 	 */
 	private PortletResponse response;
 	
+	/**
+	 * An accessor for the portlet request parameter map.
+	 */
 	private ParameterMap requestParameterMap;
+
+	/**
+	 * An accessor for the portlet request attribute map.
+	 */
 	private MutableAttributeMap requestMap;
+
+	/**
+	 * An accessor for the local portlet session map.
+	 */
 	private SharedAttributeMap sessionMap;
+
+	/**
+	 * An accessor for the global portlet session map.
+	 */
 	private SharedAttributeMap globalSessionMap;
+
+	/**
+	 * An accessor for the portlet context application map.
+	 */
 	private SharedAttributeMap applicationMap;
+	
+	/**
+	 * An accessor for the portlet user info map.
+	 */
 	private MutableAttributeMap userInfoMap;
 
 	/**
@@ -71,7 +94,6 @@ public class PortletExternalContext implements ExternalContext {
 		this.context = context;
 		this.request = request;
 		this.response = response;
-		
 		this.requestParameterMap = new LocalParameterMap(new PortletRequestParameterMap(request));
 		this.requestMap = new LocalAttributeMap(new PortletRequestMap(request));
 		this.sessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.PORTLET_SCOPE));
@@ -86,10 +108,12 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public String getDispatcherPath() {
+		// returns null in a portlet environment
 		return null;
 	}
 
 	public String getRequestPathInfo() {
+		// returns null in a portlet environment
 		return null;
 	}
 
