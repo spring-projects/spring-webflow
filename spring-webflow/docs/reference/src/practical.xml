@@ -1344,7 +1344,7 @@ if (data != null &amp;&amp; data.length() > 0) {
                 The Sellitem example demonstrates using Web Flow to build a 
                 shopping cart wizard with
                 a shipping rate subflow, decision states, service and data access 
-                Spring POJO beans, Spring 2.0 form tags, and Web Flow's 
+                Spring POJO beans, Spring 2.0 form tags, and a Web Flow 
                 FormAction bean for data binding, validation, and 
                 error reporting.
             </para>
@@ -1354,8 +1354,8 @@ if (data != null &amp;&amp; data.length() > 0) {
                 Although the example itself uses a small number of beans you 
                 may consider organizing a real-world application (with many more
                 beans) according to similar principles. Before going into the specifics
-                of each individual context use the diagram below to 
-                get a brief overview of all configuration files including their
+                of each individual context, use the diagram below to 
+                get a brief overview of all configuration files including 
                 location and purpose.
             </para>
             <mediaobject>
@@ -1579,7 +1579,7 @@ if (StringUtils.hasText(role)) {
                 <programlisting>
 &lt;!-- Manages setting up, binding input to, and validating a Sale "backing wizard form object" --&gt;
 &lt;bean id="formAction" class="org.springframework.webflow.action.FormAction"&gt;
-    &lt;property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale"/&gt;
+    &lt;property name="formObjectName" value="sale"/&gt;
     &lt;property name="validator"&gt;
         &lt;bean class="org.springframework.webflow.samples.sellitem.SaleValidator"/&gt;
     &lt;/property&gt;
@@ -1608,28 +1608,22 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
         <sect2>
             <title>Sellitem-flow Flow Definition</title>
             <para>
-                The sellitem-flow uses a start action to invoke the setupForm method of the 
-                formAction bean:
-                <programlisting>
-&lt;start-actions&gt;
-    &lt;!-- create the backing form object and initialize a empty errors collection --&gt;
-    &lt;action bean="formAction" method="setupForm"/&gt;
-&lt;/start-actions&gt;                
-                </programlisting>                
-                A start action is invoked before entering the start state. 
-                The setupForm method prepares a form object 
-                and registers custom property editors.
-                The form backing object class (as declared in sellitem-beans.xml)
-                is of type Sale and is saved in flow scope under 
-                the name of "sale" - it is possible to 
-                override both the scope and the name of the form object in the 
-                FormAction bean's declaration.
+            	The flow begins by declaring a "sale" variable - an object of type Sale:
+            	<programlisting>
+&lt;var name="sale" class="org.springframework.webflow.samples.sellitem.Sale"/&gt;
+            	</programlisting>
+            	The formAction bean will use the sale variable for form binding and
+            	validation (see sellitem-beans.xml).
             </para>
             <para>
-                The start state enterPriceAndItemCount is a view state, which resolves
+                The start state for the flow enterPriceAndItemCount is a view state, which resolves
                 to the JSP page /WEB-INF/jsp/priceAndItemCountForm.jsp:
                 <programlisting>
 &lt;view-state id="enterPriceAndItemCount" view="priceAndItemCountForm"&gt;
+	&lt;render-actions&gt;
+	    &lt;!-- create the backing form object and initialize a empty errors collection --&gt;
+	    &lt;action bean="formAction" method="setupForm"/&gt;
+	&lt;/render-actions&gt;                
     &lt;transition on="submit" to="enterCategory"&gt;
         &lt;action bean="formAction" method="bindAndValidate"&gt;
             &lt;attribute name="validatorMethod" value="validatePriceAndItemCount"/&gt;
@@ -1637,6 +1631,11 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
     &lt;/transition&gt;
 &lt;/view-state&gt;
                 </programlisting>
+				The view state uses a render action to invoke the setupForm method of the 
+                formAction bean. The setupForm method prepares a form object based on
+                the "sale" variable declared at the top of the flow definition.
+            </para>
+            <para>
                 The priceAndItemCountForm.jsp page collects a price and an itemCount using
                 Spring 2.0 form input tags binding form fields to properties in the form
                 backing object "sale". When pressed, the submit button "_eventId_submit"
@@ -1703,7 +1702,6 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
                 <programlisting>
 &lt;end-state id="finish" view="costOverview"&gt;
     &lt;entry-actions&gt;
-        &lt;!-- force reinstall of property editors so costOverview can render formatted Sale values --&gt;
         &lt;action bean="formAction" method="setupForm"/&gt;
     &lt;/entry-actions&gt;
 &lt;/end-state&gt;
@@ -1734,7 +1732,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
                 /WEB-INF/flows/converstation-scope/sellitem-beans.xml.
                 <programlisting>
 &lt;bean id="formAction" class="org.springframework.webflow.action.FormAction"&gt;
-    &lt;property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale"/&gt;
+    &lt;property name="formObjectName" value="sale"/&gt;
     &lt;property name="formObjectScope" value="CONVERSATION"/&gt;
     &lt;property name="formErrorsScope" value="CONVERSATION"/&gt;
                 </programlisting>
@@ -1838,94 +1836,33 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
 &lt;application&gt;
     &lt;!-- Navigation handler proxy for a Spring-managed bean that is the Web Flow Navigation Handler --&gt;
     &lt;navigation-handler&gt;
-        org.springframework.web.jsf.DelegatingNavigationHandlerProxy
+        org.springframework.webflow.executor.jsf.FlowNavigationHandler
     &lt;/navigation-handler&gt;
-    ...
     &lt;variable-resolver&gt;
-        org.springframework.web.jsf.
-    &lt;/variable-resolver&gt;
-    &lt;!-- Extended "webApplicationContext" resolver --&gt;
-    &lt;variable-resolver&gt;
-        org.springframework.web.jsf.WebApplicationContextVariableResolver
+        org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver
     &lt;/variable-resolver&gt;
 &lt;/application&gt;
 &lt;lifecycle&gt;
-    &lt;!-- Multi-caster that broadcast phase events to all PhaseListeners managed by Spring --&gt;
-    &lt;phase-listener&gt;org.springframework.web.jsf.DelegatingPhaseListenerMulticaster&lt;/phase-listener&gt;
+    &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
 &lt;/lifecycle&gt;
                 </programlisting>
-                The DelegatingNavigationHandlerProxy delegates to a NavigationHandler 
-                bean defined in the Spring root WebApplicationContext. For Sellitem-JSF
-                this is the jsfNavigiationHandler bean in /WEB-INF/webflow-config.xml:
-                <programlisting>
-&lt;bean id="jsfNavigationHandler" class="org.springframework.webflow.executor.jsf.FlowNavigationHandler" /&gt;
-                </programlisting>
-            </para>
-            <note>
-                <para>
-	                Web Flow's FlowNavigationHandler could have been installed directly
-	                in faces-config.xml - adding it through a delegating proxy is done for 
-	                demonstration purposes and useful for further Spring container services.
-                </para>
-            </note>
-            <para>
-                The FlowNavigationHandler provides a point of integration between Web Flow and 
-                JSF. It can delegate JSF requests to the Web Flow system (such as when 
-                a flow is initiated or is ongoing) or return control to a 
-                standard JSF navigation handler implementation (when 
-                a web flow is not ongoing). As will
-                be shown further down a web flow initiation or a continuation 
-                is detected through the 
-                presence of a _flowId or a _flowExecutionKey parameter.
             </para>
             <para>
-                The DelegatingVariableResolver and the WebApplicationContextVariableResolver
-                are Spring provided JSF VariableResolvers. The DelegatingVariableResolver
-                allows Spring beans to be used as JSF variables (such as in managed bean 
-                declarations). The WebApplicationContextVariableResolver exposes the 
-                Spring WebApplicationContext instance as a JSF variable named 
-                "webApplicationContext". This allows access to the Spring web context
-                for obtaining any Spring managed beans and resources.
+                The FlowNavigationHandler delegates view navigation handling to the
+				the Web Flow system when a flow is initiated or resumed.
             </para>
             <para>
-                The DelegatingPhaseListenerMulticaster is another Spring provided class,
-                which delegates beforePhase and afterPhase JSF events to Spring-managed
-                PhaseListener beans present in the Spring root WebApplicationContext.
-                In the case of Sellitem-JSF there is one PhaseListener bean definition
-                in its web context /WEB-INF/webflow-config.xml:
-                <programlisting>
-&lt;bean id="flowPhaseListener" class="org.springframework.webflow.executor.jsf.FlowPhaseListener" /&gt;
-                </programlisting>
+                The DelegatingFlowVariableResolver is suitable for use along side 
+                other variable resolvers to support EL binding expressions like
+ 				{#bean.property} where "bean" could be a property in any supported scope.
+ 				The resolver search algorithm looks in flash scope first, then flow scope, 
+ 				then conversation scope. If no variable is found, this resolver 
+ 				delegates to the next resolver in the chain.
             </para>
-            <note>
-                <para>
-	                The Web Flow's FlowPhaseListener could have been installed directly
-	                in faces-config.xml - adding it through a delegating proxy is done for 
-	                demonstration purposes and useful for further Spring container services.
-                </para>
-            </note>
             <para>
                 The FlowPhaseListener invoked during beforePhase and afterPhase JSF events
-                is responsible for managing an active FlowExecution and making it available
+                is responsible for managing the lifecycle of a FlowExecution and making it available
                 to other JSF artifacts during the lifecycle of a JSF request. 
-            </para>
-            <para>
-                The faces-config for Sellitem-JSF has two more definitions based on 
-                Web Flow provided classes:
-                <programlisting>
-&lt;property-resolver&gt;
-    org.springframework.webflow.executor.jsf.FlowPropertyResolver
-&lt;/property-resolver&gt;
-&lt;variable-resolver&gt;
-    org.springframework.webflow.executor.jsf.FlowVariableResolver
-&lt;/variable-resolver&gt;
-                </programlisting>
-                The FlowVariableResolver makes it possible to use the "flowScope" 
-                variable in JSF expressions. The "flow" scope is a unique feature of 
-                Web Flow allowing state to be retained for the duration of a flow -
-                less than session scope but typically longer than a single request.
-                The FlowPropertyResolver allows resolution of property paths from a 
-                FlowExecution context.
             </para>
         </sect2>
         <sect2>
@@ -1956,27 +1893,37 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
 &lt;/h:form&gt;
                 </programlisting>
                 This causes the sellitem-flow to be initiated. Once a flow is initiated
-                each next JSP page advancing through the view states of the Sellitem flow
-                definition passes a parameter called _flowExecutionKey 
-                allowing the flow to be continued by the FlowPhaseListener:
-                <programlisting>
-&lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/&gt;
-                </programlisting>
+                each subsequent JSP page can participate in the flow (the flow execution key
+				is tracked for you).
             </para>
             <para>
                 A few notable differences between Sellitem and  Sellite-JSF to keep in mind:
                 <orderedlist>
                     <listitem>
-                        In its web flow definition Sellitem-JSF uses actual 
-                        JSP names (instead of the logical view names used
-                        in Sellitem) to be rendered by JSF.
+						<para>
+							The JSF version of the sellitem flow definition is simpler because JSF components
+							care for data binding and validation.
+						</para>
+						<para>
+                        	In its web flow definition Sellitem-JSF uses actual 
+                        	JSP	names (instead of the logical view names used
+                        	in Sellitem) to be rendered by JSF.
+						</para>
                     </listitem>
                     <listitem>
-                        The JSP pages in Sellitem-JSF use unified EL to 
-                        access the flowScoped Sale object - e.g. #{flowScope.sale.price}.
+						<para>
+                        	The JSP pages in Sellitem-JSF use unified EL to 
+                        	access the flowScoped Sale object - e.g. #{sale.price}.
+						</para>
                     </listitem>
                     <listitem>
-                        Sellitem-JSF uses JSF tags for UI and Sellitem uses Spring form tags.
+                        <para>Sellitem-JSF uses JSF tags for UI and Sellitem uses Spring form tags.</para>
+                    </listitem>
+                    <listitem>
+						<para>
+                        	There is no need to manually track the flow execution key because it is tracked
+							for you in the JSF view root.
+						</para>
                     </listitem>
                 </orderedlist>
                 For more information and understanding on how the Sellitem flow
@@ -2071,6 +2018,36 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
                     Chapter 16 (Portlet MVC Framework)</ulink> from the Spring reference
                     documentation.
                 </para>
+            </sect3>
+            <sect3>
+            	<title>Getting Phonebook Portlet up and Runnign with Apache Pluto</title>
+            	<para>
+            		Since the phonebook portlet was tested with Apache Pluto we've
+            		decided to documents the steps taken to deploy and run it
+            		<orderedlist>
+						<listitem><para>Download the Pluto 1.1 binary distribution named pluto-current-bundle from http://portals.apache.org/pluto</para></listitem>
+						<listitem><para>Unzip the binary distribution to any directory.</para></listitem>
+						<listitem><para>Create the directory [pluto-home]/webapps/swf-phonebook-portlet</para></listitem>
+						<listitem><para>Copy the content of [webflow-release]/spring-webflow-samples/phonebook-portlet/target/artifacts/war-expanded to the directory created in the previous step</para></listitem>
+						<listitem><para>Start Pluto with [pluto-home]/bin/startup</para></listitem>
+						<listitem><para>Go to http://localhost:8080/pluto/portal</para></listitem>
+						<listitem><para>Login as tomcat/tomcat (or any other user but see note below)</para></listitem>
+						<listitem><para>After logging in you will be taken to the Portal Test page.</para></listitem>
+						<listitem><para>Here you will see a Navigation pull-down menu at the top. Select 'Pluto Admin' from it to go to the Pluto Admin page.</para></listitem>
+						<listitem><para>On the Pluto Admin page under Portlet Applications you will see a drop-down with available portlet applications</para></listitem>
+						<listitem><para>Select '/swf-phonebook-portlet' from it, then phonebook from the drop-down next to it, and then press the 'Add Portlet' button</para></listitem>
+						<listitem><para>Use the Navigation menu at the top to go back to the Test Page. The Phonebook portlet should be present.</para></listitem>
+            		</orderedlist>
+            	</para>
+	            <note>
+					The tomcat user must have the 'pluto' role. Open 
+					[pluto-home]/conf/tomcat-users.xml and ensure the 
+					following lines are there:
+					<programlisting>
+&lt;role rolename="pluto"/&gt;
+&lt;user username="tomcat" password="tomcat" roles="tomcat,pluto"/&gt;
+					</programlisting>
+	            </note>            
             </sect3>
         </sect2>
         <sect2>
