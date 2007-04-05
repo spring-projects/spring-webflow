@@ -62,7 +62,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 
 	public Class getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
-			// can't access flow execution by index so we cannot determine type. Return null per JSF spec
+			// cannot access flow execution by index so we cannot determine type. Return null per JSF spec
 			return null;
 		}
 		else {
@@ -82,11 +82,11 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 	}
 
 	public Object getValue(Object base, int index) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.getValue(base, index);
+		if (base instanceof FlowExecution) {
+			throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
 		}
 		else {
-			throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
+			return resolverDelegate.getValue(base, index);
 		}
 	}
 
@@ -122,7 +122,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 
 	public void setValue(Object base, int index, Object value) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
-			throw new ReferenceSyntaxException("Cannot apply an index value to flow scope");
+			throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
 		}
 		else {
 			resolverDelegate.setValue(base, index, value);
