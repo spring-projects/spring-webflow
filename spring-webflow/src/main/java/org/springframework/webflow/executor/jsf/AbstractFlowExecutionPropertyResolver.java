@@ -23,7 +23,7 @@ import javax.faces.el.ReferenceSyntaxException;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Base class for property resolvers that set flow execution attributes.
+ * Base class for property resolvers that get and set flow execution attributes.
  * 
  * @author Keith Donald
  */
