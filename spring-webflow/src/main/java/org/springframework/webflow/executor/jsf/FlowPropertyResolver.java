@@ -26,7 +26,7 @@ import org.springframework.web.jsf.FacesContextUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Custom property resolve that resolves flow session scope attributes from the current flow execution. This resolver
+ * Custom property resolver that resolves flow session scope attributes of the current flow execution. This resolver
  * will also create and set the attribute value to a bean from the root Spring Web Application Context if the value does
  * not already exist, allowing for lazy-initialized binding variables.
  * 

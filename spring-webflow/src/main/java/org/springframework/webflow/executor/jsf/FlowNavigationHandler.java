@@ -152,8 +152,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 			NavigationHandler originalNavigationHandler) {
 		JsfExternalContext context = new JsfExternalContext(facesContext, fromAction, outcome);
 		if (FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
-			// the flow execution has been restored, now see if we need to
-			// signal an event against it
+			// the flow execution has been restored, now see if we need to signal an event against it
 			if (argumentExtractor.isEventIdPresent(context)) {
 				// a flow execution has been restored, signal an event in it
 				String eventId = argumentExtractor.extractEventId(context);
@@ -163,8 +162,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 			}
 		}
 		else {
-			// no flow execution exists, see if we need to launch one if the
-			// flow id is present
+			// no flow execution exists, see if we need to launch one if the flow id is present
 			if (argumentExtractor.isFlowIdPresent(context)) {
 				// a flow execution launch has been requested, start it
 				String flowId = argumentExtractor.extractFlowId(context);
@@ -182,14 +180,6 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 		}
 	}
 
-	private FlowDefinitionLocator getLocator(JsfExternalContext context) {
-		return FlowFacesUtils.getDefinitionLocator(context.getFacesContext());
-	}
-	
-	private FlowExecutionFactory getFactory(JsfExternalContext context) {
-		return FlowFacesUtils.getExecutionFactory(context.getFacesContext());
-	}
-	
 	/**
 	 * Factory method that creates the input attribute map for a newly created
 	 * {@link FlowExecution}. This implementation uses the registered input mapper,
@@ -206,5 +196,15 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 		else {
 			return null;
 		}
+	}
+	
+	// helpers
+	
+	private FlowDefinitionLocator getLocator(JsfExternalContext context) {
+		return FlowFacesUtils.getDefinitionLocator(context.getFacesContext());
+	}
+	
+	private FlowExecutionFactory getFactory(JsfExternalContext context) {
+		return FlowFacesUtils.getExecutionFactory(context.getFacesContext());
 	}
 }
