@@ -30,6 +30,7 @@ import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
@@ -43,6 +44,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * @author Keith Donald
  */
 public class TransitionExecutingStateExceptionHandler implements FlowExecutionExceptionHandler {
+	
+	// this class should really have been called TransitionExecutingFlowExceptionHandler
 
 	private static final Log logger = LogFactory.getLog(TransitionExecutingStateExceptionHandler.class);
 
@@ -108,24 +111,34 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 		return getTargetStateResolver(e) != null;
 	}
 
-	public ViewSelection handle(FlowExecutionException e, RequestControlContext context) {
+	public ViewSelection handle(FlowExecutionException exception, RequestControlContext context) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Handling state exception " + e, e);
+			logger.debug("Handling state exception " + exception, exception);
 		}
-		// expose state exception in flash scope so it's available for response rendering
-		context.getFlashScope().put(STATE_EXCEPTION_ATTRIBUTE, e);
-		Throwable rootCause = findRootCause(e);
+		exposeException(context, exception, findRootCause(exception));
+		actionList.execute(context);
+		return context.execute(new Transition(getTargetStateResolver(exception)));
+	}
+
+	// helpers
+	
+	/**
+	 * Exposes the given flow exception and root cause in flash scope to make
+	 * them available for response rendering. Subclasses can override this
+	 * if they way to expose the exceptions in a different way or do special
+	 * processing before the exceptions are exposed.
+	 * @param context the request control context
+	 * @param exception the exception being handled
+	 * @param rootCause root cause of the exception being handled (could be null) 
+	 */
+	protected void exposeException(RequestContext context, FlowExecutionException exception, Throwable rootCause) {
+		context.getFlashScope().put(STATE_EXCEPTION_ATTRIBUTE, exception);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Exposing state exception root cause " + rootCause + " under attribute '"
 					+ ROOT_CAUSE_EXCEPTION_ATTRIBUTE + "'");
 		}
-		// expose root cause in flash scope so it's available for response rendering
 		context.getFlashScope().put(ROOT_CAUSE_EXCEPTION_ATTRIBUTE, rootCause);
-		actionList.execute(context);
-		return context.execute(new Transition(getTargetStateResolver(e)));
 	}
-
-	// helpers
 
 	/**
 	 * Find the mapped target state resolver for given exception. Returns
