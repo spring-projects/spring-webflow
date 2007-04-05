@@ -17,10 +17,8 @@ package org.springframework.webflow.executor.jsf;
 
 import java.util.Map;
 
-import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.PropertyResolver;
-import javax.faces.el.ReferenceSyntaxException;
 
 import org.springframework.webflow.execution.FlowExecution;
 
@@ -32,7 +30,7 @@ import org.springframework.webflow.execution.FlowExecution;
  * 
  * @author Keith Donald
  */
-public class FlowExecutionPropertyResolver extends PropertyResolver {
+public class FlowExecutionPropertyResolver extends AbstractFlowExecutionPropertyResolver {
 
 	/**
 	 * The name of the special flash scope execution property.
@@ -50,53 +48,24 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 	private static final String CONVERSATION_SCOPE_PROPERTY = "conversationScope";
 
 	/**
-	 * The standard property resolver to delegate to if this one doesn't apply.
-	 */
-	private final PropertyResolver resolverDelegate;
-
-	/**
-	 * Create a new FlowExecutionPropertyResolver using the original PropertyResolver.
-	 * <p>
-	 * A JSF implementation will automatically pass its original resolver into the constructor of a configured resolver,
-	 * provided that there is a corresponding constructor argument.
-	 * 
-	 * @param resolverDelegate the original VariableResolver
+	 * Creates a new flow executon property resolver that resolves flash, flow, and conversation scope attributes.
+	 * @param resolverDelegate the resolver to delegate to when the property is not a flow execution attribute
 	 */
 	public FlowExecutionPropertyResolver(PropertyResolver resolverDelegate) {
-		this.resolverDelegate = resolverDelegate;
+		super(resolverDelegate);
 	}
 
-	public Class getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.getType(base, index);
-		}
-		else {
-			// can't access flow execution property by index - return null
-			return null;
-		}
-	}
-
-	public Class getType(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.getType(base, property);
-		}
-		if (property == null) {
-			throw new PropertyNotFoundException("Unable to get value from flow execution - property (key) is null");
-		}
-		if (!(property instanceof String)) {
-			throw new PropertyNotFoundException("Unable to get value from flow execution - key is non-String");
-		}
-		if (FLASH_SCOPE_PROPERTY.equals(property)) {
+	protected Class doGetAttributeType(FlowExecution execution, String attributeName) {
+		if (FLASH_SCOPE_PROPERTY.equals(attributeName)) {
 			return Map.class;
-		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
+		} else if (FLOW_SCOPE_PROPERTY.equals(attributeName)) {
 			return Map.class;
-		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
+		} else if (CONVERSATION_SCOPE_PROPERTY.equals(attributeName)) {
 			return Map.class;
 		} else {
 			// perform an attribute search
-			FlowExecution execution = (FlowExecution)base;
-			String attributeName = (String)property;
-			// try flash scope
+			
+			// try flash scope first
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
 				return value.getClass();
@@ -111,36 +80,21 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 			if (value != null) {
 				return value.getClass();
 			}
+			// cannot determine
 			return null;
 		}		
 	}
 
-	public Object getValue(Object base, int index) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.getValue(base, index);
-		}
-		else {
-			throw new ReferenceSyntaxException("Cannot apply an index value to flow execution");
-		}
-	}
-
-	public Object getValue(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.getValue(base, property);
-		}
-		if (!(property instanceof String)) {
-			throw new PropertyNotFoundException("Unable to get value from flow execution - key is non-String");
-		}
-		FlowExecution execution = (FlowExecution) base;
-		if (FLASH_SCOPE_PROPERTY.equals(property)) {
+	protected Object doGetAttribute(FlowExecution execution, String attributeName) {
+		if (FLASH_SCOPE_PROPERTY.equals(attributeName)) {
 			return execution.getActiveSession().getFlashMap().asMap();
-		} else if (FLOW_SCOPE_PROPERTY.equals(property)) {
+		} else if (FLOW_SCOPE_PROPERTY.equals(attributeName)) {
 			return execution.getActiveSession().getScope().asMap();
-		} else if (CONVERSATION_SCOPE_PROPERTY.equals(property)) {
+		} else if (CONVERSATION_SCOPE_PROPERTY.equals(attributeName)) {
 			return execution.getConversationScope().asMap();
 		} else {
 			// perform an attribute search
-			String attributeName = (String)property;
+			
 			// try flash scope
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
@@ -156,54 +110,23 @@ public class FlowExecutionPropertyResolver extends PropertyResolver {
 			if (value != null) {
 				return value;
 			}
-			throw new PropertyNotFoundException("Cannot resolve flow execution property '" + property + "'");
-		}
+			// cannot resolve as expected
+			throw new PropertyNotFoundException("Readable flow execution attribute '" + attributeName + "' not found in any scope (flash, flow, or conversation)");
+		}		
 	}
 
-	public boolean isReadOnly(Object base, int index) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.isReadOnly(base, index);
-		}
-		return false;
-	}
-
-	public boolean isReadOnly(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			return resolverDelegate.isReadOnly(base, property);
-		}
-		return false;
-	}
-
-	public void setValue(Object base, int index, Object value) throws EvaluationException, PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			resolverDelegate.setValue(base, index, value);
-		}
-		throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
-	}
-
-	public void setValue(Object base, Object property, Object value) throws EvaluationException,
-			PropertyNotFoundException {
-		if (!(base instanceof FlowExecution)) {
-			resolverDelegate.setValue(base, property, value);
-			return;
-		}
-		if (property == null || !(property instanceof String)
-				|| ((String)property).length() == 0) {
-			throw new PropertyNotFoundException(
-					"Attempt to set flow execution attribute with null name, empty name, or non-String name");
-		}
-		FlowExecution execution = (FlowExecution)base;
-		String attributeName = (String)property;
-		// perform a search: flash, flow, conversation
+	protected void doSetAttribute(FlowExecution execution, String attributeName, Object attributeValue) {
+		// perform a search
 		if (execution.getActiveSession().getFlashMap().contains(attributeName)) {
-			execution.getActiveSession().getFlashMap().put(attributeName, value);
+			execution.getActiveSession().getFlashMap().put(attributeName, attributeValue);
 		}
 		else if (execution.getActiveSession().getScope().contains(attributeName)) {
-			execution.getActiveSession().getScope().put(attributeName, value);
+			execution.getActiveSession().getScope().put(attributeName, attributeValue);
 		} else if (execution.getConversationScope().contains(attributeName)) {
-			execution.getConversationScope().put(attributeName, value);
+			execution.getConversationScope().put(attributeName, attributeValue);
 		} else {
-			throw new PropertyNotFoundException("Settable flow execution property '" + property + "' not found");
-		}
+			// cannot resolve as expected
+			throw new PropertyNotFoundException("Settable flow execution attribute '" + attributeName + "' not found in any scope (flash, flow, or conversation)");
+		}		
 	}
 }

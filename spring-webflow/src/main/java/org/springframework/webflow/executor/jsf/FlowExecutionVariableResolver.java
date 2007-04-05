@@ -46,33 +46,26 @@ public class FlowExecutionVariableResolver extends VariableResolver {
 	private VariableResolver resolverDelegate;
 
 	/**
-	 * Create a new FlowExecutionVariableResolver, using the given original VariableResolver.
-	 * <p>
-	 * A JSF implementation will automatically pass its original resolver into the constructor of a configured resolver,
-	 * provided that there is a corresponding constructor argument.
-	 * 
-	 * @param resolverDelegate the original VariableResolver
+	 * Creates a new flow executon variable resolver that resolves the current FlowExecution object.
+	 * @param resolverDelegate the resolver to delegate to when the variable is not named "flowExecution".
 	 */
 	public FlowExecutionVariableResolver(VariableResolver resolverDelegate) {
 		this.resolverDelegate = resolverDelegate;
 	}
 
 	/**
-	 * Return the original VariableResolver that this resolver delegates to.
+	 * Returns the variable resolver this resolver delegates to if necessary.
 	 */
 	protected final VariableResolver getResolverDelegate() {
 		return resolverDelegate;
 	}
 
-	/**
-	 * Check for the special "flow" variable first, then delegate to the original VariableResolver.
-	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
-		if (!FLOW_EXECUTION_VARIABLE_NAME.equals(name)) {
-			return resolverDelegate.resolveVariable(context, name);
+		if (FLOW_EXECUTION_VARIABLE_NAME.equals(name)) {
+			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
 		}
 		else {
-			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
+			return resolverDelegate.resolveVariable(context, name);
 		}
 	}
 }

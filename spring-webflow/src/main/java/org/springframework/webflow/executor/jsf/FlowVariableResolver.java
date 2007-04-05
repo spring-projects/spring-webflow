@@ -20,9 +20,16 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
 /**
- * Custom variable resolver that resolves to a thread-bound FlowExecution object
- * for binding expressions prefixed with {@link #FLOW_SCOPE_VARIABLE}. For instance
- * "flowScope.myBean.myProperty".
+ * Custom variable resolver that resolves the current FlowExecution object for binding expressions prefixed with
+ * {@link #FLOW_SCOPE_VARIABLE}. For instance "flowScope.myBean.myProperty". Designed to be used in conjunction with
+ * {@link FlowPropertyResolver} only.
+ * 
+ * This class is the original flow execution variable resolver implementation introduced in Spring Web Flow's JSF
+ * support available since 1.0. In general, prefer use of {@link DelegatingFlowVariableResolver} or
+ * {@link FlowExecutionVariableResolver} to this implementation as they are both considerably more flexible.
+ * 
+ * This resolver should only be used with the {@link FlowPropertyResolver} which can only resolve flow-scoped variables.
+ * May be deprecated in a future release of Spring Web Flow.
  * 
  * @author Colin Sampaleanu
  */
@@ -39,12 +46,10 @@ public class FlowVariableResolver extends VariableResolver {
 	private VariableResolver resolverDelegate;
 
 	/**
-	 * Create a new FlowVariableResolver, using the given original
-	 * VariableResolver.
+	 * Create a new FlowVariableResolver, using the given original VariableResolver.
 	 * <p>
-	 * A JSF implementation will automatically pass its original resolver into
-	 * the constructor of a configured resolver, provided that there is a
-	 * corresponding constructor argument.
+	 * A JSF implementation will automatically pass its original resolver into the constructor of a configured resolver,
+	 * provided that there is a corresponding constructor argument.
 	 * 
 	 * @param resolverDelegate the original VariableResolver
 	 */
@@ -59,16 +64,12 @@ public class FlowVariableResolver extends VariableResolver {
 		return resolverDelegate;
 	}
 
-	/**
-	 * Check for the special "flow" variable first, then delegate to the
-	 * original VariableResolver.
-	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
-		if (!FLOW_SCOPE_VARIABLE.equals(name)) {
-			return resolverDelegate.resolveVariable(context, name);
+		if (FLOW_SCOPE_VARIABLE.equals(name)) {
+			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
 		}
 		else {
-			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
+			return resolverDelegate.resolveVariable(context, name);
 		}
 	}
 }
