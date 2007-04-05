@@ -86,7 +86,7 @@ public class FlowExecutionHolderUtils {
 		}
 		else {
 			throw new EvaluationException("No current FlowExecution bound to the Faces Context "
-					+ "- was the current flow execution restored before any components referenced it? "
+					+ "- was the current flow execution not restored before a view referenced it? "
 					+ "Has the flow execution ended or expired?");
 		}
 	}
