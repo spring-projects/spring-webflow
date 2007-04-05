@@ -60,24 +60,38 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Returns the current flow execution holder for the given faces context.
+	 * Returns the current flow execution in the given faces context.
 	 * @param context faces context
-	 * @return the flow execution holder or <code>null</code> if none set
-	 * @throws EvaluationException if no flow execution was bound
+	 * @return the flow execution or <code>null</code> if no execution is bound
 	 */
-	public static FlowExecution getRequiredCurrentFlowExecution(FacesContext context) throws EvaluationException {
+	public static FlowExecution getCurrentFlowExecution(FacesContext context) {
 		FlowExecutionHolder holder = getFlowExecutionHolder(context);
 		if (holder != null) {
 			return holder.getFlowExecution();
-		}
-		else {
-			throw new EvaluationException(
-					"FlowExecution is not bound to current thread context - has the flow ended or expired?");
+		} else {
+			return null;
 		}
 	}
 	
+	/**
+	 * Returns the current required flow execution in the given faces context.
+	 * @param context faces context
+	 * @return the flow execution
+	 * @throws EvaluationException if no flow execution was bound
+	 */
+	public static FlowExecution getRequiredCurrentFlowExecution(FacesContext context) throws EvaluationException {
+		FlowExecution execution = getCurrentFlowExecution(context);
+		if (execution != null) {
+			return execution;
+		}
+		else {
+			throw new EvaluationException("No current FlowExecution bound to the Faces Context "
+					+ "- was the current flow execution restored before any components referenced it? "
+					+ "Has the flow execution ended or expired?");
+		}
+	}
+
 	private static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
-
 }

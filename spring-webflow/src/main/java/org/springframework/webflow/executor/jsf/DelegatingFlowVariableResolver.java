@@ -66,20 +66,20 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 	 * chain.
 	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
-		FlowExecution execution = FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
-		// try flash/flow/conversation
-		if (execution.getActiveSession().getFlashMap().contains(name)) {
-			return execution.getActiveSession().getFlashMap().get(name);
+		FlowExecution execution = FlowExecutionHolderUtils.getCurrentFlowExecution(context);
+		if (execution != null) {
+			// try flash/flow/conversation
+			if (execution.getActiveSession().getFlashMap().contains(name)) {
+				return execution.getActiveSession().getFlashMap().get(name);
+			}
+			else if (execution.getActiveSession().getScope().contains(name)) {
+				return execution.getActiveSession().getScope().get(name);
+			}
+			else if (execution.getConversationScope().contains(name)) {
+				return execution.getConversationScope().get(name);
+			}
 		}
-		else if (execution.getActiveSession().getScope().contains(name)) {
-			return execution.getActiveSession().getScope().get(name);
-		}
-		else if (execution.getConversationScope().contains(name)) {
-			return execution.getConversationScope().get(name);
-		}
-		else {
-			// neither found a value, delegate to next resolver in the chain
-			return resolverDelegate.resolveVariable(context, name);
-		}
+		// no flow execution bound or flow execution attribute found with that name - delegate
+		return resolverDelegate.resolveVariable(context, name);
 	}
 }
