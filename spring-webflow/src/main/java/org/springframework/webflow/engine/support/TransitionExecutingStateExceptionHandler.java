@@ -125,13 +125,15 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	/**
 	 * Exposes the given flow exception and root cause in flash scope to make
 	 * them available for response rendering. Subclasses can override this
-	 * if they way to expose the exceptions in a different way or do special
+	 * if they want to expose the exceptions in a different way or do special
 	 * processing before the exceptions are exposed.
 	 * @param context the request control context
 	 * @param exception the exception being handled
 	 * @param rootCause root cause of the exception being handled (could be null) 
 	 */
 	protected void exposeException(RequestContext context, FlowExecutionException exception, Throwable rootCause) {
+		// note that all Throwables are Serializable so putting them in flash
+		// scope should not be a problem
 		context.getFlashScope().put(STATE_EXCEPTION_ATTRIBUTE, exception);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Exposing state exception root cause " + rootCause + " under attribute '"

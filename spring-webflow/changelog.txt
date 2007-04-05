@@ -46,7 +46,7 @@ Package org.springframework.webflow.engine
 * Added BeanFactoryFlowVariable(String, BeanFactory, ScopeType) convenience constructor to the
   BeanFactoryFlowVariable.
 * Added settableExpression() method to AbstractFlowBuilder.
-* Added new exposeException() hook method to TransitionExecutingStateExceptionHandler.
+* Added new exposeException() hook method to TransitionExecutingStateExceptionHandler (SWF-280).
 
 Package org.springframework.webflow.execution
 * Added FlowExecutionListener.sessionCreated(RequestContext, FlowSession) callback, useful for
