@@ -24,14 +24,15 @@ import org.springframework.webflow.execution.FlowExecution;
 
 /**
  * Custom variable resolver that searches the current flow execution for variables to resolve. The search algorithm
- * looks in flash scope first, then flow scope, then conversation scope. If no variable is found, this resolver
+ * looks in flash scope first, then flow scope, then conversation scope. If no variable is found this resolver
  * delegates to the next resolver in the chain.
  * 
  * Suitable for use along side other variable resolvers to support EL binding expressions like {#bean.property} where
  * "bean" could be a property in any supported scope.
  * 
  * Consider combining use of this class with a Spring {@link DelegatingVariableResolver} to also support lazy-initialized
- * binding variables managed by a Spring application context using custom bean scopes.
+ * binding variables managed by a Spring application context using custom bean scopes.  Also consider such a Spring-backed
+ * managed bean facility as the sole-provider for centralized JSF managed bean references.
  * 
  * @author Keith Donald
  */
@@ -80,6 +81,6 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 			}
 		}
 		// no flow execution bound or flow execution attribute found with that name - delegate
-		return resolverDelegate.resolveVariable(context, name);
+		return resolverDelegate.resolveVariable(context, name);		
 	}
 }
