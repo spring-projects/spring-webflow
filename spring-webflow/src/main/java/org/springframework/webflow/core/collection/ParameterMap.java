@@ -22,6 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * An interface for accessing parameters in a backing map. Parameters are
  * immutable and have string keys and string values.
+ * <p>
+ * The accessor methods offered by this class taking a target type argument
+ * only need to support conversions to well know types like String, Number subclasses,
+ * Boolean and so on.
  * 
  * @author Keith Donald
  */
