@@ -33,7 +33,6 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
-import org.springframework.webflow.test.MockFlowServiceLocator;
 
 /**
  * Miscellaneous flow execution tests.
