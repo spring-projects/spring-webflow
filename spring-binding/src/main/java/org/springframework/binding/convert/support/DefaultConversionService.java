@@ -47,7 +47,7 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new TextToBoolean());
 		addConverter(new TextToLabeledEnum());
 		
-		// we're not using addDefaultAlias here for efficieny reasons
+		// we're not using addDefaultAlias here for efficiency reasons
 		addAlias("string", String.class);
 		addAlias("short", Short.class);
 		addAlias("integer", Integer.class);
