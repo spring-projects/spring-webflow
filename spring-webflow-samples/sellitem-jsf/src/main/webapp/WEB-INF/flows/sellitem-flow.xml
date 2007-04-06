@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
-	<var name="sale" class="org.springframework.webflow.samples.sellitem.Sale"/>
+	<var name="sale" class="org.springframework.webflow.samples.sellitem.Sale" scope="conversation"/>
 	
 	<start-state idref="enterPriceAndItemCount" />
 
@@ -17,7 +17,7 @@
 	</view-state>
 
 	<decision-state id="requiresShipping">
-		<if test="${flowScope.sale.shipping}" then="enterShippingDetails" else="processSale" />
+		<if test="${conversationScope.sale.shipping}" then="enterShippingDetails" else="processSale" />
 	</decision-state>
 
 	<view-state id="enterShippingDetails" view="/shippingDetailsForm.jsp">
