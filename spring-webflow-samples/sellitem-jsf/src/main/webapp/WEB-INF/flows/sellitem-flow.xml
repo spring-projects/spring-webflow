@@ -27,7 +27,7 @@
 	<action-state id="processSale">
 		<bean-action bean="saleProcessor" method="process">
 			<method-arguments>
-				<argument expression="flowScope.sale" />
+				<argument expression="conversationScope.sale" />
 			</method-arguments>
 		</bean-action>
 		<transition on="success" to="showCostOverview" />
