@@ -58,26 +58,22 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * This phase listener implements the following algorithm:
  * <ul>
  * <li>On BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is participating in if a call to
- * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)} returns a submitted flow execution
- * identifier. Place the restored flow execution in a holder that other JSF artifacts such as VariableResolvers,
- * PropertyResolvers, and NavigationHandlers may access during the request lifecycle.
+ * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)} returns a submitted flow execution key.
+ * Place the restored flow execution in a holder that other JSF artifacts such as VariableResolvers, PropertyResolvers,
+ * and NavigationHandlers may access during the request lifecycle.
  * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase generate a new key for
- * identifying the updated execution within a the selected {@link FlowExecutionRepository}. Expose managed flow
- * execution attributes to the views before rendering.
+ * identifying the updated execution within a the selected {@link FlowExecutionRepository}. Expose the new flow
+ * execution key as a component in the view root for restoration on the next request. Expose managed flow execution
+ * attributes to the views before rendering.
  * <li>On AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase <em>save</em> the updated
  * execution to the repository using the new key generated in the BEFORE_RENDER_RESPONSE phase.
  * </ul>
  * 
  * @author Colin Sampaleanu
  * @author Keith Donald
+ * @author Jeremy Grelle 
  */
 public class FlowPhaseListener implements PhaseListener {
-
-	/**
-	 * The name of the attribute the flow execution key will be tracked under in the JSF View Root for managing the
-	 * current flow execution key.
-	 */
-	private static final String FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE = "_flowExecutionKey";
 
 	/**
 	 * Logger, usable by subclasses.
@@ -157,7 +153,11 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	public void beforePhase(PhaseEvent event) {
-		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
+			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
+			restoreFlowExecution(event.getFacesContext());
+		}
+		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 				prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(event
 						.getFacesContext()));
@@ -166,11 +166,7 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	public void afterPhase(PhaseEvent event) {
-		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
-			restoreFlowExecution(event.getFacesContext());
-		}
-		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			try {
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(event
@@ -193,29 +189,18 @@ public class FlowPhaseListener implements PhaseListener {
 
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
-		if (argumentHandler.isFlowExecutionKeyPresent(context) || isFlowExecutionKeyInViewRoot(facesContext)) {
-			// restore flow execution from repository so it will be
-			// available to variable/property resolvers and the flow
-			// navigation handler (this could happen as part of a submission or
-			// flow execution redirect)
+		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
+			// restore flow execution from repository so it will be available to variable/property resolvers
+			// and the flow navigation handler (this could happen as part of a submission or flow execution redirect)
 			FlowExecutionRepository repository = getRepository(context);
-			FlowExecutionKey flowExecutionKey;
-			if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-				// extract it in the "traditional way" (request parameter in url by default)
-				flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler.extractFlowExecutionKey(context));
-			}
-			else {
-				// restore the key from an attribute in the root of the component tree
-				flowExecutionKey = repository.parseFlowExecutionKey((String) facesContext.getViewRoot().getAttributes()
-						.get(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE));
-				// remove it (it should always be placed back before response rendering)
-				facesContext.getViewRoot().getAttributes().remove(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE);
-			}
+			// extract key in the "traditional way" (request parameter in url by default)
+			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
+					.extractFlowExecutionKey(context));
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			lock.lock();
 			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded existing flow execution from repository with id '" + flowExecutionKey + "'");
+				logger.debug("Loaded existing flow execution from repository with key '" + flowExecutionKey + "'");
 			}
 			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution,
 					lock), facesContext);
@@ -311,11 +296,7 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 		String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString() : null;
 		if (flowExecutionKey != null) {
-			// expose to view root for preservation in the component tree
-			if (viewRootAttributeMapPresent(facesContext)) {
-				facesContext.getViewRoot().getAttributes()
-						.put(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE, flowExecutionKey);
-			}
+			saveInViewRoot(facesContext, flowExecutionKey);
 		}
 		Map requestMap = facesContext.getExternalContext().getRequestMap();
 		argumentHandler.exposeFlowExecutionContext(flowExecutionKey, holder.getFlowExecution(), requestMap);
@@ -353,35 +334,6 @@ public class FlowPhaseListener implements PhaseListener {
 		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
 	}
 
-	/**
-	 * Returns true if the root of the component tree contains the flow execution key attribute, used to restore the
-	 * flow execution on subsequent reqests.
-	 * @param facesContext the key
-	 * @return true if yes, false otherwise
-	 */
-	private boolean isFlowExecutionKeyInViewRoot(FacesContext facesContext) {
-		if (viewRootAttributeMapPresent(facesContext)) {
-			return facesContext.getViewRoot().getAttributes().containsKey(FLOW_EXECUTION_KEY_VIEW_ROOT_ATTRIBUTE);
-		}
-		else {
-			return false;
-		}
-	}
-
-	/**
-	 * Simple little helper that returns true if the view root attribute map is non-null.
-	 * @param facesContext the faces context
-	 * @return true if so, false otherwise
-	 */
-	private boolean viewRootAttributeMapPresent(FacesContext facesContext) {
-		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getAttributes() != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
 	private void updateViewRoot(FacesContext facesContext, String viewId) {
 		UIViewRoot viewRoot = facesContext.getViewRoot();
 		if (viewRoot == null || hasViewChanged(viewRoot, viewId)) {
@@ -396,11 +348,27 @@ public class FlowPhaseListener implements PhaseListener {
 		return !viewRoot.getViewId().equals(viewId);
 	}
 
+	/**
+	 * Saves the flow execution key in a component in the view root for restoration on subsequent RESTORE_VIEW operations.
+	 * @param facesContext the faces context exposing the view root
+	 * @param flowExecutionKey the flow execution key
+	 */
+	private void saveInViewRoot(FacesContext facesContext, String flowExecutionKey) {
+		// search for key holder in the component tree
+		FlowExecutionKeyStateHolder keyHolder = (FlowExecutionKeyStateHolder) facesContext.getViewRoot()
+				.findComponent(FlowExecutionKeyStateHolder.COMPONENT_ID);
+		if (keyHolder == null) {
+			keyHolder = new FlowExecutionKeyStateHolder();
+			// expose as the first component in the view root for preservation in the tree
+			facesContext.getViewRoot().getChildren().add(0, keyHolder);
+		}
+		keyHolder.setFlowExecutionKey(flowExecutionKey);
+	}
+
 	private void generateKey(JsfExternalContext context, FlowExecutionHolder holder) {
 		FlowExecution flowExecution = holder.getFlowExecution();
 		if (flowExecution.isActive()) {
-			// generate new continuation key for the flow execution
-			// before rendering the response
+			// generate new continuation key for the flow execution before rendering the response
 			FlowExecutionKey flowExecutionKey = holder.getFlowExecutionKey();
 			FlowExecutionRepository repository = getRepository(context);
 			if (flowExecutionKey == null) {
@@ -408,8 +376,7 @@ public class FlowPhaseListener implements PhaseListener {
 				flowExecutionKey = repository.generateKey(flowExecution);
 			}
 			else {
-				// it is an existing conversaiton, use same conversation id,
-				// generate a new continuation id
+				// it is an existing conversaiton, use same conversation id, generate a new continuation id
 				flowExecutionKey = repository.getNextKey(flowExecution, flowExecutionKey);
 			}
 			holder.setFlowExecutionKey(flowExecutionKey);
@@ -448,15 +415,6 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
-	/**
-	 * Standard default view id resolver which uses the web flow view name as the jsf view id
-	 */
-	public static class DefaultViewIdMapper implements ViewIdMapper {
-		public String mapViewId(String viewName) {
-			return viewName;
-		}
-	}
-
 	private FlowDefinitionLocator getLocator(JsfExternalContext context) {
 		return FlowFacesUtils.getDefinitionLocator(context.getFacesContext());
 	}
@@ -467,5 +425,14 @@ public class FlowPhaseListener implements PhaseListener {
 
 	private FlowExecutionRepository getRepository(JsfExternalContext context) {
 		return FlowFacesUtils.getExecutionRepository(context.getFacesContext());
+	}
+
+	/**
+	 * Standard default view id resolver which uses the web flow view name as the jsf view id
+	 */
+	public static class DefaultViewIdMapper implements ViewIdMapper {
+		public String mapViewId(String viewName) {
+			return viewName;
+		}
 	}
 }
