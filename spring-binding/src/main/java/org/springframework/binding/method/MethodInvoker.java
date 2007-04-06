@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.method;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
@@ -98,6 +99,9 @@ public class MethodInvoker {
 				logger.debug("Invoked method with signature [" + key + "] returned value [" + returnValue + "]");
 			}
 			return returnValue;
+		}
+		catch (InvocationTargetException e) {
+			throw new MethodInvocationException(signature, arguments, e.getTargetException());
 		}
 		catch (Exception e) {
 			throw new MethodInvocationException(signature, arguments, e);
