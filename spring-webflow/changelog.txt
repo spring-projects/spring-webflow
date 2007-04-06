@@ -13,7 +13,9 @@ Package org.springframework.binding
   caller (SWF-255).
 * OgnlExpressionParser now supports OGNL collection construction syntax (SWF-274).
 * AbstractExpressionParser now has a doParseSettableExpression() template method.
-
+* MethodInvoker now unwraps an InvocationTargetException to make the target exception directly
+  available as the cause of a MethodInvocationException.
+  
 Package org.springframework.webflow.action
 * FormAction methods doBind() and createBinder() now declare "throws Exception".
 * FormAction now consistently uses the getters to get property values (SWF-251).
