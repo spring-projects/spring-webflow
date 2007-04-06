@@ -25,15 +25,14 @@ import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 
 /**
- * Flow executor argument handler that wraps another argument handler
- * and applies a flow id mapping. This can be used to avoid literal flow ids in
- * URLs that launch flows.
+ * Flow executor argument handler that wraps another argument handler and applies a public to private flow id mapping.
+ * This can be used to avoid literal flow ids in URLs that launch flows.
  * <p>
- * For example, when used in combination with {@link RequestParameterFlowExecutorArgumentHandler}
- * the url <code>http://localhost/springair/reservation/booking.html</code> would
- * launch a new execution of the <code>booking-flow</code> flow, assuming a context path of
- * <code>/springair</code>, a servlet mapping of <code>/reservation/*</code> and a flow id
- * mapping of <code>booking-&gt;booking-flow</code>.
+ * For example, when used in combination with {@link RequestPathFlowExecutorArgumentHandler} the url
+ * <code>http://localhost/springair/reservation/booking.html</code> would launch a new execution of the
+ * <code>booking-flow</code> flow, assuming a context path of <code>/springair</code>, a servlet mapping of
+ * <code>/reservation/*</code> and a flow id mapping of <code>booking-&gt;booking-flow</code>
+ * (the .html suffix would be removed by {@link RequestPathFlowExecutorArgumentHandler#extractFlowId(ExternalContext)}.
  * 
  * @see RequestParameterFlowExecutorArgumentHandler
  * @see RequestPathFlowExecutorArgumentHandler
@@ -42,12 +41,27 @@ import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
  * @author Erwin Vervaet
  */
 public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHandler {
-	
-	private FlowExecutorArgumentHandler argumentHandler;
+
+	/**
+	 * The mappings between client-submitted flow identifiers and internal flow identifiers.
+	 */
 	private Properties mappings = new Properties();
+
+	/**
+	 * The reverse: mappings between internal flow identifiers and client-submitted flow identifiers.
+	 */
 	private Properties reverseMappings = new Properties();
+
+	/**
+	 * Whether or not to fallback to the argument handler delegate if no mapping is found.
+	 */
 	private boolean fallback = true;
-	
+
+	/**
+	 * The argument handler delegate this handler wraps.
+	 */
+	private FlowExecutorArgumentHandler argumentHandler;
+
 	/**
 	 * Default constructor for bean style usage.
 	 * @see #setArgumentHandler(FlowExecutorArgumentHandler)
@@ -70,52 +84,53 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 	public void setArgumentHandler(FlowExecutorArgumentHandler argumentHandler) {
 		this.argumentHandler = argumentHandler;
 	}
-	
+
 	/**
-	 * Returns the flow id mappings in use.
+	 * Returns the public-to-private flow id mappings in use.
 	 */
 	protected Properties getMappings() {
 		return mappings;
 	}
 
 	/**
-	 * Set the flow id mappings to use, overwriting any previous mappings.
+	 * Set the mappings between client-submitted flow identifiers and internal flow identifiers. Overwrites any previous
+	 * mappings.
+	 * @param mappings the public to private flow id mappings
 	 */
 	public void setMappings(Properties mappings) {
-		for (Enumeration fromFlowIds = mappings.propertyNames(); fromFlowIds.hasMoreElements(); ) {
-			String fromFlowId = (String)fromFlowIds.nextElement();
-			String toFlowId = mappings.getProperty(fromFlowId);
-			addMapping(fromFlowId, toFlowId);
+		for (Enumeration publicFlowIds = mappings.propertyNames(); publicFlowIds.hasMoreElements();) {
+			String publicId = (String) publicFlowIds.nextElement();
+			String privateId = mappings.getProperty(publicId);
+			addMapping(publicId, privateId);
 		}
 	}
-	
+
 	/**
-	 * Add a flow id mapping, overwriting any previous mapping for the same
-	 * flow ids.
+	 * Add a flow id mapping, overwriting any previous mapping for the same flow ids.
+	 * @param publicFlowId how the flow will be identified publically (to web clients)
+	 * @param privateFlowId how the flow is identified internally (in the flow definition registry)
 	 */
-	public void addMapping(String fromFlowId, String toFlowId) {
-		mappings.setProperty(fromFlowId, toFlowId);
-		reverseMappings.setProperty(toFlowId, fromFlowId);
+	public void addMapping(String publicFlowId, String privateFlowId) {
+		mappings.setProperty(publicFlowId, privateFlowId);
+		reverseMappings.setProperty(privateFlowId, publicFlowId);
 	}
-	
+
 	/**
-	 * Should we fall back to the flow id extracted by the wrapped argument
-	 * handler if no mapping is defined for a flow id? Default is true.
+	 * Should we fall back to the flow id extracted by the wrapped argument handler if no mapping is defined for a flow
+	 * id? Default is true.
 	 */
 	public boolean isFallback() {
 		return fallback;
 	}
-	
+
 	/**
-	 * Set whether or not to fall back on the flow id extracted by the
-	 * wrapped argument handler if no mapping is defined for a flow id.
-	 * Default is true. When false an exception is thrown when there is
-	 * a mapping failure.
+	 * Set whether or not to fall back on the flow id extracted by the wrapped argument handler if no mapping is defined
+	 * for a flow id. Default is true. When false an exception is thrown when there is a mapping failure.
 	 */
 	public void setFallback(boolean fallback) {
 		this.fallback = fallback;
 	}
-	
+
 	public boolean isFlowIdPresent(ExternalContext context) {
 		if (argumentHandler.isFlowIdPresent(context)) {
 			return fallback || mappings.containsKey(argumentHandler.extractFlowId(context));
@@ -126,21 +141,20 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 	}
 
 	public String extractFlowId(ExternalContext context) throws FlowExecutorArgumentExtractionException {
-		String originalFlowId = argumentHandler.extractFlowId(context);
-		String flowId = mappings.getProperty(originalFlowId);
+		String publicFlowId = argumentHandler.extractFlowId(context);
+		String flowId = mappings.getProperty(publicFlowId);
 		if (!StringUtils.hasText(flowId)) {
 			if (fallback) {
-				flowId = originalFlowId;
+				flowId = publicFlowId;
 			}
 			else {
-				throw new FlowExecutorArgumentExtractionException(
-						"Unable to extract flow definition id: no mapping was defined for flow id '" +
-						originalFlowId + "'");
+				throw new FlowExecutorArgumentExtractionException("Unable to extract flow definition id:  "
+						+ "no mapping was defined for '" + publicFlowId + "'");
 			}
 		}
 		return flowId;
 	}
-	
+
 	public boolean isFlowExecutionKeyPresent(ExternalContext context) {
 		return argumentHandler.isFlowExecutionKeyPresent(context);
 	}
@@ -159,24 +173,24 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 
 	public String createFlowDefinitionUrl(FlowDefinitionRedirect flowDefinitionRedirect, ExternalContext context) {
 		// do reverse mapping
-		String flowId = reverseMappings.getProperty(flowDefinitionRedirect.getFlowDefinitionId());
-		if (!StringUtils.hasText(flowId)) {
+		String publicFlowId = reverseMappings.getProperty(flowDefinitionRedirect.getFlowDefinitionId());
+		if (!StringUtils.hasText(publicFlowId)) {
 			if (fallback) {
-				flowId = flowDefinitionRedirect.getFlowDefinitionId();
+				publicFlowId = flowDefinitionRedirect.getFlowDefinitionId();
 			}
 			else {
 				// this is a mapping problem
-				throw new IllegalArgumentException(
-						"Unable to create a flow definition URL for '" + flowDefinitionRedirect + "': " + 
-						"no reverse mapping was defined for flow id '" + flowDefinitionRedirect.getFlowDefinitionId() + "'");
+				throw new IllegalArgumentException("Unable to create a flow definition URL for '"
+						+ flowDefinitionRedirect + "': " + "no reverse mapping was defined for flow id '"
+						+ flowDefinitionRedirect.getFlowDefinitionId() + "'");
 			}
 		}
-		flowDefinitionRedirect = new FlowDefinitionRedirect(flowId, flowDefinitionRedirect.getExecutionInput());
+		flowDefinitionRedirect = new FlowDefinitionRedirect(publicFlowId, flowDefinitionRedirect.getExecutionInput());
 		return argumentHandler.createFlowDefinitionUrl(flowDefinitionRedirect, context);
 	}
 
-	public String createFlowExecutionUrl(String flowExecutionKey,
-			FlowExecutionContext flowExecution, ExternalContext context) {
+	public String createFlowExecutionUrl(String flowExecutionKey, FlowExecutionContext flowExecution,
+			ExternalContext context) {
 		return argumentHandler.createFlowExecutionUrl(flowExecutionKey, flowExecution, context);
 	}
 
