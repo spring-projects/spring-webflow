@@ -20,13 +20,14 @@
 		<ul>
 			<li>Using Spring Web Flow with JSF</li>
 			<li>Implementing a wizard using web flows.</li>
+			<li>Use of conversation scope.</li>
+			<li>Using expressions to apply dynamic flow navigation rules</li>
 			<li>Using continuations to make the flow completely stable, no matter how browser navigation buttons are used.</li>
+			<li>"Always redirect on pause" to benefit from the POST+REDIRECT+GET pattern with no special coding.</li>
 			<li>
 				Using "conversation invalidation after completion" to prevent duplicate submits of the same sale
-				while taking advantage of continuations to allow back button usage while the application transaction is in process.				</li>
-			<li>"Always redirect on pause" to benefit from the POST+REDIRECT+GET pattern with no special coding.</li>
-			<li>Using <A href="http://www.ognl.org/">OGNL</A> based conditional expressions.</li>
-			<li>Use of subflows to compose a multi-step business process from independently reusable modules.</li>
+				while taking advantage of continuations to allow back button usage while the application transaction is in process.
+			</li>
 		</ul>
 	</div>
 </f:view>
