@@ -68,7 +68,8 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
 		FlowExecution execution = FlowExecutionHolderUtils.getCurrentFlowExecution(context);
-		if (execution != null) {
+		// flow execution must be present and active (note: which means variables cannot be resolved from end-state views)
+		if (execution != null && execution.isActive()) {
 			// try flash/flow/conversation
 			if (execution.getActiveSession().getFlashMap().contains(name)) {
 				return execution.getActiveSession().getFlashMap().get(name);
@@ -80,7 +81,7 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 				return execution.getConversationScope().get(name);
 			}
 		}
-		// no flow execution bound or flow execution attribute found with that name - delegate
+		// no active flow execution bound or flow execution attribute found with that name - delegate
 		return resolverDelegate.resolveVariable(context, name);		
 	}
 }
