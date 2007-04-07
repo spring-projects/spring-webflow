@@ -191,7 +191,7 @@ public class FlowPhaseListener implements PhaseListener {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
 			// restore flow execution from repository so it will be available to variable/property resolvers
-			// and the flow navigation handler (this could happen as part of a submission or flow execution redirect)
+			// and the flow navigation handler (this could happen as part of a flow execution redirect)
 			FlowExecutionRepository repository = getRepository(context);
 			// extract key in the "traditional way" (request parameter in url by default)
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
