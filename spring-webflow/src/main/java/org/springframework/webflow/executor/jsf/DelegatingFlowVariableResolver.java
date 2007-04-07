@@ -24,15 +24,15 @@ import org.springframework.webflow.execution.FlowExecution;
 
 /**
  * Custom variable resolver that searches the current flow execution for variables to resolve. The search algorithm
- * looks in flash scope first, then flow scope, then conversation scope. If no variable is found this resolver
- * delegates to the next resolver in the chain.
+ * looks in flash scope first, then flow scope, then conversation scope. If no variable is found this resolver delegates
+ * to the next resolver in the chain.
  * 
  * Suitable for use along side other variable resolvers to support EL binding expressions like {#bean.property} where
  * "bean" could be a property in any supported scope.
  * 
- * Consider combining use of this class with a Spring {@link DelegatingVariableResolver} to also support lazy-initialized
- * binding variables managed by a Spring application context using custom bean scopes.  Also consider such a Spring-backed
- * managed bean facility as the sole-provider for centralized JSF managed bean references.
+ * Consider combining use of this class with a Spring {@link DelegatingVariableResolver} to also support
+ * lazy-initialized binding variables managed by a Spring application context using custom bean scopes. Also consider
+ * such a Spring-backed managed bean facility as the sole-provider for centralized JSF managed bean references.
  * 
  * @author Keith Donald
  */
@@ -62,26 +62,28 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 		return resolverDelegate;
 	}
 
-	/**
-	 * Check flash/flow/conversation scope. If the variable is not found, delegate to next variable resolver in the
-	 * chain.
-	 */
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
 		FlowExecution execution = FlowExecutionHolderUtils.getCurrentFlowExecution(context);
-		// flow execution must be present and active (note: which means variables cannot be resolved from end-state views)
-		if (execution != null && execution.isActive()) {
-			// try flash/flow/conversation
-			if (execution.getActiveSession().getFlashMap().contains(name)) {
-				return execution.getActiveSession().getFlashMap().get(name);
-			}
-			else if (execution.getActiveSession().getScope().contains(name)) {
-				return execution.getActiveSession().getScope().get(name);
-			}
-			else if (execution.getConversationScope().contains(name)) {
-				return execution.getConversationScope().get(name);
+		if (execution != null) {
+			if (execution.isActive()) {
+				// flow execution is active: try flash/flow/conversation scope
+				if (execution.getActiveSession().getFlashMap().contains(name)) {
+					return execution.getActiveSession().getFlashMap().get(name);
+				}
+				else if (execution.getActiveSession().getScope().contains(name)) {
+					return execution.getActiveSession().getScope().get(name);
+				}
+				else if (execution.getConversationScope().contains(name)) {
+					return execution.getConversationScope().get(name);
+				}
+			} else {
+				// flow execution has ended: check for end-state attributes exposed in the request map
+				if (context.getExternalContext().getRequestMap().containsKey(name)) {
+					return context.getExternalContext().getRequestMap().get(name);
+				}
 			}
 		}
-		// no active flow execution bound or flow execution attribute found with that name - delegate
-		return resolverDelegate.resolveVariable(context, name);		
+		// no flow execution bound or flow execution attribute found with that name - delegate
+		return resolverDelegate.resolveVariable(context, name);
 	}
 }
