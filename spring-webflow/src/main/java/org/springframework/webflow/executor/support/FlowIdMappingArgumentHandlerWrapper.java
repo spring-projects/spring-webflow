@@ -148,7 +148,7 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 				flowId = publicFlowId;
 			}
 			else {
-				throw new FlowExecutorArgumentExtractionException("Unable to extract flow definition id:  "
+				throw new FlowExecutorArgumentExtractionException("Unable to extract flow definition id: "
 						+ "no mapping was defined for '" + publicFlowId + "'");
 			}
 		}
@@ -181,7 +181,7 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 			else {
 				// this is a mapping problem
 				throw new IllegalArgumentException("Unable to create a flow definition URL for '"
-						+ flowDefinitionRedirect + "': " + "no reverse mapping was defined for flow id '"
+						+ flowDefinitionRedirect + "': no reverse mapping was defined for flow id '"
 						+ flowDefinitionRedirect.getFlowDefinitionId() + "'");
 			}
 		}
