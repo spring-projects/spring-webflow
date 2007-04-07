@@ -1,4 +1,3 @@
-package org.springframework.webflow.executor.jsf;
 /*
  * Copyright 2004-2007 the original author or authors.
  *
@@ -14,6 +13,8 @@ package org.springframework.webflow.executor.jsf;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.webflow.executor.jsf;
+
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.component.UIViewRoot;
