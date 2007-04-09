@@ -69,11 +69,10 @@ public class MethodInvocationException extends NestedRuntimeException {
 	 * @return the target throwable
 	 */
 	public Throwable getTargetException() {
-		if (getCause() instanceof InvocationTargetException) {
-			return ((InvocationTargetException)getCause()).getTargetException();
+		Throwable targetException = getCause();
+		while (targetException instanceof InvocationTargetException) {
+			targetException = ((InvocationTargetException)targetException).getTargetException();
 		}
-		else {
-			return getCause();
-		}
+		return targetException;
 	}
 }
