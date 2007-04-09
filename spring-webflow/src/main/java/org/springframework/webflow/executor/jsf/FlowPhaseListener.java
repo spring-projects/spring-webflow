@@ -71,7 +71,7 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * 
  * @author Colin Sampaleanu
  * @author Keith Donald
- * @author Jeremy Grelle 
+ * @author Jeremy Grelle
  */
 public class FlowPhaseListener implements PhaseListener {
 
@@ -255,8 +255,7 @@ public class FlowPhaseListener implements PhaseListener {
 			}
 
 			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
-				String url = argumentHandler.createFlowDefinitionUrl(
-						(FlowDefinitionRedirect) holder.getViewSelection(), context);
+				String url = argumentHandler.createFlowDefinitionUrl(redirect, context);
 				sendRedirect(url, context);
 			}
 
@@ -269,8 +268,7 @@ public class FlowPhaseListener implements PhaseListener {
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
 				String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey()
 						.toString() : null;
-				String url = argumentHandler.createExternalUrl((ExternalRedirect) holder.getViewSelection(),
-						flowExecutionKey, context);
+				String url = argumentHandler.createExternalUrl(redirect, flowExecutionKey, context);
 				sendRedirect(url, context);
 			}
 
@@ -287,12 +285,12 @@ public class FlowPhaseListener implements PhaseListener {
 	 * @param holder the holder of the current flow execution
 	 */
 	protected void prepareApplicationView(FacesContext facesContext, FlowExecutionHolder holder) {
-		ApplicationView forward = (ApplicationView) holder.getViewSelection();
-		if (forward != null) {
+		ApplicationView view = (ApplicationView) holder.getViewSelection();
+		if (view != null) {
 			// expose the view's "model map" in the request map
-			putInto(facesContext.getExternalContext().getRequestMap(), forward.getModel());
+			putInto(facesContext.getExternalContext().getRequestMap(), view.getModel());
 			// update the root component if necessary
-			updateViewRoot(facesContext, viewIdMapper.mapViewId(forward.getViewName()));
+			updateViewRoot(facesContext, viewIdMapper.mapViewId(view.getViewName()));
 		}
 		String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey().toString() : null;
 		if (flowExecutionKey != null) {
@@ -349,14 +347,15 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Saves the flow execution key in a component in the view root for restoration on subsequent RESTORE_VIEW operations.
+	 * Saves the flow execution key in a component in the view root for restoration on subsequent RESTORE_VIEW
+	 * operations.
 	 * @param facesContext the faces context exposing the view root
 	 * @param flowExecutionKey the flow execution key
 	 */
 	private void saveInViewRoot(FacesContext facesContext, String flowExecutionKey) {
 		// search for key holder in the component tree
-		FlowExecutionKeyStateHolder keyHolder = (FlowExecutionKeyStateHolder) facesContext.getViewRoot()
-				.findComponent(FlowExecutionKeyStateHolder.COMPONENT_ID);
+		FlowExecutionKeyStateHolder keyHolder = (FlowExecutionKeyStateHolder) facesContext.getViewRoot().findComponent(
+				FlowExecutionKeyStateHolder.COMPONENT_ID);
 		if (keyHolder == null) {
 			keyHolder = new FlowExecutionKeyStateHolder();
 			// expose as the first component in the view root for preservation in the tree

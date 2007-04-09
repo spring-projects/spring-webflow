@@ -34,37 +34,34 @@ import org.springframework.webflow.executor.RequestParameterInputMapper;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor;
 
 /**
- * An implementation of a JSF <code>NavigationHandler</code> that provides
- * integration with Spring Web Flow. It delegates handling to the standard
- * NavigationHandler implementation when a navigation request does not pertain
- * to a flow execution.
+ * An implementation of a JSF <code>NavigationHandler</code> that provides integration with Spring Web Flow.
+ * Responsible for delegating to Spring Web Flow to launch and resume flow executions, treating JSF action outcomes
+ * (like a command button click) as web flow events.
+ * 
+ * This class delegates to the standard NavigationHandler implementation when a navigation request does not pertain to a
+ * flow execution.
  * <p>
- * Specifically, the following navigation handler algorithm is implemented:
+ * The following navigation handler algorithm is implemented by default:
+ * </p>
+ * <p>
+ * If a flow execution has been restored in the current request:
  * <ul>
- * <li>If a flow execution is <strong>not</strong> currently in progress:
+ * <li>Resume the flow execution by signaling the JSF action outcome as an event against the current state.
+ * <li>Once event processing completes expose the selected view as the "current" {@link ViewSelection}.
+ * </ul>
+ * </p>
+ * <p>
+ * If a flow execution has not been restored in the current request:
  * <ul>
- * <li>If the specified logical outcome <strong>is</strong> of the form
- * <em>flowId:xxx</em>, look up the corresponding
- * {@link org.springframework.webflow.engine.Flow} definition with that id and
- * launch a new flow execution in the starting state. Expose information to
- * indicate that this flow is in progress and render the starting
- * {@link ViewSelection}.</li>
- * <li>If the specified logical outcome is <strong>not</strong> of the form
- * <em>flowId:xxx</em>, simply delegate to the standard
- * <code>NavigationHandler</code> implementation and return.</li>
+ * <li>If the specified logical outcome is of the form <em>flowId:xxx</em> look up the corresponding
+ * {@link FlowDefinition} with that id and launch a new flow execution in the starting state. Expose the new execution
+ * as the "current" flow execution for this request. Expose the first selected view as the "current" view selection.
+ * <li>If the specified logical outcome is not of the form <em>flowId:xxx</em>, simply delegate to the standard
+ * <code>NavigationHandler</code> implementation and return.
  * </ul>
- * </li>
- * <li>If a flow execution <strong>is</strong> currently in progress:
- * <ul>
- * <li>Load the reference to the current in-progress flow execution using the
- * submitted <em>_flowExecutionKey</em> parameter.</li>
- * <li>Resume the flow execution by signaling what action outcome (aka event)
- * the user took in the current state.
- * <li>Once state event processing to complete, render the
- * <code>ViewSelection</code> returned.</li>
- * </ul>
- * </li>
- * </ul>
+ * </p>
+ * How the flowId and eventId arguments are extracted can be customized by setting a custom
+ * {@link #setArgumentExtractor(FlowExecutorArgumentExtractor) argument extractor}.
  * 
  * @author Craig McClanahan
  * @author Colin Sampaleanu
@@ -78,26 +75,22 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * A helper for extracting parameters needed by this flow navigation
-	 * handler.
+	 * A helper for extracting parameters needed by this flow navigation handler.
 	 */
 	private FlowExecutorArgumentExtractor argumentExtractor = new FlowNavigationHandlerArgumentExtractor();
 
 	/**
-	 * The service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during the
-	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * The service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during the {@link #launch(String, ExternalContext) launch flow} operation.
 	 * <p>
-	 * This allows developers to control what attributes are made available in
-	 * the <code>inputMap</code> to new top-level flow executions. The
-	 * starting execution may then choose to map that available input into its
-	 * own local scope.
+	 * This allows developers to control what attributes are made available in the <code>inputMap</code> to new
+	 * top-level flow executions. The starting execution may then choose to map that available input into its own local
+	 * scope.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 */
 	private AttributeMapper inputMapper = new RequestParameterInputMapper();
-	
+
 	/**
 	 * Create a new {@link FlowNavigationHandler} using the default constructor.
 	 */
@@ -106,10 +99,8 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	}
 
 	/**
-	 * Create a new {@link FlowNavigationHandler}, wrapping the specified
-	 * standard navigation handler implementation.
-	 * @param originalNavigationHandler Standard <code>NavigationHandler</code>
-	 * we are wrapping
+	 * Create a new {@link FlowNavigationHandler}, wrapping the specified standard navigation handler implementation.
+	 * @param originalNavigationHandler Standard <code>NavigationHandler</code> we are wrapping
 	 */
 	public FlowNavigationHandler(NavigationHandler originalNavigationHandler) {
 		super(originalNavigationHandler);
@@ -123,12 +114,13 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	}
 
 	/**
-	 * Sets the argument extractor to use.
+	 * Sets the argument extractor to use by this navigation handler. Call to customize how flow id and event id
+	 * arguments are extracted.
 	 */
 	public void setArgumentExtractor(FlowExecutorArgumentExtractor argumentExtractor) {
 		this.argumentExtractor = argumentExtractor;
 	}
-	
+
 	/**
 	 * Returns the configured flow execution input mapper.
 	 */
@@ -137,17 +129,16 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	}
 
 	/**
-	 * Sets the service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during a launch flow operation.
+	 * Sets the service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during a launch flow operation.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 * @see RequestParameterInputMapper
 	 */
 	public void setInputMapper(AttributeMapper inputMapper) {
 		this.inputMapper = inputMapper;
 	}
-	
+
 	public void handleNavigation(FacesContext facesContext, String fromAction, String outcome,
 			NavigationHandler originalNavigationHandler) {
 		JsfExternalContext context = new JsfExternalContext(facesContext, fromAction, outcome);
@@ -181,9 +172,8 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	}
 
 	/**
-	 * Factory method that creates the input attribute map for a newly created
-	 * {@link FlowExecution}. This implementation uses the registered input mapper,
-	 * if any.
+	 * Factory method that creates the input attribute map for a newly created {@link FlowExecution}. This
+	 * implementation uses the registered input mapper, if any.
 	 * @param context the external context
 	 * @return the input map, or null if no input
 	 */
@@ -197,13 +187,13 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 			return null;
 		}
 	}
-	
+
 	// helpers
-	
+
 	private FlowDefinitionLocator getLocator(JsfExternalContext context) {
 		return FlowFacesUtils.getDefinitionLocator(context.getFacesContext());
 	}
-	
+
 	private FlowExecutionFactory getFactory(JsfExternalContext context) {
 		return FlowFacesUtils.getExecutionFactory(context.getFacesContext());
 	}
