@@ -111,9 +111,10 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 
 	private void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
-		if (StringUtils.hasText(flowExecutionKey)) {
-			// restore flow execution from repository so it will be available to variable/property resolvers
-			// and the flow navigation handler (this could happen as part of a submission or flow execution redirect)
+		// restore only if the key is present and the current flow execution has not already been restored
+		if (StringUtils.hasText(flowExecutionKey) && !FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
+			// restore the "current" flow execution from repository so it will be available to variable/property resolvers
+			// and the flow navigation handler (this could happen as part of a view action like a form submission)
 			FlowExecutionRepository repository = getRepository(context);
 			FlowExecutionKey key;
 			// restore the key from the stored flowExecutionKey
