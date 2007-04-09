@@ -81,9 +81,10 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * execution to the repository using the new key generated in the BEFORE_RENDER_RESPONSE phase.
  * </ul>
  * 
- * Note about customization: since PhaseListeners managed directly by the JSF provider cannot be benefit from DependencyInjection,
- * See Spring's {@link DelegatingPhaseListenerMulticaster} when you need to customize a FlowPhaseListener instance.
- *
+ * Note about customization: since PhaseListeners managed directly by the JSF provider cannot be benefit from
+ * DependencyInjection, See Spring's {@link DelegatingPhaseListenerMulticaster} when you need to customize a
+ * FlowPhaseListener instance.
+ * 
  * @author Colin Sampaleanu
  * @author Keith Donald
  * @author Jeremy Grelle
@@ -115,8 +116,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
 	 * </ul>
 	 * </ol>
-	 * How arguments are extracted and how URLs are generated can be customized by setting a custom
-	 * {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
+	 * How arguments are extracted and how URLs are generated can be customized by setting a custom {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -145,8 +145,8 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Sets the handler for arguments needed by this phase listener to restore and launch flow executions.
-	 * This handler is responsible for two things:
+	 * Sets the handler for arguments needed by this phase listener to restore and launch flow executions. This handler
+	 * is responsible for two things:
 	 * <ol>
 	 * <li>Helping in the restoration of the "current" FlowExecution by extracting arguments from the request.
 	 * Specifically:
@@ -242,33 +242,35 @@ public class FlowPhaseListener implements PhaseListener {
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// restore flow execution from repository so it will be available to variable/property resolvers
-			// and the flow navigation handler (this could happen as part of a flow execution redirect)
+			// restore flow execution from repository so it will be available to other JSF artifacts
+			// (this could happen as part of a flow execution redirect or browser refresh)
 			FlowExecutionRepository repository = getRepository(context);
-			// extract key in the "traditional way" (request parameter in url by default)
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
 					.extractFlowExecutionKey(context));
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			lock.lock();
 			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded existing flow execution from repository with key '" + flowExecutionKey + "'");
+				logger.debug("Loaded existing flow execution key '" + flowExecutionKey + "' due to browser access "
+						+ "[either via a flow execution redirect or direct browser refresh]");
 			}
 			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution,
 					lock), facesContext);
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
-			// launch a new flow execution (this could happen as part of a flow redirect)
+			// launch a new flow execution
+			// (this could happen as part of direct browser access or a flow definition redirect)
 			String flowId = argumentHandler.extractFlowId(context);
 			FlowDefinition flowDefinition = getLocator(context).getFlowDefinition(flowId);
 			FlowExecution flowExecution = getFactory(context).createFlowExecution(flowDefinition);
 			FlowExecutionHolder holder = new FlowExecutionHolder(flowExecution);
 			FlowExecutionHolderUtils.setFlowExecutionHolder(holder, facesContext);
 			ViewSelection selectedView = flowExecution.start(createInput(context), context);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Started new flow execution");
-			}
 			holder.setViewSelection(selectedView);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Launched a new flow execution due to browser access "
+						+ "[either via a flow redirect or direct browser URL access]");
+			}
 		}
 	}
 
