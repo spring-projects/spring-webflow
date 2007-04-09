@@ -75,7 +75,7 @@ to see a list of all relevant targets.
 			</fileset>
 		</copy>
 		
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.dir}">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.dir}" failonerror="true">
 			<classpath>
 				<fileset dir="${docs.ref.lib.dir}">
 					<include name="**/*.jar" />
@@ -87,7 +87,7 @@ to see a list of all relevant targets.
 			<arg value="${docs.ref.dir}/styles/fopdf.xsl" />
 		</java>
 
-		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m" dir="${docs.ref.dir}">
+		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m" dir="${docs.ref.dir}" failonerror="true">
 			<classpath>
 				<fileset dir="${docs.ref.lib.dir}">
 					<include name="**/*.jar" />
@@ -113,7 +113,7 @@ to see a list of all relevant targets.
 		</copy>
 		<copy todir="${docs.ref.target.dir}/html/styles" file="${docs.ref.dir}/styles/html.css"/>
 
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html" failonerror="true">
 			<classpath>
 				<fileset dir="${docs.ref.lib.dir}">
 					<include name="**/*.jar" />
@@ -138,7 +138,8 @@ to see a list of all relevant targets.
 		</copy>
 		<copy todir="${docs.ref.target.dir}/html_single/styles" file="${docs.ref.dir}/styles/html.css"/>
 
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html_single">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html_single"
+				failonerror="true">
 			<classpath>
 				<fileset dir="${docs.ref.lib.dir}">
 					<include name="**/*.jar" />
