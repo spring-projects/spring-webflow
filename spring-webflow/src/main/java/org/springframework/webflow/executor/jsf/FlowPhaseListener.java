@@ -29,6 +29,7 @@ import javax.faces.event.PhaseListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.web.jsf.DelegatingPhaseListenerMulticaster;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -52,23 +53,37 @@ import org.springframework.webflow.executor.support.RequestParameterFlowExecutor
 import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
- * JSF phase listener that is responsible for managing a {@link FlowExecution} object representing an active user
- * conversation so that other JSF artifacts that execute in different phases of the JSF lifecycle may have access to it.
+ * JSF phase listener responsible for managing the {@link FlowExecution} object lifecycle in a JSF environment. This
+ * class handles restoring and saving a FlowExecution so other JSF artifacts that execute in different phases of the JSF
+ * lifecycle may access conversational state and utilize Web Flow navigation behavior.
+ * <p>
+ * A restored flow execution is placed in a holder that other JSF artifacts such as VariableResolvers, PropertyResolvers
+ * and NavigationHandlers may access during the request lifecycle. Once in the holder the execution is considered
+ * "restored" and referred to as the "current" flow execution for this request.
+ * <p>
  * <p>
  * This phase listener implements the following algorithm:
  * <ul>
- * <li>On BEFORE_RESTORE_VIEW, restore the {@link FlowExecution} the user is participating in if a call to
- * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)} returns a submitted flow execution key.
- * Place the restored flow execution in a holder that other JSF artifacts such as VariableResolvers, PropertyResolvers,
- * and NavigationHandlers may access during the request lifecycle.
- * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase generate a new key for
- * identifying the updated execution within a the selected {@link FlowExecutionRepository}. Expose the new flow
- * execution key as a component in the view root for restoration on the next request. Expose managed flow execution
- * attributes to the views before rendering.
+ * <li>On BEFORE_RESTORE_VIEW, restore a {@link FlowExecution} if a call to
+ * {@link FlowExecutorArgumentHandler#extractFlowExecutionKey(ExternalContext)} returns a valid flow execution key. This
+ * occurs when a flow execution redirect or browser refresh is issued and ultimately results in a flow execution
+ * refresh.
+ * <li>On BEFORE_RESTORE_VIEW, launch a {@link FlowExecution} if a call to
+ * {@link FlowExecutorArgumentHandler#extractFlowId(ExternalContext)} returns a valid flow id. This occurs when a
+ * browser accesses a flow definition URL directly and is used to launch a new flow execution.
+ * <li>During RESTORE_VIEW, the {@link FlowExecutionKeyStateHolder state holder component} will restore the current
+ * FlowExecution if it is present in the JSF ViewRoot. This occurs when a postback from a JSF view that is participating
+ * in a flow.
+ * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase generate a new key that
+ * will identify the updated execution within the configured {@link FlowExecutionRepository}. Expose the new flow
+ * execution key as a component in the view root for restoration on the next request.
  * <li>On AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase <em>save</em> the updated
  * execution to the repository using the new key generated in the BEFORE_RENDER_RESPONSE phase.
  * </ul>
  * 
+ * Note about customization: since PhaseListeners managed directly by the JSF provider cannot be benefit from DependencyInjection,
+ * See Spring's {@link DelegatingPhaseListenerMulticaster} when you need to customize a FlowPhaseListener instance.
+ *
  * @author Colin Sampaleanu
  * @author Keith Donald
  * @author Jeremy Grelle
@@ -81,7 +96,27 @@ public class FlowPhaseListener implements PhaseListener {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * A helper for handling arguments needed by this phase listener to resume and launch flow executions.
+	 * A helper for handling arguments needed by this phase listener to restore and launch flow executions.
+	 * 
+	 * This helper is responsible for two main things:
+	 * <ol>
+	 * <li>Helping in the restoration of the "current" FlowExecution by extracting arguments from the request.
+	 * Specifically:
+	 * <ul>
+	 * <li>The flowExecutionKey argument is extracted to perform a flow execution refresh on redirects and browser
+	 * refreshes.
+	 * <li>The flowId argument is extracted to perform a flow execution launch on direct browser access of a flow
+	 * definition URL.
+	 * </ul>
+	 * <li>Generating URLs exposing the proper flow execution arguments. Specifically:
+	 * <ul>
+	 * <li>Generating the flow execution URL to redirect to on a FlowExecutionRedirect response.
+	 * <li>Generating the flow definition URL to redirect to on a FlowDefinitionRedirect response.
+	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
+	 * </ul>
+	 * </ol>
+	 * How arguments are extracted and how URLs are generated can be customized by setting a custom
+	 * {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -110,7 +145,24 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Sets the argument handler to use.
+	 * Sets the handler for arguments needed by this phase listener to restore and launch flow executions.
+	 * This handler is responsible for two things:
+	 * <ol>
+	 * <li>Helping in the restoration of the "current" FlowExecution by extracting arguments from the request.
+	 * Specifically:
+	 * <ul>
+	 * <li>The flowExecutionKey argument is extracted to perform a flow execution refresh on redirects and browser
+	 * refreshes.
+	 * <li>The flowId argument is extracted to perform a flow execution launch on direct browser access of a flow
+	 * definition URL.
+	 * </ul>
+	 * <li>Generating URLs exposing the proper flow execution arguments. Specifically:
+	 * <ul>
+	 * <li>Generating the flow execution URL to redirect to on a FlowExecutionRedirect response.
+	 * <li>Generating the flow definition URL to redirect to on a FlowDefinitionRedirect response.
+	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
+	 * </ul>
+	 * </ol>
 	 */
 	public void setArgumentHandler(FlowExecutorArgumentHandler argumentHandler) {
 		this.argumentHandler = argumentHandler;

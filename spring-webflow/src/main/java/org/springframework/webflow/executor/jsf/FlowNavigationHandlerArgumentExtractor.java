@@ -33,7 +33,7 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracto
 public class FlowNavigationHandlerArgumentExtractor implements FlowExecutorArgumentExtractor {
 
 	/**
-	 * The default prefix of a outcome string that indicates a new flow should be launched.
+	 * The default prefix of a JSF outcome string that indicates a new flow should be launched.
 	 */
 	private static final String FLOW_ID_PREFIX = "flowId:";
 
@@ -50,7 +50,7 @@ public class FlowNavigationHandlerArgumentExtractor implements FlowExecutorArgum
 	}
 
 	/**
-	 * Sets the prefix of a outcome string that indicates a new flow should be launched.
+	 * Sets the prefix of an outcome string that indicates a new flow should be launched.
 	 */
 	public void setFlowIdPrefix(String flowIdPrefix) {
 		this.flowIdPrefix = flowIdPrefix;
