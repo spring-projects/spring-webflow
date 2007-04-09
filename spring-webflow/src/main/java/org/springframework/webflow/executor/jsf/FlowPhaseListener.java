@@ -231,7 +231,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * view template minus a suffix.<br/>
 	 * 
 	 * JSF replaces the suffix of any view id it gets with its own default
-	 * suffix (e.g. ".jsp" or ".facelet"), and then tries to locate a physical
+	 * suffix (e.g. ".jsp" or ".xhtml"), and then tries to locate a physical
 	 * template view. Thus the {@link ViewIdMapper} gives us a chance to convert
 	 * a SWF view id into a physical path that will be used by JSF to locate the
 	 * template. (It doesn't matter what suffix we use on the JSF view id, it
