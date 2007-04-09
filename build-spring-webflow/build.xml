@@ -38,6 +38,8 @@
 				<and>
 					<!-- exclude core project derived artifacts -->
 					<filename name="*/docs/reference/lib/**" negate="true"/>
+					<filename name="*/docs/reference/lib/**" negate="true"/>
+					<filename name="*/docs/reference/lib/docbook-reference-libs.zip" negate="true"/>
 					<filename name="*/docs/reference/target/**" negate="true"/>
 					<filename name="*/target/**" negate="true" />
 					<filename name="*/build.properties" negate="true" />
@@ -47,6 +49,7 @@
 					<!-- exclude sample project derived artifacts -->
 					<filename name="*/*/docs/refrence/lib/**" negate="true"/>
 					<filename name="*/*/docs/refrence/target/**" negate="true"/>
+					<filename name="*/*/docs/refrence/target/docbook-reference-libs.zip" negate="true"/>
 					<filename name="*/*/target/**" negate="true" />
 					<filename name="*/*/build.properties" negate="true" />
 					<filename name="*/*/lib/**" negate="true" />
