@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.web.jsf.DecoratingNavigationHandler;
-import org.springframework.web.jsf.DelegatingNavigationHandlerProxy;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -64,8 +63,9 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracto
  * How the flowId and eventId arguments are extracted can be customized by setting a custom
  * {@link #setArgumentExtractor(FlowExecutorArgumentExtractor) argument extractor}.
  * 
- * Note about customization: since NavigationHandlers managed directly by the JSF provider cannot be benefit from DependencyInjection,
- * See Spring's {@link DelegatingNavigationHandlerProxy} when you need to customize a FlowNavigationHandler instance.
+ * Note about customization: since NavigationHandlers managed directly by the JSF provider cannot be benefit from
+ * DependencyInjection, See Spring's {@link org.springframework.web.jsf.DelegatingNavigationHandlerProxy} when you need
+ * to customize a FlowNavigationHandler instance.
  * 
  * @author Craig McClanahan
  * @author Colin Sampaleanu
