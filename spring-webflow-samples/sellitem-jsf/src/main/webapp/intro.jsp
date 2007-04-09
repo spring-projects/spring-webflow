@@ -1,5 +1,3 @@
- <%-- make sure we have a session --%>
-<%@ page session="true" %>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 

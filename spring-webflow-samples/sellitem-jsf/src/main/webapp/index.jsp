@@ -3,6 +3,6 @@
   <head>
   </head>
   <body>
-    <jsp:forward page="intro.jsf" />
+    <jsp:forward page="intro.faces" />
   </body>
 </html>

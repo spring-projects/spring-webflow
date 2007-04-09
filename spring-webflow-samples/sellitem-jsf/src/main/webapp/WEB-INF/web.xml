@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
@@ -13,25 +12,28 @@
 		</param-value>
 	</context-param>
 
+    <!-- Bootstraps the root Spring Web Application Context, responsible for deploying managed beans
+         defined in the configuration files above.  These beans represent the services used by the JSF application. -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
-    <!-- a Listener for MyFaces, that does all the startup work (configuration, init). -->
+    <!-- MyFaces listener that starts up the JSF engine by reading faces-config.xml -->
     <listener>
         <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
 
-    <!-- Faces Servlet -->
+    <!-- The front controller for the JSF application, responsible for handling all application requests -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- Map all requests to *.faces to the Faces Servlet for handling -->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.faces</url-pattern>
     </servlet-mapping>
 
 	<welcome-file-list>
