@@ -199,12 +199,12 @@ public class FlowPhaseListener implements PhaseListener {
 	 * a logical Spring Web Flow application view name into a JSF view id.<br/>
 	 * 
 	 * JSF view ids are important to this phase listener: it uses them to check whether the current view has changed,
-	 * and if a new view needs to be created and activated by delegating to the application's {@link ViewHandler}.
+	 * and if a new view needs to be created and activated by delegating to the application's {@link ViewHandler}.<br/>
 	 * 
 	 * A view handler typically treats a JSF view id as the physical location of a view template encapsulating a page
 	 * layout. The JSF view id normally specifies the physical location of the view template minus a suffix. View
 	 * handlers typically replace the suffix of any view id with their own default suffix (e.g. ".jsp" or ".xhtml") and
-	 * then try to locate a physical template view.
+	 * then try to locate a physical template view.<br/>
 	 * 
 	 * The {@link ViewIdMapper} provides the ability to customize how SWF view name is mapped to a JSF view id that will
 	 * be passed to the ViewHandler. The default value for the view id mapper is a {@link DefaultViewIdMapper} which
