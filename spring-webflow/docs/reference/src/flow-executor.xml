@@ -570,7 +570,7 @@
     &lt;/h:form&gt;
 	    	</programlisting>
     	</sect2>
-    	<sect2 id="executor-jsf-simple">
+    	<sect2 id="executor-jsf-simple-pre-102">
     		<title>A pre Spring Web Flow 1.0.2 faces-config.xml file</title>
 			<para>
 				Before Spring Web Flow 1.0.2 Spring Web Flow only supported resolving variables in flow scope
@@ -597,7 +597,7 @@
 &lt;/faces-config&gt;
 	    	</programlisting>
     	</sect2>
-    	<sect2 id="executor-jsf-resume-form">
+    	<sect2 id="executor-jsf-resume-form-pre-102">
     		<title>Resuming a flow execution - pre 1.0.2 form bound to flow scope variables</title>
 	    	<programlisting>
     &lt;h:form id="form"&gt;
