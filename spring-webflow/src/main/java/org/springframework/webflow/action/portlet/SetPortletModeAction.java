@@ -38,7 +38,7 @@ import org.springframework.webflow.execution.RequestContext;
  * or portlet TAG).
  * 
  * @author J.Enrique Ruiz
- * @author César Ordiñana
+ * @author Cesar Ordinana
  * @author Erwin Vervaet
  */
 public class SetPortletModeAction extends AbstractAction {
