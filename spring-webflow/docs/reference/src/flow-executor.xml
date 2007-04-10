@@ -521,74 +521,28 @@
 	<sect1 id="executor-jsf">
 		<title>Java Server Faces (JSF) integration</title>
 		<para>
-			Spring Web Flow integrates with JSF.  The JSF integration relies on custom implementations of 
-			core JSF artifacts such as navigation handler and phase listener to drive the 
-			execution of flows.  In addition, it relies on custom Variable and Property Resolvers to 
-			access flow execution variables from JSF components.
+			Spring Web Flow provides strong integration with Java Server Faces (JSF).  When used with JSF, Spring Web Flow
+			takes responsibility for view navigation handling and managing model state, adding power and 
+			simplicity to JSF's default navigation system and object scopes.  Plain JSF views and components continue to work just as before,
+			and are able to participate in flows with full access to flow state.  In addition, other view technologies
+			such as Facelets and Ajax4JSF continue to plug-in normally.
+		</para>
+		<para>
+			The JSF integration relies on custom implementations of core JSF artifacts such as the PhaseListener 
+			and NavigationHandler to drive the execution of flows.  In addition, it relies on a custom VariableResolver to 
+			access flow execution attributes from JSF components.
 		</para>
     	<sect2 id="executor-jsf-simple">
-    		<title>A typical faces-config.xml file</title>
-	    	<programlisting>
-&lt;faces-config&gt;
-    &lt;application&gt;
-        &lt;navigation-handler&gt;
-            org.springframework.webflow.executor.jsf.FlowNavigationHandler
-        &lt;/navigation-handler&gt;
-        &lt;variable-resolver&gt;
-            org.springframework.webflow.executor.jsf.FlowExecutionVariableResolver
-        &lt;/variable-resolver&gt;
-        &lt;property-resolver&gt;
-            org.springframework.webflow.executor.jsf.FlowExecutionPropertyResolver
-        &lt;/property-resolver&gt;
-    &lt;/application&gt;
-
-    &lt;lifecycle&gt;
-        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
-    &lt;/lifecycle&gt;
-&lt;/faces-config&gt;
-	    	</programlisting>
-		</sect2>
-    	<sect2 id="executor-jsf-launch-get">
-    		<title>Launching a flow execution - command link</title>
-	    	<programlisting>
-    &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
-	    	</programlisting>
-    	</sect2>
-    	<sect2 id="executor-jsf-resume-form">
-    		<title>Resuming a flow execution - form bound to flow execution variables</title>
-	    	<programlisting>
-    &lt;h:form id="form"&gt;
-        ...
-        &lt;h:inputText id="propertyName" value="#{flowExecution.flashScope.aFlashScopeAttribute}"/&gt;
-        &lt;h:inputText id="propertyName" value="#{flowExecution.flowScope.aFlowScopeAttribute}"/&gt;
-        &lt;h:inputText id="propertyName" value="#{flowExecution.conversationScope.aConversationScopeAttribute}"/&gt;
-
-        &lt;h:inputText id="propertyName" value="#{flowExecution.anAttributeToSearchForAcrossAllScopes}"/&gt;
-        ...
-        &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
-        &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
-    &lt;/h:form&gt;
-	    	</programlisting>
-    	</sect2>
-    	<sect2 id="executor-jsf-simple-pre-102">
-    		<title>A pre Spring Web Flow 1.0.2 faces-config.xml file</title>
+    		<title>A minimal faces-config.xml file</title>
 			<para>
-				Before Spring Web Flow 1.0.2 Spring Web Flow only supported resolving variables in flow scope
-				(and not the other scopes such as flash and conversation shown above).  This configuration is still supported
-				for backwards compatibility reasons and follows:
+				Using Spring Web Flow in a JSF environment requires adding these custom artifacts to the application's
+				<literal>faces-config.xml</literal> file:
 			</para>
 	    	<programlisting>
 &lt;faces-config&gt;
     &lt;application&gt;
-        &lt;navigation-handler&gt;
-            org.springframework.webflow.executor.jsf.FlowNavigationHandler
-        &lt;/navigation-handler&gt;
-        &lt;variable-resolver&gt;
-            org.springframework.webflow.executor.jsf.FlowVariableResolver
-        &lt;/variable-resolver&gt;
-        &lt;property-resolver&gt;
-            org.springframework.webflow.executor.jsf.FlowPropertyResolver
-        &lt;/property-resolver&gt;
+        &lt;navigation-handler&gt;org.springframework.webflow.executor.jsf.FlowNavigationHandler&lt;/navigation-handler&gt;
+        &lt;variable-resolver&gt;org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver&lt;/variable-resolver&gt;
     &lt;/application&gt;
 
     &lt;lifecycle&gt;
@@ -596,10 +550,158 @@
     &lt;/lifecycle&gt;
 &lt;/faces-config&gt;
 	    	</programlisting>
+			<para>
+				The <classname>FlowPhaseListener</classname> is required to manage the overall flow execution lifecycle in a JSF environment.  It handles launching new
+				flows accessed by browsers via direct URLs, and also handles restoring flow executions on postback and browser refreshes.
+			</para>
+			<para>
+				The <classname>FlowNavigationHandler</classname> is required to continue a flow on an action outcome from a JSF view
+				participating in the flow.  Outcome strings are treated as events signaled against the current view state
+				of the flow execution automatically.
+			</para>
+			<para>
+				The <classname>DelegatingFlowVariableResolver</classname> resolves JSF a value binding expression like {#someBean.someProperty} 
+				to a flow execution attribute.  This resolver searches flash, flow, and conversation scope in that order until 
+				it finds a match.  If no match is found this resolver delegates to the next resolver in the chain.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-launch-commandlink">
+    		<title>Launching a flow execution - JSF command link component</title>
+			<para>
+				Flows can be launched by firing JSF action outcomes that adhere to a special format:
+			</para>
+	    	<programlisting>
+    &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
+	    	</programlisting>
+			<para>
+  				The command link above says <emphasis>launch 'myflow' when clicked</emphasis>.
+				By default, an action outcome prefixed with <literal>flowId:</literal> will treated as a flow definition identifier.
+				The FlowNavigationHandler will launch a new execution of that flow definition.			
+			</para>
+			<para>
+				The flow id prefix respected by the FlowNavigationHandler is configurable.  See the API documentation for
+				more information.
+			</para>
+    	</sect2>
+    	<sect2 id="executor-jsf-launch-normal-anchor">
+    		<title>Launching a flow execution - normal HTML anchor</title>
+			<para>
+				Flows can also be launched simply by accessing flow definition URLs directly using a bookmark or normal HTML link:
+			</para>
+	    	<programlisting>
+    &lt;a href="app.faces?flowId=myflow"&gt;Go&lt;/a&gt;
+	    	</programlisting>
+			<para>
+				This example link assumes *.faces has been mapped to the FacesServlet defined within web.xml.
+				The format of a flow definition URL is configurable on the FlowPhaseListener.
+			</para>
+    	</sect2>
+    	<sect2 id="executor-jsf-sampleflow">
+    		<title>Sample flow in a JSF environment</title>
+			<para>
+				Flow definitions in a JSF environment are just plain Spring Web Flow definitions:
+			</para>
+			<programlisting>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                        http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+    &lt;var name="bean" class="example.ManagedBeanImpl" scope="conversation" /&gt;
+	
+    &lt;start-state idref="displayView" /&gt;
+
+    &lt;view-state id="displayView" view="/myview.jsp"&gt;
+        &lt;transition on="submit" to="displayNextView"/&gt;
+    &lt;/view-state>
+
+    &lt;view-state id="displayNextView" view="/nextview.jsp" /&gt;
+
+&lt;/flow&gt;				
+			</programlisting>
+			<para>
+  				A benefit of using JSF is UI components typically handle data binding and validation, so the actual flow
+				definition logic is often simpler and more focused.  In general, it is recommended views selected by
+				view states follow the standard JSF view identifier format, which requires a leading forward-slash
+				and ends in a prefix.
+			</para>
+			<para>
+				How Spring Web Flow view names are mapped to JSF view ids is configurable.  See the
+				<classname>FlowPhaseListener</classname> API documentation for more information.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-resume-form">
+    		<title>Resuming a flow execution - form bound to flow execution variables</title>
+			<para>
+				Views participating in flows are just plain JSF views.  They may also incorporate other
+				JSF view technologies such as Facelets and Ajax4JSF.
+			</para>
+	    	<programlisting>
+&lt;f:view&gt;		
+    &lt;h:form id="form"&gt;
+        ...
+        &lt;h:inputText id="propertyName" value="#{someBean.someProperty}"/&gt;
+        ...
+        &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
+    &lt;/h:form&gt;
+&lt;/f:view&gt;		
+	    	</programlisting>
+			<para>
+				As shown above, there is nothing Spring Web Flow specific here.  The flow execution
+				key is automatically tracked by a special UI component in the view root, so there is no need to 
+				track it manually.  Action outcomes are automatically mapped to Spring Web Flow event identifiers
+				signaled against the current state.
+			</para>
+    	</sect2>
+		<sect2 id="executor-jsf-sample">
+			<title>Spring Web Flow JSF Integration Samples</title>
+			<para>
+				See the <link linkend="sellitem-JSF-sample">sellitem-jsf</link> sample that illustrates Spring Web Flow operating in 
+				a JSF environment.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-simple-pre-102">
+    		<title>A pre Spring Web Flow 1.0.2 faces-config.xml file</title>
+			<note>
+				<para>This section applies to those using Spring Web Flow's JSF integration before release 1.0.2.</para>
+			</note>
+			<para>
+				Before release 1.0.2, Spring Web Flow only supported resolving variables in flow scope
+				(and not the other scopes such as flash and conversation shown above).  This configuration is still supported
+				for backwards compatibility reasons:
+			</para>
+	    	<programlisting>
+&lt;faces-config&gt;
+    &lt;application&gt;
+        &lt;navigation-handler&gt;org.springframework.webflow.executor.jsf.FlowNavigationHandler&lt;/navigation-handler&gt;
+        &lt;variable-resolver&gt;org.springframework.webflow.executor.jsf.FlowVariableResolver&lt;/variable-resolver&gt;
+        &lt;property-resolver&gt;org.springframework.webflow.executor.jsf.FlowPropertyResolver&lt;/property-resolver&gt;
+    &lt;/application&gt;
+
+    &lt;lifecycle&gt;
+        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
+    &lt;/lifecycle&gt;
+&lt;/faces-config&gt;
+	    	</programlisting>
+			<note>
+				<para>
+					With 1.0.2 <classname>DelegatingFlowVariableResolver</classname> is now the recommended default resolver,
+					as it allows full access to all flow execution scopes transparently from the point of view of the
+					JSF view developer.
+				</para>
+			</note>
     	</sect2>
     	<sect2 id="executor-jsf-resume-form-pre-102">
-    		<title>Resuming a flow execution - pre 1.0.2 form bound to flow scope variables</title>
+    		<title>Resuming a flow execution - pre Spring Web Flow 1.0.2</title>
+			<para>
+				Before release 1.0.2, the flow execution key had to be tracked manually in JSF views participating
+				in a flow execution.  This configuration is still supported for backwards compatibility reasons.
+				However, it is highly recommended that existing users of Spring Web Flow's JSF integration
+				update their views to be <emphasis>just plain JSF</emphasis>.
+			</para>
 	    	<programlisting>
+&lt;f:view&gt;
     &lt;h:form id="form"&gt;
         ...
         &lt;h:inputText id="propertyName" value="#{flowScope.aFlowScopeAttribute}"/&gt;
@@ -607,7 +709,12 @@
         &lt;input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"&gt;
         &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
     &lt;/h:form&gt;
+&lt;/f:view&gt;
 	    	</programlisting>
+			<para>
+				The hidden form field above can now be safely removed.  In addition, the new variable resolver
+				can be plugged in to gain access to other scopes such as flash and conversation.
+			</para>
     	</sect2>
     </sect1>
 </chapter>
