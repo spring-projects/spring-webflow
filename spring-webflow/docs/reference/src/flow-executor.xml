@@ -659,7 +659,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/webflow
                         http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
-    &lt;var name="bean" class="example.ManagedBeanImpl" scope="conversation" /&gt;
+    &lt;var name="myBean" class="example.ManagedBeanImpl" scope="conversation" /&gt;
 	
     &lt;start-state idref="displayView" /&gt;
 
@@ -667,7 +667,7 @@
         &lt;transition on="submit" to="displayNextView"/&gt;
     &lt;/view-state>
 
-    &lt;view-state id="displayNextView" view="/nextview.jsp" /&gt;
+    &lt;view-state id="displayNextView" view="/mynextview.jsp" /&gt;
 
 &lt;/flow&gt;				
 			</programlisting>
