@@ -50,7 +50,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Ship date (MM/DD/YYYY):</td>
+			<td>Ship date (DD/MM/YYYY):</td>
 			<td>
 				<form:input path="shipDate" />
 			</td>
