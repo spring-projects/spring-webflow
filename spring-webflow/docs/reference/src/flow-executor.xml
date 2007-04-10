@@ -533,7 +533,7 @@
 			access flow execution attributes from JSF components.
 		</para>
     	<sect2 id="executor-jsf-simple">
-    		<title>A minimal faces-config.xml file</title>
+    		<title>Adding Spring Web Flow extensions to faces-config.xml</title>
 			<para>
 				Using Spring Web Flow in a JSF environment requires adding these custom artifacts to the application's
 				<literal>faces-config.xml</literal> file:
@@ -565,7 +565,8 @@
 				it finds a match.  If no match is found this resolver delegates to the next resolver in the chain.
 			</para>
 		</sect2>
-    	<sect2 id="executor-jsf-simple">
+    	<sect2 id="executor-jsf-simple-webflow-setup">
+			<title>Configuring the Web Flow system</title>
 			<para>
 				The artifacts defined faces-config.xml use Spring to locate the Web Flow system.
 				This requires a Spring Web Application Context to be bootstrapped using a ContextLoaderListener in
