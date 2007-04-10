@@ -121,7 +121,7 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * The service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
-	 * during the {@link #launch(String, ExternalContext) launch flow} operation.
+	 * during the launch flow operation.
 	 * <p>
 	 * This allows developers to control what attributes are made available in the <code>inputMap</code> to new
 	 * top-level flow executions. The starting execution may then choose to map that available input into its own local
