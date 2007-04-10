@@ -23,12 +23,12 @@
     			<listitem>
                     <para>
                         <link linkend="sellitem-JSF-sample">Sellitem-JSF</link> - The sellitem sample in a JSF environment
-						(notice how the flow definition is more concise because JSF components care for data binding and validation)
+						(notice how the flow definition is more concise because JSF components care for data binding and validation).
                     </para>
     			</listitem>
     			<listitem>
     				<para>
-    					<link linkend="shippingrate-sample">Shippingrate</link> - demonstrates Spring Web Flow together with the Prototype Javascript framework (for Ajax-style flows)
+    					<link linkend="shippingrate-sample">Shippingrate</link> - demonstrates Spring Web Flow together with the Prototype Javascript framework (for Ajax-style flows).
     				</para>
     			</listitem>
     			<listitem>
@@ -1345,8 +1345,10 @@ enum GuessResult {
 &lt;c:if test="${!flowExecutionContext.activeSession.root}"&gt;
                 </programlisting>
             </para>
-            The FlowExecutionContext object is exposed to the views (JSPs)
-            to make information like this available during response rendering.
+            <para>
+	            The FlowExecutionContext object is exposed to the views (JSPs)
+    	        to make information like this available during response rendering.
+    	    </para>
         </sect2>    
     </sect1>
     <sect1 id="itemlist-sample">
@@ -2041,13 +2043,15 @@ public BirthDateFormAction() {
             		</orderedlist>
             	</para>
 	            <note>
-					The tomcat user must have the 'pluto' role. Open 
-					[pluto-home]/conf/tomcat-users.xml and ensure the 
-					following lines are there:
-					<programlisting>
+	            	<para>
+						The tomcat user must have the 'pluto' role. Open 
+						[pluto-home]/conf/tomcat-users.xml and ensure the 
+						following lines are there:
+						<programlisting>
 &lt;role rolename="pluto"/&gt;
 &lt;user username="tomcat" password="tomcat" roles="tomcat,pluto"/&gt;
-					</programlisting>
+						</programlisting>
+					</para>
 	            </note>            
             </sect3>
         </sect2>

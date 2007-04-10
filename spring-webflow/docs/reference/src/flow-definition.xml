@@ -1263,9 +1263,11 @@
     		    </table>
     		    <para>
     		    	<note>
-    		    	The above other points in a flow where actions may be executed do not
-    		    	allow you to execute a state transition in response to the action result event.
-    		    	If you need such flow control you must execute the action from within an action state.
+    		    		<para>
+		    		    	The above other points in a flow where actions may be executed do not
+		    		    	allow you to execute a state transition in response to the action result event.
+		    		    	If you need such flow control you must execute the action from within an action state.
+		    		    </para>
 					</note>
     		    </para>
     		</sect3>
@@ -1967,13 +1969,15 @@
     			</para>
     			<para>
     				<note>
-    			    <emphasis>Caution</emphasis>: flow definitions should <emphasis>not</emphasis> be vehicles for
-    			    business logic.  In this case the decision made was controller logic, reasoning on a
-    			    pre-calculated value to decide what step of the flow to transition to next.  That is the kind of logic that
-    			    should be in a flow definition.  In contrast, having the state <emphasis>itself</emphasis> embed
-    			    the business rule defining how shipping status is calculated is a misuse.
-    			    Instead, push such a calculation into application code where it belongs and <emphasis>instruct</emphasis>
-    			    the flow to invoke that code using an action.
+    					<para>
+		    			    <emphasis>Caution</emphasis>: flow definitions should <emphasis>not</emphasis> be vehicles for
+		    			    business logic.  In this case the decision made was controller logic, reasoning on a
+		    			    pre-calculated value to decide what step of the flow to transition to next.  That is the kind of logic that
+		    			    should be in a flow definition.  In contrast, having the state <emphasis>itself</emphasis> embed
+		    			    the business rule defining how shipping status is calculated is a misuse.
+		    			    Instead, push such a calculation into application code where it belongs and <emphasis>instruct</emphasis>
+		    			    the flow to invoke that code using an action.
+		    			</para>
     			    </note>
     			</para>
 			</sect3>

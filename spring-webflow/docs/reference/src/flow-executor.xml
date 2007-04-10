@@ -229,11 +229,13 @@
 	    	</para>
 	    	<para>
 	    		<note>
-	    		The <literal>alwaysRedirectOnPause</literal> attribute determines if 
-	    		a flow execution redirect occurs automatically each time an execution pauses
-	    		(automated <literal>POST+REDIRECT+GET</literal> behavior).
-	    		Setting this attribute to false will disable the <emphasis>default 'true' behavior</emphasis>
-	    		where a flow execution redirect always occurs on pause.
+	    			<para>
+			    		The <literal>alwaysRedirectOnPause</literal> attribute determines if 
+			    		a flow execution redirect occurs automatically each time an execution pauses
+			    		(automated <literal>POST+REDIRECT+GET</literal> behavior).
+			    		Setting this attribute to false will disable the <emphasis>default 'true' behavior</emphasis>
+			    		where a flow execution redirect always occurs on pause.
+			    	</para>
 	    		</note>
 	    	</para>
 		</sect2>
@@ -354,9 +356,11 @@
 			<literal>org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor</literal>
 			strategy.
 			<note>
-			The various flow controllers typically do not use this strategy directly but instead use a
-			convenient <literal>FlowExecutorArgumentHandler</literal> implementation that takes care
-			of argument extraction as well as exposing responsibilities (in callback URLs).
+				<para>
+					The various flow controllers typically do not use this strategy directly but instead use a
+					convenient <literal>FlowExecutorArgumentHandler</literal> implementation that takes care
+					of argument extraction as well as exposing responsibilities (in callback URLs).
+				</para>
 			</note>
 		</para>
 		<para>

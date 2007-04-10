@@ -104,13 +104,15 @@
 		</para>
 		<para>
 			<note>			
-			Spring Web Flow, like Spring, is a <emphasis>layered</emphasis> framework,
-			packaged in a manner that allows teams to use the parts they need and nothing else.
-			For example, one team might use Spring Web Flow in a Servlet environment with Spring MVC
-			and thus require the Spring MVC integration.  Another team might use SWF in a Portlet
-			environment, and thus require the Portlet MVC integration.  Another team might mix and match.
-			A major benefit of SWF is that it allows you to define reusable, self-contained controller 
-			modules that can execute in <emphasis>any</emphasis> environment.
+				<para>
+					Spring Web Flow, like Spring, is a <emphasis>layered</emphasis> framework,
+					packaged in a manner that allows teams to use the parts they need and nothing else.
+					For example, one team might use Spring Web Flow in a Servlet environment with Spring MVC
+					and thus require the Spring MVC integration.  Another team might use SWF in a Portlet
+					environment, and thus require the Portlet MVC integration.  Another team might mix and match.
+					A major benefit of SWF is that it allows you to define reusable, self-contained controller 
+					modules that can execute in <emphasis>any</emphasis> environment.
+				</para>
 			</note>
 		</para>
 	</sect1>
@@ -613,11 +615,13 @@
     		</table>
 			<para>
 				<note>
-					As described above, some subsystem packages are optional depending on your use of the
-					subsystem.  For example, use of Spring Web Flow	in a Servlet environment entails use of
-					the <literal>ExternalContext</literal> context.servlet package which requires the
-					Servlet API to be in the classpath.  In this case the context.portlet package is not 
-					used and the Portlet API is not required.
+					<para>
+						As described above, some subsystem packages are optional depending on your use of the
+						subsystem.  For example, use of Spring Web Flow	in a Servlet environment entails use of
+						the <literal>ExternalContext</literal> context.servlet package which requires the
+						Servlet API to be in the classpath.  In this case the context.portlet package is not 
+						used and the Portlet API is not required.
+					</para>
 				</note>
 			</para>
 			<para>
