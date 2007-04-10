@@ -278,7 +278,6 @@ ant dist
                 <programlisting>
 @Transactional
 public interface SaleProcessor {
-
     public void process(Sale sale);
 }
                 </programlisting>
