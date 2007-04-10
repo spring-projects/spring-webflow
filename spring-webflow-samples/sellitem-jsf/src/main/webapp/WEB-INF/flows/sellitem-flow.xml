@@ -33,6 +33,6 @@
 		<transition on="success" to="showCostOverview" />
 	</action-state>
 
-	<end-state id="showCostOverview" view="/costOverview.sjp" />
+	<end-state id="showCostOverview" view="/costOverview.jsp" />
 
 </flow>
