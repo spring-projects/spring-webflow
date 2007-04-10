@@ -567,9 +567,9 @@
 		</sect2>
     	<sect2 id="executor-jsf-simple">
 			<para>
-				The artifacts defined faces-config.xml and managed by the JSF provider use Spring to locate
-				the Web Flow system.  A Spring Web Application Context is bootstrapped using a ContextLoaderListener
-				in the web.xml deployment descriptor:
+				The artifacts defined faces-config.xml use Spring to locate the Web Flow system.
+				This requires a Spring Web Application Context to be bootstrapped using a ContextLoaderListener in
+				the web.xml deployment descriptor:
 			</para>
 			<programlisting>
 &lt;context-param&gt;
@@ -623,14 +623,16 @@
 &lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
 	    	</programlisting>
 			<para>
-  				The command link above says <emphasis>launch 'myflow' when clicked</emphasis>.
-				By default, an action outcome prefixed with <literal>flowId:</literal> will treated as a flow definition identifier.
-				The FlowNavigationHandler will launch a new execution of that flow definition.			
+  				The command link above says <emphasis>launch 'myflow' when clicked</emphasis>.  'myflow' is expected
+				to be a valid id of a flow definition registered in the configured registry.
 			</para>
-			<para>
-				The flow id prefix respected by the FlowNavigationHandler is configurable.  See the API documentation for
-				more information.
-			</para>
+			<tip>
+				<para>
+					By default, an action outcome prefixed with <literal>flowId:</literal> will be treated as a flow definition identifier.
+					The flow id prefix respected by the FlowNavigationHandler is configurable.  See the API documentation for
+					more information.
+				</para>
+			</tip>
     	</sect2>
     	<sect2 id="executor-jsf-launch-normal-anchor">
     		<title>Launching a flow execution - normal HTML anchor</title>
