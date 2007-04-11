@@ -2,7 +2,7 @@
 <%@ page session="true" %>
 <html>
 <body>
-	<div align="left">Sell Item - A Spring Web Flow Sample</DIV>
+	<div align="left">Sell Item - A Spring Web Flow Sample</div>
 	<hr>
 	<div align="left">
 		<p>
@@ -36,5 +36,6 @@
 			<li>Use of subflows to compose a multi-step business process from independently reusable modules.</li>
 		</ul>
 	</div>
-</body>
+	<hr/>
+	<div align="right"></div>
 </html>

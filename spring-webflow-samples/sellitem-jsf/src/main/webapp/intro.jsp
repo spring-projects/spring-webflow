@@ -5,6 +5,8 @@
 <body>
 
 <f:view>
+	<div align="left">Sell Item JSF - A Spring Web Flow Sample</div>
+	<hr>
 	<div align="left">
 		<p>
 			<h:form>
@@ -29,6 +31,8 @@
 			</li>
 		</ul>
 	</div>
+	<hr/>
+	<div align="right"></div>
 </f:view>
 
 </body>	
