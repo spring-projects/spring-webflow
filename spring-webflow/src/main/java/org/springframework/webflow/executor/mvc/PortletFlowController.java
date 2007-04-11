@@ -46,12 +46,12 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * Point of integration between Spring Portlet MVC and Spring Web Flow: a {@link Controller} that routes incoming
  * portlet requests to one or more managed flow executions.
  * <p>
- * Requests into the web flow system are handled by a {@link FlowExecutor}, which this class delegates to. Consult the
- * JavaDoc of that class for more information on how requests are processed.
+ * Requests into the web flow system are handled by a {@link FlowExecutor}, which this class delegates to. Consult
+ * the JavaDoc of that class for more information on how requests are processed.
  * <p>
  * Note: a single <code>PortletFlowController</code> may execute all flows within your application. See the
- * <code>phonebook-portlet</code> sample application for examples of the various strategies for launching and resuming
- * flow executions in a Portlet environment.
+ * <code>phonebook-portlet</code> sample application for examples of the various strategies for launching and
+ * resuming flow executions in a Portlet environment.
  * <p>
  * It is also possible to customize the {@link FlowExecutorArgumentHandler} strategy to allow for different types of
  * controller parameterization, for example perhaps in conjunction with a REST-style request mapper.
@@ -61,13 +61,13 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * redirect. Keep the following in mind when developing Portlets using Spring Web Flow:
  * <ul>
  * <li>Using the well known POST-REDIRECT-GET idiom, for instance using <i>alwaysRedirectOnPause</i> or the
- * "redirect:" view prefix, does not make sense in a Portlet environment where the Portlet container handles this using
- * a seperate <i>render phase</i>. In other words, a {@link FlowExecutionRedirect} is not supportd.</li>
+ * "redirect:" view prefix, does not make sense in a Portlet environment where the Portlet container handles this
+ * using a seperate <i>render phase</i>. In other words, a {@link FlowExecutionRedirect} is not supportd.</li>
  * <li>This controller will launch a new flow execution <i>every time</i> it handles a render request without having
  * previously handled an action request (for the same session) or the render request containing a flow execution key.
  * </li>
- * <li>Launching new flow executions is done in the render phase. As a result the first view selection your flow makes
- * cannot be a {@link FlowDefinitionRedirect} or an {@link ExternalRedirect}.</li>
+ * <li>Launching new flow executions is done in the render phase. As a result the first view selection your flow
+ * makes cannot be a {@link FlowDefinitionRedirect} or an {@link ExternalRedirect}.</li>
  * </ul>
  * 
  * @see org.springframework.webflow.executor.FlowExecutor
@@ -158,6 +158,7 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
 		PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
+
 		// look for a cached response instruction in the session put there by the action request phase
 		// the response instruction could be an "active application view" rendered
 		// from a view-state or a "confirmation view" rendered by an end-state
@@ -187,6 +188,7 @@ public class PortletFlowController extends AbstractController implements Initial
 		final PortletExternalContext context = new PortletExternalContext(getPortletContext(), request, response);
 		final String flowExecutionKey = argumentHandler.extractFlowExecutionKey(context);
 		final String eventId = argumentHandler.extractEventId(context);
+
 		// signal the event against the flow execution, returning the next response instruction
 		final ResponseInstruction responseInstruction = flowExecutor.resume(flowExecutionKey, eventId, context);
 		new ResponseInstructionHandler() {
@@ -198,8 +200,8 @@ public class PortletFlowController extends AbstractController implements Initial
 					// we need to do this because the responseInstruction stored in the session
 					// below will be removed from the session when the next render request
 					// extracts it (see extractActionResponseInstruction)
-					response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(), responseInstruction
-							.getFlowExecutionKey());
+					response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(),
+							responseInstruction.getFlowExecutionKey());
 				}
 				// make response instruction available for rendering during the render phase of this portlet request
 				exposeToRenderPhase(responseInstruction, request);
@@ -218,8 +220,8 @@ public class PortletFlowController extends AbstractController implements Initial
 
 			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
 				// is a flow execution redirect: simply expose key parameter to support refresh during render phase
-				response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(), responseInstruction
-						.getFlowExecutionKey());
+				response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(),
+						responseInstruction.getFlowExecutionKey());
 			}
 
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
@@ -232,14 +234,16 @@ public class PortletFlowController extends AbstractController implements Initial
 				if (responseInstruction.getFlowExecutionContext().isActive()) {
 					// flow execution is still active
 					// set the flow execution key render parameter to support browser refresh
-					response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(), responseInstruction
-							.getFlowExecutionKey());
+					response.setRenderParameter(argumentHandler.getFlowExecutionKeyArgumentName(),
+							responseInstruction.getFlowExecutionKey());
 				}
 				// make response instruction available for rendering during the render phase of this portlet request
 				exposeToRenderPhase(responseInstruction, request);
 			}
 		}.handle(responseInstruction);
 	}
+
+	// helpers
 
 	/**
 	 * Converts the object to a string. Simply returns {@link String#valueOf(Object)} by default.
@@ -249,8 +253,6 @@ public class PortletFlowController extends AbstractController implements Initial
 	protected String convertToString(Object object) {
 		return String.valueOf(object);
 	}
-
-	// helpers
 
 	/**
 	 * Expose given response instruction to the render phase by putting it in the session.
@@ -267,8 +269,8 @@ public class PortletFlowController extends AbstractController implements Initial
 
 	/**
 	 * Extract a response instruction stored in the session during the action phase by
-	 * {@link #exposeToRenderPhase(ResponseInstruction, ActionRequest)}. If a response instruction is found, it will be
-	 * removed from the session.
+	 * {@link #exposeToRenderPhase(ResponseInstruction, ActionRequest)}. If a response instruction is found, it will
+	 * be removed from the session.
 	 * @param request the portlet request
 	 * @return the response instructions found in the session or null if not found
 	 */
@@ -294,8 +296,8 @@ public class PortletFlowController extends AbstractController implements Initial
 			// forward to a view as part of an active conversation
 			ApplicationView forward = (ApplicationView) responseInstruction.getViewSelection();
 			Map model = new HashMap(forward.getModel());
-			argumentHandler.exposeFlowExecutionContext(responseInstruction.getFlowExecutionKey(), responseInstruction
-					.getFlowExecutionContext(), model);
+			argumentHandler.exposeFlowExecutionContext(responseInstruction.getFlowExecutionKey(),
+					responseInstruction.getFlowExecutionContext(), model);
 			return new ModelAndView(forward.getViewName(), model);
 		}
 		else if (responseInstruction.isNull()) {
