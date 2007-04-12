@@ -49,14 +49,14 @@ public class FlowNavigationHandler extends NavigationHandler {
 	/**
 	 * The standard navigation handler to delegate to when this one does not apply. 
 	 */
-	private NavigationHandler delegateHandler;
+	private NavigationHandler handlerDelegate;
 	
 	/**
 	 * Create a new {@link FlowNavigationHandler} wrapping the specified standard navigation handler implementation.
-	 * @param delegateHandler the standard <code>NavigationHandler</code> this class decorates
+	 * @param handlerDelegate the standard <code>NavigationHandler</code> this class decorates
 	 */
-	public FlowNavigationHandler(NavigationHandler delegateHandler) {
-		this.delegateHandler = delegateHandler;
+	public FlowNavigationHandler(NavigationHandler handlerDelegate) {
+		this.handlerDelegate = handlerDelegate;
 	}
 
 	public void handleNavigation(FacesContext facesContext, String fromAction, String outcome) {
@@ -68,8 +68,8 @@ public class FlowNavigationHandler extends NavigationHandler {
 			holder.setViewSelection(selectedView);
 		}
 		else {
-			// no flow execution is restored, proceed with std navigation
-			delegateHandler.handleNavigation(facesContext, fromAction, outcome);
+			// no flow execution is restored, proceed with standard navigation
+			handlerDelegate.handleNavigation(facesContext, fromAction, outcome);
 		}
 	}
 }
