@@ -115,7 +115,8 @@ public class FlowPhaseListener implements PhaseListener {
 	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
 	 * </ul>
 	 * </ol>
-	 * How arguments are extracted and how URLs are generated can be customized by setting a custom {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
+	 * How arguments are extracted and how URLs are generated can be customized by setting a custom
+	 * {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -258,10 +259,8 @@ public class FlowPhaseListener implements PhaseListener {
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// restore flow execution from repository so it will be available to
-			// other JSF artifacts
-			// (this could happen as part of a flow execution redirect or
-			// browser refresh)
+			// restore flow execution from repository so it will be available to other JSF artifacts
+			// (this could happen as part of a flow execution redirect or browser refresh)
 			FlowExecutionRepository repository = getRepository(context);
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
 					.extractFlowExecutionKey(context));
@@ -277,8 +276,7 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
 			// launch a new flow execution
-			// (this could happen as part of direct browser access or a flow
-			// definition redirect)
+			// (this could happen as part of direct browser access or a flow definition redirect)
 			String flowId = argumentHandler.extractFlowId(context);
 			FlowDefinition flowDefinition = getLocator(context).getFlowDefinition(flowId);
 			FlowExecution flowExecution = getFactory(context).createFlowExecution(flowDefinition);
@@ -318,11 +316,14 @@ public class FlowPhaseListener implements PhaseListener {
 	 * @param holder the holder
 	 */
 	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {
-		generateKey(context, holder);
 		ViewSelection selectedView = holder.getViewSelection();
 		if (selectedView == null) {
+			// no navigation event has been processed - simply refresh the execution with the same key
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
+		} else {
+			// an navigation event has been processed - generate a new flow execution key if necessary
+			generateKey(context, holder);
 		}
 		new ResponseInstructionHandler() {
 			protected void handleApplicationView(ApplicationView view) throws Exception {
