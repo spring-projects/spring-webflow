@@ -9,10 +9,7 @@
 	<hr>
 	<div align="left">
 		<p>
-			<h:form>
-			    <h:commandLink value="Sell Item" action="flowId:sellitem-flow"/> (launch with a JSF command link)
-			</h:form>
-			<a href="app.faces?_flowId=sellitem-flow">Sell Item</A> (launch with a regular anchor tag)
+			<a href="controller.faces?_flowId=sellitem-flow">Sell Item</A> (launch with a regular anchor tag)
 		</p>
 		<p>
 			This Spring Web Flow sample application is the JSF-based version of the familiar "Sell item" sample.
