@@ -44,6 +44,8 @@ import org.springframework.webflow.engine.builder.FlowAssembler;
  * 
  * @see AbstractFlowBuilder
  * 
+ * @since 1.0.2
+ * 
  * @author Erwin Vervaet
  */
 public abstract class AbstractFlowBuilderFlowRegistryFactoryBean extends

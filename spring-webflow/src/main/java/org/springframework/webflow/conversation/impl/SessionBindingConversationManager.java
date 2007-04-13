@@ -65,6 +65,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	/**
 	 * Returns the used generator for conversation ids. Defaults to
 	 * {@link RandomGuidUidGenerator}.
+	 * @since 1.0.1
 	 */
 	public UidGenerator getConversationIdGenerator() {
 		return conversationIdGenerator;
@@ -80,6 +81,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	/**
 	 * Returns the maximum number of allowed concurrent conversations. The
 	 * default is 5.
+	 * @since 1.0.1
 	 */
 	public int getMaxConversations() {
 		return maxConversations;

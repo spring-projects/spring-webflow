@@ -49,6 +49,7 @@ public class BeanFactoryFlowVariable extends FlowVariable {
 	 * @param beanFactory the bean factory where initial variable values will be
 	 * obtained
 	 * @param scope the variable scope
+	 * @since 1.0.2
 	 */
 	public BeanFactoryFlowVariable(String name, BeanFactory beanFactory, ScopeType scope) {
 		this(name, name, beanFactory, scope);

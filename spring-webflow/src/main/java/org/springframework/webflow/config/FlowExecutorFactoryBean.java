@@ -179,6 +179,7 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 * conversation when using the {@link RepositoryType#CONTINUATION continuation}
 	 * flow execution repository.
 	 * @see ContinuationFlowExecutionRepository#setMaxContinuations(int)
+	 * @since 1.0.1
 	 */
 	public void setMaxContinuations(int maxContinuations) {
 		this.maxContinuations = new Integer(maxContinuations);
@@ -190,6 +191,7 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 * {@link RepositoryType#CONTINUATION continuation} flow execution repository.
 	 * @return the configured value or null if the user did not explicitly
 	 * specify a value and wants to use the default
+	 * @since 1.0.1
 	 */
 	protected Integer getMaxContinuations() {
 		return maxContinuations;
@@ -215,6 +217,7 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 * property of the default {@link SessionBindingConversationManager}. Do not use
 	 * this when using {@link #setConversationManager(ConversationManager)}.
 	 * @see SessionBindingConversationManager#setMaxConversations(int)
+	 * @since 1.0.1
 	 */
 	public void setMaxConversations(int maxConversations) {
 		this.maxConversations = new Integer(maxConversations);
@@ -227,6 +230,7 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 * {@link #setConversationManager(ConversationManager)}.
 	 * @return the configured value or null if the user did not explicitly 
 	 * specify a value and wants to use the default
+	 * @since 1.0.1
 	 */
 	protected Integer getMaxConversations() {
 		return maxConversations;
@@ -411,6 +415,7 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	
 	/**
 	 * Returns the flow executor constructed by the factory bean.
+	 * @since 1.0.2
 	 */
 	public FlowExecutor getFlowExecutor() {
 		return flowExecutor;

@@ -84,9 +84,9 @@ public interface FlowExecutionListener {
 	 * Called after a new flow session has been created but before it starts.
 	 * Useful for setting arbitrary attributes in the session before the flow
 	 * starts.
-	 * @since 1.0.2
 	 * @param context the source of the event
 	 * @param session the session that was created
+	 * @since 1.0.2
 	 */
 	public void sessionCreated(RequestContext context, FlowSession session);
 

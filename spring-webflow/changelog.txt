@@ -2,11 +2,12 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
-Changes in version 1.1 ()
+Changes in version 1.0.3 (24.04.2007)
 -------------------------------------
 
 Package org.springframework.webflow.executor
 * PortletFlowController now correctly handles flow redirection parameters (SWF-236).
+* FlowExecution refresh no longer causes a new flow execution key to be generated (SWF-291).
 
 Changes in version 1.0.2 (10.04.2007)
 -------------------------------------

@@ -105,6 +105,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	/**
 	 * Constructs a flow execution test with given name.
 	 * @param name the name of the test
+	 * @since 1.0.2
 	 */
 	public AbstractFlowExecutionTests(String name) {
 		super(name);
@@ -401,6 +402,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * the active flow session and cleared on the next user event.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
+	 * @since 1.0.2
 	 */
 	protected Object getFlashAttribute(String attributeName) {
 		return getFlowExecution().getActiveSession().getFlashMap().get(attributeName);
@@ -413,6 +415,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present
+	 * @since 1.0.2
 	 */
 	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
 		return getFlowExecution().getActiveSession().getFlashMap().getRequired(attributeName);

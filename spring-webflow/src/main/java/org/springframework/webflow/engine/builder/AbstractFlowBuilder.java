@@ -573,6 +573,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Parses the expression string into a settable {@link Expression} object.
 	 * @param expressionString the expression string, e.g. flowScope.order.number
 	 * @return the evaluatable expression
+	 * @since 1.0.2
 	 */
 	protected SettableExpression settableExpression(String expressionString) {
 		return getFlowServiceLocator().getExpressionParser().parseSettableExpression(expressionString);

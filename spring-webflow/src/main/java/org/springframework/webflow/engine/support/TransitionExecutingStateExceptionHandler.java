@@ -129,7 +129,8 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	 * processing before the exceptions are exposed.
 	 * @param context the request control context
 	 * @param exception the exception being handled
-	 * @param rootCause root cause of the exception being handled (could be null) 
+	 * @param rootCause root cause of the exception being handled (could be null)
+	 * @since 1.0.2
 	 */
 	protected void exposeException(RequestContext context, FlowExecutionException exception, Throwable rootCause) {
 		// note that all Throwables are Serializable so putting them in flash

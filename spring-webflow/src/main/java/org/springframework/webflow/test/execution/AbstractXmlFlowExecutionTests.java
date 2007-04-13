@@ -65,6 +65,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	/**
 	 * Constructs an XML flow execution test with given name.
 	 * @param name the name of the test
+	 * @since 1.0.2
 	 */
 	public AbstractXmlFlowExecutionTests(String name) {
 		super(name);

@@ -31,6 +31,8 @@ import org.springframework.webflow.executor.ResponseInstruction;
  * 
  * @see ViewSelection
  * 
+ * @since 1.0.2
+ * 
  * @author Erwin Vervaet
  */
 public abstract class ResponseInstructionHandler {

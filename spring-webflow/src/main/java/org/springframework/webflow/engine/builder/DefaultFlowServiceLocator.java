@@ -64,6 +64,7 @@ public class DefaultFlowServiceLocator extends BaseFlowServiceLocator {
 	 * bean factory.
 	 * @param subflowRegistryBeanId the bean id of the subflow FlowDefinitionRegistry
 	 * @param beanFactory the Spring bean factory
+	 * @since 1.0.2
 	 */
 	public DefaultFlowServiceLocator(String subflowRegistryBeanId, BeanFactory beanFactory) {
 		Assert.notNull(subflowRegistryBeanId, "The subflow registry bean id is required");

@@ -92,6 +92,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	
 	/**
 	 * Set the configured externalized XML flow registrar.
+	 * @since 1.0.1
 	 */
 	public void setXmlFlowRegistrar(XmlFlowRegistrar flowRegistrar) {
 		Assert.notNull(flowRegistrar, "The flowRegistrar is required");
@@ -172,6 +173,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 * Can be used in conjunction with both {@link #setFlowLocations(Resource[])}
 	 * and {@link #setFlowDefinitions(Properties)}.
 	 * @param flowAttributes the flow attributes, keyed by flow id
+	 * @since 1.0.1
 	 */
 	public void setFlowAttributes(Map flowAttributes) {
 		this.flowAttributes = flowAttributes;

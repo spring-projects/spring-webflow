@@ -145,6 +145,7 @@ public class FlowDefinitionResource implements Serializable {
 	 * By convention this will be the filename of the resource, excluding extension.
 	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource)
 	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource, AttributeMap)
+	 * @since 1.0.1
 	 */
 	public static String conventionalFlowId(Resource location) {
 		String fileName = location.getFilename();
