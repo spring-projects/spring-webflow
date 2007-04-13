@@ -128,6 +128,7 @@ public class FlowExecutionHolder implements Serializable {
 		if (flowExecutionLock != null) {
 			flowExecutionLock.unlock();
 		}
+		this.flowExecutionLock = null;
 		this.flowExecution = flowExecution;
 	}
 
