@@ -7,7 +7,8 @@ Changes in version 1.0.3 (24.04.2007)
 
 Package org.springframework.webflow.executor
 * PortletFlowController now correctly handles flow redirection parameters (SWF-236).
-* FlowExecution refresh no longer causes a new flow execution key to be generated (SWF-291).
+* SWF-JSF: FlowExecution refresh no longer causes a new flow execution key to be generated (SWF-291).
+* SWF-JSF: Restored capability to launch a new flow within an ongoing flow using a UICommand (SWF-290).
 
 Changes in version 1.0.2 (10.04.2007)
 -------------------------------------
