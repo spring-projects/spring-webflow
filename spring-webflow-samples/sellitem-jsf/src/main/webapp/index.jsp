@@ -27,5 +27,7 @@
 			</li>
 		</ul>
 	</div>
+	<hr/>
+	<div align="right"></div>
   </body>
 </html>
