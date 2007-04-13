@@ -245,6 +245,7 @@ public class FlowPhaseListener implements PhaseListener {
 					}
 					finally {
 						if (holder.getFlowExecutionLock() != null) {
+							// unlock the flow execution
 							holder.getFlowExecutionLock().unlock();
 						}
 					}
@@ -437,8 +438,7 @@ public class FlowPhaseListener implements PhaseListener {
 				FlowExecutionKeyStateHolder.COMPONENT_ID);
 		if (keyHolder == null) {
 			keyHolder = new FlowExecutionKeyStateHolder();
-			// expose as the first component in the view root for preservation
-			// in the tree
+			// expose as the first component in the view root for preservation in the tree
 			facesContext.getViewRoot().getChildren().add(0, keyHolder);
 		}
 		keyHolder.setFlowExecutionKey(flowExecutionKey);
@@ -447,17 +447,19 @@ public class FlowPhaseListener implements PhaseListener {
 	private void generateKey(JsfExternalContext context, FlowExecutionHolder holder) {
 		FlowExecution flowExecution = holder.getFlowExecution();
 		if (flowExecution.isActive()) {
-			// generate new continuation key for the flow execution before
-			// rendering the response
+			// generate new continuation key for the flow execution before rendering the response
 			FlowExecutionKey flowExecutionKey = holder.getFlowExecutionKey();
 			FlowExecutionRepository repository = getRepository(context);
 			if (flowExecutionKey == null) {
-				// it is an new conversation, generate a brand new key
+				// it is a new conversation - generate a brand new key
 				flowExecutionKey = repository.generateKey(flowExecution);
+				FlowExecutionLock lock = repository.getLock(flowExecutionKey);
+				lock.lock();
+				// set that the flow execution lock has been acquired
+				holder.setFlowExecutionLock(lock);
 			}
 			else {
-				// it is an existing conversaiton, use same conversation id,
-				// generate a new continuation id
+				// it is an existing conversation - get the next key
 				flowExecutionKey = repository.getNextKey(flowExecution, flowExecutionKey);
 			}
 			holder.setFlowExecutionKey(flowExecutionKey);

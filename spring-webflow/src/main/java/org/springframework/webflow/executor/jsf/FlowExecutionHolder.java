@@ -84,8 +84,8 @@ public class FlowExecutionHolder implements Serializable {
 	/**
 	 * Sets the continuation key.
 	 */
-	public void setFlowExecutionKey(FlowExecutionKey continuationKey) {
-		this.flowExecutionKey = continuationKey;
+	public void setFlowExecutionKey(FlowExecutionKey key) {
+		this.flowExecutionKey = key;
 	}
 
 	/**
@@ -102,6 +102,14 @@ public class FlowExecutionHolder implements Serializable {
 		return flowExecutionLock;
 	}
 
+	/**
+	 * Sets the lock acquired on the flow execution
+	 * @param lock the flow execution lock
+	 */
+	public void setFlowExecutionLock(FlowExecutionLock lock) {
+		this.flowExecutionLock = lock;
+	}
+	
 	/**
 	 * Returns the view selected from the current flow execution request.
 	 */
