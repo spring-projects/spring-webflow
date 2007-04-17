@@ -645,7 +645,7 @@
 				Flows can also be launched simply by accessing flow definition URLs directly using a bookmark or normal HTML link:
 			</para>
 	    	<programlisting>
-&lt;a href="app.faces?flowId=myflow"&gt;Go&lt;/a&gt;
+&lt;a href="app.faces?_flowId=myflow"&gt;Go&lt;/a&gt;
 	    	</programlisting>
 			<para>
 				This example link assumes *.faces has been mapped to the FacesServlet defined within web.xml.
