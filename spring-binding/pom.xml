@@ -5,7 +5,7 @@
 	<artifactId>spring-binding</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Binding</name>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.3</version>
 	<description>Spring Data Binding Framework</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
