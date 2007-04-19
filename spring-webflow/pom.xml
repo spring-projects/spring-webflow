@@ -5,7 +5,7 @@
 	<artifactId>spring-webflow</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Web Flow</name>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<description>Spring Web Flow</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
@@ -18,7 +18,7 @@
 	<scm>
 		<connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</connection>
 		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</developerConnection>
-		<tag>spring-webflow-1.0.3</tag>
+		<tag>spring-webflow-1.0.4</tag>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-webflow</url>
 	</scm>
 	<organization>
