@@ -2,6 +2,13 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
+Changes in version 1.0.4 (08.05.2007)
+-------------------------------------
+
+Package org.springframework.webflow.config
+* FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
+  property of the created FlowExecutorImpl object.
+
 Changes in version 1.0.3 (19.04.2007)
 -------------------------------------
 

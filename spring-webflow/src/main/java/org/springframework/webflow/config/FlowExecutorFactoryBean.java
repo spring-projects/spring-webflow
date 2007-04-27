@@ -19,7 +19,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.util.Assert;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.impl.SessionBindingConversationManager;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -29,6 +31,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
+import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
@@ -101,6 +104,13 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 * Only used when the repository type is {@link RepositoryType#CONTINUATION}.
 	 */
 	private Integer maxContinuations;
+	
+	/**
+	 * A custom attribute mapper to use for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during the
+	 * {@link FlowExecutor#launch(String, ExternalContext) launch flow} operation.
+	 */
+	private AttributeMapper inputMapper;
 
 	/**
 	 * The flow executor this factory bean creates.
@@ -235,7 +245,26 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	protected Integer getMaxConversations() {
 		return maxConversations;
 	}
-	
+
+	/**
+	 * Set the service responsible for mapping attributes of an
+	 * {@link ExternalContext} to a new {@link FlowExecution} during the
+	 * {@link FlowExecutor#launch(String, ExternalContext) launch flow} operation.
+	 * <p>
+	 * This is optional. If not set, a default implementation will be used
+	 * that simply exposes all request parameters as flow execution input attributes.
+	 */
+	public void setInputMapper(AttributeMapper inputMapper) {
+		this.inputMapper = inputMapper;
+	}
+
+	/**
+	 * Return the configured input mapper.
+	 */
+	protected AttributeMapper getInputMapper() {
+		return inputMapper;
+	}
+
 	/**
 	 * Set system defaults that should be used.
 	 * @param defaults the defaults to use.
@@ -396,7 +425,12 @@ public class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
     protected FlowExecutor createFlowExecutor(
             FlowDefinitionLocator definitionLocator, FlowExecutionFactory executionFactory,
             FlowExecutionRepository executionRepository) {
-        return new FlowExecutorImpl(definitionLocator, executionFactory, executionRepository);
+        FlowExecutorImpl flowExecutor =
+        	new FlowExecutorImpl(definitionLocator, executionFactory, executionRepository);
+        if (getInputMapper() != null) {
+        	flowExecutor.setInputMapper(inputMapper);
+        }
+        return flowExecutor;
     }
 
 	// implementing FactoryBean
