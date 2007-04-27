@@ -45,7 +45,8 @@ public final class ExternalContextHolder {
 
 	/**
 	 * Return the ExternalContext associated with the current thread, if any.
-	 * @return the current ExternalContext, or <code>null</code> if none
+	 * @return the current ExternalContext
+	 * @throws IllegalStateException if no ExternalContext is bound to this thread 
 	 */
 	public static ExternalContext getExternalContext() {
 		Assert.state(externalContextHolder.get() != null, "No external context is bound to this thread");
