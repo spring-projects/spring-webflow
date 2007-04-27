@@ -19,15 +19,15 @@ import org.springframework.util.Assert;
 
 /**
  * Simple holder class that associates an {@link ExternalContext} instance with
- * the current thread. The ExternalContext will be inherited by any child
+ * the current thread. The ExternalContext will not be inherited by any child
  * threads spawned by the current thread.
  * <p>
  * Used as a central holder for the current ExternalContext in Spring Web Flow,
  * wherever necessary. Often used by artifacts needing access to the current
  * application session.
- * 
+ *
  * @see ExternalContext
- * 
+ *
  * @author Keith Donald
  */
 public final class ExternalContextHolder {
