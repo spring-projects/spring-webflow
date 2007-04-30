@@ -36,6 +36,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * phase.
  * 
  * @author Jeremy Grelle
+ * @author Keith Donald
  */
 public class FlowExecutionKeyStateHolder extends UIComponentBase {
 
@@ -116,17 +117,24 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 			// restore the "current" flow execution from repository so it will be available to variable/property resolvers
 			// and the flow navigation handler (this could happen as part of a view action like a form submission)
 			FlowExecutionRepository repository = getRepository(context);
-			FlowExecutionKey key;
-			// restore the key from the stored flowExecutionKey
-			key = repository.parseFlowExecutionKey(flowExecutionKey);
+			// restore the key from the stored encoded key string
+			FlowExecutionKey key = repository.parseFlowExecutionKey(flowExecutionKey);
 			FlowExecutionLock lock = repository.getLock(key);
 			lock.lock();
-			FlowExecution flowExecution = repository.getFlowExecution(key);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded existing flow execution from repository with key '" + key + "'");
+			FlowExecution flowExecution;
+			try {
+				flowExecution = repository.getFlowExecution(key);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Loaded existing flow execution from repository with key '" + key + "'");
+				}
+			} catch (RuntimeException e) {
+				lock.unlock();
+				throw e;
+			} catch (Error e) {
+				lock.unlock();
+				throw e;
 			}
-			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock),
-					facesContext);
+			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock), facesContext);
 		}
 	}
 

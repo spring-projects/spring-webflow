@@ -91,6 +91,17 @@ public class FlowExecutionHolderUtils {
 		}
 	}
 
+	/**
+	 * Unlocks the current flow execution in the faces context if necessary.
+	 * Can be safely called even if no execution is bound or one is bound but not locked.
+	 * @param context the faces context
+	 */
+	public static void unlockCurrentFlowExecutionIfNecessary(FacesContext context) {
+		if (isFlowExecutionRestored(context)) {
+			getFlowExecutionHolder(context).unlockFlowExecutionIfNecessary();
+		}
+	}
+	
 	private static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
