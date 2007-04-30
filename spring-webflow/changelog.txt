@@ -9,6 +9,12 @@ Package org.springframework.webflow.config
 * FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
   property of the created FlowExecutorImpl object.
 
+Package org.springframework.webflow.executor
+* JSF integration code now manages flow execution locks properly in exceptional situations and when the
+  RENDER RESPONSE phase is bypassed (SWF-302).
+* Restored compatability with 1.0.1 allowing default navigation rules to be queried if no transition could
+  be matched against the state of the current flow execution (SWF-303).
+
 Changes in version 1.0.3 (24.04.2007)
 -------------------------------------
 
