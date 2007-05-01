@@ -9,6 +9,10 @@ Package org.springframework.webflow.config
 * FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
   property of the created FlowExecutorImpl object.
 
+Package org.springframework.webflow.conversation
+* Each SessionBindingConversationManager now uses a unique key to store it's conversation container
+  in the session (SWF-304).
+
 Package org.springframework.webflow.executor
 * JSF integration code now manages flow execution locks properly in exceptional situations and when the
   RENDER RESPONSE phase is bypassed (SWF-302).

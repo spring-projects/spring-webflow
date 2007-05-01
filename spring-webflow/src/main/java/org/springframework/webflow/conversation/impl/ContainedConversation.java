@@ -110,7 +110,7 @@ class ContainedConversation implements Conversation, Serializable {
 		// manipulating the contents of the conversation
 		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
-			sessionMap.put(SessionBindingConversationManager.CONVERSATION_CONTAINER_KEY, container);
+			sessionMap.put(container.getSessionKey(), container);
 		}
 	}
 

@@ -41,6 +41,11 @@ class ConversationContainer implements Serializable {
 	 * unlimited.
 	 */
 	private int maxConversations;
+	
+	/**
+	 * The key of this conversation container in the session.
+	 */
+	private String sessionKey;
 
 	/**
 	 * The contained conversations. A list of {@link ContainedConversation} objects.
@@ -51,10 +56,20 @@ class ConversationContainer implements Serializable {
 	 * Create a new conversation container.
 	 * @param maxConversations the maximum number of allowed concurrent
 	 * conversations, -1 for unlimited
+	 * @param sessionKey the key of this conversation container in the session
 	 */
-	public ConversationContainer(int maxConversations) {
+	public ConversationContainer(int maxConversations, String sessionKey) {
 		this.maxConversations = maxConversations;
+		this.sessionKey = sessionKey;
 		this.conversations = new ArrayList();
+	}
+	
+	/**
+	 * Returns the key of this conversation container in the session.
+	 * For package level use only.
+	 */
+	String getSessionKey() {
+		return sessionKey;
 	}
 	
 	/**

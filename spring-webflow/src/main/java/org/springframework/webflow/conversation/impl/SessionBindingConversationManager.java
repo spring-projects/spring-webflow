@@ -24,6 +24,7 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
+import org.springframework.webflow.util.RandomGuid;
 import org.springframework.webflow.util.RandomGuidUidGenerator;
 import org.springframework.webflow.util.UidGenerator;
 
@@ -46,9 +47,10 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private static final Log logger = LogFactory.getLog(SessionBindingConversationManager.class);
 
 	/**
-	 * Key of the session attribute holding the conversation container.
+	 * Generate a unique key for the session attribute holding the conversation
+	 * container managed by this conversation manager.
 	 */
-	static final String CONVERSATION_CONTAINER_KEY = "webflow.conversation.container";
+	private String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
 	
 	/**
 	 * The conversation uid generation strategy to use.
@@ -94,6 +96,15 @@ public class SessionBindingConversationManager implements ConversationManager {
 	public void setMaxConversations(int maxConversations) {
 		this.maxConversations = maxConversations;
 	}
+	
+	/**
+	 * Returns the key this conversation manager uses to store conversation
+	 * data in the session. The key is unique for this conversation manager instance.
+	 * @return the session key
+	 */
+	public String getSessionKey() {
+		return sessionKey;
+	}
 
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
 		ConversationId conversationId = new SimpleConversationId(conversationIdGenerator.generateUid());
@@ -125,10 +136,10 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private ConversationContainer getConversationContainer() {
 		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
-			ConversationContainer container = (ConversationContainer)sessionMap.get(CONVERSATION_CONTAINER_KEY);
+			ConversationContainer container = (ConversationContainer)sessionMap.get(sessionKey);
 			if (container == null) {
-				container = new ConversationContainer(maxConversations);
-				sessionMap.put(CONVERSATION_CONTAINER_KEY, container);
+				container = new ConversationContainer(maxConversations, sessionKey);
+				sessionMap.put(sessionKey, container);
 			}
 			return container;
 		}
