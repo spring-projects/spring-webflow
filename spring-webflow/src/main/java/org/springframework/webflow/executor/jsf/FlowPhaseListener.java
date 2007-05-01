@@ -224,6 +224,7 @@ public class FlowPhaseListener implements PhaseListener {
 		FacesContext context = event.getFacesContext();
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
 			try {
+				ExternalContextHolder.setExternalContext(new JsfExternalContext(context));				
 				restoreFlowExecution(event.getFacesContext());
 			}
 			catch (RuntimeException e) {
