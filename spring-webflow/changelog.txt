@@ -18,6 +18,8 @@ Package org.springframework.webflow.executor
   RENDER RESPONSE phase is bypassed (SWF-302).
 * Restored compatability with 1.0.1 allowing default navigation rules to be queried if no transition could
   be matched against the state of the current flow execution (SWF-303).
+* JSF integration code now tears down ExternalContext thread local properly in exceptional situations and when
+  the RENDER_RESPONSE phase is bypassed (SWF-305).  
 
 Changes in version 1.0.3 (24.04.2007)
 -------------------------------------

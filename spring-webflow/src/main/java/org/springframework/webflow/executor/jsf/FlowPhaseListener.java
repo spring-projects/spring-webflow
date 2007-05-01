@@ -115,8 +115,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
 	 * </ul>
 	 * </ol>
-	 * How arguments are extracted and how URLs are generated can be customized by setting a custom
-	 * {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
+	 * How arguments are extracted and how URLs are generated can be customized by setting a custom {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -224,45 +223,53 @@ public class FlowPhaseListener implements PhaseListener {
 	public void beforePhase(PhaseEvent event) {
 		FacesContext context = event.getFacesContext();
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-			ExternalContextHolder.setExternalContext(new JsfExternalContext(context));
-			restoreFlowExecution(event.getFacesContext());
+			try {
+				restoreFlowExecution(event.getFacesContext());
+			}
+			catch (RuntimeException e) {
+				// clear the current external context only - no lock is acquired at this point
+				ExternalContextHolder.setExternalContext(null);
+				throw e;
+			}
+			catch (Error e) {
+				ExternalContextHolder.setExternalContext(null);
+				throw e;
+			}
 		}
 		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 				try {
 					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
-				} catch (RuntimeException e) {
-					FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+				}
+				catch (RuntimeException e) {
+					cleanupResources(context);
 					throw e;
-				} catch (Error e) {
-					FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
-					throw e;					
+				}
+				catch (Error e) {
+					cleanupResources(context);
+					throw e;
 				}
 			}
 		}
 	}
 
 	public void afterPhase(PhaseEvent event) {
-		FacesContext context = event.getFacesContext();		
+		FacesContext context = event.getFacesContext();
 		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
-			try {
-				if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
-					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(context);
-					try {
-						saveFlowExecution(getCurrentContext(), holder);
-					}
-					finally {
-						FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
-					}
+			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
+				try {
+					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
+				}
+				finally {
+					// always cleanup after save - done with flow execution request processing
+					cleanupResources(context);
 				}
 			}
-			finally {
-				ExternalContextHolder.setExternalContext(null);
-			}
-		} else {
-			// unlock if some other JSF artifact marked 'response complete' to short-circuit the lifecycle early
+		}
+		else {
+			// cleanup if some other JSF artifact marked 'response complete' to short-circuit the lifecycle early
 			if (context.getResponseComplete()) {
-				FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+				cleanupResources(context);
 			}
 		}
 	}
@@ -270,7 +277,7 @@ public class FlowPhaseListener implements PhaseListener {
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// restore flow execution from repository so it will be available to other JSF artifacts
+			// restore flow execution from repository so it will be available togother JSF artifacts
 			// (this could happen as part of a flow execution redirect or browser refresh)
 			FlowExecutionRepository repository = getRepository(context);
 			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler.extractFlowExecutionKey(context));
@@ -281,12 +288,14 @@ public class FlowPhaseListener implements PhaseListener {
 				flowExecution = repository.getFlowExecution(flowExecutionKey);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Loaded existing flow execution key '" + flowExecutionKey + "' due to browser access "
-						+ "[either via a flow execution redirect or direct browser refresh]");
+							+ "[either via a flow execution redirect or direct browser refresh]");
 				}
-			} catch (RuntimeException e) {
+			}
+			catch (RuntimeException e) {
 				lock.unlock();
 				throw e;
-			} catch (Error e) {
+			}
+			catch (Error e) {
 				lock.unlock();
 				throw e;
 			}
@@ -339,7 +348,8 @@ public class FlowPhaseListener implements PhaseListener {
 			// no navigation event has been processed - simply refresh the execution with the same key
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
-		} else {
+		}
+		else {
 			// an navigation event has been processed - generate a new flow execution key if necessary
 			generateKey(context, holder);
 		}
@@ -428,6 +438,11 @@ public class FlowPhaseListener implements PhaseListener {
 		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
 	}
 
+	private void cleanupResources(FacesContext context) {
+		FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+		ExternalContextHolder.setExternalContext(null);
+	}
+
 	private void updateViewRoot(FacesContext facesContext, String viewId) {
 		UIViewRoot viewRoot = facesContext.getViewRoot();
 		if (viewRoot == null || hasViewChanged(viewRoot, viewId)) {
@@ -455,7 +470,7 @@ public class FlowPhaseListener implements PhaseListener {
 				FlowExecutionKeyStateHolder.COMPONENT_ID);
 		if (keyHolder == null) {
 			keyHolder = new FlowExecutionKeyStateHolder();
-			// expose as the in the view root for preservation in the tree
+			// expose in the view root for preservation in the component tree
 			facesContext.getViewRoot().getChildren().add(keyHolder);
 		}
 		keyHolder.setFlowExecutionKey(flowExecutionKey);

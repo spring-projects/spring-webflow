@@ -27,19 +27,20 @@ public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
 	
 	protected void setUp() throws Exception {
 		extractor = new FlowNavigationHandlerArgumentExtractor();
-		
 		facesContext = new MockFacesContext();
 		facesContext.setExternalContext(new MockJsfExternalContext());
 	}
 
 	public void testExtractFlowId() {
-		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "flowId:foo");
+		JsfExternalContext context = new JsfExternalContext(facesContext);
+		context.handleNavigationCalled("action", "flowId:foo");
 		String flowId = extractor.extractFlowId(context);
 		assertEquals("Wrong flow id", "foo", flowId);
 	}
 
 	public void testExtractFlowIdWrongFormat() {
-		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "flow:foo");
+		JsfExternalContext context = new JsfExternalContext(facesContext);
+		context.handleNavigationCalled("action", "bogus:foo");
 		try {
 			extractor.extractFlowId(context);
 			fail();
@@ -50,7 +51,8 @@ public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
 	}
 
 	public void testExtractEventId() {
-		JsfExternalContext context = new JsfExternalContext(facesContext, "action", "submit");
+		JsfExternalContext context = new JsfExternalContext(facesContext);
+		context.handleNavigationCalled("action", "submit");
 		String eventId = extractor.extractEventId(context);
 		assertEquals("Wrong event id", "submit", eventId);
 	}
