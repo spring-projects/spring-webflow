@@ -222,37 +222,47 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	public void beforePhase(PhaseEvent event) {
+		FacesContext context = event.getFacesContext();
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-			ExternalContextHolder.setExternalContext(new JsfExternalContext(event.getFacesContext()));
+			ExternalContextHolder.setExternalContext(new JsfExternalContext(context));
 			restoreFlowExecution(event.getFacesContext());
 		}
 		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
-				prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(event
-						.getFacesContext()));
+				try {
+					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
+				} catch (RuntimeException e) {
+					FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+					throw e;
+				} catch (Error e) {
+					FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+					throw e;					
+				}
 			}
 		}
 	}
 
 	public void afterPhase(PhaseEvent event) {
+		FacesContext context = event.getFacesContext();		
 		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			try {
-				if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
-					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(event
-							.getFacesContext());
+				if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
+					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(context);
 					try {
 						saveFlowExecution(getCurrentContext(), holder);
 					}
 					finally {
-						if (holder.getFlowExecutionLock() != null) {
-							// unlock the flow execution
-							holder.getFlowExecutionLock().unlock();
-						}
+						FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
 					}
 				}
 			}
 			finally {
 				ExternalContextHolder.setExternalContext(null);
+			}
+		} else {
+			// unlock if some other JSF artifact marked 'response complete' to short-circuit the lifecycle early
+			if (context.getResponseComplete()) {
+				FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
 			}
 		}
 	}
@@ -263,17 +273,24 @@ public class FlowPhaseListener implements PhaseListener {
 			// restore flow execution from repository so it will be available to other JSF artifacts
 			// (this could happen as part of a flow execution redirect or browser refresh)
 			FlowExecutionRepository repository = getRepository(context);
-			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
-					.extractFlowExecutionKey(context));
+			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler.extractFlowExecutionKey(context));
 			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
 			lock.lock();
-			FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded existing flow execution key '" + flowExecutionKey + "' due to browser access "
+			FlowExecution flowExecution;
+			try {
+				flowExecution = repository.getFlowExecution(flowExecutionKey);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Loaded existing flow execution key '" + flowExecutionKey + "' due to browser access "
 						+ "[either via a flow execution redirect or direct browser refresh]");
+				}
+			} catch (RuntimeException e) {
+				lock.unlock();
+				throw e;
+			} catch (Error e) {
+				lock.unlock();
+				throw e;
 			}
-			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution,
-					lock), facesContext);
+			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution, lock), facesContext);
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
 			// launch a new flow execution
@@ -438,8 +455,8 @@ public class FlowPhaseListener implements PhaseListener {
 				FlowExecutionKeyStateHolder.COMPONENT_ID);
 		if (keyHolder == null) {
 			keyHolder = new FlowExecutionKeyStateHolder();
-			// expose as the first component in the view root for preservation in the tree
-			facesContext.getViewRoot().getChildren().add(0, keyHolder);
+			// expose as the in the view root for preservation in the tree
+			facesContext.getViewRoot().getChildren().add(keyHolder);
 		}
 		keyHolder.setFlowExecutionKey(flowExecutionKey);
 	}

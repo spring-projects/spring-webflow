@@ -133,11 +133,18 @@ public class FlowExecutionHolder implements Serializable {
 	public void replaceWith(FlowExecution flowExecution) {
 		this.flowExecutionKey = null;
 		this.viewSelection = null;
+		unlockFlowExecutionIfNecessary();
+		this.flowExecution = flowExecution;
+	}
+	
+	/**
+	 * Unlock the held flow execution if necessary.
+	 */
+	public void unlockFlowExecutionIfNecessary() {
 		if (flowExecutionLock != null) {
 			flowExecutionLock.unlock();
+			this.flowExecutionLock = null;
 		}
-		this.flowExecutionLock = null;
-		this.flowExecution = flowExecution;
 	}
 
 	public String toString() {
