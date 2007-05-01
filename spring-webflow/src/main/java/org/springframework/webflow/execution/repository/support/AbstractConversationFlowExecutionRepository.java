@@ -118,10 +118,6 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	}
 
 	public FlowExecutionLock getLock(FlowExecutionKey key) throws FlowExecutionRepositoryException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Getting lock for flow execution with key '" + key + "'");
-		}
-		// lock the entire conversation
 		return new ConversationBackedFlowExecutionLock(getConversation(key));
 	}
 

@@ -164,7 +164,8 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 				}
 				else {
 					// bind the new execution as the 'current execution'
-					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecution), facesContext);
+					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecution),
+							facesContext);
 				}
 				// start the new execution
 				ViewSelection selectedView = flowExecution.start(createInput(context), context);
@@ -185,6 +186,10 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 							holder.setViewSelection(selectedView);
 						}
 						catch (NoMatchingTransitionException e) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("No flow state transition found for event '" + eventId
+										+ "'; falling back to standard navigation handler.");
+							}
 							// not a valid event in the current state: proceed with standard navigation
 							originalNavigationHandler.handleNavigation(facesContext, fromAction, outcome);
 						}
@@ -238,6 +243,9 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	}
 
 	private void cleanupResources(FacesContext context) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Cleaning up allocated flow system resources");
+		}
 		FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
 		ExternalContextHolder.setExternalContext(null);
 	}
