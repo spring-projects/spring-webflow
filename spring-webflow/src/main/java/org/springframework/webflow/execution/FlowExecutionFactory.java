@@ -34,6 +34,9 @@ import org.springframework.webflow.definition.FlowDefinition;
  * @author Keith Donald
  */
 public interface FlowExecutionFactory {
+	
+	// TODO: should this class be moved to the execution.factory package for clarity
+	// and to align it with package structuring for flow execution repositories?
 
 	/**
 	 * Create a new flow execution product for the given flow definition.
