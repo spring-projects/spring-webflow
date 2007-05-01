@@ -225,10 +225,24 @@ public class FlowPhaseListener implements PhaseListener {
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
 			ExternalContextHolder.setExternalContext(new JsfExternalContext(context));
 			restoreFlowExecution(event.getFacesContext());
+			// we do not need to worry about clean up here since other phases will continue to run even if an exception
+			// occurs in restoreFlowExecution(FacesContext)
 		}
 		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
-				prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
+				try {
+					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
+				}
+				catch (RuntimeException e) {
+					// we must cleanup here since this is the render response phase and the after phase callback will
+					// NOT run when an exception occurs (which typically does the cleanup--see below)
+					cleanupResources(context);
+					throw e;
+				}
+				catch (Error e) {
+					cleanupResources(context);
+					throw e;
+				}
 			}
 		}
 	}
@@ -241,7 +255,7 @@ public class FlowPhaseListener implements PhaseListener {
 					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 				}
 				finally {
-					// always cleanup after save - done with flow execution request processing
+					// always cleanup after save - we are done with flow execution request processing
 					cleanupResources(context);
 				}
 			}
@@ -413,7 +427,7 @@ public class FlowPhaseListener implements PhaseListener {
 		if (flowExecution.isActive()) {
 			// save the flow execution out to the repository
 			if (logger.isDebugEnabled()) {
-				logger.debug("Saving continuation to repository with key " + holder.getFlowExecutionKey());
+				logger.debug("Saving execution to repository with key " + holder.getFlowExecutionKey());
 			}
 			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
 		}
@@ -435,6 +449,9 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	private void cleanupResources(FacesContext context) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Cleaning up allocated flow system resources");
+		}		
 		FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
 		ExternalContextHolder.setExternalContext(null);
 	}
