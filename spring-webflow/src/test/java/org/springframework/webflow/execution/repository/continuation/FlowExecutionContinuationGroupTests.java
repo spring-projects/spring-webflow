@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.springframework.webflow.config.FlowExecutorFactoryBean;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
+import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.impl.SessionBindingConversationManager;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
@@ -113,17 +114,23 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 		FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
 		FlowDefinition testFlow = new FlowAssembler("testFlow", new TestFlowBuilder()).assembleFlow();
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(testFlow));
+		
+		ConversationManager conversationManager = new SessionBindingConversationManager();
+		
 		FlowExecutorFactoryBean flowExecutorFactory = new FlowExecutorFactoryBean();
 		flowExecutorFactory.setDefinitionLocator(registry);
+		flowExecutorFactory.setConversationManager(conversationManager);
 		flowExecutorFactory.afterPropertiesSet();
 		FlowExecutor flowExecutor = (FlowExecutor)flowExecutorFactory.getObject();
 
 		MockExternalContext externalContext = new MockExternalContext();
+		
+		GroupGetter groupGetter = new GroupGetter(registry, conversationManager);
 
 		//obtain continuation group
 		ResponseInstruction response = flowExecutor.launch("testFlow", externalContext);
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
-		FlowExecutionContinuationGroup group = new GroupGetter(registry).getContinuationGroup(externalContext);
+		FlowExecutionContinuationGroup group = groupGetter.getContinuationGroup(externalContext);
 		assertNotNull(group);
 		
 		assertTrue(response.getViewSelection() instanceof FlowExecutionRedirect);
@@ -151,7 +158,7 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 		response = flowExecutor.resume(response.getFlowExecutionKey(), "end", externalContext);
 		
 		try {
-			new GroupGetter(registry).getContinuationGroup(externalContext);
+			groupGetter.getContinuationGroup(externalContext);
 			fail();
 		}
 		catch (NoSuchFlowExecutionException e) {
@@ -180,8 +187,8 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 	
 	private static class GroupGetter extends ContinuationFlowExecutionRepository {
 		
-		public GroupGetter(FlowDefinitionLocator definitionLocator) {
-			super(new FlowExecutionImplStateRestorer(definitionLocator), new SessionBindingConversationManager());
+		public GroupGetter(FlowDefinitionLocator definitionLocator, ConversationManager conversationManager) {
+			super(new FlowExecutionImplStateRestorer(definitionLocator), conversationManager);
 		}
 		
 		public FlowExecutionContinuationGroup getContinuationGroup(ExternalContext externalContext) {

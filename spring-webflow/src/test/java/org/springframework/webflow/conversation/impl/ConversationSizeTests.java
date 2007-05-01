@@ -41,6 +41,7 @@ import org.springframework.webflow.test.MockExternalContext;
  */
 public class ConversationSizeTests extends TestCase {
 	
+	private SessionBindingConversationManager conversationManager;
 	private FlowExecutor flowExecutor; 
 
 	protected void setUp() throws Exception {
@@ -50,8 +51,11 @@ public class ConversationSizeTests extends TestCase {
 		flowRegistryFactory.afterPropertiesSet();
 		FlowDefinitionRegistry flowRegistry = flowRegistryFactory.getRegistry();
 		
+		conversationManager = new SessionBindingConversationManager();
+		
 		FlowExecutorFactoryBean flowExecutorFactory = new FlowExecutorFactoryBean();
 		flowExecutorFactory.setDefinitionLocator(flowRegistry);
+		flowExecutorFactory.setConversationManager(conversationManager);
 		flowExecutorFactory.setRepositoryType(RepositoryType.CONTINUATION);
 		flowExecutorFactory.afterPropertiesSet();
 		flowExecutor = flowExecutorFactory.getFlowExecutor();
@@ -69,10 +73,10 @@ public class ConversationSizeTests extends TestCase {
 		assertTrue(ri.getViewSelection() instanceof FlowExecutionRedirect); // alwaysRedirectOnPause
 		
 		// the launch has stored a ConversationContainer in the session since we're using
-		// SessionBindingConversationManager (the default)
+		// SessionBindingConversationManager
 		assertEquals(1, session.size());
 		ConversationContainer conversationContainer = (ConversationContainer)session.get(
-				SessionBindingConversationManager.CONVERSATION_CONTAINER_KEY);
+				conversationManager.getSessionKey());
 		assertNotNull(conversationContainer);
 		assertEquals(1, conversationContainer.size());
 		int initialSize = getSerializedSize(conversationContainer);
@@ -83,7 +87,7 @@ public class ConversationSizeTests extends TestCase {
 		
 		// the refresh did not impact the size of the session
 		assertEquals(1, session.size());
-		assertSame(conversationContainer, session.get(SessionBindingConversationManager.CONVERSATION_CONTAINER_KEY));
+		assertSame(conversationContainer, session.get(conversationManager.getSessionKey()));
 		assertEquals(1, conversationContainer.size());
 		
 		ri = flowExecutor.resume(ri.getFlowExecutionKey(), "end", context);
@@ -92,7 +96,7 @@ public class ConversationSizeTests extends TestCase {
 		
 		// the conversation ended but the ConversationContainer is still in the session
 		assertEquals(1, session.size());
-		assertSame(conversationContainer, session.get(SessionBindingConversationManager.CONVERSATION_CONTAINER_KEY));
+		assertSame(conversationContainer, session.get(conversationManager.getSessionKey()));
 		assertEquals(0, conversationContainer.size());
 		int inactiveSize = getSerializedSize(conversationContainer);
 		
