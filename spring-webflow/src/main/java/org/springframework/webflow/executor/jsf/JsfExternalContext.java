@@ -79,19 +79,6 @@ public class JsfExternalContext implements ExternalContext {
 	}
 
 	/**
-	 * Creates a JSF External Context.
-	 * @param facesContext the JSF faces context.
-	 * @param actionId the action that fired
-	 * @param outcome the action outcome
-	 */
-	public JsfExternalContext(FacesContext facesContext, String actionId, String outcome) {
-		this.facesContext = facesContext;
-		this.actionId = actionId;
-		this.outcome = outcome;
-		initMaps(facesContext);
-	}
-
-	/**
 	 * Initializes parameter and attribute maps from context data structures.
 	 * @param facesContext the faces context
 	 */
@@ -155,6 +142,16 @@ public class JsfExternalContext implements ExternalContext {
 		return outcome;
 	}
 
+	/**
+	 * Records the action and outcome context information when navigation handling occurs.
+	 * @param actionId the from action identifier
+	 * @param outcome the action outcome
+	 */
+	public void handleNavigationCalled(String actionId, String outcome) {
+		this.actionId = actionId;
+		this.outcome = outcome;
+	}
+	
 	/**
 	 * An accessor of a JSF session map.
 	 * @author Keith Donald
