@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.repository.FlowExecutionAccessException;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
@@ -119,25 +120,42 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 			FlowExecutionRepository repository = getRepository(context);
 			// restore the key from the stored encoded key string
 			FlowExecutionKey key = repository.parseFlowExecutionKey(flowExecutionKey);
-			FlowExecutionLock lock = repository.getLock(key);
-			lock.lock();
-			FlowExecution flowExecution;
 			try {
-				flowExecution = repository.getFlowExecution(key);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Loaded existing flow execution from repository with key '" + key + "'");
+				FlowExecutionLock lock = repository.getLock(key);
+				lock.lock();
+				try {
+					FlowExecution flowExecution = repository.getFlowExecution(key);
+					if (logger.isDebugEnabled()) {
+						logger.debug("Loaded existing flow execution with key '" + flowExecutionKey
+								+ "' as part of component restoration [triggered via an action event like a button click]");
+					}
+					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock), facesContext);
 				}
-			} catch (RuntimeException e) {
-				lock.unlock();
-				throw e;
-			} catch (Error e) {
-				lock.unlock();
-				throw e;
+				catch (RuntimeException e) {
+					lock.unlock();
+					throw e;
+				}
+				catch (Error e) {
+					lock.unlock();
+					throw e;
+				}
 			}
-			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock), facesContext);
+			catch (FlowExecutionAccessException e) {
+				handleFlowExecutionAccessException(e, facesContext);
+			}
 		}
 	}
 
+	/**
+	 * Hook method to handle a thrown flow execution access exception. By default this implementation simply rethrows
+	 * the exception. Subclasses may override this method to redirect to an error page or take some other action.
+	 * @param e the flow execution access exception
+	 * @param context the current faces context
+	 */
+	protected void handleFlowExecutionAccessException(FlowExecutionAccessException e, FacesContext context) {
+		throw e;
+	}
+	
 	/**
 	 * Save the just the current FlowExecutionKey value.
 	 */

@@ -38,6 +38,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.execution.repository.FlowExecutionAccessException;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
@@ -177,9 +178,8 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Sets the service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
-	 * during a launch flow operation.
-	 * <p>
-	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
+	 * during a launch flow operation. The default implementation simply exposes all request parameters as flow
+	 * execution input attributes. May be null.
 	 * @param inputMapper the input mapper
 	 * @see RequestParameterInputMapper
 	 */
@@ -223,33 +223,12 @@ public class FlowPhaseListener implements PhaseListener {
 	public void beforePhase(PhaseEvent event) {
 		FacesContext context = event.getFacesContext();
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-			try {
-				ExternalContextHolder.setExternalContext(new JsfExternalContext(context));				
-				restoreFlowExecution(event.getFacesContext());
-			}
-			catch (RuntimeException e) {
-				// clear the current external context only - no lock is acquired at this point
-				ExternalContextHolder.setExternalContext(null);
-				throw e;
-			}
-			catch (Error e) {
-				ExternalContextHolder.setExternalContext(null);
-				throw e;
-			}
+			ExternalContextHolder.setExternalContext(new JsfExternalContext(context));
+			restoreFlowExecution(event.getFacesContext());
 		}
 		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
-				try {
-					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
-				}
-				catch (RuntimeException e) {
-					cleanupResources(context);
-					throw e;
-				}
-				catch (Error e) {
-					cleanupResources(context);
-					throw e;
-				}
+				prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 			}
 		}
 	}
@@ -278,29 +257,37 @@ public class FlowPhaseListener implements PhaseListener {
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
-			// restore flow execution from repository so it will be available togother JSF artifacts
+			// restore flow execution from repository so it will be available to JSF artifacts
 			// (this could happen as part of a flow execution redirect or browser refresh)
 			FlowExecutionRepository repository = getRepository(context);
-			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler.extractFlowExecutionKey(context));
-			FlowExecutionLock lock = repository.getLock(flowExecutionKey);
-			lock.lock();
-			FlowExecution flowExecution;
+			FlowExecutionKey flowExecutionKey = repository.parseFlowExecutionKey(argumentHandler
+					.extractFlowExecutionKey(context));
 			try {
-				flowExecution = repository.getFlowExecution(flowExecutionKey);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Loaded existing flow execution key '" + flowExecutionKey + "' due to browser access "
-							+ "[either via a flow execution redirect or direct browser refresh]");
+				FlowExecutionLock lock = repository.getLock(flowExecutionKey);
+				lock.lock();
+				try {
+					FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
+					if (logger.isDebugEnabled()) {
+						logger.debug("Loaded existing flow execution with key '" + flowExecutionKey
+								+ "' due to browser access "
+								+ "[either via a flow execution redirect or direct browser refresh]");
+					}
+					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey,
+							flowExecution, lock), facesContext);
+				}
+				catch (RuntimeException e) {
+					lock.unlock();
+					throw e;
+				}
+				catch (Error e) {
+					lock.unlock();
+					throw e;
 				}
 			}
-			catch (RuntimeException e) {
-				lock.unlock();
-				throw e;
+			catch (FlowExecutionAccessException e) {
+				// thrown if access to the execution could not be granted
+				handleFlowExecutionAccessException(e, facesContext);
 			}
-			catch (Error e) {
-				lock.unlock();
-				throw e;
-			}
-			FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey, flowExecution, lock), facesContext);
 		}
 		else if (argumentHandler.isFlowIdPresent(context)) {
 			// launch a new flow execution
@@ -320,9 +307,20 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
+	 * Hook method to handle a thrown flow execution access exception. By default this implementation simply rethrows
+	 * the exception. Subclasses may override this method to redirect to an error page or take some other action in the
+	 * case where a flow execution could not be restored (for example, because the flow execution had previously ended
+	 * or expired).
+	 * @param e the flow execution access exception
+	 * @param context the current faces context
+	 */
+	protected void handleFlowExecutionAccessException(FlowExecutionAccessException e, FacesContext context) {
+		throw e;
+	}
+
+	/**
 	 * Factory method that creates the input attribute map for a newly created {@link FlowExecution}. This
 	 * implementation uses the registered input mapper, if any.
-	 * 
 	 * @param context the external context
 	 * @return the input map, or null if no input
 	 */
@@ -339,7 +337,6 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Prepare the appropriate JSF response (e.g. rendering a view, sending a redirect, etc).
-	 * 
 	 * @param context the context
 	 * @param holder the holder
 	 */
@@ -386,7 +383,6 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Prepare the JSF view for rendering.
-	 * 
 	 * @param facesContext the faces context
 	 * @param holder the holder of the current flow execution
 	 */
@@ -408,7 +404,6 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Updates the current flow execution in the repository.
-	 * 
 	 * @param context the external context
 	 * @param holder the current flow execution holder
 	 */
@@ -461,7 +456,6 @@ public class FlowPhaseListener implements PhaseListener {
 	/**
 	 * Saves the flow execution key in a component in the view root for restoration on subsequent RESTORE_VIEW
 	 * operations.
-	 * 
 	 * @param facesContext the faces context exposing the view root
 	 * @param flowExecutionKey the flow execution key
 	 */
@@ -501,8 +495,7 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Utility method needed needed only because we can not rely on JSF RequestMap supporting Map's putAll method. Tries
-	 * putAll, falls back to individual adds
-	 * 
+	 * putAll, falls back to individual adds.
 	 * @param targetMap the target map to add the model data to
 	 * @param map the model data to add to the target map
 	 */
