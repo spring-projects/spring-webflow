@@ -372,20 +372,20 @@ public class FlowPhaseListener implements PhaseListener {
 
 			protected void handleFlowDefinitionRedirect(FlowDefinitionRedirect redirect) throws Exception {
 				String url = argumentHandler.createFlowDefinitionUrl(redirect, context);
-				sendRedirect(url, context);
+				sendRedirect(url, context.getFacesContext());
 			}
 
 			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
 				String url = argumentHandler.createFlowExecutionUrl(holder.getFlowExecutionKey().toString(), holder
 						.getFlowExecution(), context);
-				sendRedirect(url, context);
+				sendRedirect(url, context.getFacesContext());
 			}
 
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
 				String flowExecutionKey = holder.getFlowExecution().isActive() ? holder.getFlowExecutionKey()
 						.toString() : null;
 				String url = argumentHandler.createExternalUrl(redirect, flowExecutionKey, context);
-				sendRedirect(url, context);
+				sendRedirect(url, context.getFacesContext());
 			}
 
 			protected void handleNull() throws Exception {
@@ -417,6 +417,18 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
+	 * Factory method that creates the state holder UI component that will track the flow execution key
+	 * used for execution restoration during subsequent restore view phases.  Subclasses may override to 
+	 * customize the state holder component implementation, for example--to handle flow execution 
+	 * restoration/access exceptions in a certain way.
+	 * @return the flow execution key state holder
+	 * @see #saveInViewRoot(FacesContext, String)
+	 */
+	protected FlowExecutionKeyStateHolder createFlowExecutionKeyStateHolder() {
+		return new FlowExecutionKeyStateHolder();
+	}
+	
+	/**
 	 * Updates the current flow execution in the repository.
 	 * @param context the external context
 	 * @param holder the current flow execution holder
@@ -442,6 +454,23 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
+	/**
+	 * Helper method to issue a redirect in a JSF environment properly.  Subclasses may use 
+	 * as utility code.
+	 * @param url the url to redirect to
+	 * @param context the faces context
+	 */
+	protected void sendRedirect(String url, FacesContext context) {
+		try {
+			url = context.getExternalContext().encodeResourceURL(url);
+			context.getExternalContext().redirect(url);
+			context.responseComplete();
+		}
+		catch (IOException e) {
+			throw new IllegalArgumentException("Could not send redirect to " + url);
+		}
+	}
+	
 	// private helpers
 
 	private JsfExternalContext getCurrentContext() {
@@ -481,7 +510,7 @@ public class FlowPhaseListener implements PhaseListener {
 		FlowExecutionKeyStateHolder keyHolder = (FlowExecutionKeyStateHolder) facesContext.getViewRoot().findComponent(
 				FlowExecutionKeyStateHolder.COMPONENT_ID);
 		if (keyHolder == null) {
-			keyHolder = new FlowExecutionKeyStateHolder();
+			keyHolder = createFlowExecutionKeyStateHolder();
 			// expose in the view root for preservation in the component tree
 			facesContext.getViewRoot().getChildren().add(keyHolder);
 		}
@@ -528,17 +557,6 @@ public class FlowPhaseListener implements PhaseListener {
 				Map.Entry entry = (Map.Entry) it.next();
 				targetMap.put(entry.getKey(), entry.getValue());
 			}
-		}
-	}
-
-	private void sendRedirect(String url, JsfExternalContext context) {
-		try {
-			url = context.getFacesContext().getExternalContext().encodeResourceURL(url);
-			context.getFacesContext().getExternalContext().redirect(url);
-			context.getFacesContext().responseComplete();
-		}
-		catch (IOException e) {
-			throw new IllegalArgumentException("Could not send redirect to " + url);
 		}
 	}
 
