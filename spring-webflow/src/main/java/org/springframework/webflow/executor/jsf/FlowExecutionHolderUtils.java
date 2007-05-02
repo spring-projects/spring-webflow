@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionContextHolder;
 
 /**
  * A static utility class for accessing the current flow execution holder.
@@ -48,6 +49,7 @@ public class FlowExecutionHolderUtils {
 	 */
 	public static void setFlowExecutionHolder(FlowExecutionHolder holder, FacesContext context) {
 		context.getExternalContext().getRequestMap().put(getFlowExecutionHolderKey(), holder);
+		FlowExecutionContextHolder.setFlowExecutionContext(holder.getFlowExecution());
 	}
 
 	/**

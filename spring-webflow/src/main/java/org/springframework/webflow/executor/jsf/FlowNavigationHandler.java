@@ -30,6 +30,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.NoMatchingTransitionException;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionContextHolder;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.executor.RequestParameterInputMapper;
@@ -246,6 +247,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Cleaning up allocated flow system resources");
 		}
+		FlowExecutionContextHolder.setFlowExecutionContext(null);
 		FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
 		ExternalContextHolder.setExternalContext(null);
 	}

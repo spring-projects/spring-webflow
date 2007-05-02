@@ -9,6 +9,7 @@
 		<param-value>
 			classpath:org/springframework/webflow/samples/sellitem/services-config.xml
 			/WEB-INF/webflow-config.xml
+			/WEB-INF/flows/sellitem-beans.xml
 		</param-value>
 	</context-param>
 

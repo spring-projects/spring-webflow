@@ -1,1 +1,2 @@
 http\://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd=org/springframework/webflow/config/spring-webflow-config-1.0.xsd
+http\://www.springframework.org/schema/webflow-config/spring-webflow-config-1.1.xsd=org/springframework/webflow/config/spring-webflow-config-1.1.xsd
