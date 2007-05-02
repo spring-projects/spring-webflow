@@ -681,6 +681,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @param transitionCriteriaExpression the transition criteria expression,
 	 * typically simply a static event identifier (e.g. "submit")
 	 * @return the transition criteria
+	 * @see TextToTransitionCriteria
 	 */
 	protected TransitionCriteria on(String transitionCriteriaExpression) {
 		return (TransitionCriteria)fromStringTo(TransitionCriteria.class).execute(transitionCriteriaExpression);
@@ -690,6 +691,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Creates a target state resolver for the given state id expression.
 	 * @param targetStateIdExpression the target state id expression
 	 * @return the target state resolver
+	 * @see TextToTargetStateResolver
 	 */
 	protected TargetStateResolver to(String targetStateIdExpression) {
 		return (TargetStateResolver)fromStringTo(TargetStateResolver.class).execute(targetStateIdExpression);
