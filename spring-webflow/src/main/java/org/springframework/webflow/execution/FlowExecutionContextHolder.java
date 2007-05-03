@@ -53,7 +53,7 @@ public class FlowExecutionContextHolder {
 	 */
 	public static FlowExecutionContext getFlowExecutionContext() {
 		Assert.state(flowExecutionContextHolder.get() != null,
-				"No request context is bound to this thread");
+				"No flow execution context is bound to this thread");
 		return (FlowExecutionContext) flowExecutionContextHolder.get();
 	}
 

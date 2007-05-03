@@ -22,9 +22,10 @@ import org.springframework.webflow.execution.FlowSession;
 /**
  * Flash-backed {@link Scope} implementation.
  *
+ * @see FlowSession#getFlashMap()
+ * 
  * @author Ben Hale
  * @since 1.1
- * @see FlowSession#getFlashMap()
  */
 public class FlashScope extends AbstractWebFlowScope {
 

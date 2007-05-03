@@ -34,10 +34,11 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>Relies on a thread-bound @{link FlowExecutionContext} instance wich is located
  * through a @{link FlowExecutionContextHolder}.
  * 
- * @author Ben Hale
- * @since 1.1
  * @see FlowExecutionContext
  * @see FlowExecutionContextHolder
+ * 
+ * @author Ben Hale
+ * @since 1.1
  */
 public abstract class AbstractWebFlowScope implements Scope {
 	
@@ -60,7 +61,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 		MutableAttributeMap scope;
 		try {
 			scope = getScope();
-		} catch(IllegalStateException e) {
+		}
+		catch(IllegalStateException e) {
 			throw new ScopedBeanException("Cannot retrieve scoped bean '"
 					+ name + "' before the scope has been populated");
 		}
@@ -72,10 +74,10 @@ public abstract class AbstractWebFlowScope implements Scope {
 			}
 			scopedObject = objectFactory.getObject();
 			scope.put(name, scopedObject);
-		} else {
+		}
+		else {
 			if(logger.isDebugEnabled()) {
-				logger.debug("Found existing scoped instance of '" +
-						name + "'");
+				logger.debug("Found existing scoped instance of '" + name + "'");
 			}
 		}
 		return scopedObject;
@@ -84,7 +86,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 	public Object remove(String name) {
 		try {
 			return getScope().remove(name);
-		} catch(IllegalStateException e) {
+		}
+		catch(IllegalStateException e) {
 			throw new ScopedBeanException("Cannot remove scoped bean '" +
 					name + "' before the scope has been populated");
 		}

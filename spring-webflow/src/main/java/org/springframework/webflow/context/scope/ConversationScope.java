@@ -22,9 +22,10 @@ import org.springframework.webflow.execution.FlowExecution;
 /**
  * Conversation-backed {@link Scope} implementation.
  *
+ * @see FlowExecution#getConversationScope()
+ * 
  * @author Ben Hale
  * @since 1.1
- * @see FlowExecution#getConversationScope()
  */
 public class ConversationScope extends AbstractWebFlowScope {
 

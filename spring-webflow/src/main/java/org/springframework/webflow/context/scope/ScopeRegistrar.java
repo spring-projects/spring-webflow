@@ -27,6 +27,7 @@ import org.springframework.webflow.execution.ScopeType;
  * 
  * @author Ben Hale
  * @see Scope
+ * @since 1.1
  */
 public class ScopeRegistrar implements BeanFactoryPostProcessor, Ordered {
 

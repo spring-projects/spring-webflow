@@ -22,9 +22,10 @@ import org.springframework.webflow.execution.FlowSession;
 /**
  * Flow-backed {@link Scope} implementation.
  * 
+ * @see FlowSession#getScope()
+ * 
  * @author Ben Hale
  * @since 1.1
- * @see FlowSession#getScope()
  */
 public class FlowScope extends AbstractWebFlowScope {
 
