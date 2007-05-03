@@ -50,7 +50,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * Generate a unique key for the session attribute holding the conversation
 	 * container managed by this conversation manager.
 	 */
-	private String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
+	private final String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
 	
 	/**
 	 * The conversation uid generation strategy to use.
