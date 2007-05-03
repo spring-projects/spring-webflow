@@ -39,7 +39,7 @@ import org.springframework.webflow.util.UidGenerator;
  * situations. Set it to -1 for no limit. Setting maxConversations to 1 allows
  * easy resource cleanup in situations where there should only be one active
  * conversation per session.
- * 
+ *
  * @author Erwin Vervaet
  */
 public class SessionBindingConversationManager implements ConversationManager {
@@ -50,8 +50,8 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * Generate a unique key for the session attribute holding the conversation
 	 * container managed by this conversation manager.
 	 */
-	private String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
-	
+	private final String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
+
 	/**
 	 * The conversation uid generation strategy to use.
 	 */
@@ -63,7 +63,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * to avoid excessive resource usage or easy denial of service attacks.
 	 */
 	private int maxConversations = 5;
-	
+
 	/**
 	 * Returns the used generator for conversation ids. Defaults to
 	 * {@link RandomGuidUidGenerator}.
@@ -79,7 +79,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	public void setConversationIdGenerator(UidGenerator uidGenerator) {
 		this.conversationIdGenerator = uidGenerator;
 	}
-	
+
 	/**
 	 * Returns the maximum number of allowed concurrent conversations. The
 	 * default is 5.
@@ -96,7 +96,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	public void setMaxConversations(int maxConversations) {
 		this.maxConversations = maxConversations;
 	}
-	
+
 	/**
 	 * Returns the key this conversation manager uses to store conversation
 	 * data in the session. The key is unique for this conversation manager instance.
@@ -111,7 +111,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Beginning conversation " + conversationParameters +
 					"; unique conversation id = " + conversationId);
-		}		
+		}
 		return getConversationContainer().createAndAddConversation(conversationId, conversationParameters);
 	}
 
