@@ -246,7 +246,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Cleaning up allocated flow system resources");
 		}
-		FlowExecutionHolderUtils.unlockCurrentFlowExecutionIfNecessary(context);
+		FlowExecutionHolderUtils.cleanupCurrentFlowExecution(context);
 		ExternalContextHolder.setExternalContext(null);
 	}
 }

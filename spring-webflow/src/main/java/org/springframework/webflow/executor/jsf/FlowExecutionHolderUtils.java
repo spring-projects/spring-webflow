@@ -28,7 +28,6 @@ import org.springframework.webflow.execution.FlowExecution;
  * {@link FacesContext}'s {@link ExternalContext#getRequestMap()}.
  * 
  * @author Keith Donald
- * @author Craig McClanahan
  */
 public class FlowExecutionHolderUtils {
 
@@ -92,13 +91,15 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Unlocks the current flow execution in the faces context if necessary.
-	 * Can be safely called even if no execution is bound or one is bound but not locked.
+	 * Cleans up the current flow execution in the faces context if necessary.
+	 * Specifically, handles unlocking the execution if necessary and setting the
+	 * holder to null.
 	 * @param context the faces context
 	 */
-	public static void unlockCurrentFlowExecutionIfNecessary(FacesContext context) {
+	public static void cleanupCurrentFlowExecution(FacesContext context) {
 		if (isFlowExecutionRestored(context)) {
 			getFlowExecutionHolder(context).unlockFlowExecutionIfNecessary();
+			context.getExternalContext().getRequestMap().remove(getFlowExecutionHolderKey());
 		}
 	}
 	
