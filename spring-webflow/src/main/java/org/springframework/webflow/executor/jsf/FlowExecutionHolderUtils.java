@@ -107,8 +107,8 @@ public class FlowExecutionHolderUtils {
 	 */
 	public static void cleanupCurrentFlowExecution(FacesContext context) {
 		if (isFlowExecutionRestored(context)) {
-			getFlowExecutionHolder(context).unlockFlowExecutionIfNecessary();
 			FlowExecutionContextHolder.setFlowExecutionContext(null);
+			getFlowExecutionHolder(context).unlockFlowExecutionIfNecessary();
 			context.getExternalContext().getRequestMap().remove(getFlowExecutionHolderKey());
 		}
 	}
