@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.FlowSession;
+import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Flow-backed {@link Scope} implementation.
+ * Conversation-backed {@link Scope} implementation.
  * 
- * @see FlowSession#getScope()
+ * @see FlowExecution#getConversationScope()
  * 
  * @author Ben Hale
  * @since 1.1
  */
-public class FlowScope extends AbstractWebFlowScope {
+public class ConversationScope extends AbstractWebFlowScope {
 
 	protected MutableAttributeMap getScope() {
-		return getFlowExecutionContext().getActiveSession().getScope();
+		return getFlowExecutionContext().getConversationScope();
 	}
 
 }

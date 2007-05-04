@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import junit.framework.TestCase;
 
@@ -21,20 +21,21 @@ import org.springframework.webflow.execution.FlowExecutionContextHolder;
 import org.springframework.webflow.test.MockFlowExecutionContext;
 
 /**
- * Test cases for the @{link ConversationScope} class.
+ * Test cases for the
+ * @{link FlowScope} class.
  * 
  * @author Ben Hale
  */
-public class ConversationScopeTests extends TestCase {
+public class FlowScopeTests extends TestCase {
 
 	private MockFlowExecutionContext context;
 
-	private ConversationScope scope;
+	private FlowScope scope;
 
 	protected void setUp() {
 		context = new MockFlowExecutionContext();
 		FlowExecutionContextHolder.setFlowExecutionContext(context);
-		scope = new ConversationScope();
+		scope = new FlowScope();
 	}
 
 	protected void tearDown() {
@@ -47,19 +48,19 @@ public class ConversationScopeTests extends TestCase {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should have added object to the map", context.getConversationScope().contains("name"));
+		assertTrue("Should have added object to the map", context.getActiveSession().getScope().contains("name"));
 		assertSame("Created object should have been returned", factory.getValue(), gotten);
-		assertSame("Created object should have been persisted", factory.getValue(), context.getConversationScope().get(
-				"name"));
+		assertSame("Created object should have been persisted", factory.getValue(), context.getActiveSession()
+				.getScope().get("name"));
 	}
 
 	public void testGetVarExist() {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object value = new Object();
-		context.getConversationScope().put("name", value);
+		context.getActiveSession().getScope().put("name", value);
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should still be in map", context.getConversationScope().contains("name"));
+		assertTrue("Should still be in map", context.getActiveSession().getScope().contains("name"));
 		assertSame("Persisted object should have been returned", value, gotten);
 		assertNotSame("Created object should not have been returned", factory.getValue(), gotten);
 	}
@@ -75,21 +76,21 @@ public class ConversationScopeTests extends TestCase {
 	}
 
 	public void testGetConversationId() {
-		String conversationId = scope.getConversationId();
-		assertNull("Method not implemented yet, should return null", conversationId);
+		String flowId = scope.getConversationId();
+		assertNull("Method not implemented yet, should return null", flowId);
 	}
 
 	public void testRemoveVarMissing() {
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getConversationScope().contains("name"));
+		assertFalse("Should have removed from object from map", context.getActiveSession().getScope().contains("name"));
 		assertNull("Should have returned a null object", removed);
 	}
 
 	public void testRemoveVarExist() {
 		Object value = new Object();
-		context.getConversationScope().put("name", value);
+		context.getActiveSession().getScope().put("name", value);
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getConversationScope().contains("name"));
+		assertFalse("Should have removed from object from map", context.getActiveSession().getScope().contains("name"));
 		assertSame("Should have returned the previous object", removed, value);
 	}
 

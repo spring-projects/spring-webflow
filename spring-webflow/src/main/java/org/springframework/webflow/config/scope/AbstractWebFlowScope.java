@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,14 +25,17 @@ import org.springframework.webflow.execution.FlowExecutionContextHolder;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Abstract {@link Scope} implementation that reads from a particular scope
- * in the current thread-bound {@link FlowExecutionContext} object.
- *
- * <p>Subclasses simply need to implement {@link #getScope()} to instruct
- * this class which {@link FlowExecutionContext} scope to read attributes from.
+ * Abstract {@link Scope} implementation that reads from a particular scope in
+ * the current thread-bound {@link FlowExecutionContext} object.
  * 
- * <p>Relies on a thread-bound @{link FlowExecutionContext} instance wich is located
- * through a @{link FlowExecutionContextHolder}.
+ * <p>
+ * Subclasses simply need to implement {@link #getScope()} to instruct this
+ * class which {@link FlowExecutionContext} scope to read attributes from.
+ * 
+ * <p>
+ * Relies on a thread-bound
+ * @{link FlowExecutionContext} instance wich is located through a
+ * @{link FlowExecutionContextHolder}.
  * 
  * @see FlowExecutionContext
  * @see FlowExecutionContextHolder
@@ -41,7 +44,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @since 1.1
  */
 public abstract class AbstractWebFlowScope implements Scope {
-	
+
 	/**
 	 * Logger, usable by subclasses.
 	 */
@@ -61,41 +64,37 @@ public abstract class AbstractWebFlowScope implements Scope {
 		MutableAttributeMap scope;
 		try {
 			scope = getScope();
-		}
-		catch(IllegalStateException e) {
-			throw new ScopedBeanException("Cannot retrieve scoped bean '"
-					+ name + "' before the scope has been populated");
+		} catch (IllegalStateException e) {
+			throw new ScopedBeanException("Cannot retrieve scoped bean '" + name
+					+ "' before the scope has been populated");
 		}
 		Object scopedObject = scope.get(name);
 		if (scopedObject == null) {
-			if(logger.isDebugEnabled()) {
-				logger.debug("Could not find existing scoped instance of '" +
-						name + "'; creating new instace");
+			if (logger.isDebugEnabled()) {
+				logger.debug("Could not find existing scoped instance of '" + name + "'; creating new instace");
 			}
 			scopedObject = objectFactory.getObject();
 			scope.put(name, scopedObject);
-		}
-		else {
-			if(logger.isDebugEnabled()) {
+		} else {
+			if (logger.isDebugEnabled()) {
 				logger.debug("Found existing scoped instance of '" + name + "'");
 			}
 		}
 		return scopedObject;
 	}
-	
+
 	public Object remove(String name) {
 		try {
 			return getScope().remove(name);
-		}
-		catch(IllegalStateException e) {
-			throw new ScopedBeanException("Cannot remove scoped bean '" +
-					name + "' before the scope has been populated");
+		} catch (IllegalStateException e) {
+			throw new ScopedBeanException("Cannot remove scoped bean '" + name
+					+ "' before the scope has been populated");
 		}
 	}
 
 	/**
 	 * Always returns <code>null</code> as most Spring Web Flow scopes do not
-	 * have obvious conversation ids.  Subclasses should override this method
+	 * have obvious conversation ids. Subclasses should override this method
 	 * where conversation ids can be intelligently returned.
 	 * @return always returns <code>null</code>
 	 */
@@ -111,9 +110,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 * @param callback the callback to execute
 	 */
 	public void registerDestructionCallback(String name, Runnable callback) {
-		logger.warn("Destruction callback for '" + name +
-				"' was not registered. Spring Web Flow does not " +
-				"support destruction of scoped beans.");
+		logger.warn("Destruction callback for '" + name + "' was not registered. Spring Web Flow does not "
+				+ "support destruction of scoped beans.");
 	}
 
 	/**

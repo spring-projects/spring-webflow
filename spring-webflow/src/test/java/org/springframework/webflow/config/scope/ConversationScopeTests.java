@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import junit.framework.TestCase;
 
@@ -22,20 +22,20 @@ import org.springframework.webflow.test.MockFlowExecutionContext;
 
 /**
  * Test cases for the
- * @{link FlashScope} class.
+ * @{link ConversationScope} class.
  * 
  * @author Ben Hale
  */
-public class FlashScopeTests extends TestCase {
+public class ConversationScopeTests extends TestCase {
 
 	private MockFlowExecutionContext context;
 
-	private FlashScope scope;
+	private ConversationScope scope;
 
 	protected void setUp() {
 		context = new MockFlowExecutionContext();
 		FlowExecutionContextHolder.setFlowExecutionContext(context);
-		scope = new FlashScope();
+		scope = new ConversationScope();
 	}
 
 	protected void tearDown() {
@@ -48,19 +48,19 @@ public class FlashScopeTests extends TestCase {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should have added object to the map", context.getActiveSession().getFlashMap().contains("name"));
+		assertTrue("Should have added object to the map", context.getConversationScope().contains("name"));
 		assertSame("Created object should have been returned", factory.getValue(), gotten);
-		assertSame("Created object should have been persisted", factory.getValue(), context.getActiveSession()
-				.getFlashMap().get("name"));
+		assertSame("Created object should have been persisted", factory.getValue(), context.getConversationScope().get(
+				"name"));
 	}
 
 	public void testGetVarExist() {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object value = new Object();
-		context.getActiveSession().getFlashMap().put("name", value);
+		context.getConversationScope().put("name", value);
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should still be in map", context.getActiveSession().getFlashMap().contains("name"));
+		assertTrue("Should still be in map", context.getConversationScope().contains("name"));
 		assertSame("Persisted object should have been returned", value, gotten);
 		assertNotSame("Created object should not have been returned", factory.getValue(), gotten);
 	}
@@ -76,23 +76,21 @@ public class FlashScopeTests extends TestCase {
 	}
 
 	public void testGetConversationId() {
-		String flashId = scope.getConversationId();
-		assertNull("Method not implemented yet, should return null", flashId);
+		String conversationId = scope.getConversationId();
+		assertNull("Method not implemented yet, should return null", conversationId);
 	}
 
 	public void testRemoveVarMissing() {
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getActiveSession().getFlashMap().contains(
-				"name"));
+		assertFalse("Should have removed from object from map", context.getConversationScope().contains("name"));
 		assertNull("Should have returned a null object", removed);
 	}
 
 	public void testRemoveVarExist() {
 		Object value = new Object();
-		context.getActiveSession().getFlashMap().put("name", value);
+		context.getConversationScope().put("name", value);
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getActiveSession().getFlashMap().contains(
-				"name"));
+		assertFalse("Should have removed from object from map", context.getConversationScope().contains("name"));
 		assertSame("Should have returned the previous object", removed, value);
 	}
 

@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.config.Scope;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowSession;
 
 /**
- * Stub implementation for testing the Spring Web Flow scopes.
+ * Flash-backed {@link Scope} implementation.
+ * 
+ * @see FlowSession#getFlashMap()
  * 
  * @author Ben Hale
+ * @since 1.1
  */
-public class StubObjectFactory implements ObjectFactory {
-	
-	private Object value = new Object();
+public class FlashScope extends AbstractWebFlowScope {
 
-	public Object getObject() throws BeansException {
-		return value;
-	}
-	
-	public Object getValue() {
-		return value;
+	protected MutableAttributeMap getScope() {
+		return getFlowExecutionContext().getActiveSession().getFlashMap();
 	}
 
 }

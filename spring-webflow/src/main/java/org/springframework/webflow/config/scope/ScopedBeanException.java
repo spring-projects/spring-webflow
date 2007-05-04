@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import org.springframework.webflow.core.FlowException;
 
 /**
- * Thrown when a bean cannot be retrieved because the scope it resides in
- * has not yet been populated.  This might occur if the bean is being referenced
+ * Thrown when a bean cannot be retrieved because the scope it resides in has
+ * not yet been populated. This might occur if the bean is being referenced
  * before the FlowExecution has been retrieved.
  * 
  * @author Ben Hale

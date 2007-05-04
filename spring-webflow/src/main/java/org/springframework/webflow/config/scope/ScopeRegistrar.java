@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -23,7 +23,8 @@ import org.springframework.core.Ordered;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * Registers the Spring Web Flow bean scopes with a @{link ConfigurableListableBeanFactory}.
+ * Registers the Spring Web Flow bean scopes with a
+ * @{link ConfigurableListableBeanFactory}.
  * 
  * @author Ben Hale
  * @see Scope

@@ -17,7 +17,7 @@ package org.springframework.webflow.config;
 
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.webflow.context.scope.ScopeRegistrar;
+import org.springframework.webflow.config.scope.ScopeRegistrar;
 import org.w3c.dom.Element;
 
 /**

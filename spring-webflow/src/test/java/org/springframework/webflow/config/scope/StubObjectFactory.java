@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.scope;
+package org.springframework.webflow.config.scope;
 
-import org.springframework.beans.factory.config.Scope;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectFactory;
 
 /**
- * Conversation-backed {@link Scope} implementation.
- *
- * @see FlowExecution#getConversationScope()
+ * Stub implementation for testing the Spring Web Flow scopes.
  * 
  * @author Ben Hale
- * @since 1.1
  */
-public class ConversationScope extends AbstractWebFlowScope {
+public class StubObjectFactory implements ObjectFactory {
 
-	protected MutableAttributeMap getScope() {
-		return getFlowExecutionContext().getConversationScope();
+	private Object value = new Object();
+
+	public Object getObject() throws BeansException {
+		return value;
+	}
+
+	public Object getValue() {
+		return value;
 	}
 
 }
