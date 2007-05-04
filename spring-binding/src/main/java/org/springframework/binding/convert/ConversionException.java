@@ -31,8 +31,9 @@ public class ConversionException extends NestedRuntimeException {
 
 	/**
 	 * The value we tried to convert.
+	 * Transient because we cannot guarantee that the value is Serializable.
 	 */
-	private Object value;
+	private transient Object value;
 
 	/**
 	 * The target type we tried to convert to.

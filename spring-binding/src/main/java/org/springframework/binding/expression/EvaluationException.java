@@ -25,9 +25,10 @@ import org.springframework.core.NestedRuntimeException;
 public class EvaluationException extends NestedRuntimeException {
 
 	/**
-	 * The evaluation attempt that failed. 
+	 * The evaluation attempt that failed.
+	 * Transient because an EvaluationAttempt is not serializable.
 	 */
-	private EvaluationAttempt evaluationAttempt;
+	private transient EvaluationAttempt evaluationAttempt;
 
 	/**
 	 * Creates a new evaluation exception.

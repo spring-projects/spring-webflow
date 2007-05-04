@@ -29,13 +29,15 @@ public class MethodInvocationException extends NestedRuntimeException {
 
 	/**
 	 * The method signature.
+	 * Transient because a MethodSignature is not Serializable.
 	 */
-	private MethodSignature methodSignature;
+	private transient MethodSignature methodSignature;
 
 	/**
 	 * The method invocation argument values.
+	 * Transient because we cannot guarantee that the arguments are Serializable.
 	 */
-	private Object[] arguments;
+	private transient Object[] arguments;
 
 	/**
 	 * Signals that the method with the specified signature could not be invoked
