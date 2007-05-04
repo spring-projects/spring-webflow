@@ -22,19 +22,17 @@ import org.springframework.beans.factory.config.Scope;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionContextHolder;
-import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.FlowSession;
 
 /**
- * Abstract {@link Scope} implementation that reads from a particular scope in
- * the current thread-bound {@link FlowExecutionContext} object.
- * 
+ * Base class for {@link Scope} implementations that access a Web Flow scope
+ * from the current thread-bound {@link FlowExecutionContext} object.
  * <p>
- * Subclasses simply need to implement {@link #getScope()} to instruct this
- * class which {@link FlowExecutionContext} scope to read attributes from.
- * 
+ * Subclasses simply need to implement {@link #getScope()} to return the
+ * {@link MutableAttributeMap scope map} to access.
  * <p>
  * Relies on a thread-bound
- * @{link FlowExecutionContext} instance wich is located through a
+ * @{link FlowExecutionContext} instance located through the
  * @{link FlowExecutionContextHolder}.
  * 
  * @see FlowExecutionContext
@@ -50,48 +48,39 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/**
-	 * Template method that determines the actual target scope.
-	 * @return the target scope
-	 * @see RequestContext#getConversationScope()
-	 * @see RequestContext#getFlowScope()
-	 * @see RequestContext#getRequestScope()
-	 * @see RequestContext#getFlashScope()
-	 */
-	protected abstract MutableAttributeMap getScope();
-
 	public Object get(String name, ObjectFactory objectFactory) {
-		MutableAttributeMap scope;
-		try {
-			scope = getScope();
-		} catch (IllegalStateException e) {
-			throw new ScopedBeanException("Cannot retrieve scoped bean '" + name
-					+ "' before the scope has been populated");
-		}
+		MutableAttributeMap scope = getScope();
 		Object scopedObject = scope.get(name);
 		if (scopedObject == null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Could not find existing scoped instance of '" + name + "'; creating new instace");
+				logger.debug("No scoped instance '" + name + "' found; creating new instance");
 			}
 			scopedObject = objectFactory.getObject();
 			scope.put(name, scopedObject);
-		} else {
+		}
+		else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Found existing scoped instance of '" + name + "'");
+				logger.debug("Returning scoped instance '" + name + "'");
 			}
 		}
 		return scopedObject;
 	}
 
 	public Object remove(String name) {
-		try {
-			return getScope().remove(name);
-		} catch (IllegalStateException e) {
-			throw new ScopedBeanException("Cannot remove scoped bean '" + name
-					+ "' before the scope has been populated");
-		}
+		return getScope().remove(name);
 	}
 
+	/**
+	 * Template method that returns the target scope map.
+	 * @return the target scope map
+	 * @see FlowExecutionContext#getConversationScope()
+	 * @see FlowExecutionContext#getActiveSession()
+	 * @see FlowSession#getFlashMap()
+	 * @see FlowSession#getScope()
+	 * @throws IllegalStateException if the scope could not be accessed
+	 */
+	protected abstract MutableAttributeMap getScope() throws IllegalStateException;
+	
 	/**
 	 * Always returns <code>null</code> as most Spring Web Flow scopes do not
 	 * have obvious conversation ids. Subclasses should override this method
@@ -118,8 +107,9 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 * Returns the current flow execution context. Used by subclasses to easily
 	 * get access to the thread-bound flow execution context.
 	 * @return the current thread-bound flow execution context
+	 * @throws IllegalStateException if the current flow execution context is not bound
 	 */
-	protected FlowExecutionContext getFlowExecutionContext() {
+	protected FlowExecutionContext getFlowExecutionContext() throws IllegalStateException {
 		return FlowExecutionContextHolder.getFlowExecutionContext();
 	}
 

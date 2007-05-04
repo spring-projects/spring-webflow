@@ -70,8 +70,8 @@ public class ConversationScopeTests extends TestCase {
 		StubObjectFactory factory = new StubObjectFactory();
 		try {
 			scope.get("name", factory);
-			fail("Should have thrown a ScopedBeanException without a request context");
-		} catch (ScopedBeanException e) {
+			fail("Should have thrown a IllegalStateException without a request context");
+		} catch (IllegalStateException e) {
 		}
 	}
 
@@ -98,8 +98,8 @@ public class ConversationScopeTests extends TestCase {
 		FlowExecutionContextHolder.setFlowExecutionContext(null);
 		try {
 			scope.remove("name");
-			fail("Should have thrown a ScopedBeanException without a request context");
-		} catch (ScopedBeanException e) {
+			fail("Should have thrown a IllegalStateException without a request context");
+		} catch (IllegalStateException e) {
 		}
 	}
 

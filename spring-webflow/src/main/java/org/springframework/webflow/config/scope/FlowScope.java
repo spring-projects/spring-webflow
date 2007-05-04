@@ -28,9 +28,7 @@ import org.springframework.webflow.execution.FlowSession;
  * @since 1.1
  */
 public class FlowScope extends AbstractWebFlowScope {
-
 	protected MutableAttributeMap getScope() {
 		return getFlowExecutionContext().getActiveSession().getScope();
 	}
-
 }

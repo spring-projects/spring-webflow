@@ -51,7 +51,7 @@ public class FlowExecutionContextHolder {
 	 * @throws IllegalStateException if no FlowExecutionContext is bound to this
 	 * thread
 	 */
-	public static FlowExecutionContext getFlowExecutionContext() {
+	public static FlowExecutionContext getFlowExecutionContext() throws IllegalStateException {
 		Assert.state(flowExecutionContextHolder.get() != null,
 				"No flow execution context is bound to this thread");
 		return (FlowExecutionContext) flowExecutionContextHolder.get();

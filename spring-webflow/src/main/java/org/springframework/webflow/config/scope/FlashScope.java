@@ -28,9 +28,7 @@ import org.springframework.webflow.execution.FlowSession;
  * @since 1.1
  */
 public class FlashScope extends AbstractWebFlowScope {
-
 	protected MutableAttributeMap getScope() {
 		return getFlowExecutionContext().getActiveSession().getFlashMap();
 	}
-
 }
