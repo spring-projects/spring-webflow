@@ -185,6 +185,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 
 	public void init(String flowId, AttributeMap attributes) throws FlowBuilderException {
 		setFlow(getFlowArtifactFactory().createFlow(flowId, flowAttributes().union(attributes)));
+		initBuilder();
 	}
 
 	/**
@@ -195,6 +196,15 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 */
 	protected AttributeMap flowAttributes() {
 		return CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+	}
+	
+	/**
+	 * Hook method subclasses can override to initialize the flow builder.
+	 * Will be called by {@link #init(String, AttributeMap)} after
+	 * creating the initial Flow object. As a consequence, {@link #getFlow()}
+	 * can be called to retrieve the Flow object under construction.
+	 */
+	protected void initBuilder() {
 	}
 
 	// view state
