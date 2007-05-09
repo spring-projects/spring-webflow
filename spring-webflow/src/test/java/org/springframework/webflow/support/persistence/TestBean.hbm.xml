@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+	package="org.springframework.webflow.support.persistence"
+	default-access="field" default-lazy="false">
+	<class name="TestBean" table="T_BEAN">
+		<id name="entityId" column="ID">
+			<generator class="increment"/>
+		</id>
+		<property name="name" column="NAME" />
+	</class>
+</hibernate-mapping>

@@ -38,6 +38,9 @@ Package org.springframework.webflow.executor
 * JSF integration code now binds the current FlowExecutionContext to a thread local for use by the Spring scoping
   mechanism (SWF-163).
 
+Package org.springframework.webflow.support
+* Added native support for Hibernate's session-per-conversation pattern (SWF-92).
+
 Changes in version 1.0.3 (24.04.2007)
 -------------------------------------
 

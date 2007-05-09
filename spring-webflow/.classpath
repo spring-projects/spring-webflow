@@ -9,6 +9,7 @@
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/concurrent.jar"/>
 	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/hibernate.jar"/>
 	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/junit.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/myfaces-api.jar"/>
@@ -19,11 +20,18 @@
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="/spring/src"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="/spring/src"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="/spring/src"/>
-	<classpathentry kind="lib" path="lib/buildtime/spring-portlet.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/spring-struts.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-dao.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-hibernate3.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-portlet.jar" sourcepath="/spring/src"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-struts.jar" sourcepath="/spring/src"/>
 	<classpathentry kind="lib" path="lib/global/spring-web.jar" sourcepath="/spring/src"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc.jar" sourcepath="/spring/src"/>
 	<classpathentry kind="lib" path="lib/buildtime/struts.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/dom4j.jar"/>
+	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/jta.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-jdbc.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="/spring/mock"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
