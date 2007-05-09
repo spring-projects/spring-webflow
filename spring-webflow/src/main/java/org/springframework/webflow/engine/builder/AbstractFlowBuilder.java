@@ -22,6 +22,7 @@ import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingBuilder;
 import org.springframework.binding.method.MethodSignature;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
 import org.springframework.webflow.action.AbstractBeanInvokingAction;
 import org.springframework.webflow.action.ActionResultExposer;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
@@ -640,11 +641,30 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @param multiAction the multi action
 	 * @return the annotated action that when invoked sets up a context property
 	 * used by the multi action to instruct it with what method to invoke
+	 * @since 1.0.4
 	 */
-	protected AnnotatedAction invoke(String methodName, MultiAction multiAction) throws FlowArtifactLookupException {
+	protected AnnotatedAction invoke(String methodName, Action multiAction) throws FlowArtifactLookupException {
+		Assert.isInstanceOf(MultiAction.class, multiAction,
+				"The action passed into invoke() should be a MultiAction");
 		AnnotatedAction action = new AnnotatedAction(multiAction);
 		action.setMethod(methodName);
 		return action;
+	}
+
+	/**
+	 * Creates an annotated action decorator that instructs the specified method
+	 * be invoked on the multi action when it is executed. Use this when working
+	 * with MultiActions to specify the method on the MultiAction to invoke for
+	 * a particular usage scenario. Use the {@link #method(String)} factory
+	 * method when working with
+	 * {@link AbstractBeanInvokingAction bean invoking actions}.
+	 * @param methodName the name of the method on the multi action instance
+	 * @param multiAction the multi action
+	 * @return the annotated action that when invoked sets up a context property
+	 * used by the multi action to instruct it with what method to invoke
+	 */
+	protected AnnotatedAction invoke(String methodName, MultiAction multiAction) throws FlowArtifactLookupException {
+		return invoke(methodName, (Action)multiAction);
 	}
 
 	/**
