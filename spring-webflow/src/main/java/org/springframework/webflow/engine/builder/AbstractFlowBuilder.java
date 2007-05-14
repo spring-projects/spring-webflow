@@ -22,7 +22,6 @@ import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingBuilder;
 import org.springframework.binding.method.MethodSignature;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.Assert;
 import org.springframework.webflow.action.AbstractBeanInvokingAction;
 import org.springframework.webflow.action.ActionResultExposer;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
@@ -653,12 +652,17 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * used by the multi action to instruct it with what method to invoke
 	 * @since 1.0.4
 	 */
-	protected AnnotatedAction invoke(String methodName, Action multiAction) throws FlowArtifactLookupException {
-		Assert.isInstanceOf(MultiAction.class, multiAction,
-				"The action passed into invoke() should be a MultiAction");
-		AnnotatedAction action = new AnnotatedAction(multiAction);
-		action.setMethod(methodName);
-		return action;
+	protected AnnotatedAction invoke(String methodName, Action multiAction) {
+		AnnotatedAction annotatedAction;
+		if (multiAction instanceof AnnotatedAction) {
+			// already wrapped in an AnnotatedAction
+			annotatedAction = (AnnotatedAction)multiAction;
+		}
+		else {
+			annotatedAction = new AnnotatedAction(multiAction);
+		}
+		annotatedAction.setMethod(methodName);
+		return annotatedAction;
 	}
 
 	/**
@@ -675,6 +679,26 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 */
 	protected AnnotatedAction invoke(String methodName, MultiAction multiAction) throws FlowArtifactLookupException {
 		return invoke(methodName, (Action)multiAction);
+	}
+	
+	/**
+	 * Creates an annotated action decorator that makes the given action
+	 * an named action.
+	 * @param name the action name
+	 * @param action the action to name
+	 * @return the annotated named action
+	 */
+	protected AnnotatedAction name(String name, Action action) {
+		AnnotatedAction annotatedAction;
+		if (action instanceof AnnotatedAction) {
+			// already wrapped in an AnnotatedAction
+			annotatedAction = (AnnotatedAction)action;
+		}
+		else {
+			annotatedAction = new AnnotatedAction(action);
+		}
+		annotatedAction.setName(name);
+		return annotatedAction;
 	}
 
 	/**
