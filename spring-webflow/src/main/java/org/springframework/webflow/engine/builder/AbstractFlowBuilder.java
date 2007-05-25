@@ -638,6 +638,22 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	protected ActionResultExposer result(String resultName, ScopeType resultScope) {
 		return new ActionResultExposer(resultName, resultScope);
 	}
+	
+	/**
+	 * Wrap given action in an {@link AnnotatedAction}} to be able
+	 * to annotate it with attributes.
+	 * @param action the action to annotate
+	 * @return the wrapped action
+	 * @since 1.0.4
+	 */
+	protected AnnotatedAction annotate(Action action) {
+		if (action instanceof AnnotatedAction) {
+			return (AnnotatedAction)action;
+		}
+		else {
+			return new AnnotatedAction(action);
+		}
+	}
 
 	/**
 	 * Creates an annotated action decorator that instructs the specified method

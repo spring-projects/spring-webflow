@@ -134,6 +134,18 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	public void setMethod(String method) {
 		getAttributeMap().put(METHOD_ATTRIBUTE, method);
 	}
+	
+	/**
+	 * Set an attribute on this annotated object.
+	 * @param attributeName the name of the attribute to set
+	 * @param attributeValue the value of the attribute
+	 * @return this object, to support call chaining
+	 * @since 1.0.4
+	 */
+	public AnnotatedAction putAttribute(String attributeName, Object attributeValue) {
+		getAttributeMap().put(attributeName, attributeValue);
+		return this;
+	}	
 
 	public Event execute(RequestContext context) throws Exception {
 		AttributeMap originalAttributes = getAttributeMap();

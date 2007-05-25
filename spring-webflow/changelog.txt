@@ -20,6 +20,8 @@ Package org.springframework.webflow.engine
 * Added invoke(String, Action) method to AbstractFlowBuilder.
 * Added initBuilder() hook method to AbstractFlowBuilder.
 * Added name(String, Action) method to AbstractFlowBuilder for convenient creation of named actions.
+* AnnotatedAction now has a convenience putAttribute(String, Object) method.
+* Added annotate(Action) method to AbstractFlowBuilder.
 
 Package org.springframework.webflow.executor
 * JSF integration code now manages flow execution locks properly in exceptional situations and when the
