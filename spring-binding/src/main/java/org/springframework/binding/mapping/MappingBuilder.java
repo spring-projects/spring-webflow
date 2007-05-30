@@ -21,6 +21,7 @@ import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.SettableExpression;
+import org.springframework.binding.expression.support.CollectionAddingExpression;
 import org.springframework.util.Assert;
 
 /**
@@ -38,6 +39,7 @@ import org.springframework.util.Assert;
  * it can be reused to build another mapping.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public class MappingBuilder {
 
@@ -113,6 +115,17 @@ public class MappingBuilder {
 	 */
 	public MappingBuilder target(String expressionString) {
 		targetExpression = (SettableExpression)expressionParser.parseExpression(expressionString);
+		return this;
+	}
+
+	/**
+	 * Sets the target collection of the mapping built by this builder.
+	 * @param expressionString the expression string, resolving a collection
+	 * @return this, to support call-chaining
+	 */
+	public MappingBuilder targetCollection(String expressionString) {
+		targetExpression = new CollectionAddingExpression(
+				expressionParser.parseSettableExpression(expressionString));
 		return this;
 	}
 
