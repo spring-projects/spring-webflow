@@ -7,6 +7,7 @@ Changes in version 1.1.0 ()
 
 Package org.springframework.binding
 * Fixed serializability problems in ConversionException, EvaluationException and MethodInvocationException.
+* Added targetCollection(String) method to MappingBuilder.
 
 Package org.springframework.webflow.config
 * FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
