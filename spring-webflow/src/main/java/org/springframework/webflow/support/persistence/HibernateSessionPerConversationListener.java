@@ -18,10 +18,13 @@ package org.springframework.webflow.support.persistence;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
@@ -40,6 +43,11 @@ import org.springframework.webflow.execution.ViewSelection;
  * This listener assumes that you are accessing Hibernate via Spring support
  * such as HibernateTemplate or the LocalSessionFactoryBean. If not, Hibernate
  * data access code will not participate in the proper transaction.
+ * 
+ * Note that when accessing service layer methods with Spring manged
+ * transactions, those transaction should have {@link Propagation#REQUIRED}
+ * semantics.  Anything else defeats the purpose of holding the transaction open
+ * until the end of the session.
  * 
  * @author Ben Hale
  * @since 1.1
@@ -60,10 +68,13 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 	 * conversation scope of this {@link FlowSession}. Since
 	 * {@link #resumed(RequestContext)} will not be called on start of the
 	 * session, this method also binds the session to the thread-local location.
+	 * This behavior will only be exhibited on the root flow in a {@link FlowExecution}.
 	 */
 	public void sessionCreated(RequestContext context, FlowSession session) {
-		Session hibSession = createSession(context);
-		bindSession(hibSession);
+		if (session.isRoot()) {
+			Session hibSession = createSession(context);
+			bindSession(hibSession);
+		}
 	}
 
 	/**
@@ -94,13 +105,28 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 	 * <code>Session</code> is closed. Since
 	 * {@link #paused(RequestContext, ViewSelection)} will not be called on the
 	 * ending of this session, this method also unbinds the session from the
-	 * thread-local location.
+	 * thread-local location. This behavior will only be exhibited on the root
+	 * flow in a {@link FlowExecution}.
 	 */
 	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
-		Session hibSession = (Session) context.getConversationScope().remove(HIBERNATE_SESSION);
-		hibSession.flush();
+		if (session.isRoot()) {
+			Session hibSession = (Session) context.getConversationScope().remove(HIBERNATE_SESSION);
+			hibSession.flush();
+			unBindSession(hibSession);
+			destroySession(hibSession);
+		}
+	}
+	
+	/**
+	 * When an exception is thrown from a {@link FlowExecution}, the
+	 * conversationally scoped <code>Session</code> is unbound from the
+	 * thread-local location and the transaction is committed. The
+	 * transaction that is closed is a Hibernate transaction and with a
+	 * FlushMode of MANUAL will not flush anything to the database.
+	 */
+	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
+		Session hibSession = getHibernateSession(context);
 		unBindSession(hibSession);
-		destroySession(hibSession);
 	}
 
 	private Session createSession(RequestContext context) {
@@ -119,8 +145,9 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 	}
 
 	private void bindSession(Session hibSession) {
-		hibSession.beginTransaction();
+		Transaction hibTx = hibSession.beginTransaction();
 		SessionHolder sessionHolder = new SessionHolder(hibSession);
+		sessionHolder.setTransaction(hibTx);
 		TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
 	}
 
