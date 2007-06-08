@@ -512,6 +512,13 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * custom property editors for formatting form object values in UI controls
 	 * such as text fields.
 	 * <p>
+	 * A new form object instance will only be created (or more generally
+	 * acquired) with a call to {@link #createFormObject(RequestContext)},
+	 * if the form object does not yet exist in the configured 
+	 * {@link #getFormObjectScope() scope}. If you want to reset the form
+	 * handling machinery, including creation or loading of a fresh form object
+	 * instance, call {@link #resetForm(RequestContext)} instead.
+	 * <p>
 	 * NOTE: This action method is not designed to be overidden and might
 	 * become <code>final</code> in a future version of Spring Web Flow. If
 	 * you need to execute custom form setup logic have your flow call this
