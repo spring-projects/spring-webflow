@@ -9,6 +9,9 @@ Package org.springframework.binding
 * Fixed serializability problems in ConversionException, EvaluationException and MethodInvocationException.
 * Added targetCollection(String) method to MappingBuilder.
 
+Package org.springframework.webflow.action
+* Improved FormAction.setupForm() JavaDoc (SWF-325).
+
 Package org.springframework.webflow.config
 * FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
   property of the created FlowExecutorImpl object.
