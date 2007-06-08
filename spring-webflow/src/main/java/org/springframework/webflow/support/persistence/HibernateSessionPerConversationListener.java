@@ -33,18 +33,18 @@ import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A {@link FlowExecutionListener} that implements the Hibernate
- * Session-Per-Conversation pattern as described in Java Persistence with
+ * Session-per-Conversation pattern as described in Java Persistence with
  * Hibernate (chapter 11).
- * 
+ * <p>
  * This implementation uses raw Hibernate APIs and binds the current session to
  * the thread-local location identified by Spring's
  * <code>HibernateTransactionManager</code>.
- * 
+ * <p>
  * This listener assumes that you are accessing Hibernate via Spring support
  * such as HibernateTemplate or the LocalSessionFactoryBean. If not, Hibernate
  * data access code will not participate in the proper transaction.
- * 
- * Note that when accessing service layer methods with Spring manged
+ * <p>
+ * Note that when accessing service layer methods with Spring managed
  * transactions, those transaction should have {@link Propagation#REQUIRED}
  * semantics.  Anything else defeats the purpose of holding the transaction open
  * until the end of the session.
@@ -58,6 +58,11 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 
 	private SessionFactory sessionFactory;
 
+	/**
+	 * Create a new Session-per-Conversation listener using giving Hibernate session
+	 * factory.
+	 * @param sessionFactory the session factory to use
+	 */
 	public HibernateSessionPerConversationListener(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
@@ -128,6 +133,8 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 		Session hibSession = getHibernateSession(context);
 		unBindSession(hibSession);
 	}
+	
+	// internal helpers
 
 	private Session createSession(RequestContext context) {
 		Session hibSession = sessionFactory.openSession();
