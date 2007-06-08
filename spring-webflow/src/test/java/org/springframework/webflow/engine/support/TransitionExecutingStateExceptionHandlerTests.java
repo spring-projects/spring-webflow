@@ -19,20 +19,29 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.TestException;
+import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
+import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionableState;
+import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
+import org.springframework.webflow.engine.builder.FlowAssembler;
+import org.springframework.webflow.engine.builder.FlowBuilder;
+import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImpl;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
@@ -48,7 +57,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 				throw new FlowExecutionException(getFlow().getId(), getId(), "Oops!", new TestException());
 			}
 		};
-		state.getTransitionSet().add(new Transition(to("end")));
+		state.getTransitionSet().add(new Transition(toState("end")));
 	}
 
 	public void testTransitionExecutorHandlesExceptionExactMatch() {
@@ -113,8 +122,36 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 			// expected
 		}
 	}
+	
+	public void testStateExceptionHandlingExceptionInEndState() {
+		FlowBuilder builder = new AbstractFlowBuilder() {
+			public void buildStates() throws FlowBuilderException {
+				State state = addEndState("end");
+				state.getEntryActionList().add(new AbstractAction() {
+					protected Event doExecute(RequestContext context) throws Exception {
+						throw new NullPointerException("failing");
+					}
+				});
+				addViewState("showError", "error", transition(on("end"), to("end")));
+			}
+			
+			public void buildExceptionHandlers() throws FlowBuilderException {
+				getFlow().getExceptionHandlerSet().add(
+						new TransitionExecutingStateExceptionHandler().add(Exception.class, "showError"));
+			}
+		};
+		Flow flow = new FlowAssembler("flow", builder).assembleFlow();
+		FlowExecution execution = new FlowExecutionImpl(flow);
+		ViewSelection view = execution.start(null, new MockExternalContext());
+		assertTrue(execution.isActive());
+		assertEquals("error", ((ApplicationView)view).getViewName());
+		assertTrue(((ApplicationView)view).getModel().containsKey(
+				TransitionExecutingStateExceptionHandler.ROOT_CAUSE_EXCEPTION_ATTRIBUTE));
+		assertTrue(((ApplicationView)view).getModel().containsKey(
+				TransitionExecutingStateExceptionHandler.STATE_EXCEPTION_ATTRIBUTE));
+	}
 
-	protected TargetStateResolver to(String stateId) {
+	protected TargetStateResolver toState(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}
 }
