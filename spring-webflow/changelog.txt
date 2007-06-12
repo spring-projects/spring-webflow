@@ -34,6 +34,8 @@ Package org.springframework.webflow.executor
   be matched against the state of the current flow execution (SWF-303).
 * JSF integration code now tears down ExternalContext thread local properly in exceptional situations and when
   the RENDER_RESPONSE phase is bypassed (SWF-305).
+* JSF can now use a FlowSystemCleanupFilter to ensure that no matter what happens in JSF, the request context
+  is cleaned up properly (SWF-306).
 
 Changes in version 1.0.3 (19.04.2007)
 -------------------------------------
