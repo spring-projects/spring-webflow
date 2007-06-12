@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.webflow.context.ExternalContextHolder;
-import org.springframework.webflow.execution.FlowExecutionContextHolder;
 
 /**
  * A servlet filter used to guarantee that webflow context information is
@@ -48,15 +47,13 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 
 	/**
 	 * Cleans up the current flow execution in the request context if necessary.
-	 * Specifically, handles unlocking the execution if necessary, setting the
-	 * holder to null, and cleaning up the flow execution context thread local.
-	 * Can be safely called even if no execution is bound or one is bound but
-	 * not locked.
+	 * Specifically, handles unlocking the execution if necessary and setting the
+	 * holder to null. Can be safely called even if no execution is bound or one
+	 * is bound but not locked.
 	 * @param request the servlet request
 	 */
 	private void cleanupCurrentFlowExecution(ServletRequest request) {
 		if (isFlowExecutionRestored(request)) {
-			FlowExecutionContextHolder.setFlowExecutionContext(null);
 			getFlowExecutionHolder(request).unlockFlowExecutionIfNecessary();
 			request.removeAttribute(getFlowExecutionHolderKey());
 		}

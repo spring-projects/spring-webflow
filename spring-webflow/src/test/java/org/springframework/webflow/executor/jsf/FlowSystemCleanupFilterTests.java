@@ -14,7 +14,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.engine.impl.FlowExecutionImpl;
-import org.springframework.webflow.execution.FlowExecutionContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class FlowSystemCleanupFilterTests extends TestCase {
@@ -33,7 +32,6 @@ public class FlowSystemCleanupFilterTests extends TestCase {
 		request.setAttribute(getFlowExecutionHolderKey(), new FlowExecutionHolder(new FlowExecutionImpl()));
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
-		FlowExecutionContextHolder.setFlowExecutionContext(new FlowExecutionImpl());
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
 	}
 
@@ -41,11 +39,6 @@ public class FlowSystemCleanupFilterTests extends TestCase {
 		filter.doFilter(request, response, chain);
 
 		assertNull("Should have cleaned up the flow execution", request.getAttribute(getFlowExecutionHolderKey()));
-		try {
-			FlowExecutionContextHolder.getFlowExecutionContext();
-			fail("Should have an empty holder");
-		} catch (IllegalStateException e) {
-		}
 		try {
 			ExternalContextHolder.getExternalContext();
 			fail("Should have an empty holder");
@@ -58,11 +51,6 @@ public class FlowSystemCleanupFilterTests extends TestCase {
 			filter.doFilter(request, response, new ExceptionThrowingMockFilterChain());
 		} catch (RuntimeException e) {
 			assertNull("Should have cleaned up the flow execution", request.getAttribute(getFlowExecutionHolderKey()));
-			try {
-				FlowExecutionContextHolder.getFlowExecutionContext();
-				fail("Should have an empty holder");
-			} catch (IllegalStateException e1) {
-			}
 			try {
 				ExternalContextHolder.getExternalContext();
 				fail("Should have an empty holder");
