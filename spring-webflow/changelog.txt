@@ -44,6 +44,8 @@ Package org.springframework.webflow.executor
   the RENDER_RESPONSE phase is bypassed (SWF-305).
 * JSF integration code now binds the current FlowExecutionContext to a thread local for use by the Spring scoping
   mechanism (SWF-163).
+* JSF can now use a FlowSystemCleanupFilter to ensure that no matter what happens in JSF, the request context
+  is cleaned up properly (SWF-306).
 
 Package org.springframework.webflow.support
 * Added native support for Hibernate's session-per-conversation pattern (SWF-92).
