@@ -50,6 +50,9 @@ Package org.springframework.webflow.executor
 Package org.springframework.webflow.support
 * Added native support for Hibernate's session-per-conversation pattern (SWF-92).
 
+Package org.springframework.webflow.test
+* Added the ability to apply multiple listeners to a test case (SWF-334).
+
 Changes in version 1.0.3 (24.04.2007)
 -------------------------------------
 

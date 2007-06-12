@@ -112,6 +112,17 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 		getFlowExecutionImplFactory().setExecutionListenerLoader(
 				new StaticFlowExecutionListenerLoader(executionListener));
 	}
+	
+	/**
+	 * Set the listeners to be attached to the flow execution the next time one
+	 * is {@link #startFlow() started} by this test. Useful for attaching
+	 * listeners that do test assertions during the execution of the flow.
+	 * @param executionListeners the listeners to attach
+	 */
+	protected void setFlowExecutionListeners(FlowExecutionListener[] executionListeners) {
+		getFlowExecutionImplFactory().setExecutionListenerLoader(
+				new StaticFlowExecutionListenerLoader(executionListeners));
+	}
 
 	protected final FlowDefinition getFlowDefinition() {
 		if (isCacheFlowDefinition() && cachedFlowDefinition != null) {
