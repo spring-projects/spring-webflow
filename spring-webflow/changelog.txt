@@ -2,7 +2,7 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
-Changes in version 1.0.4 (08.05.2007)
+Changes in version 1.0.4 (13.06.2007)
 -------------------------------------
 
 Package org.springframework.binding
@@ -30,12 +30,12 @@ Package org.springframework.webflow.engine
 Package org.springframework.webflow.executor
 * JSF integration code now manages flow execution locks properly in exceptional situations and when the
   RENDER RESPONSE phase is bypassed (SWF-302).
-* Restored compatability with 1.0.1 allowing default navigation rules to be queried if no transition could
+* Restored compatibility with 1.0.1 allowing default navigation rules to be queried if no transition could
   be matched against the state of the current flow execution (SWF-303).
 * JSF integration code now tears down ExternalContext thread local properly in exceptional situations and when
   the RENDER_RESPONSE phase is bypassed (SWF-305).
-* JSF can now use a FlowSystemCleanupFilter to ensure that no matter what happens in JSF, the request context
-  is cleaned up properly (SWF-306).
+* JSF users can now install a fallback FlowSystemCleanupFilter to ensure that no matter what happens in the JSF environment flow
+  resources are cleaned up after request processing (SWF-306).
 
 Package org.springframework.webflow.test
 * Added the ability to apply multiple listeners to a test case (SWF-334).
