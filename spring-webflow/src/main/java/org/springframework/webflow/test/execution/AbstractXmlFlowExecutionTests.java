@@ -83,12 +83,11 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	}
 	
 	/**
-	 * Template method called to allow registration of mock implementations of
-	 * services local to the flow being tested. 
+	 * Template method subclasses may override to register mock implementations of
+	 * services used locally by the flow being tested.
 	 * @param flow the flow to register the services for
-	 * @param beanFactory the local flow service registry, you can register services here
+	 * @param beanFactory the local flow service registry; register mock services with it
 	 * using {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
-	 * @since 1.0.4
 	 */
 	protected void registerLocalMockServices(Flow flow, ConfigurableBeanFactory beanFactory) {
 	}
