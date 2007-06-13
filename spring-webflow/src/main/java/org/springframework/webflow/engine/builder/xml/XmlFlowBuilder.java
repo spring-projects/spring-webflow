@@ -25,6 +25,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -434,7 +435,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		return desiredName.equals(node.getNodeName()) || desiredName.equals(node.getLocalName());
 	}
 
-	// internal parsing logic
+	// internal parsing logic and hook methods
 
 	private Flow parseFlow(String id, AttributeMap attributes, Element flowElement) {
 		if (!isFlowElement(flowElement)) {
@@ -466,11 +467,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	}
 
 	/**
-	 * Create the local bean factory from the resources provided. This factory typcially houses services needed
-	 * locally by the flow definition.
-	 * <p>
-	 * Subclasses may override this metod to customize the population of the context local to the flow definition
-	 * being built, registering mock implementations of services for a test environment.
+	 * Create a bean factory serving as a local flow service registry.
 	 * @param flow the current flow definition being built
 	 * @param resources the file resources to assemble the bean factory from; typically XML-based
 	 * @return the bean factory
@@ -511,10 +508,23 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		}
 		context.setResourceLoader(getFlowServiceLocator().getResourceLoader());
 		new XmlBeanDefinitionReader(context).loadBeanDefinitions(resources);
+		registerLocalBeans(flow, context.getDefaultListableBeanFactory());
 		context.refresh();
 		return context;
 	}
-
+	
+	/**
+	 * Register beans in the bean factory local to the flow definition being built.
+	 * <p>
+	 * Subclasses may override this metod to customize the population of the bean factory local to
+	 * the flow definition being built, registering mock implementations of services for a test environment.
+	 * @param flow the current flow definition being built
+	 * @param beanFactory the bean factory
+	 * @since 1.0.4
+	 */
+	protected void registerLocalBeans(Flow flow, ConfigurableBeanFactory beanFactory) {
+	}
+	
 	private void destroyLocalServiceRegistry() {
 		localFlowServiceLocator.pop();
 	}
