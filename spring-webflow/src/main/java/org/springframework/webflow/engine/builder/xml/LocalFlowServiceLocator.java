@@ -35,14 +35,14 @@ import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.execution.Action;
 
 /**
- * Searches flow-local registries first before querying the global, externally
+ * Flow service locator that searches flow-local registries first before querying the global, externally
  * managed flow service locator.
  * <p>
  * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}.
  * Package private to highlight it's non-public nature.
- * 
+ *
  * @see org.springframework.webflow.engine.builder.xml.XmlFlowBuilder
- * 
+ *
  * @author Keith Donald
  */
 class LocalFlowServiceLocator implements FlowServiceLocator {
@@ -88,9 +88,9 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	public LocalFlowServiceRegistry pop() {
 		return (LocalFlowServiceRegistry)localRegistries.pop();
 	}
-	
+
 	/**
-	 * Returns the top registry on the stack
+	 * Returns the top registry on the stack.
 	 */
 	public LocalFlowServiceRegistry top() {
 		return (LocalFlowServiceRegistry)localRegistries.peek();

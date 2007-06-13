@@ -84,28 +84,28 @@ import org.xml.sax.SAXException;
 
 /**
  * Flow builder that builds flows as defined in an XML document. The XML document should adhere to the following format:
- * 
+ *
  * <pre>
  *     &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
  *     &lt;flow xmlns=&quot;http://www.springframework.org/schema/webflow&quot;
  *           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
  *           xsi:schemaLocation=&quot;http://www.springframework.org/schema/webflow
  *                               http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd&quot;&gt;
- *                                        
+ *
  *         &lt;!-- Define your states here --&gt;
- *                  
+ *
  *     &lt;/flow&gt;
  * </pre>
- * 
+ *
  * <p>
- * Consult the <a href="http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">webflow XML schema</a>
+ * Consult the <a href="http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">web flow XML schema</a>
  * for more information on the XML-based flow definition format.
  * <p>
  * This builder will setup a flow-local bean factory for the flow being constructed. That flow-local bean factory will
  * be populated with XML bean definitions contained in files referenced using the "import" element. The flow-local bean
  * factory will use the bean factory defing this flow builder as a parent. As such, the flow can access artifacts in
  * either its flow-local bean factory or in the parent bean factory hierarchy, e.g. the bean factory of the dispatcher.
- * 
+ *
  * @author Erwin Vervaet
  * @author Keith Donald
  */
@@ -244,8 +244,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	protected Resource location;
 
 	/**
-	 * A flow service locator local to this builder that first looks in a locally-managed Spring application context for
-	 * services before searching the externally managed {@link #getFlowServiceLocator()}.
+	 * A flow service locator local to this builder that first looks in a locally-managed Spring bean factory for
+	 * services before searching the externally managed {@link #getFlowServiceLocator() service locator}.
 	 */
 	private LocalFlowServiceLocator localFlowServiceLocator;
 
@@ -469,7 +469,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	 * Create the local bean factory from the resources provided. This factory typcially houses services needed locally
 	 * by the flow definition.
 	 * @param flow the current flow definition being built
-	 * @param resources the file resources to assemble the bean factory from; typically xml-based
+	 * @param resources the file resources to assemble the bean factory from; typically XML-based
 	 * @return the bean factory
 	 */
 	private BeanFactory createLocalBeanFactory(Flow flow, Resource[] resources) {
@@ -539,8 +539,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		ScopeType scope = parseScope(element, ScopeType.FLOW);
 		if (StringUtils.hasText(element.getAttribute(BEAN_ATTRIBUTE))) {
 			BeanFactory beanFactory = getLocalFlowServiceLocator().getBeanFactory();
-			return new BeanFactoryFlowVariable(element.getAttribute(NAME_ATTRIBUTE), element
-					.getAttribute(BEAN_ATTRIBUTE), beanFactory, scope);
+			return new BeanFactoryFlowVariable(element.getAttribute(NAME_ATTRIBUTE),
+					element.getAttribute(BEAN_ATTRIBUTE), beanFactory, scope);
 		}
 		else {
 			if (StringUtils.hasText(element.getAttribute(CLASS_ATTRIBUTE))) {
@@ -638,31 +638,35 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	}
 
 	private void parseAndAddActionState(Element element, Flow flow) {
-		getFlowArtifactFactory().createActionState(parseId(element), flow, parseEntryActions(element),
+		getFlowArtifactFactory().createActionState(
+				parseId(element), flow, parseEntryActions(element),
 				parseAnnotatedActions(element), parseTransitions(element), parseExceptionHandlers(element),
 				parseExitActions(element), parseAttributes(element));
 	}
 
 	private void parseAndAddViewState(Element element, Flow flow) {
-		getFlowArtifactFactory().createViewState(parseId(element), flow, parseEntryActions(element),
+		getFlowArtifactFactory().createViewState(
+				parseId(element), flow, parseEntryActions(element),
 				parseViewSelector(element), parseRenderActions(element), parseTransitions(element),
 				parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
 	}
 
 	private void parseAndAddDecisionState(Element element, Flow flow) {
-		getFlowArtifactFactory()
-				.createDecisionState(parseId(element), flow, parseEntryActions(element), parseIfs(element),
-						parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
+		getFlowArtifactFactory().createDecisionState(
+				parseId(element), flow, parseEntryActions(element), parseIfs(element),
+				parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
 	}
 
 	private void parseAndAddSubflowState(Element element, Flow flow) {
-		getFlowArtifactFactory().createSubflowState(parseId(element), flow, parseEntryActions(element),
+		getFlowArtifactFactory().createSubflowState(
+				parseId(element), flow, parseEntryActions(element),
 				parseSubflow(element), parseFlowAttributeMapper(element), parseTransitions(element),
 				parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
 	}
 
 	private void parseAndAddEndState(Element element, Flow flow) {
-		getFlowArtifactFactory().createEndState(parseId(element), flow, parseEntryActions(element),
+		getFlowArtifactFactory().createEndState(
+				parseId(element), flow, parseEntryActions(element),
 				parseViewSelector(element), parseOutputMapper(element), parseExceptionHandlers(element),
 				parseAttributes(element));
 	}
@@ -716,13 +720,13 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	}
 
 	private Transition parseTransition(Element element) {
-		TransitionCriteria matchingCriteria = (TransitionCriteria) fromStringTo(TransitionCriteria.class).execute(
-				element.getAttribute(ON_ATTRIBUTE));
-		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
-				.execute(element.getAttribute(TO_ATTRIBUTE));
+		TransitionCriteria matchingCriteria = (TransitionCriteria)
+				fromStringTo(TransitionCriteria.class).execute(element.getAttribute(ON_ATTRIBUTE));
+		TargetStateResolver targetStateResolver = (TargetStateResolver)
+				fromStringTo(TargetStateResolver.class).execute(element.getAttribute(TO_ATTRIBUTE));
 		TransitionCriteria executionCriteria = TransitionCriteriaChain.criteriaChainFor(parseAnnotatedActions(element));
-		return getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, executionCriteria,
-				parseAttributes(element));
+		return getFlowArtifactFactory().createTransition(
+				targetStateResolver, matchingCriteria, executionCriteria, parseAttributes(element));
 	}
 
 	private ViewSelector parseViewSelector(Element element) {
@@ -967,8 +971,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		Element mapperElement = getChildElementByTagName(element, INPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					INPUT_ATTRIBUTE_ELEMENT));
+			parseSimpleAttributeMappings(mapper,
+					DomUtils.getChildElementsByTagName(mapperElement, INPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement);
 			return mapper;
 		}
@@ -981,8 +985,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		Element mapperElement = getChildElementByTagName(element, OUTPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					OUTPUT_ATTRIBUTE_ELEMENT));
+			parseSimpleAttributeMappings(mapper,
+					DomUtils.getChildElementsByTagName(mapperElement, OUTPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement);
 			return mapper;
 		}
@@ -1002,8 +1006,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 				target = parser.parseSettableExpression(mappingElement.getAttribute(TARGET_ATTRIBUTE));
 			}
 			else if (StringUtils.hasText(mappingElement.getAttribute(TARGET_COLLECTION_ATTRIBUTE))) {
-				target = new CollectionAddingExpression(parser.parseSettableExpression(mappingElement
-						.getAttribute(TARGET_COLLECTION_ATTRIBUTE)));
+				target = new CollectionAddingExpression(
+						parser.parseSettableExpression(mappingElement.getAttribute(TARGET_COLLECTION_ATTRIBUTE)));
 			}
 			if (getRequired(mappingElement, false)) {
 				mapper.addMapping(new RequiredMapping(source, target, parseTypeConverter(mappingElement)));
@@ -1062,8 +1066,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	private FlowExecutionExceptionHandler[] parseExceptionHandlers(Element element) {
 		FlowExecutionExceptionHandler[] transitionExecutingHandlers = parseTransitionExecutingExceptionHandlers(element);
 		FlowExecutionExceptionHandler[] customHandlers = parseCustomExceptionHandlers(element);
-		FlowExecutionExceptionHandler[] exceptionHandlers = new FlowExecutionExceptionHandler[transitionExecutingHandlers.length
-				+ customHandlers.length];
+		FlowExecutionExceptionHandler[] exceptionHandlers =
+				new FlowExecutionExceptionHandler[transitionExecutingHandlers.length + customHandlers.length];
 		System.arraycopy(transitionExecutingHandlers, 0, exceptionHandlers, 0, transitionExecutingHandlers.length);
 		System.arraycopy(customHandlers, 0, exceptionHandlers, transitionExecutingHandlers.length,
 				customHandlers.length);
@@ -1097,8 +1101,8 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(Element element) {
 		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
 		Class exceptionClass = (Class) fromStringTo(Class.class).execute(element.getAttribute(ON_EXCEPTION_ATTRIBUTE));
-		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
-				.execute(element.getAttribute(TO_ATTRIBUTE));
+		TargetStateResolver targetStateResolver = (TargetStateResolver)
+				fromStringTo(TargetStateResolver.class).execute(element.getAttribute(TO_ATTRIBUTE));
 		handler.add(exceptionClass, targetStateResolver);
 		handler.getActionList().addAll(parseAnnotatedActions(element));
 		return handler;
