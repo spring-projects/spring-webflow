@@ -28,11 +28,11 @@ import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.execution.FlowExecutionContextHolder;
 
 /**
- * A servlet filter used to guarantee that webflow context information is
+ * A servlet filter used to guarantee that web flow context information is
  * cleaned up in a JSF environment.
  * 
  * @author Ben Hale
- * @since 1.1
+ * @since 1.0.4
  */
 public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 
@@ -40,7 +40,8 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		try {
 			chain.doFilter(request, response);
-		} finally {
+		}
+		finally {
 			cleanupCurrentFlowExecution(request);
 			ExternalContextHolder.setExternalContext(null);
 		}
@@ -58,7 +59,7 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 		if (isFlowExecutionRestored(request)) {
 			FlowExecutionContextHolder.setFlowExecutionContext(null);
 			getFlowExecutionHolder(request).unlockFlowExecutionIfNecessary();
-			request.removeAttribute(getFlowExecutionHolderKey());
+			request.removeAttribute(FlowExecutionHolderUtils.getFlowExecutionHolderKey());
 		}
 	}
 
@@ -78,11 +79,6 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 	 * @return the flow execution holder, or <code>null</code> if none set.
 	 */
 	private FlowExecutionHolder getFlowExecutionHolder(ServletRequest request) {
-		return (FlowExecutionHolder) request.getAttribute(getFlowExecutionHolderKey());
+		return (FlowExecutionHolder) request.getAttribute(FlowExecutionHolderUtils.getFlowExecutionHolderKey());
 	}
-
-	private static String getFlowExecutionHolderKey() {
-		return FlowExecutionHolder.class.getName();
-	}
-
 }

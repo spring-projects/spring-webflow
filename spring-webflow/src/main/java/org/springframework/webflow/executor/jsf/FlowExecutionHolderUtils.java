@@ -113,7 +113,11 @@ public class FlowExecutionHolderUtils {
 		}
 	}
 
-	private static String getFlowExecutionHolderKey() {
+	/**
+	 * Returns the key used to index the flow execution holder in the request
+	 * attributes.
+	 */
+	static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
 }
