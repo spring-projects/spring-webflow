@@ -26,7 +26,7 @@ import org.springframework.webflow.execution.FlowExecution;
  * <p>
  * By default, the current flow execution holder is stored associated with the current thread in the
  * {@link FacesContext}'s {@link ExternalContext#getRequestMap()}.
- * 
+ *
  * @author Keith Donald
  */
 public class FlowExecutionHolderUtils {
@@ -71,7 +71,7 @@ public class FlowExecutionHolderUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns the current required flow execution in the given faces context.
 	 * @param context faces context
@@ -102,8 +102,12 @@ public class FlowExecutionHolderUtils {
 			context.getExternalContext().getRequestMap().remove(getFlowExecutionHolderKey());
 		}
 	}
-	
-	private static String getFlowExecutionHolderKey() {
+
+	/**
+	 * Returns the key used to index the flow execution holder in the request
+	 * attributes.
+	 */
+	static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
 }

@@ -27,10 +27,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.webflow.context.ExternalContextHolder;
 
 /**
- * A servlet filter used to guarantee that webflow context information is
- * cleaned up in a JSF environment.  Most useful to ensure no possibility 
+ * A servlet filter used to guarantee that web flow context information is
+ * cleaned up in a JSF environment. Most useful to ensure no possibility
  * of a flow execution remaining locked due to an uncaught JSF exception.
- * 
+ *
  * @author Ben Hale
  */
 public class FlowSystemCleanupFilter extends OncePerRequestFilter {
@@ -39,7 +39,8 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		try {
 			chain.doFilter(request, response);
-		} finally {
+		}
+		finally {
 			cleanupCurrentFlowExecution(request);
 			ExternalContextHolder.setExternalContext(null);
 		}
@@ -55,7 +56,7 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 	private void cleanupCurrentFlowExecution(ServletRequest request) {
 		if (isFlowExecutionRestored(request)) {
 			getFlowExecutionHolder(request).unlockFlowExecutionIfNecessary();
-			request.removeAttribute(getFlowExecutionHolderKey());
+			request.removeAttribute(FlowExecutionHolderUtils.getFlowExecutionHolderKey());
 		}
 	}
 
@@ -72,13 +73,9 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 	/**
 	 * Returns the current flow execution holder for the given servlet request.
 	 * @param request the servlet request
-	 * @return the flow execution holder, or <code>null</code> if none set.
+	 * @return the flow execution holder, or <code>null</code> if none set
 	 */
 	private FlowExecutionHolder getFlowExecutionHolder(ServletRequest request) {
-		return (FlowExecutionHolder) request.getAttribute(getFlowExecutionHolderKey());
-	}
-
-	private static String getFlowExecutionHolderKey() {
-		return FlowExecutionHolder.class.getName();
+		return (FlowExecutionHolder) request.getAttribute(FlowExecutionHolderUtils.getFlowExecutionHolderKey());
 	}
 }

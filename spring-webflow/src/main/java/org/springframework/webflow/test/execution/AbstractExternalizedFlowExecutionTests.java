@@ -34,7 +34,7 @@ import org.springframework.webflow.test.MockFlowServiceLocator;
 /**
  * Base class for flow integration tests that verify an externalized flow definition executes as expected. Supports
  * caching of the flow definition built from an externalized resource to speed up test execution.
- * 
+ *
  * @author Keith Donald
  */
 public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlowExecutionTests {
@@ -68,7 +68,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Internal helper that return the flow execution factory used by the test cast to a
+	 * Internal helper that returns the flow execution factory used by the test cast to a
 	 * {@link FlowExecutionImplFactory}.
 	 */
 	private FlowExecutionImplFactory getFlowExecutionImplFactory() {
@@ -100,8 +100,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Set a single listener to be attached to the flow execution the next time one is {@link #startFlow() started} by this
-	 * test. Useful for attaching a listener that does test assertions during the execution of the flow.
+	 * Set a single listener to be attached to the flow execution the next time one is {@link #startFlow() started} by
+	 * this test. Useful for attaching a listener that does test assertions during the execution of the flow.
 	 * @param executionListener the listener to attach
 	 */
 	protected void setFlowExecutionListener(FlowExecutionListener executionListener) {
@@ -113,12 +113,16 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * Set the listeners to be attached to the flow execution the next time one is {@link #startFlow() started} by this
 	 * test. Useful for attaching listeners that do test assertions during the execution of the flow.
 	 * @param executionListeners the listeners to attach
+	 * @since 1.0.4
 	 */
 	protected void setFlowExecutionListeners(FlowExecutionListener[] executionListeners) {
 		getFlowExecutionImplFactory().setExecutionListenerLoader(
 				new StaticFlowExecutionListenerLoader(executionListeners));
 	}
 
+	/**
+	 * Returns the flow definition being tested.
+	 */
 	protected final FlowDefinition getFlowDefinition() {
 		if (isCacheFlowDefinition() && cachedFlowDefinition != null) {
 			return cachedFlowDefinition;
@@ -132,7 +136,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Returns the flow artifact factory to use during flow definition construction time for accessing externally
+	 * Returns the flow service locator to use during flow definition construction time for accessing externally
 	 * managed flow artifacts such as actions and flows to be used as subflows.
 	 * <p>
 	 * This implementation just creates a {@link MockFlowServiceLocator} and populates it with services by calling
@@ -155,7 +159,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Factory method to assemble another flow definition from a resource. Called by {@link #getFlowDefinition()} to
+	 * Factory method to assemble a flow definition from a resource. Called by {@link #getFlowDefinition()} to
 	 * create the "main" flow to test. May also be called by subclasses to create subflow definitions whose executions
 	 * should also be exercised by this test.
 	 * @param resource the flow definition resource
@@ -177,18 +181,17 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * protected FlowDefinitionResource getFlowDefinitionResource() {
 	 * 	return createFlowDefinitionResource(&quot;/WEB-INF/flows/order-flow.xml&quot;);
 	 * }
-	 * </pre> 
+	 * </pre>
 	 * @return the flow definition resource
 	 */
 	protected abstract FlowDefinitionResource getFlowDefinitionResource();
 
 	/**
-	 * Factory method to create the builder that will build the flow definition whose execution will be tested. Subclasses must
-	 * override.
-	 * 
+	 * Factory method to create the builder that will build the flow definition whose execution will be tested.
+	 * Subclasses must implement.
+	 * <p>
 	 * A subclass may return a builder that sets up mock implementations of services needed locally by the flow
 	 * definition at runtime.
-	 * 
 	 * @param resource the externalized flow definition resource location
 	 * @param serviceLocator the flow service locator
 	 * @return the flow builder that will build the flow to be tested
@@ -217,7 +220,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file.
+	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file. Typically
+	 * called by subclasses overriding {@link #getFlowDefinitionResource()}.
 	 * @param file the file
 	 * @return the flow definition resource
 	 */
