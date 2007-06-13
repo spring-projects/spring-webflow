@@ -70,17 +70,9 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	 * @param registry the local registry
 	 */
 	public void push(LocalFlowServiceRegistry registry) {
-		registry.init(this, parent);
 		localRegistries.push(registry);
 	}
 
-	/**
-	 * Pop a registry off the stack.
-	 */
-	public LocalFlowServiceRegistry pop() {
-		return (LocalFlowServiceRegistry)localRegistries.pop();
-	}
-	
 	/**
 	 * Pops all registries off the stack until the stack is empty.
 	 */
@@ -90,6 +82,13 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 		}
 	}
 
+	/**
+	 * Pop a registry off the stack.
+	 */
+	public LocalFlowServiceRegistry pop() {
+		return (LocalFlowServiceRegistry)localRegistries.pop();
+	}
+	
 	/**
 	 * Returns the top registry on the stack
 	 */
@@ -183,7 +182,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	public BeanFactory getBeanFactory() {
-		return top().getContext();
+		return top().getBeanFactory();
 	}
 
 	public ResourceLoader getResourceLoader() {
@@ -208,8 +207,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Does this flow local service locator contain a bean defintion
-	 * for given id?
+	 * Does this flow local service locator contain a bean defintion for the given id?
 	 */
 	protected boolean containsBean(String id) {
 		if (localRegistries.isEmpty()) {
