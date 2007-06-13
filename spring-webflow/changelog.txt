@@ -25,6 +25,10 @@ Package org.springframework.webflow.conversation
 * Each SessionBindingConversationManager now uses a unique key to store it's conversation container
   in the session (SWF-304).
 
+Package org.springframework.webflow.core
+* Fixed DefaultExpressionParserFactory to not require OGNL on the classpath if another expression parser
+  is configured (SWF-335).
+
 Package org.springframework.webflow.engine
 * Added invoke(String, Action) method to AbstractFlowBuilder.
 * Added initBuilder() hook method to AbstractFlowBuilder.

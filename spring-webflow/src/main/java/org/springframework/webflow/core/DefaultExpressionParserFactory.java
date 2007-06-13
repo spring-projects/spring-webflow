@@ -15,7 +15,10 @@
  */
 package org.springframework.webflow.core;
 
+import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.SettableExpression;
 
 /**
  * Static helper factory that creates instances of the default expression parser
@@ -26,11 +29,12 @@ import org.springframework.binding.expression.ExpressionParser;
  * the classpath when this class is loaded.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public final class DefaultExpressionParserFactory {
 
 	/**
-	 * The singleton instance.
+	 * The singleton instance of the default expression parser.
 	 */
 	private static ExpressionParser INSTANCE;
 
@@ -44,6 +48,28 @@ public final class DefaultExpressionParserFactory {
 	 * @return the expression parser
 	 */
 	public static synchronized ExpressionParser getExpressionParser() {
+		// return a wrapper that will lazily load the default expression parser
+		return new ExpressionParser() {
+			public boolean isDelimitedExpression(String expressionString) {
+				return getDefaultExpressionParser().isDelimitedExpression(expressionString);
+			}
+			
+			public Expression parseExpression(String expressionString) throws ParserException {
+				return getDefaultExpressionParser().parseExpression(expressionString);
+			}
+			
+			public SettableExpression parseSettableExpression(String expressionString)
+					throws ParserException, UnsupportedOperationException {
+				return getDefaultExpressionParser().parseSettableExpression(expressionString);
+			}
+		};
+	}
+	
+	/**
+	 * Returns the default expression parser, creating it if necessary.
+	 * @return the default expression parser
+	 */
+	private static synchronized ExpressionParser getDefaultExpressionParser() {
 		if (INSTANCE == null) {
 			INSTANCE = createDefaultExpressionParser();
 		}
@@ -58,12 +84,14 @@ public final class DefaultExpressionParserFactory {
 		try {
 			Class.forName("ognl.Ognl");
 			return new WebFlowOgnlExpressionParser();
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			throw new IllegalStateException(
 					"Unable to load the default expression parser: OGNL could not be found in the classpath.  "
 					+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "
 					+ "Details: " + e.getMessage());
-		} catch (NoClassDefFoundError e) {
+		}
+		catch (NoClassDefFoundError e) {
 			throw new IllegalStateException(
 					"Unable to construct the default expression parser: ognl.Ognl could not be instantiated.  "
 					+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "

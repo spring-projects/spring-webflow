@@ -27,6 +27,5 @@ public class DefaultExpressionParserFactoryTests extends TestCase {
 	public void testGetDefaultExpressionParser() {
 		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
 		assertNotNull(parser);
-		assertTrue(parser instanceof WebFlowOgnlExpressionParser);
 	}
 }
