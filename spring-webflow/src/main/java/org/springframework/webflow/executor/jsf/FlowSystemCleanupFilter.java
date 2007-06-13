@@ -28,10 +28,10 @@ import org.springframework.webflow.context.ExternalContextHolder;
 
 /**
  * A servlet filter used to guarantee that webflow context information is
- * cleaned up in a JSF environment.
+ * cleaned up in a JSF environment.  Most useful to ensure no possibility 
+ * of a flow execution remaining locked due to an uncaught JSF exception.
  * 
  * @author Ben Hale
- * @since 1.1
  */
 public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 
@@ -81,5 +81,4 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 	private static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();
 	}
-
 }
