@@ -104,6 +104,20 @@ public class ConversionException extends NestedRuntimeException {
 	}
 	
 	/**
+	 * Creates a new conversion exception.
+	 * @param sourceClass the source type
+	 * @param value the value we tried to convert
+	 * @param targetClass the target type
+	 * @param message a descriptive message
+	 */
+	public ConversionException(Class sourceClass, Object value, Class targetClass, String message) {
+		super(message);
+		this.sourceClass = sourceClass;
+		this.value = value;
+		this.targetClass = targetClass;
+	}
+	
+	/**
 	 * Returns the source type.
 	 */
 	public Class getSourceClass() {
