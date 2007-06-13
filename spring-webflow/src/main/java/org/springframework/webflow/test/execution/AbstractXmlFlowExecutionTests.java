@@ -15,7 +15,9 @@
  */
 package org.springframework.webflow.test.execution;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
@@ -51,6 +53,7 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
  * </pre>
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
 public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalizedFlowExecutionTests {
 
@@ -72,6 +75,21 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	}
 
 	protected FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
-		return new XmlFlowBuilder(resource, flowServiceLocator);
+		return new XmlFlowBuilder(resource, flowServiceLocator) {
+			protected void registerLocalBeans(Flow flow, ConfigurableBeanFactory beanFactory) {
+				registerLocalMockServices(flow, beanFactory);
+			}
+		};
+	}
+	
+	/**
+	 * Template method called to allow registration of mock implementations of
+	 * services local to the flow being tested. 
+	 * @param flow the flow to register the services for
+	 * @param beanFactory the local flow service registry, you can register services here
+	 * using {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
+	 * @since 1.0.4
+	 */
+	protected void registerLocalMockServices(Flow flow, ConfigurableBeanFactory beanFactory) {
 	}
 }
