@@ -8,6 +8,7 @@ Changes in version 1.1.0 ()
 Package org.springframework.binding
 * Fixed serializability problems in ConversionException, EvaluationException and MethodInvocationException.
 * Added targetCollection(String) method to MappingBuilder.
+* ConversionExecutor now checks for assignment compatible types (SWF-337).
 
 Package org.springframework.webflow.action
 * Improved FormAction.setupForm() JavaDoc (SWF-325).

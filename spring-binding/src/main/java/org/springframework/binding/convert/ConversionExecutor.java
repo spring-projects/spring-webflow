@@ -98,8 +98,13 @@ public class ConversionExecutor {
 	 * behavior of the converter
 	 */
 	public Object execute(Object source, ConversionContext context) throws ConversionException {
-		if (source != null) {
-			Assert.isInstanceOf(sourceClass, source, "Not of source type: ");
+		if (getTargetClass().isInstance(source)) {
+			// source is already assignment compatible with target class
+			return source;
+		}
+		if (source != null && !getSourceClass().isInstance(source)) {
+			throw new ConversionException(getSourceClass(), source, getTargetClass(),
+					"Source object '" + source +  "' is expected to be a " + getSourceClass());
 		}
 		return converter.convert(source, targetClass, context);
 	}
