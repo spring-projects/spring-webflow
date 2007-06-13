@@ -466,13 +466,17 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	}
 
 	/**
-	 * Create the local bean factory from the resources provided. This factory typcially houses services needed locally
-	 * by the flow definition.
+	 * Create the local bean factory from the resources provided. This factory typcially houses services needed
+	 * locally by the flow definition.
+	 * <p>
+	 * Subclasses may override this metod to customize the population of the context local to the flow definition
+	 * being built, registering mock implementations of services for a test environment.
 	 * @param flow the current flow definition being built
 	 * @param resources the file resources to assemble the bean factory from; typically XML-based
 	 * @return the bean factory
+	 * @since 1.0.4
 	 */
-	private BeanFactory createLocalBeanFactory(Flow flow, Resource[] resources) {
+	protected BeanFactory createLocalBeanFactory(Flow flow, Resource[] resources) {
 		// see if this factory has a parent
 		BeanFactory parent = null;
 		if (localFlowServiceLocator.isEmpty()) {
@@ -506,22 +510,9 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 			}
 		}
 		context.setResourceLoader(getFlowServiceLocator().getResourceLoader());
-		// populate and initialize the context
-		populateLocalContext(flow, context, resources);
+		new XmlBeanDefinitionReader(context).loadBeanDefinitions(resources);
 		context.refresh();
 		return context;
-	}
-
-	/**
-	 * Hook method subclasses may override to customize the population of the context local to the flow definition being built.
-	 * Such a context typically houses services needed by the flow definition.  A subclass might override this method to
-	 * register mock implementations of services for a test environment.
-	 * @param flow the current flow definition being built
-	 * @param context the flow-local context to populate
-	 * @param resources the imported XML resources that typically define the structure of this context
-	 */
-	protected void populateLocalContext(Flow flow, GenericApplicationContext context, Resource[] resources) {
-		new XmlBeanDefinitionReader(context).loadBeanDefinitions(resources);
 	}
 
 	private void destroyLocalServiceRegistry() {

@@ -26,7 +26,7 @@ Package org.springframework.webflow.engine
 * Added name(String, Action) method to AbstractFlowBuilder for convenient creation of named actions.
 * AnnotatedAction now has a convenience putAttribute(String, Object) method.
 * Added annotate(Action) method to AbstractFlowBuilder.
-* Added populateLocalContext(Flow, GenericApplicationContext, Resource[]) hook method to XmlFlowBuilder
+* Added createLocalBeanFactory(Flow flow, Resource[] resources) hook method to XmlFlowBuilder
   to allow for control over the registration of beans needed locally by a flow definition.
   Useful for testing (SWF-307).
   

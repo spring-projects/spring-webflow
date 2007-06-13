@@ -15,9 +15,15 @@
  */
 package org.springframework.webflow.engine.builder.xml;
 
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.definition.registry.FlowDefinitionResource;
+import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.builder.FlowBuilder;
+import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -31,13 +37,7 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
  */
 public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTests {
 	
-	protected FlowDefinitionResource getFlowDefinitionResource() {
-		return new FlowDefinitionResource(
-				new ClassPathResource("namedActionFlow.xml", NamedActionXmlFlowBuilderTests.class));
-	}
-	
 	private int executionOrderCounter = 0;
-	
 	private Action aAction;
 	private int aActionExecutionCount = 0;
 	private int aActionExecutionOrder;
@@ -65,11 +65,26 @@ public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTest
 			}
 		};
 	}
-	
+
+	protected FlowDefinitionResource getFlowDefinitionResource() {
+		return new FlowDefinitionResource(
+				new ClassPathResource("namedActionFlow.xml", NamedActionXmlFlowBuilderTests.class));
+	}
+
 	protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
 		serviceRegistry.registerBean("aAction", aAction);
 		serviceRegistry.registerBean("bBean", bBean);
 		serviceRegistry.registerBean("cAction", cAction);
+	}
+	
+	protected FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
+		return new XmlFlowBuilder(resource, flowServiceLocator) {
+			protected BeanFactory createLocalBeanFactory(Flow flow, Resource[] resources) {
+				StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
+				beanFactory.addBean("bBean", bBean);
+				return beanFactory;
+			}
+		};
 	}
 	
 	public void testActionExecutionOrder() {
