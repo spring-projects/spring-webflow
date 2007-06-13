@@ -66,11 +66,16 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	 * objects.
 	 */
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
+	
+	/**
+	 * The conversion service configured by the user (none by default).
+	 */
+	private ConversionService userConversionService = null;
 
 	/**
 	 * A conversion service that can convert between types.
 	 */
-	private ConversionService conversionService = createConversionService(null);
+	private ConversionService conversionService = createConversionService(userConversionService);
 
 	/**
 	 * A resource loader that can load resources.
@@ -102,15 +107,18 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		Assert.notNull(expressionParser, "The expression parser is required");
 		this.expressionParser = expressionParser;
+		//this has impact on the TextToExpression converter in the conversion service!
+		this.conversionService = createConversionService(userConversionService);
 	}
 
 	/**
 	 * Set the conversion service to use to convert between types; typically
 	 * from string to a rich object type.
 	 */
-	public void setConversionService(ConversionService conversionService) {
-		Assert.notNull(conversionService, "The conversion service is required");
-		this.conversionService = createConversionService(conversionService);
+	public void setConversionService(ConversionService userConversionService) {
+		Assert.notNull(userConversionService, "The conversion service is required");
+		this.userConversionService = userConversionService;
+		this.conversionService = createConversionService(userConversionService);
 	}
 
 	/**
