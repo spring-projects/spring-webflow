@@ -71,7 +71,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 		super(name);
 	}
 
-	protected final FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
+	protected FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
 		return new XmlFlowBuilder(resource, flowServiceLocator);
 	}
 }

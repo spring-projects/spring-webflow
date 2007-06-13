@@ -16,25 +16,18 @@
 package org.springframework.webflow.engine.builder.xml;
 
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.webflow.engine.Flow;
-import org.springframework.webflow.engine.builder.FlowServiceLocator;
 
 /**
- * Simple value object that holds a reference to a local artifact registry
- * of a flow definition that is in the process of being constructed.
+ * Simple object that holds a reference to a local bean factory housing services needed by a flow definition
+ * at execution time.
  * <p>
- * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}.
- * Package private to highlight it's non-public nature.
- * 
+ * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}. Package private
+ * to highlight it's non-public nature.
+ *
  * @see org.springframework.webflow.engine.builder.xml.XmlFlowBuilder
  * @see org.springframework.webflow.engine.builder.xml.LocalFlowServiceLocator
- * 
+ *
  * @author Keith Donald
  */
 class LocalFlowServiceRegistry {
@@ -45,24 +38,18 @@ class LocalFlowServiceRegistry {
 	private Flow flow;
 
 	/**
-	 * The locations of the registry resource definitions. 
-	 */
-	private Resource[] resources;
-
-	/**
 	 * The local registry holding the artifacts local to the flow.
 	 */
-	private GenericApplicationContext context;
+	private BeanFactory beanFactory;
 
 	/**
-	 * Create a new registry, loading artifact definitions from
-	 * given resources.
+	 * Create a new local service registry.
 	 * @param flow the flow this registry is for (and scoped by)
-	 * @param resources the registry resource definitions
+	 * @param beanFactory the actual backing registry - a Spring bean factory
 	 */
-	public LocalFlowServiceRegistry(Flow flow, Resource[] resources) {
+	public LocalFlowServiceRegistry(Flow flow, BeanFactory beanFactory) {
 		this.flow = flow;
-		this.resources = resources;
+		this.beanFactory = beanFactory;
 	}
 
 	/**
@@ -73,69 +60,9 @@ class LocalFlowServiceRegistry {
 	}
 
 	/**
-	 * Returns the resources defining registry artifacts.
+	 * Returns the bean factory acting as the physical registry.
 	 */
-	public Resource[] getResources() {
-		return resources;
-	}
-
-	/**
-	 * Retuns the application context holding registry artifacts.
-	 */
-	public ApplicationContext getContext() {
-		return context;
-	}
-
-	/**
-	 * Initialize this registry of the local flow service locator.
-	 * @param localFactory the local flow service locator
-	 * @param rootFactory the root service locator
-	 */
-	public void init(LocalFlowServiceLocator localFactory, FlowServiceLocator rootFactory) {
-		BeanFactory parent = null;
-		if (localFactory.isEmpty()) {
-			try {
-				parent = rootFactory.getBeanFactory();
-			}
-			catch (UnsupportedOperationException e) {
-				// can't link to a parent
-			}
-		}
-		else {
-			parent = localFactory.top().context;
-		}
-		context = createLocalFlowContext(parent, rootFactory);
-		new XmlBeanDefinitionReader(context).loadBeanDefinitions(resources);
-		context.refresh();
-	}
-
-	/**
-	 * Create the flow local application context.
-	 * @param parent the parent application context
-	 * @param rootFactory the root service locator, used to obtain a resource
-	 * loader
-	 * @return the flow local application context
-	 */
-	private GenericApplicationContext createLocalFlowContext(BeanFactory parent, FlowServiceLocator rootFactory) {
-		if (parent instanceof WebApplicationContext) {
-			GenericWebApplicationContext context = new GenericWebApplicationContext();
-			context.setServletContext(((WebApplicationContext)parent).getServletContext());
-			context.setParent((WebApplicationContext)parent);
-			context.setResourceLoader(rootFactory.getResourceLoader());
-			return context;
-		}
-		else {
-			GenericApplicationContext context = new GenericApplicationContext();
-			if (parent instanceof ApplicationContext) {
-				context.setParent((ApplicationContext)parent);
-			}
-			else {
-				if (parent != null) {
-					context.getBeanFactory().setParentBeanFactory(parent);
-				}
-			}
-			context.setResourceLoader(rootFactory.getResourceLoader());
-			return context;
-		}
+	public BeanFactory getBeanFactory() {
+		return beanFactory;
 	}
 }

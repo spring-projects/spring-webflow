@@ -35,14 +35,14 @@ import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.execution.Action;
 
 /**
- * Searches flow-local registries first before querying the global, externally
+ * Flow service locator that searches flow-local registries first before querying the global, externally
  * managed flow service locator.
  * <p>
  * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}.
  * Package private to highlight it's non-public nature.
- * 
+ *
  * @see org.springframework.webflow.engine.builder.xml.XmlFlowBuilder
- * 
+ *
  * @author Keith Donald
  */
 class LocalFlowServiceLocator implements FlowServiceLocator {
@@ -70,17 +70,9 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	 * @param registry the local registry
 	 */
 	public void push(LocalFlowServiceRegistry registry) {
-		registry.init(this, parent);
 		localRegistries.push(registry);
 	}
 
-	/**
-	 * Pop a registry off the stack.
-	 */
-	public LocalFlowServiceRegistry pop() {
-		return (LocalFlowServiceRegistry)localRegistries.pop();
-	}
-	
 	/**
 	 * Pops all registries off the stack until the stack is empty.
 	 */
@@ -91,7 +83,14 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Returns the top registry on the stack
+	 * Pop a registry off the stack.
+	 */
+	public LocalFlowServiceRegistry pop() {
+		return (LocalFlowServiceRegistry)localRegistries.pop();
+	}
+
+	/**
+	 * Returns the top registry on the stack.
 	 */
 	public LocalFlowServiceRegistry top() {
 		return (LocalFlowServiceRegistry)localRegistries.peek();
@@ -183,7 +182,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	public BeanFactory getBeanFactory() {
-		return top().getContext();
+		return top().getBeanFactory();
 	}
 
 	public ResourceLoader getResourceLoader() {
@@ -208,8 +207,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Does this flow local service locator contain a bean defintion
-	 * for given id?
+	 * Does this flow local service locator contain a bean defintion for the given id?
 	 */
 	protected boolean containsBean(String id) {
 		if (localRegistries.isEmpty()) {

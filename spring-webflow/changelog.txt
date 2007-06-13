@@ -31,6 +31,9 @@ Package org.springframework.webflow.engine
 * Added name(String, Action) method to AbstractFlowBuilder for convenient creation of named actions.
 * AnnotatedAction now has a convenience putAttribute(String, Object) method.
 * Added annotate(Action) method to AbstractFlowBuilder.
+* Added createLocalBeanFactory(Flow flow, Resource[] resources) hook method to XmlFlowBuilder
+  to allow for control over the registration of beans needed locally by a flow definition.
+  Useful for testing (SWF-307).
 
 Package org.springframework.webflow.execution
 * Added a holder for the FlowExecutionContext of a request (SWF-163).
@@ -52,6 +55,9 @@ Package org.springframework.webflow.support
 
 Package org.springframework.webflow.test
 * Added the ability to apply multiple listeners to a test case (SWF-334).
+* Relaxed 'final' qualifier on AbstractXmlFlowExecutionTests#createFlowBuilder(FlowServiceLocator).
+  Overriding this method is useful for customizing the builder's population of the bean factory local to the
+  flow definition (SWF-307).
 
 Changes in version 1.0.3 (24.04.2007)
 -------------------------------------
