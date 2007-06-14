@@ -39,6 +39,7 @@ Package org.springframework.webflow.engine
 * Added createLocalBeanFactory(Flow, Resource[]) and registerLocalBeans(Flow, ConfigurableBeanFactory) hook
   methods to XmlFlowBuilder to allow for control over the registration of beans needed locally by a flow definition.
   Useful for testing (SWF-307).
+* Ensures that all exceptions (including RuntimeExceptions) are handled properly by the FlowExecution (SWF-333).
 
 Package org.springframework.webflow.execution
 * Added a holder for the FlowExecutionContext of a request (SWF-163).
