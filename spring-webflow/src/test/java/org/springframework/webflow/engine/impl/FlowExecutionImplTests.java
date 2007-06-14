@@ -24,6 +24,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.DefaultExpressionParserFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
@@ -251,6 +253,24 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.refresh(context);
 		execution.refresh(context);
 		execution.signalEvent("view", context);
+	}
+	
+	public void testUnhandledExceptionThrownBeforeSessionStartup() {
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
+				getClass()));
+		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
+		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
+			public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
+				throw new IllegalStateException("Cannot proceed");
+			}
+		};
+		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
+		flowExecution.setListeners(new FlowExecutionListeners(new FlowExecutionListener[] { listener }));
+		try {
+			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
+			fail("Should have thrown a FlowExecutionException, not any other type");
+		} catch (FlowExecutionException e) {
+		}		
 	}
 	
 	public void testExceptionFromInputMapper() {

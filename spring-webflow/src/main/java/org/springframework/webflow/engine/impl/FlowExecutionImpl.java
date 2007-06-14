@@ -192,11 +192,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
 			} catch (Exception e) {
-				String flowId = context.getActiveFlow().getId();
-				String stateId = null;
-				if(context.getCurrentState() != null) {
-					stateId = context.getCurrentState().getId();
-				}
+				String flowId = getCurrentFlow().getId();
+				String stateId = getCurrentStateId();
 				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
 						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
 				return pause(context, handleException(flowException, context));
@@ -226,8 +223,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
 			} catch (Exception e) {
-				String flowId = context.getActiveFlow().getId();
-				String stateId = context.getCurrentState().getId();
+				String flowId = getCurrentFlow().getId();
+				String stateId = getCurrentStateId();
 				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
 						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
 				return pause(context, handleException(flowException, context));
@@ -259,8 +256,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
 			} catch (Exception e) {
-				String flowId = context.getActiveFlow().getId();
-				String stateId = context.getCurrentState().getId();
+				String flowId = getCurrentFlow().getId();
+				String stateId = getCurrentStateId();
 				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
 						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
 				return pause(context, handleException(flowException, context));
@@ -332,16 +329,29 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			// the state could be null if the flow was attempting a start operation
 			ViewSelection selectedView = tryStateHandlers(exception, context);
 			if (selectedView != null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("State '" + exception.getStateId() + "' handled exception");
+				}
 				return selectedView;
 			}
 			selectedView = tryFlowHandlers(exception, context);
 			if (selectedView != null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Flow '" + flow.getId() + "' handled exception");
+				}
 				return selectedView;
 			}
 		}
 		catch (FlowExecutionException newException) {
 			// exception handling resulted in a new FlowExecutionException, try to handle it
 			return handleException(newException, context);
+		} catch (Exception e) {
+			// a lower-level exception occured, wrap it in a flow execution exception and try to handle it
+			String flowId = getCurrentFlow().getId();
+			String stateId = getCurrentStateId();
+			FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
+					"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
+			return handleException(flowException, context);			
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rethrowing unhandled flow execution exception");
@@ -354,16 +364,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * at the state level. Returns null if no handler handled the exception.
 	 */
 	private ViewSelection tryStateHandlers(FlowExecutionException exception, RequestControlContext context) {
-		ViewSelection selectedView = null;
-		if (exception.getStateId() != null) {
-			selectedView = getActiveFlow().getStateInstance(exception.getStateId()).handleException(exception, context);
-			if (selectedView != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("State '" + exception.getStateId() + "' handled exception");
-				}
-			}
+		if (isActive() && exception.getStateId() != null) {
+			return getActiveFlow().getStateInstance(exception.getStateId()).handleException(exception, context);
+		} else {
+			return null;
 		}
-		return selectedView;
 	}
 
 	/**
@@ -371,13 +376,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * at the flow level. Returns null if no handler handled the exception.
 	 */
 	private ViewSelection tryFlowHandlers(FlowExecutionException exception, RequestControlContext context) {
-		ViewSelection selectedView = getActiveFlow().handleException(exception, context);
-		if (selectedView != null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Flow '" + exception.getFlowId() + "' handled exception");
-			}
-		}
-		return selectedView;
+		return getCurrentFlow().handleException(exception, context);
 	}
 
 	// internal helpers
@@ -477,16 +476,40 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	/**
+	 * Returns the "current flow": which is the active flow if this execution is active, else the top-level flow definition.
+	 */
+	private Flow getCurrentFlow() {
+		return isActive() ? getActiveFlow() : this.flow;
+	}
+
+	/**
+	 * Returns the id of the "current" state: a valid state identifier if the flow is active and in a state; null if the flow
+	 * is not active or has not yet entered a state.
+	 */
+	private String getCurrentStateId() {
+		if (isActive()) {
+			State state = getCurrentState();
+			if (state != null) {
+				return state.getId();
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Returns the currently active flow.
 	 */
-	private Flow getActiveFlow() {
+	private Flow getActiveFlow() throws IllegalStateException {
 		return (Flow)getActiveSessionInternal().getDefinition();
 	}
 
 	/**
 	 * Returns the current state of this flow execution.
 	 */
-	private State getCurrentState() {
+	private State getCurrentState() throws IllegalStateException {
 		return (State)getActiveSessionInternal().getState();
 	}
 
