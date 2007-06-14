@@ -30,6 +30,7 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
 import org.springframework.webflow.engine.support.ApplicationViewSelector;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
@@ -75,8 +76,10 @@ public class MiscFlowExecutionTests extends TestCase {
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
 		try {
 			execution.start(null, new MockExternalContext());
-		} catch (RequiredMappingException e) {
-			
+			fail("Should have thrown a FlowExecutionException");
+		} catch (FlowExecutionException e) {
+			assertTrue("Root cause should have been a RequiredMappingException",
+					e.getRootCause() instanceof RequiredMappingException);
 		}
 	}
 

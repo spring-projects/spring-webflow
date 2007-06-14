@@ -27,6 +27,8 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
+import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.SubflowState;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
@@ -47,7 +49,9 @@ import org.springframework.webflow.engine.support.TransitionExecutingStateExcept
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
+import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
@@ -248,6 +252,45 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.refresh(context);
 		execution.signalEvent("view", context);
 	}
+	
+	public void testExceptionFromInputMapper() {
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
+				getClass()));
+		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
+		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
+		try {
+			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
+			fail("Should have thrown a FlowExecutionException, not any other type");
+		} catch (FlowExecutionException e) {
+		}
+	}
+	
+	public void testExceptionWithListener() {
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
+				getClass()));
+		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
+		FlowExceptionListener listener = new FlowExceptionListener();
+		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
+		flowExecution.setListeners(new FlowExecutionListeners(new FlowExecutionListener[] { listener }));
+		try {
+			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
+			fail("Should have thrown a FlowExecutionException, not any other type");
+		} catch (FlowExecutionException e) {
+		}
+
+		assertTrue("Listener should have been called on exception", listener.getExceptionFired());
+	}
+	
+	public void testExceptionWithHandler() {
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
+				getClass()));
+		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
+		FlowExceptionHandler handler = new FlowExceptionHandler();
+		flow.getExceptionHandlerSet().add(handler);
+		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
+		flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
+		assertTrue("Handler should have been called on exception", handler.getExceptionHandled());
+	}
 
 	public static TransitionCriteria onEvent(String event) {
 		return new EventIdTransitionCriteria(event);
@@ -292,5 +335,37 @@ public class FlowExecutionImplTests extends TestCase {
 				}
 			});
 		}
+	}
+
+	private class FlowExceptionListener extends FlowExecutionListenerAdapter {
+		
+		private boolean exceptionFired = false;
+		
+		public boolean getExceptionFired() {
+			return exceptionFired;
+		}
+
+		public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
+			exceptionFired = true;
+		}
+	}
+
+	private class FlowExceptionHandler implements FlowExecutionExceptionHandler {
+		
+		private boolean exceptionHandled = false;
+		
+		public boolean getExceptionHandled() {
+			return exceptionHandled;
+		}
+
+		public ViewSelection handle(FlowExecutionException exception, RequestControlContext context) {
+			exceptionHandled = true;
+			return ViewSelection.NULL_VIEW;
+		}
+
+		public boolean handles(FlowExecutionException exception) {
+			return true;
+		}
+		
 	}
 }
