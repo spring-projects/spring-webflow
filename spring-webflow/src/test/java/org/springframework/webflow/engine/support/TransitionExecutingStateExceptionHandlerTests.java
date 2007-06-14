@@ -99,7 +99,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 			execution.start(null, new MockExternalContext());
 			fail("Should have failed no such state");
 		}
-		catch (IllegalArgumentException e) {
+		catch (FlowExecutionException e) {
 		}
 	}
 

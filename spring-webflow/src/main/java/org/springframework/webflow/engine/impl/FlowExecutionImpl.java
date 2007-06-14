@@ -57,10 +57,10 @@ import org.springframework.webflow.execution.ViewSelection;
  * or client-side form field. Once deserialized, the
  * {@link FlowExecutionImplStateRestorer} strategy is expected to be used to
  * restore the execution to a usable state.
- * 
+ *
  * @see FlowExecutionImplFactory
  * @see FlowExecutionImplStateRestorer
- * 
+ *
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Ben Hale
@@ -191,12 +191,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
-			} catch (Exception e) {
-				String flowId = getCurrentFlow().getId();
-				String stateId = getCurrentStateId();
-				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
-						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
-				return pause(context, handleException(flowException, context));
+			}
+			catch (Exception e) {
+				return pause(context, handleException(wrapException(e), context));
 			}
 		}
 		finally {
@@ -222,12 +219,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
-			} catch (Exception e) {
-				String flowId = getCurrentFlow().getId();
-				String stateId = getCurrentStateId();
-				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
-						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
-				return pause(context, handleException(flowException, context));
+			}
+			catch (Exception e) {
+				return pause(context, handleException(wrapException(e), context));
 			}
 		}
 		finally {
@@ -255,12 +249,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
-			} catch (Exception e) {
-				String flowId = getCurrentFlow().getId();
-				String stateId = getCurrentStateId();
-				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
-						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
-				return pause(context, handleException(flowException, context));
+			}
+			catch (Exception e) {
+				return pause(context, handleException(wrapException(e), context));
 			}
 		}
 		finally {
@@ -337,7 +328,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			selectedView = tryFlowHandlers(exception, context);
 			if (selectedView != null) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Flow '" + flow.getId() + "' handled exception");
+					logger.debug("Flow '" + getCurrentFlow().getId() + "' handled exception");
 				}
 				return selectedView;
 			}
@@ -345,13 +336,10 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		catch (FlowExecutionException newException) {
 			// exception handling resulted in a new FlowExecutionException, try to handle it
 			return handleException(newException, context);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// a lower-level exception occured, wrap it in a flow execution exception and try to handle it
-			String flowId = getCurrentFlow().getId();
-			String stateId = getCurrentStateId();
-			FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
-					"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
-			return handleException(flowException, context);			
+			return handleException(wrapException(e), context);
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rethrowing unhandled flow execution exception");
@@ -366,7 +354,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	private ViewSelection tryStateHandlers(FlowExecutionException exception, RequestControlContext context) {
 		if (isActive() && exception.getStateId() != null) {
 			return getActiveFlow().getStateInstance(exception.getStateId()).handleException(exception, context);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -491,14 +480,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			State state = getCurrentState();
 			if (state != null) {
 				return state.getId();
-			} else {
-				return null;
 			}
-		} else {
-			return null;
 		}
+		return null;
 	}
-	
+
 	/**
 	 * Returns the currently active flow.
 	 */
@@ -511,6 +497,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	private State getCurrentState() throws IllegalStateException {
 		return (State)getActiveSessionInternal().getState();
+	}
+
+	/**
+	 * Wrap given exception in a FlowExecutionException.
+	 */
+	private FlowExecutionException wrapException(Exception e) {
+		String flowId = getCurrentFlow().getId();
+		String stateId = getCurrentStateId();
+		return new FlowExecutionException(flowId, stateId,
+				"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
 	}
 
 	// custom serialization (implementation of Externalizable for optimized
@@ -590,7 +586,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	LinkedList getFlowSessions() {
 		return flowSessions;
 	}
-	
+
 	/**
 	 * Are there any flow sessions in this flow execution?
 	 */
@@ -619,5 +615,4 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	ListIterator getSubflowSessionIterator() {
 		return flowSessions.listIterator(1);
 	}
-
 }
