@@ -104,7 +104,7 @@ public class ConversionExecutor {
 		}
 		if (source != null && !getSourceClass().isInstance(source)) {
 			throw new ConversionException(getSourceClass(), source, getTargetClass(),
-					"Source object '" + source +  "' is expected to be a " + getSourceClass());
+					"Source object '" + source +  "' is expected to be an instance of " + getSourceClass());
 		}
 		return converter.convert(source, targetClass, context);
 	}
