@@ -69,7 +69,7 @@ public class MiscFlowExecutionTests extends TestCase {
 		ApplicationView view = (ApplicationView)execution.start(input, new MockExternalContext());
 		assertEquals(new Long(23), view.getModel().get("id"));
 	}
-	
+
 	public void testRequiredMappingException() {
 		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("required-mapping.xml", getClass()));
 		Flow flow = new FlowAssembler("myFlow", builder).assembleFlow();
@@ -77,7 +77,8 @@ public class MiscFlowExecutionTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have thrown a FlowExecutionException");
-		} catch (FlowExecutionException e) {
+		}
+		catch (FlowExecutionException e) {
 			assertTrue("Root cause should have been a RequiredMappingException",
 					e.getRootCause() instanceof RequiredMappingException);
 		}

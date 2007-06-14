@@ -512,18 +512,20 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 		context.refresh();
 		return context;
 	}
-	
+
 	/**
 	 * Register beans in the bean factory local to the flow definition being built.
 	 * <p>
 	 * Subclasses may override this metod to customize the population of the bean factory local to
 	 * the flow definition being built; for example, to register mock implementations of services in a test environment.
 	 * @param flow the current flow definition being built
-	 * @param beanFactory the bean factory; register local beans with it using {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
+	 * @param beanFactory the bean factory; register local beans with it using
+	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
+	 * @since 1.0.4
 	 */
 	protected void registerLocalBeans(Flow flow, ConfigurableBeanFactory beanFactory) {
 	}
-	
+
 	private void destroyLocalServiceRegistry() {
 		localFlowServiceLocator.pop();
 	}
