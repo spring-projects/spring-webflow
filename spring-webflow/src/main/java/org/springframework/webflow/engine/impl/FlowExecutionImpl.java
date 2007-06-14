@@ -191,6 +191,15 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
+			} catch (Exception e) {
+				String flowId = context.getActiveFlow().getId();
+				String stateId = null;
+				if(context.getCurrentState() != null) {
+					stateId = context.getCurrentState().getId();
+				}
+				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
+						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
+				return pause(context, handleException(flowException, context));
 			}
 		}
 		finally {
@@ -216,6 +225,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
+			} catch (Exception e) {
+				String flowId = context.getActiveFlow().getId();
+				String stateId = context.getCurrentState().getId();
+				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
+						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
+				return pause(context, handleException(flowException, context));
 			}
 		}
 		finally {
@@ -243,6 +258,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			catch (FlowExecutionException e) {
 				return pause(context, handleException(e, context));
+			} catch (Exception e) {
+				String flowId = context.getActiveFlow().getId();
+				String stateId = context.getCurrentState().getId();
+				FlowExecutionException flowException = new FlowExecutionException(flowId, stateId,
+						"Exception thrown in state '" + stateId + "' of flow '" + flowId + "'", e);
+				return pause(context, handleException(flowException, context));
 			}
 		}
 		finally {
