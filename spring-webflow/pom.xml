@@ -18,7 +18,6 @@
 	<scm>
 		<connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</connection>
 		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</developerConnection>
-		<tag>spring-webflow-1.1</tag>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-webflow</url>
 	</scm>
 	<organization>
