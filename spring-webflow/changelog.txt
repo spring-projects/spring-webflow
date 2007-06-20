@@ -2,6 +2,10 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org
 
+Changes in version 1.0.5 ()
+-------------------------------------
+
+
 Changes in version 1.0.4 (13.06.2007)
 -------------------------------------
 
