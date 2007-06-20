@@ -16,7 +16,15 @@ Build Pre-requisites:
 DEVELOPERS
 - To build a new Spring Web Flow product release:
 
-  1. Update project.properties to reflect the new release version, if necessary.
+  1. Update the files containing the version number to reflect the new release version, if necessary.
+		build-spring-webflow/project.properties
+		spring-binding/pom.xml
+		spring-binding/project.properties
+		spring-webflow/changelog.txt
+		spring-webflow/pom.xml
+		spring-webflow/project.properties
+		spring-webflow/readme.txt
+		spring-webflow/docs/reference/src/index.xml
 
   2. From this directory, run:
 		ant release
