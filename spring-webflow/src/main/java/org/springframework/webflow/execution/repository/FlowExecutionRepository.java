@@ -44,7 +44,7 @@ public interface FlowExecutionRepository {
 	 * saved. The FlowExecutionKey is the execution's persistent identity.
 	 * @param flowExecution the flow execution
 	 * @return the flow execution key
-	 * @throws FlowExecutionRepositoryException a problem occured generating the
+	 * @throws FlowExecutionRepositoryException a problem occurred generating the
 	 * key
 	 */
 	public FlowExecutionKey generateKey(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
@@ -56,8 +56,8 @@ public interface FlowExecutionRepository {
 	 * be updated. This repository may choose to return the previous key or
 	 * generate a new key.
 	 * @param flowExecution the flow execution
-	 * @param previousKey the <i>current</i> key associated with the flow exection
-	 * @throws FlowExecutionRepositoryException a problem occured generating the
+	 * @param previousKey the <i>current</i> key associated with the flow execution
+	 * @throws FlowExecutionRepositoryException a problem occurred generating the
 	 * key
 	 */
 	public FlowExecutionKey getNextKey(FlowExecution flowExecution, FlowExecutionKey previousKey)
@@ -85,7 +85,7 @@ public interface FlowExecutionRepository {
 	 * </pre>
 	 * @param key the identifier of the flow execution to lock
 	 * @return the lock
-	 * @throws FlowExecutionRepositoryException a problem occured accessing the
+	 * @throws FlowExecutionRepositoryException a problem occurred accessing the
 	 * lock object
 	 */
 	public FlowExecutionLock getLock(FlowExecutionKey key) throws FlowExecutionRepositoryException;
@@ -96,7 +96,7 @@ public interface FlowExecutionRepository {
 	 * flow from a point in time. This should be called to resume a persistent
 	 * flow execution.
 	 * <p>
-	 * Before calling this method, you should aquire the lock for the keyed
+	 * Before calling this method, you should acquire the lock for the keyed
 	 * flow execution.
 	 * @param key the flow execution key
 	 * @return the flow execution, fully hydrated and ready to signal an event
@@ -111,7 +111,7 @@ public interface FlowExecutionRepository {
 	 * provided key. This should be called to save or update the persistent
 	 * state of an active (but paused) flow execution.
 	 * <p>
-	 * Before calling this method, you should aquire the lock for the keyed
+	 * Before calling this method, you should acquire the lock for the keyed
 	 * flow execution.
 	 * @param key the flow execution key
 	 * @param flowExecution the flow execution
@@ -125,7 +125,7 @@ public interface FlowExecutionRepository {
 	 * Remove the flow execution from the repository. This should be called when
 	 * the flow execution ends (is no longer active).
 	 * <p>
-	 * Before calling this method, you should aquire the lock for the keyed
+	 * Before calling this method, you should acquire the lock for the keyed
 	 * flow execution.
 	 * @param key the flow execution key
 	 * @throws FlowExecutionRepositoryException the flow execution could not be
