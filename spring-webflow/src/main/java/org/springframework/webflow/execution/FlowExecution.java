@@ -55,7 +55,7 @@ import org.springframework.webflow.definition.FlowDefinition;
  * {@link org.springframework.webflow.execution.repository.FlowExecutionRepository flow execution repository}
  * subsystem.
  * <p>
- * Subsequent requests from the client to manipuate this flow execution trigger
+ * Subsequent requests from the client to manipulate this flow execution trigger
  * restoration of this object, followed by an invocation of the
  * {@link #signalEvent(String, ExternalContext) signal event} operation. The
  * signalEvent operation resumes this execution by indicating what action the
@@ -91,7 +91,7 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * This will start the entire flow execution <i>from scratch</i>.
 	 * @param input input attributes to pass to the flow, which the flow may
 	 * choose to map into its scope
-	 * @param context the external context in which the starting event occured
+	 * @param context the external context in which the starting event occurred
 	 * @return the starting view selection, a value object to be used to issue a
 	 * suitable response to the caller
 	 * @throws FlowExecutionException if an exception was thrown within a state
@@ -103,8 +103,8 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * Signal an occurrence of the specified user event in the current state of
 	 * this executing flow. The event will be processed in full and control will
 	 * be returned once event processing is complete.
-	 * @param eventId the identifier of the user event that occured
-	 * @param context the external context in which the event occured
+	 * @param eventId the identifier of the user event that occurred
+	 * @param context the external context in which the event occurred
 	 * @return the next view selection to render, used by the calling executor
 	 * to issue a suitable response to the client
 	 * @throws FlowExecutionException if an exception was thrown within a state
@@ -116,7 +116,7 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * Refresh this flow execution, asking the current view selection to be
 	 * reconstituted to support reissuing the last response. This is an idempotent
 	 * operation that may be safely called on a paused execution.
-	 * @param context the externa context in which the refresh event occured
+	 * @param context the external context in which the refresh event occurred
 	 * @return the current view selection for this flow execution
 	 * @throws FlowExecutionException if an exception was thrown within a state
 	 * of the resumed flow execution during event processing
