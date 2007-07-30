@@ -30,26 +30,32 @@ import junit.framework.TestSuite;
  * real life usage should be able to pass these tests.
  *  
  * @author Erwin Vervaet
+ * @author Jeremy Grelle
  */
 public class SimpleExpressionTests extends TestCase {
 	
 	private ExpressionParser expressionParser;
+	private String expressionPrefix;
 	private TestBean bean;
 	
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new SimpleExpressionTests("testGetValue", new OgnlExpressionParser()));
-		suite.addTest(new SimpleExpressionTests("testSetValue", new OgnlExpressionParser()));
-		suite.addTest(new SimpleExpressionTests("testSyntaxError", new OgnlExpressionParser()));
-		suite.addTest(new SimpleExpressionTests("testGetValue", new BeanWrapperExpressionParser()));
-		suite.addTest(new SimpleExpressionTests("testSetValue", new BeanWrapperExpressionParser()));
-		suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser()));
+		suite.addTest(new SimpleExpressionTests("testGetValue", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testGetValue", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testGetValue", new ELExpressionParser(), "#"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new ELExpressionParser(), "#"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new ELExpressionParser(), "#"));
 		return suite;
 	}
 	
-	public SimpleExpressionTests(String name, ExpressionParser expressionParser) {
+	public SimpleExpressionTests(String name, ExpressionParser expressionParser, String expressionPrefix) {
 		super(name);
 		this.expressionParser = expressionParser;
+		this.expressionPrefix = expressionPrefix;
 	}
 	
 	protected void setUp() throws Exception {
@@ -62,22 +68,22 @@ public class SimpleExpressionTests extends TestCase {
 	}
 	
 	public void testGetValue() {
-		assertEquals(Boolean.TRUE, expressionParser.parseExpression("${flag}").evaluate(bean, null));
+		assertEquals(Boolean.TRUE, expressionParser.parseExpression(expressionPrefix+"{flag}").evaluate(bean, null));
 		assertEquals(Boolean.TRUE, expressionParser.parseExpression("flag").evaluate(bean, null));
-		assertSame(bean.getList(), expressionParser.parseExpression("${list}").evaluate(bean, null));
-		assertEquals("foo", expressionParser.parseExpression("${list[0]}").evaluate(bean, null));
+		assertSame(bean.getList(), expressionParser.parseExpression(expressionPrefix+"{list}").evaluate(bean, null));
+		assertEquals("foo", expressionParser.parseExpression(expressionPrefix+"{list[0]}").evaluate(bean, null));
 	}
 
 	public void testSetValue() {
-		expressionParser.parseSettableExpression("${flag}").evaluateToSet(bean, Boolean.FALSE, null);
+		expressionParser.parseSettableExpression(expressionPrefix+"{flag}").evaluateToSet(bean, Boolean.FALSE, null);
 		assertFalse(bean.isFlag());
 		expressionParser.parseSettableExpression("flag").evaluateToSet(bean, Boolean.TRUE, null);
 		assertTrue(bean.isFlag());
 		List newList = new ArrayList();
 		newList.add("boo");
-		expressionParser.parseSettableExpression("${list}").evaluateToSet(bean, newList, null);
+		expressionParser.parseSettableExpression(expressionPrefix+"{list}").evaluateToSet(bean, newList, null);
 		assertSame(newList, bean.getList());
-		expressionParser.parseSettableExpression("${list[0]}").evaluateToSet(bean, "baa", null);
+		expressionParser.parseSettableExpression(expressionPrefix+"{list[0]}").evaluateToSet(bean, "baa", null);
 		assertEquals("baa", bean.getList().get(0));
 	}
 	

@@ -13,12 +13,14 @@
 		<!-- global dependencies -->
 		<dependency org="commons-logging" name="commons-logging" rev="1.0.4"/>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
+		<dependency org="javax.el" name="el-api" rev="1.0"/>
+		<dependency org="jboss" name="jboss-el" rev="1.0"/>
 		<dependency org="org.springframework" name="spring-beans" rev="2.0.6" />
 		<dependency org="org.springframework" name="spring-context"	rev="2.0.6" />
 		<dependency org="org.springframework" name="spring-core" rev="2.0.6" />
 
 		<!-- test dependencies -->
-		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
+		<dependency org="easymock" name="easymock" rev="1.2_Java1.3" conf="test->default" />
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
 		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default"/>
 	</dependencies>
