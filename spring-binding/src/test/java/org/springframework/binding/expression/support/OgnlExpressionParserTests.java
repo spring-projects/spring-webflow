@@ -19,9 +19,10 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 
 /**
- * Unit tests for {@link org.springframework.binding.expression.support.OgnlExpressionParser}.
+ * Unit tests for {@link org.springframework.binding.expression.ognl.OgnlExpressionParser}.
  */
 public class OgnlExpressionParserTests extends TestCase {
 

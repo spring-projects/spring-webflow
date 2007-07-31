@@ -3,6 +3,7 @@ package org.springframework.binding.expression.support;
 import java.util.HashMap;
 import java.util.Map;
 import org.easymock.MockControl;
+import org.springframework.binding.expression.el.JBossELExpressionParser;
 
 import junit.framework.TestCase;
 
@@ -14,7 +15,7 @@ import junit.framework.TestCase;
  */
 public class ELMethodExpressionTests extends TestCase {
 
-	ELExpressionParser parser = new ELExpressionParser();
+	JBossELExpressionParser parser = new JBossELExpressionParser();
 
 	Map context;
 

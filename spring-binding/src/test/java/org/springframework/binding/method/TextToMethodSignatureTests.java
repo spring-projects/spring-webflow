@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.convert.support.TextToExpression;
-import org.springframework.binding.expression.support.OgnlExpressionParser;
+import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 
 /**
  * Test case for {@link TextToMethodSignature}.

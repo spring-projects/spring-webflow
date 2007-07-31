@@ -1,4 +1,4 @@
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELException;
@@ -16,9 +16,9 @@ import org.springframework.binding.expression.SettableExpression;
  */
 public class ELExpression implements SettableExpression {
 
-    ELContextFactory factory;
+    private ELContextFactory factory;
 
-    ValueExpression expression;
+    private ValueExpression expression;
 
     public ELExpression(ELContextFactory factory, ValueExpression expression) {
 	this.factory = factory;

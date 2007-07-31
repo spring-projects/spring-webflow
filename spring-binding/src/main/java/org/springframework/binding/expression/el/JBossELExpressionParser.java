@@ -1,4 +1,4 @@
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELException;
@@ -17,7 +17,7 @@ import org.springframework.binding.expression.SettableExpression;
  * 
  * @author Jeremy Grelle
  */
-public class ELExpressionParser implements ExpressionParser {
+public class JBossELExpressionParser implements ExpressionParser {
 
     /**
      * The expression prefix for deferred EL expressions.

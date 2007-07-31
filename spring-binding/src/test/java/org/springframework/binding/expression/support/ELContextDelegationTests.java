@@ -11,6 +11,9 @@ import javax.el.VariableMapper;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.el.DelegatingELContext;
+import org.springframework.binding.expression.el.ELContextFactory;
+import org.springframework.binding.expression.el.JBossELExpressionParser;
 
 /**
  * Tests to verify the delegation behavior of ELContextImpl.
@@ -34,7 +37,7 @@ public class ELContextDelegationTests extends TestCase {
 	assertEquals(Boolean.TRUE, expressionParser.parseExpression("#{bean.flag}").evaluate(null, null));
     }
 
-    private class DelegatingELExpressionParser extends ELExpressionParser {
+    private class DelegatingELExpressionParser extends JBossELExpressionParser {
 
 	protected ELContextFactory getELContextFactory() {
 	    ELContextFactory stubFactory = new ELContextFactory() {

@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.expression.support.OgnlExpressionParser;
+import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 
 /**
  * Unit tests for the {@link org.springframework.binding.mapping.RequiredMapping}.

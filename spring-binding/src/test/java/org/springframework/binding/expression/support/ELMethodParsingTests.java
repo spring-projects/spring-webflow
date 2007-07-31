@@ -3,13 +3,14 @@ package org.springframework.binding.expression.support;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.el.JBossELExpressionParser;
 
 public class ELMethodParsingTests extends TestCase {
 
-	ELExpressionParser parser;
+	JBossELExpressionParser parser;
 
 	protected void setUp() throws Exception {
-		parser = new ELExpressionParser();
+		parser = new JBossELExpressionParser();
 	}
 
 	public void testEmptyMethod() {

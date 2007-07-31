@@ -1,4 +1,4 @@
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.el;
 
 import javax.el.ArrayELResolver;
 import javax.el.BeanELResolver;
