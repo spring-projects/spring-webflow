@@ -2,7 +2,10 @@ package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELException;
+import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
+import javax.el.FunctionMapper;
+import javax.el.VariableMapper;
 
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
@@ -42,34 +45,42 @@ public class JBossELExpressionParser implements ExpressionParser {
     /**
      * The {@link ELContextFactory} for retrieving a configured ELContext.
      */
-    private ELContextFactory contextFactory = new DefaultELContextFactory();
+    private ELContextFactory contextFactory;
 
     /**
      * The ExpressionFactory for constructing EL expressions
      */
     private ExpressionFactory factory = new ExpressionFactoryImpl();
 
-    public String getExpressionPrefix() {
-	return expressionPrefix;
+    /**
+     * Creates a new EL expression parser for standalone usage.
+     */
+    public JBossELExpressionParser() {
+	this.contextFactory = new DefaultELContextFactory();
     }
 
-    public String getExpressionSuffix() {
-	return expressionSuffix;
+    /**
+     * Creates a new EL expression parser with a custom context factory for a specific environment.
+     * 
+     * @param contextFactory the context factory
+     */
+    public JBossELExpressionParser(ELContextFactory contextFactory) {
+	this.contextFactory = contextFactory;
     }
 
     /**
      * Check whether or not given criteria are expressed as an expression.
      */
     public boolean isDelimitedExpression(String expressionString) {
-	int prefixIndex = expressionString.indexOf(getExpressionPrefix());
+	int prefixIndex = expressionString.indexOf(expressionPrefix);
 	if (prefixIndex == -1) {
 	    return false;
 	}
-	int suffixIndex = expressionString.indexOf(getExpressionSuffix(), prefixIndex);
+	int suffixIndex = expressionString.indexOf(expressionSuffix, prefixIndex);
 	if (suffixIndex == -1) {
 	    return false;
 	} else {
-	    if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
+	    if (suffixIndex == prefixIndex + expressionPrefix.length()) {
 		return false;
 	    } else {
 		return true;
@@ -77,24 +88,23 @@ public class JBossELExpressionParser implements ExpressionParser {
 	}
     }
 
-    public Expression parseExpression(String expressionString) throws ParserException {
+    public final Expression parseExpression(String expressionString) throws ParserException {
 	if (!isDelimitedExpression(expressionString)) {
-	    expressionString = getExpressionPrefix() + expressionString + getExpressionSuffix();
+	    expressionString = expressionPrefix + expressionString + expressionSuffix;
 	}
 	return doParseExpression(expressionString);
     }
 
-    public SettableExpression parseSettableExpression(String expressionString) throws ParserException,
+    public final SettableExpression parseSettableExpression(String expressionString) throws ParserException,
 	    UnsupportedOperationException {
 	if (!isDelimitedExpression(expressionString)) {
-	    expressionString = getExpressionPrefix() + expressionString + getExpressionSuffix();
+	    expressionString = expressionPrefix + expressionString + expressionSuffix;
 	}
 	return doParseSettableExpression(expressionString);
     }
 
     /**
      * Parses the expression string into an EL value expression.
-     * 
      * @param expressionString
      * @throws ParserException
      */
@@ -104,26 +114,47 @@ public class JBossELExpressionParser implements ExpressionParser {
 
     /**
      * Parses the expression string into an EL value expression.
-     * 
      * @param expressionString
      * @throws ParserException
      */
     protected SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
-	ELContext ctx = getELContextFactory().getELContext(null);
+	ELContext ctx = contextFactory.getELContext(null);
 	try {
-	    return new ELExpression(getELContextFactory(), factory.createValueExpression(ctx, expressionString,
-		    Object.class));
+	    return new ELExpression(contextFactory, factory.createValueExpression(ctx, expressionString, Object.class));
 	} catch (ELException ex) {
 	    throw new ParserException(expressionString, ex);
 	}
     }
 
-    /**
-     * Returns the proper {@link ELContextFactory} for the current environment.
-     * 
-     * @return ELContextFactory The ELContextFactory for the current environment.
-     */
-    protected ELContextFactory getELContextFactory() {
-	return contextFactory;
+    static class DefaultELContextFactory implements ELContextFactory {
+
+	/**
+	 * Configures and returns a simple EL context to use to evaluate EL expressions on the given base target object.
+	 * @return The configured simple ELContext instance.
+	 */
+	public ELContext getELContext(Object target) {
+	    return new SimpleELContext(target);
+	}
+
+	private static class SimpleELContext extends ELContext {
+	    private DefaultELResolver resolver;
+
+	    public SimpleELContext(Object target) {
+		this.resolver = new DefaultELResolver();
+		this.resolver.setTarget(target);
+	    }
+
+	    public ELResolver getELResolver() {
+		return resolver;
+	    }
+
+	    public FunctionMapper getFunctionMapper() {
+		return null;
+	    }
+
+	    public VariableMapper getVariableMapper() {
+		return null;
+	    }
+	}
     }
 }

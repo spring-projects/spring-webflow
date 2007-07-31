@@ -21,7 +21,6 @@ import org.springframework.util.Assert;
  * Note - Requires Java 5 or higher due to the use of generics in the API's basic resolvers.
  * 
  * @author Jeremy Grelle
- * 
  */
 public class DefaultELResolver extends CompositeELResolver {
 
@@ -39,16 +38,18 @@ public class DefaultELResolver extends CompositeELResolver {
 	Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
 	if (base == null) {
 	    return super.getValue(context, target, property);
+	} else {
+	    return super.getValue(context, adaptIfNecessary(base), property);
 	}
-	return super.getValue(context, adaptIfNecessary(base), property);
     }
 
     public void setValue(ELContext context, Object base, Object property, Object val) {
 	Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
-	if (base == null)
+	if (base == null) {
 	    super.setValue(context, target, property, val);
-	else
+	} else {
 	    super.setValue(context, adaptIfNecessary(base), property, val);
+	}
     }
 
     public Object getTarget() {
@@ -60,9 +61,11 @@ public class DefaultELResolver extends CompositeELResolver {
     }
 
     private Object adaptIfNecessary(Object base) {
-	if (base instanceof MapAdaptable)
+	if (base instanceof MapAdaptable) {
 	    return ((MapAdaptable) base).asMap();
-	return base;
+	} else {
+	    return base;
+	}
     }
 
     private void configureResolvers() {

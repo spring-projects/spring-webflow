@@ -2,6 +2,11 @@ package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 
+/**
+ * A factory for creating a EL context object that will be used to evaluate a target object of an EL expression.
+ * 
+ * @author Jeremy Grelle
+ */
 public interface ELContextFactory {
 
     /**
