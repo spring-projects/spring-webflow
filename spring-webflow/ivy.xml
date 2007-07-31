@@ -22,6 +22,7 @@
 		<!--  global (core) dependencies -->
 		<dependency org="commons-logging" name="commons-logging" rev="1.0.4" />
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
+		<dependency org="javax.el" name="el-api" rev="1.0"/>
 		<!-- Xerces and XML-apis are required only under JDK 1.4 for XSD support -->
 		<!-- Note: POMs are incorrect in m2 repo; ignoring since they are optional anyway
 		<dependency org="xerces" name="xercesImpl" rev="2.8.0"/>
@@ -48,8 +49,8 @@
 
 		<!-- JSF-only dependencies -->
 		<!-- note that at this time we depend on MyFaces, not JSF-RI -->
-		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.4" conf="buildtime, jsf->default" />
-		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.1.4" conf="buildtime, jsf->default" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.0" conf="buildtime, jsf->default"/>
+		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.0" conf="buildtime, jsf->default"/>
 
 		<!-- build time only dependencies -->
 		<dependency org="concurrent" name="concurrent" rev="1.3.4" conf="buildtime->default" />
