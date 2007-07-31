@@ -16,73 +16,67 @@ import org.springframework.binding.expression.SettableExpression;
  */
 public class ELExpression implements SettableExpression {
 
-	ValueExpression expression;
+    ELContextFactory factory;
 
-	public ELExpression(ValueExpression expression) {
-		this.expression = expression;
-	}
+    ValueExpression expression;
 
-	public void evaluateToSet(Object target, Object value, EvaluationContext context) throws EvaluationException {
-		ELContext ctx = getELContext(target);
-		try {
-			expression.setValue(ctx, value);
-		}
-		catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
-	}
+    public ELExpression(ELContextFactory factory, ValueExpression expression) {
+	this.factory = factory;
+	this.expression = expression;
+    }
 
-	public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
-		ELContext ctx = getELContext(target);
-		try {
-			return expression.getValue(ctx);
-		} 
-		catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
+    public void evaluateToSet(Object target, Object value, EvaluationContext context) throws EvaluationException {
+	ELContext ctx = getELContext(target);
+	try {
+	    expression.setValue(ctx, value);
+	} catch (ELException ex) {
+	    throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
 	}
-	
-	protected Class getType(Object target, EvaluationContext context) throws EvaluationException{
-		ELContext ctx = getELContext(target);
-		try {
-			return expression.getType(ctx);
-		} 
-		catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
-	}
-	
-	/**
-	 * Retrieves the thread-bound {@link ELContext} instance, configured with a DefaultELResolver if
-	 * no other resolvers have been configured.
-	 * 
-	 * @return {@link ELContext} The thread-bound {@link ELContext} instance.
-	 */
-	private ELContext getELContext(Object target) {
-		ELContext ctx = DelegatingELContext.getCurrentInstance();
-		if (ctx.getELResolver() == null)
-			((DelegatingELContext)ctx).setELResolver(new DefaultELResolver());
-		if (ctx.getELResolver() instanceof DefaultELResolver)
-			((DefaultELResolver)ctx.getELResolver()).setTarget(target);
-		return ctx;
-	}
+    }
 
-	public int hashCode() {
-		return expression.hashCode();
+    public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
+	ELContext ctx = getELContext(target);
+	try {
+	    return expression.getValue(ctx);
+	} catch (ELException ex) {
+	    throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
 	}
+    }
 
-	public boolean equals(Object o) {
-		if (!(o instanceof ELExpression)) {
-			return false;
-		}
-		ELExpression other = (ELExpression) o;
-		return expression.equals(other.expression);
+    protected Class getType(Object target, EvaluationContext context) throws EvaluationException {
+	ELContext ctx = getELContext(target);
+	try {
+	    return expression.getType(ctx);
+	} catch (ELException ex) {
+	    throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
 	}
-	
-	public String toString()
-	{
-		return expression.getExpressionString();
+    }
+
+    /**
+     * Retrieves an {@link ELContext} instance, configured with a DefaultELResolver if no other resolvers have been
+     * configured.
+     * 
+     * @return {@link ELContext} The thread-bound {@link ELContext} instance.
+     */
+    protected ELContext getELContext(Object target) {
+	ELContext ctx = factory.getELContext(target);
+	return ctx;
+    }
+
+    public int hashCode() {
+	return expression.hashCode();
+    }
+
+    public boolean equals(Object o) {
+	if (!(o instanceof ELExpression)) {
+	    return false;
 	}
-	
+	ELExpression other = (ELExpression) o;
+	return expression.equals(other.expression);
+    }
+
+    public String toString() {
+	return expression.getExpressionString();
+    }
 
 }
