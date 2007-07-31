@@ -11,7 +11,7 @@ import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
 
 /**
- * An {@link ELContext} implementation that is meant to aggregate the {@link ELResolver}s of pre-existing
+ * An {@link ELContext} implementation that is meant to aggregate the {@link ELResolver}s of preexisting
  * {@link ELContext}s. Can also be used standalone if no other {@link ELContext} exists in the current environment.
  * 
  * Note - Using this context standalone requires Java 5 or higher.
