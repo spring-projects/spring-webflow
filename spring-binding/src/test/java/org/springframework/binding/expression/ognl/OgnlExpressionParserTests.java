@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.ognl;
 
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ognl.OgnlExpressionParser;
+import org.springframework.binding.expression.support.TestBean;
 
 /**
  * Unit tests for {@link org.springframework.binding.expression.ognl.OgnlExpressionParser}.

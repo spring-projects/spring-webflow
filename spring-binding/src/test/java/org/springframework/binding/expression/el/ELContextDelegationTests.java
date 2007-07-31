@@ -1,4 +1,4 @@
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.el;
 
 import java.util.Iterator;
 
@@ -14,6 +14,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.el.DelegatingELContext;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.JBossELExpressionParser;
+import org.springframework.binding.expression.support.TestBean;
 
 /**
  * Tests to verify the delegation behavior of ELContextImpl.

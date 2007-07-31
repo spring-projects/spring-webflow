@@ -1,9 +1,11 @@
-package org.springframework.binding.expression.support;
+package org.springframework.binding.expression.el;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.easymock.MockControl;
 import org.springframework.binding.expression.el.JBossELExpressionParser;
+import org.springframework.binding.expression.support.TestBean;
+import org.springframework.binding.expression.support.TestMethods;
 
 import junit.framework.TestCase;
 
