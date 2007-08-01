@@ -25,7 +25,7 @@ public class Jsf12ELExpressionParser extends ELExpressionParser {
 
     private static class Jsf12ELContextFactory extends DefaultELContextFactory {
 
-	public ELContext getEvalTimeELContext(Object target) {
+	public ELContext getEvaluationContext(Object target) {
 	    FacesContext context = FacesContext.getCurrentInstance();
 	    return context.getELContext();
 	}

@@ -14,7 +14,7 @@ public interface ELContextFactory {
      * Configures and returns an {@link ELContext} to be used in parsing EL expressions.
      * @return ELContext The configured ELContext instance for parsing expressions.
      */
-    public ELContext getParseTimeELContext();
+    public ELContext getParseContext();
 
     /**
      * Configures and returns an {@link ELContext} to be used in evaluating EL expressions on the given base target
@@ -23,6 +23,6 @@ public interface ELContextFactory {
      * @param target The base object for the expression evaluation.
      * @return ELContext The configured ELContext instance for evaluating expressions.
      */
-    public ELContext getEvalTimeELContext(Object target);
+    public ELContext getEvaluationContext(Object target);
 
 }

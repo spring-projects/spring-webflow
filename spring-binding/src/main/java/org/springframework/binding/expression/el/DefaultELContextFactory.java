@@ -16,7 +16,7 @@ public class DefaultELContextFactory implements ELContextFactory {
      * Configures and returns a simple EL context to use to parse EL expressions.
      * @return The configured simple ELContext instance.
      */
-    public ELContext getParseTimeELContext() {
+    public ELContext getParseContext() {
 	return new SimpleELContext();
     }
 
@@ -24,7 +24,7 @@ public class DefaultELContextFactory implements ELContextFactory {
      * Configures and returns a simple EL context to use to evaluate EL expressions on the given base target object.
      * @return The configured simple ELContext instance.
      */
-    public ELContext getEvalTimeELContext(Object target) {
+    public ELContext getEvaluationContext(Object target) {
 	return new SimpleELContext(target);
     }
 

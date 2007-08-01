@@ -113,7 +113,7 @@ public class ELExpressionParser implements ExpressionParser {
      * @throws ParserException
      */
     protected SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
-	ELContext ctx = contextFactory.getParseTimeELContext();
+	ELContext ctx = contextFactory.getParseContext();
 	try {
 	    return new ELExpression(contextFactory, expressionFactory.createValueExpression(ctx, expressionString,
 		    Object.class));
