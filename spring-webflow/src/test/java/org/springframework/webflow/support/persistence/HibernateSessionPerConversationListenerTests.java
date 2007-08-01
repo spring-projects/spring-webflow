@@ -31,6 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
@@ -61,7 +62,8 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	sessionFactory = getSessionFactory(dataSource);
 	hibernateTemplate = new HibernateTemplate(sessionFactory);
 	hibernateTemplate.setCheckWriteOperations(false);
-	listener = new HibernateSessionPerConversationListener(sessionFactory);
+	HibernateTransactionManager tm = new HibernateTransactionManager(sessionFactory);
+	listener = new HibernateSessionPerConversationListener(sessionFactory, tm);
     }
 
     public void testSameSession() {
@@ -98,7 +100,7 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	assertSessionNotBound();
     }
 
-    public void testFlowEndsInSingleRequest() {
+    public void testFlowCommitsInSingleRequest() {
 	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	MockRequestContext context = new MockRequestContext();
 	MockFlowSession flowSession = new MockFlowSession();
@@ -110,13 +112,17 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	hibernateTemplate.save(bean);
 	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
+	EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
+	endState.getAttributeMap().put("commit", Boolean.TRUE);
+	flowSession.setState(endState);
+
 	listener.sessionEnded(context, flowSession, null);
 	assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	assertSessionNotBound();
 	assertFalse(flowSession.getScope().contains("hibernate.session"));
     }
 
-    public void testFlowSpansMultipleRequests() {
+    public void testFlowCommitsAfterMultipleRequests() {
 	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	MockRequestContext context = new MockRequestContext();
 	MockFlowSession flowSession = new MockFlowSession();
@@ -136,29 +142,16 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	assertSessionBound();
 
+	EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
+	endState.getAttributeMap().put("commit", Boolean.TRUE);
+	flowSession.setState(endState);
+
 	listener.sessionEnded(context, flowSession, null);
 	assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	assertFalse(flowSession.getScope().contains("hibernate.session"));
 
 	assertSessionNotBound();
 	assertFalse(flowSession.getScope().contains("hibernate.session"));
-
-    }
-
-    public void testExceptionThrown() {
-	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-	MockRequestContext context = new MockRequestContext();
-	MockFlowSession flowSession = new MockFlowSession();
-	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-	listener.sessionCreated(context, flowSession);
-	assertSessionBound();
-
-	TestBean bean1 = new TestBean("Keith Donald");
-	hibernateTemplate.save(bean1);
-	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-	listener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
-	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-	assertSessionNotBound();
 
     }
 
@@ -181,6 +174,42 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	assertSessionNotBound();
 	assertFalse(flowSession.getScope().contains("hibernate.session"));
+    }
+
+    public void testNoCommitAttributeSetOnEndState() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
+	flowSession.setState(endState);
+
+	listener.sessionEnded(context, flowSession, null);
+	assertEquals("Table should only have three rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+
+	assertSessionNotBound();
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+    }
+
+    public void testExceptionThrown() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	TestBean bean1 = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean1);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	listener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertSessionNotBound();
+
     }
 
     private DataSource getDataSource() {

@@ -18,10 +18,13 @@ package org.springframework.webflow.support.persistence;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
@@ -51,47 +54,58 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 
     private static final String HIBERNATE_SESSION_ATTRIBUTE = "hibernate.session";
 
+    private TransactionTemplate transactionTemplate;
+
     private SessionFactory sessionFactory;
 
     /**
      * Create a new Session-per-Conversation listener using giving Hibernate session factory.
      * @param sessionFactory the session factory to use
      */
-    public HibernateSessionPerConversationListener(SessionFactory sessionFactory) {
+    public HibernateSessionPerConversationListener(SessionFactory sessionFactory,
+	    PlatformTransactionManager transactionManager) {
 	this.sessionFactory = sessionFactory;
+	this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     public void sessionCreated(RequestContext context, FlowSession session) {
 	if (session.isRoot() && session.getDefinition().getAttributes().contains("persistenceContext")) {
 	    Session hibernateSession = createSession(context);
 	    context.getConversationScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
-	    bind(hibernateSession, context, session);
+	    bind(hibernateSession, context);
 	}
     }
 
     public void resumed(RequestContext context) {
-	bind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
+	bind(getHibernateSession(context), context);
     }
 
     public void paused(RequestContext context, ViewSelection selectedView) {
-	unbind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
+	unbind(getHibernateSession(context), context);
     }
 
     public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
 	if (session.isRoot()) {
-	    Session hibernateSession = (Session) context.getConversationScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
+	    final Session hibernateSession = (Session) context.getConversationScope().remove(
+		    HIBERNATE_SESSION_ATTRIBUTE);
 	    Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
-	    if (commitStatus == null || commitStatus.equals(Boolean.TRUE)) {
-		// assume a commit by default and when 'commit' attribute = true
-		hibernateSession.flush();
-		hibernateSession.close();
+	    if (Boolean.TRUE.equals(commitStatus)) {
+		// this is a commit end state - start a new transaction that quickly commits
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+		    protected void doInTransactionWithoutResult(TransactionStatus status) {
+			sessionFactory.getCurrentSession();
+			// nothing to do - a flush will happen on commit automatically as this is a read-write
+			// transaction
+		    }
+		});
 	    }
-	    unbind(hibernateSession, context, session);
+	    hibernateSession.close();
+	    unbind(hibernateSession, context);
 	}
     }
 
     public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-	unbind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
+	unbind(getHibernateSession(context), context);
     }
 
     // internal helpers
@@ -106,19 +120,11 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 	return (Session) context.getConversationScope().get(HIBERNATE_SESSION_ATTRIBUTE);
     }
 
-    private void bind(Session session, RequestContext context, FlowSession flowSession) {
-	SessionHolder sessionHolder = new SessionHolder(session);
-	if (flowSession.getDefinition().getAttributes().contains("transactional")) {
-	    Transaction tx = session.beginTransaction();
-	    sessionHolder.setTransaction(tx);
-	}
-	TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
+    private void bind(Session session, RequestContext context) {
+	TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
     }
 
-    private void unbind(Session session, RequestContext context, FlowSession flowSession) {
-	if (flowSession.getDefinition().getAttributes().contains("transactional")) {
-	    session.getTransaction().commit();
-	}
+    private void unbind(Session session, RequestContext context) {
 	TransactionSynchronizationManager.unbindResource(sessionFactory);
     }
 }
