@@ -1,5 +1,6 @@
 package org.springframework.webflow.executor.jsf;
 
+import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.test.MockFlowServiceLocator;
@@ -7,7 +8,7 @@ import org.springframework.webflow.test.MockFlowServiceLocator;
 public class JSF12ManagedBeanAccessTests extends JSF11ManagedBeanAccessTests {
 
     protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
-	serviceRegistry.setExpressionParser(new Jsf12ELExpressionParser());
+	serviceRegistry.setExpressionParser(new Jsf12ELExpressionParser(new ExpressionFactoryImpl()));
 	serviceRegistry.registerBean("serviceBean", service);
 	StaticWebApplicationContext ctx = new StaticWebApplicationContext();
 	ctx.registerPrototype("jsfModel", JSFModel.class);

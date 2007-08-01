@@ -5,7 +5,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.easymock.MockControl;
+import org.easymock.EasyMock;
+import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.TestBean;
 import org.springframework.binding.expression.support.TestMethods;
@@ -14,22 +15,20 @@ import org.springframework.binding.expression.support.TestMethods;
  * Tests to exercise the extended method invoking expression extensions of JBoss-el.
  * @author Jeremy Grelle
  */
-public class JBossELExpressionParserTests extends TestCase {
+public class ELExpressionParserTests extends TestCase {
 
-    JBossELExpressionParser parser = new JBossELExpressionParser();
+    ELExpressionParser parser = new ELExpressionParser(new ExpressionFactoryImpl());
 
     Map context;
 
     Map container;
 
     TestMethods target;
-    MockControl targetMockControl;
 
     protected void setUp() throws Exception {
 	context = new HashMap();
 	container = new HashMap();
-	targetMockControl = MockControl.createControl(TestMethods.class);
-	target = (TestMethods) targetMockControl.getMock();
+	target = (TestMethods) EasyMock.createMock(TestMethods.class);
 	context.put("container", container);
 	container.put("myObject", target);
     }
@@ -39,10 +38,10 @@ public class JBossELExpressionParserTests extends TestCase {
 	int param = 5;
 	container.put("param1", new Integer(param));
 	target.doSomethingWithInt(param);
-	targetMockControl.replay();
+	EasyMock.replay(new Object[] { target });
 
 	parser.parseExpression(expression).evaluate(context, null);
-	targetMockControl.verify();
+	EasyMock.verify(new Object[] { target });
 
     }
 
@@ -51,11 +50,11 @@ public class JBossELExpressionParserTests extends TestCase {
 	String expression = "#{container.myObject.returnStringFromInt(container.param1)}";
 	int param = 5;
 	container.put("param1", new Integer(param));
-	targetMockControl.expectAndReturn(target.returnStringFromInt(param), expected);
-	targetMockControl.replay();
+	EasyMock.expect(target.returnStringFromInt(param)).andReturn(expected);
+	EasyMock.replay(new Object[] { target });
 
 	String result = (String) parser.parseExpression(expression).evaluate(context, null);
-	targetMockControl.verify();
+	EasyMock.verify(new Object[] { target });
 	assertEquals(expected, result);
     }
 
@@ -66,11 +65,11 @@ public class JBossELExpressionParserTests extends TestCase {
 	container.put("param1", new Integer(param1));
 	TestBean param2 = new TestBean();
 	container.put("param2", param2);
-	targetMockControl.expectAndReturn(target.returnStringFromIntAndObject(param1, param2), expected);
-	targetMockControl.replay();
+	EasyMock.expect(target.returnStringFromIntAndObject(param1, param2)).andReturn(expected);
+	EasyMock.replay(new Object[] { target });
 
 	String result = (String) parser.parseExpression(expression).evaluate(context, null);
-	targetMockControl.verify();
+	EasyMock.verify(new Object[] { target });
 	assertEquals(expected, result);
     }
 

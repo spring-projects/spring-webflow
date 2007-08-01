@@ -1,6 +1,7 @@
 package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
+import javax.el.ELResolver;
 
 /**
  * A factory for creating a EL context object that will be used to evaluate a target object of an EL expression.
@@ -10,11 +11,18 @@ import javax.el.ELContext;
 public interface ELContextFactory {
 
     /**
-     * Configures and returns a {@link DelegatingELContext} to be used in evaluating EL expressions on the given base
-     * target object.
-     * 
-     * @return DelegatingELContext The configured DelegatingELContext instance.
+     * Configures and returns an {@link ELContext} to be used in parsing EL expressions.
+     * @return ELContext The configured ELContext instance for parsing expressions.
      */
-    public ELContext getELContext(Object target);
+    public ELContext getParseTimeELContext();
+
+    /**
+     * Configures and returns an {@link ELContext} to be used in evaluating EL expressions on the given base target
+     * object. In certain environments the target will be null and the base object of the expression is expected to be
+     * resolved via the ELContext's {@link ELResolver} chain.
+     * @param target The base object for the expression evaluation.
+     * @return ELContext The configured ELContext instance for evaluating expressions.
+     */
+    public ELContext getEvalTimeELContext(Object target);
 
 }

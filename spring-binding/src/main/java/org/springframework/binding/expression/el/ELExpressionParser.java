@@ -2,25 +2,18 @@ package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELException;
-import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
-import javax.el.FunctionMapper;
-import javax.el.VariableMapper;
 
-import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.SettableExpression;
 
 /**
- * An expression parser that parses EL expressions. Beyond standard EL expression parsing, it makes use of the ability
- * of the JBoss-EL implementation to parse dynamic method invocations such as foo.bar() (the EL spec currently only
- * provides out-of-the-box support for functions).
- * 
+ * An expression parser that parses EL expressions.
  * @author Jeremy Grelle
  */
-public class JBossELExpressionParser implements ExpressionParser {
+public class ELExpressionParser implements ExpressionParser {
 
     /**
      * The expression prefix for deferred EL expressions.
@@ -50,12 +43,13 @@ public class JBossELExpressionParser implements ExpressionParser {
     /**
      * The ExpressionFactory for constructing EL expressions
      */
-    private ExpressionFactory factory = new ExpressionFactoryImpl();
+    private ExpressionFactory expressionFactory;
 
     /**
      * Creates a new EL expression parser for standalone usage.
      */
-    public JBossELExpressionParser() {
+    public ELExpressionParser(ExpressionFactory expressionFactory) {
+	this.expressionFactory = expressionFactory;
 	this.contextFactory = new DefaultELContextFactory();
     }
 
@@ -64,7 +58,8 @@ public class JBossELExpressionParser implements ExpressionParser {
      * 
      * @param contextFactory the context factory
      */
-    public JBossELExpressionParser(ELContextFactory contextFactory) {
+    public ELExpressionParser(ExpressionFactory expressionFactory, ELContextFactory contextFactory) {
+	this.expressionFactory = expressionFactory;
 	this.contextFactory = contextFactory;
     }
 
@@ -118,43 +113,12 @@ public class JBossELExpressionParser implements ExpressionParser {
      * @throws ParserException
      */
     protected SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
-	ELContext ctx = contextFactory.getELContext(null);
+	ELContext ctx = contextFactory.getParseTimeELContext();
 	try {
-	    return new ELExpression(contextFactory, factory.createValueExpression(ctx, expressionString, Object.class));
+	    return new ELExpression(contextFactory, expressionFactory.createValueExpression(ctx, expressionString,
+		    Object.class));
 	} catch (ELException ex) {
 	    throw new ParserException(expressionString, ex);
-	}
-    }
-
-    static class DefaultELContextFactory implements ELContextFactory {
-
-	/**
-	 * Configures and returns a simple EL context to use to evaluate EL expressions on the given base target object.
-	 * @return The configured simple ELContext instance.
-	 */
-	public ELContext getELContext(Object target) {
-	    return new SimpleELContext(target);
-	}
-
-	private static class SimpleELContext extends ELContext {
-	    private DefaultELResolver resolver;
-
-	    public SimpleELContext(Object target) {
-		this.resolver = new DefaultELResolver();
-		this.resolver.setTarget(target);
-	    }
-
-	    public ELResolver getELResolver() {
-		return resolver;
-	    }
-
-	    public FunctionMapper getFunctionMapper() {
-		return null;
-	    }
-
-	    public VariableMapper getVariableMapper() {
-		return null;
-	    }
 	}
     }
 }

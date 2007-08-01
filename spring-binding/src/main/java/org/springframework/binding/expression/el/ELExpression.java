@@ -59,7 +59,7 @@ public class ELExpression implements SettableExpression {
      * @return {@link ELContext} The thread-bound {@link ELContext} instance.
      */
     protected ELContext getELContext(Object target) {
-	ELContext ctx = factory.getELContext(target);
+	ELContext ctx = factory.getEvalTimeELContext(target);
 	return ctx;
     }
 

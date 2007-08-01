@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 
 import javax.faces.el.ValueBinding;
 
-import org.easymock.MockControl;
+import org.easymock.EasyMock;
+import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -16,19 +17,17 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
 
 public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 
-    JSF jsf;
+    JSFMockHelper jsf;
     JSFManagedBean jsfBean;
     JSFModel jsfModel;
     FlowPhaseListener flowPhaseListener;
     FlowNavigationHandler flowNavigationHandler;
     MockService service;
-    MockControl serviceControl;
 
     protected void setUp() throws Exception {
 	super.setUp();
-	serviceControl = MockControl.createControl(MockService.class);
-	service = (MockService) serviceControl.getMock();
-	jsf = new JSF("JSFManagedBeanAccessTests");
+	service = (MockService) EasyMock.createMock(MockService.class);
+	jsf = new JSFMockHelper();
 	jsf.setUp();
 	configureJSFForSWF();
     }
@@ -77,11 +76,11 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 	testManagedBeanExpression();
 	jsfBean.setProp1("arg");
 	service.doSomething(jsfBean.getProp1());
-	serviceControl.replay();
+	EasyMock.replay(new Object[] { service });
 
 	startFlow();
 	signalEvent("event1");
-	serviceControl.verify();
+	EasyMock.verify(new Object[] { service });
 	assertCurrentStateEquals("viewState2");
     }
 
@@ -122,7 +121,8 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 
     protected FlowDefinitionResource getFlowDefinitionResource() {
 	try {
-	    return createFlowDefinitionResource(ResourceUtils.getFile("classpath:jsf-flow.xml").getPath());
+	    return createFlowDefinitionResource(ResourceUtils.getFile(
+		    "classpath:org/springframework/webflow/executor/jsf/jsf-flow.xml").getPath());
 	} catch (FileNotFoundException e) {
 	    fail(e.getMessage());
 	    return null;
@@ -130,7 +130,7 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
     }
 
     protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
-	serviceRegistry.setExpressionParser(new Jsf11ELExpressionParser());
+	serviceRegistry.setExpressionParser(new Jsf11ELExpressionParser(new ExpressionFactoryImpl()));
 	serviceRegistry.registerBean("serviceBean", service);
 	StaticWebApplicationContext ctx = new StaticWebApplicationContext();
 	ctx.registerPrototype("jsfModel", JSFModel.class);

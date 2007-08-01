@@ -18,10 +18,11 @@ package org.springframework.binding.expression.support;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.el.JBossELExpressionParser;
+import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 
 import junit.framework.TestCase;
@@ -48,9 +49,12 @@ public class SimpleExpressionTests extends TestCase {
 	suite.addTest(new SimpleExpressionTests("testGetValue", new BeanWrapperExpressionParser(), "$"));
 	suite.addTest(new SimpleExpressionTests("testSetValue", new BeanWrapperExpressionParser(), "$"));
 	suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testGetValue", new JBossELExpressionParser(), "#"));
-	suite.addTest(new SimpleExpressionTests("testSetValue", new JBossELExpressionParser(), "#"));
-	suite.addTest(new SimpleExpressionTests("testSyntaxError", new JBossELExpressionParser(), "#"));
+	suite.addTest(new SimpleExpressionTests("testGetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
+		"#"));
+	suite.addTest(new SimpleExpressionTests("testSetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
+		"#"));
+	suite.addTest(new SimpleExpressionTests("testSyntaxError", new ELExpressionParser(new ExpressionFactoryImpl()),
+		"#"));
 	return suite;
     }
 

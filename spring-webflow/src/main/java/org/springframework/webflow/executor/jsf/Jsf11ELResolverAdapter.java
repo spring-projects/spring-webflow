@@ -19,11 +19,11 @@ import javax.faces.el.VariableResolver;
  * @author Jeremy Grelle
  * 
  */
-public class ELResolverAdapter extends ELResolver {
+public class Jsf11ELResolverAdapter extends ELResolver {
 
     private FacesContext facesContext;
 
-    public ELResolverAdapter(FacesContext facesContext) {
+    public Jsf11ELResolverAdapter(FacesContext facesContext) {
 	this.facesContext = facesContext;
     }
 
