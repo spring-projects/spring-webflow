@@ -20,7 +20,7 @@
 		<dependency org="org.springframework" name="spring-core" rev="2.0.6" />
 
 		<!-- test dependencies -->
-		<dependency org="easymock" name="easymock" rev="1.2_Java1.3" conf="test->default" />
+		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
 		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default"/>
 	</dependencies>
