@@ -6,9 +6,11 @@ import javax.faces.el.ValueBinding;
 
 import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.StaticWebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.jsf.DelegatingVariableResolver;
 import org.springframework.webflow.definition.registry.FlowDefinitionResource;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewSelection;
@@ -23,6 +25,7 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
     FlowPhaseListener flowPhaseListener;
     FlowNavigationHandler flowNavigationHandler;
     MockService service;
+    GenericWebApplicationContext ctx;
 
     protected void setUp() throws Exception {
 	super.setUp();
@@ -33,8 +36,8 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
     }
 
     private void configureJSFForSWF() {
-	DelegatingFlowVariableResolver dfvr = new DelegatingFlowVariableResolver(jsf.application()
-		.getVariableResolver());
+	DelegatingVariableResolver dvr = new DelegatingVariableResolver(jsf.application().getVariableResolver());
+	DelegatingFlowVariableResolver dfvr = new DelegatingFlowVariableResolver(dvr);
 	FlowVariableResolver fvr = new FlowVariableResolver(dfvr);
 	jsf.application().setVariableResolver(fvr);
 	FlowPropertyResolver fpr = new FlowPropertyResolver(jsf.application().getPropertyResolver());
@@ -66,7 +69,7 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 	assertNotNull(jsfModel);
     }
 
-    public void testManagedBeanProperyAsArgument() {
+    public void testManagedBeanPropertyAsArgument() {
 	testManagedBeanExpression();
 	jsfBean.setProp1("arg");
 	service.doSomething(jsfBean.getProp1());
@@ -95,14 +98,11 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
     }
 
     public void testSWFScopedPropertyInjection() {
-	// testManagedBeanExpression();
-	// startFlow();
+	startFlow();
 
-	// TODO - Add a flow scoped bean definition to the test application context
-	// ValueBinding propBinding = jsf.application().createValueBinding("#{flowScopedModel}");
-	// jsfModel = (JSFModel) propBinding.getValue(jsf.facesContext());
-	// assertNotNull("This test won't pass until custom scopes are implemented.", jsfModel);
-	// jsfBean.setModel(jsfModel);
+	ValueBinding propBinding = jsf.application().createValueBinding("#{flowScopedModel}");
+	jsfModel = (JSFModel) propBinding.getValue(jsf.facesContext());
+	assertNotNull("This test won't pass until custom scopes are implemented.", jsfModel);
     }
 
     protected ViewSelection startFlow() throws FlowExecutionException {
@@ -126,9 +126,14 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
     protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
 	serviceRegistry.setExpressionParser(new Jsf11ELExpressionParser(new ExpressionFactoryImpl()));
 	serviceRegistry.registerBean("serviceBean", service);
-	StaticWebApplicationContext ctx = new StaticWebApplicationContext();
-	ctx.registerPrototype("jsfModel", JSFModel.class);
-	jsf.externalContext().getApplicationMap()
-		.put(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx);
+
+	ctx = new GenericWebApplicationContext();
+	XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
+	xmlReader.loadBeanDefinitions(new ClassPathResource(
+		"org/springframework/webflow/executor/jsf/jsf-flow-beans.xml"));
+	ctx.refresh();
+
+	jsf.externalContext().getApplicationMap().put(
+		GenericWebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx);
     }
 }
