@@ -62,35 +62,36 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
     }
 
     public void sessionCreated(RequestContext context, FlowSession session) {
-	if (session.isRoot()) {
+	if (session.isRoot() && session.getDefinition().getAttributes().contains("persistenceContext")) {
 	    Session hibernateSession = createSession(context);
 	    context.getConversationScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
-	    bind(hibernateSession, context);
+	    bind(hibernateSession, context, session);
 	}
     }
 
     public void resumed(RequestContext context) {
-	Session hibSession = getHibernateSession(context);
-	bind(hibSession, context);
+	bind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
     }
 
     public void paused(RequestContext context, ViewSelection selectedView) {
-	Session session = getHibernateSession(context);
-	unbind(session, context);
+	unbind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
     }
 
     public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
 	if (session.isRoot()) {
 	    Session hibernateSession = (Session) context.getConversationScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
-	    hibernateSession.flush();
-	    unbind(hibernateSession, context);
-	    hibernateSession.close();
+	    Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
+	    if (commitStatus == null || commitStatus.equals(Boolean.TRUE)) {
+		// assume a commit by default and when 'commit' attribute = true
+		hibernateSession.flush();
+		hibernateSession.close();
+	    }
+	    unbind(hibernateSession, context, session);
 	}
     }
 
     public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-	Session session = getHibernateSession(context);
-	unbind(session, context);
+	unbind(getHibernateSession(context), context, context.getFlowExecutionContext().getActiveSession());
     }
 
     // internal helpers
@@ -105,18 +106,18 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 	return (Session) context.getConversationScope().get(HIBERNATE_SESSION_ATTRIBUTE);
     }
 
-    private void bind(Session hibSession, RequestContext context) {
-	SessionHolder sessionHolder = new SessionHolder(hibSession);
-	if (context.getActiveFlow().getAttributes().getBoolean("transactional").booleanValue() == true) {
-	    Transaction tx = hibSession.beginTransaction();
+    private void bind(Session session, RequestContext context, FlowSession flowSession) {
+	SessionHolder sessionHolder = new SessionHolder(session);
+	if (flowSession.getDefinition().getAttributes().contains("transactional")) {
+	    Transaction tx = session.beginTransaction();
 	    sessionHolder.setTransaction(tx);
 	}
 	TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
     }
 
-    private void unbind(Session hibSession, RequestContext context) {
-	if (context.getActiveFlow().getAttributes().getBoolean("transactional").booleanValue() == true) {
-	    hibSession.getTransaction().commit();
+    private void unbind(Session session, RequestContext context, FlowSession flowSession) {
+	if (flowSession.getDefinition().getAttributes().contains("transactional")) {
+	    session.getTransaction().commit();
 	}
 	TransactionSynchronizationManager.unbindResource(sessionFactory);
     }

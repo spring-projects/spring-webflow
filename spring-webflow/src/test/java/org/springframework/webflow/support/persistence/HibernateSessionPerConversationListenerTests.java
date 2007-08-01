@@ -32,6 +32,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.webflow.engine.EndState;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
@@ -42,114 +45,188 @@ import org.springframework.webflow.test.MockRequestContext;
  * @author Ben Hale
  */
 public class HibernateSessionPerConversationListenerTests extends TestCase {
-	
-	private JdbcTemplate jdbcTemplate;
 
-	private HibernateTemplate hibernateTemplate;
+    private SessionFactory sessionFactory;
 
-	private HibernateSessionPerConversationListener listener;
+    private JdbcTemplate jdbcTemplate;
 
-	protected void setUp() throws Exception {
-		DataSource dataSource = getDataSource();
-		populateDataBase(dataSource);
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		SessionFactory sessionFactory = getSessionFactory(dataSource);
-		hibernateTemplate = new HibernateTemplate(sessionFactory);
-		hibernateTemplate.setCheckWriteOperations(false);
-		listener = new HibernateSessionPerConversationListener(sessionFactory);
-	}
+    private HibernateTemplate hibernateTemplate;
 
-	public void testSameSession() {
-		MockRequestContext context = new MockRequestContext();
-		MockFlowSession flowSession = new MockFlowSession();
-		listener.sessionCreated(context, flowSession);
+    private HibernateSessionPerConversationListener listener;
 
-		// Session created and bound to conversation
-		final Session hibSession = (Session) context.getConversationScope().get("hibernate.session");
-		assertNotNull("Should have been populated", hibSession);
-		listener.paused(context, ViewSelection.NULL_VIEW);
+    protected void setUp() throws Exception {
+	DataSource dataSource = getDataSource();
+	populateDataBase(dataSource);
+	jdbcTemplate = new JdbcTemplate(dataSource);
+	sessionFactory = getSessionFactory(dataSource);
+	hibernateTemplate = new HibernateTemplate(sessionFactory);
+	hibernateTemplate.setCheckWriteOperations(false);
+	listener = new HibernateSessionPerConversationListener(sessionFactory);
+    }
 
-		// Session bound to thread local variable
-		listener.resumed(context);
-		hibernateTemplate.execute(new HibernateCallback() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				assertSame("Should have been original instance", hibSession, session);
-				return null;
-			}
-		}, true);
-		listener.paused(context, ViewSelection.NULL_VIEW);
-	}
+    public void testSameSession() {
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
 
-	public void testSingleState() {
-		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		MockRequestContext context = new MockRequestContext();
-		MockFlowSession flowSession = new MockFlowSession();
-		listener.sessionCreated(context, flowSession);
+	// Session created and bound to conversation
+	final Session hibSession = (Session) context.getConversationScope().get("hibernate.session");
+	assertNotNull("Should have been populated", hibSession);
+	listener.paused(context, ViewSelection.NULL_VIEW);
+	assertSessionNotBound();
 
-		TestBean bean = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean);
-		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		
-		listener.sessionEnded(context, flowSession, null);
-		assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-	}
-	
-	public void testMultipleState() {
-		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		MockRequestContext context = new MockRequestContext();
-		MockFlowSession flowSession = new MockFlowSession();
-		listener.sessionCreated(context, flowSession);
+	// Session bound to thread local variable
+	listener.resumed(context);
+	assertSessionBound();
 
-		TestBean bean1 = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean1);
-		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		listener.paused(context, ViewSelection.NULL_VIEW);
-		
-		listener.resumed(context);
-		TestBean bean2 = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean2);
-		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		
-		
-		listener.sessionEnded(context, flowSession, null);
-		assertEquals("Table should only have two rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-	}
+	hibernateTemplate.execute(new HibernateCallback() {
+	    public Object doInHibernate(Session session) throws HibernateException, SQLException {
+		assertSame("Should have been original instance", hibSession, session);
+		return null;
+	    }
+	}, true);
+	listener.paused(context, ViewSelection.NULL_VIEW);
+	assertSessionNotBound();
+    }
 
-	private DataSource getDataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-		dataSource.setUrl("jdbc:hsqldb:mem:hspcl");
-		dataSource.setUsername("sa");
-		dataSource.setPassword("");
-		return dataSource;
-	}
+    public void testFlowNotAPersistenceContext() {
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	listener.sessionCreated(context, flowSession);
+	assertSessionNotBound();
+    }
 
-	private void populateDataBase(DataSource dataSource) {
-		Connection connection = null;
+    public void testFlowEndsInSingleRequest() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	TestBean bean = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+
+	listener.sessionEnded(context, flowSession, null);
+	assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertSessionNotBound();
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+    }
+
+    public void testFlowSpansMultipleRequests() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	TestBean bean1 = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean1);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	listener.paused(context, ViewSelection.NULL_VIEW);
+	assertSessionNotBound();
+
+	listener.resumed(context);
+	TestBean bean2 = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean2);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertSessionBound();
+
+	listener.sessionEnded(context, flowSession, null);
+	assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+
+	assertSessionNotBound();
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+
+    }
+
+    public void testExceptionThrown() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	TestBean bean1 = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean1);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	listener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertSessionNotBound();
+
+    }
+
+    public void testCancelEndState() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	listener.sessionCreated(context, flowSession);
+	assertSessionBound();
+
+	TestBean bean = new TestBean("Keith Donald");
+	hibernateTemplate.save(bean);
+	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+
+	EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
+	endState.getAttributeMap().put("commit", Boolean.FALSE);
+	flowSession.setState(endState);
+	listener.sessionEnded(context, flowSession, null);
+	assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	assertSessionNotBound();
+	assertFalse(flowSession.getScope().contains("hibernate.session"));
+    }
+
+    private DataSource getDataSource() {
+	DriverManagerDataSource dataSource = new DriverManagerDataSource();
+	dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+	dataSource.setUrl("jdbc:hsqldb:mem:hspcl");
+	dataSource.setUsername("sa");
+	dataSource.setPassword("");
+	return dataSource;
+    }
+
+    private void populateDataBase(DataSource dataSource) {
+	Connection connection = null;
+	try {
+	    connection = dataSource.getConnection();
+	    connection.createStatement().execute("drop table T_BEAN if exists;");
+	    connection.createStatement().execute(
+		    "create table T_BEAN (ID integer primary key, NAME varchar(50) not null);");
+	    connection.createStatement().execute("insert into T_BEAN (ID, NAME) values (0, 'Ben Hale');");
+	} catch (SQLException e) {
+	    throw new RuntimeException("SQL exception occurred acquiring connection", e);
+	} finally {
+	    if (connection != null) {
 		try {
-			connection = dataSource.getConnection();
-			connection.createStatement().execute("drop table T_BEAN if exists;");
-			connection.createStatement().execute(
-					"create table T_BEAN (ID integer primary key, NAME varchar(50) not null);");
-			connection.createStatement().execute("insert into T_BEAN (ID, NAME) values (0, 'Ben Hale');");
+		    connection.close();
 		} catch (SQLException e) {
-			throw new RuntimeException("SQL exception occurred acquiring connection", e);
-		} finally {
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-				}
-			}
 		}
+	    }
 	}
+    }
 
-	private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-		factory.setDataSource(dataSource);
-		factory.setMappingLocations(new Resource[] { new ClassPathResource(
-				"org/springframework/webflow/support/persistence/TestBean.hbm.xml") });
-		factory.afterPropertiesSet();
-		return (SessionFactory) factory.getObject();
-	}
+    private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
+	LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
+	factory.setDataSource(dataSource);
+	factory.setMappingLocations(new Resource[] { new ClassPathResource(
+		"org/springframework/webflow/support/persistence/TestBean.hbm.xml") });
+	factory.afterPropertiesSet();
+	return (SessionFactory) factory.getObject();
+    }
+
+    private void assertSessionNotBound() {
+	assertNull(TransactionSynchronizationManager.getResource(sessionFactory));
+    }
+
+    private void assertSessionBound() {
+	assertNotNull(TransactionSynchronizationManager.getResource(sessionFactory));
+    }
+
 }
