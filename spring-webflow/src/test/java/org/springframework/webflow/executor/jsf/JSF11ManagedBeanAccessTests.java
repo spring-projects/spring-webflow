@@ -40,20 +40,15 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 	FlowPropertyResolver fpr = new FlowPropertyResolver(jsf.application().getPropertyResolver());
 	jsf.application().setPropertyResolver(fpr);
 
-	// flowPhaseListener = new FlowPhaseListener();
-	// jsf.lifecycle().addPhaseListener(flowPhaseListener);
 	flowNavigationHandler = new FlowNavigationHandler(jsf.application().getNavigationHandler());
 	jsf.application().setNavigationHandler(flowNavigationHandler);
 
 	jsf.externalContext().getRequestMap().put("JsfBean", new JSFManagedBean());
-
-	// flowPhaseListener.setupELContext(jsf.facesContext());
     }
 
     protected void tearDown() throws Exception {
 	super.tearDown();
 	jsf.tearDown();
-	// flowPhaseListener.teardownELContext();
     }
 
     public void testManagedBeanExpression() {
@@ -69,7 +64,6 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 	ValueBinding propBinding = jsf.application().createValueBinding("#{flowScope.jsfModel}");
 	jsfModel = (JSFModel) propBinding.getValue(jsf.facesContext());
 	assertNotNull(jsfModel);
-	jsfBean.setModel(jsfModel);
     }
 
     public void testManagedBeanProperyAsArgument() {
