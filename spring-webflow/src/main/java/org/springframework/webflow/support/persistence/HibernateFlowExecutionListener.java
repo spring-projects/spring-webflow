@@ -21,7 +21,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -34,23 +33,44 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A {@link FlowExecutionListener} that implements the Hibernate Session-per-Conversation pattern as described in Java
- * Persistence with Hibernate (chapter 11).
+ * A {@link FlowExecutionListener} that implements the Session-per-Conversation pattern using the native Hibernate API.
  * <p>
- * This implementation uses raw Hibernate APIs and binds the current session to the thread-local location identified by
- * Spring's <code>HibernateTransactionManager</code>.
+ * The general pattern is as follows:
+ * <ul>
+ * <li>When a flow execution starts, create a new Hibernate Session and bind it to conversation scope.
+ * <li>Before processing a flow execution request, expose the conversationally-bound session as the "current session"
+ * for the current thread.
+ * <li>When an existing flow pauses, unbind the session from the current thread.
+ * <li>When an existing flow ends, commit the changes made to the session in a transaction if the ending state is a
+ * commit state. Then, unbind the context and close it.
+ * </ul>
+ * 
+ * The general data access pattern implemented here is:
+ * <ul>
+ * <li> Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
+ * <li> Load some objects into this persistence context
+ * <li> Perform edits to those objects over a series of conversational requests
+ * <li> On successful conversation completion, commit and flush those edits to the database, applying a version check if
+ * necessary.
+ * </ul>
+ * 
  * <p>
- * This listener assumes that you are accessing Hibernate via Spring support such as HibernateTemplate or the
- * LocalSessionFactoryBean. If not, Hibernate data access code will not participate in the proper transaction.
+ * Note: All data access except for the final commit will, by default, be non-transactional. However, a flow may call
+ * into a transactional service layer to fetch objects during the conversation in the context of a read-only system
+ * transaction. In that case, the session's flush mode will be set to Manual and no intermediate changes will be
+ * flushed.
  * <p>
- * Note that when accessing service layer methods with Spring managed transactions, those transaction should have
- * {@link Propagation#REQUIRED} semantics. Anything else defeats the purpose of holding the transaction open until the
- * end of the session.
+ * Care should be taken to prevent premature commits of conversational data while the conversation is in progress. You
+ * would generally not want intermediate flushing to happen, as the nature of a conversation implies a transient,
+ * isolated resource that can be canceled before it ends. Generally, the only time a read-write transaction should be
+ * started is upon successful completion of the conversation, triggered by reaching a 'commit' end state.
  * 
  * @author Ben Hale
+ * @author Keith Donald
+ * @author Juergen Hoeller
  * @since 1.1
  */
-public class HibernateSessionPerConversationListener extends FlowExecutionListenerAdapter {
+public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
 
     private static final String HIBERNATE_SESSION_ATTRIBUTE = "hibernate.session";
 
@@ -62,8 +82,7 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
      * Create a new Session-per-Conversation listener using giving Hibernate session factory.
      * @param sessionFactory the session factory to use
      */
-    public HibernateSessionPerConversationListener(SessionFactory sessionFactory,
-	    PlatformTransactionManager transactionManager) {
+    public HibernateFlowExecutionListener(SessionFactory sessionFactory, PlatformTransactionManager transactionManager) {
 	this.sessionFactory = sessionFactory;
 	this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
@@ -94,7 +113,7 @@ public class HibernateSessionPerConversationListener extends FlowExecutionListen
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 		    protected void doInTransactionWithoutResult(TransactionStatus status) {
 			sessionFactory.getCurrentSession();
-			// nothing to do - a flush will happen on commit automatically as this is a read-write
+			// nothing to do; a flush will happen on commit automatically as this is a read-write
 			// transaction
 		    }
 		});

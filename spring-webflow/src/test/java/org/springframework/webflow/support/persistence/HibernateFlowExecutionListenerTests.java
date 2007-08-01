@@ -41,11 +41,11 @@ import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
 /**
- * Tests for {@link HibernateSessionPerConversationListener}
+ * Tests for {@link HibernateFlowExecutionListener}
  * 
  * @author Ben Hale
  */
-public class HibernateSessionPerConversationListenerTests extends TestCase {
+public class HibernateFlowExecutionListenerTests extends TestCase {
 
     private SessionFactory sessionFactory;
 
@@ -53,7 +53,7 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 
     private HibernateTemplate hibernateTemplate;
 
-    private HibernateSessionPerConversationListener listener;
+    private HibernateFlowExecutionListener listener;
 
     protected void setUp() throws Exception {
 	DataSource dataSource = getDataSource();
@@ -63,7 +63,7 @@ public class HibernateSessionPerConversationListenerTests extends TestCase {
 	hibernateTemplate = new HibernateTemplate(sessionFactory);
 	hibernateTemplate.setCheckWriteOperations(false);
 	HibernateTransactionManager tm = new HibernateTransactionManager(sessionFactory);
-	listener = new HibernateSessionPerConversationListener(sessionFactory, tm);
+	listener = new HibernateFlowExecutionListener(sessionFactory, tm);
     }
 
     public void testSameSession() {
