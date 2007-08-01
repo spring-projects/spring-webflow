@@ -10,32 +10,26 @@ import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.JBossELExpressionParser;
 
 /**
- * A JSF-aware ExpressionParser that allows JSF managed beans to be referenced in expressions in the FlowDefinition.
+ * A JSF-aware ExpressionParser that allows JSF 1.1 managed beans to be referenced in expressions in the FlowDefinition.
  * @author Jeremy Grelle
  * 
  */
-public class JsfELExpressionParser extends JBossELExpressionParser {
+public class Jsf11ELExpressionParser extends JBossELExpressionParser {
 
-    public JsfELExpressionParser() {
-	super(new JsfELContextFactory());
+    public Jsf11ELExpressionParser() {
+	super(new Jsf11ELContextFactory());
     }
 
-    public JsfELExpressionParser(ELContextFactory contextFactory) {
+    public Jsf11ELExpressionParser(ELContextFactory contextFactory) {
 	super(contextFactory);
     }
 
-    private static class JsfELContextFactory implements ELContextFactory {
+    private static class Jsf11ELContextFactory implements ELContextFactory {
 
 	public ELContext getELContext(Object target) {
 
 	    FacesContext context = FacesContext.getCurrentInstance();
-	    if (FacesAPI.getVersion() < 12) {
-		return new Jsf11ELContext(context);
-	    }
-	    if (context != null) {
-		return context.getELContext();
-	    }
-	    return null;
+	    return new Jsf11ELContext(context);
 	}
 
 	private static class Jsf11ELContext extends ELContext {
