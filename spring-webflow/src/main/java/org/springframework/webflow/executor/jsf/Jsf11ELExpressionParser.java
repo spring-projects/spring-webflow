@@ -8,7 +8,6 @@ import javax.el.VariableMapper;
 import javax.faces.context.FacesContext;
 
 import org.springframework.binding.expression.el.DefaultELContextFactory;
-import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
 
 /**
@@ -22,16 +21,10 @@ public class Jsf11ELExpressionParser extends ELExpressionParser {
 	super(expressionFactory, new Jsf11ELContextFactory());
     }
 
-    public Jsf11ELExpressionParser(ExpressionFactory expressionFactory, ELContextFactory contextFactory) {
-	super(expressionFactory, contextFactory);
-    }
-
     private static class Jsf11ELContextFactory extends DefaultELContextFactory {
 
 	public ELContext getEvaluationContext(Object target) {
-
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    return new Jsf11ELContext(context);
+	    return new Jsf11ELContext(FacesContext.getCurrentInstance());
 	}
 
 	private static class Jsf11ELContext extends ELContext {

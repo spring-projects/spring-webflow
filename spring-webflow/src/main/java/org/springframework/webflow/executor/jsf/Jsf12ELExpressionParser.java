@@ -5,7 +5,6 @@ import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 
 import org.springframework.binding.expression.el.DefaultELContextFactory;
-import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
 
 /**
@@ -19,15 +18,9 @@ public class Jsf12ELExpressionParser extends ELExpressionParser {
 	super(expressionFactory, new Jsf12ELContextFactory());
     }
 
-    public Jsf12ELExpressionParser(ExpressionFactory expressionFactory, ELContextFactory contextFactory) {
-	super(expressionFactory, contextFactory);
-    }
-
     private static class Jsf12ELContextFactory extends DefaultELContextFactory {
-
 	public ELContext getEvaluationContext(Object target) {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    return context.getELContext();
+	    return FacesContext.getCurrentInstance().getELContext();
 	}
     }
 
