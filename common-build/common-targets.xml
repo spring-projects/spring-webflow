@@ -875,6 +875,7 @@
       <jvmarg value="${unitvm}" />
       <jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
       <jvmarg value="${test.arguments}" />
+      <jvmarg value="-XX:MaxPermSize=128m"/>
       <classpath>
         <pathelement location="${target.classes.dir}" />
         <pathelement location="${target.testclasses.dir}" />
@@ -898,6 +899,7 @@
       <jvmarg value="${unitvm}" />
       <jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
       <jvmarg value="${test.arguments}" />
+      <jvmarg value="-XX:MaxPermSize=128m"/>
       <classpath>
         <pathelement location="${target.classes.dir}" />
         <pathelement location="${target.testclasses.dir}" />
