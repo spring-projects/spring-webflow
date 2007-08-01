@@ -114,7 +114,6 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		// this is a commit end state - start a new transaction that quickly commits
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 		    protected void doInTransactionWithoutResult(TransactionStatus status) {
-			em.joinTransaction();
 			// nothing to do - a flush will happen on commit automatically as this is a read-write
 			// transaction
 		    }
