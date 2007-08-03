@@ -17,11 +17,32 @@ package org.springframework.webflow.support.persistence;
 
 public class TestBean {
 
-    private long entityId;
+    private Long entityId;
 
     private String name;
 
+    public TestBean() {
+
+    }
+
     public TestBean(String name) {
+	this.name = name;
+    }
+
+    public TestBean(long id, String name) {
+	this.entityId = new Long(id);
+	this.name = name;
+    }
+
+    public Long getEntityId() {
+	return entityId;
+    }
+
+    public void setEntityId(Long entityId) {
+	this.entityId = entityId;
+    }
+
+    public void setName(String name) {
 	this.name = name;
     }
 

@@ -74,7 +74,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	assertSessionBound();
 
 	// Session created and bound to conversation
-	final Session hibSession = (Session) context.getConversationScope().get("hibernate.session");
+	final Session hibSession = (Session) context.getConversationScope().get("session");
 	assertNotNull("Should have been populated", hibSession);
 	listener.paused(context, ViewSelection.NULL_VIEW);
 	assertSessionNotBound();
@@ -210,6 +210,16 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 	assertSessionNotBound();
 
+    }
+
+    public void testExceptionThrownWithNothingBound() {
+	assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	assertSessionNotBound();
+	listener.exceptionThrown(context, new FlowExecutionException("foo", "bar", "test"));
+	assertSessionNotBound();
     }
 
     private DataSource getDataSource() {

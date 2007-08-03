@@ -16,6 +16,7 @@
 package org.springframework.webflow.support.persistence;
 
 import org.hibernate.FlushMode;
+import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionHolder;
@@ -72,11 +73,13 @@ import org.springframework.webflow.execution.ViewSelection;
  */
 public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-    private static final String HIBERNATE_SESSION_ATTRIBUTE = "hibernate.session";
+    private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
 
     private TransactionTemplate transactionTemplate;
 
     private SessionFactory sessionFactory;
+
+    private Interceptor entityInterceptor;
 
     /**
      * Create a new Session-per-Conversation listener using giving Hibernate session factory.
@@ -85,6 +88,14 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     public HibernateFlowExecutionListener(SessionFactory sessionFactory, PlatformTransactionManager transactionManager) {
 	this.sessionFactory = sessionFactory;
 	this.transactionTemplate = new TransactionTemplate(transactionManager);
+    }
+
+    /**
+     * Sets the entity interceptor to attach to sessions opened by this listener.
+     * @param entityInterceptor the entity interceptor
+     */
+    public void setEntityInterceptor(Interceptor entityInterceptor) {
+	this.entityInterceptor = entityInterceptor;
     }
 
     public void sessionCreated(RequestContext context, FlowSession session) {
@@ -130,7 +141,8 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     // internal helpers
 
     private Session createSession(RequestContext context) {
-	Session session = sessionFactory.openSession();
+	Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
+		.openSession());
 	session.setFlushMode(FlushMode.MANUAL);
 	return session;
     }
@@ -144,6 +156,8 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     }
 
     private void unbind(Session session, RequestContext context) {
-	TransactionSynchronizationManager.unbindResource(sessionFactory);
+	if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
+	    TransactionSynchronizationManager.unbindResource(sessionFactory);
+	}
     }
 }

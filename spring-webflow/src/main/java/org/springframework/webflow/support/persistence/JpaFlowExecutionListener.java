@@ -74,7 +74,7 @@ import org.springframework.webflow.execution.ViewSelection;
  */
 public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-    private static final String ENTITY_MANAGER_ATTRIBUTE = "jpa.entityManager";
+    private static final String ENTITY_MANAGER_ATTRIBUTE = "entityManager";
 
     private EntityManagerFactory entityManagerFactory;
 
@@ -114,8 +114,12 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		// this is a commit end state - start a new transaction that quickly commits
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 		    protected void doInTransactionWithoutResult(TransactionStatus status) {
-			// nothing to do - a flush will happen on commit automatically as this is a read-write
-			// transaction
+			// necessary for JTA to enlist the entity manager in the transaction
+			try {
+			    em.joinTransaction();
+			} catch (IllegalStateException e) {
+			    // won't be necessary once Spring 2.0.7 is released
+			}
 		    }
 		});
 	    }
@@ -139,6 +143,8 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
     }
 
     private void unbind(EntityManager em) {
-	TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+	if (TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
+	    TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+	}
     }
 }

@@ -35,8 +35,9 @@
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="/spring/mock"/>
 	<classpathentry kind="lib" path="lib/global/el-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/spring-jpa.jar"/>
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/global/jboss-el.jar"/>
+	<classpathentry kind="lib" path="lib/test/toplink-essentials.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-jpa.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

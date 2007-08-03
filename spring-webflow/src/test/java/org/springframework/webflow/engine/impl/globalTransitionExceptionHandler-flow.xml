@@ -10,12 +10,14 @@
 
   <action-state id="action1">
     <evaluate-action expression="flowScope.flowAction.action1()" />
-    <transition on-exception="org.springframework.webflow.engine.impl.FooException" to="fooException" />
-    <transition on-exception="ognl.MethodFailedException" to="methodFailedException" />
   </action-state>
 
   <end-state id="fooException" view="showFooException" />
 
   <end-state id="methodFailedException" view="showMethodFailedException" />
- 
+
+  <global-transitions>
+      <transition on-exception="org.springframework.webflow.engine.impl.FooException" to="fooException" />
+  </global-transitions> 
+  
 </flow>
