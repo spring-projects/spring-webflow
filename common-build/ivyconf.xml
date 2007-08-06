@@ -44,6 +44,9 @@
 			<!-- try maven repo -->
            	<ibiblio name="maven2-repo" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2/"/>
 
+			<!-- try jboss repo -->
+			<ibiblio name="jboss-maven2-repo" checkconsistency="false" m2compatible="true" root="http://repository.jboss.com/maven2/"/>
+			
 			<!-- try the java.net maven repo -->
 			<url name="java.net-repo" m2compatible="false">
 				<artifact pattern="http://download.java.net/maven/1/[organisation]/jars/[artifact]-[revision].[ext]" />
