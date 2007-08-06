@@ -1,0 +1,89 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	    		xmlns:ui="http://java.sun.com/jsf/facelets"
+	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+				template="template.xhtml">
+
+<!-- content -->
+<ui:define name="content">
+<div class="section">
+	<h1>Confirm Hotel Booking</h1>
+</div>
+<div class="section">
+	<h:form id="confirm">
+	<fieldset>
+		<div class="entry">
+			<div class="label">Name:</div>
+			<div class="output">#{hotel.name}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Address:</div>
+			<div class="output">#{hotel.address}</div>
+		</div>
+		<div class="entry">
+			<div class="label">City, State:</div>
+			<div class="output">#{hotel.city}, #{hotel.state}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Zip:</div>
+			<div class="output">#{hotel.zip}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Country:</div>
+			<div class="output">#{hotel.country}</div>
+		</div>
+        <div class="entry">
+            <div class="label">Total payment:</div>
+            <div class="output">
+                <h:outputText value="#{booking.total}">
+                    <f:convertNumber type="currency" 
+                                     currencySymbol="$"/>
+                </h:outputText>
+            </div>
+        </div>
+		<div class="entry">
+			<div class="label">Check In Date:</div>
+			<div class="output"><h:outputText value="#{booking.checkinDate}"/></div>
+		</div>
+		<div class="entry">
+			<div class="label">Check Out Date:</div>
+			<div class="output"><h:outputText value="#{booking.checkoutDate}"/></div>
+		</div>
+		<div class="entry">
+			<div class="label">Credit Card #:</div>
+			<div class="output">#{booking.creditCard}</div>
+		</div>
+		<div class="entry">
+			<div class="label">&#160;</div>
+			<div class="input">
+				<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
+    			<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
+    			<h:commandButton id="cancel" value="Cancel" action="cancel"/>
+			</div>
+		</div>
+	</fieldset>
+	</h:form>
+</div>
+</ui:define>
+
+<!-- sidebar -->
+<ui:define name="sidebar">
+<h1>Back button navigation</h1>
+<p>
+   When you click "Confirm", the new booking is written to the database, the 
+   conversation ends, and state associated with the conversation is automatically 
+   destroyed by Seam. After you confirm your booking, try hitting the back button
+   on your web browser and clicking "Confirm" again. Seam makes it easy implement
+   applications that behave elegantly in response to the back, forward and refresh
+   buttons.
+</p>
+<p>
+   <a href="#" onclick="window.open('exp/confirmExp.html','exp','width=752,height=500,scrollbars=yes');">
+      What happens when the conversation ends?
+   </a>
+</p>
+</ui:define>
+
+</ui:composition>

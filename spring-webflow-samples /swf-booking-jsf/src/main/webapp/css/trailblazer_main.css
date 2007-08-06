@@ -1,0 +1,148 @@
+* {
+    margin:  0px; 
+    padding: 0px; 
+    border:  none;
+}
+
+body {
+    font: 1em verdana, arial, sans-serif;
+    background: #CCCCCC;
+}
+
+div#main {
+    margin-left:  0px;
+    width: 751px;
+    background: #ecefdf;
+}
+
+div#top,div#pictures{
+}
+
+div#pictures img {
+    float:left;
+}
+
+img#head1 {
+    margin-right: 3px;
+} 
+
+img#head2 {
+    margin-right: 4px;
+} 
+
+div.trail {
+    clear:both;     
+    margin-left:  50px;
+    margin-top:   0px;
+    margin-right: 50px
+}
+
+div.foot {
+    margin-left:  50px;
+    margin-right: 50px;
+    margin-top:   50px;
+    text-align:   center;
+    font-size:    .5em;
+    height: 36px;
+}
+
+div.trail h1 {
+    margin-top:   -30px;
+    margin-left:  -50px;
+    font-size:    1.2em;   
+    font-weight:  bold;
+    padding-left: .4em;
+}
+
+div.trail h2 { 
+    float:        left;
+    font-size:    1em;   
+    font-weight:  bold;
+    padding-left: .4em;
+}
+
+div.trail h3 { 
+    float:        left;
+    font-size:    .8em;   
+    font-weight:  bold;
+    margin-left: -1.4em;
+    margin-bottom: 1em;
+}
+
+
+div.trail p {
+    clear:      both;
+    margin-top: 20px;
+    font-size: .8em;
+    text-decoration: none;
+}
+
+div#next_trail {
+    margin-left: 36px;
+}
+
+div.numbox {
+    border: thin solid black; 
+    margin-left: -.8em;
+    float:   left;
+    background: #ffffff;
+    padding: .2em .35em .3em;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+div.figure {
+    text-align: center;
+    font-size: .6em;
+    margin-top: 30px;
+}
+
+div.figure img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+code {
+    font: 1.1em "Courier New", Courier, mono;
+}
+
+code.block {
+    white-space: pre;
+    font: 10pt "Courier New", Courier, mono;
+    display: block;
+    border-style: dashed;
+    border-width: thin;
+    padding: .5em;
+    background: #ffffff;
+    margin: 20px;
+}
+
+div.foot_image {
+   float: left;
+   height: 86px;
+}
+
+a:active {
+    color : #666666;
+    text-decoration: none;
+}
+
+a:hover {
+    color : #000000;
+    background-color : #D6E0FE;
+    text-decoration: none;
+}
+
+a:link {
+    color : #005EB6;
+    text-decoration: none;
+}
+
+a:visited {
+    color : #888888;
+    text-decoration: none;
+}
+
+

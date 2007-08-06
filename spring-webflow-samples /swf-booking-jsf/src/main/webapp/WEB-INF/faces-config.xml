@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+	<application>
+		<navigation-handler>org.springframework.webflow.executor.jsf.FlowNavigationHandler</navigation-handler>
+		<variable-resolver>org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver</variable-resolver>
+		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
+	</application>
+	
+	<lifecycle>
+		<phase-listener>org.springframework.webflow.samples.booking.DebuggingPhaseListener</phase-listener>
+		<phase-listener>org.springframework.webflow.executor.jsf.FlowPhaseListener</phase-listener>
+	</lifecycle>
+	
+	<managed-bean>
+		<managed-bean-name>jsfSearchAction</managed-bean-name>
+		<managed-bean-class>org.springframework.webflow.samples.booking.SearchAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+</faces-config>

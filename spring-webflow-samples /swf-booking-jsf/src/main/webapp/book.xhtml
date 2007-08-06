@@ -1,0 +1,201 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	    		xmlns:ui="http://java.sun.com/jsf/facelets"
+	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+				template="template.xhtml">
+
+<!-- content -->
+<ui:define name="content">
+<div class="section">
+	<h1>Book Hotel</h1>
+</div>
+<div class="section">
+	<h:form id="booking">
+	<h:messages/>
+	<fieldset>
+		<div class="entry">
+			<div class="label">Name:</div>
+			<div class="output">#{hotel.name}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Address:</div>
+			<div class="output">#{hotel.address}</div>
+		</div>
+		<div class="entry">
+			<div class="label">City, State:</div>
+			<div class="output">#{hotel.city}, #{hotel.state}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Zip:</div>
+			<div class="output">#{hotel.zip}</div>
+		</div>
+		<div class="entry">
+			<div class="label">Country:</div>
+			<div class="output">#{hotel.country}</div>
+		</div>
+        <div class="entry">
+            <div class="label">Nightly rate:</div>
+            <div class="output">
+                <h:outputText value="#{hotel.price}">
+                    <f:convertNumber type="currency"  
+                                     currencySymbol="$"/>
+                </h:outputText>
+            </div>
+        </div>
+		
+		<s:validateAll>
+    
+            <f:facet name="aroundInvalidField">
+                <s:span styleClass="errors"/>
+            </f:facet>
+            <f:facet name="afterInvalidField">
+                <s:div styleClass="errors">
+               	    <s:message/>
+               	</s:div>
+            </f:facet>
+		    
+			<div class="entry">
+                            <div class="label"><h:outputLabel for="checkinDate">Check In Date:</h:outputLabel></div>
+                            <div class="input">
+                                <s:decorate id="checkinDateDecorate">
+                                    <h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
+                                        <f:convertDateTime pattern="MM/dd/yyyy"/>
+                                        <a:support event="onblur" reRender="checkinDateDecorate"/>
+                                    </h:inputText>
+                                    <s:selectDate for="checkinDate">
+                                        <h:graphicImage url="img/dtpick.gif" style="margin-left:5px;cursor:pointer"/>
+                                    </s:selectDate>
+                                </s:decorate>
+                            </div>
+			</div>
+			
+			<div class="entry">
+                            <div class="label"><h:outputLabel for="checkoutDate">Check Out Date:</h:outputLabel></div>
+                            <div class="input">
+                                <s:decorate id="checkoutDateDecorate">
+                                    <h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
+                                        <f:convertDateTime pattern="MM/dd/yyyy"/>
+                                        <a:support event="onblur" reRender="checkoutDateDecorate"/>
+                                    </h:inputText>
+                                    <s:selectDate for="checkoutDate">
+                                        <h:graphicImage url="img/dtpick.gif" style="margin-left:5px;cursor:pointer"/>
+                                    </s:selectDate>
+                                </s:decorate>
+                            </div>
+                        </div>
+
+			<div class="entry">
+				<div class="label"><h:outputLabel for="beds">Room Preference:</h:outputLabel></div>
+				<div class="input">
+					<s:decorate>
+						<h:selectOneMenu id="beds" value="#{booking.beds}">
+							<f:selectItem itemLabel="One king-size bed" itemValue="1"/>
+							<f:selectItem itemLabel="Two double beds" itemValue="2"/>
+							<f:selectItem itemLabel="Three beds" itemValue="3"/>
+						</h:selectOneMenu>
+					</s:decorate>
+				</div>
+			</div>
+			
+			<div class="entry">
+				<div class="label"><h:outputLabel for="smoking">Smoking Preference:</h:outputLabel></div>
+				<div id="radio" class="input">
+					<s:decorate>
+						<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
+							<f:selectItem itemLabel="Smoking" itemValue="true"/>
+							<f:selectItem itemLabel="Non Smoking" itemValue="false"/>
+						</h:selectOneRadio>
+					</s:decorate>
+				</div>
+			</div>
+			
+			<div class="entry">
+				<div class="label"><h:outputLabel for="creditCard">Credit Card #:</h:outputLabel></div>
+				<div class="input">
+					<s:decorate id="creditCardDecorate">
+						<h:inputText id="creditCard" value="#{booking.creditCard}" required="true">
+                           <a:support event="onblur" reRender="creditCardDecorate"/>
+                        </h:inputText>
+					</s:decorate>
+				</div>
+			</div>
+			
+			<div class="entry">
+				<div class="label"><h:outputLabel for="creditCardName">Credit Card Name:</h:outputLabel></div>
+				<div class="input">
+					<s:decorate id="creditCardNameDecorate">
+						<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true">
+                           <a:support event="onblur" reRender="creditCardNameDecorate"/>
+                        </h:inputText>
+					</s:decorate>
+				</div>
+			</div>
+			
+			<div class="entry">
+				<div class="label"><h:outputLabel for="creditCardExpiryMonth">Credit Card Expiry:</h:outputLabel></div>
+				<div class="input">
+					<s:decorate>
+						<h:selectOneMenu id="creditCardExpiryMonth" value="#{booking.creditCardExpiryMonth}">
+							<f:selectItem itemLabel="Jan" itemValue="1"/>
+							<f:selectItem itemLabel="Feb" itemValue="2"/>
+							<f:selectItem itemLabel="Mar" itemValue="3"/>
+							<f:selectItem itemLabel="Apr" itemValue="4"/>
+							<f:selectItem itemLabel="May" itemValue="5"/>
+							<f:selectItem itemLabel="Jun" itemValue="6"/>
+							<f:selectItem itemLabel="Jul" itemValue="7"/>
+							<f:selectItem itemLabel="Aug" itemValue="8"/>
+							<f:selectItem itemLabel="Sep" itemValue="9"/>
+							<f:selectItem itemLabel="Oct" itemValue="10"/>
+							<f:selectItem itemLabel="Nov" itemValue="11"/>
+							<f:selectItem itemLabel="Dec" itemValue="12"/>
+						</h:selectOneMenu>
+						<h:selectOneMenu id="creditCardExpiryYear" value="#{booking.creditCardExpiryYear}">
+							<f:selectItem itemLabel="2005" itemValue="2005"/>
+							<f:selectItem itemLabel="2006" itemValue="2006"/>
+							<f:selectItem itemLabel="2007" itemValue="2007"/>
+							<f:selectItem itemLabel="2008" itemValue="2008"/>
+							<f:selectItem itemLabel="2009" itemValue="2009"/>
+						</h:selectOneMenu>
+					</s:decorate>
+				</div>
+			</div>
+			
+		</s:validateAll>
+		
+		<div class="entry errors">
+			<h:messages globalOnly="true"/>
+		</div>
+		
+		<div class="entry">
+			<div class="label">&#160;</div>
+			<div class="input">
+				<h:commandButton id="proceed" value="Proceed" action="reviewDetails"/>&#160;
+				<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
+			</div>
+		</div>		
+	</fieldset>
+	</h:form>
+</div>
+</ui:define>
+
+<!-- sidebar -->
+<ui:define name="sidebar">
+
+<h1>Workspace management</h1>
+<p>
+   As you can see, Seam makes it easy to work in multiple windows or multiple browser 
+   tabs. But you can even switch between multiple tasks inside a single browser tab!
+   The "Workspaces" section showcases this advanced feature.
+</p>
+<p>
+   <a href="#" onclick="window.open('exp/workspaceExp.html','exp','width=752,height=500,scrollbars=yes');">
+      How does the workspace list work?
+   </a>
+</p>
+
+</ui:define>
+
+</ui:composition>

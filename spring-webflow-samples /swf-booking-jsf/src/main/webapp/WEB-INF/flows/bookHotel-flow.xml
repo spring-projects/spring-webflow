@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<attribute name="persistenceContext" value="true"/>
+	
+	<input-mapper>
+		<input-attribute name="id" scope="flow"/>
+	</input-mapper>
+	
+	<start-state idref="displayHotel"/>
+	
+	<!-- NOTE - for some reason leaving off the scope prefix from EL expressions is not working in the subflow -->
+	
+	<view-state id="displayHotel" view="/hotel.xhtml">
+		<render-actions>
+			<bean-action bean="bookingService" method="readHotelById">
+				<method-arguments>
+					<argument expression="flowScope.id"/>
+				</method-arguments>
+				<method-result name="hotel" scope="flow"/>
+			</bean-action>
+		</render-actions>
+		<transition on="bookHotel" to="bookHotel"/>
+		<transition on="cancel" to="cancel"/>
+	</view-state>
+	
+	<action-state id="bookHotel">
+		<bean-action bean="bookingService" method="bookHotel">
+				<method-arguments>
+					<argument expression="flowScope.hotel"/>
+					<argument expression="conversationScope.user"/>
+				</method-arguments>
+				<method-result name="booking" scope="flow"/>
+		</bean-action>
+		<transition to="enterBookingDetails"/>
+	</action-state>
+	
+	<view-state id="enterBookingDetails" view="/book.xhtml">
+		<transition on="reviewDetails" to="validateBooking"/>
+		<transition on="cancel" to="cancel"/>
+	</view-state>
+	
+	<action-state id="validateBooking">
+		<action bean="validateBookingAction"/>
+		<transition on="success" to="confirmBooking"/>
+		<transition on="error" to="enterBookingDetails"/>
+	</action-state>
+	
+	<view-state id="confirmBooking" view="/confirm.xhtml">
+		<transition on="confirm" to="completeBooking"/>
+		<transition on="revise" to="enterBookingDetails"/>
+		<transition on="cancel" to="cancel"/>
+	</view-state>
+	
+	<end-state id="cancel">
+		<attribute name="commit" value="false" type="boolean"/>
+	</end-state>
+	
+	<end-state id="completeBooking">
+		<attribute name="commit" value="true" type="boolean"/>
+	</end-state>
+	
+</flow>

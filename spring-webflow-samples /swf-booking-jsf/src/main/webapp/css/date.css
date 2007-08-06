@@ -1,0 +1,185 @@
+div.seam-date 
+{
+  margin-top: 5px;
+  border: 1px solid #AAAAAA;
+  background: #fff url(../img/input.bg.gif) 0 0 repeat-x;
+  background-color: #FFFFFF;  
+  color: #505050;
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+table.seam-date td {
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: 11px; 
+}
+
+.seam-date-monthNames
+{
+  width: 70px;
+  border: 1px solid #dddddd;
+  border-right: 3px solid #444444;
+  border-bottom: 3px solid #444444;
+  background-color: #ffffff; 
+  font-size: 12px;
+  cursor: pointer;	
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+a.seam-date-monthNameLink, a.seam-date-monthNameLink:visited
+{
+  text-align: center;
+  display: block;
+  color: #555555;  
+}
+
+a.seam-date-monthNameLink:hover
+{ 
+  background-color: #CCCCCC;
+  color: red;  
+}
+
+.seam-date-years
+{
+  height: 10em;
+  overflow: auto;
+  width: 60px;
+  border: 1px solid #dddddd;
+  border-right: 3px solid #444444;
+  border-bottom: 3px solid #444444;
+  background-color: #ffffff; 
+  font-size: 12px;
+  cursor: pointer;	
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+a.seam-date-yearLink, a.seam-date-yearLink:visited
+{
+  text-align: center;
+  display: block;
+  color: #555555;    
+}
+
+a.seam-date-yearLink:hover
+{
+  background-color: #CCCCCC;
+  color: red;    
+}  
+
+tr.seam-date-header
+{
+  padding: 2px 0px 2px 0px;
+}
+  
+td.seam-date-header
+{
+  padding: 0px 8px 0px 8px;
+  text-align: center;
+  color: gray;
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 12px;  
+}
+
+td.seam-date-header-prevMonth
+{
+  background-image: url("../img/cal-prev.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0px 2px 0px 2px;
+  width: 17px;
+  height: 16px;
+  margin-left: 2px;
+}
+
+td.seam-date-header-nextMonth
+{
+  background-image: url("../img/cal-next.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0px 2px 0px 2px;
+  width: 17px;
+  height: 16px;
+  margin-right: 2px;
+}
+
+tr.seam-date-headerDays
+{
+  color: white;
+  font-weight: normal;
+}
+
+tr.seam-date-headerDays > td
+{
+  background-color: #CCCCCC;
+  border: 1px solid #AAAAAA;
+  color: white;
+  text-align: center;
+  width: 26px;   
+}
+
+tr.seam-date-footer
+{
+  background-color: white; 
+  color: #505050;
+  font-weight: bold;
+}
+
+tr.seam-date-footer > td
+{
+  text-align: center;
+}
+
+td.seam-date-inMonth
+{
+  background-color: white; 
+  color: black;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-outMonth
+{
+  background-color: white; 
+  color: #999999;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-selected
+{
+  background-color: #CCCCCC;        
+  border: 1px solid #AAAAAA; 
+  color: black;
+  font-weight: normal;
+}
+
+td.seam-date-dayOff-inMonth
+{
+  background-color: #efefef;
+  color: black;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-dayOff-outMonth
+{
+  background-color: #efefef;
+  color: #999999;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-hover 
+{
+  background-color: #CCCCCC;
+  border: 1px solid #AAAAAA;
+  cursor: pointer;
+  color: red;
+}

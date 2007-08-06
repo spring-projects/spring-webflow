@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	
+	<var name="hotelSearch" class="org.springframework.webflow.samples.booking.HotelSearch" scope="flow"/>
+	<var name="user" bean="user"/>
+	
+	<start-state idref="findBookings"/>
+	
+	<action-state id="findBookings">
+		<action bean="searchAction"/>
+		<transition to="main"/>
+	</action-state>
+	
+	<view-state id="main" view="/main.xhtml">
+		<transition on="findHotels" to="findHotels"/>
+		<transition on="selectHotel" to="bookHotel-flow"/>
+	</view-state>
+	
+	<action-state id="findHotels">
+		<action bean="searchAction"/>
+		<transition to="main"/>
+	</action-state>
+	
+	<subflow-state flow="bookHotel-flow" id="bookHotel-flow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.id" target="id" from="string" to="long"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition to="findBookings"/>
+	</subflow-state>
+	
+	<end-state id="loggedIn"/>
+	
+</flow>

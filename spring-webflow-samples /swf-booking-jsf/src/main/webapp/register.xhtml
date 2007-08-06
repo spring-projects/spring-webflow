@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:s="http://jboss.com/products/seam/taglib"
+      xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>JBoss Suites: Seam Framework</title>
+	<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body id="pgHome">
+<div id="document">
+	<div id="header">
+		<div id="title"><img src="img/hdr.title.gif" alt="JBoss Suites: seam framework demo"/></div>
+	</div>
+	<div id="container">
+		<div id="sidebar">		    
+			<h1>Integrated multi-layer validation</h1>
+			<p>
+			    Robust applications need data validation in several different places. Seam integrates Hibernate Validator,
+			    a set of annotations for expressing data model constraints in your domain model classes. Then, these 
+			    constraints are applied almost completely transparently at three levels of the application: by Seam when 
+			    the user first enters data, by EJB before persisting data to the database, and, if you use Hibernate to 
+			    generate your database schema, by the database constraints themselves. Multi-layer validation hardens
+			    your application and protects your data. Even better, it's self-documenting, and easy to change when
+			    your business rules change.
+			</p>
+			<p>
+			   <a href="#" onclick="window.open('exp/registerExp.html','exp','width=752,height=500,scrollbars=yes');">
+			      What happens when I register?
+			   </a>
+			</p>
+		</div>
+		<div id="content">
+			<div class="section">
+				<h1>Register</h1>
+			</div>
+			<div class="section">
+                
+                <h:form id="register">
+				<fieldset>
+				
+                    <s:validateAll>
+
+                       <f:facet name="aroundInvalidField">
+                           <s:span styleClass="errors"/>
+                       </f:facet>
+                       <f:facet name="afterInvalidField">
+                           <s:div styleClass="errors">
+               	               <s:message/>
+               	           </s:div>
+                       </f:facet>
+		    
+						<div class="entry">
+							<div class="label"><h:outputLabel for="username">Username:</h:outputLabel></div>
+							<div class="input">
+								<s:decorate id="usernameDecorate">
+									<h:inputText id="username" value="#{user.username}" required="true">
+                                        <a:support event="onblur" reRender="usernameDecorate"/>
+                                    </h:inputText>
+								</s:decorate>
+							</div>
+						</div>
+						
+						<div class="entry">
+							<div class="label"><h:outputLabel for="name">Real Name:</h:outputLabel></div>
+							<div class="input">
+								<s:decorate id="nameDecorate">
+									<h:inputText id="name" value="#{user.name}" required="true">
+                                        <a:support event="onblur" reRender="nameDecorate"/>
+                                    </h:inputText>
+								</s:decorate>
+							</div>
+						</div>
+						
+						<div class="entry">
+							<div class="label"><h:outputLabel for="password">Password:</h:outputLabel></div>
+							<div class="input">
+								<s:decorate>
+									<h:inputSecret id="password" value="#{user.password}" required="true"/>
+								</s:decorate>
+							</div>
+						</div>
+						
+						<div class="entry">
+							<div class="label"><h:outputLabel for="verify">Verify Password:</h:outputLabel></div>
+							<div class="input">
+								<s:decorate>
+									<h:inputSecret id="verify" value="#{register.verify}" required="true"/>
+								</s:decorate>
+							</div>
+						</div>
+
+					</s:validateAll>
+					
+					<div class="entry errors">
+						<h:messages globalOnly="true"/>
+					</div>
+					
+					<div class="entry">
+						<div class="label">&#160;</div>
+						<div class="input">
+							<h:commandButton id="register" value="Register" action="#{register.register}"/>&#160;
+							<s:button id="cancel" value="Cancel" view="/home.xhtml"/>
+						</div>
+					</div>
+					
+				</fieldset>
+                </h:form>
+                
+			</div>			
+		</div>
+	</div>
+	<div id="footer">Created with JBoss EJB 3.0, Seam, MyFaces, and Facelets</div>
+</div>
+</body>
+</html>

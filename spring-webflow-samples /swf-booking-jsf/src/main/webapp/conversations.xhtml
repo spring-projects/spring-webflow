@@ -1,0 +1,34 @@
+<!DOCTYPE div PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:c="http://java.sun.com/jstl/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+     
+<div class="section">
+    <h1><h:outputText rendered="#{not empty conversationList}" value="Workspaces"/></h1>
+</div>
+
+<div class="section">
+    <h:form>
+        <h:dataTable value="#{conversationList}" var="entry">
+            <h:column>
+                <h:commandLink action="#{entry.select}" value="#{entry.description}"/>
+                &#160;
+                <h:outputText value="[current]" rendered="#{entry.current}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{entry.startDatetime}">
+                    <s:convertDateTime type="time" pattern="hh:mm"/>
+                </h:outputText>
+                -
+                <h:outputText value="#{entry.lastDatetime}">
+                    <s:convertDateTime type="time" pattern="hh:mm"/>
+                </h:outputText>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</div>
+
+</div>
