@@ -18,7 +18,7 @@
 		<render-actions>
 			<bean-action bean="bookingService" method="readHotelById">
 				<method-arguments>
-					<argument expression="flowScope.id"/>
+					<argument expression="id"/>
 				</method-arguments>
 				<method-result name="hotel" scope="flow"/>
 			</bean-action>
@@ -30,8 +30,8 @@
 	<action-state id="bookHotel">
 		<bean-action bean="bookingService" method="bookHotel">
 				<method-arguments>
-					<argument expression="flowScope.hotel"/>
-					<argument expression="conversationScope.user"/>
+					<argument expression="hotel"/>
+					<argument expression="user"/>
 				</method-arguments>
 				<method-result name="booking" scope="flow"/>
 		</bean-action>

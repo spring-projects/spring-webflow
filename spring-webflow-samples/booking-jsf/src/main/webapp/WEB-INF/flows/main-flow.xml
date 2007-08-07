@@ -27,7 +27,7 @@
 	<subflow-state flow="bookHotel-flow" id="bookHotel-flow">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="requestParameters.id" target="id" from="string" to="long"/>
+				<mapping source="param.id" target="id" from="string" to="long"/>
 			</input-mapper>
 		</attribute-mapper>
 		<transition to="findBookings"/>

@@ -40,6 +40,7 @@ public class JpaBookingService implements BookingService {
     @Transactional(readOnly = true)
     public Booking bookHotel(Hotel hotel, User user) {
 	Booking booking = new Booking(hotel, user);
+	em.persist(booking);
 	return booking;
     }
 
