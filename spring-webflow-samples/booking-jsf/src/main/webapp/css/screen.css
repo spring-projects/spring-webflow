@@ -32,13 +32,13 @@ input {
 	border: 1px solid #C3BBB6;
 	padding: 4px;
 	margin: 5px 0;
-	background: #fff url(../img/input.bg.gif) 0 0 repeat-x;
+	background: #fff url(../images/input.bg.gif) 0 0 repeat-x;
 }
 select {
 	border: 1px solid #C3BBB6;
 	padding: 4px;
 	margin: 5px 0;
-	background: #fff url(../img/input.bg.gif) 0 0 repeat-x;
+	background: #fff url(../images/input.bg.gif) 0 0 repeat-x;
 }ol, ul {
 	margin: 10px 0px 10px 6px;
 }
@@ -52,27 +52,20 @@ fieldset {
 ----------------------------------------------- */
 #document {
 	padding: 0 1px;
-	background: #fff url(../img/bg.gif) 0 0 repeat-y;
+	background: #fff url(../images/bg.gif) 0 0 repeat-y;
 	float: left;
 	border-bottom: 1px solid #C3BBB6;
 }
 #header {
 	float: left;
 	width: 758px;
-	height: 46px;
-	background: url(../img/hdr.bg.gif) 0 0 repeat-x;
+	height:76px;
+	background: url(../images/hdr.bg.gif) 0 0 repeat-x;
 }
 #container {
 	float: left;
 	width: 758px;
-	background: url(../img/hdr.bar.jpg) 0 0 repeat-x;
-}
-#sidebar {
-	float: left;
-	width: 190px;
-	margin-top: 96px;
-	padding: 20px 10px 0 10px;
-	background: url(../img/sdb.bg.gif) 0 0 no-repeat;
+	background: url(../images/spring-logo.jpg) 0 0 repeat-x;
 }
 #content {
 	float: left;
@@ -98,7 +91,7 @@ input[type="submit"], input[type="button"] {
 	color: #fff;
 	border: 1px solid #5D1414;
 	height: 26px;
-	background: #fff url(../img/btn.bg.gif) 0 0 repeat-x;
+	background: #fff url(../images/btn.bg.gif) 0 0 repeat-x;
 	border-style: none;
 }
 .center {
@@ -202,7 +195,7 @@ input[type="submit"], input[type="button"] {
 }
 #content table thead th {
 	border-left: 1px solid #D2C9C4;
-	background: #fff url(../img/th.bg.gif) 0 100% repeat-x;	
+	background: #fff url(../images/th.bg.gif) 0 100% repeat-x;	
 	border-bottom: 1px solid #D2C9C4;
 	padding: 6px;
 	text-align: left;
@@ -251,18 +244,4 @@ input[type="submit"], input[type="button"] {
 #status a {
 	color: #C7B299;
 	text-decoration: none;
-}
-/* Homepage Modifications
------------------------------------------------ */
-#pgHome #container {
-	background: url(../img/hdr.ad.jpg) 0 0 repeat-x;
-}
-#pgHome #sidebar {
-	margin-top: 207px;
-}
-#pgHome #content {
-	margin-top: 183px;
-}
-#pgHome input[type="submit"] {
-	height: 30px;
 }

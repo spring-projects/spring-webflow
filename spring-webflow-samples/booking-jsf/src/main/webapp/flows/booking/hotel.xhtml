@@ -3,7 +3,7 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-				template="template.xhtml">
+				template="/template.xhtml">
 
 <!-- content -->
 <ui:define name="content">
@@ -53,30 +53,6 @@
 	</fieldset>
 	</h:form>
 </div>
-</ui:define>
-
-<!-- sidebar -->
-<ui:define name="sidebar">
-
-<h1>Don't kill your database</h1>
-<p>
-    Keeping conversational state in memory in the middle tier is a great way to
-    improve your application's scalability. It saves hitting the database every
-    time we refresh a page, to re-read the data we were just looking at five 
-    seconds ago. By using Seam's conversation context, we get a natural cache 
-    of data associated with the what the user is currently doing. By nature, 
-    this cache has a more efficient eviction policy than the MRU-type algorithms 
-    used by a typical second-level data cache in an O/R mapping engine like
-    Hibernate (at least for some kinds of data). Of course, you should use 
-    a clever combination of second-level caching and conversational data
-    caching to achieve the best performance for your application.
-</p>
-<p>
-   <a href="#" onclick="window.open('exp/bookingExp.html','exp','width=752,height=500,scrollbars=yes');">
-      How does the hotel booking wizard work?
-   </a>
-</p>
-
 </ui:define>
 
 </ui:composition>

@@ -3,9 +3,8 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-	  			xmlns:s="http://jboss.com/products/seam/taglib"
                 xmlns:a="https://ajax4jsf.dev.java.net/ajax"
-				template="template.xhtml">
+				template="/template.xhtml">
 
 <!-- content -->
 <ui:define name="content">
@@ -42,27 +41,27 @@
 
   <div class="section">
 	<h:outputText value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
-	<h:dataTable id="hotels" value="#{hotels}" var="hot" rendered="#{hotels.rowCount>0}">
+	<h:dataTable id="hotels" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount>0}">
 		<h:column>
 			<f:facet name="header">Name</f:facet>
-			#{hot.name}
+			#{hotel.name}
 		</h:column>
 		<h:column>
 			<f:facet name="header">Address</f:facet>
-			#{hot.address}
+			#{hotel.address}
 		</h:column>
 		<h:column>
 			<f:facet name="header">City, State</f:facet>
-			#{hot.city}, #{hot.state}, #{hot.country}
+			#{hotel.city}, #{hotel.state}, #{hotel.country}
 		</h:column> 
 		<h:column>
 			<f:facet name="header">Zip</f:facet>
-			#{hot.zip}
+			#{hotel.zip}
 		</h:column>
 		<h:column>
 			<f:facet name="header">Action</f:facet>
 			<h:commandLink id="viewHotelLink" value="View Hotel" action="selectHotel">
-				<f:param name="id" value="#{hot.id}"/>
+				<f:param name="hotelId" value="#{hotel.id}"/>
 			</h:commandLink>
 		</h:column>
 	</h:dataTable>
@@ -78,62 +77,41 @@
 <div class="section">
 
 	<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount==0}"/>
-	<h:dataTable id="bookings" value="#{bookings}" var="book" rendered="#{bookings.rowCount>0}">
+	<h:dataTable id="bookings" value="#{bookings}" var="booking" rendered="#{bookings.rowCount>0}">
 		<h:column>
 			<f:facet name="header">Name</f:facet>
-			#{book.hotel.name}
+			#{booking.hotel.name}
 		</h:column>
 		<h:column>
 			<f:facet name="header">Address</f:facet>
-			#{book.hotel.address}
+			#{booking.hotel.address}
 		</h:column>
 		<h:column>
 			<f:facet name="header">City, State</f:facet>
-			#{book.hotel.city}, #{book.hotel.state}
+			#{booking.hotel.city}, #{booking.hotel.state}
 		</h:column>
         <h:column>
             <f:facet name="header">Check in date</f:facet>
-            <h:outputText value="#{book.checkinDate}"/>
+            <h:outputText value="#{booking.checkinDate}"/>
         </h:column>
         <h:column>
             <f:facet name="header">Check out date</f:facet>
-            <h:outputText value="#{book.checkoutDate}"/>
+            <h:outputText value="#{booking.checkoutDate}"/>
         </h:column>
 		<h:column>
 			<f:facet name="header">Confirmation number</f:facet>
-			#{book.id}
+			#{booking.id}
 		</h:column>
 		<h:column>
 			<f:facet name="header">Action</f:facet>
-			<h:commandLink id="cancel" value="Cancel" action="cancelBooking"/>
+			<h:commandLink id="cancel" value="Cancel" action="cancelBooking">
+				<f:param name="bookingId" value="#{booking.id}"/>
+			</h:commandLink>
 		</h:column>
 	</h:dataTable>
 </div>
 
 </h:form>
-
-</ui:define>
-
-<!-- sidebar -->
-<ui:define name="sidebar">
-
-<h1>State management in Seam</h1>
-<p>
-   State in Seam is <em>contextual</em>. When you click "Find Hotels", the application
-   retrieves a list of hotels from the database and caches it in the session context. When you
-   navigate to one of the hotel records by clicking the "View Hotel" link, a <em>conversation</em> 
-   begins. The conversation is attached to a particular tab, in a particular browser window. You can
-   navigate to multiple hotels using "open in new tab" or "open in new window" in your web browser.
-   Each window will execute in the context of a different conversation. The application keeps state
-   associated with your hotel booking in the conversation context, which ensures that the concurrent
-   conversations do not interfere with each other.
-</p>
-
-<p>
-   <a href="#" onclick="window.open('exp/mainExp.html','exp','width=752,height=500,scrollbars=yes');">
-      How does the search page work?
-   </a>
-</p>
 
 </ui:define>
 

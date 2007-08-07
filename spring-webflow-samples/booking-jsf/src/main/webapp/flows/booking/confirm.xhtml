@@ -3,8 +3,7 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:s="http://jboss.com/products/seam/taglib"
-				template="template.xhtml">
+				template="/template.xhtml">
 
 <!-- content -->
 <ui:define name="content">
@@ -66,24 +65,6 @@
 	</fieldset>
 	</h:form>
 </div>
-</ui:define>
-
-<!-- sidebar -->
-<ui:define name="sidebar">
-<h1>Back button navigation</h1>
-<p>
-   When you click "Confirm", the new booking is written to the database, the 
-   conversation ends, and state associated with the conversation is automatically 
-   destroyed by Seam. After you confirm your booking, try hitting the back button
-   on your web browser and clicking "Confirm" again. Seam makes it easy implement
-   applications that behave elegantly in response to the back, forward and refresh
-   buttons.
-</p>
-<p>
-   <a href="#" onclick="window.open('exp/confirmExp.html','exp','width=752,height=500,scrollbars=yes');">
-      What happens when the conversation ends?
-   </a>
-</p>
 </ui:define>
 
 </ui:composition>

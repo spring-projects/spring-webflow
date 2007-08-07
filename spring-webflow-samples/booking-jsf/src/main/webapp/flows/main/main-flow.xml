@@ -11,12 +11,13 @@
 	
 	<action-state id="findBookings">
 		<action bean="searchAction"/>
-		<transition to="main"/>
+		<transition on="success" to="main"/>
 	</action-state>
 	
-	<view-state id="main" view="/main.xhtml">
+	<view-state id="main" view="/flows/main/main.xhtml">
 		<transition on="findHotels" to="findHotels"/>
 		<transition on="selectHotel" to="bookHotel-flow"/>
+		<transition on="cancelBooking" to="cancelBooking"/>
 	</view-state>
 	
 	<action-state id="findHotels">
@@ -27,11 +28,20 @@
 	<subflow-state flow="bookHotel-flow" id="bookHotel-flow">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="param.id" target="id" from="string" to="long"/>
+				<mapping source="param.hotelId" target="id" from="string" to="long"/>
 			</input-mapper>
 		</attribute-mapper>
-		<transition to="findBookings"/>
+		<transition on="*" to="findBookings"/>
 	</subflow-state>
+	
+	<action-state id="cancelBooking">
+		<bean-action bean="bookingService" method="cancelBooking">
+			<method-arguments>
+				<argument expression="param.bookingId" parameter-type="long"/>
+			</method-arguments>
+		</bean-action>
+		<transition on="success" to="findBookings"/>
+	</action-state>
 	
 	<end-state id="loggedIn"/>
 	

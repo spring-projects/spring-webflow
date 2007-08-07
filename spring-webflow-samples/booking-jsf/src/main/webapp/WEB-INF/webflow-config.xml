@@ -38,9 +38,8 @@
         <property name="expressionParser" ref="jsfExpressionParser"/>
 		<property name="flowLocations">
 			<list>
-				<value>/WEB-INF/flows/login-flow.xml</value>
-				<value>/WEB-INF/flows/main-flow.xml</value>
-				<value>/WEB-INF/flows/bookHotel-flow.xml</value>
+				<value>/flows/main/main-flow.xml</value>
+				<value>/flows/booking/bookHotel-flow.xml</value>
 			</list>
 		</property>
 	</bean>
