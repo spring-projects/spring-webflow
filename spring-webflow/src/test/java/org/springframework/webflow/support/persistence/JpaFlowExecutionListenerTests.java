@@ -8,13 +8,12 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.TopLinkJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.test.MockFlowSession;
@@ -31,10 +30,9 @@ public class JpaFlowExecutionListenerTests extends TestCase {
     private JpaTemplate jpaTemplate;
 
     public void testTemp() {
-	
+
     }
-    
-    /*
+
     protected void setUp() throws Exception {
 	DataSource dataSource = getDataSource();
 	populateDataBase(dataSource);
@@ -107,11 +105,10 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 	LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 	factory.setDataSource(dataSource);
 	factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/support/persistence/persistence.xml");
-	TopLinkJpaVendorAdapter toplink = new TopLinkJpaVendorAdapter();
-	factory.setJpaVendorAdapter(toplink);
-	factory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+	HibernateJpaVendorAdapter hibernate = new HibernateJpaVendorAdapter();
+	factory.setJpaVendorAdapter(hibernate);
 	factory.afterPropertiesSet();
-	return (EntityManagerFactory) factory.getObject();
+	return factory.getObject();
     }
 
     private void assertSessionNotBound() {
@@ -121,5 +118,5 @@ public class JpaFlowExecutionListenerTests extends TestCase {
     private void assertSessionBound() {
 	assertNotNull(TransactionSynchronizationManager.getResource(entityManagerFactory));
     }
-    */
+
 }

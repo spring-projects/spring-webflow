@@ -37,7 +37,21 @@
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/global/jboss-el.jar"/>
-	<classpathentry kind="lib" path="lib/test/toplink-essentials.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-jpa.jar"/>
+	<classpathentry kind="lib" path="lib/test/antlr.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-attrs.jar"/>
+	<classpathentry kind="lib" path="lib/test/cglib.jar"/>
+	<classpathentry kind="lib" path="lib/test/clover.jar"/>
+	<classpathentry kind="lib" path="lib/test/ehcache.jar"/>
+	<classpathentry kind="lib" path="lib/test/freemarker.jar"/>
+	<classpathentry kind="lib" path="lib/test/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/test/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/test/hibernate-entitymanager.jar"/>
+	<classpathentry kind="lib" path="lib/test/hibernate-tools.jar"/>
+	<classpathentry kind="lib" path="lib/test/hibernate-validator.jar"/>
+	<classpathentry kind="lib" path="lib/test/javassist.jar"/>
+	<classpathentry kind="lib" path="lib/test/jboss-common-core.jar"/>
+	<classpathentry kind="lib" path="lib/test/jtidy.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

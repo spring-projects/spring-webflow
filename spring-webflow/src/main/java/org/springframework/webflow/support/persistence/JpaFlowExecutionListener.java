@@ -93,7 +93,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
     public void sessionCreated(RequestContext context, FlowSession session) {
 	if (session.getDefinition().getAttributes().contains("persistenceContext")) {
 	    EntityManager em = entityManagerFactory.createEntityManager();
-	    context.getFlowScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
+	    session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
 	    bind(em);
 	}
     }
