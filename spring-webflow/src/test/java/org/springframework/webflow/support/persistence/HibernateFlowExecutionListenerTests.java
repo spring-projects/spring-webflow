@@ -71,10 +71,11 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	// Session created and bound to conversation
-	final Session hibSession = (Session) context.getConversationScope().get("session");
+	final Session hibSession = (Session) flowSession.getScope().get("session");
 	assertNotNull("Should have been populated", hibSession);
 	listener.paused(context, ViewSelection.NULL_VIEW);
 	assertSessionNotBound();
@@ -106,6 +107,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	TestBean bean = new TestBean("Keith Donald");
@@ -128,6 +130,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	TestBean bean1 = new TestBean("Keith Donald");
@@ -161,6 +164,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	TestBean bean = new TestBean("Keith Donald");
@@ -182,6 +186,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
@@ -201,6 +206,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	MockFlowSession flowSession = new MockFlowSession();
 	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 	listener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
 	assertSessionBound();
 
 	TestBean bean1 = new TestBean("Keith Donald");

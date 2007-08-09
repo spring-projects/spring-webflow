@@ -26,6 +26,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
@@ -34,11 +35,12 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A {@link FlowExecutionListener} that implements the Session-per-Conversation pattern using the native Hibernate API.
+ * A {@link FlowExecutionListener} that implements the Flow Managed Persistence Context (FMPC) pattern using the native
+ * Hibernate API.
  * <p>
  * The general pattern is as follows:
  * <ul>
- * <li>When a flow execution starts, create a new Hibernate Session and bind it to conversation scope.
+ * <li>When a flow execution starts, create a new Hibernate Session and bind it to flow scope.
  * <li>Before processing a flow execution request, expose the conversationally-bound session as the "current session"
  * for the current thread.
  * <li>When an existing flow pauses, unbind the session from the current thread.
@@ -50,8 +52,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * <ul>
  * <li> Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
  * <li> Load some objects into this persistence context
- * <li> Perform edits to those objects over a series of conversational requests
- * <li> On successful conversation completion, commit and flush those edits to the database, applying a version check if
+ * <li> Perform edits to those objects over a series of requests into the flow
+ * <li> On successful flow ccompletion, commit and flush those edits to the database, applying a version check if
  * necessary.
  * </ul>
  * 
@@ -61,10 +63,10 @@ import org.springframework.webflow.execution.ViewSelection;
  * transaction. In that case, the session's flush mode will be set to Manual and no intermediate changes will be
  * flushed.
  * <p>
- * Care should be taken to prevent premature commits of conversational data while the conversation is in progress. You
- * would generally not want intermediate flushing to happen, as the nature of a conversation implies a transient,
- * isolated resource that can be canceled before it ends. Generally, the only time a read-write transaction should be
- * started is upon successful completion of the conversation, triggered by reaching a 'commit' end state.
+ * Care should be taken to prevent premature commits of flow data while the flow is in progress. You would generally not
+ * want intermediate flushing to happen, as the nature of a flow implies a transient, isolated resource that can be
+ * canceled before it ends. Generally, the only time a read-write transaction should be started is upon successful
+ * completion of the conversation, triggered by reaching a 'commit' end state.
  * 
  * @author Ben Hale
  * @author Keith Donald
@@ -72,6 +74,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * @since 1.1
  */
 public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
+
+    private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
     private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
 
@@ -99,25 +103,28 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     }
 
     public void sessionCreated(RequestContext context, FlowSession session) {
-	if (session.isRoot() && session.getDefinition().getAttributes().contains("persistenceContext")) {
+	if (isPersistenceContext(session.getDefinition())) {
 	    Session hibernateSession = createSession(context);
-	    context.getConversationScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
+	    session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
 	    bind(hibernateSession, context);
 	}
     }
 
     public void resumed(RequestContext context) {
-	bind(getHibernateSession(context), context);
+	if (isPersistenceContext(context.getActiveFlow())) {
+	    bind(getHibernateSession(context), context);
+	}
     }
 
     public void paused(RequestContext context, ViewSelection selectedView) {
-	unbind(getHibernateSession(context), context);
+	if (isPersistenceContext(context.getActiveFlow())) {
+	    unbind(getHibernateSession(context), context);
+	}
     }
 
     public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
-	if (session.isRoot()) {
-	    final Session hibernateSession = (Session) context.getConversationScope().remove(
-		    HIBERNATE_SESSION_ATTRIBUTE);
+	if (isPersistenceContext(session.getDefinition())) {
+	    final Session hibernateSession = (Session) session.getScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
 	    Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
 	    if (Boolean.TRUE.equals(commitStatus)) {
 		// this is a commit end state - start a new transaction that quickly commits
@@ -129,16 +136,22 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		    }
 		});
 	    }
-	    hibernateSession.close();
 	    unbind(hibernateSession, context);
+	    hibernateSession.close();
 	}
     }
 
     public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-	unbind(getHibernateSession(context), context);
+	if (isPersistenceContext(context.getActiveFlow())) {
+	    unbind(getHibernateSession(context), context);
+	}
     }
 
     // internal helpers
+
+    private boolean isPersistenceContext(FlowDefinition flow) {
+	return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
+    }
 
     private Session createSession(RequestContext context) {
 	Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
@@ -148,7 +161,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     }
 
     private Session getHibernateSession(RequestContext context) {
-	return (Session) context.getConversationScope().get(HIBERNATE_SESSION_ATTRIBUTE);
+	return (Session) context.getFlowScope().get(HIBERNATE_SESSION_ATTRIBUTE);
     }
 
     private void bind(Session session, RequestContext context) {
