@@ -82,9 +82,11 @@
 		<module organisation="org.springframework" name="spring-struts" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-support" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-toplink" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-tx" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-web" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-webflow" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-webmvc" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-webmvc-portlet" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-ws-core" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-ws-security" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-xml" resolver="spring-projects"/>
