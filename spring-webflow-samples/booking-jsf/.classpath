@@ -6,8 +6,5 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
-	<classpathentry kind="lib" path="lib/global/freemarker.jar"/>
-	<classpathentry kind="lib" path="lib/global/hibernate.jar"/>
-	<classpathentry kind="lib" path="lib/global/hibernate-tools.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

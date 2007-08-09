@@ -7,7 +7,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:org/springframework/webflow/samples/booking/services-config-jpa.xml
+			classpath:org/springframework/webflow/samples/booking/service/services-config-jpa.xml
 			/WEB-INF/webflow-config.xml
 		</param-value>
 	</context-param>

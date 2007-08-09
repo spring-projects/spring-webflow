@@ -2,11 +2,13 @@ package org.springframework.webflow.samples.booking;
 
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-
 import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.samples.booking.model.Booking;
+import org.springframework.webflow.samples.booking.model.Hotel;
+import org.springframework.webflow.samples.booking.model.User;
+import org.springframework.webflow.samples.booking.service.BookingService;
 
 public class SearchAction extends MultiAction {
 
@@ -35,15 +37,6 @@ public class SearchAction extends MultiAction {
 	    context.getFlowScope().put("bookings", null);
 	}
 	return success();
-    }
-
-    public String nextPage() {
-	HotelSearch search = (HotelSearch) FacesContext.getCurrentInstance().getApplication().getVariableResolver()
-		.resolveVariable(FacesContext.getCurrentInstance(), "hotelSearch");
-
-	search.setPage(search.getPage() + 1);
-
-	return "findHotels";
     }
 
     public void setBookingService(BookingService bookingService) {

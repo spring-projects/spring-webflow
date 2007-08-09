@@ -5,7 +5,7 @@
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 	
 	<var name="hotelSearch" class="org.springframework.webflow.samples.booking.HotelSearch" scope="flow"/>
-	<var name="user" bean="user"/>
+	<var name="user" bean="user"/>  <!-- Can replace this when we can replace searchAction with bean-actions -->
 	
 	<start-state idref="findBookings"/>
 	

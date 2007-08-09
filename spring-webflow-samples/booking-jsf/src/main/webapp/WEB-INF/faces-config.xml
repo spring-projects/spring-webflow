@@ -12,7 +12,7 @@
 	</application>
 	
 	<lifecycle>
-		<phase-listener>org.springframework.webflow.samples.booking.DebuggingPhaseListener</phase-listener>
+		<phase-listener>org.springframework.webflow.samples.booking.util.DebuggingPhaseListener</phase-listener>
 		<phase-listener>org.springframework.webflow.executor.jsf.FlowPhaseListener</phase-listener>
 	</lifecycle>
 	

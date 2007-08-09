@@ -25,7 +25,7 @@
 	<tx:annotation-driven transaction-manager="txManager"/>
 
 	<bean id="bookingService"
-		class="org.springframework.webflow.samples.booking.JpaBookingService" />
+		class="org.springframework.webflow.samples.booking.service.JpaBookingService" />
 
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

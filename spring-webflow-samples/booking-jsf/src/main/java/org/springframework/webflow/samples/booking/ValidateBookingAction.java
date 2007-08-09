@@ -8,6 +8,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.samples.booking.model.Booking;
 
 public class ValidateBookingAction extends AbstractAction {
 

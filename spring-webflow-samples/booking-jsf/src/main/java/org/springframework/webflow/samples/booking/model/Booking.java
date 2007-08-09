@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 
 //import org.hibernate.validator.Length;
 //import org.hibernate.validator.NotNull;

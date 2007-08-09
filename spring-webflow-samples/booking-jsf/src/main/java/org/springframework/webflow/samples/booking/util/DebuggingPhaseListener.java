@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.util;
 
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;

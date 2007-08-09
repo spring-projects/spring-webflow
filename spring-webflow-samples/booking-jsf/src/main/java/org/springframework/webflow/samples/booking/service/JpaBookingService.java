@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.service;
 
 import java.util.List;
 
@@ -8,6 +8,9 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.samples.booking.model.Booking;
+import org.springframework.webflow.samples.booking.model.Hotel;
+import org.springframework.webflow.samples.booking.model.User;
 
 @Repository
 public class JpaBookingService implements BookingService {
