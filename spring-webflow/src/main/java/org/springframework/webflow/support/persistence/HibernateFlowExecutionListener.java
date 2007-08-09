@@ -53,7 +53,7 @@ import org.springframework.webflow.execution.ViewSelection;
  * <li> Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
  * <li> Load some objects into this persistence context
  * <li> Perform edits to those objects over a series of requests into the flow
- * <li> On successful flow ccompletion, commit and flush those edits to the database, applying a version check if
+ * <li> On successful flow completion, commit and flush those edits to the database, applying a version check if
  * necessary.
  * </ul>
  * 
@@ -86,8 +86,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
     private Interceptor entityInterceptor;
 
     /**
-     * Create a new Session-per-Conversation listener using giving Hibernate session factory.
+     * Create a new Hibernate Flow Execution Listener using giving Hibernate session factory and transaction manager.
      * @param sessionFactory the session factory to use
+     * @param transactionManager the transaction manager to drive transactions
      */
     public HibernateFlowExecutionListener(SessionFactory sessionFactory, PlatformTransactionManager transactionManager) {
 	this.sessionFactory = sessionFactory;
