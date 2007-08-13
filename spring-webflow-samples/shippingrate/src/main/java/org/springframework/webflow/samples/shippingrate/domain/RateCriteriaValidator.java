@@ -26,7 +26,7 @@ public class RateCriteriaValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors errors) {
-		RateCriteria criteria = (RateCriteria)obj;
+		RateCriteria criteria = (RateCriteria) obj;
 		validateSender(criteria, errors);
 		validateReceiver(criteria, errors);
 		validatePackageDetails(criteria, errors);

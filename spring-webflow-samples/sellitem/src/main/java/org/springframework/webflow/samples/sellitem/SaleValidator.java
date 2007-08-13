@@ -25,10 +25,10 @@ public class SaleValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors errors) {
-		Sale sale = (Sale)obj;
+		Sale sale = (Sale) obj;
 		validatePriceAndItemCount(sale, errors);
 	}
-	
+
 	public void validatePriceAndItemCount(Sale sale, Errors errors) {
 		if (sale.getItemCount() <= 0) {
 			errors.rejectValue("itemCount", "tooLittle", "Item count must be greater than 0");

@@ -54,7 +54,7 @@ public class BirthDateFormAction extends FormAction {
 	 */
 	public Event calculateAge(RequestContext context) throws Exception {
 		// pull the date from the model
-		BirthDate birthDate = (BirthDate)getFormObject(context);
+		BirthDate birthDate = (BirthDate) getFormObject(context);
 
 		// calculate the age (quick & dirty)
 		// in a real application you would delegate to the business layer for

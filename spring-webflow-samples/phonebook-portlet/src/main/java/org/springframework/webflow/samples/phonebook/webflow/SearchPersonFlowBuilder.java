@@ -26,13 +26,11 @@ import org.springframework.webflow.samples.phonebook.SearchCriteria;
 import org.springframework.webflow.samples.phonebook.SearchCriteriaValidator;
 
 /**
- * Java-based flow builder that searches for people in the phonebook. The flow
- * defined by this class is exactly the same as that defined in the
- * <code>search-flow.xml</code> XML flow definition.
+ * Java-based flow builder that searches for people in the phonebook. The flow defined by this class is exactly the same
+ * as that defined in the <code>search-flow.xml</code> XML flow definition.
  * <p>
- * This encapsulates the page flow of searching for some people, selecting a
- * person you care about, and viewing their person's details and those of their
- * collegues in a reusable, self-contained module.
+ * This encapsulates the page flow of searching for some people, selecting a person you care about, and viewing their
+ * person's details and those of their collegues in a reusable, self-contained module.
  * 
  * @author Keith Donald
  */

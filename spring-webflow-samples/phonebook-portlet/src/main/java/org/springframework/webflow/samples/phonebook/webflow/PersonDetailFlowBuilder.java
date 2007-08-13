@@ -23,11 +23,11 @@ import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.support.ConfigurableFlowAttributeMapper;
 
 /**
- * Java-based flow builder that builds the person details flow, exactly like it
- * is defined in the <code>detail-flow.xml</code> XML flow definition.
+ * Java-based flow builder that builds the person details flow, exactly like it is defined in the
+ * <code>detail-flow.xml</code> XML flow definition.
  * <p>
- * This encapsulates the page flow of viewing a person's details and their
- * collegues in a reusable, self-contained module.
+ * This encapsulates the page flow of viewing a person's details and their collegues in a reusable, self-contained
+ * module.
  * 
  * @author Keith Donald
  */

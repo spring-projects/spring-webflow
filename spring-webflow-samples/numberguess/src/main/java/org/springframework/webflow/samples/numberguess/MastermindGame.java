@@ -51,8 +51,7 @@ public class MastermindGame implements Serializable {
 	public GuessResult makeGuess(String guess) {
 		if (isGuessValid(guess)) {
 			setResult(calculateResult(guess));
-		}
-		else {
+		} else {
 			setResult(GuessResult.INVALID);
 		}
 		return getResult();
@@ -86,8 +85,7 @@ public class MastermindGame implements Serializable {
 				if (digit == answerDigit) {
 					if (i == j) {
 						rightPosition++;
-					}
-					else {
+					} else {
 						correctButWrongPosition++;
 					}
 					break;
@@ -97,8 +95,7 @@ public class MastermindGame implements Serializable {
 		data.recordGuessData(guess, rightPosition, correctButWrongPosition);
 		if (rightPosition == 4) {
 			return GuessResult.CORRECT;
-		}
-		else {
+		} else {
 			return GuessResult.WRONG;
 		}
 	}
