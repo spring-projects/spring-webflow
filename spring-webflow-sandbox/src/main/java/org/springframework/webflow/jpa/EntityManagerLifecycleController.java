@@ -9,35 +9,37 @@ import javax.persistence.EntityManager;
  * <code>org.hibernate.annotations.FlushModeType.MANUAL</code></li>
  * <li>Binding/Unbinding persistence context resources for current thread</li>
  * </ul>
- *
+ * 
  * @author Maxim Petrashev
  */
 public interface EntityManagerLifecycleController {
-    /**
-     * Create new entity manager and return wrapper for it with aId id.
-     */
-    EntityManager create();
+	/**
+	 * Create new entity manager and return wrapper for it with aId id.
+	 */
+	EntityManager create();
 
-    /**
-     * Reconnect entity manager and bind to current thread.
-     * @param aEntityManager
-     */
-    void activate(EntityManager aEntityManager);
-    /**
-     * Disconnect current session and unbind from current thread.
-     * @param aEntityManager
-     */
-    void deactivate(EntityManager aEntityManager);
+	/**
+	 * Reconnect entity manager and bind to current thread.
+	 * @param aEntityManager
+	 */
+	void activate(EntityManager aEntityManager);
 
-    /**
-     * Commit application transaction.
-     * @param aEntityManager
-     */
-    void flush(EntityManager aEntityManager);
-    /**
-     * Close opened entity manager.
-     * @param aEntityManager
-     */
-    void close(EntityManager aEntityManager);
+	/**
+	 * Disconnect current session and unbind from current thread.
+	 * @param aEntityManager
+	 */
+	void deactivate(EntityManager aEntityManager);
+
+	/**
+	 * Commit application transaction.
+	 * @param aEntityManager
+	 */
+	void flush(EntityManager aEntityManager);
+
+	/**
+	 * Close opened entity manager.
+	 * @param aEntityManager
+	 */
+	void close(EntityManager aEntityManager);
 
 }
