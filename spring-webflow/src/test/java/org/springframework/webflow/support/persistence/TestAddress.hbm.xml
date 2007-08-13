@@ -4,14 +4,10 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="org.springframework.webflow.support.persistence" default-lazy="false">
-	<class name="TestBean" table="T_BEAN">
+	<class name="TestAddress" table="T_ADDRESS">
 		<id name="entityId" column="ID">
 			<generator class="increment" />
 		</id>
-		<property name="name" column="NAME" />
-		<set name="addresses" table="T_ADDRESS" lazy="true">
-			<key column="BEAN_ID"/>
-			<one-to-many class="TestAddress"/>
-		</set>
+		<property name="value" column="VALUE" />
 	</class>
 </hibernate-mapping>

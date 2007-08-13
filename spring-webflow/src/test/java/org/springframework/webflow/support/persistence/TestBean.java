@@ -15,11 +15,16 @@
  */
 package org.springframework.webflow.support.persistence;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class TestBean {
 
     private Long entityId;
 
     private String name;
+
+    private Set addresses = new HashSet();
 
     public TestBean() {
 
@@ -48,5 +53,13 @@ public class TestBean {
 
     public String getName() {
 	return name;
+    }
+
+    public Set getAddresses() {
+	return addresses;
+    }
+
+    public void setAddresses(Set addresses) {
+	this.addresses = addresses;
     }
 }

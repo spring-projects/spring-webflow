@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.hibernate.Hibernate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTemplate;
@@ -108,6 +109,22 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 
     }
 
+    public void testLazilyInitalizedCollection() {
+	MockRequestContext context = new MockRequestContext();
+	MockFlowSession flowSession = new MockFlowSession();
+	flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+	jpaListener.sessionCreated(context, flowSession);
+	context.setActiveSession(flowSession);
+	assertSessionBound();
+
+	TestBean bean = (TestBean) jpaTemplate.getReference(TestBean.class, Long.valueOf(0));
+	assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
+	jpaListener.paused(context, ViewSelection.NULL_VIEW);
+	assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
+	Hibernate.initialize(bean.getAddresses());
+	assertTrue("addresses should be initialized", Hibernate.isInitialized(bean.getAddresses()));
+    }
+
     private DataSource getDataSource() {
 	DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
@@ -121,10 +138,19 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 	Connection connection = null;
 	try {
 	    connection = dataSource.getConnection();
+	    connection.createStatement().execute("drop table T_ADDRESS if exists;");
 	    connection.createStatement().execute("drop table T_BEAN if exists;");
 	    connection.createStatement().execute(
 		    "create table T_BEAN (ID integer primary key, NAME varchar(50) not null);");
+	    connection.createStatement().execute(
+		    "create table T_ADDRESS (ID integer primary key, BEAN_ID integer, VALUE varchar(50) not null);");
+	    connection
+		    .createStatement()
+		    .execute(
+			    "alter table T_ADDRESS add constraint FK_BEAN_ADDRESS foreign key (BEAN_ID) references T_BEAN(ID) on delete cascade");
 	    connection.createStatement().execute("insert into T_BEAN (ID, NAME) values (0, 'Ben Hale');");
+	    connection.createStatement().execute(
+		    "insert into T_ADDRESS (ID, BEAN_ID, VALUE) values (0, 0, 'Melbourne')");
 	} catch (SQLException e) {
 	    throw new RuntimeException("SQL exception occurred acquiring connection", e);
 	} finally {
