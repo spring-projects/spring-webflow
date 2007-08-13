@@ -24,56 +24,56 @@ import org.springframework.util.Assert;
  */
 public class DefaultELResolver extends CompositeELResolver {
 
-    private Object target;
+	private Object target;
 
-    public DefaultELResolver() {
-	configureResolvers();
-    }
-
-    public Class getType(ELContext context, Object base, Object property) {
-	return super.getType(context, adaptIfNecessary(base), property);
-    }
-
-    public Object getValue(ELContext context, Object base, Object property) {
-	Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
-	if (base == null) {
-	    return super.getValue(context, target, property);
-	} else {
-	    return super.getValue(context, adaptIfNecessary(base), property);
+	public DefaultELResolver() {
+		configureResolvers();
 	}
-    }
 
-    public void setValue(ELContext context, Object base, Object property, Object val) {
-	Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
-	if (base == null) {
-	    super.setValue(context, target, property, val);
-	} else {
-	    super.setValue(context, adaptIfNecessary(base), property, val);
+	public Class getType(ELContext context, Object base, Object property) {
+		return super.getType(context, adaptIfNecessary(base), property);
 	}
-    }
 
-    public Object getTarget() {
-	return target;
-    }
-
-    public void setTarget(Object target) {
-	this.target = adaptIfNecessary(target);
-    }
-
-    private Object adaptIfNecessary(Object base) {
-	if (base instanceof MapAdaptable) {
-	    return ((MapAdaptable) base).asMap();
-	} else {
-	    return base;
+	public Object getValue(ELContext context, Object base, Object property) {
+		Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
+		if (base == null) {
+			return super.getValue(context, target, property);
+		} else {
+			return super.getValue(context, adaptIfNecessary(base), property);
+		}
 	}
-    }
 
-    private void configureResolvers() {
-	add(new ArrayELResolver());
-	add(new ListELResolver());
-	add(new MapELResolver());
-	add(new ResourceBundleELResolver());
-	add(new BeanELResolver());
-    }
+	public void setValue(ELContext context, Object base, Object property, Object val) {
+		Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
+		if (base == null) {
+			super.setValue(context, target, property, val);
+		} else {
+			super.setValue(context, adaptIfNecessary(base), property, val);
+		}
+	}
+
+	public Object getTarget() {
+		return target;
+	}
+
+	public void setTarget(Object target) {
+		this.target = adaptIfNecessary(target);
+	}
+
+	private Object adaptIfNecessary(Object base) {
+		if (base instanceof MapAdaptable) {
+			return ((MapAdaptable) base).asMap();
+		} else {
+			return base;
+		}
+	}
+
+	private void configureResolvers() {
+		add(new ArrayELResolver());
+		add(new ListELResolver());
+		add(new MapELResolver());
+		add(new ResourceBundleELResolver());
+		add(new BeanELResolver());
+	}
 
 }

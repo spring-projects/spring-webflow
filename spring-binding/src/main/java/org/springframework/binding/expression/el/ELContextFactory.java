@@ -10,19 +10,19 @@ import javax.el.ELResolver;
  */
 public interface ELContextFactory {
 
-    /**
-     * Configures and returns an {@link ELContext} to be used in parsing EL expressions.
-     * @return ELContext The configured ELContext instance for parsing expressions.
-     */
-    public ELContext getParseContext();
+	/**
+	 * Configures and returns an {@link ELContext} to be used in parsing EL expressions.
+	 * @return ELContext The configured ELContext instance for parsing expressions.
+	 */
+	public ELContext getParseContext();
 
-    /**
-     * Configures and returns an {@link ELContext} to be used in evaluating EL expressions on the given base target
-     * object. In certain environments the target will be null and the base object of the expression is expected to be
-     * resolved via the ELContext's {@link ELResolver} chain.
-     * @param target The base object for the expression evaluation.
-     * @return ELContext The configured ELContext instance for evaluating expressions.
-     */
-    public ELContext getEvaluationContext(Object target);
+	/**
+	 * Configures and returns an {@link ELContext} to be used in evaluating EL expressions on the given base target
+	 * object. In certain environments the target will be null and the base object of the expression is expected to be
+	 * resolved via the ELContext's {@link ELResolver} chain.
+	 * @param target The base object for the expression evaluation.
+	 * @return ELContext The configured ELContext instance for evaluating expressions.
+	 */
+	public ELContext getEvaluationContext(Object target);
 
 }

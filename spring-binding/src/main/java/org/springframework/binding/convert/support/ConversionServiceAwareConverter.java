@@ -20,8 +20,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 
 /**
- * Base class for converters that use other converters to convert things, thus
- * they are conversion-service aware.
+ * Base class for converters that use other converters to convert things, thus they are conversion-service aware.
  * 
  * @author Keith Donald
  */
@@ -33,8 +32,8 @@ public abstract class ConversionServiceAwareConverter extends AbstractConverter 
 	private ConversionService conversionService;
 
 	/**
-	 * Default constructor, expectes to conversion service to be injected
-	 * using {@link #setConversionService(ConversionService)}.
+	 * Default constructor, expectes to conversion service to be injected using
+	 * {@link #setConversionService(ConversionService)}.
 	 */
 	protected ConversionServiceAwareConverter() {
 	}
@@ -61,8 +60,7 @@ public abstract class ConversionServiceAwareConverter extends AbstractConverter 
 	}
 
 	/**
-	 * Returns a conversion executor capable of converting string objects to the
-	 * specified target class.
+	 * Returns a conversion executor capable of converting string objects to the specified target class.
 	 * @param targetClass the target class
 	 * @return the conversion executor, never null
 	 */
@@ -71,19 +69,17 @@ public abstract class ConversionServiceAwareConverter extends AbstractConverter 
 	}
 
 	/**
-	 * Returns a conversion executor capable of converting string objects to the
-	 * target class aliased by the provided alias.
+	 * Returns a conversion executor capable of converting string objects to the target class aliased by the provided
+	 * alias.
 	 * @param targetAlias the target class alias, e.g "long" or "float"
-	 * @return the conversion executor, or <code>null</code> if no suitable
-	 * converter exists for alias
+	 * @return the conversion executor, or <code>null</code> if no suitable converter exists for alias
 	 */
 	protected ConversionExecutor fromStringToAliased(String targetAlias) {
 		return getConversionService().getConversionExecutorByTargetAlias(String.class, targetAlias);
 	}
 
 	/**
-	 * Returns a conversion executor capable of converting objects from one
-	 * class to another.
+	 * Returns a conversion executor capable of converting objects from one class to another.
 	 * @param sourceClass the source class to convert from
 	 * @param targetClass the target class to convert to
 	 * @return the conversion executor, never null
@@ -93,12 +89,12 @@ public abstract class ConversionServiceAwareConverter extends AbstractConverter 
 	}
 
 	/**
-	 * Helper that parsers the given expression string into an expression, using
-	 * the installed String-&gt;Expression converter.
+	 * Helper that parsers the given expression string into an expression, using the installed String-&gt;Expression
+	 * converter.
 	 * @param expressionString the expression string to parse
 	 * @return the parsed, evaluatable expression
 	 */
 	protected Expression parseExpression(String expressionString) {
-		return (Expression)fromStringTo(Expression.class).execute(expressionString);
+		return (Expression) fromStringTo(Expression.class).execute(expressionString);
 	}
 }

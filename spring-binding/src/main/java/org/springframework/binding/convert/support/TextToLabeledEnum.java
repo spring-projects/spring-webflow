@@ -20,8 +20,7 @@ import org.springframework.binding.format.support.LabeledEnumFormatter;
 import org.springframework.core.enums.LabeledEnum;
 
 /**
- * Converter that converts textual representations of enum
- * instances to a specific instance of <code>LabeledEnum</code>.
+ * Converter that converts textual representations of enum instances to a specific instance of <code>LabeledEnum</code>.
  * 
  * @author Keith Donald
  */
@@ -38,6 +37,6 @@ public class TextToLabeledEnum extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		return labeledEnumFormatter.parseValue((String)source, targetClass);
+		return labeledEnumFormatter.parseValue((String) source, targetClass);
 	}
 }

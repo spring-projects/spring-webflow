@@ -23,8 +23,7 @@ import java.util.List;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * Generic attributes mapper implementation that allows mappings to be
- * configured programatically.
+ * Generic attributes mapper implementation that allows mappings to be configured programatically.
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
@@ -49,7 +48,7 @@ public class DefaultAttributeMapper implements AttributeMapper {
 
 	/**
 	 * Add a set of mappings.
-	 * @param mappings the mappings 
+	 * @param mappings the mappings
 	 */
 	public void addMappings(AttributeMapper[] mappings) {
 		if (mappings == null) {
@@ -63,14 +62,14 @@ public class DefaultAttributeMapper implements AttributeMapper {
 	 * @return the list of mappings
 	 */
 	public AttributeMapper[] getMappings() {
-		return (AttributeMapper[])mappings.toArray(new AttributeMapper[mappings.size()]);
+		return (AttributeMapper[]) mappings.toArray(new AttributeMapper[mappings.size()]);
 	}
 
 	public void map(Object source, Object target, MappingContext context) {
 		if (mappings != null) {
 			Iterator it = mappings.iterator();
 			while (it.hasNext()) {
-				AttributeMapper mapping = (AttributeMapper)it.next();
+				AttributeMapper mapping = (AttributeMapper) it.next();
 				mapping.map(source, target, context);
 			}
 		}

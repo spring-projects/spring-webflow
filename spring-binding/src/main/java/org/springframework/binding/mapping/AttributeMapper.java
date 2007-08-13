@@ -18,9 +18,8 @@ package org.springframework.binding.mapping;
 /**
  * A lightweight service interface for mapping between two attribute sources.
  * <p>
- * Implementations of this interface are expected to encapsulate the mapping
- * configuration information as well as the logic to act on it to perform
- * mapping between a given source and target attribute source.
+ * Implementations of this interface are expected to encapsulate the mapping configuration information as well as the
+ * logic to act on it to perform mapping between a given source and target attribute source.
  * 
  * @author Keith Donald
  */

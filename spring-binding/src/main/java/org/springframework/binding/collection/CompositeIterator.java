@@ -23,16 +23,15 @@ import java.util.NoSuchElementException;
 import org.springframework.util.Assert;
 
 /**
- * Iterator that combines multiple other iterators. This is a simple implementation
- * that just maintains a list of iterators which are invoked in sequence untill
- * all iterators are exhausted.
+ * Iterator that combines multiple other iterators. This is a simple implementation that just maintains a list of
+ * iterators which are invoked in sequence untill all iterators are exhausted.
  * 
  * @author Erwin Vervaet
  */
 public class CompositeIterator implements Iterator {
 
 	private List iterators = new LinkedList();
-	
+
 	private boolean inUse = false;
 
 	/**
@@ -40,7 +39,7 @@ public class CompositeIterator implements Iterator {
 	 */
 	public CompositeIterator() {
 	}
-	
+
 	/**
 	 * Add given iterator to this composite.
 	 */
@@ -54,8 +53,8 @@ public class CompositeIterator implements Iterator {
 
 	public boolean hasNext() {
 		inUse = true;
-		for (Iterator it = iterators.iterator(); it.hasNext(); ) {
-			if (((Iterator)it.next()).hasNext()) {
+		for (Iterator it = iterators.iterator(); it.hasNext();) {
+			if (((Iterator) it.next()).hasNext()) {
 				return true;
 			}
 		}
@@ -64,8 +63,8 @@ public class CompositeIterator implements Iterator {
 
 	public Object next() {
 		inUse = true;
-		for (Iterator it = iterators.iterator(); it.hasNext(); ) {
-			Iterator iterator = (Iterator)it.next();
+		for (Iterator it = iterators.iterator(); it.hasNext();) {
+			Iterator iterator = (Iterator) it.next();
 			if (iterator.hasNext()) {
 				return iterator.next();
 			}
@@ -75,5 +74,5 @@ public class CompositeIterator implements Iterator {
 
 	public void remove() {
 		throw new UnsupportedOperationException("Remove is not supported");
-	}		
+	}
 }

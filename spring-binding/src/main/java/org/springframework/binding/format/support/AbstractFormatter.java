@@ -62,18 +62,16 @@ public abstract class AbstractFormatter implements Formatter {
 		Assert.isTrue(!isEmpty(value), "Object to format cannot be empty");
 		return doFormatValue(value);
 	}
-	
+
 	/**
-	 * Template method subclasses should override to encapsulate formatting
-	 * logic.
+	 * Template method subclasses should override to encapsulate formatting logic.
 	 * @param value the value to format
 	 * @return the formatted string representation
 	 */
 	protected abstract String doFormatValue(Object value);
 
 	/**
-	 * Returns the formatted form of an empty value. Default implementation
-	 * just returns the empty string.
+	 * Returns the formatted form of an empty value. Default implementation just returns the empty string.
 	 */
 	protected String getEmptyFormattedValue() {
 		return "";
@@ -85,8 +83,7 @@ public abstract class AbstractFormatter implements Formatter {
 				return getEmptyValue();
 			}
 			return doParseValue(formattedString, targetClass);
-		}
-		catch (ParseException ex) {
+		} catch (ParseException ex) {
 			throw new InvalidFormatException(formattedString, getExpectedFormat(targetClass), ex);
 		}
 	}
@@ -102,16 +99,15 @@ public abstract class AbstractFormatter implements Formatter {
 			ParseException;
 
 	/**
-	 * Returns the empty value (resulting from parsing an empty input string).
-	 * This default implementation just returns null.
+	 * Returns the empty value (resulting from parsing an empty input string). This default implementation just returns
+	 * null.
 	 */
 	protected Object getEmptyValue() {
 		return null;
 	}
 
 	/**
-	 * Returns the expected string format for the given target class.
-	 * The default implementation just returns null.
+	 * Returns the expected string format for the given target class. The default implementation just returns null.
 	 */
 	protected String getExpectedFormat(Class targetClass) {
 		return null;
@@ -123,11 +119,9 @@ public abstract class AbstractFormatter implements Formatter {
 	protected boolean isEmpty(Object o) {
 		if (o == null) {
 			return true;
-		}
-		else if (o instanceof String) {
-			return !StringUtils.hasText((String)o);
-		}
-		else {
+		} else if (o instanceof String) {
+			return !StringUtils.hasText((String) o);
+		} else {
 			return false;
 		}
 	}

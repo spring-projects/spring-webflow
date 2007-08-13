@@ -24,8 +24,8 @@ import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.SimpleLocaleContext;
 
 /**
- * Base class for formatter factories. Manages the locale used by the produced
- * formatters using Spring's {@link org.springframework.context.i18n.LocaleContext} system.
+ * Base class for formatter factories. Manages the locale used by the produced formatters using Spring's
+ * {@link org.springframework.context.i18n.LocaleContext} system.
  * 
  * @author Keith Donald
  */
@@ -38,8 +38,7 @@ public abstract class AbstractFormatterFactory implements FormatterFactory {
 	private Style defaultTimeStyle = Style.MEDIUM;
 
 	/**
-	 * Sets the locale context used. Defaults to a {@link SimpleLocaleContext} holding
-	 * the system default locale.
+	 * Sets the locale context used. Defaults to a {@link SimpleLocaleContext} holding the system default locale.
 	 */
 	public void setLocaleContext(LocaleContext localeContext) {
 		this.localeContext = localeContext;

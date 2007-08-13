@@ -42,9 +42,8 @@ public class MethodKey implements Serializable {
 	private String methodName;
 
 	/**
-	 * The method's actual parameter types. Could contain null values
-	 * if the user did not specify a parameter type for the corresponding
-	 * parameter
+	 * The method's actual parameter types. Could contain null values if the user did not specify a parameter type for
+	 * the corresponding parameter
 	 */
 	private Class[] parameterTypes;
 
@@ -57,8 +56,7 @@ public class MethodKey implements Serializable {
 	 * Create a new method key.
 	 * @param declaredType the class the method is a member of
 	 * @param methodName the method name
-	 * @param parameterTypes the method's parameter types, or <code>null</code>
-	 * if the method has no parameters
+	 * @param parameterTypes the method's parameter types, or <code>null</code> if the method has no parameters
 	 */
 	public MethodKey(Class declaredType, String methodName, Class[] parameterTypes) {
 		Assert.notNull(declaredType, "The method's declared type is required");
@@ -83,8 +81,8 @@ public class MethodKey implements Serializable {
 	}
 
 	/**
-	 * Returns the method parameter types. Could contain null values
-	 * if no type was specified for the corresponding parameter.
+	 * Returns the method parameter types. Could contain null values if no type was specified for the corresponding
+	 * parameter.
 	 */
 	public Class[] getParameterTypes() {
 		return parameterTypes;
@@ -108,13 +106,11 @@ public class MethodKey implements Serializable {
 	protected Method resolveMethod() throws InvalidMethodKeyException {
 		try {
 			return declaredType.getMethod(methodName, parameterTypes);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			Method method = findMethodConsiderAssignableParameterTypes();
 			if (method != null) {
 				return method;
-			}
-			else {
+			} else {
 				throw new InvalidMethodKeyException(this, e);
 			}
 		}
@@ -140,8 +136,7 @@ public class MethodKey implements Serializable {
 							if (isAssignable(candidateType, parameterType)) {
 								numberOfCorrectArguments++;
 							}
-						}
-						else {
+						} else {
 							// just match on a null param type (effectively 'any')
 							numberOfCorrectArguments++;
 						}
@@ -202,16 +197,14 @@ public class MethodKey implements Serializable {
 	}
 
 	/**
-	 * Convenience method that returns the parameter types describing the
-	 * signature of the method as a string.
+	 * Convenience method that returns the parameter types describing the signature of the method as a string.
 	 */
 	private String parameterTypesString() {
 		StringBuffer parameterTypesString = new StringBuffer();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			if (parameterTypes[i] == null) {
 				parameterTypesString.append("<any>");
-			}
-			else {
+			} else {
 				parameterTypesString.append(ClassUtils.getShortName(parameterTypes[i]));
 			}
 			if (i < parameterTypes.length - 1) {
@@ -224,13 +217,12 @@ public class MethodKey implements Serializable {
 	// internal helpers
 
 	/**
-	 * Determine if the given target type is assignable from the given value
-	 * type, assuming setting by reflection. Considers primitive wrapper classes
-	 * as assignable to the corresponding primitive types. <p> NOTE: Pulled from
-	 * ClassUtils in Spring 2.0 for 1.2.8 compatability.
+	 * Determine if the given target type is assignable from the given value type, assuming setting by reflection.
+	 * Considers primitive wrapper classes as assignable to the corresponding primitive types.
+	 * <p>
+	 * NOTE: Pulled from ClassUtils in Spring 2.0 for 1.2.8 compatability.
 	 * @param targetType the target type
-	 * @param valueType the value type that should be assigned to the target
-	 * type
+	 * @param valueType the value type that should be assigned to the target type
 	 * @return if the target type is assignable from the value type
 	 */
 	private static boolean isAssignable(Class targetType, Class valueType) {
@@ -238,8 +230,8 @@ public class MethodKey implements Serializable {
 	}
 
 	/**
-	 * Map with primitive wrapper type as key and corresponding primitive type
-	 * as value, for example: Integer.class -> int.class.
+	 * Map with primitive wrapper type as key and corresponding primitive type as value, for example: Integer.class ->
+	 * int.class.
 	 */
 	private static final Map primitiveWrapperTypeMap = new HashMap(8);
 

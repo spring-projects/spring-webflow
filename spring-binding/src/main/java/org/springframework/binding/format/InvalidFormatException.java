@@ -44,7 +44,8 @@ public class InvalidFormatException extends NestedRuntimeException {
 	 * @param cause the underlying cause of this exception
 	 */
 	public InvalidFormatException(String invalidValue, String expectedFormat, Throwable cause) {
-		super("Invalid format for value '" + invalidValue + "'; the expected format was '" + expectedFormat + "'", cause);
+		super("Invalid format for value '" + invalidValue + "'; the expected format was '" + expectedFormat + "'",
+				cause);
 		this.invalidValue = invalidValue;
 		this.expectedFormat = expectedFormat;
 	}

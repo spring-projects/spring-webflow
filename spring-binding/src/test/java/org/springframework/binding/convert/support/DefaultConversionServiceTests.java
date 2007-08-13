@@ -32,7 +32,7 @@ import org.springframework.core.enums.ShortCodedLabeledEnum;
  * @author Keith Donald
  */
 public class DefaultConversionServiceTests extends TestCase {
-	
+
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addAlias("list", List.class);
@@ -40,36 +40,34 @@ public class DefaultConversionServiceTests extends TestCase {
 		List lst = new ArrayList();
 		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
 		assertSame(lst, service.getConversionExecutorByTargetAlias(ArrayList.class, "list").execute(lst));
-		
+
 		try {
 			service.getConversionExecutor(List.class, ArrayList.class);
 			fail();
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 			// expected
 		}
 	}
-	
+
 	public void testOverrideConverter() {
 		Converter customConverter = new TextToBoolean("ja", "nee");
-		
+
 		DefaultConversionService service = new DefaultConversionService();
-		
+
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Boolean.class);
 		assertNotSame(customConverter, executor.getConverter());
 		try {
 			executor.execute("ja");
 			fail();
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 			// expected
 		}
-		
+
 		service.addConverter(customConverter);
-		
+
 		executor = service.getConversionExecutor(String.class, Boolean.class);
 		assertSame(customConverter, executor.getConverter());
-		assertTrue(((Boolean)executor.execute("ja")).booleanValue());
+		assertTrue(((Boolean) executor.execute("ja")).booleanValue());
 	}
 
 	public void testTargetClassNotSupported() {
@@ -77,15 +75,14 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			service.getConversionExecutor(String.class, HashMap.class);
 			fail("Should have thrown an exception");
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 		}
 	}
 
 	public void testValidConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
-		Integer three = (Integer)executor.execute("3");
+		Integer three = (Integer) executor.execute("3");
 		assertEquals(3, three.intValue());
 	}
 
@@ -95,15 +92,14 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			executor.execute("My Invalid Label");
 			fail("Should have failed");
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 		}
 	}
 
 	public void testValidLabeledEnumConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, MyEnum.class);
-		MyEnum myEnum = (MyEnum)executor.execute("My Label 1");
+		MyEnum myEnum = (MyEnum) executor.execute("My Label 1");
 		assertEquals(MyEnum.ONE, myEnum);
 	}
 

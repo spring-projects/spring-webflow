@@ -16,16 +16,14 @@
 package org.springframework.binding.expression;
 
 /**
- * An evaluator that is capable of setting a value on a target object at the
- * path defined by this expression.
+ * An evaluator that is capable of setting a value on a target object at the path defined by this expression.
  * 
  * @author Keith Donald
  */
 public interface SettableExpression extends Expression {
 
 	/**
-	 * Evaluate this expression against the target object to set its value to
-	 * the value provided.
+	 * Evaluate this expression against the target object to set its value to the value provided.
 	 * @param target the target object
 	 * @param value the new value to be set
 	 * @param context the evaluation context

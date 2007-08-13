@@ -22,24 +22,24 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * Base class for map adapters whose keys are String values. Concrete
- * classes need only implement the abstract hook methods defined by this class.
+ * Base class for map adapters whose keys are String values. Concrete classes need only implement the abstract hook
+ * methods defined by this class.
  * 
  * @author Keith Donald
  */
 public abstract class StringKeyedMapAdapter implements Map {
-	
+
 	private Set keySet;
 
 	private Collection values;
 
 	private Set entrySet;
-	
+
 	// implementing Map
 
 	public void clear() {
 		for (Iterator it = getAttributeNames(); it.hasNext();) {
-			removeAttribute((String)it.next());
+			removeAttribute((String) it.next());
 		}
 	}
 
@@ -52,7 +52,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 			return false;
 		}
 		for (Iterator it = getAttributeNames(); it.hasNext();) {
-			Object aValue = getAttribute((String)it.next());
+			Object aValue = getAttribute((String) it.next());
 			if (value.equals(aValue)) {
 				return true;
 			}
@@ -85,7 +85,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 
 	public void putAll(Map map) {
 		for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-			Entry entry = (Entry)it.next();
+			Entry entry = (Entry) it.next();
 			setAttribute(entry.getKey().toString(), entry.getValue());
 		}
 	}
@@ -109,40 +109,38 @@ public abstract class StringKeyedMapAdapter implements Map {
 	public Collection values() {
 		return (values != null) ? values : (values = new Values());
 	}
-	
+
 	// hook methods
 
 	/**
-	 * Hook method that needs to be implemented by concrete subclasses.
-	 * Gets a value associated with a key.
+	 * Hook method that needs to be implemented by concrete subclasses. Gets a value associated with a key.
 	 * @param key the key to lookup
 	 * @return the associated value, or null if none
 	 */
 	protected abstract Object getAttribute(String key);
 
 	/**
-	 * Hook method that needs to be implemented by concrete subclasses.
-	 * Puts a key-value pair in the map, overwriting any possible earlier
-	 * value associated with the same key.
+	 * Hook method that needs to be implemented by concrete subclasses. Puts a key-value pair in the map, overwriting
+	 * any possible earlier value associated with the same key.
 	 * @param key the key to associate the value with
 	 * @param value the value to associate with the key
 	 */
 	protected abstract void setAttribute(String key, Object value);
 
 	/**
-	 * Hook method that needs to be implemented by concrete subclasses.
-	 * Removes a key and its associated value from the map.
+	 * Hook method that needs to be implemented by concrete subclasses. Removes a key and its associated value from the
+	 * map.
 	 * @param key the key to remove
 	 */
 	protected abstract void removeAttribute(String key);
 
 	/**
-	 * Hook method that needs to be implemented by concrete subclasses.
-	 * Returns an enumeration listing all keys known to the map.
+	 * Hook method that needs to be implemented by concrete subclasses. Returns an enumeration listing all keys known to
+	 * the map.
 	 * @return the key enumeration
 	 */
 	protected abstract Iterator getAttributeNames();
-	
+
 	// internal helper classes
 
 	private abstract class AbstractSet extends java.util.AbstractSet {
@@ -233,7 +231,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 			if (!(o instanceof Entry)) {
 				return false;
 			}
-			Entry entry = (Entry)o;
+			Entry entry = (Entry) o;
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 			if (key == null || value == null) {
@@ -246,13 +244,13 @@ public abstract class StringKeyedMapAdapter implements Map {
 			if (!(o instanceof Entry)) {
 				return false;
 			}
-			Entry entry = (Entry)o;
+			Entry entry = (Entry) o;
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 			if (key == null || value == null || !value.equals(StringKeyedMapAdapter.this.get(key))) {
 				return false;
 			}
-			return StringKeyedMapAdapter.this.remove(((Entry)o).getKey()) != null;
+			return StringKeyedMapAdapter.this.remove(((Entry) o).getKey()) != null;
 		}
 	}
 

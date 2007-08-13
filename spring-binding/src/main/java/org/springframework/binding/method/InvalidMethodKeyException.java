@@ -18,8 +18,7 @@ package org.springframework.binding.method;
 import org.springframework.core.NestedRuntimeException;
 
 /**
- * Thrown when a method key could not be resolved to an invokable java Method on
- * a Class.
+ * Thrown when a method key could not be resolved to an invokable java Method on a Class.
  * 
  * @author Keith Donald
  */
@@ -29,7 +28,7 @@ public class InvalidMethodKeyException extends NestedRuntimeException {
 	 * The method key that could not be resolved.
 	 */
 	private MethodKey methodKey;
-	
+
 	/**
 	 * Creates an exception signaling an invalid method signature.
 	 * @param methodKey the class method key

@@ -25,20 +25,17 @@ import org.springframework.binding.convert.support.ConversionServiceAwareConvert
 import org.springframework.binding.expression.Expression;
 
 /**
- * Converter that takes an encoded string representation and produces a
- * corresponding <code>MethodSignature</code> object.
+ * Converter that takes an encoded string representation and produces a corresponding <code>MethodSignature</code>
+ * object.
  * <p>
  * This converter supports the following encoded forms:
  * <ul>
- * <li> "methodName" - the name of the method to invoke, where the method is
- * expected to have no arguments. </li>
- * <li> "methodName(param1Type param1Name, paramNType paramNName)" - the name of
- * the method to invoke, where the method is expected to have parameters
- * delimited by a comma. In this example, the method has two parameters. The
- * type is either the fully-qualified class of the argument OR a known type
- * alias OR left out althogether. The name is the logical name of the argument,
- * which is used during data binding to retrieve the argument value
- * (typically an expression). </li>
+ * <li> "methodName" - the name of the method to invoke, where the method is expected to have no arguments. </li>
+ * <li> "methodName(param1Type param1Name, paramNType paramNName)" - the name of the method to invoke, where the method
+ * is expected to have parameters delimited by a comma. In this example, the method has two parameters. The type is
+ * either the fully-qualified class of the argument OR a known type alias OR left out althogether. The name is the
+ * logical name of the argument, which is used during data binding to retrieve the argument value (typically an
+ * expression). </li>
  * </ul>
  * 
  * @see MethodSignature
@@ -71,14 +68,13 @@ public class TextToMethodSignature extends ConversionServiceAwareConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		String encodedMethodSignature = (String)source;
+		String encodedMethodSignature = (String) source;
 		encodedMethodSignature = encodedMethodSignature.trim();
 		int openParan = encodedMethodSignature.indexOf('(');
 		if (openParan == -1) {
 			// form "foo"
 			return new MethodSignature(encodedMethodSignature);
-		}
-		else {
+		} else {
 			// form "foo(...)"
 			String methodName = encodedMethodSignature.substring(0, openParan);
 			int closeParan = encodedMethodSignature.lastIndexOf(')');
@@ -94,13 +90,12 @@ public class TextToMethodSignature extends ConversionServiceAwareConverter {
 				String param = paramArray[i].trim();
 				int space = param.indexOf(' ');
 				int expr = param.indexOf('{');
-				if (space == -1 || (expr != -1 &&  space > expr)) {
+				if (space == -1 || (expr != -1 && space > expr)) {
 					// "name" or "${name}"
 					params.add(new Parameter(null, parseExpression(param)));
-				}
-				else {
+				} else {
 					// "type name" or "type ${name}"
-					Class type = (Class)fromStringTo(Class.class).execute(param.substring(0, space).trim());
+					Class type = (Class) fromStringTo(Class.class).execute(param.substring(0, space).trim());
 					Expression name = parseExpression(param.substring(space + 1).trim());
 					params.add(new Parameter(type, name));
 				}
@@ -108,31 +103,31 @@ public class TextToMethodSignature extends ConversionServiceAwareConverter {
 			return new MethodSignature(methodName, params);
 		}
 	}
-	
+
 	/**
 	 * Split given parameter string into individual parameter definitions.
 	 */
 	private String[] splitParameters(String encodedMethodSignature, String parameters) {
 		List res = new LinkedList();
-		
+
 		int paramStart = 0;
 		int blockNestingCount = 0;
 		for (int i = 0; i < parameters.length(); i++) {
 			switch (parameters.charAt(i)) {
-				case '{':
-					blockNestingCount++;
-					break;
-				case '}':
-					blockNestingCount--;
-					break;
-				case ',':
-					if (blockNestingCount == 0) {
-						// only take comma delimiter into account when not inside
-						// a block
-						res.add(parameters.substring(paramStart, i));
-						paramStart = i + 1;
-					}
-					break;
+			case '{':
+				blockNestingCount++;
+				break;
+			case '}':
+				blockNestingCount--;
+				break;
+			case ',':
+				if (blockNestingCount == 0) {
+					// only take comma delimiter into account when not inside
+					// a block
+					res.add(parameters.substring(paramStart, i));
+					paramStart = i + 1;
+				}
+				break;
 			}
 		}
 		if (blockNestingCount != 0) {
@@ -142,7 +137,7 @@ public class TextToMethodSignature extends ConversionServiceAwareConverter {
 		if (paramStart < parameters.length()) {
 			res.add(parameters.substring(paramStart));
 		}
-		
-		return (String[])res.toArray(new String[res.size()]);
+
+		return (String[]) res.toArray(new String[res.size()]);
 	}
 }

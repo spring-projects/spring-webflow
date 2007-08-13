@@ -53,7 +53,7 @@ public class LabeledEnumFormatter extends AbstractFormatter {
 	}
 
 	protected String doFormatValue(Object value) {
-		LabeledEnum labeledEnum = (LabeledEnum)value;
+		LabeledEnum labeledEnum = (LabeledEnum) value;
 		return labeledEnum.getLabel();
 	}
 
@@ -71,6 +71,6 @@ public class LabeledEnumFormatter extends AbstractFormatter {
 	 * Convenience method to parse a LabeledEnum.
 	 */
 	public LabeledEnum parseLabeledEnum(String formattedString, Class enumClass) throws InvalidFormatException {
-		return (LabeledEnum)parseValue(formattedString, enumClass);
+		return (LabeledEnum) parseValue(formattedString, enumClass);
 	}
 }

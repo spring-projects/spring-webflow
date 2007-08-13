@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestBean {
-	
+
 	private boolean flag;
 
 	private List list = new ArrayList();
-	
+
 	public boolean isFlag() {
 		return flag;
 	}
@@ -35,7 +35,7 @@ public class TestBean {
 	public List getList() {
 		return list;
 	}
-	
+
 	public void setList(List list) {
 		this.list = list;
 	}

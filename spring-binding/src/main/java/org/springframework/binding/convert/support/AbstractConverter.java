@@ -27,42 +27,36 @@ import org.springframework.binding.convert.Converter;
 public abstract class AbstractConverter implements Converter {
 
 	/**
-	 * Convenience convert method that converts the provided source to the first
-	 * target object supported by this converter. Useful when a converter only
-	 * supports conversion to a single target.
+	 * Convenience convert method that converts the provided source to the first target object supported by this
+	 * converter. Useful when a converter only supports conversion to a single target.
 	 * @param source the source to convert
 	 * @return the converted object
-	 * @throws ConversionException an exception occured converting the source
-	 * value
+	 * @throws ConversionException an exception occured converting the source value
 	 */
 	public Object convert(Object source) throws ConversionException {
 		return convert(source, getTargetClasses()[0], null);
 	}
 
 	/**
-	 * Convenience convert method that converts the provided source to the
-	 * target class specified with an empty conversion context.
+	 * Convenience convert method that converts the provided source to the target class specified with an empty
+	 * conversion context.
 	 * @param source the source to convert
-	 * @param targetClass the target class to convert the source to, must be one
-	 * of the supported <code>targetClasses</code>
+	 * @param targetClass the target class to convert the source to, must be one of the supported
+	 * <code>targetClasses</code>
 	 * @return the converted object
-	 * @throws ConversionException an exception occured converting the source
-	 * value
+	 * @throws ConversionException an exception occured converting the source value
 	 */
 	public Object convert(Object source, Class targetClass) throws ConversionException {
 		return convert(source, targetClass, null);
 	}
 
 	/**
-	 * Convenience convert method that converts the provided source to the first
-	 * target object supported by this converter. Useful when a converter only
-	 * supports conversion to a single target.
+	 * Convenience convert method that converts the provided source to the first target object supported by this
+	 * converter. Useful when a converter only supports conversion to a single target.
 	 * @param source the source to convert
-	 * @param context the conversion context, useful for influencing the
-	 * behavior of the converter
+	 * @param context the conversion context, useful for influencing the behavior of the converter
 	 * @return the converted object
-	 * @throws ConversionException an exception occured converting the source
-	 * value
+	 * @throws ConversionException an exception occured converting the source value
 	 */
 	public Object convert(Object source, ConversionContext context) throws ConversionException {
 		return convert(source, getTargetClasses()[0], context);
@@ -71,11 +65,9 @@ public abstract class AbstractConverter implements Converter {
 	public Object convert(Object source, Class targetClass, ConversionContext context) throws ConversionException {
 		try {
 			return doConvert(source, targetClass, context);
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 			throw e;
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			// wrap in a ConversionException
 			if (targetClass == null) {
 				targetClass = getTargetClasses()[0];
@@ -85,15 +77,12 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	/**
-	 * Template method subclasses should override to actually perform the type
-	 * conversion.
+	 * Template method subclasses should override to actually perform the type conversion.
 	 * @param source the source to convert from
 	 * @param targetClass the target type to convert to
-	 * @param context an optional conversion context that may be used to
-	 * influence the conversion process, could be null
+	 * @param context an optional conversion context that may be used to influence the conversion process, could be null
 	 * @return the converted source value
-	 * @throws Exception an exception occured, will be wrapped in a conversion
-	 * exception if necessary
+	 * @throws Exception an exception occured, will be wrapped in a conversion exception if necessary
 	 */
 	protected abstract Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception;
 

@@ -18,20 +18,18 @@ package org.springframework.binding.collection;
 import java.util.Map;
 
 /**
- * A simple subinterface of {@link Map} that exposes a mutex that
- * application code can synchronize on.
+ * A simple subinterface of {@link Map} that exposes a mutex that application code can synchronize on.
  * <p>
- * Expected to be implemented by Maps that are backed by shared objects that
- * require synchronization between multiple threads. An example would be the
- * HTTP session map.
+ * Expected to be implemented by Maps that are backed by shared objects that require synchronization between multiple
+ * threads. An example would be the HTTP session map.
  * 
  * @author Keith Donald
  */
 public interface SharedMap extends Map {
 
 	/**
-	 * Returns the shared mutex that may be synchronized on using a
-	 * synchronized block. The returned mutex is guaranteed to be non-null.
+	 * Returns the shared mutex that may be synchronized on using a synchronized block. The returned mutex is guaranteed
+	 * to be non-null.
 	 * 
 	 * Example usage:
 	 * 

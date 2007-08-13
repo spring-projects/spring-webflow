@@ -22,17 +22,15 @@ import org.springframework.binding.format.support.SimpleFormatterFactory;
 import org.springframework.core.enums.LabeledEnum;
 
 /**
- * Default, local implementation of a conversion service. Will automatically
- * register <i>from string</i> converters for a number of standard Java
- * types like Class, Number, Boolean and so on.
+ * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
+ * a number of standard Java types like Class, Number, Boolean and so on.
  * 
  * @author Keith Donald
  */
 public class DefaultConversionService extends GenericConversionService {
 
 	/**
-	 * Creates a new default conversion service, installing the default
-	 * converters.
+	 * Creates a new default conversion service, installing the default converters.
 	 */
 	public DefaultConversionService() {
 		addDefaultConverters();
@@ -46,7 +44,7 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new TextToNumber(new SimpleFormatterFactory()));
 		addConverter(new TextToBoolean());
 		addConverter(new TextToLabeledEnum());
-		
+
 		// we're not using addDefaultAlias here for efficiency reasons
 		addAlias("string", String.class);
 		addAlias("short", Short.class);

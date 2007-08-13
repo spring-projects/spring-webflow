@@ -28,20 +28,17 @@ import org.springframework.core.style.StylerUtils;
 public class MethodInvocationException extends NestedRuntimeException {
 
 	/**
-	 * The method signature.
-	 * Transient because a MethodSignature is not Serializable.
+	 * The method signature. Transient because a MethodSignature is not Serializable.
 	 */
 	private transient MethodSignature methodSignature;
 
 	/**
-	 * The method invocation argument values.
-	 * Transient because we cannot guarantee that the arguments are Serializable.
+	 * The method invocation argument values. Transient because we cannot guarantee that the arguments are Serializable.
 	 */
 	private transient Object[] arguments;
 
 	/**
-	 * Signals that the method with the specified signature could not be invoked
-	 * with the provided arguments.
+	 * Signals that the method with the specified signature could not be invoked with the provided arguments.
 	 * @param methodSignature the method signature
 	 * @param arguments the arguments
 	 * @param cause the root cause
@@ -73,7 +70,7 @@ public class MethodInvocationException extends NestedRuntimeException {
 	public Throwable getTargetException() {
 		Throwable targetException = getCause();
 		while (targetException instanceof InvocationTargetException) {
-			targetException = ((InvocationTargetException)targetException).getTargetException();
+			targetException = ((InvocationTargetException) targetException).getTargetException();
 		}
 		return targetException;
 	}

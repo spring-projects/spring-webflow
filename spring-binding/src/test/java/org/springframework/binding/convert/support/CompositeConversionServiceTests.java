@@ -25,13 +25,13 @@ import org.springframework.binding.convert.ConversionService;
 
 /**
  * Test case for the {@link CompositeConversionService}.
- *  
+ * 
  * @author Erwin Vervaet
  */
 public class CompositeConversionServiceTests extends TestCase {
-	
+
 	private CompositeConversionService service;
-	
+
 	protected void setUp() throws Exception {
 		GenericConversionService first = new GenericConversionService();
 		first.addConverter(new TextToClass());
@@ -52,24 +52,21 @@ public class CompositeConversionServiceTests extends TestCase {
 		try {
 			service.getConversionExecutor(String.class, Date.class);
 			fail();
-		}
-		catch (ConversionException e) {
+		} catch (ConversionException e) {
 			// expected
 		}
 	}
-	
+
 	public void testGetConversionExecutorByTargetAlias() {
 		assertNotNull(service.getConversionExecutorByTargetAlias(String.class, "boolean"));
 		assertEquals(Boolean.TRUE, service.getConversionExecutorByTargetAlias(String.class, "boolean").execute("ja"));
 		assertNotNull(service.getConversionExecutorByTargetAlias(String.class, "integer"));
 		assertNull(service.getConversionExecutorByTargetAlias(String.class, "class"));
 	}
-	
+
 	public void testGetConversionExecutorsForSource() {
-		assertEquals(
-				new TextToClass().getTargetClasses().length +
-				new TextToBoolean().getTargetClasses().length +
-				new TextToNumber().getTargetClasses().length,
+		assertEquals(new TextToClass().getTargetClasses().length + new TextToBoolean().getTargetClasses().length
+				+ new TextToNumber().getTargetClasses().length,
 				service.getConversionExecutorsForSource(String.class).length);
 		assertEquals(0, service.getConversionExecutorsForSource(Date.class).length);
 		ConversionExecutor[] fromStringConversionExecutors = service.getConversionExecutorsForSource(String.class);
@@ -81,7 +78,7 @@ public class CompositeConversionServiceTests extends TestCase {
 		}
 		assertEquals(Boolean.TRUE, booleanConversionExecutor.execute("ja"));
 	}
-	
+
 	public void testGetClassByAlias() {
 		assertEquals(Boolean.class, service.getClassByAlias("boolean"));
 		assertEquals(Integer.class, service.getClassByAlias("integer"));

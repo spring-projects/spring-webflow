@@ -91,12 +91,10 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		int suffixIndex = expressionString.indexOf(getExpressionSuffix(), prefixIndex);
 		if (suffixIndex == -1) {
 			return false;
-		}
-		else {
+		} else {
 			if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
 				return false;
-			}
-			else {
+			} else {
 				return true;
 			}
 		}
@@ -106,30 +104,27 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		Expression[] expressions = parseExpressions(expressionString);
 		if (expressions.length == 1) {
 			return expressions[0];
-		}
-		else {
+		} else {
 			return new CompositeStringExpression(expressions);
 		}
 	}
 
-	public final SettableExpression parseSettableExpression(String expressionString)
-			throws ParserException,	UnsupportedOperationException {
+	public final SettableExpression parseSettableExpression(String expressionString) throws ParserException,
+			UnsupportedOperationException {
 		expressionString = expressionString.trim();
 		// a settable expression should just be a single expression
 		if (expressionString.startsWith(getExpressionPrefix()) && expressionString.endsWith(getExpressionSuffix())) {
-			expressionString = expressionString.substring(getExpressionPrefix().length(),
-					expressionString.length() - getExpressionSuffix().length());
+			expressionString = expressionString.substring(getExpressionPrefix().length(), expressionString.length()
+					- getExpressionSuffix().length());
 		}
 		return doParseSettableExpression(expressionString);
 	}
 
 	/**
-	 * Helper that parses given expression string using the configured parser.
-	 * The expression string can contain any number of expressions all contained
-	 * in "${...}" markers. For instance: "foo${expr0}bar${expr1}". The static
-	 * pieces of text will also be returned as Expressions that just return that
-	 * static piece of text. As a result, evaluating all returned expressions
-	 * and concatenating the results produces the complete evaluated string.
+	 * Helper that parses given expression string using the configured parser. The expression string can contain any
+	 * number of expressions all contained in "${...}" markers. For instance: "foo${expr0}bar${expr1}". The static
+	 * pieces of text will also be returned as Expressions that just return that static piece of text. As a result,
+	 * evaluating all returned expressions and concatenating the results produces the complete evaluated string.
 	 * @param expressionString the expression string
 	 * @return the parsed expressions
 	 * @throws ParserException when the expressions cannot be parsed
@@ -146,74 +141,64 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 						expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
 						startIdx = prefixIndex;
 					}
-					int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(),
-							prefixIndex + getExpressionPrefix().length());
+					int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(), prefixIndex
+							+ getExpressionPrefix().length());
 					int suffixIndex;
-					if (nextPrefixIndex == -1) { 
+					if (nextPrefixIndex == -1) {
 						// this is the last expression in the expression string
-						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix()); 
-					}
-					else { 
+						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix());
+					} else {
 						// another expression exists after this one in the expression string
-						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix(), nextPrefixIndex); 
-					} 
+						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix(), nextPrefixIndex);
+					}
 					if (suffixIndex < (prefixIndex + getExpressionPrefix().length())) {
 						throw new ParserException(expressionString, "No ending suffix '" + getExpressionSuffix()
 								+ "' for expression starting at character " + prefixIndex + ": "
 								+ expressionString.substring(prefixIndex), null);
-					}
-					else if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
+					} else if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
 						throw new ParserException(expressionString, "No expression defined within delimiter '"
-								+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex,
-								null);
-					}
-					else {
+								+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex, null);
+					} else {
 						String expr = expressionString.substring(prefixIndex + getExpressionPrefix().length(),
 								suffixIndex);
 						expressions.add(doParseExpression(expr));
 						startIdx = suffixIndex + 1;
 					}
-				}
-				else {
+				} else {
 					if (startIdx == 0) {
 						// treat entire string as one expression
 						expressions.add(doParseExpression(expressionString));
-					}
-					else {
+					} else {
 						// no more ${expressions} found in string
 						expressions.add(new StaticExpression(expressionString.substring(startIdx)));
 					}
 					startIdx = expressionString.length();
 				}
 			}
-		}
-		else {
+		} else {
 			expressions.add(new StaticExpression(expressionString));
 		}
 		return (Expression[]) expressions.toArray(new Expression[expressions.size()]);
 	}
-	
+
 	// template methods
 
 	/**
-	 * Template method for parsing a filtered expression string. Subclasses should
-	 * override.
+	 * Template method for parsing a filtered expression string. Subclasses should override.
 	 * @param expressionString the expression string
 	 * @return the parsed expression
 	 * @throws ParserException an exception occured during parsing
 	 */
 	protected abstract Expression doParseExpression(String expressionString) throws ParserException;
-	
+
 	/**
-	 * Template method for parsing a filtered settable expression string. Subclasses
-	 * should override.
+	 * Template method for parsing a filtered settable expression string. Subclasses should override.
 	 * @param expressionString the expression string
 	 * @return the parsed expression
 	 * @throws ParserException an exception occured during parsing
-	 * @throws UnsupportedOperationException this parser does not support
-	 * settable expressions
+	 * @throws UnsupportedOperationException this parser does not support settable expressions
 	 */
-	protected abstract SettableExpression doParseSettableExpression(String expressionString)
-			throws ParserException, UnsupportedOperationException;
+	protected abstract SettableExpression doParseSettableExpression(String expressionString) throws ParserException,
+			UnsupportedOperationException;
 
 }

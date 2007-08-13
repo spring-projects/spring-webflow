@@ -37,68 +37,68 @@ import junit.framework.TestSuite;
  */
 public class SimpleExpressionTests extends TestCase {
 
-    private ExpressionParser expressionParser;
-    private String expressionPrefix;
-    private TestBean bean;
+	private ExpressionParser expressionParser;
+	private String expressionPrefix;
+	private TestBean bean;
 
-    public static TestSuite suite() {
-	TestSuite suite = new TestSuite();
-	suite.addTest(new SimpleExpressionTests("testGetValue", new OgnlExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testSetValue", new OgnlExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testSyntaxError", new OgnlExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testGetValue", new BeanWrapperExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testSetValue", new BeanWrapperExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser(), "$"));
-	suite.addTest(new SimpleExpressionTests("testGetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
-		"#"));
-	suite.addTest(new SimpleExpressionTests("testSetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
-		"#"));
-	suite.addTest(new SimpleExpressionTests("testSyntaxError", new ELExpressionParser(new ExpressionFactoryImpl()),
-		"#"));
-	return suite;
-    }
-
-    public SimpleExpressionTests(String name, ExpressionParser expressionParser, String expressionPrefix) {
-	super(name);
-	this.expressionParser = expressionParser;
-	this.expressionPrefix = expressionPrefix;
-    }
-
-    protected void setUp() throws Exception {
-	bean = new TestBean();
-	bean.setFlag(true);
-	List list = new ArrayList();
-	list.add("foo");
-	list.add("bar");
-	bean.setList(list);
-    }
-
-    public void testGetValue() {
-	assertEquals(Boolean.TRUE, expressionParser.parseExpression(expressionPrefix + "{flag}").evaluate(bean, null));
-	assertEquals(Boolean.TRUE, expressionParser.parseExpression("flag").evaluate(bean, null));
-	assertSame(bean.getList(), expressionParser.parseExpression(expressionPrefix + "{list}").evaluate(bean, null));
-	assertEquals("foo", expressionParser.parseExpression(expressionPrefix + "{list[0]}").evaluate(bean, null));
-    }
-
-    public void testSetValue() {
-	expressionParser.parseSettableExpression(expressionPrefix + "{flag}").evaluateToSet(bean, Boolean.FALSE, null);
-	assertFalse(bean.isFlag());
-	expressionParser.parseSettableExpression("flag").evaluateToSet(bean, Boolean.TRUE, null);
-	assertTrue(bean.isFlag());
-	List newList = new ArrayList();
-	newList.add("boo");
-	expressionParser.parseSettableExpression(expressionPrefix + "{list}").evaluateToSet(bean, newList, null);
-	assertSame(newList, bean.getList());
-	expressionParser.parseSettableExpression(expressionPrefix + "{list[0]}").evaluateToSet(bean, "baa", null);
-	assertEquals("baa", bean.getList().get(0));
-    }
-
-    public void testSyntaxError() {
-	try {
-	    expressionParser.parseExpression("foo(").evaluate(bean, null);
-	    fail("should have failed");
-	} catch (ParserException e) {
-	} catch (EvaluationException e) {
+	public static TestSuite suite() {
+		TestSuite suite = new TestSuite();
+		suite.addTest(new SimpleExpressionTests("testGetValue", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new OgnlExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testGetValue", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser(), "$"));
+		suite.addTest(new SimpleExpressionTests("testGetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
+				"#"));
+		suite.addTest(new SimpleExpressionTests("testSetValue", new ELExpressionParser(new ExpressionFactoryImpl()),
+				"#"));
+		suite.addTest(new SimpleExpressionTests("testSyntaxError", new ELExpressionParser(new ExpressionFactoryImpl()),
+				"#"));
+		return suite;
 	}
-    }
+
+	public SimpleExpressionTests(String name, ExpressionParser expressionParser, String expressionPrefix) {
+		super(name);
+		this.expressionParser = expressionParser;
+		this.expressionPrefix = expressionPrefix;
+	}
+
+	protected void setUp() throws Exception {
+		bean = new TestBean();
+		bean.setFlag(true);
+		List list = new ArrayList();
+		list.add("foo");
+		list.add("bar");
+		bean.setList(list);
+	}
+
+	public void testGetValue() {
+		assertEquals(Boolean.TRUE, expressionParser.parseExpression(expressionPrefix + "{flag}").evaluate(bean, null));
+		assertEquals(Boolean.TRUE, expressionParser.parseExpression("flag").evaluate(bean, null));
+		assertSame(bean.getList(), expressionParser.parseExpression(expressionPrefix + "{list}").evaluate(bean, null));
+		assertEquals("foo", expressionParser.parseExpression(expressionPrefix + "{list[0]}").evaluate(bean, null));
+	}
+
+	public void testSetValue() {
+		expressionParser.parseSettableExpression(expressionPrefix + "{flag}").evaluateToSet(bean, Boolean.FALSE, null);
+		assertFalse(bean.isFlag());
+		expressionParser.parseSettableExpression("flag").evaluateToSet(bean, Boolean.TRUE, null);
+		assertTrue(bean.isFlag());
+		List newList = new ArrayList();
+		newList.add("boo");
+		expressionParser.parseSettableExpression(expressionPrefix + "{list}").evaluateToSet(bean, newList, null);
+		assertSame(newList, bean.getList());
+		expressionParser.parseSettableExpression(expressionPrefix + "{list[0]}").evaluateToSet(bean, "baa", null);
+		assertEquals("baa", bean.getList().get(0));
+	}
+
+	public void testSyntaxError() {
+		try {
+			expressionParser.parseExpression("foo(").evaluate(bean, null);
+			fail("should have failed");
+		} catch (ParserException e) {
+		} catch (EvaluationException e) {
+		}
+	}
 }

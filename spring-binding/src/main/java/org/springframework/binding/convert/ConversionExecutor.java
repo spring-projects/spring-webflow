@@ -19,11 +19,11 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
- * A command object that is parameterized with the information necessary to
- * perform a conversion of a source input to a target output.
+ * A command object that is parameterized with the information necessary to perform a conversion of a source input to a
+ * target output.
  * <p>
- * Specifically, encapsulates knowledge about how to convert source objects to a
- * specific target type using a specific converter.
+ * Specifically, encapsulates knowledge about how to convert source objects to a specific target type using a specific
+ * converter.
  * 
  * @author Keith Donald
  */
@@ -74,7 +74,7 @@ public class ConversionExecutor {
 	public Class getTargetClass() {
 		return targetClass;
 	}
-	
+
 	/**
 	 * Returns the converter that will perform the conversion.
 	 * @return the converter
@@ -94,8 +94,7 @@ public class ConversionExecutor {
 	/**
 	 * Execute the conversion for the provided source object.
 	 * @param source the source object to convert
-	 * @param context the conversion context, useful for influencing the
-	 * behavior of the converter
+	 * @param context the conversion context, useful for influencing the behavior of the converter
 	 */
 	public Object execute(Object source, ConversionContext context) throws ConversionException {
 		if (getTargetClass().isInstance(source)) {
@@ -103,8 +102,8 @@ public class ConversionExecutor {
 			return source;
 		}
 		if (source != null && !getSourceClass().isInstance(source)) {
-			throw new ConversionException(getSourceClass(), source, getTargetClass(),
-					"Source object '" + source +  "' is expected to be an instance of " + getSourceClass());
+			throw new ConversionException(getSourceClass(), source, getTargetClass(), "Source object '" + source
+					+ "' is expected to be an instance of " + getSourceClass());
 		}
 		return converter.convert(source, targetClass, context);
 	}
@@ -113,7 +112,7 @@ public class ConversionExecutor {
 		if (!(o instanceof ConversionExecutor)) {
 			return false;
 		}
-		ConversionExecutor other = (ConversionExecutor)o;
+		ConversionExecutor other = (ConversionExecutor) o;
 		return sourceClass.equals(other.sourceClass) && targetClass.equals(other.targetClass);
 	}
 

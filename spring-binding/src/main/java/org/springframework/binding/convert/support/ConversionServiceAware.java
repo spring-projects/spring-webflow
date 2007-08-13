@@ -18,16 +18,14 @@ package org.springframework.binding.convert.support;
 import org.springframework.binding.convert.ConversionService;
 
 /**
- * Marker interface that denotes an object has a dependency on a conversion
- * service that is expected to be fulfilled.
+ * Marker interface that denotes an object has a dependency on a conversion service that is expected to be fulfilled.
  * 
  * @author Keith Donald
  */
 public interface ConversionServiceAware {
 
 	/**
-	 * Set the conversion service this object should be made aware of (as it
-	 * presumably depends on it).
+	 * Set the conversion service this object should be made aware of (as it presumably depends on it).
 	 * 
 	 * @param conversionService the conversion service
 	 */

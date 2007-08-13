@@ -24,10 +24,8 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
- * A single mapping definition, encapulating the information neccessary to map
- * the result of evaluating an expression on a source object to a property on a
- * target object, optionally applying a type conversion during the mapping
- * process.
+ * A single mapping definition, encapulating the information neccessary to map the result of evaluating an expression on
+ * a source object to a property on a target object, optionally applying a type conversion during the mapping process.
  * 
  * @author Keith Donald
  */
@@ -51,8 +49,7 @@ public class Mapping implements AttributeMapper {
 	private final ConversionExecutor typeConverter;
 
 	/**
-	 * Whether or not this is a required mapping; if true, the source expression
-	 * must return a non-null value.
+	 * Whether or not this is a required mapping; if true, the source expression must return a non-null value.
 	 */
 	private boolean required;
 
@@ -62,8 +59,7 @@ public class Mapping implements AttributeMapper {
 	 * @param targetExpression the target expression
 	 * @param typeConverter a type converter
 	 */
-	public Mapping(Expression sourceExpression, SettableExpression targetExpression,
-			ConversionExecutor typeConverter) {
+	public Mapping(Expression sourceExpression, SettableExpression targetExpression, ConversionExecutor typeConverter) {
 		this(sourceExpression, targetExpression, typeConverter, false);
 	}
 
@@ -85,9 +81,8 @@ public class Mapping implements AttributeMapper {
 	}
 
 	/**
-	 * Map the <code>sourceAttribute</code> in to the
-	 * <code>targetAttribute</code> target map, performing type conversion if
-	 * necessary.
+	 * Map the <code>sourceAttribute</code> in to the <code>targetAttribute</code> target map, performing type
+	 * conversion if necessary.
 	 * @param source The source data structure
 	 * @param target The target data structure
 	 */
@@ -99,8 +94,7 @@ public class Mapping implements AttributeMapper {
 				throw new RequiredMappingException("This mapping is required; evaluation of expression '"
 						+ sourceExpression + "' against source of type [" + source.getClass()
 						+ "] must return a non-null value");
-			}
-			else {
+			} else {
 				// source expression returned no value, simply abort mapping
 				return;
 			}
@@ -121,9 +115,8 @@ public class Mapping implements AttributeMapper {
 		if (!(o instanceof Mapping)) {
 			return false;
 		}
-		Mapping other = (Mapping)o;
-		return sourceExpression.equals(other.sourceExpression)
-				&& targetExpression.equals(other.targetExpression);
+		Mapping other = (Mapping) o;
+		return sourceExpression.equals(other.sourceExpression) && targetExpression.equals(other.targetExpression);
 	}
 
 	public int hashCode() {

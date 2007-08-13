@@ -29,18 +29,18 @@ import junit.framework.TestCase;
  * @author Erwin Vervaet
  */
 public class NumberFormatterTests extends TestCase {
-	
+
 	private Locale systemDefaultLocale;
-	
+
 	protected void setUp() throws Exception {
 		systemDefaultLocale = Locale.getDefault();
 	}
-	
+
 	protected void tearDown() throws Exception {
 		// restore default
 		Locale.setDefault(systemDefaultLocale);
 	}
-	
+
 	public void testParseUsBigDecimalInUs() {
 		Locale.setDefault(Locale.US);
 		SimpleFormatterFactory formatterFactory = new SimpleFormatterFactory();
@@ -56,7 +56,7 @@ public class NumberFormatterTests extends TestCase {
 		Formatter formatter = formatterFactory.getNumberFormatter(BigDecimal.class);
 		assertEquals(new BigDecimal("123.45"), formatter.parseValue("123.45", BigDecimal.class));
 	}
-	
+
 	public void testParseGermanBigDecimalInGermany() {
 		Locale.setDefault(Locale.GERMANY);
 		SimpleFormatterFactory formatterFactory = new SimpleFormatterFactory();

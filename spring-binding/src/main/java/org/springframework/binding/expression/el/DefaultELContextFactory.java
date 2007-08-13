@@ -12,43 +12,43 @@ import javax.el.VariableMapper;
  */
 public class DefaultELContextFactory implements ELContextFactory {
 
-    /**
-     * Configures and returns a simple EL context to use to parse EL expressions.
-     * @return The configured simple ELContext instance.
-     */
-    public ELContext getParseContext() {
-	return new SimpleELContext();
-    }
-
-    /**
-     * Configures and returns a simple EL context to use to evaluate EL expressions on the given base target object.
-     * @return The configured simple ELContext instance.
-     */
-    public ELContext getEvaluationContext(Object target) {
-	return new SimpleELContext(target);
-    }
-
-    private static class SimpleELContext extends ELContext {
-	private DefaultELResolver resolver = new DefaultELResolver();
-
-	public SimpleELContext() {
-
+	/**
+	 * Configures and returns a simple EL context to use to parse EL expressions.
+	 * @return The configured simple ELContext instance.
+	 */
+	public ELContext getParseContext() {
+		return new SimpleELContext();
 	}
 
-	public SimpleELContext(Object target) {
-	    this.resolver.setTarget(target);
+	/**
+	 * Configures and returns a simple EL context to use to evaluate EL expressions on the given base target object.
+	 * @return The configured simple ELContext instance.
+	 */
+	public ELContext getEvaluationContext(Object target) {
+		return new SimpleELContext(target);
 	}
 
-	public ELResolver getELResolver() {
-	    return resolver;
-	}
+	private static class SimpleELContext extends ELContext {
+		private DefaultELResolver resolver = new DefaultELResolver();
 
-	public FunctionMapper getFunctionMapper() {
-	    return null;
-	}
+		public SimpleELContext() {
 
-	public VariableMapper getVariableMapper() {
-	    return null;
+		}
+
+		public SimpleELContext(Object target) {
+			this.resolver.setTarget(target);
+		}
+
+		public ELResolver getELResolver() {
+			return resolver;
+		}
+
+		public FunctionMapper getFunctionMapper() {
+			return null;
+		}
+
+		public VariableMapper getVariableMapper() {
+			return null;
+		}
 	}
-    }
 }

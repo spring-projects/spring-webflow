@@ -31,7 +31,7 @@ public class MethodKeyTests extends TestCase {
 
 	private static final Method LIST_FILENAME_FILTER = safeGetMethod(File.class, "list",
 			new Class[] { FilenameFilter.class });
-	
+
 	public void testGetMethodWithNoArgs() throws Exception {
 		MethodKey key = new MethodKey(File.class, "list", new Class[0]);
 		Method m = key.getMethod();
@@ -62,8 +62,7 @@ public class MethodKeyTests extends TestCase {
 	private static final Method safeGetMethod(Class type, String name, Class[] argTypes) {
 		try {
 			return type.getMethod(name, argTypes);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			throw new IllegalStateException("Unable to safely access a known method via reflection. " + e.getMessage());
 		}
 	}

@@ -22,8 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
- * A named method parameter. Each parameter has an identifying name and is of a
- * specified type (class).
+ * A named method parameter. Each parameter has an identifying name and is of a specified type (class).
  * 
  * @author Keith Donald
  */
@@ -35,14 +34,13 @@ public class Parameter {
 	private Class type;
 
 	/**
-	 * The name of the parameter as an evaluatable expression, e.g
-	 * "accountNumber".
+	 * The name of the parameter as an evaluatable expression, e.g "accountNumber".
 	 */
 	private Expression name;
 
 	/**
-	 * Create a new named parameter definition.  Named parameters are capable of resolving 
-	 * parameter values (arguments) from argument sources.
+	 * Create a new named parameter definition. Named parameters are capable of resolving parameter values (arguments)
+	 * from argument sources.
 	 * @param type the parameter type, may be null
 	 * @param name the name the method argument expression (required)
 	 */
@@ -53,8 +51,7 @@ public class Parameter {
 	}
 
 	/**
-	 * Returns the parameter type. Could be null if no parameter type
-	 * was specified.
+	 * Returns the parameter type. Could be null if no parameter type was specified.
 	 */
 	public Class getType() {
 		return type;
@@ -68,8 +65,7 @@ public class Parameter {
 	}
 
 	/**
-	 * Evaluate this method parameter against the provided argument source,
-	 * returning a single method argument value.
+	 * Evaluate this method parameter against the provided argument source, returning a single method argument value.
 	 * @param argumentSource the meyhod argument source
 	 * @param context the evaluation context
 	 * @return the method argument value

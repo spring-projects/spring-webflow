@@ -23,9 +23,8 @@ import java.util.Set;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * A map decorator that implements <code>SharedMap</code>. By default, simply
- * returns the map itself as the mutex. Subclasses may override to return a
- * different mutex object.
+ * A map decorator that implements <code>SharedMap</code>. By default, simply returns the map itself as the mutex.
+ * Subclasses may override to return a different mutex object.
  * 
  * @author Keith Donald
  */
@@ -43,7 +42,7 @@ public class SharedMapDecorator implements SharedMap, Serializable {
 	public SharedMapDecorator(Map map) {
 		this.map = map;
 	}
-	
+
 	// implementing Map
 
 	public void clear() {
@@ -93,7 +92,7 @@ public class SharedMapDecorator implements SharedMap, Serializable {
 	public Collection values() {
 		return map.values();
 	}
-	
+
 	// implementing SharedMap
 
 	public Object getMutex() {

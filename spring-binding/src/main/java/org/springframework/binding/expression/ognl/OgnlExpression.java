@@ -31,9 +31,8 @@ import org.springframework.util.Assert;
 /**
  * Evaluates a parsed Ognl expression.
  * <p>
- * IMPLEMENTATION NOTE: Ognl 2.6.7 expression objects do not respect equality
- * properly, so the equality operations defined within this class do not
- * function properly.
+ * IMPLEMENTATION NOTE: Ognl 2.6.7 expression objects do not respect equality properly, so the equality operations
+ * defined within this class do not function properly.
  * 
  * @author Keith Donald
  */
@@ -71,14 +70,12 @@ class OgnlExpression implements SettableExpression {
 		Map contextAttributes = (context != null ? context.getAttributes() : Collections.EMPTY_MAP);
 		try {
 			return Ognl.getValue(expression, contextAttributes, target);
-		}
-		catch (OgnlException e) {
+		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it
 				// and there is not generic (getCause) way to get to it later on
 				throw new EvaluationException(new EvaluationAttempt(this, target, context), e.getReason());
-			}
-			else {
+			} else {
 				throw new EvaluationException(new EvaluationAttempt(this, target, context), e);
 			}
 		}
@@ -89,8 +86,7 @@ class OgnlExpression implements SettableExpression {
 		Map contextAttributes = (context != null ? context.getAttributes() : Collections.EMPTY_MAP);
 		try {
 			Ognl.setValue(expression, contextAttributes, target, value);
-		}
-		catch (OgnlException e) {
+		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, target, value, context), e);
 		}
 	}

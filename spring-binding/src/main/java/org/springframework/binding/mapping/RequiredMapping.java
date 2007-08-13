@@ -25,7 +25,7 @@ import org.springframework.binding.expression.SettableExpression;
  * @author Keith Donald
  */
 public class RequiredMapping extends Mapping {
-	
+
 	/**
 	 * Creates a required mapping.
 	 * @param sourceExpression the source mapping expression
