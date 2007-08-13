@@ -23,9 +23,8 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Simple transition criteria that matches on an eventId and nothing else.
- * Specifically, if the id of the last event that occured equals
- * {@link #getEventId()} this criteria will return true.
+ * Simple transition criteria that matches on an eventId and nothing else. Specifically, if the id of the last event
+ * that occurred equals {@link #getEventId()} this criteria will return true.
  * 
  * @see RequestContext#getLastEvent()
  * 
@@ -38,7 +37,7 @@ public class EventIdTransitionCriteria implements TransitionCriteria, Serializab
 	 * The event id to match.
 	 */
 	private String eventId;
-	
+
 	/**
 	 * Whether or not to match case sensitively. Default is true.
 	 */
@@ -59,10 +58,9 @@ public class EventIdTransitionCriteria implements TransitionCriteria, Serializab
 	public String getEventId() {
 		return eventId;
 	}
-	
+
 	/**
-	 * Set whether or not the event id should be matched in a case sensitve
-	 * manner. Defaults to true.
+	 * Set whether or not the event id should be matched in a case sensitive manner. Defaults to true.
 	 */
 	public void setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
@@ -75,8 +73,7 @@ public class EventIdTransitionCriteria implements TransitionCriteria, Serializab
 		}
 		if (caseSensitive) {
 			return eventId.equals(lastEvent.getId());
-		}
-		else {
+		} else {
 			return eventId.equalsIgnoreCase(lastEvent.getId());
 		}
 	}
