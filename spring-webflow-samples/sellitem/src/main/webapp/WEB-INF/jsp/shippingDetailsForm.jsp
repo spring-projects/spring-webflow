@@ -37,7 +37,7 @@
 		<tr>
 			<td>Shipping type:</td>
 			<td>
-				<spring:bind path="sale.shippingType">
+				<spring:bind path="shippingType">
 					<select name="${status.expression}">
 						<option value="S" <c:if test="${status.value=='S'}">selected</c:if>>
 							Standard (10 extra cost)

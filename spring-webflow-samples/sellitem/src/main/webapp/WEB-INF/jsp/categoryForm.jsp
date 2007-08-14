@@ -31,7 +31,7 @@
 		<tr>
 			<td>Category:</td>
 			<td>
-				<spring:bind path="sale.category">
+				<spring:bind path="category">
 					<select name="${status.expression}">
 						<option value="" <c:if test="${status.value ==''}">selected</c:if>>
 							None (0.02 discount rate)

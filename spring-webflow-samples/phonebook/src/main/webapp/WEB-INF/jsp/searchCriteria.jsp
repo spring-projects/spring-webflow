@@ -32,7 +32,7 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				<form:errors cssClass="error"/>
+				<form:errors cssClass="error" path="*"/>
 			</td>
 		</tr>
 		<tr>
