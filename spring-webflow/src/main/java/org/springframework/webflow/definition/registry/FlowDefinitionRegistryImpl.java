@@ -17,6 +17,7 @@ package org.springframework.webflow.definition.registry;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -34,200 +35,192 @@ import org.springframework.webflow.definition.FlowDefinition;
  * definitions that no longer exist.
  * 
  * @author Keith Donald
+ * @author Ben Hale
  */
 public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
-    private static final Log logger = LogFactory.getLog(FlowDefinitionRegistryImpl.class);
+	private static final Log logger = LogFactory.getLog(FlowDefinitionRegistryImpl.class);
 
-    /**
-     * The map of loaded Flow definitions maintained in this registry.
-     */
-    private Map flowDefinitions;
+	/**
+	 * The map of loaded Flow definitions maintained in this registry.
+	 */
+	private Map flowDefinitions;
 
-    /**
-     * An optional parent flow definition registry.
-     */
-    private FlowDefinitionRegistry parent;
+	/**
+	 * An optional parent flow definition registry.
+	 */
+	private FlowDefinitionRegistry parent;
 
-    public FlowDefinitionRegistryImpl() {
-	flowDefinitions = new TreeMap();
-    }
-
-    // implementing FlowDefinitionRegistryMBean
-
-    public String[] getFlowDefinitionIds() {
-	return (String[]) flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
-    }
-
-    public int getFlowDefinitionCount() {
-	return flowDefinitions.size();
-    }
-
-    public boolean containsFlowDefinition(String id) {
-	Assert.hasText(id, "The flow id is required");
-	return flowDefinitions.get(id) != null;
-    }
-
-    public void refresh() throws FlowDefinitionConstructionException {
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Refreshing flow definition registry '" + this + "'");
+	public FlowDefinitionRegistryImpl() {
+		flowDefinitions = new TreeMap();
 	}
-	ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	try {
-	    // workaround for JMX
-	    Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-	    LinkedList needsReindexing = new LinkedList();
-	    Iterator it = flowDefinitions.entrySet().iterator();
-	    while (it.hasNext()) {
-		Map.Entry entry = (Map.Entry) it.next();
-		String key = (String) entry.getKey();
-		FlowDefinitionHolder holder = (FlowDefinitionHolder) entry.getValue();
-		holder.refresh();
-		if (!holder.getFlowDefinitionId().equals(key)) {
-		    needsReindexing.add(new Indexed(key, holder));
+
+	// implementing FlowDefinitionRegistryMBean
+
+	public String[] getFlowDefinitionPaths() {
+		List flowPaths = new LinkedList();
+		for (Iterator namespaces = flowDefinitions.entrySet().iterator(); namespaces.hasNext();) {
+			Map.Entry namespaceEntry = (Map.Entry) namespaces.next();
+			String namespaceName = (String) namespaceEntry.getKey();
+			Map namespace = (Map) namespaceEntry.getValue();
+			for (Iterator ids = namespace.keySet().iterator(); ids.hasNext();) {
+				flowPaths.add(FlowPathUtils.buildFlowPath(namespaceName, (String) ids.next()));
+			}
 		}
-	    }
-	    it = needsReindexing.iterator();
-	    while (it.hasNext()) {
-		Indexed indexed = (Indexed) it.next();
-		reindex(indexed.holder, indexed.key);
-	    }
-	} finally {
-	    Thread.currentThread().setContextClassLoader(loader);
+		return (String[]) flowPaths.toArray(new String[flowPaths.size()]);
 	}
-    }
 
-    public void refresh(String flowId) throws NoSuchFlowDefinitionException, FlowDefinitionConstructionException {
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Refreshing flow with id '" + flowId + "'");
+	public int getFlowDefinitionCount() {
+		int count = 0;
+		for (Iterator namespaces = flowDefinitions.values().iterator(); namespaces.hasNext();) {
+			Map namespace = (Map) namespaces.next();
+			count += namespace.size();
+		}
+		return count;
 	}
-	ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	try {
-	    // workaround for JMX
-	    Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-	    FlowDefinitionHolder holder = getFlowDefinitionHolder(flowId);
-	    holder.refresh();
-	    if (!holder.getFlowDefinitionId().equals(flowId)) {
-		reindex(holder, flowId);
-	    }
-	} finally {
-	    Thread.currentThread().setContextClassLoader(loader);
+
+	public boolean containsFlowDefinition(String flowPath) {
+		Assert.hasText(flowPath, "The flow path is required");
+		Map namespace = getNamespace(FlowPathUtils.extractFlowNamespace(flowPath));
+		return namespace.containsKey(FlowPathUtils.extractFlowId(flowPath));
 	}
-    }
 
-    // implementing FlowDefinitionLocator
-
-    public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
-	    FlowDefinitionConstructionException {
-	Assert.hasText(id,
-		"Unable to load a flow definition: no flow id was provided.  Please provide a valid flow identifier.");
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Getting flow definition with id '" + id + "'");
+	public void refresh() throws FlowDefinitionConstructionException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Refreshing flow definition registry '" + this + "'");
+		}
+		for (Iterator namespaces = flowDefinitions.entrySet().iterator(); namespaces.hasNext();) {
+			Map.Entry namespaceEntry = (Map.Entry) namespaces.next();
+			String namespaceName = (String) namespaceEntry.getKey();
+			Map namespace = (Map) namespaceEntry.getValue();
+			for (Iterator ids = namespace.keySet().iterator(); ids.hasNext();) {
+				refresh(FlowPathUtils.buildFlowPath(namespaceName, (String) ids.next()));
+			}
+		}
 	}
-	try {
-	    return getFlowDefinitionHolder(id).getFlowDefinition();
-	} catch (NoSuchFlowDefinitionException e) {
-	    if (parent != null) {
-		// try parent
-		return parent.getFlowDefinition(id);
-	    }
-	    throw e;
+
+	public void refresh(String flowPath) throws NoSuchFlowDefinitionException, FlowDefinitionConstructionException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Refreshing flow with path '" + flowPath + "'");
+		}
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		try {
+			// workaround for JMX
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+			FlowDefinitionHolder holder = getFlowDefinitionHolder(flowPath);
+			holder.refresh();
+			if (!holder.getFlowDefinitionId().equals(FlowPathUtils.extractFlowId(flowPath))) {
+				reindex(holder, FlowPathUtils.extractFlowNamespace(flowPath), flowPath);
+			}
+		} finally {
+			Thread.currentThread().setContextClassLoader(loader);
+		}
 	}
-    }
 
-    // implementing FlowDefinitionRegistry
+	// implementing FlowDefinitionLocator
 
-    public void setParent(FlowDefinitionRegistry parent) {
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Setting parent flow definition registry to '" + parent + "'");
+	public FlowDefinition getFlowDefinition(String path) throws NoSuchFlowDefinitionException,
+			FlowDefinitionConstructionException {
+		Assert.hasText(path,
+				"Unable to load a flow definition: no flow path was provided.  Please provide a valid flow path.");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Getting flow definition with path '" + path + "'");
+		}
+		try {
+			return getFlowDefinitionHolder(path).getFlowDefinition();
+		} catch (NoSuchFlowDefinitionException e) {
+			if (parent != null) {
+				// try parent
+				return parent.getFlowDefinition(path);
+			}
+			throw e;
+		}
 	}
-	this.parent = parent;
-    }
 
-    public FlowDefinition[] getFlowDefinitions() throws FlowDefinitionConstructionException {
-	FlowDefinition[] flows = new FlowDefinition[flowDefinitions.size()];
-	Iterator it = flowDefinitions.values().iterator();
-	int i = 0;
-	while (it.hasNext()) {
-	    FlowDefinitionHolder holder = (FlowDefinitionHolder) it.next();
-	    flows[i] = holder.getFlowDefinition();
-	    i++;
+	// implementing FlowDefinitionRegistry
+
+	public void setParent(FlowDefinitionRegistry parent) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting parent flow definition registry to '" + parent + "'");
+		}
+		this.parent = parent;
 	}
-	return flows;
-    }
 
-    public void registerFlowDefinition(FlowDefinitionHolder flowHolder) {
-	Assert.notNull(flowHolder, "The flow definition holder to register is required");
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Registering flow definition with id '" + flowHolder.getFlowDefinitionId() + "'");
+	public void registerFlowDefinition(FlowDefinitionHolder flowHolder) {
+		registerFlowDefinition(flowHolder, "");
 	}
-	index(flowHolder);
-    }
 
-    /**
-     * Remove identified flow definition from this registry. If the given id is not known in this registry, nothing will
-     * happen.
-     * @param id the flow definition id
-     */
-    public void removeFlowDefinition(String id) {
-	Assert.hasText(id, "The flow id is required");
-	if (logger.isDebugEnabled()) {
-	    logger.debug("Removing flow definition with id '" + id + "'");
+	public void registerFlowDefinition(FlowDefinitionHolder flowHolder, String namespace) {
+		Assert.notNull(flowHolder, "The flow definition holder to register is required");
+		Assert.notNull(namespace, "The flow namespace is required");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Registering flow definition with id '" + flowHolder.getFlowDefinitionId()
+					+ "' in namespace '" + namespace + "'");
+		}
+		index(flowHolder, namespace);
 	}
-	flowDefinitions.remove(id);
-    }
 
-    // internal helpers
-
-    /**
-     * Reindex given flow definition.
-     * @param holder the holder holding the flow definition to reindex
-     * @param oldId the id that was previously assigned to given flow definition
-     */
-    private void reindex(FlowDefinitionHolder holder, String oldId) {
-	flowDefinitions.remove(oldId);
-	index(holder);
-    }
-
-    /**
-     * Index given flow definition.
-     * @param holder the holder holding the flow definition to index
-     */
-    private void index(FlowDefinitionHolder holder) {
-	Assert.hasText(holder.getFlowDefinitionId(), "The flow holder to index must return a non-blank flow id");
-	flowDefinitions.put(holder.getFlowDefinitionId(), holder);
-    }
-
-    /**
-     * Returns the identified flow definition holder. Throws an exception if it cannot be found.
-     */
-    private FlowDefinitionHolder getFlowDefinitionHolder(String id) throws NoSuchFlowDefinitionException {
-	FlowDefinitionHolder flowHolder = (FlowDefinitionHolder) flowDefinitions.get(id);
-	if (flowHolder == null) {
-	    throw new NoSuchFlowDefinitionException(id, getFlowDefinitionIds());
+	/**
+	 * Remove identified flow definition from this registry. If the given id is not known in this registry, nothing will
+	 * happen.
+	 * @param flowPath the flow definition path
+	 */
+	public void removeFlowDefinition(String flowPath) {
+		Assert.hasText(flowPath, "The flow path is required");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Removing flow definition with path '" + flowPath + "'");
+		}
+		Map namespace = getNamespace(FlowPathUtils.extractFlowNamespace(flowPath));
+		namespace.remove(FlowPathUtils.extractFlowId(flowPath));
 	}
-	return flowHolder;
-    }
 
-    /**
-     * Simple value object that holds the key for an indexed flow definition holder in this registry. Used to support
-     * reindexing on a refresh.
-     * 
-     * @author Keith Donald
-     */
-    private static class Indexed {
+	// internal helpers
 
-	private String key;
-
-	private FlowDefinitionHolder holder;
-
-	public Indexed(String key, FlowDefinitionHolder holder) {
-	    this.key = key;
-	    this.holder = holder;
+	/**
+	 * Re-index given flow definition.
+	 * @param holder the holder holding the flow definition to re-index
+	 * @param namespace the namespace to index the new flow in
+	 * @param oldFlowPath the flowPath that was previously assigned to given flow definition
+	 */
+	private void reindex(FlowDefinitionHolder holder, String namespace, String oldFlowPath) {
+		removeFlowDefinition(oldFlowPath);
+		index(holder, namespace);
 	}
-    }
 
-    public String toString() {
-	return new ToStringCreator(this).append("flowDefinitions", flowDefinitions).append("parent", parent).toString();
-    }
+	/**
+	 * Index given flow definition.
+	 * @param holder the holder holding the flow definition to index
+	 * @param namespaceName the namespace to index the flow definition in
+	 */
+	private void index(FlowDefinitionHolder holder, String namespaceName) {
+		Assert.hasText(holder.getFlowDefinitionId(), "The flow holder to index must return a non-blank flow id");
+		Map namespace = getNamespace(namespaceName);
+		namespace.put(holder.getFlowDefinitionId(), holder);
+	}
+
+	/**
+	 * Returns the identified flow definition holder. Throws an exception if it cannot be found.
+	 */
+	private FlowDefinitionHolder getFlowDefinitionHolder(String flowPath) throws NoSuchFlowDefinitionException {
+		Map namespace = getNamespace(FlowPathUtils.extractFlowNamespace(flowPath));
+		FlowDefinitionHolder flowHolder = (FlowDefinitionHolder) namespace.get(FlowPathUtils.extractFlowId(flowPath));
+		if (flowHolder == null) {
+			throw new NoSuchFlowDefinitionException(flowPath, getFlowDefinitionPaths());
+		}
+		return flowHolder;
+	}
+
+	/**
+	 * Returns the namespace map for a given namespace. Creates the map if it does not exist.
+	 */
+	private Map getNamespace(String namespace) {
+		if (!flowDefinitions.containsKey(namespace)) {
+			flowDefinitions.put(namespace, new TreeMap());
+		}
+		return (Map) flowDefinitions.get(namespace);
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("flowDefinitions", flowDefinitions).append("parent", parent).toString();
+	}
 }

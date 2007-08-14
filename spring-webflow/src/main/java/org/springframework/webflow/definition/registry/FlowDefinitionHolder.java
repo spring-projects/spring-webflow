@@ -18,8 +18,8 @@ package org.springframework.webflow.definition.registry;
 import org.springframework.webflow.definition.FlowDefinition;
 
 /**
- * A holder holding a reference to a Flow definition. Provides a layer of
- * indirection, enabling things like "hot-reloadable" flow definitions.
+ * A holder holding a reference to a Flow definition. Provides a layer of indirection, enabling things like
+ * "hot-reloadable" flow definitions.
  * 
  * @see FlowDefinitionRegistry#registerFlowDefinition(FlowDefinitionHolder)
  * 
@@ -28,27 +28,23 @@ import org.springframework.webflow.definition.FlowDefinition;
 public interface FlowDefinitionHolder {
 
 	/**
-	 * Returns the <code>id</code> of the flow definition held by this holder.
-	 * This is a <i>lightweight</i> method callers may call to obtain the id of
-	 * the flow without triggering full flow definition assembly (which may be
-	 * an expensive operation).
+	 * Returns the <code>id</code> of the flow definition held by this holder. This is a <i>lightweight</i> method
+	 * callers may call to obtain the id of the flow without triggering full flow definition assembly (which may be an
+	 * expensive operation).
 	 */
 	public String getFlowDefinitionId();
 
 	/**
-	 * Returns the flow definition held by this holder. Calling this method the
-	 * first time may trigger flow assembly (which may be expensive).
-	 * @throws FlowDefinitionConstructionException if there is a problem constructing 
-	 * the target flow definition
+	 * Returns the flow definition held by this holder. Calling this method the first time may trigger flow assembly
+	 * (which may be expensive).
+	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
 	 */
 	public FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException;
 
 	/**
-	 * Refresh the flow definition held by this holder. Calling this method
-	 * typically triggers flow reassembly, which may include a refresh from an
-	 * externalized resource such as a file.
-	 * @throws FlowDefinitionConstructionException if there is a problem constructing 
-	 * the target flow definition
+	 * Refresh the flow definition held by this holder. Calling this method typically triggers flow re-assembly, which
+	 * may include a refresh from an externalized resource such as a file.
+	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
 	 */
 	public void refresh() throws FlowDefinitionConstructionException;
 }

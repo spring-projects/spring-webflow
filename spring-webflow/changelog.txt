@@ -30,6 +30,10 @@ Package org.springframework.webflow.core
 * Fixed DefaultExpressionParserFactory to not require OGNL on the classpath if another expression parser
   is configured (SWF-335).
 
+Package org.springframework.webflow.definition.registry
+* Added namespace awareness to the flow registry allowing flows with the same id to be placed in different namespaces
+  and be referenced by a 'flow path' (SWF-363).
+
 Package org.springframework.webflow.engine
 * Added invoke(String, Action) method to AbstractFlowBuilder.
 * Added initBuilder() hook method to AbstractFlowBuilder.

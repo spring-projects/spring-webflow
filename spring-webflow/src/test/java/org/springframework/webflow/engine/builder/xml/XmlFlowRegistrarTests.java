@@ -38,7 +38,7 @@ public class XmlFlowRegistrarTests extends TestCase {
 		registrar.addLocation(new ClassPathResource("flow.xml", getClass()));
 		registrar.registerFlowDefinitions(registry);
 		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("flow", registry.getFlowDefinitions()[0].getId());
+		assertEquals("flow", registry.getFlowDefinition("flow").getId());
 	}
 
 	public void testAddResource() {
@@ -46,6 +46,6 @@ public class XmlFlowRegistrarTests extends TestCase {
 		registrar.addResource(new FlowDefinitionResource("foo", new ClassPathResource("flow.xml", getClass())));
 		registrar.registerFlowDefinitions(registry);
 		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("foo", registry.getFlowDefinitions()[0].getId());
+		assertEquals("foo", registry.getFlowDefinition("foo").getId());
 	}
 }

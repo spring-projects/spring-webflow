@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.definition.registry;
 
-import org.springframework.webflow.definition.FlowDefinition;
 
 /**
  * A container of flow definitions. Extends the {@link FlowDefinitionRegistryMBean} management interface exposing
@@ -26,6 +25,7 @@ import org.springframework.webflow.definition.FlowDefinition;
  * registry hierarchy.
  * 
  * @author Keith Donald
+ * @author Ben Hale
  */
 public interface FlowDefinitionRegistry extends FlowDefinitionLocator, FlowDefinitionRegistryMBean {
 
@@ -37,20 +37,20 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator, FlowDefin
 	public void setParent(FlowDefinitionRegistry parent);
 
 	/**
-	 * Return all flow definitions registered in this registry. Note that this will trigger flow assembly for all
-	 * registered flow definitions (which may be expensive).
-	 * @return the flow definitions
-	 * @throws FlowDefinitionConstructionException if there is a problem constructing one of the registered flow
-	 * definitions
-	 */
-	public FlowDefinition[] getFlowDefinitions() throws FlowDefinitionConstructionException;
-
-	/**
 	 * Register a flow definition in this registry. Registers a "holder", not the Flow definition itself. This allows
 	 * the actual Flow definition to be loaded lazily only when needed, and also rebuilt at runtime when its underlying
-	 * resource changes without redeploy.
+	 * resource changes without re-deploy.
 	 * @param flowHolder a holder holding the flow definition to register
 	 */
 	public void registerFlowDefinition(FlowDefinitionHolder flowHolder);
+
+	/**
+	 * Register a flow definition in this registry under a specific namespace. Registers a "holder", not the Flow
+	 * definition itself. This allows the actual Flow definition to be loaded lazily only when needed, and also rebuilt
+	 * at runtime when its underlying resource changes without re-deploy.
+	 * @param flowHolder a holder holding the flow definition to register
+	 * @param namespace the namespace to register the flow definition in
+	 */
+	public void registerFlowDefinition(FlowDefinitionHolder flowHolder, String namespace);
 
 }

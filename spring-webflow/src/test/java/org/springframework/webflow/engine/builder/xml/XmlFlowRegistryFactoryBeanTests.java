@@ -31,9 +31,9 @@ public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean.setFlowLocations(locations);
 		factoryBean.setBeanFactory(new StaticListableBeanFactory());
 		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)factoryBean.getObject();
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
 		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("flow", registry.getFlowDefinitions()[0].getId());
+		assertEquals("flow", registry.getFlowDefinition("flow").getId());
 	}
 
 	public void testCreateFromDefinitions() throws Exception {
@@ -42,8 +42,8 @@ public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean.setFlowDefinitions(properties);
 		factoryBean.setBeanFactory(new StaticListableBeanFactory());
 		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)factoryBean.getObject();
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
 		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("foo", registry.getFlowDefinitions()[0].getId());
+		assertEquals("foo", registry.getFlowDefinition("foo").getId());
 	}
 }

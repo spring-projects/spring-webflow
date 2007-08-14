@@ -18,8 +18,7 @@ package org.springframework.webflow.definition.registry;
 import org.springframework.webflow.definition.FlowDefinition;
 
 /**
- * A simple flow definition holder that just holds a constant singleton
- * reference to a flow definition.
+ * A simple flow definition holder that just holds a constant singleton reference to a flow definition.
  * 
  * @author Keith Donald
  */
