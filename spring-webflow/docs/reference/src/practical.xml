@@ -78,7 +78,7 @@
     			Java 1.5 (or greater) and Ant 1.6 (or greater) are prerequisites for building the sample applications.
     			Ensure those are present in the system path or are passed on the command line. To build Web Flow 
     			samples from the command line, open a prompt, cd to the directory where Spring Web Flow was
-    			unzipped and run the following:
+    			unzipped, and run the following:
     			<programlisting>
 cd projects/spring-webflow/build-spring-webflow
 ant dist
@@ -94,15 +94,14 @@ ant dist
     		<title>Importing Projects into Eclipse</title>
     		<para>
     			Importing the sample projects into Eclipse is easy. With a new or an existing workspace select:
-    			<emphasis>File &gt; Import &gt; Existing Projects into Workspace</emphasis>. In the resulting dialog browse to the project
+    			<emphasis>File &gt; Import &gt; Existing Projects into Workspace</emphasis>. In the resulting dialog, browse to the project
     			subdirectory where Spring Web Flow was unzipped and choose it as the root directory to import from.
     			Select OK. Here Eclipse will list all projects it found including the sample application projects.
     			Select the projects you're interested in, and select Finish.
     		</para>
     		<para>
-    			If you previously built each project from the command line Eclipse will compile with no errors.
-    			If not you will need to run the Ant build <emphasis>once</emphasis> for these errors to clear
-    			and you can do that within Eclipse.
+    			If you previously built each project from the command line, Eclipse will compile with no errors.
+    			If not, you will need to run the Ant build <emphasis>once</emphasis> for these errors to clear.
     		</para>
     		<para>
     			To build all projects inside Eclipse, import and expand the <literal>build-spring-webflow</literal> project, right-click on 
@@ -145,7 +144,7 @@ ant dist
     	<sect2>
     		<title>Other IDE's</title>
     		<para>
-    			Importing samples into other IDE's should be fairly straight-forward. If using another IDE
+    			Importing samples into other IDE's should be fairly straight-forward. If using another IDE,
     			running the Ant build from the command line first may help as it will populate the lib
     			subdirectories of each sample project. Follow steps similar as those outlined for Eclipse above.
     		</para>
@@ -349,8 +348,8 @@ public interface SaleProcessor {
                 sparing the need to implement methods for all lifecycle events.
             </para>
             <para>
-                Looking inside SellItemFlowExecutionListener it implements the stateEntering
-                method executed whenever a new state is about to be entered. 
+                Looking inside SellItemFlowExecutionListener, it implements the stateEntering
+                method executed for whenever a new state is about to be entered. 
                 The logic in this method checks if the current web flow state
                 has an attribute named "role" and if so it ensures the user 
                 has that role:
@@ -581,7 +580,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
             <para>
                 The Sellitem-JSF example uses Web Flow and JSF to build a shopping 
                 cart wizard. Navigation logic and supporting managed beans
-                are supplied by Spring Web Flow while UI views and 
+                are supplied by Spring Web Flow, while UI views and 
                 overall servlet processing is based on JSF technology.
             </para>
             <note>
@@ -590,7 +589,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
                     examples are very similar. To avoid repetition the documentation for 
                     the Sellitem-JSF example focuses primarily on the points of integration between 
                     Web Flow and JSF. For further general information on Web Flow definitions 
-                    and supporting Java classes for the Sellitem example please refer to the 
+                    and supporting Java classes for the Sellitem example, please refer to the 
                     <link linkend="sellitem-sample">Sellitem</link> example documentation.
                 </para>
             </note>
@@ -615,7 +614,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
                 </programlisting>
             </para>
             <para>
-                In addition the web.xml loads a Spring root web application context containing the services
+                In addition, the web.xml loads a Spring root web application context containing the services
 				used by the application:
                 <programlisting>
 &lt;context-param&gt;
@@ -642,7 +641,7 @@ public void registerCustomEditors(PropertyEditorRegistry registry) {
         <sect2>
             <title>Web Flow JSF Setup in faces-config.xml</title>
             <para>
-                To plug in Web Flow a few things must be added once to faces-config.xml.
+                To plug in Web Flow, a few things must be added once to faces-config.xml.
                 This is demonstrated in the faces-config.xml of Sellitem-JSF:
                 <programlisting>
 &lt;application&gt;

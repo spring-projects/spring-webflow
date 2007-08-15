@@ -9,7 +9,7 @@
 			across a variety of environments.
 		</para>
 		<para>
-			In this chapter you'll learn how to execute flows within Spring MVC, Struts, 
+			In this chapter, you will learn how to execute flows within Spring MVC, Struts, 
 			and Java Server Faces (JSF) based applications.
 		</para>
     </sect1>
@@ -48,19 +48,19 @@
     				<para>
     					Request that the last response issued by a flow execution be re-issued. 
     					Unlike start and signalEvent, the refresh operation is an idempotent operation
-    					that does not affect the state of a flow execution.
+    					that does not change the state of a flow execution.
     				</para>
     			</listitem>
     		</orderedlist>
     	</para>
     	<para>
     		Each operation accepts an <literal>ExternalContext</literal> that provides normalized 
-    		access to properties of an external system that has called into Spring Web Flow, allowing
-    		access to environment-specific request parameters as well as request, session, and
-    		application-level attributes.
+    		access to properties of an external system that has called into Spring Web Flow.
+    		This context allows access to environment-specific request parameters as well as 
+    		externally-managed request, session, and application-level attributes.
     	</para>
     	<para>
-    		Each operation returns a <literal>ResponseInstruction</literal> which the calling system is 
+    		Each operation returns a <literal>ResponseInstruction</literal>, which the calling system is 
     		expected to use to issue a suitable response.
     	</para>
     	<para>
@@ -81,7 +81,7 @@
 			As you can see, an <literal>ExternalContext</literal> implementation exists for each of
 			the environments Spring Web Flow supports.  If a flow artifact such as an Action needs
 			to access native constructs of the calling environment it can downcast a context to its
-			specific implementation.  The need for such downcasting is considered a special case.
+			specific implementation.  The need for such downcasting is considered a corner case.
 		</para>
     	<sect2 id="flowexecutor-impl">
     		<title>FlowExecutorImpl</title>
@@ -233,8 +233,7 @@
 			    		The <literal>alwaysRedirectOnPause</literal> attribute determines if 
 			    		a flow execution redirect occurs automatically each time an execution pauses
 			    		(automated <literal>POST+REDIRECT+GET</literal> behavior).
-			    		Setting this attribute to false will disable the <emphasis>default 'true' behavior</emphasis>
-			    		where a flow execution redirect always occurs on pause.
+			    		Setting this attribute to false will disable the <emphasis>default 'true' behavior</emphasis>.
 			    	</para>
 	    		</note>
 	    	</para>
@@ -303,7 +302,7 @@
 			core Spring Framework.  Use of Portlet MVC requires Spring 2.0.
 		</para>
 		<para>
-			For both Servlet and Portlet MVC a <literal>FlowController</literal> acts as an adapter
+			For both Servlet and Portlet MVC, a <literal>FlowController</literal> acts as an adapter
 			between Spring MVC and Spring Web Flow.  As an adapter, this controller has knowledge 
 			of both systems and delegates to a flow executor for driving the execution of flows.
 			One controller typically executes all flows of an application, relying on 
@@ -355,13 +354,6 @@
 			are extracted from an incoming controller request with the
 			<literal>org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor</literal>
 			strategy.
-			<note>
-				<para>
-					The various flow controllers typically do not use this strategy directly but instead use a
-					convenient <literal>FlowExecutorArgumentHandler</literal> implementation that takes care
-					of argument extraction as well as exposing responsibilities (in callback URLs).
-				</para>
-			</note>
 		</para>
 		<para>
 			The next several examples illustrate strategies for parameterizing flow controllers 
@@ -446,7 +438,7 @@
 		    	</programlisting>
 	   		 	<note>
 	   		 		<para>
-		  	  			In this case the <literal>eventId</literal> is determined by parsing the name of the 
+		  	  			In this case, the <literal>eventId</literal> is determined by parsing the name of the 
 		   		 		button that was pressed.
 		   		 	</para>
 		    	</note>
@@ -463,7 +455,7 @@
 			<para>
 				The request-path based argument extractor strategy relies on executor arguments
 				being path elements as much as possible. This results in friendlier REST-style URLs such
-				as <literal>http://host/app/myflow</literal> instead of
+				as <literal>http://host/app/myflow</literal>, instead of
 				<literal>http://host/app?_flowId=myflow</literal>.
 			</para>
 	    	<sect3 id="executor-servletmvc-pathextractor">
@@ -529,7 +521,7 @@
 			takes responsibility for view navigation handling and managing model state, adding power and 
 			simplicity to JSF's default navigation system and object scopes.  Plain JSF views and components continue to work just as before,
 			and are able to participate in flows with full access to flow state.  In addition, other view technologies
-			such as Facelets and Ajax4JSF continue to plug-in normally.
+			such as Facelets continue to plug-in normally.
 		</para>
 		<para>
 			The JSF integration relies on custom implementations of core JSF artifacts such as the PhaseListener 
@@ -566,13 +558,13 @@
 			<para>
 				The <classname>DelegatingFlowVariableResolver</classname> resolves JSF a value binding expression like {#someBean.someProperty} 
 				to a flow execution attribute.  This resolver searches flash, flow, and conversation scope in that order until 
-				it finds a match.  If no match is found this resolver delegates to the next resolver in the chain.
+				it finds a match.  If no match is found, this resolver delegates to the next resolver in the chain.
 			</para>
 		</sect2>
     	<sect2 id="executor-jsf-simple-webflow-setup">
 			<title>Configuring the Web Flow system</title>
 			<para>
-				The artifacts defined faces-config.xml use Spring to locate the Web Flow system.
+				The artifacts defined in the faces-config.xml use Spring to access the Web Flow system configuration.
 				This requires a Spring Web Application Context to be bootstrapped using a ContextLoaderListener in
 				the web.xml deployment descriptor:
 			</para>
@@ -589,9 +581,8 @@
 &lt;/listener&gt;				
 			</programlisting>
 			<para>
-				In this example inside webflow-config.xml resides the configuration of the Web Flow system the JSF
-				artifacts will delegate to.  A bean named <literal>flowExecutor</literal> is configured and
-				linked with a flow definition registry containing the flows eligible for execution: 
+				This context should contain the Web Flow system configuration.
+				The example <literal>webflow-config.xml</literal> below shows a typical Web Flow configuration for a JSF environment:
 			</para>
 	    	<programlisting>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;	    	
@@ -615,7 +606,12 @@
 &lt;/beans&gt;
 	        </programlisting>
 			<para>
-				Any executor property such as the flow execution repository type is configurable here, consistent
+				A bean named <literal>flowExecutor</literal> must be configured and linked with a flow definition registry
+				that contains the flows eligible for execution.   Note the <literal>flowExecutor</literal> bean name is significant,
+				as that is bean name the Web Flow JSF extensions will expect.
+			</para>
+			<para>		
+				Any flow executor property such as the flow execution repository type is configurable here, consistent
 				with the other environments Spring Web Flow supports.
 			</para>
 		</sect2>
@@ -677,7 +673,7 @@
 &lt;/flow&gt;				
 			</programlisting>
 			<para>
-  				A primary benefit of using JSF is it a rich UI component framework, and components have behaviors.
+  				A primary benefit of using JSF is it a rich UI component framework, and UI components have both data and behavior.
 				As JSF components typically handle data binding and validation behaviors, the actual flow
 				definition logic is often simpler and more focused as a result.
 			</para>

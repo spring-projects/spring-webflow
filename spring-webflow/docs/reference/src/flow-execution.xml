@@ -4,14 +4,14 @@
 	<sect1 id="execution-intro">
 		<title>Introduction</title>
 		<para>
-			Once a flow has been defined any number of executions of it can be launched in parallel 
+			Once a flow has been defined, any number of executions of it can be launched in parallel 
 			at runtime.  Execution of a flow is carried out by a dedicated system that 
 			is based internally on a state machine that runs atop the Java VM.  As the life of a
 			flow execution can span more than one request into the server, this system 
 			is also responsible for persisting execution state across requests.
 		</para>
 		<para>
-			This chapter documents Spring Web Flow's flow execution system.  You'll
+			This chapter documents Spring Web Flow's flow execution system.  You will
 			learn the core constructs of the system and how to execute flows out-of-container 
 			within a JUnit test environment.
 		</para>
@@ -20,9 +20,9 @@
     	<title>FlowExecution</title>
     	<para>
 		    A <literal>org.springframework.webflow.execution.FlowExecution</literal> is a runtime instantiation of a flow definition.
-		    Given a single <literal>FlowDefinition</literal> any
-		    number of independent flow executions may be created, typically by a
-		    <literal>FlowExecutionFactory</literal>.
+		    Given a single <literal>FlowDefinition</literal>, any
+		    number of independent flow executions may be created.
+		    These executions are typically created by a <literal>FlowExecutionFactory</literal>.
 		</para>
 		<para>
 		    A flow execution carries out the execution of program instructions defined within
@@ -30,7 +30,7 @@
 		</para>
 		<para>
 			<emphasis>
-				It may be helpful to think of a flow definition as analagous to a Java <literal>Class</literal> and a 
+				It may be helpful to think of a flow definition as analagous to a Java <literal>Class</literal>, and a 
 				flow execution as analagous to an object instance of that <literal>Class</literal>.  Signaling
 				an execution event can be considered analagous to sending an object a message.
 			</emphasis>
@@ -44,8 +44,8 @@
  	  	 	</programlisting>
 			<para>
 				Once created, a new flow execution is initially inactive, waiting to be started.  Once 
-				started a flow execution becomes active by entering its <literal>startState</literal>.  
-				From there it continues executing until it enters a state where user input is required
+				started, a flow execution becomes active by entering its <literal>startState</literal>.  
+				From there, it continues executing until it enters a state where user input is required
 				to continue or it terminates.
 			</para>
  	  	</sect2>
@@ -57,10 +57,10 @@
     ViewSelection startingView = execution.start(input, context);
  	  	 	</programlisting>
 			<para>
-				When a flow execution reaches a state where input is required to continue it is said to have <emphasis>paused</emphasis>,
-				where it waits in that state for the input to be provided.  After pausing the 
-				<literal>ViewSelection</literal> returned is typically used to issue a response to the user
-				that provides a vehicle for collecting the required input.
+				When a flow execution reaches a state where input is required to continue, it is said to have <emphasis>paused</emphasis>,
+				where it waits in that state for user input to be provided.  After pausing, the 
+				<literal>ViewSelection</literal> returned is used to issue a response to the user
+				that provides a vehicle for collecting the required user input.
 			</para>
 			<para>			
 				User input is provided by <emphasis>signaling an event</emphasis> that
@@ -69,7 +69,7 @@
 				resumes by consuming the event.
 			</para>
 			<para>
-				Once a flow execution has resumed it continues executing until it again enters a 
+				Once a flow execution has resumed, it continues executing until it again enters a 
 				state where more input is needed or it terminates.  Once a flow execution has terminated
 				it becomes inactive and cannot be resumed.
 			</para>
@@ -335,8 +335,7 @@
 			the session at the top of the stack.
 		</para>
 		<para>
-			The contextual properties associated with a <literal>FlowSession</literal>
-			are summarized below:
+			The contextual properties associated with a <literal>FlowSession</literal> are summarized below:
 		</para>
     	<table>
 			<title>Flow Session properties</title>
@@ -422,7 +421,7 @@
 			</caption>
 		</mediaobject>
 		<para>
-			In this illustration a flow execution has been created for the <literal>Book Flight</literal> flow.
+			In this illustration, a flow execution has been created for the <literal>Book Flight</literal> flow.
 			The execution is currently active and the <literal>activeSession</literal> indicates it
 			is in the <literal>Display Seating Chart</literal> state of the <literal>Assign Seats</literal> flow,
 			which was spawned as a subflow from the <literal>Enter Seat Assignments</literal> state.		
@@ -488,7 +487,7 @@
 			Spring Web Flow provides support within the <literal>org.springframework.webflow.test</literal> 
 			package for testing flow executions with JUnit.  This support is provided as convenience but is 
 			entirely optional, as a flow execution is instantiable in any environment with the standard
-			<literal>new</literal> operator.
+			Java <literal>new</literal> operator.
 		</para>
 		<para>
 			The general strategy for testing flows follows:
@@ -595,13 +594,13 @@
 	    			</listitem>
 	    			<listitem>
     					<para>
-							On form submit and successful data binding and validation the search is executed.
+							On form submit and successful data binding and validation, the search is executed.
 					  		After search execution a results view is displayed.
 	    				</para>
 	    			</listitem>
 	    			<listitem>
     					<para>
-							From the results view the user may select a result they wish to browse additional details on
+							From the results view, the user may select a result they wish to browse additional details on
 							or they may request a new search.  On select, the "detail" flow is spawned and 
 							when it finishes the search is re-executed and it's results redisplayed.
 	    				</para>
@@ -641,7 +640,7 @@
 	    			</listitem>
 	    		</orderedlist>
 	    	<para>
-				To assist with writing these assertions Spring Web Flow ships with JUnit-based flow execution 
+				To assist with writing these assertions, Spring Web Flow ships with JUnit-based flow execution 
 				test support within the <literal>org.springframwork.webflow.test</literal> package.
 				These base test classes are indicated below:
 	    	</para>
@@ -741,9 +740,9 @@
     }
         </programlisting>
 	    	<para>
-	    		With a well-written flow execution test passing that covers the controller behavior scenarios 
-	    		possible for your flow you have concrete evidence the flow will execute as expected when 
-	    		deployed in a container.
+	    		With a well-written flow execution test passing that exercises the scenarios 
+	    		possible for your flow, you have concrete evidence the flow will execute as expected when 
+	    		deployed into a container.
 	    	</para>
 			<mediaobject>
 				<imageobject role="fo">
