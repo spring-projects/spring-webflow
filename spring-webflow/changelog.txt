@@ -13,6 +13,7 @@ Package org.springframework.webflow.engine
 
 Package org.springframework.webflow.execution
 * Made the Event class non-final to allow for extension (SWF-330).
+* Now allow multiple conversation containers per session in a manner that supports use in a cluster (SWF-378).
 
 Changes in version 1.0.4 (13.06.2007)
 -------------------------------------
