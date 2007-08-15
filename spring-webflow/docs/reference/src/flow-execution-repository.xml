@@ -15,12 +15,12 @@
 			challenges, as there must exist a stable mechanism for a new request to be associated
 			with an existing execution in the view state that matches what the user expects.  This problem 
 			is more difficult when you consider that many applications require use of browser
-			navigational buttons and their use involves updating local history without 
+			navigational buttons, and use of these buttons involves updating local history without 
 			notifying the server.
 		</para>
 		<para>
 			The problem of flow execution persistence is addressed by Spring Web Flow's <emphasis>flow
-			execution repository subsystem</emphasis>.  In this chapter you will learn how to use the system
+			execution repository subsystem</emphasis>.  In this chapter, you will learn how to use the system
 			to manage the storage of active web conversations in a stable manner.
 		</para>
     </sect1>
@@ -34,9 +34,9 @@
     			<listitem>
     				<para>
 						When a flow execution reaches a <literal>ViewState</literal> it is said to have <emphasis>paused</emphasis>,
-						where it waits in that state for user input to be provided so it can continue.  After pausing the 
+						where it waits in that state for user input to be provided so it can continue.  After pausing, the 
 						<literal>ViewSelection</literal> returned is used to issue a response to the user
-						that provides a vehicle for collecting the required input.
+						that provides a vehicle for collecting the required user input.
 					</para>
 				</listitem>
 				<listitem>
@@ -49,7 +49,7 @@
     		</orderedlist>
     	</para>
     	<para>
-    		Each time an active flow execution is <emphasis>paused</emphasis> it is saved out to a 
+    		Each time an active flow execution is <emphasis>paused</emphasis>, it is saved out to a 
     		repository.  When the next request comes in for that flow execution, it is restored 
     		from the repository, <emphasis>resumed</emphasis>, and continued.  This process continues 
     		until the flow execution reaches an end state, at which time it is removed from the repository.
@@ -83,11 +83,11 @@
     <sect1 id="repository-entry-identity">
     	<title>Flow execution identity</title>
     	<para>
-			When a flow execution is created it marks the start of a new conversation between a browser 
-   			and the server.  As outlined, a new flow execution that is still active after startup
+			When a new flow execution is created, it marks the start of a new conversation between a browser 
+   			and the server.  A new flow execution that is still active after startup
    			processing indicates the start of a conversation that will span more than one request
    			and needs to be persisted.  When this is the case, that flow execution is assigned
-   			an <emphasis>persistent identifer</emphasis> by the repository.  By default the
+   			an <emphasis>persistent identifer</emphasis> by the repository.  By default, the
    			structure of this identifier consists of a two-part composite key.  This key is used
    			by clients to restore the flow execution on subsequent requests.
     	</para>
@@ -114,21 +114,21 @@
     			Together the conversation id plus the continuation id make up the unique two-part
     			<emphasis>flow execution key</emphasis> that identifies a state 
     			of a conversation <emphasis>at a point in time</emphasis>.  By submitting this key 
-    			in a subsequent request a browser can restore the conversation at that point
+    			in a subsequent request, a browser can restore the conversation at that point
     			and <emphasis>continue</emphasis> from there.
 	    	</para>
 	    	<para>
-	    		So on a subsequent request the conversation is resumed by restoring a flow execution
-	    		from the repository using the two-part key.  After event processing if the 
+	    		So on a subsequent request, the conversation is resumed by restoring a flow execution
+	    		from the repository using the two-part key.  After event processing, if the 
 	    		flow execution is still active it is saved back out to the repository.
-	    		At this time a new flow execution key is generated.  By default that key
+	    		At this time a new flow execution key is generated.  By default, that key
 	    		retains the	same <emphasis>conversation identifier</emphasis>, as the same logical 
 	    		conversation is in progress; however the <emphasis>continuation identifier</emphasis>
 	    		changes to provide an index into the state of the flow execution
 	    		at <emphasis>this new point in time</emphasis>.
 	    	</para>
 	    	<para>
-				By submitting this new key in a subsequent request a browser can
+				By submitting this new key in a subsequent request, a browser can
 				restore the conversation at that point and <emphasis>continue</emphasis> from there.
 				This process continues until a flow execution reaches an end state during event processing 
 				signaling the end of the conversation.
@@ -144,8 +144,8 @@
     		resulting in any flow execution continuations associated with the conversation being purged.
     	</para>
     	<para>
-    		Once a conversation has been ended the conversation identifier is no longer valid
-    		and cannot ever be used again.
+    		Once a conversation has ended, the conversation identifier is no longer valid
+    		and can never be used again.
     	</para>
     </sect1>
 	<sect1 id="repository-implementations">

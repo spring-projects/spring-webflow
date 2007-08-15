@@ -74,7 +74,10 @@ Package org.springframework.webflow.test
   Overriding this method is useful for customizing the builder's population of the bean factory local to the
   flow definition (SWF-307).
 
-Changes in version 1.0.3 (24.04.2007)
+Package reference-manual
+* Improved readability of reference manual in several sections (SWF-349).
+
+Changes in version 1.0.3 (19.04.2007)
 -------------------------------------
 
 Package org.springframework.webflow.executor

@@ -242,7 +242,7 @@
             				<entry>
 								Support for working with registries of flow definitions.  Flow 
 								definitions eligible for execution are typically stored in 
-								a registry providing lookup services.
+								a registry that provides lookup services.
             				</entry>
             				<entry>
             					definition.registry
@@ -486,7 +486,7 @@
 		<sect2 id="layer-executor">
 			<title>The Executor Layer</title>
 			<para>
-				Stable higher-layer for driving and coordinating the execution of flow definitions.
+				Stable higher-level layer for driving and coordinating the execution of flow definitions.
 				This layer is decoupled from the more-volatile engine implementation.
 			</para>
 			<para>
@@ -513,7 +513,7 @@
 						<row>
 							<entry>Core</entry>
             				<entry>
-            					Stable, generic flow executor abstractions and support.
+            					Generic flow executor abstractions and support.
             				</entry>
             				<entry>
             					executor,
@@ -619,7 +619,7 @@
 						As described above, some subsystem packages are optional depending on your use of the
 						subsystem.  For example, use of Spring Web Flow	in a Servlet environment entails use of
 						the <literal>ExternalContext</literal> context.servlet package which requires the
-						Servlet API to be in the classpath.  In this case the context.portlet package is not 
+						Servlet API to be in the classpath.  In this case, the context.portlet package is not 
 						used and the Portlet API is not required.
 					</para>
 				</note>
@@ -633,7 +633,7 @@
 	<sect1 id="introduction-support">
 		<title>Support</title>
 		<para>
-			Spring Web Flow 1.x is supported on Spring Framework 1.2.7 or > for the 1.x series and 
+			Spring Web Flow 1.x is supported on Spring Framework 1.2.7 or > for the 1.x series, and 
 			supported on 2.0 or > for the 2.x series.
 		</para>
 		<para>
