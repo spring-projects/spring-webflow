@@ -55,14 +55,9 @@ class RequestControlContextImpl implements RequestControlContext {
 	private static final Log logger = LogFactory.getLog(RequestControlContextImpl.class);
 
 	/**
-	 * The owning flow execution.
+	 * The owning flow execution carrying out this request.
 	 */
 	private FlowExecutionImpl flowExecution;
-
-	/**
-	 * The request scope data map.
-	 */
-	private LocalAttributeMap requestScope = new LocalAttributeMap();
 
 	/**
 	 * A source context for the caller who initiated this request.
@@ -70,19 +65,25 @@ class RequestControlContextImpl implements RequestControlContext {
 	private ExternalContext externalContext;
 
 	/**
-	 * The last event that occured in this request context.
+	 * The request scope data map. Never null, initially empty.
+	 */
+	private LocalAttributeMap requestScope = new LocalAttributeMap();
+
+	/**
+	 * Holder for contextual properties describing the currently executing request; never null, initially empty and
+	 * immutable.
+	 */
+	private AttributeMap attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+
+	/**
+	 * The last event that occurred in this request context; initially null.
 	 */
 	private Event lastEvent;
 
 	/**
-	 * The last transition that executed in this request context.
+	 * The last transition that executed in this request context; initially null.
 	 */
 	private Transition lastTransition;
-
-	/**
-	 * Holder for contextual execution properties.
-	 */
-	private AttributeMap attributes;
 
 	/**
 	 * Create a new request context.
@@ -91,8 +92,8 @@ class RequestControlContextImpl implements RequestControlContext {
 	 */
 	public RequestControlContextImpl(FlowExecutionImpl flowExecution, ExternalContext externalContext) {
 		Assert.notNull(flowExecution, "The owning flow execution is required");
-		this.externalContext = externalContext;
 		this.flowExecution = flowExecution;
+		this.externalContext = externalContext;
 	}
 
 	// implementing RequestContext
@@ -224,7 +225,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	// internal helpers
 
 	/**
-	 * Returns the execution listerns for the flow execution of this request context.
+	 * Returns the execution listeners for the flow execution of this request context.
 	 */
 	protected FlowExecutionListeners getExecutionListeners() {
 		return flowExecution.getListeners();
