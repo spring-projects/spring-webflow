@@ -60,9 +60,7 @@ public abstract class DefaultEntityManagerLifecycleController implements EntityM
 	protected void unbind(EntityManager aEntityManager) {
 		synchronized (_entityManagerFactory) {// todo is this need?
 			Assert.isTrue(TransactionSynchronizationManager.hasResource(_entityManagerFactory)); // todo remove this
-																									// code. Resource
-																									// must be already
-																									// present.
+			// code. Resource must be already present.
 			TransactionSynchronizationManager.unbindResource(_entityManagerFactory);
 		}
 	}

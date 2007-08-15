@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @author Maxim Petrashev
  */
 public abstract class AbstractResourceHolder<E> implements ResourceHolder<E>, MethodReplacer {// todo replace on
-																								// injector in config
+	// injector in config
 	@SuppressWarnings("unchecked")
 	public Object reimplement(Object aObj, Method aMethod, Object[] aArgs) throws Throwable {
 		Object retVal = null;

@@ -1,14 +1,6 @@
 package org.springframework.webflow.jpa.hibernate;
 
 import org.springframework.webflow.jpa.DefaultEntityManagerLifecycleController;
-import org.hibernate.FlushMode;
-import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
-import org.hibernate.context.ManagedSessionContext;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 /**
  * Hibernate specific implementation of EntityManagerLifecycleController interface. Set for each new entity manager
@@ -58,13 +50,13 @@ public class EntityManagerLifecycleController extends DefaultEntityManagerLifecy
 	}
 
 	protected void beginTransaction(EntityManager aEntityManager) {// todo is it method need? May be transaction aspect
-																	// has to cover it?
+		// has to cover it?
 		// begin database transaction for taking available connection
 		aEntityManager.getTransaction().begin();
 	}
 
 	protected void disconnectSession(EntityManager aEntityManager) {// todo is it method need? May be transaction aspect
-																	// has to cover it?
+		// has to cover it?
 		EntityTransaction transaction = aEntityManager.getTransaction();
 		transaction.commit();
 		// todo is it need ? aSession.disconnect();
