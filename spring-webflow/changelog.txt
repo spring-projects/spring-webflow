@@ -5,6 +5,9 @@ http://www.springframework.org/webflow
 Changes in version 1.0.5 (21.08.2007)
 -------------------------------------
 
+Package org.springframework.webflow.binding
+* Fixed bug in MapAccessor where accessing a map entry with a null value would result in an exception (SWF-343).
+
 Package org.springframework.webflow.engine
 * Ensured the RequestContext attribute map can never be null (SWF-347).
 

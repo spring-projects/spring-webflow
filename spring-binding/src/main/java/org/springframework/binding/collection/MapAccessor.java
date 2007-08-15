@@ -49,6 +49,15 @@ public class MapAccessor implements MapAdaptable {
 	}
 
 	/**
+	 * Returns a value in the map, returning null if the attribute is not present.
+	 * @param key the key
+	 * @return the value
+	 */
+	public Object get(Object key) {
+		return map.get(key);
+	}
+
+	/**
 	 * Returns a value in the map, returning the defaultValue if no value was found.
 	 * @param key the key
 	 * @param defaultValue the default
@@ -390,7 +399,7 @@ public class MapAccessor implements MapAdaptable {
 	}
 
 	/**
-	 * Assert that value of the mak key is of the required type.
+	 * Assert that value of the map key, if non-null, is of the required type.
 	 * @param key the attribute name
 	 * @param requiredType the required attribute value type
 	 * @return the attribute value
@@ -400,7 +409,7 @@ public class MapAccessor implements MapAdaptable {
 	}
 
 	/**
-	 * Assert that the key value is an instance of the required type.
+	 * Assert that the key value, if non null, is an instance of the required type.
 	 * @param key the key
 	 * @param value the value
 	 * @param requiredType the required type
@@ -408,10 +417,10 @@ public class MapAccessor implements MapAdaptable {
 	 */
 	public Object assertKeyValueInstanceOf(Object key, Object value, Class requiredType) {
 		Assert.notNull(requiredType, "The required type to assert is required");
-		if (!requiredType.isInstance(value)) {
+		if (value != null && !requiredType.isInstance(value)) {
 			throw new IllegalArgumentException("Map key '" + key + "' has value [" + value
 					+ "] that is not of expected type [" + requiredType + "], instead it is of type ["
-					+ (value != null ? value.getClass().getName() : "null") + "]");
+					+ value.getClass().getName() + "]");
 		}
 		return value;
 	}
