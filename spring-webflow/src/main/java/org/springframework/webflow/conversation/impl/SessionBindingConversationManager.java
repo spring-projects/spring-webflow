@@ -24,7 +24,6 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
-import org.springframework.webflow.util.RandomGuid;
 import org.springframework.webflow.util.RandomGuidUidGenerator;
 import org.springframework.webflow.util.UidGenerator;
 
@@ -44,10 +43,14 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private static final Log logger = LogFactory.getLog(SessionBindingConversationManager.class);
 
 	/**
-	 * Generate a unique key for the session attribute holding the conversation container managed by this conversation
-	 * manager.
+	 * The name of the session attribute that will hold the conversation container used by this conversation manager.
+	 * 
+	 * To support multiple independent conversation containers in the same web application, for example, for use with
+	 * multiple flow executors each configured with their own session-binding conversation manager, set this field's
+	 * value to something unique.
+	 * @see #setSessionKey(String)
 	 */
-	private final String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
+	private String sessionKey = "webflow.conversationContainer";
 
 	/**
 	 * The conversation uid generation strategy to use.
@@ -62,7 +65,6 @@ public class SessionBindingConversationManager implements ConversationManager {
 
 	/**
 	 * Returns the used generator for conversation ids. Defaults to {@link RandomGuidUidGenerator}.
-	 * @since 1.0.1
 	 */
 	public UidGenerator getConversationIdGenerator() {
 		return conversationIdGenerator;
@@ -77,7 +79,6 @@ public class SessionBindingConversationManager implements ConversationManager {
 
 	/**
 	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
-	 * @since 1.0.1
 	 */
 	public int getMaxConversations() {
 		return maxConversations;
@@ -91,12 +92,21 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	/**
-	 * Returns the key this conversation manager uses to store conversation data in the session. The key is unique for
-	 * this conversation manager instance.
+	 * Returns the key this conversation manager uses to store conversation data in the session.
 	 * @return the session key
 	 */
 	public String getSessionKey() {
 		return sessionKey;
+	}
+
+	/**
+	 * Sets the key this conversation manager uses to store conversation data in the session. If multiple session
+	 * binding conversation managers are used in the same web application to back independent flow executors, this value
+	 * should be unique among them.
+	 * @param sessionKey the session key
+	 */
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {

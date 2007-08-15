@@ -50,6 +50,7 @@ Package org.springframework.webflow.engine
 Package org.springframework.webflow.execution
 * Added a holder for the FlowExecutionContext of a request (SWF-163).
 * Made the Event class non-final to allow for extension (SWF-330).
+* Now allow multiple conversation containers per session in a manner that supports use in a cluster (SWF-378).
 
 Package org.springframework.webflow.executor
 * JSF integration code now manages flow execution locks properly in exceptional situations and when the

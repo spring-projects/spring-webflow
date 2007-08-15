@@ -87,11 +87,15 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		conversation.putAttribute("testAttribute", "testValue");
 		ConversationId conversationId = conversation.getId();
 		ExternalContextHolder.setExternalContext(null);
+		// simulate write out of session
 		byte[] passiveSession = passivate(externalContext.getSessionMap());
 
+		// simulate start-up of server
+		conversationManager = new SessionBindingConversationManager();
 		String id = conversationId.toString();
 		conversationId = conversationManager.parseConversationId(id);
 
+		// simulate restore of session
 		externalContext.setSessionMap(activate(passiveSession));
 		ExternalContextHolder.setExternalContext(externalContext);
 		Conversation conversation2 = conversationManager.getConversation(conversationId);
@@ -123,6 +127,14 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		}
 		assertNotNull(conversationManager.getConversation(conversation2.getId()));
 		assertNotNull(conversationManager.getConversation(conversation3.getId()));
+	}
+
+	public void testCustomSessionKey() {
+		conversationManager.setSessionKey("foo");
+		MockExternalContext context = new MockExternalContext();
+		ExternalContextHolder.setExternalContext(context);
+		conversationManager.beginConversation(new ConversationParameters("test", "test", "test"));
+		assertNotNull(context.getSessionMap().get("foo"));
 	}
 
 	private byte[] passivate(SharedAttributeMap session) throws Exception {
