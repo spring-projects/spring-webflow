@@ -6,7 +6,7 @@
 	<persistence-unit name="webflow" transaction-type="RESOURCE_LOCAL">
 
 		<!-- Explicitly define mapping file path,-->
-		<mapping-file>org/springframework/webflow/support/persistence/orm.xml</mapping-file>
+		<mapping-file>org/springframework/webflow/persistence/orm.xml</mapping-file>
 
 		<!-- Prevent annotation scanning. In this app we are purely driven by orm.xml -->
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>

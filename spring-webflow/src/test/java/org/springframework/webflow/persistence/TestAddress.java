@@ -1,4 +1,4 @@
-package org.springframework.webflow.support.persistence;
+package org.springframework.webflow.persistence;
 
 public class TestAddress {
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.support.persistence;
+package org.springframework.webflow.persistence;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Interceptor;
@@ -79,9 +79,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 
 	private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
 
-	private TransactionTemplate transactionTemplate;
-
 	private SessionFactory sessionFactory;
+
+	private TransactionTemplate transactionTemplate;
 
 	private Interceptor entityInterceptor;
 
@@ -107,19 +107,19 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		if (isPersistenceContext(session.getDefinition())) {
 			Session hibernateSession = createSession(context);
 			session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
-			bind(hibernateSession, context);
+			bind(hibernateSession);
 		}
 	}
 
 	public void resumed(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			bind(getHibernateSession(context), context);
+			bind(getHibernateSession(context));
 		}
 	}
 
 	public void paused(RequestContext context, ViewSelection selectedView) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getHibernateSession(context), context);
+			unbind(getHibernateSession(context));
 		}
 	}
 
@@ -137,14 +137,14 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 					}
 				});
 			}
-			unbind(hibernateSession, context);
+			unbind(hibernateSession);
 			hibernateSession.close();
 		}
 	}
 
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getHibernateSession(context), context);
+			unbind(getHibernateSession(context));
 		}
 	}
 
@@ -165,11 +165,11 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		return (Session) context.getFlowScope().get(HIBERNATE_SESSION_ATTRIBUTE);
 	}
 
-	private void bind(Session session, RequestContext context) {
+	private void bind(Session session) {
 		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
 	}
 
-	private void unbind(Session session, RequestContext context) {
+	private void unbind(Session session) {
 		if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
 			TransactionSynchronizationManager.unbindResource(sessionFactory);
 		}

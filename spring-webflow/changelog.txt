@@ -2,7 +2,7 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
-Changes in version 2.0-m1 (16.08.2007)
+Changes in version 2.0 M1 (16.08.2007)
 -------------------------------------
 
 Package org.springframework.binding
@@ -64,8 +64,8 @@ Package org.springframework.webflow.executor
 * JSF can now use a FlowSystemCleanupFilter to ensure that no matter what happens in JSF, the request context
   is cleaned up properly (SWF-306).
 
-Package org.springframework.webflow.support
-* Added native support for Hibernate's session-per-conversation pattern (SWF-92).
+Package org.springframework.webflow.persistence
+* Added support for Flow Managed Persistence Contexts with Hibernate and JPA (SWF-92).
 
 Package org.springframework.webflow.test
 * Added the ability to apply multiple listeners to a test case (SWF-334).

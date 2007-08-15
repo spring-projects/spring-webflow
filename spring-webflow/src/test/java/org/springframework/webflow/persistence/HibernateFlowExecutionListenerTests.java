@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.support.persistence;
+package org.springframework.webflow.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -54,7 +54,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 
 	private HibernateTemplate hibernateTemplate;
 
-	private HibernateFlowExecutionListener listener;
+	private HibernateFlowExecutionListener hibernateListener;
 
 	protected void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
@@ -64,25 +64,25 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
 		hibernateTemplate.setCheckWriteOperations(false);
 		HibernateTransactionManager tm = new HibernateTransactionManager(sessionFactory);
-		listener = new HibernateFlowExecutionListener(sessionFactory, tm);
+		hibernateListener = new HibernateFlowExecutionListener(sessionFactory, tm);
 	}
 
 	public void testSameSession() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		// Session created and bound to conversation
 		final Session hibSession = (Session) flowSession.getScope().get("session");
 		assertNotNull("Should have been populated", hibSession);
-		listener.paused(context, ViewSelection.NULL_VIEW);
+		hibernateListener.paused(context, ViewSelection.NULL_VIEW);
 		assertSessionNotBound();
 
 		// Session bound to thread local variable
-		listener.resumed(context);
+		hibernateListener.resumed(context);
 		assertSessionBound();
 
 		hibernateTemplate.execute(new HibernateCallback() {
@@ -91,14 +91,14 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 				return null;
 			}
 		}, true);
-		listener.paused(context, ViewSelection.NULL_VIEW);
+		hibernateListener.paused(context, ViewSelection.NULL_VIEW);
 		assertSessionNotBound();
 	}
 
 	public void testFlowNotAPersistenceContext() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		assertSessionNotBound();
 	}
 
@@ -107,7 +107,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -119,7 +119,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		endState.getAttributeMap().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
-		listener.sessionEnded(context, flowSession, null);
+		hibernateListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
@@ -130,17 +130,17 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean("Keith Donald");
 		hibernateTemplate.save(bean1);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		listener.paused(context, ViewSelection.NULL_VIEW);
+		hibernateListener.paused(context, ViewSelection.NULL_VIEW);
 		assertSessionNotBound();
 
-		listener.resumed(context);
+		hibernateListener.resumed(context);
 		TestBean bean2 = new TestBean("Keith Donald");
 		hibernateTemplate.save(bean2);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
@@ -150,7 +150,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		endState.getAttributeMap().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
-		listener.sessionEnded(context, flowSession, null);
+		hibernateListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
@@ -164,7 +164,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -175,7 +175,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
 		endState.getAttributeMap().put("commit", Boolean.FALSE);
 		flowSession.setState(endState);
-		listener.sessionEnded(context, flowSession, null);
+		hibernateListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
@@ -186,14 +186,14 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
 		flowSession.setState(endState);
 
-		listener.sessionEnded(context, flowSession, null);
+		hibernateListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have three rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
@@ -206,14 +206,14 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean("Keith Donald");
 		hibernateTemplate.save(bean1);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		listener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
+		hibernateListener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
 
@@ -225,7 +225,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
 		assertSessionNotBound();
-		listener.exceptionThrown(context, new FlowExecutionException("foo", "bar", "test"));
+		hibernateListener.exceptionThrown(context, new FlowExecutionException("foo", "bar", "test"));
 		assertSessionNotBound();
 	}
 
@@ -233,13 +233,13 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		listener.sessionCreated(context, flowSession);
+		hibernateListener.sessionCreated(context, flowSession);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		TestBean bean = (TestBean) hibernateTemplate.get(TestBean.class, Long.valueOf(0));
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
-		listener.paused(context, ViewSelection.NULL_VIEW);
+		hibernateListener.paused(context, ViewSelection.NULL_VIEW);
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
 		Hibernate.initialize(bean.getAddresses());
 		assertTrue("addresses should be initialized", Hibernate.isInitialized(bean.getAddresses()));
@@ -287,8 +287,8 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setMappingLocations(new Resource[] {
-				new ClassPathResource("org/springframework/webflow/support/persistence/TestBean.hbm.xml"),
-				new ClassPathResource("org/springframework/webflow/support/persistence/TestAddress.hbm.xml") });
+				new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
+				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
 		factory.afterPropertiesSet();
 		return (SessionFactory) factory.getObject();
 	}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.support.persistence;
+package org.springframework.webflow.persistence;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
