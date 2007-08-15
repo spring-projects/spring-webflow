@@ -28,7 +28,7 @@ public class ExceptionThrowingAction extends AbstractAction {
 
 	protected Event doExecute(RequestContext context) throws Exception {
 		Class exceptionType = Class.forName(context.getAttributes().getString("exceptionType"));
-		throw (Exception)exceptionType.newInstance();
+		throw (Exception) exceptionType.newInstance();
 	}
 
 }

@@ -21,10 +21,8 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 
 /**
- * An abstract adapter class for listeners (observers) of flow execution
- * lifecycle events. The methods in this class are empty. This class exists as
- * convenience for creating listener objects; subclass it and override what you
- * need.
+ * An abstract adapter class for listeners (observers) of flow execution lifecycle events. The methods in this class are
+ * empty. This class exists as convenience for creating listener objects; subclass it and override what you need.
  * 
  * @author Erwin Vervaet
  * @author Keith Donald

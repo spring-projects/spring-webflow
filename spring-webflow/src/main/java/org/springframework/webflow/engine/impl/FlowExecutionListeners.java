@@ -27,8 +27,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A helper that aids in publishing events to an array of
- * <code>FlowExecutionListener</code> objects.
+ * A helper that aids in publishing events to an array of <code>FlowExecutionListener</code> objects.
  * 
  * @see org.springframework.webflow.execution.FlowExecutionListener
  * 
@@ -38,29 +37,25 @@ import org.springframework.webflow.execution.ViewSelection;
 class FlowExecutionListeners {
 
 	/**
-	 * The list of listeners that should receive event callbacks during managed
-	 * flow executions.
+	 * The list of listeners that should receive event callbacks during managed flow executions.
 	 */
 	private FlowExecutionListener[] listeners;
 
 	/**
-	 * Create a flow execution listener helper that wraps an empty listener
-	 * array.
+	 * Create a flow execution listener helper that wraps an empty listener array.
 	 */
 	public FlowExecutionListeners() {
 		this(null);
 	}
 
 	/**
-	 * Create a flow execution listener helper that wraps the specified listener
-	 * array.
+	 * Create a flow execution listener helper that wraps the specified listener array.
 	 * @param listeners the listener array
 	 */
 	public FlowExecutionListeners(FlowExecutionListener[] listeners) {
 		if (listeners != null) {
 			this.listeners = listeners;
-		}
-		else {
+		} else {
 			this.listeners = new FlowExecutionListener[0];
 		}
 	}
@@ -83,8 +78,7 @@ class FlowExecutionListeners {
 	// methods to fire events to all listeners
 
 	/**
-	 * Notify all interested listeners that a request was submitted to the flow
-	 * execution.
+	 * Notify all interested listeners that a request was submitted to the flow execution.
 	 */
 	public void fireRequestSubmitted(RequestContext context) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -93,8 +87,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that the flow execution finished
-	 * processing a request.
+	 * Notify all interested listeners that the flow execution finished processing a request.
 	 */
 	public void fireRequestProcessed(RequestContext context) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -103,8 +96,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a flow execution session is starting
-	 * (about to be created).
+	 * Notify all interested listeners that a flow execution session is starting (about to be created).
 	 */
 	public void fireSessionStarting(RequestContext context, FlowDefinition flow, MutableAttributeMap input) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -113,8 +105,8 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a flow execution session has been
-	 * activated (created, on the stack and about to start).
+	 * Notify all interested listeners that a flow execution session has been activated (created, on the stack and about
+	 * to start).
 	 */
 	public void fireSessionCreated(RequestContext context, FlowSession session) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -123,8 +115,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a flow execution session has
-	 * started (has entered its start state).
+	 * Notify all interested listeners that a flow execution session has started (has entered its start state).
 	 */
 	public void fireSessionStarted(RequestContext context, FlowSession session) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -133,8 +124,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that an event was signaled in the flow
-	 * execution.
+	 * Notify all interested listeners that an event was signaled in the flow execution.
 	 */
 	public void fireEventSignaled(RequestContext context, Event event) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -143,8 +133,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a state is being entered in the flow
-	 * execution.
+	 * Notify all interested listeners that a state is being entered in the flow execution.
 	 */
 	public void fireStateEntering(RequestContext context, StateDefinition nextState) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -153,8 +142,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a state was entered in the flow
-	 * execution.
+	 * Notify all interested listeners that a state was entered in the flow execution.
 	 */
 	public void fireStateEntered(RequestContext context, StateDefinition previousState) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -163,8 +151,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that a flow session was paused in the
-	 * flow execution.
+	 * Notify all interested listeners that a flow session was paused in the flow execution.
 	 */
 	public void firePaused(RequestContext context, ViewSelection selectedView) {
 		for (int i = 0; i < listeners.length; i++) {
@@ -182,8 +169,7 @@ class FlowExecutionListeners {
 	}
 
 	/**
-	 * Notify all interested listeners that the active flow execution session is
-	 * ending.
+	 * Notify all interested listeners that the active flow execution session is ending.
 	 */
 	public void fireSessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
 		for (int i = 0; i < listeners.length; i++) {

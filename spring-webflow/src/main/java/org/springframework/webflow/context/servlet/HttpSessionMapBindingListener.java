@@ -25,9 +25,8 @@ import org.springframework.webflow.core.collection.AttributeMapBindingListener;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 
 /**
- * Helper class that adapts a generic {@link AttributeMapBindingListener} to a
- * HTTP specific {@link HttpSessionBindingListener}. Calls will be forwarded to
- * the wrapped listener.
+ * Helper class that adapts a generic {@link AttributeMapBindingListener} to a HTTP specific
+ * {@link HttpSessionBindingListener}. Calls will be forwarded to the wrapped listener.
  * 
  * @author Keith Donald
  */
@@ -70,8 +69,7 @@ public class HttpSessionMapBindingListener implements HttpSessionBindingListener
 	}
 
 	/**
-	 * Create a attribute map binding event for given HTTP session binding
-	 * event.
+	 * Create a attribute map binding event for given HTTP session binding event.
 	 */
 	private AttributeMapBindingEvent getContextBindingEvent(HttpSessionBindingEvent event) {
 		return new AttributeMapBindingEvent(new LocalAttributeMap(sessionMap), event.getName(), listener);

@@ -29,14 +29,12 @@ import org.springframework.webflow.execution.RequestContext;
 /**
  * An action that will execute an ordered chain of other actions when executed.
  * <p>
- * The event id of the last not-null result returned by the executed actions
- * will be used as the result event id of the composite action. Lacking that,
- * the action will return the "success" event.
+ * The event id of the last not-null result returned by the executed actions will be used as the result event id of the
+ * composite action. Lacking that, the action will return the "success" event.
  * <p>
- * The resulting event will have an "actionResults" event attribute
- * with a list of all events returned by the executed actions, including the null
- * events. This allows you to relate an executed action and its result event by
- * their index in the list.
+ * The resulting event will have an "actionResults" event attribute with a list of all events returned by the executed
+ * actions, including the null events. This allows you to relate an executed action and its result event by their index
+ * in the list.
  * <p>
  * This is the classic GoF composite design pattern.
  * 
@@ -45,8 +43,8 @@ import org.springframework.webflow.execution.RequestContext;
 public class CompositeAction extends AbstractAction {
 
 	/**
-	 * The resulting event whill have an attribute of this name which holds a
-	 * list of all events returned by the executed actions. ("actionResults")
+	 * The resulting event whill have an attribute of this name which holds a list of all events returned by the
+	 * executed actions. ("actionResults")
 	 */
 	public static final String ACTION_RESULTS_ATTRIBUTE_NAME = "actionResults";
 
@@ -85,9 +83,8 @@ public class CompositeAction extends AbstractAction {
 	}
 
 	/**
-	 * Sets the stop on error flag. This determines whether or not execution
-	 * should stop with the first action that returns an error event. In the
-	 * error case, the composite action will also return the "error" event.
+	 * Sets the stop on error flag. This determines whether or not execution should stop with the first action that
+	 * returns an error event. In the error case, the composite action will also return the "error" event.
 	 */
 	public void setStopOnError(boolean stopOnError) {
 		this.stopOnError = stopOnError;

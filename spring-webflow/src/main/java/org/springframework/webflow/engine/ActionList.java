@@ -25,8 +25,7 @@ import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * An ordered, typed list of actions, mainly for use internally by flow artifacts
- * that can execute groups of actions.
+ * An ordered, typed list of actions, mainly for use internally by flow artifacts that can execute groups of actions.
  * 
  * @see Flow#getStartActionList()
  * @see Flow#getEndActionList()
@@ -47,8 +46,7 @@ public class ActionList {
 	/**
 	 * Add an action to this list.
 	 * @param action the action to add
-	 * @return true if this list's contents changed as a result of the add
-	 * operation
+	 * @return true if this list's contents changed as a result of the add operation
 	 */
 	public boolean add(Action action) {
 		return actions.add(action);
@@ -57,8 +55,7 @@ public class ActionList {
 	/**
 	 * Add a collection of actions to this list.
 	 * @param actions the actions to add
-	 * @return true if this list's contents changed as a result of the add
-	 * operation
+	 * @return true if this list's contents changed as a result of the add operation
 	 */
 	public boolean addAll(Action[] actions) {
 		if (actions == null) {
@@ -79,8 +76,7 @@ public class ActionList {
 	/**
 	 * Remove the action instance from this list.
 	 * @param action the action to add
-	 * @return true if this list's contents changed as a result of the remove
-	 * operation
+	 * @return true if this list's contents changed as a result of the remove operation
 	 */
 	public boolean remove(Action action) {
 		return actions.remove(action);
@@ -100,21 +96,19 @@ public class ActionList {
 	 * @return the action the action
 	 */
 	public Action get(int index) throws IndexOutOfBoundsException {
-		return (Action)actions.get(index);
+		return (Action) actions.get(index);
 	}
 
 	/**
-	 * Returns the action in this list at the provided index, exposing it as an
-	 * annotated action. This allows clients to access specific properties about
-	 * a target action instance if they exist.
+	 * Returns the action in this list at the provided index, exposing it as an annotated action. This allows clients to
+	 * access specific properties about a target action instance if they exist.
 	 * @return the action, as an annotated action
 	 */
 	public AnnotatedAction getAnnotated(int index) throws IndexOutOfBoundsException {
 		Action action = get(index);
 		if (action instanceof AnnotatedAction) {
-			return (AnnotatedAction)action;
-		}
-		else {
+			return (AnnotatedAction) action;
+		} else {
 			// wrap the action; no annotations will be available
 			return new AnnotatedAction(action);
 		}
@@ -132,13 +126,12 @@ public class ActionList {
 	 * @return the action list, as a typed array
 	 */
 	public Action[] toArray() {
-		return (Action[])actions.toArray(new Action[actions.size()]);
+		return (Action[]) actions.toArray(new Action[actions.size()]);
 	}
 
 	/**
-	 * Returns the list of actions in this list as a typed annotated action
-	 * array. This is a convenience method allowing clients to access properties
-	 * about an action if they exist.
+	 * Returns the list of actions in this list as a typed annotated action array. This is a convenience method allowing
+	 * clients to access properties about an action if they exist.
 	 * @return the annotated action list, as a typed array
 	 */
 	public AnnotatedAction[] toAnnotatedArray() {
@@ -150,14 +143,14 @@ public class ActionList {
 	}
 
 	/**
-	 * Executes the actions contained within this action list. Simply iterates
-	 * over each action and calls execute. Action result events are ignored.
+	 * Executes the actions contained within this action list. Simply iterates over each action and calls execute.
+	 * Action result events are ignored.
 	 * @param context the action execution request context
 	 */
 	public void execute(RequestContext context) {
 		Iterator it = actions.iterator();
 		while (it.hasNext()) {
-			ActionExecutor.execute((Action)it.next(), context);
+			ActionExecutor.execute((Action) it.next(), context);
 		}
 	}
 

@@ -30,8 +30,7 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * Internal {@link Conversation} implementation used by the conversation
- * container.
+ * Internal {@link Conversation} implementation used by the conversation container.
  * <p>
  * This is an internal helper class of the {@link SessionBindingConversationManager}.
  * 
@@ -68,7 +67,7 @@ class ContainedConversation implements Conversation, Serializable {
 	public void lock() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Locking conversation " + id);
-		}			
+		}
 		lock.lock();
 	}
 
@@ -79,21 +78,21 @@ class ContainedConversation implements Conversation, Serializable {
 	public void putAttribute(Object name, Object value) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Putting conversation attribute '" + name + "' with value " + value);
-		}			
+		}
 		attributes.put(name, value);
 	}
 
 	public void removeAttribute(Object name) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Removing conversation attribute '" + name + "'");
-		}			
+		}
 		attributes.remove(name);
 	}
 
 	public void end() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Ending conversation " + id);
-		}		
+		}
 		container.removeConversation(getId());
 	}
 
@@ -102,7 +101,7 @@ class ContainedConversation implements Conversation, Serializable {
 			logger.debug("Unlocking conversation " + id);
 		}
 		lock.unlock();
-		
+
 		// re-bind the conversation container in the session
 		// this is required to make session replication work correctly in
 		// a clustered environment
@@ -124,7 +123,7 @@ class ContainedConversation implements Conversation, Serializable {
 		if (!(obj instanceof ContainedConversation)) {
 			return false;
 		}
-		return id.equals(((ContainedConversation)obj).id);
+		return id.equals(((ContainedConversation) obj).id);
 	}
 
 	public int hashCode() {

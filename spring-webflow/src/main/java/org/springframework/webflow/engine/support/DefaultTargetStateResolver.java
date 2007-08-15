@@ -25,8 +25,8 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A transition target state resolver that evaluates an expression to resolve
- * the target state. The default implementation.
+ * A transition target state resolver that evaluates an expression to resolve the target state. The default
+ * implementation.
  * 
  * @author Keith Donald
  */
@@ -38,8 +38,7 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 	private Expression targetStateIdExpression;
 
 	/**
-	 * Creates a new target state resolver that always returns the same
-	 * target state id.
+	 * Creates a new target state resolver that always returns the same target state id.
 	 * @param targetStateId the id of the target state
 	 */
 	public DefaultTargetStateResolver(String targetStateId) {
@@ -57,7 +56,7 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 
 	public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
 		String stateId = String.valueOf(targetStateIdExpression.evaluate(context, null));
-		return ((Flow)context.getActiveFlow()).getStateInstance(stateId);
+		return ((Flow) context.getActiveFlow()).getStateInstance(stateId);
 	}
 
 	public String toString() {

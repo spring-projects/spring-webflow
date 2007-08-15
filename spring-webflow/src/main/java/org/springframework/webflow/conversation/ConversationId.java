@@ -18,8 +18,7 @@ package org.springframework.webflow.conversation;
 import java.io.Serializable;
 
 /**
- * An id that uniquely identifies a conversation managed by a
- * {@link ConversationManager}.
+ * An id that uniquely identifies a conversation managed by a {@link ConversationManager}.
  * 
  * @author Ben Hale
  * @author Keith Donald
@@ -27,8 +26,7 @@ import java.io.Serializable;
 public abstract class ConversationId implements Serializable {
 
 	/**
-	 * Subclasses should override toString to return a parseable string form of
-	 * the key.
+	 * Subclasses should override toString to return a parseable string form of the key.
 	 * @see java.lang.Object#toString()
 	 * @see ConversationManager#parseConversationId(String)
 	 */

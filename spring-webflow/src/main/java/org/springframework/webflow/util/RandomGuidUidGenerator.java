@@ -18,8 +18,7 @@ package org.springframework.webflow.util;
 import java.io.Serializable;
 
 /**
- * A key generator that uses the RandomGuid support class. The default
- * implementation used by the webflow system.
+ * A key generator that uses the RandomGuid support class. The default implementation used by the webflow system.
  * 
  * @author Keith Donald
  */
@@ -31,17 +30,15 @@ public class RandomGuidUidGenerator implements UidGenerator, Serializable {
 	private boolean secure;
 
 	/**
-	 * Returns whether or not the generated random numbers are
-	 * <i>secure</i>, meaning cryptographically strong.
+	 * Returns whether or not the generated random numbers are <i>secure</i>, meaning cryptographically strong.
 	 */
 	public boolean isSecure() {
 		return secure;
 	}
 
 	/**
-	 * Sets whether or not the generated random numbers should be
-	 * <i>secure</i>. If set to true, generated GUIDs are cryptographically
-	 * strong.
+	 * Sets whether or not the generated random numbers should be <i>secure</i>. If set to true, generated GUIDs are
+	 * cryptographically strong.
 	 */
 	public void setSecure(boolean secure) {
 		this.secure = secure;

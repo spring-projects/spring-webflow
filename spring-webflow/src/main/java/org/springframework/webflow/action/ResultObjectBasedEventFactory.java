@@ -22,10 +22,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
- * Result object-to-event adapter interface that tries to do a 
- * sensible conversion of the result object into a web flow event.
- * It uses the following conversion table:
- * <table border="1">
+ * Result object-to-event adapter interface that tries to do a sensible conversion of the result object into a web flow
+ * event. It uses the following conversion table: <table border="1">
  * <tr>
  * <th>Result object type</th>
  * <th>Event id</th>
@@ -45,14 +43,12 @@ import org.springframework.webflow.execution.support.EventFactorySupport;
  * <tr>
  * <td>{@link org.springframework.core.enums.LabeledEnum}</td>
  * <td>{@link org.springframework.core.enums.LabeledEnum#getLabel()}</td>
- * <td>The result object will included in the event as an attribute
- * named "result".</td>
+ * <td>The result object will included in the event as an attribute named "result".</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.Enum}</td>
  * <td>{@link java.lang.Enum#name()}</td>
- * <td>The result object will included in the event as an attribute
- * named "result".</td>
+ * <td>The result object will included in the event as an attribute named "result".</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.String}</td>
@@ -70,44 +66,37 @@ import org.springframework.webflow.execution.support.EventFactorySupport;
  * @author Erwin Vervaet
  */
 public class ResultObjectBasedEventFactory extends EventFactorySupport implements ResultEventFactory {
-	
+
 	public Event createResultEvent(Object source, Object resultObject, RequestContext context) {
 		if (resultObject == null) {
 			// this handles the case where the declared result return type is mapped
 			// by this class but the value is null
 			return event(source, getNullEventId());
-		}
-		else if (isBoolean(resultObject.getClass())) {
-			return event(source, ((Boolean)resultObject).booleanValue());
-		}
-		else if (isLabeledEnum(resultObject.getClass())) {
-			String resultId = ((LabeledEnum)resultObject).getLabel();
+		} else if (isBoolean(resultObject.getClass())) {
+			return event(source, ((Boolean) resultObject).booleanValue());
+		} else if (isLabeledEnum(resultObject.getClass())) {
+			String resultId = ((LabeledEnum) resultObject).getLabel();
 			return event(source, resultId, getResultAttributeName(), resultObject);
-		}
-		else if (isJdk5Enum(resultObject.getClass())) {
+		} else if (isJdk5Enum(resultObject.getClass())) {
 			String eventId = EnumNameResolver.getEnumName(resultObject);
 			return event(source, eventId, getResultAttributeName(), resultObject);
-		}
-		else if (isString(resultObject.getClass())) {
-			return event(source, (String)resultObject);
-		}
-		else if (isEvent(resultObject.getClass())) {
-			return (Event)resultObject;
-		}
-		else {
-			throw new IllegalArgumentException("Cannot deal with result object '" + resultObject +
-					"' of type '" + resultObject.getClass() + "'");
+		} else if (isString(resultObject.getClass())) {
+			return event(source, (String) resultObject);
+		} else if (isEvent(resultObject.getClass())) {
+			return (Event) resultObject;
+		} else {
+			throw new IllegalArgumentException("Cannot deal with result object '" + resultObject + "' of type '"
+					+ resultObject.getClass() + "'");
 		}
 	}
 
 	/**
-	 * Check whether or not given type is mapped to a corresponding
-	 * event using special mapping rules.
+	 * Check whether or not given type is mapped to a corresponding event using special mapping rules.
 	 */
 	public boolean isMappedValueType(Class type) {
 		return isBoolean(type) || isLabeledEnum(type) || isJdk5Enum(type) || isString(type) || isEvent(type);
 	}
-	
+
 	// internal helpers to determine the 'type' of a class
 
 	private boolean isBoolean(Class type) {
@@ -121,8 +110,7 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	private boolean isJdk5Enum(Class type) {
 		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
 			return type.isEnum();
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -130,18 +118,17 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	private boolean isString(Class type) {
 		return String.class.equals(type);
 	}
-	
+
 	private boolean isEvent(Class type) {
 		return Event.class.isAssignableFrom(type);
 	}
 
 	/**
-	 * Simple helper class with Java 5 specific code factored out to keep
-	 * the containing class JDK 1.3 compatible.
+	 * Simple helper class with Java 5 specific code factored out to keep the containing class JDK 1.3 compatible.
 	 */
 	private static class EnumNameResolver {
 		public static String getEnumName(Object enumValue) {
-			return ((java.lang.Enum)enumValue).name();
+			return ((java.lang.Enum) enumValue).name();
 		}
 	}
 }

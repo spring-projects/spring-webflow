@@ -69,7 +69,7 @@ public class FormActionBindingTests extends TestCase {
 		assertEquals(0, formActionErrors.getGlobalErrorCount());
 		assertEquals(1, formActionErrors.getFieldErrorCount("prop"));
 	}
-	
+
 	public void testFieldBinding() throws Exception {
 		FormAction formAction = new FormAction() {
 			protected Object createFormObject(RequestContext context) throws Exception {
@@ -78,31 +78,30 @@ public class FormActionBindingTests extends TestCase {
 				res.otherProp = "initialValue";
 				return res;
 			}
-			
+
 			protected void initBinder(RequestContext context, DataBinder binder) {
 				binder.initDirectFieldAccess();
 			}
 		};
 		formAction.setFormObjectName("formObject");
-		
+
 		MockRequestContext context = new MockRequestContext();
-		
+
 		context.setAttribute("method", "setupForm");
 		formAction.execute(context);
 		Errors errors = new FormObjectAccessor(context).getFormErrors("formObject", ScopeType.FLASH);
 		assertNotNull(errors);
 		assertEquals(new Long(-1), errors.getFieldValue("prop"));
-		
-		//this fails because of SWF-193
+
+		// this fails because of SWF-193
 		assertEquals("initialValue", errors.getFieldValue("otherProp"));
-		
+
 		context.putRequestParameter("prop", "1");
 		context.putRequestParameter("otherProp", "value");
 		context.setAttribute("method", "bind");
 		formAction.execute(context);
-		
-		TestBean formObject = (TestBean)
-			new FormObjectAccessor(context).getFormObject("formObject", ScopeType.FLOW);
+
+		TestBean formObject = (TestBean) new FormObjectAccessor(context).getFormObject("formObject", ScopeType.FLOW);
 		errors = new FormObjectAccessor(context).getFormErrors("formObject", ScopeType.FLASH);
 		assertNotNull(formObject);
 		assertEquals(new Long(1), formObject.getProp());

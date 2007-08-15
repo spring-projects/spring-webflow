@@ -22,8 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A utility class for working with attribute and parameter collections used by
- * Spring Web FLow.
+ * A utility class for working with attribute and parameter collections used by Spring Web FLow.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -56,8 +55,7 @@ public class CollectionUtils {
 	}
 
 	/**
-	 * Factory method that returns a unmodifiable attribute map with a single
-	 * entry.
+	 * Factory method that returns a unmodifiable attribute map with a single entry.
 	 * @param attributeName the attribute name
 	 * @param attributeValue the attribute value
 	 * @return the unmodifiable map with a single element
@@ -67,9 +65,8 @@ public class CollectionUtils {
 	}
 
 	/**
-	 * Add all given objects to given target list. No duplicates will be added.
-	 * The contains() method of the given target list will be used to determine
-	 * whether or not an object is already in the list.
+	 * Add all given objects to given target list. No duplicates will be added. The contains() method of the given
+	 * target list will be used to determine whether or not an object is already in the list.
 	 * @param target the collection to which to objects will be added
 	 * @param objects the objects to add
 	 * @return whether or not the target collection changed
@@ -77,8 +74,7 @@ public class CollectionUtils {
 	public static boolean addAllNoDuplicates(List target, Object[] objects) {
 		if (objects == null || objects.length == 0) {
 			return false;
-		}
-		else {
+		} else {
 			boolean changed = false;
 			for (int i = 0; i < objects.length; i++) {
 				if (!target.contains(objects[i])) {
@@ -89,7 +85,7 @@ public class CollectionUtils {
 			return changed;
 		}
 	}
-	
+
 	/**
 	 * Iterator iterating over no elements (hasNext() always returns false).
 	 */

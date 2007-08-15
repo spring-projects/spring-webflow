@@ -54,8 +54,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 			FlowExecution execution = (FlowExecution) base;
 			assertPropertyNameValid(property);
 			return doGetAttributeType(execution, (String) property);
-		}
-		else {
+		} else {
 			return resolverDelegate.getType(base, property);
 		}
 	}
@@ -64,8 +63,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 		if (base instanceof FlowExecution) {
 			// cannot access flow execution by index so we cannot determine type. Return null per JSF spec
 			return null;
-		}
-		else {
+		} else {
 			return resolverDelegate.getType(base, index);
 		}
 	}
@@ -75,8 +73,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 			FlowExecution execution = (FlowExecution) base;
 			assertPropertyNameValid(property);
 			return doGetAttribute(execution, (String) property);
-		}
-		else {
+		} else {
 			return resolverDelegate.getValue(base, property);
 		}
 	}
@@ -84,8 +81,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 	public Object getValue(Object base, int index) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
 			throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
-		}
-		else {
+		} else {
 			return resolverDelegate.getValue(base, index);
 		}
 	}
@@ -93,8 +89,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 	public boolean isReadOnly(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
 			return false;
-		}
-		else {
+		} else {
 			return resolverDelegate.isReadOnly(base, property);
 		}
 	}
@@ -102,8 +97,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 	public boolean isReadOnly(Object base, int index) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
 			return false;
-		}
-		else {
+		} else {
 			return resolverDelegate.isReadOnly(base, index);
 		}
 	}
@@ -114,8 +108,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 			FlowExecution execution = (FlowExecution) base;
 			assertPropertyNameValid(property);
 			doSetAttribute(execution, (String) property, value);
-		}
-		else {
+		} else {
 			resolverDelegate.setValue(base, property, value);
 		}
 	}
@@ -123,8 +116,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 	public void setValue(Object base, int index, Object value) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
 			throw new ReferenceSyntaxException("Cannot apply an index value to a flow execution");
-		}
-		else {
+		} else {
 			resolverDelegate.setValue(base, index, value);
 		}
 	}

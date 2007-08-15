@@ -31,8 +31,8 @@ import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
  * For example, when used in combination with {@link RequestPathFlowExecutorArgumentHandler} the url
  * <code>http://localhost/springair/reservation/booking.html</code> would launch a new execution of the
  * <code>booking-flow</code> flow, assuming a context path of <code>/springair</code>, a servlet mapping of
- * <code>/reservation/*</code> and a flow id mapping of <code>booking-&gt;booking-flow</code>
- * (the .html suffix would be removed by {@link RequestPathFlowExecutorArgumentHandler#extractFlowId(ExternalContext)}.
+ * <code>/reservation/*</code> and a flow id mapping of <code>booking-&gt;booking-flow</code> (the .html suffix
+ * would be removed by {@link RequestPathFlowExecutorArgumentHandler#extractFlowId(ExternalContext)}.
  * 
  * @see RequestParameterFlowExecutorArgumentHandler
  * @see RequestPathFlowExecutorArgumentHandler
@@ -136,8 +136,7 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 	public boolean isFlowIdPresent(ExternalContext context) {
 		if (argumentHandler.isFlowIdPresent(context)) {
 			return fallback || mappings.containsKey(argumentHandler.extractFlowId(context));
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -148,8 +147,7 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 		if (!StringUtils.hasText(flowId)) {
 			if (fallback) {
 				flowId = publicFlowId;
-			}
-			else {
+			} else {
 				throw new FlowExecutorArgumentExtractionException("Unable to extract flow definition id: "
 						+ "no mapping was defined for '" + publicFlowId + "'");
 			}
@@ -179,8 +177,7 @@ public class FlowIdMappingArgumentHandlerWrapper extends FlowExecutorArgumentHan
 		if (!StringUtils.hasText(publicFlowId)) {
 			if (fallback) {
 				publicFlowId = flowDefinitionRedirect.getFlowDefinitionId();
-			}
-			else {
+			} else {
 				// this is a mapping problem
 				throw new IllegalArgumentException("Unable to create a flow definition URL for '"
 						+ flowDefinitionRedirect + "': no reverse mapping was defined for flow id '"

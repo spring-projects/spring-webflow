@@ -42,7 +42,7 @@ public class ClientContinuationFlowExecutionRepositoryTests extends TestCase {
 	private FlowExecution execution;
 
 	private FlowExecutionKey key;
-	
+
 	private FlowExecutionLock lock;
 
 	protected void setUp() throws Exception {
@@ -50,7 +50,8 @@ public class ClientContinuationFlowExecutionRepositoryTests extends TestCase {
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(new SimpleFlow()));
 		execution = new FlowExecutionImplFactory().createFlowExecution(registry.getFlowDefinition("simpleFlow"));
 		FlowExecutionStateRestorer stateRestorer = new FlowExecutionImplStateRestorer(registry);
-		repository = new ClientContinuationFlowExecutionRepository(stateRestorer, new SessionBindingConversationManager());
+		repository = new ClientContinuationFlowExecutionRepository(stateRestorer,
+				new SessionBindingConversationManager());
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
 	}
 
@@ -98,8 +99,7 @@ public class ClientContinuationFlowExecutionRepositoryTests extends TestCase {
 		try {
 			repository.getFlowExecution(key);
 			fail("should've throw nsfee");
-		}
-		catch (NoSuchFlowExecutionException e) {
+		} catch (NoSuchFlowExecutionException e) {
 		}
 		lock.unlock();
 	}

@@ -48,7 +48,7 @@ import org.springframework.webflow.test.MockExternalContext;
  * @author Erwin Vervaet
  */
 public class FlowExecutionContinuationGroupTests extends TestCase {
-	
+
 	public void testUpdateFlowExecution() {
 		FlowExecutionContinuationGroup group = new FlowExecutionContinuationGroup(-1);
 		assertEquals(0, group.getContinuationCount());
@@ -67,7 +67,7 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 		assertSame(continuation1, group.get("1"));
 		assertSame(updatedContinuation2, group.get("2"));
 	}
-	
+
 	public void testUpdateFlowExecutionWithMaxContinuations() {
 		FlowExecutionContinuationGroup group = new FlowExecutionContinuationGroup(2);
 		FlowExecutionContinuation continuation1 = new TestFlowExecutionContinuation();
@@ -88,8 +88,7 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 		try {
 			group.get("1");
 			fail();
-		}
-		catch (ContinuationNotFoundException e) {
+		} catch (ContinuationNotFoundException e) {
 			// expected
 		}
 		assertSame(updatedContinuation2, group.get("2"));
@@ -102,81 +101,79 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 		try {
 			group.get("3");
 			fail();
-		}
-		catch (ContinuationNotFoundException e) {
+		} catch (ContinuationNotFoundException e) {
 			// expected
 		}
 		assertSame(updatedContinuation2, group.get("2"));
 		assertSame(continuation4, group.get("4"));
 	}
-	
+
 	public void testViaFlowExecutor() throws Exception {
 		FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
 		FlowDefinition testFlow = new FlowAssembler("testFlow", new TestFlowBuilder()).assembleFlow();
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(testFlow));
-		
+
 		ConversationManager conversationManager = new SessionBindingConversationManager();
-		
+
 		FlowExecutorFactoryBean flowExecutorFactory = new FlowExecutorFactoryBean();
 		flowExecutorFactory.setDefinitionLocator(registry);
 		flowExecutorFactory.setConversationManager(conversationManager);
 		flowExecutorFactory.afterPropertiesSet();
-		FlowExecutor flowExecutor = (FlowExecutor)flowExecutorFactory.getObject();
+		FlowExecutor flowExecutor = (FlowExecutor) flowExecutorFactory.getObject();
 
 		MockExternalContext externalContext = new MockExternalContext();
-		
+
 		GroupGetter groupGetter = new GroupGetter(registry, conversationManager);
 
-		//obtain continuation group
+		// obtain continuation group
 		ResponseInstruction response = flowExecutor.launch("testFlow", externalContext);
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		FlowExecutionContinuationGroup group = groupGetter.getContinuationGroup(externalContext);
 		assertNotNull(group);
-		
+
 		assertTrue(response.getViewSelection() instanceof FlowExecutionRedirect);
 		assertEquals(1, group.getContinuationCount());
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		response = flowExecutor.refresh(response.getFlowExecutionKey(), externalContext);
-		assertEquals("viewName", ((ApplicationView)response.getViewSelection()).getViewName());
+		assertEquals("viewName", ((ApplicationView) response.getViewSelection()).getViewName());
 		assertEquals(1, group.getContinuationCount());
-		
+
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		response = flowExecutor.resume(response.getFlowExecutionKey(), "next", externalContext);
 		assertTrue(response.getViewSelection() instanceof FlowExecutionRedirect);
 		assertEquals(2, group.getContinuationCount());
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		response = flowExecutor.refresh(response.getFlowExecutionKey(), externalContext);
-		assertEquals("nextViewName", ((ApplicationView)response.getViewSelection()).getViewName());
+		assertEquals("nextViewName", ((ApplicationView) response.getViewSelection()).getViewName());
 		assertEquals(2, group.getContinuationCount());
-		
+
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		response = flowExecutor.refresh(response.getFlowExecutionKey(), externalContext);
-		assertEquals("nextViewName", ((ApplicationView)response.getViewSelection()).getViewName());
+		assertEquals("nextViewName", ((ApplicationView) response.getViewSelection()).getViewName());
 		assertEquals(2, group.getContinuationCount());
 
 		externalContext.putRequestParameter("_flowExecutionKey", response.getFlowExecutionKey());
 		response = flowExecutor.resume(response.getFlowExecutionKey(), "end", externalContext);
-		
+
 		try {
 			groupGetter.getContinuationGroup(externalContext);
 			fail();
-		}
-		catch (NoSuchFlowExecutionException e) {
+		} catch (NoSuchFlowExecutionException e) {
 			// expected
 		}
 	}
-	
+
 	private static class TestFlowExecutionContinuation extends FlowExecutionContinuation {
-		
+
 		public FlowExecution unmarshal() throws ContinuationUnmarshalException {
 			return null;
 		}
-		
+
 		public byte[] toByteArray() {
 			return new byte[0];
 		}
 	}
-	
+
 	private static class TestFlowBuilder extends AbstractFlowBuilder {
 		public void buildStates() throws FlowBuilderException {
 			addViewState("viewState", "viewName", transition(on("next"), to("nextViewState")));
@@ -184,28 +181,26 @@ public class FlowExecutionContinuationGroupTests extends TestCase {
 			addEndState("endState");
 		}
 	}
-	
+
 	private static class GroupGetter extends ContinuationFlowExecutionRepository {
-		
+
 		public GroupGetter(FlowDefinitionLocator definitionLocator, ConversationManager conversationManager) {
 			super(new FlowExecutionImplStateRestorer(definitionLocator), conversationManager);
 		}
-		
+
 		public FlowExecutionContinuationGroup getContinuationGroup(ExternalContext externalContext) {
 			ExternalContextHolder.setExternalContext(externalContext);
 			try {
-				FlowExecutionKey key = parseFlowExecutionKey(
-						new RequestParameterFlowExecutorArgumentHandler().extractFlowExecutionKey(externalContext));
+				FlowExecutionKey key = parseFlowExecutionKey(new RequestParameterFlowExecutorArgumentHandler()
+						.extractFlowExecutionKey(externalContext));
 				FlowExecutionLock lock = getLock(key);
 				lock.lock();
 				try {
 					return getContinuationGroup(key);
-				}
-				finally {
+				} finally {
 					lock.unlock();
 				}
-			}
-			finally {
+			} finally {
 				ExternalContextHolder.setExternalContext(null);
 			}
 		}

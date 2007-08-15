@@ -56,7 +56,7 @@ public class AbstractFlowBuilderTests extends TestCase {
 	private static String PERSON_DETAILS = "person.Detail";
 
 	private AbstractFlowBuilder builder = createBuilder();
-	
+
 	protected AbstractFlowBuilder createBuilder() {
 		return new AbstractFlowBuilder() {
 			public void buildStates() {
@@ -64,7 +64,7 @@ public class AbstractFlowBuilderTests extends TestCase {
 			}
 		};
 	}
-	
+
 	public void testDependencyLookup() {
 		TestMasterFlowBuilderLookupById master = new TestMasterFlowBuilderLookupById();
 		master.setFlowServiceLocator(new BaseFlowServiceLocator() {
@@ -74,8 +74,7 @@ public class AbstractFlowBuilderTests extends TestCase {
 					builder.setFlowServiceLocator(this);
 					FlowAssembler assembler = new FlowAssembler(PERSON_DETAILS, builder);
 					return assembler.assembleFlow();
-				}
-				else {
+				} else {
 					throw new FlowArtifactLookupException(id, Flow.class);
 				}
 			}
@@ -87,8 +86,7 @@ public class AbstractFlowBuilderTests extends TestCase {
 			public FlowAttributeMapper getAttributeMapper(String id) throws FlowArtifactLookupException {
 				if (id.equals("id.attributeMapper")) {
 					return new PersonIdMapper();
-				}
-				else {
+				} else {
 					throw new FlowArtifactLookupException(id, FlowAttributeMapper.class);
 				}
 			}
@@ -115,8 +113,7 @@ public class AbstractFlowBuilderTests extends TestCase {
 			FlowAssembler assembler = new FlowAssembler(PERSONS_LIST, master);
 			assembler.assembleFlow();
 			fail("Should have failed, artifact lookup not supported");
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			// expected
 		}
 	}
@@ -204,20 +201,20 @@ public class AbstractFlowBuilderTests extends TestCase {
 			return new Event(this, "success");
 		}
 	}
-	
+
 	public void testConfigureMultiAction() throws Exception {
 		MultiAction multiAction = new MultiAction(new MultiActionTarget());
 		AnnotatedAction action = builder.invoke("foo", multiAction);
 		assertEquals("foo", action.getAttributeMap().get(AnnotatedAction.METHOD_ATTRIBUTE));
 		assertEquals("success", action.execute(new MockRequestContext()).getId());
 	}
-	
+
 	public static class MultiActionTarget {
 		public Event foo(RequestContext context) {
 			return new Event(this, "success");
 		}
 	}
-	
+
 	public void testEndStateRefresh() {
 		FlowBuilder builder = new AbstractFlowBuilder() {
 			public void buildStates() throws FlowBuilderException {
@@ -226,13 +223,13 @@ public class AbstractFlowBuilderTests extends TestCase {
 		};
 		Flow testFlow = new FlowAssembler("testFlow", builder).assembleFlow();
 		assertTrue(testFlow.getStartState() instanceof EndState);
-		assertTrue(((EndState)testFlow.getStartState()).getViewSelector() instanceof ApplicationViewSelector);
-		assertTrue(((ApplicationViewSelector)((EndState)testFlow.getStartState()).getViewSelector()).isRedirect());
-		
+		assertTrue(((EndState) testFlow.getStartState()).getViewSelector() instanceof ApplicationViewSelector);
+		assertTrue(((ApplicationViewSelector) ((EndState) testFlow.getStartState()).getViewSelector()).isRedirect());
+
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(testFlow);
 		ViewSelection viewSelection = execution.start(null, new MockExternalContext());
 		assertTrue("redirect: should be ignored for end states", viewSelection instanceof ApplicationView);
-		assertEquals("endView", ((ApplicationView)viewSelection).getViewName());
+		assertEquals("endView", ((ApplicationView) viewSelection).getViewName());
 		assertFalse(execution.isActive());
 	}
 }

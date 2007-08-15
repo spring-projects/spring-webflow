@@ -67,8 +67,7 @@ public class FlowVariableResolver extends VariableResolver {
 	public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
 		if (FLOW_SCOPE_VARIABLE.equals(name)) {
 			return FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context);
-		}
-		else {
+		} else {
 			return resolverDelegate.resolveVariable(context, name);
 		}
 	}

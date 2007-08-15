@@ -95,8 +95,7 @@ public class ConditionalFlowExecutionListenerLoaderTests extends TestCase {
 		try {
 			loader.getListeners(null);
 			fail("Should have failed");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 

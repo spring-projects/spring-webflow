@@ -17,7 +17,8 @@ public class FlowPathUtilsTests extends TestCase {
 	}
 
 	public void teswtNamespaceWithComplexNamespace() {
-		assertEquals("Incorrect namespace", "/complex/namespace", FlowPathUtils.extractFlowNamespace("/complex/namespace/flow"));
+		assertEquals("Incorrect namespace", "/complex/namespace", FlowPathUtils
+				.extractFlowNamespace("/complex/namespace/flow"));
 	}
 
 	public void testNamespaceEmpty() {
@@ -93,7 +94,8 @@ public class FlowPathUtilsTests extends TestCase {
 	}
 
 	public void testPathWithComplexNamespace() {
-		assertEquals("Incorrect path", "/complex/namespace/flow", FlowPathUtils.buildFlowPath("/complex/namespace", "flow"));
+		assertEquals("Incorrect path", "/complex/namespace/flow", FlowPathUtils.buildFlowPath("/complex/namespace",
+				"flow"));
 	}
 
 	public void testPathWithNullNamespace() {

@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * @author Keith Donald
  */
 public interface DocumentLoader {
-	
+
 	/**
 	 * Load the XML-based document from the external resource.
 	 * @param resource the document resource

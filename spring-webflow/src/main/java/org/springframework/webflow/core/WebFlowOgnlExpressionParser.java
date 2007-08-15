@@ -25,8 +25,7 @@ import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
- * An extension of {@link OgnlExpressionParser} that registers web flow specific
- * property accessors.
+ * An extension of {@link OgnlExpressionParser} that registers web flow specific property accessors.
  * 
  * @author Keith Donald
  */
@@ -47,7 +46,7 @@ class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	 */
 	private static class MapAdaptablePropertyAccessor implements PropertyAccessor {
 		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
-			return ((MapAdaptable)target).asMap().get(name);
+			return ((MapAdaptable) target).asMap().get(name);
 		}
 
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
@@ -63,7 +62,7 @@ class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	 */
 	private static class MutableAttributeMapPropertyAccessor extends MapAdaptablePropertyAccessor {
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
-			((MutableAttributeMap)target).put((String)name, value);
+			((MutableAttributeMap) target).put((String) name, value);
 		}
 	}
 }

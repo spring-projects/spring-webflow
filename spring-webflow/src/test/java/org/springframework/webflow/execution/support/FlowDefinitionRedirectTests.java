@@ -35,20 +35,20 @@ public class FlowDefinitionRedirectTests extends TestCase {
 		try {
 			redirect.getExecutionInput().put("foo", "bar");
 		} catch (UnsupportedOperationException e) {
-			
+
 		}
 	}
-	
+
 	public void testNullParams() {
 		try {
 			new FlowDefinitionRedirect(null, null);
 			fail("was null");
 		} catch (IllegalArgumentException e) {
-			
+
 		}
 
 	}
-	
+
 	public void testMapLookup() {
 		FlowDefinitionRedirect redirect = new FlowDefinitionRedirect("foo", null);
 		Map map = new HashMap();

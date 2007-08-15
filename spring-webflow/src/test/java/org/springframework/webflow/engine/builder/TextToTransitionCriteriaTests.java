@@ -35,44 +35,43 @@ public class TextToTransitionCriteriaTests extends TestCase {
 
 	public void testAny() {
 		String expression = "*";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
-		
+
 		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert("*"));
 		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert(""));
 	}
 
 	public void testStaticEventId() {
 		String expression = "sample";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
 	public void testTrueEvaluation() throws Exception {
 		String expression = "${flowScope.foo == 'bar'}";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
 	public void testFalseEvaluation() throws Exception {
 		String expression = "${flowScope.foo != 'bar'}";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
 	}
 
 	public void testNonBooleanEvaluation() throws Exception {
 		String expression = "${flowScope.foo}";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		try {
 			criterion.test(ctx);
 			fail("Non-boolean evaluations are not allowed");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// success
 		}
 	}
@@ -82,22 +81,21 @@ public class TextToTransitionCriteriaTests extends TestCase {
 			String expression = "${&foo<<m}";
 			converter.convert(expression);
 			fail("Syntax error should throw ExpressionSyntaxException");
-		}
-		catch (ConversionException ex) {
+		} catch (ConversionException ex) {
 			// success
 		}
 	}
 
 	public void testEventId() throws Exception {
 		String expression = "${lastEvent.id == 'sample'}";
-		TransitionCriteria criterion = (TransitionCriteria)converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 		expression = "${#result == 'sample'}";
-		criterion = (TransitionCriteria)converter.convert(expression);
+		criterion = (TransitionCriteria) converter.convert(expression);
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
-	
+
 	public void testBean() {
 		TransitionCriteria myTransitionCriteria = new TransitionCriteria() {
 			public boolean test(RequestContext context) {
@@ -105,7 +103,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 			}
 		};
 		serviceLocator.registerBean("myTransitionCriteria", myTransitionCriteria);
-		TransitionCriteria criteria = (TransitionCriteria)converter.convert("bean:myTransitionCriteria");
+		TransitionCriteria criteria = (TransitionCriteria) converter.convert("bean:myTransitionCriteria");
 		assertSame(myTransitionCriteria, criteria);
 	}
 

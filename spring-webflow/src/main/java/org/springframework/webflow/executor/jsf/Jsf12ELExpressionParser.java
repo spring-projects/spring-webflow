@@ -14,14 +14,14 @@ import org.springframework.binding.expression.el.ELExpressionParser;
  */
 public class Jsf12ELExpressionParser extends ELExpressionParser {
 
-    public Jsf12ELExpressionParser(ExpressionFactory expressionFactory) {
-	super(expressionFactory, new Jsf12ELContextFactory());
-    }
-
-    private static class Jsf12ELContextFactory extends DefaultELContextFactory {
-	public ELContext getEvaluationContext(Object target) {
-	    return FacesContext.getCurrentInstance().getELContext();
+	public Jsf12ELExpressionParser(ExpressionFactory expressionFactory) {
+		super(expressionFactory, new Jsf12ELContextFactory());
 	}
-    }
+
+	private static class Jsf12ELContextFactory extends DefaultELContextFactory {
+		public ELContext getEvaluationContext(Object target) {
+			return FacesContext.getCurrentInstance().getELContext();
+		}
+	}
 
 }

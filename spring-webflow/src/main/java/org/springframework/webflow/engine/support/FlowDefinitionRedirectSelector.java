@@ -26,9 +26,8 @@ import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 
 /**
- * Makes a {@link FlowDefinitionRedirect} selection when requested, calculating the
- * <code>flowDefinitionId</code> and <code>executionInput</code> by
- * evaluating an expression against the request context.
+ * Makes a {@link FlowDefinitionRedirect} selection when requested, calculating the <code>flowDefinitionId</code> and
+ * <code>executionInput</code> by evaluating an expression against the request context.
  * 
  * @see org.springframework.webflow.execution.support.FlowDefinitionRedirect
  * 
@@ -44,8 +43,8 @@ public class FlowDefinitionRedirectSelector implements ViewSelector {
 
 	/**
 	 * Creates a new launch flow redirect selector.
-	 * @param expression the parsed flow redirect expression, evaluatable to the
-	 * string format: flowDefinitionId?param1Name=parmValue&param2Name=paramValue
+	 * @param expression the parsed flow redirect expression, evaluatable to the string format:
+	 * flowDefinitionId?param1Name=parmValue&param2Name=paramValue
 	 */
 	public FlowDefinitionRedirectSelector(Expression expression) {
 		this.expression = expression;
@@ -56,7 +55,7 @@ public class FlowDefinitionRedirectSelector implements ViewSelector {
 	}
 
 	public ViewSelection makeEntrySelection(RequestContext context) {
-		String encodedRedirect = (String)expression.evaluate(context, null);
+		String encodedRedirect = (String) expression.evaluate(context, null);
 		if (encodedRedirect == null) {
 			throw new IllegalStateException(
 					"Flow definition redirect expression evaluated to [null], the expression was " + expression);
@@ -76,13 +75,11 @@ public class FlowDefinitionRedirectSelector implements ViewSelector {
 				index = nameAndValue.indexOf('=');
 				if (index != -1) {
 					executionInput.put(nameAndValue.substring(0, index), nameAndValue.substring(index + 1));
-				}
-				else {
+				} else {
 					executionInput.put(nameAndValue, "");
 				}
 			}
-		}
-		else {
+		} else {
 			flowDefinitionId = encodedRedirect;
 		}
 		if (!StringUtils.hasText(flowDefinitionId)) {

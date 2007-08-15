@@ -23,8 +23,7 @@ import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * Map backed by the Servlet HTTP request attribute map for accessing request
- * local attributes.
+ * Map backed by the Servlet HTTP request attribute map for accessing request local attributes.
  * 
  * @author Keith Donald
  */

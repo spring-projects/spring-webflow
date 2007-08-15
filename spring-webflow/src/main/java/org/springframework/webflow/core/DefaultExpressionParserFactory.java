@@ -24,7 +24,8 @@ import org.springframework.binding.expression.SettableExpression;
  * Static helper factory that creates instances of the default expression parser used by Spring Web Flow when requested.
  * Marked final with a private constructor to prevent subclassing.
  * <p>
- * The default is an OGNL based expression parser.  Also asserts that OGNL is in the classpath the first time the parser is used.
+ * The default is an OGNL based expression parser. Also asserts that OGNL is in the classpath the first time the parser
+ * is used.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -83,14 +84,12 @@ public final class DefaultExpressionParserFactory {
 		try {
 			Class.forName("ognl.Ognl");
 			return new WebFlowOgnlExpressionParser();
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(
 					"Unable to load the default expression parser: OGNL could not be found in the classpath.  "
 							+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "
 							+ "Details: " + e.getMessage());
-		}
-		catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError e) {
 			throw new IllegalStateException(
 					"Unable to construct the default expression parser: ognl.Ognl could not be instantiated.  "
 							+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "

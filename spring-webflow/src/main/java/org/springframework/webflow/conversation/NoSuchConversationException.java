@@ -16,9 +16,8 @@
 package org.springframework.webflow.conversation;
 
 /**
- * Thrown when no logical conversation exists with the specified
- * <code>conversationId</code>. This might occur if the conversation ended,
- * expired, or was otherwise invalidated, but a client view still references it.
+ * Thrown when no logical conversation exists with the specified <code>conversationId</code>. This might occur if the
+ * conversation ended, expired, or was otherwise invalidated, but a client view still references it.
  * 
  * @author Keith Donald
  */

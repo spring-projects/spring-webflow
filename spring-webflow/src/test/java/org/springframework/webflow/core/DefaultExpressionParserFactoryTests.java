@@ -23,7 +23,7 @@ import org.springframework.binding.expression.ExpressionParser;
  * Unit tests for {@link DefaultExpressionParserFactory}.
  */
 public class DefaultExpressionParserFactoryTests extends TestCase {
-	
+
 	public void testGetDefaultExpressionParser() {
 		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
 		assertNotNull(parser);

@@ -151,7 +151,7 @@ public class JsfExternalContext implements ExternalContext {
 		this.actionId = actionId;
 		this.outcome = outcome;
 	}
-	
+
 	/**
 	 * An accessor of a JSF session map.
 	 * @author Keith Donald

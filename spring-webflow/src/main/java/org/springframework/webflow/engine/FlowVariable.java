@@ -23,9 +23,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * A value object that defines a specification for a flow variable. Encapsulates
- * information about the variable and the behavior necessary to create a new
- * variable instance in a flow execution scope.
+ * A value object that defines a specification for a flow variable. Encapsulates information about the variable and the
+ * behavior necessary to create a new variable instance in a flow execution scope.
  * 
  * @author Keith Donald
  */
@@ -66,14 +65,14 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 	public ScopeType getScope() {
 		return scope;
 	}
-	
+
 	// name and scope based equality
 
 	public boolean equals(Object o) {
 		if (!(o instanceof FlowVariable)) {
 			return false;
 		}
-		FlowVariable other = (FlowVariable)o;
+		FlowVariable other = (FlowVariable) o;
 		return name.equals(other.name) && scope.equals(other.scope);
 	}
 
@@ -90,9 +89,8 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 	}
 
 	/**
-	 * Hook method that needs to be implemented by subclasses to calculate the
-	 * value of this flow variable based on the information available in the
-	 * request context.
+	 * Hook method that needs to be implemented by subclasses to calculate the value of this flow variable based on the
+	 * information available in the request context.
 	 * @param context the flow execution request context
 	 * @return the flow variable value
 	 */

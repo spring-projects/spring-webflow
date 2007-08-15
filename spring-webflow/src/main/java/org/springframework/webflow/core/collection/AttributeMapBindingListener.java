@@ -16,11 +16,9 @@
 package org.springframework.webflow.core.collection;
 
 /**
- * Causes an object to be notified when it is bound or unbound from
- * an {@link AttributeMap}.
+ * Causes an object to be notified when it is bound or unbound from an {@link AttributeMap}.
  * <p>
- * Note that this is an optional feature and not all {@link AttributeMap}
- * implementations support it.
+ * Note that this is an optional feature and not all {@link AttributeMap} implementations support it.
  * 
  * @see AttributeMap
  * 
@@ -29,15 +27,13 @@ package org.springframework.webflow.core.collection;
 public interface AttributeMapBindingListener {
 
 	/**
-	 * Called when the implementing instance is bound into an
-	 * <code>AttributeMap</code>.
+	 * Called when the implementing instance is bound into an <code>AttributeMap</code>.
 	 * @param event information about the binding event
 	 */
 	void valueBound(AttributeMapBindingEvent event);
 
 	/**
-	 * Called when the implementing instance is unbound from an
-	 * <code>AttributeMap</code>.
+	 * Called when the implementing instance is unbound from an <code>AttributeMap</code>.
 	 * @param event information about the unbinding event
 	 */
 	void valueUnbound(AttributeMapBindingEvent event);

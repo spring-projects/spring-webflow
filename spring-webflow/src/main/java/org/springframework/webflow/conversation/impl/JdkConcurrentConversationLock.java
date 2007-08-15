@@ -20,8 +20,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * A conversation lock that relies on a {@link ReentrantLock} within Java 5's
- * <code>util.concurrent.locks</code> package.
+ * A conversation lock that relies on a {@link ReentrantLock} within Java 5's <code>util.concurrent.locks</code>
+ * package.
  * 
  * @author Keith Donald
  */

@@ -22,7 +22,7 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracto
 
 /**
  * An {@link FlowExecutorArgumentExtractor} that is aware of JSF outcomes that communicate requests to launch flow
- * executions and signal event in existing flow executions.  Designed to be used wih a {@link FlowNavigationHandler}.
+ * executions and signal event in existing flow executions. Designed to be used wih a {@link FlowNavigationHandler}.
  * 
  * Note: this class only implements flow id and event id extraction methods. A FlowNavigationHandler is not expected to
  * extract a flow execution key, as flow execution restoration is fully handled by the {@link FlowPhaseListener} and the
@@ -60,8 +60,7 @@ public class FlowNavigationHandlerArgumentExtractor implements FlowExecutorArgum
 		String outcome = getOutcome(context);
 		if (outcome != null && outcome.startsWith(getFlowIdPrefix())) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

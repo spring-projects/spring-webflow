@@ -31,26 +31,26 @@ public class EventIdTransitionCriteriaTests extends TestCase {
 		context.setLastEvent(new Event(this, "bar"));
 		assertEquals(false, c.test(context));
 	}
-	
+
 	public void testNullLastEventId() {
 		EventIdTransitionCriteria c = new EventIdTransitionCriteria("foo");
 		MockRequestContext context = new MockRequestContext();
 		context.setLastEvent(null);
 		assertEquals(false, c.test(context));
 	}
-	
-	public void testIllegalArg(){
+
+	public void testIllegalArg() {
 		try {
 			new EventIdTransitionCriteria(null);
 			fail("was null");
 		} catch (IllegalArgumentException e) {
-			
+
 		}
 		try {
 			new EventIdTransitionCriteria("");
 			fail("was blank");
 		} catch (IllegalArgumentException e) {
-			
+
 		}
 	}
 }

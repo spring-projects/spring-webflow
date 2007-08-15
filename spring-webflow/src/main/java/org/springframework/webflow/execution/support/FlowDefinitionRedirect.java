@@ -22,12 +22,11 @@ import org.springframework.util.Assert;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * Concrete response type that requests that a <i>new</i> execution of a flow
- * definition (representing the start of a new conversation) be launched.
+ * Concrete response type that requests that a <i>new</i> execution of a flow definition (representing the start of a
+ * new conversation) be launched.
  * <p>
- * This allows "redirect to new flow" semantics; useful for restarting a flow
- * after completion, or starting an entirely new flow from within the end state
- * of another flow definition.
+ * This allows "redirect to new flow" semantics; useful for restarting a flow after completion, or starting an entirely
+ * new flow from within the end state of another flow definition.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -66,8 +65,7 @@ public final class FlowDefinitionRedirect extends ViewSelection {
 	}
 
 	/**
-	 * Return the flow execution input map as an unmodifiable map. Never returns
-	 * null.
+	 * Return the flow execution input map as an unmodifiable map. Never returns null.
 	 */
 	public Map getExecutionInput() {
 		return Collections.unmodifiableMap(executionInput);
@@ -77,7 +75,7 @@ public final class FlowDefinitionRedirect extends ViewSelection {
 		if (!(o instanceof FlowDefinitionRedirect)) {
 			return false;
 		}
-		FlowDefinitionRedirect other = (FlowDefinitionRedirect)o;
+		FlowDefinitionRedirect other = (FlowDefinitionRedirect) o;
 		return flowDefinitionId.equals(other.flowDefinitionId) && executionInput.equals(other.executionInput);
 	}
 

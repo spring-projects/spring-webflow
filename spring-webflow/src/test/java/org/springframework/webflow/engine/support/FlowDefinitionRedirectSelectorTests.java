@@ -35,12 +35,12 @@ public class FlowDefinitionRedirectSelectorTests extends TestCase {
 		context.getRequestScope().put("bar", "baz");
 		ViewSelection selection = selector.makeEntrySelection(context);
 		assertTrue(selection instanceof FlowDefinitionRedirect);
-		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect)selection;
+		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect) selection;
 		assertEquals("foo", redirect.getFlowDefinitionId());
 		assertEquals("b", redirect.getExecutionInput().get("a"));
 		assertEquals("baz", redirect.getExecutionInput().get("c"));
 	}
-	
+
 	public void testMakeSelectionInvalidVariable() {
 		Expression exp = parser.parseExpression("${flowScope.flowId}");
 		FlowDefinitionRedirectSelector selector = new FlowDefinitionRedirectSelector(exp);
@@ -49,7 +49,7 @@ public class FlowDefinitionRedirectSelectorTests extends TestCase {
 			ViewSelection selection = selector.makeEntrySelection(context);
 			assertTrue(selection instanceof FlowDefinitionRedirect);
 		} catch (IllegalStateException e) {
-			
+
 		}
 	}
 }

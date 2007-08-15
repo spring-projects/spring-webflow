@@ -44,40 +44,32 @@ import org.springframework.webflow.executor.support.RequestParameterFlowExecutor
 import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
- * Point of integration between Struts and Spring Web Flow: a Struts Action that
- * acts a front controller entry point into the web flow system. A single
- * FlowAction may launch any new FlowExecution. In addition, a single Flow
- * Action may signal events in any existing/restored FlowExecutions.
+ * Point of integration between Struts and Spring Web Flow: a Struts Action that acts a front controller entry point
+ * into the web flow system. A single FlowAction may launch any new FlowExecution. In addition, a single Flow Action may
+ * signal events in any existing/restored FlowExecutions.
  * <p>
- * Requests are managed by and delegated to a {@link FlowExecutor}, which this
- * class delegates to using a {@link FlowRequestHandler} (allowing reuse of
- * common front flow controller logic in other environments). Consult the
+ * Requests are managed by and delegated to a {@link FlowExecutor}, which this class delegates to using a
+ * {@link FlowRequestHandler} (allowing reuse of common front flow controller logic in other environments). Consult the
  * JavaDoc of those classes for more information on how requests are processed.
  * <p>
- * <li>By default, to have this controller launch a new flow execution
- * (conversation), have the client send a
- * {@link FlowExecutorArgumentHandler#getFlowIdArgumentName()} request
- * parameter indicating the flow definition to launch.
- * <li>To have this controller participate in an existing flow execution
- * (conversation), have the client send a
- * {@link FlowExecutorArgumentHandler#getFlowExecutionKeyArgumentName()}
- * request parameter identifying the conversation to participate in.
+ * <li>By default, to have this controller launch a new flow execution (conversation), have the client send a
+ * {@link FlowExecutorArgumentHandler#getFlowIdArgumentName()} request parameter indicating the flow definition to
+ * launch.
+ * <li>To have this controller participate in an existing flow execution (conversation), have the client send a
+ * {@link FlowExecutorArgumentHandler#getFlowExecutionKeyArgumentName()} request parameter identifying the conversation
+ * to participate in.
  * <p>
- * On each request received by this action, a {@link StrutsExternalContext}
- * object is created as input to the web flow system. This external source event
- * provides access to the action form, action mapping, and other Struts-specific
+ * On each request received by this action, a {@link StrutsExternalContext} object is created as input to the web flow
+ * system. This external source event provides access to the action form, action mapping, and other Struts-specific
  * constructs.
  * <p>
- * This class also is aware of the {@link SpringBindingActionForm} adapter,
- * which adapts Spring's data binding infrastructure (based on POJO binding, a
- * standard Errors interface, and property editor type conversion) to the Struts
- * action form model. This option gives backend web-tier developers full support
- * for POJO-based binding with minimal hassel, while still providing consistency
- * to view developers who already have a lot of experience with Struts for
- * markup and request dispatching.
+ * This class also is aware of the {@link SpringBindingActionForm} adapter, which adapts Spring's data binding
+ * infrastructure (based on POJO binding, a standard Errors interface, and property editor type conversion) to the
+ * Struts action form model. This option gives backend web-tier developers full support for POJO-based binding with
+ * minimal hassel, while still providing consistency to view developers who already have a lot of experience with Struts
+ * for markup and request dispatching.
  * <p>
- * Below is an example <code>struts-config.xml</code> configuration for a
- * FlowAction:
+ * Below is an example <code>struts-config.xml</code> configuration for a FlowAction:
  * 
  * <pre>
  *     &lt;action path=&quot;/userRegistration&quot;
@@ -86,43 +78,33 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  *     &lt;/action&gt;
  * </pre>
  * 
- * This example maps the logical request URL <code>/userRegistration.do</code>
- * as a Flow controller (<code>FlowAction</code>). It is expected that flows
- * to launch be provided in a dynamic fashion by the views (allowing this single
- * <code>FlowAction</code> to manage any number of flow executions). A Spring
- * binding action form instance is set in request scope, acting as an adapter
- * enabling POJO-based binding and validation with Spring.
+ * This example maps the logical request URL <code>/userRegistration.do</code> as a Flow controller (<code>FlowAction</code>).
+ * It is expected that flows to launch be provided in a dynamic fashion by the views (allowing this single
+ * <code>FlowAction</code> to manage any number of flow executions). A Spring binding action form instance is set in
+ * request scope, acting as an adapter enabling POJO-based binding and validation with Spring.
  * <p>
  * Other notes regarding Struts/Spring Web Flow integration:
  * <ul>
- * <li>Logical view names returned when <code>ViewStates</code> and
- * <code>EndStates</code> are entered are mapped to physical view templates
- * using standard Struts action forwards (typically global forwards).</li>
- * <li>Use of the <code>SpringBindingActionForm</code> requires no special
- * setup in <code>struts-config.xml</code>: simply declare a form bean in
- * request scope of the class
- * <code>org.springframework.web.struts.SpringBindingActionForm</code> and use
- * it with your FlowAction.</li>
- * <li>This class depends on a {@link FlowExecutor} instance to be configured.
- * If relying on Spring's {@link DelegatingActionProxy} (which is recommended),
- * a FlowExecutor reference can simply be injected using standard Spring
- * dependency injection techniques. If you are not using the proxy-based
- * approach, this class will attempt a root context lookup on initialization,
- * first querying for a bean of instance {@link FlowExecutor} named
+ * <li>Logical view names returned when <code>ViewStates</code> and <code>EndStates</code> are entered are mapped
+ * to physical view templates using standard Struts action forwards (typically global forwards).</li>
+ * <li>Use of the <code>SpringBindingActionForm</code> requires no special setup in <code>struts-config.xml</code>:
+ * simply declare a form bean in request scope of the class
+ * <code>org.springframework.web.struts.SpringBindingActionForm</code> and use it with your FlowAction.</li>
+ * <li>This class depends on a {@link FlowExecutor} instance to be configured. If relying on Spring's
+ * {@link DelegatingActionProxy} (which is recommended), a FlowExecutor reference can simply be injected using standard
+ * Spring dependency injection techniques. If you are not using the proxy-based approach, this class will attempt a root
+ * context lookup on initialization, first querying for a bean of instance {@link FlowExecutor} named
  * {@link #FLOW_EXECUTOR_BEAN_NAME}.</li>
- * <li>The
- * {@link org.springframework.webflow.executor.support.FlowExecutorArgumentHandler}
- * used by the FlowAction can be configured in the root context using a bean of
- * name {@link #FLOW_EXECUTOR_ARGUMENT_HANDLER_BEAN_NAME}. If not explicitly
- * specified it will default to a normal
- * {@link org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler}
- * with standard configuration.</li>
+ * <li>The {@link org.springframework.webflow.executor.support.FlowExecutorArgumentHandler} used by the FlowAction can
+ * be configured in the root context using a bean of name {@link #FLOW_EXECUTOR_ARGUMENT_HANDLER_BEAN_NAME}. If not
+ * explicitly specified it will default to a normal
+ * {@link org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler} with standard
+ * configuration.</li>
  * </ul>
  * <p>
- * The benefits here are considerable: developers now have a powerful web flow
- * capability integrated with Struts, with a consistent-approach to POJO-based
- * binding and validation that addresses the proliferation of
- * <code>ActionForm</code> classes found in traditional Struts-based apps.
+ * The benefits here are considerable: developers now have a powerful web flow capability integrated with Struts, with a
+ * consistent-approach to POJO-based binding and validation that addresses the proliferation of <code>ActionForm</code>
+ * classes found in traditional Struts-based apps.
  * 
  * @see org.springframework.webflow.executor.FlowExecutor
  * @see org.springframework.webflow.executor.support.FlowRequestHandler
@@ -135,21 +117,19 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 public class FlowAction extends ActionSupport {
 
 	/**
-	 * The flow executor will be retreived from the application context using
-	 * this bean name if no executor is explicitly set. ("flowExecutor")
+	 * The flow executor will be retreived from the application context using this bean name if no executor is
+	 * explicitly set. ("flowExecutor")
 	 */
 	protected static final String FLOW_EXECUTOR_BEAN_NAME = "flowExecutor";
 
 	/**
-	 * The flow executor argument handler will be retreived from the
-	 * application context using this bean name if no argument handler is
-	 * explicitly set. ("argumentHandler")
+	 * The flow executor argument handler will be retreived from the application context using this bean name if no
+	 * argument handler is explicitly set. ("argumentHandler")
 	 */
 	protected static final String FLOW_EXECUTOR_ARGUMENT_HANDLER_BEAN_NAME = "argumentHandler";
 
 	/**
-	 * The service responsible for launching and signaling Struts-originating
-	 * events in flow executions.
+	 * The service responsible for launching and signaling Struts-originating events in flow executions.
 	 */
 	private FlowExecutor flowExecutor;
 
@@ -194,9 +174,8 @@ public class FlowAction extends ActionSupport {
 		WebApplicationContext context = getWebApplicationContext();
 		if (getFlowExecutor() == null) {
 			if (context.containsBean(FLOW_EXECUTOR_BEAN_NAME)) {
-				setFlowExecutor((FlowExecutor)context.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutor.class));
-			}
-			else {
+				setFlowExecutor((FlowExecutor) context.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutor.class));
+			} else {
 				throw new IllegalStateException("No '" + FLOW_EXECUTOR_BEAN_NAME
 						+ "' bean definition could be found; to use Spring Web Flow with Struts you must "
 						+ "configure this FlowAction with a FlowExecutor");
@@ -204,10 +183,9 @@ public class FlowAction extends ActionSupport {
 		}
 		if (getArgumentHandler() == null) {
 			if (context.containsBean(FLOW_EXECUTOR_ARGUMENT_HANDLER_BEAN_NAME)) {
-				setArgumentHandler((FlowExecutorArgumentHandler)context.getBean(
+				setArgumentHandler((FlowExecutorArgumentHandler) context.getBean(
 						FLOW_EXECUTOR_ARGUMENT_HANDLER_BEAN_NAME, FlowExecutorArgumentHandler.class));
-			}
-			else {
+			} else {
 				// default
 				argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 			}
@@ -222,8 +200,7 @@ public class FlowAction extends ActionSupport {
 	}
 
 	/**
-	 * Factory method that creates a new helper for processing a request into
-	 * this flow controller.
+	 * Factory method that creates a new helper for processing a request into this flow controller.
 	 * @return the controller helper
 	 */
 	protected FlowRequestHandler createRequestHandler() {
@@ -231,25 +208,24 @@ public class FlowAction extends ActionSupport {
 	}
 
 	/**
-	 * Return a Struts ActionForward given a ResponseInstruction. Adds all
-	 * attributes from the ResponseInstruction as request attributes.
+	 * Return a Struts ActionForward given a ResponseInstruction. Adds all attributes from the ResponseInstruction as
+	 * request attributes.
 	 */
-	protected ActionForward toActionForward(final ResponseInstruction responseInstruction,
-			final ActionMapping mapping, final ActionForm form,
-			final HttpServletRequest request, final HttpServletResponse response,
+	protected ActionForward toActionForward(final ResponseInstruction responseInstruction, final ActionMapping mapping,
+			final ActionForm form, final HttpServletRequest request, final HttpServletResponse response,
 			final ExternalContext context) throws Exception {
-		return (ActionForward)new ResponseInstructionHandler() {
+		return (ActionForward) new ResponseInstructionHandler() {
 			protected void handleApplicationView(ApplicationView view) throws Exception {
 				// forward to a view as part of an active conversation
 				Map model = new HashMap(view.getModel());
-				argumentHandler.exposeFlowExecutionContext(
-						responseInstruction.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), model);
+				argumentHandler.exposeFlowExecutionContext(responseInstruction.getFlowExecutionKey(),
+						responseInstruction.getFlowExecutionContext(), model);
 				WebUtils.exposeRequestAttributes(request, model);
 				if (form instanceof SpringBindingActionForm) {
-					SpringBindingActionForm bindingForm = (SpringBindingActionForm)form;
+					SpringBindingActionForm bindingForm = (SpringBindingActionForm) form;
 					// expose the form object and associated errors as the
 					// "current form object" in the request
-					Errors currentErrors = (Errors)model.get(FormObjectAccessor.getCurrentFormErrorsName());
+					Errors currentErrors = (Errors) model.get(FormObjectAccessor.getCurrentFormErrorsName());
 					bindingForm.expose(currentErrors, request);
 				}
 				setResult(findForward(view, mapping));
@@ -263,15 +239,15 @@ public class FlowAction extends ActionSupport {
 
 			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
 				// redirect to active flow execution URL
-				String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(
-						responseInstruction.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), context);
+				String flowExecutionUrl = argumentHandler.createFlowExecutionUrl(responseInstruction
+						.getFlowExecutionKey(), responseInstruction.getFlowExecutionContext(), context);
 				setResult(createRedirectForward(flowExecutionUrl, response));
 			}
 
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
 				// redirect to external URL
-				String externalUrl = argumentHandler.createExternalUrl(
-						redirect, responseInstruction.getFlowExecutionKey(), context);
+				String externalUrl = argumentHandler.createExternalUrl(redirect, responseInstruction
+						.getFlowExecutionKey(), context);
 				setResult(createRedirectForward(externalUrl, response));
 			}
 
@@ -283,8 +259,7 @@ public class FlowAction extends ActionSupport {
 	}
 
 	/**
-	 * Handles a redirect. This implementation simply calls sendRedirect on the
-	 * response object.
+	 * Handles a redirect. This implementation simply calls sendRedirect on the response object.
 	 * @param url the url to redirect to
 	 * @param response the http response
 	 * @return the redirect forward, this implementation returns null
@@ -297,9 +272,8 @@ public class FlowAction extends ActionSupport {
 	}
 
 	/**
-	 * Find an action forward for given application view. If no suitable forward
-	 * is found in the action mapping using the view name as a key, this method
-	 * will create a new action forward using the view name.
+	 * Find an action forward for given application view. If no suitable forward is found in the action mapping using
+	 * the view name as a key, this method will create a new action forward using the view name.
 	 * @param forward the application view to find a forward for
 	 * @param mapping the action mapping to use
 	 * @return the action forward, never null
@@ -313,8 +287,7 @@ public class FlowAction extends ActionSupport {
 			// the 1.2.1 copy constructor would ideally be better to
 			// use, but it is not Struts 1.1 compatible
 			actionForward = new ActionForward(actionForward.getName(), actionForward.getPath(), false);
-		}
-		else {
+		} else {
 			actionForward = new ActionForward(forward.getViewName(), false);
 		}
 		return actionForward;

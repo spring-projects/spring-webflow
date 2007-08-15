@@ -39,12 +39,12 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 	private Flow flowDefinition = new SimpleFlow();
 
 	private boolean starting;
-	
+
 	public void testDefaultFactory() {
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertFalse(execution.isActive());
 	}
-	
+
 	public void testFactoryWithExecutionAttributes() {
 		MutableAttributeMap attributes = new LocalAttributeMap();
 		attributes.put("foo", "bar");
@@ -53,7 +53,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		assertFalse(execution.isActive());
 		assertEquals(attributes, execution.getAttributes());
 	}
-	
+
 	public void testFactoryWithListener() {
 		FlowExecutionListener listener1 = new FlowExecutionListenerAdapter() {
 			public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {

@@ -22,8 +22,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 
 /**
- * Mock implementation of the <code>FlowExecutionListener</code> interface for
- * use in unit tests.
+ * Mock implementation of the <code>FlowExecutionListener</code> interface for use in unit tests.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -31,7 +30,7 @@ import org.springframework.webflow.definition.StateDefinition;
 public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	private boolean sessionStarting;
-	
+
 	private boolean started;
 
 	private boolean executing;
@@ -49,11 +48,11 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	private int eventsSignaled;
 
 	private boolean stateEntering;
-	
+
 	private int stateTransitions;
 
 	private boolean sessionEnding;
-	
+
 	private int exceptionsThrown;
 
 	/**
@@ -78,17 +77,16 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	/**
-	 * Returns the nesting level of the currently active flow in the flow
-	 * execution. The root flow is at level 0, a sub flow of the root flow is at
-	 * level 1, and so on.
+	 * Returns the nesting level of the currently active flow in the flow execution. The root flow is at level 0, a sub
+	 * flow of the root flow is at level 1, and so on.
 	 */
 	public int getFlowNestingLevel() {
 		return flowNestingLevel;
 	}
 
 	/**
-	 * Checks if a request is in process. A request is in process if it was
-	 * submitted but has not yet completed processing.
+	 * Checks if a request is in process. A request is in process if it was submitted but has not yet completed
+	 * processing.
 	 */
 	public boolean isRequestInProcess() {
 		return requestInProcess;
@@ -144,27 +142,25 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 		sessionStarting = true;
 	}
-	
+
 	public void sessionCreated(RequestContext context, FlowSession session) {
 		Assert.state(sessionStarting, "The session should've been starting...");
 		if (session.isRoot()) {
 			Assert.state(!started, "The flow execution was already started");
 			executing = true;
-		}
-		else {
+		} else {
 			assertStarted();
 			flowNestingLevel++;
-		}	
+		}
 	}
-	
+
 	public void sessionStarted(RequestContext context, FlowSession session) {
 		Assert.state(sessionStarting, "The session should've been starting...");
 		sessionStarting = false;
 		if (session.isRoot()) {
 			Assert.state(!started, "The flow execution was already started");
 			started = true;
-		}
-		else {
+		} else {
 			assertStarted();
 		}
 	}
@@ -202,7 +198,7 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
 		sessionEnding = true;
 	}
-	
+
 	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
 		assertStarted();
 		Assert.state(sessionEnding, "Should have been ending");
@@ -211,8 +207,7 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 			Assert.state(flowNestingLevel == 0, "The flow execution should have ended");
 			started = false;
 			executing = false;
-		}
-		else {
+		} else {
 			flowNestingLevel--;
 			Assert.state(started, "The flow execution prematurely ended");
 		}

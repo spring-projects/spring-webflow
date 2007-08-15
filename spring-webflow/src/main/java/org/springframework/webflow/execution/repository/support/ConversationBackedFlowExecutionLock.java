@@ -20,13 +20,10 @@ import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.execution.repository.FlowExecutionLock;
 
 /**
- * A flow execution lock that locks a conversation managed by a
- * {@link ConversationManager}.
+ * A flow execution lock that locks a conversation managed by a {@link ConversationManager}.
  * <p>
- * This implementation ensures multiple threads cannot manipulate the same
- * conversation at the same time. The locked conversation is the sole gateway to
- * a flow execution, and a lock on it prevents access to any associated
- * execution.
+ * This implementation ensures multiple threads cannot manipulate the same conversation at the same time. The locked
+ * conversation is the sole gateway to a flow execution, and a lock on it prevents access to any associated execution.
  * 
  * @see ConversationManager
  * @see Conversation

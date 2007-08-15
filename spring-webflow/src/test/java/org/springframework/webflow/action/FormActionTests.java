@@ -71,7 +71,7 @@ public class FormActionTests extends TestCase {
 
 	public static class TestBeanValidator implements Validator {
 		private boolean invoked;
-		
+
 		public boolean supports(Class clazz) {
 			return TestBean.class.equals(clazz);
 		}
@@ -119,7 +119,6 @@ public class FormActionTests extends TestCase {
 		map.put("prop", "");
 		return map;
 	}
-
 
 	public void testSetupFormWithExistingFormObject() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
@@ -276,13 +275,13 @@ public class FormActionTests extends TestCase {
 	public void testGetFormObject() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 		FormAction action = createFormAction("test");
-		TestBean formObject = (TestBean)action.getFormObject(context);
+		TestBean formObject = (TestBean) action.getFormObject(context);
 		assertNotNull(formObject);
 		formObject = new TestBean();
 		TestBean testBean = formObject;
 		new FormObjectAccessor(context).putFormObject(formObject, action.getFormObjectName(), action
 				.getFormObjectScope());
-		formObject = (TestBean)action.getFormObject(context);
+		formObject = (TestBean) action.getFormObject(context);
 		assertSame(formObject, testBean);
 	}
 
@@ -335,7 +334,7 @@ public class FormActionTests extends TestCase {
 		assertEquals(action.getEventFactorySupport().getSuccessEventId(), action.setupForm(context).getId());
 
 		Object formObject = getFormObject(context);
-		BindException errors = (BindException)getErrors(context);
+		BindException errors = (BindException) getErrors(context);
 
 		assertTrue(formObject instanceof TestBean);
 		assertTrue(errors.getTarget() instanceof TestBean);
@@ -354,7 +353,7 @@ public class FormActionTests extends TestCase {
 		assertEquals(action.getEventFactorySupport().getSuccessEventId(), otherAction.setupForm(context).getId());
 
 		formObject = context.getFlowScope().get("test");
-		errors = (BindException)getErrors(context);
+		errors = (BindException) getErrors(context);
 
 		assertTrue(formObject instanceof OtherTestBean);
 		assertSame(freshBean, formObject);
@@ -368,13 +367,13 @@ public class FormActionTests extends TestCase {
 
 		FormAction action1 = createFormAction("test1");
 		action1.setupForm(context);
-		TestBean test1 = (TestBean)context.getFlowScope().get("test1");
+		TestBean test1 = (TestBean) context.getFlowScope().get("test1");
 		assertNotNull(test1);
 		assertSame(test1, new FormObjectAccessor(context).getCurrentFormObject());
 
 		FormAction action2 = createFormAction("test2");
 		action2.setupForm(context);
-		TestBean test2 = (TestBean)context.getFlowScope().get("test2");
+		TestBean test2 = (TestBean) context.getFlowScope().get("test2");
 		assertNotNull(test2);
 		assertSame(test2, new FormObjectAccessor(context).getCurrentFormObject());
 
@@ -382,7 +381,7 @@ public class FormActionTests extends TestCase {
 		parameters.put("prop", "12345");
 		context.setExternalContext(new MockExternalContext(parameters));
 		action1.bindAndValidate(context);
-		TestBean test11 = (TestBean)context.getFlowScope().get("test1");
+		TestBean test11 = (TestBean) context.getFlowScope().get("test1");
 		assertSame(test1, test11);
 		assertEquals("12345", test1.getProp());
 		assertSame(test1, new FormObjectAccessor(context).getCurrentFormObject());
@@ -391,7 +390,7 @@ public class FormActionTests extends TestCase {
 		parameters.put("prop", "123456");
 		context.setExternalContext(new MockExternalContext(parameters));
 		action2.bindAndValidate(context);
-		TestBean test22 = (TestBean)context.getFlowScope().get("test2");
+		TestBean test22 = (TestBean) context.getFlowScope().get("test2");
 		assertSame(test22, test2);
 		assertEquals("123456", test2.getProp());
 		assertSame(test2, new FormObjectAccessor(context).getCurrentFormObject());
@@ -414,7 +413,7 @@ public class FormActionTests extends TestCase {
 		assertSame(testBean, getFormObject(context));
 		assertEquals("bla", getFormObject(context).getProp());
 		assertNotNull(getErrors(context));
-		assertSame(testBean, ((BindException)getErrors(context)).getTarget());
+		assertSame(testBean, ((BindException) getErrors(context)).getTarget());
 		assertFalse(getErrors(context).hasErrors());
 	}
 
@@ -431,7 +430,7 @@ public class FormActionTests extends TestCase {
 		result = action.bindAndValidate(context);
 		assertEquals("success", result.getId());
 		assertSame(formObject, action.getFormObject(context));
-		assertEquals(true, ((TestBeanValidator)action.getValidator()).invoked);
+		assertEquals(true, ((TestBeanValidator) action.getValidator()).invoked);
 	}
 
 	public void testFormActionWithValidatorAndNoFormActionClass() throws Exception {
@@ -447,12 +446,12 @@ public class FormActionTests extends TestCase {
 
 		Event result = action.setupForm(context);
 		assertEquals("success", result.getId());
-		
+
 		context.putRequestParameter("prop", "foo");
 		context.getAttributeMap().put("validatorMethod", "validateTestBean");
 		result = action.bindAndValidate(context);
 	}
-	
+
 	// helpers
 
 	private FormAction createFormAction(String formObjectName) {
@@ -479,6 +478,6 @@ public class FormActionTests extends TestCase {
 	}
 
 	private TestBean getFormObject(RequestContext context, String formObjectName) {
-		return (TestBean)context.getFlowScope().get(formObjectName);
+		return (TestBean) context.getFlowScope().get(formObjectName);
 	}
 }

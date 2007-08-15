@@ -27,7 +27,7 @@ public class JsfFlowConfigurationException extends FlowException {
 	public JsfFlowConfigurationException(String msg) {
 		super(msg);
 	}
-	
+
 	public JsfFlowConfigurationException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

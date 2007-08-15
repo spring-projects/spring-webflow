@@ -19,8 +19,8 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 /**
- * A singleton lock that doesn't do anything. For use when conversations don't
- * require or choose not to implement locking.
+ * A singleton lock that doesn't do anything. For use when conversations don't require or choose not to implement
+ * locking.
  * 
  * @author Keith Donald
  */

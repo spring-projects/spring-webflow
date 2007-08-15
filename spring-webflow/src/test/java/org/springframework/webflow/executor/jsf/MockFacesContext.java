@@ -28,15 +28,12 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 
 /**
- * Mock implementation of the <code>FacesContext</code> class to facilitate
- * standalone Action unit tests.
+ * Mock implementation of the <code>FacesContext</code> class to facilitate standalone Action unit tests.
  * <p>
- * NOT intended to be used for anything but standalone unit tests. This is a
- * simple state holder, a <i>stub</i> implementation, at least if you follow <a
- * href="http://www.martinfowler.com/articles/mocksArentStubs.html">Martin
- * Fowler's</a> reasoning. This class is called <i>Mock</i>FacesContext to be
- * consistent with the naming convention in the rest of the Spring framework
- * (e.g. MockHttpServletRequest, ...).
+ * NOT intended to be used for anything but standalone unit tests. This is a simple state holder, a <i>stub</i>
+ * implementation, at least if you follow <a href="http://www.martinfowler.com/articles/mocksArentStubs.html">Martin
+ * Fowler's</a> reasoning. This class is called <i>Mock</i>FacesContext to be consistent with the naming convention in
+ * the rest of the Spring framework (e.g. MockHttpServletRequest, ...).
  * 
  * @see javax.faces.context.FacesContext
  * 

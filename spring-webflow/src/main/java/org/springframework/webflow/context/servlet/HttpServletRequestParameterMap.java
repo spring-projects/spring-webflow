@@ -25,9 +25,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * Map backed by the Servlet HTTP request parameter map for accessing request
- * parameters. Also provides support for multi-part requests, providing
- * transparent access to the request "fileMap" as a request parameter entry.
+ * Map backed by the Servlet HTTP request parameter map for accessing request parameters. Also provides support for
+ * multi-part requests, providing transparent access to the request "fileMap" as a request parameter entry.
  * 
  * @author Keith Donald
  */
@@ -47,7 +46,7 @@ public class HttpServletRequestParameterMap extends StringKeyedMapAdapter {
 
 	protected Object getAttribute(String key) {
 		if (request instanceof MultipartHttpServletRequest) {
-			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			Object data = multipartRequest.getFileMap().get(key);
 			if (data != null) {
 				return data;
@@ -73,13 +72,12 @@ public class HttpServletRequestParameterMap extends StringKeyedMapAdapter {
 
 	protected Iterator getAttributeNames() {
 		if (request instanceof MultipartHttpServletRequest) {
-			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			CompositeIterator iterator = new CompositeIterator();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
 			iterator.add(CollectionUtils.toIterator(request.getParameterNames()));
 			return iterator;
-		}
-		else {
+		} else {
 			return CollectionUtils.toIterator(request.getParameterNames());
 		}
 	}

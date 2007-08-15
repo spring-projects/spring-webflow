@@ -19,15 +19,13 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 /**
- * Abstract base class for value objects that provide callers into a flow
- * execution information about a logical response to issue and the data
- * necessary to issue it.
+ * Abstract base class for value objects that provide callers into a flow execution information about a logical response
+ * to issue and the data necessary to issue it.
  * <p>
- * This class is a generic marker returned when a request into an executing flow
- * has completed processing, indicating a client response needs to be issued. An
- * instance of a ViewSelection subclass represents the selection of a concrete
- * response type. It is expected that callers introspect the returned view
- * selection instance to handle the response types they support.
+ * This class is a generic marker returned when a request into an executing flow has completed processing, indicating a
+ * client response needs to be issued. An instance of a ViewSelection subclass represents the selection of a concrete
+ * response type. It is expected that callers introspect the returned view selection instance to handle the response
+ * types they support.
  * 
  * @see FlowExecution
  * 
@@ -37,14 +35,12 @@ import java.io.Serializable;
 public abstract class ViewSelection implements Serializable {
 
 	/**
-	 * Constant for a <code>null</code> or empty view selection, indicating no
-	 * response should be issued.
+	 * Constant for a <code>null</code> or empty view selection, indicating no response should be issued.
 	 */
 	public static final ViewSelection NULL_VIEW = new NullView();
 
 	/**
-	 * The definition of the 'null' view selection type, indicating that no
-	 * response should be issued.
+	 * The definition of the 'null' view selection type, indicating that no response should be issued.
 	 */
 	private static final class NullView extends ViewSelection {
 

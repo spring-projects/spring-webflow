@@ -41,8 +41,7 @@ public class ActionExecutorTests extends TestCase {
 		try {
 			ActionExecutor.execute(action, new MockRequestContext());
 			fail("Should've failed");
-		}
-		catch (ActionExecutionException e) {
+		} catch (ActionExecutionException e) {
 			assertTrue(e.getCause() instanceof IllegalStateException);
 		}
 	}
@@ -60,8 +59,7 @@ public class ActionExecutorTests extends TestCase {
 		try {
 			ActionExecutor.execute(action, context);
 			fail("Should've failed");
-		}
-		catch (ActionExecutionException e) {
+		} catch (ActionExecutionException e) {
 			assertTrue(e.getCause() instanceof IllegalStateException);
 		}
 	}

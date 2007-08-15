@@ -35,14 +35,14 @@ import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.execution.Action;
 
 /**
- * Flow service locator that searches flow-local registries first before querying the global, externally
- * managed flow service locator.
+ * Flow service locator that searches flow-local registries first before querying the global, externally managed flow
+ * service locator.
  * <p>
- * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}.
- * Package private to highlight it's non-public nature.
- *
+ * Internal helper class of the {@link org.springframework.webflow.engine.builder.xml.XmlFlowBuilder}. Package private
+ * to highlight it's non-public nature.
+ * 
  * @see org.springframework.webflow.engine.builder.xml.XmlFlowBuilder
- *
+ * 
  * @author Keith Donald
  */
 class LocalFlowServiceLocator implements FlowServiceLocator {
@@ -86,14 +86,14 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	 * Pop a registry off the stack.
 	 */
 	public LocalFlowServiceRegistry pop() {
-		return (LocalFlowServiceRegistry)localRegistries.pop();
+		return (LocalFlowServiceRegistry) localRegistries.pop();
 	}
 
 	/**
 	 * Returns the top registry on the stack.
 	 */
 	public LocalFlowServiceRegistry top() {
-		return (LocalFlowServiceRegistry)localRegistries.peek();
+		return (LocalFlowServiceRegistry) localRegistries.peek();
 	}
 
 	/**
@@ -121,54 +121,48 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 
 	public Action getAction(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (Action)getBean(id, Action.class);
-		}
-		else {
+			return (Action) getBean(id, Action.class);
+		} else {
 			return parent.getAction(id);
 		}
 	}
 
 	public FlowAttributeMapper getAttributeMapper(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (FlowAttributeMapper)getBean(id, FlowAttributeMapper.class);
-		}
-		else {
+			return (FlowAttributeMapper) getBean(id, FlowAttributeMapper.class);
+		} else {
 			return parent.getAttributeMapper(id);
 		}
 	}
 
 	public TransitionCriteria getTransitionCriteria(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (TransitionCriteria)getBean(id, TransitionCriteria.class);
-		}
-		else {
+			return (TransitionCriteria) getBean(id, TransitionCriteria.class);
+		} else {
 			return parent.getTransitionCriteria(id);
 		}
 	}
 
 	public TargetStateResolver getTargetStateResolver(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (TargetStateResolver)getBean(id, TargetStateResolver.class);
-		}
-		else {
+			return (TargetStateResolver) getBean(id, TargetStateResolver.class);
+		} else {
 			return parent.getTargetStateResolver(id);
 		}
 	}
 
 	public ViewSelector getViewSelector(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (ViewSelector)getBean(id, ViewSelector.class);
-		}
-		else {
+			return (ViewSelector) getBean(id, ViewSelector.class);
+		} else {
 			return parent.getViewSelector(id);
 		}
 	}
 
 	public FlowExecutionExceptionHandler getExceptionHandler(String id) throws FlowArtifactLookupException {
 		if (containsBean(id)) {
-			return (FlowExecutionExceptionHandler)getBean(id, FlowExecutionExceptionHandler.class);
-		}
-		else {
+			return (FlowExecutionExceptionHandler) getBean(id, FlowExecutionExceptionHandler.class);
+		} else {
 			return parent.getExceptionHandler(id);
 		}
 	}
@@ -212,8 +206,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	protected boolean containsBean(String id) {
 		if (localRegistries.isEmpty()) {
 			return false;
-		}
-		else {
+		} else {
 			return getBeanFactory().containsBean(id);
 		}
 	}
@@ -224,8 +217,7 @@ class LocalFlowServiceLocator implements FlowServiceLocator {
 	protected Object getBean(String id, Class artifactType) throws FlowArtifactLookupException {
 		try {
 			return getBeanFactory().getBean(id, artifactType);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			throw new FlowArtifactLookupException(id, artifactType, e);
 		}
 	}

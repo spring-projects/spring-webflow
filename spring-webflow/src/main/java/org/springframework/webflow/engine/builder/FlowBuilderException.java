@@ -25,7 +25,7 @@ import org.springframework.webflow.core.FlowException;
  * @author Erwin Vervaet
  */
 public class FlowBuilderException extends FlowException {
-	
+
 	/**
 	 * Create a new flow builder exception.
 	 * @param message descriptive message

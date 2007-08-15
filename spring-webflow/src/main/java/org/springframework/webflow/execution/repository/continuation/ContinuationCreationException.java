@@ -19,8 +19,7 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 
 /**
- * Thrown when a continuation snapshot could not be taken of flow execution
- * state.
+ * Thrown when a continuation snapshot could not be taken of flow execution state.
  * 
  * @author Keith Donald
  */

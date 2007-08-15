@@ -22,126 +22,126 @@ import org.apache.shale.test.mock.MockServletContext;
  */
 public class JSFMockHelper {
 
-    private JSFMock mock = new JSFMock();
-
-    public MockApplication application() {
-	return mock.application();
-    }
-
-    public MockServletConfig config() {
-	return mock.config();
-    }
-
-    public MockExternalContext externalContext() {
-	return mock.externalContext();
-    }
-
-    public MockFacesContext facesContext() {
-	return mock.facesContext();
-    }
-
-    public MockFacesContextFactory facesContextFactory() {
-	return mock.facesContextFactory();
-    }
-
-    public MockLifecycle lifecycle() {
-	return mock.lifecycle();
-    }
-
-    public MockLifecycleFactory lifecycleFactory() {
-	return mock.lifecycleFactory();
-    }
-
-    public MockRenderKit renderKit() {
-	return mock.renderKit();
-    }
-
-    public MockHttpServletRequest request() {
-	return mock.request();
-    }
-
-    public MockHttpServletResponse response() {
-	return mock.response();
-    }
-
-    public MockServletContext servletContext() {
-	return mock.servletContext();
-    }
-
-    public MockHttpSession session() {
-	return mock.session();
-    }
-
-    public void setUp() throws Exception {
-	mock.setUp();
-    }
-
-    public void tearDown() throws Exception {
-	mock.tearDown();
-    }
-
-    private static class JSFMock extends AbstractJsfTestCase {
-
-	public JSFMock() {
-	    super("JSFMock");
-	}
-
-	public void setUp() throws Exception {
-	    super.setUp();
-	}
-
-	public void tearDown() throws Exception {
-	    super.tearDown();
-	}
+	private JSFMock mock = new JSFMock();
 
 	public MockApplication application() {
-	    return application;
+		return mock.application();
 	}
 
 	public MockServletConfig config() {
-	    return config;
+		return mock.config();
 	}
 
 	public MockExternalContext externalContext() {
-	    return externalContext;
+		return mock.externalContext();
 	}
 
 	public MockFacesContext facesContext() {
-	    return facesContext;
+		return mock.facesContext();
 	}
 
 	public MockFacesContextFactory facesContextFactory() {
-	    return facesContextFactory;
+		return mock.facesContextFactory();
 	}
 
 	public MockLifecycle lifecycle() {
-	    return lifecycle;
+		return mock.lifecycle();
 	}
 
 	public MockLifecycleFactory lifecycleFactory() {
-	    return lifecycleFactory;
+		return mock.lifecycleFactory();
 	}
 
 	public MockRenderKit renderKit() {
-	    return renderKit;
+		return mock.renderKit();
 	}
 
 	public MockHttpServletRequest request() {
-	    return request;
+		return mock.request();
 	}
 
 	public MockHttpServletResponse response() {
-	    return response;
+		return mock.response();
 	}
 
 	public MockServletContext servletContext() {
-	    return servletContext;
+		return mock.servletContext();
 	}
 
 	public MockHttpSession session() {
-	    return session;
+		return mock.session();
 	}
 
-    }
+	public void setUp() throws Exception {
+		mock.setUp();
+	}
+
+	public void tearDown() throws Exception {
+		mock.tearDown();
+	}
+
+	private static class JSFMock extends AbstractJsfTestCase {
+
+		public JSFMock() {
+			super("JSFMock");
+		}
+
+		public void setUp() throws Exception {
+			super.setUp();
+		}
+
+		public void tearDown() throws Exception {
+			super.tearDown();
+		}
+
+		public MockApplication application() {
+			return application;
+		}
+
+		public MockServletConfig config() {
+			return config;
+		}
+
+		public MockExternalContext externalContext() {
+			return externalContext;
+		}
+
+		public MockFacesContext facesContext() {
+			return facesContext;
+		}
+
+		public MockFacesContextFactory facesContextFactory() {
+			return facesContextFactory;
+		}
+
+		public MockLifecycle lifecycle() {
+			return lifecycle;
+		}
+
+		public MockLifecycleFactory lifecycleFactory() {
+			return lifecycleFactory;
+		}
+
+		public MockRenderKit renderKit() {
+			return renderKit;
+		}
+
+		public MockHttpServletRequest request() {
+			return request;
+		}
+
+		public MockHttpServletResponse response() {
+			return response;
+		}
+
+		public MockServletContext servletContext() {
+			return servletContext;
+		}
+
+		public MockHttpSession session() {
+			return session;
+		}
+
+	}
 
 }

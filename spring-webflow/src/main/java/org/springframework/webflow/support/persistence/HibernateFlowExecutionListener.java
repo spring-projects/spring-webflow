@@ -75,103 +75,103 @@ import org.springframework.webflow.execution.ViewSelection;
  */
 public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-    private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
+	private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
-    private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
+	private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
 
-    private TransactionTemplate transactionTemplate;
+	private TransactionTemplate transactionTemplate;
 
-    private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory;
 
-    private Interceptor entityInterceptor;
+	private Interceptor entityInterceptor;
 
-    /**
-     * Create a new Hibernate Flow Execution Listener using giving Hibernate session factory and transaction manager.
-     * @param sessionFactory the session factory to use
-     * @param transactionManager the transaction manager to drive transactions
-     */
-    public HibernateFlowExecutionListener(SessionFactory sessionFactory, PlatformTransactionManager transactionManager) {
-	this.sessionFactory = sessionFactory;
-	this.transactionTemplate = new TransactionTemplate(transactionManager);
-    }
-
-    /**
-     * Sets the entity interceptor to attach to sessions opened by this listener.
-     * @param entityInterceptor the entity interceptor
-     */
-    public void setEntityInterceptor(Interceptor entityInterceptor) {
-	this.entityInterceptor = entityInterceptor;
-    }
-
-    public void sessionCreated(RequestContext context, FlowSession session) {
-	if (isPersistenceContext(session.getDefinition())) {
-	    Session hibernateSession = createSession(context);
-	    session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
-	    bind(hibernateSession, context);
+	/**
+	 * Create a new Hibernate Flow Execution Listener using giving Hibernate session factory and transaction manager.
+	 * @param sessionFactory the session factory to use
+	 * @param transactionManager the transaction manager to drive transactions
+	 */
+	public HibernateFlowExecutionListener(SessionFactory sessionFactory, PlatformTransactionManager transactionManager) {
+		this.sessionFactory = sessionFactory;
+		this.transactionTemplate = new TransactionTemplate(transactionManager);
 	}
-    }
 
-    public void resumed(RequestContext context) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    bind(getHibernateSession(context), context);
+	/**
+	 * Sets the entity interceptor to attach to sessions opened by this listener.
+	 * @param entityInterceptor the entity interceptor
+	 */
+	public void setEntityInterceptor(Interceptor entityInterceptor) {
+		this.entityInterceptor = entityInterceptor;
 	}
-    }
 
-    public void paused(RequestContext context, ViewSelection selectedView) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    unbind(getHibernateSession(context), context);
+	public void sessionCreated(RequestContext context, FlowSession session) {
+		if (isPersistenceContext(session.getDefinition())) {
+			Session hibernateSession = createSession(context);
+			session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
+			bind(hibernateSession, context);
+		}
 	}
-    }
 
-    public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
-	if (isPersistenceContext(session.getDefinition())) {
-	    final Session hibernateSession = (Session) session.getScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
-	    Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
-	    if (Boolean.TRUE.equals(commitStatus)) {
-		// this is a commit end state - start a new transaction that quickly commits
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-		    protected void doInTransactionWithoutResult(TransactionStatus status) {
-			sessionFactory.getCurrentSession();
-			// nothing to do; a flush will happen on commit automatically as this is a read-write
-			// transaction
-		    }
-		});
-	    }
-	    unbind(hibernateSession, context);
-	    hibernateSession.close();
+	public void resumed(RequestContext context) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			bind(getHibernateSession(context), context);
+		}
 	}
-    }
 
-    public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    unbind(getHibernateSession(context), context);
+	public void paused(RequestContext context, ViewSelection selectedView) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			unbind(getHibernateSession(context), context);
+		}
 	}
-    }
 
-    // internal helpers
-
-    private boolean isPersistenceContext(FlowDefinition flow) {
-	return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
-    }
-
-    private Session createSession(RequestContext context) {
-	Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
-		.openSession());
-	session.setFlushMode(FlushMode.MANUAL);
-	return session;
-    }
-
-    private Session getHibernateSession(RequestContext context) {
-	return (Session) context.getFlowScope().get(HIBERNATE_SESSION_ATTRIBUTE);
-    }
-
-    private void bind(Session session, RequestContext context) {
-	TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-    }
-
-    private void unbind(Session session, RequestContext context) {
-	if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
-	    TransactionSynchronizationManager.unbindResource(sessionFactory);
+	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
+		if (isPersistenceContext(session.getDefinition())) {
+			final Session hibernateSession = (Session) session.getScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
+			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
+			if (Boolean.TRUE.equals(commitStatus)) {
+				// this is a commit end state - start a new transaction that quickly commits
+				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+					protected void doInTransactionWithoutResult(TransactionStatus status) {
+						sessionFactory.getCurrentSession();
+						// nothing to do; a flush will happen on commit automatically as this is a read-write
+						// transaction
+					}
+				});
+			}
+			unbind(hibernateSession, context);
+			hibernateSession.close();
+		}
 	}
-    }
+
+	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			unbind(getHibernateSession(context), context);
+		}
+	}
+
+	// internal helpers
+
+	private boolean isPersistenceContext(FlowDefinition flow) {
+		return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
+	}
+
+	private Session createSession(RequestContext context) {
+		Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
+				.openSession());
+		session.setFlushMode(FlushMode.MANUAL);
+		return session;
+	}
+
+	private Session getHibernateSession(RequestContext context) {
+		return (Session) context.getFlowScope().get(HIBERNATE_SESSION_ATTRIBUTE);
+	}
+
+	private void bind(Session session, RequestContext context) {
+		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+	}
+
+	private void unbind(Session session, RequestContext context) {
+		if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
+			TransactionSynchronizationManager.unbindResource(sessionFactory);
+		}
+	}
 }

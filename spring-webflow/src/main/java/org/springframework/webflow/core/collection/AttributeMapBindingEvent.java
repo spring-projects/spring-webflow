@@ -18,8 +18,7 @@ package org.springframework.webflow.core.collection;
 import java.util.EventObject;
 
 /**
- * Holder for information about the binding or unbinding event in an
- * {@link AttributeMap}.
+ * Holder for information about the binding or unbinding event in an {@link AttributeMap}.
  * 
  * @see AttributeMapBindingListener
  * 
@@ -32,8 +31,7 @@ public class AttributeMapBindingEvent extends EventObject {
 	private Object attributeValue;
 
 	/**
-	 * Creates an event for map binding that contains information about the
-	 * event.
+	 * Creates an event for map binding that contains information about the event.
 	 * @param source the source map that this attribute was bound in
 	 * @param attributeName the name that this attribute was bound with
 	 * @param attributeValue the attribute

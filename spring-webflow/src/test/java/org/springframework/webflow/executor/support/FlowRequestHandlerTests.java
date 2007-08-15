@@ -92,7 +92,7 @@ public class FlowRequestHandlerTests extends TestCase {
 		assertEquals("flow", response.getFlowExecutionContext().getDefinition().getId());
 		assertEquals("view", response.getFlowExecutionContext().getActiveSession().getState().getId());
 	}
-	
+
 	protected TargetStateResolver to(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}

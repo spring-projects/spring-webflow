@@ -24,14 +24,12 @@ public class JSFManagedBean {
 	public void setProp1(String prop1) {
 		this.prop1 = prop1;
 	}
-	
-	public void addValue(String value)
-	{
+
+	public void addValue(String value) {
 		values.add(value);
 	}
-	
-	public List getValues()
-	{
+
+	public List getValues() {
 		return values;
 	}
 }

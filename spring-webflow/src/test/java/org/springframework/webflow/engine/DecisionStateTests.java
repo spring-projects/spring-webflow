@@ -62,12 +62,11 @@ public class DecisionStateTests extends TestCase {
 		try {
 			state.enter(context);
 			fail("Expected no matching");
-		}
-		catch (NoMatchingTransitionException e) {
+		} catch (NoMatchingTransitionException e) {
 
 		}
 	}
-	
+
 	protected TargetStateResolver to(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}

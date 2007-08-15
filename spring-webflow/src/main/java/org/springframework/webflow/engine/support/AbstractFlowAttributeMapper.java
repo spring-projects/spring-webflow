@@ -26,26 +26,25 @@ import org.springframework.webflow.engine.FlowAttributeMapper;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Convenient base class for attribute mapper implementations. Encapsulates
- * common attribute mapper workflow. Contains no state. Subclasses must override
- * the {@link #getInputMapper()} and {@link #getOutputMapper()} methods to
- * return the input mapper and output mapper, respectively.
+ * Convenient base class for attribute mapper implementations. Encapsulates common attribute mapper workflow. Contains
+ * no state. Subclasses must override the {@link #getInputMapper()} and {@link #getOutputMapper()} methods to return the
+ * input mapper and output mapper, respectively.
  * 
  * @author Keith Donald
  */
 public abstract class AbstractFlowAttributeMapper implements FlowAttributeMapper, Serializable {
 
 	/**
-	 * Returns the input mapper to use to map attributes of a parent flow
-	 * {@link RequestContext} to a subflow input attribute {@link AttributeMap map}.
+	 * Returns the input mapper to use to map attributes of a parent flow {@link RequestContext} to a subflow input
+	 * attribute {@link AttributeMap map}.
 	 * @return the input mapper, or null if none
 	 * @see #createFlowInput(RequestContext)
 	 */
 	protected abstract AttributeMapper getInputMapper();
 
 	/**
-	 * Returns the output mapper to use to map attributes from a subflow output
-	 * attribute map to the {@link RequestContext}.
+	 * Returns the output mapper to use to map attributes from a subflow output attribute map to the
+	 * {@link RequestContext}.
 	 * @return the output mapper, or null if none
 	 * @see #mapFlowOutput(AttributeMap, RequestContext)
 	 */
@@ -57,8 +56,7 @@ public abstract class AbstractFlowAttributeMapper implements FlowAttributeMapper
 			// map from request context to input map
 			getInputMapper().map(context, input, getMappingContext(context));
 			return input;
-		}
-		else {
+		} else {
 			// an empty, but modifiable map
 			return new LocalAttributeMap();
 		}
@@ -72,8 +70,7 @@ public abstract class AbstractFlowAttributeMapper implements FlowAttributeMapper
 	}
 
 	/**
-	 * Returns a map of contextual data available during mapping.
-	 * This implementation just returns null.
+	 * Returns a map of contextual data available during mapping. This implementation just returns null.
 	 */
 	protected MappingContext getMappingContext(RequestContext context) {
 		return null;

@@ -43,7 +43,7 @@ public class TextToViewSelectorTests extends TestCase {
 		serviceLocator = new MockFlowServiceLocator();
 		converter = new TextToViewSelector(serviceLocator);
 	}
-	
+
 	public void testNullView() {
 		assertSame(NullViewSelector.INSTANCE, viewSelector(null));
 		assertSame(NullViewSelector.INSTANCE, viewSelector(""));
@@ -52,7 +52,7 @@ public class TextToViewSelectorTests extends TestCase {
 	public void testApplicationView() {
 		ViewSelector selector = viewSelector("myView");
 		RequestContext context = getRequestContext();
-		ApplicationView view = (ApplicationView)selector.makeEntrySelection(context);
+		ApplicationView view = (ApplicationView) selector.makeEntrySelection(context);
 		assertEquals("myView", view.getViewName());
 		assertEquals(5, view.getModel().size());
 	}
@@ -60,10 +60,10 @@ public class TextToViewSelectorTests extends TestCase {
 	public void testFlowExecutionRedirect() {
 		ViewSelector selector = viewSelector("redirect:myView");
 		RequestContext context = getRequestContext();
-		FlowExecutionRedirect redirect = (FlowExecutionRedirect)selector.makeEntrySelection(context);
+		FlowExecutionRedirect redirect = (FlowExecutionRedirect) selector.makeEntrySelection(context);
 		assertSame(redirect, FlowExecutionRedirect.INSTANCE);
 		context.getRequestScope().clear();
-		ApplicationView view = (ApplicationView)selector.makeRefreshSelection(context);
+		ApplicationView view = (ApplicationView) selector.makeRefreshSelection(context);
 		assertEquals("myView", view.getViewName());
 		assertEquals(3, view.getModel().size());
 	}
@@ -71,16 +71,15 @@ public class TextToViewSelectorTests extends TestCase {
 	public void testFlowRedirect() {
 		ViewSelector selector = viewSelector("flowRedirect:myFlow");
 		RequestContext context = getRequestContext();
-		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect)selector.makeEntrySelection(context);
+		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect) selector.makeEntrySelection(context);
 		assertEquals("myFlow", redirect.getFlowDefinitionId());
 		assertEquals(0, redirect.getExecutionInput().size());
 	}
 
 	public void testFlowRedirectWithModel() {
-		ViewSelector selector = viewSelector(
-				"flowRedirect:myFlow?foo=${flowScope.foo}&bar=${requestScope.oven}");
+		ViewSelector selector = viewSelector("flowRedirect:myFlow?foo=${flowScope.foo}&bar=${requestScope.oven}");
 		RequestContext context = getRequestContext();
-		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect)selector.makeEntrySelection(context);
+		FlowDefinitionRedirect redirect = (FlowDefinitionRedirect) selector.makeEntrySelection(context);
 		assertEquals("myFlow", redirect.getFlowDefinitionId());
 		assertEquals(2, redirect.getExecutionInput().size());
 		assertEquals("bar", redirect.getExecutionInput().get("foo"));
@@ -88,23 +87,22 @@ public class TextToViewSelectorTests extends TestCase {
 	}
 
 	public void testExternalRedirect() {
-		ViewSelector selector = viewSelector(
-				"externalRedirect:myUrl.htm?foo=${flowScope.foo}&bar=${requestScope.oven}");
+		ViewSelector selector = viewSelector("externalRedirect:myUrl.htm?foo=${flowScope.foo}&bar=${requestScope.oven}");
 		RequestContext context = getRequestContext();
-		ExternalRedirect view = (ExternalRedirect)selector.makeEntrySelection(context);
+		ExternalRedirect view = (ExternalRedirect) selector.makeEntrySelection(context);
 		assertEquals("myUrl.htm?foo=bar&bar=mit", view.getUrl());
 	}
-	
+
 	public void testBean() {
 		ViewSelector myViewSelector = new ViewSelector() {
 			public boolean isEntrySelectionRenderable(RequestContext context) {
 				return true;
 			}
-			
+
 			public ViewSelection makeEntrySelection(RequestContext context) {
 				return null;
 			}
-			
+
 			public ViewSelection makeRefreshSelection(RequestContext context) {
 				return null;
 			}
@@ -130,6 +128,6 @@ public class TextToViewSelectorTests extends TestCase {
 	 * @return the corresponding view selector
 	 */
 	protected ViewSelector viewSelector(String viewName) {
-		return (ViewSelector)converter.convert(viewName);
+		return (ViewSelector) converter.convert(viewName);
 	}
 }

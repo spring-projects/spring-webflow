@@ -18,13 +18,11 @@ package org.springframework.webflow.context;
 import org.springframework.util.Assert;
 
 /**
- * Simple holder class that associates an {@link ExternalContext} instance with
- * the current thread. The ExternalContext will not be inherited by any child
- * threads spawned by the current thread.
+ * Simple holder class that associates an {@link ExternalContext} instance with the current thread. The ExternalContext
+ * will not be inherited by any child threads spawned by the current thread.
  * <p>
- * Used as a central holder for the current ExternalContext in Spring Web Flow,
- * wherever necessary. Often used by artifacts needing access to the current
- * application session.
+ * Used as a central holder for the current ExternalContext in Spring Web Flow, wherever necessary. Often used by
+ * artifacts needing access to the current application session.
  * 
  * @see ExternalContext
  * 
@@ -36,8 +34,7 @@ public final class ExternalContextHolder {
 
 	/**
 	 * Associate the given ExternalContext with the current thread.
-	 * @param externalContext the current ExternalContext, or <code>null</code>
-	 * to reset the thread-bound context
+	 * @param externalContext the current ExternalContext, or <code>null</code> to reset the thread-bound context
 	 */
 	public static void setExternalContext(ExternalContext externalContext) {
 		externalContextHolder.set(externalContext);
@@ -46,11 +43,11 @@ public final class ExternalContextHolder {
 	/**
 	 * Return the ExternalContext associated with the current thread, if any.
 	 * @return the current ExternalContext
-	 * @throws IllegalStateException if no ExternalContext is bound to this thread 
+	 * @throws IllegalStateException if no ExternalContext is bound to this thread
 	 */
 	public static ExternalContext getExternalContext() {
 		Assert.state(externalContextHolder.get() != null, "No external context is bound to this thread");
-		return (ExternalContext)externalContextHolder.get();
+		return (ExternalContext) externalContextHolder.get();
 	}
 
 	// not instantiable

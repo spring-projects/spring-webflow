@@ -75,90 +75,90 @@ import org.springframework.webflow.execution.ViewSelection;
  */
 public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-    private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
+	private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
-    private static final String ENTITY_MANAGER_ATTRIBUTE = "entityManager";
+	private static final String ENTITY_MANAGER_ATTRIBUTE = "entityManager";
 
-    private EntityManagerFactory entityManagerFactory;
+	private EntityManagerFactory entityManagerFactory;
 
-    private TransactionTemplate transactionTemplate;
+	private TransactionTemplate transactionTemplate;
 
-    /**
-     * Create a new JPA flow execution listener using given JPA Entity Manager factory.
-     * @param entityManagerFactory the entity manager factory to use
-     */
-    public JpaFlowExecutionListener(EntityManagerFactory entityManagerFactory,
-	    PlatformTransactionManager transactionManager) {
-	this.entityManagerFactory = entityManagerFactory;
-	this.transactionTemplate = new TransactionTemplate(transactionManager);
-    }
-
-    public void sessionCreated(RequestContext context, FlowSession session) {
-	if (isPersistenceContext(session.getDefinition())) {
-	    EntityManager em = entityManagerFactory.createEntityManager();
-	    session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
-	    bind(em);
+	/**
+	 * Create a new JPA flow execution listener using given JPA Entity Manager factory.
+	 * @param entityManagerFactory the entity manager factory to use
+	 */
+	public JpaFlowExecutionListener(EntityManagerFactory entityManagerFactory,
+			PlatformTransactionManager transactionManager) {
+		this.entityManagerFactory = entityManagerFactory;
+		this.transactionTemplate = new TransactionTemplate(transactionManager);
 	}
-    }
 
-    public void resumed(RequestContext context) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    bind(getEntityManager(context));
+	public void sessionCreated(RequestContext context, FlowSession session) {
+		if (isPersistenceContext(session.getDefinition())) {
+			EntityManager em = entityManagerFactory.createEntityManager();
+			session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
+			bind(em);
+		}
 	}
-    }
 
-    public void paused(RequestContext context, ViewSelection selectedView) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    unbind(getEntityManager(context));
+	public void resumed(RequestContext context) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			bind(getEntityManager(context));
+		}
 	}
-    }
 
-    public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
-	if (isPersistenceContext(session.getDefinition())) {
-	    final EntityManager em = (EntityManager) session.getScope().remove(ENTITY_MANAGER_ATTRIBUTE);
-	    Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
-	    if (Boolean.TRUE.equals(commitStatus)) {
-		// this is a commit end state - start a new transaction that quickly commits
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-		    protected void doInTransactionWithoutResult(TransactionStatus status) {
-			// necessary for JTA to enlist the entity manager in the transaction
-			try {
-			    em.joinTransaction();
-			} catch (IllegalStateException e) {
-			    // won't be necessary once Spring 2.0.7 is released
+	public void paused(RequestContext context, ViewSelection selectedView) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			unbind(getEntityManager(context));
+		}
+	}
+
+	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
+		if (isPersistenceContext(session.getDefinition())) {
+			final EntityManager em = (EntityManager) session.getScope().remove(ENTITY_MANAGER_ATTRIBUTE);
+			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
+			if (Boolean.TRUE.equals(commitStatus)) {
+				// this is a commit end state - start a new transaction that quickly commits
+				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+					protected void doInTransactionWithoutResult(TransactionStatus status) {
+						// necessary for JTA to enlist the entity manager in the transaction
+						try {
+							em.joinTransaction();
+						} catch (IllegalStateException e) {
+							// won't be necessary once Spring 2.0.7 is released
+						}
+					}
+				});
 			}
-		    }
-		});
-	    }
-	    unbind(em);
-	    em.close();
+			unbind(em);
+			em.close();
+		}
 	}
-    }
 
-    public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-	if (isPersistenceContext(context.getActiveFlow())) {
-	    unbind(getEntityManager(context));
+	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
+		if (isPersistenceContext(context.getActiveFlow())) {
+			unbind(getEntityManager(context));
+		}
 	}
-    }
 
-    // internal helpers
+	// internal helpers
 
-    private boolean isPersistenceContext(FlowDefinition flow) {
-	return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
-    }
-
-    private EntityManager getEntityManager(RequestContext context) {
-	return (EntityManager) context.getFlowScope().get(ENTITY_MANAGER_ATTRIBUTE);
-    }
-
-    private void bind(EntityManager em) {
-	TransactionSynchronizationManager.bindResource(entityManagerFactory, new EntityManagerHolder(em));
-    }
-
-    private void unbind(EntityManager em) {
-	if (TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
-	    TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+	private boolean isPersistenceContext(FlowDefinition flow) {
+		return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
-    }
+
+	private EntityManager getEntityManager(RequestContext context) {
+		return (EntityManager) context.getFlowScope().get(ENTITY_MANAGER_ATTRIBUTE);
+	}
+
+	private void bind(EntityManager em) {
+		TransactionSynchronizationManager.bindResource(entityManagerFactory, new EntityManagerHolder(em));
+	}
+
+	private void unbind(EntityManager em) {
+		if (TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
+			TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+		}
+	}
 
 }

@@ -22,8 +22,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * Concrete response type that requests the rendering of a local, internal
- * application view resource such as a JSP, Velocity, or FreeMarker template.
+ * Concrete response type that requests the rendering of a local, internal application view resource such as a JSP,
+ * Velocity, or FreeMarker template.
  * <p>
  * This is typically the most common type of view selection.
  * 
@@ -33,26 +33,22 @@ import org.springframework.webflow.execution.ViewSelection;
 public final class ApplicationView extends ViewSelection {
 
 	/**
-	 * The name of the view (or page or other response) to render. This name may
-	 * identify a <i>logical</i> view resource or may be a <i>physical</i>
-	 * path to an internal view template.
+	 * The name of the view (or page or other response) to render. This name may identify a <i>logical</i> view
+	 * resource or may be a <i>physical</i> path to an internal view template.
 	 */
 	private final String viewName;
 
 	/**
-	 * A map of the application data to make available to the view for
-	 * rendering.
+	 * A map of the application data to make available to the view for rendering.
 	 */
 	private final Map model;
 
 	/**
 	 * Creates a new application view.
-	 * @param viewName the name (or resource identifier) of the view that should
-	 * be rendered
-	 * @param model the map of application model data to make available to the
-	 * view during rendering; entries consist of model names (Strings) to model
-	 * objects (Objects), model entries may not be null, but the model Map may
-	 * be null if there is no model data
+	 * @param viewName the name (or resource identifier) of the view that should be rendered
+	 * @param model the map of application model data to make available to the view during rendering; entries consist of
+	 * model names (Strings) to model objects (Objects), model entries may not be null, but the model Map may be null if
+	 * there is no model data
 	 */
 	public ApplicationView(String viewName, Map model) {
 		if (model == null) {
@@ -70,8 +66,8 @@ public final class ApplicationView extends ViewSelection {
 	}
 
 	/**
-	 * Return the view's application model that should be made available during
-	 * the rendering process. Never returns null. The returned map is unmodifiable.
+	 * Return the view's application model that should be made available during the rendering process. Never returns
+	 * null. The returned map is unmodifiable.
 	 */
 	public Map getModel() {
 		return Collections.unmodifiableMap(model);
@@ -81,7 +77,7 @@ public final class ApplicationView extends ViewSelection {
 		if (!(o instanceof ApplicationView)) {
 			return false;
 		}
-		ApplicationView other = (ApplicationView)o;
+		ApplicationView other = (ApplicationView) o;
 		return ObjectUtils.nullSafeEquals(viewName, other.viewName) && model.equals(other.model);
 	}
 

@@ -25,8 +25,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * An action that sets an attribute in a {@link ScopeType scope} when executed.
- * Always returns the "success" event.
+ * An action that sets an attribute in a {@link ScopeType scope} when executed. Always returns the "success" event.
  * 
  * @author Keith Donald
  */
@@ -43,7 +42,7 @@ public class SetAction extends AbstractAction {
 	private ScopeType scope;
 
 	/**
-	 * The expression for resolving the scoped attribute value. 
+	 * The expression for resolving the scoped attribute value.
 	 */
 	private Expression valueExpression;
 
@@ -71,8 +70,8 @@ public class SetAction extends AbstractAction {
 	}
 
 	/**
-	 * Template method subclasses may override to customize the expression
-	 * evaluation context. This implementation returns null.
+	 * Template method subclasses may override to customize the expression evaluation context. This implementation
+	 * returns null.
 	 * @param context the request context
 	 * @return the evaluation context
 	 */

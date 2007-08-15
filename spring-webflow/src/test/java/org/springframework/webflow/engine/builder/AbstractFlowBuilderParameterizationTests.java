@@ -27,15 +27,15 @@ import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
- * Test parameterization of flow built using an AbstractFlowBuilder when
- * registering the flows with a FlowDefinitionRegistry.
+ * Test parameterization of flow built using an AbstractFlowBuilder when registering the flows with a
+ * FlowDefinitionRegistry.
  * 
  * @author Erwin Vervaet
  */
 public class AbstractFlowBuilderParameterizationTests extends TestCase {
-	
+
 	private FlowDefinitionRegistry registry;
-	
+
 	protected void setUp() throws Exception {
 		TestFlowRegistryFactoryBean registryFactory = new TestFlowRegistryFactoryBean();
 		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
@@ -44,42 +44,42 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 		registryFactory.afterPropertiesSet();
 		registry = registryFactory.getRegistry();
 	}
-	
+
 	public void testFlowParameterization() {
 		assertEquals(2, registry.getFlowDefinitionCount());
 		assertTrue(registry.containsFlowDefinition("flowA"));
-		Flow flowA = (Flow)registry.getFlowDefinition("flowA");
+		Flow flowA = (Flow) registry.getFlowDefinition("flowA");
 		assertEquals(2, flowA.getAttributes().size());
 		assertEquals("A", flowA.getAttributes().get("name"));
 		assertEquals("someValue", flowA.getAttributes().get("someKey"));
 		assertNull(flowA.getAttributes().get("someOtherKey"));
-		
+
 		assertTrue(registry.containsFlowDefinition("flowB"));
-		Flow flowB = (Flow)registry.getFlowDefinition("flowB");
+		Flow flowB = (Flow) registry.getFlowDefinition("flowB");
 		assertEquals(2, flowB.getAttributes().size());
 		assertEquals("B", flowB.getAttributes().get("name"));
 		assertEquals("someOtherValue", flowB.getAttributes().get("someOtherKey"));
 		assertNull(flowB.getAttributes().get("someKey"));
 	}
-	
+
 	public void testFlowParameterizationAtRuntime() {
-		Flow flowA = (Flow)registry.getFlowDefinition("flowA");
+		Flow flowA = (Flow) registry.getFlowDefinition("flowA");
 		ViewSelection viewSelection = flowA.start(new MockRequestControlContext(flowA), null);
-		assertEquals("A", ((ApplicationView)viewSelection).getViewName());
-		
-		Flow flowB = (Flow)registry.getFlowDefinition("flowB");
+		assertEquals("A", ((ApplicationView) viewSelection).getViewName());
+
+		Flow flowB = (Flow) registry.getFlowDefinition("flowB");
 		viewSelection = flowB.start(new MockRequestControlContext(flowB), null);
-		assertEquals("B", ((ApplicationView)viewSelection).getViewName());
+		assertEquals("B", ((ApplicationView) viewSelection).getViewName());
 	}
-	
+
 	public class TestFlowBuilder extends AbstractFlowBuilder {
-		
+
 		public void buildStates() throws FlowBuilderException {
 			addActionState("test", action("testAction"), transition(on(success()), to("finish")));
 			addEndState("finish", "${activeFlow.attributes['name']}");
 		}
 	}
-	
+
 	public class TestFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
 
 		protected void doPopulate(FlowDefinitionRegistry registry) {
@@ -87,7 +87,7 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 			attributes.put("name", "A");
 			attributes.put("someKey", "someValue");
 			registerFlowDefinition(registry, "flowA", attributes, new TestFlowBuilder());
-			
+
 			attributes = new LocalAttributeMap();
 			attributes.put("name", "B");
 			attributes.put("someOtherKey", "someOtherValue");

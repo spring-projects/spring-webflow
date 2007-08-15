@@ -22,14 +22,11 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.engine.Flow;
 
 /**
- * Abstract base implementation of a flow builder defining common functionality
- * needed by most concrete flow builder implementations. This class implements
- * all optional parts of the FlowBuilder process as no-op methods. Subclasses
- * are only required to implement {@link #init(String, AttributeMap)} and
- * {@link #buildStates()}.
+ * Abstract base implementation of a flow builder defining common functionality needed by most concrete flow builder
+ * implementations. This class implements all optional parts of the FlowBuilder process as no-op methods. Subclasses are
+ * only required to implement {@link #init(String, AttributeMap)} and {@link #buildStates()}.
  * <p>
- * This class also provides a {@link FlowServiceLocator} for use by
- * subclasses in the flow construction process.
+ * This class also provides a {@link FlowServiceLocator} for use by subclasses in the flow construction process.
  * 
  * @see org.springframework.webflow.engine.builder.FlowServiceLocator
  * 
@@ -44,8 +41,7 @@ public abstract class BaseFlowBuilder implements FlowBuilder {
 	private Flow flow;
 
 	/**
-	 * Locates actions, attribute mappers, and other artifacts needed by the
-	 * flow built by this builder.
+	 * Locates actions, attribute mappers, and other artifacts needed by the flow built by this builder.
 	 */
 	private FlowServiceLocator flowServiceLocator;
 
@@ -81,9 +77,8 @@ public abstract class BaseFlowBuilder implements FlowBuilder {
 	}
 
 	/**
-	 * Set the flow being built by this builder. Typically called during
-	 * initialization to set the initial flow reference returned by
-	 * {@link #getFlow()} after building.
+	 * Set the flow being built by this builder. Typically called during initialization to set the initial flow
+	 * reference returned by {@link #getFlow()} after building.
 	 */
 	protected void setFlow(Flow flow) {
 		this.flow = flow;
@@ -127,23 +122,22 @@ public abstract class BaseFlowBuilder implements FlowBuilder {
 	public void dispose() {
 		setFlow(null);
 	}
-	
+
 	// helpers for use in subclasses
 
 	/**
-	 * Returns a conversion executor capable of converting string objects to the
-	 * target class aliased by the provided alias.
+	 * Returns a conversion executor capable of converting string objects to the target class aliased by the provided
+	 * alias.
 	 * @param targetAlias the target class alias, e.g. "long" or "float"
-	 * @return the conversion executor, or <code>null</code> if no suitable
-	 * converter exists for given alias
+	 * @return the conversion executor, or <code>null</code> if no suitable converter exists for given alias
 	 */
 	protected ConversionExecutor fromStringTo(String targetAlias) {
-		return getFlowServiceLocator().getConversionService().getConversionExecutorByTargetAlias(String.class, targetAlias);
+		return getFlowServiceLocator().getConversionService().getConversionExecutorByTargetAlias(String.class,
+				targetAlias);
 	}
 
 	/**
-	 * Returns a converter capable of converting a string value to the given
-	 * type.
+	 * Returns a converter capable of converting a string value to the given type.
 	 * @param targetType the type you wish to convert to (from a string)
 	 * @return the converter
 	 * @throws ConversionException when the converter cannot be found

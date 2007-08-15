@@ -21,7 +21,7 @@ import java.io.Serializable;
  * Test bean used in unit tests.
  */
 public class TestBean implements Serializable {
-	
+
 	private int amount = 0;
 
 	public int getAmount() {
@@ -36,7 +36,7 @@ public class TestBean implements Serializable {
 		if (!(o instanceof TestBean)) {
 			return false;
 		}
-		return amount == ((TestBean)o).amount;
+		return amount == ((TestBean) o).amount;
 	}
 
 	public int hashCode() {

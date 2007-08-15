@@ -22,8 +22,7 @@ import java.io.ObjectInputStream;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * A factory that creates new instances of flow execution continuations based on
- * standard Java serialization.
+ * A factory that creates new instances of flow execution continuations based on standard Java serialization.
  * 
  * @see SerializedFlowExecutionContinuation
  * 
@@ -51,25 +50,23 @@ public class SerializedFlowExecutionContinuationFactory implements FlowExecution
 		this.compress = compress;
 	}
 
-	public FlowExecutionContinuation createContinuation(FlowExecution flowExecution) throws ContinuationCreationException {
-	    return new SerializedFlowExecutionContinuation(flowExecution, compress);      
+	public FlowExecutionContinuation createContinuation(FlowExecution flowExecution)
+			throws ContinuationCreationException {
+		return new SerializedFlowExecutionContinuation(flowExecution, compress);
 	}
-	
-    public FlowExecutionContinuation createContinuation(byte[] bytes) throws ContinuationUnmarshalException {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-            try {
-                return (FlowExecutionContinuation)ois.readObject();
-            }
-            finally {
-                ois.close();
-            }
-        }
-        catch (IOException e) {
-            throw new ContinuationUnmarshalException("IO problem while creating a flow execution continuation", e);
-        }
-        catch (ClassNotFoundException e) {
-            throw new ContinuationUnmarshalException("Class not found while creating a flow execution continuation", e);
-        }
-    }    
+
+	public FlowExecutionContinuation createContinuation(byte[] bytes) throws ContinuationUnmarshalException {
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+			try {
+				return (FlowExecutionContinuation) ois.readObject();
+			} finally {
+				ois.close();
+			}
+		} catch (IOException e) {
+			throw new ContinuationUnmarshalException("IO problem while creating a flow execution continuation", e);
+		} catch (ClassNotFoundException e) {
+			throw new ContinuationUnmarshalException("Class not found while creating a flow execution continuation", e);
+		}
+	}
 }

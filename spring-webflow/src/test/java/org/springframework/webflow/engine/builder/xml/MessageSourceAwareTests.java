@@ -34,23 +34,24 @@ import org.springframework.webflow.test.MockExternalContext;
 public class MessageSourceAwareTests extends TestCase {
 
 	private Flow flow;
-	
+
 	protected void setUp() throws Exception {
 		GenericApplicationContext context = new GenericApplicationContext();
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(FooMessageSource.class);
 		context.registerBeanDefinition("messageSource", builder.getBeanDefinition());
 		context.refresh();
 		DefaultFlowServiceLocator locator = new DefaultFlowServiceLocator(new FlowDefinitionRegistryImpl(), context);
-		XmlFlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("messageSourceAwareFlow.xml", getClass()), locator);
+		XmlFlowBuilder flowBuilder = new XmlFlowBuilder(
+				new ClassPathResource("messageSourceAwareFlow.xml", getClass()), locator);
 		flow = new FlowAssembler("flow", flowBuilder).assembleFlow();
 	}
-	
+
 	private static class FooMessageSource extends StaticMessageSource {
 		public FooMessageSource() {
 			addMessage("foo", Locale.getDefault(), "bar");
-		}		
+		}
 	}
-	
+
 	public void testAwareAction() {
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());

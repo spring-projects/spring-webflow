@@ -20,46 +20,46 @@ import java.util.Set;
 
 public class TestBean {
 
-    private Long entityId;
+	private Long entityId;
 
-    private String name;
+	private String name;
 
-    private Set addresses = new HashSet();
+	private Set addresses = new HashSet();
 
-    public TestBean() {
+	public TestBean() {
 
-    }
+	}
 
-    public TestBean(String name) {
-	this.name = name;
-    }
+	public TestBean(String name) {
+		this.name = name;
+	}
 
-    public TestBean(long id, String name) {
-	this.entityId = new Long(id);
-	this.name = name;
-    }
+	public TestBean(long id, String name) {
+		this.entityId = new Long(id);
+		this.name = name;
+	}
 
-    public Long getEntityId() {
-	return entityId;
-    }
+	public Long getEntityId() {
+		return entityId;
+	}
 
-    public void setEntityId(Long entityId) {
-	this.entityId = entityId;
-    }
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
+	}
 
-    public void setName(String name) {
-	this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-	return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Set getAddresses() {
-	return addresses;
-    }
+	public Set getAddresses() {
+		return addresses;
+	}
 
-    public void setAddresses(Set addresses) {
-	this.addresses = addresses;
-    }
+	public void setAddresses(Set addresses) {
+		this.addresses = addresses;
+	}
 }

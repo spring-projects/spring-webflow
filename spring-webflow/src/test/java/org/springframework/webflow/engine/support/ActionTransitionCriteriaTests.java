@@ -35,7 +35,7 @@ public class ActionTransitionCriteriaTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		actionMock = (Action)EasyMock.createMock(Action.class);
+		actionMock = (Action) EasyMock.createMock(Action.class);
 		tested = new ActionTransitionCriteria(actionMock);
 	}
 

@@ -26,32 +26,24 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A path from one {@link TransitionableState state} to another
- * {@link State state}.
+ * A path from one {@link TransitionableState state} to another {@link State state}.
  * <p>
- * When executed a transition takes a flow execution from its current state,
- * called the <i>source state</i>, to another state, called the </i>target
- * state</i>. A transition may become eligible for execution on the occurence
- * of an {@link Event} from within a transitionable source state.
+ * When executed a transition takes a flow execution from its current state, called the <i>source state</i>, to another
+ * state, called the </i>target state</i>. A transition may become eligible for execution on the occurence of an
+ * {@link Event} from within a transitionable source state.
  * <p>
- * When an event occurs within this transition's source
- * <code>TransitionableState</code> the determination of the eligibility of
- * this transition is made by a <code>TransitionCriteria</code> object called
- * the <i>matching criteria</i>. If the matching criteria returns
- * <code>true</code> this transition is marked eligible for execution for that
- * event.
+ * When an event occurs within this transition's source <code>TransitionableState</code> the determination of the
+ * eligibility of this transition is made by a <code>TransitionCriteria</code> object called the <i>matching criteria</i>.
+ * If the matching criteria returns <code>true</code> this transition is marked eligible for execution for that event.
  * <p>
- * Determination as to whether an eligible transition should be allowed to
- * execute is made by a <code>TransitionCriteria</code> object called the
- * <i>execution criteria</i>. If the execution criteria test fails this
- * transition will <i>roll back</i> and reenter its source state. If the
- * execution criteria test succeeds this transition will execute and take the
- * flow to the transition's target state.
+ * Determination as to whether an eligible transition should be allowed to execute is made by a
+ * <code>TransitionCriteria</code> object called the <i>execution criteria</i>. If the execution criteria test fails
+ * this transition will <i>roll back</i> and reenter its source state. If the execution criteria test succeeds this
+ * transition will execute and take the flow to the transition's target state.
  * <p>
- * The target state of this transition is typically specified at configuration
- * time in a static manner. If the target state of this transition needs to be
- * calculated in a dynamic fashion at runtime configure a {@link TargetStateResolver}
- * that supports such calculations.
+ * The target state of this transition is typically specified at configuration time in a static manner. If the target
+ * state of this transition needs to be calculated in a dynamic fashion at runtime configure a
+ * {@link TargetStateResolver} that supports such calculations.
  * 
  * @see TransitionableState
  * @see TransitionCriteria
@@ -68,29 +60,26 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	protected final Log logger = LogFactory.getLog(Transition.class);
 
 	/**
-	 * The criteria that determine whether or not this transition matches as
-	 * eligible for execution when an event occurs in the source state.
+	 * The criteria that determine whether or not this transition matches as eligible for execution when an event occurs
+	 * in the source state.
 	 */
 	private TransitionCriteria matchingCriteria;
 
 	/**
-	 * The criteria that determine whether or not this transition, once matched,
-	 * should complete execution or should <i>roll back</i>.
+	 * The criteria that determine whether or not this transition, once matched, should complete execution or should
+	 * <i>roll back</i>.
 	 */
 	private TransitionCriteria executionCriteria = WildcardTransitionCriteria.INSTANCE;
 
 	/**
-	 * The resolver responsible for calculating the target state of this
-	 * transition.
+	 * The resolver responsible for calculating the target state of this transition.
 	 */
 	private TargetStateResolver targetStateResolver;
 
 	/**
-	 * Create a new transition that always matches and always executes,
-	 * transitioning to the target state calculated by the provided
-	 * targetStateResolver.
-	 * @param targetStateResolver the resolver of the target state of this
-	 * transition
+	 * Create a new transition that always matches and always executes, transitioning to the target state calculated by
+	 * the provided targetStateResolver.
+	 * @param targetStateResolver the resolver of the target state of this transition
 	 * @see #setMatchingCriteria(TransitionCriteria)
 	 * @see #setExecutionCriteria(TransitionCriteria)
 	 */
@@ -99,12 +88,10 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Create a new transition that matches on the specified criteria,
-	 * transitioning to the target state calculated by the provided
-	 * targetStateResolver.
+	 * Create a new transition that matches on the specified criteria, transitioning to the target state calculated by
+	 * the provided targetStateResolver.
 	 * @param matchingCriteria the criteria for matching this transition
-	 * @param targetStateResolver the resolver of the target state of this
-	 * transition
+	 * @param targetStateResolver the resolver of the target state of this transition
 	 * @see #setExecutionCriteria(TransitionCriteria)
 	 */
 	public Transition(TransitionCriteria matchingCriteria, TargetStateResolver targetStateResolver) {
@@ -123,8 +110,7 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Returns the criteria that determine whether or not this transition
-	 * matches as eligible for execution.
+	 * Returns the criteria that determine whether or not this transition matches as eligible for execution.
 	 * @return the transition matching criteria
 	 */
 	public TransitionCriteria getMatchingCriteria() {
@@ -132,8 +118,7 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Set the criteria that determine whether or not this transition matches as
-	 * eligible for execution.
+	 * Set the criteria that determine whether or not this transition matches as eligible for execution.
 	 * @param matchingCriteria the transition matching criteria
 	 */
 	public void setMatchingCriteria(TransitionCriteria matchingCriteria) {
@@ -142,8 +127,8 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Returns the criteria that determine whether or not this transition, once
-	 * matched, should complete execution or should <i>roll back</i>.
+	 * Returns the criteria that determine whether or not this transition, once matched, should complete execution or
+	 * should <i>roll back</i>.
 	 * @return the transition execution criteria
 	 */
 	public TransitionCriteria getExecutionCriteria() {
@@ -151,8 +136,8 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Set the criteria that determine whether or not this transition, once
-	 * matched, should complete execution or should <i>roll back</i>.
+	 * Set the criteria that determine whether or not this transition, once matched, should complete execution or should
+	 * <i>roll back</i>.
 	 * @param executionCriteria the transition execution criteria
 	 */
 	public void setExecutionCriteria(TransitionCriteria executionCriteria) {
@@ -168,8 +153,8 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Set this transition's target state resolver, to calculate what state to
-	 * transition to when this transition is executed.
+	 * Set this transition's target state resolver, to calculate what state to transition to when this transition is
+	 * executed.
 	 * @param targetStateResolver the target state resolver
 	 */
 	public void setTargetStateResolver(TargetStateResolver targetStateResolver) {
@@ -178,8 +163,8 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Checks if this transition is elligible for execution given the state of
-	 * the provided flow execution request context.
+	 * Checks if this transition is elligible for execution given the state of the provided flow execution request
+	 * context.
 	 * @param context the flow execution request context
 	 * @return true if this transition should execute, false otherwise
 	 */
@@ -188,22 +173,21 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	/**
-	 * Checks if this transition can complete its execution or should be rolled
-	 * back, given the state of the flow execution request context.
+	 * Checks if this transition can complete its execution or should be rolled back, given the state of the flow
+	 * execution request context.
 	 * @param context the flow execution request context
-	 * @return true if this transition can complete execution, false if it
-	 * should roll back
+	 * @return true if this transition can complete execution, false if it should roll back
 	 */
 	public boolean canExecute(RequestContext context) {
 		return executionCriteria.test(context);
 	}
 
 	/**
-	 * Execute this state transition. Will only be called if the
-	 * {@link #matches(RequestContext)} method returns true for given context.
+	 * Execute this state transition. Will only be called if the {@link #matches(RequestContext)} method returns true
+	 * for given context.
 	 * @param context the flow execution control context
-	 * @return a view selection containing model and view information needed to
-	 * render the results of the transition execution
+	 * @return a view selection containing model and view information needed to render the results of the transition
+	 * execution
 	 * @throws FlowExecutionException when transition execution fails
 	 */
 	public ViewSelection execute(State sourceState, RequestControlContext context) throws FlowExecutionException {
@@ -215,10 +199,9 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 				}
 				if (sourceState instanceof TransitionableState) {
 					// make exit call back on transitionable state
-					((TransitionableState)sourceState).exit(context);
+					((TransitionableState) sourceState).exit(context);
 				}
-			}
-			else {
+			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Executing " + this);
 				}
@@ -227,15 +210,12 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 			context.setLastTransition(this);
 			// enter the target state (note: any exceptions are propagated)
 			selectedView = targetState.enter(context);
-		}
-		else {
+		} else {
 			if (sourceState != null && sourceState instanceof TransitionableState) {
 				// 'roll back' and re-enter the transitionable source state
-				selectedView = ((TransitionableState)sourceState).reenter(context);
-			}
-			else {
-				throw new IllegalStateException(
-						"Execution of '" + this + "' was blocked by '" + getExecutionCriteria()
+				selectedView = ((TransitionableState) sourceState).reenter(context);
+			} else {
+				throw new IllegalStateException("Execution of '" + this + "' was blocked by '" + getExecutionCriteria()
 						+ "', " + "; however, no source state is set at runtime.  "
 						+ "This is an illegal situation: check your flow definition.");
 			}
@@ -244,8 +224,7 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 			if (context.getFlowExecutionContext().isActive()) {
 				logger.debug("Completed execution of " + this + ", as a result the new state is '"
 						+ context.getCurrentState().getId() + "' in flow '" + context.getActiveFlow().getId() + "'");
-			}
-			else {
+			} else {
 				logger.debug("Completed execution of " + this + ", as a result the flow execution has ended");
 			}
 		}

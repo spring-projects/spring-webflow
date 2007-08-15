@@ -41,7 +41,7 @@ import org.springframework.webflow.test.MockParameterMap;
 
 /**
  * Test case for {@link FlowExecutionImplStateRestorer}.
- *
+ * 
  * @author Erwin Vervaet
  */
 public class FlowExecutionImplStateRestorerTests extends TestCase {
@@ -59,9 +59,9 @@ public class FlowExecutionImplStateRestorerTests extends TestCase {
 		registrar.addLocation(new ClassPathResource("testFlow.xml", getClass()));
 		registrar.addLocation(new ClassPathResource("external-subflow.xml", getClass()));
 		registrar.registerFlowDefinitions(registry);
-		final Flow flow = (Flow)registry.getFlowDefinition("testFlow");
+		final Flow flow = (Flow) registry.getFlowDefinition("testFlow");
 		flowLocator = registry;
-		
+
 		FlowExecutionListener listener1 = new FlowExecutionListenerAdapter() {
 		};
 		final FlowExecutionListener[] listeners = new FlowExecutionListener[] { listener1 };
@@ -108,7 +108,7 @@ public class FlowExecutionImplStateRestorerTests extends TestCase {
 		// deserialize the flowExecution
 		ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
 		ObjectInputStream oin = new ObjectInputStream(bin);
-		FlowExecutionImpl restoredFlowExecution = (FlowExecutionImpl)oin.readObject();
+		FlowExecutionImpl restoredFlowExecution = (FlowExecutionImpl) oin.readObject();
 		assertNotNull(restoredFlowExecution);
 		assertNull(restoredFlowExecution.getDefinition());
 

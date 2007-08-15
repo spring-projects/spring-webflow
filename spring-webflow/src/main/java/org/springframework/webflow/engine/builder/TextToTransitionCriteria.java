@@ -26,23 +26,18 @@ import org.springframework.webflow.engine.support.BooleanExpressionTransitionCri
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 
 /**
- * Converter that takes an encoded string representation and produces a
- * corresponding <code>TransitionCriteria</code> object.
+ * Converter that takes an encoded string representation and produces a corresponding <code>TransitionCriteria</code>
+ * object.
  * <p>
  * This converter supports the following encoded forms:
  * <ul>
- * <li>"*" - will result in a TransitionCriteria object that matches on
- * everything ({@link org.springframework.webflow.engine.WildcardTransitionCriteria})
+ * <li>"*" - will result in a TransitionCriteria object that matches on everything ({@link org.springframework.webflow.engine.WildcardTransitionCriteria})
  * </li>
- * <li>"eventId" - will result in a TransitionCriteria object that matches
- * given event id ({@link org.springframework.webflow.engine.support.EventIdTransitionCriteria})
+ * <li>"eventId" - will result in a TransitionCriteria object that matches given event id ({@link org.springframework.webflow.engine.support.EventIdTransitionCriteria})
  * </li>
- * <li>"${...}" - will result in a TransitionCriteria object that evaluates
- * given condition, expressed as an expression
- * ({@link org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria})
+ * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an expression ({@link org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria})
  * </li>
- * <li>"bean:&lt;id&gt;" - will result in usage of a custom TransitionCriteria
- * bean implementation.</li>
+ * <li>"bean:&lt;id&gt;" - will result in usage of a custom TransitionCriteria bean implementation.</li>
  * </ul>
  * 
  * @see org.springframework.webflow.engine.TransitionCriteria
@@ -53,8 +48,7 @@ import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 public class TextToTransitionCriteria extends AbstractConverter {
 
 	/**
-	 * Prefix used when the user wants to use a custom TransitionCriteria
-	 * implementation managed by a bean factory.
+	 * Prefix used when the user wants to use a custom TransitionCriteria implementation managed by a bean factory.
 	 */
 	private static final String BEAN_PREFIX = "bean:";
 
@@ -64,9 +58,8 @@ public class TextToTransitionCriteria extends AbstractConverter {
 	private FlowServiceLocator flowServiceLocator;
 
 	/**
-	 * Create a new converter that converts strings to transition criteria
-	 * objects. Custom transition criteria will be looked up using given
-	 * service locator.
+	 * Create a new converter that converts strings to transition criteria objects. Custom transition criteria will be
+	 * looked up using given service locator.
 	 */
 	public TextToTransitionCriteria(FlowServiceLocator flowServiceLocator) {
 		this.flowServiceLocator = flowServiceLocator;
@@ -81,26 +74,22 @@ public class TextToTransitionCriteria extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		String encodedCriteria = (String)source;
+		String encodedCriteria = (String) source;
 		if (!StringUtils.hasText(encodedCriteria)
 				|| WildcardTransitionCriteria.WILDCARD_EVENT_ID.equals(encodedCriteria)) {
 			return WildcardTransitionCriteria.INSTANCE;
-		}
-		else if (flowServiceLocator.getExpressionParser().isDelimitedExpression(encodedCriteria)) {
+		} else if (flowServiceLocator.getExpressionParser().isDelimitedExpression(encodedCriteria)) {
 			Expression expression = flowServiceLocator.getExpressionParser().parseExpression(encodedCriteria);
 			return createBooleanExpressionTransitionCriteria(expression);
-		}
-		else if (encodedCriteria.startsWith(BEAN_PREFIX)) {
+		} else if (encodedCriteria.startsWith(BEAN_PREFIX)) {
 			return flowServiceLocator.getTransitionCriteria(encodedCriteria.substring(BEAN_PREFIX.length()));
-		}
-		else {
+		} else {
 			return createEventIdTransitionCriteria(encodedCriteria);
 		}
 	}
 
 	/**
-	 * Hook method subclasses can override to return a specialized eventId
-	 * matching transition criteria implementation.
+	 * Hook method subclasses can override to return a specialized eventId matching transition criteria implementation.
 	 * @param eventId the event id to match
 	 * @return the transition criteria object
 	 * @throws ConversionException when something goes wrong
@@ -110,8 +99,8 @@ public class TextToTransitionCriteria extends AbstractConverter {
 	}
 
 	/**
-	 * Hook method subclasses can override to return a specialized expression
-	 * evaluating transition criteria implementation.
+	 * Hook method subclasses can override to return a specialized expression evaluating transition criteria
+	 * implementation.
 	 * @param expression the expression to evaluate
 	 * @return the transition criteria object
 	 * @throws ConversionException when something goes wrong

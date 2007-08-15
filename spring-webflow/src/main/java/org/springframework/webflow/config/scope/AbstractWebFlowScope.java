@@ -25,11 +25,11 @@ import org.springframework.webflow.execution.FlowExecutionContextHolder;
 import org.springframework.webflow.execution.FlowSession;
 
 /**
- * Base class for {@link Scope} implementations that access a Web Flow scope
- * from the current thread-bound {@link FlowExecutionContext} object.
+ * Base class for {@link Scope} implementations that access a Web Flow scope from the current thread-bound
+ * {@link FlowExecutionContext} object.
  * <p>
- * Subclasses simply need to implement {@link #getScope()} to return the
- * {@link MutableAttributeMap scope map} to access.
+ * Subclasses simply need to implement {@link #getScope()} to return the {@link MutableAttributeMap scope map} to
+ * access.
  * <p>
  * Relies on a thread-bound
  * @{link FlowExecutionContext} instance located through the
@@ -57,8 +57,7 @@ public abstract class AbstractWebFlowScope implements Scope {
 			}
 			scopedObject = objectFactory.getObject();
 			scope.put(name, scopedObject);
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Returning scoped instance '" + name + "'");
 			}
@@ -80,11 +79,10 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 * @throws IllegalStateException if the scope could not be accessed
 	 */
 	protected abstract MutableAttributeMap getScope() throws IllegalStateException;
-	
+
 	/**
-	 * Always returns <code>null</code> as most Spring Web Flow scopes do not
-	 * have obvious conversation ids. Subclasses should override this method
-	 * where conversation ids can be intelligently returned.
+	 * Always returns <code>null</code> as most Spring Web Flow scopes do not have obvious conversation ids.
+	 * Subclasses should override this method where conversation ids can be intelligently returned.
 	 * @return always returns <code>null</code>
 	 */
 	public String getConversationId() {
@@ -92,9 +90,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 	}
 
 	/**
-	 * Will not register a destruction callback as Spring Web Flow does not
-	 * support destruction of scoped beans. Subclasses should override this
-	 * method where where destruction can adequately be accomplished.
+	 * Will not register a destruction callback as Spring Web Flow does not support destruction of scoped beans.
+	 * Subclasses should override this method where where destruction can adequately be accomplished.
 	 * @param name the name of the bean to register the callback for
 	 * @param callback the callback to execute
 	 */
@@ -104,8 +101,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 	}
 
 	/**
-	 * Returns the current flow execution context. Used by subclasses to easily
-	 * get access to the thread-bound flow execution context.
+	 * Returns the current flow execution context. Used by subclasses to easily get access to the thread-bound flow
+	 * execution context.
 	 * @return the current thread-bound flow execution context
 	 * @throws IllegalStateException if the current flow execution context is not bound
 	 */

@@ -40,11 +40,9 @@ import org.springframework.webflow.execution.FlowSessionStatus;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * Default request control context implementation used internally by the web
- * flow system. This class is closely coupled with
- * <code>FlowExecutionImpl</code> and <code>FlowSessionImpl</code>. The
- * three classes work together to form a complete flow execution implementation
- * based on a finite state machine.
+ * Default request control context implementation used internally by the web flow system. This class is closely coupled
+ * with <code>FlowExecutionImpl</code> and <code>FlowSessionImpl</code>. The three classes work together to form a
+ * complete flow execution implementation based on a finite state machine.
  * 
  * @see FlowExecutionImpl
  * @see FlowSessionImpl
@@ -89,8 +87,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	/**
 	 * Create a new request context.
 	 * @param flowExecution the owning flow execution
-	 * @param externalContext the external context that originated the flow
-	 * execution request
+	 * @param externalContext the external context that originated the flow execution request
 	 */
 	public RequestControlContextImpl(FlowExecutionImpl flowExecution, ExternalContext externalContext) {
 		Assert.notNull(flowExecution, "The owning flow execution is required");
@@ -151,8 +148,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	public void setAttributes(AttributeMap attributes) {
 		if (attributes == null) {
 			this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-		}
-		else {
+		} else {
 			this.attributes = attributes;
 		}
 	}
@@ -228,8 +224,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	// internal helpers
 
 	/**
-	 * Returns the execution listerns for the flow execution of this request
-	 * context.
+	 * Returns the execution listerns for the flow execution of this request context.
 	 */
 	protected FlowExecutionListeners getExecutionListeners() {
 		return flowExecution.getListeners();
@@ -239,19 +234,18 @@ class RequestControlContextImpl implements RequestControlContext {
 	 * Returns the active flow in the flow execution of this request context.
 	 */
 	protected Flow getActiveFlowInternal() {
-		return (Flow)getActiveSession().getDefinition();
+		return (Flow) getActiveSession().getDefinition();
 	}
 
 	/**
 	 * Returns the current state in the flow execution of this request context.
 	 */
 	protected State getCurrentStateInternal() {
-		return (State)getActiveSession().getState();
+		return (State) getActiveSession().getState();
 	}
 
 	/**
-	 * Returns the active flow session in the flow execution of this request
-	 * context.
+	 * Returns the active flow session in the flow execution of this request context.
 	 */
 	protected FlowSessionImpl getActiveSession() {
 		return flowExecution.getActiveSessionInternal();

@@ -30,25 +30,21 @@ import org.springframework.webflow.engine.builder.DefaultFlowServiceLocator;
 import org.springframework.webflow.engine.builder.FlowServiceLocator;
 
 /**
- * A factory bean that produces a populated flow registry using an
- * {@link XmlFlowRegistrar}. This is the simplest implementation to use when
- * using a Spring BeanFactory to deploy an explicit registry of XML-based Flow
- * definitions for execution.
+ * A factory bean that produces a populated flow registry using an {@link XmlFlowRegistrar}. This is the simplest
+ * implementation to use when using a Spring BeanFactory to deploy an explicit registry of XML-based Flow definitions
+ * for execution.
  * <p>
- * By default, a configured flow definition will be assigned a registry
- * identifier equal to the filename of the underlying definition resource, minus
- * the filename extension. For example, an XML-based flow definition defined in
- * the file <code>flow1.xml</code> will be identified as <code>flow1</code>
- * in the registry created by this factory bean.
+ * By default, a configured flow definition will be assigned a registry identifier equal to the filename of the
+ * underlying definition resource, minus the filename extension. For example, an XML-based flow definition defined in
+ * the file <code>flow1.xml</code> will be identified as <code>flow1</code> in the registry created by this factory
+ * bean.
  * <p>
- * This class is also <code>BeanFactoryAware</code> and when used with Spring
- * will automatically create a configured {@link DefaultFlowServiceLocator} for
- * loading Flow artifacts like Actions from the Spring bean factory during the
+ * This class is also <code>BeanFactoryAware</code> and when used with Spring will automatically create a configured
+ * {@link DefaultFlowServiceLocator} for loading Flow artifacts like Actions from the Spring bean factory during the
  * Flow registration process.
  * <p>
- * This class is also <code>ResourceLoaderAware</code>; when an instance is
- * created by a Spring BeanFactory the factory will automatically configure the
- * XmlFlowRegistrar with a context-relative resource loader for accessing other
+ * This class is also <code>ResourceLoaderAware</code>; when an instance is created by a Spring BeanFactory the
+ * factory will automatically configure the XmlFlowRegistrar with a context-relative resource loader for accessing other
  * resources during Flow assembly.
  * 
  * Usage example:
@@ -67,17 +63,17 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 * The flow registrar that will perform the definition registrations.
 	 */
 	private XmlFlowRegistrar flowRegistrar = new XmlFlowRegistrar();
-	
+
 	/**
 	 * Temporary holder for flow definition locations.
 	 */
-	private Resource[] locations; 
+	private Resource[] locations;
 
 	/**
 	 * Temporary holder for flow definitions configured using a property map.
 	 */
 	private Properties flowDefinitions;
-	
+
 	/**
 	 * A map that contains a map (java.util.Map) of flow attributes keyed by flow id (String).
 	 */
@@ -89,7 +85,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	public XmlFlowRegistrar getXmlFlowRegistrar() {
 		return flowRegistrar;
 	}
-	
+
 	/**
 	 * Set the configured externalized XML flow registrar.
 	 * @since 1.0.1
@@ -100,12 +96,10 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	}
 
 	/**
-	 * Sets the locations (resource file paths) pointing to XML-based flow
-	 * definitions.
+	 * Sets the locations (resource file paths) pointing to XML-based flow definitions.
 	 * <p>
-	 * When configuring as a Spring bean definition, ANT-style resource
-	 * patterns/wildcards are also supported, taking advantage of Spring's built
-	 * in ResourceArrayPropertyEditor machinery.
+	 * When configuring as a Spring bean definition, ANT-style resource patterns/wildcards are also supported, taking
+	 * advantage of Spring's built in ResourceArrayPropertyEditor machinery.
 	 * <p>
 	 * For example:
 	 * 
@@ -123,8 +117,8 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 *    &lt;/bean&gt;
 	 * </pre>
 	 * 
-	 * Flows registered from this set will be automatically assigned an id based
-	 * on the filename of the matched XML resource.
+	 * Flows registered from this set will be automatically assigned an id based on the filename of the matched XML
+	 * resource.
 	 * @param locations the resource locations
 	 */
 	public void setFlowLocations(Resource[] locations) {
@@ -132,17 +126,16 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	}
 
 	/**
-	 * Convenience method for setting externalized flow definitions
-	 * from a <code>java.util.Properties</code> map. Allows for more control
-	 * over the definition, including which <code>flowId</code> is assigned.
+	 * Convenience method for setting externalized flow definitions from a <code>java.util.Properties</code> map.
+	 * Allows for more control over the definition, including which <code>flowId</code> is assigned.
 	 * <p>
-	 * Each property key is the <code>flowId</code> and each property value is
-	 * the string encoded location of the externalized flow definition resource.
+	 * Each property key is the <code>flowId</code> and each property value is the string encoded location of the
+	 * externalized flow definition resource.
 	 * <p>
 	 * Here is the exact format:
 	 * 
 	 * <pre>
-	 *      flowId=resource
+	 * flowId = resource
 	 * </pre>
 	 * 
 	 * For example:
@@ -157,21 +150,21 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	 *         &lt;/property&gt;
 	 *     &lt;/bean&gt;
 	 * </pre>
-	 * @param flowDefinitions the flow definitions, defined within a properties
-	 * map
+	 * 
+	 * @param flowDefinitions the flow definitions, defined within a properties map
 	 */
 	public void setFlowDefinitions(Properties flowDefinitions) {
 		this.flowDefinitions = flowDefinitions;
 	}
-	
+
 	/**
-	 * Sets flow attributes from an externalized <code>java.util.Map</code>. The keys in the
-	 * map are String flow ids. The corresponding values should be <code>java.util.Map</code>
-	 * maps containing flow attributes to be assigned to the flow. A flow with an id not
-	 * contained in the provided map will get not externally defined flow attributes assigned.
+	 * Sets flow attributes from an externalized <code>java.util.Map</code>. The keys in the map are String flow ids.
+	 * The corresponding values should be <code>java.util.Map</code> maps containing flow attributes to be assigned to
+	 * the flow. A flow with an id not contained in the provided map will get not externally defined flow attributes
+	 * assigned.
 	 * <p>
-	 * Can be used in conjunction with both {@link #setFlowLocations(Resource[])}
-	 * and {@link #setFlowDefinitions(Properties)}.
+	 * Can be used in conjunction with both {@link #setFlowLocations(Resource[])} and
+	 * {@link #setFlowDefinitions(Properties)}.
 	 * @param flowAttributes the flow attributes, keyed by flow id
 	 * @since 1.0.1
 	 */
@@ -180,9 +173,8 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	}
 
 	/**
-	 * Sets the loader to load XML-based flow definition documents during flow
-	 * definition assembly. Allows for customization over how flow definition 
-	 * documents are loaded. Optional.
+	 * Sets the loader to load XML-based flow definition documents during flow definition assembly. Allows for
+	 * customization over how flow definition documents are loaded. Optional.
 	 * @param documentLoader the document loader
 	 */
 	public void setDocumentLoader(DocumentLoader documentLoader) {
@@ -190,7 +182,7 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	}
 
 	protected void init(FlowServiceLocator flowServiceLocator) {
-		// simply wire in the locator to the registrar 
+		// simply wire in the locator to the registrar
 		getXmlFlowRegistrar().setFlowServiceLocator(flowServiceLocator);
 	}
 
@@ -199,10 +191,9 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 		addFlowDefinitionsFromProperties();
 		getXmlFlowRegistrar().registerFlowDefinitions(registry);
 	}
-	
+
 	/**
-	 * Add configured flow definition locations to the flow definition
-	 * registrar. 
+	 * Add configured flow definition locations to the flow definition registrar.
 	 */
 	private void addFlowDefinitionLocations() {
 		if (locations != null) {
@@ -215,30 +206,29 @@ public class XmlFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistry
 	}
 
 	/**
-	 * Add flow definitions configured using a property map to 
-	 * the flow definition registrar.
+	 * Add flow definitions configured using a property map to the flow definition registrar.
 	 */
 	private void addFlowDefinitionsFromProperties() {
 		if (flowDefinitions != null) {
 			Iterator it = flowDefinitions.entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry entry = (Map.Entry)it.next();
-				String flowId = (String)entry.getKey();
-				String location = (String)entry.getValue();
+				Map.Entry entry = (Map.Entry) it.next();
+				String flowId = (String) entry.getKey();
+				String location = (String) entry.getValue();
 				Resource resource = getFlowServiceLocator().getResourceLoader().getResource(location);
 				getXmlFlowRegistrar().addResource(
 						new FlowDefinitionResource(flowId, resource, getFlowAttributes(flowId)));
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns the flow attributes to be assigned to the flow with given id. Returns
-	 * null if no attributes should be assigned. 
+	 * Returns the flow attributes to be assigned to the flow with given id. Returns null if no attributes should be
+	 * assigned.
 	 */
 	private AttributeMap getFlowAttributes(String flowId) {
 		if (flowAttributes != null) {
-			Map attributes = (Map)flowAttributes.get(flowId);
+			Map attributes = (Map) flowAttributes.get(flowId);
 			if (attributes != null) {
 				return new LocalAttributeMap(attributes);
 			}

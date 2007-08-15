@@ -28,8 +28,7 @@ import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.execution.FlowExecutionContextHolder;
 
 /**
- * A servlet filter used to guarantee that web flow context information is
- * cleaned up in a JSF environment.
+ * A servlet filter used to guarantee that web flow context information is cleaned up in a JSF environment.
  * 
  * @author Ben Hale
  * @since 1.0.4
@@ -40,19 +39,16 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		try {
 			chain.doFilter(request, response);
-		}
-		finally {
+		} finally {
 			cleanupCurrentFlowExecution(request);
 			ExternalContextHolder.setExternalContext(null);
 		}
 	}
 
 	/**
-	 * Cleans up the current flow execution in the request context if necessary.
-	 * Specifically, handles unlocking the execution if necessary, setting the
-	 * holder to null, and cleaning up the flow execution context thread local.
-	 * Can be safely called even if no execution is bound or one is bound but
-	 * not locked.
+	 * Cleans up the current flow execution in the request context if necessary. Specifically, handles unlocking the
+	 * execution if necessary, setting the holder to null, and cleaning up the flow execution context thread local. Can
+	 * be safely called even if no execution is bound or one is bound but not locked.
 	 * @param request the servlet request
 	 */
 	private void cleanupCurrentFlowExecution(ServletRequest request) {
@@ -64,8 +60,7 @@ public class FlowSystemCleanupFilter extends OncePerRequestFilter {
 	}
 
 	/**
-	 * Returns true if the flow execution has been restored in the current
-	 * thread.
+	 * Returns true if the flow execution has been restored in the current thread.
 	 * @param request the servlet request
 	 * @return true if restored, false otherwise
 	 */

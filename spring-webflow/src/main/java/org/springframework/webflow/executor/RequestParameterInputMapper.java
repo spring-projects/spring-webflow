@@ -21,13 +21,11 @@ import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
- * Simple attribute mapper implementation that puts all entries in the
- * request parameter map of a source {@link ExternalContext} into the
- * FlowExecution inputMap. This makes request parameters available to launching
- * flows for input mapping.
+ * Simple attribute mapper implementation that puts all entries in the request parameter map of a source
+ * {@link ExternalContext} into the FlowExecution inputMap. This makes request parameters available to launching flows
+ * for input mapping.
  * <p>
- * Used by {@link FlowExecutorImpl} as the default AttributeMapper
- * implementation.
+ * Used by {@link FlowExecutorImpl} as the default AttributeMapper implementation.
  * 
  * @see ExternalContext#getRequestParameterMap()
  * @see FlowExecutor#launch(String, ExternalContext)
@@ -36,8 +34,8 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
  */
 public class RequestParameterInputMapper implements AttributeMapper {
 	public void map(Object source, Object target, MappingContext context) {
-		ExternalContext externalContext = (ExternalContext)source;
-		MutableAttributeMap inputMap = (MutableAttributeMap)target;
+		ExternalContext externalContext = (ExternalContext) source;
+		MutableAttributeMap inputMap = (MutableAttributeMap) target;
 		inputMap.putAll(externalContext.getRequestParameterMap().asAttributeMap());
 	}
 }

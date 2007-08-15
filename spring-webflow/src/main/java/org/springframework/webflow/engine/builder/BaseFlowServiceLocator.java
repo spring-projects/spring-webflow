@@ -39,9 +39,8 @@ import org.springframework.webflow.engine.ViewSelector;
 import org.springframework.webflow.execution.Action;
 
 /**
- * Base implementation that implements a minimal set of the
- * <code>FlowServiceLocator</code> interface, throwing unsupported operation
- * exceptions for some operations.
+ * Base implementation that implements a minimal set of the <code>FlowServiceLocator</code> interface, throwing
+ * unsupported operation exceptions for some operations.
  * <p>
  * May be subclassed to offer additional factory/lookup support.
  * 
@@ -50,23 +49,22 @@ import org.springframework.webflow.execution.Action;
 public class BaseFlowServiceLocator implements FlowServiceLocator {
 
 	/**
-	 * The factory encapsulating the creation of central Flow artifacts such as
-	 * {@link Flow flows} and {@link State states}.
+	 * The factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and
+	 * {@link State states}.
 	 */
 	private FlowArtifactFactory flowArtifactFactory = new FlowArtifactFactory();
 
 	/**
-	 * The factory encapsulating the creation of bean invoking actions, actions
-	 * that adapt methods on objects to the {@link Action} interface.
+	 * The factory encapsulating the creation of bean invoking actions, actions that adapt methods on objects to the
+	 * {@link Action} interface.
 	 */
 	private BeanInvokingActionFactory beanInvokingActionFactory = new BeanInvokingActionFactory();
 
 	/**
-	 * The parser for parsing expression strings into evaluatable expression
-	 * objects.
+	 * The parser for parsing expression strings into evaluatable expression objects.
 	 */
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
-	
+
 	/**
 	 * The conversion service configured by the user (none by default).
 	 */
@@ -83,8 +81,8 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
 	/**
-	 * Sets the factory encapsulating the creation of central Flow artifacts
-	 * such as {@link Flow flows} and {@link State states}.
+	 * Sets the factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and
+	 * {@link State states}.
 	 */
 	public void setFlowArtifactFactory(FlowArtifactFactory flowArtifactFactory) {
 		Assert.notNull(flowArtifactFactory, "The flow artifact factory is required");
@@ -92,8 +90,8 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Sets the factory for creating bean invoking actions, actions that adapt
-	 * methods on objects to the {@link Action} interface.
+	 * Sets the factory for creating bean invoking actions, actions that adapt methods on objects to the {@link Action}
+	 * interface.
 	 */
 	public void setBeanInvokingActionFactory(BeanInvokingActionFactory beanInvokingActionFactory) {
 		Assert.notNull(beanInvokingActionFactory, "The bean invoking action factory is required");
@@ -101,19 +99,17 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Set the expression parser responsible for parsing expression strings into
-	 * evaluatable expression objects.
+	 * Set the expression parser responsible for parsing expression strings into evaluatable expression objects.
 	 */
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		Assert.notNull(expressionParser, "The expression parser is required");
 		this.expressionParser = expressionParser;
-		//this has impact on the TextToExpression converter in the conversion service!
+		// this has impact on the TextToExpression converter in the conversion service!
 		this.conversionService = createConversionService(userConversionService);
 	}
 
 	/**
-	 * Set the conversion service to use to convert between types; typically
-	 * from string to a rich object type.
+	 * Set the conversion service to use to convert between types; typically from string to a rich object type.
 	 */
 	public void setConversionService(ConversionService userConversionService) {
 		Assert.notNull(userConversionService, "The conversion service is required");
@@ -122,40 +118,38 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Set the resource loader to load file-based resources from string-encoded
-	 * paths. This is optional.
+	 * Set the resource loader to load file-based resources from string-encoded paths. This is optional.
 	 */
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
 
 	public Flow getSubflow(String id) throws FlowArtifactLookupException {
-		throw new FlowArtifactLookupException(id, Flow.class,
-				"Subflow lookup is not supported by this service locator");
+		throw new FlowArtifactLookupException(id, Flow.class, "Subflow lookup is not supported by this service locator");
 	}
 
 	public Action getAction(String id) throws FlowArtifactLookupException {
-		return (Action)getBean(id, Action.class);
+		return (Action) getBean(id, Action.class);
 	}
 
 	public FlowAttributeMapper getAttributeMapper(String id) throws FlowArtifactLookupException {
-		return (FlowAttributeMapper)getBean(id, FlowAttributeMapper.class);
+		return (FlowAttributeMapper) getBean(id, FlowAttributeMapper.class);
 	}
 
 	public TransitionCriteria getTransitionCriteria(String id) throws FlowArtifactLookupException {
-		return (TransitionCriteria)getBean(id, TransitionCriteria.class);
+		return (TransitionCriteria) getBean(id, TransitionCriteria.class);
 	}
 
 	public TargetStateResolver getTargetStateResolver(String id) throws FlowArtifactLookupException {
-		return (TargetStateResolver)getBean(id, TargetStateResolver.class);
+		return (TargetStateResolver) getBean(id, TargetStateResolver.class);
 	}
 
 	public ViewSelector getViewSelector(String id) throws FlowArtifactLookupException {
-		return (ViewSelector)getBean(id, ViewSelector.class);
+		return (ViewSelector) getBean(id, ViewSelector.class);
 	}
 
 	public FlowExecutionExceptionHandler getExceptionHandler(String id) throws FlowArtifactLookupException {
-		return (FlowExecutionExceptionHandler)getBean(id, FlowExecutionExceptionHandler.class);
+		return (FlowExecutionExceptionHandler) getBean(id, FlowExecutionExceptionHandler.class);
 	}
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
@@ -181,12 +175,11 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	public ConversionService getConversionService() {
 		return conversionService;
 	}
-	
+
 	// helpers for use by subclasses
 
 	/**
-	 * Helper method for determining if the configured bean factory contains the
-	 * provided bean.
+	 * Helper method for determining if the configured bean factory contains the provided bean.
 	 * @param id the id of the bean
 	 * @return true if yes, false otherwise
 	 */
@@ -195,8 +188,7 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	}
 
 	/**
-	 * Helper method to lookup the bean representing a flow artifact of the
-	 * specified type.
+	 * Helper method to lookup the bean representing a flow artifact of the specified type.
 	 * @param id the bean id
 	 * @param artifactType the bean type
 	 * @return the bean
@@ -205,8 +197,7 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	protected Object getBean(String id, Class artifactType) throws FlowArtifactLookupException {
 		try {
 			return getBeanFactory().getBean(id, artifactType);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			throw new FlowArtifactLookupException(id, artifactType, e);
 		}
 	}
@@ -221,8 +212,7 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 	protected Class getBeanType(String id, Class artifactType) throws FlowArtifactLookupException {
 		try {
 			return getBeanFactory().getType(id);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			throw new FlowArtifactLookupException(id, artifactType, e);
 		}
 	}
@@ -236,10 +226,9 @@ public class BaseFlowServiceLocator implements FlowServiceLocator {
 		DefaultConversionService defaultConversionService = new DefaultConversionService();
 		addWebFlowConverters(defaultConversionService);
 		if (userConversionService != null) {
-			return new CompositeConversionService(
-					new ConversionService[] { userConversionService, defaultConversionService });
-		}
-		else {
+			return new CompositeConversionService(new ConversionService[] { userConversionService,
+					defaultConversionService });
+		} else {
 			return defaultConversionService;
 		}
 	}

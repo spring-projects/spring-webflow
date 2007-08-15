@@ -21,24 +21,22 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * A group of flow execution continuations. Simple typed data structure backed
- * by a map and linked list. Supports expelling the oldest continuation once a
- * maximum group size is met.
+ * A group of flow execution continuations. Simple typed data structure backed by a map and linked list. Supports
+ * expelling the oldest continuation once a maximum group size is met.
  * 
  * @author Keith Donald
  */
 class FlowExecutionContinuationGroup implements Serializable {
 
 	/**
-	 * A map of continuations; the key is the continuation id, and the value is
-	 * the {@link FlowExecutionContinuation} object.
+	 * A map of continuations; the key is the continuation id, and the value is the {@link FlowExecutionContinuation}
+	 * object.
 	 */
 	private Map continuations = new HashMap();
 
 	/**
-	 * An ordered list of continuation ids. Each continuation id represents an
-	 * pointer to a continuation in the map. The first element is the oldest 
-	 * continuation and the last is the youngest. 
+	 * An ordered list of continuation ids. Each continuation id represents an pointer to a continuation in the map. The
+	 * first element is the oldest continuation and the last is the youngest.
 	 */
 	private LinkedList continuationIds = new LinkedList();
 
@@ -49,13 +47,12 @@ class FlowExecutionContinuationGroup implements Serializable {
 
 	/**
 	 * Creates a new flow execution continuation group.
-	 * @param maxContinuations the maximum number of continuations that can be
-	 * stored in this group, -1 for unlimited
-	 */                                                                            
+	 * @param maxContinuations the maximum number of continuations that can be stored in this group, -1 for unlimited
+	 */
 	public FlowExecutionContinuationGroup(int maxContinuations) {
 		this.maxContinuations = maxContinuations;
 	}
-	
+
 	/**
 	 * Returns the count of continuations in this group.
 	 */
@@ -64,15 +61,14 @@ class FlowExecutionContinuationGroup implements Serializable {
 	}
 
 	/**
-	 * Returns the continuation with the provided <code>id</code>, or
-	 * <code>null</code> if no such continuation exists with that id.
+	 * Returns the continuation with the provided <code>id</code>, or <code>null</code> if no such continuation
+	 * exists with that id.
 	 * @param id the continuation id
 	 * @return the continuation
-	 * @throws ContinuationNotFoundException if the id does not match a
-	 * continuation in this group
+	 * @throws ContinuationNotFoundException if the id does not match a continuation in this group
 	 */
 	public FlowExecutionContinuation get(Serializable id) throws ContinuationNotFoundException {
-		FlowExecutionContinuation continuation = (FlowExecutionContinuation)continuations.get(id);
+		FlowExecutionContinuation continuation = (FlowExecutionContinuation) continuations.get(id);
 		if (continuation == null) {
 			throw new ContinuationNotFoundException(id);
 		}

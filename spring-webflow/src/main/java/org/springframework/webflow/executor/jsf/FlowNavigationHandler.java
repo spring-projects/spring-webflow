@@ -161,8 +161,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
 					// replace the current flow execution with the new one
 					FlowExecutionHolderUtils.getFlowExecutionHolder(facesContext).replaceWith(flowExecution);
-				}
-				else {
+				} else {
 					// bind the new execution as the 'current execution'
 					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecution),
 							facesContext);
@@ -171,8 +170,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 				ViewSelection selectedView = flowExecution.start(createInput(context), context);
 				// set the starting view to render
 				FlowExecutionHolderUtils.getFlowExecutionHolder(facesContext).setViewSelection(selectedView);
-			}
-			else {
+			} else {
 				// not a launch request - see if this is a resume request to continue an existing execution
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
 					// a flow execution has been restored - see if we need to signal an event against it
@@ -184,8 +182,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 							ViewSelection selectedView = holder.getFlowExecution().signalEvent(eventId, context);
 							// set the next view to render
 							holder.setViewSelection(selectedView);
-						}
-						catch (NoMatchingTransitionException e) {
+						} catch (NoMatchingTransitionException e) {
 							if (logger.isDebugEnabled()) {
 								logger.debug("No flow state transition found for event '" + eventId
 										+ "'; falling back to standard navigation handler.");
@@ -194,18 +191,15 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 							originalNavigationHandler.handleNavigation(facesContext, fromAction, outcome);
 						}
 					}
-				}
-				else {
+				} else {
 					// neither a flow launch or resume request: proceed with standard navigation
 					originalNavigationHandler.handleNavigation(facesContext, fromAction, outcome);
 				}
 			}
-		}
-		catch (RuntimeException e) {
+		} catch (RuntimeException e) {
 			cleanupResources(facesContext);
 			throw e;
-		}
-		catch (Error e) {
+		} catch (Error e) {
 			cleanupResources(facesContext);
 			throw e;
 		}
@@ -222,8 +216,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 			MutableAttributeMap inputMap = new LocalAttributeMap();
 			inputMapper.map(context, inputMap, null);
 			return inputMap;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -245,7 +238,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	private void cleanupResources(FacesContext context) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Cleaning up allocated flow system resources");
-		}		
+		}
 		FlowExecutionHolderUtils.cleanupCurrentFlowExecution(context);
 		ExternalContextHolder.setExternalContext(null);
 	}

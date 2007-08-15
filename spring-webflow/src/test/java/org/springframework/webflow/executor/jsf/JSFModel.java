@@ -9,5 +9,5 @@ public class JSFModel {
 
 	public void setValue(String value) {
 		this.value = value;
-	}	
+	}
 }

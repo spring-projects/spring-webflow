@@ -20,8 +20,7 @@ import java.io.Serializable;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * Simple parameter object for clumping together input needed to begin a new
- * conversation.
+ * Simple parameter object for clumping together input needed to begin a new conversation.
  * 
  * @author Keith Donald
  */
@@ -77,7 +76,7 @@ public class ConversationParameters implements Serializable {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public String toString() {
 		return new ToStringCreator(this).append("name", name).toString();
 	}

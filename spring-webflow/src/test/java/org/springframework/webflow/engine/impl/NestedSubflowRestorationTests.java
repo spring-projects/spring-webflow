@@ -34,14 +34,15 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
 public class NestedSubflowRestorationTests extends AbstractXmlFlowExecutionTests implements FlowDefinitionLocator {
 
 	protected FlowDefinitionResource getFlowDefinitionResource() {
-		return new FlowDefinitionResource(new ClassPathResource("nestedSubflow.xml", NestedSubflowRestorationTests.class));
+		return new FlowDefinitionResource(new ClassPathResource("nestedSubflow.xml",
+				NestedSubflowRestorationTests.class));
 	}
-	
-	public FlowDefinition getFlowDefinition(String id)
-			throws NoSuchFlowDefinitionException, FlowDefinitionConstructionException {
+
+	public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
+			FlowDefinitionConstructionException {
 		return getFlowDefinition();
 	}
-	
+
 	public void testNestedFlows() {
 		startFlow();
 		assertFlowExecutionActive();
@@ -51,12 +52,12 @@ public class NestedSubflowRestorationTests extends AbstractXmlFlowExecutionTests
 		assertFlowExecutionActive();
 		assertActiveFlowEquals("subflowDef3");
 		assertCurrentStateEquals("view4");
-		
+
 		FlowExecution flowExecution = getFlowExecution();
 		flowExecution = new SerializedFlowExecutionContinuation(flowExecution, false).unmarshal();
 		flowExecution = new FlowExecutionImplStateRestorer(this).restoreState(flowExecution, null);
 		updateFlowExecution(flowExecution);
-		
+
 		signalEvent("continue");
 		assertFlowExecutionEnded();
 	}

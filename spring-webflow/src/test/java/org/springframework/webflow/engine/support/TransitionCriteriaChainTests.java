@@ -31,19 +31,19 @@ import junit.framework.TestCase;
  * @author Erwin Vervaet
  */
 public class TransitionCriteriaChainTests extends TestCase {
-	
+
 	private TransitionCriteriaChain chain;
 	private MockRequestContext context;
-	
+
 	protected void setUp() throws Exception {
 		chain = new TransitionCriteriaChain();
 		context = new MockRequestContext();
 	}
-	
+
 	public void testEmptyChain() {
 		assertTrue(chain.test(context));
 	}
-	
+
 	public void testAllTrue() {
 		TestTransitionCriteria criteria1 = new TestTransitionCriteria(true);
 		TestTransitionCriteria criteria2 = new TestTransitionCriteria(true);
@@ -56,7 +56,7 @@ public class TransitionCriteriaChainTests extends TestCase {
 		assertTrue(criteria2.tested);
 		assertTrue(criteria3.tested);
 	}
-	
+
 	public void testWithFalse() {
 		TestTransitionCriteria criteria1 = new TestTransitionCriteria(true);
 		TestTransitionCriteria criteria2 = new TestTransitionCriteria(false);
@@ -69,49 +69,46 @@ public class TransitionCriteriaChainTests extends TestCase {
 		assertTrue(criteria2.tested);
 		assertFalse(criteria3.tested);
 	}
-	
+
 	public void testCriteriaChainForNoActions() {
 		TransitionCriteria actionChain = TransitionCriteriaChain.criteriaChainFor(null);
 		assertTrue(actionChain.test(context));
 	}
-	
+
 	public void testCriteriaChainForActions() {
-		AnnotatedAction[] actions = new AnnotatedAction[] {
-				new AnnotatedAction(new TestAction(true)),
-				new AnnotatedAction(new TestAction(false))
-		};
+		AnnotatedAction[] actions = new AnnotatedAction[] { new AnnotatedAction(new TestAction(true)),
+				new AnnotatedAction(new TestAction(false)) };
 		TransitionCriteria actionChain = TransitionCriteriaChain.criteriaChainFor(actions);
 		assertFalse(actionChain.test(context));
 	}
 
 	private static class TestTransitionCriteria implements TransitionCriteria {
-		
+
 		public boolean tested = false;
 		private boolean result;
-		
+
 		public TestTransitionCriteria(boolean result) {
 			this.result = result;
 		}
-		
+
 		public boolean test(RequestContext context) {
 			tested = true;
 			return result;
 		}
 	}
-	
+
 	private static class TestAction implements Action {
-		
+
 		private boolean result;
-		
+
 		public TestAction(boolean result) {
 			this.result = result;
 		}
-		
+
 		public Event execute(RequestContext context) throws Exception {
 			if (result) {
 				return new EventFactorySupport().success(this);
-			}
-			else {
+			} else {
 				return new EventFactorySupport().error(this);
 			}
 		}

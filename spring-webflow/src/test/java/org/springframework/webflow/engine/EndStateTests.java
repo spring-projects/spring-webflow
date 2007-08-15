@@ -47,7 +47,7 @@ public class EndStateTests extends TestCase {
 		EndState state = new EndState(flow, "finish");
 		state.setViewSelector(view("myViewName"));
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
-		ApplicationView view = (ApplicationView)flowExecution.start(null, new MockExternalContext());
+		ApplicationView view = (ApplicationView) flowExecution.start(null, new MockExternalContext());
 		assertFalse(flowExecution.isActive());
 		assertEquals("myViewName", view.getViewName());
 	}

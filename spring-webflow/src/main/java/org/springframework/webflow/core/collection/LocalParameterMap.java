@@ -35,9 +35,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * An immutable parameter map storing String-keyed, String-valued parameters
- * in a backing {@link Map} implementation. This base provides convenient
- * operations for accessing parameters in a typed-manner.
+ * An immutable parameter map storing String-keyed, String-valued parameters in a backing {@link Map} implementation.
+ * This base provides convenient operations for accessing parameters in a typed-manner.
  * 
  * @author Keith Donald
  */
@@ -49,23 +48,20 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	private Map parameters;
 
 	/**
-	 * A helper for accessing parameters. Marked transient and restored on
-	 * deserialization.
+	 * A helper for accessing parameters. Marked transient and restored on deserialization.
 	 */
 	private transient MapAccessor parameterAccessor;
 
 	/**
-	 * A helper for converting string parameter values. Marked transient and
-	 * restored on deserialization.
+	 * A helper for converting string parameter values. Marked transient and restored on deserialization.
 	 */
 	private transient ConversionService conversionService;
 
 	/**
 	 * Creates a new parameter map from the provided map.
 	 * <p>
-	 * It is expected that the contents of the backing map adhere to the
-	 * parameter map contract; that is, map entries have string keys, string
-	 * values, and remain unmodifiable.
+	 * It is expected that the contents of the backing map adhere to the parameter map contract; that is, map entries
+	 * have string keys, string values, and remain unmodifiable.
 	 * @param parameters the contents of this parameter map
 	 */
 	public LocalParameterMap(Map parameters) {
@@ -75,12 +71,10 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * Creates a new parameter map from the provided map.
 	 * <p>
-	 * It is expected that the contents of the backing map adhere to the
-	 * parameter map contract; that is, map entries have string keys, string
-	 * values, and remain unmodifiable.
+	 * It is expected that the contents of the backing map adhere to the parameter map contract; that is, map entries
+	 * have string keys, string values, and remain unmodifiable.
 	 * @param parameters the contents of this parameter map
-	 * @param conversionService a helper for performing type conversion of map
-	 * entry values
+	 * @param conversionService a helper for performing type conversion of map entry values
 	 */
 	public LocalParameterMap(Map parameters, ConversionService conversionService) {
 		initParameters(parameters);
@@ -91,7 +85,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		if (!(o instanceof LocalParameterMap)) {
 			return false;
 		}
-		LocalParameterMap other = (LocalParameterMap)o;
+		LocalParameterMap other = (LocalParameterMap) o;
 		return parameters.equals(other.parameters);
 	}
 
@@ -116,7 +110,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	}
 
 	public String get(String parameterName) {
-		return get(parameterName, (String)null);
+		return get(parameterName, (String) null);
 	}
 
 	public String get(String parameterName, String defaultValue) {
@@ -126,20 +120,18 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		Object value = parameters.get(parameterName);
 		if (value.getClass().isArray()) {
 			parameterAccessor.assertKeyValueInstanceOf(parameterName, value, String[].class);
-			String[] array = (String[])value;
+			String[] array = (String[]) value;
 			if (array.length == 0) {
 				return null;
-			}
-			else {
-				Object first = ((String[])value)[0];
+			} else {
+				Object first = ((String[]) value)[0];
 				parameterAccessor.assertKeyValueInstanceOf(parameterName, first, String.class);
-				return (String)first;
+				return (String) first;
 			}
 
-		}
-		else {
+		} else {
 			parameterAccessor.assertKeyValueInstanceOf(parameterName, value, String.class);
-			return (String)value;
+			return (String) value;
 		}
 	}
 
@@ -150,11 +142,10 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		Object value = parameters.get(parameterName);
 		if (value.getClass().isArray()) {
 			parameterAccessor.assertKeyValueInstanceOf(parameterName, value, String[].class);
-			return (String[])value;
-		}
-		else {
+			return (String[]) value;
+		} else {
 			parameterAccessor.assertKeyValueInstanceOf(parameterName, value, String.class);
-			return new String[] { (String)value };
+			return new String[] { (String) value };
 		}
 	}
 
@@ -198,62 +189,62 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 
 	public Number getNumber(String parameterName, Class targetType) throws ConversionException {
 		assertAssignableTo(Number.class, targetType);
-		return (Number)get(parameterName, targetType);
+		return (Number) get(parameterName, targetType);
 	}
 
 	public Number getNumber(String parameterName, Class targetType, Number defaultValue) throws ConversionException {
 		assertAssignableTo(Number.class, targetType);
-		return (Number)get(parameterName, targetType, defaultValue);
+		return (Number) get(parameterName, targetType, defaultValue);
 	}
 
 	public Number getRequiredNumber(String parameterName, Class targetType) throws IllegalArgumentException,
 			ConversionException {
 		assertAssignableTo(Number.class, targetType);
-		return (Number)getRequired(parameterName, targetType);
+		return (Number) getRequired(parameterName, targetType);
 	}
 
 	public Integer getInteger(String parameterName) throws ConversionException {
-		return (Integer)get(parameterName, Integer.class);
+		return (Integer) get(parameterName, Integer.class);
 	}
 
 	public Integer getInteger(String parameterName, Integer defaultValue) throws ConversionException {
-		return (Integer)get(parameterName, Integer.class, defaultValue);
+		return (Integer) get(parameterName, Integer.class, defaultValue);
 	}
 
 	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException, ConversionException {
-		return (Integer)getRequired(parameterName, Integer.class);
+		return (Integer) getRequired(parameterName, Integer.class);
 	}
 
 	public Long getLong(String parameterName) throws ConversionException {
-		return (Long)get(parameterName, Long.class);
+		return (Long) get(parameterName, Long.class);
 	}
 
 	public Long getLong(String parameterName, Long defaultValue) throws ConversionException {
-		return (Long)get(parameterName, Long.class, defaultValue);
+		return (Long) get(parameterName, Long.class, defaultValue);
 	}
 
 	public Long getRequiredLong(String parameterName) throws IllegalArgumentException, ConversionException {
-		return (Long)getRequired(parameterName, Long.class);
+		return (Long) getRequired(parameterName, Long.class);
 	}
 
 	public Boolean getBoolean(String parameterName) throws ConversionException {
-		return (Boolean)get(parameterName, Boolean.class);
+		return (Boolean) get(parameterName, Boolean.class);
 	}
 
 	public Boolean getBoolean(String parameterName, Boolean defaultValue) throws ConversionException {
-		return (Boolean)get(parameterName, Boolean.class, defaultValue);
+		return (Boolean) get(parameterName, Boolean.class, defaultValue);
 	}
 
 	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException, ConversionException {
-		return (Boolean)getRequired(parameterName, Boolean.class);
+		return (Boolean) getRequired(parameterName, Boolean.class);
 	}
 
 	public MultipartFile getMultipartFile(String parameterName) {
-		return (MultipartFile)parameterAccessor.get(parameterName, MultipartFile.class);
+		return (MultipartFile) parameterAccessor.get(parameterName, MultipartFile.class);
 	}
 
 	public MultipartFile getRequiredMultipartFile(String parameterName) throws IllegalArgumentException {
-		return (MultipartFile)parameterAccessor.getRequired(parameterName, MultipartFile.class);
+		return (MultipartFile) parameterAccessor.getRequired(parameterName, MultipartFile.class);
 	}
 
 	public AttributeMap asAttributeMap() {
@@ -286,8 +277,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	}
 
 	/**
-	 * Convert given array of String parameters to specified target type and
-	 * return the resulting array.
+	 * Convert given array of String parameters to specified target type and return the resulting array.
 	 */
 	private Object[] convert(String[] parameters, Class targetElementType) throws ConversionException {
 		List list = new ArrayList(parameters.length);
@@ -295,7 +285,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		for (int i = 0; i < parameters.length; i++) {
 			list.add(converter.execute(parameters[i]));
 		}
-		return list.toArray((Object[])Array.newInstance(targetElementType, parameters.length));
+		return list.toArray((Object[]) Array.newInstance(targetElementType, parameters.length));
 	}
 
 	/**

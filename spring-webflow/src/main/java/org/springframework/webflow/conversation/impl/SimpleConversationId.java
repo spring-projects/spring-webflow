@@ -21,8 +21,7 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 
 /**
- * An id that uniquely identifies a conversation managed by a
- * {@link ConversationManager}.
+ * An id that uniquely identifies a conversation managed by a {@link ConversationManager}.
  * <p>
  * This key consists of a unique string that is typically a GUID.
  * 
@@ -47,7 +46,7 @@ public class SimpleConversationId extends ConversationId {
 		if (!(o instanceof SimpleConversationId)) {
 			return false;
 		}
-		return id.equals(((SimpleConversationId)o).id);
+		return id.equals(((SimpleConversationId) o).id);
 	}
 
 	public int hashCode() {

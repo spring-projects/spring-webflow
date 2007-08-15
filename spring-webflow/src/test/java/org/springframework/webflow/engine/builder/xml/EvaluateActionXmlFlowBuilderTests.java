@@ -43,7 +43,7 @@ public class EvaluateActionXmlFlowBuilderTests extends TestCase {
 	public void testFlowExecution() {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
-		ApplicationView selection = (ApplicationView)execution.start(null, new MockExternalContext());
+		ApplicationView selection = (ApplicationView) execution.start(null, new MockExternalContext());
 		assertEquals(FlowSessionStatus.CREATED, execution.getActiveSession().getScope().get("sessionStatus"));
 		assertNotNull(selection.getModel().get("hashCode"));
 		assertEquals(new Integer(FlowSessionStatus.CREATED.hashCode()), selection.getModel().get("hashCode"));

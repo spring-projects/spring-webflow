@@ -20,9 +20,8 @@ import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
 /**
- * A strategy interface for loading the set of FlowExecutionListener's that
- * should apply to executions of a given flow definition. Typically used by a
- * {@link FlowExecutionFactory} as part of execution creation.
+ * A strategy interface for loading the set of FlowExecutionListener's that should apply to executions of a given flow
+ * definition. Typically used by a {@link FlowExecutionFactory} as part of execution creation.
  * 
  * @author Keith Donald
  */

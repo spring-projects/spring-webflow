@@ -27,8 +27,7 @@ import org.springframework.webflow.core.collection.AttributeMapBindingListener;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * A Shared Map backed by the Servlet HTTP session, for accessing session scoped
- * attributes.
+ * A Shared Map backed by the Servlet HTTP session, for accessing session scoped attributes.
  * 
  * @author Keith Donald
  */
@@ -47,8 +46,7 @@ public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
 	}
 
 	/**
-	 * Internal helper to get the HTTP session associated with the wrapped
-	 * request, or null if there is no such session.
+	 * Internal helper to get the HTTP session associated with the wrapped request, or null if there is no such session.
 	 * <p>
 	 * Note that this method will not force session creation.
 	 */
@@ -64,7 +62,7 @@ public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
 		Object value = session.getAttribute(key);
 		if (value instanceof HttpSessionMapBindingListener) {
 			// unwrap
-			return ((HttpSessionMapBindingListener)value).getListener();
+			return ((HttpSessionMapBindingListener) value).getListener();
 		} else {
 			return value;
 		}
@@ -75,10 +73,8 @@ public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
 		HttpSession session = request.getSession(true);
 		if (value instanceof AttributeMapBindingListener) {
 			// wrap
-			session.setAttribute(key,
-					new HttpSessionMapBindingListener((AttributeMapBindingListener)value, this));
-		}
-		else {
+			session.setAttribute(key, new HttpSessionMapBindingListener((AttributeMapBindingListener) value, this));
+		} else {
 			session.setAttribute(key, value);
 		}
 	}

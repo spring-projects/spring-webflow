@@ -29,16 +29,13 @@ import org.springframework.webflow.util.RandomGuidUidGenerator;
 import org.springframework.webflow.util.UidGenerator;
 
 /**
- * Simple implementation of a conversation manager that stores conversations in
- * the session attribute map.
+ * Simple implementation of a conversation manager that stores conversations in the session attribute map.
  * <p>
- * Using the {@link #setMaxConversations(int) maxConversations} property, you can
- * limit the number of concurrently active conversations allowed in a single
- * session. If the maximum is exceeded, the conversation manager will automatically
- * end the oldest conversation. The default is 5, which should be fine for most
- * situations. Set it to -1 for no limit. Setting maxConversations to 1 allows
- * easy resource cleanup in situations where there should only be one active
- * conversation per session.
+ * Using the {@link #setMaxConversations(int) maxConversations} property, you can limit the number of concurrently
+ * active conversations allowed in a single session. If the maximum is exceeded, the conversation manager will
+ * automatically end the oldest conversation. The default is 5, which should be fine for most situations. Set it to -1
+ * for no limit. Setting maxConversations to 1 allows easy resource cleanup in situations where there should only be one
+ * active conversation per session.
  * 
  * @author Erwin Vervaet
  */
@@ -47,26 +44,24 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private static final Log logger = LogFactory.getLog(SessionBindingConversationManager.class);
 
 	/**
-	 * Generate a unique key for the session attribute holding the conversation
-	 * container managed by this conversation manager.
+	 * Generate a unique key for the session attribute holding the conversation container managed by this conversation
+	 * manager.
 	 */
 	private final String sessionKey = "webflow.conversation.container." + new RandomGuid().toString();
-	
+
 	/**
 	 * The conversation uid generation strategy to use.
 	 */
 	private UidGenerator conversationIdGenerator = new RandomGuidUidGenerator();
 
 	/**
-	 * The maximum number of active conversations allowed in a session.
-	 * The default is 5. This is high enough for most practical situations and low enough
-	 * to avoid excessive resource usage or easy denial of service attacks.
+	 * The maximum number of active conversations allowed in a session. The default is 5. This is high enough for most
+	 * practical situations and low enough to avoid excessive resource usage or easy denial of service attacks.
 	 */
 	private int maxConversations = 5;
-	
+
 	/**
-	 * Returns the used generator for conversation ids. Defaults to
-	 * {@link RandomGuidUidGenerator}.
+	 * Returns the used generator for conversation ids. Defaults to {@link RandomGuidUidGenerator}.
 	 * @since 1.0.1
 	 */
 	public UidGenerator getConversationIdGenerator() {
@@ -79,10 +74,9 @@ public class SessionBindingConversationManager implements ConversationManager {
 	public void setConversationIdGenerator(UidGenerator uidGenerator) {
 		this.conversationIdGenerator = uidGenerator;
 	}
-	
+
 	/**
-	 * Returns the maximum number of allowed concurrent conversations. The
-	 * default is 5.
+	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
 	 * @since 1.0.1
 	 */
 	public int getMaxConversations() {
@@ -90,16 +84,15 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	/**
-	 * Set the maximum number of allowed concurrent conversations. Set to -1 for
-	 * no limit. The default is 5.
+	 * Set the maximum number of allowed concurrent conversations. Set to -1 for no limit. The default is 5.
 	 */
 	public void setMaxConversations(int maxConversations) {
 		this.maxConversations = maxConversations;
 	}
-	
+
 	/**
-	 * Returns the key this conversation manager uses to store conversation
-	 * data in the session. The key is unique for this conversation manager instance.
+	 * Returns the key this conversation manager uses to store conversation data in the session. The key is unique for
+	 * this conversation manager instance.
 	 * @return the session key
 	 */
 	public String getSessionKey() {
@@ -109,9 +102,9 @@ public class SessionBindingConversationManager implements ConversationManager {
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
 		ConversationId conversationId = new SimpleConversationId(conversationIdGenerator.generateUid());
 		if (logger.isDebugEnabled()) {
-			logger.debug("Beginning conversation " + conversationParameters +
-					"; unique conversation id = " + conversationId);
-		}		
+			logger.debug("Beginning conversation " + conversationParameters + "; unique conversation id = "
+					+ conversationId);
+		}
 		return getConversationContainer().createAndAddConversation(conversationId, conversationParameters);
 	}
 
@@ -129,14 +122,13 @@ public class SessionBindingConversationManager implements ConversationManager {
 	// internal helpers
 
 	/**
-	 * Obtain the conversation container from the session. Create a new empty
-	 * container and add it to the session if no existing container can be
-	 * found.
+	 * Obtain the conversation container from the session. Create a new empty container and add it to the session if no
+	 * existing container can be found.
 	 */
 	private ConversationContainer getConversationContainer() {
 		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
-			ConversationContainer container = (ConversationContainer)sessionMap.get(sessionKey);
+			ConversationContainer container = (ConversationContainer) sessionMap.get(sessionKey);
 			if (container == null) {
 				container = new ConversationContainer(maxConversations, sessionKey);
 				sessionMap.put(sessionKey, container);

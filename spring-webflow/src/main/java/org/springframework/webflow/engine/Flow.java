@@ -34,70 +34,53 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A single flow definition. A Flow definition is a reusable, self-contained
- * controller module that provides the blue print for a user dialog or
- * conversation. Flows typically orchestrate controlled navigations within web
- * applications to guide users through fulfillment of a business process/goal
- * that takes place over a series of steps, modeled as states.
+ * A single flow definition. A Flow definition is a reusable, self-contained controller module that provides the blue
+ * print for a user dialog or conversation. Flows typically orchestrate controlled navigations within web applications
+ * to guide users through fulfillment of a business process/goal that takes place over a series of steps, modeled as
+ * states.
  * <p>
- * A simple Flow definition could do nothing more than execute an action and
- * display a view all in one request. A more elaborate Flow definition may be
- * long-lived and execute across a series of requests, invoking many possible
- * paths, actions, and subflows.
+ * A simple Flow definition could do nothing more than execute an action and display a view all in one request. A more
+ * elaborate Flow definition may be long-lived and execute across a series of requests, invoking many possible paths,
+ * actions, and subflows.
  * <p>
- * Especially in Intranet applications there are often "controlled navigations"
- * where the user is not free to do what he or she wants but must follow the
- * guidelines provided by the system to complete a process that is transactional
- * in nature (the quinessential example would be a 'checkout' flow of a shopping
- * cart application). This is a typical use case appropriate to model as a flow.
+ * Especially in Intranet applications there are often "controlled navigations" where the user is not free to do what he
+ * or she wants but must follow the guidelines provided by the system to complete a process that is transactional in
+ * nature (the quinessential example would be a 'checkout' flow of a shopping cart application). This is a typical use
+ * case appropriate to model as a flow.
  * <p>
- * Structurally a Flow is composed of a set of states. A {@link State} is a
- * point in a flow where a behavior is executed; for example, showing a view,
- * executing an action, spawning a subflow, or terminating the flow. Different
+ * Structurally a Flow is composed of a set of states. A {@link State} is a point in a flow where a behavior is
+ * executed; for example, showing a view, executing an action, spawning a subflow, or terminating the flow. Different
  * types of states execute different behaviors in a polymorphic fashion.
  * <p>
- * Each {@link TransitionableState} type has one or more transitions that when
- * executed move a flow to another state. These transitions define the supported
- * paths through the flow.
+ * Each {@link TransitionableState} type has one or more transitions that when executed move a flow to another state.
+ * These transitions define the supported paths through the flow.
  * <p>
- * A state transition is triggered by the occurence of an event. An event is
- * something that happens the flow should respond to, for example a user input
- * event like ("submit") or an action execution result event like ("success").
- * When an event occurs in a state of a Flow that event drives a state
- * transition that decides what to do next.
+ * A state transition is triggered by the occurence of an event. An event is something that happens the flow should
+ * respond to, for example a user input event like ("submit") or an action execution result event like ("success"). When
+ * an event occurs in a state of a Flow that event drives a state transition that decides what to do next.
  * <p>
- * Each Flow has exactly one start state. A start state is simply a marker
- * noting the state executions of this Flow definition should start in. The
- * first state added to the flow will become the start state by default.
+ * Each Flow has exactly one start state. A start state is simply a marker noting the state executions of this Flow
+ * definition should start in. The first state added to the flow will become the start state by default.
  * <p>
- * Flow definitions may have one or more flow exception handlers. A
- * {@link FlowExecutionExceptionHandler} can execute custom behavior in response
- * to a specific exception (or set of exceptions) that occur in a state of one
- * of this flow's executions.
+ * Flow definitions may have one or more flow exception handlers. A {@link FlowExecutionExceptionHandler} can execute
+ * custom behavior in response to a specific exception (or set of exceptions) that occur in a state of one of this
+ * flow's executions.
  * <p>
- * Instances of this class are typically built by
- * {@link org.springframework.webflow.engine.builder.FlowBuilder}
+ * Instances of this class are typically built by {@link org.springframework.webflow.engine.builder.FlowBuilder}
  * implementations but may also be directly instantiated.
  * <p>
- * This class and the rest of the Spring Web Flow (SWF) engine have been designed
- * with minimal dependencies on other libraries. Spring Web Flow is usable in a
- * standalone fashion (as well as in the context of other frameworks like Spring
- * MVC, Struts, or JSF, for example). The engine system is fully usable outside an
- * HTTP servlet environment, for example in portlets, tests, or standalone
- * applications. One of the major architectural benefits of Spring Web Flow is
- * the ability to design reusable, high-level controller modules that may be
- * executed in <i>any</i> environment.
+ * This class and the rest of the Spring Web Flow (SWF) engine have been designed with minimal dependencies on other
+ * libraries. Spring Web Flow is usable in a standalone fashion (as well as in the context of other frameworks like
+ * Spring MVC, Struts, or JSF, for example). The engine system is fully usable outside an HTTP servlet environment, for
+ * example in portlets, tests, or standalone applications. One of the major architectural benefits of Spring Web Flow is
+ * the ability to design reusable, high-level controller modules that may be executed in <i>any</i> environment.
  * <p>
- * Note: flows are singleton definition objects so they should be thread-safe.
- * You can think a flow definition as analagous somewhat to a Java class,
- * defining all the behavior of an application module. The core behaviors
- * {@link #start(RequestControlContext, MutableAttributeMap) start},
- * {@link #onEvent(RequestControlContext) on event}, and
- * {@link #end(RequestControlContext, MutableAttributeMap) end} each accept a
- * {@link RequestContext request context} that allows for this flow to access
- * execution state in a thread safe manner. A flow execution is what models a
- * running instance of this flow definition, somewhat analgous to a java object
- * that is an instance of a class.
+ * Note: flows are singleton definition objects so they should be thread-safe. You can think a flow definition as
+ * analagous somewhat to a Java class, defining all the behavior of an application module. The core behaviors
+ * {@link #start(RequestControlContext, MutableAttributeMap) start}, {@link #onEvent(RequestControlContext) on event},
+ * and {@link #end(RequestControlContext, MutableAttributeMap) end} each accept a {@link RequestContext request context}
+ * that allows for this flow to access execution state in a thread safe manner. A flow execution is what models a
+ * running instance of this flow definition, somewhat analgous to a java object that is an instance of a class.
  * 
  * @see org.springframework.webflow.engine.State
  * @see org.springframework.webflow.engine.TransitionableState
@@ -121,8 +104,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * An assigned flow identifier uniquely identifying this flow among all
-	 * other flows.
+	 * An assigned flow identifier uniquely identifying this flow among all other flows.
 	 */
 	private String id;
 
@@ -149,9 +131,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The list of actions to execute when this flow starts.
 	 * <p>
-	 * Start actions should execute with care as during startup a flow session
-	 * has not yet fully initialized and some properties like its "currentState"
-	 * have not yet been set.
+	 * Start actions should execute with care as during startup a flow session has not yet fully initialized and some
+	 * properties like its "currentState" have not yet been set.
 	 */
 	private ActionList startActionList = new ActionList();
 
@@ -181,8 +162,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	private Set inlineFlows = CollectionFactory.createLinkedSetIfPossible(3);
 
 	/**
-	 * Construct a new flow definition with the given id. The id should be
-	 * unique among all flows.
+	 * Construct a new flow definition with the given id. The id should be unique among all flows.
 	 * @param id the flow identifier
 	 */
 	public Flow(String id) {
@@ -216,13 +196,11 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Add given state definition to this flow definition. Marked protected, as
-	 * this method is to be called by the (privileged) state definition classes
-	 * themselves during state construction as part of a FlowBuilder invocation.
+	 * Add given state definition to this flow definition. Marked protected, as this method is to be called by the
+	 * (privileged) state definition classes themselves during state construction as part of a FlowBuilder invocation.
 	 * @param state the state to add
-	 * @throws IllegalArgumentException when the state cannot be added to the
-	 * flow; for instance if another state shares the same id as the one
-	 * provided or if given state already belongs to another flow
+	 * @throws IllegalArgumentException when the state cannot be added to the flow; for instance if another state shares
+	 * the same id as the one provided or if given state already belongs to another flow
 	 */
 	protected void add(State state) throws IllegalArgumentException {
 		if (this != state.getFlow() && state.getFlow() != null) {
@@ -257,32 +235,28 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	public boolean containsState(String stateId) {
 		Iterator it = states.iterator();
 		while (it.hasNext()) {
-			State state = (State)it.next();
+			State state = (State) it.next();
 			if (state.getId().equals(stateId)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Set the start state for this flow to the state with the provided
-	 * <code>stateId</code>; a state must exist by the provided
-	 * <code>stateId</code>.
+	 * Set the start state for this flow to the state with the provided <code>stateId</code>; a state must exist by
+	 * the provided <code>stateId</code>.
 	 * @param stateId the id of the new start state
-	 * @throws IllegalArgumentException when no state exists with the id you
-	 * provided
+	 * @throws IllegalArgumentException when no state exists with the id you provided
 	 */
 	public void setStartState(String stateId) throws IllegalArgumentException {
 		setStartState(getStateInstance(stateId));
 	}
 
 	/**
-	 * Set the start state for this flow to the state provided; any state may be
-	 * the start state.
+	 * Set the start state for this flow to the state provided; any state may be the start state.
 	 * @param state the new start state
-	 * @throws IllegalArgumentException given state has not been added to this
-	 * flow
+	 * @throws IllegalArgumentException given state has not been added to this flow
 	 */
 	public void setStartState(State state) throws IllegalArgumentException {
 		if (!states.contains(state)) {
@@ -296,16 +270,15 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param stateId id of the state to look up
 	 * @return the transitionable state
 	 * @throws IllegalArgumentException if the identified state cannot be found
-	 * @throws ClassCastException when the identified state is not
-	 * transitionable
+	 * @throws ClassCastException when the identified state is not transitionable
 	 */
-	public TransitionableState getTransitionableState(String stateId)
-			throws IllegalArgumentException, ClassCastException {
+	public TransitionableState getTransitionableState(String stateId) throws IllegalArgumentException,
+			ClassCastException {
 		State state = getStateInstance(stateId);
 		if (state != null && !(state instanceof TransitionableState)) {
 			throw new ClassCastException("The state '" + stateId + "' of flow '" + getId() + "' must be transitionable");
 		}
-		return (TransitionableState)state;
+		return (TransitionableState) state;
 	}
 
 	/**
@@ -320,7 +293,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		}
 		Iterator it = states.iterator();
 		while (it.hasNext()) {
-			State state = (State)it.next();
+			State state = (State) it.next();
 			if (state.getId().equals(stateId)) {
 				return state;
 			}
@@ -330,9 +303,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Convenience accessor that returns an ordered array of the String
-	 * <code>ids</code> for the state definitions associated with this flow
-	 * definition.
+	 * Convenience accessor that returns an ordered array of the String <code>ids</code> for the state definitions
+	 * associated with this flow definition.
 	 * @return the state ids
 	 */
 	public String[] getStateIds() {
@@ -340,7 +312,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		int i = 0;
 		Iterator it = states.iterator();
 		while (it.hasNext()) {
-			stateIds[i++] = ((State)it.next()).getId();
+			stateIds[i++] = ((State) it.next()).getId();
 		}
 		return stateIds;
 	}
@@ -365,12 +337,12 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 			addVariable(variables[i]);
 		}
 	}
-	
+
 	/**
 	 * Returns the flow variables.
 	 */
 	public FlowVariable[] getVariables() {
-		return (FlowVariable[])variables.toArray(new FlowVariable[variables.size()]);
+		return (FlowVariable[]) variables.toArray(new FlowVariable[variables.size()]);
 	}
 
 	/**
@@ -390,8 +362,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Returns the list of actions executed by this flow when an execution of
-	 * the flow <i>starts</i>. The returned list is mutable.
+	 * Returns the list of actions executed by this flow when an execution of the flow <i>starts</i>. The returned list
+	 * is mutable.
 	 * @return the start action list
 	 */
 	public ActionList getStartActionList() {
@@ -399,8 +371,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Returns the list of actions executed by this flow when an execution of
-	 * the flow <i>ends</i>. The returned list is mutable.
+	 * Returns the list of actions executed by this flow when an execution of the flow <i>ends</i>. The returned list
+	 * is mutable.
 	 * @return the end action list
 	 */
 	public ActionList getEndActionList() {
@@ -424,13 +396,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Returns the set of exception handlers, allowing manipulation of how
-	 * exceptions are handled when thrown during flow execution. Exception
-	 * handlers are invoked when an exception occurs at execution time
-	 * and can execute custom exception handling logic as well as select an
-	 * error view to display. Exception handlers attached at the flow
-	 * level have an opportunity to handle exceptions that aren't handled at the
-	 * state level.
+	 * Returns the set of exception handlers, allowing manipulation of how exceptions are handled when thrown during
+	 * flow execution. Exception handlers are invoked when an exception occurs at execution time and can execute custom
+	 * exception handling logic as well as select an error view to display. Exception handlers attached at the flow
+	 * level have an opportunity to handle exceptions that aren't handled at the state level.
 	 * @return the exception handler set
 	 */
 	public FlowExecutionExceptionHandlerSet getExceptionHandlerSet() {
@@ -454,7 +423,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		int i = 0;
 		Iterator it = inlineFlows.iterator();
 		while (it.hasNext()) {
-			flowIds[i++] = ((Flow)it.next()).getId();
+			flowIds[i++] = ((Flow) it.next()).getId();
 		}
 		return flowIds;
 	}
@@ -464,7 +433,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @return the list of inline flows
 	 */
 	public Flow[] getInlineFlows() {
-		return (Flow[])inlineFlows.toArray(new Flow[inlineFlows.size()]);
+		return (Flow[]) inlineFlows.toArray(new Flow[inlineFlows.size()]);
 	}
 
 	/**
@@ -478,16 +447,14 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * Tests if this flow contains an in-line flow with the specified id.
 	 * @param id the inline flow id
-	 * @return true if this flow contains a inline flow with that id, false
-	 * otherwise
+	 * @return true if this flow contains a inline flow with that id, false otherwise
 	 */
 	public boolean containsInlineFlow(String id) {
 		return getInlineFlow(id) != null;
 	}
 
 	/**
-	 * Returns the inline flow with the provided id, or <code>null</code> if
-	 * no such inline flow exists.
+	 * Returns the inline flow with the provided id, or <code>null</code> if no such inline flow exists.
 	 * @param id the inline flow id
 	 * @return the inline flow
 	 * @throws IllegalArgumentException when an invalid flow id is provided
@@ -499,7 +466,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		}
 		Iterator it = inlineFlows.iterator();
 		while (it.hasNext()) {
-			Flow flow = (Flow)it.next();
+			Flow flow = (Flow) it.next();
 			if (flow.getId().equals(id)) {
 				return flow;
 			}
@@ -508,21 +475,21 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Returns the set of transitions eligible for execution by this flow if no
-	 * state-level transition is matched. The returned set is mutable.
+	 * Returns the set of transitions eligible for execution by this flow if no state-level transition is matched. The
+	 * returned set is mutable.
 	 * @return the global transition set
 	 */
 	public TransitionSet getGlobalTransitionSet() {
 		return globalTransitionSet;
 	}
-	
+
 	// id based equality
 
 	public boolean equals(Object o) {
 		if (!(o instanceof Flow)) {
 			return false;
 		}
-		Flow other = (Flow)o;
+		Flow other = (Flow) o;
 		return id.equals(other.id);
 	}
 
@@ -533,14 +500,11 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	// behavioral code, could be overridden in subclasses
 
 	/**
-	 * Start a new session for this flow in its start state. This boils down to
-	 * the following:
+	 * Start a new session for this flow in its start state. This boils down to the following:
 	 * <ol>
-	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)})
-	 * in flow scope.</li>
-	 * <li>Map provided input data into the flow execution control context.
-	 * Typically data will be mapped into flow scope using the registered input
-	 * mapper ({@link #setInputMapper(AttributeMapper)}).</li>
+	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li>
+	 * <li>Map provided input data into the flow execution control context. Typically data will be mapped into flow
+	 * scope using the registered input mapper ({@link #setInputMapper(AttributeMapper)}).</li>
 	 * <li>Execute all registered start actions ({@link #getStartActionList()}).</li>
 	 * <li>Enter the configured start state ({@link #setStartState(State)})</li>
 	 * </ol>
@@ -558,26 +522,22 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Inform this flow definition that an event was signaled in the current
-	 * state of an active flow execution. The signaled event is the last event
-	 * available in given request context ({@link RequestContext#getLastEvent()}).
+	 * Inform this flow definition that an event was signaled in the current state of an active flow execution. The
+	 * signaled event is the last event available in given request context ({@link RequestContext#getLastEvent()}).
 	 * @param context the flow execution control context
 	 * @return the selected view
-	 * @throws FlowExecutionException when an exception occurs processing the
-	 * event
+	 * @throws FlowExecutionException when an exception occurs processing the event
 	 */
 	public ViewSelection onEvent(RequestControlContext context) throws FlowExecutionException {
 		TransitionableState currentState = getCurrentTransitionableState(context);
 		try {
 			return currentState.onEvent(context);
-		}
-		catch (NoMatchingTransitionException e) {
+		} catch (NoMatchingTransitionException e) {
 			// try the flow level transition set for a match
 			Transition transition = globalTransitionSet.getTransition(context);
 			if (transition != null) {
 				return transition.execute(currentState, context);
-			}
-			else {
+			} else {
 				// no matching global transition => let the original exception
 				// propagate
 				throw e;
@@ -586,17 +546,15 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Inform this flow definition that an execution session of itself has
-	 * ended. As a result, the flow will do the following:
+	 * Inform this flow definition that an execution session of itself has ended. As a result, the flow will do the
+	 * following:
 	 * <ol>
 	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li>
-	 * <li>Map data available in the flow execution control context into
-	 * provided output map using a registered output mapper
-	 * ({@link #setOutputMapper(AttributeMapper)}).</li>
+	 * <li>Map data available in the flow execution control context into provided output map using a registered output
+	 * mapper ({@link #setOutputMapper(AttributeMapper)}).</li>
 	 * </ol>
 	 * @param context the flow execution control context
-	 * @param output initial output produced by the session that is eligible for
-	 * modification by this method
+	 * @param output initial output produced by the session that is eligible for modification by this method
 	 * @throws FlowExecutionException when an exception occurs ending this flow
 	 */
 	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
@@ -610,8 +568,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Handle an exception that occured during an execution of this flow.
 	 * @param exception the exception that occured
 	 * @param context the flow execution control context
-	 * @return the selected error view, or <code>null</code> if no handler
-	 * matched or returned a non-null view selection
+	 * @return the selected error view, or <code>null</code> if no handler matched or returned a non-null view
+	 * selection
 	 */
 	public ViewSelection handleException(FlowExecutionException exception, RequestControlContext context)
 			throws FlowExecutionException {
@@ -626,7 +584,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	private void createVariables(RequestContext context) {
 		Iterator it = variables.iterator();
 		while (it.hasNext()) {
-			FlowVariable variable = (FlowVariable)it.next();
+			FlowVariable variable = (FlowVariable) it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -638,12 +596,12 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Returns the current state and makes sure it is transitionable.
 	 */
 	private TransitionableState getCurrentTransitionableState(RequestControlContext context) {
-		State currentState = (State)context.getCurrentState();
+		State currentState = (State) context.getCurrentState();
 		if (!(currentState instanceof TransitionableState)) {
 			throw new IllegalStateException("You can only signal events in transitionable states, and state "
 					+ context.getCurrentState() + " is not transitionable - programmer error");
 		}
-		return (TransitionableState)currentState;
+		return (TransitionableState) currentState;
 	}
 
 	public String toString() {

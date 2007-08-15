@@ -23,9 +23,8 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A transition criteria that will execute an action when tested and return
- * <code>true</code> if the action's result is equal to the 'trueEventId',
- * <code>false</code> otherwise.
+ * A transition criteria that will execute an action when tested and return <code>true</code> if the action's result
+ * is equal to the 'trueEventId', <code>false</code> otherwise.
  * <p>
  * This effectively adapts an <code>Action</code> to a <code>TransitionCriteria</code>.
  * 
@@ -38,14 +37,12 @@ import org.springframework.webflow.execution.RequestContext;
 public class ActionTransitionCriteria implements TransitionCriteria {
 
 	/**
-	 * The result event id that should map to a <code>true</code>
-	 * return value.
+	 * The result event id that should map to a <code>true</code> return value.
 	 */
 	private String trueEventId = "success";
 
 	/**
-	 * The action to execute when the criteria is tested, annotated with
-	 * usage attributes.
+	 * The action to execute when the criteria is tested, annotated with usage attributes.
 	 */
 	private Action action;
 
@@ -58,17 +55,16 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 	}
 
 	/**
-	 * Returns the action result <code>eventId</code> that should cause this
-	 * criteria to return true (it will return false otherwise). Defaults to
-	 * "success".
+	 * Returns the action result <code>eventId</code> that should cause this criteria to return true (it will return
+	 * false otherwise). Defaults to "success".
 	 */
 	public String getTrueEventId() {
 		return trueEventId;
 	}
 
 	/**
-	 * Sets the action result <code>eventId</code> that should cause this
-	 * precondition to return true (it will return false otherwise).
+	 * Sets the action result <code>eventId</code> that should cause this precondition to return true (it will return
+	 * false otherwise).
 	 * @param trueEventId the true result event ID
 	 */
 	public void setTrueEventId(String trueEventId) {

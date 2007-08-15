@@ -40,8 +40,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	private Map attributes;
 
 	/**
-	 * A helper for accessing attributes. Marked transient and restored on
-	 * deserialization.
+	 * A helper for accessing attributes. Marked transient and restored on deserialization.
 	 */
 	private transient MapAccessor attributeAccessor;
 
@@ -54,8 +53,8 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 
 	/**
 	 * Creates a new attribute map, initially empty.
-     * @param size the initial size
-     * @param loadFactor the load factor
+	 * @param size the initial size
+	 * @param loadFactor the load factor
 	 */
 	public LocalAttributeMap(int size, int loadFactor) {
 		initAttributes(createTargetMap(size, loadFactor));
@@ -211,8 +210,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	public AttributeMap union(AttributeMap attributes) {
 		if (attributes == null) {
 			return new LocalAttributeMap(getMapInternal());
-		}
-		else {
+		} else {
 			Map map = createTargetMap();
 			map.putAll(getMapInternal());
 			map.putAll(attributes.asMap());
@@ -270,8 +268,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	// helpers
 
 	/**
-	 * Factory method that returns the target map storing the data in this
-	 * attribute map.
+	 * Factory method that returns the target map storing the data in this attribute map.
 	 * @return the target map
 	 */
 	protected Map createTargetMap() {
@@ -279,8 +276,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	}
 
 	/**
-	 * Factory method that returns the target map storing the data in this
-	 * attribute map.
+	 * Factory method that returns the target map storing the data in this attribute map.
 	 * @param size the initial size of the map
 	 * @param loadFactor the load factor
 	 * @return the target map
@@ -293,7 +289,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		if (!(o instanceof LocalAttributeMap)) {
 			return false;
 		}
-		LocalAttributeMap other = (LocalAttributeMap)o;
+		LocalAttributeMap other = (LocalAttributeMap) o;
 		return getMapInternal().equals(other.getMapInternal());
 	}
 

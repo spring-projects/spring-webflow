@@ -16,8 +16,7 @@
 package org.springframework.webflow.execution.repository;
 
 /**
- * Base class for exceptions that indicate a flow execution could not be
- * accessed within a repository.
+ * Base class for exceptions that indicate a flow execution could not be accessed within a repository.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -31,8 +30,7 @@ public abstract class FlowExecutionAccessException extends FlowExecutionReposito
 
 	/**
 	 * Creates a new flow execution access exception.
-	 * @param flowExecutionKey the key of the execution that could not be
-	 * accessed
+	 * @param flowExecutionKey the key of the execution that could not be accessed
 	 * @param message a descriptive message
 	 */
 	public FlowExecutionAccessException(FlowExecutionKey flowExecutionKey, String message) {
@@ -41,8 +39,7 @@ public abstract class FlowExecutionAccessException extends FlowExecutionReposito
 
 	/**
 	 * Creates a new flow execution access exception.
-	 * @param flowExecutionKey the key of the execution that could not be
-	 * accessed
+	 * @param flowExecutionKey the key of the execution that could not be accessed
 	 * @param message a descriptive message
 	 * @param cause the root cause of the access failure
 	 */

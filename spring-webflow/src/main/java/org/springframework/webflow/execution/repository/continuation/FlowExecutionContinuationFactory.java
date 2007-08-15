@@ -18,8 +18,7 @@ package org.springframework.webflow.execution.repository.continuation;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * A factory for creating different {@link FlowExecutionContinuation}
- * implementations.
+ * A factory for creating different {@link FlowExecutionContinuation} implementations.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

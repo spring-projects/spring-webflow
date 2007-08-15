@@ -56,8 +56,7 @@ public class PortletRequestParameterMapTests extends TestCase {
 		try {
 			tested.setAttribute("Some key", "Some value");
 			fail("UnsupportedOperationException expected");
-		}
-		catch (UnsupportedOperationException expected) {
+		} catch (UnsupportedOperationException expected) {
 			// expected
 		}
 	}
@@ -68,8 +67,7 @@ public class PortletRequestParameterMapTests extends TestCase {
 		try {
 			tested.removeAttribute("Some param");
 			fail("UnsupportedOperationException expected");
-		}
-		catch (UnsupportedOperationException expected) {
+		} catch (UnsupportedOperationException expected) {
 			// expected
 		}
 	}
@@ -80,7 +78,7 @@ public class PortletRequestParameterMapTests extends TestCase {
 		Iterator names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String)names.next();
+		String name = (String) names.next();
 		assertEquals("Some param", name);
 	}
 }

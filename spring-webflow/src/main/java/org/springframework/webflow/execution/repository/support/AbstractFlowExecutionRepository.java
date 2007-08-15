@@ -21,26 +21,22 @@ import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 
 /**
- * Abstract base class for flow execution repository implementations. Does not
- * make any assumptions about the storage medium used to store active flow
- * executions. Mandates the use of a {@link FlowExecutionStateRestorer}, used
- * to rehydrate a flow execution after it has been obtained from storage
- * from resume.
+ * Abstract base class for flow execution repository implementations. Does not make any assumptions about the storage
+ * medium used to store active flow executions. Mandates the use of a {@link FlowExecutionStateRestorer}, used to
+ * rehydrate a flow execution after it has been obtained from storage from resume.
  * <p>
- * The configured {@link FlowExecutionStateRestorer} should be compatible
- * with the chosen {@link FlowExecution} implementation and is configuration
- * as done by a {@link FlowExecutionFactory} (listeners, execution attributes, ...).
+ * The configured {@link FlowExecutionStateRestorer} should be compatible with the chosen {@link FlowExecution}
+ * implementation and is configuration as done by a {@link FlowExecutionFactory} (listeners, execution attributes, ...).
  * 
  * @author Erwin Vervaet
  */
 public abstract class AbstractFlowExecutionRepository implements FlowExecutionRepository {
 
 	/**
-	 * The strategy for restoring transient flow execution state after
-	 * obtaining it from storage.
+	 * The strategy for restoring transient flow execution state after obtaining it from storage.
 	 */
 	private FlowExecutionStateRestorer executionStateRestorer;
-	
+
 	/**
 	 * Constructor for use in subclasses.
 	 * @param executionStateRestorer the transient flow execution state restorer
@@ -50,22 +46,18 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	}
 
 	/**
-	 * Returns the strategy for restoring transient flow execution state after
-	 * obtaining it from storage.
+	 * Returns the strategy for restoring transient flow execution state after obtaining it from storage.
 	 * @return the transient flow execution state restorer
 	 */
 	protected FlowExecutionStateRestorer getExecutionStateRestorer() {
 		return executionStateRestorer;
 	}
-	
+
 	/**
-	 * Sets the strategy for restoring transient flow execution state after
-	 * obtaining it from storage.
-	 * @param executionStateRestorer the transient flow execution state restorer,
-	 * may not be null
+	 * Sets the strategy for restoring transient flow execution state after obtaining it from storage.
+	 * @param executionStateRestorer the transient flow execution state restorer, may not be null
 	 */
-	private void setExecutionStateRestorer(
-			FlowExecutionStateRestorer executionStateRestorer) {
+	private void setExecutionStateRestorer(FlowExecutionStateRestorer executionStateRestorer) {
 		Assert.notNull(executionStateRestorer, "The flow execution state restorer is required");
 		this.executionStateRestorer = executionStateRestorer;
 	}

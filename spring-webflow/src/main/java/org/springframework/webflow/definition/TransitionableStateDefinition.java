@@ -22,7 +22,7 @@ package org.springframework.webflow.definition;
  * @author Erwin Vervaet
  */
 public interface TransitionableStateDefinition extends StateDefinition {
-	
+
 	/**
 	 * Returns the available transitions out of this state.
 	 * @return the available state transitions

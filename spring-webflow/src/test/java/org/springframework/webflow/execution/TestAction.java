@@ -22,7 +22,7 @@ import org.springframework.webflow.action.AbstractAction;
  * Test action for use in unit tests.
  */
 public class TestAction extends AbstractAction {
-	
+
 	private Event result = new Event(this, "success");
 
 	private boolean executed;
@@ -36,8 +36,7 @@ public class TestAction extends AbstractAction {
 	public TestAction(String result) {
 		if (StringUtils.hasText(result)) {
 			this.result = new Event(this, result);
-		}
-		else {
+		} else {
 			this.result = null;
 		}
 	}

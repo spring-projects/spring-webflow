@@ -19,8 +19,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.factory.FlowExecutionListenerCriteria;
 
 /**
- * Dummy test implementation of a FlowExecutionListenerCriteria.
- * Not intended for actual use.
+ * Dummy test implementation of a FlowExecutionListenerCriteria. Not intended for actual use.
  * 
  * @author Erwin Vervaet
  */

@@ -25,8 +25,7 @@ import org.springframework.webflow.execution.FlowExecutionContextHolder;
 /**
  * A static utility class for accessing the current flow execution holder.
  * <p>
- * By default, the current flow execution holder is associated with the
- * current thread via the {@link FacesContext}'s
+ * By default, the current flow execution holder is associated with the current thread via the {@link FacesContext}'s
  * {@link ExternalContext#getRequestMap()}.
  * 
  * @author Keith Donald
@@ -54,8 +53,7 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Returns true if the flow execution has been restored in the current
-	 * thread.
+	 * Returns true if the flow execution has been restored in the current thread.
 	 * @param context the faces context
 	 * @return true if restored, false otherwise
 	 */
@@ -66,15 +64,13 @@ public class FlowExecutionHolderUtils {
 	/**
 	 * Returns the current flow execution in the given faces context.
 	 * @param context faces context
-	 * @return the flow execution or <code>null</code> if no execution is
-	 * bound
+	 * @return the flow execution or <code>null</code> if no execution is bound
 	 */
 	public static FlowExecution getCurrentFlowExecution(FacesContext context) {
 		FlowExecutionHolder holder = getFlowExecutionHolder(context);
 		if (holder != null) {
 			return holder.getFlowExecution();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -89,8 +85,7 @@ public class FlowExecutionHolderUtils {
 		FlowExecution execution = getCurrentFlowExecution(context);
 		if (execution != null) {
 			return execution;
-		}
-		else {
+		} else {
 			throw new EvaluationException("No current FlowExecution bound to the Faces Context "
 					+ "- was the current flow execution not restored before a view referenced it? "
 					+ "Has the flow execution ended or expired?");
@@ -98,11 +93,9 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Cleans up the current flow execution in the faces context if necessary.
-	 * Specifically, handles unlocking the execution if necessary, setting the
-	 * holder to null, and cleaning up the flow execution context thread local.
-	 * Can be safely called even if no execution is bound or one is bound but
-	 * not locked.
+	 * Cleans up the current flow execution in the faces context if necessary. Specifically, handles unlocking the
+	 * execution if necessary, setting the holder to null, and cleaning up the flow execution context thread local. Can
+	 * be safely called even if no execution is bound or one is bound but not locked.
 	 * @param context the faces context
 	 */
 	public static void cleanupCurrentFlowExecution(FacesContext context) {
@@ -114,8 +107,7 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Returns the key used to index the flow execution holder in the request
-	 * attributes.
+	 * Returns the key used to index the flow execution holder in the request attributes.
 	 */
 	static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();

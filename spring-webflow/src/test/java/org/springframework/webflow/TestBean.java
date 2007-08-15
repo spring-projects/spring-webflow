@@ -18,11 +18,10 @@ package org.springframework.webflow;
 import java.io.Serializable;
 
 /**
- * Simple test bean used by some test cases.
- * Note that this bean has value semantics.
+ * Simple test bean used by some test cases. Note that this bean has value semantics.
  */
 public class TestBean implements Serializable {
-	
+
 	public String datum1 = "";
 
 	public int datum2;
@@ -61,11 +60,11 @@ public class TestBean implements Serializable {
 		if (!(obj instanceof TestBean)) {
 			return false;
 		}
-		TestBean other = (TestBean)obj;
+		TestBean other = (TestBean) obj;
 		return datum1.equals(other.datum1) && datum2 == other.datum2 && executed == other.executed;
 	}
 
 	public int hashCode() {
-		return (datum1.hashCode() + datum2 + (executed ? 1:0)) * 29;
-	}	
+		return (datum1.hashCode() + datum2 + (executed ? 1 : 0)) * 29;
+	}
 }

@@ -27,7 +27,7 @@ import org.springframework.webflow.execution.RequestContext;
 public class MessageSourceAwareAction extends AbstractAction implements MessageSourceAware {
 
 	private MessageSourceAccessor messageSource;
-	
+
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = new MessageSourceAccessor(messageSource);
 	}

@@ -17,36 +17,36 @@ import org.springframework.binding.expression.el.ELExpressionParser;
  */
 public class Jsf11ELExpressionParser extends ELExpressionParser {
 
-    public Jsf11ELExpressionParser(ExpressionFactory expressionFactory) {
-	super(expressionFactory, new Jsf11ELContextFactory());
-    }
-
-    private static class Jsf11ELContextFactory extends DefaultELContextFactory {
-
-	public ELContext getEvaluationContext(Object target) {
-	    return new Jsf11ELContext(FacesContext.getCurrentInstance());
+	public Jsf11ELExpressionParser(ExpressionFactory expressionFactory) {
+		super(expressionFactory, new Jsf11ELContextFactory());
 	}
 
-	private static class Jsf11ELContext extends ELContext {
+	private static class Jsf11ELContextFactory extends DefaultELContextFactory {
 
-	    ELResolver baseResolver;
+		public ELContext getEvaluationContext(Object target) {
+			return new Jsf11ELContext(FacesContext.getCurrentInstance());
+		}
 
-	    public Jsf11ELContext(FacesContext context) {
-		baseResolver = new Jsf11ELResolverAdapter(context);
-	    }
+		private static class Jsf11ELContext extends ELContext {
 
-	    public ELResolver getELResolver() {
-		return baseResolver;
-	    }
+			ELResolver baseResolver;
 
-	    public FunctionMapper getFunctionMapper() {
-		return null;
-	    }
+			public Jsf11ELContext(FacesContext context) {
+				baseResolver = new Jsf11ELResolverAdapter(context);
+			}
 
-	    public VariableMapper getVariableMapper() {
-		return null;
-	    }
+			public ELResolver getELResolver() {
+				return baseResolver;
+			}
+
+			public FunctionMapper getFunctionMapper() {
+				return null;
+			}
+
+			public VariableMapper getVariableMapper() {
+				return null;
+			}
+		}
 	}
-    }
 
 }

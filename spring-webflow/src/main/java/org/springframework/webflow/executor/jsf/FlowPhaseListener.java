@@ -227,19 +227,16 @@ public class FlowPhaseListener implements PhaseListener {
 			restoreFlowExecution(event.getFacesContext());
 			// we do not need to worry about clean up here since other phases will continue to run even if an exception
 			// occurs in restoreFlowExecution(FacesContext)
-		}
-		else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+		} else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
 				try {
 					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
-				}
-				catch (RuntimeException e) {
+				} catch (RuntimeException e) {
 					// we must cleanup here since this is the render response phase and the after phase callback will
 					// NOT run when an exception occurs (which typically does the cleanup--see below)
 					cleanupResources(context);
 					throw e;
-				}
-				catch (Error e) {
+				} catch (Error e) {
 					cleanupResources(context);
 					throw e;
 				}
@@ -253,14 +250,12 @@ public class FlowPhaseListener implements PhaseListener {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 				try {
 					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
-				}
-				finally {
+				} finally {
 					// always cleanup after save - we are done with flow execution request processing
 					cleanupResources(context);
 				}
 			}
-		}
-		else {
+		} else {
 			// cleanup if some other JSF artifact marked 'response complete' to short-circuit the lifecycle early
 			if (context.getResponseComplete()) {
 				cleanupResources(context);
@@ -288,22 +283,18 @@ public class FlowPhaseListener implements PhaseListener {
 					}
 					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey,
 							flowExecution, lock), facesContext);
-				}
-				catch (RuntimeException e) {
+				} catch (RuntimeException e) {
+					lock.unlock();
+					throw e;
+				} catch (Error e) {
 					lock.unlock();
 					throw e;
 				}
-				catch (Error e) {
-					lock.unlock();
-					throw e;
-				}
-			}
-			catch (FlowExecutionAccessException e) {
+			} catch (FlowExecutionAccessException e) {
 				// thrown if access to the execution could not be granted
 				handleFlowExecutionAccessException(e, facesContext);
 			}
-		}
-		else if (argumentHandler.isFlowIdPresent(context)) {
+		} else if (argumentHandler.isFlowIdPresent(context)) {
 			// launch a new flow execution
 			// (this could happen as part of direct browser access or a flow definition redirect)
 			String flowId = argumentHandler.extractFlowId(context);
@@ -343,8 +334,7 @@ public class FlowPhaseListener implements PhaseListener {
 			MutableAttributeMap inputMap = new LocalAttributeMap();
 			inputMapper.map(context, inputMap, null);
 			return inputMap;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -360,8 +350,7 @@ public class FlowPhaseListener implements PhaseListener {
 			// no navigation event has been processed - simply refresh the execution with the same key
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
-		}
-		else {
+		} else {
 			// an navigation event has been processed - generate a new flow execution key if necessary
 			generateKey(context, holder);
 		}
@@ -417,17 +406,17 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Factory method that creates the state holder UI component that will track the flow execution key
-	 * used for execution restoration during subsequent restore view phases.  Subclasses may override to 
-	 * customize the state holder component implementation, for example--to handle flow execution 
-	 * restoration/access exceptions in a certain way.
+	 * Factory method that creates the state holder UI component that will track the flow execution key used for
+	 * execution restoration during subsequent restore view phases. Subclasses may override to customize the state
+	 * holder component implementation, for example--to handle flow execution restoration/access exceptions in a certain
+	 * way.
 	 * @return the flow execution key state holder
 	 * @see #saveInViewRoot(FacesContext, String)
 	 */
 	protected FlowExecutionKeyStateHolder createFlowExecutionKeyStateHolder() {
 		return new FlowExecutionKeyStateHolder();
 	}
-	
+
 	/**
 	 * Updates the current flow execution in the repository.
 	 * @param context the external context
@@ -442,8 +431,7 @@ public class FlowPhaseListener implements PhaseListener {
 				logger.debug("Saving execution to repository with key " + holder.getFlowExecutionKey());
 			}
 			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
-		}
-		else {
+		} else {
 			if (holder.getFlowExecutionKey() != null) {
 				// remove the flow execution from the repository
 				if (logger.isDebugEnabled()) {
@@ -455,8 +443,7 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Helper method to issue a redirect in a JSF environment properly.  Subclasses may use 
-	 * as utility code.
+	 * Helper method to issue a redirect in a JSF environment properly. Subclasses may use as utility code.
 	 * @param url the url to redirect to
 	 * @param context the faces context
 	 */
@@ -465,12 +452,11 @@ public class FlowPhaseListener implements PhaseListener {
 			url = context.getExternalContext().encodeResourceURL(url);
 			context.getExternalContext().redirect(url);
 			context.responseComplete();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new IllegalArgumentException("Could not send redirect to " + url);
 		}
 	}
-	
+
 	// private helpers
 
 	private JsfExternalContext getCurrentContext() {
@@ -480,7 +466,7 @@ public class FlowPhaseListener implements PhaseListener {
 	private void cleanupResources(FacesContext context) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Cleaning up allocated flow system resources");
-		}		
+		}
 		FlowExecutionHolderUtils.cleanupCurrentFlowExecution(context);
 		ExternalContextHolder.setExternalContext(null);
 	}
@@ -530,8 +516,7 @@ public class FlowPhaseListener implements PhaseListener {
 				lock.lock();
 				// set that the flow execution lock has been acquired
 				holder.setFlowExecutionLock(lock);
-			}
-			else {
+			} else {
 				// it is an existing conversation - get the next key
 				flowExecutionKey = repository.getNextKey(flowExecution, flowExecutionKey);
 			}
@@ -548,8 +533,7 @@ public class FlowPhaseListener implements PhaseListener {
 	private void putInto(Map targetMap, Map map) {
 		try {
 			targetMap.putAll(map);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			// work around nasty MyFaces bug where it's RequestMap doesn't
 			// support putAll remove after it's fixed in MyFaces
 			Iterator it = map.entrySet().iterator();

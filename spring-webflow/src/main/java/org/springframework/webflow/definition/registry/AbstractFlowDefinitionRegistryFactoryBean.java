@@ -19,10 +19,9 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * A base class for factory beans that create populated flow definition registries.
- * Subclasses should override the {@link #doPopulate(FlowDefinitionRegistry)} method
- * to perform the registry population logic, typically delegating to a
- * {@link FlowDefinitionRegistrar} strategy to perform the population.
+ * A base class for factory beans that create populated flow definition registries. Subclasses should override the
+ * {@link #doPopulate(FlowDefinitionRegistry)} method to perform the registry population logic, typically delegating to
+ * a {@link FlowDefinitionRegistrar} strategy to perform the population.
  * 
  * @author Keith Donald
  */
@@ -34,11 +33,9 @@ public abstract class AbstractFlowDefinitionRegistryFactoryBean implements Facto
 	private FlowDefinitionRegistry registry = createFlowDefinitionRegistry();
 
 	/**
-	 * Sets the parent registry of the registry constructed by this factory
-	 * bean.
+	 * Sets the parent registry of the registry constructed by this factory bean.
 	 * <p>
-	 * A child registry will delegate to its parent if it cannot fulfill a
-	 * request to locate a flow definition itself.
+	 * A child registry will delegate to its parent if it cannot fulfill a request to locate a flow definition itself.
 	 * @param parent the parent flow definition registry
 	 */
 	public void setParent(FlowDefinitionRegistry parent) {
@@ -53,7 +50,7 @@ public abstract class AbstractFlowDefinitionRegistryFactoryBean implements Facto
 	}
 
 	// implementing FactoryBean
-	
+
 	public Class getObjectType() {
 		return FlowDefinitionRegistry.class;
 	}
@@ -75,26 +72,22 @@ public abstract class AbstractFlowDefinitionRegistryFactoryBean implements Facto
 	}
 
 	// subclassing hooks
-	
+
 	/**
-	 * Create the flow definition registry to be populated in
-	 * {@link #doPopulate(FlowDefinitionRegistry)}. Subclasses can override
-	 * this method if they want to use a custom flow definition registry
-	 * implementation.
+	 * Create the flow definition registry to be populated in {@link #doPopulate(FlowDefinitionRegistry)}. Subclasses
+	 * can override this method if they want to use a custom flow definition registry implementation.
 	 */
 	protected FlowDefinitionRegistry createFlowDefinitionRegistry() {
 		return new FlowDefinitionRegistryImpl();
 	}
-	
+
 	/**
-	 * Template method subclasses may override to perform factory bean initialization 
-	 * logic before registry population. Will be called before
-	 * {@link #doPopulate(FlowDefinitionRegistry)}. The default implementation
-	 * is empty.
+	 * Template method subclasses may override to perform factory bean initialization logic before registry population.
+	 * Will be called before {@link #doPopulate(FlowDefinitionRegistry)}. The default implementation is empty.
 	 */
 	protected void init() {
 	}
-	
+
 	/**
 	 * Template method subclasses must override to perform registry population.
 	 * @param registry the flow definition registry to populate

@@ -31,8 +31,8 @@ import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Mock implementation of the <code>RequestContext</code> interface to
- * facilitate standalone flow artifact (e.g. action) unit tests.
+ * Mock implementation of the <code>RequestContext</code> interface to facilitate standalone flow artifact (e.g.
+ * action) unit tests.
  * 
  * @see org.springframework.webflow.execution.RequestContext
  * @see org.springframework.webflow.execution.Action
@@ -57,12 +57,10 @@ public class MockRequestContext implements RequestContext {
 	/**
 	 * Creates a new mock request context with the following defaults:
 	 * <ul>
-	 * <li>A flow execution context with a active session of flow "mockFlow" in
-	 * state "mockState".
+	 * <li>A flow execution context with a active session of flow "mockFlow" in state "mockState".
 	 * <li>A mock external context with no request parameters set.
 	 * </ul>
-	 * To add request parameters to this request, use the
-	 * {@link #putRequestParameter(String, String)} method.
+	 * To add request parameters to this request, use the {@link #putRequestParameter(String, String)} method.
 	 */
 	public MockRequestContext() {
 	}
@@ -73,18 +71,16 @@ public class MockRequestContext implements RequestContext {
 	 * <li>A flow execution context with an active session for the specified flow.
 	 * <li>A mock external context with no request parameters set.
 	 * </ul>
-	 * To add request parameters to this request, use the
-	 * {@link #putRequestParameter(String, String)} method.
+	 * To add request parameters to this request, use the {@link #putRequestParameter(String, String)} method.
 	 */
 	public MockRequestContext(Flow flow) {
 		flowExecutionContext = new MockFlowExecutionContext(flow);
 	}
-	
+
 	/**
 	 * Creates a new mock request context with the following defaults:
 	 * <ul>
-	 * <li>A flow execution context with a active session of flow "mockFlow" in
-	 * state "mockState".
+	 * <li>A flow execution context with a active session of flow "mockFlow" in state "mockState".
 	 * <li>A mock external context with the provided parameters set.
 	 * </ul>
 	 */
@@ -149,13 +145,13 @@ public class MockRequestContext implements RequestContext {
 	public AttributeMap getModel() {
 		return getConversationScope().union(getFlowScope()).union(getFlashScope()).union(getRequestScope());
 	}
-	
+
 	// mutators
 
 	/**
-	 * Sets the active flow session of the executing flow associated with this
-	 * request. This will influence {@link #getActiveFlow()} and {@link #getCurrentState()},
-	 * as well as {@link #getFlowScope()} and {@link #getFlashScope()}.
+	 * Sets the active flow session of the executing flow associated with this request. This will influence
+	 * {@link #getActiveFlow()} and {@link #getCurrentState()}, as well as {@link #getFlowScope()} and
+	 * {@link #getFlashScope()}.
 	 */
 	public void setActiveSession(FlowSession flowSession) {
 		getMockFlowExecutionContext().setActiveSession(flowSession);
@@ -207,12 +203,12 @@ public class MockRequestContext implements RequestContext {
 	public void removeAttribute(String attributeName) {
 		attributes.remove(attributeName);
 	}
-		
+
 	// convenience accessors
-	
+
 	/**
-	 * Returns the contained mutable context {@link AttributeMap attribute map}
-	 * allowing setting of mock context attributes.
+	 * Returns the contained mutable context {@link AttributeMap attribute map} allowing setting of mock context
+	 * attributes.
 	 * @return the attribute map
 	 */
 	public MutableAttributeMap getAttributeMap() {
@@ -223,14 +219,14 @@ public class MockRequestContext implements RequestContext {
 	 * Returns the flow execution context as a {@link MockFlowExecutionContext}.
 	 */
 	public MockFlowExecutionContext getMockFlowExecutionContext() {
-		return (MockFlowExecutionContext)flowExecutionContext;
+		return (MockFlowExecutionContext) flowExecutionContext;
 	}
 
 	/**
 	 * Returns the external context as a {@link MockExternalContext}.
 	 */
 	public MockExternalContext getMockExternalContext() {
-		return (MockExternalContext)externalContext;
+		return (MockExternalContext) externalContext;
 	}
 
 	/**

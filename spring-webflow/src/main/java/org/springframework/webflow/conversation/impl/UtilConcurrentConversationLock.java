@@ -15,16 +15,15 @@
  */
 package org.springframework.webflow.conversation.impl;
 
-
 import org.springframework.core.NestedRuntimeException;
 
 import EDU.oswego.cs.dl.util.concurrent.ReentrantLock;
 
 /**
- * A conversation lock that relies on a {@link ReentrantLock} within Doug Lea's
- * <a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">util.concurrent</a>
- * package. For use on JDK 1.3 and 1.4.
- *
+ * A conversation lock that relies on a {@link ReentrantLock} within Doug Lea's <a
+ * href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">util.concurrent</a> package.
+ * For use on JDK 1.3 and 1.4.
+ * 
  * @author Keith Donald
  * @author Rob Harrop
  */
@@ -42,8 +41,7 @@ class UtilConcurrentConversationLock implements ConversationLock {
 	public void lock() {
 		try {
 			lock.acquire();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			throw new SystemInterruptedException("Unable to acquire lock.", e);
 		}
 	}
@@ -54,11 +52,10 @@ class UtilConcurrentConversationLock implements ConversationLock {
 	public void unlock() {
 		lock.release();
 	}
-	
+
 	/**
-	 * <code>Exception</code> indicating that some {@link Thread} was
-	 * {@link Thread#interrupt() interrupted} during processing and as
-	 * such processing was halted.
+	 * <code>Exception</code> indicating that some {@link Thread} was {@link Thread#interrupt() interrupted} during
+	 * processing and as such processing was halted.
 	 * <p>
 	 * Only used to wrap the checked {@link InterruptedException java.lang.InterruptedException}.
 	 */

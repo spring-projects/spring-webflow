@@ -71,7 +71,7 @@ public class PortletContextMapTests extends TestCase {
 		Iterator names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String)names.next();
+		String name = (String) names.next();
 		assertEquals("Some key", name);
 	}
 }

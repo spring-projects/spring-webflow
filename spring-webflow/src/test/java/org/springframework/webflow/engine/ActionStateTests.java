@@ -40,7 +40,7 @@ public class ActionStateTests extends TestCase {
 		new EndState(flow, "finish");
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
 		flowExecution.start(null, new MockExternalContext());
-		assertEquals(1, ((TestAction)state.getActionList().get(0)).getExecutionCount());
+		assertEquals(1, ((TestAction) state.getActionList().get(0)).getExecutionCount());
 	}
 
 	public void testActionAttributesChain() {
@@ -56,7 +56,7 @@ public class ActionStateTests extends TestCase {
 		flowExecution.start(null, new MockExternalContext());
 		Action[] actions = state.getActionList().toArray();
 		for (int i = 0; i < actions.length; i++) {
-			TestAction action = (TestAction)actions[i];
+			TestAction action = (TestAction) actions[i];
 			assertEquals(1, action.getExecutionCount());
 		}
 	}
@@ -74,8 +74,7 @@ public class ActionStateTests extends TestCase {
 		try {
 			flowExecution.start(null, new MockExternalContext());
 			fail("Should not have matched to another state transition");
-		}
-		catch (NoMatchingTransitionException e) {
+		} catch (NoMatchingTransitionException e) {
 			// expected
 		}
 	}
@@ -98,8 +97,8 @@ public class ActionStateTests extends TestCase {
 		assertTrue(!flowExecution.isActive());
 		Action[] actions = state.getActionList().toArray();
 		for (int i = 0; i < actions.length; i++) {
-			AnnotatedAction action = (AnnotatedAction)actions[i];
-			assertEquals(1, ((TestAction)(action.getTargetAction())).getExecutionCount());
+			AnnotatedAction action = (AnnotatedAction) actions[i];
+			assertEquals(1, ((TestAction) (action.getTargetAction())).getExecutionCount());
 		}
 	}
 

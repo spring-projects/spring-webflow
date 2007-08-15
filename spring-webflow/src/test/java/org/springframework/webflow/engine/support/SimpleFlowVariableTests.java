@@ -31,14 +31,14 @@ public class SimpleFlowVariableTests extends TestCase {
 		assertTrue(context.getRequestScope().contains("var"));
 		context.getRequestScope().getRequired("var", ArrayList.class);
 	}
-	
+
 	public void testCreateVariableNoDefaultConstructor() {
 		SimpleFlowVariable variable = new SimpleFlowVariable("var", Integer.class, ScopeType.FLOW);
 		try {
 			variable.create(context);
 			fail("should have failed");
 		} catch (Exception e) {
-			
+
 		}
 	}
 }

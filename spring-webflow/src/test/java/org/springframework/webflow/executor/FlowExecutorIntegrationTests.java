@@ -36,7 +36,8 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 	}
 
 	protected String[] getConfigLocations() {
-		return new String[] { "org/springframework/webflow/executor/context.xml", "org/springframework/webflow/executor/repository-simple.xml" };
+		return new String[] { "org/springframework/webflow/executor/context.xml",
+				"org/springframework/webflow/executor/repository-simple.xml" };
 	}
 
 	public void testConfigurationOk() {
@@ -50,7 +51,7 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 		assertTrue(response.getFlowExecutionContext().isActive());
 		assertEquals("viewState1", response.getFlowExecutionContext().getActiveSession().getState().getId());
 		assertTrue(response.isApplicationView());
-		ApplicationView view = (ApplicationView)response.getViewSelection();
+		ApplicationView view = (ApplicationView) response.getViewSelection();
 		assertEquals("view1", view.getViewName());
 		assertEquals(0, view.getModel().size());
 	}
@@ -61,8 +62,7 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 					new MockHttpServletRequest(), new MockHttpServletResponse());
 			flowExecutor.launch("bogus", context);
 			fail("no such flow expected");
-		}
-		catch (NoSuchFlowDefinitionException e) {
+		} catch (NoSuchFlowDefinitionException e) {
 			assertEquals("bogus", e.getFlowId());
 		}
 	}
@@ -78,11 +78,11 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 		assertEquals("viewState2", response.getFlowExecutionContext().getActiveSession().getState().getId());
 		assertTrue(response.isApplicationView());
 		assertNotNull(response.getFlowExecutionKey());
-		ApplicationView view = (ApplicationView)response.getViewSelection();
+		ApplicationView view = (ApplicationView) response.getViewSelection();
 		assertEquals("view2", view.getViewName());
 		assertEquals(0, view.getModel().size());
 		response = flowExecutor.resume(response.getFlowExecutionKey(), "event1", context);
-		view = (ApplicationView)response.getViewSelection();
+		view = (ApplicationView) response.getViewSelection();
 		assertFalse(response.getFlowExecutionContext().isActive());
 		assertTrue(response.isApplicationView());
 		assertNull(response.getFlowExecutionKey());
@@ -91,8 +91,7 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 		try {
 			flowExecutor.resume(key, "event1", context);
 			fail("Should've been removed");
-		}
-		catch (NoSuchFlowExecutionException e) {
+		} catch (NoSuchFlowExecutionException e) {
 
 		}
 	}
@@ -109,8 +108,7 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 		try {
 			flowExecutor.resume("_cbogus_kbogus", "bogus", new MockExternalContext());
 			fail("Should've failed");
-		}
-		catch (NoSuchFlowExecutionException e) {
+		} catch (NoSuchFlowExecutionException e) {
 			assertEquals("_cbogus_kbogus", e.getFlowExecutionKey().toString());
 		}
 	}
@@ -123,8 +121,7 @@ public class FlowExecutorIntegrationTests extends AbstractDependencyInjectionSpr
 		try {
 			flowExecutor.resume(key, "bogus", context);
 			fail("Should've been removed");
-		}
-		catch (NoMatchingTransitionException e) {
+		} catch (NoMatchingTransitionException e) {
 			assertEquals("flow", e.getFlowId());
 			assertEquals("viewState1", e.getStateId());
 			assertEquals("bogus", e.getEvent().getId());

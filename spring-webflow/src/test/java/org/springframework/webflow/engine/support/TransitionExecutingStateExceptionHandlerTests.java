@@ -107,8 +107,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have failed no such state");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
 
@@ -117,12 +116,11 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have rethrown");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 			// expected
 		}
 	}
-	
+
 	public void testStateExceptionHandlingExceptionInEndState() {
 		FlowBuilder builder = new AbstractFlowBuilder() {
 			public void buildStates() throws FlowBuilderException {
@@ -134,7 +132,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 				});
 				addViewState("showError", "error", transition(on("end"), to("end")));
 			}
-			
+
 			public void buildExceptionHandlers() throws FlowBuilderException {
 				getFlow().getExceptionHandlerSet().add(
 						new TransitionExecutingStateExceptionHandler().add(Exception.class, "showError"));
@@ -144,10 +142,10 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		FlowExecution execution = new FlowExecutionImpl(flow);
 		ViewSelection view = execution.start(null, new MockExternalContext());
 		assertTrue(execution.isActive());
-		assertEquals("error", ((ApplicationView)view).getViewName());
-		assertTrue(((ApplicationView)view).getModel().containsKey(
+		assertEquals("error", ((ApplicationView) view).getViewName());
+		assertTrue(((ApplicationView) view).getModel().containsKey(
 				TransitionExecutingStateExceptionHandler.ROOT_CAUSE_EXCEPTION_ATTRIBUTE));
-		assertTrue(((ApplicationView)view).getModel().containsKey(
+		assertTrue(((ApplicationView) view).getModel().containsKey(
 				TransitionExecutingStateExceptionHandler.STATE_EXCEPTION_ATTRIBUTE));
 	}
 

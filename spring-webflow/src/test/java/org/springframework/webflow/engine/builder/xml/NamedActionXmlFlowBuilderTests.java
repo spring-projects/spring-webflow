@@ -31,7 +31,7 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
  * @author Erwin Vervaet
  */
 public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTests {
-	
+
 	private int executionOrderCounter = 0;
 	private Action aAction;
 	private int aActionExecutionCount = 0;
@@ -42,7 +42,7 @@ public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTest
 	private Action cAction;
 	private int cActionExecutionCount = 0;
 	private int cActionExecutionOrder;
-	
+
 	protected void setUp() throws Exception {
 		aAction = new AbstractAction() {
 			protected Event doExecute(RequestContext context) throws Exception {
@@ -62,8 +62,8 @@ public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTest
 	}
 
 	protected FlowDefinitionResource getFlowDefinitionResource() {
-		return new FlowDefinitionResource(
-				new ClassPathResource("namedActionFlow.xml", NamedActionXmlFlowBuilderTests.class));
+		return new FlowDefinitionResource(new ClassPathResource("namedActionFlow.xml",
+				NamedActionXmlFlowBuilderTests.class));
 	}
 
 	protected void registerLocalMockServices(Flow flow, ConfigurableBeanFactory beanFactory) {
@@ -71,7 +71,7 @@ public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTest
 		beanFactory.registerSingleton("cAction", cAction);
 		beanFactory.registerSingleton("bBean", bBean);
 	}
-	
+
 	public void testActionExecutionOrder() {
 		startFlow();
 		assertFlowExecutionEnded();
@@ -85,10 +85,11 @@ public class NamedActionXmlFlowBuilderTests extends AbstractXmlFlowExecutionTest
 
 	public static class TestBean {
 		private NamedActionXmlFlowBuilderTests testCase;
-		
+
 		public TestBean(NamedActionXmlFlowBuilderTests testCase) {
 			this.testCase = testCase;
 		}
+
 		public void b() {
 			testCase.bBeanExecutionCount++;
 			testCase.bBeanExecutionOrder = testCase.executionOrderCounter++;
