@@ -58,11 +58,6 @@ public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinit
 	private Set resources = new HashSet();
 
 	/**
-	 * A set of namespace mappings to load. A set of {@link NamespaceMapping} objects.
-	 */
-	private Set namespaceMappings = new HashSet();
-
-	/**
 	 * Sets the locations (file paths) pointing to externalized flow definitions.
 	 * <p>
 	 * Flows registered from this set will be automatically assigned an id based on the filename of the flow resource.
@@ -81,16 +76,6 @@ public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinit
 	 */
 	public void setResources(FlowDefinitionResource[] resources) {
 		this.resources = new HashSet(Arrays.asList(resources));
-	}
-
-	/**
-	 * Sets the namespace mappings for a set of externalized flow definitions.
-	 * <p>
-	 * Use this method when you want to add a set of locations or resources in an explicitly named namespace.
-	 * @param namespaceMappings
-	 */
-	public void setNamespaceMappings(NamespaceMapping[] namespaceMappings) {
-		this.namespaceMappings = namespaceMappings;
 	}
 
 	/**
@@ -143,33 +128,9 @@ public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinit
 		return this.resources.addAll(Arrays.asList(resources));
 	}
 
-	/**
-	 * Adds a namespace mapping.
-	 * <p>
-	 * Use this method when you want to add a set of locations or resources in an explicitly named namespace.
-	 * @param namespaceMappings the namespace mapping
-	 */
-	public boolean addNamespaceMapping(NamespaceMapping namespaceMappings) {
-		return namespaceMappings.add(namespaceMappings);
-	}
-
-	/**
-	 * Adds namespace mappings.
-	 * <p>
-	 * Use this method when you want to add a set of locations or resources in an explicitly named namespace.
-	 * @param namespaceMappings the namespace mappings
-	 */
-	public boolean addNamespaceMappings(NamespaceMapping[] namespaceMappings) {
-		if (namespaceMappings == null) {
-			return false;
-		}
-		return this.namespaceMappings.addAll(Arrays.asList(namespaceMappings));
-	}
-
 	public void registerFlowDefinitions(FlowDefinitionRegistry registry) {
 		processLocations(registry);
 		processResources(registry);
-		processNamespaces(registry);
 	}
 
 	// internal helpers
@@ -184,39 +145,30 @@ public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinit
 			Resource location = (Resource) it.next();
 			if (isFlowDefinitionResource(location)) {
 				FlowDefinitionResource resource = createFlowDefinitionResource(location);
-				register(resource, "", registry);
+				register(resource, registry);
 			}
 		}
 	}
 
 	/**
-	 * Register the flow definitions at the configured resource locations.
+	 * Register the flow definitions at the configured file locations.
 	 * @param registry the registry
 	 */
 	private void processResources(FlowDefinitionRegistry registry) {
 		Iterator it = resources.iterator();
 		while (it.hasNext()) {
 			FlowDefinitionResource resource = (FlowDefinitionResource) it.next();
-			register(resource, "", registry);
+			register(resource, registry);
 		}
-	}
-
-	/**
-	 * Register the flow definitions at the configured resource locations to a given namespace.
-	 * @param registry the registry
-	 */
-	private void processNamespaces(FlowDefinitionRegistry registry) {
-		// TODO
 	}
 
 	/**
 	 * Helper method to register the flow built from an externalized resource in the registry.
 	 * @param resource representation of the externalized flow definition resource
-	 * @param namespace the namespace to register the flow in
 	 * @param registry the flow registry to register the flow in
 	 */
-	protected final void register(FlowDefinitionResource resource, String namespace, FlowDefinitionRegistry registry) {
-		registry.registerFlowDefinition(createFlowDefinitionHolder(resource), namespace);
+	protected final void register(FlowDefinitionResource resource, FlowDefinitionRegistry registry) {
+		registry.registerFlowDefinition(createFlowDefinitionHolder(resource));
 	}
 
 	// subclassing hooks
