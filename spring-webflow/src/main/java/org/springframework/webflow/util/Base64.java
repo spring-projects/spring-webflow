@@ -30,7 +30,10 @@ public class Base64 {
 
 	/*
 	 * static data used by the encoding and decoding algorithm
-	 *  /* The equals sign (=) as a byte.
+	 */
+
+	/*
+	 * The equals sign (=) as a byte.
 	 */
 	private static final byte EQUALS_SIGN = (byte) '=';
 	/* The dot (.) as a byte. */
