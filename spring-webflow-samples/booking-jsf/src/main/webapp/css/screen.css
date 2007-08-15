@@ -8,7 +8,7 @@ body, div, dd, dt, dl, img, ul, ol, li, p, h1, h2, h3, h4, h5, form, hr, fieldse
 ----------------------------------------------- */
 html {
 	height: 100%;
-	background-color: #DBD4C6;
+	background-color: #9cac7c;
 }
 img {
 	border: 0;
@@ -59,18 +59,25 @@ fieldset {
 #header {
 	float: left;
 	width: 758px;
-	height:76px;
-	background: url(../images/hdr.bg.gif) 0 0 repeat-x;
+	height:36px;
+	background-color: #414f23;
 }
 #container {
 	float: left;
 	width: 758px;
-	background: url(../images/spring-logo.jpg) 0 0 repeat-x;
+	background: url(../images/header.graphic.jpg) 0 0 repeat-x;
+}
+#sidebar {
+	float: left;
+	width: 205px;
+	margin-left: 5px;
+	margin-top: 185px;
+	padding-top: 5px;
 }
 #content {
 	float: left;
-	width: 548px;
-	margin-top: 75px;
+	width: 448px;
+	margin-top: 195px;
 	padding-top: 5px;
 	background: #fff url(../img/cnt.bg.gif) 0 0 repeat-x;
 }
@@ -170,7 +177,7 @@ input[type="submit"], input[type="button"] {
 #content .section {
 	float: left;
 	width: 518px;
-	padding: 15px 15px 0 15px;
+	padding: 15px 15px 0 3px;
 }
 #content .section h1 {
 	font-family: "Trebuchet MS", Arial, sans-serif;
@@ -225,14 +232,22 @@ input[type="submit"], input[type="button"] {
 	border-left: 0px;
 	border-bottom: 0px;
 }
+#content .section .prev {
+	float: left;
+	width: 120px;
+}
+#content .section .next {
+	float: left;	
+}
 /* Header
 ----------------------------------------------- */
 #title {
 	float: left;
-	padding: 1px 0 6px 15px;
+	padding: 10px 0 6px 15px;
+	color: #e9efdb;
 }
 #status {
-	color: #C7B299;
+	color: #e9efdb;
 	float: right;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-weight: bold;
@@ -242,6 +257,6 @@ input[type="submit"], input[type="button"] {
 	padding-right: 15px;
 }
 #status a {
-	color: #C7B299;
+	color: #e9efdb;
 	text-decoration: none;
 }

@@ -1,22 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html">
-
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Spring Web Stack: SWF + JSF Booking Sample</title>
+	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
+	<ui:insert name="headIncludes"/>
+</head>
 <body>
 
-<f:view>
-	<div align="left">Booking SWF + JSF - A Spring Web Flow Sample</div>
-	<hr/>
-	<div align="left">
-		<p>
-			<h:form>
-			    <h:commandLink value="Book Hotels" action="flowId:main-flow"/>
-			</h:form>
-		</p>
+<div id="document">
+	<div id="header">
+		<div id="title">Spring Web Stack: SWF + JSF Booking Sample</div>
 	</div>
-	<hr/>
-</f:view>
-
-</body>	
+	<div id="container">
+		<a href="http://www.thespringexperience.com">
+			<div id="sidebar">
+				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+				<img src="/swf-booking-jsf/images/tse.gif" />
+				
+				<p>
+					The features shown in this sample are just the beginning.  To see what else we've got in store
+					for Spring Web Flow and JSF, join us at The Spring Experience December 12 - 15, 2007 at the Westin 
+					Diplomat in Hollywood, Florida.
+				</p>
+			</div>
+		</a>
+		<div id="content">
+			<div class="section">
+				<h1>Welcome to the Spring Web Flow Booking Sample</h1>
+				
+				<p>
+					This sample will continue to evolve as Spring Web Flow 2.0 is developed.
+				</p>
+					
+				<p>
+					As of SWF 2.0-m1, some of the new features that this sample serves to demonstrate include:
+					<li>Flow-scoped persistence contexts</li>
+					<li>Unified EL integration</li>
+					<li>Spring 2.0 custom scopes</li>
+					<li>Client-side validation support</li> 
+				</p>
+				
+				<p>
+					<a href="controller.swf?_flowId=main-flow">Click here to book your hotel.</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div id="footer">Created with Spring, Spring Web Flow, MyFaces, and Facelets</div>
+</div>
+</body>
 </html>

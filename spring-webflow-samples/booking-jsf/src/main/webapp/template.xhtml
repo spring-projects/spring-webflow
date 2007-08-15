@@ -6,17 +6,30 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Web Stack: SWF + JSF Booking Sample</title>
 	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
+	<ui:insert name="headIncludes"/>
 </head>
 <body>
 
 <div id="document">
 	<div id="header">
-		<div id="title"><img src="/swf-booking-jsf/images/webflow-logo.jpg" alt="Spring Web Stack: SWF + JSF Booking Sample"/></div>
+		<div id="title">Spring Web Stack: SWF + JSF Booking Sample</div>
 		<div id="status">
             Welcome #{user.name}
 		</div>
 	</div>
 	<div id="container">
+		<a href="http://www.thespringexperience.com">
+			<div id="sidebar">
+				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+				<img src="/swf-booking-jsf/images/tse.gif" />
+				
+				<p>
+					The features shown in this sample are just the beginning.  To see what else we've got in store
+					for Spring Web Flow and JSF, join us at The Spring Experience December 12 - 15, 2007 at the Westin 
+					Diplomat in Hollywood, Florida.
+				</p>
+			</div>
+		</a>
 		<div id="content">
 			<ui:insert name="content"/>
 		</div>

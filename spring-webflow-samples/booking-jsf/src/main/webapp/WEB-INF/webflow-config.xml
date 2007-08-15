@@ -15,9 +15,9 @@
 	<flow:enable-scopes/>
 
 	<bean id="user" class="org.springframework.webflow.samples.booking.model.User" scope="conversation">
-		<property name="username" value="jeremy"/>
+		<property name="username" value="springuser"/>
 		<property name="password" value="barfoo"/>
-		<property name="name" value="Jeremy Grelle"/>
+		<property name="name" value="Spring User"/>
 	</bean>
 	
 	<bean id="searchAction" class="org.springframework.webflow.samples.booking.SearchAction">

@@ -8,9 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-//import org.hibernate.validator.Length;
-//import org.hibernate.validator.NotNull;
-
 @Entity
 public class Hotel implements Serializable {
     private Long id;
@@ -32,7 +29,6 @@ public class Hotel implements Serializable {
 	this.id = id;
     }
 
-    // @Length(max=50) @NotNull
     public String getName() {
 	return name;
     }
@@ -41,7 +37,6 @@ public class Hotel implements Serializable {
 	this.name = name;
     }
 
-    // @Length(max=100) @NotNull
     public String getAddress() {
 	return address;
     }
@@ -50,7 +45,6 @@ public class Hotel implements Serializable {
 	this.address = address;
     }
 
-    // @Length(max=40) @NotNull
     public String getCity() {
 	return city;
     }
@@ -59,7 +53,6 @@ public class Hotel implements Serializable {
 	this.city = city;
     }
 
-    // @Length(min=4, max=6) @NotNull
     public String getZip() {
 	return zip;
     }
@@ -68,7 +61,6 @@ public class Hotel implements Serializable {
 	this.zip = zip;
     }
 
-    // @Length(min=2, max=10) @NotNull
     public String getState() {
 	return state;
     }
@@ -77,7 +69,6 @@ public class Hotel implements Serializable {
 	this.state = state;
     }
 
-    // @Length(min=2, max=40) @NotNull
     public String getCountry() {
 	return country;
     }

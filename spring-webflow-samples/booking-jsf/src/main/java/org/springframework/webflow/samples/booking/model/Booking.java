@@ -16,11 +16,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-
-//import org.hibernate.validator.Length;
-//import org.hibernate.validator.NotNull;
-//import org.hibernate.validator.Pattern;
-
 @Entity
 public class Booking implements Serializable {
     private Long id;
@@ -68,7 +63,6 @@ public class Booking implements Serializable {
 	this.id = id;
     }
 
-    // @NotNull
     @Basic
     @Temporal(TemporalType.DATE)
     public Date getCheckinDate() {
@@ -80,7 +74,6 @@ public class Booking implements Serializable {
     }
 
     @ManyToOne
-    // @NotNull
     public Hotel getHotel() {
 	return hotel;
     }
@@ -90,7 +83,6 @@ public class Booking implements Serializable {
     }
 
     @ManyToOne
-    // @NotNull
     public User getUser() {
 	return user;
     }
@@ -101,7 +93,6 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
-    // @NotNull
     public Date getCheckoutDate() {
 	return checkoutDate;
     }
@@ -110,9 +101,6 @@ public class Booking implements Serializable {
 	this.checkoutDate = checkoutDate;
     }
 
-    // @NotNull(message="Credit card number is required")
-    // @Length(min=16, max=16, message="Credit card number must 16 digits long")
-    // @Pattern(regex="^\\d*$", message="Credit card number must be numeric")
     public String getCreditCard() {
 	return creditCard;
     }
@@ -144,8 +132,6 @@ public class Booking implements Serializable {
 	this.beds = beds;
     }
 
-    // @NotNull(message="Credit card name is required")
-    // @Length(min=3, max=70, message="Credit card name is required")
     public String getCreditCardName() {
 	return creditCardName;
     }

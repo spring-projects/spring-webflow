@@ -13,7 +13,7 @@
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 		
-	<bean id="jpaConversationListener" class="org.springframework.webflow.support.persistence.JpaFlowExecutionListener">
+	<bean id="jpaConversationListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
 		<constructor-arg>
 			<ref bean="entityManagerFactory"/>
 		</constructor-arg>

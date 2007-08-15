@@ -13,7 +13,7 @@
 
   
     <span class="errors">
-       <h:messages/>
+       <h:messages globalOnly="true"/>
     </span>
     
 	<h1>Search Hotels</h1>
@@ -65,10 +65,14 @@
 			</h:commandLink>
 		</h:column>
 	</h:dataTable>
-	<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{hotelSearch.prevPageListener}" 
-		action="findHotels" rendered="#{hotelSearch.page > 0}"/>
-	<h:commandLink id="nextPageLink" value="More results" actionListener="#{hotelSearch.nextPageListener}" 
-		action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
+	<div class="prev">
+		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{hotelSearch.prevPageListener}" 
+			action="findHotels" rendered="#{hotelSearch.page > 0}"/>
+	</div>
+	<div class="next">
+		<h:commandLink id="nextPageLink" value="More results" actionListener="#{hotelSearch.nextPageListener}" 
+			action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
+	</div>
   </div>
 
 <div class="section">

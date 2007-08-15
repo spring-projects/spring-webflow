@@ -6,10 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-//import org.hibernate.validator.Length;
-//import org.hibernate.validator.NotNull;
-//import org.hibernate.validator.Pattern;
-
 @Entity
 @Table(name = "Customer")
 public class User implements Serializable {
@@ -26,8 +22,6 @@ public class User implements Serializable {
     public User() {
     }
 
-    // @NotNull
-    // @Length(max = 100)
     public String getName() {
 	return name;
     }
@@ -36,8 +30,6 @@ public class User implements Serializable {
 	this.name = name;
     }
 
-    // @NotNull
-    // @Length(min = 5, max = 15)
     public String getPassword() {
 	return password;
     }
@@ -47,8 +39,6 @@ public class User implements Serializable {
     }
 
     @Id
-    // @Length(min = 5, max = 15)
-    // @Pattern(regex = "^\\w*$", message = "not a valid username")
     public String getUsername() {
 	return username;
     }

@@ -1,5 +1,8 @@
 package org.springframework.webflow.samples.booking.util;
 
+import java.util.Map;
+
+import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
@@ -21,6 +24,12 @@ public class DebuggingPhaseListener implements PhaseListener {
     public void beforePhase(PhaseEvent event) {
 	if (logger.isDebugEnabled()) {
 	    logger.debug("Entering JSF Phase: " + event.getPhaseId());
+
+	    if (event.getPhaseId() == PhaseId.APPLY_REQUEST_VALUES) {
+		Map input = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		for (Object key : input.keySet())
+		    logger.debug(key + " : " + input.get(key));
+	    }
 	}
 
     }
