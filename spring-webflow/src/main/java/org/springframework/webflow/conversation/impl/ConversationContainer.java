@@ -26,22 +26,20 @@ import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.conversation.NoSuchConversationException;
 
 /**
- * Container for conversations that is stored in the session. When the
- * session expires this container will go with it, implicitly expiring all
- * contained conversations.
+ * Container for conversations that is stored in the session. When the session expires this container will go with it,
+ * implicitly expiring all contained conversations.
  * <p>
  * This is an internal helper class of the {@link SessionBindingConversationManager}.
  * 
  * @author Erwin Vervaet
  */
 class ConversationContainer implements Serializable {
-	
+
 	/**
-	 * Maximum number of conversations in this container. -1 for
-	 * unlimited.
+	 * Maximum number of conversations in this container. -1 for unlimited.
 	 */
 	private int maxConversations;
-	
+
 	/**
 	 * The key of this conversation container in the session.
 	 */
@@ -54,8 +52,7 @@ class ConversationContainer implements Serializable {
 
 	/**
 	 * Create a new conversation container.
-	 * @param maxConversations the maximum number of allowed concurrent
-	 * conversations, -1 for unlimited
+	 * @param maxConversations the maximum number of allowed concurrent conversations, -1 for unlimited
 	 * @param sessionKey the key of this conversation container in the session
 	 */
 	public ConversationContainer(int maxConversations, String sessionKey) {
@@ -63,26 +60,23 @@ class ConversationContainer implements Serializable {
 		this.sessionKey = sessionKey;
 		this.conversations = new ArrayList();
 	}
-	
+
 	/**
-	 * Returns the key of this conversation container in the session.
-	 * For package level use only.
+	 * Returns the key of this conversation container in the session. For package level use only.
 	 */
 	String getSessionKey() {
 		return sessionKey;
 	}
-	
+
 	/**
-	 * Returns the current size of the conversation container: the number
-	 * of conversations contained within it.
+	 * Returns the current size of the conversation container: the number of conversations contained within it.
 	 */
 	public int size() {
 		return conversations.size();
 	}
 
 	/**
-	 * Create a new conversation based on given parameters and add it to the
-	 * container.
+	 * Create a new conversation based on given parameters and add it to the container.
 	 * @param id the unique id of the conversation
 	 * @param parameters descriptive parameters
 	 * @return the created conversation
@@ -92,7 +86,7 @@ class ConversationContainer implements Serializable {
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			// end oldest conversation
-			((Conversation)conversations.get(0)).end();
+			((Conversation) conversations.get(0)).end();
 		}
 		return conversation;
 	}
@@ -101,12 +95,11 @@ class ConversationContainer implements Serializable {
 	 * Return the identified conversation.
 	 * @param id the id to lookup
 	 * @return the conversation
-	 * @throws NoSuchConversationException if the conversation cannot be
-	 * found
+	 * @throws NoSuchConversationException if the conversation cannot be found
 	 */
 	public synchronized Conversation getConversation(ConversationId id) throws NoSuchConversationException {
 		for (Iterator it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = (ContainedConversation)it.next();
+			ContainedConversation conversation = (ContainedConversation) it.next();
 			if (conversation.getId().equals(id)) {
 				return conversation;
 			}
@@ -119,7 +112,7 @@ class ConversationContainer implements Serializable {
 	 */
 	public synchronized void removeConversation(ConversationId id) {
 		for (Iterator it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = (ContainedConversation)it.next();
+			ContainedConversation conversation = (ContainedConversation) it.next();
 			if (conversation.getId().equals(id)) {
 				it.remove();
 				break;
@@ -128,8 +121,7 @@ class ConversationContainer implements Serializable {
 	}
 
 	/**
-	 * Has the maximum number of allowed concurrent conversations in the
-	 * session been exceeded?
+	 * Has the maximum number of allowed concurrent conversations in the session been exceeded?
 	 */
 	private boolean maxExceeded() {
 		return maxConversations > 0 && conversations.size() > maxConversations;

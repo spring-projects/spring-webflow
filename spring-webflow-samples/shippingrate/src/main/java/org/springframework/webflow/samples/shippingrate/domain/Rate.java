@@ -34,7 +34,7 @@ public class Rate implements Serializable {
 		if (!(o instanceof Rate)) {
 			return false;
 		}
-		return value.equals(((Rate)o).value);
+		return value.equals(((Rate) o).value);
 	}
 
 	public int hashCode() {

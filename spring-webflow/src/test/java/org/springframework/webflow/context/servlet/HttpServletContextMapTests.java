@@ -95,7 +95,7 @@ public class HttpServletContextMapTests extends TestCase {
 	public void testPutAll() {
 		Map otherMap = new HashMap();
 		otherMap.put("SomeOtherKey", "SomeOtherValue");
-		otherMap.put("SomeKey",	"SomeUpdatedValue");
+		otherMap.put("SomeKey", "SomeUpdatedValue");
 		tested.putAll(otherMap);
 		assertEquals("SomeOtherValue", tested.get("SomeOtherKey"));
 		assertEquals("SomeUpdatedValue", tested.get("SomeKey"));
@@ -118,7 +118,7 @@ public class HttpServletContextMapTests extends TestCase {
 
 	public void testEntrySet() {
 		assertEquals(1, tested.entrySet().size());
-		assertEquals("SomeKey", ((Entry)tested.entrySet().iterator().next()).getKey());
-		assertEquals("SomeValue", ((Entry)tested.entrySet().iterator().next()).getValue());
+		assertEquals("SomeKey", ((Entry) tested.entrySet().iterator().next()).getKey());
+		assertEquals("SomeValue", ((Entry) tested.entrySet().iterator().next()).getValue());
 	}
 }

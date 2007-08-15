@@ -25,8 +25,7 @@ import org.springframework.web.portlet.multipart.MultipartActionRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * Map backed by the Portlet request parameter map for accessing request local
- * portlet parameters.
+ * Map backed by the Portlet request parameter map for accessing request local portlet parameters.
  * 
  * @author Keith Donald
  */
@@ -46,7 +45,7 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter {
 
 	protected Object getAttribute(String key) {
 		if (request instanceof MultipartActionRequest) {
-			MultipartActionRequest multipartRequest = (MultipartActionRequest)request;
+			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
 			Object data = multipartRequest.getFileMap().get(key);
 			if (data != null) {
 				return data;
@@ -72,13 +71,12 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter {
 
 	protected Iterator getAttributeNames() {
 		if (request instanceof MultipartActionRequest) {
-			MultipartActionRequest multipartRequest = (MultipartActionRequest)request;
+			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
 			CompositeIterator iterator = new CompositeIterator();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
 			iterator.add(CollectionUtils.toIterator(request.getParameterNames()));
 			return iterator;
-		}
-		else {
+		} else {
 			return CollectionUtils.toIterator(request.getParameterNames());
 		}
 	}

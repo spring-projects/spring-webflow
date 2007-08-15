@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-
 import junit.framework.TestCase;
 
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -34,13 +33,13 @@ public class EventTests extends TestCase {
 		assertTrue(event.getTimestamp() > 0);
 		assertTrue(event.getAttributes().isEmpty());
 	}
-	
+
 	public void testEventNullSource() {
 		try {
 			new Event(null, "id");
 			fail("null source");
 		} catch (IllegalArgumentException e) {
-			
+
 		}
 	}
 
@@ -49,10 +48,10 @@ public class EventTests extends TestCase {
 			new Event(this, null);
 			fail("null id");
 		} catch (IllegalArgumentException e) {
-			
+
 		}
 	}
-	
+
 	public void testNewEventWithAttributes() {
 		LocalAttributeMap attrs = new LocalAttributeMap();
 		attrs.put("name", "value");

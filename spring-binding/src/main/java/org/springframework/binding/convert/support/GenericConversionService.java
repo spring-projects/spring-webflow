@@ -33,24 +33,21 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Base implementation of a conversion service. Initially empty, e.g. no converters
- * are registered by default.
+ * Base implementation of a conversion service. Initially empty, e.g. no converters are registered by default.
  * 
  * @author Keith Donald
  */
 public class GenericConversionService implements ConversionService {
 
 	/**
-	 * An indexed map of converters. Each entry key is a source class that can
-	 * be converted from, and each entry value is a map of target classes that
-	 * can be convertered to, ultimately mapping to a specific converter that
-	 * can perform the source->target conversion.
+	 * An indexed map of converters. Each entry key is a source class that can be converted from, and each entry value
+	 * is a map of target classes that can be convertered to, ultimately mapping to a specific converter that can
+	 * perform the source->target conversion.
 	 */
 	private Map sourceClassConverters = new HashMap();
 
 	/**
-	 * A map of string aliases to convertible classes. Allows lookup of
-	 * converters by alias.
+	 * A map of string aliases to convertible classes. Allows lookup of converters by alias.
 	 */
 	private Map aliasMap = new HashMap();
 
@@ -74,16 +71,15 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	/**
-	 * Add given converter to this conversion service. If the converter is
-	 * {@link ConversionServiceAware}, it will get the conversion service
-	 * injected.
+	 * Add given converter to this conversion service. If the converter is {@link ConversionServiceAware}, it will get
+	 * the conversion service injected.
 	 */
 	public void addConverter(Converter converter) {
 		Class[] sourceClasses = converter.getSourceClasses();
 		Class[] targetClasses = converter.getTargetClasses();
 		for (int i = 0; i < sourceClasses.length; i++) {
 			Class sourceClass = sourceClasses[i];
-			Map sourceMap = (Map)sourceClassConverters.get(sourceClass);
+			Map sourceMap = (Map) sourceClassConverters.get(sourceClass);
 			if (sourceMap == null) {
 				sourceMap = new HashMap();
 				sourceClassConverters.put(sourceClass, sourceMap);
@@ -94,14 +90,13 @@ public class GenericConversionService implements ConversionService {
 			}
 		}
 		if (converter instanceof ConversionServiceAware) {
-			((ConversionServiceAware)converter).setConversionService(this);
+			((ConversionServiceAware) converter).setConversionService(this);
 		}
 	}
 
 	/**
-	 * Add all given converters. If the converters are
-	 * {@link ConversionServiceAware}, they will get the conversion service
-	 * injected.
+	 * Add all given converters. If the converters are {@link ConversionServiceAware}, they will get the conversion
+	 * service injected.
 	 */
 	public void addConverters(Converter[] converters) {
 		for (int i = 0; i < converters.length; i++) {
@@ -110,9 +105,8 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	/**
-	 * Add given converter with an alias to the conversion service. If the
-	 * converter is {@link ConversionServiceAware}, it will get the conversion
-	 * service injected.
+	 * Add given converter with an alias to the conversion service. If the converter is {@link ConversionServiceAware},
+	 * it will get the conversion service injected.
 	 */
 	public void addConverter(Converter converter, String alias) {
 		aliasMap.put(alias, converter);
@@ -127,8 +121,8 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	/**
-	 * Generate a conventions based alias for given target type. For instance,
-	 * "java.lang.Boolean" will get the "boolean" alias.
+	 * Generate a conventions based alias for given target type. For instance, "java.lang.Boolean" will get the
+	 * "boolean" alias.
 	 */
 	public void addDefaultAlias(Class targetType) {
 		addAlias(StringUtils.uncapitalize(ClassUtils.getShortName(targetType)), targetType);
@@ -148,16 +142,14 @@ public class GenericConversionService implements ConversionService {
 		if (converter != null) {
 			// we found a converter
 			return new ConversionExecutor(sourceClass, targetClass, converter);
-		}
-		else {
+		} else {
 			if (parent != null) {
 				// try the parent
 				return parent.getConversionExecutor(sourceClass, targetClass);
-			}
-			else {
+			} else {
 				throw new ConversionException(sourceClass, targetClass,
-						"No converter registered to convert from sourceClass '"	+ sourceClass +
-						"' to target class '" + targetClass + "'");
+						"No converter registered to convert from sourceClass '" + sourceClass + "' to target class '"
+								+ targetClass + "'");
 			}
 		}
 	}
@@ -172,18 +164,15 @@ public class GenericConversionService implements ConversionService {
 			if (parent != null) {
 				// try the parent
 				return parent.getConversionExecutorByTargetAlias(sourceClass, alias);
-			}
-			else {
+			} else {
 				// not aliased
 				return null;
 			}
-		}
-		else if (targetType instanceof Class) {
-			return getConversionExecutor(sourceClass, (Class)targetType);
-		}
-		else {
+		} else if (targetType instanceof Class) {
+			return getConversionExecutor(sourceClass, (Class) targetType);
+		} else {
 			Assert.isInstanceOf(Converter.class, targetType, "Not a converter: ");
-			Converter conv = (Converter)targetType;
+			Converter conv = (Converter) targetType;
 			return new ConversionExecutor(sourceClass, Object.class, conv);
 		}
 	}
@@ -195,23 +184,22 @@ public class GenericConversionService implements ConversionService {
 			if (parent != null) {
 				// use the parent
 				return parent.getConversionExecutorsForSource(sourceClass);
-			}
-			else {
+			} else {
 				// no converters for source class
 				return new ConversionExecutor[0];
 			}
-		}
-		else {
+		} else {
 			Set executors = new HashSet();
 			if (parent != null) {
 				executors.addAll(Arrays.asList(parent.getConversionExecutorsForSource(sourceClass)));
 			}
 			Iterator it = sourceTargetConverters.entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry entry = (Map.Entry)it.next();
-				executors.add(new ConversionExecutor(sourceClass, (Class)entry.getKey(), (Converter)entry.getValue()));
+				Map.Entry entry = (Map.Entry) it.next();
+				executors
+						.add(new ConversionExecutor(sourceClass, (Class) entry.getKey(), (Converter) entry.getValue()));
 			}
-			return (ConversionExecutor[])executors.toArray(new ConversionExecutor[executors.size()]);
+			return (ConversionExecutor[]) executors.toArray(new ConversionExecutor[executors.size()]);
 		}
 	}
 
@@ -220,28 +208,26 @@ public class GenericConversionService implements ConversionService {
 		Object clazz = aliasMap.get(alias);
 		if (clazz != null) {
 			Assert.isInstanceOf(Class.class, clazz, "Not a Class alias '" + alias + "': ");
-			return (Class)clazz;
-		}
-		else {
+			return (Class) clazz;
+		} else {
 			if (parent != null) {
-		    	// try parent service
-		        return parent.getClassByAlias(alias);
-			}
-			else {
+				// try parent service
+				return parent.getClassByAlias(alias);
+			} else {
 				// alias does not index a class, return null
 				return null;
 			}
 		}
 	}
-	
+
 	// internal helpers
 
 	private Map findConvertersForSource(Class sourceClass) {
 		LinkedList classQueue = new LinkedList();
 		classQueue.addFirst(sourceClass);
 		while (!classQueue.isEmpty()) {
-			sourceClass = (Class)classQueue.removeLast();
-			Map sourceTargetConverters = (Map)sourceClassConverters.get(sourceClass);
+			sourceClass = (Class) classQueue.removeLast();
+			Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
 			if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
 				return sourceTargetConverters;
 			}
@@ -261,8 +247,8 @@ public class GenericConversionService implements ConversionService {
 		LinkedList classQueue = new LinkedList();
 		classQueue.addFirst(targetClass);
 		while (!classQueue.isEmpty()) {
-			targetClass = (Class)classQueue.removeLast();
-			Converter converter = (Converter)sourceTargetConverters.get(targetClass);
+			targetClass = (Class) classQueue.removeLast();
+			Converter converter = (Converter) sourceTargetConverters.get(targetClass);
 			if (converter != null) {
 				return converter;
 			}
@@ -277,13 +263,12 @@ public class GenericConversionService implements ConversionService {
 		}
 		return null;
 	}
-	
+
 	// subclassing support
 
 	/**
-	 * Returns an indexed map of converters. Each entry key is a source class that
-	 * can be converted from, and each entry value is a map of target classes that
-	 * can be convertered to, ultimately mapping to a specific converter that can
+	 * Returns an indexed map of converters. Each entry key is a source class that can be converted from, and each entry
+	 * value is a map of target classes that can be convertered to, ultimately mapping to a specific converter that can
 	 * perform the source->target conversion.
 	 */
 	protected Map getSourceClassConverters() {
@@ -291,8 +276,8 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	/**
-	 * Returns a map of known aliases. Each entry key is a String alias and the
-	 * associated value is either a target class or a converter.
+	 * Returns a map of known aliases. Each entry key is a String alias and the associated value is either a target
+	 * class or a converter.
 	 */
 	protected Map getAliasMap() {
 		return aliasMap;

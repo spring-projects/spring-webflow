@@ -18,8 +18,7 @@ package org.springframework.webflow.executor.support;
 import org.springframework.webflow.core.FlowException;
 
 /**
- * An exception thrown by a flow executor argument extractor when an
- * argument could not be extracted.
+ * An exception thrown by a flow executor argument extractor when an argument could not be extracted.
  * 
  * @see org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor
  * 

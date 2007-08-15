@@ -32,7 +32,7 @@ public class MethodInvocationExceptionTests extends TestCase {
 		IllegalArgumentException iae = new IllegalArgumentException("test");
 		MethodInvocationException ex = testException(iae);
 		assertSame(iae, ex.getTargetException());
-		
+
 		// exception
 		IOException ioe = new IOException("test");
 		ex = testException(ioe);
@@ -42,15 +42,15 @@ public class MethodInvocationExceptionTests extends TestCase {
 		InvocationTargetException ite = new InvocationTargetException(ioe);
 		ex = testException(ite);
 		assertSame(ioe, ex.getTargetException());
-		
+
 		// deep nesting
 		ite = new InvocationTargetException(new InvocationTargetException(ioe));
 		ex = testException(ite);
 		assertSame(ioe, ex.getTargetException());
 	}
-	
+
 	// internal helpers
-	
+
 	private MethodInvocationException testException(Throwable cause) {
 		return new MethodInvocationException(new MethodSignature("test"), null, cause);
 	}

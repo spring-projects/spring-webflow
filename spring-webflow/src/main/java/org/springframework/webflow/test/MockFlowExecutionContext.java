@@ -41,8 +41,8 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	private MutableAttributeMap attributes = new LocalAttributeMap();
 
 	/**
-	 * Creates a new mock flow execution context -- automatically installs a root
-	 * flow definition and active flow session.
+	 * Creates a new mock flow execution context -- automatically installs a root flow definition and active flow
+	 * session.
 	 */
 	public MockFlowExecutionContext() {
 		activeSession = new MockFlowSession();
@@ -50,8 +50,7 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	}
 
 	/**
-	 * Creates a new mock flow execution context for the specified root flow
-	 * definition.
+	 * Creates a new mock flow execution context for the specified root flow definition.
 	 */
 	public MockFlowExecutionContext(Flow rootFlow) {
 		this.flow = rootFlow;
@@ -82,11 +81,11 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	public MutableAttributeMap getConversationScope() {
 		return conversationScope;
 	}
-	
+
 	public AttributeMap getAttributes() {
 		return attributes;
 	}
-	
+
 	// mutators
 
 	/**
@@ -109,14 +108,14 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	public void setConversationScope(MutableAttributeMap scope) {
 		this.conversationScope = scope;
 	}
-	
+
 	// convenience accessors
 
 	/**
 	 * Returns the mock active flow session.
 	 */
 	public MockFlowSession getMockActiveSession() {
-		return (MockFlowSession)activeSession;
+		return (MockFlowSession) activeSession;
 	}
 
 	/**
@@ -126,7 +125,7 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	public MutableAttributeMap getAttributeMap() {
 		return attributes;
 	}
-	
+
 	/**
 	 * Puts a execution attribute into the context.
 	 * @param attributeName the attribute name

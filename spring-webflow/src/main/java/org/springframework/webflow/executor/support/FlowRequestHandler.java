@@ -24,23 +24,21 @@ import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.ResponseInstruction;
 
 /**
- * An immutable helper for flow controllers that encapsulates reusable workflow
- * required to launch and resume flow executions using a {@link FlowExecutor}.
+ * An immutable helper for flow controllers that encapsulates reusable workflow required to launch and resume flow
+ * executions using a {@link FlowExecutor}.
  * <p>
- * The {@link #handleFlowRequest(ExternalContext)} method is the central helper
- * operation and implements the following algorithm:
+ * The {@link #handleFlowRequest(ExternalContext)} method is the central helper operation and implements the following
+ * algorithm:
  * <ol>
  * <li>Extract the flow execution id by calling
  * {@link FlowExecutorArgumentExtractor#extractFlowExecutionKey(ExternalContext)}.
- * <li>If a valid flow execution id was extracted, signal an event in that
- * existing execution to resume it. The event to signal is determined by calling
- * the {@link FlowExecutorArgumentExtractor#extractEventId(ExternalContext)}
- * method. If no event can be extracted, the existing execution will be refreshed.
- * <li>If no flow execution id was extracted, launch a new flow execution. The
- * top-level flow definition for which an execution is created is determined by
- * extracting the flow id using the method
- * {@link FlowExecutorArgumentExtractor#extractFlowId(ExternalContext)}. If no
- * valid flow id can be determined, an exception is thrown.
+ * <li>If a valid flow execution id was extracted, signal an event in that existing execution to resume it. The event
+ * to signal is determined by calling the {@link FlowExecutorArgumentExtractor#extractEventId(ExternalContext)} method.
+ * If no event can be extracted, the existing execution will be refreshed.
+ * <li>If no flow execution id was extracted, launch a new flow execution. The top-level flow definition for which an
+ * execution is created is determined by extracting the flow id using the method
+ * {@link FlowExecutorArgumentExtractor#extractFlowId(ExternalContext)}. If no valid flow id can be determined, an
+ * exception is thrown.
  * </ol>
  * 
  * @author Keith Donald
@@ -59,14 +57,12 @@ public class FlowRequestHandler {
 	private FlowExecutor flowExecutor;
 
 	/**
-	 * A helper for extracting arguments of flow executor operations
-	 * from the external context.
+	 * A helper for extracting arguments of flow executor operations from the external context.
 	 */
 	private FlowExecutorArgumentExtractor argumentExtractor;
 
 	/**
-	 * Creates a new flow controller helper. Will use the default
-	 * {@link RequestParameterFlowExecutorArgumentHandler}.
+	 * Creates a new flow controller helper. Will use the default {@link RequestParameterFlowExecutorArgumentHandler}.
 	 * @param flowExecutor the flow execution manager to delegate to
 	 */
 	public FlowRequestHandler(FlowExecutor flowExecutor) {
@@ -84,7 +80,7 @@ public class FlowRequestHandler {
 		this.flowExecutor = flowExecutor;
 		this.argumentExtractor = argumentExtractor;
 	}
-	
+
 	/**
 	 * Returns the flow executor used by this helper.
 	 */
@@ -117,16 +113,14 @@ public class FlowRequestHandler {
 					logger.debug("Returning [resume] " + response);
 				}
 				return response;
-			}
-			else {
+			} else {
 				ResponseInstruction response = flowExecutor.refresh(flowExecutionKey, context);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Returning [refresh] " + response);
 				}
 				return response;
 			}
-		}
-		else {
+		} else {
 			String flowDefinitionId = argumentExtractor.extractFlowId(context);
 			ResponseInstruction response = flowExecutor.launch(flowDefinitionId, context);
 			if (logger.isDebugEnabled()) {

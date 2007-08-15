@@ -34,17 +34,14 @@ import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 
 /**
- * The default implementation of the central facade for <i>driving</i> the
- * execution of flows within an application.
+ * The default implementation of the central facade for <i>driving</i> the execution of flows within an application.
  * <p>
- * This object is responsible for creating and starting new flow executions as
- * requested by clients, as well as signaling events for processing by existing,
- * paused executions (that are waiting to be resumed in response to a user
+ * This object is responsible for creating and starting new flow executions as requested by clients, as well as
+ * signaling events for processing by existing, paused executions (that are waiting to be resumed in response to a user
  * event).
  * <p>
- * This object is a facade or entry point into the Spring Web Flow execution
- * system and makes the overall system easier to use. The name <i>executor</i>
- * was chosen as <i>executors drive executions</i>.
+ * This object is a facade or entry point into the Spring Web Flow execution system and makes the overall system easier
+ * to use. The name <i>executor</i> was chosen as <i>executors drive executions</i>.
  * <p>
  * <b>Commonly used configurable properties</b><br>
  * <table border="1">
@@ -70,15 +67,11 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * </tr>
  * <tr>
  * <td>inputMapper</td>
- * <td>The service responsible for mapping attributes of
- * {@link ExternalContext external contexts} that request to launch new
- * {@link FlowExecution flow executions}.
- * After mapping, the target map is then passed to the FlowExecution, exposing
- * external context attributes as input to the flow during startup.</td>
- * <td>A
- * {@link org.springframework.webflow.executor.RequestParameterInputMapper request parameter mapper},
- * which exposes all request parameters in to the flow execution for input
- * mapping.</td>
+ * <td>The service responsible for mapping attributes of {@link ExternalContext external contexts} that request to
+ * launch new {@link FlowExecution flow executions}. After mapping, the target map is then passed to the FlowExecution,
+ * exposing external context attributes as input to the flow during startup.</td>
+ * <td>A {@link org.springframework.webflow.executor.RequestParameterInputMapper request parameter mapper}, which
+ * exposes all request parameters in to the flow execution for input mapping.</td>
  * </tr>
  * </table>
  * </p>
@@ -93,7 +86,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * @author Colin Sampaleanu
  */
 public class FlowExecutorImpl implements FlowExecutor {
-	
+
 	private static final Log logger = LogFactory.getLog(FlowExecutorImpl.class);
 
 	/**
@@ -107,34 +100,27 @@ public class FlowExecutorImpl implements FlowExecutor {
 	private FlowExecutionFactory executionFactory;
 
 	/**
-	 * An repository used to save, update, and load existing flow executions
-	 * to/from a persistent store.
+	 * An repository used to save, update, and load existing flow executions to/from a persistent store.
 	 */
 	private FlowExecutionRepository executionRepository;
 
 	/**
-	 * The service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during the
-	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * The service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during the {@link #launch(String, ExternalContext) launch flow} operation.
 	 * <p>
-	 * This allows developers to control what attributes are made available in
-	 * the <code>inputMap</code> to new top-level flow executions. The
-	 * starting execution may then choose to map that available input into its
-	 * own local scope.
+	 * This allows developers to control what attributes are made available in the <code>inputMap</code> to new
+	 * top-level flow executions. The starting execution may then choose to map that available input into its own local
+	 * scope.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 */
 	private AttributeMapper inputMapper = new RequestParameterInputMapper();
 
 	/**
 	 * Create a new flow executor.
-	 * @param definitionLocator the locator for accessing flow definitions to
-	 * execute
-	 * @param executionFactory the factory for creating executions of flow
-	 * definitions
-	 * @param executionRepository the repository for persisting paused flow
-	 * executions
+	 * @param definitionLocator the locator for accessing flow definitions to execute
+	 * @param executionFactory the factory for creating executions of flow definitions
+	 * @param executionRepository the repository for persisting paused flow executions
 	 */
 	public FlowExecutorImpl(FlowDefinitionLocator definitionLocator, FlowExecutionFactory executionFactory,
 			FlowExecutionRepository executionRepository) {
@@ -147,8 +133,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 	}
 
 	/**
-	 * Exposes the configured input mapper to subclasses and privileged
-	 * accessors.
+	 * Exposes the configured input mapper to subclasses and privileged accessors.
 	 * @return the input mapper
 	 */
 	public AttributeMapper getInputMapper() {
@@ -156,12 +141,10 @@ public class FlowExecutorImpl implements FlowExecutor {
 	}
 
 	/**
-	 * Set the service responsible for mapping attributes of an
-	 * {@link ExternalContext} to a new {@link FlowExecution} during the
-	 * {@link #launch(String, ExternalContext) launch flow} operation.
+	 * Set the service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
+	 * during the {@link #launch(String, ExternalContext) launch flow} operation.
 	 * <p>
-	 * The default implementation simply exposes all request parameters as flow
-	 * execution input attributes. May be null.
+	 * The default implementation simply exposes all request parameters as flow execution input attributes. May be null.
 	 * @see RequestParameterInputMapper
 	 */
 	public void setInputMapper(AttributeMapper inputMapper) {
@@ -169,8 +152,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 	}
 
 	/**
-	 * Exposes the configured flow definition locator to subclasses and
-	 * privileged accessors.
+	 * Exposes the configured flow definition locator to subclasses and privileged accessors.
 	 * @return the flow definition locator
 	 */
 	public FlowDefinitionLocator getDefinitionLocator() {
@@ -178,8 +160,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 	}
 
 	/**
-	 * Exposes the configured execution factory to subclasses and privileged
-	 * accessors.
+	 * Exposes the configured execution factory to subclasses and privileged accessors.
 	 * @return the execution factory
 	 */
 	public FlowExecutionFactory getExecutionFactory() {
@@ -211,18 +192,15 @@ public class FlowExecutorImpl implements FlowExecutor {
 				lock.lock();
 				try {
 					executionRepository.putFlowExecution(key, flowExecution);
-				}
-				finally {
+				} finally {
 					lock.unlock();
 				}
 				return new ResponseInstruction(key.toString(), flowExecution, selectedView);
-			}
-			else {
+			} else {
 				// execution already ended => just render the selected view
 				return new ResponseInstruction(flowExecution, selectedView);
 			}
-		}
-		finally {
+		} finally {
 			ExternalContextHolder.setExternalContext(null);
 		}
 	}
@@ -230,8 +208,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 	public ResponseInstruction resume(String flowExecutionKey, String eventId, ExternalContext context)
 			throws FlowException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Resuming flow execution with key '" + flowExecutionKey +
-					"' on user event '" + eventId + "'");
+			logger.debug("Resuming flow execution with key '" + flowExecutionKey + "' on user event '" + eventId + "'");
 		}
 		// expose external context as a thread-bound service
 		ExternalContextHolder.setExternalContext(context);
@@ -248,18 +225,15 @@ public class FlowExecutorImpl implements FlowExecutor {
 					key = executionRepository.getNextKey(flowExecution, key);
 					executionRepository.putFlowExecution(key, flowExecution);
 					return new ResponseInstruction(key.toString(), flowExecution, selectedView);
-				}
-				else {
+				} else {
 					// execution ended => remove it from the repository
 					executionRepository.removeFlowExecution(key);
 					return new ResponseInstruction(flowExecution, selectedView);
 				}
-			}
-			finally {
+			} finally {
 				lock.unlock();
 			}
-		}
-		finally {
+		} finally {
 			ExternalContextHolder.setExternalContext(null);
 		}
 	}
@@ -282,12 +256,10 @@ public class FlowExecutorImpl implements FlowExecutor {
 				// the flow execution with it's existing key
 				executionRepository.putFlowExecution(key, flowExecution);
 				return new ResponseInstruction(key.toString(), flowExecution, selectedView);
-			}
-			finally {
+			} finally {
 				lock.unlock();
 			}
-		}
-		finally {
+		} finally {
 			ExternalContextHolder.setExternalContext(null);
 		}
 	}
@@ -295,9 +267,8 @@ public class FlowExecutorImpl implements FlowExecutor {
 	// helper methods
 
 	/**
-	 * Factory method that creates the input attribute map for a newly created
-	 * {@link FlowExecution}. This implementation uses the registered input mapper,
-	 * if any.
+	 * Factory method that creates the input attribute map for a newly created {@link FlowExecution}. This
+	 * implementation uses the registered input mapper, if any.
 	 * @param context the external context
 	 * @return the input map, or null if no input
 	 */
@@ -306,8 +277,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 			MutableAttributeMap inputMap = new LocalAttributeMap();
 			inputMapper.map(context, inputMap, null);
 			return inputMap;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

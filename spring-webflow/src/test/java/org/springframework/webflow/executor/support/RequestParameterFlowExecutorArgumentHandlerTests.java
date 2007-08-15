@@ -30,7 +30,7 @@ import org.springframework.webflow.test.MockFlowExecutionContext;
  * Unit tests for {@link RequestParameterFlowExecutorArgumentHandler}.
  */
 public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
-	
+
 	private MockExternalContext context;
 
 	private FlowExecutorArgumentHandler argumentHandler;
@@ -57,8 +57,7 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		try {
 			argumentHandler.extractFlowId(context);
 			fail("no flow id provided");
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 
 		}
 	}
@@ -72,8 +71,7 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		try {
 			argumentHandler.extractFlowExecutionKey(context);
 			fail("no flow execution key provided");
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 
 		}
 	}
@@ -93,20 +91,15 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		try {
 			argumentHandler.extractEventId(context);
 			fail("no event id provided");
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 
 		}
 	}
 
 	public void testCreateFlowUrl() {
 		/*
-		 * Scenario:
-		 *  Context root: /app
-		 *  Dispatcher mapping in web.xml: *.htm
-		 *  Controller mapping: /flows.htm
-		 * So full request URI will be
-		 *  /app/flows.htm
+		 * Scenario: Context root: /app Dispatcher mapping in web.xml: *.htm Controller mapping: /flows.htm So full
+		 * request URI will be /app/flows.htm
 		 */
 		context.setContextPath("/app");
 		context.setDispatcherPath("/flows.htm");
@@ -117,12 +110,8 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 
 	public void testCreateFlowUrlRequestPath() {
 		/*
-		 * Scenario:
-		 *  Context root: /app
-		 *  Dispatcher mapping in web.xml: /system/*
-		 *  Controller mapping: /flows.htm
-		 * So full request URI will be
-		 *  /app/system/flows.htm
+		 * Scenario: Context root: /app Dispatcher mapping in web.xml: /system/* Controller mapping: /flows.htm So full
+		 * request URI will be /app/system/flows.htm
 		 */
 		context.setContextPath("/app");
 		context.setDispatcherPath("/system");
@@ -140,18 +129,14 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		input.put("baz", new Integer(3));
 		FlowDefinitionRedirect redirect = new FlowDefinitionRedirect("flow", input);
 		String url = argumentHandler.createFlowDefinitionUrl(redirect, context);
-		assertTrue("/app/flows.htm?_flowId=flow&foo=bar&baz=3".equals(url) ||
-				"/app/flows.htm?_flowId=flow&baz=3&foo=bar".equals(url));
+		assertTrue("/app/flows.htm?_flowId=flow&foo=bar&baz=3".equals(url)
+				|| "/app/flows.htm?_flowId=flow&baz=3&foo=bar".equals(url));
 	}
 
 	public void testCreateFlowExecutionUrl() {
 		/*
-		 * Scenario:
-		 *  Context root: /app
-		 *  Dispatcher mapping in web.xml: *.htm
-		 *  Controller mapping: /flows.htm
-		 * So full request URI will be
-		 *  /app/flows.htm
+		 * Scenario: Context root: /app Dispatcher mapping in web.xml: *.htm Controller mapping: /flows.htm So full
+		 * request URI will be /app/flows.htm
 		 */
 		context.setContextPath("/app");
 		context.setDispatcherPath("/flows.htm");
@@ -162,12 +147,8 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 
 	public void testCreateFlowExecutionUrlRequestPath() {
 		/*
-		 * Scenario:
-		 *  Context root: /app
-		 *  Dispatcher mapping in web.xml: /system/*
-		 *  Controller mapping: /flows.htm
-		 * So full request URI will be
-		 *  /app/system/flows.htm
+		 * Scenario: Context root: /app Dispatcher mapping in web.xml: /system/* Controller mapping: /flows.htm So full
+		 * request URI will be /app/system/flows.htm
 		 */
 		context.setContextPath("/app");
 		context.setDispatcherPath("/system");
@@ -176,7 +157,7 @@ public class RequestParameterFlowExecutorArgumentHandlerTests extends TestCase {
 		String url = argumentHandler.createFlowExecutionUrl(flowExecutionKey, flowExecution, context);
 		assertEquals("/app/system/flows.htm?_flowExecutionKey=_c12345_k12345", url);
 	}
-	
+
 	public void testCreateExternalUrlAbsolute() {
 		context.setContextPath("/app");
 		context.setDispatcherPath("/flows.htm");

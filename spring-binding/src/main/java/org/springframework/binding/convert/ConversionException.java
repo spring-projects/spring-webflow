@@ -23,15 +23,14 @@ import org.springframework.core.NestedRuntimeException;
  * @author Keith Donald
  */
 public class ConversionException extends NestedRuntimeException {
-	
+
 	/**
 	 * The source type we tried to convert from
 	 */
 	private Class sourceClass;
 
 	/**
-	 * The value we tried to convert.
-	 * Transient because we cannot guarantee that the value is Serializable.
+	 * The value we tried to convert. Transient because we cannot guarantee that the value is Serializable.
 	 */
 	private transient Object value;
 
@@ -77,7 +76,7 @@ public class ConversionException extends NestedRuntimeException {
 		this.value = value;
 		this.targetClass = targetClass;
 	}
-	
+
 	/**
 	 * Creates a new conversion exception.
 	 * @param sourceClass the source type
@@ -90,7 +89,7 @@ public class ConversionException extends NestedRuntimeException {
 		this.value = null; // not available
 		this.targetClass = targetClass;
 	}
-	
+
 	/**
 	 * Creates a new conversion exception.
 	 * @param sourceClass the source type
@@ -102,7 +101,7 @@ public class ConversionException extends NestedRuntimeException {
 		this.value = null; // not available
 		this.targetClass = null; // not available
 	}
-	
+
 	/**
 	 * Creates a new conversion exception.
 	 * @param sourceClass the source type
@@ -116,7 +115,7 @@ public class ConversionException extends NestedRuntimeException {
 		this.value = value;
 		this.targetClass = targetClass;
 	}
-	
+
 	/**
 	 * Returns the source type.
 	 */

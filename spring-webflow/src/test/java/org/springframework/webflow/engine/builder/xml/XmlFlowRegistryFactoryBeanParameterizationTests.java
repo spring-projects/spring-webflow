@@ -31,59 +31,59 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * @author Erwin Vervaet
  */
 public class XmlFlowRegistryFactoryBeanParameterizationTests extends TestCase {
-	
+
 	private ApplicationContext applicationContext;
-	
+
 	protected void setUp() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext("parameterizedFlowContext.xml", getClass());
 	}
-	
+
 	public void testNoFlowParameterization() {
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)applicationContext.getBean("flowRegistry0");
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) applicationContext.getBean("flowRegistry0");
 		assertEquals(1, registry.getFlowDefinitionCount());
 		assertTrue(registry.containsFlowDefinition("parameterizedFlow"));
-		Flow parameterizedFlow = (Flow)registry.getFlowDefinition("parameterizedFlow");
+		Flow parameterizedFlow = (Flow) registry.getFlowDefinition("parameterizedFlow");
 		assertEquals(0, parameterizedFlow.getAttributes().size());
 		assertNull(parameterizedFlow.getAttributes().get("foo"));
 	}
 
 	public void testSimpleFlowParameterization() {
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)applicationContext.getBean("flowRegistry1");
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) applicationContext.getBean("flowRegistry1");
 		assertEquals(1, registry.getFlowDefinitionCount());
 		assertTrue(registry.containsFlowDefinition("parameterizedFlow"));
-		Flow parameterizedFlow = (Flow)registry.getFlowDefinition("parameterizedFlow");
+		Flow parameterizedFlow = (Flow) registry.getFlowDefinition("parameterizedFlow");
 		assertEquals(1, parameterizedFlow.getAttributes().size());
 		assertEquals("bar", parameterizedFlow.getAttributes().get("foo"));
 	}
-	
+
 	public void testAdvancedParameterization() {
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)applicationContext.getBean("flowRegistry2");
-		
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) applicationContext.getBean("flowRegistry2");
+
 		assertEquals(2, registry.getFlowDefinitionCount());
 		assertTrue(registry.containsFlowDefinition("flowA"));
-		Flow flowA = (Flow)registry.getFlowDefinition("flowA");
+		Flow flowA = (Flow) registry.getFlowDefinition("flowA");
 		assertEquals(2, flowA.getAttributes().size());
 		assertEquals("A", flowA.getAttributes().get("name"));
 		assertEquals("someValue", flowA.getAttributes().get("someKey"));
 		assertNull(flowA.getAttributes().get("someOtherKey"));
-		
+
 		assertTrue(registry.containsFlowDefinition("flowB"));
-		Flow flowB = (Flow)registry.getFlowDefinition("flowB");
+		Flow flowB = (Flow) registry.getFlowDefinition("flowB");
 		assertEquals(2, flowB.getAttributes().size());
 		assertEquals("B", flowB.getAttributes().get("name"));
 		assertEquals("someOtherValue", flowB.getAttributes().get("someOtherKey"));
 		assertNull(flowB.getAttributes().get("someKey"));
 	}
-	
-	public void testAdvancedParameterizationAtRuntime() {
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry)applicationContext.getBean("flowRegistry2");
 
-		Flow flowA = (Flow)registry.getFlowDefinition("flowA");
+	public void testAdvancedParameterizationAtRuntime() {
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) applicationContext.getBean("flowRegistry2");
+
+		Flow flowA = (Flow) registry.getFlowDefinition("flowA");
 		ViewSelection viewSelection = flowA.start(new MockRequestControlContext(flowA), null);
-		assertEquals("A", ((ApplicationView)viewSelection).getViewName());
-		
-		Flow flowB = (Flow)registry.getFlowDefinition("flowB");
+		assertEquals("A", ((ApplicationView) viewSelection).getViewName());
+
+		Flow flowB = (Flow) registry.getFlowDefinition("flowB");
 		viewSelection = flowB.start(new MockRequestControlContext(flowB), null);
-		assertEquals("B", ((ApplicationView)viewSelection).getViewName());
+		assertEquals("B", ((ApplicationView) viewSelection).getViewName());
 	}
 }

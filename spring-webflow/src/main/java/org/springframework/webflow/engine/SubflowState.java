@@ -24,17 +24,13 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A transitionable state that spawns a subflow when executed. When the subflow
- * this state spawns ends, the ending result is used as grounds for a state
- * transition out of this state.
+ * A transitionable state that spawns a subflow when executed. When the subflow this state spawns ends, the ending
+ * result is used as grounds for a state transition out of this state.
  * <p>
- * A subflow state may be configured to map input data from its flow -- acting
- * as the parent flow -- down to the subflow when the subflow is spawned. In
- * addition, output data produced by the subflow may be mapped up to the parent
- * flow when the subflow ends and the parent flow resumes. See the
- * {@link FlowAttributeMapper} interface definition for more information on how
- * to do this. The logic for ending a subflow is located in the {@link EndState}
- * implementation.
+ * A subflow state may be configured to map input data from its flow -- acting as the parent flow -- down to the subflow
+ * when the subflow is spawned. In addition, output data produced by the subflow may be mapped up to the parent flow
+ * when the subflow ends and the parent flow resumes. See the {@link FlowAttributeMapper} interface definition for more
+ * information on how to do this. The logic for ending a subflow is located in the {@link EndState} implementation.
  * 
  * @see org.springframework.webflow.engine.FlowAttributeMapper
  * @see org.springframework.webflow.engine.EndState
@@ -50,8 +46,7 @@ public class SubflowState extends TransitionableState {
 	private Flow subflow;
 
 	/**
-	 * The attribute mapper that should map attributes from the parent flow down
-	 * to the spawned subflow and visa versa.
+	 * The attribute mapper that should map attributes from the parent flow down to the spawned subflow and visa versa.
 	 */
 	private FlowAttributeMapper attributeMapper;
 
@@ -60,8 +55,7 @@ public class SubflowState extends TransitionableState {
 	 * @param flow the owning flow
 	 * @param id the state identifier (must be unique to the flow)
 	 * @param subflow the subflow to spawn
-	 * @throws IllegalArgumentException when this state cannot be added to given
-	 * flow, e.g. because the id is not unique
+	 * @throws IllegalArgumentException when this state cannot be added to given flow, e.g. because the id is not unique
 	 * @see #setAttributeMapper(FlowAttributeMapper)
 	 */
 	public SubflowState(Flow flow, String id, Flow subflow) throws IllegalArgumentException {
@@ -86,31 +80,29 @@ public class SubflowState extends TransitionableState {
 	}
 
 	/**
-	 * Returns the attribute mapper used to map data between the parent and child
-	 * flow, or null if no mapping is needed.
+	 * Returns the attribute mapper used to map data between the parent and child flow, or null if no mapping is needed.
 	 */
 	public FlowAttributeMapper getAttributeMapper() {
 		return attributeMapper;
 	}
 
 	/**
-	 * Set the attribute mapper used to map model data between the parent and
-	 * child flow. Can be null if no mapping is needed.
+	 * Set the attribute mapper used to map model data between the parent and child flow. Can be null if no mapping is
+	 * needed.
 	 */
 	public void setAttributeMapper(FlowAttributeMapper attributeMapper) {
 		this.attributeMapper = attributeMapper;
 	}
 
 	/**
-	 * Specialization of State's <code>doEnter</code> template method that
-	 * executes behaviour specific to this state type in polymorphic fashion.
+	 * Specialization of State's <code>doEnter</code> template method that executes behaviour specific to this state
+	 * type in polymorphic fashion.
 	 * <p>
-	 * Entering this state, creates the subflow input map and spawns the subflow
-	 * in the current flow execution.
-	 * @param context the control context for the currently executing flow, used
-	 * by this state to manipulate the flow execution
-	 * @return a view selection containing model and view information needed to
-	 * render the results of the state execution
+	 * Entering this state, creates the subflow input map and spawns the subflow in the current flow execution.
+	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
+	 * execution
+	 * @return a view selection containing model and view information needed to render the results of the state
+	 * execution
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
 	protected ViewSelection doEnter(RequestControlContext context) throws FlowExecutionException {
@@ -121,8 +113,8 @@ public class SubflowState extends TransitionableState {
 	}
 
 	/**
-	 * Create the input data map for the spawned subflow session. The returned
-	 * map will be passed to {@link Flow#start(RequestControlContext, MutableAttributeMap)}.
+	 * Create the input data map for the spawned subflow session. The returned map will be passed to
+	 * {@link Flow#start(RequestControlContext, MutableAttributeMap)}.
 	 */
 	protected MutableAttributeMap createSubflowInput(RequestContext context) {
 		if (getAttributeMapper() != null) {
@@ -131,20 +123,19 @@ public class SubflowState extends TransitionableState {
 						+ "down to the spawned subflow for access within the subflow");
 			}
 			return getAttributeMapper().createFlowInput(context);
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No attribute mapper configured for this subflow state '" + getId()
-						+ "' -- As a result, no attributes will be passed to the spawned subflow '"
-						+ subflow.getId() + "'");
+						+ "' -- As a result, no attributes will be passed to the spawned subflow '" + subflow.getId()
+						+ "'");
 			}
 			return null;
 		}
 	}
 
 	/**
-	 * Called on completion of the subflow to handle the subflow result event as
-	 * determined by the end state reached by the subflow.
+	 * Called on completion of the subflow to handle the subflow result event as determined by the end state reached by
+	 * the subflow.
 	 */
 	public ViewSelection onEvent(RequestControlContext context) {
 		mapSubflowOutput(context.getLastEvent().getAttributes(), context);
@@ -152,21 +143,22 @@ public class SubflowState extends TransitionableState {
 	}
 
 	/**
-	 * Map the output data produced by the subflow back into the request context
-	 * (typically flow scope).
+	 * Map the output data produced by the subflow back into the request context (typically flow scope).
 	 */
 	private void mapSubflowOutput(AttributeMap subflowOutput, RequestContext context) {
 		if (getAttributeMapper() != null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Messaging the configured attribute mapper to map subflow result attributes to the "
-						+ "resuming parent flow -- It will have access to attributes passed up by the completed subflow");
+				logger
+						.debug("Messaging the configured attribute mapper to map subflow result attributes to the "
+								+ "resuming parent flow -- It will have access to attributes passed up by the completed subflow");
 			}
 			attributeMapper.mapFlowOutput(subflowOutput, context);
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("No attribute mapper is configured for the resuming subflow state '" + getId()
-						+ "' -- As a result, no attributes of the ending flow will be passed to the resuming parent flow");
+				logger
+						.debug("No attribute mapper is configured for the resuming subflow state '"
+								+ getId()
+								+ "' -- As a result, no attributes of the ending flow will be passed to the resuming parent flow");
 			}
 		}
 	}

@@ -25,10 +25,10 @@ import org.springframework.mock.web.MockServletContext;
  * Unit tests for {@link ServletExternalContext}.
  */
 public class ServletExternalContextTests extends TestCase {
-	
+
 	private ServletExternalContext context = new ServletExternalContext(new MockServletContext(),
 			new MockHttpServletRequest(), new MockHttpServletResponse());
-	
+
 	public void testApplicationMap() {
 		assertEquals(1, context.getApplicationMap().size());
 		context.getApplicationMap().put("foo", "bar");
@@ -49,7 +49,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals("bar", context.getRequestMap().get("foo"));
 		assertEquals("bar", context.getRequest().getAttribute("foo"));
 	}
-	
+
 	public void testOther() {
 		assertEquals(null, context.getRequestPathInfo());
 		assertEquals("", context.getDispatcherPath());

@@ -37,7 +37,7 @@ public class CompositeActionTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		actionMock = (Action)EasyMock.createMock(Action.class);
+		actionMock = (Action) EasyMock.createMock(Action.class);
 		Action[] actions = new Action[] { actionMock };
 		tested = new CompositeAction(actions);
 	}

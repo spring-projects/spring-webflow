@@ -28,7 +28,7 @@ public class BirthDateValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors errors) {
-		BirthDate birthDate = (BirthDate)obj;
+		BirthDate birthDate = (BirthDate) obj;
 		validateBirthdateForm(birthDate, errors);
 		validateCardForm(birthDate, errors);
 	}
@@ -44,8 +44,7 @@ public class BirthDateValidator implements Validator {
 			cal.setTime(birthDate.getDate());
 			if (cal.get(Calendar.MONTH) == 11) {
 				errors.reject("tooGoodForCards", "You're born in December--you're too good for a silly card!");
-			}
-			else {
+			} else {
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "emailAddress", "noEmail",
 						"Please specify your email address.");
 			}

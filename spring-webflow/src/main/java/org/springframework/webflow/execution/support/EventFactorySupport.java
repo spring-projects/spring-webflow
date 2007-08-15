@@ -22,9 +22,8 @@ import org.springframework.webflow.execution.Event;
 /**
  * A convenience support class assisting in the creation of {@link Event} objects.
  * <p>
- * This class can be used as a simple utility class when you need to create
- * common event objects.  Alternatively you could extend it as a base support class
- * when creating custom event factories.
+ * This class can be used as a simple utility class when you need to create common event objects. Alternatively you
+ * could extend it as a base support class when creating custom event factories.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -65,7 +64,7 @@ public class EventFactorySupport {
 	 * The default 'result' event attribute name ("result").
 	 */
 	private static final String RESULT_ATTRIBUTE_NAME = "result";
-	
+
 	/**
 	 * The success event identifier.
 	 */
@@ -166,9 +165,8 @@ public class EventFactorySupport {
 	}
 
 	/**
-	 * Returns a "success" event with the provided result object as an
-	 * attribute. The result object is identified by the attribute name
-	 * {@link #getResultAttributeName()}.
+	 * Returns a "success" event with the provided result object as an attribute. The result object is identified by the
+	 * attribute name {@link #getResultAttributeName()}.
 	 * @param source the source of the event
 	 * @param result the action success result
 	 */
@@ -187,8 +185,8 @@ public class EventFactorySupport {
 	/**
 	 * Returns an "error" event caused by the provided exception.
 	 * @param source the source of the event
-	 * @param e the exception that caused the error event, to be put as an
-	 * event attribute under the name {@link #getExceptionAttributeName()}
+	 * @param e the exception that caused the error event, to be put as an event attribute under the name
+	 * {@link #getExceptionAttributeName()}
 	 */
 	public Event error(Object source, Exception e) {
 		return event(source, getErrorEventId(), getExceptionAttributeName(), e);
@@ -219,8 +217,7 @@ public class EventFactorySupport {
 	public Event event(Object source, boolean booleanResult) {
 		if (booleanResult) {
 			return yes(source);
-		}
-		else {
+		} else {
 			return no(source);
 		}
 	}
@@ -236,8 +233,7 @@ public class EventFactorySupport {
 	}
 
 	/**
-	 * Returns a event with the specified identifier and the specified set of
-	 * attributes.
+	 * Returns a event with the specified identifier and the specified set of attributes.
 	 * @param source the source of the event
 	 * @param eventId the result event identifier
 	 * @param attributes the event payload attributes
@@ -248,8 +244,7 @@ public class EventFactorySupport {
 	}
 
 	/**
-	 * Returns a result event with the specified identifier and
-	 * a single attribute.
+	 * Returns a result event with the specified identifier and a single attribute.
 	 * @param source the source of the event
 	 * @param eventId the result id
 	 * @param attributeName the attribute name

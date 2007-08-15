@@ -80,8 +80,7 @@ public class FlowTests extends TestCase {
 		try {
 			new EndState(flow, "myState1");
 			fail("Duplicate state added");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -92,8 +91,7 @@ public class FlowTests extends TestCase {
 		try {
 			flow.add(state);
 			fail("Should have failed");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 		assertEquals("State count wrong:", 1, flow.getStateCount());
@@ -106,8 +104,7 @@ public class FlowTests extends TestCase {
 		try {
 			flow.add(state);
 			fail("Added state part of another flow");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -117,8 +114,7 @@ public class FlowTests extends TestCase {
 		try {
 			flow.getStartState();
 			fail("Retrieved start state when no such state");
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 			// expected
 		}
 	}
@@ -127,8 +123,7 @@ public class FlowTests extends TestCase {
 		try {
 			flow.getState("myState3");
 			fail("Returned a state that doesn't exist");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -142,14 +137,12 @@ public class FlowTests extends TestCase {
 		try {
 			flow.getTransitionableState("myState2");
 			fail("End states aren't transtionable");
-		}
-		catch (ClassCastException e) {
+		} catch (ClassCastException e) {
 			// expected
 		}
 		try {
 			flow.getTransitionableState("doesNotExist");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -234,8 +227,7 @@ public class FlowTests extends TestCase {
 		try {
 			context.setLastEvent(event);
 			flow.onEvent(context);
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 
 		}
 	}
@@ -248,8 +240,7 @@ public class FlowTests extends TestCase {
 		try {
 			context.setLastEvent(event);
 			flow.onEvent(context);
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 
 		}
 	}
@@ -284,8 +275,7 @@ public class FlowTests extends TestCase {
 		try {
 			context.setLastEvent(event);
 			flow.onEvent(context);
-		}
-		catch (NoMatchingTransitionException e) {
+		} catch (NoMatchingTransitionException e) {
 
 		}
 	}
@@ -318,7 +308,7 @@ public class FlowTests extends TestCase {
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		FlowExecutionException e = new FlowExecutionException(flow.getId(), flow.getStartState().getId(), "Oops!",
 				new TestException());
-		ApplicationView selectedView = (ApplicationView)flow.handleException(e, context);
+		ApplicationView selectedView = (ApplicationView) flow.handleException(e, context);
 		assertFalse(context.getFlowExecutionContext().isActive());
 		assertNotNull("Should not have been null", selectedView);
 		assertEquals("Wrong selected view", "myView2", selectedView.getViewName());
@@ -330,8 +320,7 @@ public class FlowTests extends TestCase {
 				new TestException());
 		try {
 			flow.handleException(e, context);
-		}
-		catch (FlowExecutionException ex) {
+		} catch (FlowExecutionException ex) {
 			// expected
 		}
 	}

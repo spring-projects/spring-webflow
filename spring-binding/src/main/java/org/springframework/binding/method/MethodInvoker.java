@@ -26,9 +26,8 @@ import org.springframework.core.style.StylerUtils;
 import org.springframework.util.CachingMapDecorator;
 
 /**
- * A helper for invoking typed methods on abritrary objects, with support for
- * argument value type conversion from values retrieved from a argument
- * attribute source.
+ * A helper for invoking typed methods on abritrary objects, with support for argument value type conversion from values
+ * retrieved from a argument attribute source.
  * 
  * @author Keith Donald
  */
@@ -37,8 +36,7 @@ public class MethodInvoker {
 	private static final Log logger = LogFactory.getLog(MethodInvoker.class);
 
 	/**
-	 * Conversion service for converting arguments to the neccessary type if
-	 * required.
+	 * Conversion service for converting arguments to the neccessary type if required.
 	 */
 	private ConversionService conversionService = new DefaultConversionService();
 
@@ -59,10 +57,8 @@ public class MethodInvoker {
 	}
 
 	/**
-	 * Invoke the method on the bean provided. Argument values are pulled from
-	 * the provided argument source.
-	 * @param signature the definition of the method to invoke, including the
-	 * method name and the method argument types
+	 * Invoke the method on the bean provided. Argument values are pulled from the provided argument source.
+	 * @param signature the definition of the method to invoke, including the method name and the method argument types
 	 * @param bean the bean to invoke
 	 * @param argumentSource the source for method arguments
 	 * @return the invoked method's return value
@@ -99,11 +95,9 @@ public class MethodInvoker {
 				logger.debug("Invoked method with signature [" + key + "] returned value [" + returnValue + "]");
 			}
 			return returnValue;
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			throw new MethodInvocationException(signature, arguments, e.getTargetException());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new MethodInvocationException(signature, arguments, e);
 		}
 	}

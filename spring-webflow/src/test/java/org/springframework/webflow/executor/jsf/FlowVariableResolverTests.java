@@ -59,15 +59,14 @@ public class FlowVariableResolverTests extends TestCase {
 		try {
 			tested.resolveVariable(mockFacesContext, "flowScope");
 			fail("EvaluationException expected");
-		}
-		catch (EvaluationException expected) {
-			
+		} catch (EvaluationException expected) {
+
 		}
 		assertFalse("resolved using delegate", variableResolver.resolvedUsingDelegate);
 	}
 
 	public void testResolveVariableFlowScopeWithThreadLocal() {
-		FlowExecution flowExecutionMock = (FlowExecution)EasyMock.createMock(FlowExecution.class);
+		FlowExecution flowExecutionMock = (FlowExecution) EasyMock.createMock(FlowExecution.class);
 		FlowExecutionKey key = null;
 		FlowExecutionHolder holder = new FlowExecutionHolder(key, flowExecutionMock, null);
 		FlowExecutionHolderUtils.setFlowExecutionHolder(holder, mockFacesContext);

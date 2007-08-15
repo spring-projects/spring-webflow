@@ -20,11 +20,11 @@ import junit.framework.TestCase;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractionException;
 
 public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
-	
+
 	private FlowNavigationHandlerArgumentExtractor extractor;
-	
+
 	private MockFacesContext facesContext;
-	
+
 	protected void setUp() throws Exception {
 		extractor = new FlowNavigationHandlerArgumentExtractor();
 		facesContext = new MockFacesContext();
@@ -44,8 +44,7 @@ public class FlowNavigationHandlerArgumentExtractorTests extends TestCase {
 		try {
 			extractor.extractFlowId(context);
 			fail();
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 			// expected
 		}
 	}

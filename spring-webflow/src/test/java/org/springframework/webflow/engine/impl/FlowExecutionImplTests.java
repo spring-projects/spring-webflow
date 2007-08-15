@@ -64,7 +64,7 @@ import org.springframework.webflow.test.MockFlowServiceLocator;
 
 /**
  * General flow execution tests.
- *
+ * 
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Ben Hale
@@ -76,20 +76,20 @@ public class FlowExecutionImplTests extends TestCase {
 		Flow flow = new FlowAssembler("fooFlow", flowBuilder).assembleFlow();
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
 		ViewSelection view = flowExecution.start(null, new MockExternalContext());
-		assertEquals("showFooException", ((ApplicationView)view).getViewName());
+		assertEquals("showFooException", ((ApplicationView) view).getViewName());
 		assertFalse(flowExecution.isActive());
 	}
 
 	public void testExceptionWhileHandlingException() {
 		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
 		serviceLocator.registerBean("testAction", new ExceptionThrowingAction());
-		XmlFlowBuilder flowBuilder =
-			new XmlFlowBuilder(new ClassPathResource("exceptionHandlingFlow.xml", this.getClass()));
+		XmlFlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("exceptionHandlingFlow.xml", this
+				.getClass()));
 		flowBuilder.setFlowServiceLocator(serviceLocator);
 		Flow flow = new FlowAssembler("flow", flowBuilder).assembleFlow();
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
 		ViewSelection view = flowExecution.start(null, new MockExternalContext());
-		assertEquals("failed", ((ApplicationView)view).getViewName());
+		assertEquals("failed", ((ApplicationView) view).getViewName());
 		assertFalse(flowExecution.isActive());
 	}
 
@@ -166,11 +166,11 @@ public class FlowExecutionImplTests extends TestCase {
 		};
 		Flow flow = new FlowAssembler("flow", builder).assembleFlow();
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
-		ApplicationView view = (ApplicationView)flowExecution.start(null, new MockExternalContext());
+		ApplicationView view = (ApplicationView) flowExecution.start(null, new MockExternalContext());
 		assertNotNull(view);
 		assertEquals("viewName", view.getViewName());
 		for (int i = 0; i < 10; i++) {
-			view = (ApplicationView)flowExecution.signalEvent("submit", new MockExternalContext());
+			view = (ApplicationView) flowExecution.signalEvent("submit", new MockExternalContext());
 			assertEquals("viewName", view.getViewName());
 		}
 		assertTrue(flowExecution.isActive());
@@ -256,8 +256,7 @@ public class FlowExecutionImplTests extends TestCase {
 	}
 
 	public void testUnhandledExceptionThrownBeforeSessionStartup() {
-		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
-				getClass()));
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml", getClass()));
 		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
 			public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
@@ -269,27 +268,23 @@ public class FlowExecutionImplTests extends TestCase {
 		try {
 			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
 			fail("Should have thrown a FlowExecutionException, not any other type");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 		}
 	}
 
 	public void testExceptionFromInputMapper() {
-		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
-				getClass()));
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml", getClass()));
 		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
 		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
 		try {
 			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
 			fail("Should have thrown a FlowExecutionException, not any other type");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 		}
 	}
 
 	public void testExceptionWithListener() {
-		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
-				getClass()));
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml", getClass()));
 		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
 		FlowExceptionListener listener = new FlowExceptionListener();
 		FlowExecutionImpl flowExecution = new FlowExecutionImpl(flow);
@@ -297,16 +292,14 @@ public class FlowExecutionImplTests extends TestCase {
 		try {
 			flowExecution.start(new LocalAttributeMap(), new MockExternalContext());
 			fail("Should have thrown a FlowExecutionException, not any other type");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 		}
 
 		assertTrue("Listener should have been called on exception", listener.getExceptionFired());
 	}
 
 	public void testExceptionWithHandler() {
-		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml",
-				getClass()));
+		FlowBuilder flowBuilder = new XmlFlowBuilder(new ClassPathResource("runtime-exception.xml", getClass()));
 		Flow flow = new FlowAssembler("runtime-exception", flowBuilder).assembleFlow();
 		FlowExceptionHandler handler = new FlowExceptionHandler();
 		flow.getExceptionHandlerSet().add(handler);

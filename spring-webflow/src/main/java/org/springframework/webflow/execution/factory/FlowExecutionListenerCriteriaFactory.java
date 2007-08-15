@@ -46,8 +46,7 @@ public class FlowExecutionListenerCriteriaFactory {
 	}
 
 	/**
-	 * Returns a criteria that just matches a flow if it is identified by one of
-	 * the specified ids.
+	 * Returns a criteria that just matches a flow if it is identified by one of the specified ids.
 	 * @param flowIds the flow ids to match
 	 */
 	public FlowExecutionListenerCriteria flows(String[] flowIds) {
@@ -55,8 +54,7 @@ public class FlowExecutionListenerCriteriaFactory {
 	}
 
 	/**
-	 * A flow execution listener criteria implementation that matches for all
-	 * flows.
+	 * A flow execution listener criteria implementation that matches for all flows.
 	 */
 	private static class WildcardFlowExecutionListenerCriteria implements FlowExecutionListenerCriteria {
 
@@ -70,8 +68,7 @@ public class FlowExecutionListenerCriteriaFactory {
 	}
 
 	/**
-	 * A flow execution listener criteria implementation that matches flows with
-	 * a specified id.
+	 * A flow execution listener criteria implementation that matches flows with a specified id.
 	 */
 	private static class FlowIdFlowExecutionListenerCriteria implements FlowExecutionListenerCriteria {
 
@@ -81,8 +78,7 @@ public class FlowExecutionListenerCriteriaFactory {
 		private String[] flowIds;
 
 		/**
-		 * Create a new flow id matching flow execution listener criteria
-		 * implemenation.
+		 * Create a new flow id matching flow execution listener criteria implemenation.
 		 * @param flowId the flow id to match
 		 */
 		public FlowIdFlowExecutionListenerCriteria(String flowId) {
@@ -91,8 +87,7 @@ public class FlowExecutionListenerCriteriaFactory {
 		}
 
 		/**
-		 * Create a new flow id matching flow execution listener criteria
-		 * implemenation.
+		 * Create a new flow id matching flow execution listener criteria implemenation.
 		 * @param flowIds the flow ids to match
 		 */
 		public FlowIdFlowExecutionListenerCriteria(String[] flowIds) {

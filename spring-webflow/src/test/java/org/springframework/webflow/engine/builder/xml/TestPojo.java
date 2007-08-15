@@ -20,7 +20,7 @@ import org.springframework.webflow.execution.FlowSessionStatus;
 
 public class TestPojo {
 	private boolean flag;
-	
+
 	public boolean booleanMethod() {
 		return true;
 	}
@@ -28,7 +28,7 @@ public class TestPojo {
 	public FlowSessionStatus enumMethod() {
 		return FlowSessionStatus.CREATED;
 	}
-	
+
 	public void methodWithVariableArgument(FlowSessionStatus status) {
 		Assert.isTrue(status == FlowSessionStatus.CREATED);
 	}

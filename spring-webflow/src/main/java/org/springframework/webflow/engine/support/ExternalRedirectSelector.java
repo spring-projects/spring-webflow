@@ -25,16 +25,14 @@ import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ExternalRedirect;
 
 /**
- * Makes view selections requesting a client side redirect to an <i>external</i>
- * URL outside of the flow.
+ * Makes view selections requesting a client side redirect to an <i>external</i> URL outside of the flow.
  * <p>
- * This selector is usefull when you wish to request a <i>redirect after
- * conversation completion</i> as part of entering an EndState.
+ * This selector is usefull when you wish to request a <i>redirect after conversation completion</i> as part of
+ * entering an EndState.
  * <p>
- * This selector may also be used to redirect to an external URL from a
- * ViewState of an active conversation. The external system redirected to will
- * be provided the flow execution context necessary to allow it to communicate
- * back to the executing flow at a later time.
+ * This selector may also be used to redirect to an external URL from a ViewState of an active conversation. The
+ * external system redirected to will be provided the flow execution context necessary to allow it to communicate back
+ * to the executing flow at a later time.
  * 
  * @see org.springframework.webflow.execution.support.ExternalRedirect
  * 
@@ -49,9 +47,8 @@ public class ExternalRedirectSelector implements ViewSelector, Serializable {
 	private Expression urlExpression;
 
 	/**
-	 * Create a new redirecting view selector that takes given URL expression as
-	 * input. The expression is the parsed form (expression-tokenized) of the
-	 * encoded view (e.g. "/pathInfo?param0=value0&param1=value1").
+	 * Create a new redirecting view selector that takes given URL expression as input. The expression is the parsed
+	 * form (expression-tokenized) of the encoded view (e.g. "/pathInfo?param0=value0&param1=value1").
 	 * @param urlExpression the url expression
 	 */
 	public ExternalRedirectSelector(Expression urlExpression) {
@@ -70,7 +67,7 @@ public class ExternalRedirectSelector implements ViewSelector, Serializable {
 	}
 
 	public ViewSelection makeEntrySelection(RequestContext context) {
-		String url = (String)urlExpression.evaluate(context, null);
+		String url = (String) urlExpression.evaluate(context, null);
 		return new ExternalRedirect(url);
 	}
 

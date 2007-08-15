@@ -23,9 +23,8 @@ import org.springframework.util.Assert;
 /**
  * Adapts a Converter to the PropertyEditor interface.
  * <p>
- * Note: with a converter, only forward conversion from-string-to-value is
- * supported. Value-to-string conversion is not supported. If you need this
- * capability, use a Formatter with a FormatterPropertyEditor adapter.
+ * Note: with a converter, only forward conversion from-string-to-value is supported. Value-to-string conversion is not
+ * supported. If you need this capability, use a Formatter with a FormatterPropertyEditor adapter.
  * 
  * @see org.springframework.binding.format.Formatter
  * @see org.springframework.binding.format.support.FormatterPropertyEditor

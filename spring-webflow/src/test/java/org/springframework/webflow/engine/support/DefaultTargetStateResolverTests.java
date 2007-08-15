@@ -32,23 +32,23 @@ import org.springframework.webflow.test.execution.AbstractFlowExecutionTests;
  * @author Erwin Vervaet
  */
 public class DefaultTargetStateResolverTests extends AbstractFlowExecutionTests {
-	
+
 	private boolean fail = false;
-	
+
 	protected FlowDefinition getFlowDefinition() {
 		return new FlowAssembler("testFlow", new TestFlowBuilder()).assembleFlow();
 	}
-	
+
 	public void testNonNullSourceState() {
 		fail = false;
 		ViewSelection viewSelection = startFlow();
 		assertFlowExecutionActive();
 		assertCurrentStateEquals("stateA");
-		assertEquals("stateAView", ((ApplicationView)viewSelection).getViewName());
+		assertEquals("stateAView", ((ApplicationView) viewSelection).getViewName());
 		viewSelection = signalEvent("aEvent");
 		assertFlowExecutionActive();
 		assertCurrentStateEquals("stateB");
-		assertEquals("stateBView", ((ApplicationView)viewSelection).getViewName());
+		assertEquals("stateBView", ((ApplicationView) viewSelection).getViewName());
 		viewSelection = signalEvent("bEvent");
 		assertFlowExecutionEnded();
 		assertTrue(viewSelection == ViewSelection.NULL_VIEW);
@@ -60,9 +60,9 @@ public class DefaultTargetStateResolverTests extends AbstractFlowExecutionTests 
 		assertFlowExecutionEnded();
 		assertTrue(viewSelection == ViewSelection.NULL_VIEW);
 	}
-	
+
 	private class TestFlowBuilder extends AbstractFlowBuilder {
-		
+
 		public void buildStartActions() throws FlowBuilderException {
 			getFlow().getStartActionList().add(new Action() {
 				public Event execute(RequestContext context) throws Exception {
@@ -73,15 +73,15 @@ public class DefaultTargetStateResolverTests extends AbstractFlowExecutionTests 
 				}
 			});
 		}
-		
+
 		public void buildExceptionHandlers() throws FlowBuilderException {
 			TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
 			handler.add(UnsupportedOperationException.class, "stateC");
 			getFlow().getExceptionHandlerSet().add(handler);
 		}
-		
+
 		public void buildStates() throws FlowBuilderException {
-			addViewState("stateA",  "stateAView", transition(on("aEvent"), to("stateB")));
+			addViewState("stateA", "stateAView", transition(on("aEvent"), to("stateB")));
 			addViewState("stateB", "stateBView", transition(on("bEvent"), to("stateC")));
 			addEndState("stateC");
 		}

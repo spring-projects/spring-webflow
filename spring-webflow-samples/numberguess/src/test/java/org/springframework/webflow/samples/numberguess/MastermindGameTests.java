@@ -23,11 +23,11 @@ import org.springframework.webflow.samples.numberguess.MastermindGame.GuessResul
 public class MastermindGameTests extends TestCase {
 
 	private MastermindGame action = new MastermindGame();
-	
+
 	protected void setUp() {
 		action = new MastermindGame();
 	}
-	
+
 	public void testGuessNoInputProvided() throws Exception {
 		GuessResult result = action.makeGuess(null);
 		assertEquals(GuessResult.INVALID, result);

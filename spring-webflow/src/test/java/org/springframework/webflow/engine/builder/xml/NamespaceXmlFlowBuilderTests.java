@@ -30,8 +30,8 @@ import org.springframework.webflow.engine.builder.FlowAssembler;
 public class NamespaceXmlFlowBuilderTests extends TestCase {
 
 	public void testBuildFlow() {
-		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("nsFlow.xml", NamespaceXmlFlowBuilderTests.class),
-				new TestFlowServiceLocator());
+		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("nsFlow.xml",
+				NamespaceXmlFlowBuilderTests.class), new TestFlowServiceLocator());
 		new FlowAssembler("nsFlow", builder).assembleFlow();
 	}
 

@@ -21,8 +21,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Converts a textual representation of a class object to a <code>Class</code>
- * instance.
+ * Converts a textual representation of a class object to a <code>Class</code> instance.
  * 
  * @author Keith Donald
  */
@@ -41,19 +40,17 @@ public class TextToClass extends ConversionServiceAwareConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		String text = (String)source;
+		String text = (String) source;
 		if (StringUtils.hasText(text)) {
 			String classNameOrAlias = text.trim();
 			if (classNameOrAlias.startsWith(CLASS_PREFIX)) {
 				return ClassUtils.forName(text.substring(CLASS_PREFIX.length()));
-			}
-			else if (classNameOrAlias.startsWith(ALIAS_PREFIX)) {
+			} else if (classNameOrAlias.startsWith(ALIAS_PREFIX)) {
 				String alias = text.substring(ALIAS_PREFIX.length());
 				Class clazz = getConversionService().getClassByAlias(alias);
 				Assert.notNull(clazz, "No class found associated with type alias '" + alias + "'");
 				return clazz;
-			}
-			else {
+			} else {
 				// try first an aliased based lookup
 				if (getConversionService() != null) {
 					Class aliasedClass = getConversionService().getClassByAlias(classNameOrAlias);
@@ -64,8 +61,7 @@ public class TextToClass extends ConversionServiceAwareConverter {
 				// treat as a class name
 				return ClassUtils.forName(classNameOrAlias);
 			}
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

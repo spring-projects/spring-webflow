@@ -24,12 +24,10 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.util.Assert;
 
 /**
- * Registers all 'from string' converters known to a conversion service with
- * a Spring bean factory.
+ * Registers all 'from string' converters known to a conversion service with a Spring bean factory.
  * <p>
- * Acts as bean factory post processor, registering property editor adapters for
- * each supported conversion with a <code>java.lang.String sourceClass</code>.
- * This makes for very convenient use with the Spring container.
+ * Acts as bean factory post processor, registering property editor adapters for each supported conversion with a
+ * <code>java.lang.String sourceClass</code>. This makes for very convenient use with the Spring container.
  * 
  * @author Keith Donald
  */

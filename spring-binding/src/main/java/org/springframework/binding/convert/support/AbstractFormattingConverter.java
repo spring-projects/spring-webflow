@@ -18,9 +18,8 @@ package org.springframework.binding.convert.support;
 import org.springframework.binding.format.FormatterFactory;
 
 /**
- * A converter that delegates to a formatter to perform the conversion.
- * Formatters are typically not thread safe, so we use a FormatterFactory that
- * is expected to provide us with thread-safe instances as necessary.
+ * A converter that delegates to a formatter to perform the conversion. Formatters are typically not thread safe, so we
+ * use a FormatterFactory that is expected to provide us with thread-safe instances as necessary.
  * 
  * @author Keith Donald
  */

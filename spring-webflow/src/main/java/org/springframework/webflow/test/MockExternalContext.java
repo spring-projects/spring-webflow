@@ -35,7 +35,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
 public class MockExternalContext implements ExternalContext {
 
 	private String contextPath;
-	
+
 	private String dispatcherPath;
 
 	private String requestPathInfo;
@@ -45,22 +45,20 @@ public class MockExternalContext implements ExternalContext {
 	private MutableAttributeMap requestMap = new LocalAttributeMap();
 
 	private SharedAttributeMap sessionMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
-	
+
 	private SharedAttributeMap globalSessionMap = sessionMap;
 
 	private SharedAttributeMap applicationMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
 
 	/**
-	 * Creates a mock external context with an empty request parameter map.
-	 * Allows for bean style usage.
+	 * Creates a mock external context with an empty request parameter map. Allows for bean style usage.
 	 */
 	public MockExternalContext() {
 	}
 
 	/**
-	 * Creates a mock external context with the specified parameters in the
-	 * request parameter map. All other properties of the external context
-	 * can be set using the appropriate setter.
+	 * Creates a mock external context with the specified parameters in the request parameter map. All other properties
+	 * of the external context can be set using the appropriate setter.
 	 * @param requestParameterMap the request parameters
 	 */
 	public MockExternalContext(ParameterMap requestParameterMap) {
@@ -70,11 +68,11 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	// implementing external context
-	
+
 	public String getContextPath() {
 		return contextPath;
 	}
-	
+
 	public String getDispatcherPath() {
 		return dispatcherPath;
 	}
@@ -98,7 +96,7 @@ public class MockExternalContext implements ExternalContext {
 	public SharedAttributeMap getGlobalSessionMap() {
 		return globalSessionMap;
 	}
-	
+
 	public SharedAttributeMap getApplicationMap() {
 		return applicationMap;
 	}
@@ -112,7 +110,7 @@ public class MockExternalContext implements ExternalContext {
 	public void setContextPath(String contextPath) {
 		this.contextPath = contextPath;
 	}
-	
+
 	/**
 	 * Set the dispatcher path.
 	 * @see ExternalContext#getDispatcherPath()
@@ -136,7 +134,7 @@ public class MockExternalContext implements ExternalContext {
 	public void setRequestParameterMap(ParameterMap requestParameterMap) {
 		this.requestParameterMap = requestParameterMap;
 	}
-	
+
 	/**
 	 * Set the request attribute map.
 	 * @see ExternalContext#getRequestMap()
@@ -152,10 +150,10 @@ public class MockExternalContext implements ExternalContext {
 	public void setSessionMap(SharedAttributeMap sessionMap) {
 		this.sessionMap = sessionMap;
 	}
-	
+
 	/**
-	 * Set the global session attribute map. By default the session attribute
-	 * map and the global session attribute map are one and the same.
+	 * Set the global session attribute map. By default the session attribute map and the global session attribute map
+	 * are one and the same.
 	 * @see ExternalContext#getGlobalSessionMap()
 	 */
 	public void setGlobalSessionMap(SharedAttributeMap globalSessionMap) {
@@ -169,18 +167,17 @@ public class MockExternalContext implements ExternalContext {
 	public void setApplicationMap(SharedAttributeMap applicationMap) {
 		this.applicationMap = applicationMap;
 	}
-	
+
 	// convenience helpers
 
 	/**
-	 * Returns the request parameter map as a {@link MockParameterMap}
-	 * for convenient access in a unit test.
+	 * Returns the request parameter map as a {@link MockParameterMap} for convenient access in a unit test.
 	 * @see #getRequestParameterMap()
 	 */
 	public MockParameterMap getMockRequestParameterMap() {
-		return (MockParameterMap)requestParameterMap;
+		return (MockParameterMap) requestParameterMap;
 	}
-	
+
 	/**
 	 * Puts a request parameter into the mock parameter map.
 	 * @param parameterName the parameter name

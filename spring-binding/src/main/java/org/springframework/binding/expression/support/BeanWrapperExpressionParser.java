@@ -25,7 +25,7 @@ import org.springframework.binding.expression.SettableExpression;
  * @author Keith Donald
  */
 public class BeanWrapperExpressionParser extends AbstractExpressionParser {
-	
+
 	protected Expression doParseExpression(String expressionString) throws ParserException {
 		return doParseSettableExpression(expressionString);
 	}

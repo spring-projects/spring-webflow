@@ -33,36 +33,27 @@ import org.springframework.webflow.execution.repository.support.FlowExecutionSta
 import org.springframework.webflow.util.Base64;
 
 /**
- * Stores flow execution state client side, requiring no use of server-side
- * state.
+ * Stores flow execution state client side, requiring no use of server-side state.
  * <p>
- * More specifically, instead of putting {@link FlowExecution} objects in a
- * server-side store this repository <i>encodes</i> them directly into the
- * <code>continuationId</code> of the generated {@link FlowExecutionKey}.
- * When asked to load a flow execution by its key this repository decodes the
- * serialized <code>continuationId</code>, restoring the
+ * More specifically, instead of putting {@link FlowExecution} objects in a server-side store this repository <i>encodes</i>
+ * them directly into the <code>continuationId</code> of the generated {@link FlowExecutionKey}. When asked to load a
+ * flow execution by its key this repository decodes the serialized <code>continuationId</code>, restoring the
  * {@link FlowExecution} object at the state it was in when encoded.
  * <p>
- * Note: currently this repository implementation does not by default support
- * <i>conversation management</i>. This has two consequences. First, there is no
- * <i>conversation invalidation after completion</i>, which enables automatic
- * prevention of duplicate submission after a conversation has completed.
- * Secondly, The contents of <i>conversation scope</i> will not be maintained
- * across requests. Support for these features requires tracking active
- * conversations using a conversation service backed by some centralized storage
- * medium like a database table. If you want to have proper conversation management,
- * configure this class with an appropriate conversation manager (the default
+ * Note: currently this repository implementation does not by default support <i>conversation management</i>. This has
+ * two consequences. First, there is no <i>conversation invalidation after completion</i>, which enables automatic
+ * prevention of duplicate submission after a conversation has completed. Secondly, The contents of <i>conversation
+ * scope</i> will not be maintained across requests. Support for these features requires tracking active conversations
+ * using a conversation service backed by some centralized storage medium like a database table. If you want to have
+ * proper conversation management, configure this class with an appropriate conversation manager (the default
  * conversation manager used does nothing).
  * <p>
- * Warning: storing state (a flow execution continuation) on the client entails
- * a certain security risk. This implementation does not provide a secure way of
- * storing state on the client, so a malicious client could reverse engineer a
- * continuation and get access to possible sensitive data stored in the flow
- * execution. If you need more security and still want to store continuations on
- * the client, subclass this class and override the methods
- * {@link #encode(FlowExecution)} and {@link #decode(String)}, implementing
- * them with a secure encoding/decoding algorithm, e.g. based on public/private
- * key encryption.
+ * Warning: storing state (a flow execution continuation) on the client entails a certain security risk. This
+ * implementation does not provide a secure way of storing state on the client, so a malicious client could reverse
+ * engineer a continuation and get access to possible sensitive data stored in the flow execution. If you need more
+ * security and still want to store continuations on the client, subclass this class and override the methods
+ * {@link #encode(FlowExecution)} and {@link #decode(String)}, implementing them with a secure encoding/decoding
+ * algorithm, e.g. based on public/private key encryption.
  * 
  * @see Base64
  * 
@@ -72,8 +63,7 @@ import org.springframework.webflow.util.Base64;
 public class ClientContinuationFlowExecutionRepository extends AbstractConversationFlowExecutionRepository {
 
 	/**
-	 * The continuation factory that will be used to create new continuations to
-	 * be added to active conversations.
+	 * The continuation factory that will be used to create new continuations to be added to active conversations.
 	 */
 	private FlowExecutionContinuationFactory continuationFactory = new SerializedFlowExecutionContinuationFactory();
 
@@ -84,11 +74,10 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	public ClientContinuationFlowExecutionRepository(FlowExecutionStateRestorer executionStateRestorer) {
 		super(executionStateRestorer, new NoOpConversationManager());
 	}
-	
+
 	/**
-	 * Creates a new client continuation repository. Use this contructor when you want
-	 * to use a particular conversation manager, e.g. one that does proper conversation
-	 * management.
+	 * Creates a new client continuation repository. Use this contructor when you want to use a particular conversation
+	 * manager, e.g. one that does proper conversation management.
 	 * @param executionStateRestorer the transient flow execution state restorer
 	 * @param conversationManager the conversation manager for managing centralized conversational state
 	 */
@@ -116,19 +105,18 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 		if (logger.isDebugEnabled()) {
 			logger.debug("Getting flow execution with key '" + key + "'");
 		}
-		
+
 		// note that the call to getConversationScope() below will try to obtain
 		// the conversation identified by the key, which will fail if that conversation
 		// is no longer managed by the conversation manager (i.e. it has expired)
-		
-		FlowExecutionContinuation continuation = decode((String)getContinuationId(key));
+
+		FlowExecutionContinuation continuation = decode((String) getContinuationId(key));
 		try {
 			FlowExecution execution = continuation.unmarshal();
 			// the flow execution was deserialized so we need to restore transient
 			// state
 			return getExecutionStateRestorer().restoreState(execution, getConversationScope(key));
-		}
-		catch (ContinuationUnmarshalException e) {
+		} catch (ContinuationUnmarshalException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
 	}
@@ -137,7 +125,7 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 		if (logger.isDebugEnabled()) {
 			logger.debug("Putting flow execution '" + flowExecution + "' into repository with key '" + key + "'");
 		}
-		
+
 		// note that the call to putConversationScope() below will try to obtain
 		// the conversation identified by the key, which will fail if that conversation
 		// is no longer managed by the conversation manager (i.e. it has expired)
@@ -157,11 +145,10 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	}
 
 	/**
-	 * Encode given flow execution object into data that can be stored on the
-	 * client.
+	 * Encode given flow execution object into data that can be stored on the client.
 	 * <p>
-	 * Subclasses can override this to change the encoding algorithm. This class
-	 * just does a BASE64 encoding of the serialized flow execution.
+	 * Subclasses can override this to change the encoding algorithm. This class just does a BASE64 encoding of the
+	 * serialized flow execution.
 	 * @param flowExecution the flow execution instance
 	 * @return the encoded representation
 	 */
@@ -171,12 +158,10 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	}
 
 	/**
-	 * Decode given data, received from the client, and return the corresponding
-	 * flow execution object.
+	 * Decode given data, received from the client, and return the corresponding flow execution object.
 	 * <p>
-	 * Subclasses can override this to change the decoding algorithm. This class
-	 * just does a <code>BASE64</code> decoding and then deserializes the flow
-	 * execution.
+	 * Subclasses can override this to change the decoding algorithm. This class just does a <code>BASE64</code>
+	 * decoding and then deserializes the flow execution.
 	 * @param encodedContinuation the encoded flow execution data
 	 * @return the decoded flow execution instance
 	 */
@@ -186,8 +171,8 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 	}
 
 	/**
-	 * Conversation manager that doesn't do anything - the default. Does not support
-	 * conversation scope or conversation invalidation.
+	 * Conversation manager that doesn't do anything - the default. Does not support conversation scope or conversation
+	 * invalidation.
 	 * 
 	 * @author Keith Donald
 	 */
@@ -212,7 +197,7 @@ public class ClientContinuationFlowExecutionRepository extends AbstractConversat
 		}
 
 		private static class NoOpConversation implements Conversation {
-			
+
 			private static final ConversationId ID = new ConversationId() {
 				public String toString() {
 					return "NoOpConversation id";

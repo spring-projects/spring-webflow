@@ -28,22 +28,22 @@ import junit.framework.TestCase;
  * @author Erwin Vervaet
  */
 public class BaseFlowServiceLocatorTests extends TestCase {
-	
+
 	public void testWithCustomConversionService() {
 		BaseFlowServiceLocator serviceLocator = new BaseFlowServiceLocator();
-		
+
 		GenericConversionService conversionService = new GenericConversionService();
 		conversionService.addConverter(new TextToBoolean("ja", "nee"));
 		conversionService.addConverter(new CustomTextToViewSelector(serviceLocator));
-		
+
 		serviceLocator.setConversionService(conversionService);
-		
-		assertEquals(Boolean.TRUE, serviceLocator.getConversionService().getConversionExecutor(
-				String.class, Boolean.class).execute("ja"));
-		assertSame(NullViewSelector.INSTANCE, serviceLocator.getConversionService().getConversionExecutor(
-				String.class, ViewSelector.class).execute("custom:"));
+
+		assertEquals(Boolean.TRUE, serviceLocator.getConversionService().getConversionExecutor(String.class,
+				Boolean.class).execute("ja"));
+		assertSame(NullViewSelector.INSTANCE, serviceLocator.getConversionService().getConversionExecutor(String.class,
+				ViewSelector.class).execute("custom:"));
 	}
-	
+
 	public static class CustomTextToViewSelector extends TextToViewSelector {
 
 		public CustomTextToViewSelector(FlowServiceLocator flowServiceLocator) {

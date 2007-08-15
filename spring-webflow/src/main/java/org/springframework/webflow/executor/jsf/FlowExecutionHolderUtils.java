@@ -26,7 +26,7 @@ import org.springframework.webflow.execution.FlowExecution;
  * <p>
  * By default, the current flow execution holder is stored associated with the current thread in the
  * {@link FacesContext}'s {@link ExternalContext#getRequestMap()}.
- *
+ * 
  * @author Keith Donald
  */
 public class FlowExecutionHolderUtils {
@@ -82,8 +82,7 @@ public class FlowExecutionHolderUtils {
 		FlowExecution execution = getCurrentFlowExecution(context);
 		if (execution != null) {
 			return execution;
-		}
-		else {
+		} else {
 			throw new EvaluationException("No current FlowExecution bound to the Faces Context "
 					+ "- was the current flow execution not restored before a view referenced it? "
 					+ "Has the flow execution ended or expired?");
@@ -91,9 +90,8 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Cleans up the current flow execution in the faces context if necessary.
-	 * Specifically, handles unlocking the execution if necessary and setting the
-	 * holder to null.
+	 * Cleans up the current flow execution in the faces context if necessary. Specifically, handles unlocking the
+	 * execution if necessary and setting the holder to null.
 	 * @param context the faces context
 	 */
 	public static void cleanupCurrentFlowExecution(FacesContext context) {
@@ -104,8 +102,7 @@ public class FlowExecutionHolderUtils {
 	}
 
 	/**
-	 * Returns the key used to index the flow execution holder in the request
-	 * attributes.
+	 * Returns the key used to index the flow execution holder in the request attributes.
 	 */
 	static String getFlowExecutionHolderKey() {
 		return FlowExecutionHolder.class.getName();

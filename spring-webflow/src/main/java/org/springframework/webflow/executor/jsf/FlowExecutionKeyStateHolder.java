@@ -115,7 +115,8 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		// restore only if the key is present and the current flow execution has not already been restored
 		if (StringUtils.hasText(flowExecutionKey) && !FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
-			// restore the "current" flow execution from repository so it will be available to variable/property resolvers
+			// restore the "current" flow execution from repository so it will be available to variable/property
+			// resolvers
 			// and the flow navigation handler (this could happen as part of a view action like a form submission)
 			FlowExecutionRepository repository = getRepository(context);
 			// restore the key from the stored encoded key string
@@ -126,21 +127,21 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 				try {
 					FlowExecution flowExecution = repository.getFlowExecution(key);
 					if (logger.isDebugEnabled()) {
-						logger.debug("Loaded existing flow execution with key '" + flowExecutionKey
-								+ "' as part of component restoration [triggered via an action event like a button click]");
+						logger
+								.debug("Loaded existing flow execution with key '"
+										+ flowExecutionKey
+										+ "' as part of component restoration [triggered via an action event like a button click]");
 					}
-					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock), facesContext);
-				}
-				catch (RuntimeException e) {
+					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock),
+							facesContext);
+				} catch (RuntimeException e) {
+					lock.unlock();
+					throw e;
+				} catch (Error e) {
 					lock.unlock();
 					throw e;
 				}
-				catch (Error e) {
-					lock.unlock();
-					throw e;
-				}
-			}
-			catch (FlowExecutionAccessException e) {
+			} catch (FlowExecutionAccessException e) {
 				handleFlowExecutionAccessException(e, facesContext);
 			}
 		}
@@ -155,7 +156,7 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 	protected void handleFlowExecutionAccessException(FlowExecutionAccessException e, FacesContext context) {
 		throw e;
 	}
-	
+
 	/**
 	 * Save the just the current FlowExecutionKey value.
 	 */

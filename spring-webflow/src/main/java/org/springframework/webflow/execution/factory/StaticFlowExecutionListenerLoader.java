@@ -20,9 +20,8 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
 /**
- * A simple flow execution listener loader that simply returns a static listener
- * array on each invocation. For more elaborate needs see the
- * {@link ConditionalFlowExecutionListenerLoader}.
+ * A simple flow execution listener loader that simply returns a static listener array on each invocation. For more
+ * elaborate needs see the {@link ConditionalFlowExecutionListenerLoader}.
  * 
  * @see ConditionalFlowExecutionListenerLoader
  * 
@@ -34,24 +33,21 @@ public final class StaticFlowExecutionListenerLoader implements FlowExecutionLis
 	 * A shared listener loader instance that returns am empty listener array on each invocation.
 	 */
 	public static final FlowExecutionListenerLoader EMPTY_INSTANCE = new StaticFlowExecutionListenerLoader();
-	
+
 	/**
-	 * The listener array to return when {@link #getListeners(FlowDefinition)}
-	 * is invoked.
+	 * The listener array to return when {@link #getListeners(FlowDefinition)} is invoked.
 	 */
 	private final FlowExecutionListener[] listeners;
 
 	/**
-	 * Creates a new flow execution listener loader that returns an empty
-	 * listener array on each invocation.
+	 * Creates a new flow execution listener loader that returns an empty listener array on each invocation.
 	 */
 	private StaticFlowExecutionListenerLoader() {
 		this(new FlowExecutionListener[0]);
 	}
 
 	/**
-	 * Creates a new flow execution listener loader that returns the provided
-	 * listener on each invocation.
+	 * Creates a new flow execution listener loader that returns the provided listener on each invocation.
 	 * @param listener the listener
 	 */
 	public StaticFlowExecutionListenerLoader(FlowExecutionListener listener) {
@@ -59,9 +55,8 @@ public final class StaticFlowExecutionListenerLoader implements FlowExecutionLis
 	}
 
 	/**
-	 * Creates a new flow execution listener loader that returns the provided
-	 * listener array on each invocation. Clients should not attempt to modify
-	 * the passed in array as no deep copy is made.
+	 * Creates a new flow execution listener loader that returns the provided listener array on each invocation. Clients
+	 * should not attempt to modify the passed in array as no deep copy is made.
 	 * @param listeners the listener array.
 	 */
 	public StaticFlowExecutionListenerLoader(FlowExecutionListener[] listeners) {

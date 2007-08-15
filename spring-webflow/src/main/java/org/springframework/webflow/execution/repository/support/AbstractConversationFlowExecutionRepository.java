@@ -37,16 +37,15 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepositoryE
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 
 /**
- * A convenient base class for flow execution repository implementations that delegate
- * to a conversation service for managing conversations that govern the
- * persistent state of paused flow executions.
+ * A convenient base class for flow execution repository implementations that delegate to a conversation service for
+ * managing conversations that govern the persistent state of paused flow executions.
  * 
  * @see ConversationManager
  * 
  * @author Keith Donald
  */
 public abstract class AbstractConversationFlowExecutionRepository extends AbstractFlowExecutionRepository {
-	
+
 	/**
 	 * Logger, usable in subclasses
 	 */
@@ -58,8 +57,7 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	private static final String SCOPE_ATTRIBUTE = "scope";
 
 	/**
-	 * The conversation service to delegate to for managing conversations
-	 * initiated by this repository.
+	 * The conversation service to delegate to for managing conversations initiated by this repository.
 	 */
 	private ConversationManager conversationManager;
 
@@ -89,15 +87,15 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 		Assert.notNull(conversationManager, "The conversation manager is required");
 		this.conversationManager = conversationManager;
 	}
-		
+
 	public FlowExecutionKey generateKey(FlowExecution flowExecution) {
 		// we need to generate a key for a new flow execution, so a new conversation has
 		// started
 		ConversationParameters parameters = createConversationParameters(flowExecution);
 		Conversation conversation = conversationManager.beginConversation(parameters);
 		onBegin(conversation);
-		FlowExecutionKey key =
-			new CompositeFlowExecutionKey(conversation.getId(), generateContinuationId(flowExecution));
+		FlowExecutionKey key = new CompositeFlowExecutionKey(conversation.getId(),
+				generateContinuationId(flowExecution));
 		if (logger.isDebugEnabled()) {
 			logger.debug("Generated new key for flow execution '" + flowExecution + "': '" + key + "'");
 		}
@@ -105,14 +103,14 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	}
 
 	public FlowExecutionKey getNextKey(FlowExecution flowExecution, FlowExecutionKey previousKey) {
-		CompositeFlowExecutionKey key = (CompositeFlowExecutionKey)previousKey;
+		CompositeFlowExecutionKey key = (CompositeFlowExecutionKey) previousKey;
 		// the conversation id remains the same for the life of the flow execution
 		// but the continuation id changes
-		FlowExecutionKey nextKey =
-			new CompositeFlowExecutionKey(key.getConversationId(), generateContinuationId(flowExecution));
+		FlowExecutionKey nextKey = new CompositeFlowExecutionKey(key.getConversationId(),
+				generateContinuationId(flowExecution));
 		if (logger.isDebugEnabled()) {
-			logger.debug("Generated next key for flow execution '" + flowExecution + "': '" + nextKey + "'; " +
-					"previous key was '" + key + "'");
+			logger.debug("Generated next key for flow execution '" + flowExecution + "': '" + nextKey + "'; "
+					+ "previous key was '" + key + "'");
 		}
 		return nextKey;
 	}
@@ -130,7 +128,7 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 		if (logger.isDebugEnabled()) {
 			logger.debug("Removing flow execution with key '" + key + "' from repository");
 		}
-		
+
 		// end the governing conversation
 		Conversation conversation = getConversation(key);
 		conversation.end();
@@ -139,39 +137,35 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 
 	public FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException {
 		if (!StringUtils.hasText(encodedKey)) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, 
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey,
 					"The string encoded flow execution key is required");
 		}
-		
+
 		String[] keyParts = CompositeFlowExecutionKey.keyParts(encodedKey);
-		
+
 		// parse out the conversation id
 		ConversationId conversationId;
 		try {
 			conversationId = conversationManager.parseConversationId(keyParts[0]);
+		} catch (ConversationException e) {
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, "The conversation id '" + keyParts[0]
+					+ "' contained in the composite flow execution key '" + encodedKey + "' is invalid", e);
 		}
-		catch (ConversationException e) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey,
-					"The conversation id '" + keyParts[0] + "' contained in the composite flow execution key '"
-					+ encodedKey + "' is invalid", e);
-		}
-		
+
 		// parse out the continuation id
 		Serializable continuationId;
 		try {
 			continuationId = parseContinuationId(keyParts[1]);
+		} catch (FlowExecutionRepositoryException e) {
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, "The continuation id '" + keyParts[1]
+					+ "' contained in the composite flow execution key '" + encodedKey + "' is invalid", e);
 		}
-		catch (FlowExecutionRepositoryException e) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey,
-					"The continuation id '" + keyParts[1] + "' contained in the composite flow execution key '"
-					+ encodedKey + "' is invalid", e);
-		}
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Parsed encoded flow execution key '" + encodedKey + "', extracted conversation id '"
 					+ conversationId + "' and continuation id '" + continuationId + "'");
 		}
-		
+
 		return new CompositeFlowExecutionKey(conversationId, continuationId);
 	}
 
@@ -181,8 +175,7 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	 * Factory method that maps a new flow execution to a descriptive
 	 * {@link ConversationParameters conversation parameters} object.
 	 * @param flowExecution the new flow execution
-	 * @return the conversation parameters object to pass to the conversation
-	 * manager when the conversation is started
+	 * @return the conversation parameters object to pass to the conversation manager when the conversation is started
 	 */
 	protected ConversationParameters createConversationParameters(FlowExecution flowExecution) {
 		FlowDefinition flow = flowExecution.getDefinition();
@@ -190,19 +183,16 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	}
 
 	/**
-	 * An "on begin conversation" callback, allowing for insertion of custom
-	 * logic after a new conversation has begun.
+	 * An "on begin conversation" callback, allowing for insertion of custom logic after a new conversation has begun.
 	 * This implementation is emtpy.
 	 * @param conversation the conversation that has begun
 	 */
 	protected void onBegin(Conversation conversation) {
 	}
-	
+
 	/**
-	 * An "on conversation end" callback, allowing for insertion of custom logic
-	 * after a conversation has ended (it's {@link Conversation#end()} method has been
-	 * called).
-	 * This implementation is empty.
+	 * An "on conversation end" callback, allowing for insertion of custom logic after a conversation has ended (it's
+	 * {@link Conversation#end()} method has been called). This implementation is empty.
 	 * @param conversation the conversation that has ended
 	 */
 	protected void onEnd(Conversation conversation) {
@@ -214,7 +204,7 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	 * @return the conversationId key part
 	 */
 	protected ConversationId getConversationId(FlowExecutionKey key) {
-		return ((CompositeFlowExecutionKey)key).getConversationId();
+		return ((CompositeFlowExecutionKey) key).getConversationId();
 	}
 
 	/**
@@ -223,40 +213,35 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	 * @return the continuation id key part
 	 */
 	protected Serializable getContinuationId(FlowExecutionKey key) {
-		return ((CompositeFlowExecutionKey)key).getContinuationId();
+		return ((CompositeFlowExecutionKey) key).getContinuationId();
 	}
 
 	/**
-	 * Returns the conversation governing the execution of the
-	 * {@link FlowExecution} with the provided key.
+	 * Returns the conversation governing the execution of the {@link FlowExecution} with the provided key.
 	 * @param key the flow execution key
 	 * @return the governing conversation
-	 * @throws NoSuchFlowExecutionException when the conversation for identified
-	 * flow execution cannot be found
+	 * @throws NoSuchFlowExecutionException when the conversation for identified flow execution cannot be found
 	 */
 	protected Conversation getConversation(FlowExecutionKey key) throws NoSuchFlowExecutionException {
 		try {
 			return getConversationManager().getConversation(getConversationId(key));
-		}
-		catch (NoSuchConversationException e) {
+		} catch (NoSuchConversationException e) {
 			throw new NoSuchFlowExecutionException(key, e);
 		}
 	}
 
 	/**
-	 * Returns the "conversation scope" for the flow execution with the
-	 * key provided. This is mainly useful for reinitialisation of a flow execution
-	 * after restoration from the repository.
+	 * Returns the "conversation scope" for the flow execution with the key provided. This is mainly useful for
+	 * reinitialisation of a flow execution after restoration from the repository.
 	 * @param key the flow execution key
 	 * @return the execution's conversation scope
 	 */
 	protected MutableAttributeMap getConversationScope(FlowExecutionKey key) {
-		return (MutableAttributeMap)getConversation(key).getAttribute(SCOPE_ATTRIBUTE);
+		return (MutableAttributeMap) getConversation(key).getAttribute(SCOPE_ATTRIBUTE);
 	}
 
 	/**
-	 * Sets the conversation scope attribute for the flow execution with the key
-	 * provided.
+	 * Sets the conversation scope attribute for the flow execution with the key provided.
 	 * @param key the flow execution key
 	 * @param scope the execution's conversation scope
 	 */
@@ -268,8 +253,7 @@ public abstract class AbstractConversationFlowExecutionRepository extends Abstra
 	// abstract template methods
 
 	/**
-	 * Template method used to generate a new continuation id for given flow
-	 * execution. Subclasses must override.
+	 * Template method used to generate a new continuation id for given flow execution. Subclasses must override.
 	 * @param flowExecution the flow execution
 	 * @return the continuation id
 	 */

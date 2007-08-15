@@ -25,9 +25,9 @@ import org.springframework.webflow.execution.Event;
 public class EventFactorySupportTests extends TestCase {
 
 	private EventFactorySupport support = new EventFactorySupport();
-	
+
 	private Object source = new Object();
-	
+
 	protected void setUp() throws Exception {
 	}
 
@@ -36,7 +36,7 @@ public class EventFactorySupportTests extends TestCase {
 		assertEquals("success", e.getId());
 		assertSame(source, e.getSource());
 	}
-	
+
 	public void testSuccessWithResult() {
 		Object result = new Object();
 		Event e = support.success(source, result);
@@ -58,7 +58,7 @@ public class EventFactorySupportTests extends TestCase {
 		assertSame(source, e.getSource());
 		assertSame(ex, e.getAttributes().get("exception"));
 	}
-	
+
 	public void testYes() {
 		Event e = support.yes(source);
 		assertEquals("yes", e.getId());

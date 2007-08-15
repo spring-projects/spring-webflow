@@ -98,8 +98,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have failed no such state");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 		}
 	}
 
@@ -108,8 +107,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have rethrown");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 			// expected
 		}
 	}

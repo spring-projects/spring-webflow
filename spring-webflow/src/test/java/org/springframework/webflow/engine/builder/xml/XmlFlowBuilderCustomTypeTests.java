@@ -58,9 +58,9 @@ public class XmlFlowBuilderCustomTypeTests extends TestCase {
 		assertEquals("testFlow3", flow.getId());
 		assertEquals(5, flow.getStateCount());
 		assertEquals(1, flow.getExceptionHandlerSet().size());
-		assertSame(((ActionState)flow.getState("actionState1")).getActionList().getAnnotated(0).getTargetAction()
+		assertSame(((ActionState) flow.getState("actionState1")).getActionList().getAnnotated(0).getTargetAction()
 				.getClass(), CustomAction.class);
-		assertSame(((SubflowState)flow.getState("subFlowState1")).getAttributeMapper().getClass(),
+		assertSame(((SubflowState) flow.getState("subFlowState1")).getAttributeMapper().getClass(),
 				CustomAttributeMapper.class);
 		assertSame(flow.getExceptionHandlerSet().toArray()[0].getClass(), CustomExceptionHandler.class);
 	}
@@ -75,7 +75,7 @@ public class XmlFlowBuilderCustomTypeTests extends TestCase {
 		protected AttributeMapper getInputMapper() {
 			return null;
 		}
-		
+
 		protected AttributeMapper getOutputMapper() {
 			return null;
 		}

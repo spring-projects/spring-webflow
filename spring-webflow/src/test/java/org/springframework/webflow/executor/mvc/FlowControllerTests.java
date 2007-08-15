@@ -36,7 +36,7 @@ import org.springframework.webflow.executor.FlowExecutorImpl;
  * Unit tests for {@link FlowController}.
  */
 public class FlowControllerTests extends TestCase {
-	
+
 	private FlowController controller = new FlowController();
 
 	public void setUp() {
@@ -65,12 +65,12 @@ public class FlowControllerTests extends TestCase {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		request.addParameter("_flowId", "simpleFlow");
 		ModelAndView mv = controller.handleRequestInternal(request, response);
-		request.addParameter("_flowExecutionKey", (String)mv.getModel().get("flowExecutionKey"));
+		request.addParameter("_flowExecutionKey", (String) mv.getModel().get("flowExecutionKey"));
 		request.addParameter("_eventId", "submit");
 		mv = controller.handleRequest(request, response);
 		assertNull(mv.getViewName());
 		assertTrue(mv.getView() instanceof RedirectView);
-		RedirectView rv = (RedirectView)mv.getView();
+		RedirectView rv = (RedirectView) mv.getView();
 		assertEquals("confirm", rv.getUrl());
 		assertNull(mv.getModel().get("flowExecutionKey"));
 	}

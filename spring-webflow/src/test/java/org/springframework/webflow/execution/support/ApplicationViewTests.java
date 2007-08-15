@@ -35,10 +35,10 @@ public class ApplicationViewTests extends TestCase {
 		try {
 			view.getModel().put("foo", "bar");
 		} catch (UnsupportedOperationException e) {
-			
+
 		}
 	}
-	
+
 	public void testNullParams() {
 		ApplicationView view = new ApplicationView(null, null);
 		assertEquals(0, view.getModel().size());
@@ -46,7 +46,7 @@ public class ApplicationViewTests extends TestCase {
 		ApplicationView view2 = new ApplicationView(null, null);
 		assertEquals(view, view2);
 	}
-	
+
 	public void testMapLookup() {
 		ApplicationView view = new ApplicationView("view", null);
 		Map map = new HashMap();

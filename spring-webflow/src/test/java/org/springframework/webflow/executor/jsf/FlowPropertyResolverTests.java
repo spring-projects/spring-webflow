@@ -38,7 +38,7 @@ public class FlowPropertyResolverTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		resolver = new FlowPropertyResolver(new OriginalPropertyResolver());
-		flowEx = (FlowExecution)EasyMock.createMock(FlowExecution.class);
+		flowEx = (FlowExecution) EasyMock.createMock(FlowExecution.class);
 	}
 
 	protected void tearDown() throws Exception {
@@ -64,8 +64,7 @@ public class FlowPropertyResolverTests extends TestCase {
 		try {
 			resolver.getValue(flowEx, 2);
 			fail("not legal to get flow property by index");
-		}
-		catch (ReferenceSyntaxException e) {
+		} catch (ReferenceSyntaxException e) {
 			// expected
 		}
 	}
@@ -84,8 +83,7 @@ public class FlowPropertyResolverTests extends TestCase {
 		try {
 			resolver.setValue(flowEx, 2, "whatever");
 			fail("not legal to set flow property by index");
-		}
-		catch (ReferenceSyntaxException e) {
+		} catch (ReferenceSyntaxException e) {
 			// expected
 		}
 	}

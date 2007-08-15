@@ -31,14 +31,11 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
- * The default document loader strategy for XSD-based XML documents with
- * validation enabled by default.
+ * The default document loader strategy for XSD-based XML documents with validation enabled by default.
  * <p>
- * Note: full XSD support requires JDK 5.0 or a capable parser such as Xerces
- * 2.0. JDK 1.4 or < do not fully support XSD out of the box. To use this
- * implementation on JDK 1.4 make sure Xerces is available in your classpath or
- * disable XSD validation by
- * {@link #setValidating(boolean) setting the validating property to false}.
+ * Note: full XSD support requires JDK 5.0 or a capable parser such as Xerces 2.0. JDK 1.4 or < do not fully support XSD
+ * out of the box. To use this implementation on JDK 1.4 make sure Xerces is available in your classpath or disable XSD
+ * validation by {@link #setValidating(boolean) setting the validating property to false}.
  * 
  * @author Keith Donald
  */
@@ -57,8 +54,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";
 
 	/**
-	 * Flag indicating if the XML document parser will perform schema
-	 * validation.
+	 * Flag indicating if the XML document parser will perform schema validation.
 	 */
 	private boolean validating = true;
 
@@ -75,8 +71,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	}
 
 	/**
-	 * Set if the XML parser should validate the document and thus enforce a
-	 * schema. Defaults to true.
+	 * Set if the XML parser should validate the document and thus enforce a schema. Defaults to true.
 	 */
 	public void setValidating(boolean validating) {
 		this.validating = validating;
@@ -90,9 +85,8 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	}
 
 	/**
-	 * Set a SAX entity resolver to be used for parsing. Can be overridden for
-	 * custom entity resolution, for example relative to some specific base
-	 * path.
+	 * Set a SAX entity resolver to be used for parsing. Can be overridden for custom entity resolution, for example
+	 * relative to some specific base path.
 	 * @see org.springframework.webflow.engine.builder.xml.WebFlowEntityResolver
 	 */
 	public void setEntityResolver(EntityResolver entityResolver) {
@@ -108,8 +102,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			factory.setNamespaceAware(true);
 			try {
 				factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
-			}
-			catch (IllegalArgumentException ex) {
+			} catch (IllegalArgumentException ex) {
 				throw new IllegalStateException("Unable to validate using XSD: Your JAXP provider [" + factory
 						+ "] does not support XML Schema. "
 						+ "Are you running on Java 1.4 or below with Apache Crimson? "
@@ -119,8 +112,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			docBuilder.setErrorHandler(new SimpleSaxErrorHandler(logger));
 			docBuilder.setEntityResolver(getEntityResolver());
 			return docBuilder.parse(is);
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}

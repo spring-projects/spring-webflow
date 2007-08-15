@@ -28,19 +28,18 @@ import junit.framework.TestCase;
  * @author Erwin Vervaet
  */
 public class CompositeIteratorTests extends TestCase {
-	
+
 	public void testNoIterators() {
 		CompositeIterator it = new CompositeIterator();
 		assertFalse(it.hasNext());
 		try {
 			it.next();
 			fail();
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			// expected
 		}
 	}
-	
+
 	public void testSingleIterator() {
 		CompositeIterator it = new CompositeIterator();
 		it.add(Arrays.asList(new String[] { "0", "1" }).iterator());
@@ -52,12 +51,11 @@ public class CompositeIteratorTests extends TestCase {
 		try {
 			it.next();
 			fail();
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			// expected
 		}
 	}
-	
+
 	public void testMultipleIterators() {
 		CompositeIterator it = new CompositeIterator();
 		it.add(Arrays.asList(new String[] { "0", "1" }).iterator());
@@ -71,12 +69,11 @@ public class CompositeIteratorTests extends TestCase {
 		try {
 			it.next();
 			fail();
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			// expected
 		}
 	}
-	
+
 	public void testInUse() {
 		List list = Arrays.asList(new String[] { "0", "1" });
 		CompositeIterator it = new CompositeIterator();
@@ -85,8 +82,7 @@ public class CompositeIteratorTests extends TestCase {
 		try {
 			it.add(list.iterator());
 			fail();
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 			// expected
 		}
 		it = new CompositeIterator();
@@ -95,12 +91,11 @@ public class CompositeIteratorTests extends TestCase {
 		try {
 			it.add(list.iterator());
 			fail();
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 			// expected
 		}
 	}
-	
+
 	public void testDuplicateIterators() {
 		List list = Arrays.asList(new String[] { "0", "1" });
 		Iterator iterator = list.iterator();
@@ -110,8 +105,7 @@ public class CompositeIteratorTests extends TestCase {
 		try {
 			it.add(iterator);
 			fail();
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}

@@ -21,12 +21,11 @@ import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.execution.FlowExecutionException;
 
 /**
- * A flow artifact lookup exception is thrown when an artifact (such as a flow, state,
- * action, etc.) required by the webflow system cannot be obtained.
+ * A flow artifact lookup exception is thrown when an artifact (such as a flow, state, action, etc.) required by the
+ * webflow system cannot be obtained.
  * <p>
- * Flow artifact lookup exceptions indicate unrecoverable problems with the flow
- * definition, e.g. a required action of a flow cannot be found. They're not used
- * to signal problems related to execution of a client request. A
+ * Flow artifact lookup exceptions indicate unrecoverable problems with the flow definition, e.g. a required action of a
+ * flow cannot be found. They're not used to signal problems related to execution of a client request. A
  * {@link FlowExecutionException} is used for that.
  * 
  * @see org.springframework.webflow.execution.FlowExecutionException

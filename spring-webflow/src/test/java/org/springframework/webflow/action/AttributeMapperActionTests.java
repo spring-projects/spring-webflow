@@ -29,8 +29,7 @@ import org.springframework.webflow.test.MockRequestContext;
  */
 public class AttributeMapperActionTests extends TestCase {
 
-	private MappingBuilder mappingBuilder = new MappingBuilder(DefaultExpressionParserFactory
-			.getExpressionParser());
+	private MappingBuilder mappingBuilder = new MappingBuilder(DefaultExpressionParserFactory.getExpressionParser());
 
 	public void testMapping() throws Exception {
 		DefaultAttributeMapper mapper = new DefaultAttributeMapper();
@@ -48,14 +47,13 @@ public class AttributeMapperActionTests extends TestCase {
 		assertEquals(1, context.getFlowScope().size());
 		assertEquals("value", context.getFlowScope().get("bar"));
 	}
-	
+
 	public void testNullIllegalArgument() {
 		try {
 			new AttributeMapperAction(null);
 			fail("Should've thrown illegal argument");
-		}
-		catch (IllegalArgumentException e) {
-			
+		} catch (IllegalArgumentException e) {
+
 		}
 	}
 }

@@ -19,8 +19,7 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 
 /**
- * Thrown when a FlowExecutionContinuation could not be deserialized into a
- * FlowExecution.
+ * Thrown when a FlowExecutionContinuation could not be deserialized into a FlowExecution.
  * 
  * @see FlowExecutionContinuation
  * @see FlowExecution

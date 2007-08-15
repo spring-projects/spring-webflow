@@ -32,30 +32,28 @@ import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 
 /**
- * A factory for instances of the
- * {@link FlowExecutionImpl default flow execution} implementation.
+ * A factory for instances of the {@link FlowExecutionImpl default flow execution} implementation.
  * 
  * @author Keith Donald
  */
 public class FlowExecutionImplFactory implements FlowExecutionFactory {
-	
+
 	private static final Log logger = LogFactory.getLog(FlowExecutionImplFactory.class);
 
 	/**
-	 * The strategy for loading listeners that should observe executions of a
-	 * flow definition. The default simply loads an empty static listener list.
+	 * The strategy for loading listeners that should observe executions of a flow definition. The default simply loads
+	 * an empty static listener list.
 	 */
 	private FlowExecutionListenerLoader executionListenerLoader = StaticFlowExecutionListenerLoader.EMPTY_INSTANCE;
 
 	/**
-	 * System execution attributes that may influence flow execution behavior.
-	 * The default is an empty map.
+	 * System execution attributes that may influence flow execution behavior. The default is an empty map.
 	 */
 	private AttributeMap executionAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-	
+
 	/**
-	 * Returns the attributes to apply to flow executions created by this factory.
-	 * Execution attributes may affect flow execution behavior.
+	 * Returns the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
+	 * execution behavior.
 	 * @return flow execution attributes
 	 */
 	public AttributeMap getExecutionAttributes() {
@@ -63,41 +61,38 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	}
 
 	/**
-	 * Sets the attributes to apply to flow executions created by this factory.
-	 * Execution attributes may affect flow execution behavior.
+	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
+	 * execution behavior.
 	 * @param executionAttributes flow execution system attributes
 	 */
 	public void setExecutionAttributes(AttributeMap executionAttributes) {
 		Assert.notNull(executionAttributes, "The execution attributes map is required");
 		this.executionAttributes = executionAttributes;
 	}
-	
+
 	/**
-	 * Sets the attributes to apply to flow executions created by this factory.
-	 * Execution attributes may affect flow execution behavior.
+	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
+	 * execution behavior.
 	 * <p>
-	 * Convenience setter that takes a simple <code>java.util.Map</code> to ease
-	 * bean style configuration.
+	 * Convenience setter that takes a simple <code>java.util.Map</code> to ease bean style configuration.
 	 * @param executionAttributes flow execution system attributes
 	 */
 	public void setExecutionAttributesMap(Map executionAttributes) {
 		Assert.notNull(executionAttributes, "The execution attributes map is required");
 		this.executionAttributes = new LocalAttributeMap(executionAttributes);
 	}
-	
+
 	/**
-	 * Returns the strategy for loading listeners that should observe executions of
-	 * a flow definition. Allows full control over what listeners should apply
-	 * for executions of a flow definition.
+	 * Returns the strategy for loading listeners that should observe executions of a flow definition. Allows full
+	 * control over what listeners should apply for executions of a flow definition.
 	 */
 	public FlowExecutionListenerLoader getExecutionListenerLoader() {
 		return executionListenerLoader;
 	}
 
 	/**
-	 * Sets the strategy for loading listeners that should observe executions of
-	 * a flow definition. Allows full control over what listeners should apply
-	 * for executions of a flow definition.
+	 * Sets the strategy for loading listeners that should observe executions of a flow definition. Allows full control
+	 * over what listeners should apply for executions of a flow definition.
 	 */
 	public void setExecutionListenerLoader(FlowExecutionListenerLoader listenerLoader) {
 		Assert.notNull(listenerLoader, "The listener loader is required");
@@ -110,6 +105,6 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 			logger.debug("Creating flow execution for flow definition with id '" + flowDefinition.getId() + "'");
 		}
 		FlowExecutionListener[] listeners = executionListenerLoader.getListeners(flowDefinition);
-		return new FlowExecutionImpl((Flow)flowDefinition, listeners, executionAttributes);
+		return new FlowExecutionImpl((Flow) flowDefinition, listeners, executionAttributes);
 	}
 }

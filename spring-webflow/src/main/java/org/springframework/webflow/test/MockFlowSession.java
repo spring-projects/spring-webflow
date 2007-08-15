@@ -48,8 +48,8 @@ public class MockFlowSession implements FlowSession {
 	private FlowSession parent;
 
 	/**
-	 * Creates a new mock flow session that sets a flow with id "mockFlow" as
-	 * the 'active flow' in state "mockState". This session marks itself active.
+	 * Creates a new mock flow session that sets a flow with id "mockFlow" as the 'active flow' in state "mockState".
+	 * This session marks itself active.
 	 */
 	public MockFlowSession() {
 		setDefinition(new Flow("mockFlow"));
@@ -59,16 +59,14 @@ public class MockFlowSession implements FlowSession {
 	}
 
 	/**
-	 * Creates a new mock session in a created state for the specified flow
-	 * definition.
+	 * Creates a new mock session in a created state for the specified flow definition.
 	 */
 	public MockFlowSession(Flow flow) {
 		setDefinition(flow);
 	}
 
 	/**
-	 * Creates a new mock session in {@link FlowSessionStatus#CREATED} state
-	 * for the specified flow definition.
+	 * Creates a new mock session in {@link FlowSessionStatus#CREATED} state for the specified flow definition.
 	 * @param flow the flow definition for the session
 	 * @param input initial contents of 'flow scope'
 	 */
@@ -76,7 +74,7 @@ public class MockFlowSession implements FlowSession {
 		setDefinition(flow);
 		scope.putAll(input);
 	}
-	
+
 	// implementing FlowSession
 
 	public FlowDefinition getDefinition() {
@@ -106,9 +104,9 @@ public class MockFlowSession implements FlowSession {
 	public boolean isRoot() {
 		return parent == null;
 	}
-	
+
 	// mutators
-	
+
 	/**
 	 * Set the flow associated with this flow session.
 	 */
@@ -131,16 +129,15 @@ public class MockFlowSession implements FlowSession {
 	}
 
 	/**
-	 * Set the scope data maintained by this flow session. This will be the flow
-	 * scope data of the ongoing flow execution.
+	 * Set the scope data maintained by this flow session. This will be the flow scope data of the ongoing flow
+	 * execution.
 	 */
 	public void setScope(MutableAttributeMap scope) {
 		this.scope = scope;
 	}
 
 	/**
-	 * Set the parent flow session of this flow session in the ongoing flow
-	 * execution.
+	 * Set the parent flow session of this flow session in the ongoing flow execution.
 	 */
 	public void setParent(FlowSession parent) {
 		this.parent = parent;
@@ -154,7 +151,7 @@ public class MockFlowSession implements FlowSession {
 	public Flow getDefinitionInternal() {
 		return definition;
 	}
-	
+
 	/**
 	 * Returns the current state of this session.
 	 */

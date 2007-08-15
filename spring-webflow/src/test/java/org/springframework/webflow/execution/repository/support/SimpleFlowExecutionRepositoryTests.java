@@ -42,7 +42,7 @@ public class SimpleFlowExecutionRepositoryTests extends TestCase {
 	private FlowExecution execution;
 
 	private FlowExecutionKey key;
-	
+
 	private FlowExecutionLock lock;
 
 	protected void setUp() throws Exception {
@@ -91,8 +91,7 @@ public class SimpleFlowExecutionRepositoryTests extends TestCase {
 		try {
 			repository.getFlowExecution(key);
 			fail("Should've failed");
-		}
-		catch (PermissionDeniedFlowExecutionAccessException e) {
+		} catch (PermissionDeniedFlowExecutionAccessException e) {
 		}
 		lock.unlock();
 	}
@@ -111,8 +110,7 @@ public class SimpleFlowExecutionRepositoryTests extends TestCase {
 		try {
 			repository.getFlowExecution(key);
 			fail("should've throw nsfee");
-		}
-		catch (NoSuchFlowExecutionException e) {
+		} catch (NoSuchFlowExecutionException e) {
 		}
 		lock.unlock();
 	}

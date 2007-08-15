@@ -27,7 +27,7 @@ import org.springframework.webflow.test.MockRequestContext;
  * Unit tests for {@link org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria}.
  */
 public class BooleanExpressionTransitionCriteriaTests extends TestCase {
-	
+
 	private ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
 
 	public void testMatchCriteria() {
@@ -36,7 +36,7 @@ public class BooleanExpressionTransitionCriteriaTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		context.getRequestScope().put("flag", Boolean.TRUE);
 		assertEquals(true, c.test(context));
-	}	
+	}
 
 	public void testNotABoolean() {
 		Expression exp = parser.parseExpression("${requestScope.flag}");
@@ -46,11 +46,10 @@ public class BooleanExpressionTransitionCriteriaTests extends TestCase {
 		try {
 			c.test(context);
 			fail("not a boolean");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	public void testResult() {
 		Expression exp = parser.parseExpression("${#result == 'foo'}");
 		BooleanExpressionTransitionCriteria c = new BooleanExpressionTransitionCriteria(exp);
@@ -58,7 +57,7 @@ public class BooleanExpressionTransitionCriteriaTests extends TestCase {
 		context.setLastEvent(new Event(this, "foo"));
 		assertEquals(true, c.test(context));
 	}
-	
+
 	public void testFunctionInvocation() {
 		Expression exp = parser.parseExpression("${#result.endsWith('error')}");
 		BooleanExpressionTransitionCriteria c = new BooleanExpressionTransitionCriteria(exp);

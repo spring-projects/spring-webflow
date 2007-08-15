@@ -19,8 +19,7 @@ import org.springframework.util.Assert;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * Concrete response type that requests a redirect to an external URL outside of
- * Spring Web Flow.
+ * Concrete response type that requests a redirect to an external URL outside of Spring Web Flow.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -40,7 +39,7 @@ public final class ExternalRedirect extends ViewSelection {
 		Assert.notNull(url, "The external URL to redirect to is required");
 		this.url = url;
 	}
-	
+
 	/**
 	 * Returns the external URL to redirect to.
 	 */
@@ -52,7 +51,7 @@ public final class ExternalRedirect extends ViewSelection {
 		if (!(o instanceof ExternalRedirect)) {
 			return false;
 		}
-		ExternalRedirect other = (ExternalRedirect)o;
+		ExternalRedirect other = (ExternalRedirect) o;
 		return url.equals(other.url);
 	}
 

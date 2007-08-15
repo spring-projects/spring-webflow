@@ -27,13 +27,11 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
- * Base action that provides assistance commonly needed by action
- * implementations. This includes:
+ * Base action that provides assistance commonly needed by action implementations. This includes:
  * <ul>
- * <li>Implementing {@link InitializingBean} to receive an init callback
- * when deployed within a Spring bean factory.
- * <li>Exposing convenient event factory methods to create common result
- * {@link Event} objects such as "success" and "error".
+ * <li>Implementing {@link InitializingBean} to receive an init callback when deployed within a Spring bean factory.
+ * <li>Exposing convenient event factory methods to create common result {@link Event} objects such as "success" and
+ * "error".
  * <li>A hook for inserting action pre and post execution logic.
  * </ul>
  * 
@@ -58,19 +56,16 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		try {
 			initAction();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new BeanInitializationException("Initialization of this Action failed: " + ex.getMessage(), ex);
 		}
 	}
 
 	/**
-	 * Action initializing callback, may be overriden by subclasses to perform
-	 * custom initialization logic.
+	 * Action initializing callback, may be overriden by subclasses to perform custom initialization logic.
 	 * <p>
-	 * Keep in mind that this hook will only be invoked when this action is
-	 * deployed in a Spring application context since it uses the Spring
-	 * {@link InitializingBean} mechanism to trigger action initialisation.
+	 * Keep in mind that this hook will only be invoked when this action is deployed in a Spring application context
+	 * since it uses the Spring {@link InitializingBean} mechanism to trigger action initialisation.
 	 */
 	protected void initAction() throws Exception {
 	}
@@ -83,8 +78,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Returns a "success" result event with the provided result object as a
-	 * parameter.
+	 * Returns a "success" result event with the provided result object as a parameter.
 	 * @param result the action success result
 	 */
 	protected Event success(Object result) {
@@ -100,8 +94,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 
 	/**
 	 * Returns an "error" result event caused by the provided exception.
-	 * @param e the exception that caused the error event, to be configured as
-	 * an event attribute
+	 * @param e the exception that caused the error event, to be configured as an event attribute
 	 */
 	protected Event error(Exception e) {
 		return getEventFactorySupport().error(this, e);
@@ -131,8 +124,8 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Returns a result event for this action with the specified identifier.
-	 * Typically called as part of return, for example:
+	 * Returns a result event for this action with the specified identifier. Typically called as part of return, for
+	 * example:
 	 * 
 	 * <pre>
 	 *     protected Event doExecute(RequestContext context) {
@@ -145,8 +138,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 *     }
 	 * </pre>
 	 * 
-	 * Consider calling the error() or success() factory methods for returning
-	 * common results.
+	 * Consider calling the error() or success() factory methods for returning common results.
 	 * @param eventId the result event identifier
 	 * @return the action result event
 	 */
@@ -155,9 +147,8 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Returns a result event for this action with the specified identifier and
-	 * the specified set of attributes. Typically called as part of return, for
-	 * example:
+	 * Returns a result event for this action with the specified identifier and the specified set of attributes.
+	 * Typically called as part of return, for example:
 	 * 
 	 * <pre>
 	 *     protected Event doExecute(RequestContext context) {
@@ -172,8 +163,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 *     }
 	 * </pre>
 	 * 
-	 * Consider calling the error() or success() factory methods for returning
-	 * common results.
+	 * Consider calling the error() or success() factory methods for returning common results.
 	 * @param eventId the result event identifier
 	 * @param resultAttributes the event attributes
 	 * @return the action result event
@@ -183,8 +173,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Returns a result event for this action with the specified identifier and
-	 * a single attribute.
+	 * Returns a result event for this action with the specified identifier and a single attribute.
 	 * @param eventId the result id
 	 * @param resultAttributeName the attribute name
 	 * @param resultAttributeValue the attribute value
@@ -203,27 +192,25 @@ public abstract class AbstractAction implements Action, InitializingBean {
 			result = doExecute(context);
 			if (logger.isDebugEnabled()) {
 				if (result != null) {
-					logger.debug("Action '" + getActionNameForLogging() + "' completed execution; result is '" + result.getId() + "'");
-				}
-				else {
+					logger.debug("Action '" + getActionNameForLogging() + "' completed execution; result is '"
+							+ result.getId() + "'");
+				} else {
 					logger.debug("Action '" + getActionNameForLogging() + "' completed execution; result is [null]");
 				}
 			}
 			doPostExecute(context);
-		}
-		else {
+		} else {
 			if (logger.isInfoEnabled()) {
 				logger.info("Action execution disallowed; pre-execution result is '" + result.getId() + "'");
 			}
 		}
 		return result;
 	}
-	
+
 	// subclassing hooks
 
 	/**
-	 * Internal helper to return the name of this action for logging
-	 * purposes. Defaults to the short class name.
+	 * Internal helper to return the name of this action for logging purposes. Defaults to the short class name.
 	 * @see ClassUtils#getShortName(java.lang.Class)
 	 */
 	protected String getActionNameForLogging() {
@@ -231,48 +218,37 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Pre-action-execution hook, subclasses may override. If this method
-	 * returns a non-<code>null</code> event, the <code>doExecute()</code>
-	 * method will <b>not</b> be called and the returned event will be used to
-	 * select a transition to trigger in the calling action state. If this
-	 * method returns <code>null</code>, <code>doExecute()</code> will be
-	 * called to obtain an action result event.
+	 * Pre-action-execution hook, subclasses may override. If this method returns a non-<code>null</code> event, the
+	 * <code>doExecute()</code> method will <b>not</b> be called and the returned event will be used to select a
+	 * transition to trigger in the calling action state. If this method returns <code>null</code>,
+	 * <code>doExecute()</code> will be called to obtain an action result event.
 	 * <p>
 	 * This implementation just returns <code>null</code>.
-	 * @param context the action execution context, for accessing and setting
-	 * data in "flow scope" or "request scope"
-	 * @return the non-<code>null</code> action result, in which case the
-	 * <code>doExecute()</code> will not be called, or <code>null</code> if
-	 * the <code>doExecute()</code> method should be called to obtain the
-	 * action result
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either
-	 * checked or unchecked
+	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
+	 * @return the non-<code>null</code> action result, in which case the <code>doExecute()</code> will not be
+	 * called, or <code>null</code> if the <code>doExecute()</code> method should be called to obtain the action
+	 * result
+	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected Event doPreExecute(RequestContext context) throws Exception {
 		return null;
 	}
 
 	/**
-	 * Template hook method subclasses should override to encapsulate their
-	 * specific action execution logic.
-	 * @param context the action execution context, for accessing and setting
-	 * data in "flow scope" or "request scope"
+	 * Template hook method subclasses should override to encapsulate their specific action execution logic.
+	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return the action result event
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either
-	 * checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected abstract Event doExecute(RequestContext context) throws Exception;
 
 	/**
-	 * Post-action execution hook, subclasses may override. Will only be called
-	 * if <code>doExecute()</code> was called, e.g. when <code>doPreExecute()</code>
-	 * returned <code>null</code>.
+	 * Post-action execution hook, subclasses may override. Will only be called if <code>doExecute()</code> was
+	 * called, e.g. when <code>doPreExecute()</code> returned <code>null</code>.
 	 * <p>
 	 * This implementation does nothing.
-	 * @param context the action execution context, for accessing and setting
-	 * data in "flow scope" or "request scope"
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either
-	 * checked or unchecked
+	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
+	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected void doPostExecute(RequestContext context) throws Exception {
 	}

@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 
 /**
  * A settable expression that adds non-null values to a collection.
- *  
+ * 
  * @author Keith Donald
  */
 public class CollectionAddingExpression implements SettableExpression {
@@ -52,13 +52,13 @@ public class CollectionAddingExpression implements SettableExpression {
 	public void evaluateToSet(Object target, Object value, EvaluationContext context) throws EvaluationException {
 		Object result = evaluate(target, context);
 		if (result == null) {
-			throw new EvaluationException(new SetValueAttempt(this, target, value, null),
-					new IllegalArgumentException("The collection expression evaluated to a [null] reference"));
+			throw new EvaluationException(new SetValueAttempt(this, target, value, null), new IllegalArgumentException(
+					"The collection expression evaluated to a [null] reference"));
 		}
 		Assert.isInstanceOf(Collection.class, result, "Not a collection: ");
 		if (value != null) {
 			// add the value to the collection
-			((Collection)result).add(value);
+			((Collection) result).add(value);
 		}
 	}
 

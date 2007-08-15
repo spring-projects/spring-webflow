@@ -32,24 +32,20 @@ import org.springframework.webflow.engine.ViewSelector;
 import org.springframework.webflow.execution.Action;
 
 /**
- * A support interface used by flow builders at configuration time. Acts as a
- * "service locator" responsible for:
+ * A support interface used by flow builders at configuration time. Acts as a "service locator" responsible for:
  * <ol>
- * <li> Retrieving dependent (but externally managed) flow services needed to
- * configure flow and state definitions. Such services are usually hosted in a
- * backing registry and may be shared by multiple flows.
- * <li> Providing access to abstract factories to create core flow definitional
- * artifacts such as {@link Flow}, {@link State}, {@link Transition}, and
- * {@link AbstractBeanInvokingAction bean invoking actions}. These artifacts
+ * <li> Retrieving dependent (but externally managed) flow services needed to configure flow and state definitions. Such
+ * services are usually hosted in a backing registry and may be shared by multiple flows.
+ * <li> Providing access to abstract factories to create core flow definitional artifacts such as {@link Flow},
+ * {@link State}, {@link Transition}, and {@link AbstractBeanInvokingAction bean invoking actions}. These artifacts
  * are unique to each flow and are typically not shared.
  * </ol>
  * <p>
- * In general, implementations of this interface act as facades to accessing and
- * creating flow artifacts during {@link FlowAssembler flow assembly}.
+ * In general, implementations of this interface act as facades to accessing and creating flow artifacts during
+ * {@link FlowAssembler flow assembly}.
  * <p>
- * Finally, this interface also exposes access to generic infrastructure
- * services also needed by flow assemblers such as a {@link ConversionService}
- * and {@link ExpressionParser}.
+ * Finally, this interface also exposes access to generic infrastructure services also needed by flow assemblers such as
+ * a {@link ConversionService} and {@link ExpressionParser}.
  * 
  * @see org.springframework.webflow.engine.builder.FlowBuilder
  * @see org.springframework.webflow.engine.builder.BaseFlowBuilder
@@ -76,8 +72,8 @@ public interface FlowServiceLocator {
 	public Action getAction(String id) throws FlowArtifactLookupException;
 
 	/**
-	 * Returns the flow attribute mapper with the provided id. Flow attribute
-	 * mappers are used from subflow states to map input and output attributes.
+	 * Returns the flow attribute mapper with the provided id. Flow attribute mappers are used from subflow states to
+	 * map input and output attributes.
 	 * @param id the attribute mapper id
 	 * @return the attribute mapper
 	 * @throws FlowArtifactLookupException when no such mapper is found
@@ -85,8 +81,7 @@ public interface FlowServiceLocator {
 	public FlowAttributeMapper getAttributeMapper(String id) throws FlowArtifactLookupException;
 
 	/**
-	 * Returns the transition criteria to drive state transitions with the
-	 * provided id.
+	 * Returns the transition criteria to drive state transitions with the provided id.
 	 * @param id the transition criteria id
 	 * @return the transition criteria
 	 * @throws FlowArtifactLookupException when no such criteria is found
@@ -102,8 +97,7 @@ public interface FlowServiceLocator {
 	public TargetStateResolver getTargetStateResolver(String id) throws FlowArtifactLookupException;
 
 	/**
-	 * Returns the view selector to make view selections in view states with the
-	 * provided id.
+	 * Returns the view selector to make view selections in view states with the provided id.
 	 * @param id the view selector id
 	 * @return the view selector
 	 * @throws FlowArtifactLookupException when no such selector is found
@@ -111,8 +105,7 @@ public interface FlowServiceLocator {
 	public ViewSelector getViewSelector(String id) throws FlowArtifactLookupException;
 
 	/**
-	 * Returns the exception handler to handle flow execution exceptions with
-	 * the provided id.
+	 * Returns the exception handler to handle flow execution exceptions with the provided id.
 	 * @param id the exception handler id
 	 * @return the exception handler
 	 * @throws FlowArtifactLookupException when no such handler is found
@@ -151,8 +144,8 @@ public interface FlowServiceLocator {
 	public ExpressionParser getExpressionParser();
 
 	/**
-	 * Returns a generic type conversion service for converting between types,
-	 * typically from string to a rich value object.
+	 * Returns a generic type conversion service for converting between types, typically from string to a rich value
+	 * object.
 	 * @return the generic conversion service
 	 */
 	public ConversionService getConversionService();

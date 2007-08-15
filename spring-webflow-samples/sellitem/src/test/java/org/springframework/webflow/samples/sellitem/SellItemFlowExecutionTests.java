@@ -69,9 +69,9 @@ public class SellItemFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	public void testSubmitShippingDetailsForm() {
 		testSubmitCategoryFormWithShipping();
 
-		saleProcessor.process((Sale)getRequiredFlowAttribute("sale", Sale.class));
+		saleProcessor.process((Sale) getRequiredFlowAttribute("sale", Sale.class));
 		EasyMock.replay(saleProcessor);
-		
+
 		MockParameterMap parameters = new MockParameterMap();
 		parameters.put("shippingType", "E");
 		parameters.put("shipDate", "12/06/2007");

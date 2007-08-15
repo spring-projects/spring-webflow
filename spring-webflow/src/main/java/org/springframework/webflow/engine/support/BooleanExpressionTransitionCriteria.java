@@ -25,10 +25,9 @@ import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Transition criteria that tests the value of an expression. The
- * expression is used to express a condition that guards transition
- * execution in a web flow. Expressions will be evaluated agains the request
- * context and should return a boolean result.
+ * Transition criteria that tests the value of an expression. The expression is used to express a condition that guards
+ * transition execution in a web flow. Expressions will be evaluated agains the request context and should return a
+ * boolean result.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -36,11 +35,10 @@ import org.springframework.webflow.execution.RequestContext;
 public class BooleanExpressionTransitionCriteria implements TransitionCriteria {
 
 	/**
-	 * Constant alias that points to the id of the last event that occured
-	 * in a web flow execution.
+	 * Constant alias that points to the id of the last event that occured in a web flow execution.
 	 */
 	private static final String RESULT_ALIAS = "result";
-	
+
 	/**
 	 * The expression evaluator to use.
 	 */
@@ -48,8 +46,8 @@ public class BooleanExpressionTransitionCriteria implements TransitionCriteria {
 
 	/**
 	 * Create a new expression based transition criteria object.
-	 * @param booleanExpression the expression evaluator testing the criteria,
-	 * this expression should be a condition that returns a Boolean value
+	 * @param booleanExpression the expression evaluator testing the criteria, this expression should be a condition
+	 * that returns a Boolean value
 	 */
 	public BooleanExpressionTransitionCriteria(Expression booleanExpression) {
 		Assert.notNull(booleanExpression, "The expression to test is required");
@@ -59,12 +57,11 @@ public class BooleanExpressionTransitionCriteria implements TransitionCriteria {
 	public boolean test(RequestContext context) {
 		Object result = booleanExpression.evaluate(context, getEvaluationContext(context));
 		Assert.isInstanceOf(Boolean.class, result, "Impossible to determine result of boolean expression: ");
-		return ((Boolean)result).booleanValue();
+		return ((Boolean) result).booleanValue();
 	}
 
 	/**
-	 * Setup a context with a few aliased values to make writing expression based
-	 * transition conditions a bit easier.
+	 * Setup a context with a few aliased values to make writing expression based transition conditions a bit easier.
 	 */
 	protected EvaluationContext getEvaluationContext(RequestContext context) {
 		final Map attributes = new HashMap(1, 1);

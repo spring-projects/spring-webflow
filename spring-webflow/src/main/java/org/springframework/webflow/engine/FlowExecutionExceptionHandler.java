@@ -19,8 +19,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A strategy for handling an exception that occurs at runtime during the
- * execution of a flow definition.
+ * A strategy for handling an exception that occurs at runtime during the execution of a flow definition.
  * 
  * @author Keith Donald
  */
@@ -34,13 +33,12 @@ public interface FlowExecutionExceptionHandler {
 	public boolean handles(FlowExecutionException exception);
 
 	/**
-	 * Handle the exception in the context of the current request, optionally
-	 * making an error view selection that should be rendered.
+	 * Handle the exception in the context of the current request, optionally making an error view selection that should
+	 * be rendered.
 	 * @param exception the exception that occured
 	 * @param context the execution control context for this request
-	 * @return the selected error view that should be displayed (may be null if
-	 * the handler chooses not to select a view, in which case other exception
-	 * handlers may be given a chance to handle the exception)
+	 * @return the selected error view that should be displayed (may be null if the handler chooses not to select a
+	 * view, in which case other exception handlers may be given a chance to handle the exception)
 	 */
 	public ViewSelection handle(FlowExecutionException exception, RequestControlContext context);
 }

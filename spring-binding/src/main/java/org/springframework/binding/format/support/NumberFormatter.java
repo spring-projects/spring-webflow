@@ -23,18 +23,17 @@ import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.NumberUtils;
 
 /**
- * Converts from various <code>Number</code> specializations to
- * <code>String</code> and back.
+ * Converts from various <code>Number</code> specializations to <code>String</code> and back.
  * 
  * @author Keith Donald
  */
 public class NumberFormatter extends AbstractFormatter {
 
 	private NumberFormat numberFormat;
-	
+
 	/**
-	 * Default constructor. The formatter will use "toString" when formatting
-	 * a value and "valueOf" when parsing a value.
+	 * Default constructor. The formatter will use "toString" when formatting a value and "valueOf" when parsing a
+	 * value.
 	 */
 	public NumberFormatter() {
 	}
@@ -61,8 +60,7 @@ public class NumberFormatter extends AbstractFormatter {
 		if (this.numberFormat != null) {
 			// use NumberFormat for rendering value
 			return this.numberFormat.format(number);
-		}
-		else {
+		} else {
 			// use toString method for rendering value
 			return number.toString();
 		}
@@ -78,38 +76,38 @@ public class NumberFormatter extends AbstractFormatter {
 			return NumberUtils.parseNumber(text, targetClass);
 		}
 	}
-	
+
 	// convenience methods
 
 	public Byte parseByte(String formattedString) throws InvalidFormatException {
-		return (Byte)parseValue(formattedString, Byte.class);
+		return (Byte) parseValue(formattedString, Byte.class);
 	}
 
 	public Short parseShort(String formattedString) throws InvalidFormatException {
-		return (Short)parseValue(formattedString, Short.class);
+		return (Short) parseValue(formattedString, Short.class);
 	}
 
 	public Integer parseInteger(String formattedString) throws InvalidFormatException {
-		return (Integer)parseValue(formattedString, Integer.class);
+		return (Integer) parseValue(formattedString, Integer.class);
 	}
 
 	public Long parseLong(String formattedString) throws InvalidFormatException {
-		return (Long)parseValue(formattedString, Long.class);
+		return (Long) parseValue(formattedString, Long.class);
 	}
 
 	public Float parseFloat(String formattedString) throws InvalidFormatException {
-		return (Float)parseValue(formattedString, Float.class);
+		return (Float) parseValue(formattedString, Float.class);
 	}
 
 	public Double parseDouble(String formattedString) throws InvalidFormatException {
-		return (Double)parseValue(formattedString, Double.class);
+		return (Double) parseValue(formattedString, Double.class);
 	}
 
 	public BigInteger parseBigInteger(String formattedString) throws InvalidFormatException {
-		return (BigInteger)parseValue(formattedString, BigInteger.class);
+		return (BigInteger) parseValue(formattedString, BigInteger.class);
 	}
-	
+
 	public BigDecimal parseBigDecimal(String formattedString) throws InvalidFormatException {
-		return (BigDecimal)parseValue(formattedString, BigDecimal.class);
+		return (BigDecimal) parseValue(formattedString, BigDecimal.class);
 	}
 }

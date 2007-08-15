@@ -25,7 +25,7 @@ import org.springframework.core.style.ToStringCreator;
 public class SetValueAttempt extends EvaluationAttempt {
 
 	/**
-	 * The new value. 
+	 * The new value.
 	 */
 	private Object value;
 

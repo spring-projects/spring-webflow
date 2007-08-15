@@ -33,48 +33,46 @@ import org.w3c.dom.Element;
 class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
 	// elements and attributes
-	
+
 	private static final String CONVERSATION_MANAGER_REF_ATTRIBUTE = "conversation-manager-ref";
-	
+
 	private static final String EXECUTION_ATTRIBUTES_ELEMENT = "execution-attributes";
 
 	private static final String EXECUTION_LISTENERS_ELEMENT = "execution-listeners";
-	
+
 	private static final String MAX_CONTINUATIONS_ATTRIBUTE = "max-continuations";
-	
+
 	private static final String MAX_CONVERSATIONS_ATTRIBUTE = "max-conversations";
 
 	private static final String REGISTRY_REF_ATTRIBUTE = "registry-ref";
-	
+
 	private static final String REPOSITORY_ELEMENT = "repository";
 
 	private static final String REPOSITORY_TYPE_ATTRIBUTE = "repository-type";
-	
+
 	private static final String TYPE_ATTRIBUTE = "type";
 
 	// properties
 
 	private static final String CONVERSATION_MANAGER_PROPERTY = "conversationManager";
-	
+
 	private static final String DEFINITION_LOCATOR_PROPERTY = "definitionLocator";
 
 	private static final String EXECUTION_ATTRIBUTES_PROPERTY = "executionAttributes";
 
 	private static final String EXECUTION_LISTENER_LOADER_PROPERTY = "executionListenerLoader";
-	
+
 	private static final String MAX_CONTINUATIONS_PROPERTY = "maxContinuations";
-	
+
 	private static final String MAX_CONVERSATIONS_PROPERTY = "maxConversations";
 
 	private static final String REPOSITORY_TYPE_PROPERTY = "repositoryType";
-	
 
 	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
 		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder
 				.rootBeanDefinition(FlowExecutorFactoryBean.class);
 		definitionBuilder.setSource(parserContext.extractSource(element));
-		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, 
-				getRegistryRef(element, parserContext));
+		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistryRef(element, parserContext));
 		addExecutionAttributes(element, parserContext, definitionBuilder);
 		addExecutionListenerLoader(element, parserContext, definitionBuilder);
 		configureRepository(element, definitionBuilder, parserContext);
@@ -82,29 +80,27 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	}
 
 	/**
-	 * Configures a repository based on the <code>repository-type</code> attribute
-	 * or a <code>repository</code> tag.
+	 * Configures a repository based on the <code>repository-type</code> attribute or a <code>repository</code> tag.
 	 * @param element the root element to extract repository configuration from
 	 * @param definitionBuilder the builder
 	 * @param parserContext the parserContext
 	 */
-	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder, 
+	private void configureRepository(Element element, BeanDefinitionBuilder definitionBuilder,
 			ParserContext parserContext) {
 		Element repositoryElement = DomUtils.getChildElementByTagName(element, REPOSITORY_ELEMENT);
 		String repositoryTypeAttribute = getRepositoryType(element);
 		if (repositoryElement != null) {
 			if (StringUtils.hasText(repositoryTypeAttribute)) {
 				parserContext.getReaderContext().error(
-					"The 'repositoryType' attribute of the 'executor' element must " +
-					"not have a value if there is a 'repository' element", element);
+						"The 'repositoryType' attribute of the 'executor' element must "
+								+ "not have a value if there is a 'repository' element", element);
 			}
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getType(repositoryElement));
 			configureContinuations(repositoryElement, definitionBuilder, parserContext);
 			configureConversationManager(repositoryElement, definitionBuilder, parserContext);
-		}
-		else if (StringUtils.hasText(repositoryTypeAttribute)) {
+		} else if (StringUtils.hasText(repositoryTypeAttribute)) {
 			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, repositoryTypeAttribute);
-		}	
+		}
 	}
 
 	/**
@@ -119,8 +115,8 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 		if (StringUtils.hasText(maxContinuations)) {
 			if (!getType(repositoryElement).equals("CONTINUATION")) {
 				parserContext.getReaderContext().error(
-						"The 'max-continuations' attribute of the 'repository' element must not " +
-						"have a value if the 'type' attribute is not 'continuation'", repositoryElement);
+						"The 'max-continuations' attribute of the 'repository' element must not "
+								+ "have a value if the 'type' attribute is not 'continuation'", repositoryElement);
 			}
 			definitionBuilder.addPropertyValue(MAX_CONTINUATIONS_PROPERTY, maxContinuations);
 		}
@@ -132,24 +128,23 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	 * @param definitionBuilder the builder
 	 * @param parserContext the parserContext
 	 */
-	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder, 
+	private void configureConversationManager(Element repositoryElement, BeanDefinitionBuilder definitionBuilder,
 			ParserContext parserContext) {
 		String conversationManagerRef = getConversationManagerRef(repositoryElement);
 		String maxConversations = getMaxConversations(repositoryElement);
 		if (StringUtils.hasText(conversationManagerRef)) {
-			if(StringUtils.hasText(maxConversations)) {
+			if (StringUtils.hasText(maxConversations)) {
 				parserContext.getReaderContext().error(
-						"The 'max-conversations' attribute of the 'repository' element must not " +
-						"have a value if there is a value for the 'conversation-manager-ref' attribute", 
+						"The 'max-conversations' attribute of the 'repository' element must not "
+								+ "have a value if there is a value for the 'conversation-manager-ref' attribute",
 						repositoryElement);
 			}
 			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
-		}
-		else if (StringUtils.hasText(maxConversations)) {
+		} else if (StringUtils.hasText(maxConversations)) {
 			definitionBuilder.addPropertyValue(MAX_CONVERSATIONS_PROPERTY, maxConversations);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Returns the name of the registry detailed in the bean definition.
 	 * @param element the element to extract the registry name from
@@ -166,25 +161,23 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	}
 
 	/**
-	 * Returns the name of the repository type enum field detailed in the bean
-	 * definition.
+	 * Returns the name of the repository type enum field detailed in the bean definition.
 	 * @param element the element to extract the repository type from
 	 * @return the type of the repository
 	 */
 	private String getRepositoryType(Element element) {
 		return element.getAttribute(REPOSITORY_TYPE_ATTRIBUTE).toUpperCase();
 	}
-	
+
 	/**
-	 * Returns the name of the repository type enum field detailed in the bean
-	 * definition.
+	 * Returns the name of the repository type enum field detailed in the bean definition.
 	 * @param element the element to extract the repository type from
 	 * @return the type of the repository
 	 */
 	private String getType(Element element) {
 		return element.getAttribute(TYPE_ATTRIBUTE).toUpperCase();
 	}
-	
+
 	/**
 	 * Returns the maximum number of continuations detailed in the bean definition.
 	 * @param element the element to extract the max continuations from
@@ -193,7 +186,7 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	private String getMaxContinuations(Element element) {
 		return element.getAttribute(MAX_CONTINUATIONS_ATTRIBUTE);
 	}
-	
+
 	/**
 	 * Returns the maximum number of conversations detailed in the bean definition.
 	 * @param element the element to extract the max conversations from
@@ -202,7 +195,7 @@ class ExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 	private String getMaxConversations(Element element) {
 		return element.getAttribute(MAX_CONVERSATIONS_ATTRIBUTE);
 	}
-	
+
 	/**
 	 * Returns the name of the conversation manager detailed in the bean definition.
 	 * @param element the element to extract the conversation manager name from

@@ -16,8 +16,7 @@
 package org.springframework.webflow.execution.repository;
 
 /**
- * Thrown when the flow execution with the persistent identifier provided could
- * not be restored.
+ * Thrown when the flow execution with the persistent identifier provided could not be restored.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -26,8 +25,7 @@ public class FlowExecutionRestorationFailureException extends FlowExecutionAcces
 
 	/**
 	 * Creates a new flow execution restoration failure exception.
-	 * @param flowExecutionKey the key of the execution that could not be
-	 * restored
+	 * @param flowExecutionKey the key of the execution that could not be restored
 	 * @param cause the root cause of the restoration failure
 	 */
 	public FlowExecutionRestorationFailureException(FlowExecutionKey flowExecutionKey, Exception cause) {

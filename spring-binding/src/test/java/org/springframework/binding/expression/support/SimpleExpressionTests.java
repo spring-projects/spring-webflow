@@ -26,16 +26,16 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Tests simple expressions. Any expression language capable enough for
- * real life usage should be able to pass these tests.
- *  
+ * Tests simple expressions. Any expression language capable enough for real life usage should be able to pass these
+ * tests.
+ * 
  * @author Erwin Vervaet
  */
 public class SimpleExpressionTests extends TestCase {
-	
+
 	private ExpressionParser expressionParser;
 	private TestBean bean;
-	
+
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
 		suite.addTest(new SimpleExpressionTests("testGetValue", new OgnlExpressionParser()));
@@ -46,12 +46,12 @@ public class SimpleExpressionTests extends TestCase {
 		suite.addTest(new SimpleExpressionTests("testSyntaxError", new BeanWrapperExpressionParser()));
 		return suite;
 	}
-	
+
 	public SimpleExpressionTests(String name, ExpressionParser expressionParser) {
 		super(name);
 		this.expressionParser = expressionParser;
 	}
-	
+
 	protected void setUp() throws Exception {
 		bean = new TestBean();
 		bean.setFlag(true);
@@ -60,7 +60,7 @@ public class SimpleExpressionTests extends TestCase {
 		list.add("bar");
 		bean.setList(list);
 	}
-	
+
 	public void testGetValue() {
 		assertEquals(Boolean.TRUE, expressionParser.parseExpression("${flag}").evaluate(bean, null));
 		assertEquals(Boolean.TRUE, expressionParser.parseExpression("flag").evaluate(bean, null));
@@ -80,15 +80,13 @@ public class SimpleExpressionTests extends TestCase {
 		expressionParser.parseSettableExpression("${list[0]}").evaluateToSet(bean, "baa", null);
 		assertEquals("baa", bean.getList().get(0));
 	}
-	
+
 	public void testSyntaxError() {
 		try {
 			expressionParser.parseExpression("foo(").evaluate(bean, null);
 			fail("should have failed");
-		}
-		catch (ParserException e) {
-		}
-		catch (EvaluationException e) {
+		} catch (ParserException e) {
+		} catch (EvaluationException e) {
 		}
 	}
 }

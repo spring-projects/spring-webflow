@@ -16,8 +16,7 @@
 package org.springframework.webflow.execution.repository;
 
 /**
- * Thrown when an encoded flow execution key is badly formatted and could not be
- * parsed.
+ * Thrown when an encoded flow execution key is badly formatted and could not be parsed.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -30,8 +29,7 @@ public class BadlyFormattedFlowExecutionKeyException extends FlowExecutionReposi
 	private String invalidKey;
 
 	/**
-	 * The format the string key should have been in. Could just be a
-	 * description of that format.
+	 * The format the string key should have been in. Could just be a description of that format.
 	 */
 	private String format;
 

@@ -31,8 +31,7 @@ import org.springframework.webflow.execution.factory.StaticFlowExecutionListener
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
 /**
- * Restores the transient state of deserialized {@link FlowExecutionImpl}
- * objects.
+ * Restores the transient state of deserialized {@link FlowExecutionImpl} objects.
  * 
  * @author Keith Donald
  */
@@ -63,8 +62,8 @@ public class FlowExecutionImplStateRestorer implements FlowExecutionStateRestore
 	}
 
 	/**
-	 * Sets the attributes to apply to restored flow executions.
-	 * Execution attributes may affect flow execution behavior.
+	 * Sets the attributes to apply to restored flow executions. Execution attributes may affect flow execution
+	 * behavior.
 	 * @param executionAttributes flow execution system attributes
 	 */
 	public void setExecutionAttributes(AttributeMap executionAttributes) {
@@ -73,22 +72,20 @@ public class FlowExecutionImplStateRestorer implements FlowExecutionStateRestore
 	}
 
 	/**
-	 * Sets the attributes to apply to restored flow executions.
-	 * Execution attributes may affect flow execution behavior.
+	 * Sets the attributes to apply to restored flow executions. Execution attributes may affect flow execution
+	 * behavior.
 	 * <p>
-	 * Convenience setter that takes a simple <code>java.util.Map</code> to ease
-	 * bean style configuration.
+	 * Convenience setter that takes a simple <code>java.util.Map</code> to ease bean style configuration.
 	 * @param executionAttributes flow execution system attributes
 	 */
 	public void setExecutionAttributesMap(Map executionAttributes) {
 		Assert.notNull(executionAttributes, "The execution attributes map is required");
 		this.executionAttributes = new LocalAttributeMap(executionAttributes);
 	}
-	
+
 	/**
-	 * Sets the strategy for loading listeners that should observe executions of
-	 * a flow definition. Allows full control over what listeners should apply.
-	 * for executions of a flow definition.
+	 * Sets the strategy for loading listeners that should observe executions of a flow definition. Allows full control
+	 * over what listeners should apply. for executions of a flow definition.
 	 */
 	public void setExecutionListenerLoader(FlowExecutionListenerLoader executionListenerLoader) {
 		Assert.notNull(executionListenerLoader, "The listener loader is required");
@@ -96,9 +93,9 @@ public class FlowExecutionImplStateRestorer implements FlowExecutionStateRestore
 	}
 
 	public FlowExecution restoreState(FlowExecution flowExecution, MutableAttributeMap conversationScope) {
-		FlowExecutionImpl impl = (FlowExecutionImpl)flowExecution;
+		FlowExecutionImpl impl = (FlowExecutionImpl) flowExecution;
 		// the root flow should be a top-level flow visible by the flow def locator
-		Flow flow = (Flow)definitionLocator.getFlowDefinition(impl.getFlowId());
+		Flow flow = (Flow) definitionLocator.getFlowDefinition(impl.getFlowId());
 		impl.setFlow(flow);
 		if (impl.hasSessions()) {
 			FlowSessionImpl root = impl.getRootSession();
@@ -107,14 +104,14 @@ public class FlowExecutionImplStateRestorer implements FlowExecutionStateRestore
 			if (impl.hasSubflowSessions()) {
 				Flow parent = flow;
 				for (ListIterator it = impl.getSubflowSessionIterator(); it.hasNext();) {
-					FlowSessionImpl subflow = (FlowSessionImpl)it.next();
+					FlowSessionImpl subflow = (FlowSessionImpl) it.next();
 					Flow definition;
 					if (parent.containsInlineFlow(subflow.getFlowId())) {
 						// subflow is an inline flow of it's parent
 						definition = parent.getInlineFlow(subflow.getFlowId());
 					} else {
 						// subflow is a top-level flow
-						definition = (Flow)definitionLocator.getFlowDefinition(subflow.getFlowId());
+						definition = (Flow) definitionLocator.getFlowDefinition(subflow.getFlowId());
 					}
 					subflow.setFlow(definition);
 					subflow.setState(definition.getStateInstance(subflow.getStateId()));
@@ -129,5 +126,5 @@ public class FlowExecutionImplStateRestorer implements FlowExecutionStateRestore
 		impl.setListeners(new FlowExecutionListeners(executionListenerLoader.getListeners(flow)));
 		impl.setAttributes(executionAttributes);
 		return flowExecution;
-	}	
+	}
 }

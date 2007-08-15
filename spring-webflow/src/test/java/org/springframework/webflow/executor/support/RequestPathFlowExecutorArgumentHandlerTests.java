@@ -29,7 +29,7 @@ import org.springframework.webflow.test.MockFlowExecutionContext;
  * Unit tests for {@link RequestPathFlowExecutorArgumentHandler}.
  */
 public class RequestPathFlowExecutorArgumentHandlerTests extends TestCase {
-	
+
 	private MockExternalContext context = new MockExternalContext();
 
 	private RequestPathFlowExecutorArgumentHandler argumentHandler;
@@ -56,8 +56,7 @@ public class RequestPathFlowExecutorArgumentHandlerTests extends TestCase {
 		try {
 			argumentHandler.extractFlowId(new MockExternalContext());
 			fail("should've failed");
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 		}
 	}
 
@@ -87,7 +86,7 @@ public class RequestPathFlowExecutorArgumentHandlerTests extends TestCase {
 		String url = argumentHandler.createFlowExecutionUrl(flowExecutionKey, flowExecution, context);
 		assertEquals("/app/flows/k/_c12345_k12345", url);
 	}
-	
+
 	public void testIsFlowExecutionKeyPresent() {
 		context.setContextPath("/app");
 		context.setDispatcherPath("/flows");
@@ -96,7 +95,7 @@ public class RequestPathFlowExecutorArgumentHandlerTests extends TestCase {
 		context.setRequestPathInfo("/sellitem");
 		assertFalse(argumentHandler.isFlowExecutionKeyPresent(context));
 	}
-	
+
 	public void testExtractFlowExecutionKey() {
 		context.setContextPath("/app");
 		context.setDispatcherPath("/flows");

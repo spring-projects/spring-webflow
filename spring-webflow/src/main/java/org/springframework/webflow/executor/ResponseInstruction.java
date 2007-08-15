@@ -27,19 +27,15 @@ import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 
 /**
- * Immutable value object that provides clients with information about a
- * response to issue.
+ * Immutable value object that provides clients with information about a response to issue.
  * <p>
  * There are five different <i>types</i> of response instruction:
  * <ul>
  * <li>An {@link #isApplicationView() application view}.</li>
- * <li>A {@link #isFlowExecutionRedirect() flow execution redirect}, showing
- * an application view via a redirect that refreshes an ongoing flow
- * execution.</li>
- * <li>A {@link #isFlowDefinitionRedirect() flow definition redirect},
- * launching an entirely new flow execution.</li>
- * <li>An {@link #isExternalRedirect() external redirect}, redirecting
- * to an external URL.</li>
+ * <li>A {@link #isFlowExecutionRedirect() flow execution redirect}, showing an application view via a redirect that
+ * refreshes an ongoing flow execution.</li>
+ * <li>A {@link #isFlowDefinitionRedirect() flow definition redirect}, launching an entirely new flow execution.</li>
+ * <li>An {@link #isExternalRedirect() external redirect}, redirecting to an external URL.</li>
  * <li>A {@link #isNull() null view}, not showing a response at all.</li>
  * </ul>
  * 
@@ -49,8 +45,7 @@ import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 public class ResponseInstruction implements Serializable {
 
 	/**
-	 * The persistent identifier of the flow execution that
-	 * resulted in this response instruction.
+	 * The persistent identifier of the flow execution that resulted in this response instruction.
 	 */
 	private String flowExecutionKey;
 
@@ -78,9 +73,8 @@ public class ResponseInstruction implements Serializable {
 	}
 
 	/**
-	 * Create a new response instruction for an ended flow execution. No
-	 * flow execution key needs to be provided since the flow execution no longer
-	 * exists and cannot be referenced any longer.
+	 * Create a new response instruction for an ended flow execution. No flow execution key needs to be provided since
+	 * the flow execution no longer exists and cannot be referenced any longer.
 	 * @param flowExecutionContext the current flow execution context (inactive)
 	 * @param viewSelection the selected view
 	 */
@@ -106,9 +100,8 @@ public class ResponseInstruction implements Serializable {
 	}
 
 	/**
-	 * Returns the flow execution context representing the current state of the
-	 * execution. It could be that the returned flow execution is
-	 * {@link FlowExecutionContext#isActive() inactive}.
+	 * Returns the flow execution context representing the current state of the execution. It could be that the returned
+	 * flow execution is {@link FlowExecutionContext#isActive() inactive}.
 	 */
 	public FlowExecutionContext getFlowExecutionContext() {
 		return flowExecutionContext;
@@ -122,58 +115,54 @@ public class ResponseInstruction implements Serializable {
 	}
 
 	/**
-	 * Returns true if this is an instruction to render an application view for
-	 * an "active" (in progress) flow execution.
+	 * Returns true if this is an instruction to render an application view for an "active" (in progress) flow
+	 * execution.
 	 */
 	public boolean isActiveView() {
 		return isApplicationView() && flowExecutionContext.isActive();
 	}
 
 	/**
-	 * Returns true if this is an instruction to render an application view for
-	 * an "ended" (inactive) flow execution from an end state.
+	 * Returns true if this is an instruction to render an application view for an "ended" (inactive) flow execution
+	 * from an end state.
 	 */
 	public boolean isEndingView() {
 		return isApplicationView() && !flowExecutionContext.isActive();
 	}
-	
+
 	// response types
 
 	/**
-	 * Returns true if this is an "application view" (forward) response
-	 * instruction.
+	 * Returns true if this is an "application view" (forward) response instruction.
 	 */
 	public boolean isApplicationView() {
 		return viewSelection instanceof ApplicationView;
 	}
 
 	/**
-	 * Returns true if this is an instruction to perform a redirect to the
-	 * current flow execution to render an application view.
+	 * Returns true if this is an instruction to perform a redirect to the current flow execution to render an
+	 * application view.
 	 */
 	public boolean isFlowExecutionRedirect() {
 		return viewSelection instanceof FlowExecutionRedirect;
 	}
 
 	/**
-	 * Returns true if this is an instruction to launch an entirely new
-	 * (independent) flow execution.
+	 * Returns true if this is an instruction to launch an entirely new (independent) flow execution.
 	 */
 	public boolean isFlowDefinitionRedirect() {
 		return viewSelection instanceof FlowDefinitionRedirect;
 	}
 
 	/**
-	 * Returns true if this an instruction to perform a redirect to an external
-	 * URL.
+	 * Returns true if this an instruction to perform a redirect to an external URL.
 	 */
 	public boolean isExternalRedirect() {
 		return viewSelection instanceof ExternalRedirect;
 	}
 
 	/**
-	 * Returns true if this is a "null" response instruction, e.g.
-	 * no response needs to be rendered.
+	 * Returns true if this is a "null" response instruction, e.g. no response needs to be rendered.
 	 */
 	public boolean isNull() {
 		return viewSelection == ViewSelection.NULL_VIEW;
@@ -183,12 +172,11 @@ public class ResponseInstruction implements Serializable {
 		if (!(o instanceof ResponseInstruction)) {
 			return false;
 		}
-		ResponseInstruction other = (ResponseInstruction)o;
+		ResponseInstruction other = (ResponseInstruction) o;
 		if (getFlowExecutionKey() != null) {
 			return getFlowExecutionKey().equals(other.getFlowExecutionKey())
 					&& viewSelection.equals(other.viewSelection);
-		}
-		else {
+		} else {
 			return other.getFlowExecutionKey() == null && viewSelection.equals(other.viewSelection);
 		}
 	}
@@ -202,7 +190,7 @@ public class ResponseInstruction implements Serializable {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("flowExecutionKey", flowExecutionKey)
-			.append("viewSelection", viewSelection).append("flowExecutionContext", flowExecutionContext).toString();
+		return new ToStringCreator(this).append("flowExecutionKey", flowExecutionKey).append("viewSelection",
+				viewSelection).append("flowExecutionContext", flowExecutionContext).toString();
 	}
 }

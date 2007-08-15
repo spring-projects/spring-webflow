@@ -24,8 +24,7 @@ import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * Map backed by the Servlet context for accessing application scoped
- * attributes.
+ * Map backed by the Servlet context for accessing application scoped attributes.
  * 
  * @author Keith Donald
  */

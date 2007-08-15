@@ -41,7 +41,7 @@ public class ApplicationViewSelectorTests extends TestCase {
 		context.getConversationScope().put("foo3", "bar");
 		ViewSelection selection = selector.makeEntrySelection(context);
 		assertTrue(selection instanceof ApplicationView);
-		ApplicationView view = (ApplicationView)selection;
+		ApplicationView view = (ApplicationView) selection;
 		assertEquals("view", view.getViewName());
 		assertEquals("bar", view.getModel().get("foo"));
 		assertEquals("bar", view.getModel().get("foo2"));
@@ -54,9 +54,8 @@ public class ApplicationViewSelectorTests extends TestCase {
 		try {
 			selector.makeEntrySelection(context);
 			fail();
-		}
-		catch (IllegalStateException e) {
-			//expected
+		} catch (IllegalStateException e) {
+			// expected
 		}
 	}
 
@@ -66,9 +65,8 @@ public class ApplicationViewSelectorTests extends TestCase {
 		try {
 			selector.makeEntrySelection(context);
 			fail();
-		}
-		catch (IllegalStateException e) {
-			//expected
+		} catch (IllegalStateException e) {
+			// expected
 		}
 	}
 

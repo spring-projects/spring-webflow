@@ -24,9 +24,8 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * A pointer to an externalized flow definition resource. Adds assigned
- * identification information about the resource including the flow id and
- * attributes.
+ * A pointer to an externalized flow definition resource. Adds assigned identification information about the resource
+ * including the flow id and attributes.
  * 
  * @see ExternalizedFlowDefinitionRegistrar
  * 
@@ -50,17 +49,17 @@ public class FlowDefinitionResource implements Serializable {
 	private Resource location;
 
 	/**
-	 * Creates a new externalized flow definition resource. The flow id assigned will be
-	 * the same name as the externalized resource's filename, excluding the extension.
+	 * Creates a new externalized flow definition resource. The flow id assigned will be the same name as the
+	 * externalized resource's filename, excluding the extension.
 	 * @param location the flow resource location
 	 */
 	public FlowDefinitionResource(Resource location) {
 		init(conventionalFlowId(location), location, null);
 	}
-	
+
 	/**
-	 * Creates a new externalized flow definition resource. The flow id assigned will be
-	 * the same name as the externalized resource's filename, excluding the extension.
+	 * Creates a new externalized flow definition resource. The flow id assigned will be the same name as the
+	 * externalized resource's filename, excluding the extension.
 	 * @param location the flow resource location
 	 * @param attributes flow definition attributes to be assigned
 	 */
@@ -112,14 +111,14 @@ public class FlowDefinitionResource implements Serializable {
 		if (!(o instanceof FlowDefinitionResource)) {
 			return false;
 		}
-		FlowDefinitionResource other = (FlowDefinitionResource)o;
+		FlowDefinitionResource other = (FlowDefinitionResource) o;
 		return id.equals(other.id) && location.equals(other.location);
 	}
 
 	public int hashCode() {
 		return id.hashCode() + location.hashCode();
 	}
-	
+
 	// internal helpers
 
 	/**
@@ -132,17 +131,16 @@ public class FlowDefinitionResource implements Serializable {
 		this.location = location;
 		if (attributes != null) {
 			this.attributes = attributes;
-		}
-		else {
+		} else {
 			this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 		}
 	}
-	
+
 	// public utilities
 
 	/**
-	 * Returns the flow id assigned to the flow definition contained in given resource.
-	 * By convention this will be the filename of the resource, excluding extension.
+	 * Returns the flow id assigned to the flow definition contained in given resource. By convention this will be the
+	 * filename of the resource, excluding extension.
 	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource)
 	 * @see FlowDefinitionResource#FlowDefinitionResource(Resource, AttributeMap)
 	 * @since 1.0.1
@@ -152,8 +150,7 @@ public class FlowDefinitionResource implements Serializable {
 		int extensionIndex = fileName.lastIndexOf('.');
 		if (extensionIndex != -1) {
 			return fileName.substring(0, extensionIndex);
-		}
-		else {
+		} else {
 			return fileName;
 		}
 	}

@@ -20,9 +20,8 @@ import java.io.Serializable;
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 
 /**
- * Thrown when no flow execution continuation exists with the provided id.
- * This might occur if the continuation has expired or was explictly invalidated
- * but a client's browser page cache still references it.
+ * Thrown when no flow execution continuation exists with the provided id. This might occur if the continuation has
+ * expired or was explictly invalidated but a client's browser page cache still references it.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

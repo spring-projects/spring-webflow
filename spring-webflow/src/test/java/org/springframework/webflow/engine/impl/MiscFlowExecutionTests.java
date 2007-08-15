@@ -55,7 +55,7 @@ public class MiscFlowExecutionTests extends TestCase {
 			}
 		});
 		FlowExecution execution = new FlowExecutionImpl(parentFlow);
-		ApplicationView response = (ApplicationView)execution.start(null, new MockExternalContext());
+		ApplicationView response = (ApplicationView) execution.start(null, new MockExternalContext());
 		assertNotNull(response.getModel().get("order"));
 		assertEquals(order, response.getModel().get("order"));
 	}
@@ -66,7 +66,7 @@ public class MiscFlowExecutionTests extends TestCase {
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
 		LocalAttributeMap input = new LocalAttributeMap();
 		input.put("id", "23");
-		ApplicationView view = (ApplicationView)execution.start(input, new MockExternalContext());
+		ApplicationView view = (ApplicationView) execution.start(input, new MockExternalContext());
 		assertEquals(new Long(23), view.getModel().get("id"));
 	}
 
@@ -77,27 +77,18 @@ public class MiscFlowExecutionTests extends TestCase {
 		try {
 			execution.start(null, new MockExternalContext());
 			fail("Should have thrown a FlowExecutionException");
-		}
-		catch (FlowExecutionException e) {
+		} catch (FlowExecutionException e) {
 			assertTrue("Root cause should have been a RequiredMappingException",
 					e.getRootCause() instanceof RequiredMappingException);
 		}
 	}
 
 	/*
-	public void testInfiniteLoop() {
-		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
-		serviceLocator.registerBean("action", new InfiniteLoopTestAction());
-		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("infinite-loop.xml", getClass()));
-		builder.setFlowServiceLocator(serviceLocator);
-		Flow flow = new FlowAssembler("myFlow", builder).assembleFlow();
-		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
-		try {
-			execution.start(null, new MockExternalContext());
-		}
-		catch (StackOverflowError e) {
-			// expected
-		}
-	}
-	*/
+	 * public void testInfiniteLoop() { MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
+	 * serviceLocator.registerBean("action", new InfiniteLoopTestAction()); XmlFlowBuilder builder = new
+	 * XmlFlowBuilder(new ClassPathResource("infinite-loop.xml", getClass()));
+	 * builder.setFlowServiceLocator(serviceLocator); Flow flow = new FlowAssembler("myFlow", builder).assembleFlow();
+	 * FlowExecutionImpl execution = new FlowExecutionImpl(flow); try { execution.start(null, new
+	 * MockExternalContext()); } catch (StackOverflowError e) { // expected } }
+	 */
 }

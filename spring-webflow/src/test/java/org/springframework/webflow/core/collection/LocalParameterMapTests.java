@@ -62,15 +62,14 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetRequiredWithConversion() {
-		Integer value = (Integer)parameterMap.getRequired("integer", Integer.class);
+		Integer value = (Integer) parameterMap.getRequired("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
 	public void testGetRequiredNotPresent() {
 		try {
 			parameterMap.getRequired("bogus");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -94,8 +93,7 @@ public class LocalParameterMapTests extends TestCase {
 		try {
 			parameterMap.get("bogus", Integer.class, "1");
 			fail("'1' isn't a integer");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -121,7 +119,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void getArrayWithConversion() {
-		Integer[] values = (Integer[])parameterMap.getArray("stringArray", Integer.class);
+		Integer[] values = (Integer[]) parameterMap.getArray("stringArray", Integer.class);
 		assertEquals(new Integer(1), values[0]);
 		assertEquals(new Integer(2), values[1]);
 		assertEquals(new Integer(3), values[2]);
@@ -130,8 +128,7 @@ public class LocalParameterMapTests extends TestCase {
 	public void testGetRequiredArrayNotPresent() {
 		try {
 			parameterMap.getRequiredArray("bogus");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -158,7 +155,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetArrayConversion() {
-		Integer[] i = (Integer[])parameterMap.getArray("stringArray", Integer.class);
+		Integer[] i = (Integer[]) parameterMap.getArray("stringArray", Integer.class);
 		assertEquals(i.length, 3);
 		assertEquals(new Integer(1), i[0]);
 		assertEquals(new Integer(2), i[1]);
@@ -166,24 +163,24 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void getRequiredArrayWithConversion() {
-		Integer[] values = (Integer[])parameterMap.getRequiredArray("stringArray", Integer.class);
+		Integer[] values = (Integer[]) parameterMap.getRequiredArray("stringArray", Integer.class);
 		assertEquals(new Integer(1), values[0]);
 		assertEquals(new Integer(2), values[1]);
 		assertEquals(new Integer(3), values[2]);
 	}
 
 	public void testGetNumber() {
-		Integer value = (Integer)parameterMap.getNumber("integer", Integer.class);
+		Integer value = (Integer) parameterMap.getNumber("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
 	public void testGetRequiredNumber() {
-		Integer value = (Integer)parameterMap.getRequiredNumber("integer", Integer.class);
+		Integer value = (Integer) parameterMap.getRequiredNumber("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
 	public void testGetNumberWithDefault() {
-		Integer value = (Integer)parameterMap.getNumber("bogus", Integer.class, new Integer(12345));
+		Integer value = (Integer) parameterMap.getNumber("bogus", Integer.class, new Integer(12345));
 		assertEquals(new Integer(12345), value);
 	}
 
@@ -241,7 +238,7 @@ public class LocalParameterMapTests extends TestCase {
 		MultipartFile file = parameterMap.getRequiredMultipartFile("multipartFile");
 		assertNotNull(file);
 	}
-	
+
 	public void testEquality() {
 		LocalParameterMap map1 = new LocalParameterMap(new HashMap(parameterMap.asMap()));
 		assertEquals(parameterMap, map1);

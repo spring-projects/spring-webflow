@@ -24,7 +24,7 @@ public class InfiniteLoopTestAction extends MultiAction {
 	public Event method(RequestContext context) {
 		return success();
 	}
-	
+
 	public Event errorMethod(RequestContext context) {
 		return error();
 	}

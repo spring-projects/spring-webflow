@@ -23,10 +23,9 @@ import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.engine.Flow;
 
 /**
- * A director for assembling flows, delegating to a {@link FlowBuilder} to
- * construct a flow. This class encapsulates the algorithm for using a
- * FlowBuilder to assemble a Flow properly. It acts as the director in the
- * classic GoF builder pattern.
+ * A director for assembling flows, delegating to a {@link FlowBuilder} to construct a flow. This class encapsulates the
+ * algorithm for using a FlowBuilder to assemble a Flow properly. It acts as the director in the classic GoF builder
+ * pattern.
  * <p>
  * Flow assemblers may be used in a standalone, programmatic fashion as follows:
  * 
@@ -41,7 +40,7 @@ import org.springframework.webflow.engine.Flow;
  * @author Erwin Vervaet
  */
 public class FlowAssembler {
-	
+
 	private static final Log logger = LogFactory.getLog(FlowAssembler.class);
 
 	/**
@@ -55,14 +54,12 @@ public class FlowAssembler {
 	private AttributeMap flowAttributes;
 
 	/**
-	 * The flow builder strategy used to construct the flow from its component
-	 * parts.
+	 * The flow builder strategy used to construct the flow from its component parts.
 	 */
 	private FlowBuilder flowBuilder;
 
 	/**
-	 * Create a new flow assembler that will direct Flow assembly using the
-	 * specified builder strategy.
+	 * Create a new flow assembler that will direct Flow assembly using the specified builder strategy.
 	 * @param flowId the flow id to assign
 	 * @param flowBuilder the builder the factory will use to build flows
 	 */
@@ -71,11 +68,9 @@ public class FlowAssembler {
 	}
 
 	/**
-	 * Create a new flow assembler that will direct Flow assembly using the
-	 * specified builder strategy.
+	 * Create a new flow assembler that will direct Flow assembly using the specified builder strategy.
 	 * @param flowId the flow id to assign
-	 * @param flowAttributes externally assigned flow attributes that can affect
-	 * flow construction
+	 * @param flowAttributes externally assigned flow attributes that can affect flow construction
 	 * @param flowBuilder the builder the factory will use to build flows
 	 */
 	public FlowAssembler(String flowId, AttributeMap flowAttributes, FlowBuilder flowBuilder) {
@@ -94,51 +89,45 @@ public class FlowAssembler {
 	}
 
 	/**
-	 * Returns externally assigned attributes that can be used to affect flow
-	 * construction.
+	 * Returns externally assigned attributes that can be used to affect flow construction.
 	 */
 	public AttributeMap getFlowAttributes() {
 		return flowAttributes;
 	}
 
 	/**
-	 * Returns the flow builder strategy used to construct the flow from its
-	 * component parts.
+	 * Returns the flow builder strategy used to construct the flow from its component parts.
 	 */
 	public FlowBuilder getFlowBuilder() {
 		return flowBuilder;
 	}
 
 	/**
-	 * Assembles the flow, directing the construction process by delegating to
-	 * the configured FlowBuilder. Every call to this method will assemble
-	 * the Flow instance.
+	 * Assembles the flow, directing the construction process by delegating to the configured FlowBuilder. Every call to
+	 * this method will assemble the Flow instance.
 	 * <p>
-	 * This will drive the flow construction process as described in the
-	 * {@link FlowBuilder} JavaDoc, starting with builder initialisation using
-	 * {@link FlowBuilder#init(String, AttributeMap)} and finishing by
-	 * cleaning up the builder with a call to {@link FlowBuilder#dispose()}.
+	 * This will drive the flow construction process as described in the {@link FlowBuilder} JavaDoc, starting with
+	 * builder initialisation using {@link FlowBuilder#init(String, AttributeMap)} and finishing by cleaning up the
+	 * builder with a call to {@link FlowBuilder#dispose()}.
 	 * @return the constructed flow
 	 * @throws FlowBuilderException when flow assembly fails
 	 */
 	public Flow assembleFlow() throws FlowBuilderException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Assembling flow definition with id '" + flowId + "' using flow builder '" +
-					flowBuilder + "'; externally assigned flow attributes are '" + flowAttributes + "'");
+			logger.debug("Assembling flow definition with id '" + flowId + "' using flow builder '" + flowBuilder
+					+ "'; externally assigned flow attributes are '" + flowAttributes + "'");
 		}
 		try {
 			flowBuilder.init(flowId, flowAttributes);
 			directAssembly();
 			return flowBuilder.getFlow();
-		}
-		finally {
+		} finally {
 			flowBuilder.dispose();
 		}
 	}
 
 	/**
-	 * Build all parts of the flow by directing flow assembly by the flow
-	 * builder.
+	 * Build all parts of the flow by directing flow assembly by the flow builder.
 	 * @throws FlowBuilderException when flow assembly fails
 	 */
 	protected void directAssembly() throws FlowBuilderException {

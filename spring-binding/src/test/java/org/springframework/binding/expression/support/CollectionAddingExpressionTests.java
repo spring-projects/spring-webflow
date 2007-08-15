@@ -47,18 +47,17 @@ public class CollectionAddingExpressionTests extends TestCase {
 		assertEquals("1", bean.getList().get(0));
 		assertEquals("2", bean.getList().get(1));
 	}
-	
+
 	public void testNotACollection() {
-		Expression exp = parser.parseExpression("flag");		
+		Expression exp = parser.parseExpression("flag");
 		CollectionAddingExpression colExp = new CollectionAddingExpression(exp);
 		try {
 			colExp.evaluateToSet(bean, "1", null);
 			fail("not a collection");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	public void testNoAddOnNullValue() {
 		CollectionAddingExpression colExp = new CollectionAddingExpression(exp);
 		colExp.evaluateToSet(bean, null, null);

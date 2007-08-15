@@ -29,17 +29,14 @@ import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 
 /**
- * Simple view selector that makes an {@link ApplicationView} selection using a
- * view name expression.
+ * Simple view selector that makes an {@link ApplicationView} selection using a view name expression.
  * <p>
- * This factory will treat all attributes returned from calling
- * {@link RequestContext#getModel()} as the application model exposed to the
- * view during rendering. This is typically the union of attributes in request,
- * flow, and conversation scope.
+ * This factory will treat all attributes returned from calling {@link RequestContext#getModel()} as the application
+ * model exposed to the view during rendering. This is typically the union of attributes in request, flow, and
+ * conversation scope.
  * <p>
- * This selector also supports setting a <i>redirect</i> flag that can be used
- * to trigger a redirect to the {@link ApplicationView} at a bookmarkable URL
- * using an {@link FlowExecutionRedirect}}.
+ * This selector also supports setting a <i>redirect</i> flag that can be used to trigger a redirect to the
+ * {@link ApplicationView} at a bookmarkable URL using an {@link FlowExecutionRedirect}}.
  * 
  * @see org.springframework.webflow.execution.support.ApplicationView
  * @see org.springframework.webflow.execution.support.FlowExecutionRedirect
@@ -50,8 +47,7 @@ import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 public class ApplicationViewSelector implements ViewSelector, Serializable {
 
 	/**
-	 * Flow execution attribute name that indicates that we should always render
-	 * an application view via a redirect.
+	 * Flow execution attribute name that indicates that we should always render an application view via a redirect.
 	 */
 	public static final String ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE = "alwaysRedirectOnPause";
 
@@ -61,17 +57,15 @@ public class ApplicationViewSelector implements ViewSelector, Serializable {
 	private Expression viewName;
 
 	/**
-	 * A flag indicating if a redirect to the selected application view should
-	 * be requested.
+	 * A flag indicating if a redirect to the selected application view should be requested.
 	 * <p>
-	 * Setting this allows you to redirect while the flow is in progress to a
-	 * stable URL that can be safely refreshed.
+	 * Setting this allows you to redirect while the flow is in progress to a stable URL that can be safely refreshed.
 	 */
 	private boolean redirect;
 
 	/**
-	 * Creates a application view selector that will make application view
-	 * selections requesting that the specified view be rendered.
+	 * Creates a application view selector that will make application view selections requesting that the specified view
+	 * be rendered.
 	 * @param viewName the view name expression
 	 */
 	public ApplicationViewSelector(Expression viewName) {
@@ -79,9 +73,8 @@ public class ApplicationViewSelector implements ViewSelector, Serializable {
 	}
 
 	/**
-	 * Creates a application view selector that will make application view
-	 * selections requesting that the specified view be rendered. No redirects
-	 * will be done.
+	 * Creates a application view selector that will make application view selections requesting that the specified view
+	 * be rendered. No redirects will be done.
 	 * @param viewName the view name expression
 	 * @param redirect indicates if a redirect to the view should be initiated
 	 */
@@ -112,8 +105,7 @@ public class ApplicationViewSelector implements ViewSelector, Serializable {
 	public ViewSelection makeEntrySelection(RequestContext context) {
 		if (shouldRedirect(context)) {
 			return FlowExecutionRedirect.INSTANCE;
-		}
-		else {
+		} else {
 			return makeRefreshSelection(context);
 		}
 	}
@@ -149,8 +141,7 @@ public class ApplicationViewSelector implements ViewSelector, Serializable {
 	}
 
 	/**
-	 * Determine whether or not a redirect should be used to render the
-	 * application view.
+	 * Determine whether or not a redirect should be used to render the application view.
 	 * @param context the context
 	 * @return true or false
 	 */
@@ -159,8 +150,8 @@ public class ApplicationViewSelector implements ViewSelector, Serializable {
 	}
 
 	/**
-	 * Checks the {@link #ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE} to see if every
-	 * application view of the flow execution should be rendered via a redirect.
+	 * Checks the {@link #ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE} to see if every application view of the flow execution
+	 * should be rendered via a redirect.
 	 * @param context the flow execution request context
 	 * @return true or false
 	 */

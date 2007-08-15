@@ -72,7 +72,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	@Override
 	protected FlowDefinitionResource getFlowDefinitionResource() {
-        return createFlowDefinitionResource("src/main/webapp/WEB-INF/flows/search-flow.xml");
+		return createFlowDefinitionResource("src/main/webapp/WEB-INF/flows/search-flow.xml");
 	}
 
 	@Override
@@ -80,7 +80,8 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper(new AttributeMapper() {
 			public void map(Object source, Object target, MappingContext context) {
-				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1), ((AttributeMap)source).get("id"));
+				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1),
+						((AttributeMap) source).get("id"));
 			}
 		});
 		// test responding to finish result

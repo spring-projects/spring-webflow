@@ -26,8 +26,8 @@ public class SearchCriteriaValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors errors) {
-		SearchCriteria query = (SearchCriteria)obj;
-		if (!StringUtils.hasText(query.getFirstName()) && !StringUtils.hasText(query.getLastName())) { 
+		SearchCriteria query = (SearchCriteria) obj;
+		if (!StringUtils.hasText(query.getFirstName()) && !StringUtils.hasText(query.getLastName())) {
 			errors.reject("noCriteria", "Please provide some query criteria!");
 		}
 	}

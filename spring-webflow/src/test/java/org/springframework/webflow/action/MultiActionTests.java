@@ -29,7 +29,7 @@ import org.springframework.webflow.util.DispatchMethodInvoker.MethodLookupExcept
  * Unit tests for {@link MultiAction}.
  */
 public class MultiActionTests extends TestCase {
-	
+
 	private TestMultiAction action = new TestMultiAction();
 
 	private MockRequestContext context = new MockRequestContext();
@@ -45,8 +45,7 @@ public class MultiActionTests extends TestCase {
 		try {
 			action.execute(context);
 			fail("Should've failed with no such method");
-		}
-		catch (MethodLookupException e) {
+		} catch (MethodLookupException e) {
 
 		}
 	}
@@ -62,8 +61,7 @@ public class MultiActionTests extends TestCase {
 		try {
 			action.execute(context);
 			fail("Should've failed with no such method");
-		}
-		catch (MethodLookupException e) {
+		} catch (MethodLookupException e) {
 
 		}
 	}
@@ -73,8 +71,7 @@ public class MultiActionTests extends TestCase {
 			context.getMockFlowExecutionContext().getMockActiveSession().setState(null);
 			action.execute(context);
 			fail("Should've failed with illegal state");
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 
 		}
 	}

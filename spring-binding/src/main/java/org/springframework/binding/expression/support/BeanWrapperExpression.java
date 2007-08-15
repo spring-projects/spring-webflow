@@ -48,15 +48,14 @@ class BeanWrapperExpression implements SettableExpression {
 		if (!(o instanceof BeanWrapperExpression)) {
 			return false;
 		}
-		BeanWrapperExpression other = (BeanWrapperExpression)o;
+		BeanWrapperExpression other = (BeanWrapperExpression) o;
 		return expression.equals(other.expression);
 	}
 
 	public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
 		try {
 			return new BeanWrapperImpl(target).getPropertyValue(expression);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			throw new EvaluationException(new EvaluationAttempt(this, target, context), e);
 		}
 	}
@@ -65,8 +64,7 @@ class BeanWrapperExpression implements SettableExpression {
 		try {
 			Assert.notNull(target, "The target object to evaluate is required");
 			new BeanWrapperImpl(target).setPropertyValue(expression, value);
-		}
-		catch (BeansException e) {
+		} catch (BeansException e) {
 			throw new EvaluationException(new SetValueAttempt(this, target, value, context), e);
 		}
 	}

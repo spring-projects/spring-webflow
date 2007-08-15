@@ -24,7 +24,7 @@ import org.springframework.webflow.engine.builder.AbstractFlowBuilderFlowRegistr
  * @author Keith Donald
  */
 public class PhonebookFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
-	
+
 	protected void doPopulate(FlowDefinitionRegistry registry) {
 		registerFlowDefinition(registry, "detail-flow", new PersonDetailFlowBuilder());
 		registerFlowDefinition(registry, "search-flow", new SearchPersonFlowBuilder());

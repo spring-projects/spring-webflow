@@ -44,8 +44,7 @@ public class AbstractActionTests extends TestCase {
 		try {
 			action.afterPropertiesSet();
 			fail("Should've failed initialization");
-		}
-		catch (BeanInitializationException e) {
+		} catch (BeanInitializationException e) {
 			assertFalse(action.initialized);
 		}
 	}
@@ -65,8 +64,7 @@ public class AbstractActionTests extends TestCase {
 		try {
 			action.execute(new MockRequestContext());
 			fail("Should've failed execute");
-		}
-		catch (IllegalStateException e) {
+		} catch (IllegalStateException e) {
 
 		}
 	}

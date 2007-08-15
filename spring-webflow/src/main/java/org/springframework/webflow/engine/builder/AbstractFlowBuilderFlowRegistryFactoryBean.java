@@ -25,19 +25,18 @@ import org.springframework.webflow.engine.builder.AbstractFlowBuildingFlowRegist
 import org.springframework.webflow.engine.builder.FlowAssembler;
 
 /**
- * Base class for factory beans that create flow definition registries containing
- * flows built using Java based {@link AbstractFlowBuilder flow builders}.
+ * Base class for factory beans that create flow definition registries containing flows built using Java based
+ * {@link AbstractFlowBuilder flow builders}.
  * <p>
- * Subclasses only need to define the {@link #doPopulate(FlowDefinitionRegistry)}
- * method and use the
- * {@link #registerFlowDefinition(FlowDefinitionRegistry, String, AbstractFlowBuilder)}
- * convenience methods provided by this class to register all relevant flows:
+ * Subclasses only need to define the {@link #doPopulate(FlowDefinitionRegistry)} method and use the
+ * {@link #registerFlowDefinition(FlowDefinitionRegistry, String, AbstractFlowBuilder)} convenience methods provided by
+ * this class to register all relevant flows:
  * 
  * <pre class="code">
  * public class MyFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
  * 	protected void doPopulate(FlowDefinitionRegistry registry) {
- * 		registerFlowDefinition(registry, "my-flow", new MyFlowBuilder());
- * 		registerFlowDefinition(registry, "my-other-flow", new MyOtherFlowBuilder());
+ * 		registerFlowDefinition(registry, &quot;my-flow&quot;, new MyFlowBuilder());
+ * 		registerFlowDefinition(registry, &quot;my-other-flow&quot;, new MyOtherFlowBuilder());
  * 	}
  * }
  * </pre>
@@ -48,40 +47,34 @@ import org.springframework.webflow.engine.builder.FlowAssembler;
  * 
  * @author Erwin Vervaet
  */
-public abstract class AbstractFlowBuilderFlowRegistryFactoryBean extends
-		AbstractFlowBuildingFlowRegistryFactoryBean {
+public abstract class AbstractFlowBuilderFlowRegistryFactoryBean extends AbstractFlowBuildingFlowRegistryFactoryBean {
 
 	/**
-	 * Register the flow built by given flow builder in specified flow
-	 * definition registry.
+	 * Register the flow built by given flow builder in specified flow definition registry.
 	 * <p>
-	 * Note that this method will set the
-	 * {@link #getFlowServiceLocator() flow service locator} of this class
-	 * on given flow builder.
+	 * Note that this method will set the {@link #getFlowServiceLocator() flow service locator} of this class on given
+	 * flow builder.
 	 * @param registry the registry to register the flow in
 	 * @param flowId the flow id to assign
 	 * @param flowBuilder the builder used to build the flow
 	 */
-	protected void registerFlowDefinition(
-			FlowDefinitionRegistry registry, String flowId, AbstractFlowBuilder flowBuilder) {
+	protected void registerFlowDefinition(FlowDefinitionRegistry registry, String flowId,
+			AbstractFlowBuilder flowBuilder) {
 		registerFlowDefinition(registry, flowId, null, flowBuilder);
 	}
-	
+
 	/**
-	 * Register the flow built by given flow builder in specified flow
-	 * definition registry.
+	 * Register the flow built by given flow builder in specified flow definition registry.
 	 * <p>
-	 * Note that this method will set the
-	 * {@link #getFlowServiceLocator() flow service locator} of this class
-	 * on given flow builder.
+	 * Note that this method will set the {@link #getFlowServiceLocator() flow service locator} of this class on given
+	 * flow builder.
 	 * @param registry the registry to register the flow in
 	 * @param flowId the flow id to assign
-	 * @param flowAttributes externally assigned flow attributes that can affect
-	 * flow construction
+	 * @param flowAttributes externally assigned flow attributes that can affect flow construction
 	 * @param flowBuilder the builder used to build the flow
 	 */
-	protected void registerFlowDefinition(
-			FlowDefinitionRegistry registry, String flowId, AttributeMap flowAttributes, AbstractFlowBuilder flowBuilder) {
+	protected void registerFlowDefinition(FlowDefinitionRegistry registry, String flowId, AttributeMap flowAttributes,
+			AbstractFlowBuilder flowBuilder) {
 		flowBuilder.setFlowServiceLocator(getFlowServiceLocator());
 		Flow flow = new FlowAssembler(flowId, flowAttributes, flowBuilder).assembleFlow();
 		FlowDefinitionHolder flowHolder = new StaticFlowDefinitionHolder(flow);

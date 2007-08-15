@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 
 public class DefaultDocumentLoaderTests extends TestCase {
 	private DefaultDocumentLoader loader = new DefaultDocumentLoader();
-	
+
 	public void testLoad() throws Exception {
 		Resource resource = new ClassPathResource("testFlow1.xml", getClass());
 		Document document = loader.loadDocument(resource);

@@ -26,9 +26,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CachingMapDecorator;
 
 /**
- * Invoker and cache for dispatch methods that all share the same target object.
- * The dispatch methods typically share the same form, but multiple exist per
- * target object, and they only differ in name.
+ * Invoker and cache for dispatch methods that all share the same target object. The dispatch methods typically share
+ * the same form, but multiple exist per target object, and they only differ in name.
  * 
  * @author Keith Donald
  * @author Ben Hale
@@ -50,11 +49,10 @@ public class DispatchMethodInvoker {
 	 */
 	private Map methodCache = new CachingMapDecorator() {
 		public Object create(Object key) {
-			String methodName = (String)key;
+			String methodName = (String) key;
 			try {
 				return new MethodKey(target.getClass(), methodName, parameterTypes).getMethod();
-			}
-			catch (InvalidMethodKeyException e) {
+			} catch (InvalidMethodKeyException e) {
 				throw new MethodLookupException("Unable to resolve dispatch method " + e.getMethodKey()
 						+ "'; make sure the method name is correct and such a method is defined on targetClass "
 						+ target.getClass().getName(), e);
@@ -65,8 +63,7 @@ public class DispatchMethodInvoker {
 	/**
 	 * Creates a dispatch method invoker.
 	 * @param target the target to dispatch to
-	 * @param parameterTypes the parameter types defining the argument signature
-	 * of the dispatch methods
+	 * @param parameterTypes the parameter types defining the argument signature of the dispatch methods
 	 */
 	public DispatchMethodInvoker(Object target, Class[] parameterTypes) {
 		Assert.notNull(target, "The target of a dispatch method invocation is required");
@@ -82,8 +79,7 @@ public class DispatchMethodInvoker {
 	}
 
 	/**
-	 * Returns the parameter types defining the argument signature of the
-	 * dispatch methods.
+	 * Returns the parameter types defining the argument signature of the dispatch methods.
 	 */
 	public Class[] getParameterTypes() {
 		return parameterTypes;
@@ -101,28 +97,26 @@ public class DispatchMethodInvoker {
 		try {
 			Method dispatchMethod = getDispatchMethod(methodName);
 			return dispatchMethod.invoke(target, arguments);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			// the invoked method threw an exception; have it propagate to the caller
 			Throwable t = e.getTargetException();
 			if (t instanceof Exception) {
-				throw (Exception)e.getTargetException();
-			}
-			else {
-				throw (Error)e.getTargetException();
+				throw (Exception) e.getTargetException();
+			} else {
+				throw (Error) e.getTargetException();
 			}
 		}
 	}
 
 	/**
-	 * Get a handle to the method of the specified name, with the signature
-	 * defined by the configured parameter types and return type.
+	 * Get a handle to the method of the specified name, with the signature defined by the configured parameter types
+	 * and return type.
 	 * @param methodName the method name
 	 * @return the method
 	 * @throws MethodLookupException when the method cannot be resolved
 	 */
 	private Method getDispatchMethod(String methodName) throws MethodLookupException {
-		return (Method)methodCache.get(methodName);
+		return (Method) methodCache.get(methodName);
 	}
 
 	/**

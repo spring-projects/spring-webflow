@@ -32,8 +32,7 @@ import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * Provides contextual information about a JSR-168 Portlet environment that has
- * called into Spring Web Flow.
+ * Provides contextual information about a JSR-168 Portlet environment that has called into Spring Web Flow.
  * 
  * @author Keith Donald
  */
@@ -53,7 +52,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * The response.
 	 */
 	private PortletResponse response;
-	
+
 	/**
 	 * An accessor for the portlet request parameter map.
 	 */
@@ -78,7 +77,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * An accessor for the portlet context application map.
 	 */
 	private SharedAttributeMap applicationMap;
-	
+
 	/**
 	 * An accessor for the portlet user info map.
 	 */
@@ -97,9 +96,10 @@ public class PortletExternalContext implements ExternalContext {
 		this.requestParameterMap = new LocalParameterMap(new PortletRequestParameterMap(request));
 		this.requestMap = new LocalAttributeMap(new PortletRequestMap(request));
 		this.sessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.PORTLET_SCOPE));
-		this.globalSessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request, PortletSession.APPLICATION_SCOPE));
+		this.globalSessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request,
+				PortletSession.APPLICATION_SCOPE));
 		this.applicationMap = new LocalSharedAttributeMap(new PortletContextMap(context));
-		Map userInfo = (Map)request.getAttribute(PortletRequest.USER_INFO);
+		Map userInfo = (Map) request.getAttribute(PortletRequest.USER_INFO);
 		this.userInfoMap = userInfo != null ? new LocalAttributeMap(userInfo) : null;
 	}
 
@@ -124,7 +124,7 @@ public class PortletExternalContext implements ExternalContext {
 	public MutableAttributeMap getRequestMap() {
 		return requestMap;
 	}
-	
+
 	public SharedAttributeMap getSessionMap() {
 		return sessionMap;
 	}

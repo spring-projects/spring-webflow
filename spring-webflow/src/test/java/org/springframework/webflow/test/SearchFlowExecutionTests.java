@@ -69,15 +69,16 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	}
 
 	protected FlowDefinitionResource getFlowDefinitionResource() {
-		return new FlowDefinitionResource("search-flow",
-				new ClassPathResource("search-flow.xml", SearchFlowExecutionTests.class));
+		return new FlowDefinitionResource("search-flow", new ClassPathResource("search-flow.xml",
+				SearchFlowExecutionTests.class));
 	}
 
 	protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper(new AttributeMapper() {
 			public void map(Object source, Object target, MappingContext context) {
-				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1), ((AttributeMap)source).get("id"));
+				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1),
+						((AttributeMap) source).get("id"));
 			}
 		});
 		// test responding to finish result
@@ -86,9 +87,9 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		serviceRegistry.registerSubflow(mockDetailFlow);
 		serviceRegistry.registerBean("phonebook", new TestPhoneBook());
 	}
-	
+
 	public static class TestPhoneBook {
-		
+
 		public List search(Object criteria) {
 			ArrayList res = new ArrayList();
 			res.add(new Object());
@@ -102,7 +103,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		public Object getPerson(String userId) {
 			return new Object();
 		}
-		
+
 	}
 
 }

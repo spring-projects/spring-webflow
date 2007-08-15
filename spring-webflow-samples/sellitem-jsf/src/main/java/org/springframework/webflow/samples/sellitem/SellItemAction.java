@@ -25,7 +25,7 @@ public class SellItemAction extends AbstractAction {
 	// an action is not needed for binding, you can still add in an action to do
 	// something if you need to
 	protected Event doExecute(RequestContext context) throws Exception {
-		Sale sale = (Sale)context.getFlowScope().getRequired("sale", Sale.class);
+		Sale sale = (Sale) context.getFlowScope().getRequired("sale", Sale.class);
 		sale.getAmount();
 		return success();
 	}

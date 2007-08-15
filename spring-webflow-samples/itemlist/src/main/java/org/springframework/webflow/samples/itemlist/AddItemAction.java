@@ -33,8 +33,7 @@ public class AddItemAction extends AbstractAction {
 		try {
 			// add a bit of artificial think time
 			Thread.sleep(2000);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 		}
 
 		return success();

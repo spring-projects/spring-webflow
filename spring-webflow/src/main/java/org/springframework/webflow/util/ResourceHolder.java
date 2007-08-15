@@ -18,9 +18,8 @@ package org.springframework.webflow.util;
 import org.springframework.core.io.Resource;
 
 /**
- * Simple interface for all objects (typically flow builders) that hold on to a
- * resource defining a flow (e.g. an XML file). Provides a way to access
- * information about the underlying resource like the last modified date.
+ * Simple interface for all objects (typically flow builders) that hold on to a resource defining a flow (e.g. an XML
+ * file). Provides a way to access information about the underlying resource like the last modified date.
  * 
  * @see org.springframework.webflow.engine.builder.FlowBuilder
  * 

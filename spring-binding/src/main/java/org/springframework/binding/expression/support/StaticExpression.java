@@ -21,8 +21,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.util.ObjectUtils;
 
 /**
- * A simple expression evaluator that just returns a fixed result on each
- * evaluation.
+ * A simple expression evaluator that just returns a fixed result on each evaluation.
  * 
  * @author Keith Donald
  */
@@ -44,8 +43,7 @@ public class StaticExpression implements Expression {
 	public int hashCode() {
 		if (value == null) {
 			return 0;
-		}
-		else {
+		} else {
 			return value.hashCode();
 		}
 	}
@@ -54,7 +52,7 @@ public class StaticExpression implements Expression {
 		if (!(o instanceof StaticExpression)) {
 			return false;
 		}
-		StaticExpression other = (StaticExpression)o;
+		StaticExpression other = (StaticExpression) o;
 		return ObjectUtils.nullSafeEquals(value, other.value);
 	}
 

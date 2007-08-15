@@ -62,11 +62,10 @@ public class TextToExpression extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		String expressionString = (String)source;
+		String expressionString = (String) source;
 		if (getExpressionParser().isDelimitedExpression(expressionString)) {
-			return getExpressionParser().parseExpression((String)source);
-		}
-		else {
+			return getExpressionParser().parseExpression((String) source);
+		} else {
 			return new StaticExpression(expressionString);
 		}
 	}

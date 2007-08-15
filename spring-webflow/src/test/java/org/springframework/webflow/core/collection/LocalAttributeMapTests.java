@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * Unit tests for {@link LocalAttributeMap}.
  */
 public class LocalAttributeMapTests extends TestCase {
-	
+
 	private LocalAttributeMap attributeMap = new LocalAttributeMap();
 
 	public void setUp() {
@@ -43,17 +43,17 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGet() {
-		TestBean bean = (TestBean)attributeMap.get("bean");
+		TestBean bean = (TestBean) attributeMap.get("bean");
 		assertNotNull(bean);
 	}
 
 	public void testGetNull() {
-		TestBean bean = (TestBean)attributeMap.get("bogus");
+		TestBean bean = (TestBean) attributeMap.get("bogus");
 		assertNull(bean);
 	}
 
 	public void testGetRequiredType() {
-		TestBean bean = (TestBean)attributeMap.get("bean", TestBean.class);
+		TestBean bean = (TestBean) attributeMap.get("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
@@ -61,27 +61,26 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.get("bean", String.class);
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetWithDefaultOption() {
 		TestBean d = new TestBean();
-		TestBean bean = (TestBean)attributeMap.get("bean", d);
+		TestBean bean = (TestBean) attributeMap.get("bean", d);
 		assertNotNull(bean);
 		assertNotSame(bean, d);
 	}
 
 	public void testGetWithDefault() {
 		TestBean d = new TestBean();
-		TestBean bean = (TestBean)attributeMap.get("bogus", d);
+		TestBean bean = (TestBean) attributeMap.get("bogus", d);
 		assertSame(bean, d);
 	}
 
 	public void testGetRequired() {
-		TestBean bean = (TestBean)attributeMap.getRequired("bean");
+		TestBean bean = (TestBean) attributeMap.getRequired("bean");
 		assertNotNull(bean);
 	}
 
@@ -89,14 +88,13 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequired("bogus");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetRequiredOfType() {
-		TestBean bean = (TestBean)attributeMap.getRequired("bean", TestBean.class);
+		TestBean bean = (TestBean) attributeMap.getRequired("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
@@ -104,14 +102,13 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequired("bean", String.class);
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetNumber() {
-		BigDecimal bd = (BigDecimal)attributeMap.getNumber("bigDecimal", BigDecimal.class);
+		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
@@ -119,28 +116,27 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getNumber("bigDecimal", Integer.class);
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetNumberWithDefaultOption() {
 		BigDecimal d = new BigDecimal("1");
-		BigDecimal bd = (BigDecimal)attributeMap.getNumber("bigDecimal", BigDecimal.class, d);
+		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bigDecimal", BigDecimal.class, d);
 		assertEquals(new BigDecimal("12345.67"), bd);
 		assertNotSame(d, bd);
 	}
 
 	public void testGetNumberWithDefault() {
 		BigDecimal d = new BigDecimal("1");
-		BigDecimal bd = (BigDecimal)attributeMap.getNumber("bogus", BigDecimal.class, d);
+		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bogus", BigDecimal.class, d);
 		assertEquals(d, bd);
 		assertSame(d, bd);
 	}
 
 	public void testGetNumberRequired() {
-		BigDecimal bd = (BigDecimal)attributeMap.getRequiredNumber("bigDecimal", BigDecimal.class);
+		BigDecimal bd = (BigDecimal) attributeMap.getRequiredNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
@@ -148,8 +144,7 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredNumber("bogus", BigDecimal.class);
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -173,8 +168,7 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredInteger("bogus");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -198,8 +192,7 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredLong("bogus");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -223,8 +216,7 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredString("bogus");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
@@ -248,24 +240,23 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredBoolean("bogus");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetArray() {
-		String[] i = (String[])attributeMap.getArray("stringArray", String[].class);
+		String[] i = (String[]) attributeMap.getArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
 	public void testGetArrayNull() {
-		String[] i = (String[])attributeMap.getArray("A bogus array", String[].class);
+		String[] i = (String[]) attributeMap.getArray("A bogus array", String[].class);
 		assertNull(i);
 	}
 
 	public void testGetArrayRequired() {
-		String[] i = (String[])attributeMap.getRequiredArray("stringArray", String[].class);
+		String[] i = (String[]) attributeMap.getRequiredArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
@@ -273,24 +264,23 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredArray("A bogus array", String[].class);
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testGetCollection() {
-		LinkedList i = (LinkedList)attributeMap.getCollection("collection", List.class);
+		LinkedList i = (LinkedList) attributeMap.getCollection("collection", List.class);
 		assertEquals(0, i.size());
 	}
 
 	public void testGetCollectionNull() {
-		LinkedList i = (LinkedList)attributeMap.getCollection("bogus", List.class);
+		LinkedList i = (LinkedList) attributeMap.getCollection("bogus", List.class);
 		assertNull(i);
 	}
 
 	public void testGetCollectionRequired() {
-		LinkedList i = (LinkedList)attributeMap.getRequiredCollection("collection", List.class);
+		LinkedList i = (LinkedList) attributeMap.getRequiredCollection("collection", List.class);
 		assertEquals(0, i.size());
 	}
 
@@ -298,8 +288,7 @@ public class LocalAttributeMapTests extends TestCase {
 		try {
 			attributeMap.getRequiredCollection("A bogus collection");
 			fail("Should've failed iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}

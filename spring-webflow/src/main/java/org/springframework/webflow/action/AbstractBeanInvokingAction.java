@@ -25,12 +25,11 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Base class for actions that delegate to methods on beans (POJOs - Plain Old
- * Java Objects). Acts as an adapter that adapts an {@link Object} method to the
- * Spring Web Flow {@link Action} contract.
+ * Base class for actions that delegate to methods on beans (POJOs - Plain Old Java Objects). Acts as an adapter that
+ * adapts an {@link Object} method to the Spring Web Flow {@link Action} contract.
  * <p>
- * Subclasses are required to implement the {@link #getBean(RequestContext)}
- * method, returning the bean on which a method should be invoked.
+ * Subclasses are required to implement the {@link #getBean(RequestContext)} method, returning the bean on which a
+ * method should be invoked.
  * 
  * @see BeanInvokingActionFactory
  * 
@@ -39,21 +38,20 @@ import org.springframework.webflow.execution.RequestContext;
 public abstract class AbstractBeanInvokingAction extends AbstractAction {
 
 	/**
-	 * The signature of the method to invoke on the target bean, capable of
-	 * resolving the method when used with a {@link MethodInvoker}. Required.
+	 * The signature of the method to invoke on the target bean, capable of resolving the method when used with a
+	 * {@link MethodInvoker}. Required.
 	 */
 	private MethodSignature methodSignature;
 
 	/**
-	 * The method invoker that performs the action-&gt;bean method binding,
-	 * accepting a {@link MethodSignature} and
+	 * The method invoker that performs the action-&gt;bean method binding, accepting a {@link MethodSignature} and
 	 * {@link #getBean(RequestContext) target bean} instance.
 	 */
 	private MethodInvoker methodInvoker = new MethodInvoker();
 
 	/**
-	 * The specification (configuration) for how bean method return values
-	 * should be exposed to an executing flow that invokes this action.
+	 * The specification (configuration) for how bean method return values should be exposed to an executing flow that
+	 * invokes this action.
 	 */
 	private ActionResultExposer methodResultExposer;
 
@@ -79,17 +77,16 @@ public abstract class AbstractBeanInvokingAction extends AbstractAction {
 	}
 
 	/**
-	 * Returns the configuration for how bean method return values should be
-	 * exposed to an executing flow that invokes this action.
+	 * Returns the configuration for how bean method return values should be exposed to an executing flow that invokes
+	 * this action.
 	 */
 	public ActionResultExposer getMethodResultExposer() {
 		return methodResultExposer;
 	}
 
 	/**
-	 * Configures how bean method return values should be exposed to an
-	 * executing flow that invokes this action. This is optional. By default the
-	 * bean method return values do not get exposed to the executing flow.
+	 * Configures how bean method return values should be exposed to an executing flow that invokes this action. This is
+	 * optional. By default the bean method return values do not get exposed to the executing flow.
 	 */
 	public void setMethodResultExposer(ActionResultExposer methodResultExposer) {
 		this.methodResultExposer = methodResultExposer;
@@ -103,17 +100,15 @@ public abstract class AbstractBeanInvokingAction extends AbstractAction {
 	}
 
 	/**
-	 * Set the bean return value-&gt;event adaption strategy. Defaults to
-	 * {@link SuccessEventFactory}, so all bean method return values will be
-	 * interpreted as "success".
+	 * Set the bean return value-&gt;event adaption strategy. Defaults to {@link SuccessEventFactory}, so all bean
+	 * method return values will be interpreted as "success".
 	 */
 	public void setResultEventFactory(ResultEventFactory resultEventFactory) {
 		this.resultEventFactory = resultEventFactory;
 	}
 
 	/**
-	 * Set the conversion service to perform type conversion of event parameters
-	 * to method arguments as neccessary.
+	 * Set the conversion service to perform type conversion of event parameters to method arguments as neccessary.
 	 * Defaults to {@link DefaultConversionService}.
 	 */
 	public void setConversionService(ConversionService conversionService) {
@@ -139,8 +134,7 @@ public abstract class AbstractBeanInvokingAction extends AbstractAction {
 	// subclassing hooks
 
 	/**
-	 * Retrieves the bean to invoke a method on. Subclasses need to implement
-	 * this method.
+	 * Retrieves the bean to invoke a method on. Subclasses need to implement this method.
 	 * @param context the flow execution request context
 	 * @return the bean on which to invoke methods
 	 * @throws Exception when the bean cannot be retreived

@@ -25,10 +25,10 @@ import org.springframework.mock.web.portlet.MockPortletResponse;
  * Unit tests for {@link PortletExternalContext}.
  */
 public class PortletExternalContextTests extends TestCase {
-	
+
 	private PortletExternalContext context = new PortletExternalContext(new MockPortletContext(),
 			new MockPortletRequest(), new MockPortletResponse());
-	
+
 	public void testApplicationMap() {
 		assertEquals(1, context.getApplicationMap().size());
 		context.getApplicationMap().put("foo", "bar");
@@ -49,7 +49,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertEquals("bar", context.getRequestMap().get("foo"));
 		assertEquals("bar", context.getRequest().getAttribute("foo"));
 	}
-	
+
 	public void testOther() {
 		assertNull(context.getRequestPathInfo());
 		assertNull(context.getDispatcherPath());

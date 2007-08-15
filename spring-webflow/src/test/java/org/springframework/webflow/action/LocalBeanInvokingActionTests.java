@@ -54,8 +54,7 @@ public class LocalBeanInvokingActionTests extends TestCase {
 		try {
 			action = new LocalBeanInvokingAction(new MethodSignature("execute"), null);
 			fail("Should've failed with iae");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}

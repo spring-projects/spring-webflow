@@ -24,8 +24,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A typed set of transitions for use internally by artifacts that can
- * apply transition execution logic.
+ * A typed set of transitions for use internally by artifacts that can apply transition execution logic.
  * 
  * @see TransitionableState#getTransitionSet()
  * @see Flow#getGlobalTransitionSet()
@@ -42,8 +41,7 @@ public class TransitionSet {
 	/**
 	 * Add a transition to this set.
 	 * @param transition the transition to add
-	 * @return true if this set's contents changed as a result of the add
-	 * operation
+	 * @return true if this set's contents changed as a result of the add operation
 	 */
 	public boolean add(Transition transition) {
 		if (contains(transition)) {
@@ -55,8 +53,7 @@ public class TransitionSet {
 	/**
 	 * Add a collection of transition instances to this set.
 	 * @param transitions the transitions to add
-	 * @return true if this set's contents changed as a result of the add
-	 * operation
+	 * @return true if this set's contents changed as a result of the add operation
 	 */
 	public boolean addAll(Transition[] transitions) {
 		return CollectionUtils.addAllNoDuplicates(this.transitions, transitions);
@@ -74,8 +71,7 @@ public class TransitionSet {
 	/**
 	 * Remove the transition instance from this set.
 	 * @param transition the transition to remove
-	 * @return true if this list's contents changed as a result of the remove
-	 * operation
+	 * @return true if this list's contents changed as a result of the remove operation
 	 */
 	public boolean remove(Transition transition) {
 		return transitions.remove(transition);
@@ -94,12 +90,11 @@ public class TransitionSet {
 	 * @return the transition set as a typed array
 	 */
 	public Transition[] toArray() {
-		return (Transition[])transitions.toArray(new Transition[transitions.size()]);
+		return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
 	}
 
 	/**
-	 * Returns a list of the supported transitional criteria used to match
-	 * transitions in this state.
+	 * Returns a list of the supported transitional criteria used to match transitions in this state.
 	 * @return the list of transitional criteria
 	 */
 	public TransitionCriteria[] getTransitionCriterias() {
@@ -107,21 +102,20 @@ public class TransitionSet {
 		int i = 0;
 		Iterator it = transitions.iterator();
 		while (it.hasNext()) {
-			criterias[i++] = ((Transition)it.next()).getMatchingCriteria();
+			criterias[i++] = ((Transition) it.next()).getMatchingCriteria();
 		}
 		return criterias;
 	}
 
 	/**
-	 * Gets a transition for given flow execution request context. The first
-	 * matching transition will be returned.
+	 * Gets a transition for given flow execution request context. The first matching transition will be returned.
 	 * @param context a flow execution context
 	 * @return the transition, or null if no transition matches
 	 */
 	public Transition getTransition(RequestContext context) {
 		Iterator it = transitions.iterator();
 		while (it.hasNext()) {
-			Transition transition = (Transition)it.next();
+			Transition transition = (Transition) it.next();
 			if (transition.matches(context)) {
 				return transition;
 			}
@@ -130,8 +124,7 @@ public class TransitionSet {
 	}
 
 	/**
-	 * Returns whether or not this list has a transition that will fire for
-	 * given flow execution request context.
+	 * Returns whether or not this list has a transition that will fire for given flow execution request context.
 	 * @param context a flow execution context
 	 */
 	public boolean hasMatchingTransition(RequestContext context) {

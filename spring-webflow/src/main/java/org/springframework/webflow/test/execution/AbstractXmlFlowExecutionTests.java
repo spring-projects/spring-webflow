@@ -23,35 +23,33 @@ import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
 
 /**
- * Base class for flow integration tests that verify an XML flow definition
- * executes as expected.
+ * Base class for flow integration tests that verify an XML flow definition executes as expected.
  * <p>
  * Example usage:
- *
+ * 
  * <pre>
  * public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
- *
- *     protected FlowDefinitionResource getFlowDefinitionResource() {
- *         return createFlowDefinitionResource("src/main/webapp/WEB-INF/flows/search-flow.xml");
- *     }
- *
- *     public void testStartFlow() {
- *         startFlow();
- *         assertCurrentStateEquals(&quot;displaySearchCriteria&quot;);
- *     }
- *
- *     public void testDisplayCriteriaSubmitSuccess() {
- *         startFlow();
- *         MockParameterMap parameters = new MockParameterMap();
- *         parameters.put(&quot;firstName&quot;, &quot;Keith&quot;);
- *         parameters.put(&quot;lastName&quot;, &quot;Donald&quot;);
- *         ViewSelection view = signalEvent(&quot;search&quot;, parameters);
- *         assertCurrentStateEquals(&quot;displaySearchResults&quot;);
- *         assertModelAttributeCollectionSize(1, &quot;results&quot;, view);
- *     }
+ * 	protected FlowDefinitionResource getFlowDefinitionResource() {
+ * 		return createFlowDefinitionResource(&quot;src/main/webapp/WEB-INF/flows/search-flow.xml&quot;);
+ * 	}
+ * 
+ * 	public void testStartFlow() {
+ * 		startFlow();
+ * 		assertCurrentStateEquals(&quot;displaySearchCriteria&quot;);
+ * 	}
+ * 
+ * 	public void testDisplayCriteriaSubmitSuccess() {
+ * 		startFlow();
+ * 		MockParameterMap parameters = new MockParameterMap();
+ * 		parameters.put(&quot;firstName&quot;, &quot;Keith&quot;);
+ * 		parameters.put(&quot;lastName&quot;, &quot;Donald&quot;);
+ * 		ViewSelection view = signalEvent(&quot;search&quot;, parameters);
+ * 		assertCurrentStateEquals(&quot;displaySearchResults&quot;);
+ * 		assertModelAttributeCollectionSize(1, &quot;results&quot;, view);
+ * 	}
  * }
  * </pre>
- *
+ * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
@@ -83,11 +81,11 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	}
 
 	/**
-	 * Template method subclasses may override to register mock implementations of
-	 * services used locally by the flow being tested.
+	 * Template method subclasses may override to register mock implementations of services used locally by the flow
+	 * being tested.
 	 * @param flow the flow to register the services for
-	 * @param beanFactory the local flow service registry; register mock services with it
-	 * using {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
+	 * @param beanFactory the local flow service registry; register mock services with it using
+	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
 	 * @since 1.0.4
 	 */
 	protected void registerLocalMockServices(Flow flow, ConfigurableBeanFactory beanFactory) {

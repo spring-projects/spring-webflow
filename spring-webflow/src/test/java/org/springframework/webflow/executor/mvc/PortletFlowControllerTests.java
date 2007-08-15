@@ -37,7 +37,7 @@ import org.springframework.webflow.executor.FlowExecutorImpl;
  * Unit tests for {@link PortletFlowController}.
  */
 public class PortletFlowControllerTests extends TestCase {
-	
+
 	private PortletFlowController controller = new PortletFlowController();
 
 	public void setUp() {
@@ -71,12 +71,11 @@ public class PortletFlowControllerTests extends TestCase {
 		actionRequest.setSession(renderRequest.getPortletSession());
 		actionRequest.setContextPath("/app");
 		MockActionResponse actionResponse = new MockActionResponse();
-		actionRequest.addParameter("_flowExecutionKey", (String)mv.getModel().get("flowExecutionKey"));
+		actionRequest.addParameter("_flowExecutionKey", (String) mv.getModel().get("flowExecutionKey"));
 		actionRequest.addParameter("_eventId", "submit");
 		try {
 			controller.handleActionRequest(actionRequest, actionResponse);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 
 		}
 	}

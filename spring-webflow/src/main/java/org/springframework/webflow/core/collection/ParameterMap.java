@@ -20,12 +20,11 @@ import org.springframework.binding.convert.ConversionException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * An interface for accessing parameters in a backing map. Parameters are
- * immutable and have string keys and string values.
+ * An interface for accessing parameters in a backing map. Parameters are immutable and have string keys and string
+ * values.
  * <p>
- * The accessor methods offered by this class taking a target type argument
- * only need to support conversions to well know types like String, Number subclasses,
- * Boolean and so on.
+ * The accessor methods offered by this class taking a target type argument only need to support conversions to well
+ * know types like String, Number subclasses, Boolean and so on.
  * 
  * @author Keith Donald
  */
@@ -51,8 +50,7 @@ public interface ParameterMap extends MapAdaptable {
 	public boolean contains(String parameterName);
 
 	/**
-	 * Get a parameter value, returning <code>null</code> if no value is
-	 * found.
+	 * Get a parameter value, returning <code>null</code> if no value is found.
 	 * @param parameterName the parameter name
 	 * @return the parameter value
 	 */
@@ -67,17 +65,16 @@ public interface ParameterMap extends MapAdaptable {
 	public String get(String parameterName, String defaultValue);
 
 	/**
-	 * Get a multi-valued parameter value, returning <code>null</code> if no
-	 * value is found. If the parameter is single valued an array with a single
-	 * element is returned.
+	 * Get a multi-valued parameter value, returning <code>null</code> if no value is found. If the parameter is
+	 * single valued an array with a single element is returned.
 	 * @param parameterName the parameter name
 	 * @return the parameter value array
 	 */
 	public String[] getArray(String parameterName);
 
 	/**
-	 * Get a multi-valued parameter value, converting each value to the target
-	 * type or returning <code>null</code> if no value is found.
+	 * Get a multi-valued parameter value, converting each value to the target type or returning <code>null</code> if
+	 * no value is found.
 	 * @param parameterName the parameter name
 	 * @param targetElementType the target type of the array's elements
 	 * @return the converterd parameter value array
@@ -86,8 +83,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Object[] getArray(String parameterName, Class targetElementType) throws ConversionException;
 
 	/**
-	 * Get a parameter value, converting it from <code>String</code> to the
-	 * target type.
+	 * Get a parameter value, converting it from <code>String</code> to the target type.
 	 * @param parameterName the name of the parameter
 	 * @param targetType the target type of the parameter value
 	 * @return the converted parameter value, or null if not found
@@ -96,8 +92,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Object get(String parameterName, Class targetType) throws ConversionException;
 
 	/**
-	 * Get a parameter value, converting it from <code>String</code> to the
-	 * target type or returning the defaultValue if not found.
+	 * Get a parameter value, converting it from <code>String</code> to the target type or returning the defaultValue
+	 * if not found.
 	 * @param parameterName name of the parameter to get
 	 * @param targetType the target type of the parameter value
 	 * @param defaultValue the default value
@@ -123,8 +119,7 @@ public interface ParameterMap extends MapAdaptable {
 	public String[] getRequiredArray(String parameterName) throws IllegalArgumentException;
 
 	/**
-	 * Get a required multi-valued parameter value, converting each value to the
-	 * target type.
+	 * Get a required multi-valued parameter value, converting each value to the target type.
 	 * @param parameterName the name of the parameter
 	 * @return the parameter value
 	 * @throws IllegalArgumentException when the parameter is not found
@@ -145,8 +140,8 @@ public interface ParameterMap extends MapAdaptable {
 			ConversionException;
 
 	/**
-	 * Returns a number parameter value in the map that is of the specified
-	 * type, returning <code>null</code> if no value was found.
+	 * Returns a number parameter value in the map that is of the specified type, returning <code>null</code> if no
+	 * value was found.
 	 * @param parameterName the parameter name
 	 * @param targetType the target number type
 	 * @return the number parameter value
@@ -155,8 +150,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Number getNumber(String parameterName, Class targetType) throws ConversionException;
 
 	/**
-	 * Returns a number parameter value in the map of the specified type,
-	 * returning the defaultValue if no value was found.
+	 * Returns a number parameter value in the map of the specified type, returning the defaultValue if no value was
+	 * found.
 	 * @param parameterName the parameter name
 	 * @param defaultValue the default
 	 * @return the number parameter value
@@ -165,8 +160,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Number getNumber(String parameterName, Class targetType, Number defaultValue) throws ConversionException;
 
 	/**
-	 * Returns a number parameter value in the map, throwing an exception if the
-	 * parameter is not present or could not be converted.
+	 * Returns a number parameter value in the map, throwing an exception if the parameter is not present or could not
+	 * be converted.
 	 * @param parameterName the parameter name
 	 * @return the number parameter value
 	 * @throws IllegalArgumentException if the parameter is not present
@@ -176,8 +171,7 @@ public interface ParameterMap extends MapAdaptable {
 			ConversionException;
 
 	/**
-	 * Returns an integer parameter value in the map, returning
-	 * <code>null</code> if no value was found.
+	 * Returns an integer parameter value in the map, returning <code>null</code> if no value was found.
 	 * @param parameterName the parameter name
 	 * @return the integer parameter value
 	 * @throws ConversionException when the value could not be converted
@@ -185,8 +179,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Integer getInteger(String parameterName) throws ConversionException;
 
 	/**
-	 * Returns an integer parameter value in the map, returning the defaultValue
-	 * if no value was found.
+	 * Returns an integer parameter value in the map, returning the defaultValue if no value was found.
 	 * @param parameterName the parameter name
 	 * @param defaultValue the default
 	 * @return the integer parameter value
@@ -195,8 +188,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Integer getInteger(String parameterName, Integer defaultValue) throws ConversionException;
 
 	/**
-	 * Returns an integer parameter value in the map, throwing an exception if
-	 * the parameter is not present or could not be converted.
+	 * Returns an integer parameter value in the map, throwing an exception if the parameter is not present or could not
+	 * be converted.
 	 * @param parameterName the parameter name
 	 * @return the integer parameter value
 	 * @throws IllegalArgumentException if the parameter is not present
@@ -205,8 +198,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException, ConversionException;
 
 	/**
-	 * Returns a long parameter value in the map, returning <code>null</code>
-	 * if no value was found.
+	 * Returns a long parameter value in the map, returning <code>null</code> if no value was found.
 	 * @param parameterName the parameter name
 	 * @return the long parameter value
 	 * @throws ConversionException when the value could not be converted
@@ -214,8 +206,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Long getLong(String parameterName) throws ConversionException;
 
 	/**
-	 * Returns a long parameter value in the map, returning the defaultValue if
-	 * no value was found.
+	 * Returns a long parameter value in the map, returning the defaultValue if no value was found.
 	 * @param parameterName the parameter name
 	 * @param defaultValue the default
 	 * @return the long parameter value
@@ -224,8 +215,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Long getLong(String parameterName, Long defaultValue) throws ConversionException;
 
 	/**
-	 * Returns a long parameter value in the map, throwing an exception if the
-	 * parameter is not present or could not be converted.
+	 * Returns a long parameter value in the map, throwing an exception if the parameter is not present or could not be
+	 * converted.
 	 * @param parameterName the parameter name
 	 * @return the long parameter value
 	 * @throws IllegalArgumentException if the parameter is not present
@@ -234,8 +225,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Long getRequiredLong(String parameterName) throws IllegalArgumentException, ConversionException;
 
 	/**
-	 * Returns a boolean parameter value in the map, returning <code>null</code>
-	 * if no value was found.
+	 * Returns a boolean parameter value in the map, returning <code>null</code> if no value was found.
 	 * @param parameterName the parameter name
 	 * @return the long parameter value
 	 * @throws ConversionException when the value could not be converted
@@ -243,8 +233,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Boolean getBoolean(String parameterName) throws ConversionException;
 
 	/**
-	 * Returns a boolean parameter value in the map, returning the defaultValue
-	 * if no value was found.
+	 * Returns a boolean parameter value in the map, returning the defaultValue if no value was found.
 	 * @param parameterName the parameter name
 	 * @param defaultValue the default
 	 * @return the boolean parameter value
@@ -253,8 +242,8 @@ public interface ParameterMap extends MapAdaptable {
 	public Boolean getBoolean(String parameterName, Boolean defaultValue) throws ConversionException;
 
 	/**
-	 * Returns a boolean parameter value in the map, throwing an exception if
-	 * the parameter is not present or could not be converted.
+	 * Returns a boolean parameter value in the map, throwing an exception if the parameter is not present or could not
+	 * be converted.
 	 * @param parameterName the parameter name
 	 * @return the boolean parameter value
 	 * @throws IllegalArgumentException if the parameter is not present
@@ -263,8 +252,7 @@ public interface ParameterMap extends MapAdaptable {
 	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException, ConversionException;
 
 	/**
-	 * Get a multi-part file parameter value, returning <code>null</code> if
-	 * no value is found.
+	 * Get a multi-part file parameter value, returning <code>null</code> if no value is found.
 	 * @param parameterName the parameter name
 	 * @return the multipart file
 	 */

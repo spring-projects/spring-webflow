@@ -27,18 +27,16 @@ import org.springframework.webflow.execution.support.ExternalRedirect;
 import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 
 /**
- * Abstract base class for objects handling
- * {@link org.springframework.webflow.executor.FlowExecutor} arguments. This
- * class combines the two argument handling responsabilities of ({@link FlowExecutorArgumentExtractor extraction}
- * and {@link FlowExecutorArgumentExposer exposing}) and makes sure they are
- * consistent, i.e. that exposed arguments can later be extracted again.
+ * Abstract base class for objects handling {@link org.springframework.webflow.executor.FlowExecutor} arguments. This
+ * class combines the two argument handling responsabilities of ({@link FlowExecutorArgumentExtractor extraction} and
+ * {@link FlowExecutorArgumentExposer exposing}) and makes sure they are consistent, i.e. that exposed arguments can
+ * later be extracted again.
  * <p>
- * All argument names are configurable. Common convenience functionality is also
- * provided, e.g. a {@link #applyDefaultFlowId(String) default flow id},
- * {@link #encodeValue(Object) URL encoding} and dealing with
- * {@link #makeRedirectUrlContextRelativeIfNecessary(String, ExternalContext) relative URLs}.
- * Subclasses are responsible for taking these settings into account when
- * implementing actual argument extraction and exposing behavior.
+ * All argument names are configurable. Common convenience functionality is also provided, e.g. a
+ * {@link #applyDefaultFlowId(String) default flow id}, {@link #encodeValue(Object) URL encoding} and dealing with
+ * {@link #makeRedirectUrlContextRelativeIfNecessary(String, ExternalContext) relative URLs}. Subclasses are
+ * responsible for taking these settings into account when implementing actual argument extraction and exposing
+ * behavior.
  * 
  * @see FlowExecutorArgumentExtractor
  * @see FlowExecutorArgumentExposer
@@ -51,45 +49,41 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	// data and behavior related to argument extraction
 
 	/**
-	 * By default clients can send the id of the flow definition to be launched
-	 * using an argument with this name ("_flowId").
+	 * By default clients can send the id of the flow definition to be launched using an argument with this name
+	 * ("_flowId").
 	 */
 	private static final String FLOW_ID_ARGUMENT_NAME = "_flowId";
 
 	/**
-	 * By default clients can send the key of a flow execution to be resumed
-	 * using an argument with this name ("_flowExecutionKey").
+	 * By default clients can send the key of a flow execution to be resumed using an argument with this name
+	 * ("_flowExecutionKey").
 	 */
 	private static final String FLOW_EXECUTION_KEY_ARGUMENT_NAME = "_flowExecutionKey";
 
 	/**
-	 * By default clients can send the event to be signaled in an argument with
-	 * this name ("_eventId").
+	 * By default clients can send the event to be signaled in an argument with this name ("_eventId").
 	 */
 	private static final String EVENT_ID_ARGUMENT_NAME = "_eventId";
 
 	/**
-	 * Identifies a flow definition to launch a new execution for, defaults to
-	 * {@link #FLOW_ID_ARGUMENT_NAME}.
+	 * Identifies a flow definition to launch a new execution for, defaults to {@link #FLOW_ID_ARGUMENT_NAME}.
 	 */
 	private String flowIdArgumentName = FLOW_ID_ARGUMENT_NAME;
 
 	/**
-	 * Input argument that identifies an existing flow execution to participate
-	 * in, defaults to {@link #FLOW_EXECUTION_KEY_ARGUMENT_NAME}.
+	 * Input argument that identifies an existing flow execution to participate in, defaults to
+	 * {@link #FLOW_EXECUTION_KEY_ARGUMENT_NAME}.
 	 */
 	private String flowExecutionKeyArgumentName = FLOW_EXECUTION_KEY_ARGUMENT_NAME;
 
 	/**
-	 * Identifies an event that occured in an existing flow execution, defaults
-	 * to {@link #EVENT_ID_ARGUMENT_NAME}.
+	 * Identifies an event that occured in an existing flow execution, defaults to {@link #EVENT_ID_ARGUMENT_NAME}.
 	 */
 	private String eventIdArgumentName = EVENT_ID_ARGUMENT_NAME;
 
 	/**
-	 * The flow definition id to use if no flowId argument value can be
-	 * extracted during the {@link #extractFlowId(ExternalContext)} operation.
-	 * Default value is <code>null</code>.
+	 * The flow definition id to use if no flowId argument value can be extracted during the
+	 * {@link #extractFlowId(ExternalContext)} operation. Default value is <code>null</code>.
 	 */
 	private String defaultFlowId;
 
@@ -108,41 +102,36 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	}
 
 	/**
-	 * Returns the flow execution key argument name, used to request that an
-	 * executing conversation resumes.
+	 * Returns the flow execution key argument name, used to request that an executing conversation resumes.
 	 */
 	public String getFlowExecutionKeyArgumentName() {
 		return flowExecutionKeyArgumentName;
 	}
 
 	/**
-	 * Sets the flow execution key argument name, used to request that an
-	 * executing conversation resumes.
+	 * Sets the flow execution key argument name, used to request that an executing conversation resumes.
 	 */
 	public void setFlowExecutionKeyArgumentName(String flowExecutionKeyArgumentName) {
 		this.flowExecutionKeyArgumentName = flowExecutionKeyArgumentName;
 	}
 
 	/**
-	 * Returns the event id argument name, used to signal what user action
-	 * happened within a paused flow execution.
+	 * Returns the event id argument name, used to signal what user action happened within a paused flow execution.
 	 */
 	public String getEventIdArgumentName() {
 		return eventIdArgumentName;
 	}
 
 	/**
-	 * Sets the event id argument name, used to signal what user action happened
-	 * within a paused flow execution.
+	 * Sets the event id argument name, used to signal what user action happened within a paused flow execution.
 	 */
 	public void setEventIdArgumentName(String eventIdArgumentName) {
 		this.eventIdArgumentName = eventIdArgumentName;
 	}
 
 	/**
-	 * Returns the <i>default</i> flowId argument value. If no flow id argument
-	 * is provided, the default acts as a fallback. Defaults to
-	 * <code>null</code>.
+	 * Returns the <i>default</i> flowId argument value. If no flow id argument is provided, the default acts as a
+	 * fallback. Defaults to <code>null</code>.
 	 */
 	public String getDefaultFlowId() {
 		return defaultFlowId;
@@ -151,8 +140,8 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	/**
 	 * Sets the default flowId argument value.
 	 * <p>
-	 * This value will be used if no flowId argument value can be extracted from
-	 * the request by the {@link #extractFlowId(ExternalContext)} operation.
+	 * This value will be used if no flowId argument value can be extracted from the request by the
+	 * {@link #extractFlowId(ExternalContext)} operation.
 	 */
 	public void setDefaultFlowId(String defaultFlowId) {
 		this.defaultFlowId = defaultFlowId;
@@ -161,14 +150,14 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	// data and behavior for response issuance
 
 	/**
-	 * The string-encoded id of the flow execution will be exposed to the view
-	 * in a model attribute with this name ("flowExecutionKey").
+	 * The string-encoded id of the flow execution will be exposed to the view in a model attribute with this name
+	 * ("flowExecutionKey").
 	 */
 	private static final String FLOW_EXECUTION_KEY_ATTRIBUTE = "flowExecutionKey";
 
 	/**
-	 * The flow execution context itself will be exposed to the view in a model
-	 * attribute with this name ("flowExecutionContext").
+	 * The flow execution context itself will be exposed to the view in a model attribute with this name
+	 * ("flowExecutionContext").
 	 */
 	private static final String FLOW_EXECUTION_CONTEXT_ATTRIBUTE = "flowExecutionContext";
 
@@ -178,42 +167,40 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	private static final String DEFAULT_URL_ENCODING_SCHEME = "UTF-8";
 
 	/**
-	 * Model attribute that identifies the flow execution participated in,
-	 * defaults to {@link #FLOW_EXECUTION_KEY_ATTRIBUTE}.
+	 * Model attribute that identifies the flow execution participated in, defaults to
+	 * {@link #FLOW_EXECUTION_KEY_ATTRIBUTE}.
 	 */
 	private String flowExecutionKeyAttributeName = FLOW_EXECUTION_KEY_ATTRIBUTE;
 
 	/**
-	 * Model attribute that provides state about the flow execution participated
-	 * in, defaults to {@link #FLOW_EXECUTION_CONTEXT_ATTRIBUTE}.
+	 * Model attribute that provides state about the flow execution participated in, defaults to
+	 * {@link #FLOW_EXECUTION_CONTEXT_ATTRIBUTE}.
 	 */
 	private String flowExecutionContextAttributeName = FLOW_EXECUTION_CONTEXT_ATTRIBUTE;
 
 	/**
-	 * The url encoding scheme to be used to encode URLs built by this argument
-	 * handler. Defaults to {@link #DEFAULT_URL_ENCODING_SCHEME}.
+	 * The url encoding scheme to be used to encode URLs built by this argument handler. Defaults to
+	 * {@link #DEFAULT_URL_ENCODING_SCHEME}.
 	 */
 	private String urlEncodingScheme = DEFAULT_URL_ENCODING_SCHEME;
 
 	/**
-	 * A flag indicating whether to interpret a redirect URL that starts with a
-	 * slash ("/") as relative to the current ServletContext, i.e. as relative
-	 * to the web application root, as opposed to absolute. Default is true.
+	 * A flag indicating whether to interpret a redirect URL that starts with a slash ("/") as relative to the current
+	 * ServletContext, i.e. as relative to the web application root, as opposed to absolute. Default is true.
 	 */
 	private boolean redirectContextRelative = true;
 
 	/**
-	 * Returns the flow execution key attribute name, used as a model attribute
-	 * for identifying the executing flow being participated in.
+	 * Returns the flow execution key attribute name, used as a model attribute for identifying the executing flow being
+	 * participated in.
 	 */
 	public String getFlowExecutionKeyAttributeName() {
 		return flowExecutionKeyAttributeName;
 	}
 
 	/**
-	 * Sets the flow execution key attribute name, used as a model attribute for
-	 * identifying the current state of the executing flow being participated in
-	 * (typically used by view templates during rendering).
+	 * Sets the flow execution key attribute name, used as a model attribute for identifying the current state of the
+	 * executing flow being participated in (typically used by view templates during rendering).
 	 */
 	public void setFlowExecutionKeyAttributeName(String flowExecutionKeyAttributeName) {
 		this.flowExecutionKeyAttributeName = flowExecutionKeyAttributeName;
@@ -234,38 +221,33 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	}
 
 	/**
-	 * Returns the url encoding scheme to be used to encode URLs built by this
-	 * argument handler. Defaults to "UTF-8".
+	 * Returns the url encoding scheme to be used to encode URLs built by this argument handler. Defaults to "UTF-8".
 	 */
 	public String getUrlEncodingScheme() {
 		return urlEncodingScheme;
 	}
 
 	/**
-	 * Set the url encoding scheme to be used to encode URLs built by this
-	 * argument handler. Defaults to "UTF-8".
+	 * Set the url encoding scheme to be used to encode URLs built by this argument handler. Defaults to "UTF-8".
 	 */
 	public void setUrlEncodingScheme(String urlEncodingScheme) {
 		this.urlEncodingScheme = urlEncodingScheme;
 	}
 
 	/**
-	 * Set whether to interpret a given redirect URL that starts with a slash
-	 * ("/") as relative to the current ServletContext, i.e. as relative to the
-	 * web application root.
+	 * Set whether to interpret a given redirect URL that starts with a slash ("/") as relative to the current
+	 * ServletContext, i.e. as relative to the web application root.
 	 * <p>
-	 * Default is "true": A redirect URL that starts with a slash will be
-	 * interpreted as relative to the web application root, i.e. the context
-	 * path will be prepended to the URL.
+	 * Default is "true": A redirect URL that starts with a slash will be interpreted as relative to the web application
+	 * root, i.e. the context path will be prepended to the URL.
 	 */
 	public void setRedirectContextRelative(boolean redirectContextRelative) {
 		this.redirectContextRelative = redirectContextRelative;
 	}
 
 	/**
-	 * Return whether to interpret a given redirect URL that starts with a slash
-	 * ("/") as relative to the current ServletContext, i.e. as relative to the
-	 * web application root.
+	 * Return whether to interpret a given redirect URL that starts with a slash ("/") as relative to the current
+	 * ServletContext, i.e. as relative to the web application root.
 	 */
 	public boolean isRedirectContextRelative() {
 		return redirectContextRelative;
@@ -303,10 +285,8 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 
 	/**
 	 * Apply the configured default flow id to given extracted flow id.
-	 * @param extractedFlowId the extracted flow id, could be null if non was
-	 * available in the external context
-	 * @return the extracted flow id if not empty, the default flow id otherwise
-	 * (which could still be null if not set)
+	 * @param extractedFlowId the extracted flow id, could be null if non was available in the external context
+	 * @return the extracted flow id if not empty, the default flow id otherwise (which could still be null if not set)
 	 * @see #getDefaultFlowId()
 	 */
 	protected String applyDefaultFlowId(String extractedFlowId) {
@@ -324,9 +304,8 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	}
 
 	/**
-	 * Make given redirect URL context relative if necessary. If the URL starts
-	 * with a slash ("/") it will be made relative to the current
-	 * ServletContext, i.e. relative to the web application root.
+	 * Make given redirect URL context relative if necessary. If the URL starts with a slash ("/") it will be made
+	 * relative to the current ServletContext, i.e. relative to the web application root.
 	 * @param url the original URL
 	 * @param context the external context
 	 * @return the processed URL
@@ -346,9 +325,8 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 	/**
 	 * URL-encode the given input String with the configured encoding scheme.
 	 * <p>
-	 * Default implementation uses <code>URLEncoder.encode(input, enc)</code>
-	 * on JDK 1.4+, falling back to <code>URLEncoder.encode(input)</code>
-	 * (which uses the platform default encoding) on JDK 1.3.
+	 * Default implementation uses <code>URLEncoder.encode(input, enc)</code> on JDK 1.4+, falling back to
+	 * <code>URLEncoder.encode(input)</code> (which uses the platform default encoding) on JDK 1.3.
 	 * @param input the unencoded input String
 	 * @return the encoded output String
 	 */
@@ -358,8 +336,7 @@ public abstract class FlowExecutorArgumentHandler implements FlowExecutorArgumen
 		}
 		try {
 			return URLEncoder.encode(input, getUrlEncodingScheme());
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			throw new IllegalArgumentException("Cannot encode URL " + input);
 		}
 	}

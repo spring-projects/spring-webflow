@@ -24,8 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * EntityResolver implementation for the Spring Web Flow 1.0 XML Schema. This
- * will load the XSD from the classpath. 
+ * EntityResolver implementation for the Spring Web Flow 1.0 XML Schema. This will load the XSD from the classpath.
  * <p>
  * The xmlns of the XSD expected to be resolved:
  * 
@@ -53,8 +52,7 @@ public class WebFlowEntityResolver implements EntityResolver {
 				source.setPublicId(publicId);
 				source.setSystemId(systemId);
 				return source;
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				// fall through below
 			}
 		}

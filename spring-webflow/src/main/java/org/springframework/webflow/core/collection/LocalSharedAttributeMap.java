@@ -18,11 +18,10 @@ package org.springframework.webflow.core.collection;
 import org.springframework.binding.collection.SharedMap;
 
 /**
- * An attribute map that exposes a mutex that application code can synchronize
- * on. This class wraps another shared map in an attribute map.
+ * An attribute map that exposes a mutex that application code can synchronize on. This class wraps another shared map
+ * in an attribute map.
  * <p>
- * The mutex can be used to serialize concurrent access to the shared map's
- * contents by multiple threads.
+ * The mutex can be used to serialize concurrent access to the shared map's contents by multiple threads.
  * 
  * @author Keith Donald
  */
@@ -39,11 +38,11 @@ public class LocalSharedAttributeMap extends LocalAttributeMap implements Shared
 	public Object getMutex() {
 		return getSharedMap().getMutex();
 	}
-	
+
 	/**
 	 * Returns the wrapped shared map.
 	 */
 	protected SharedMap getSharedMap() {
-		return (SharedMap)getMapInternal();
+		return (SharedMap) getMapInternal();
 	}
 }

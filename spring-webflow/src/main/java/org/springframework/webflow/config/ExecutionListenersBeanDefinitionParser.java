@@ -29,21 +29,20 @@ import org.springframework.webflow.execution.factory.ConditionalFlowExecutionLis
 import org.w3c.dom.Element;
 
 /**
- * {@link BeanDefinitionParser} for the <code>&lt;execution-listeners&gt;</code>
- * tag.
+ * {@link BeanDefinitionParser} for the <code>&lt;execution-listeners&gt;</code> tag.
  * 
  * @author Ben Hale
  */
 class ExecutionListenersBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-	
+
 	// elements and attributes
-	
-	private static final String LISTENER_ELEMENT= "listener";
+
+	private static final String LISTENER_ELEMENT = "listener";
 
 	// properties
 
 	private static final String LISTENERS_PROPERTY = "listeners";
-	
+
 	private static final String CRITERIA_ATTRIBUTE = "criteria";
 
 	private static final String REF_ATTRIBUTE = "ref";
@@ -60,13 +59,13 @@ class ExecutionListenersBeanDefinitionParser extends AbstractSingleBeanDefinitio
 	/**
 	 * Creates a map of listeners with their associated criteria.
 	 * @param listeners the list of listener elements from the bean definition
-	 * @return a map containing keys that are references to given listeners
-	 * and values of string that represent the criteria
+	 * @return a map containing keys that are references to given listeners and values of string that represent the
+	 * criteria
 	 */
 	private Map getListenersWithCriteria(List listeners) {
 		Map listenersWithCriteria = new ManagedMap(listeners.size());
 		for (Iterator i = listeners.iterator(); i.hasNext();) {
-			Element listenerElement = (Element)i.next();
+			Element listenerElement = (Element) i.next();
 			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute(REF_ATTRIBUTE));
 			String criteria = listenerElement.getAttribute(CRITERIA_ATTRIBUTE);
 			listenersWithCriteria.put(ref, criteria);

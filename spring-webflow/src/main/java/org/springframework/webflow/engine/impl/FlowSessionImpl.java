@@ -32,11 +32,9 @@ import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.FlowSessionStatus;
 
 /**
- * Implementation of the FlowSession interfaced used internally by the
- * <code>FlowExecutionImpl</code>. This class is closely coupled with
- * <code>FlowExecutionImpl</code> and <code>RequestControlContextImpl</code>.
- * The three classes work together to form a complete flow execution
- * implementation.
+ * Implementation of the FlowSession interfaced used internally by the <code>FlowExecutionImpl</code>. This class is
+ * closely coupled with <code>FlowExecutionImpl</code> and <code>RequestControlContextImpl</code>. The three
+ * classes work together to form a complete flow execution implementation.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -47,34 +45,29 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	/**
 	 * The flow definition (a singleton).
 	 * <p>
-	 * Transient to support restoration by the
-	 * {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private transient Flow flow;
 
 	/**
-	 * Set so the transient {@link #flow} field can be restored by the
-	 * {@link FlowExecutionImplStateRestorer}.
+	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private String flowId;
 
 	/**
 	 * The current state of this flow session.
 	 * <p>
-	 * Transient to support restoration by the
-	 * {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private transient State state;
 
 	/**
-	 * Set so the transient {@link #state} field can be restored by the
-	 * {@link FlowExecutionImplStateRestorer}.
+	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private String stateId;
 
 	/**
-	 * The session status; may be CREATED, STARTING, ACTIVE, PAUSED, SUSPENDED,
-	 * or ENDED.
+	 * The session status; may be CREATED, STARTING, ACTIVE, PAUSED, SUSPENDED, or ENDED.
 	 */
 	private FlowSessionStatus status = FlowSessionStatus.CREATED;
 
@@ -89,14 +82,12 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	private MutableAttributeMap flashMap = new LocalAttributeMap();
 
 	/**
-	 * The parent session of this session (may be <code>null</code> if this is
-	 * a root session.)
+	 * The parent session of this session (may be <code>null</code> if this is a root session.)
 	 */
 	private FlowSessionImpl parent;
 
 	/**
-	 * Default constructor required for externalizable serialization. Should NOT
-	 * be called programmatically.
+	 * Default constructor required for externalizable serialization. Should NOT be called programmatically.
 	 */
 	public FlowSessionImpl() {
 	}
@@ -144,12 +135,12 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	// custom serialization
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		flowId = (String)in.readObject();
-		stateId = (String)in.readObject();
-		status = (FlowSessionStatus)in.readObject();
-		scope = (MutableAttributeMap)in.readObject();
-		flashMap = (MutableAttributeMap)in.readObject();
-		parent = (FlowSessionImpl)in.readObject();
+		flowId = (String) in.readObject();
+		stateId = (String) in.readObject();
+		status = (FlowSessionStatus) in.readObject();
+		scope = (MutableAttributeMap) in.readObject();
+		flashMap = (MutableAttributeMap) in.readObject();
+		parent = (FlowSessionImpl) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
@@ -211,7 +202,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	String getStateId() {
 		return stateId;
 	}
-	
+
 	public String toString() {
 		return new ToStringCreator(this).append("flow", flowId).append("state", stateId).append("scope", scope).append(
 				"flashMap", flashMap).append("status", status).toString();

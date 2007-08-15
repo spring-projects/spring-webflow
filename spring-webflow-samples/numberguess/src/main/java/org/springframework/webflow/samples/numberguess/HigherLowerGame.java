@@ -20,8 +20,8 @@ import java.util.Calendar;
 import java.util.Random;
 
 /**
- * Action that encapsulates logic for the number guess sample flow. Note that
- * this is a stateful action: it holds modifiable state in instance members!
+ * Action that encapsulates logic for the number guess sample flow. Note that this is a stateful action: it holds
+ * modifiable state in instance members!
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
@@ -63,16 +63,13 @@ public class HigherLowerGame implements Serializable {
 	public GuessResult makeGuess(int guess) {
 		if (guess < 0 || guess > 100) {
 			setResult(GuessResult.INVALID);
-		}
-		else {
+		} else {
 			guesses++;
 			if (answer < guess) {
 				setResult(GuessResult.TOO_HIGH);
-			}
-			else if (answer > guess) {
+			} else if (answer > guess) {
 				setResult(GuessResult.TOO_LOW);
-			}
-			else {
+			} else {
 				setResult(GuessResult.CORRECT);
 			}
 		}

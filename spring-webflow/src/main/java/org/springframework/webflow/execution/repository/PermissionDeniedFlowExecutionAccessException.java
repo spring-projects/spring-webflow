@@ -25,8 +25,7 @@ public class PermissionDeniedFlowExecutionAccessException extends FlowExecutionA
 
 	/**
 	 * Creates a new flow execution restoration exception.
-	 * @param flowExecutionKey the key of the execution that could not be
-	 * accessed
+	 * @param flowExecutionKey the key of the execution that could not be accessed
 	 * @param cause the root cause of the access failure
 	 */
 	public PermissionDeniedFlowExecutionAccessException(FlowExecutionKey flowExecutionKey, Exception cause) {

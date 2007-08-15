@@ -33,8 +33,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Flow service locator for the services needed by the testFlow (defined in
- * testFlow.xml)
+ * Flow service locator for the services needed by the testFlow (defined in testFlow.xml)
  * 
  * @author Erwin Vervaet
  */

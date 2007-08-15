@@ -27,9 +27,8 @@ import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * An ordered chain of <code>TransitionCriteria</code>. Iterates over each element
- * in the chain, continues until one returns false or the list is exhausted. So
- * in effect it will do a logical AND between the contained criteria.
+ * An ordered chain of <code>TransitionCriteria</code>. Iterates over each element in the chain, continues until one
+ * returns false or the list is exhausted. So in effect it will do a logical AND between the contained criteria.
  * 
  * @author Keith Donald
  */
@@ -41,14 +40,14 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	private List criteriaChain = new LinkedList();
 
 	/**
-	 * Creates an initially empty transition criteria chain. 
+	 * Creates an initially empty transition criteria chain.
 	 * @see #add(TransitionCriteria)
 	 */
 	public TransitionCriteriaChain() {
 	}
 
 	/**
-	 * Creates a transition criteria chain with the specified criteria. 
+	 * Creates a transition criteria chain with the specified criteria.
 	 * @param criteria the criteria
 	 */
 	public TransitionCriteriaChain(TransitionCriteria[] criteria) {
@@ -58,8 +57,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	/**
 	 * Add given criteria object to the end of the chain.
 	 * @param criteria the criteria
-	 * @return this object, so multiple criteria can be added in a single
-	 * statement
+	 * @return this object, so multiple criteria can be added in a single statement
 	 */
 	public TransitionCriteriaChain add(TransitionCriteria criteria) {
 		this.criteriaChain.add(criteria);
@@ -69,7 +67,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	public boolean test(RequestContext context) {
 		Iterator it = criteriaChain.iterator();
 		while (it.hasNext()) {
-			TransitionCriteria criteria = (TransitionCriteria)it.next();
+			TransitionCriteria criteria = (TransitionCriteria) it.next();
 			if (!criteria.test(context)) {
 				return false;
 			}
@@ -82,7 +80,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	}
 
 	// static helpers
-	
+
 	/**
 	 * Create a transition criteria chain chaining given list of actions.
 	 * @param actions the actions (and their execution properties) to chain together
@@ -96,5 +94,5 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 			chain.add(new ActionTransitionCriteria(actions[i]));
 		}
 		return chain;
-	}	
+	}
 }

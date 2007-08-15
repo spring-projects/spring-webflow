@@ -109,7 +109,7 @@ public class FlowExecutionHolder implements Serializable {
 	public void setFlowExecutionLock(FlowExecutionLock lock) {
 		this.flowExecutionLock = lock;
 	}
-	
+
 	/**
 	 * Returns the view selected from the current flow execution request.
 	 */
@@ -136,7 +136,7 @@ public class FlowExecutionHolder implements Serializable {
 		unlockFlowExecutionIfNecessary();
 		this.flowExecution = flowExecution;
 	}
-	
+
 	/**
 	 * Unlock the held flow execution if necessary.
 	 */

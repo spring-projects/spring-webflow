@@ -53,17 +53,17 @@ public class ConfigurableFlowAttributeMapperTests extends TestCase {
 		subflowSession = new MockFlowSession();
 		subflowSession.setParent(parentSession);
 	}
-	
+
 	public void testAttributeMapping() {
 		mapper.addInputAttribute("x");
 		mapper.addOutputAttribute("y");
-		
+
 		context.setActiveSession(parentSession);
 		context.getFlowScope().put("x", "xValue");
 		MutableAttributeMap input = mapper.createFlowInput(context);
 		assertEquals(1, input.size());
 		assertEquals("xValue", input.get("x"));
-		
+
 		parentSession.getScope().clear();
 
 		MutableAttributeMap subflowOutput = new LocalAttributeMap();
@@ -109,7 +109,7 @@ public class ConfigurableFlowAttributeMapperTests extends TestCase {
 		MutableAttributeMap input = mapper.createFlowInput(context);
 		assertEquals(2, input.size());
 		assertEquals("value", input.get("attr"));
-		assertEquals("otherValue", ((TestBean)input.get("otherBean")).getProp());
+		assertEquals("otherValue", ((TestBean) input.get("otherBean")).getProp());
 
 		parentSession.getScope().clear();
 		bean.setProp("value");
@@ -120,7 +120,7 @@ public class ConfigurableFlowAttributeMapperTests extends TestCase {
 		mapper.mapFlowOutput(subflowOutput, context);
 		assertEquals(2, parentSession.getScope().size());
 		assertEquals("value", parentSession.getScope().get("attr"));
-		assertEquals("otherValue", ((TestBean)parentSession.getScope().get("otherBean")).getProp());
+		assertEquals("otherValue", ((TestBean) parentSession.getScope().get("otherBean")).getProp());
 	}
 
 	public void testExpressionMapping() {

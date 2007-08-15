@@ -31,23 +31,23 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "T_SALES")
-@Proxy(lazy=true)
+@Proxy(lazy = true)
 public class Sale implements Serializable {
 
-    @Id
-    @TableGenerator( name="ids" )
-    @GeneratedValue(strategy= GenerationType.TABLE)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@TableGenerator(name = "ids")
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int aId) {
-        id = aId;
-    }
+	public void setId(int aId) {
+		id = aId;
+	}
 
-    private int id;
+	private int id;
 
-    private double price;
+	private double price;
 
 	private int itemCount;
 
@@ -113,22 +113,21 @@ public class Sale implements Serializable {
 	 * Returns the base amount of the sale, without discount or delivery costs.
 	 */
 	@Transient
-    public double getAmount() {
+	public double getAmount() {
 		return price * itemCount;
 	}
 
 	/**
 	 * Returns the discount rate to apply.
 	 */
-    @Transient
-    public double getDiscountRate() {
+	@Transient
+	public double getDiscountRate() {
 		double discount = 0.02;
 		if ("A".equals(category)) {
 			if (itemCount >= 100) {
 				discount = 0.1;
 			}
-		}
-		else if ("B".equals(category)) {
+		} else if ("B".equals(category)) {
 			if (itemCount >= 200) {
 				discount = 0.2;
 			}
@@ -139,21 +138,20 @@ public class Sale implements Serializable {
 	/**
 	 * Returns the savings because of the discount.
 	 */
-    @Transient
-    public double getSavings() {
+	@Transient
+	public double getSavings() {
 		return getDiscountRate() * getAmount();
 	}
 
 	/**
 	 * Returns the delivery cost.
 	 */
-    @Transient
-    public double getDeliveryCost() {
+	@Transient
+	public double getDeliveryCost() {
 		double delCost = 0.0;
 		if ("S".equals(shippingType)) {
 			delCost = 10.0;
-		}
-		else if ("E".equals(shippingType)) {
+		} else if ("E".equals(shippingType)) {
 			delCost = 20.0;
 		}
 		return delCost;
@@ -163,7 +161,7 @@ public class Sale implements Serializable {
 	 * Returns the total cost of the sale, including discount and delivery cost.
 	 */
 	@Transient
-    public double getTotalCost() {
+	public double getTotalCost() {
 		return getAmount() + getDeliveryCost() - getSavings();
 	}
 

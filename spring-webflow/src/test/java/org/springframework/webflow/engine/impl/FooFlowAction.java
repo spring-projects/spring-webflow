@@ -17,8 +17,8 @@ package org.springframework.webflow.engine.impl;
 
 public class FooFlowAction {
 
-    public String action1() {
-        throw new FooException();
-    }
+	public String action1() {
+		throw new FooException();
+	}
 
 }

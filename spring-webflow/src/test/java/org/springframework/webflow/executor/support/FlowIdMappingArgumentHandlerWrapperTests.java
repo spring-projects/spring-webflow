@@ -30,9 +30,9 @@ import org.springframework.webflow.test.MockExternalContext;
  * @author Erwin Vervaet
  */
 public class FlowIdMappingArgumentHandlerWrapperTests extends TestCase {
-	
+
 	private FlowIdMappingArgumentHandlerWrapper argumentHandler;
-	
+
 	protected void setUp() throws Exception {
 		this.argumentHandler = new FlowIdMappingArgumentHandlerWrapper();
 		this.argumentHandler.setArgumentHandler(new RequestPathFlowExecutorArgumentHandler());
@@ -42,10 +42,10 @@ public class FlowIdMappingArgumentHandlerWrapperTests extends TestCase {
 		argumentHandler.setMappings(mappings);
 		argumentHandler.addMapping("C", "X");
 	}
-	
+
 	public void testMappingNoFallback() {
 		argumentHandler.setFallback(false);
-		
+
 		assertTrue(argumentHandler.isFlowIdPresent(context("A")));
 		assertEquals("X", argumentHandler.extractFlowId(context("A")));
 		assertTrue(argumentHandler.isFlowIdPresent(context("B")));
@@ -57,22 +57,20 @@ public class FlowIdMappingArgumentHandlerWrapperTests extends TestCase {
 		try {
 			argumentHandler.extractFlowId(context("X"));
 			fail();
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 			// expected
 		}
 		try {
 			argumentHandler.extractFlowId(context(""));
 			fail();
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 			// expected
 		}
 	}
-	
+
 	public void testMappingFallback() {
 		argumentHandler.setFallback(true);
-		
+
 		assertTrue(argumentHandler.isFlowIdPresent(context("A")));
 		assertEquals("X", argumentHandler.extractFlowId(context("A")));
 		assertTrue(argumentHandler.isFlowIdPresent(context("B")));
@@ -86,52 +84,50 @@ public class FlowIdMappingArgumentHandlerWrapperTests extends TestCase {
 		try {
 			argumentHandler.extractFlowId(context(""));
 			fail();
-		}
-		catch (FlowExecutorArgumentExtractionException e) {
-			//expected
-		}
-	}
-	
-	public void testReverseMappingNoFallBack() {
-		argumentHandler.setFallback(false);
-		
-		assertEquals("/app/flows/C", argumentHandler.createFlowDefinitionUrl(redirect("X"), context()));
-		assertEquals("/app/flows/B", argumentHandler.createFlowDefinitionUrl(redirect("Y"), context()));
-		
-		try {
-			argumentHandler.createFlowDefinitionUrl(redirect("Z"), context());
-			fail();
-		}
-		catch (IllegalArgumentException e) {
+		} catch (FlowExecutorArgumentExtractionException e) {
 			// expected
 		}
 	}
-	
+
+	public void testReverseMappingNoFallBack() {
+		argumentHandler.setFallback(false);
+
+		assertEquals("/app/flows/C", argumentHandler.createFlowDefinitionUrl(redirect("X"), context()));
+		assertEquals("/app/flows/B", argumentHandler.createFlowDefinitionUrl(redirect("Y"), context()));
+
+		try {
+			argumentHandler.createFlowDefinitionUrl(redirect("Z"), context());
+			fail();
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+
 	public void testReverseMappingFallback() {
 		argumentHandler.setFallback(true);
-		
+
 		assertEquals("/app/flows/C", argumentHandler.createFlowDefinitionUrl(redirect("X"), context()));
 		assertEquals("/app/flows/B", argumentHandler.createFlowDefinitionUrl(redirect("Y"), context()));
 		assertEquals("/app/flows/Z", argumentHandler.createFlowDefinitionUrl(redirect("Z"), context()));
 	}
-	
+
 	public void testWithRequestParameters() {
 		argumentHandler.setArgumentHandler(new RequestParameterFlowExecutorArgumentHandler());
 
 		// mapping
 		assertTrue(argumentHandler.isFlowIdPresent(contextWithParam("A")));
 		assertEquals("X", argumentHandler.extractFlowId(contextWithParam("A")));
-		
+
 		// reverse mapping
 		assertEquals("/app/flows?_flowId=C", argumentHandler.createFlowDefinitionUrl(redirect("X"), context()));
 	}
 
 	// internal helpers
-	
+
 	private MockExternalContext context() {
 		return context("");
 	}
-	
+
 	private MockExternalContext context(String flowId) {
 		MockExternalContext context = new MockExternalContext();
 		context.setContextPath("/app");
@@ -141,13 +137,13 @@ public class FlowIdMappingArgumentHandlerWrapperTests extends TestCase {
 		}
 		return context;
 	}
-	
+
 	private MockExternalContext contextWithParam(String flowId) {
 		MockExternalContext context = context();
 		context.putRequestParameter("_flowId", flowId);
 		return context;
 	}
-	
+
 	private FlowDefinitionRedirect redirect(String flowId) {
 		return new FlowDefinitionRedirect(flowId, Collections.EMPTY_MAP);
 	}

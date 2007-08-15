@@ -23,8 +23,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * Specifies how an action result value should be exposed to an executing flow.
- * The return value is exposed as an attribute in a configured scope.
+ * Specifies how an action result value should be exposed to an executing flow. The return value is exposed as an
+ * attribute in a configured scope.
  * 
  * @see EvaluateAction
  * @see AbstractBeanInvokingAction
@@ -70,8 +70,7 @@ public class ActionResultExposer implements Serializable {
 	}
 
 	/**
-	 * Expose given bean method return value in given flow execution request
-	 * context.
+	 * Expose given bean method return value in given flow execution request context.
 	 * @param result the return value
 	 * @param context the request context
 	 */

@@ -44,13 +44,11 @@ import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
- * Base class for flow builders that programmatically build flows in Java
- * configuration code.
+ * Base class for flow builders that programmatically build flows in Java configuration code.
  * <p>
- * To give you an example of what a simple Java-based web flow builder
- * definition might look like, the following example defines the 'dynamic' web
- * flow roughly equivalent to the work flow statically implemented in Spring
- * MVC's simple form controller:
+ * To give you an example of what a simple Java-based web flow builder definition might look like, the following example
+ * defines the 'dynamic' web flow roughly equivalent to the work flow statically implemented in Spring MVC's simple form
+ * controller:
  * 
  * <pre class="code">
  * public class CustomerDetailFlowBuilder extends AbstractFlowBuilder {
@@ -71,72 +69,56 @@ import org.springframework.webflow.execution.support.EventFactorySupport;
  * }
  * </pre>
  * 
- * What this Java-based FlowBuilder implementation does is add four states to a
- * flow. These include a "get" <code>ActionState</code> (the start state), a
- * <code>ViewState</code> state, a "bind and validate"
+ * What this Java-based FlowBuilder implementation does is add four states to a flow. These include a "get"
+ * <code>ActionState</code> (the start state), a <code>ViewState</code> state, a "bind and validate"
  * <code>ActionState</code>, and an end marker state (<code>EndState</code>).
  * <p>
- * The first state, an action state, will be assigned the indentifier
- * <code>getDetails</code>. This action state will automatically be
- * configured with the following defaults:
+ * The first state, an action state, will be assigned the indentifier <code>getDetails</code>. This action state will
+ * automatically be configured with the following defaults:
  * <ol>
- * <li>The action instance with id <code>customerAction</code>. This is the
- * <code>Action</code> implementation that will execute when this state is
- * entered. In this example, that <code>Action</code> will go out to the DB,
- * load the Customer, and put it in the Flow's request context.
- * <li>A <code>success</code> transition to a default view state, called
- * <code>displayDetails</code>. This means when the <code>Action</code>
- * returns a <code>success</code> result event (aka outcome), the
+ * <li>The action instance with id <code>customerAction</code>. This is the <code>Action</code> implementation
+ * that will execute when this state is entered. In this example, that <code>Action</code> will go out to the DB, load
+ * the Customer, and put it in the Flow's request context.
+ * <li>A <code>success</code> transition to a default view state, called <code>displayDetails</code>. This means
+ * when the <code>Action</code> returns a <code>success</code> result event (aka outcome), the
  * <code>displayDetails</code> state will be entered.
- * <li>It will act as the start state for this flow (by default, the first
- * state added to a flow during the build process is treated as the start
- * state).
+ * <li>It will act as the start state for this flow (by default, the first state added to a flow during the build
+ * process is treated as the start state).
  * </ol>
  * <p>
- * The second state, a view state, will be identified as
- * <code>displayDetails</code>. This view state will automatically be
- * configured with the following defaults:
+ * The second state, a view state, will be identified as <code>displayDetails</code>. This view state will
+ * automatically be configured with the following defaults:
  * <ol>
- * <li>A view name called <code>customerDetails</code>. This is the logical
- * name of a view resource. This logical view name gets mapped to a physical
- * view resource (jsp, etc.) by the calling front controller (via a Spring view
+ * <li>A view name called <code>customerDetails</code>. This is the logical name of a view resource. This logical
+ * view name gets mapped to a physical view resource (jsp, etc.) by the calling front controller (via a Spring view
  * resolver, or a Struts action forward, for example).
- * <li>A <code>submit</code> transition to a bind and validate action state,
- * indentified by the default id <code>bindAndValidate</code>. This means
- * when a <code>submit</code> event is signaled by the view (for example, on a
- * submit button click), the bindAndValidate action state will be entered and
- * the <code>bindAndValidate</code> method of the
- * <code>customerAction</code> <code>Action</code> implementation will be
- * executed.
+ * <li>A <code>submit</code> transition to a bind and validate action state, indentified by the default id
+ * <code>bindAndValidate</code>. This means when a <code>submit</code> event is signaled by the view (for example,
+ * on a submit button click), the bindAndValidate action state will be entered and the <code>bindAndValidate</code>
+ * method of the <code>customerAction</code> <code>Action</code> implementation will be executed.
  * </ol>
  * <p>
- * The third state, an action state, will be indentified as
- * <code>bindAndValidate</code>. This action state will automatically be
- * configured with the following defaults:
+ * The third state, an action state, will be indentified as <code>bindAndValidate</code>. This action state will
+ * automatically be configured with the following defaults:
  * <ol>
- * <li>An action bean named <code>customerAction</code> -- this is the name
- * of the <code>Action</code> implementation exported in the application
- * context that will execute when this state is entered. In this example, the
- * <code>Action</code> has a "bindAndValidate" method that will bind form
- * input in the HTTP request to a backing Customer form object, validate it, and
- * update the DB.
- * <li>A <code>success</code> transition to a default end state, called
- * <code>finish</code>. This means if the <code>Action</code> returns a
- * <code>success</code> result, the <code>finish</code> end state will be
+ * <li>An action bean named <code>customerAction</code> -- this is the name of the <code>Action</code>
+ * implementation exported in the application context that will execute when this state is entered. In this example, the
+ * <code>Action</code> has a "bindAndValidate" method that will bind form input in the HTTP request to a backing
+ * Customer form object, validate it, and update the DB.
+ * <li>A <code>success</code> transition to a default end state, called <code>finish</code>. This means if the
+ * <code>Action</code> returns a <code>success</code> result, the <code>finish</code> end state will be
  * transitioned to and the flow will terminate.
- * <li>An <code>error</code> transition back to the form view. This means if
- * the <code>Action</code> returns an <code>error</code> event, the <code>
+ * <li>An <code>error</code> transition back to the form view. This means if the <code>Action</code> returns an
+ * <code>error</code> event, the <code>
  * displayDetails</code> view state will be transitioned back to.
  * </ol>
  * <p>
- * The fourth and last state, an end state, will be indentified with the default
- * end state id <code>finish</code>. This end state is a marker that signals
- * the end of the flow. When entered, the flow session terminates, and if this
- * flow is acting as a root flow in the current flow execution, any
- * flow-allocated resources will be cleaned up. An end state can optionally be
- * configured with a logical view name to forward to when entered. It will also
- * trigger a state transition in a resuming parent flow if this flow was
- * participating as a spawned 'subflow' within a suspended parent flow.
+ * The fourth and last state, an end state, will be indentified with the default end state id <code>finish</code>.
+ * This end state is a marker that signals the end of the flow. When entered, the flow session terminates, and if this
+ * flow is acting as a root flow in the current flow execution, any flow-allocated resources will be cleaned up. An end
+ * state can optionally be configured with a logical view name to forward to when entered. It will also trigger a state
+ * transition in a resuming parent flow if this flow was participating as a spawned 'subflow' within a suspended parent
+ * flow.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -144,8 +126,7 @@ import org.springframework.webflow.execution.support.EventFactorySupport;
 public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 
 	/**
-	 * A helper for creating commonly used event identifiers that drive
-	 * transitions created by this builder.
+	 * A helper for creating commonly used event identifiers that drive transitions created by this builder.
 	 */
 	private EventFactorySupport eventFactorySupport = new EventFactorySupport();
 
@@ -157,26 +138,25 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Create an instance of an abstract flow builder, using the specified
-	 * locator to obtain needed flow services at build time.
-	 * @param flowServiceLocator the locator for services needed by this builder
-	 * to build its Flow
+	 * Create an instance of an abstract flow builder, using the specified locator to obtain needed flow services at
+	 * build time.
+	 * @param flowServiceLocator the locator for services needed by this builder to build its Flow
 	 */
 	protected AbstractFlowBuilder(FlowServiceLocator flowServiceLocator) {
 		super(flowServiceLocator);
 	}
 
 	/**
-	 * Returns the configured event factory support helper for creating commonly
-	 * used event identifiers that drive transitions created by this builder.
+	 * Returns the configured event factory support helper for creating commonly used event identifiers that drive
+	 * transitions created by this builder.
 	 */
 	public EventFactorySupport getEventFactorySupport() {
 		return eventFactorySupport;
 	}
 
 	/**
-	 * Sets the event factory support helper to use to create commonly used
-	 * event identifiers that drive transitions created by this builder.
+	 * Sets the event factory support helper to use to create commonly used event identifiers that drive transitions
+	 * created by this builder.
 	 */
 	public void setEventFactorySupport(EventFactorySupport eventFactorySupport) {
 		this.eventFactorySupport = eventFactorySupport;
@@ -188,19 +168,17 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Hook subclasses may override to provide additional properties for the
-	 * flow built by this builder. Returns a empty collection by default.
-	 * @return additional properties describing the flow being built, should not
-	 * return null
+	 * Hook subclasses may override to provide additional properties for the flow built by this builder. Returns a empty
+	 * collection by default.
+	 * @return additional properties describing the flow being built, should not return null
 	 */
 	protected AttributeMap flowAttributes() {
 		return CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 	}
-	
+
 	/**
-	 * Hook method subclasses can override to initialize the flow builder.
-	 * Will be called by {@link #init(String, AttributeMap)} after
-	 * creating the initial Flow object. As a consequence, {@link #getFlow()}
+	 * Hook method subclasses can override to initialize the flow builder. Will be called by
+	 * {@link #init(String, AttributeMap)} after creating the initial Flow object. As a consequence, {@link #getFlow()}
 	 * can be called to retrieve the Flow object under construction.
 	 */
 	protected void initBuilder() {
@@ -236,8 +214,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds a view state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param viewName the string-encoded view selector
-	 * @param renderAction the action to execute on state entry and refresh; may
-	 * be null
+	 * @param renderAction the action to execute on state entry and refresh; may be null
 	 * @param transition the sole transition (path) out of this state
 	 * @return the fully constructed view state instance
 	 */
@@ -250,8 +227,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds a view state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param viewName the string-encoded view selector
-	 * @param renderAction the action to execute on state entry and refresh; may
-	 * be null
+	 * @param renderAction the action to execute on state entry and refresh; may be null
 	 * @param transitions the transitions (paths) out of this state
 	 * @return the fully constructed view state instance
 	 */
@@ -264,15 +240,12 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds a view state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param entryActions the actions to execute when the state is entered
-	 * @param viewSelector the view selector that will make the view selection
-	 * when the state is entered
-	 * @param renderActions any 'render actions' to execute on state entry and
-	 * refresh; may be null
+	 * @param viewSelector the view selector that will make the view selection when the state is entered
+	 * @param renderActions any 'render actions' to execute on state entry and refresh; may be null
 	 * @param transitions the transitions (path) out of this state
 	 * @param exceptionHandlers any exception handlers to attach to the state
 	 * @param exitActions the actions to execute when the state exits
-	 * @param attributes attributes to assign to the state that may be used to
-	 * affect state construction and execution
+	 * @param attributes attributes to assign to the state that may be used to affect state construction and execution
 	 * @return the fully constructed view state instance
 	 */
 	protected State addViewState(String stateId, Action[] entryActions, ViewSelector viewSelector,
@@ -313,8 +286,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @param stateId the state identifier
 	 * @param action the single action to execute when the state is entered
 	 * @param transition the single transition (path) out of this state
-	 * @param exceptionHandler the exception handler to handle exceptions thrown
-	 * by the action
+	 * @param exceptionHandler the exception handler to handle exceptions thrown by the action
 	 * @return the fully constructed action state instance
 	 */
 	protected State addActionState(String stateId, Action action, Transition transition,
@@ -327,14 +299,11 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds an action state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param entryActions any generic entry actions to add to the state
-	 * @param actions the actions to execute in a chain when the state is
-	 * entered
+	 * @param actions the actions to execute in a chain when the state is entered
 	 * @param transitions the transitions (paths) out of this state
-	 * @param exceptionHandlers the exception handlers to handle exceptions
-	 * thrown by the actions
+	 * @param exceptionHandlers the exception handlers to handle exceptions thrown by the actions
 	 * @param exitActions the exit actions to execute when the state exits
-	 * @param attributes attributes to assign to the state that may be used to
-	 * affect state construction and execution
+	 * @param attributes attributes to assign to the state that may be used to affect state construction and execution
 	 * @return the fully constructed action state instance
 	 */
 	protected State addActionState(String stateId, Action[] entryActions, Action[] actions, Transition[] transitions,
@@ -365,8 +334,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 */
 	protected State addDecisionState(String stateId, TransitionCriteria decisionCriteria, String trueStateId,
 			String falseStateId) {
-		Transition thenTransition = getFlowArtifactFactory()
-				.createTransition(to(trueStateId), decisionCriteria, null, null);
+		Transition thenTransition = getFlowArtifactFactory().createTransition(to(trueStateId), decisionCriteria, null,
+				null);
 		Transition elseTransition = getFlowArtifactFactory().createTransition(to(falseStateId), null, null, null);
 		return getFlowArtifactFactory().createDecisionState(stateId, getFlow(), null,
 				new Transition[] { thenTransition, elseTransition }, null, null, null);
@@ -377,11 +346,9 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @param stateId the state identifier
 	 * @param entryActions the entry actions to execute when the state enters
 	 * @param transitions the transitions (paths) out of this state
-	 * @param exceptionHandlers the exception handlers to handle exceptions
-	 * thrown by the state
+	 * @param exceptionHandlers the exception handlers to handle exceptions thrown by the state
 	 * @param exitActions the exit actions to execute when the state exits
-	 * @param attributes attributes to assign to the state that may be used to
-	 * affect state construction and execution
+	 * @param attributes attributes to assign to the state that may be used to affect state construction and execution
 	 * @return the fully constructed decision state instance
 	 */
 	protected State addDecisionState(String stateId, Action[] entryActions, Transition[] transitions,
@@ -396,8 +363,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds a subflow state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param subflow the flow that will act as the subflow
-	 * @param attributeMapper the mapper to map subflow input and output
-	 * attributes
+	 * @param attributeMapper the mapper to map subflow input and output attributes
 	 * @param transition the single transition (path) out of the state
 	 * @return the fully constructed subflow state instance
 	 */
@@ -411,8 +377,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * Adds a subflow state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param subflow the flow that will act as the subflow
-	 * @param attributeMapper the mapper to map subflow input and output
-	 * attributes
+	 * @param attributeMapper the mapper to map subflow input and output attributes
 	 * @param transitions the transitions (paths) out of the state
 	 * @return the fully constructed subflow state instance
 	 */
@@ -427,14 +392,11 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @param stateId the state identifier
 	 * @param entryActions the entry actions to execute when the state enters
 	 * @param subflow the flow that will act as the subflow
-	 * @param attributeMapper the mapper to map subflow input and output
-	 * attributes
+	 * @param attributeMapper the mapper to map subflow input and output attributes
 	 * @param transitions the transitions (paths) out of this state
-	 * @param exceptionHandlers the exception handlers to handle exceptions
-	 * thrown by the state
+	 * @param exceptionHandlers the exception handlers to handle exceptions thrown by the state
 	 * @param exitActions the exit actions to execute when the state exits
-	 * @param attributes attributes to assign to the state that may be used to
-	 * affect state construction and execution
+	 * @param attributes attributes to assign to the state that may be used to affect state construction and execution
 	 * @return the fully constructed subflow state instance
 	 */
 	protected State addSubflowState(String stateId, Action[] entryActions, Flow subflow,
@@ -462,34 +424,30 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @return the fully constructed end state instance
 	 */
 	protected State addEndState(String stateId, String viewName) {
-		return getFlowArtifactFactory().createEndState(stateId, getFlow(), null, viewSelector(viewName), null,
-				null, null);
+		return getFlowArtifactFactory().createEndState(stateId, getFlow(), null, viewSelector(viewName), null, null,
+				null);
 	}
 
 	/**
 	 * Adds an end state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param viewName the string-encoded view selector
-	 * @param outputMapper the output mapper to map output attributes for the
-	 * end state (a flow outcome)
+	 * @param outputMapper the output mapper to map output attributes for the end state (a flow outcome)
 	 * @return the fully constructed end state instance
 	 */
 	protected State addEndState(String stateId, String viewName, AttributeMapper outputMapper) {
-		return getFlowArtifactFactory().createEndState(stateId, getFlow(), null, viewSelector(viewName),
-				outputMapper, null, null);
+		return getFlowArtifactFactory().createEndState(stateId, getFlow(), null, viewSelector(viewName), outputMapper,
+				null, null);
 	}
 
 	/**
 	 * Adds an end state to the flow built by this builder.
 	 * @param stateId the state identifier
 	 * @param entryActions the actions to execute when the state is entered
-	 * @param viewSelector the view selector that will make the view selection
-	 * when the state is entered
-	 * @param outputMapper the output mapper to map output attributes for the
-	 * end state (a flow outcome)
+	 * @param viewSelector the view selector that will make the view selection when the state is entered
+	 * @param outputMapper the output mapper to map output attributes for the end state (a flow outcome)
 	 * @param exceptionHandlers any exception handlers to attach to the state
-	 * @param attributes attributes to assign to the state that may be used to
-	 * affect state construction and execution
+	 * @param attributes attributes to assign to the state that may be used to affect state construction and execution
 	 * @return the fully constructed end state instance
 	 */
 	protected State addEndState(String stateId, Action[] entryActions, ViewSelector viewSelector,
@@ -501,19 +459,17 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	// helpers to create misc. flow artifacts
 
 	/**
-	 * Factory method that creates a view selector from an encoded
-	 * view name. See {@link TextToViewSelector} for information on the
-	 * conversion rules.
+	 * Factory method that creates a view selector from an encoded view name. See {@link TextToViewSelector} for
+	 * information on the conversion rules.
 	 * @param viewName the encoded view selector
 	 * @return the view selector
 	 */
 	public ViewSelector viewSelector(String viewName) {
-		return (ViewSelector)fromStringTo(ViewSelector.class).execute(viewName);
+		return (ViewSelector) fromStringTo(ViewSelector.class).execute(viewName);
 	}
 
 	/**
-	 * Resolves the action with the specified id. Simply looks the action up by
-	 * id and returns it.
+	 * Resolves the action with the specified id. Simply looks the action up by id and returns it.
 	 * @param id the action id
 	 * @return the action
 	 * @throws FlowArtifactLookupException the action could not be resolved
@@ -523,10 +479,9 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates a bean invoking action that invokes the method identified by the
-	 * signature on the bean associated with the action identifier.
-	 * @param beanId the id identifying an arbitrary
-	 * <code>java.lang.Object</code> to be used as an action
+	 * Creates a bean invoking action that invokes the method identified by the signature on the bean associated with
+	 * the action identifier.
+	 * @param beanId the id identifying an arbitrary <code>java.lang.Object</code> to be used as an action
 	 * @param methodSignature the signature of the method to invoke on the POJO
 	 * @return the adapted bean invoking action
 	 * @throws FlowArtifactLookupException the action could not be resolved
@@ -538,10 +493,9 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates a bean invoking action that invokes the method identified by the
-	 * signature on the bean associated with the action identifier.
-	 * @param beanId the id identifying an arbitrary
-	 * <code>java.lang.Object</code> to be used as an action
+	 * Creates a bean invoking action that invokes the method identified by the signature on the bean associated with
+	 * the action identifier.
+	 * @param beanId the id identifying an arbitrary <code>java.lang.Object</code> to be used as an action
 	 * @param methodSignature the signature of the method to invoke on the POJO
 	 * @return the adapted bean invoking action
 	 * @throws FlowArtifactLookupException the action could not be resolved
@@ -578,7 +532,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	protected Expression expression(String expressionString) {
 		return getFlowServiceLocator().getExpressionParser().parseExpression(expressionString);
 	}
-	
+
 	/**
 	 * Parses the expression string into a settable {@link Expression} object.
 	 * @param expressionString the expression string, e.g. flowScope.order.number
@@ -590,18 +544,19 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Convert the encoded method signature string to a {@link MethodSignature}
-	 * object. Method signatures are used to match methods on POJO services to
-	 * invoke on a {@link AbstractBeanInvokingAction bean invoking action}.
+	 * Convert the encoded method signature string to a {@link MethodSignature} object. Method signatures are used to
+	 * match methods on POJO services to invoke on a {@link AbstractBeanInvokingAction bean invoking action}.
 	 * <p>
 	 * Encoded method signature format:
 	 * 
 	 * Method without arguments:
+	 * 
 	 * <pre>
 	 *       ${methodName}
 	 * </pre>
 	 * 
 	 * Method with arguments:
+	 * 
 	 * <pre>
 	 *       ${methodName}(${arg1}, ${arg2}, ${arg n})
 	 * </pre>
@@ -611,13 +566,12 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @see #action(String, MethodSignature, ActionResultExposer)
 	 */
 	protected MethodSignature method(String method) {
-		return (MethodSignature)fromStringTo(MethodSignature.class).execute(method);
+		return (MethodSignature) fromStringTo(MethodSignature.class).execute(method);
 	}
 
 	/**
-	 * Factory method for a {@link ActionResultExposer result exposer}. A
-	 * result exposer is used to expose an action result such as a method return
-	 * value or expression evaluation result to the calling flow.
+	 * Factory method for a {@link ActionResultExposer result exposer}. A result exposer is used to expose an action
+	 * result such as a method return value or expression evaluation result to the calling flow.
 	 * @param resultName the result name
 	 * @return the result exposer
 	 * @see #action(String, MethodSignature, ActionResultExposer)
@@ -627,9 +581,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Factory method for a {@link ActionResultExposer result exposer}. A
-	 * result exposer is used to expose an action result such as a method return
-	 * value or expression evaluation result to the calling flow.
+	 * Factory method for a {@link ActionResultExposer result exposer}. A result exposer is used to expose an action
+	 * result such as a method return value or expression evaluation result to the calling flow.
 	 * @param resultName the result name
 	 * @param resultScope the scope of the result
 	 * @return the result exposer
@@ -638,43 +591,38 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	protected ActionResultExposer result(String resultName, ScopeType resultScope) {
 		return new ActionResultExposer(resultName, resultScope);
 	}
-	
+
 	/**
-	 * Wrap given action in an {@link AnnotatedAction}} to be able
-	 * to annotate it with attributes.
+	 * Wrap given action in an {@link AnnotatedAction}} to be able to annotate it with attributes.
 	 * @param action the action to annotate
 	 * @return the wrapped action
 	 * @since 1.0.4
 	 */
 	protected AnnotatedAction annotate(Action action) {
 		if (action instanceof AnnotatedAction) {
-			return (AnnotatedAction)action;
-		}
-		else {
+			return (AnnotatedAction) action;
+		} else {
 			return new AnnotatedAction(action);
 		}
 	}
 
 	/**
-	 * Creates an annotated action decorator that instructs the specified method
-	 * be invoked on the multi action when it is executed. Use this when working
-	 * with MultiActions to specify the method on the MultiAction to invoke for
-	 * a particular usage scenario. Use the {@link #method(String)} factory
-	 * method when working with
+	 * Creates an annotated action decorator that instructs the specified method be invoked on the multi action when it
+	 * is executed. Use this when working with MultiActions to specify the method on the MultiAction to invoke for a
+	 * particular usage scenario. Use the {@link #method(String)} factory method when working with
 	 * {@link AbstractBeanInvokingAction bean invoking actions}.
 	 * @param methodName the name of the method on the multi action instance
 	 * @param multiAction the multi action
-	 * @return the annotated action that when invoked sets up a context property
-	 * used by the multi action to instruct it with what method to invoke
+	 * @return the annotated action that when invoked sets up a context property used by the multi action to instruct it
+	 * with what method to invoke
 	 * @since 1.0.4
 	 */
 	protected AnnotatedAction invoke(String methodName, Action multiAction) {
 		AnnotatedAction annotatedAction;
 		if (multiAction instanceof AnnotatedAction) {
 			// already wrapped in an AnnotatedAction
-			annotatedAction = (AnnotatedAction)multiAction;
-		}
-		else {
+			annotatedAction = (AnnotatedAction) multiAction;
+		} else {
 			annotatedAction = new AnnotatedAction(multiAction);
 		}
 		annotatedAction.setMethod(methodName);
@@ -682,24 +630,21 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates an annotated action decorator that instructs the specified method
-	 * be invoked on the multi action when it is executed. Use this when working
-	 * with MultiActions to specify the method on the MultiAction to invoke for
-	 * a particular usage scenario. Use the {@link #method(String)} factory
-	 * method when working with
+	 * Creates an annotated action decorator that instructs the specified method be invoked on the multi action when it
+	 * is executed. Use this when working with MultiActions to specify the method on the MultiAction to invoke for a
+	 * particular usage scenario. Use the {@link #method(String)} factory method when working with
 	 * {@link AbstractBeanInvokingAction bean invoking actions}.
 	 * @param methodName the name of the method on the multi action instance
 	 * @param multiAction the multi action
-	 * @return the annotated action that when invoked sets up a context property
-	 * used by the multi action to instruct it with what method to invoke
+	 * @return the annotated action that when invoked sets up a context property used by the multi action to instruct it
+	 * with what method to invoke
 	 */
 	protected AnnotatedAction invoke(String methodName, MultiAction multiAction) throws FlowArtifactLookupException {
-		return invoke(methodName, (Action)multiAction);
+		return invoke(methodName, (Action) multiAction);
 	}
-	
+
 	/**
-	 * Creates an annotated action decorator that makes the given action
-	 * an named action.
+	 * Creates an annotated action decorator that makes the given action an named action.
 	 * @param name the action name
 	 * @param action the action to name
 	 * @return the annotated named action
@@ -708,9 +653,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 		AnnotatedAction annotatedAction;
 		if (action instanceof AnnotatedAction) {
 			// already wrapped in an AnnotatedAction
-			annotatedAction = (AnnotatedAction)action;
-		}
-		else {
+			annotatedAction = (AnnotatedAction) action;
+		} else {
 			annotatedAction = new AnnotatedAction(action);
 		}
 		annotatedAction.setName(name);
@@ -718,27 +662,23 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Request that the attribute mapper with the specified name be used to map
-	 * attributes between a parent flow and a spawning subflow when the subflow
-	 * state being constructed is entered.
-	 * @param id the id of the attribute mapper that will map attributes between
-	 * the flow built by this builder and the subflow
+	 * Request that the attribute mapper with the specified name be used to map attributes between a parent flow and a
+	 * spawning subflow when the subflow state being constructed is entered.
+	 * @param id the id of the attribute mapper that will map attributes between the flow built by this builder and the
+	 * subflow
 	 * @return the attribute mapper
-	 * @throws FlowArtifactLookupException no FlowAttributeMapper implementation
-	 * was exported with the specified id
+	 * @throws FlowArtifactLookupException no FlowAttributeMapper implementation was exported with the specified id
 	 */
 	protected FlowAttributeMapper attributeMapper(String id) throws FlowArtifactLookupException {
 		return getFlowServiceLocator().getAttributeMapper(id);
 	}
 
 	/**
-	 * Request that the <code>Flow</code> with the specified flowId be spawned
-	 * as a subflow when the subflow state being built is entered. Simply
-	 * resolves the subflow definition by id and returns it; throwing a
-	 * fail-fast exception if it does not exist.
+	 * Request that the <code>Flow</code> with the specified flowId be spawned as a subflow when the subflow state
+	 * being built is entered. Simply resolves the subflow definition by id and returns it; throwing a fail-fast
+	 * exception if it does not exist.
 	 * @param id the flow definition id
-	 * @return the flow to be used as a subflow, this should be passed to a
-	 * addSubflowState call
+	 * @return the flow to be used as a subflow, this should be passed to a addSubflowState call
 	 * @throws FlowArtifactLookupException when the flow cannot be resolved
 	 */
 	protected Flow flow(String id) throws FlowArtifactLookupException {
@@ -746,15 +686,15 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates a transition criteria that is used to match a Transition. The
-	 * criteria is based on the provided expression string.
-	 * @param transitionCriteriaExpression the transition criteria expression,
-	 * typically simply a static event identifier (e.g. "submit")
+	 * Creates a transition criteria that is used to match a Transition. The criteria is based on the provided
+	 * expression string.
+	 * @param transitionCriteriaExpression the transition criteria expression, typically simply a static event
+	 * identifier (e.g. "submit")
 	 * @return the transition criteria
 	 * @see TextToTransitionCriteria
 	 */
 	protected TransitionCriteria on(String transitionCriteriaExpression) {
-		return (TransitionCriteria)fromStringTo(TransitionCriteria.class).execute(transitionCriteriaExpression);
+		return (TransitionCriteria) fromStringTo(TransitionCriteria.class).execute(transitionCriteriaExpression);
 	}
 
 	/**
@@ -764,13 +704,12 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	 * @see TextToTargetStateResolver
 	 */
 	protected TargetStateResolver to(String targetStateIdExpression) {
-		return (TargetStateResolver)fromStringTo(TargetStateResolver.class).execute(targetStateIdExpression);
+		return (TargetStateResolver) fromStringTo(TargetStateResolver.class).execute(targetStateIdExpression);
 	}
 
 	/**
 	 * Creates a new transition.
-	 * @param matchingCriteria the criteria that determines when the transition
-	 * matches
+	 * @param matchingCriteria the criteria that determines when the transition matches
 	 * @param targetStateResolver the resolver of the transition's target state
 	 * @return the transition
 	 */
@@ -780,43 +719,37 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 
 	/**
 	 * Creates a new transition.
-	 * @param matchingCriteria the criteria that determines when the transition
-	 * matches
+	 * @param matchingCriteria the criteria that determines when the transition matches
 	 * @param targetStateResolver the resolver of the transition's target state
-	 * @param executionCriteria the criteria that determines if a matched
-	 * transition is allowed to execute
+	 * @param executionCriteria the criteria that determines if a matched transition is allowed to execute
 	 * @return the transition
 	 */
 	protected Transition transition(TransitionCriteria matchingCriteria, TargetStateResolver targetStateResolver,
 			TransitionCriteria executionCriteria) {
-		return getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, executionCriteria, null);
+		return getFlowArtifactFactory()
+				.createTransition(targetStateResolver, matchingCriteria, executionCriteria, null);
 	}
 
 	/**
 	 * Creates a new transition.
-	 * @param matchingCriteria the criteria that determines when the transition
-	 * matches
+	 * @param matchingCriteria the criteria that determines when the transition matches
 	 * @param targetStateResolver the resolver of the transition's target state
-	 * @param executionCriteria the criteria that determines if a matched
-	 * transition is allowed to execute
+	 * @param executionCriteria the criteria that determines if a matched transition is allowed to execute
 	 * @param attributes transition attributes
 	 * @return the transition
 	 */
 	protected Transition transition(TransitionCriteria matchingCriteria, TargetStateResolver targetStateResolver,
 			TransitionCriteria executionCriteria, AttributeMap attributes) {
-		return getFlowArtifactFactory()
-				.createTransition(targetStateResolver, matchingCriteria, executionCriteria, attributes);
+		return getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, executionCriteria,
+				attributes);
 	}
 
 	/**
-	 * Creates a <code>TransitionCriteria</code> that will execute the
-	 * specified action when the Transition is executed but before the
-	 * transition's target state is entered.
+	 * Creates a <code>TransitionCriteria</code> that will execute the specified action when the Transition is
+	 * executed but before the transition's target state is entered.
 	 * <p>
-	 * This criteria will only allow the Transition to complete execution if the
-	 * Action completes successfully.
-	 * @param action the action to execute after a transition is matched but
-	 * before it transitions to its target state
+	 * This criteria will only allow the Transition to complete execution if the Action completes successfully.
+	 * @param action the action to execute after a transition is matched but before it transitions to its target state
 	 * @return the transition execution criteria
 	 */
 	protected TransitionCriteria ifReturnedSuccess(Action action) {
@@ -824,8 +757,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>success</code> event id. "Success" indicates that an
-	 * action completed successfuly.
+	 * Creates the <code>success</code> event id. "Success" indicates that an action completed successfuly.
 	 * @return the event id
 	 */
 	protected String success() {
@@ -833,8 +765,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>error</code> event id. "Error" indicates that an
-	 * action completed with an error status.
+	 * Creates the <code>error</code> event id. "Error" indicates that an action completed with an error status.
 	 * @return the event id
 	 */
 	protected String error() {
@@ -842,8 +773,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>submit</code> event id. "Submit" indicates the user
-	 * submitted a request (form) for processing.
+	 * Creates the <code>submit</code> event id. "Submit" indicates the user submitted a request (form) for
+	 * processing.
 	 * @return the event id
 	 */
 	protected String submit() {
@@ -851,8 +782,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>back</code> event id. "Back" indicates the user wants
-	 * to go to the previous step in the flow.
+	 * Creates the <code>back</code> event id. "Back" indicates the user wants to go to the previous step in the flow.
 	 * @return the event id
 	 */
 	protected String back() {
@@ -860,8 +790,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>cancel</code> event id. "Cancel" indicates the flow
-	 * was aborted because the user changed their mind.
+	 * Creates the <code>cancel</code> event id. "Cancel" indicates the flow was aborted because the user changed
+	 * their mind.
 	 * @return the event id
 	 */
 	protected String cancel() {
@@ -869,8 +799,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>finish</code> event id. "Finish" indicates the flow
-	 * has finished processing.
+	 * Creates the <code>finish</code> event id. "Finish" indicates the flow has finished processing.
 	 * @return the event id
 	 */
 	protected String finish() {
@@ -878,8 +807,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>select</code> event id. "Select" indicates an object
-	 * was selected for processing or display.
+	 * Creates the <code>select</code> event id. "Select" indicates an object was selected for processing or display.
 	 * @return the event id
 	 */
 	protected String select() {
@@ -887,8 +815,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>edit</code> event id. "Edit" indicates an object was
-	 * selected for creation or updating.
+	 * Creates the <code>edit</code> event id. "Edit" indicates an object was selected for creation or updating.
 	 * @return the event id
 	 */
 	protected String edit() {
@@ -896,8 +823,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>add</code> event id. "Add" indicates a child object
-	 * is being added to a parent collection.
+	 * Creates the <code>add</code> event id. "Add" indicates a child object is being added to a parent collection.
 	 * @return the event id
 	 */
 	protected String add() {
@@ -905,8 +831,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>delete</code> event id. "Delete" indicates a object
-	 * is being removed.
+	 * Creates the <code>delete</code> event id. "Delete" indicates a object is being removed.
 	 * @return the event id
 	 */
 	protected String delete() {
@@ -914,8 +839,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>yes</code> event id. "Yes" indicates a true result
-	 * was returned.
+	 * Creates the <code>yes</code> event id. "Yes" indicates a true result was returned.
 	 * @return the event id
 	 */
 	protected String yes() {
@@ -923,8 +847,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Creates the <code>no</code> event id. "False" indicates a false result
-	 * was returned.
+	 * Creates the <code>no</code> event id. "False" indicates a false result was returned.
 	 * @return the event id
 	 */
 	protected String no() {
@@ -932,9 +855,8 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 	}
 
 	/**
-	 * Factory method that returns a new, fully configured mapping builder to
-	 * assist with building {@link Mapping} objects used by a
-	 * {@link FlowAttributeMapper} to map attributes.
+	 * Factory method that returns a new, fully configured mapping builder to assist with building {@link Mapping}
+	 * objects used by a {@link FlowAttributeMapper} to map attributes.
 	 * @return the mapping builder
 	 */
 	protected MappingBuilder mapping() {
@@ -942,7 +864,7 @@ public abstract class AbstractFlowBuilder extends BaseFlowBuilder {
 		mapping.setConversionService(getFlowServiceLocator().getConversionService());
 		return mapping;
 	}
-	
+
 	public String toString() {
 		return new ToStringCreator(this).toString();
 	}

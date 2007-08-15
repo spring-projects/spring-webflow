@@ -24,8 +24,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
 /**
- * A holder that holds a listener plus a set of criteria defining the flows in
- * which that listener applies.
+ * A holder that holds a listener plus a set of criteria defining the flows in which that listener applies.
  * <p>
  * This is an internal helper class used by the {@link ConditionalFlowExecutionListenerLoader}.
  * 
@@ -83,15 +82,15 @@ class ConditionalFlowExecutionListenerHolder {
 	}
 
 	/**
-	 * Determines if the listener held by this holder applies to the specified
-	 * flow definition. Will do a logical OR between the registered criteria.
+	 * Determines if the listener held by this holder applies to the specified flow definition. Will do a logical OR
+	 * between the registered criteria.
 	 * @param flowDefinition the flow
 	 * @return true if yes, false otherwise
 	 */
 	public boolean listenerAppliesTo(FlowDefinition flowDefinition) {
 		Iterator it = criteriaSet.iterator();
 		while (it.hasNext()) {
-			FlowExecutionListenerCriteria criteria = (FlowExecutionListenerCriteria)it.next();
+			FlowExecutionListenerCriteria criteria = (FlowExecutionListenerCriteria) it.next();
 			if (criteria.appliesTo(flowDefinition)) {
 				return true;
 			}

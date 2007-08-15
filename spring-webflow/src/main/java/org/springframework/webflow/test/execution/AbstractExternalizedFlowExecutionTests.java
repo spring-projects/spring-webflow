@@ -34,7 +34,7 @@ import org.springframework.webflow.test.MockFlowServiceLocator;
 /**
  * Base class for flow integration tests that verify an externalized flow definition executes as expected. Supports
  * caching of the flow definition built from an externalized resource to speed up test execution.
- *
+ * 
  * @author Keith Donald
  */
 public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlowExecutionTests {
@@ -136,8 +136,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Returns the flow service locator to use during flow definition construction time for accessing externally
-	 * managed flow artifacts such as actions and flows to be used as subflows.
+	 * Returns the flow service locator to use during flow definition construction time for accessing externally managed
+	 * flow artifacts such as actions and flows to be used as subflows.
 	 * <p>
 	 * This implementation just creates a {@link MockFlowServiceLocator} and populates it with services by calling
 	 * {@link #registerMockServices(MockFlowServiceLocator)}.
@@ -159,9 +159,9 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Factory method to assemble a flow definition from a resource. Called by {@link #getFlowDefinition()} to
-	 * create the "main" flow to test. May also be called by subclasses to create subflow definitions whose executions
-	 * should also be exercised by this test.
+	 * Factory method to assemble a flow definition from a resource. Called by {@link #getFlowDefinition()} to create
+	 * the "main" flow to test. May also be called by subclasses to create subflow definitions whose executions should
+	 * also be exercised by this test.
 	 * @param resource the flow definition resource
 	 * @return the built flow definition, ready for execution
 	 * @see #createFlowBuilder(Resource, FlowServiceLocator)
@@ -177,11 +177,13 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * implement.
 	 * <p>
 	 * Example usage:
+	 * 
 	 * <pre class="code">
 	 * protected FlowDefinitionResource getFlowDefinitionResource() {
 	 * 	return createFlowDefinitionResource(&quot;/WEB-INF/flows/order-flow.xml&quot;);
 	 * }
 	 * </pre>
+	 * 
 	 * @return the flow definition resource
 	 */
 	protected abstract FlowDefinitionResource getFlowDefinitionResource();
@@ -220,8 +222,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file. Typically
-	 * called by subclasses overriding {@link #getFlowDefinitionResource()}.
+	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file. Typically called by
+	 * subclasses overriding {@link #getFlowDefinitionResource()}.
 	 * @param file the file
 	 * @return the flow definition resource
 	 */

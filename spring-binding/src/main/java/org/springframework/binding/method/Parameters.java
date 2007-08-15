@@ -95,16 +95,15 @@ public class Parameters {
 	}
 
 	/**
-	 * Get an array containing each parameter type. The resulting array
-	 * could contain null values if the corresponding parameters did
-	 * not specify a parameter type.
+	 * Get an array containing each parameter type. The resulting array could contain null values if the corresponding
+	 * parameters did not specify a parameter type.
 	 * @return the types
 	 */
 	public Class[] getTypesArray() {
 		int i = 0;
 		Class[] types = new Class[parameters.size()];
 		for (Iterator it = parameters.iterator(); it.hasNext();) {
-			Parameter param = (Parameter)it.next();
+			Parameter param = (Parameter) it.next();
 			types[i] = param.getType();
 			i++;
 		}
@@ -126,14 +125,14 @@ public class Parameters {
 	 * @throws IndexOutOfBoundsException if the provided index is out of bounds
 	 */
 	public Parameter getParameter(int index) throws IndexOutOfBoundsException {
-		return (Parameter)parameters.get(index);
+		return (Parameter) parameters.get(index);
 	}
 
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Parameters)) {
 			return false;
 		}
-		Parameters other = (Parameters)obj;
+		Parameters other = (Parameters) obj;
 		return parameters.equals(other.parameters);
 	}
 

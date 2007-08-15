@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @author Ben Hale
  */
 class RegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-	
+
 	// elements and attributes
 
 	private static final String LOCATION_ELEMENT = "location";
@@ -60,7 +60,7 @@ class RegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 	private List getLocations(List locationElements) {
 		List locations = new ArrayList(locationElements.size());
 		for (Iterator i = locationElements.iterator(); i.hasNext();) {
-			Element locationElement = (Element)i.next();
+			Element locationElement = (Element) i.next();
 			String path = locationElement.getAttribute(PATH_ATTRIBUTE);
 			if (StringUtils.hasText(path)) {
 				locations.add(path);

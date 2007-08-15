@@ -36,7 +36,7 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 	public void testEvalSimpleExpression() {
 		ArrayList list = new ArrayList();
 		Expression exp = parser.parseExpression("size()");
-		Integer size = (Integer)exp.evaluate(list, null);
+		Integer size = (Integer) exp.evaluate(list, null);
 		assertEquals(0, size.intValue());
 	}
 
@@ -49,7 +49,7 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 			}
 		};
 		Expression exp = parser.parseExpression("size");
-		Integer size = (Integer)exp.evaluate(adaptable, null);
+		Integer size = (Integer) exp.evaluate(adaptable, null);
 		assertEquals(0, size.intValue());
 	}
 
@@ -57,12 +57,12 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 		LocalAttributeMap map = new LocalAttributeMap();
 		map.put("size", new Integer(0));
 		Expression exp = parser.parseExpression("size");
-		Integer size = (Integer)exp.evaluate(map, null);
+		Integer size = (Integer) exp.evaluate(map, null);
 		assertEquals(0, size.intValue());
 		assertTrue(exp instanceof SettableExpression);
-		SettableExpression sexp = (SettableExpression)exp;
+		SettableExpression sexp = (SettableExpression) exp;
 		sexp.evaluateToSet(map, new Integer(1), null);
-		size = (Integer)exp.evaluate(map, null);
+		size = (Integer) exp.evaluate(map, null);
 		assertEquals(1, size.intValue());
 	}
 }

@@ -22,11 +22,10 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A view state is a state that issues a response to the user, for
- * example, for soliciting form input.
+ * A view state is a state that issues a response to the user, for example, for soliciting form input.
  * <p>
- * To accomplish this, a <code>ViewState</code> makes a {@link ViewSelection},
- * which contains the necessary information to issue a suitable response.
+ * To accomplish this, a <code>ViewState</code> makes a {@link ViewSelection}, which contains the necessary
+ * information to issue a suitable response.
  * 
  * @see org.springframework.webflow.engine.ViewSelector
  * 
@@ -49,16 +48,14 @@ public class ViewState extends TransitionableState {
 	 * Create a new view state.
 	 * @param flow the owning flow
 	 * @param id the state identifier (must be unique to the flow)
-	 * @throws IllegalArgumentException when this state cannot be added to given
-	 * flow, e.g. because the id is not unique
+	 * @throws IllegalArgumentException when this state cannot be added to given flow, e.g. because the id is not unique
 	 */
 	public ViewState(Flow flow, String id) throws IllegalArgumentException {
 		super(flow, id);
 	}
 
 	/**
-	 * Returns the strategy used to select the view to render in this view
-	 * state.
+	 * Returns the strategy used to select the view to render in this view state.
 	 */
 	public ViewSelector getViewSelector() {
 		return viewSelector;
@@ -73,8 +70,7 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
-	 * Returns the list of actions executable by this view state on entry and on
-	 * refresh. The returned list is mutable.
+	 * Returns the list of actions executable by this view state on entry and on refresh. The returned list is mutable.
 	 * @return the state action list
 	 */
 	public ActionList getRenderActionList() {
@@ -82,14 +78,13 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
-	 * Specialization of State's <code>doEnter</code> template method that
-	 * executes behavior specific to this state type in polymorphic fashion.
+	 * Specialization of State's <code>doEnter</code> template method that executes behavior specific to this state
+	 * type in polymorphic fashion.
 	 * <p>
-	 * Returns a view selection indicating a response to issue. The view
-	 * selection typically contains all the data necessary to issue the
-	 * response.
-	 * @param context the control context for the currently executing flow, used
-	 * by this state to manipulate the flow execution
+	 * Returns a view selection indicating a response to issue. The view selection typically contains all the data
+	 * necessary to issue the response.
+	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
+	 * execution
 	 * @return a view selection serving as a response instruction
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
@@ -102,10 +97,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
-	 * Request that the current view selection be reconstituted to support
-	 * reissuing the response. This is an idempotent operation that may be
-	 * safely called any number of times on a paused execution, used primarily
-	 * to support a flow execution redirect.
+	 * Request that the current view selection be reconstituted to support reissuing the response. This is an idempotent
+	 * operation that may be safely called any number of times on a paused execution, used primarily to support a flow
+	 * execution redirect.
 	 * @param context the request context
 	 * @return the view selection
 	 * @throws FlowExecutionException if an exception occurs in this state

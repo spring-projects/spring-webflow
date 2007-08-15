@@ -87,7 +87,7 @@ public class PortletSessionMapTests extends TestCase {
 		Iterator names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String)names.next();
+		String name = (String) names.next();
 		assertEquals("Some key", name);
 	}
 
@@ -98,7 +98,7 @@ public class PortletSessionMapTests extends TestCase {
 		assertNotNull("Null result unexpected", names);
 		assertFalse("No elements expected", names.hasNext());
 	}
-	
+
 	public void testGetSessionAsMutex() {
 		Object mutex = tested.getMutex();
 		assertSame(mutex, request.getPortletSession());

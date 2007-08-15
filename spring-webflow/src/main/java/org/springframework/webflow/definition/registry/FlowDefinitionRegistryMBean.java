@@ -16,13 +16,12 @@
 package org.springframework.webflow.definition.registry;
 
 /**
- * A management interface for managing flow definition registries at runtime.
- * Provides the ability to query the size and state of the registry, as well as
- * refresh registered flow definitions at runtime.
+ * A management interface for managing flow definition registries at runtime. Provides the ability to query the size and
+ * state of the registry, as well as refresh registered flow definitions at runtime.
  * <p>
- * Flow registries that implement this interface may be exposed for management
- * over the JMX protocol. The following is an example of using Spring's JMX
- * <code>MBeanExporter</code> to export a flow registry to an MBeanServer:
+ * Flow registries that implement this interface may be exposed for management over the JMX protocol. The following is
+ * an example of using Spring's JMX <code>MBeanExporter</code> to export a flow registry to an MBeanServer:
+ * 
  * <pre class="code">
  *     &lt;!-- Creates the registry of flow definitions for this application --&gt;
  *     &lt;bean name=&quot;flowRegistry&quot; class=&quot;org.springframework.webflow...XmlFlowRegistryFactoryBean&quot;&gt;
@@ -44,8 +43,9 @@ package org.springframework.webflow.definition.registry;
  *         &lt;/property&gt;
  *     &lt;/bean&gt;
  * </pre>
- * With the above configuration, you may then use any JMX client (such as Sun's
- * jConsole which ships with JDK 1.5) to refresh flow definitions at runtime.
+ * 
+ * With the above configuration, you may then use any JMX client (such as Sun's jConsole which ships with JDK 1.5) to
+ * refresh flow definitions at runtime.
  * 
  * @author Keith Donald
  */
@@ -64,28 +64,24 @@ public interface FlowDefinitionRegistryMBean {
 	public int getFlowDefinitionCount();
 
 	/**
-	 * Queries this registry to determine if a specific flow is contained within
-	 * it.
+	 * Queries this registry to determine if a specific flow is contained within it.
 	 * @param id the flow definition id
-	 * @return true if a flow definition is contained in this registry with the
-	 * id provided
+	 * @return true if a flow definition is contained in this registry with the id provided
 	 */
 	public boolean containsFlowDefinition(String id);
 
 	/**
-	 * Refresh this flow definition registry, reloading all Flow definitions
-	 * from their externalized representations.
+	 * Refresh this flow definition registry, reloading all Flow definitions from their externalized representations.
 	 */
 	public void refresh() throws FlowDefinitionConstructionException;
 
 	/**
-	 * Refresh the Flow definition in this registry with the <code>id</code>
-	 * provided, reloading it from it's externalized representation.
+	 * Refresh the Flow definition in this registry with the <code>id</code> provided, reloading it from it's
+	 * externalized representation.
 	 * @param flowDefinitionId the id of the flow definition to refresh
-	 * @throws NoSuchFlowDefinitionException if a flow with the id provided is not
-	 * stored in this registry
+	 * @throws NoSuchFlowDefinitionException if a flow with the id provided is not stored in this registry
 	 */
-	public void refresh(String flowDefinitionId)
-			throws NoSuchFlowDefinitionException, FlowDefinitionConstructionException;
+	public void refresh(String flowDefinitionId) throws NoSuchFlowDefinitionException,
+			FlowDefinitionConstructionException;
 
 }

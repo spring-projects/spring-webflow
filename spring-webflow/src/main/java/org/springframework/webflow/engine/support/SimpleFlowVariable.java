@@ -24,8 +24,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * A trivial concrete flow variable subclass that creates new variable values
- * using Java reflection.
+ * A trivial concrete flow variable subclass that creates new variable values using Java reflection.
  * 
  * @author Keith Donald
  */

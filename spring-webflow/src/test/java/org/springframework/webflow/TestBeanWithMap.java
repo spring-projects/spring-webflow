@@ -23,9 +23,9 @@ import java.util.Map;
  * Simple test bean with a Map property.
  */
 public class TestBeanWithMap implements Serializable {
-	
+
 	private Map map = new HashMap();
-	
+
 	public Map getMap() {
 		return map;
 	}

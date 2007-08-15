@@ -23,9 +23,8 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.ApplicationViewSelector;
 
 /**
- * Encapsulates overall flow system configuration defaults. Allows for
- * centralized application of, and if necessary, overridding of system-wide
- * default values.
+ * Encapsulates overall flow system configuration defaults. Allows for centralized application of, and if necessary,
+ * overridding of system-wide default values.
  * 
  * @author Keith Donald
  */
@@ -42,8 +41,7 @@ public class FlowSystemDefaults implements Serializable {
 	private RepositoryType repositoryType = RepositoryType.CONTINUATION;
 
 	/**
-	 * Overrides the alwaysRedirectOnPause execution attribute default. Defaults
-	 * to "true".
+	 * Overrides the alwaysRedirectOnPause execution attribute default. Defaults to "true".
 	 * @param alwaysRedirectOnPause the new default value
 	 * @see ApplicationViewSelector#ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE
 	 */
@@ -60,9 +58,8 @@ public class FlowSystemDefaults implements Serializable {
 	}
 
 	/**
-	 * Applies default execution attributes if necessary. Defaults will only
-	 * apply in the case where the user did not configure a value, or explicitly
-	 * requested the 'default' value.
+	 * Applies default execution attributes if necessary. Defaults will only apply in the case where the user did not
+	 * configure a value, or explicitly requested the 'default' value.
 	 * @param executionAttributes the user-configured execution attribute map
 	 * @return the map with defaults applied as appropriate
 	 */
@@ -71,23 +68,21 @@ public class FlowSystemDefaults implements Serializable {
 			executionAttributes = new LocalAttributeMap(1, 1);
 		}
 		if (!executionAttributes.contains(ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE)) {
-			executionAttributes.put(ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE,
-					new Boolean(alwaysRedirectOnPause));
+			executionAttributes.put(ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE, new Boolean(
+					alwaysRedirectOnPause));
 		}
 		return executionAttributes;
 	}
 
 	/**
 	 * Applies the default repository type if requested by the user.
-	 * @param selectedType the selected repository type (may be null if no
-	 * selection was made)
+	 * @param selectedType the selected repository type (may be null if no selection was made)
 	 * @return the repository type, with the default applied if necessary
 	 */
 	public RepositoryType applyIfNecessary(RepositoryType selectedType) {
 		if (selectedType == null) {
 			return repositoryType;
-		}
-		else {
+		} else {
 			return selectedType;
 		}
 	}

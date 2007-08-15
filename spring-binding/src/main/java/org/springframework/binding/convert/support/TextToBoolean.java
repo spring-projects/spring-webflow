@@ -19,8 +19,7 @@ import org.springframework.binding.convert.ConversionContext;
 import org.springframework.util.StringUtils;
 
 /**
- * Converts a textual representation of a boolean object to a <code>Boolean</code>
- * instance.
+ * Converts a textual representation of a boolean object to a <code>Boolean</code> instance.
  * 
  * @author Keith Donald
  */
@@ -54,8 +53,8 @@ public class TextToBoolean extends AbstractConverter {
 	}
 
 	/**
-	 * Create a text to boolean converter. Take given <i>special</i> string representations
-	 * of true and false into account.
+	 * Create a text to boolean converter. Take given <i>special</i> string representations of true and false into
+	 * account.
 	 * @param trueString special true string to consider
 	 * @param falseString special false string to consider
 	 */
@@ -73,27 +72,22 @@ public class TextToBoolean extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		String text = (String)source;
+		String text = (String) source;
 		if (!StringUtils.hasText(text)) {
 			return null;
-		}
-		else if (this.trueString != null && text.equalsIgnoreCase(this.trueString)) {
+		} else if (this.trueString != null && text.equalsIgnoreCase(this.trueString)) {
 			return Boolean.TRUE;
-		}
-		else if (this.falseString != null && text.equalsIgnoreCase(this.falseString)) {
+		} else if (this.falseString != null && text.equalsIgnoreCase(this.falseString)) {
 			return Boolean.FALSE;
-		}
-		else if (this.trueString == null
+		} else if (this.trueString == null
 				&& (text.equalsIgnoreCase(VALUE_TRUE) || text.equalsIgnoreCase(VALUE_ON)
 						|| text.equalsIgnoreCase(VALUE_YES) || text.equals(VALUE_1))) {
 			return Boolean.TRUE;
-		}
-		else if (this.falseString == null
+		} else if (this.falseString == null
 				&& (text.equalsIgnoreCase(VALUE_FALSE) || text.equalsIgnoreCase(VALUE_OFF)
 						|| text.equalsIgnoreCase(VALUE_NO) || text.equals(VALUE_0))) {
 			return Boolean.FALSE;
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("Invalid boolean value [" + text + "]");
 		}
 	}

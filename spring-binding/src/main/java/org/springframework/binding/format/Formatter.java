@@ -16,8 +16,7 @@
 package org.springframework.binding.format;
 
 /**
- * A lightweight interface for formatting a value and parsing a value from its
- * formatted form.
+ * A lightweight interface for formatting a value and parsing a value from its formatted form.
  * 
  * @author Keith Donald
  */
@@ -32,8 +31,7 @@ public interface Formatter {
 	public String formatValue(Object value) throws IllegalArgumentException;
 
 	/**
-	 * Parse the formatted string representation of a value, restoring the
-	 * value.
+	 * Parse the formatted string representation of a value, restoring the value.
 	 * @param formattedString the formatted string representation
 	 * @param targetClass the target class to convert the formatted value to
 	 * @return the parsed value

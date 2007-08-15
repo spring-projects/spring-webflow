@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 public class ExternalRedirectTests extends TestCase {
 
 	private ExternalRedirect redirect;
-	
+
 	protected void setUp() throws Exception {
 	}
 

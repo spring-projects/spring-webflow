@@ -32,7 +32,7 @@ import org.springframework.webflow.test.MockExternalContext;
  * @author Keith Donald
  */
 public class SerializedFlowExecutionContinuationTests extends TestCase {
-	
+
 	public void testCreate() throws Exception {
 		FlowDefinition flow = new SimpleFlow();
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
@@ -41,16 +41,15 @@ public class SerializedFlowExecutionContinuationTests extends TestCase {
 		assertTrue(c.isCompressed());
 		byte[] array = c.toByteArray();
 		execution = c.unmarshal();
-		
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(array));
-        try {
-            c = (SerializedFlowExecutionContinuation)ois.readObject();
-            assertTrue(c.isCompressed());
-            execution = c.unmarshal();
-        }
-        finally {
-            ois.close();
-        }
+
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(array));
+		try {
+			c = (SerializedFlowExecutionContinuation) ois.readObject();
+			assertTrue(c.isCompressed());
+			execution = c.unmarshal();
+		} finally {
+			ois.close();
+		}
 	}
 
 }

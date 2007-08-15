@@ -62,7 +62,7 @@ public class TransitionTests extends TestCase {
 		assertEquals(context.getCurrentState(), source);
 		assertEquals(0, action.getExecutionCount());
 	}
-	
+
 	protected TargetStateResolver to(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}

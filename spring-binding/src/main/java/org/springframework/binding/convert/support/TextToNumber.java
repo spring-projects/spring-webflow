@@ -23,8 +23,8 @@ import org.springframework.binding.format.FormatterFactory;
 import org.springframework.binding.format.support.SimpleFormatterFactory;
 
 /**
- * Converts textual representations of numbers to a <code>Number</code>
- * specialization. Delegates to a synchronized formatter to parse text strings.
+ * Converts textual representations of numbers to a <code>Number</code> specialization. Delegates to a synchronized
+ * formatter to parse text strings.
  * 
  * @author Keith Donald
  */
@@ -55,6 +55,6 @@ public class TextToNumber extends AbstractFormattingConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		return getFormatterFactory().getNumberFormatter(targetClass).parseValue((String)source, targetClass);
+		return getFormatterFactory().getNumberFormatter(targetClass).parseValue((String) source, targetClass);
 	}
 }

@@ -28,8 +28,7 @@ public class FileUploadAction extends AbstractAction {
 			// data was uploaded
 			context.getFlashScope().put("file", new String(file.getBytes()));
 			return success();
-		}
-		else {
+		} else {
 			return error();
 		}
 	}

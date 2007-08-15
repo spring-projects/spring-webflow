@@ -26,16 +26,14 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Action implementation that changes a PortletResponse mode. The action only
- * generates the
- * {@link org.springframework.webflow.action.AbstractAction#success()} event.
- * All error cases result in an exception being thrown.
+ * Action implementation that changes a PortletResponse mode. The action only generates the
+ * {@link org.springframework.webflow.action.AbstractAction#success()} event. All error cases result in an exception
+ * being thrown.
  * <p>
- * This class is usefull when you want to change the current PortletMode before
- * entering a specific state, e.g. it can be the first state in a subflow.
+ * This class is usefull when you want to change the current PortletMode before entering a specific state, e.g. it can
+ * be the first state in a subflow.
  * <p>
- * Note: if you can, change the PortletMode using Portlet URLs (PortletURL class
- * or portlet TAG).
+ * Note: if you can, change the PortletMode using Portlet URLs (PortletURL class or portlet TAG).
  * 
  * @author J.Enrique Ruiz
  * @author Cesar Ordinana
@@ -44,8 +42,7 @@ import org.springframework.webflow.execution.RequestContext;
 public class SetPortletModeAction extends AbstractAction {
 
 	/**
-	 * The portlet mode to set can be specified in an action state action
-	 * attribute with this name ("portletMode").
+	 * The portlet mode to set can be specified in an action state action attribute with this name ("portletMode").
 	 */
 	public static final String PORTLET_MODE_ATTRIBUTE = "portletMode";
 
@@ -71,29 +68,25 @@ public class SetPortletModeAction extends AbstractAction {
 
 	/**
 	 * Sets the PortletMode.
-	 * @param context the action execution context, for accessing and setting
-	 * data in "flow scope" or "request scope"
+	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return the action result event
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either
-	 * checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected Event doExecute(RequestContext context) throws Exception {
 		Assert.isInstanceOf(PortletExternalContext.class, context.getExternalContext(), "'"
 				+ ClassUtils.getShortName(this.getClass()) + "' can only work with 'PortletExternalContext': ");
-		PortletExternalContext portletContext = (PortletExternalContext)context.getExternalContext();
+		PortletExternalContext portletContext = (PortletExternalContext) context.getExternalContext();
 		if (portletContext.getResponse() instanceof ActionResponse) {
-			PortletMode mode =
-				(PortletMode)context.getAttributes().get(PORTLET_MODE_ATTRIBUTE, PortletMode.class,	getPortletMode());
-			((ActionResponse)portletContext.getResponse()).setPortletMode(mode);
+			PortletMode mode = (PortletMode) context.getAttributes().get(PORTLET_MODE_ATTRIBUTE, PortletMode.class,
+					getPortletMode());
+			((ActionResponse) portletContext.getResponse()).setPortletMode(mode);
 			return success();
-		}
-		else {
+		} else {
 			// portlet mode and the window state can be changed through
 			// ActionResponse only, if this is not the case, it means that this
 			// action has been invoked directly in a RenderRequest
-			throw new IllegalStateException(
-					"SetPortletModeAction can only be invoked within a Action request -- " +
-					"make sure you are not invoking it in a RenderRequest");
+			throw new IllegalStateException("SetPortletModeAction can only be invoked within a Action request -- "
+					+ "make sure you are not invoking it in a RenderRequest");
 		}
 	}
 }

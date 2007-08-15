@@ -23,10 +23,9 @@ import javax.faces.el.PropertyResolver;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Custom property resolver that resolves supported properties of the current flow execution.
- * Supports resolving all scopes as java.util.Maps: "flowScope", "conversationScope", and "flashScope".
- * Also supports attribute searching when no scope prefix is specified. The search order is 
- * flash, flow, conversation.
+ * Custom property resolver that resolves supported properties of the current flow execution. Supports resolving all
+ * scopes as java.util.Maps: "flowScope", "conversationScope", and "flashScope". Also supports attribute searching when
+ * no scope prefix is specified. The search order is flash, flow, conversation.
  * 
  * @author Keith Donald
  */
@@ -64,7 +63,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 			return Map.class;
 		} else {
 			// perform an attribute search
-			
+
 			// try flash scope first
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
@@ -82,7 +81,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 			}
 			// cannot determine
 			return null;
-		}		
+		}
 	}
 
 	protected Object doGetAttribute(FlowExecution execution, String attributeName) {
@@ -94,7 +93,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 			return execution.getConversationScope().asMap();
 		} else {
 			// perform an attribute search
-			
+
 			// try flash scope
 			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
 			if (value != null) {
@@ -111,22 +110,23 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 				return value;
 			}
 			// cannot resolve as expected
-			throw new PropertyNotFoundException("Readable flow execution attribute '" + attributeName + "' not found in any scope (flash, flow, or conversation)");
-		}		
+			throw new PropertyNotFoundException("Readable flow execution attribute '" + attributeName
+					+ "' not found in any scope (flash, flow, or conversation)");
+		}
 	}
 
 	protected void doSetAttribute(FlowExecution execution, String attributeName, Object attributeValue) {
 		// perform a search
 		if (execution.getActiveSession().getFlashMap().contains(attributeName)) {
 			execution.getActiveSession().getFlashMap().put(attributeName, attributeValue);
-		}
-		else if (execution.getActiveSession().getScope().contains(attributeName)) {
+		} else if (execution.getActiveSession().getScope().contains(attributeName)) {
 			execution.getActiveSession().getScope().put(attributeName, attributeValue);
 		} else if (execution.getConversationScope().contains(attributeName)) {
 			execution.getConversationScope().put(attributeName, attributeValue);
 		} else {
 			// cannot resolve as expected
-			throw new PropertyNotFoundException("Settable flow execution attribute '" + attributeName + "' not found in any scope (flash, flow, or conversation)");
-		}		
+			throw new PropertyNotFoundException("Settable flow execution attribute '" + attributeName
+					+ "' not found in any scope (flash, flow, or conversation)");
+		}
 	}
 }

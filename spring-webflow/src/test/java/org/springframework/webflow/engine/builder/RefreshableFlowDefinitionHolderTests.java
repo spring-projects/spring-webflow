@@ -53,7 +53,7 @@ public class RefreshableFlowDefinitionHolderTests extends TestCase {
 		assertEquals(lastModified, holder.getLastModified());
 		assertSame(flow1, flow2);
 	}
-	
+
 	public void testReloadOnChange() throws Exception {
 		MockFlowBuilder mockFlowBuilder = new MockFlowBuilder();
 		FlowAssembler assembler = new FlowAssembler("mockFlow", mockFlowBuilder);
@@ -77,20 +77,20 @@ public class RefreshableFlowDefinitionHolderTests extends TestCase {
 		holder.refresh();
 		assertEquals(4, mockFlowBuilder.buildCallCount);
 	}
-	
+
 	private class MockFlowBuilder extends AbstractFlowBuilder implements ResourceHolder {
-		
+
 		public int buildCallCount = 0;
 		public long lastModified = 0L;
-		
+
 		public void buildStates() throws FlowBuilderException {
 			addEndState("end");
 			buildCallCount++;
 		}
-		
+
 		public Resource getResource() {
 			return new AbstractResource() {
-				
+
 				public File getFile() throws IOException {
 					return new File("mock") {
 						public long lastModified() {
@@ -98,17 +98,16 @@ public class RefreshableFlowDefinitionHolderTests extends TestCase {
 						}
 					};
 				}
-				
+
 				public String getDescription() {
 					return null;
 				}
-				
+
 				public InputStream getInputStream() throws IOException {
 					return null;
 				}
 			};
 		}
 	}
-	
-	
+
 }

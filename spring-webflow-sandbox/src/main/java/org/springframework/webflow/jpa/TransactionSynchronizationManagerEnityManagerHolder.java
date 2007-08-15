@@ -8,18 +8,18 @@ import javax.persistence.EntityManager;
 
 /**
  * Resource holder that is wrapper for TransactionSynchronizationManager.
- *
+ * 
  * @author Maxim Petrashev
  */
 public class TransactionSynchronizationManagerEnityManagerHolder extends AbstractReadOnlyResourceHolder<EntityManager> {
-    public EntityManager get() {
-        EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.getResource( _key );
-        return emHolder.getEntityManager();
-    }
+	public EntityManager get() {
+		EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.getResource(_key);
+		return emHolder.getEntityManager();
+	}
 
-    public TransactionSynchronizationManagerEnityManagerHolder(Object aKey) {
-        _key = aKey;
-    }
+	public TransactionSynchronizationManagerEnityManagerHolder(Object aKey) {
+		_key = aKey;
+	}
 
-    private Object _key;
+	private Object _key;
 }

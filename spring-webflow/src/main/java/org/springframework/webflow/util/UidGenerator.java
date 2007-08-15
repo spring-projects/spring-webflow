@@ -18,8 +18,8 @@ package org.springframework.webflow.util;
 import java.io.Serializable;
 
 /**
- * A strategy for generating ids for uniquely identifying execution artifacts
- * such as FlowExecutions and any other uniquely identified flow artifact.
+ * A strategy for generating ids for uniquely identifying execution artifacts such as FlowExecutions and any other
+ * uniquely identified flow artifact.
  * 
  * @author Keith Donald
  */

@@ -26,16 +26,15 @@ import junit.framework.TestCase;
  * @author Erwin Vervaet
  */
 public class NotTransitionCriteriaTests extends TestCase {
-	
+
 	public void testNull() {
 		try {
 			new NotTransitionCriteria(null);
 			fail();
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	public void testNegation() {
 		assertFalse(new NotTransitionCriteria(WildcardTransitionCriteria.INSTANCE).test(new MockRequestContext()));
 	}

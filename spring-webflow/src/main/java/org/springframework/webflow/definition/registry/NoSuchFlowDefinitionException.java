@@ -19,8 +19,7 @@ import org.springframework.core.style.StylerUtils;
 import org.springframework.webflow.core.FlowException;
 
 /**
- * Thrown when no flow definition was found during a lookup operation by a flow
- * locator.
+ * Thrown when no flow definition was found during a lookup operation by a flow locator.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -35,8 +34,7 @@ public class NoSuchFlowDefinitionException extends FlowException {
 	/**
 	 * Creates an exception indicating a flow definition could not be found.
 	 * @param flowId the flow id
-	 * @param availableFlowIds all flow ids available to the locator generating
-	 * this exception
+	 * @param availableFlowIds all flow ids available to the locator generating this exception
 	 */
 	public NoSuchFlowDefinitionException(String flowId, String[] availableFlowIds) {
 		super("No such flow definition with id '" + flowId + "' found; the flows available are: "

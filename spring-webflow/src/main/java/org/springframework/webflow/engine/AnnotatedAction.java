@@ -24,14 +24,12 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * An action proxy/decorator that stores arbitrary properties about a target
- * <code>Action</code> implementation for use within a specific Action
- * execution context, for example an <code>ActionState</code> definition, a
+ * An action proxy/decorator that stores arbitrary properties about a target <code>Action</code> implementation for
+ * use within a specific Action execution context, for example an <code>ActionState</code> definition, a
  * <code>TransitionCriteria</code> definition, or in a test environment.
  * <p>
- * An annotated action is an action that wraps another action (referred to as
- * the <i>target</i> action), setting up the target action's execution attributes
- * before invoking {@link Action#execute}.
+ * An annotated action is an action that wraps another action (referred to as the <i>target</i> action), setting up the
+ * target action's execution attributes before invoking {@link Action#execute}.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -43,9 +41,8 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	/**
 	 * The action name attribute ("name").
 	 * <p>
-	 * The name attribute is often used as a qualifier for an action's result
-	 * event, and is typically used to allow the flow to respond to a specific
-	 * action's outcome within a larger action execution chain.
+	 * The name attribute is often used as a qualifier for an action's result event, and is typically used to allow the
+	 * flow to respond to a specific action's outcome within a larger action execution chain.
 	 * @see ActionState
 	 */
 	public static final String NAME_ATTRIBUTE = "name";
@@ -53,9 +50,8 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	/**
 	 * The action execution method attribute ("method").
 	 * <p>
-	 * The method property is a hint about what method should be invoked; for
-	 * example, the name of a specific target method on a
-	 * {@link org.springframework.webflow.action.MultiAction multi action}.
+	 * The method property is a hint about what method should be invoked; for example, the name of a specific target
+	 * method on a {@link org.springframework.webflow.action.MultiAction multi action}.
 	 * @see ActionState
 	 */
 	public static final String METHOD_ATTRIBUTE = "method";
@@ -66,8 +62,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	private Action targetAction;
 
 	/**
-	 * Creates a new annotated action object for the specified action. No
-	 * contextual properties are provided.
+	 * Creates a new annotated action object for the specified action. No contextual properties are provided.
 	 * @param targetAction the action
 	 */
 	public AnnotatedAction(Action targetAction) {
@@ -91,8 +86,8 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	}
 
 	/**
-	 * Returns the name of a named action, or <code>null</code> if the action
-	 * is unnamed. Used when mapping action result events to transitions.
+	 * Returns the name of a named action, or <code>null</code> if the action is unnamed. Used when mapping action
+	 * result events to transitions.
 	 * @see #isNamed()
 	 * @see #postProcessResult(Event)
 	 */
@@ -101,8 +96,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	}
 
 	/**
-	 * Sets the name of a named action. This is optional and can be
-	 * <code>null</code>.
+	 * Sets the name of a named action. This is optional and can be <code>null</code>.
 	 * @param name the action name
 	 */
 	public void setName(String name) {
@@ -117,24 +111,22 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	public boolean isNamed() {
 		return StringUtils.hasText(getName());
 	}
-	
+
 	/**
-	 * Returns the name of the action method to invoke when the target action is
-	 * executed.
+	 * Returns the name of the action method to invoke when the target action is executed.
 	 */
 	public String getMethod() {
 		return getAttributeMap().getString(METHOD_ATTRIBUTE);
 	}
 
 	/**
-	 * Sets the name of the action method to invoke when the target action is
-	 * executed.
+	 * Sets the name of the action method to invoke when the target action is executed.
 	 * @param method the action method name
 	 */
 	public void setMethod(String method) {
 		getAttributeMap().put(METHOD_ATTRIBUTE, method);
 	}
-	
+
 	/**
 	 * Set an attribute on this annotated object.
 	 * @param attributeName the name of the attribute to set
@@ -145,7 +137,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	public AnnotatedAction putAttribute(String attributeName, Object attributeValue) {
 		getAttributeMap().put(attributeName, attributeValue);
 		return this;
-	}	
+	}
 
 	public Event execute(RequestContext context) throws Exception {
 		AttributeMap originalAttributes = getAttributeMap();
@@ -153,19 +145,17 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 			context.setAttributes(getAttributeMap());
 			Event result = getTargetAction().execute(context);
 			return postProcessResult(result);
-		}
-		finally {
+		} finally {
 			// restore original attributes
 			context.setAttributes(originalAttributes);
 		}
 	}
 
 	/**
-	 * Get the event id to be used as grounds for a transition in the containing
-	 * state, based on given result returned from action execution.
+	 * Get the event id to be used as grounds for a transition in the containing state, based on given result returned
+	 * from action execution.
 	 * <p>
-	 * If the wrapped action is named, the name will be used as a qualifier for
-	 * the event (e.g. "myAction.success").
+	 * If the wrapped action is named, the name will be used as a qualifier for the event (e.g. "myAction.success").
 	 * @param resultEvent the action result event
 	 */
 	protected Event postProcessResult(Event resultEvent) {
@@ -181,7 +171,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("targetAction", getTargetAction())
-			.append("attributes", getAttributeMap()).toString();
+		return new ToStringCreator(this).append("targetAction", getTargetAction()).append("attributes",
+				getAttributeMap()).toString();
 	}
 }

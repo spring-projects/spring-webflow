@@ -29,23 +29,18 @@ import org.springframework.webflow.core.DefaultExpressionParserFactory;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * Generic flow attribute mapper implementation that allows mappings to be
- * configured in a declarative fashion.
+ * Generic flow attribute mapper implementation that allows mappings to be configured in a declarative fashion.
  * <p>
  * Two types of mappings may be configured, input mappings and output mappings:
  * <ol>
- * <li>Input mappings define the rules for mapping attributes in a parent flow
- * to a spawning subflow.
- * <li>Output mappings define the rules for mapping attributes returned from an
- * ended subflow into the resuming parent.
+ * <li>Input mappings define the rules for mapping attributes in a parent flow to a spawning subflow.
+ * <li>Output mappings define the rules for mapping attributes returned from an ended subflow into the resuming parent.
  * </ol>
  * <p>
- * The mappings defined using the configuration properties fully support bean
- * property access. So an entry name in a mapping can either be "beanName" or
- * "beanName.propName". Nested property values are also supported
- * ("beanName.propName.nestedPropName"). When the <i>from</i> mapping string is
- * enclosed in "${...}", it will be interpreted as an expression that will be
- * evaluated against the flow execution request context.
+ * The mappings defined using the configuration properties fully support bean property access. So an entry name in a
+ * mapping can either be "beanName" or "beanName.propName". Nested property values are also supported
+ * ("beanName.propName.nestedPropName"). When the <i>from</i> mapping string is enclosed in "${...}", it will be
+ * interpreted as an expression that will be evaluated against the flow execution request context.
  * 
  * @see org.springframework.webflow.execution.RequestContext
  * 
@@ -54,15 +49,13 @@ import org.springframework.webflow.execution.ScopeType;
  * @author Colin Sampaleanu
  */
 public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper implements Serializable {
-	
+
 	/*
-	 * Note: no longer used by the Spring Web Flow code base. Kept around
-	 * for possible usage by end users.
+	 * Note: no longer used by the Spring Web Flow code base. Kept around for possible usage by end users.
 	 */
 
 	/**
-	 * The expression parser that will parse input and output attribute
-	 * expressions.
+	 * The expression parser that will parse input and output attribute expressions.
 	 */
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
 
@@ -77,8 +70,7 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	private DefaultAttributeMapper outputMapper = new DefaultAttributeMapper();
 
 	/**
-	 * Set the expression parser responsible for parsing expression strings into
-	 * evaluatable expression objects.
+	 * Set the expression parser responsible for parsing expression strings into evaluatable expression objects.
 	 */
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		Assert.notNull(expressionParser, "The expression parser is required");
@@ -86,8 +78,8 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a new input mapping. Use when you need full control over defining
-	 * how a subflow input attribute mapping will be perfomed.
+	 * Adds a new input mapping. Use when you need full control over defining how a subflow input attribute mapping will
+	 * be perfomed.
 	 * @param inputMapping the input mapping
 	 * @return this, to support call chaining
 	 */
@@ -97,8 +89,8 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a collection of input mappings. Use when you need full control over
-	 * defining how a subflow input attribute mapping will be perfomed.
+	 * Adds a collection of input mappings. Use when you need full control over defining how a subflow input attribute
+	 * mapping will be perfomed.
 	 * @param inputMappings the input mappings
 	 */
 	public void addInputMappings(AttributeMapper[] inputMappings) {
@@ -106,8 +98,8 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a new output mapping. Use when you need full control over defining
-	 * how a subflow output attribute mapping will be perfomed.
+	 * Adds a new output mapping. Use when you need full control over defining how a subflow output attribute mapping
+	 * will be perfomed.
 	 * @param outputMapping the output mapping
 	 * @return this, to support call chaining
 	 */
@@ -117,8 +109,8 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a collection of output mappings. Use when you need full control over
-	 * defining how a subflow output attribute mapping will be perfomed.
+	 * Adds a collection of output mappings. Use when you need full control over defining how a subflow output attribute
+	 * mapping will be perfomed.
 	 * @param outputMappings the output mappings
 	 */
 	public void addOutputMappings(AttributeMapper[] outputMappings) {
@@ -126,10 +118,9 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds an input mapping that maps a single attribute in parent <i>flow
-	 * scope</i> into the subflow input map. For instance: "x" will result in
-	 * the "x" attribute in parent flow scope being mapped into the subflow
-	 * input map as "x".
+	 * Adds an input mapping that maps a single attribute in parent <i>flow scope</i> into the subflow input map. For
+	 * instance: "x" will result in the "x" attribute in parent flow scope being mapped into the subflow input map as
+	 * "x".
 	 * @param attributeName the attribute in flow scope to map into the subflow
 	 * @return this, to support call chaining
 	 */
@@ -141,12 +132,10 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a collection of input mappings that map attributes in parent <i>flow
-	 * scope</i> into the subflow input map. For instance: "x" will result in
-	 * the "x" attribute in parent flow scope being mapped into the subflow
-	 * input map as "x".
-	 * @param attributeNames the attributes in flow scope to map into the
-	 * subflow
+	 * Adds a collection of input mappings that map attributes in parent <i>flow scope</i> into the subflow input map.
+	 * For instance: "x" will result in the "x" attribute in parent flow scope being mapped into the subflow input map
+	 * as "x".
+	 * @param attributeNames the attributes in flow scope to map into the subflow
 	 */
 	public void addInputAttributes(String[] attributeNames) {
 		if (attributeNames == null) {
@@ -158,12 +147,10 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds an output mapping that maps a single subflow output attribute into
-	 * the <i>flow scope</i> of the resuming parent flow. For instance: "y"
-	 * will result in the "y" attribute of the subflow output map being mapped
-	 * into the flowscope of the resuming parent flow as "y".
-	 * @param attributeName the subflow output attribute to map into the parent
-	 * flow scope
+	 * Adds an output mapping that maps a single subflow output attribute into the <i>flow scope</i> of the resuming
+	 * parent flow. For instance: "y" will result in the "y" attribute of the subflow output map being mapped into the
+	 * flowscope of the resuming parent flow as "y".
+	 * @param attributeName the subflow output attribute to map into the parent flow scope
 	 * @return this, to support call chaining
 	 */
 	public ConfigurableFlowAttributeMapper addOutputAttribute(String attributeName) {
@@ -174,12 +161,10 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Adds a collection of output mappings that map subflow output attributes
-	 * into the scope of the resuming parent flow. For instance: "y" will result
-	 * in the "y" attribute of the subflow output map being mapped into the
+	 * Adds a collection of output mappings that map subflow output attributes into the scope of the resuming parent
+	 * flow. For instance: "y" will result in the "y" attribute of the subflow output map being mapped into the
 	 * flowscope of the resuming parent flow as "y".
-	 * @param attributeNames the subflow output attributes to map into the
-	 * parent flow
+	 * @param attributeNames the subflow output attributes to map into the parent flow
 	 */
 	public void addOutputAttributes(String[] attributeNames) {
 		if (attributeNames == null) {
@@ -207,8 +192,7 @@ public class ConfigurableFlowAttributeMapper extends AbstractFlowAttributeMapper
 	}
 
 	/**
-	 * Returns the configured expression parser. Can be used by subclasses that
-	 * build mappings.
+	 * Returns the configured expression parser. Can be used by subclasses that build mappings.
 	 */
 	protected ExpressionParser getExpressionParser() {
 		return expressionParser;

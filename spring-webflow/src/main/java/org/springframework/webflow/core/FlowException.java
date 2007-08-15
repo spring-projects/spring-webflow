@@ -18,8 +18,8 @@ package org.springframework.webflow.core;
 import org.springframework.core.NestedRuntimeException;
 
 /**
- * Root class for exceptions thrown by the Spring Web Flow system. All other
- * exceptions within the system should be assignable to this class.
+ * Root class for exceptions thrown by the Spring Web Flow system. All other exceptions within the system should be
+ * assignable to this class.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

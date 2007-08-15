@@ -42,7 +42,7 @@ public class ViewStateTests extends TestCase {
 		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
 		new EndState(flow, "finish");
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
-		ApplicationView view = (ApplicationView)flowExecution.start(null, new MockExternalContext());
+		ApplicationView view = (ApplicationView) flowExecution.start(null, new MockExternalContext());
 		assertEquals("viewState", flowExecution.getActiveSession().getState().getId());
 		assertNotNull(view);
 		assertEquals("myViewName", view.getViewName());
@@ -107,7 +107,7 @@ public class ViewStateTests extends TestCase {
 	protected TargetStateResolver to(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}
-	
+
 	public static ViewSelector view(String viewName) {
 		return new ApplicationViewSelector(new StaticExpression(viewName));
 	}

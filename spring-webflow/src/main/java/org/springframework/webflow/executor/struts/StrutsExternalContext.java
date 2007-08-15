@@ -24,8 +24,8 @@ import org.apache.struts.action.ActionMapping;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
- * Provides consistent access to a Struts environment from within the Spring Web
- * Flow system. Represents the context of a request into SWF from Struts.
+ * Provides consistent access to a Struts environment from within the Spring Web Flow system. Represents the context of
+ * a request into SWF from Struts.
  * 
  * @author Keith Donald
  */

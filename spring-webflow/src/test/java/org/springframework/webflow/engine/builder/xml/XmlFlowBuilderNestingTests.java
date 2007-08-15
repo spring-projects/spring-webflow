@@ -57,9 +57,10 @@ public class XmlFlowBuilderNestingTests extends TestCase {
 		this.parentBeanFactory = parentContext.getBeanFactory();
 		XmlFlowBuilder builder = new XmlFlowBuilder(new ClassPathResource("testFlow2.xml", getClass()));
 		builder
-				.setFlowServiceLocator(new DefaultFlowServiceLocator(new FlowDefinitionRegistryImpl(), parentBeanFactory));
+				.setFlowServiceLocator(new DefaultFlowServiceLocator(new FlowDefinitionRegistryImpl(),
+						parentBeanFactory));
 		this.flow = new FlowAssembler("testFlow2", builder).assembleFlow();
-		this.testService = (TestService)parentContext.getBean("testService");
+		this.testService = (TestService) parentContext.getBean("testService");
 	}
 
 	public void testBuildResult() {
@@ -67,30 +68,29 @@ public class XmlFlowBuilderNestingTests extends TestCase {
 		assertEquals(3, flow.getStateCount());
 		assertEquals("actionState1", flow.getStartState().getId());
 
-		TestAction action1 = (TestAction)((ActionState)flow.getState("actionState1")).getActionList().getAnnotated(0)
+		TestAction action1 = (TestAction) ((ActionState) flow.getState("actionState1")).getActionList().getAnnotated(0)
 				.getTargetAction();
 		BeanFactory testFlow2BeanFactory = action1.getBeanFactory();
 		assertNotNull(testFlow2BeanFactory);
 		assertSame(testService, action1.getTestService());
 		assertSame(action1, testFlow2BeanFactory.getBean("action1"));
-		assertSame(parentBeanFactory, ((HierarchicalBeanFactory)testFlow2BeanFactory).getParentBeanFactory());
-		assertEquals(2, BeanFactoryUtils.countBeansIncludingAncestors(((ListableBeanFactory)testFlow2BeanFactory)));
+		assertSame(parentBeanFactory, ((HierarchicalBeanFactory) testFlow2BeanFactory).getParentBeanFactory());
+		assertEquals(2, BeanFactoryUtils.countBeansIncludingAncestors(((ListableBeanFactory) testFlow2BeanFactory)));
 
-		Flow subFlow1 = ((SubflowState)flow.getState("subFlowState1")).getSubflow();
+		Flow subFlow1 = ((SubflowState) flow.getState("subFlowState1")).getSubflow();
 		assertNotSame(flow, subFlow1);
 		assertEquals("subFlow1", subFlow1.getId());
 		assertEquals(2, subFlow1.getStateCount());
 		assertEquals("subActionState1", subFlow1.getStartState().getId());
 
-		AnnotatedAction[] actions = ((ActionState)subFlow1.getState("subActionState1")).getActionList()
+		AnnotatedAction[] actions = ((ActionState) subFlow1.getState("subActionState1")).getActionList()
 				.toAnnotatedArray();
 		assertEquals(2, actions.length);
 		SubTestAction subAction1 = null;
 		if (action1 == actions[0].getTargetAction()) {
-			subAction1 = (SubTestAction)actions[1].getTargetAction();
-		}
-		else {
-			subAction1 = (SubTestAction)actions[0].getTargetAction();
+			subAction1 = (SubTestAction) actions[1].getTargetAction();
+		} else {
+			subAction1 = (SubTestAction) actions[0].getTargetAction();
 			assertSame(action1, actions[1].getTargetAction());
 		}
 		BeanFactory testFlow2SubFlow1BeanFactory = subAction1.getBeanFactory();
@@ -100,8 +100,9 @@ public class XmlFlowBuilderNestingTests extends TestCase {
 		// failed
 		assertSame(action1, subAction1.getAction1());
 		assertSame(subAction1, testFlow2SubFlow1BeanFactory.getBean("subAction1"));
-		assertSame(testFlow2BeanFactory, ((HierarchicalBeanFactory)testFlow2SubFlow1BeanFactory).getParentBeanFactory());
-		assertEquals(1, ((ListableBeanFactory)testFlow2SubFlow1BeanFactory).getBeanDefinitionCount()); // only
+		assertSame(testFlow2BeanFactory, ((HierarchicalBeanFactory) testFlow2SubFlow1BeanFactory)
+				.getParentBeanFactory());
+		assertEquals(1, ((ListableBeanFactory) testFlow2SubFlow1BeanFactory).getBeanDefinitionCount()); // only
 		// subAction1
 	}
 

@@ -22,15 +22,12 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Action that executes an attribute mapper to map information in the request
- * context. Both the source and the target of the mapping will be the request
- * context. This allows for maximum flexibility when defining attribute mapping
+ * Action that executes an attribute mapper to map information in the request context. Both the source and the target of
+ * the mapping will be the request context. This allows for maximum flexibility when defining attribute mapping
  * expressions (e.g. "${flowScope.someAttribute}").
  * <p>
- * This action always returns the
- * {@link org.springframework.webflow.action.AbstractAction#success() success}
- * event. If something goes wrong while executing the mapping, an exception
- * is thrown. 
+ * This action always returns the {@link org.springframework.webflow.action.AbstractAction#success() success} event. If
+ * something goes wrong while executing the mapping, an exception is thrown.
  * 
  * @see org.springframework.binding.mapping.AttributeMapper
  * @see org.springframework.webflow.execution.RequestContext
@@ -46,8 +43,8 @@ public class AttributeMapperAction extends AbstractAction {
 	private AttributeMapper attributeMapper;
 
 	/**
-	 * Creates a new attribute mapper action that delegates to the configured
-	 * attribute mapper to complete the mapping process.
+	 * Creates a new attribute mapper action that delegates to the configured attribute mapper to complete the mapping
+	 * process.
 	 * @param attributeMapper the mapper
 	 */
 	public AttributeMapperAction(AttributeMapper attributeMapper) {
@@ -62,9 +59,8 @@ public class AttributeMapperAction extends AbstractAction {
 	}
 
 	/**
-	 * Returns a context containing extra data available during attribute mapping.
-	 * The default implementation just returns null. Subclasses can
-	 * override this if necessary.
+	 * Returns a context containing extra data available during attribute mapping. The default implementation just
+	 * returns null. Subclasses can override this if necessary.
 	 */
 	protected MappingContext getMappingContext(RequestContext context) {
 		return null;

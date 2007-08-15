@@ -52,7 +52,7 @@ public class EvaluateActionTests extends TestCase {
 		assertEquals("bar", result.getId());
 		assertEquals("bar", context.getFlowScope().get("baz"));
 	}
-	
+
 	public void testBeanResult() throws Exception {
 		EvaluateAction action = new EvaluateAction(parser.parseExpression("flowScope.bean"), new ActionResultExposer(
 				"baz", ScopeType.FLOW));

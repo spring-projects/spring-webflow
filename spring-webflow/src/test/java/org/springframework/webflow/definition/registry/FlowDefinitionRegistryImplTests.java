@@ -25,7 +25,7 @@ import org.springframework.webflow.definition.StateDefinition;
  * Unit tests for {@link FlowDefinitionRegistryImpl}.
  */
 public class FlowDefinitionRegistryImplTests extends TestCase {
-	
+
 	private FlowDefinitionRegistryImpl registry = new FlowDefinitionRegistryImpl();
 
 	private FlowDefinition fooFlow;
@@ -44,8 +44,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		try {
 			registry.getFlowDefinition("bogus");
 			fail("Should've bombed with NoSuchFlow");
-		}
-		catch (NoSuchFlowDefinitionException e) {
+		} catch (NoSuchFlowDefinitionException e) {
 
 		}
 	}
@@ -82,7 +81,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		assertEquals(2, registry.getFlowDefinitionCount());
 		assertSame(fooFlow, registry.getFlowDefinition("foo"));
 	}
-	
+
 	public void testRefreshValidFlow() {
 		testRegisterMultipleFlows();
 		registry.refresh("foo");
@@ -95,12 +94,11 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		try {
 			registry.refresh("bogus");
 			fail("Should've bombed with NoSuchFlow");
-		}
-		catch (NoSuchFlowDefinitionException e) {
+		} catch (NoSuchFlowDefinitionException e) {
 
 		}
 	}
-	
+
 	public void testParentHierarchy() {
 		testRegisterMultipleFlows();
 		FlowDefinitionRegistryImpl child = new FlowDefinitionRegistryImpl();
@@ -113,7 +111,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 	private static class FooFlow implements FlowDefinition {
 		private String id = "foo";
-		
+
 		public AttributeMap getAttributes() {
 			return null;
 		}

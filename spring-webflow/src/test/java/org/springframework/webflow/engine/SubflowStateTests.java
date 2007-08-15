@@ -54,11 +54,11 @@ public class SubflowStateTests extends TestCase {
 		state3.setViewSelector(view("myParentFlowEndingViewName"));
 
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
-		ApplicationView view = (ApplicationView)flowExecution.start(null, new MockExternalContext());
+		ApplicationView view = (ApplicationView) flowExecution.start(null, new MockExternalContext());
 		assertEquals("mySubFlow", flowExecution.getActiveSession().getDefinition().getId());
 		assertEquals("subFlowViewState", flowExecution.getActiveSession().getState().getId());
 		assertEquals("mySubFlowViewName", view.getViewName());
-		view = (ApplicationView)flowExecution.signalEvent("submit", new MockExternalContext());
+		view = (ApplicationView) flowExecution.signalEvent("submit", new MockExternalContext());
 		assertEquals("myParentFlowEndingViewName", view.getViewName());
 		assertTrue(!flowExecution.isActive());
 	}
@@ -96,12 +96,12 @@ public class SubflowStateTests extends TestCase {
 		FlowExecution flowExecution = new FlowExecutionImpl(flow);
 		MockParameterMap input = new MockParameterMap();
 		input.put("parentInputAttribute", "attributeValue");
-		ApplicationView view = (ApplicationView)flowExecution.start(null, new MockExternalContext(input));
+		ApplicationView view = (ApplicationView) flowExecution.start(null, new MockExternalContext(input));
 		assertEquals("mySubFlow", flowExecution.getActiveSession().getDefinition().getId());
 		assertEquals("subFlowViewState", flowExecution.getActiveSession().getState().getId());
 		assertEquals("mySubFlowViewName", view.getViewName());
 		assertEquals("attributeValue", flowExecution.getActiveSession().getScope().get("childInputAttribute"));
-		view = (ApplicationView)flowExecution.signalEvent("submit", new MockExternalContext());
+		view = (ApplicationView) flowExecution.signalEvent("submit", new MockExternalContext());
 		assertEquals("myParentFlowEndingViewName", view.getViewName());
 		assertTrue(!flowExecution.isActive());
 		assertEquals("attributeValue", view.getModel().get("parentOutputAttribute"));
@@ -114,7 +114,7 @@ public class SubflowStateTests extends TestCase {
 	protected TargetStateResolver to(String stateId) {
 		return new DefaultTargetStateResolver(stateId);
 	}
-	
+
 	protected ViewSelector view(String viewName) {
 		return new ApplicationViewSelector(new StaticExpression(viewName));
 	}

@@ -53,7 +53,7 @@ public class RepositoryType extends StaticLabeledEnum {
 	 * @see SimpleFlowExecutionRepository#setAlwaysGenerateNewNextKey(boolean)
 	 */
 	public static final RepositoryType SINGLEKEY = new RepositoryType(3, "Single Key");
-	
+
 	/**
 	 * Private constructor because this is a typesafe enum!
 	 */

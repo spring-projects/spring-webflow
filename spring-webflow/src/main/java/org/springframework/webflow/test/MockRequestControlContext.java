@@ -27,8 +27,8 @@ import org.springframework.webflow.execution.FlowSessionStatus;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * Mock implementation of the {@link RequestControlContext} interface to
- * facilitate standalone Flow and State unit tests.
+ * Mock implementation of the {@link RequestControlContext} interface to facilitate standalone Flow and State unit
+ * tests.
  * 
  * @see org.springframework.webflow.execution.RequestContext
  * @see org.springframework.webflow.execution.FlowSession
@@ -39,17 +39,16 @@ import org.springframework.webflow.execution.ViewSelection;
 public class MockRequestControlContext extends MockRequestContext implements RequestControlContext {
 
 	/**
-	 * Creates a new mock request control context for controlling a mock execution of the
-	 * provided flow definition.
+	 * Creates a new mock request control context for controlling a mock execution of the provided flow definition.
 	 */
 	public MockRequestControlContext(Flow rootFlow) {
 		super(rootFlow);
 	}
-	
+
 	// implementing RequestControlContext
 
 	public void setCurrentState(State state) {
-		State previousState = (State)getCurrentState();
+		State previousState = (State) getCurrentState();
 		getMockFlowExecutionContext().getMockActiveSession().setState(state);
 		if (previousState == null) {
 			getMockFlowExecutionContext().getMockActiveSession().setStatus(FlowSessionStatus.ACTIVE);
@@ -65,7 +64,7 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 
 	public ViewSelection signalEvent(Event event) {
 		setLastEvent(event);
-		ViewSelection selectedView = ((Flow)getActiveFlow()).onEvent(this);
+		ViewSelection selectedView = ((Flow) getActiveFlow()).onEvent(this);
 		return selectedView;
 	}
 
@@ -78,6 +77,6 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	}
 
 	public ViewSelection execute(Transition transition) {
-		return transition.execute((TransitionableState)getCurrentState(), this);
+		return transition.execute((TransitionableState) getCurrentState(), this);
 	}
 }

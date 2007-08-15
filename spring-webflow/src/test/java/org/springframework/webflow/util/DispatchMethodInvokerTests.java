@@ -73,8 +73,7 @@ public class DispatchMethodInvokerTests extends TestCase {
 		try {
 			invoker.invoke("exceptionMethod", new Object[] { "testValue" });
 			fail("Should have thrown an exception");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 		}
 	}
 

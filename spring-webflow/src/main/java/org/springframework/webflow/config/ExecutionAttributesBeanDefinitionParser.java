@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * @author Ben Hale
  */
 class ExecutionAttributesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-	
+
 	// elements and attributes
 
 	private static final String ATTRIBUTE_ELEMENT = "attribute";
@@ -68,7 +68,7 @@ class ExecutionAttributesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	 */
 	private void putAttributes(Map attributeMap, List attributeElements) {
 		for (Iterator i = attributeElements.iterator(); i.hasNext();) {
-			Element attributeElement = (Element)i.next();
+			Element attributeElement = (Element) i.next();
 			String type = attributeElement.getAttribute(TYPE_ATTRIBUTE);
 			Object value;
 			if (StringUtils.hasText(type)) {
@@ -81,17 +81,15 @@ class ExecutionAttributesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	}
 
 	/**
-	 * Add all non-generic (special) attributes defined in given element
-	 * to given map.
+	 * Add all non-generic (special) attributes defined in given element to given map.
 	 */
 	private void putSpecialAttributes(Map attributeMap, Element element) {
-		putAlwaysRedirectOnPauseAttribute(attributeMap,
-				DomUtils.getChildElementByTagName(element, ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE));
+		putAlwaysRedirectOnPauseAttribute(attributeMap, DomUtils.getChildElementByTagName(element,
+				ApplicationViewSelector.ALWAYS_REDIRECT_ON_PAUSE_ATTRIBUTE));
 	}
 
 	/**
-	 * Parse the "alwaysRedirectOnPause" attribute from given element and
-	 * add it to given map.
+	 * Parse the "alwaysRedirectOnPause" attribute from given element and add it to given map.
 	 */
 	private void putAlwaysRedirectOnPauseAttribute(Map attributeMap, Element element) {
 		if (element != null) {

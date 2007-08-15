@@ -31,8 +31,7 @@ public class DateFormatter extends AbstractFormatter {
 	private DateFormat dateFormat;
 
 	/**
-	 * Constructs a date formatter that will delegate to the specified date
-	 * format.
+	 * Constructs a date formatter that will delegate to the specified date format.
 	 * @param dateFormat the date format to use
 	 */
 	public DateFormatter(DateFormat dateFormat) {
@@ -40,8 +39,7 @@ public class DateFormatter extends AbstractFormatter {
 	}
 
 	/**
-	 * Constructs a date formatter that will delegate to the specified date
-	 * format.
+	 * Constructs a date formatter that will delegate to the specified date format.
 	 * @param dateFormat the date format to use
 	 * @param allowEmpty should this formatter allow empty input arguments?
 	 */
@@ -52,7 +50,7 @@ public class DateFormatter extends AbstractFormatter {
 
 	// convert from date to string
 	protected String doFormatValue(Object date) {
-		return dateFormat.format((Date)date);
+		return dateFormat.format((Date) date);
 	}
 
 	// convert back from string to date
@@ -64,6 +62,6 @@ public class DateFormatter extends AbstractFormatter {
 	 * Convenience method to parse a date.
 	 */
 	public Date parseDate(String formattedString) throws InvalidFormatException {
-		return (Date)parseValue(formattedString, Date.class);
+		return (Date) parseValue(formattedString, Date.class);
 	}
 }

@@ -39,7 +39,7 @@ public class AttributeExpressionTests extends TestCase {
 		context.getFlowScope().put("foo", "bar");
 		assertEquals("bar", flowExp.evaluate(context, null));
 	}
-	
+
 	public void testFlowScopeSettableExpression() {
 		Expression exp = DefaultExpressionParserFactory.getExpressionParser().parseSettableExpression("foo");
 		AttributeExpression flowExp = new AttributeExpression(exp, ScopeType.FLOW);
@@ -48,7 +48,7 @@ public class AttributeExpressionTests extends TestCase {
 		flowExp.evaluateToSet(context, "newValue", null);
 		assertEquals("newValue", context.getFlowScope().get("foo"));
 	}
-	
+
 	public void testAttributeMapExpression() {
 		Expression exp = DefaultExpressionParserFactory.getExpressionParser().parseExpression("foo");
 		AttributeExpression attrExp = new AttributeExpression(exp);
@@ -56,7 +56,7 @@ public class AttributeExpressionTests extends TestCase {
 		attributeMap.put("foo", "bar");
 		assertEquals("bar", attrExp.evaluate(attributeMap, null));
 	}
-	
+
 	public void testAttributeMapSettableExpression() {
 		Expression exp = DefaultExpressionParserFactory.getExpressionParser().parseSettableExpression("foo");
 		AttributeExpression attrExp = new AttributeExpression(exp);
@@ -65,31 +65,28 @@ public class AttributeExpressionTests extends TestCase {
 		attrExp.evaluateToSet(attributeMap, "newValue", null);
 		assertEquals("newValue", attributeMap.get("foo"));
 	}
-	
+
 	public void testInvalidExpressionType() {
 		Expression exp = new StaticExpression("value");
 		AttributeExpression attrExp = new AttributeExpression(exp);
 		try {
 			attrExp.evaluateToSet(new LocalAttributeMap(), "newValue", null);
 			fail("we need a SettableExpression");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	public void testUnsupportedTarget() {
 		try {
 			new AttributeExpression(new StaticExpression("value")).evaluate(new HashMap(), null);
 			fail("a Map is not supported");
-		}
-		catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 		try {
 			Expression exp = DefaultExpressionParserFactory.getExpressionParser().parseSettableExpression("foo");
 			new AttributeExpression(exp).evaluate(new HashMap(), null);
 			fail("a Map is not supported");
-		}
-		catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 		}
 	}
 }

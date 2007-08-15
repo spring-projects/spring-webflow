@@ -36,8 +36,7 @@ public class MethodInvokerTests extends TestCase {
 		try {
 			methodInvoker.invoke(new MethodSignature("test"), new TestObject(), null);
 			fail();
-		}
-		catch (MethodInvocationException e) {
+		} catch (MethodInvocationException e) {
 			assertTrue(e.getTargetException() instanceof IllegalArgumentException);
 			assertEquals("just testing", e.getTargetException().getMessage());
 		}
@@ -47,8 +46,7 @@ public class MethodInvokerTests extends TestCase {
 		try {
 			methodInvoker.invoke(new MethodSignature("bogus"), new TestObject(), null);
 			fail();
-		}
-		catch (MethodInvocationException e) {
+		} catch (MethodInvocationException e) {
 			assertTrue(e.getTargetException() instanceof InvalidMethodKeyException);
 		}
 	}
