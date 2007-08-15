@@ -55,5 +55,6 @@
 	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc-portlet.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/xalan.jar"/>
 	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/shale-remoting.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

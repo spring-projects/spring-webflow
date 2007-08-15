@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+	<component>
+    	<component-type>spring.faces.ClientTextValidator</component-type>
+    	<component-class>org.springframework.faces.ui.ClientTextValidator</component-class>
+  	</component>
+  	
+  	<component>
+    	<component-type>spring.faces.ClientNumberValidator</component-type>
+    	<component-class>org.springframework.faces.ui.ClientNumberValidator</component-class>
+  	</component>
+  	
+  	<component>
+    	<component-type>spring.faces.ClientDateValidator</component-type>
+    	<component-class>org.springframework.faces.ui.ClientDateValidator</component-class>
+  	</component>
+  	
+  	<component>
+  		<component-type>spring.faces.ExtJsComponent</component-type>
+  		<component-class>org.springframework.faces.ui.ExtJsComponent</component-class>
+  	</component>
+
+	<render-kit>
+		<render-kit-id>HTML_BASIC</render-kit-id>
+		
+		<renderer>
+			<component-family>spring.faces.ExtAdvisor</component-family>
+			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ExtAdvisorRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.ExtAdvisor</component-family>
+			<renderer-type>spring.faces.ExtValidateAll</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ExtValidateAllRenderer</renderer-class>
+		</renderer>
+	</render-kit>
+
+</faces-config>

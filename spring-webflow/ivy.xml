@@ -57,6 +57,7 @@
     	<dependency org="commons-codec" name="commons-codec" rev="1.3" conf="buildtime, jsf12->default" />
     	<dependency org="commons-discovery" name="commons-discovery" rev="0.4" conf="buildtime, jsf12->default" />
     	<dependency org="commons-collections" name="commons-collections" rev="3.2" conf="buildtime, jsf12->default" />
+    	<dependency org="org.apache.shale" name="shale-remoting" rev="1.0.4" conf="buildtime, jsf12->default" />
 
 		<!-- build time only dependencies -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
