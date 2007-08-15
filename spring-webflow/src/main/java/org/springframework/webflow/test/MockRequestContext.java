@@ -48,11 +48,11 @@ public class MockRequestContext implements RequestContext {
 
 	private MutableAttributeMap requestScope = new LocalAttributeMap();
 
+	private MutableAttributeMap attributes = new LocalAttributeMap();
+
 	private Event lastEvent;
 
 	private Transition lastTransition;
-
-	private MutableAttributeMap attributes = new LocalAttributeMap();
 
 	/**
 	 * Creates a new mock request context with the following defaults:

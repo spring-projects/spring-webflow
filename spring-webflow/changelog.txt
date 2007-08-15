@@ -1,10 +1,15 @@
 SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
-http://www.springframework.org
+http://www.springframework.org/webflow
 
-Changes in version 1.0.5 ()
+Changes in version 1.0.5 (21.08.2007)
 -------------------------------------
 
+Package org.springframework.webflow.engine
+* Ensured the RequestContext attribute map can never be null (SWF-347).
+
+Package org.springframework.webflow.execution
+* Made the Event class non-final to allow for extension (SWF-330).
 
 Changes in version 1.0.4 (13.06.2007)
 -------------------------------------
