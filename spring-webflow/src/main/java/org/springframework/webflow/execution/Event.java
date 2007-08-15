@@ -31,13 +31,13 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * <p>
  * Why is this not an interface? A specific design choice. An event is not a strategy that defines a generic type or
  * role--it is essentially an immutable value object. It is expected that specializations of this base class be "Events"
- * and not part of some other inheritence hierarchy.
+ * and not part of some other inheritance hierarchy.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Colin Sampaleanu
  */
-public final class Event extends EventObject {
+public class Event extends EventObject {
 
 	/**
 	 * The event identifier.
@@ -45,7 +45,7 @@ public final class Event extends EventObject {
 	private final String id;
 
 	/**
-	 * The time the event occured.
+	 * The time the event occurred.
 	 */
 	private final long timestamp = System.currentTimeMillis();
 
@@ -85,7 +85,7 @@ public final class Event extends EventObject {
 	}
 
 	/**
-	 * Returns the time at which the event occured, represented as the number of milliseconds since January 1, 1970,
+	 * Returns the time at which the event occurred, represented as the number of milliseconds since January 1, 1970,
 	 * 00:00:00 GMT.
 	 * @return the timestamp
 	 */
