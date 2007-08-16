@@ -1,4 +1,4 @@
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;

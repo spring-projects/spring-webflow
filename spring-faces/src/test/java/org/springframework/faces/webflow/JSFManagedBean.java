@@ -1,4 +1,4 @@
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 import java.util.ArrayList;
 import java.util.List;

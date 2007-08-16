@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.io.InputStream;

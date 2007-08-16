@@ -1,4 +1,4 @@
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockApplication;

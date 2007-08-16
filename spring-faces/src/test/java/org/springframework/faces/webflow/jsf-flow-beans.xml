@@ -10,8 +10,8 @@
 
 	<flow:enable-scopes/>
 	
-	<bean name="jsfModel" class="org.springframework.webflow.executor.jsf.JSFModel" scope="prototype"/>
+	<bean name="jsfModel" class="org.springframework.faces.webflow.JSFModel" scope="prototype"/>
 	
-	<bean name="flowScopedModel" class="org.springframework.webflow.executor.jsf.JSFModel" scope="flow"/>
+	<bean name="flowScopedModel" class="org.springframework.faces.webflow.JSFModel" scope="flow"/>
 
 </beans>

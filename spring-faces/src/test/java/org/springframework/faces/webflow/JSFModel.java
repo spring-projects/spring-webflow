@@ -1,4 +1,4 @@
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 public class JSFModel {
 	String value;

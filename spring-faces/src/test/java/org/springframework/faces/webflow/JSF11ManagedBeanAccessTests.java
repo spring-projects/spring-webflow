@@ -1,4 +1,4 @@
-package org.springframework.webflow.executor.jsf;
+package org.springframework.faces.webflow;
 
 import java.io.FileNotFoundException;
 
@@ -12,10 +12,6 @@ import org.springframework.faces.el.DelegatingFlowVariableResolver;
 import org.springframework.faces.el.FlowPropertyResolver;
 import org.springframework.faces.el.FlowVariableResolver;
 import org.springframework.faces.el.Jsf11ELExpressionParser;
-import org.springframework.faces.webflow.FlowExecutionHolder;
-import org.springframework.faces.webflow.FlowExecutionHolderUtils;
-import org.springframework.faces.webflow.FlowNavigationHandler;
-import org.springframework.faces.webflow.FlowPhaseListener;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.jsf.DelegatingVariableResolver;
@@ -124,7 +120,7 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 	protected FlowDefinitionResource getFlowDefinitionResource() {
 		try {
 			return createFlowDefinitionResource(ResourceUtils.getFile(
-					"classpath:org/springframework/webflow/executor/jsf/jsf-flow.xml").getPath());
+					"classpath:org/springframework/faces/webflow/jsf-flow.xml").getPath());
 		} catch (FileNotFoundException e) {
 			fail(e.getMessage());
 			return null;
@@ -137,8 +133,7 @@ public class JSF11ManagedBeanAccessTests extends AbstractXmlFlowExecutionTests {
 
 		ctx = new GenericWebApplicationContext();
 		XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-		xmlReader.loadBeanDefinitions(new ClassPathResource(
-				"org/springframework/webflow/executor/jsf/jsf-flow-beans.xml"));
+		xmlReader.loadBeanDefinitions(new ClassPathResource("org/springframework/faces/webflow/jsf-flow-beans.xml"));
 		ctx.refresh();
 
 		jsf.externalContext().getApplicationMap().put(
