@@ -68,8 +68,8 @@ public class DelegatingFlowVariableResolver extends VariableResolver {
 		if (execution != null) {
 			if (execution.isActive()) {
 				// flow execution is active: try flash/flow/conversation scope
-				if (execution.getActiveSession().getFlashMap().contains(name)) {
-					return execution.getActiveSession().getFlashMap().get(name);
+				if (execution.getFlashScope().contains(name)) {
+					return execution.getFlashScope().get(name);
 				} else if (execution.getActiveSession().getScope().contains(name)) {
 					return execution.getActiveSession().getScope().get(name);
 				} else if (execution.getConversationScope().contains(name)) {

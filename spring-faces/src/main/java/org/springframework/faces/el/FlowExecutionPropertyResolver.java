@@ -65,7 +65,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 			// perform an attribute search
 
 			// try flash scope first
-			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
+			Object value = execution.getFlashScope().get(attributeName);
 			if (value != null) {
 				return value.getClass();
 			}
@@ -86,7 +86,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 
 	protected Object doGetAttribute(FlowExecution execution, String attributeName) {
 		if (FLASH_SCOPE_PROPERTY.equals(attributeName)) {
-			return execution.getActiveSession().getFlashMap().asMap();
+			return execution.getFlashScope().asMap();
 		} else if (FLOW_SCOPE_PROPERTY.equals(attributeName)) {
 			return execution.getActiveSession().getScope().asMap();
 		} else if (CONVERSATION_SCOPE_PROPERTY.equals(attributeName)) {
@@ -95,7 +95,7 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 			// perform an attribute search
 
 			// try flash scope
-			Object value = execution.getActiveSession().getFlashMap().get(attributeName);
+			Object value = execution.getFlashScope().get(attributeName);
 			if (value != null) {
 				return value;
 			}
@@ -117,8 +117,8 @@ public class FlowExecutionPropertyResolver extends AbstractFlowExecutionProperty
 
 	protected void doSetAttribute(FlowExecution execution, String attributeName, Object attributeValue) {
 		// perform a search
-		if (execution.getActiveSession().getFlashMap().contains(attributeName)) {
-			execution.getActiveSession().getFlashMap().put(attributeName, attributeValue);
+		if (execution.getFlashScope().contains(attributeName)) {
+			execution.getFlashScope().put(attributeName, attributeValue);
 		} else if (execution.getActiveSession().getScope().contains(attributeName)) {
 			execution.getActiveSession().getScope().put(attributeName, attributeValue);
 		} else if (execution.getConversationScope().contains(attributeName)) {
