@@ -45,7 +45,7 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilderTests;
 import org.springframework.webflow.engine.support.ApplicationViewSelector;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
-import org.springframework.webflow.engine.support.TransitionExecutingStateExceptionHandler;
+import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
@@ -130,7 +130,7 @@ public class FlowExecutionImplTests extends TestCase {
 				throw new IllegalStateException("Whoops!");
 			}
 		});
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(Exception.class, "error");
 		endState.getExceptionHandlerSet().add(handler);
 

@@ -44,7 +44,7 @@ import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
+public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestCase {
 
 	Flow flow;
 
@@ -61,7 +61,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 	}
 
 	public void testTransitionExecutorHandlesExceptionExactMatch() {
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
@@ -72,7 +72,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 	}
 
 	public void testTransitionExecutorHandlesExceptionSuperclassMatch() {
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(Exception.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
@@ -84,12 +84,12 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 	public void testFlowStateExceptionHandlingTransition() {
 		EndState state2 = new EndState(flow, "end");
 		state2.setViewSelector(new ApplicationViewSelector(new StaticExpression("view")));
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
 			public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
-				assertTrue(context.getFlashScope().contains("stateException"));
+				assertTrue(context.getFlashScope().contains("flowExecutionException"));
 				assertTrue(context.getFlashScope().contains("rootCauseException"));
 				assertTrue(context.getFlashScope().get("rootCauseException") instanceof TestException);
 			}
@@ -100,7 +100,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 	}
 
 	public void testStateExceptionHandlingTransitionNoSuchState() {
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
@@ -135,7 +135,7 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 
 			public void buildExceptionHandlers() throws FlowBuilderException {
 				getFlow().getExceptionHandlerSet().add(
-						new TransitionExecutingStateExceptionHandler().add(Exception.class, "showError"));
+						new TransitionExecutingFlowExecutionExceptionHandler().add(Exception.class, "showError"));
 			}
 		};
 		Flow flow = new FlowAssembler("flow", builder).assembleFlow();
@@ -144,9 +144,9 @@ public class TransitionExecutingStateExceptionHandlerTests extends TestCase {
 		assertTrue(execution.isActive());
 		assertEquals("error", ((ApplicationView) view).getViewName());
 		assertTrue(((ApplicationView) view).getModel().containsKey(
-				TransitionExecutingStateExceptionHandler.ROOT_CAUSE_EXCEPTION_ATTRIBUTE));
+				TransitionExecutingFlowExecutionExceptionHandler.ROOT_CAUSE_EXCEPTION_ATTRIBUTE));
 		assertTrue(((ApplicationView) view).getModel().containsKey(
-				TransitionExecutingStateExceptionHandler.STATE_EXCEPTION_ATTRIBUTE));
+				TransitionExecutingFlowExecutionExceptionHandler.FLOW_EXECUTION_EXCEPTION_ATTRIBUTE));
 	}
 
 	protected TargetStateResolver toState(String stateId) {

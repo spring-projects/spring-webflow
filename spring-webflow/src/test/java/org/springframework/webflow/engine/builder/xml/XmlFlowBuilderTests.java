@@ -33,7 +33,7 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.support.ApplicationViewSelector;
-import org.springframework.webflow.engine.support.TransitionExecutingStateExceptionHandler;
+import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewSelection;
@@ -74,9 +74,9 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertEquals(1, flow.getStartActionList().size());
 		assertEquals(1, flow.getEndActionList().size());
 		assertEquals(2, flow.getExceptionHandlerSet().size());
-		assertTrue(flow.getExceptionHandlerSet().toArray()[0] instanceof TransitionExecutingStateExceptionHandler);
-		assertTrue(flow.getExceptionHandlerSet().toArray()[1] instanceof TransitionExecutingStateExceptionHandler);
-		TransitionExecutingStateExceptionHandler handler = (TransitionExecutingStateExceptionHandler) flow
+		assertTrue(flow.getExceptionHandlerSet().toArray()[0] instanceof TransitionExecutingFlowExecutionExceptionHandler);
+		assertTrue(flow.getExceptionHandlerSet().toArray()[1] instanceof TransitionExecutingFlowExecutionExceptionHandler);
+		TransitionExecutingFlowExecutionExceptionHandler handler = (TransitionExecutingFlowExecutionExceptionHandler) flow
 				.getExceptionHandlerSet().toArray()[1];
 		FlowExecutionException exception = new FlowExecutionException("testFlow1", "actionState1", "test",
 				new IOException());

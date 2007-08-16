@@ -75,7 +75,7 @@ public class DefaultTargetStateResolverTests extends AbstractFlowExecutionTests 
 		}
 
 		public void buildExceptionHandlers() throws FlowBuilderException {
-			TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+			TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 			handler.add(UnsupportedOperationException.class, "stateC");
 			getFlow().getExceptionHandlerSet().add(handler);
 		}

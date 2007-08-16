@@ -32,7 +32,7 @@ import org.springframework.webflow.engine.support.BeanFactoryFlowVariable;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.engine.support.SimpleFlowVariable;
-import org.springframework.webflow.engine.support.TransitionExecutingStateExceptionHandler;
+import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ScopeType;
@@ -303,7 +303,7 @@ public class FlowTests extends TestCase {
 
 	public void testHandleStateException() {
 		flow.getExceptionHandlerSet().add(
-				new TransitionExecutingStateExceptionHandler().add(TestException.class, "myState2"));
+				new TransitionExecutingFlowExecutionExceptionHandler().add(TestException.class, "myState2"));
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		FlowExecutionException e = new FlowExecutionException(flow.getId(), flow.getStartState().getId(), "Oops!",

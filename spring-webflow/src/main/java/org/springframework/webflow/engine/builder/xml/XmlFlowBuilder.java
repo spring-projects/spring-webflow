@@ -73,7 +73,7 @@ import org.springframework.webflow.engine.support.BeanFactoryFlowVariable;
 import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
 import org.springframework.webflow.engine.support.SimpleFlowVariable;
 import org.springframework.webflow.engine.support.TransitionCriteriaChain;
-import org.springframework.webflow.engine.support.TransitionExecutingStateExceptionHandler;
+import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.util.ResourceHolder;
@@ -1058,7 +1058,7 @@ public class XmlFlowBuilder extends BaseFlowBuilder implements ResourceHolder {
 	}
 
 	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(Element element) {
-		TransitionExecutingStateExceptionHandler handler = new TransitionExecutingStateExceptionHandler();
+		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		Class exceptionClass = (Class) fromStringTo(Class.class).execute(element.getAttribute(ON_EXCEPTION_ATTRIBUTE));
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(element.getAttribute(TO_ATTRIBUTE));

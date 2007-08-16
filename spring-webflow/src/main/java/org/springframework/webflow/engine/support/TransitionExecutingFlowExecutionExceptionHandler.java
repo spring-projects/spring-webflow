@@ -34,24 +34,23 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ViewSelection;
 
 /**
- * A flow execution exception handler that maps the occurence of a specific type of exception to a transition to a new
+ * A flow execution exception handler that maps the occurrence of a specific type of exception to a transition to a new
  * {@link org.springframework.webflow.engine.State}.
  * <p>
- * The handled {@link FlowExecutionException} will be exposed in flash scope as {@link #STATE_EXCEPTION_ATTRIBUTE}. The
- * underlying root cause of that exception will be exposed in flash scope as {@link #ROOT_CAUSE_EXCEPTION_ATTRIBUTE}.
+ * The handled {@link FlowExecutionException} will be exposed in flash scope as
+ * {@link #FLOW_EXECUTION_EXCEPTION_ATTRIBUTE}. The underlying root cause of that exception will be exposed in flash
+ * scope as {@link #ROOT_CAUSE_EXCEPTION_ATTRIBUTE}.
  * 
  * @author Keith Donald
  */
-public class TransitionExecutingStateExceptionHandler implements FlowExecutionExceptionHandler {
+public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExecutionExceptionHandler {
 
-	// this class should really have been called TransitionExecutingFlowExceptionHandler
-
-	private static final Log logger = LogFactory.getLog(TransitionExecutingStateExceptionHandler.class);
+	private static final Log logger = LogFactory.getLog(TransitionExecutingFlowExecutionExceptionHandler.class);
 
 	/**
-	 * The name of the attribute to expose a handled exception under in flash scope ("stateException").
+	 * The name of the attribute to expose a handled exception under in flash scope ("flowExecutionException").
 	 */
-	public static final String STATE_EXCEPTION_ATTRIBUTE = "stateException";
+	public static final String FLOW_EXECUTION_EXCEPTION_ATTRIBUTE = "flowExecutionException";
 
 	/**
 	 * The name of the attribute to expose a root cause of a handled exception under in flash scope
@@ -60,7 +59,7 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	public static final String ROOT_CAUSE_EXCEPTION_ATTRIBUTE = "rootCauseException";
 
 	/**
-	 * The exceptionType->targetStateResolver map.
+	 * The exceptionType to targetStateResolver map.
 	 */
 	private Map exceptionTargetStateMappings = new HashMap();
 
@@ -70,23 +69,24 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	private ActionList actionList = new ActionList();
 
 	/**
-	 * Adds an exception->state mapping to this handler.
+	 * Adds an exception-to-target state mapping to this handler.
 	 * @param exceptionClass the type of exception to map
 	 * @param targetStateId the id of the state to transition to if the specified type of exception is handled
 	 * @return this handler, to allow for adding multiple mappings in a single statement
 	 */
-	public TransitionExecutingStateExceptionHandler add(Class exceptionClass, String targetStateId) {
+	public TransitionExecutingFlowExecutionExceptionHandler add(Class exceptionClass, String targetStateId) {
 		return add(exceptionClass, new DefaultTargetStateResolver(targetStateId));
 	}
 
 	/**
-	 * Adds a exception->state mapping to this handler.
+	 * Adds a exception-to-target state resolver mapping to this handler.
 	 * @param exceptionClass the type of exception to map
 	 * @param targetStateResolver the resolver to calculate the state to transition to if the specified type of
 	 * exception is handled
 	 * @return this handler, to allow for adding multiple mappings in a single statement
 	 */
-	public TransitionExecutingStateExceptionHandler add(Class exceptionClass, TargetStateResolver targetStateResolver) {
+	public TransitionExecutingFlowExecutionExceptionHandler add(Class exceptionClass,
+			TargetStateResolver targetStateResolver) {
 		Assert.notNull(exceptionClass, "The exception class is required");
 		Assert.notNull(targetStateResolver, "The target state resolver is required");
 		exceptionTargetStateMappings.put(exceptionClass, targetStateResolver);
@@ -106,7 +106,7 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 
 	public ViewSelection handle(FlowExecutionException exception, RequestControlContext context) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Handling state exception " + exception, exception);
+			logger.debug("Handling flow execution exception " + exception, exception);
 		}
 		exposeException(context, exception, findRootCause(exception));
 		actionList.execute(context);
@@ -122,14 +122,13 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	 * @param context the request control context
 	 * @param exception the exception being handled
 	 * @param rootCause root cause of the exception being handled (could be null)
-	 * @since 1.0.2
 	 */
 	protected void exposeException(RequestContext context, FlowExecutionException exception, Throwable rootCause) {
 		// note that all Throwables are Serializable so putting them in flash
 		// scope should not be a problem
-		context.getFlashScope().put(STATE_EXCEPTION_ATTRIBUTE, exception);
+		context.getFlashScope().put(FLOW_EXECUTION_EXCEPTION_ATTRIBUTE, exception);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Exposing state exception root cause " + rootCause + " under attribute '"
+			logger.debug("Exposing flow execution exception root cause " + rootCause + " under attribute '"
 					+ ROOT_CAUSE_EXCEPTION_ATTRIBUTE + "'");
 		}
 		context.getFlashScope().put(ROOT_CAUSE_EXCEPTION_ATTRIBUTE, rootCause);
@@ -257,7 +256,6 @@ public class TransitionExecutingStateExceptionHandler implements FlowExecutionEx
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("exceptionTargetStateMappings", exceptionTargetStateMappings)
-				.toString();
+		return new ToStringCreator(this).append("exceptionHandlingMappings", exceptionTargetStateMappings).toString();
 	}
 }
