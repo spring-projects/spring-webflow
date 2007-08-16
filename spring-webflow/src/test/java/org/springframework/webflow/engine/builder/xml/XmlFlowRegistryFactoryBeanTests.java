@@ -22,18 +22,29 @@ import junit.framework.TestCase;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.definition.registry.NamespaceMapping;
 
 public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 	private XmlFlowRegistryFactoryBean factoryBean = new XmlFlowRegistryFactoryBean();
 
 	public void testCreateFromLocations() throws Exception {
-		ClassPathResource[] locations = new ClassPathResource[] { new ClassPathResource("flow.xml", getClass()) };
+		ClassPathResource[] locations = new ClassPathResource[] { getLocation() };
 		factoryBean.setFlowLocations(locations);
 		factoryBean.setBeanFactory(new StaticListableBeanFactory());
 		factoryBean.afterPropertiesSet();
 		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
 		assertEquals(1, registry.getFlowDefinitionCount());
 		assertEquals("flow", registry.getFlowDefinition("flow").getId());
+	}
+
+	public void testCreateFromNamespaceMappings() throws Exception {
+		NamespaceMapping[] namespaceMappings = new NamespaceMapping[] { getNamespaceMapping() };
+		factoryBean.setFlowNamespaceMappings(namespaceMappings);
+		factoryBean.setBeanFactory(new StaticListableBeanFactory());
+		factoryBean.afterPropertiesSet();
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
+		assertEquals(1, registry.getFlowDefinitionCount());
+		assertEquals("flow", registry.getFlowDefinition("/namespace/flow").getId());
 	}
 
 	public void testCreateFromDefinitions() throws Exception {
@@ -45,5 +56,13 @@ public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
 		assertEquals(1, registry.getFlowDefinitionCount());
 		assertEquals("foo", registry.getFlowDefinition("foo").getId());
+	}
+
+	private ClassPathResource getLocation() {
+		return new ClassPathResource("flow.xml", getClass());
+	}
+
+	private NamespaceMapping getNamespaceMapping() {
+		return new NamespaceMapping("/namespace", getLocation());
 	}
 }

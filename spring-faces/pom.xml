@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-faces</artifactId>
+	<packaging>jar</packaging>
+	<name>Spring Faces</name>
+	<version>2.0-m1-SNAPSHOT</version>
+	<description>Spring Faces Framework</description>
+	<url>http://www.springframework.org</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-webflow</url>
+	</scm>
+	<organization>
+		<name>Spring Framework</name>
+		<url>http://www.springframework.org/</url>
+	</organization>
+	<dependencies>
+<!-- External Dependencies -->
+<!-- Spring Dependencies -->
+<!-- Runtime Dependencies -->
+<!-- Test Dependencies -->
+</project>

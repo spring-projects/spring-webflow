@@ -32,6 +32,7 @@
 				<or>
 					<filename name="build-spring-webflow/**" />
 					<filename name="spring-binding/**" />
+					<filename name="spring-faces/**" />
 					<filename name="spring-webflow/**" />
 					<filename name="spring-webflow-samples/**" />
 				</or>
@@ -88,6 +89,7 @@ to see a list of all relevant targets.
 		<ivy:buildlist reference="modules">
 			<fileset dir="..">
 				<include name="spring-binding/build.xml" />
+				<include name="spring-faces/build.xml" />
 				<include name="spring-webflow/build.xml" />
 				<include name="spring-webflow-samples/*/build.xml" />
 			</fileset>
@@ -221,6 +223,9 @@ to see a list of all relevant targets.
 			<zipfileset dir="../spring-binding/target/dist/jars" prefix="${zip.toplevel.dir}" />
 			<zipfileset dir="../spring-binding/target/dist/ivys" prefix="${zip.toplevel.dir}/ivys" />
 			<zipfileset dir="../spring-binding/target/javadocs"  prefix="${zip.toplevel.dir}/docs/api-binding" />
+			<zipfileset dir="../spring-faces/target/dist/jars"   prefix="${zip.toplevel.dir}" />
+			<zipfileset dir="../spring-faces/target/dist/ivys" prefix="${zip.toplevel.dir}/ivys" />
+			<zipfileset dir="../spring-faces/target/javadocs"  prefix="${zip.toplevel.dir}/docs/api-faces" />
 			<zipfileset dir="../spring-webflow/target/dist/jars" prefix="${zip.toplevel.dir}" />
 			<zipfileset dir="../spring-webflow/target/dist/ivys" prefix="${zip.toplevel.dir}/ivys" />
 			<zipfileset dir="../spring-webflow/target/javadocs"  prefix="${zip.toplevel.dir}/docs/api" />
