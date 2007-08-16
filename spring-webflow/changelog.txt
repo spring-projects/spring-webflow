@@ -76,6 +76,7 @@ Package org.springframework.webflow.test
 * Added registerLocalMockServices(Flow, ConfigurableBeanFactory) hook method to AbstractXmlFlowExecutionTests.
   Overriding this method is useful for customizing the builder's population of the bean factory local to the
   flow definition (SWF-307).
+* Introduced MockAction for stubbing out action implementations when unit testing flow executions (SWF-317).
 
 Package reference-manual
 * Improved readability of reference manual in several sections (SWF-349).
