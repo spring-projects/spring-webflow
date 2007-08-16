@@ -23,7 +23,7 @@ import javax.faces.el.ReferenceSyntaxException;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.springframework.faces.el.FlowPropertyResolver;
+import org.springframework.faces.webflow.el.FlowPropertyResolver;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.test.MockFlowSession;
 

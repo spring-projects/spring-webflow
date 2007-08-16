@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.el;
+package org.springframework.faces.webflow.el;
 
 import java.util.Map;
 

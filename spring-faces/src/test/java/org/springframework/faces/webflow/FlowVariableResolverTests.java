@@ -22,9 +22,9 @@ import javax.faces.el.VariableResolver;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.springframework.faces.el.FlowVariableResolver;
 import org.springframework.faces.webflow.FlowExecutionHolder;
 import org.springframework.faces.webflow.FlowExecutionHolderUtils;
+import org.springframework.faces.webflow.el.FlowVariableResolver;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
 
