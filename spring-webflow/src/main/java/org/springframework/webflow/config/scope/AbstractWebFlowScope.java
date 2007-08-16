@@ -39,7 +39,6 @@ import org.springframework.webflow.execution.FlowSession;
  * @see FlowExecutionContextHolder
  * 
  * @author Ben Hale
- * @since 1.1
  */
 public abstract class AbstractWebFlowScope implements Scope {
 

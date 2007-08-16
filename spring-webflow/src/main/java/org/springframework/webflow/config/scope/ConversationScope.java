@@ -20,12 +20,11 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Conversation-backed {@link Scope} implementation.
+ * Conversation {@link Scope scope} implementation.
  * 
  * @see FlowExecution#getConversationScope()
  * 
  * @author Ben Hale
- * @since 1.1
  */
 public class ConversationScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {

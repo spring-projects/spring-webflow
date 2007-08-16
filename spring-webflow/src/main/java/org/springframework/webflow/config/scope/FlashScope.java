@@ -17,18 +17,17 @@ package org.springframework.webflow.config.scope;
 
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.FlowSession;
+import org.springframework.webflow.execution.FlowExecutionContext;
 
 /**
- * Flash-backed {@link Scope} implementation.
+ * Flash {@link Scope scope} implementation.
  * 
- * @see FlowSession#getFlashMap()
+ * @see FlowExecutionContext#getFlashScope()
  * 
  * @author Ben Hale
- * @since 1.1
  */
 public class FlashScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {
-		return getFlowExecutionContext().getActiveSession().getFlashMap();
+		return getFlowExecutionContext().getFlashScope();
 	}
 }

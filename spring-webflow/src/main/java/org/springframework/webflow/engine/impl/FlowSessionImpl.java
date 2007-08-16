@@ -77,11 +77,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	private MutableAttributeMap scope = new LocalAttributeMap();
 
 	/**
-	 * The flash map ("flash scope").
-	 */
-	private MutableAttributeMap flashMap = new LocalAttributeMap();
-
-	/**
 	 * The parent session of this session (may be <code>null</code> if this is a root session.)
 	 */
 	private FlowSessionImpl parent;
@@ -120,10 +115,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return scope;
 	}
 
-	public MutableAttributeMap getFlashMap() {
-		return flashMap;
-	}
-
 	public FlowSession getParent() {
 		return parent;
 	}
@@ -139,7 +130,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		stateId = (String) in.readObject();
 		status = (FlowSessionStatus) in.readObject();
 		scope = (MutableAttributeMap) in.readObject();
-		flashMap = (MutableAttributeMap) in.readObject();
 		parent = (FlowSessionImpl) in.readObject();
 	}
 
@@ -148,7 +138,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		out.writeObject(stateId);
 		out.writeObject(status);
 		out.writeObject(scope);
-		out.writeObject(flashMap);
 		out.writeObject(parent);
 	}
 
@@ -205,6 +194,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 
 	public String toString() {
 		return new ToStringCreator(this).append("flow", flowId).append("state", stateId).append("scope", scope).append(
-				"flashMap", flashMap).append("status", status).toString();
+				"status", status).toString();
 	}
 }

@@ -48,19 +48,18 @@ public class FlashScopeTests extends TestCase {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should have added object to the map", context.getActiveSession().getFlashMap().contains("name"));
+		assertTrue("Should have added object to the map", context.getFlashScope().contains("name"));
 		assertSame("Created object should have been returned", factory.getValue(), gotten);
-		assertSame("Created object should have been persisted", factory.getValue(), context.getActiveSession()
-				.getFlashMap().get("name"));
+		assertSame("Created object should have been persisted", factory.getValue(), context.getFlashScope().get("name"));
 	}
 
 	public void testGetVarExist() {
 		StubObjectFactory factory = new StubObjectFactory();
 		Object value = new Object();
-		context.getActiveSession().getFlashMap().put("name", value);
+		context.getFlashScope().put("name", value);
 		Object gotten = scope.get("name", factory);
 		assertNotNull("Should be real object", gotten);
-		assertTrue("Should still be in map", context.getActiveSession().getFlashMap().contains("name"));
+		assertTrue("Should still be in map", context.getFlashScope().contains("name"));
 		assertSame("Persisted object should have been returned", value, gotten);
 		assertNotSame("Created object should not have been returned", factory.getValue(), gotten);
 	}
@@ -82,17 +81,15 @@ public class FlashScopeTests extends TestCase {
 
 	public void testRemoveVarMissing() {
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getActiveSession().getFlashMap().contains(
-				"name"));
+		assertFalse("Should have removed from object from map", context.getFlashScope().contains("name"));
 		assertNull("Should have returned a null object", removed);
 	}
 
 	public void testRemoveVarExist() {
 		Object value = new Object();
-		context.getActiveSession().getFlashMap().put("name", value);
+		context.getFlashScope().put("name", value);
 		Object removed = scope.remove("name");
-		assertFalse("Should have removed from object from map", context.getActiveSession().getFlashMap().contains(
-				"name"));
+		assertFalse("Should have removed from object from map", context.getFlashScope().contains("name"));
 		assertSame("Should have returned the previous object", removed, value);
 	}
 

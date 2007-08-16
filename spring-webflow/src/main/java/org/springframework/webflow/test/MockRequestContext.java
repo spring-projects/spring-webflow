@@ -103,7 +103,7 @@ public class MockRequestContext implements RequestContext {
 	}
 
 	public MutableAttributeMap getFlashScope() {
-		return getMockFlowExecutionContext().getActiveSession().getFlashMap();
+		return getMockFlowExecutionContext().getFlashScope();
 	}
 
 	public MutableAttributeMap getFlowScope() {

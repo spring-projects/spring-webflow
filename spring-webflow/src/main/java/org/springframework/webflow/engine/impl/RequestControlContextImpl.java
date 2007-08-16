@@ -111,7 +111,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public MutableAttributeMap getFlashScope() {
-		return flowExecution.getActiveSession().getFlashMap();
+		return flowExecution.getFlashScope();
 	}
 
 	public MutableAttributeMap getFlowScope() {

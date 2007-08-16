@@ -20,12 +20,11 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowSession;
 
 /**
- * Flow-backed {@link Scope} implementation.
+ * Flow {@link Scope scope} implementation.
  * 
  * @see FlowSession#getScope()
  * 
  * @author Ben Hale
- * @since 1.1
  */
 public class FlowScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {

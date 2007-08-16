@@ -350,10 +350,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * the next user event.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
-	 * @since 1.0.2
 	 */
 	protected Object getFlashAttribute(String attributeName) {
-		return getFlowExecution().getActiveSession().getFlashMap().get(attributeName);
+		return getFlowExecution().getFlashScope().get(attributeName);
 	}
 
 	/**
@@ -362,10 +361,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present
-	 * @since 1.0.2
 	 */
 	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
-		return getFlowExecution().getActiveSession().getFlashMap().getRequired(attributeName);
+		return getFlowExecution().getFlashScope().getRequired(attributeName);
 	}
 
 	/**
@@ -376,7 +374,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
 	 */
 	protected Object getRequiredFlashAttribute(String attributeName, Class requiredType) throws IllegalStateException {
-		return getFlowExecution().getActiveSession().getFlashMap().getRequired(attributeName, requiredType);
+		return getFlowExecution().getFlashScope().getRequired(attributeName, requiredType);
 	}
 
 	// assert helpers

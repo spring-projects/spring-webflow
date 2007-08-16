@@ -80,13 +80,6 @@ public interface FlowSession {
 	public MutableAttributeMap getScope();
 
 	/**
-	 * Returns the local "flash map". Attributes in this map are cleared out on the next event signaled in the flow
-	 * execution, so they survive a refresh.
-	 * @return the flash map
-	 */
-	public MutableAttributeMap getFlashMap();
-
-	/**
 	 * Returns the parent flow session in the current flow execution, or <code>null</code> if there is no parent flow
 	 * session.
 	 */

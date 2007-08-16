@@ -20,6 +20,10 @@ Package org.springframework.webflow.config
 * Added a new <enable-scopes/> bean definition to a new 1.1 revision of the spring-webflow-config schema to support
   Web Flow scoping of beans in Spring (SWF-163).
 
+Package org.springframework.webflow.engine
+* Made flash scope a property of the FlowExecution instead of the active FlowSession.  This allows flash messages to be saved across an redirect
+  if the messages were put there by a subflow that ended, for example (SWF-221).
+
 Package org.springframework.webflow.context.scope
 * Added support for Web Flow scoping of Spring beans (SWF-163).
 

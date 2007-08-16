@@ -258,9 +258,13 @@ public class FlowExecutionImplTests extends TestCase {
 		FlowExecution execution = new FlowExecutionImpl(new FlashScopeFlow());
 		MockExternalContext context = new MockExternalContext();
 		execution.start(null, context);
+		assertTrue(execution.getFlashScope().contains("flashScopedValue"));
 		execution.refresh(context);
+		assertTrue(execution.getFlashScope().contains("flashScopedValue"));
 		execution.refresh(context);
-		execution.signalEvent("view", context);
+		assertTrue(execution.getFlashScope().contains("flashScopedValue"));
+		execution.signalEvent("submit", context);
+		assertFalse(execution.getFlashScope().contains("flashScopedValue"));
 	}
 
 	public void testExceptionFromInputMapper() {

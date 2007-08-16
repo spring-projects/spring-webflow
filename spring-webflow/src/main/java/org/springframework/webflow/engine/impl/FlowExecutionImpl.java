@@ -86,6 +86,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	private transient FlowExecutionListeners listeners;
 
 	/**
+	 * The flash map ("flash scope").
+	 */
+	private MutableAttributeMap flashScope = new LocalAttributeMap();
+
+	/**
 	 * A data structure for attributes shared by all flow sessions.
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
@@ -153,6 +158,10 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return getActiveSessionInternal();
 	}
 
+	public MutableAttributeMap getFlashScope() {
+		return flashScope;
+	}
+
 	public MutableAttributeMap getConversationScope() {
 		return conversationScope;
 	}
@@ -198,8 +207,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resuming execution on user event '" + eventId + "'");
 		}
+		flashScope.clear();
 		RequestControlContext context = createControlContext(externalContext);
-		context.getFlashScope().clear();
 		getListeners().fireRequestSubmitted(context);
 		try {
 			try {
@@ -463,17 +472,18 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return (State) getActiveSessionInternal().getState();
 	}
 
-	// custom serialization (implementation of Externalizable for optimized
-	// storage)
+	// custom serialization (implementation of Externalizable for optimized storage)
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		flowId = (String) in.readObject();
 		flowSessions = (LinkedList) in.readObject();
+		flashScope = (MutableAttributeMap) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeObject(flowId);
 		out.writeObject(flowSessions);
+		out.writeObject(flashScope);
 	}
 
 	public String toString() {
@@ -482,7 +492,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} else {
 			if (flow != null) {
 				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
-						.toString();
+						.append("flashScope", flashScope).toString();
 			} else {
 				return "[Unhydrated " + getCaption() + "]";
 			}

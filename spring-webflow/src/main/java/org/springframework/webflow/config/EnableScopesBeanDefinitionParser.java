@@ -24,7 +24,6 @@ import org.w3c.dom.Element;
  * {@link BeanDefinitionParser} for the <code>&lt;enable-scopes&gt;</code> tag.
  * 
  * @author Ben Hale
- * @since 1.1
  */
 class EnableScopesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
