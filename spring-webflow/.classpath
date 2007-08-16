@@ -10,8 +10,6 @@
 	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/hibernate.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/junit.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/myfaces-api.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/myfaces-impl.jar"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/portlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
@@ -28,33 +26,24 @@
 	<classpathentry kind="lib" path="lib/test/spring-jdbc.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="/spring/mock"/>
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
-	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>
 	<classpathentry kind="lib" path="lib/test/hibernate-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/test/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/test/hibernate-entitymanager.jar"/>
 	<classpathentry kind="lib" path="lib/test/javassist.jar"/>
 	<classpathentry kind="lib" path="lib/test/jboss-common-core.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-orm.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/asm.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/asm-attrs.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/avalon-framework.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/cglib.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/commons-codec.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/commons-discovery.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-validator.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/ehcache.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/logkit.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/oro.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-tx.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc-portlet.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/xalan.jar"/>
-	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/shale-remoting.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -3,5 +3,34 @@
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-binding.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-webflow.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/avalon-framework.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-digester.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/logkit.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/myfaces-api.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/myfaces-impl.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/shale-remoting.jar"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar"/>
+	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
