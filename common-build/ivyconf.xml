@@ -64,6 +64,7 @@
 		<module organisation="org.springframework" name="spring-context" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-core" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-dao" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-faces" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-hibernate2" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-hibernate3" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-ibatis" resolver="spring-projects"/>
