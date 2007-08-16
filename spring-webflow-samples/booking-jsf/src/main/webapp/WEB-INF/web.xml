@@ -43,7 +43,7 @@
 	<filter>
 		<filter-name>Flow System Cleanup Filter</filter-name>
 		<filter-class>
-			org.springframework.webflow.executor.jsf.FlowSystemCleanupFilter
+			org.springframework.faces.webflow.FlowSystemCleanupFilter
 		</filter-class>
 	</filter>
 

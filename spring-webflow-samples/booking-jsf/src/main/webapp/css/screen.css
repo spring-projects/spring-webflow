@@ -156,7 +156,10 @@ input[type="submit"], input[type="button"] {
 	font-size: small;
 	color: #8B7869;
 	line-height: 150%;
+	padding-top: 10px;
 	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 #sidebar li {
 	font-size: small;
@@ -177,7 +180,7 @@ input[type="submit"], input[type="button"] {
 #content .section {
 	float: left;
 	width: 518px;
-	padding: 15px 15px 0 3px;
+	padding: 15px 15px 0 10px;
 }
 #content .section h1 {
 	font-family: "Trebuchet MS", Arial, sans-serif;
@@ -212,7 +215,7 @@ input[type="submit"], input[type="button"] {
 	border-left: 1px solid #E4DBD5;
 	padding: 4px;
 	border-bottom: 1px solid #D2C9C4;
-	font-size: small;
+	font-size: 8pt;
 }
 #content dt {
 	font-weight: bold;

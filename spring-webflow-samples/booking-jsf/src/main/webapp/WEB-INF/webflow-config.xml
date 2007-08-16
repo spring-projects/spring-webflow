@@ -47,7 +47,7 @@
 		</property>
 	</bean>
 	
-	<bean id="jsfExpressionParser" class="org.springframework.webflow.executor.jsf.Jsf12ELExpressionParser">
+	<bean id="jsfExpressionParser" class="org.springframework.faces.el.Jsf12ELExpressionParser">
 		<constructor-arg >
 			<bean class="org.jboss.el.ExpressionFactoryImpl"/>
 		</constructor-arg>

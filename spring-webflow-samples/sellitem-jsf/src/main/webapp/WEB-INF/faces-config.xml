@@ -5,11 +5,11 @@
 
 <faces-config>
 	<application>
-		<navigation-handler>org.springframework.webflow.executor.jsf.FlowNavigationHandler</navigation-handler>
-		<variable-resolver>org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver</variable-resolver>
+		<navigation-handler>org.springframework.faces.webflow.FlowNavigationHandler</navigation-handler>
+		<variable-resolver>org.springframework.f.el.DelegatingFlowVariableResolver</variable-resolver>
 	</application>
 	
 	<lifecycle>
-		<phase-listener>org.springframework.webflow.executor.jsf.FlowPhaseListener</phase-listener>
+		<phase-listener>org.springframework.faces.webflow.FlowPhaseListener</phase-listener>
 	</lifecycle>
 </faces-config>
