@@ -76,6 +76,7 @@ Package org.springframework.webflow.test
 
 Package reference-manual
 * Improved readability of reference manual in several sections (SWF-349).
+* Added documentation on flow execution exception handling options (SWF-357).
 
 Changes in version 1.0.3 (19.04.2007)
 -------------------------------------
