@@ -50,7 +50,7 @@ import org.springframework.webflow.execution.support.FlowDefinitionRedirect;
 public class RequestPathFlowExecutorArgumentHandler extends RequestParameterFlowExecutorArgumentHandler {
 
 	/**
-	 * URL path seperator ("/").
+	 * URL path separator ("/").
 	 */
 	private static final char PATH_SEPARATOR_CHARACTER = '/';
 
