@@ -37,16 +37,6 @@ public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 		assertEquals("flow", registry.getFlowDefinition("flow").getId());
 	}
 
-	public void testCreateFromNamespaceMappings() throws Exception {
-		NamespaceMapping[] namespaceMappings = new NamespaceMapping[] { getNamespaceMapping() };
-		factoryBean.setFlowNamespaceMappings(namespaceMappings);
-		factoryBean.setBeanFactory(new StaticListableBeanFactory());
-		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
-		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("flow", registry.getFlowDefinition("/namespace/flow").getId());
-	}
-
 	public void testCreateFromDefinitions() throws Exception {
 		Properties properties = new Properties();
 		properties.put("foo", "classpath:/org/springframework/webflow/engine/builder/xml/flow.xml");
@@ -56,13 +46,5 @@ public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
 		assertEquals(1, registry.getFlowDefinitionCount());
 		assertEquals("foo", registry.getFlowDefinition("foo").getId());
-	}
-
-	private ClassPathResource getLocation() {
-		return new ClassPathResource("flow.xml", getClass());
-	}
-
-	private NamespaceMapping getNamespaceMapping() {
-		return new NamespaceMapping("/namespace", getLocation());
 	}
 }
