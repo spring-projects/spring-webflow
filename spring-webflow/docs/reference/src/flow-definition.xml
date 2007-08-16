@@ -598,8 +598,7 @@
     			<para>
     			    In this mock example, <literal>state1</literal> defines one transition and also inherits
     			    the two others defined within the <literal>global-transitions</literal> element.
-    			    Any other states defined within this flow would also inherit those global
-    			    transitions.
+    			    Any other states defined within this flow would also inherit those global transitions.
     			</para>
     			<para>
     			    This example is shown graphically below:
@@ -618,16 +617,17 @@
 			</sect3>
 		</sect2>
         <sect2 id="transition-exception-handling">
-        	<title>Transition executing state exception handlers</title>
+        	<title>Transition executing exception handlers</title>
         	<para>
         		The <literal>&lt;transition/&gt;</literal> element contains an exclusive <literal>on-exception</literal>
         		attribute used to specify an exception-based criteria for transition execution.  This allows you to
-        		transition the flow to another state on the occurrence of an exception.
+        		transition the flow to another state on the occurrence of an exception.  Transition executing exception handlers
+        		may be attached at the state and flow levels.
         	</para>
-        	<sect3 id="transition-onExceptionXml">
-    	    	<title>Exception handling - XML example</title>
+        	<sect3 id="transition-onExceptionInState-Xml">
+    	    	<title>State exception handling - XML example</title>
     	    	<para>
-    	    	    The following example shows a transition that is applied as a state exception handler:
+    	    	    The following example illustrates a state-level transition executing exception handler:
     	    	</para>
     	    	<programlisting>
     &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -651,11 +651,125 @@
     			<para>
     			    In this example, <literal>state1</literal> defines one transition and an exception handler
     			    which executes a transition to <literal>state3</literal> if a <literal>MyBusinessException</literal>
-    			    is thrown within the state. The handled exception will be put into flash scope using the
-    			    key "stateException". That way it is available for processing in the flow or display in a view.
+    			    is thrown within the state. The handled exception will be put into flash scope under the
+    			    key <literal>stateException</literal>, where it will be automatically exposed to the next view (typically an error view).
     			</para>
    			</sect3>
+        	<sect3 id="transition-onExceptionInFlow-Xml">
+    	    	<title>Flow exception handling - XML example</title>
+    	    	<para>
+    	    	    The following example illustrates a flow-level transition executing exception handler:
+    	    	</para>
+    	    	<programlisting>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;flow xmlns="http://www.springframework.org/schema/webflow"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="
+              http://www.springframework.org/schema/webflow
+              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+
+        &lt;start-state idref="state1"/&gt;
+
+        &lt;xxx-state id="state1"&gt;
+            &lt;transition on="event1" to="state2"/&gt;
+        &lt;/xxx-state&gt;
+
+        &lt;xxx-state id="state2"/&gt;
+
+        &lt;global-transitions&gt;
+            &lt;transition on-exception="example.MyBusinessException" to="state3"/&gt;
+        &lt;/global-transitions&gt;
+
+        ...
+        
+    &lt;/flow&gt;
+    			</programlisting>
+    			<para>
+    			    In this example, the exception handler is defined as a global transition.  This reads "any time
+    			    a <literal>MyBusinessException</literal> occurs during flow execution, transition the flow
+    			    to <literal>state3</literal>".
+    			</para>
+    			<para>
+    				Exception handlers attached at the state level take precedence over those defined at the flow level.
+    				This is illustrated by the following example:
+    			</para>
+    	    	<programlisting>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;flow xmlns="http://www.springframework.org/schema/webflow"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="
+              http://www.springframework.org/schema/webflow
+              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+
+        &lt;start-state idref="state1"/&gt;
+
+        &lt;xxx-state id="state1"&gt;
+            &lt;transition on="event1" to="state2"/&gt;
+            &lt;transition on-exception="example.MyBusinessException" to="state4"/&gt;
+        &lt;/xxx-state&gt;
+
+        &lt;xxx-state id="state2"/&gt;
+
+        &lt;global-transitions&gt;
+            &lt;transition on-exception="example.MyBusinessException" to="state3"/&gt;
+        &lt;/global-transitions&gt;
+
+        ...
+        
+    &lt;/flow&gt;
+    			</programlisting>
+    			<para>
+    				In this example, if <literal>MyBusinessException</literal> is thrown in <literal>state1</literal> the 
+    				flow will transition to <literal>state4</literal>.  For any other state, the flow will transition to <literal>state3</literal>.
+    			</para>
+   			</sect3>   					
 		</sect2>
+        <sect2 id="custom-exception-handling">
+        	<title>Custom exception handlers</title>
+        	<para>
+        		Custom, user-defined exception handlers may be attached at the flow and state levels by using the
+        		<literal>exception-handler</literal> element.  This element delegates to Spring to locate
+        		the custom exception handler instance with the specified bean name.
+        	</para>
+        	<para>
+        		An example of attaching a custom exception handler is shown below:
+        	</para>
+  	    	<programlisting>
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;flow xmlns="http://www.springframework.org/schema/webflow"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="
+              http://www.springframework.org/schema/webflow
+              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+
+        &lt;start-state idref="state1"/&gt;
+
+        &lt;xxx-state id="state1"&gt;
+            &lt;transition on="event1" to="state2"/&gt;
+            &lt;exception-handler bean="myCustomStateExceptionHandler"/&gt;
+        &lt;/xxx-state&gt;
+
+        &lt;xxx-state id="state2"/&gt;
+
+        &lt;global-transitions&gt;
+            &lt;exception-handler bean="myCustomFlowExceptionHandler"/&gt;
+        &lt;/global-transitions&gt;
+
+        &lt;import resource="flow-beans.xml"/&gt;
+        
+    &lt;/flow&gt;
+  			</programlisting>
+  			<sect3>
+  				<title>flow-beans.xml</title>
+	  			<programlisting>
+    &lt;bean id="myCustomStateExceptionHandler" class="example.CustomFlowExecutionExceptionHandler"/&gt;
+    &lt;bean id="myCustomFlowExceptionHandler" class="example.AnotherCustomFlowExecutionExceptionHandler"/&gt;
+  				</programlisting>
+  			</sect3>
+  			<para>
+  				Custom exception handlers must implement the <literal>org.springframework.webflow.engine.FlowExecutionExceptionHandler</literal> interface.
+  			</para>
+        </sect2>		
     </sect1>
     <sect1 id="core-states">
     	<title>Concrete state types</title>
