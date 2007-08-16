@@ -12,8 +12,11 @@ Package org.springframework.webflow.engine
 * Ensured the RequestContext attribute map can never be null (SWF-347).
 
 Package org.springframework.webflow.execution
-* Made the Event class non-final to allow for extension (SWF-330).
+* Made the Event class non-final to allow for possibility of extension (SWF-330).
 * Now allow multiple conversation containers per session in a manner that supports use in a cluster (SWF-378).
+
+Package org.springframework.webflow.test
+* Introduced MockAction for stubbing out action implementations when unit testing flow executions (SWF-317).
 
 Package reference-manual
 * Improved readability of reference manual in several sections (SWF-349).
