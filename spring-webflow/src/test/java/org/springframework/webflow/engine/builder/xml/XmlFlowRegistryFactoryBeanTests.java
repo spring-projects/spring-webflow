@@ -22,13 +22,12 @@ import junit.framework.TestCase;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
-import org.springframework.webflow.definition.registry.NamespaceMapping;
 
 public class XmlFlowRegistryFactoryBeanTests extends TestCase {
 	private XmlFlowRegistryFactoryBean factoryBean = new XmlFlowRegistryFactoryBean();
 
 	public void testCreateFromLocations() throws Exception {
-		ClassPathResource[] locations = new ClassPathResource[] { getLocation() };
+		ClassPathResource[] locations = new ClassPathResource[] { new ClassPathResource("flow.xml", getClass()) };
 		factoryBean.setFlowLocations(locations);
 		factoryBean.setBeanFactory(new StaticListableBeanFactory());
 		factoryBean.afterPropertiesSet();
