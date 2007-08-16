@@ -20,6 +20,8 @@ DEVELOPERS
 		build-spring-webflow/project.properties
 		spring-binding/pom.xml
 		spring-binding/project.properties
+		spring-faces/pom.xml
+		spring-faces/project.properties
 		spring-webflow/changelog.txt
 		spring-webflow/pom.xml
 		spring-webflow/project.properties
