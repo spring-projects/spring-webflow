@@ -15,8 +15,7 @@ public class JSF12ManagedBeanAccessTests extends JSF11ManagedBeanAccessTests {
 
 		ctx = new GenericWebApplicationContext();
 		XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-		xmlReader.loadBeanDefinitions(new ClassPathResource(
-				"org/springframework/webflow/executor/jsf/jsf-flow-beans.xml"));
+		xmlReader.loadBeanDefinitions(new ClassPathResource("org/springframework/faces/webflow/jsf-flow-beans.xml"));
 		ctx.refresh();
 
 		jsf.externalContext().getApplicationMap().put(
