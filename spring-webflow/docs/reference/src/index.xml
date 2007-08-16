@@ -7,6 +7,7 @@
 <!ENTITY flow-execution SYSTEM "flow-execution.xml">
 <!ENTITY flow-execution-repository SYSTEM "flow-execution-repository.xml">
 <!ENTITY flow-executor SYSTEM "flow-executor.xml">
+<!ENTITY spring-faces SYSTEM "spring-faces.xml">
 <!ENTITY practical SYSTEM "practical.xml">
 ]>
 
@@ -78,6 +79,7 @@
 	&flow-execution;
 	&flow-execution-repository;
 	&flow-executor;
+	&spring-faces;
 	&practical;
 	
 </book>

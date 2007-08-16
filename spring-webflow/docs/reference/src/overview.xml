@@ -551,20 +551,6 @@
             					Struts 1.1
             				</entry>
         	            </row>
-						<row>
-							<entry>Java Server Faces (JSF)</entry>
-            				<entry>
-            					The integration between Spring Web Flow and the Java Server Faces framework.
-            				</entry>
-            				<entry>
-            					executor.jsf
-            				</entry>
-            				<entry>None</entry>
-            				<entry>
-            					Core,
-            					JSF 1.0
-            				</entry>
-        	            </row>
  					</tbody>
 	    		</tgroup>
     		</table>

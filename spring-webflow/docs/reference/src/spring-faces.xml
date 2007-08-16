@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="spring-faces">
+	<title>Spring Faces</title>
+	<sect1 id="spring-faces-intro">
+		<title>Introduction</title>
+		<para>
+		</para>
+		<programlisting>
+    Code Example
+		</programlisting>
+		<sect2>
+			<title>Sub section</title>
+			<para>
+				<tip>
+					<para>
+						Tip
+					</para>
+				</tip>
+			</para>
+			<sect3>
+				<title>Sub-sub section</title>
+				<para>
+					<note>
+						<para>
+							Note
+						</para>
+					</note>
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+	<sect1 id="jsf-webflow">
+		<title>Web Flow Java Server Faces (JSF) integration</title>
+		<para>
+			Spring Web Flow provides strong integration with Java Server Faces (JSF).  When used with JSF, Spring Web Flow
+			takes responsibility for view navigation handling and managing model state, adding power and 
+			simplicity to JSF's default navigation system and object scopes.  Plain JSF views and components continue to work just as before,
+			and are able to participate in flows with full access to flow state.  In addition, other view technologies
+			such as Facelets continue to plug-in normally.
+		</para>
+		<para>
+			The JSF integration relies on custom implementations of core JSF artifacts such as the PhaseListener 
+			and NavigationHandler to drive the execution of flows.  In addition, it relies on a custom VariableResolver to 
+			access flow execution attributes from JSF components.
+		</para>
+    	<sect2 id="executor-jsf-simple">
+    		<title>Adding Spring Web Flow extensions to faces-config.xml</title>
+			<para>
+				Using Spring Web Flow in a JSF environment requires adding these custom artifacts to the application's
+				<literal>faces-config.xml</literal> file:
+			</para>
+	    	<programlisting>
+&lt;faces-config&gt;
+    &lt;application&gt;
+        &lt;navigation-handler&gt;org.springframework.webflow.executor.jsf.FlowNavigationHandler&lt;/navigation-handler&gt;
+        &lt;variable-resolver&gt;org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver&lt;/variable-resolver&gt;
+    &lt;/application&gt;
+
+    &lt;lifecycle&gt;
+        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
+    &lt;/lifecycle&gt;
+&lt;/faces-config&gt;
+	    	</programlisting>
+			<para>
+				The <classname>FlowPhaseListener</classname> is required to manage the overall flow execution lifecycle in a JSF environment.
+				It handles launching new flows accessed by browsers via direct URLs, and also handles restoring flow executions on postback and browser refreshes.
+			</para>
+			<para>
+				The <classname>FlowNavigationHandler</classname> is required to continue a flow on an action outcome from a JSF view
+				participating in the flow.  Outcome strings are treated as events signaled against the current view state
+				of the flow execution automatically.
+			</para>
+			<para>
+				The <classname>DelegatingFlowVariableResolver</classname> resolves JSF a value binding expression like {#someBean.someProperty} 
+				to a flow execution attribute.  This resolver searches flash, flow, and conversation scope in that order until 
+				it finds a match.  If no match is found, this resolver delegates to the next resolver in the chain.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-simple-webflow-setup">
+			<title>Configuring the Web Flow system</title>
+			<para>
+				The artifacts defined in the faces-config.xml use Spring to access the Web Flow system configuration.
+				This requires a Spring Web Application Context to be bootstrapped using a ContextLoaderListener in
+				the web.xml deployment descriptor:
+			</para>
+			<programlisting>
+&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;
+        /WEB-INF/webflow-config.xml
+    &lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;				
+			</programlisting>
+			<para>
+				This context should contain the Web Flow system configuration.
+				The example <literal>webflow-config.xml</literal> below shows a typical Web Flow configuration for a JSF environment:
+			</para>
+	    	<programlisting>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;	    	
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:flow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd"&gt;
+           	    	
+    &lt;!-- Launches new flow executions and resumes existing executions. --&gt;
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"/>
+
+    &lt;!-- Creates the registry of flow definitions for this application --&gt;
+    &lt;flow:registry id="flowRegistry"&gt;
+        &lt;flow:location path="/WEB-INF/flows/**/*-flow.xml"/&gt;
+    &lt;/flow:registry&gt;
+        
+&lt;/beans&gt;
+	        </programlisting>
+			<para>
+				A bean named <literal>flowExecutor</literal> must be configured and linked with a flow definition registry
+				that contains the flows eligible for execution.   Note the <literal>flowExecutor</literal> bean name is significant,
+				as that is bean name the Web Flow JSF extensions will expect.
+			</para>
+			<para>		
+				Any flow executor property such as the flow execution repository type is configurable here, consistent
+				with the other environments Spring Web Flow supports.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-launch-commandlink">
+    		<title>Launching a flow execution - JSF command link component</title>
+			<para>
+				Flows can be launched by firing JSF action outcomes that adhere to a special format:
+			</para>
+	    	<programlisting>
+&lt;h:commandLink value="Go" action="flowId:myflow"/&gt;
+	    	</programlisting>
+			<para>
+  				The command link above says <emphasis>launch 'myflow' when clicked</emphasis>.  'myflow' is expected
+				to be a valid id of a flow definition registered in the configured registry.
+			</para>
+			<tip>
+				<para>
+					By default, an action outcome prefixed with <literal>flowId:</literal> will be treated as a flow definition identifier.
+					The flow id prefix respected by the FlowNavigationHandler is configurable.  See the API documentation for
+					more information.
+				</para>
+			</tip>
+    	</sect2>
+    	<sect2 id="executor-jsf-launch-normal-anchor">
+    		<title>Launching a flow execution - normal HTML anchor</title>
+			<para>
+				Flows can also be launched simply by accessing flow definition URLs directly using a bookmark or normal HTML link:
+			</para>
+	    	<programlisting>
+&lt;a href="app.faces?_flowId=myflow"&gt;Go&lt;/a&gt;
+	    	</programlisting>
+			<para>
+				This example link assumes *.faces has been mapped to the FacesServlet defined within web.xml.
+				The format of a flow definition URL is configurable on the FlowPhaseListener.
+			</para>
+    	</sect2>
+    	<sect2 id="executor-jsf-sampleflow">
+    		<title>Flow definitions in a JSF environment</title>
+			<para>
+				Flow definitions in a JSF environment are just plain Spring Web Flow definitions:
+			</para>
+			<programlisting>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                        http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+    &lt;var name="myBean" class="example.ManagedBeanImpl" scope="conversation" /&gt;
+	
+    &lt;start-state idref="displayView" /&gt;
+
+    &lt;view-state id="displayView" view="/myview.jsp"&gt;
+        &lt;transition on="submit" to="displayNextView"/&gt;
+    &lt;/view-state>
+
+    &lt;view-state id="displayNextView" view="/mynextview.jsp" /&gt;
+
+&lt;/flow&gt;				
+			</programlisting>
+			<para>
+  				A primary benefit of using JSF is it a rich UI component framework, and UI components have both data and behavior.
+				As JSF components typically handle data binding and validation behaviors, the actual flow
+				definition logic is often simpler and more focused as a result.
+			</para>
+			<para>
+  				In general, it is recommended views selected by
+				view states follow the standard JSF view identifier format, which requires a leading forward-slash
+				and ends in a prefix.  How Spring Web Flow view names are mapped to JSF view ids is configurable.
+				See the <classname>FlowPhaseListener</classname> API documentation for more information.
+			</para>
+		</sect2>
+    	<sect2 id="executor-jsf-resume-form">
+    		<title>Resuming a flow execution - form bound to flow execution variables</title>
+			<para>
+				Views participating in flows are just plain JSF views.  They may also incorporate other
+				JSF view technologies such as Facelets and Ajax4JSF.
+			</para>
+	    	<programlisting>
+&lt;f:view&gt;		
+    &lt;h:form id="form"&gt;
+        ...
+        &lt;h:inputText id="propertyName" value="#{someBean.someProperty}"/&gt;
+        ...
+        &lt;h:commandButton type="submit" value="Next" action="submit"/&gt;
+    &lt;/h:form&gt;
+&lt;/f:view&gt;		
+	    	</programlisting>
+			<para>
+				As shown above, there is nothing Spring Web Flow specific here.  The flow execution
+				key is automatically tracked by a special UI component in the view root, so there is no need to 
+				track it manually.  Action outcomes are automatically mapped to Spring Web Flow event identifiers
+				signaled against the current state.
+			</para>
+    	</sect2>
+		<sect2 id="executor-jsf-sample">
+			<title>Spring Web Flow JSF Integration Samples</title>
+			<para>
+				See the <link linkend="sellitem-JSF-sample">sellitem-jsf</link> sample that illustrates Spring Web Flow operating in 
+				a JSF environment.
+			</para>
+		</sect2>
+    </sect1>	   
+</chapter>
