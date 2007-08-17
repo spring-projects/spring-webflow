@@ -2,7 +2,7 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
-Changes in version 2.0 M1 (16.08.2007)
+Changes in version 2.0 M1 (20.08.2007)
 -------------------------------------
 
 Package org.springframework.binding
@@ -81,6 +81,14 @@ Package org.springframework.webflow.test
   Overriding this method is useful for customizing the builder's population of the bean factory local to the
   flow definition (SWF-307).
 * Introduced MockAction for stubbing out action implementations when unit testing flow executions (SWF-317).
+
+Package org.springframework.faces
+* Introduced a "Spring Faces" component library, the new home of the Spring Web Flow + Java Server Faces (JSF) integration
+  and additional JSF-based functionality such as client-side UI input validation components (SWF-388).
+
+Package org.springframework.webflow.samples
+* Added a "booking-jsf" reference application, a hotel booking system built on "Spring Faces" (which ties together JSF + Spring Web Flow + Spring).
+  Also serves as a Seam comparison sample (SWF-366).
 
 Package reference-manual
 * Improved readability of reference manual in several sections (SWF-349).
