@@ -4,82 +4,69 @@
 	<sect1 id="spring-faces-intro">
 		<title>Introduction</title>
 		<para>
+			Spring Faces is the home of the Spring Web Flow + JSF integration layer, as well as a number of additional value adds specific
+			to a JSF environment.  These value adds include:
 		</para>
-		<programlisting>
-    Code Example
-		</programlisting>
-		<sect2>
-			<title>Sub section</title>
-			<para>
-				<tip>
-					<para>
-						Tip
-					</para>
-				</tip>
-			</para>
-			<sect3>
-				<title>Sub-sub section</title>
-				<para>
-					<note>
-						<para>
-							Note
-						</para>
-					</note>
-				</para>
-			</sect3>
-		</sect2>
+		<para>
+			Unified EL Integration - A separate implementation of the <classname>ExpressionParser</classname> from Spring Binding that uses
+			the new Unified EL from JSF 1.2 and JSP 2.1.  Both JSF 1.1 and 1.2 implementations are provided.  This allows for JSF users to use the same expression
+			language in their flow definitions as in their JSF views, and to have access to the full chain of JSF resolvers for expression evaluation.
+		</para>
+		<para>
+			Client Side Validator Components - A small set of JSF components that work as "advisors" on regular JSF inputText components.  These
+			components make use of the rich validation capabilities of the Ext javascript framework.
+		</para>
 	</sect1>
 	<sect1 id="jsf-webflow">
 		<title>Web Flow Java Server Faces (JSF) integration</title>
 		<para>
-			Spring Web Flow provides strong integration with Java Server Faces (JSF).  When used with JSF, Spring Web Flow
-			takes responsibility for view navigation handling and managing model state, adding power and 
-			simplicity to JSF's default navigation system and object scopes.  Plain JSF views and components continue to work just as before,
+			The Spring Faces module provides strong integration between Spring Web Flow and Java Server Faces (JSF).  When used with JSF, 
+			Spring Web Flow takes responsibility for view navigation handling and managing model state, adding power and 
+			simplicity beyond JSF's default navigation system and object scopes.  Plain JSF views and components continue to work just as before,
 			and are able to participate in flows with full access to flow state.  In addition, other view technologies
 			such as Facelets continue to plug-in normally.
 		</para>
 		<para>
 			The JSF integration relies on custom implementations of core JSF artifacts such as the PhaseListener 
-			and NavigationHandler to drive the execution of flows.  In addition, it relies on a custom VariableResolver to 
-			access flow execution attributes from JSF components.
+			and NavigationHandler to drive the execution of flows.  In addition, it relies on custom VariableResolvers to 
+			access flow execution attributes from JSF components and to be able to reference any JSF-managed beans using
+			expressions in the Flow Definition.  
 		</para>
     	<sect2 id="executor-jsf-simple">
-    		<title>Adding Spring Web Flow extensions to faces-config.xml</title>
+    		<title>Adding Spring Web Flow extensions to a JSF application.</title>
 			<para>
-				Using Spring Web Flow in a JSF environment requires adding these custom artifacts to the application's
-				<literal>faces-config.xml</literal> file:
-			</para>
-	    	<programlisting>
-&lt;faces-config&gt;
-    &lt;application&gt;
-        &lt;navigation-handler&gt;org.springframework.webflow.executor.jsf.FlowNavigationHandler&lt;/navigation-handler&gt;
-        &lt;variable-resolver&gt;org.springframework.webflow.executor.jsf.DelegatingFlowVariableResolver&lt;/variable-resolver&gt;
-    &lt;/application&gt;
-
-    &lt;lifecycle&gt;
-        &lt;phase-listener&gt;org.springframework.webflow.executor.jsf.FlowPhaseListener&lt;/phase-listener&gt;
-    &lt;/lifecycle&gt;
-&lt;/faces-config&gt;
-	    	</programlisting>
-			<para>
-				The <classname>FlowPhaseListener</classname> is required to manage the overall flow execution lifecycle in a JSF environment.
-				It handles launching new flows accessed by browsers via direct URLs, and also handles restoring flow executions on postback and browser refreshes.
+				Using Spring Web Flow in a JSF environment does not require any additions to your application's faces-config.xml.  You just
+				need to have the Spring Faces jar on your classpath and everything will be picked up by JSF automatically.
+				The following classes are automatically configured for you:
 			</para>
 			<para>
-				The <classname>FlowNavigationHandler</classname> is required to continue a flow on an action outcome from a JSF view
-				participating in the flow.  Outcome strings are treated as events signaled against the current view state
-				of the flow execution automatically.
+				The <classname>FlowPhaseListener</classname> manages the overall flow execution lifecycle in a JSF environment.
+				It handles launching new flows accessed by browsers via direct URLs, and also handles restoring flow executions on postback and browser 
+				refreshes.
 			</para>
 			<para>
-				The <classname>DelegatingFlowVariableResolver</classname> resolves JSF a value binding expression like {#someBean.someProperty} 
+				The <classname>FlowNavigationHandler</classname> handles selecting the appropriate view in a flow based on an action event outcome 
+				from a JSF view participating in the flow.  Outcome strings from JSF ActionSource components (i.e., commandButton or commandLink) are 
+				treated as events signaled against the current view state of the flow execution.
+			</para>
+			<para>
+				The <classname>DelegatingFlowVariableResolver</classname> resolves a JSF value binding expression like #{someBean.someProperty} 
 				to a flow execution attribute.  This resolver searches flash, flow, and conversation scope in that order until 
-				it finds a match.  If no match is found, this resolver delegates to the next resolver in the chain.
+				it finds a match.  If no match is found, this resolver delegates to the next resolver in the chain.  You can take advantage of this
+				in combination with Web Flow's Spring 2.0 custom scopes in order to have on-demand instantiation and configuration of flow-managed
+				beans the first time the expression for such a bean is encountered.  This corresponds to the standard behavior of JSF-managed beans.  
+			</para>
+			<para>
+				The <classname>DelegatingVariableResolver</classname> resolves JSF value binding expressions against the configured Spring Web 
+				Application Context.  This can be taken advantage of in combination with Web Flow's Spring 2.0 custom scopes in order to have on-demand 
+				instantiation and configuration of flow-managed beans the first time the expression for such a bean is encountered.  This corresponds to 
+				the standard behavior of JSF-managed beans.  
 			</para>
 		</sect2>
     	<sect2 id="executor-jsf-simple-webflow-setup">
 			<title>Configuring the Web Flow system</title>
 			<para>
-				The artifacts defined in the faces-config.xml use Spring to access the Web Flow system configuration.
+				The artifacts configured by Spring Faces use Spring to access the Web Flow system configuration.
 				This requires a Spring Web Application Context to be bootstrapped using a ContextLoaderListener in
 				the web.xml deployment descriptor:
 			</para>
@@ -111,12 +98,29 @@
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd"&gt;
            	    	
     &lt;!-- Launches new flow executions and resumes existing executions. --&gt;
-    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"/>
+    &lt;flow:executor id="flowExecutor" registry-ref="flowRegistry"&gt;
+		&lt;flow:execution-attributes>
+			&lt;flow:alwaysRedirectOnPause value="false"/>
+		&lt;/flow:execution-attributes>
+	&lt;/flow:executor&gt;
 
     &lt;!-- Creates the registry of flow definitions for this application --&gt;
-    &lt;flow:registry id="flowRegistry"&gt;
-        &lt;flow:location path="/WEB-INF/flows/**/*-flow.xml"/&gt;
-    &lt;/flow:registry&gt;
+    &lt;bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+        &lt;property name="expressionParser" ref="jsfExpressionParser"/>
+		&lt;property name="flowLocations">
+			&lt;list>
+				&lt;value>/WEB-INF/flows/**/*-flow.xml&lt;/value>
+			&lt;/list>
+		&lt;/property>
+	&lt;/bean>
+	
+	&lt;!-- Configures the ELExpressionParser for use in place of the default OGNL -->
+	&lt;bean id="jsfExpressionParser" class="org.springframework.faces.el.Jsf12ELExpressionParser">
+		&lt;constructor-arg >
+			&lt;bean class="org.jboss.el.ExpressionFactoryImpl"/>
+		&lt;/constructor-arg>
+	&lt;/bean&gt;
+    
         
 &lt;/beans&gt;
 	        </programlisting>
@@ -128,6 +132,12 @@
 			<para>		
 				Any flow executor property such as the flow execution repository type is configurable here, consistent
 				with the other environments Spring Web Flow supports.
+			</para>
+			<para>
+				A full bean definition is currently required for the <classname>XmlFlowRegistryFactoryBean</classname> in order to configure
+				it with the <classname>Jsf12ELExpressionParser</classname> instead of the default OGNL parser.  (There is also a <classname>Jsf11ExpressionParser</classname> 
+				for those using JSF 1.1)  This expression parser allows JSF developers to use the same expression language in their flow definitions 
+				that they are already accustomed to with JSF.  
 			</para>
 		</sect2>
     	<sect2 id="executor-jsf-launch-commandlink">
@@ -142,13 +152,6 @@
   				The command link above says <emphasis>launch 'myflow' when clicked</emphasis>.  'myflow' is expected
 				to be a valid id of a flow definition registered in the configured registry.
 			</para>
-			<tip>
-				<para>
-					By default, an action outcome prefixed with <literal>flowId:</literal> will be treated as a flow definition identifier.
-					The flow id prefix respected by the FlowNavigationHandler is configurable.  See the API documentation for
-					more information.
-				</para>
-			</tip>
     	</sect2>
     	<sect2 id="executor-jsf-launch-normal-anchor">
     		<title>Launching a flow execution - normal HTML anchor</title>
@@ -156,11 +159,10 @@
 				Flows can also be launched simply by accessing flow definition URLs directly using a bookmark or normal HTML link:
 			</para>
 	    	<programlisting>
-&lt;a href="app.faces?_flowId=myflow"&gt;Go&lt;/a&gt;
+&lt;a href="app.swf?_flowId=myflow"&gt;Go&lt;/a&gt;
 	    	</programlisting>
 			<para>
-				This example link assumes *.faces has been mapped to the FacesServlet defined within web.xml.
-				The format of a flow definition URL is configurable on the FlowPhaseListener.
+				This example link assumes *.swf has been mapped to the FacesServlet defined within web.xml.
 			</para>
     	</sect2>
     	<sect2 id="executor-jsf-sampleflow">
@@ -180,23 +182,35 @@
     &lt;start-state idref="displayView" /&gt;
 
     &lt;view-state id="displayView" view="/myview.jsp"&gt;
-        &lt;transition on="submit" to="displayNextView"/&gt;
+        &lt;transition on="submit" to="prepareNextView"/&gt;
     &lt;/view-state>
+    
+    &lt;action-state id="prepareNextView" &gt;
+    	&lt;bean-action bean="myService" method="loadMyModel"&gt;
+    		&lt;method-arguments&gt;
+    			&lt;argument expression="#{myBean.foo}"/&gt;
+    		&lt;/method-arguments&gt;
+    	&lt;/bean-action&gt;
+    	&lt;transition on="success" to="displayNextView"/&gt;
+    &lt;/action-state&gt;
 
     &lt;view-state id="displayNextView" view="/mynextview.jsp" /&gt;
 
 &lt;/flow&gt;				
-			</programlisting>
+			</programlisting> 
 			<para>
-  				A primary benefit of using JSF is it a rich UI component framework, and UI components have both data and behavior.
-				As JSF components typically handle data binding and validation behaviors, the actual flow
+  				A primary benefit of using JSF is it is a rich UI component framework, and UI components have both data and behavior.
+				As JSF components typically handle data binding and field-level validation behaviors, the actual flow
 				definition logic is often simpler and more focused as a result.
 			</para>
 			<para>
-  				In general, it is recommended views selected by
-				view states follow the standard JSF view identifier format, which requires a leading forward-slash
-				and ends in a prefix.  How Spring Web Flow view names are mapped to JSF view ids is configurable.
-				See the <classname>FlowPhaseListener</classname> API documentation for more information.
+				An important difference to note in the above example is the difference in using EL expressions versus Web Flow's traditional
+				OGNL expressions.  When using the ELExpressionParser, the chain of configured resolvers will automatically resolve an expression
+				against the correct scope, so the "conversationScope" identifier is not included in the expression when referencing "myBean".
+			</para>
+			<para>
+  				Views selected by view states must follow the standard JSF view identifier format, which requires a leading forward-slash
+				and ends in a suffix such as .jsp or .xhtml.
 			</para>
 		</sect2>
     	<sect2 id="executor-jsf-resume-form">
@@ -222,11 +236,99 @@
 				signaled against the current state.
 			</para>
     	</sect2>
+    	<sect2 id="spring-faces-components">
+    		<title>Spring Faces JSF Components</title>
+    	    <para>
+    	    	Spring Faces provides some lightweight JSF components that act in an "advisor" role to provide rich client-side validation
+    	    	capabilities to standard inputText components.  These can be used in place of server-side JSF validators to provide immediate
+    	    	validation feedback to the end user without the overhead of another fine-grained call to the server.  These components use
+    	    	the Ext javascript library to provide this validation behavior.
+    	    </para>
+    	    <sect3>
+    	    	<title>Spring Faces Component Configuration</title>
+    	    	<para>
+    	    		In order for the Spring Faces library to correctly serve the resources from the Ext library, you must have the *.swf extension
+    	    		mapped to the FacesServlet in web.xml.
+    	    	</para>
+    	    	<para>
+    	    		The Spring Faces components are currently provided as Facelets tags.  In order to utilize them, you simply need to add the 
+    	    		following namespace declaration to the header of your Facelets view template:      
+    	    	</para>
+    	    	<programlisting>
+xmlns:sf="http://www.springframework.org/faces"
+    	    	</programlisting>
+    	    </sect3>
+    	    <sect3>
+    	    	<title>Using The Spring Faces Client Side Validation Components</title>
+    	    	<para>
+    	    		Spring Faces provides three different client-side validator components:
+    	    	</para>
+    	    	<para>
+    				<orderedlist>
+    					<listitem>
+    						<para>
+    							&lt;sf:clientTextValidator&gt; - Provides validation with customizable error messages for text fields. 
+    						</para>
+    					</listitem>
+    					<listitem>
+    						<para>
+    							&lt;sf:clientNumberValidator&gt; - Provides validation and input filtering with customizable error messages for numeric 
+    							fields. 
+    						</para>
+    					</listitem>
+    					<listitem>
+    						<para>
+    							&lt;sf:clientDateValidator&gt; - Provides validation and a rich popup date picker control with customizable error 
+    							messages for date fields. 
+    						</para>
+    					</listitem>
+    					<listitem>
+    						<para>
+    							&lt;sf:validateAllOnClick&gt; - When wrapped around a UICommand component such as &lt;h:commandButton&gt; or &lt;h:commandLink&gt;
+    							fires all client-side validators when the UICommand component is clicked and prevents the form from being submitted if 
+    							any of the validations fail.
+    						</para>
+    					</listitem>
+    				</orderedlist>
+    			</para>
+    			<para>
+    				The validator components must be wrapped around an &lt;h:inputText&gt; component (or any other component that renders an HTML text input).
+    				For example, see the following snippet from the Booking sample application:
+    			</para>  
+    			<para>
+    				<programlisting>
+&lt;sf:clientDateValidator allowBlank="false" msgDisplay="block" msgClass="errors"&gt;
+	&lt;h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true"&gt;
+		&lt;f:convertDateTime pattern="MM/dd/yy" timeZone="EST"/&gt;
+	&lt;/h:inputText&gt;
+&lt;/sf:clientDateValidator&gt;
+    				</programlisting>
+    			</para>
+    			<para>
+    				In general, each of the available validations has a corresponding sensible default error message.  If you want to override the error
+    				message, you can do so via the validation's corresponding "Text" attribute.  All of the customizable error message attributes are
+    				value-binding aware so that you can use expressions to bind to keys in your message bundle if so desired.   
+    			</para>
+    			<para>	
+    				A trimmed down version of the Ext javascript library and its corresponding stylesheet will be served automatically by the components in order
+    				to provide the validation behavior.  If you would like to include Ext yourself in order to take advantage of more features of the library,
+    				then all of the components have an includeExtScript and includeExtStyles attribute that can be utilized. 
+    			</para>
+    			<para>
+    				Please refer to the javadocs of the component classes to see all of the attributes for the components.
+    			</para>
+    	    </sect3>
+    	</sect2>
 		<sect2 id="executor-jsf-sample">
 			<title>Spring Web Flow JSF Integration Samples</title>
 			<para>
 				See the <link linkend="sellitem-JSF-sample">sellitem-jsf</link> sample that illustrates Spring Web Flow operating in 
 				a JSF environment.
+			</para>
+			<para>
+				See the booking-jsf sample that provides a more complex example of Spring Web Flow 
+				operating in a JSF environment, including use of flow-managed persistence, Spring 2.0 custom scopes, EL integration, and the
+				client-side JSF validator components of Spring Faces.
 			</para>
 		</sect2>
     </sect1>	   
