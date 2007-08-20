@@ -5,6 +5,16 @@
 
 <faces-config>
 
+	<application>
+		<navigation-handler>org.springframework.faces.webflow.FlowNavigationHandler</navigation-handler>
+		<variable-resolver>org.springframework.faces.webflow.el.DelegatingFlowVariableResolver</variable-resolver>
+		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+	</application>
+	
+	<lifecycle>
+		<phase-listener>org.springframework.faces.webflow.FlowPhaseListener</phase-listener>
+	</lifecycle>
+
 	<component>
     	<component-type>spring.faces.ClientTextValidator</component-type>
     	<component-class>org.springframework.faces.ui.ClientTextValidator</component-class>
