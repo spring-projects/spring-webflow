@@ -47,10 +47,10 @@
 		</filter-class>
 	</filter>
 
-	<!-- Filters all request to *.faces to the Flow System Cleanup Filter for guarenteed cleanup -->
+	<!-- Filters all request to *.spring to the Flow System Cleanup Filter for guarenteed cleanup -->
 	<filter-mapping>
 		<filter-name>Flow System Cleanup Filter</filter-name>
-		<url-pattern>*.swf</url-pattern>
+		<url-pattern>*.spring</url-pattern>
 	</filter-mapping>
 
 	<!-- The front controller for the JSF application, responsible for handling all application requests -->
@@ -61,10 +61,8 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.swf</url-pattern>
+		<url-pattern>*.spring</url-pattern>
 	</servlet-mapping>
-
-	<!-- Map all requests to *.faces to the Faces Servlet for handling -->
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
