@@ -84,7 +84,7 @@ to see a list of all relevant targets.
 
 		<property name="ivy.conf.dir" value="${common.build.dir}" />
 
-		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+		<ivy:settings id="ivy.instance" file="${ivy.conf.dir}/ivysettings.xml" />
 
 		<ivy:buildlist reference="modules">
 			<fileset dir="..">

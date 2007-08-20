@@ -1,7 +1,8 @@
-<ivyconf>
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
 	<properties file="${ivy.conf.dir}/ivyconf.properties"/>
-	<conf defaultResolver="maven2"/>
-	<resolvers>
+	<settings defaultResolver="maven2"/>
+		<resolvers>
 		<chain name="spring-projects" returnFirst="true">
 			<!-- try developer's local integration repository first -->
 			<filesystem name="integration-repo">
@@ -94,4 +95,4 @@
 		<module organisation="org.springframework" name="spring-ldap" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="various" resolver="spring-projects"/>
 	</modules>
-</ivyconf>
+</ivysettings>

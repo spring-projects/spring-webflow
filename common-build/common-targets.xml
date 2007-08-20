@@ -309,7 +309,7 @@
 
   <target name="ivy.configure" depends="init">
     <echo>reading ivy config</echo>
-    <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+    <ivy:settings id="ivy.instance" file="${ivy.conf.dir}/ivysettings.xml" />
   </target>
 
   <presetdef name="resolve.conf">
