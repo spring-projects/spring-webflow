@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Spring Web Stack: SWF + JSF Booking Sample</title>
+	<title>Spring Faces: Booking Sample</title>
 	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
 	<ui:insert name="headIncludes"/>
 </head>
@@ -12,44 +12,48 @@
 
 <div id="document">
 	<div id="header">
-		<div id="title">Spring Web Stack: SWF + JSF Booking Sample</div>
+		<div id="title">Spring Faces: Hotel Booking Sample</div>
 	</div>
 	<div id="container">
-		<a href="http://www.thespringexperience.com">
-			<div id="sidebar">
-				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+		<div id="sidebar">
+			<img src="/swf-booking-jsf/images/diplomat.jpg" />
+			<a href="http://www.thespringexperience.com">
 				<img src="/swf-booking-jsf/images/tse.gif" />
-				
-				<p>
-					The features shown in this sample are just the beginning.  To see what else we've got in store
-					for Spring Web Flow and JSF, join us at The Spring Experience December 12 - 15, 2007 at the Westin 
-					Diplomat in Hollywood, Florida.
-				</p>
-			</div>
-		</a>
+			</a>
+			
+			<p>
+				The features illustrated in this sample are just the beginning.
+				To see what is in store for developing rich web applications with Spring, join us at
+				<a href="http://www.thespringexperience.com">The Spring Experience</a>
+				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
+			</p>
+		</div>
 		<div id="content">
 			<div class="section">
-				<h1>Welcome to the Spring Web Flow Booking Sample</h1>
-				
+				<h1>Welcome to the Spring Faces Sample Application</h1>
 				<p>
-					This sample will continue to evolve as Spring Web Flow 2.0 is developed.
+				 	This "Hotel Booking" sample illustrates "Spring Faces", Spring's first-class support for Java Server Faces (JSF).
+					Spring Faces integrates Spring, Spring Web Flow, ExtJs, and Facelets to provide a
+					compelling solution for developing rich web applications with JSF.
 				</p>
-					
 				<p>
-					As of SWF 2.0-m1, some of the new features that this sample serves to demonstrate include:
-					<li>Flow-scoped persistence contexts</li>
-					<li>Unified EL integration</li>
+					Currently, Spring Faces is released as a component of the Spring Web Flow distribution, 
+					and is available beginning with Spring Web Flow 2.0 m1.
+				</p>
+				<p>
+					The new features illustrated in this sample include:
+					<li>Flow-managed persistence contexts</li>
+					<li>Unified Expression Language (EL) integration</li>
 					<li>Spring 2.0 custom scopes</li>
-					<li>Client-side validation support</li> 
+					<li>Client-side validation with ExtJs</li> 
 				</p>
-				
-				<p>
-					<a href="controller.swf?_flowId=main-flow">Click here to book your hotel.</a>
+				<p align="right">
+					<a href="controller.swf?_flowId=main-flow">Start your Hotel Booking Experience</a>
 				</p>
 			</div>
 		</div>
 	</div>
-	<div id="footer">Created with Spring, Spring Web Flow, Spring Faces, MyFaces, and Facelets</div>
+	<div id="footer">Powered by Spring Faces</div>
 </div>
 </body>
 </html>
