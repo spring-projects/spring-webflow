@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Spring Web Stack: SWF + JSF Booking Sample</title>
+	<title>Spring Faces: Hotel Booking Sample Application</title>
 	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
 	<ui:insert name="headIncludes"/>
 </head>
@@ -12,29 +12,34 @@
 
 <div id="document">
 	<div id="header">
-		<div id="title">Spring Web Stack: SWF + JSF Booking Sample</div>
+		<div id="title">Spring Faces: Hotel Booking Sample Application</div>
 		<div id="status">
             Welcome #{user.name}
 		</div>
 	</div>
 	<div id="container">
-		<a href="http://www.thespringexperience.com">
-			<div id="sidebar">
+		<div id="sidebar">
+			<a href="http://www.thespringexperience.com">
 				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+			</a>
+			<a href="http://www.thespringexperience.com">
 				<img src="/swf-booking-jsf/images/tse.gif" />
-				
-				<p>
-					The features shown in this sample are just the beginning.  To see what else we've got in store
-					for Spring Web Flow and JSF, join us at The Spring Experience December 12 - 15, 2007 at the Westin 
-					Diplomat in Hollywood, Florida.
-				</p>
-			</div>
-		</a>
+			</a>
+			<p>
+				The features illustrated in this sample are just the beginning.
+				To see what is in store for developing rich web applications with Spring, join us at
+				<a href="http://www.thespringexperience.com">The Spring Experience</a>
+				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
+			</p>
+		</div>
 		<div id="content">
 			<ui:insert name="content"/>
 		</div>
+		<div id="footer">
+			<a href="http://www.springframework.org"><img src="/swf-booking-jsf/images/powered-by-spring.png" /></a>
+		</div>
 	</div>
-	<div id="footer">Created with Spring, Spring Web Flow, Spring Faces, MyFaces, and Facelets</div>
 </div>
+
 </body>
 </html>

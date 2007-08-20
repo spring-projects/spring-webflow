@@ -65,7 +65,7 @@ fieldset {
 #container {
 	float: left;
 	width: 758px;
-	background: url(../images/header.graphic.jpg) 0 0 repeat-x;
+	background: url(../images/header.jpg) 0 0 repeat-x;
 }
 #sidebar {
 	float: left;
@@ -79,7 +79,7 @@ fieldset {
 	width: 448px;
 	margin-top: 195px;
 	padding-top: 5px;
-	background: #fff url(../img/cnt.bg.gif) 0 0 repeat-x;
+	background: #fff url(../images/cnt.bg.gif) 0 0 repeat-x;
 }
 #footer {
 	clear: both;
