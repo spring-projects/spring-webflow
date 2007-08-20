@@ -5,20 +5,10 @@
 
 <faces-config>
 	<application>
-		<navigation-handler>org.springframework.faces.webflow.FlowNavigationHandler</navigation-handler>
-		<variable-resolver>org.springframework.faces.webflow.el.DelegatingFlowVariableResolver</variable-resolver>
-		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
 		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
 	</application>
 	
 	<lifecycle>
 		<phase-listener>org.springframework.webflow.samples.booking.util.DebuggingPhaseListener</phase-listener>
-		<phase-listener>org.springframework.faces.webflow.FlowPhaseListener</phase-listener>
 	</lifecycle>
-	
-	<managed-bean>
-		<managed-bean-name>jsfSearchAction</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.SearchAction</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
 </faces-config>
