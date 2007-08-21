@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:flow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.1.xsd">
+
+	<import resource="application-config.xml"/>
+	
+	<flow:enable-scopes/>
+
+	<!-- Launches new flow executions and resumes existing executions -->
+	<flow:executor id="flowExecutor" registry-ref="flowRegistry">
+		<flow:execution-attributes>
+			<flow:alwaysRedirectOnPause value="false"/>
+		</flow:execution-attributes>
+		<flow:execution-listeners>
+			<flow:listener ref="jpaConversationListener"/>
+		</flow:execution-listeners>
+	</flow:executor>
+	
+	<!-- Creates the registry of flow definitions for this application -->
+	<bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
+        <property name="expressionParser" ref="jsfExpressionParser"/>
+		<property name="flowLocations">
+			<list>
+				<value>/flow/main/main.xml</value>
+				<value>/flow/booking/booking.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="jsfExpressionParser" class="org.springframework.faces.el.Jsf12ELExpressionParser">
+		<constructor-arg >
+			<bean class="org.jboss.el.ExpressionFactoryImpl"/>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="jpaConversationListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+		<constructor-arg>
+			<ref bean="entityManagerFactory"/>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="txManager"/>
+		</constructor-arg>
+	</bean>
+		
+</beans>
