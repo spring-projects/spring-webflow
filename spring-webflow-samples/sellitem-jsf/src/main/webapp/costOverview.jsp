@@ -61,7 +61,7 @@
 	</tr>
 	<tr>
 		<td colspan="2" class="buttonBar">
-			<form action="<c:url value="/index.faces"/>">
+			<form action="<c:url value="/"/>">
 				<input type="submit" class="button" value="Home">
 			</form>
 		</td>
