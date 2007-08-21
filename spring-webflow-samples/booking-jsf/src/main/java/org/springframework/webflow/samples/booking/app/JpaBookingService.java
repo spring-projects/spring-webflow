@@ -41,19 +41,4 @@ public class JpaBookingService implements BookingService {
     public Hotel findHotelById(Long id) {
 	return em.find(Hotel.class, id);
     }
-
-    @Transactional(readOnly = true)
-    public Booking bookHotel(Hotel hotel, User user) {
-	Booking booking = new Booking(hotel, user);
-	em.persist(booking);
-	return booking;
-    }
-
-    @Transactional
-    public void cancelBooking(Long id) {
-	Booking booking = em.find(Booking.class, id);
-	if (booking != null) {
-	    em.remove(booking);
-	}
-    }
 }

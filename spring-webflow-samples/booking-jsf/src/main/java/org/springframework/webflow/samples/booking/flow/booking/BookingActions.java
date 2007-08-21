@@ -4,16 +4,28 @@ import java.util.Calendar;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
 
-import org.springframework.webflow.action.AbstractAction;
+import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.samples.booking.app.Booking;
+import org.springframework.webflow.samples.booking.app.Hotel;
+import org.springframework.webflow.samples.booking.app.User;
 
-public class ValidateBookingAction extends AbstractAction {
+public class BookingActions extends MultiAction {
 
-    @Override
-    protected Event doExecute(RequestContext context) throws Exception {
+    public Event createBooking(RequestContext context) {
+	Hotel hotel = (Hotel) context.getFlowScope().get("hotel");
+	User user = (User) context.getFlowScope().get("user");
+	Booking booking = new Booking(hotel, user);
+	EntityManager em = (EntityManager) context.getFlowScope().get("entityManager");
+	em.persist(booking);
+	context.getFlowScope().put("booking", booking);
+	return success();
+    }
+
+    public Event validateBooking(RequestContext context) throws Exception {
 	Booking booking = (Booking) context.getFlowScope().get("booking");
 	Calendar calendar = Calendar.getInstance();
 	calendar.add(Calendar.DAY_OF_MONTH, -1);

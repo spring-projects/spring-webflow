@@ -34,12 +34,8 @@
 		<transition on="cancel" to="displayMain" />
 	</subflow-state>
 	
-	<action-state id="cancelBooking">
-		<bean-action bean="bookingService" method="cancelBooking">
-			<method-arguments>
-				<argument expression="param.bookingId" parameter-type="long" />
-			</method-arguments>
-		</bean-action>
+	<action-state id="removeBooking">
+		<action method="removeBooking" bean="mainActions" />
 		<transition on="success" to="reloadCurrentUserBookings" />
 	</action-state>
 	

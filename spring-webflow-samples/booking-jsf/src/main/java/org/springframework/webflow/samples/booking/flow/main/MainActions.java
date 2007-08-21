@@ -27,7 +27,7 @@ public class MainActions extends MultiAction {
 
     public Event findCurrentUserBookings(RequestContext context) {
 	User user = (User) context.getConversationScope().get("user");
-	List<Booking> bookings = bookingService.findBookings(user.getName());
+	List<Booking> bookings = bookingService.findBookings(user.getUsername());
 	context.getFlowScope().put("bookings", new SerializableListDataModel(bookings));
 	return success();
     }
@@ -37,6 +37,10 @@ public class MainActions extends MultiAction {
 	List<Hotel> hotels = bookingService
 		.findHotels(search.getSearchString(), search.getPageSize(), search.getPage());
 	context.getFlowScope().put("hotels", new SerializableListDataModel(hotels));
+	return success();
+    }
+
+    public Event removeBooking(RequestContext context) {
 	return success();
     }
 
