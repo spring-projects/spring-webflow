@@ -4,6 +4,8 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 	
+	<attribute name="description" value="The main flow of the application that handles searching for hotels to book"/>
+	
 	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.flow.main.SearchCriteria" scope="flow" />
 	
 	<start-actions>
