@@ -16,13 +16,16 @@ import javax.faces.el.VariableResolver;
 
 /**
  * An adapter for using JSF 1.1 {@link VariableResolver}s and {@link PropertyResolver}s in an {@link ELContext}.
- * @author Jeremy Grelle
- * 
+ * @author Jeremy Grelle0
  */
 public class Jsf11ELResolverAdapter extends ELResolver {
 
 	private FacesContext facesContext;
 
+	/**
+	 * Creates a new adapter that adapts JSF 1.1 EL constructs to the Unified EL Resolver construct.
+	 * @param facesContext the current faces context
+	 */
 	public Jsf11ELResolverAdapter(FacesContext facesContext) {
 		this.facesContext = facesContext;
 	}
