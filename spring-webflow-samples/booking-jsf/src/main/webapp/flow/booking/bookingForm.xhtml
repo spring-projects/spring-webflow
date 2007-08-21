@@ -20,22 +20,27 @@
 			<div class="label">Name:</div>
 			<div class="output">#{hotel.name}</div>
 		</div>
+		
 		<div class="entry">
 			<div class="label">Address:</div>
 			<div class="output">#{hotel.address}</div>
 		</div>
+		
 		<div class="entry">
 			<div class="label">City, State:</div>
 			<div class="output">#{hotel.city}, #{hotel.state}</div>
 		</div>
+		
 		<div class="entry">
 			<div class="label">Zip:</div>
 			<div class="output">#{hotel.zip}</div>
 		</div>
+		
 		<div class="entry">
 			<div class="label">Country:</div>
 			<div class="output">#{hotel.country}</div>
 		</div>
+		
         <div class="entry">
             <div class="label">Nightly rate:</div>
             <div class="output">
@@ -89,12 +94,10 @@
 				<h:outputLabel for="smoking">Smoking Preference:</h:outputLabel>
 			</div>
 			<div id="radio" class="input">
-		
-			<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
-				<f:selectItem itemLabel="Smoking" itemValue="true"/>
-				<f:selectItem itemLabel="Non Smoking" itemValue="false"/>
-			</h:selectOneRadio>
-	
+				<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
+					<f:selectItem itemLabel="Smoking" itemValue="true"/>
+					<f:selectItem itemLabel="Non Smoking" itemValue="false"/>
+				</h:selectOneRadio>
 			</div>
 		</div>
 			
@@ -146,7 +149,6 @@
 					<f:selectItem itemLabel="2008" itemValue="2008"/>
 					<f:selectItem itemLabel="2009" itemValue="2009"/>
 				</h:selectOneMenu>
-
 			</div>
 		</div>
 		
@@ -158,7 +160,7 @@
 			<div class="label">&#160;</div>
 			<div class="input">
 				<sf:validateAllOnClick>
-					<h:commandButton id="proceed" value="Proceed" action="reviewDetails"/>
+					<h:commandButton id="proceed" action="proceed" value="Proceed"/>
 				</sf:validateAllOnClick>&#160;
 				<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
 			</div>
@@ -166,6 +168,6 @@
 	</fieldset>
 	</h:form>
 </div>
-</ui:define>
 
+</ui:define>
 </ui:composition>

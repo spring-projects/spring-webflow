@@ -10,8 +10,6 @@
 
 	<import resource="application-layer-config.xml"/>
 	
-	<flow:enable-scopes/>
-
 	<!-- Launches new flow executions and resumes existing executions -->
 	<flow:executor id="flowExecutor" registry-ref="flowRegistry">
 		<flow:execution-attributes>

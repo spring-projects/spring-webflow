@@ -31,15 +31,11 @@
 	</action-state>
 	
 	<view-state id="enterBookingDetails" view="/flow/booking/bookingForm.xhtml">
-		<transition on="reviewDetails" to="validateBooking" />
+		<transition on="proceed" to="confirmBooking">
+			<action method="validateBooking" bean="bookingActions" />
+		</transition>
 		<transition on="cancel" to="cancel" />
 	</view-state>
-	
-	<action-state id="validateBooking">
-		<action method="validateBooking" bean="bookingActions" />
-		<transition on="success" to="confirmBooking" />
-		<transition on="error" to="enterBookingDetails" />
-	</action-state>
 	
 	<view-state id="confirmBooking" view="/flow/booking/confirmBooking.xhtml">
 		<transition on="confirm" to="bookingAuthorized" />
