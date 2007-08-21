@@ -29,7 +29,7 @@ SpringFaces.ExtGenericFieldAdvisor.prototype = {
 		
 SpringFaces.applyAdvisors = function(){
 			
-	for (x in SpringFaces.advisors) {
+	for (var x=0; x<SpringFaces.advisors.length; x++) {
 		SpringFaces.advisors[x].apply();
 	}
 };
