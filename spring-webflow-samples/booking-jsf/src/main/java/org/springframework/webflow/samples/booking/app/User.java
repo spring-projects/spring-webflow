@@ -18,18 +18,19 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name, String password, String username) {
-	this.name = name;
-	this.password = password;
+    public User(String username, String password, String name) {
 	this.username = username;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
+	this.password = password;
 	this.name = name;
+    }
+
+    @Id
+    public String getUsername() {
+	return username;
+    }
+
+    public void setUsername(String username) {
+	this.username = username;
     }
 
     public String getPassword() {
@@ -40,13 +41,12 @@ public class User implements Serializable {
 	this.password = password;
     }
 
-    @Id
-    public String getUsername() {
-	return username;
+    public String getName() {
+	return name;
     }
 
-    public void setUsername(String username) {
-	this.username = username;
+    public void setName(String name) {
+	this.name = name;
     }
 
     @Override

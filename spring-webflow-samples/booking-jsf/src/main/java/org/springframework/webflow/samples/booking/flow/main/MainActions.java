@@ -20,7 +20,7 @@ public class MainActions extends MultiAction {
     }
 
     public Event initCurrentUser(RequestContext context) {
-	User user = new User("Springer", "springrocks", "Spring User");
+	User user = new User("springer", "springrocks", "Springer");
 	context.getConversationScope().put("user", user);
 	return success();
     }
