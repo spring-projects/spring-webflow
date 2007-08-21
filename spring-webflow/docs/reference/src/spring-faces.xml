@@ -159,10 +159,10 @@
 				Flows can also be launched simply by accessing flow definition URLs directly using a bookmark or normal HTML link:
 			</para>
 	    	<programlisting>
-&lt;a href="app.swf?_flowId=myflow"&gt;Go&lt;/a&gt;
+&lt;a href="app.spring?_flowId=myflow"&gt;Go&lt;/a&gt;
 	    	</programlisting>
 			<para>
-				This example link assumes *.swf has been mapped to the FacesServlet defined within web.xml.
+				This example link assumes *.spring has been mapped to the FacesServlet defined within web.xml.
 			</para>
     	</sect2>
     	<sect2 id="executor-jsf-sampleflow">
@@ -247,7 +247,7 @@
     	    <sect3>
     	    	<title>Spring Faces Component Configuration</title>
     	    	<para>
-    	    		In order for the Spring Faces library to correctly serve the resources from the Ext library, you must have the *.swf extension
+    	    		In order for the Spring Faces library to correctly serve the resources from the Ext library, you must have the *.spring extension
     	    		mapped to the FacesServlet in web.xml.
     	    	</para>
     	    	<para>
