@@ -21,7 +21,7 @@ fully addressing the "C" in MVC.
 
 2. RELEASE INFO
 
-Spring Web Flow requires J2SE 1.3 and J2EE 1.3 (Servlet 2.3) or > to run.
+Spring Web Flow 2.0 requires J2SE 1.4 and J2EE 1.4 (Servlet 2.4) or > to run.
 
 J2SE 5.0 with Ant 1.6 and Ivy 1.3 or > is required to build.  A compatible version of Ivy
 is shipped with this release.
@@ -36,6 +36,7 @@ SWF release contents:
 "projects/repository" contains Spring Web Flow dependencies (dependent jars)
 "projects/spring-webflow/build-spring-webflow" contains the master build file used to build all Spring Web Flow projects
 "projects/spring-webflow/spring-binding" contains buildable Spring Data Binding project sources, an internal library used by SWF
+"projects/spring-webflow/spring-faces" contains buildable Spring Faces project sources, a library containing SWF's JSF integration
 "projects/spring-webflow/spring-webflow" contains buildable Spring Web Flow project sources
 "projects/spring-webflow/spring-webflow-samples" contains buildable Spring Web Flow sample application sources
 
