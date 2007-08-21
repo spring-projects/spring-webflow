@@ -33,7 +33,7 @@
 	</target>
 	
 	<target name="s3.tasks">
-		<ivy:configure file="${common.build.dir}/ivyconf.xml" />
+		<ivy:settings id="ivy.instance" file="${common.build.dir}/ivysettings.xml" />
 		<property name="main.build.configs" value="global,buildtime,test" />
 		<ivy:resolve file="${basedir}/ivy.xml" conf="${main.build.configs}" />
 		<ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${main.build.configs}" />
