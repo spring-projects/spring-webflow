@@ -4,7 +4,8 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
-		<config>src/main/webapp/WEB-INF/webflow-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/application-layer-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/web-application-config.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -12,7 +13,8 @@
 			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/main/webapp/WEB-INF/webflow-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/application-layer-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/web-application-config.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

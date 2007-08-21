@@ -2,8 +2,12 @@
 <webflow-project-description>
 	<configs>
 		<config>
-			<file>src/main/webapp/WEB-INF/flows/booking-flow.xml</file>
+			<file>src/main/webapp/flows/booking/booking-flow.xml</file>
 			<name><![CDATA[booking-flow]]></name>
+		</config>
+		<config>
+			<file>src/main/webapp/flows/main/main-flow.xml</file>
+			<name><![CDATA[main-flow]]></name>
 		</config>
 	</configs>
 </webflow-project-description>

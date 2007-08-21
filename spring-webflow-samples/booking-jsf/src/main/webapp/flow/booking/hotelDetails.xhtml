@@ -5,11 +5,12 @@
 	  			xmlns:f="http://java.sun.com/jsf/core"
 				template="/template.xhtml">
 
-<!-- content -->
 <ui:define name="content">
+
 <div class="section">
 	<h1>View Hotel</h1>
 </div>
+
 <div class="section">
 	<div class="entry">
 		<div class="label">Name:</div>
@@ -39,12 +40,12 @@
         <div class="label">Nightly rate:</div>
         <div class="output">
             <h:outputText value="#{hotel.price}">
-                <f:convertNumber type="currency" 
-                                 currencySymbol="$"/>
+                <f:convertNumber type="currency" currencySymbol="$"/>
             </h:outputText>
         </div>
     </div>
 </div>
+
 <div class="section">
 	<h:form id="hotel">
 	<fieldset class="buttonBox">

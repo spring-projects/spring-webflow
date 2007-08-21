@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.web.SearchCriteria" scope="flow" />
+	
+	<start-actions>
+		<action method="findCurrentUserBookings" bean="mainActions" />
+	</start-actions>
+	
+	<start-state idref="displayMain"/>
+	
+	<view-state id="displayMain" view="/flows/main/main.xhtml">
+		<transition on="findHotels" to="findHotels" />
+		<transition on="selectHotel" to="bookHotel" />
+		<transition on="cancelBooking" to="cancelBooking" />
+	</view-state>
+	
+	<action-state id="findHotels">
+		<action bean="searchAction" method="findHotels" />
+		<transition on="success" to="displayMain" />
+	</action-state>
+	
+	<subflow-state id="bookHotel" flow="booking-flow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="param.hotelId" target="id" from="string" to="long"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="*" to="findBookings"/>
+	</subflow-state>
+	
+	<action-state id="cancelBooking">
+		<bean-action bean="bookingService" method="cancelBooking">
+			<method-arguments>
+				<argument expression="param.bookingId" parameter-type="long" />
+			</method-arguments>
+		</bean-action>
+		<transition on="success" to="reloadCurrentUserBookings" />
+	</action-state>
+	
+	<action-state id="reloadCurrentUserBookings">
+		<action bean="searchAction" method="findCurrentUserBookings" />
+		<transition on="success" to="displayMain" />
+	</action-state>
+	
+</flow>

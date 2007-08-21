@@ -1,4 +1,4 @@
-insert into Customer (username, password, name) values ('springuser', 'barfoo', 'Spring User')
+insert into Customer (username, password, name) values ('springer', 'springrocks', 'Spring User')
 insert into Customer (username, password, name) values ('demo', 'demo', 'Demo User')
 insert into Hotel (id, price, name, address, city, state, zip, country) values (1, 199, 'Westin Diplomat', '3555 S. Ocean Drive', 'Hollywood', 'FL', '33019', 'USA')
 insert into Hotel (id, price, name, address, city, state, zip, country) values (2, 120, 'Marriott Courtyard', 'Tower Place, Buckhead', 'Atlanta', 'GA', '30305', 'USA')

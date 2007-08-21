@@ -3,32 +3,19 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
 				template="/template.xhtml">
 
-<!-- content -->
 <ui:define name="content">
-  <h:form id="main">
-<div class="section">
+<h:form id="main">
 
-  
+<div class="section">
     <span class="errors">
        <h:messages globalOnly="true"/>
     </span>
-    
 	<h1>Search Hotels</h1>
 	<fieldset> 
-	   <h:inputText id="searchString" value="#{hotelSearch.searchString}" style="width: 165px;"/>
-         
-       &#160;
-	   <h:commandButton id="findHotels" value="Find Hotels" actionListener="#{hotelSearch.findHotelsListener}" 
-	   		action="findHotels" reRender="searchResults"/>
-       &#160;
-       <a:status>
-          <f:facet name="start">
-             <h:graphicImage value="/img/spinner.gif"/>
-          </f:facet>
-       </a:status>
+	   <h:inputText id="searchString" value="#{hotelSearch.searchString}" style="width: 165px; height: 15px;"/>&#160;
+	   <h:commandButton id="findHotels" value="Find Hotels" actionListener="#{hotelSearch.findHotelsListener}" action="findHotels"/>
 	   <br/>
        <h:outputLabel for="pageSize">Maximum results:</h:outputLabel>&#160;
        <h:selectOneMenu value="#{hotelSearch.pageSize}" id="pageSize">
@@ -39,9 +26,9 @@
     </fieldset>
 </div>
 
-  <div class="section">
+<div class="section">
 	<h:outputText value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
-	<h:dataTable id="hotels" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount>0}">
+	<h:dataTable id="hotels" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
 		<h:column>
 			<f:facet name="header">Name</f:facet>
 			#{hotel.name}
@@ -66,22 +53,20 @@
 		</h:column>
 	</h:dataTable>
 	<div class="prev">
-		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{hotelSearch.prevPageListener}" 
-			action="findHotels" rendered="#{hotelSearch.page > 0}"/>
+		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{hotelSearch.prevPageListener}" action="findHotels" rendered="#{hotelSearch.page > 0}"/>
 	</div>
 	<div class="next">
-		<h:commandLink id="nextPageLink" value="More results" actionListener="#{hotelSearch.nextPageListener}" 
-			action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
+		<h:commandLink id="nextPageLink" value="More results" actionListener="#{hotelSearch.nextPageListener}" action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
 	</div>
-  </div>
+</div>
 
 <div class="section">
 	<h1>Current Hotel Bookings</h1>
 </div>
-<div class="section">
 
-	<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount==0}"/>
-	<h:dataTable id="bookings" value="#{bookings}" var="booking" rendered="#{bookings.rowCount>0}">
+<div class="section">
+	<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount == 0}"/>
+	<h:dataTable id="bookings" value="#{bookings}" var="booking" rendered="#{bookings.rowCount > 0}">
 		<h:column>
 			<f:facet name="header">Name</f:facet>
 			#{booking.hotel.name}
@@ -116,7 +101,5 @@
 </div>
 
 </h:form>
-
 </ui:define>
-
 </ui:composition>

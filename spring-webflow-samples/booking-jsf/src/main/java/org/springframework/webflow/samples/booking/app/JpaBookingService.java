@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.service;
+package org.springframework.webflow.samples.booking.app;
 
 import java.util.List;
 
@@ -8,20 +8,22 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.webflow.samples.booking.model.Booking;
-import org.springframework.webflow.samples.booking.model.Hotel;
-import org.springframework.webflow.samples.booking.model.User;
 
 @Repository
 public class JpaBookingService implements BookingService {
 
     private EntityManager em;
 
+    @PersistenceContext
+    public void setEntityManager(EntityManager em) {
+	this.em = em;
+    }
+
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Booking> findBookings(User user) {
+    public List<Booking> findBookings(String username) {
 	return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
-		.setParameter("username", user.getUsername()).getResultList();
+		.setParameter("username", username).getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -36,7 +38,7 @@ public class JpaBookingService implements BookingService {
     }
 
     @Transactional(readOnly = true)
-    public Hotel readHotelById(Long id) {
+    public Hotel findHotelById(Long id) {
 	return em.find(Hotel.class, id);
     }
 
@@ -54,10 +56,4 @@ public class JpaBookingService implements BookingService {
 	    em.remove(booking);
 	}
     }
-
-    @PersistenceContext
-    public void setEntityManager(EntityManager em) {
-	this.em = em;
-    }
-
 }

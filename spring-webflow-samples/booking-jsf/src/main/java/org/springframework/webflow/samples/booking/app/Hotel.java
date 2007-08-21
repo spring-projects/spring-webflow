@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.model;
+package org.springframework.webflow.samples.booking.app;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,12 +11,19 @@ import javax.persistence.Id;
 @Entity
 public class Hotel implements Serializable {
     private Long id;
+
     private String name;
+
     private String address;
+
     private String city;
+
     private String state;
+
     private String zip;
+
     private String country;
+
     private BigDecimal price;
 
     @Id

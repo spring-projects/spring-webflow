@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.model;
+package org.springframework.webflow.samples.booking.app;
 
 import java.io.Serializable;
 
@@ -10,16 +10,18 @@ import javax.persistence.Table;
 @Table(name = "Customer")
 public class User implements Serializable {
     private String username;
+
     private String password;
+
     private String name;
+
+    public User() {
+    }
 
     public User(String name, String password, String username) {
 	this.name = name;
 	this.password = password;
 	this.username = username;
-    }
-
-    public User() {
     }
 
     public String getName() {

@@ -1,10 +1,10 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.flow.main;
 
 import java.io.Serializable;
 
 import javax.faces.event.ActionEvent;
 
-public class HotelSearch implements Serializable {
+public class SearchCriteria implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

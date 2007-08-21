@@ -7,8 +7,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:org/springframework/webflow/samples/booking/service/services-config-jpa.xml
-			/WEB-INF/webflow-config.xml
+			/WEB-INF/config/web-application-config.xml
 		</param-value>
 	</context-param>
 
@@ -16,12 +15,6 @@
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
-	</context-param>
-
-	<!-- Special Debug Output for Development -->
-	<context-param>
-		<param-name>facelets.DEVELOPMENT</param-name>
-		<param-value>true</param-value>
 	</context-param>
 
 	<!-- Bootstraps the root Spring Web Application Context, responsible for deploying managed beans
@@ -59,6 +52,7 @@
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.spring</url-pattern>

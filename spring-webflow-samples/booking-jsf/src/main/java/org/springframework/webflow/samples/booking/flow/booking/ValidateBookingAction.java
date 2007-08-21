@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.flow.booking;
 
 import java.util.Calendar;
 
@@ -8,7 +8,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.samples.booking.model.Booking;
+import org.springframework.webflow.samples.booking.app.Booking;
 
 public class ValidateBookingAction extends AbstractAction {
 

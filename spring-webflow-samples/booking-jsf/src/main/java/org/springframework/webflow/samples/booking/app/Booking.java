@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.model;
+package org.springframework.webflow.samples.booking.app;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,15 +19,25 @@ import javax.persistence.Transient;
 @Entity
 public class Booking implements Serializable {
     private Long id;
+
     private User user;
+
     private Hotel hotel;
+
     private Date checkinDate;
+
     private Date checkoutDate;
+
     private String creditCard;
+
     private String creditCardName;
+
     private int creditCardExpiryMonth;
+
     private int creditCardExpiryYear;
+
     private boolean smoking;
+
     private int beds;
 
     public Booking() {
@@ -36,7 +46,6 @@ public class Booking implements Serializable {
     public Booking(Hotel hotel, User user) {
 	this.hotel = hotel;
 	this.user = user;
-
 	Calendar calendar = Calendar.getInstance();
 	setCheckinDate(calendar.getTime());
 	calendar.add(Calendar.DAY_OF_MONTH, 1);
