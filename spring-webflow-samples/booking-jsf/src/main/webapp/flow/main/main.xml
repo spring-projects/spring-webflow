@@ -7,6 +7,7 @@
 	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.web.SearchCriteria" scope="flow" />
 	
 	<start-actions>
+		<action method="initCurrentUser" bean="mainActions" />
 		<action method="findCurrentUserBookings" bean="mainActions" />
 	</start-actions>
 	

@@ -6,9 +6,9 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.1.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<import resource="application-config.xml"/>
+	<import resource="application-layer-config.xml"/>
 	
 	<flow:enable-scopes/>
 
