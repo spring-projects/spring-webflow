@@ -8,6 +8,7 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
+	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
 	
 	<!-- Launches new flow executions and resumes existing executions -->
@@ -31,12 +32,14 @@
 		</property>
 	</bean>
 	
+	<!-- Enables use of the unified expression language (EL) from flow definitions -->
 	<bean id="jsfExpressionParser" class="org.springframework.faces.el.Jsf12ELExpressionParser">
 		<constructor-arg >
 			<bean class="org.jboss.el.ExpressionFactoryImpl"/>
 		</constructor-arg>
 	</bean>
 	
+	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaConversationListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
 		<constructor-arg>
 			<ref bean="entityManagerFactory"/>

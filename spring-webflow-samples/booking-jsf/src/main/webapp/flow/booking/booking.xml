@@ -4,6 +4,10 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
+	<!-- 
+		Indicates this flow requires a persistence context
+		One will be created automatically when this flow starts; all data access will use it automatically
+	-->
 	<attribute name="persistenceContext" value="true" />
 	
 	<input-mapper>
@@ -44,10 +48,12 @@
 	</view-state>
 	
 	<end-state id="cancel">
+		<!-- Indicates any changes to managed persistent entities should NOT be committed to the database -->
 		<attribute name="commit" value="false" type="boolean" />
 	</end-state>
 	
 	<end-state id="bookingAuthorized">
+		<!-- Indicates changes to managed persistent entities should be committed to the database at this point -->
 		<attribute name="commit" value="true" type="boolean" />
 	</end-state>
 	
