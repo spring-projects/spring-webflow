@@ -2,6 +2,11 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
+Changes in version 2.0 M2 (30.10.2007)
+-------------------------------------
+
+
+
 Changes in version 2.0 M1 (21.08.2007)
 -------------------------------------
 
@@ -17,7 +22,7 @@ Package org.springframework.webflow.action
 Package org.springframework.webflow.config
 * FlowExecutorFactoryBean now has an 'inputMapper' property to conveniently configure the 'inputMapper'
   property of the created FlowExecutorImpl object.
-* Added a new <enable-scopes/> bean definition to a new 1.1 revision of the spring-webflow-config schema to support
+* Added a new <enable-scopes/> bean definition to a new 2.0 revision of the spring-webflow-config schema to support
   Web Flow scoping of beans in Spring (SWF-163).
 
 Package org.springframework.webflow.engine
