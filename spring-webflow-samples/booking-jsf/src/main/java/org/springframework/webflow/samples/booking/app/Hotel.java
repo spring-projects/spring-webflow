@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * A hotel where users may book stays.
+ */
 @Entity
 public class Hotel implements Serializable {
     private Long id;

@@ -16,6 +16,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+/**
+ * A Hotel Booking made by a User.
+ */
 @Entity
 public class Booking implements Serializable {
     private Long id;

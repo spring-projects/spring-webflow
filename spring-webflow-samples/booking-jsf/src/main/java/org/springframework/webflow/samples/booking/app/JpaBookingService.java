@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * A JPA-based implementation of the Booking Service. Delegates to a JPA entity manager to issue data access calls
+ * against the backing repository. The EntityManager reference is provided by the managing container (Spring)
+ * automatically.
+ */
 @Repository
 public class JpaBookingService implements BookingService {
 
@@ -42,6 +47,7 @@ public class JpaBookingService implements BookingService {
 	return em.find(Hotel.class, id);
     }
 
+    // this one is a read/write transaction
     @Transactional
     public void cancelBooking(Long id) {
 	Booking booking = em.find(Booking.class, id);

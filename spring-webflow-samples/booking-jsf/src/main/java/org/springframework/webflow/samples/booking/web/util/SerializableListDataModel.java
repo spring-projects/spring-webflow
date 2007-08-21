@@ -7,6 +7,9 @@ import javax.faces.model.DataModel;
 import javax.faces.model.DataModelEvent;
 import javax.faces.model.DataModelListener;
 
+/**
+ * A simple List-to-JSF-DataModel adapter that is also serializable.
+ */
 public class SerializableListDataModel extends DataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -19,6 +22,10 @@ public class SerializableListDataModel extends DataModel implements Serializable
 	super();
     }
 
+    /**
+     * Adapt the list to a data model;
+     * @param list the list
+     */
     public SerializableListDataModel(List list) {
 	if (list == null)
 	    throw new NullPointerException("list");

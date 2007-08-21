@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A user who can book hotels.
+ */
 @Entity
 @Table(name = "Customer")
 public class User implements Serializable {
