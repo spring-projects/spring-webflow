@@ -14,11 +14,11 @@
     </span>
 	<h1>Search Hotels</h1>
 	<fieldset> 
-	   <h:inputText id="searchString" value="#{hotelSearch.searchString}" style="width: 165px; height: 15px;"/>&#160;
-	   <h:commandButton id="findHotels" value="Find Hotels" actionListener="#{hotelSearch.findHotelsListener}" action="findHotels"/>
+	   <h:inputText id="searchString" value="#{searchCriteria.searchString}" style="width: 165px; height: 15px;"/>&#160;
+	   <h:commandButton id="findHotels" value="Find Hotels" actionListener="#{searchCriteria.findHotelsListener}" action="findHotels"/>
 	   <br/>
        <h:outputLabel for="pageSize">Maximum results:</h:outputLabel>&#160;
-       <h:selectOneMenu value="#{hotelSearch.pageSize}" id="pageSize">
+       <h:selectOneMenu value="#{searchCriteria.pageSize}" id="pageSize">
           <f:selectItem itemLabel="5" itemValue="5"/>
           <f:selectItem itemLabel="10" itemValue="10"/>
           <f:selectItem itemLabel="20" itemValue="20"/>
@@ -53,10 +53,10 @@
 		</h:column>
 	</h:dataTable>
 	<div class="prev">
-		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{hotelSearch.prevPageListener}" action="findHotels" rendered="#{hotelSearch.page > 0}"/>
+		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{searchCriteria.prevPageListener}" action="findHotels" rendered="#{hotelSearch.page > 0}"/>
 	</div>
 	<div class="next">
-		<h:commandLink id="nextPageLink" value="More results" actionListener="#{hotelSearch.nextPageListener}" action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
+		<h:commandLink id="nextPageLink" value="More results" actionListener="#{searchCriteria.nextPageListener}" action="findHotels" rendered="#{hotels != null and hotels.rowCount == hotelSearch.pageSize}"/>
 	</div>
 </div>
 

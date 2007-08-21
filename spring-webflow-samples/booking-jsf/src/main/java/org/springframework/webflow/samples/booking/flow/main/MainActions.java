@@ -20,7 +20,7 @@ public class MainActions extends MultiAction {
     }
 
     public Event initCurrentUser(RequestContext context) {
-	User user = new User("springer", "springrocks", "Spring User");
+	User user = new User("Springer", "springrocks", "Spring User");
 	context.getConversationScope().put("user", user);
 	return success();
     }
@@ -28,23 +28,15 @@ public class MainActions extends MultiAction {
     public Event findCurrentUserBookings(RequestContext context) {
 	User user = (User) context.getConversationScope().get("user");
 	List<Booking> bookings = bookingService.findBookings(user.getName());
-	if (bookings != null) {
-	    context.getFlowScope().put("bookings", new SerializableListDataModel(bookings));
-	} else {
-	    context.getFlowScope().put("bookings", null);
-	}
+	context.getFlowScope().put("bookings", new SerializableListDataModel(bookings));
 	return success();
     }
 
     public Event findHotels(RequestContext context) {
-	SearchCriteria search = (SearchCriteria) context.getFlowScope().get("hotelSearch");
+	SearchCriteria search = (SearchCriteria) context.getFlowScope().get("searchCriteria");
 	List<Hotel> hotels = bookingService
 		.findHotels(search.getSearchString(), search.getPageSize(), search.getPage());
-	if (hotels != null) {
-	    context.getFlowScope().put("hotels", new SerializableListDataModel(hotels));
-	} else {
-	    context.getFlowScope().put("hotels", null);
-	}
+	context.getFlowScope().put("hotels", new SerializableListDataModel(hotels));
 	return success();
     }
 

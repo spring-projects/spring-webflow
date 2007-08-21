@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 	
-	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.web.SearchCriteria" scope="flow" />
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.flow.main.SearchCriteria" scope="flow" />
 	
 	<start-actions>
 		<action method="initCurrentUser" bean="mainActions" />
@@ -13,24 +13,25 @@
 	
 	<start-state idref="displayMain"/>
 	
-	<view-state id="displayMain" view="/flows/main/main.xhtml">
+	<view-state id="displayMain" view="/flow/main/main.xhtml">
 		<transition on="findHotels" to="findHotels" />
 		<transition on="selectHotel" to="bookHotel" />
 		<transition on="cancelBooking" to="cancelBooking" />
 	</view-state>
 	
 	<action-state id="findHotels">
-		<action bean="searchAction" method="findHotels" />
+		<action method="findHotels" bean="mainActions" />
 		<transition on="success" to="displayMain" />
 	</action-state>
 	
-	<subflow-state id="bookHotel" flow="booking-flow">
+	<subflow-state id="bookHotel" flow="booking">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="param.hotelId" target="id" from="string" to="long"/>
+				<mapping source="param.hotelId" target="id" from="string" to="long" />
 			</input-mapper>
 		</attribute-mapper>
-		<transition on="*" to="findBookings"/>
+		<transition on="bookingAuthorized" to="reloadCurrentUserBookings" />
+		<transition on="cancel" to="displayMain" />
 	</subflow-state>
 	
 	<action-state id="cancelBooking">
@@ -43,8 +44,10 @@
 	</action-state>
 	
 	<action-state id="reloadCurrentUserBookings">
-		<action bean="searchAction" method="findCurrentUserBookings" />
+		<action method="findCurrentUserBookings" bean="mainActions" />
 		<transition on="success" to="displayMain" />
 	</action-state>
 	
+	<import resource="main-beans.xml" />
+
 </flow>

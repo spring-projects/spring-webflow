@@ -44,7 +44,7 @@
 			<ref bean="entityManagerFactory"/>
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="txManager"/>
+			<ref bean="transactionManager"/>
 		</constructor-arg>
 	</bean>
 		
