@@ -17,7 +17,7 @@ public class BookingActions extends MultiAction {
 
     public Event createBooking(RequestContext context) {
 	Hotel hotel = (Hotel) context.getFlowScope().get("hotel");
-	User user = (User) context.getFlowScope().get("user");
+	User user = (User) context.getConversationScope().get("user");
 	Booking booking = new Booking(hotel, user);
 	EntityManager em = (EntityManager) context.getFlowScope().get("entityManager");
 	em.persist(booking);

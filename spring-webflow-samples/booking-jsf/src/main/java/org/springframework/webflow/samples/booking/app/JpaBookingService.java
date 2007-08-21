@@ -41,4 +41,12 @@ public class JpaBookingService implements BookingService {
     public Hotel findHotelById(Long id) {
 	return em.find(Hotel.class, id);
     }
+
+    @Transactional
+    public void cancelBooking(Long id) {
+	Booking booking = em.find(Booking.class, id);
+	if (booking != null) {
+	    em.remove(booking);
+	}
+    }
 }

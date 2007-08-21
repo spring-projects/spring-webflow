@@ -39,9 +39,4 @@ public class MainActions extends MultiAction {
 	context.getFlowScope().put("hotels", new SerializableListDataModel(hotels));
 	return success();
     }
-
-    public Event removeBooking(RequestContext context) {
-	return success();
-    }
-
 }

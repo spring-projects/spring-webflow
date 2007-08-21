@@ -10,4 +10,5 @@ public interface BookingService {
 
     public Hotel findHotelById(Long id);
 
+    public void cancelBooking(Long id);
 }
