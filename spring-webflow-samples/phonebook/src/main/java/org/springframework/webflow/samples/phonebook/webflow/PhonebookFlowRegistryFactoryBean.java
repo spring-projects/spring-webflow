@@ -15,18 +15,46 @@
  */
 package org.springframework.webflow.samples.phonebook.webflow;
 
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
-import org.springframework.webflow.engine.builder.AbstractFlowBuilderFlowRegistryFactoryBean;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
+import org.springframework.webflow.definition.registry.StaticFlowDefinitionHolder;
+import org.springframework.webflow.engine.builder.FlowAssembler;
+import org.springframework.webflow.engine.builder.FlowBuilder;
 
 /**
- * Demonstrates how to populate a flow registry programatically.
+ * Demonstrates how to populate a flow registry programmatically.
  * 
  * @author Keith Donald
+ * @author Ben Hale
  */
-public class PhonebookFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
+public class PhonebookFlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 
-	protected void doPopulate(FlowDefinitionRegistry registry) {
+	private FlowDefinitionRegistry registry;
+
+	public void afterPropertiesSet() throws Exception {
+		this.registry = new FlowDefinitionRegistryImpl();
 		registerFlowDefinition(registry, "detail-flow", new PersonDetailFlowBuilder());
 		registerFlowDefinition(registry, "search-flow", new SearchPersonFlowBuilder());
+	}
+
+	public Object getObject() throws Exception {
+		return registry;
+	}
+
+	public Class getObjectType() {
+		return FlowDefinitionRegistry.class;
+	}
+
+	public boolean isSingleton() {
+		return true;
+	}
+
+	private void registerFlowDefinition(FlowDefinitionRegistry registry, String flowId, FlowBuilder flowBuilder) {
+		FlowAssembler assembler = new FlowAssembler(flowId, flowBuilder);
+		FlowDefinitionHolder holder = new StaticFlowDefinitionHolder(assembler.assembleFlow());
+		registry.registerFlowDefinition(holder);
 	}
 }
