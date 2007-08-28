@@ -38,7 +38,7 @@ public interface AttributeMap extends MapAdaptable {
 
 	/**
 	 * Returns the size of this map.
-	 * @return the nubmer of entries in the map
+	 * @return the number of entries in the map
 	 */
 	public int size();
 

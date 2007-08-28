@@ -17,6 +17,7 @@ package org.springframework.webflow.config;
 
 import junit.framework.TestCase;
 
+import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.beans.factory.parsing.ProblemReporter;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -38,17 +39,12 @@ import org.springframework.webflow.executor.FlowExecutorImpl;
 
 /**
  * Unit tests for the WebFlowConfigNamespaceHandler and its BeanDefinitionParsers.
- * 
- * @author Ben Hale
- * @author Erwin Vervaet
- * @author Christian Dupuis
  */
 public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 
 	private DefaultListableBeanFactory beanFactory;
 
 	protected void setUp() throws Exception {
-		super.setUp();
 		this.beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this.beanFactory);
 		reader.loadBeanDefinitions(new ClassPathResource(
@@ -58,16 +54,36 @@ public class WebFlowConfigNamespaceHandlerTests extends TestCase {
 	public void testRegistryWithPath() {
 		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) this.beanFactory.getBean("withPath");
 		assertEquals("Incorrect number of flows loaded", 1, registry.getFlowDefinitionCount());
-	}
-
-	public void testRegistryWithoutPath() {
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) this.beanFactory.getBean("withoutPath");
-		assertEquals("Incorrect number of flows loaded", 0, registry.getFlowDefinitionCount());
+		assertTrue("Incorrect flow name", registry.containsFlowDefinition("/flow1"));
 	}
 
 	public void testRegistryWithPathWithWildcards() {
 		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) this.beanFactory.getBean("withPathWithWildcards");
-		assertEquals("Incorrect number of flows loaded", 0, registry.getFlowDefinitionCount());
+		assertEquals("Incorrect number of flows loaded", 3, registry.getFlowDefinitionCount());
+		assertTrue("Incorrect flow name", registry.containsFlowDefinition("/flow1"));
+		assertTrue("Incorrect flow name", registry.containsFlowDefinition("/flow2"));
+	}
+
+	public void testRegistryWithId() {
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) this.beanFactory.getBean("withId");
+		assertEquals("Incorrect number of flows loaded", 1, registry.getFlowDefinitionCount());
+		assertTrue("Incorrect flow name", registry.containsFlowDefinition("/foo"));
+	}
+
+	public void testWithIdWithWildCards() {
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this.beanFactory);
+		try {
+			reader.loadBeanDefinitions(new ClassPathResource(
+					"org/springframework/webflow/config/webflow-config-namespace-bad.xml"));
+			fail("Should not have allowed id with wildcards");
+		} catch (BeanDefinitionParsingException e) {
+		}
+	}
+
+	public void testRegistryWithNamespace() {
+		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) this.beanFactory.getBean("withNamespace");
+		assertEquals("Incorrect number of flows loaded", 1, registry.getFlowDefinitionCount());
+		assertTrue("Incorrect flow name", registry.containsFlowDefinition("namespace/flow1"));
 	}
 
 	public void testDefaultExecutor() {

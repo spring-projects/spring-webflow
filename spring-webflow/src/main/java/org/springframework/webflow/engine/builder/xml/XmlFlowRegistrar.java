@@ -22,17 +22,19 @@ import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
 import org.springframework.webflow.definition.registry.FlowDefinitionResource;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
+import org.springframework.webflow.engine.builder.FlowRegistryFactoryBean;
 import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.builder.RefreshableFlowDefinitionHolder;
 
 /**
  * A flow definition registrar that populates a flow definition registry with flow definitions defined in externalized
- * XML resources. Typically used in conjunction with a {@link XmlFlowRegistryFactoryBean} but may also be used
- * standalone in programmatic fashion.
+ * XML resources. Typically used in conjunction with a {@link FlowRegistryFactoryBean} but may also be used stand-alone
+ * in programmatic fashion.
  * <p>
- * By default, a flow definition registered by this registrar will be assigned a registry identifier equal to the
- * filename of the underlying definition resource, minus the filename extension. For example, a XML-based flow
- * definition defined in the file "flow1.xml" will be identified as "flow1" when registered in a registry.
+ * By default, a flow definition added to this registrar with the {@link #addLocation(Resource, String)} method will be
+ * will be assigned a registry identifier equal to the filename of the underlying definition resource, minus the
+ * filename extension. For example, a XML-based flow definition defined in the file "flow1.xml" will be identified as
+ * "flow1" when registered in a registry.
  * <p>
  * Programmatic usage example:
  * 
@@ -43,24 +45,15 @@ import org.springframework.webflow.engine.builder.RefreshableFlowDefinitionHolde
  *         new DefaultFlowServiceLocator(registry, beanFactory);
  *     XmlFlowRegistrar registrar = new XmlFlowRegistrar(flowServiceLocator);
  *     File parent = new File(&quot;src/webapp/WEB-INF&quot;);
- *     registrar.addLocation(new FileSystemResource(new File(parent, &quot;flow1.xml&quot;));
- *     registrar.addLocation(new FileSystemResource(new File(parent, &quot;flow2.xml&quot;));
+ *     registrar.add(new FileSystemResource(new File(parent, &quot;flow1.xml&quot;));
+ *     registrar.add(new FileSystemResource(new File(parent, &quot;flow2.xml&quot;));
  *     registrar.registerFlowDefinitions(registry);
  * </pre>
  * 
  * @author Keith Donald
+ * @author Ben Hale
  */
 public class XmlFlowRegistrar extends ExternalizedFlowDefinitionRegistrar {
-
-	/**
-	 * The xml file suffix constant.
-	 */
-	private static final String XML_SUFFIX = ".xml";
-
-	/**
-	 * The locator of services needed by flow definitions.
-	 */
-	private FlowServiceLocator flowServiceLocator;
 
 	/**
 	 * The loader of XML-based flow definition documents.
@@ -68,34 +61,12 @@ public class XmlFlowRegistrar extends ExternalizedFlowDefinitionRegistrar {
 	private DocumentLoader documentLoader;
 
 	/**
-	 * Creates a new XML flow registrar. Protected constructor - if used, make sure the required
-	 * {@link #flowServiceLocator} reference is set.
-	 */
-	protected XmlFlowRegistrar() {
-	}
-
-	/**
 	 * Creates a new XML flow registrar.
 	 * @param flowServiceLocator the locator needed to support flow definition assembly
 	 */
 	public XmlFlowRegistrar(FlowServiceLocator flowServiceLocator) {
-		setFlowServiceLocator(flowServiceLocator);
-	}
-
-	/**
-	 * Sets the flow service locator.
-	 * @param flowServiceLocator the flow service locator (may not be null)
-	 */
-	protected void setFlowServiceLocator(FlowServiceLocator flowServiceLocator) {
 		Assert.notNull(flowServiceLocator, "The flow service locator is required");
-		this.flowServiceLocator = flowServiceLocator;
-	}
-
-	/**
-	 * Returns the flow service locator.
-	 */
-	protected FlowServiceLocator getFlowServiceLocator() {
-		return flowServiceLocator;
+		setFlowServiceLocator(flowServiceLocator);
 	}
 
 	/**
@@ -107,24 +78,13 @@ public class XmlFlowRegistrar extends ExternalizedFlowDefinitionRegistrar {
 		this.documentLoader = documentLoader;
 	}
 
-	/**
-	 * Returns the loader of XML-based flow definition documents.
-	 */
-	public DocumentLoader getDocumentLoader() {
-		return documentLoader;
-	}
-
-	protected boolean isFlowDefinitionResource(Resource resource) {
-		return resource.getFilename().endsWith(XML_SUFFIX);
-	}
+	// hook methods
 
 	protected FlowDefinitionHolder createFlowDefinitionHolder(FlowDefinitionResource resource) {
 		FlowBuilder builder = createFlowBuilder(resource.getLocation());
 		FlowAssembler assembler = new FlowAssembler(resource.getId(), resource.getAttributes(), builder);
 		return new RefreshableFlowDefinitionHolder(assembler);
 	}
-
-	// hook methods
 
 	/**
 	 * Factory method that creates and fully initializes the XML-based flow definition builder.

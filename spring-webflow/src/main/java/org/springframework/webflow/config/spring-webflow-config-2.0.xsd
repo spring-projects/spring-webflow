@@ -52,7 +52,7 @@ A flow registry is used by a flow executor at runtime to launch new executions o
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
 					<xsd:sequence>
-						<xsd:element name="location" type="locationType" maxOccurs="unbounded">
+						<xsd:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
@@ -71,6 +71,47 @@ Individual paths such as:
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
+						<xsd:element name="class" type="classType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Specifies a class containing a flow definition.  The flow definition built from this
+class will be registered in this registry.
+<br>
+Classes must be declared using a fully qualified path name such as
+<pre>
+	com.interface21.SellItemFlow
+</pre>
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="crud" type="crudType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Specifies a domain entity class to have crud flows built for. This will register flows for Creating, Reading, Updating,
+and Deleting the domain entity in a namespace that is equal to the short name of the class.
+<br>
+Entities must be declared using a fully qualified path name such as
+<pre>
+	com.interface21.Account
+</pre>
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="namespace" type="namespaceType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Specifies a namespace to register nested flow definitions in. This namespace is a course-grained grouping for uniquely
+identifying a flow. Since some flows define a namespace implicitly (CRUD flows for example), not all flow types are
+allowed to be nested in the namespace tag.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
 					</xsd:sequence>
 				</xsd:extension>
 			</xsd:complexContent>
@@ -78,12 +119,96 @@ Individual paths such as:
 	</xsd:element>
 
 	<xsd:complexType name="locationType">
+		<xsd:attribute name="id" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The id to the externalized flow definition resource. This only needs to be populated for explict declaration of flow
+identifiers.  If not populated this id of the flow is equal to the filename of the underlying definition resource, minus
+the filename extension.  This value cannot be set if an ANT-style path expression that matches multiple resources is
+used in path attribute. 
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="path" type="xsd:string" use="required">
 			<xsd:annotation>
 				<xsd:documentation>
 					<![CDATA[
-The path to the externalized flow definition resource.  May be a path to a single resource or 
-a ANT-style path expression that matches multiple resources.
+The path to the externalized flow definition resource. May be a path to a single resource or a ANT-style path expression
+that matches multiple resources.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="classType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of the java based flow definition.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="crudType">
+		<xsd:attribute name="entity" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of a domain entity class to have crud flows created for.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="namespaceType">
+		<xsd:sequence>
+			<xsd:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Specifies a path to a externalized flow definition resource.  The flow definition built from this
+resource will be registered in this registry.
+<br>
+Individual paths such as:
+<pre>
+	/WEB-INF/flows/orderitem-flow.xml
+</pre>
+... are supported as well as wildcard paths such as:
+<pre>
+	/WEB-INF/flows/**/*-flow.xml
+</pre>
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="class" type="classType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Specifies a class containing a flow definition.  The flow definition built from this
+class will be registered in this registry.
+<br>
+Classes must be declared using a fully qualified path name such as
+<pre>
+	com.interface21.SellItemFlow
+</pre>
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of the namespace to group all child flow definitions in.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>

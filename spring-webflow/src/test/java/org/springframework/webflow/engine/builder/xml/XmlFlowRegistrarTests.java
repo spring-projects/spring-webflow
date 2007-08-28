@@ -18,12 +18,14 @@ package org.springframework.webflow.engine.builder.xml;
 import junit.framework.TestCase;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
 import org.springframework.webflow.definition.registry.FlowDefinitionResource;
 import org.springframework.webflow.engine.builder.BaseFlowServiceLocator;
 
 public class XmlFlowRegistrarTests extends TestCase {
+
 	private XmlFlowRegistrar registrar;
 
 	private FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
@@ -33,19 +35,41 @@ public class XmlFlowRegistrarTests extends TestCase {
 		registrar = new XmlFlowRegistrar(locator);
 	}
 
-	public void testAddLocation() {
-		assertEquals(0, registry.getFlowDefinitionCount());
-		registrar.addLocation(new ClassPathResource("flow.xml", getClass()));
-		registrar.registerFlowDefinitions(registry);
-		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("flow", registry.getFlowDefinition("flow").getId());
-	}
-
 	public void testAddResource() {
 		assertEquals(0, registry.getFlowDefinitionCount());
-		registrar.addResource(new FlowDefinitionResource("foo", new ClassPathResource("flow.xml", getClass())));
+		registrar.addResource(new FlowDefinitionResource("foo", fromClassPath("flow.xml")), "namespace");
 		registrar.registerFlowDefinitions(registry);
 		assertEquals(1, registry.getFlowDefinitionCount());
-		assertEquals("foo", registry.getFlowDefinition("foo").getId());
+		assertEquals("foo", registry.getFlowDefinition("namespace/foo").getId());
+	}
+
+	public void testAddResourceDefaultNamespace() {
+		assertEquals(0, registry.getFlowDefinitionCount());
+		registrar.setDefaultNamespace("default");
+		registrar.addResource(new FlowDefinitionResource("foo", fromClassPath("flow.xml")));
+		registrar.registerFlowDefinitions(registry);
+		assertEquals(1, registry.getFlowDefinitionCount());
+		assertEquals("foo", registry.getFlowDefinition("default/foo").getId());
+	}
+
+	public void testAddLocation() {
+		assertEquals(0, registry.getFlowDefinitionCount());
+		registrar.addLocation(fromClassPath("flow.xml"), "namespace");
+		registrar.registerFlowDefinitions(registry);
+		assertEquals(1, registry.getFlowDefinitionCount());
+		assertEquals("flow", registry.getFlowDefinition("namespace/flow").getId());
+	}
+
+	public void testAddLocationDefaultNamespace() {
+		assertEquals(0, registry.getFlowDefinitionCount());
+		registrar.setDefaultNamespace("default");
+		registrar.addLocation(fromClassPath("flow.xml"));
+		registrar.registerFlowDefinitions(registry);
+		assertEquals(1, registry.getFlowDefinitionCount());
+		assertEquals("flow", registry.getFlowDefinition("default/flow").getId());
+	}
+
+	private Resource fromClassPath(String resourceName) {
+		return new ClassPathResource(resourceName, getClass());
 	}
 }

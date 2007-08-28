@@ -15,13 +15,15 @@
  */
 package org.springframework.webflow.definition.registry;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.webflow.engine.builder.FlowServiceLocator;
 
 /**
  * A flow definition registrar that populates a flow definition registry from flow definitions defined within
@@ -30,167 +32,139 @@ import org.springframework.core.style.ToStringCreator;
  * <p>
  * Concrete subclasses are expected to derive from this class to provide knowledge about a particular kind of definition
  * format by implementing the abstract template methods in this class.
- * <p>
- * By default, when configuring the {@link #setLocations(Resource[]) locations} property, flow definitions at those
- * locations will be assigned a registry identifier equal to the filename of the underlying definition resource, minus
- * the filename extension. For example, a XML-based flow definition defined in the file "flow1.xml" will be identified
- * as "flow1" when registered in a registry.
- * <p>
- * For full control over the assignment of flow identifiers and flow properties, configure formal
- * {@link org.springframework.webflow.definition.registry.FlowDefinitionResource} instances using the
- * {@link #setResources(FlowDefinitionResource[] resources)} property.
  * 
  * @see org.springframework.webflow.definition.registry.FlowDefinitionResource
  * @see org.springframework.webflow.definition.registry.FlowDefinitionRegistry
  * 
  * @author Keith Donald
+ * @author Ben Hale
  */
 public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinitionRegistrar {
 
 	/**
-	 * File locations of externalized flow definition resources to load. A set of {@link Resource}} objects.
+	 * The locator of services needed by flow definitions.
 	 */
-	private Set locations = new HashSet();
+	private FlowServiceLocator flowServiceLocator;
 
 	/**
-	 * A set of formal externalized flow definitions to load. A set of {@link FlowDefinitionResource} objects.
+	 * A set of mappings between a namespace and a set of externalized flow definitions. A map of Strings to Sets
+	 * containing {@link FlowDefinitionResource}s
 	 */
-	private Set resources = new HashSet();
+	private Map namespaceFlowMappings;
 
 	/**
-	 * Sets the locations (file paths) pointing to externalized flow definitions.
-	 * <p>
-	 * Flows registered from this set will be automatically assigned an id based on the filename of the flow resource.
-	 * @param locations the resource locations
+	 * The default namespace for flows registered without an explicit namespace.
 	 */
-	public void setLocations(Resource[] locations) {
-		this.locations = new HashSet(Arrays.asList(locations));
+	private String defaultNamespace = "";
+
+	/**
+	 * Creates a new registrar with an empty initial set of namespace to flow mappings.
+	 */
+	public ExternalizedFlowDefinitionRegistrar() {
+		this(new HashMap());
 	}
 
 	/**
-	 * Sets the formal set of externalized flow definitions this registrar will register.
-	 * <p>
-	 * Use this method when you want full control over the assigned flow id and the set of properties applied to the
-	 * externalized flow resources.
-	 * @param resources the externalized flow definition specifications
+	 * Creates a new registrar with an initial set of namespace to flow mappings.
+	 * @param namespaceFlowMappings the initial set of namespace to flow mappings
 	 */
-	public void setResources(FlowDefinitionResource[] resources) {
-		this.resources = new HashSet(Arrays.asList(resources));
+	public ExternalizedFlowDefinitionRegistrar(Map namespaceFlowMappings) {
+		this.namespaceFlowMappings = namespaceFlowMappings;
 	}
 
 	/**
-	 * Adds a flow location pointing to an externalized flow resource.
-	 * <p>
-	 * The flow registered from this location will automatically assigned an id based on the filename of the flow
-	 * resource.
-	 * @param location the definition location
+	 * Sets the default namespace to register flows in. If not set the default namespace is "" (an empty string).
+	 * @param defaultNamespace the default namespace
+	 */
+	public void setDefaultNamespace(String defaultNamespace) {
+		this.defaultNamespace = defaultNamespace;
+	}
+
+	public void setFlowServiceLocator(FlowServiceLocator flowServiceLocator) {
+		this.flowServiceLocator = flowServiceLocator;
+	}
+
+	/**
+	 * Returns the flow service locator for use by subclasses.
+	 */
+	protected FlowServiceLocator getFlowServiceLocator() {
+		return flowServiceLocator;
+	}
+
+	/**
+	 * Adds an externalized XML flow definition to be registered in the default namespace.
+	 * @param location the resource to register
+	 * @see #addLocation(Resource, String)
+	 * @see #setDefaultNamespace(String)
 	 */
 	public boolean addLocation(Resource location) {
-		return locations.add(location);
+		return addLocation(location, defaultNamespace);
 	}
 
 	/**
-	 * Adds the flow locations pointing to externalized flow resources.
-	 * <p>
-	 * The flow registered from this location will automatically assigned an id based on the filename of the flow
-	 * resource.
-	 * @param locations the definition locations
+	 * Adds an externalized XML flow definition to be registered. The resource will be assigned a registry identifier
+	 * equal to the filename of the resource, minus the filename extension. For example, an XML-based flow definition
+	 * defined in the file <code>flow1.xml</code> will be identified as <code>flow1</code> in the registry created
+	 * by this factory bean.
+	 * @param location the resource to register
+	 * @param namespace the namespace to register the flow definition in
 	 */
-	public boolean addLocations(Resource[] locations) {
-		if (locations == null) {
-			return false;
-		}
-		return this.locations.addAll(Arrays.asList(locations));
+	public boolean addLocation(Resource location, String namespace) {
+		return getFlows(namespace).add(new FlowDefinitionResource(location));
 	}
 
 	/**
-	 * Adds an externalized flow definition specification pointing to an externalized flow resource.
-	 * <p>
-	 * Use this method when you want full control over the assigned flow id and the set of properties applied to the
-	 * externalized flow resource.
-	 * @param resource the definition the definition resource
+	 * Adds an externalized XML flow definition resource to be registered in the default namespace.
+	 * @param resource the flow definition resource to be registered
+	 * @see #addResource(FlowDefinitionResource, String)
+	 * @see #setDefaultNamespace(String)
 	 */
 	public boolean addResource(FlowDefinitionResource resource) {
-		return resources.add(resource);
+		return addResource(resource, defaultNamespace);
 	}
 
 	/**
-	 * Adds the externalized flow definitions pointing to externalized flow resources.
-	 * <p>
-	 * Use this method when you want full control over the assigned flow id and the set of properties applied to the
-	 * externalized flow resources.
-	 * @param resources the definitions
+	 * Adds an externalized XML flow definition resource to be registered.
+	 * @param resource the flow definition resource to be registered
+	 * @param namespace the namespace to register the flow definition in
 	 */
-	public boolean addResources(FlowDefinitionResource[] resources) {
-		if (resources == null) {
-			return false;
-		}
-		return this.resources.addAll(Arrays.asList(resources));
+	public boolean addResource(FlowDefinitionResource resource, String namespace) {
+		return getFlows(namespace).add(resource);
 	}
 
 	public void registerFlowDefinitions(FlowDefinitionRegistry registry) {
-		processLocations(registry);
-		processResources(registry);
-	}
-
-	// internal helpers
-
-	/**
-	 * Register the flow definitions at the configured file locations.
-	 * @param registry the registry
-	 */
-	private void processLocations(FlowDefinitionRegistry registry) {
-		Iterator it = locations.iterator();
-		while (it.hasNext()) {
-			Resource location = (Resource) it.next();
-			if (isFlowDefinitionResource(location)) {
-				FlowDefinitionResource resource = createFlowDefinitionResource(location);
-				register(resource, registry);
+		for (Iterator mappings = namespaceFlowMappings.entrySet().iterator(); mappings.hasNext();) {
+			Map.Entry mapping = (Map.Entry) mappings.next();
+			String namespace = (String) mapping.getKey();
+			for (Iterator resources = ((Set) mapping.getValue()).iterator(); resources.hasNext();) {
+				FlowDefinitionResource resource = (FlowDefinitionResource) resources.next();
+				register(resource, namespace, registry);
 			}
 		}
 	}
 
 	/**
-	 * Register the flow definitions at the configured file locations.
+	 * Registers a flow definition resource in a given namespace.
+	 * @param resource the resource to register
+	 * @param namespace the namespace to register in
 	 * @param registry the registry
 	 */
-	private void processResources(FlowDefinitionRegistry registry) {
-		Iterator it = resources.iterator();
-		while (it.hasNext()) {
-			FlowDefinitionResource resource = (FlowDefinitionResource) it.next();
-			register(resource, registry);
+	private void register(FlowDefinitionResource resource, String namespace, FlowDefinitionRegistry registry) {
+		registry.registerFlowDefinition(createFlowDefinitionHolder(resource), namespace);
+	}
+
+	/**
+	 * Returns the set of flows to be registered in a namespace.
+	 * @param namespace The namespace for the collection to be returned
+	 */
+	private Set getFlows(String namespace) {
+		if (!namespaceFlowMappings.containsKey(namespace)) {
+			namespaceFlowMappings.put(namespace, new HashSet());
 		}
+		return (Set) namespaceFlowMappings.get(namespace);
 	}
 
-	/**
-	 * Helper method to register the flow built from an externalized resource in the registry.
-	 * @param resource representation of the externalized flow definition resource
-	 * @param registry the flow registry to register the flow in
-	 */
-	protected final void register(FlowDefinitionResource resource, FlowDefinitionRegistry registry) {
-		registry.registerFlowDefinition(createFlowDefinitionHolder(resource));
-	}
-
-	// subclassing hooks
-
-	/**
-	 * Template method that calculates if the given file resource is actually a flow definition resource. Resources that
-	 * aren't flow definitions will be ignored. Subclasses may override; this implementation simply returns true.
-	 * @param resource the underlying resource
-	 * @return true if yes, false otherwise
-	 */
-	protected boolean isFlowDefinitionResource(Resource resource) {
-		return true;
-	}
-
-	/**
-	 * Factory method that creates a flow definition from an externalized resource location.
-	 * @param location the location of the resource
-	 * @return the externalized flow definition pointer
-	 */
-	protected FlowDefinitionResource createFlowDefinitionResource(Resource location) {
-		return new FlowDefinitionResource(location);
-	}
+	// sub-classing hooks
 
 	/**
 	 * Template factory method subclasses must override to return the holder for the flow definition to be registered
@@ -201,6 +175,6 @@ public abstract class ExternalizedFlowDefinitionRegistrar implements FlowDefinit
 	protected abstract FlowDefinitionHolder createFlowDefinitionHolder(FlowDefinitionResource resource);
 
 	public String toString() {
-		return new ToStringCreator(this).append("locations", locations).append("resources", resources).toString();
+		return new ToStringCreator(this).append("namespaceFlowMappings", namespaceFlowMappings).toString();
 	}
 }

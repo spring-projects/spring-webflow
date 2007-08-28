@@ -20,13 +20,17 @@ import java.io.ObjectOutputStream;
 
 import junit.framework.TestCase;
 
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.webflow.config.FlowExecutorFactoryBean;
 import org.springframework.webflow.config.RepositoryType;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
+import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistrar;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
+import org.springframework.webflow.definition.registry.StaticFlowDefinitionHolder;
+import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
-import org.springframework.webflow.engine.builder.AbstractFlowBuilderFlowRegistryFactoryBean;
+import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.execution.support.ApplicationView;
 import org.springframework.webflow.execution.support.FlowExecutionRedirect;
@@ -36,19 +40,16 @@ import org.springframework.webflow.test.MockExternalContext;
 
 /**
  * Test case that looks for the miminum conversation size.
- * 
- * @author Erwin Vervaet
  */
 public class ConversationSizeTests extends TestCase {
 
 	private SessionBindingConversationManager conversationManager;
+
 	private FlowExecutor flowExecutor;
 
 	protected void setUp() throws Exception {
-		AbstractFlowBuilderFlowRegistryFactoryBean flowRegistryFactory = new SizeTestFlowRegistry();
-		flowRegistryFactory.setBeanFactory(new StaticListableBeanFactory());
-		flowRegistryFactory.afterPropertiesSet();
-		FlowDefinitionRegistry flowRegistry = flowRegistryFactory.getRegistry();
+		FlowDefinitionRegistry flowRegistry = new FlowDefinitionRegistryImpl();
+		new SizeTestFlowRegistrar().registerFlowDefinitions(flowRegistry);
 
 		conversationManager = new SessionBindingConversationManager();
 
@@ -110,9 +111,6 @@ public class ConversationSizeTests extends TestCase {
 		oout.writeObject(obj);
 		oout.flush();
 		int objSize = bout.toByteArray().length;
-
-		// System.out.println(">>>> serialized size of '" + obj + "' is " + objSize);
-
 		return objSize;
 	}
 
@@ -123,9 +121,12 @@ public class ConversationSizeTests extends TestCase {
 		}
 	}
 
-	private static class SizeTestFlowRegistry extends AbstractFlowBuilderFlowRegistryFactoryBean {
-		protected void doPopulate(FlowDefinitionRegistry registry) {
-			registerFlowDefinition(registry, "size-test-flow", new SizeTestFlowBuilder());
+	private static class SizeTestFlowRegistrar implements FlowDefinitionRegistrar {
+
+		public void registerFlowDefinitions(FlowDefinitionRegistry registry) {
+			Flow flow = new FlowAssembler("size-test-flow", null, new SizeTestFlowBuilder()).assembleFlow();
+			FlowDefinitionHolder flowHolder = new StaticFlowDefinitionHolder(flow);
+			registry.registerFlowDefinition(flowHolder);
 		}
 	}
 }

@@ -17,32 +17,32 @@ package org.springframework.webflow.engine.builder;
 
 import junit.framework.TestCase;
 
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistrar;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
+import org.springframework.webflow.definition.registry.StaticFlowDefinitionHolder;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.execution.support.ApplicationView;
+import org.springframework.webflow.test.MockFlowServiceLocator;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
  * Test parameterization of flow built using an AbstractFlowBuilder when registering the flows with a
  * FlowDefinitionRegistry.
- * 
- * @author Erwin Vervaet
  */
 public class AbstractFlowBuilderParameterizationTests extends TestCase {
 
 	private FlowDefinitionRegistry registry;
 
 	protected void setUp() throws Exception {
-		TestFlowRegistryFactoryBean registryFactory = new TestFlowRegistryFactoryBean();
-		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-		beanFactory.addBean("testAction", new ParameterizationTestAction());
-		registryFactory.setBeanFactory(beanFactory);
-		registryFactory.afterPropertiesSet();
-		registry = registryFactory.getRegistry();
+		registry = new FlowDefinitionRegistryImpl();
+		MockFlowServiceLocator flowServiceLocator = new MockFlowServiceLocator();
+		flowServiceLocator.registerBean("testAction", new ParameterizationTestAction());
+		new TestFlowRegistrar(flowServiceLocator).registerFlowDefinitions(registry);
 	}
 
 	public void testFlowParameterization() {
@@ -74,24 +74,40 @@ public class AbstractFlowBuilderParameterizationTests extends TestCase {
 
 	public class TestFlowBuilder extends AbstractFlowBuilder {
 
+		public TestFlowBuilder(FlowServiceLocator flowServiceLocator) {
+			setFlowServiceLocator(flowServiceLocator);
+		}
+
 		public void buildStates() throws FlowBuilderException {
 			addActionState("test", action("testAction"), transition(on(success()), to("finish")));
 			addEndState("finish", "${activeFlow.attributes['name']}");
 		}
 	}
 
-	public class TestFlowRegistryFactoryBean extends AbstractFlowBuilderFlowRegistryFactoryBean {
+	private class TestFlowRegistrar implements FlowDefinitionRegistrar {
 
-		protected void doPopulate(FlowDefinitionRegistry registry) {
-			MutableAttributeMap attributes = new LocalAttributeMap();
-			attributes.put("name", "A");
-			attributes.put("someKey", "someValue");
-			registerFlowDefinition(registry, "flowA", attributes, new TestFlowBuilder());
+		private FlowServiceLocator flowServiceLocator;
 
-			attributes = new LocalAttributeMap();
-			attributes.put("name", "B");
-			attributes.put("someOtherKey", "someOtherValue");
-			registerFlowDefinition(registry, "flowB", attributes, new TestFlowBuilder());
+		public TestFlowRegistrar(FlowServiceLocator flowServiceLocator) {
+			this.flowServiceLocator = flowServiceLocator;
+		}
+
+		public void registerFlowDefinitions(FlowDefinitionRegistry registry) {
+			MutableAttributeMap attributesA = new LocalAttributeMap();
+			attributesA.put("name", "A");
+			attributesA.put("someKey", "someValue");
+			Flow flowA = new FlowAssembler("flowA", attributesA, new TestFlowBuilder(flowServiceLocator))
+					.assembleFlow();
+			FlowDefinitionHolder flowHolderA = new StaticFlowDefinitionHolder(flowA);
+			registry.registerFlowDefinition(flowHolderA);
+
+			MutableAttributeMap attributesB = new LocalAttributeMap();
+			attributesB.put("name", "B");
+			attributesB.put("someOtherKey", "someOtherValue");
+			Flow flowB = new FlowAssembler("flowB", attributesB, new TestFlowBuilder(flowServiceLocator))
+					.assembleFlow();
+			FlowDefinitionHolder flowHolderB = new StaticFlowDefinitionHolder(flowB);
+			registry.registerFlowDefinition(flowHolderB);
 		}
 	}
 

@@ -6,19 +6,24 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-1.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
 	<flow:registry id="withPath">
-		<flow:location path="classpath:org/springframework/webflow/registry/flow1.xml" />
-	</flow:registry>
-
-	<flow:registry id="withoutPath">
-		<flow:location path="" />
+		<flow:location path="classpath:org/springframework/webflow/config/flow1.xml" />
 	</flow:registry>
 
 	<flow:registry id="withPathWithWildcards">
-		<flow:location path="classpath*:org/springframework/webflow/engine/builder/registry/flow*.xml" />
-		<flow:location path="classpath*:org/springframework/webflow/engine/builder/registry/flows/**/flow*.xml" />
+		<flow:location path="classpath*:org/springframework/webflow/config/flow*.xml" />
+	</flow:registry>
+	
+	<flow:registry id="withId">
+		<flow:location id="foo" path="classpath:org/springframework/webflow/config/flow1.xml"/>
+	</flow:registry>
+
+	<flow:registry id="withNamespace">
+		<flow:namespace name="namespace">
+			<flow:location path="classpath:org/springframework/webflow/config/flow1.xml"/>
+		</flow:namespace>
 	</flow:registry>
 
 	<flow:executor id="defaultExecutor" registry-ref="withPathWithWildcards"/>

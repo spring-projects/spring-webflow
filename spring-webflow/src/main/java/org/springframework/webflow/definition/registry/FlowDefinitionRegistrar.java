@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.definition.registry;
 
+
 /**
  * A strategy to use to populate a flow definition registry with one or more flow definitions.
  * <p>
@@ -42,4 +43,5 @@ public interface FlowDefinitionRegistrar {
 	 * @param registry the registry to register flow definitions in
 	 */
 	public void registerFlowDefinitions(FlowDefinitionRegistry registry);
+
 }

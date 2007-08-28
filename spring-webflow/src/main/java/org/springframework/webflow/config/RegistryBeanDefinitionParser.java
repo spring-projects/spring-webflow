@@ -15,16 +15,25 @@
  */
 package org.springframework.webflow.config;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
+import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.util.xml.DomUtils;
-import org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean;
+import org.springframework.webflow.definition.registry.FlowDefinitionResource;
+import org.springframework.webflow.engine.builder.FlowRegistryFactoryBean;
 import org.w3c.dom.Element;
 
 /**
@@ -32,40 +41,73 @@ import org.w3c.dom.Element;
  * 
  * @author Ben Hale
  */
-class RegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
+class RegistryBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
-	// elements and attributes
-
+	// elements
 	private static final String LOCATION_ELEMENT = "location";
 
-	// properties
+	private static final String NAMESPACE_ELEMENT = "namespace";
 
-	private static final String FLOW_LOCATIONS_PROPERTY = "flowLocations";
+	// attributes
+	private static final String ID_ATTRIBUTE = "id";
+
+	private static final String NAME_ATTRIBUTE = "name";
 
 	private static final String PATH_ATTRIBUTE = "path";
 
-	protected Class getBeanClass(Element element) {
-		return XmlFlowRegistryFactoryBean.class;
+	// Properties
+	private static final String XML_NAMESPACE_FLOW_MAPPINGS_PROPERTY = "xmlNamespaceFlowMappings";
+
+	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
+		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder
+				.rootBeanDefinition(FlowRegistryFactoryBean.class);
+		definitionBuilder.setSource(parserContext.extractSource(element));
+		parseXml(element, definitionBuilder, parserContext);
+		return definitionBuilder.getBeanDefinition();
 	}
 
-	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
-		List locationElements = DomUtils.getChildElementsByTagName(element, LOCATION_ELEMENT);
-		List locations = getLocations(locationElements);
-		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, locations.toArray(new String[locations.size()]));
+	public void parseXml(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext parserContext) {
+		Map xmlNamespaceFlowMappings = new HashMap();
+		xmlNamespaceFlowMappings.put("", parseXmlElements(
+				DomUtils.getChildElementsByTagName(element, LOCATION_ELEMENT), parserContext));
+		List namespaceElements = DomUtils.getChildElementsByTagName(element, NAMESPACE_ELEMENT);
+		for (Iterator it = namespaceElements.iterator(); it.hasNext();) {
+			Element namespaceElement = (Element) it.next();
+			String namespace = namespaceElement.getAttribute(NAME_ATTRIBUTE);
+			xmlNamespaceFlowMappings.put(namespace, parseXmlElements(DomUtils.getChildElementsByTagName(
+					namespaceElement, LOCATION_ELEMENT), parserContext));
+		}
+		definitionBuilder.addPropertyValue(XML_NAMESPACE_FLOW_MAPPINGS_PROPERTY, xmlNamespaceFlowMappings);
 	}
 
-	/**
-	 * Parse location definitions from given list of location elements.
-	 */
-	private List getLocations(List locationElements) {
-		List locations = new ArrayList(locationElements.size());
-		for (Iterator i = locationElements.iterator(); i.hasNext();) {
-			Element locationElement = (Element) i.next();
-			String path = locationElement.getAttribute(PATH_ATTRIBUTE);
-			if (StringUtils.hasText(path)) {
-				locations.add(path);
+	private Set parseXmlElements(List locationElements, ParserContext parserContext) {
+		ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(parserContext
+				.getReaderContext().getResourceLoader());
+		Set resources = new HashSet();
+		for (Iterator it = locationElements.iterator(); it.hasNext();) {
+			Element locationElement = (Element) it.next();
+			try {
+				Resource[] locations = resolver.getResources(locationElement.getAttribute(PATH_ATTRIBUTE));
+				if (locationElement.hasAttribute(ID_ATTRIBUTE)) {
+					if (locations.length != 1) {
+						parserContext.getReaderContext().error(
+								"The 'path' attribute of the 'location' element must point to a single value "
+										+ "flow definition if an id has been specified", locationElement);
+					} else {
+						resources.add(new FlowDefinitionResource(locationElement.getAttribute(ID_ATTRIBUTE),
+								locations[0]));
+					}
+				} else {
+					for (int i = 0; i < locations.length; i++) {
+						resources.add(new FlowDefinitionResource(locations[i]));
+					}
+				}
+			} catch (IOException e) {
+				parserContext.getReaderContext().error(
+						"The 'path' attribute of the 'location' element must point to a valid flow definition "
+								+ "or definitions", locationElement);
 			}
 		}
-		return locations;
+		return resources;
 	}
 }

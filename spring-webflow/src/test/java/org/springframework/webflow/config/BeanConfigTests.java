@@ -22,7 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.executor.mvc.FlowController;
 
 /**
- * Test case that illustrates configuration of a FlowController and its associated artefacts using classic spring bean
+ * Test case that illustrates configuration of a FlowController and its associated artifacts using classic spring bean
  * configuration information. This test case does not really test much but serves more as an example.
  * 
  * @author Erwin Vervaet
