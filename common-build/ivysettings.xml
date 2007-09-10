@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivysettings>
 	<properties file="${ivy.conf.dir}/ivyconf.properties"/>
-	<settings defaultResolver="maven2"/>
+	<settings defaultResolver="maven"/>
 		<resolvers>
 		<chain name="spring-projects" returnFirst="true">
 			<!-- try developer's local integration repository first -->
@@ -17,19 +17,14 @@
 			</filesystem>
 
 			<!-- pull from the main release repository third -->
-			<url name="spring-repo" m2compatible="true">
-				<ivy pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/ivy-[revision].xml" />
-				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-			</url>
+			<ibiblio name="maven-central" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2"/>
 
-			<!-- if still not resolved, try snapshots -->
-			<url name="spring-repo-snapshots" m2compatible="true">
-				<ivy pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/ivy-[revision].xml" />
-				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-			</url>
+			<!-- if still not resolved, try milestones -->
+			<ibiblio name="maven-spring-milestone" checkconsistency="false" m2compatible="true" root="http://s3.amazonaws.com/maven.springframework.org/milestone/"/>
+
 		</chain>
 
-		<chain name="maven2" returnFirst="true">
+		<chain name="maven" returnFirst="true">
 			<!-- try shared local filesystem repository first -->
 			<filesystem name="filesystem-repo">
   				<ivy pattern="${repository.dir}/[organisation]/[module]/ivy-[revision].xml" /> 
@@ -42,14 +37,14 @@
 				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 
-			<!-- try maven repo -->
-           	<ibiblio name="maven2-repo" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2/"/>
+			<!-- try central maven repository -->
+           	<ibiblio name="maven-central" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2/"/>
 
-			<!-- try jboss repo -->
-			<ibiblio name="jboss-maven2-repo" checkconsistency="false" m2compatible="true" root="http://repository.jboss.com/maven2/"/>
+			<!-- try jboss maven repo -->
+			<ibiblio name="maven-jboss" checkconsistency="false" m2compatible="true" root="http://repository.jboss.com/maven2/"/>
 			
-			<!-- try the java.net maven repo -->
-			<url name="java.net-repo" m2compatible="false">
+			<!-- try the maven java.net maven repo -->
+			<url name="maven-java.net" m2compatible="false">
 				<artifact pattern="http://download.java.net/maven/1/[organisation]/jars/[artifact]-[revision].[ext]" />
 			</url>
 			
@@ -63,6 +58,7 @@
 		<module organisation="org.springframework" name="spring-beans" resolver="spring-projects"/>
        	<module organisation="org.springframework" name="spring-binding" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-context" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-context-support" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-core" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-dao" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-faces" resolver="spring-projects"/>
@@ -83,6 +79,7 @@
 		<module organisation="org.springframework" name="spring-remoting" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-struts" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-support" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-test" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-toplink" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-tx" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-web" resolver="spring-projects"/>
