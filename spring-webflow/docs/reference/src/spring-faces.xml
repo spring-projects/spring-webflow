@@ -255,7 +255,7 @@
     	    		following namespace declaration to the header of your Facelets view template:      
     	    	</para>
     	    	<programlisting>
-xmlns:sf="http://www.springframework.org/faces"
+xmlns:sf="http://www.springframework.org/tags/faces"
     	    	</programlisting>
     	    </sect3>
     	    <sect3>

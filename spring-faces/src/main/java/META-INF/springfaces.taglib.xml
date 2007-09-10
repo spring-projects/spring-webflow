@@ -3,7 +3,7 @@
   "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
   "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
 <facelet-taglib>
-	<namespace>http://springframework.org/faces</namespace>
+	<namespace>http://www.springframework.org/tags/faces</namespace>
 	
 	<tag>
 		<tag-name>clientTextValidator</tag-name>
