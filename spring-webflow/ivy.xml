@@ -43,6 +43,7 @@
 
 		<!-- struts only dependencies -->
 		<dependency org="struts" name="struts" rev="1.2.9" conf="buildtime, struts->default" />
+		<dependency org="org.springframework" name="spring-webmvc-struts" rev="2.1-m4" conf="buildtime, struts->default" />
 
 		<!-- build time only dependencies -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
