@@ -102,7 +102,7 @@ import org.xml.sax.SAXException;
  * <p>
  * This builder will setup a flow-local bean factory for the flow being constructed. That flow-local bean factory will
  * be populated with XML bean definitions contained in files referenced using the "import" element. The flow-local bean
- * factory will use the bean factory defing this flow builder as a parent. As such, the flow can access artifacts in
+ * factory will use the bean factory defining this flow builder as a parent. As such, the flow can access artifacts in
  * either its flow-local bean factory or in the parent bean factory hierarchy, e.g. the bean factory of the dispatcher.
  * 
  * @author Erwin Vervaet

@@ -75,7 +75,7 @@ public class XmlFlowBuilderNestingTests extends TestCase {
 		assertSame(testService, action1.getTestService());
 		assertSame(action1, testFlow2BeanFactory.getBean("action1"));
 		assertSame(parentBeanFactory, ((HierarchicalBeanFactory) testFlow2BeanFactory).getParentBeanFactory());
-		assertEquals(2, BeanFactoryUtils.countBeansIncludingAncestors(((ListableBeanFactory) testFlow2BeanFactory)));
+		assertEquals(4, BeanFactoryUtils.countBeansIncludingAncestors((ListableBeanFactory) testFlow2BeanFactory));
 
 		Flow subFlow1 = ((SubflowState) flow.getState("subFlowState1")).getSubflow();
 		assertNotSame(flow, subFlow1);
