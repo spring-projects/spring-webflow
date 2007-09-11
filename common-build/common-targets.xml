@@ -870,7 +870,7 @@
          we want to optionally run all tests and report on the whole
          batch, then we need to set a failure property as in the server
          tests. -->
-    <junit forkmode="perBatch" printsummary="yes" haltonfailure="yes" haltonerror="yes"
+    <junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no"
                     dir="${basedir}">
       <jvmarg value="${unitvm}" />
       <jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
