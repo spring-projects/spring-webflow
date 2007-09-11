@@ -31,6 +31,6 @@
 	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

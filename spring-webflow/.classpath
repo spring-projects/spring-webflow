@@ -24,7 +24,6 @@
 	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/jta.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-jdbc.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="/spring/mock"/>
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>
 	<classpathentry kind="lib" path="lib/test/hibernate-annotations.jar"/>
@@ -45,5 +44,7 @@
 	<classpathentry kind="lib" path="lib/buildtime/spring-tx.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc-portlet.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc-struts.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
