@@ -17,9 +17,9 @@
 			<format property="tstamp" pattern="yyyyMMdd"/>
 		</tstamp>
 		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
-			<upload bucketName="static.springframework.org"
+			<upload bucketName="dist.springframework.org"
 			        file="${target.release.dir}/${release.zip}"
-			        toFile="SWF/spring-webflow-${release.version}-${tstamp}-${build.number}.zip"
+			        toFile="snapshot/SWF/spring-webflow-${release.version}-${tstamp}-${build.number}.zip"
 					publicRead="true"/>
 		</aws:s3>
 	</target>
