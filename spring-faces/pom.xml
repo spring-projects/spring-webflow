@@ -116,4 +116,5 @@
 			<version>2.1-m3</version>
 			<scope>test</scope>
 		</dependency>
+	</dependencies>
 </project>
