@@ -75,7 +75,6 @@ public class SimpleExpressionTests extends TestCase {
 
 	public void testGetValue() {
 		assertEquals(Boolean.TRUE, expressionParser.parseExpression(expressionPrefix + "{flag}").evaluate(bean, null));
-		assertEquals(Boolean.TRUE, expressionParser.parseExpression("flag").evaluate(bean, null));
 		assertSame(bean.getList(), expressionParser.parseExpression(expressionPrefix + "{list}").evaluate(bean, null));
 		assertEquals("foo", expressionParser.parseExpression(expressionPrefix + "{list[0]}").evaluate(bean, null));
 	}
@@ -83,8 +82,6 @@ public class SimpleExpressionTests extends TestCase {
 	public void testSetValue() {
 		expressionParser.parseSettableExpression(expressionPrefix + "{flag}").evaluateToSet(bean, Boolean.FALSE, null);
 		assertFalse(bean.isFlag());
-		expressionParser.parseSettableExpression("flag").evaluateToSet(bean, Boolean.TRUE, null);
-		assertTrue(bean.isFlag());
 		List newList = new ArrayList();
 		newList.add("boo");
 		expressionParser.parseSettableExpression(expressionPrefix + "{list}").evaluateToSet(bean, newList, null);
@@ -95,7 +92,7 @@ public class SimpleExpressionTests extends TestCase {
 
 	public void testSyntaxError() {
 		try {
-			expressionParser.parseExpression("foo(").evaluate(bean, null);
+			expressionParser.parseExpression(expressionPrefix + "{foo(}").evaluate(bean, null);
 			fail("should have failed");
 		} catch (ParserException e) {
 		} catch (EvaluationException e) {

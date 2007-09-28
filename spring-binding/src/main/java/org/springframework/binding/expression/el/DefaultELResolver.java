@@ -6,10 +6,11 @@ import javax.el.CompositeELResolver;
 import javax.el.ELContext;
 import javax.el.ListELResolver;
 import javax.el.MapELResolver;
+import javax.el.PropertyNotFoundException;
+import javax.el.PropertyNotWritableException;
 import javax.el.ResourceBundleELResolver;
 
 import org.springframework.binding.collection.MapAdaptable;
-import org.springframework.util.Assert;
 
 /**
  * A generic ELResolver to be used as a default when no other ELResolvers have been configured by the client
@@ -35,21 +36,27 @@ public class DefaultELResolver extends CompositeELResolver {
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {
-		Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
 		if (base == null) {
-			return super.getValue(context, target, property);
-		} else {
-			return super.getValue(context, adaptIfNecessary(base), property);
+			try {
+				return super.getValue(context, target, property);
+			} catch (PropertyNotFoundException ex) {
+				context.setPropertyResolved(false);
+			}
 		}
+		return super.getValue(context, adaptIfNecessary(base), property);
 	}
 
 	public void setValue(ELContext context, Object base, Object property, Object val) {
-		Assert.notNull(target, "The DefaultELResolver must have a target base property set.");
 		if (base == null) {
-			super.setValue(context, target, property, val);
-		} else {
-			super.setValue(context, adaptIfNecessary(base), property, val);
+			try {
+				super.setValue(context, target, property, val);
+				if (context.isPropertyResolved())
+					return;
+			} catch (PropertyNotWritableException ex) {
+				context.setPropertyResolved(false);
+			}
 		}
+		super.setValue(context, adaptIfNecessary(base), property, val);
 	}
 
 	public Object getTarget() {

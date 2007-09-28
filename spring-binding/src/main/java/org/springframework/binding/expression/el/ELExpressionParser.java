@@ -84,35 +84,16 @@ public class ELExpressionParser implements ExpressionParser {
 	}
 
 	public final Expression parseExpression(String expressionString) throws ParserException {
-		if (!isDelimitedExpression(expressionString)) {
-			expressionString = expressionPrefix + expressionString + expressionSuffix;
-		}
-		return doParseExpression(expressionString);
+		return parseSettableExpression(expressionString);
 	}
 
+	/**
+	 * Parses the expression string into an EL value expression.
+	 * @param expressionString
+	 * @throws ParserException
+	 */
 	public final SettableExpression parseSettableExpression(String expressionString) throws ParserException,
 			UnsupportedOperationException {
-		if (!isDelimitedExpression(expressionString)) {
-			expressionString = expressionPrefix + expressionString + expressionSuffix;
-		}
-		return doParseSettableExpression(expressionString);
-	}
-
-	/**
-	 * Parses the expression string into an EL value expression.
-	 * @param expressionString
-	 * @throws ParserException
-	 */
-	protected Expression doParseExpression(String expressionString) throws ParserException {
-		return doParseSettableExpression(expressionString);
-	}
-
-	/**
-	 * Parses the expression string into an EL value expression.
-	 * @param expressionString
-	 * @throws ParserException
-	 */
-	protected SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
 		ELContext ctx = contextFactory.getParseContext();
 		try {
 			return new ELExpression(contextFactory, expressionFactory.createValueExpression(ctx, expressionString,
