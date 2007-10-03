@@ -15,8 +15,8 @@
 	<bookinfo>
 		<title>Spring Web Flow</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 1.0.5-SNAPSHOT</releaseinfo>
-		<pubdate>August 2007</pubdate>
+		<releaseinfo>Version 1.0.5</releaseinfo>
+		<pubdate>October 2007</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>

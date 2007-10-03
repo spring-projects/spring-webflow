@@ -1,4 +1,4 @@
-SPRING WEB FLOW 1.0.5 (Augst 2007)
+SPRING WEB FLOW 1.0.5 (October 2007)
 ----------------------------------
 http://www.springframework.org/webflow
 http://forum.springframework.org
