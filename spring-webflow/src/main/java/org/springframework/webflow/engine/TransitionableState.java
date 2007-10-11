@@ -20,7 +20,6 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * Abstract superclass for states that can execute a transition in response to an event.
@@ -100,11 +99,10 @@ public abstract class TransitionableState extends State implements Transitionabl
 	 * Inform this state definition that an event was signaled in it. The signaled event is the last event available in
 	 * given request context ({@link RequestContext#getLastEvent()}).
 	 * @param context the flow execution control context
-	 * @return the selected view
 	 * @throws NoMatchingTransitionException when a matching transition cannot be found
 	 */
-	public ViewSelection onEvent(RequestControlContext context) throws NoMatchingTransitionException {
-		return getRequiredTransition(context).execute(this, context);
+	public void handleEvent(RequestControlContext context) throws NoMatchingTransitionException {
+		context.execute(getRequiredTransition(context));
 	}
 
 	/**
@@ -113,11 +111,9 @@ public abstract class TransitionableState extends State implements Transitionabl
 	 * <p>
 	 * By default, this just calls <code>enter()</code>.
 	 * @param context the flow control context in an executing flow (a client instance of a flow)
-	 * @return a view selection containing model and view information needed to render the results of the state
-	 * processing
 	 */
-	public ViewSelection reenter(RequestControlContext context) {
-		return enter(context);
+	public void reenter(RequestControlContext context) {
+		enter(context);
 	}
 
 	/**

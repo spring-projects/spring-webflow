@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.TestAction;
-import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -35,12 +34,13 @@ public class StateTests extends TestCase {
 
 	private boolean entered;
 
+	private boolean handled;
+
 	public void setUp() {
 		flow = new Flow("flow");
 		state = new State(flow, "myState") {
-			protected ViewSelection doEnter(RequestControlContext context) throws FlowExecutionException {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 				entered = true;
-				return ViewSelection.NULL_VIEW;
 			}
 		};
 	}
@@ -63,4 +63,28 @@ public class StateTests extends TestCase {
 		assertTrue(entered);
 		assertEquals(1, action.getExecutionCount());
 	}
+
+	public void testHandledException() {
+		state.getExceptionHandlerSet().add(new FlowExecutionExceptionHandler() {
+			public boolean canHandle(FlowExecutionException exception) {
+				return true;
+			}
+
+			public void handle(FlowExecutionException exception, RequestControlContext context) {
+				handled = true;
+			}
+
+		});
+		FlowExecutionException e = new FlowExecutionException(flow.getId(), state.getId(), "Whatev");
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		assertTrue(state.handleException(e, context));
+		assertTrue(handled);
+	}
+
+	public void testCouldNotHandleException() {
+		FlowExecutionException e = new FlowExecutionException(flow.getId(), state.getId(), "Whatev");
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		assertFalse(state.handleException(e, context));
+	}
+
 }

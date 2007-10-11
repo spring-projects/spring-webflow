@@ -1,13 +1,20 @@
 package org.springframework.binding.expression.el;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.el.ELContext;
 import javax.el.ELException;
+import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
+import javax.el.FunctionMapper;
+import javax.el.ValueExpression;
+import javax.el.VariableMapper;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.SettableExpression;
 
 /**
  * An expression parser that parses EL expressions.
@@ -16,90 +23,118 @@ import org.springframework.binding.expression.SettableExpression;
 public class ELExpressionParser implements ExpressionParser {
 
 	/**
-	 * The expression prefix for deferred EL expressions.
+	 * The expression prefix.
 	 */
-	private static final String DEFERRED_EL_EXPRESSION_PREFIX = "#{";
+	private static final String EXPRESSION_PREFIX = "#{";
 
 	/**
-	 * The expression suffix for deferred EL expressions.
+	 * The expression suffix.
 	 */
-	private static final String DEFERRED_EL_EXPRESSION_SUFFIX = "}";
-
-	/**
-	 * The marked expression delimiter prefix.
-	 */
-	private String expressionPrefix = DEFERRED_EL_EXPRESSION_PREFIX;
-
-	/**
-	 * The marked expression delimiter suffix.
-	 */
-	private String expressionSuffix = DEFERRED_EL_EXPRESSION_SUFFIX;
-
-	/**
-	 * The {@link ELContextFactory} for retrieving a configured ELContext.
-	 */
-	private ELContextFactory contextFactory;
+	private static final String EXPRESSION_SUFFIX = "}";
 
 	/**
 	 * The ExpressionFactory for constructing EL expressions
 	 */
 	private ExpressionFactory expressionFactory;
 
+	private Map contextFactories = new HashMap();
+
 	/**
 	 * Creates a new EL expression parser for standalone usage.
 	 */
 	public ELExpressionParser(ExpressionFactory expressionFactory) {
 		this.expressionFactory = expressionFactory;
-		this.contextFactory = new DefaultELContextFactory();
 	}
 
 	/**
-	 * Creates a new EL expression parser with a custom context factory for a specific environment.
-	 * 
-	 * @param contextFactory the context factory
+	 * Register the ELContextFactory for expressions that evaluate the given class of target object.
+	 * @param expressionTargetType the expression target class
+	 * @param contextFactory the context factory to use for expressions that evaluate those types of targets
 	 */
-	public ELExpressionParser(ExpressionFactory expressionFactory, ELContextFactory contextFactory) {
-		this.expressionFactory = expressionFactory;
-		this.contextFactory = contextFactory;
+	public void putContextFactory(Class expressionTargetType, ELContextFactory contextFactory) {
+		this.contextFactories.put(expressionTargetType, contextFactory);
 	}
 
-	/**
-	 * Check whether or not given criteria are expressed as an expression.
-	 */
-	public boolean isDelimitedExpression(String expressionString) {
-		int prefixIndex = expressionString.indexOf(expressionPrefix);
-		if (prefixIndex == -1) {
-			return false;
-		}
-		int suffixIndex = expressionString.indexOf(expressionSuffix, prefixIndex);
-		if (suffixIndex == -1) {
-			return false;
-		} else {
-			if (suffixIndex == prefixIndex + expressionPrefix.length()) {
-				return false;
-			} else {
-				return true;
-			}
-		}
+	public boolean isEvalExpressionString(String expressionString) {
+		return expressionString.startsWith(EXPRESSION_PREFIX) && expressionString.endsWith(EXPRESSION_SUFFIX);
 	}
 
-	public final Expression parseExpression(String expressionString) throws ParserException {
-		return parseSettableExpression(expressionString);
+	public String parseEvalExpressionString(String string) {
+		return encloseInDelimitersIfNecessary(string);
 	}
 
-	/**
-	 * Parses the expression string into an EL value expression.
-	 * @param expressionString
-	 * @throws ParserException
-	 */
-	public final SettableExpression parseSettableExpression(String expressionString) throws ParserException,
-			UnsupportedOperationException {
-		ELContext ctx = contextFactory.getParseContext();
+	public Expression parseExpression(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
+		ParserELContext context = new ParserELContext();
 		try {
-			return new ELExpression(contextFactory, expressionFactory.createValueExpression(ctx, expressionString,
-					Object.class));
+			context.mapVariables(expressionVariables, expressionFactory);
+			ValueExpression expression = expressionFactory.createValueExpression(context, expressionString,
+					expectedEvaluationResultType);
+			ELContextFactory contextFactory = getContextFactory(expressionString, expressionTargetType);
+			return new ELExpression(contextFactory, expression, context.getVariableMapper());
 		} catch (ELException ex) {
 			throw new ParserException(expressionString, ex);
 		}
 	}
+
+	private String encloseInDelimitersIfNecessary(String expressionString) {
+		if (isEvalExpressionString(expressionString)) {
+			return expressionString;
+		} else {
+			return EXPRESSION_PREFIX + expressionString + EXPRESSION_SUFFIX;
+		}
+	}
+
+	private ELContextFactory getContextFactory(String expressionString, Class expressionTargetType) {
+		if (!contextFactories.containsKey(expressionTargetType)) {
+			throw new ParserException(expressionString, new IllegalArgumentException(
+					"No ELContextFactory registered for expressionTargetType [" + expressionTargetType + "]"));
+		}
+		return (ELContextFactory) contextFactories.get(expressionTargetType);
+	}
+
+	private static class ParserELContext extends ELContext {
+		private VariableMapper variableMapper;
+
+		public ELResolver getELResolver() {
+			return null;
+		}
+
+		public FunctionMapper getFunctionMapper() {
+			return null;
+		}
+
+		public VariableMapper getVariableMapper() {
+			return variableMapper;
+		}
+
+		public void mapVariables(ExpressionVariable[] variables, ExpressionFactory expressionFactory) {
+			if (variables != null && variables.length > 0) {
+				variableMapper = new VariableMapperImpl();
+				for (int i = 0; i < variables.length; i++) {
+					ExpressionVariable var = variables[i];
+					ValueExpression expr = expressionFactory.createValueExpression(this,
+							var.getValueExpressionString(), Object.class);
+					variableMapper.setVariable(var.getName(), expr);
+				}
+			}
+		}
+	}
+
+	private static class VariableMapperImpl extends VariableMapper {
+		private Map variables = new HashMap();
+
+		public ValueExpression resolveVariable(String name) {
+			return (ValueExpression) variables.get(name);
+		}
+
+		public ValueExpression setVariable(String name, ValueExpression value) {
+			return (ValueExpression) variables.put(name, value);
+		}
+
+		public String toString() {
+			return variables.toString();
+		}
+	}
+
 }

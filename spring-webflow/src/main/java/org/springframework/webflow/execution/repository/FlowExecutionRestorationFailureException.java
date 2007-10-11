@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution.repository;
 
+import org.springframework.webflow.execution.FlowExecutionKey;
+
 /**
  * Thrown when the flow execution with the persistent identifier provided could not be restored.
  * 

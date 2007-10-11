@@ -21,17 +21,20 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.binding.mapping.MappingContext;
 import org.springframework.core.CollectionFactory;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A single flow definition. A Flow definition is a reusable, self-contained controller module that provides the blue
@@ -45,7 +48,7 @@ import org.springframework.webflow.execution.ViewSelection;
  * <p>
  * Especially in Intranet applications there are often "controlled navigations" where the user is not free to do what he
  * or she wants but must follow the guidelines provided by the system to complete a process that is transactional in
- * nature (the quinessential example would be a 'checkout' flow of a shopping cart application). This is a typical use
+ * nature (the quintessential example would be a 'checkout' flow of a shopping cart application). This is a typical use
  * case appropriate to model as a flow.
  * <p>
  * Structurally a Flow is composed of a set of states. A {@link State} is a point in a flow where a behavior is
@@ -55,7 +58,7 @@ import org.springframework.webflow.execution.ViewSelection;
  * Each {@link TransitionableState} type has one or more transitions that when executed move a flow to another state.
  * These transitions define the supported paths through the flow.
  * <p>
- * A state transition is triggered by the occurence of an event. An event is something that happens the flow should
+ * A state transition is triggered by the occurrence of an event. An event is something that happens the flow should
  * respond to, for example a user input event like ("submit") or an action execution result event like ("success"). When
  * an event occurs in a state of a Flow that event drives a state transition that decides what to do next.
  * <p>
@@ -76,14 +79,15 @@ import org.springframework.webflow.execution.ViewSelection;
  * the ability to design reusable, high-level controller modules that may be executed in <i>any</i> environment.
  * <p>
  * Note: flows are singleton definition objects so they should be thread-safe. You can think a flow definition as
- * analagous somewhat to a Java class, defining all the behavior of an application module. The core behaviors
- * {@link #start(RequestControlContext, MutableAttributeMap) start}, {@link #onEvent(RequestControlContext) on event},
- * and {@link #end(RequestControlContext, MutableAttributeMap) end} each accept a {@link RequestContext request context}
- * that allows for this flow to access execution state in a thread safe manner. A flow execution is what models a
- * running instance of this flow definition, somewhat analgous to a java object that is an instance of a class.
+ * analogous to a Java class, defining all the behavior of an application module. The core behaviors
+ * {@link #start(RequestControlContext, MutableAttributeMap) start}, {@link #resume(RequestControlContext)},
+ * {@link #handleEvent(RequestControlContext) on event}, {@link #end(RequestControlContext, MutableAttributeMap) end},
+ * and {@link #handleException(FlowExecutionException, RequestControlContext)}. Each method accepts a
+ * {@link RequestContext request context} that allows for this flow to access execution state in a thread safe manner. A
+ * flow execution is what models a running instance of this flow definition, somewhat analogous to a java object that is
+ * an instance of a class.
  * 
  * @see org.springframework.webflow.engine.State
- * @see org.springframework.webflow.engine.TransitionableState
  * @see org.springframework.webflow.engine.ActionState
  * @see org.springframework.webflow.engine.ViewState
  * @see org.springframework.webflow.engine.SubflowState
@@ -126,7 +130,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The mapper to map flow input attributes.
 	 */
-	private AttributeMapper inputMapper;
+	private AttributeMapper inputMapper = new NoInputMapper();
 
 	/**
 	 * The list of actions to execute when this flow starts.
@@ -149,7 +153,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The mapper to map flow output attributes.
 	 */
-	private AttributeMapper outputMapper;
+	private AttributeMapper outputMapper = new NoOutputMapper();
 
 	/**
 	 * The set of exception handlers for this flow.
@@ -157,16 +161,26 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	private FlowExecutionExceptionHandlerSet exceptionHandlerSet = new FlowExecutionExceptionHandlerSet();
 
 	/**
-	 * The set of inline flows contained by this flow.
-	 */
-	private Set inlineFlows = CollectionFactory.createLinkedSetIfPossible(3);
-
-	/**
 	 * Construct a new flow definition with the given id. The id should be unique among all flows.
 	 * @param id the flow identifier
 	 */
 	public Flow(String id) {
-		setId(id);
+		Assert.hasText(id, "This flow must be uniquely identified");
+		this.id = id;
+	}
+
+	// convenient static factory methods
+
+	/**
+	 * Create a new flow with the given id and attributes.
+	 * @param id the flow id
+	 * @param attributes the attributes
+	 * @return the flow
+	 */
+	public static Flow create(String id, AttributeMap attributes) {
+		Flow flow = new Flow(id);
+		flow.getAttributeMap().putAll(attributes);
+		return flow;
 	}
 
 	// implementing FlowDefinition
@@ -185,14 +199,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 
 	public StateDefinition getState(String stateId) {
 		return getStateInstance(stateId);
-	}
-
-	/**
-	 * Set the unique id of this flow.
-	 */
-	protected void setId(String id) {
-		Assert.hasText(id, "This flow must have a unique, non-blank identifier");
-		this.id = id;
 	}
 
 	/**
@@ -358,6 +364,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param inputMapper the input mapper
 	 */
 	public void setInputMapper(AttributeMapper inputMapper) {
+		Assert.notNull(inputMapper, "The input mapper cannot be null");
 		this.inputMapper = inputMapper;
 	}
 
@@ -392,6 +399,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param outputMapper the output mapper
 	 */
 	public void setOutputMapper(AttributeMapper outputMapper) {
+		Assert.notNull(outputMapper, "The output mapper cannot be null");
 		this.outputMapper = outputMapper;
 	}
 
@@ -404,74 +412,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	public FlowExecutionExceptionHandlerSet getExceptionHandlerSet() {
 		return exceptionHandlerSet;
-	}
-
-	/**
-	 * Adds an inline flow to this flow.
-	 * @param flow the inline flow to add
-	 */
-	public void addInlineFlow(Flow flow) {
-		inlineFlows.add(flow);
-	}
-
-	/**
-	 * Returns the list of inline flow ids.
-	 * @return a string array of inline flow identifiers
-	 */
-	public String[] getInlineFlowIds() {
-		String[] flowIds = new String[getInlineFlowCount()];
-		int i = 0;
-		Iterator it = inlineFlows.iterator();
-		while (it.hasNext()) {
-			flowIds[i++] = ((Flow) it.next()).getId();
-		}
-		return flowIds;
-	}
-
-	/**
-	 * Returns the list of inline flows.
-	 * @return the list of inline flows
-	 */
-	public Flow[] getInlineFlows() {
-		return (Flow[]) inlineFlows.toArray(new Flow[inlineFlows.size()]);
-	}
-
-	/**
-	 * Returns the count of registered inline flows.
-	 * @return the count
-	 */
-	public int getInlineFlowCount() {
-		return inlineFlows.size();
-	}
-
-	/**
-	 * Tests if this flow contains an in-line flow with the specified id.
-	 * @param id the inline flow id
-	 * @return true if this flow contains a inline flow with that id, false otherwise
-	 */
-	public boolean containsInlineFlow(String id) {
-		return getInlineFlow(id) != null;
-	}
-
-	/**
-	 * Returns the inline flow with the provided id, or <code>null</code> if no such inline flow exists.
-	 * @param id the inline flow id
-	 * @return the inline flow
-	 * @throws IllegalArgumentException when an invalid flow id is provided
-	 */
-	public Flow getInlineFlow(String id) throws IllegalArgumentException {
-		if (!StringUtils.hasText(id)) {
-			throw new IllegalArgumentException(
-					"The specified inline flowId is invalid: flow identifiers must be non-blank");
-		}
-		Iterator it = inlineFlows.iterator();
-		while (it.hasNext()) {
-			Flow flow = (Flow) it.next();
-			if (flow.getId().equals(id)) {
-				return flow;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -500,11 +440,20 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	// behavioral code, could be overridden in subclasses
 
 	/**
+	 * Factory method that creates the initial input map to pass to this flow when a new execution of this flow is
+	 * started. Allows this flow to assemble the input map from data in the external context representing the calling
+	 * environment.
+	 */
+	public MutableAttributeMap createExecutionInputMap(ExternalContext context) {
+		return new LocalAttributeMap();
+	}
+
+	/**
 	 * Start a new session for this flow in its start state. This boils down to the following:
 	 * <ol>
 	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li>
-	 * <li>Map provided input data into the flow execution control context. Typically data will be mapped into flow
-	 * scope using the registered input mapper ({@link #setInputMapper(AttributeMapper)}).</li>
+	 * <li>Map provided input data into the flow. Typically data will be mapped into flow scope using the registered
+	 * input mapper ({@link #setInputMapper(AttributeMapper)}).</li>
 	 * <li>Execute all registered start actions ({@link #getStartActionList()}).</li>
 	 * <li>Enter the configured start state ({@link #setStartState(State)})</li>
 	 * </ol>
@@ -512,31 +461,36 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param input eligible input into the session
 	 * @throws FlowExecutionException when an exception occurs starting the flow
 	 */
-	public ViewSelection start(RequestControlContext context, MutableAttributeMap input) throws FlowExecutionException {
+	public void start(RequestControlContext context, MutableAttributeMap input) throws FlowExecutionException {
+		assertStartStateSet();
 		createVariables(context);
-		if (inputMapper != null) {
-			inputMapper.map(input, context, null);
-		}
+		inputMapper.map(input, context, null);
 		startActionList.execute(context);
-		return startState.enter(context);
+		startState.enter(context);
 	}
 
 	/**
-	 * Inform this flow definition that an event was signaled in the current state of an active flow execution. The
-	 * signaled event is the last event available in given request context ({@link RequestContext#getLastEvent()}).
+	 * Resume a paused session for this flow in its current view state.
 	 * @param context the flow execution control context
-	 * @return the selected view
-	 * @throws FlowExecutionException when an exception occurs processing the event
+	 * @throws FlowExecutionException when an exception occurs during the resume operation
 	 */
-	public ViewSelection onEvent(RequestControlContext context) throws FlowExecutionException {
+	public void resume(RequestControlContext context) throws FlowExecutionException {
+		getCurrentViewState(context).resume(context);
+	}
+
+	/**
+	 * Handle the last event that occurred against an active session of this flow.
+	 * @param context the flow execution control context
+	 */
+	public void handleEvent(RequestControlContext context) {
 		TransitionableState currentState = getCurrentTransitionableState(context);
 		try {
-			return currentState.onEvent(context);
+			currentState.handleEvent(context);
 		} catch (NoMatchingTransitionException e) {
 			// try the flow level transition set for a match
 			Transition transition = globalTransitionSet.getTransition(context);
 			if (transition != null) {
-				return transition.execute(currentState, context);
+				transition.execute(currentState, context);
 			} else {
 				// no matching global transition => let the original exception
 				// propagate
@@ -559,24 +513,27 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
 		endActionList.execute(context);
-		if (outputMapper != null) {
-			outputMapper.map(context, output, null);
-		}
+		outputMapper.map(context, output, null);
 	}
 
 	/**
-	 * Handle an exception that occured during an execution of this flow.
-	 * @param exception the exception that occured
+	 * Handle an exception that occurred during an execution of this flow.
+	 * @param exception the exception that occurred
 	 * @param context the flow execution control context
-	 * @return the selected error view, or <code>null</code> if no handler matched or returned a non-null view
-	 * selection
 	 */
-	public ViewSelection handleException(FlowExecutionException exception, RequestControlContext context)
+	public boolean handleException(FlowExecutionException exception, RequestControlContext context)
 			throws FlowExecutionException {
 		return getExceptionHandlerSet().handleException(exception, context);
 	}
 
 	// internal helpers
+
+	private void assertStartStateSet() {
+		if (startState == null) {
+			throw new IllegalStateException("Unable to start flow '" + id
+					+ "'; the start state is not set -- flow builder configuration error?");
+		}
+	}
 
 	/**
 	 * Create (setup) all known flow variables in flow scope.
@@ -593,6 +550,18 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
+	 * Returns the current state and makes sure it is a view state.
+	 */
+	private ViewState getCurrentViewState(RequestControlContext context) {
+		State currentState = (State) context.getCurrentState();
+		if (!(currentState instanceof ViewState)) {
+			throw new IllegalStateException("You can only resume paused view states, and state "
+					+ context.getCurrentState() + " is not a view state - programmer error");
+		}
+		return (ViewState) currentState;
+	}
+
+	/**
 	 * Returns the current state and makes sure it is transitionable.
 	 */
 	private TransitionableState getCurrentTransitionableState(RequestControlContext context) {
@@ -604,11 +573,39 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		return (TransitionableState) currentState;
 	}
 
+	/**
+	 * Maps no input attributes. The default implementation.
+	 */
+	private class NoInputMapper implements AttributeMapper {
+		public void map(Object source, Object target, MappingContext context) {
+			logger.debug("No input attributes mapped");
+		}
+
+		public String toString() {
+			return "none";
+		}
+
+	}
+
+	/**
+	 * Maps no input attributes. The default implementation.
+	 */
+	private class NoOutputMapper implements AttributeMapper {
+		public void map(Object source, Object target, MappingContext context) {
+			logger.debug("No output attributes mapped");
+		}
+
+		public String toString() {
+			return "none";
+		}
+	}
+
 	public String toString() {
 		return new ToStringCreator(this).append("id", id).append("states", states).append("startState", startState)
 				.append("variables", variables).append("inputMapper", inputMapper).append("startActionList",
 						startActionList).append("exceptionHandlerSet", exceptionHandlerSet).append(
 						"globalTransitionSet", globalTransitionSet).append("endActionList", endActionList).append(
-						"outputMapper", outputMapper).append("inlineFlows", inlineFlows).toString();
+						"outputMapper", outputMapper).toString();
 	}
+
 }

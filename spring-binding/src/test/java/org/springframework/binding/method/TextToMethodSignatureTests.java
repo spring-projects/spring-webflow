@@ -103,7 +103,7 @@ public class TextToMethodSignatureTests extends TestCase {
 		assertEquals("foo", signature.getMethodName());
 		assertEquals(1, signature.getParameters().size());
 		assertNull(signature.getParameters().getParameter(0).getType());
-		assertEquals("{1, 2, 3}", signature.getParameters().getParameter(0).getName().toString());
+		assertEquals("{ 1, 2, 3 }", signature.getParameters().getParameter(0).getName().toString());
 	}
 
 	public void testCollectionConstructionSyntaxWithType() {
@@ -111,7 +111,7 @@ public class TextToMethodSignatureTests extends TestCase {
 		assertEquals("foo", signature.getMethodName());
 		assertEquals(1, signature.getParameters().size());
 		assertEquals(java.util.List.class, signature.getParameters().getParameter(0).getType());
-		assertEquals("{1, 2, 3}", signature.getParameters().getParameter(0).getName().toString());
+		assertEquals("{ 1, 2, 3 }", signature.getParameters().getParameter(0).getName().toString());
 
 		signature = (MethodSignature) converter.convert("foo(a${b,#{1:2},e}f${g,#{3:4},j}k)");
 	}

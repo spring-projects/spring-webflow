@@ -19,7 +19,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -41,7 +40,7 @@ public class Mapping implements AttributeMapper {
 	/**
 	 * The target expression to set on a target object to map to.
 	 */
-	private final SettableExpression targetExpression;
+	private final Expression targetExpression;
 
 	/**
 	 * A type converter to apply during the mapping process.
@@ -59,7 +58,7 @@ public class Mapping implements AttributeMapper {
 	 * @param targetExpression the target expression
 	 * @param typeConverter a type converter
 	 */
-	public Mapping(Expression sourceExpression, SettableExpression targetExpression, ConversionExecutor typeConverter) {
+	public Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter) {
 		this(sourceExpression, targetExpression, typeConverter, false);
 	}
 
@@ -70,8 +69,8 @@ public class Mapping implements AttributeMapper {
 	 * @param typeConverter a type converter
 	 * @param required whether or not this mapping is required
 	 */
-	protected Mapping(Expression sourceExpression, SettableExpression targetExpression,
-			ConversionExecutor typeConverter, boolean required) {
+	protected Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter,
+			boolean required) {
 		Assert.notNull(sourceExpression, "The source expression is required");
 		Assert.notNull(targetExpression, "The target expression is required");
 		this.sourceExpression = sourceExpression;
@@ -88,7 +87,7 @@ public class Mapping implements AttributeMapper {
 	 */
 	public void map(Object source, Object target, MappingContext context) {
 		// get source value
-		Object sourceValue = sourceExpression.evaluate(source, null);
+		Object sourceValue = sourceExpression.getValue(source);
 		if (sourceValue == null) {
 			if (required) {
 				throw new RequiredMappingException("This mapping is required; evaluation of expression '"
@@ -108,7 +107,7 @@ public class Mapping implements AttributeMapper {
 			logger.debug("Mapping '" + sourceExpression + "' value [" + sourceValue + "] to target property '"
 					+ targetExpression + "'; setting property value to [" + targetValue + "]");
 		}
-		targetExpression.evaluateToSet(target, targetValue, null);
+		targetExpression.setValue(target, targetValue);
 	}
 
 	public boolean equals(Object o) {

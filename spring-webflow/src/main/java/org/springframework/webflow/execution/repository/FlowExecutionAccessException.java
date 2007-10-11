@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution.repository;
 
+import org.springframework.webflow.execution.FlowExecutionKey;
+
 /**
  * Base class for exceptions that indicate a flow execution could not be accessed within a repository.
  * 

@@ -17,9 +17,7 @@ package org.springframework.webflow.test.execution;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowBuilder;
-import org.springframework.webflow.engine.builder.FlowServiceLocator;
 import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
 
 /**
@@ -67,16 +65,15 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	/**
 	 * Constructs an XML flow execution test with given name.
 	 * @param name the name of the test
-	 * @since 1.0.2
 	 */
 	public AbstractXmlFlowExecutionTests(String name) {
 		super(name);
 	}
 
-	protected FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator flowServiceLocator) {
-		return new XmlFlowBuilder(resource, flowServiceLocator) {
-			protected void registerLocalBeans(Flow flow, ConfigurableBeanFactory beanFactory) {
-				registerLocalMockServices(flow, beanFactory);
+	protected FlowBuilder createFlowBuilder(Resource resource) {
+		return new XmlFlowBuilder(resource) {
+			protected void registerFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
+				registerMockFlowBeans(flowBeanFactory);
 			}
 		};
 	}
@@ -84,10 +81,9 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	/**
 	 * Template method subclasses may override to register mock implementations of services used locally by the flow
 	 * being tested.
-	 * @param flow the flow to register the services for
-	 * @param beanFactory the local flow service registry; register mock services with it using
+	 * @param flowBeanFactory the local flow service registry; register mock services with it using
 	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
 	 */
-	protected void registerLocalMockServices(Flow flow, ConfigurableBeanFactory beanFactory) {
+	protected void registerMockFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 	}
 }

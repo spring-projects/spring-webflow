@@ -16,7 +16,6 @@
 package org.springframework.webflow.executor;
 
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.core.FlowException;
 
 /**
  * The central facade and entry-point service interface into the Spring Web Flow system for <i>driving the executions of
@@ -31,38 +30,8 @@ import org.springframework.webflow.core.FlowException;
 public interface FlowExecutor {
 
 	/**
-	 * Launch a new execution of identified flow definition in the context of the current external client request.
-	 * @param flowDefinitionId the unique id of the flow definition to launch
-	 * @param context the external context representing the state of a request into Spring Web Flow from an external
-	 * system
-	 * @return the starting response instruction
-	 * @throws FlowException if an exception occured launching the new flow execution
+	 * Execute the flow request initiated by the provided external context.
+	 * @param context the external context, representing a client environment calling into Spring Web Flow
 	 */
-	public ResponseInstruction launch(String flowDefinitionId, ExternalContext context) throws FlowException;
-
-	/**
-	 * Resume an existing, paused flow execution by signaling an event against its current state.
-	 * @param flowExecutionKey the identifying key of a paused flow execution that is waiting to resume on the
-	 * occurrence of a user event
-	 * @param eventId the user event that occured
-	 * @param context the external context representing the state of a request into Spring Web Flow from an external
-	 * system
-	 * @return the next response instruction
-	 * @throws FlowException if an exception occured resuming the existing flow execution
-	 */
-	public ResponseInstruction resume(String flowExecutionKey, String eventId, ExternalContext context)
-			throws FlowException;
-
-	/**
-	 * Reissue the last response instruction issued by the flow execution. This is a logical refresh operation that
-	 * allows the "current response" to be re-issued. This operation is idempotent and does not affect the state of the
-	 * flow execution.
-	 * @param flowExecutionKey the identifying key of a paused flow execution that is waiting to resume on the ocurrence
-	 * of a user event
-	 * @param context the external context representing the state of a request into Spring Web Flow from an external
-	 * system
-	 * @return the current response instruction
-	 * @throws FlowException if an exception occured retrieving the current response instruction
-	 */
-	public ResponseInstruction refresh(String flowExecutionKey, ExternalContext context) throws FlowException;
+	public void execute(ExternalContext context);
 }

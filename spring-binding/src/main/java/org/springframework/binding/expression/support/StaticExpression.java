@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.expression.support;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.ObjectUtils;
@@ -25,7 +24,7 @@ import org.springframework.util.ObjectUtils;
  * 
  * @author Keith Donald
  */
-public class StaticExpression implements Expression {
+public final class StaticExpression implements Expression {
 
 	/**
 	 * The value expression.
@@ -56,8 +55,12 @@ public class StaticExpression implements Expression {
 		return ObjectUtils.nullSafeEquals(value, other.value);
 	}
 
-	public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
+	public Object getValue(Object target) throws EvaluationException {
 		return value;
+	}
+
+	public void setValue(Object target, Object value) throws EvaluationException {
+		this.value = value;
 	}
 
 	public String toString() {

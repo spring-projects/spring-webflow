@@ -15,7 +15,11 @@
  */
 package org.springframework.webflow.test;
 
+import org.springframework.binding.message.DefaultMessageContextFactory;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.context.support.StaticMessageSource;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.context.FlowExecutionRequestInfo;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -42,9 +46,11 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class MockRequestContext implements RequestContext {
 
-	private FlowExecutionContext flowExecutionContext = new MockFlowExecutionContext();
+	private FlowExecutionContext flowExecutionContext;
 
-	private ExternalContext externalContext = new MockExternalContext();
+	private ExternalContext externalContext;
+
+	private MessageContext messageContext;
 
 	private MutableAttributeMap requestScope = new LocalAttributeMap();
 
@@ -55,37 +61,52 @@ public class MockRequestContext implements RequestContext {
 	private Transition lastTransition;
 
 	/**
-	 * Creates a new mock request context with the following defaults:
+	 * Convenience constructor that creates a new mock request context with the following defaults:
 	 * <ul>
-	 * <li>A flow execution context with a active session of flow "mockFlow" in state "mockState".
+	 * <li>A mock flow execution context with a active session of flow "mockFlow" in state "mockState".
 	 * <li>A mock external context with no request parameters set.
 	 * </ul>
 	 * To add request parameters to this request, use the {@link #putRequestParameter(String, String)} method.
 	 */
 	public MockRequestContext() {
+		this(new MockFlowExecutionContext());
 	}
 
 	/**
-	 * Creates a new mock request context with the following defaults:
+	 * Convenience constructor that creates a new mock request context with the following defaults:
 	 * <ul>
-	 * <li>A flow execution context with an active session for the specified flow.
+	 * <li>A mock flow execution context with an active session for the specified flow.
 	 * <li>A mock external context with no request parameters set.
 	 * </ul>
 	 * To add request parameters to this request, use the {@link #putRequestParameter(String, String)} method.
+	 * @param flow the flow definition
 	 */
 	public MockRequestContext(Flow flow) {
-		flowExecutionContext = new MockFlowExecutionContext(flow);
+		this(new MockFlowExecutionContext(flow));
 	}
 
 	/**
-	 * Creates a new mock request context with the following defaults:
+	 * Convenience constructor that creates a new mock request context with the following defaults:
 	 * <ul>
-	 * <li>A flow execution context with a active session of flow "mockFlow" in state "mockState".
+	 * <li>A mock flow execution context with a active session of flow "mockFlow" in state "mockState".
 	 * <li>A mock external context with the provided parameters set.
 	 * </ul>
 	 */
 	public MockRequestContext(ParameterMap requestParameterMap) {
-		externalContext = new MockExternalContext(requestParameterMap);
+		this.flowExecutionContext = new MockFlowExecutionContext();
+		this.externalContext = new MockExternalContext(requestParameterMap);
+		this.messageContext = new DefaultMessageContextFactory(new StaticMessageSource()).createMessageContext();
+	}
+
+	/**
+	 * Creates a new mock request context with the provided flow execution context. To add request parameters to this
+	 * request, use the {@link #putRequestParameter(String, String)} method.
+	 * @param flowExecutionContext the flow execution context
+	 */
+	public MockRequestContext(FlowExecutionContext flowExecutionContext) {
+		this.flowExecutionContext = flowExecutionContext;
+		this.externalContext = new MockExternalContext();
+		this.messageContext = new DefaultMessageContextFactory(new StaticMessageSource()).createMessageContext();
 	}
 
 	// implementing RequestContext
@@ -118,6 +139,10 @@ public class MockRequestContext implements RequestContext {
 		return externalContext.getRequestParameterMap();
 	}
 
+	public MessageContext getMessageContext() {
+		return messageContext;
+	}
+
 	public ExternalContext getExternalContext() {
 		return externalContext;
 	}
@@ -142,8 +167,28 @@ public class MockRequestContext implements RequestContext {
 		this.attributes.replaceWith(attributes);
 	}
 
-	public AttributeMap getModel() {
-		return getConversationScope().union(getFlowScope()).union(getFlashScope()).union(getRequestScope());
+	public String getFlowExecutionUrl() {
+		if (flowExecutionContext.getKey() == null) {
+			throw new IllegalStateException(
+					"Flow execution key not yet assigned; unable to build the flow execution url");
+		} else {
+			String flowDefinitionId = flowExecutionContext.getDefinition().getId();
+			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowDefinitionId, flowExecutionContext
+					.getKey().toString());
+			return externalContext.buildFlowExecutionUrl(requestInfo, true);
+		}
+	}
+
+	public void sendFlowExecutionRedirect() {
+		if (flowExecutionContext.getKey() == null) {
+			throw new IllegalStateException(
+					"Flow execution key not yet assigned; unable to send a flow execution redirect request");
+		} else {
+			String flowDefinitionId = flowExecutionContext.getDefinition().getId();
+			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowDefinitionId, flowExecutionContext
+					.getKey().toString());
+			externalContext.sendFlowExecutionRedirect(requestInfo);
+		}
 	}
 
 	// mutators
@@ -246,4 +291,5 @@ public class MockRequestContext implements RequestContext {
 	public void putRequestParameter(String parameterName, String[] parameterValues) {
 		getMockExternalContext().putRequestParameter(parameterName, parameterValues);
 	}
+
 }

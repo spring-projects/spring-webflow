@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.method;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -66,12 +65,11 @@ public class Parameter {
 
 	/**
 	 * Evaluate this method parameter against the provided argument source, returning a single method argument value.
-	 * @param argumentSource the meyhod argument source
-	 * @param context the evaluation context
+	 * @param argumentSource the method argument source
 	 * @return the method argument value
 	 */
-	public Object evaluateArgument(Object argumentSource, EvaluationContext context) {
-		return name.evaluate(argumentSource, context);
+	public Object evaluateArgument(Object argumentSource) {
+		return name.getValue(argumentSource);
 	}
 
 	public boolean equals(Object obj) {

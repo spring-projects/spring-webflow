@@ -70,7 +70,7 @@ public class MethodInvoker {
 		Object[] arguments = new Object[parameters.size()];
 		for (int i = 0; i < parameters.size(); i++) {
 			Parameter parameter = parameters.getParameter(i);
-			Object argument = parameter.evaluateArgument(argumentSource, null);
+			Object argument = parameter.evaluateArgument(argumentSource);
 			arguments[i] = applyTypeConversion(argument, parameter.getType());
 		}
 		Class[] parameterTypes = parameters.getTypesArray();

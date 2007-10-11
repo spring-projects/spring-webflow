@@ -27,9 +27,11 @@ public class AnnotedActionTests extends TestCase {
 
 	private AnnotatedAction action = new AnnotatedAction(new TestAction());
 
-	private MockRequestContext context = new MockRequestContext();
+	private MockRequestContext context;
 
 	protected void setUp() throws Exception {
+		Flow flow = new Flow("myFlow");
+		context = new MockRequestContext(flow);
 	}
 
 	public void testBasicExecute() throws Exception {

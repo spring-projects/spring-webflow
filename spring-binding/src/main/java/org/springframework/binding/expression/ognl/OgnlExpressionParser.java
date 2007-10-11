@@ -22,7 +22,6 @@ import ognl.PropertyAccessor;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.binding.expression.support.AbstractExpressionParser;
 
 /**
@@ -33,10 +32,6 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
 public class OgnlExpressionParser extends AbstractExpressionParser {
 
 	protected Expression doParseExpression(String expressionString) throws ParserException {
-		return doParseSettableExpression(expressionString);
-	}
-
-	public SettableExpression doParseSettableExpression(String expressionString) throws ParserException {
 		try {
 			return new OgnlExpression(Ognl.parseExpression(expressionString));
 		} catch (OgnlException e) {

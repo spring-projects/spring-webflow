@@ -4,53 +4,40 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
-	<!-- The location of the configuration of this Spring Faces application; a path to a Spring configuration file -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			/WEB-INF/config/web-application-config.xml
-		</param-value>
-	</context-param>
-
 	<!-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
 
-	<!-- Bootstraps the "root" Spring WebApplicationContext, responsible for deploying the managed beans
-		 defined in the web-application-config.xml file above.  These beans define the back-end services of the JSF application. -->
-	<listener>
-		<listener-class>
-			org.springframework.web.context.ContextLoaderListener
-		</listener-class>
-	</listener>
-
-	<!-- Guarantees that under all JSF exit conditions, the flow context will be cleaned up -->
-	<filter>
-		<filter-name>Flow System Cleanup Filter</filter-name>
-		<filter-class>
-			org.springframework.faces.webflow.FlowSystemCleanupFilter
-		</filter-class>
-	</filter>
-
-	<!-- Runs all requests to *.spring through the FlowSystemCleanupFilter for guarenteed cleanup -->
-	<filter-mapping>
-		<filter-name>Flow System Cleanup Filter</filter-name>
-		<url-pattern>*.spring</url-pattern>
-	</filter-mapping>
-
-	<!-- The front controller of the JSF application, responsible for handling all application requests -->
+	<!-- Here so the JSF implementation can initialize, not used at runtime -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
-	<!-- Map all *.spring requests to the Faces Servlet for handling -->
+	<!-- Dummy mapping for faces initialization -->
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.spring</url-pattern>
+		<url-pattern>*.faces</url-pattern>
+	</servlet-mapping>
+
+	<!-- The front controller of the Spring Web application, responsible for handling all application requests -->
+	<servlet>
+		<servlet-name>Spring Web Servlet</servlet-name>
+		<servlet-class>org.springframework.webflow.servlet.SpringWebServlet</servlet-class>
+		<init-param>
+			<param-name>configLocations</param-name>
+			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<!-- Map all *.spring requests to the Web Servlet for handling -->
+	<servlet-mapping>
+		<servlet-name>Spring Web Servlet</servlet-name>
+		<url-pattern>/spring/*</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

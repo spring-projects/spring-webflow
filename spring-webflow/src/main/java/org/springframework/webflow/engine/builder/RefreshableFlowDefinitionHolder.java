@@ -23,7 +23,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
-import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.util.ResourceHolder;
 
 /**
@@ -32,13 +31,11 @@ import org.springframework.webflow.util.ResourceHolder;
  * <p>
  * This class is thread-safe.
  * <p>
- * Note that this {@link FlowDefinition} holder uses a {@link Flow} assembler. This is normal since a {@link Flow} is a
- * {@link FlowDefinition}! This class bridges the <i>abstract</i> world of {@link FlowDefinition flow definitions}
- * with the <i>concrete</i> world of {@link Flow flow implementations}.
+ * Note that this {@link FlowDefinition} holder uses a {@link FlowAssembler}. This class bridges the <i>abstract</i>
+ * world of {@link FlowDefinition flow definitions} with the <i>concrete</i> world of flow implementations.
  * 
- * @see FlowDefinition
- * @see Flow
  * @see FlowAssembler
+ * @see FlowDefinition
  * 
  * @author Keith Donald
  */
@@ -77,7 +74,7 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 	}
 
 	public String getFlowDefinitionId() {
-		return assembler.getFlowId();
+		return assembler.getFlowBuilderContext().getFlowId();
 	}
 
 	public synchronized FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException {
@@ -85,8 +82,9 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 			// must return early assembly result
 			return getFlowBuilder().getFlow();
 		}
-		if (!isAssembled()) {
+		if (flowDefinition == null) {
 			lastModified = calculateLastModified();
+			logger.debug("Assembling the flow definition for the first time");
 			assembleFlow();
 		} else {
 			refreshIfChanged();
@@ -94,91 +92,66 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 		return flowDefinition;
 	}
 
-	public synchronized void refresh() throws FlowBuilderException {
+	public synchronized void refresh() throws FlowDefinitionConstructionException {
 		assembleFlow();
 	}
 
 	// internal helpers
 
 	/**
-	 * Returns the flow builder that actually builds the Flow definition.
-	 */
-	protected FlowBuilder getFlowBuilder() {
-		return assembler.getFlowBuilder();
-	}
-
-	/**
-	 * Reassemble the flow if its underlying resource has changed.
-	 */
-	protected void refreshIfChanged() {
-		if (this.lastModified == -1) {
-			// just ignore, tracking last modified date not supported
-			return;
-		}
-		long calculatedLastModified = calculateLastModified();
-		if (this.lastModified < calculatedLastModified) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Resource modification detected, reloading flow definition with id '"
-						+ assembler.getFlowId() + "'");
-			}
-			assembleFlow();
-			this.lastModified = calculatedLastModified;
-		}
-	}
-
-	/**
 	 * Helper that retrieves the last modified date by querying the backing flow resource.
-	 * @return the last modified date, or -1 if it could not be retrieved
+	 * @return the last modified date, or 0L if it could not be retrieved
 	 */
-	protected long calculateLastModified() {
+	private long calculateLastModified() {
 		if (getFlowBuilder() instanceof ResourceHolder) {
 			Resource resource = ((ResourceHolder) getFlowBuilder()).getResource();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Calculating last modified timestamp for flow definition resource '" + resource + "'");
-			}
 			try {
-				return resource.getFile().lastModified();
+				long lastModified = resource.getFile().lastModified();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Flow definition [" + resource + "] was last modified on " + lastModified);
+				}
+				return lastModified;
 			} catch (IOException e) {
 				// ignore, last modified checks not supported
 			}
 		}
-		return -1;
-	}
-
-	/**
-	 * Returns the last modified date of the backed flow definition resource.
-	 * @return the last modified date
-	 */
-	protected long getLastModified() {
-		return lastModified;
+		return 0L;
 	}
 
 	/**
 	 * Assemble the held flow definition, delegating to the configured FlowAssembler (director).
 	 */
-	protected void assembleFlow() throws FlowBuilderException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Assembling flow definition with id '" + assembler.getFlowId() + "'");
-		}
+	private void assembleFlow() throws FlowDefinitionConstructionException {
 		try {
 			assembling = true;
 			flowDefinition = assembler.assembleFlow();
+		} catch (FlowBuilderException e) {
+			throw new FlowDefinitionConstructionException(assembler.getFlowBuilderContext().getFlowId(), e);
 		} finally {
 			assembling = false;
 		}
 	}
 
 	/**
-	 * Returns a flag indicating if this holder has performed and completed flow definition assembly.
+	 * Reassemble the flow if its underlying resource has changed.
 	 */
-	protected boolean isAssembled() {
-		return flowDefinition != null;
+	private void refreshIfChanged() {
+		long calculatedLastModified = calculateLastModified();
+		if (calculatedLastModified > lastModified) {
+			assembleFlow();
+			lastModified = calculatedLastModified;
+		}
 	}
 
 	/**
-	 * Returns a flag indicating if this holder is performing assembly.
+	 * Returns the flow builder that actually builds the Flow definition.
 	 */
-	protected boolean isAssembling() {
-		return assembling;
+	private FlowBuilder getFlowBuilder() {
+		return assembler.getFlowBuilder();
 	}
+
+	public String toString() {
+		return "'" + getFlowDefinitionId() + "'";
+	}
+
 }

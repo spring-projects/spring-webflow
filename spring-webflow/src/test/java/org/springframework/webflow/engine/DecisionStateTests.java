@@ -52,7 +52,7 @@ public class DecisionStateTests extends TestCase {
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
 
-	public void testNoMatching() {
+	public void testCannotDecide() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
 		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("invalid")));

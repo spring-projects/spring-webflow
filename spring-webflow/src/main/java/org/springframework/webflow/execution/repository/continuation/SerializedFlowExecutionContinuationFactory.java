@@ -24,8 +24,6 @@ import org.springframework.webflow.execution.FlowExecution;
 /**
  * A factory that creates new instances of flow execution continuations based on standard Java serialization.
  * 
- * @see SerializedFlowExecutionContinuation
- * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
@@ -55,7 +53,7 @@ public class SerializedFlowExecutionContinuationFactory implements FlowExecution
 		return new SerializedFlowExecutionContinuation(flowExecution, compress);
 	}
 
-	public FlowExecutionContinuation createContinuation(byte[] bytes) throws ContinuationUnmarshalException {
+	public FlowExecutionContinuation restoreContinuation(byte[] bytes) throws ContinuationUnmarshalException {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
 			try {

@@ -27,31 +27,11 @@ import org.springframework.webflow.definition.StateDefinition;
  * {@link #getScope() flow scope} lives for the life of this object and is cleaned up automatically when this object is
  * destroyed. Destruction happens when this session enters an end state.
  * <p>
- * A flow session will go through several status changes during its lifecycle. Initially it will be
- * {@link FlowSessionStatus#CREATED} when a new execution is started.
- * <p>
- * After passing through the {@link FlowSessionStatus#STARTING} status, the flow session is activated (about to be
- * manipulated) and its status becomes {@link FlowSessionStatus#ACTIVE}. In the case of a new execution session
- * activation happens immediately after creation to put the "root flow" at the top of the stack and transition it to its
- * start state.
- * <p>
- * When control returns to the client for user think time the status is updated to {@link FlowSessionStatus#PAUSED}.
- * The flow is no longer actively processing then, as it is stored off to a repository waiting on the user to resume.
- * <p>
- * If a flow session is pushed down in the stack because a subflow is spawned, its status becomes
- * {@link FlowSessionStatus#SUSPENDED} until the subflow returns (ends) and is popped off the stack. The resuming flow
- * session then becomes active once again.
- * <p>
- * When a flow session is terminated because an EndState is reached its status becomes {@link FlowSessionStatus#ENDED},
- * which ends its life. When this happens the session is popped off the stack and discarded, and any allocated resources
- * in "flow scope" are automatically cleaned up.
- * <p>
  * Note that a flow <i>session</i> is in no way linked to an HTTP session. It just uses the familiar "session" naming
  * convention to denote a stateful object.
  * 
  * @see FlowDefinition
  * @see FlowExecution
- * @see FlowSessionStatus
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -67,11 +47,6 @@ public interface FlowSession {
 	 * Returns the current state of this flow session. This value changes as the flow executes.
 	 */
 	public StateDefinition getState();
-
-	/**
-	 * Returns the current status of this flow session. This value changes as the flow executes.
-	 */
-	public FlowSessionStatus getStatus();
 
 	/**
 	 * Return this session's local attributes; the basis for "flow scope" (flow session scope).

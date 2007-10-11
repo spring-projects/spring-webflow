@@ -1,92 +1,160 @@
 package org.springframework.binding.expression.el;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.el.ELContext;
+import javax.el.ELResolver;
+import javax.el.FunctionMapper;
+import javax.el.VariableMapper;
 
 import junit.framework.TestCase;
 
-import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.support.TestBean;
-import org.springframework.binding.expression.support.TestMethods;
+import org.springframework.binding.expression.ExpressionVariable;
 
-/**
- * Tests to exercise the extended method invoking expression extensions of JBoss-el.
- * @author Jeremy Grelle
- */
 public class ELExpressionParserTests extends TestCase {
 
-	ELExpressionParser parser = new ELExpressionParser(new ExpressionFactoryImpl());
+	private ELExpressionParser parser = new ELExpressionParser(new ExpressionFactoryImpl());
 
-	Map context;
-
-	Map container;
-
-	TestMethods target;
-
-	protected void setUp() throws Exception {
-		context = new HashMap();
-		container = new HashMap();
-		target = (TestMethods) EasyMock.createMock(TestMethods.class);
-		context.put("container", container);
-		container.put("myObject", target);
+	public void setUp() {
+		parser.putContextFactory(TestBean.class, new TestELContextFactory());
 	}
 
-	public void testWithIntParam() {
-		String expression = "#{container.myObject.doSomethingWithInt(container.param1)}";
-		int param = 5;
-		container.put("param1", new Integer(param));
-		target.doSomethingWithInt(param);
-		EasyMock.replay(new Object[] { target });
+	private static class TestELContextFactory implements ELContextFactory {
+		public ELContext getELContext(final Object target, final VariableMapper variableMapper) {
+			return new ELContext() {
+				public ELResolver getELResolver() {
+					return new DefaultELResolver(target, null);
+				}
 
-		parser.parseExpression(expression).evaluate(context, null);
-		EasyMock.verify(new Object[] { target });
+				public FunctionMapper getFunctionMapper() {
+					return null;
+				}
 
+				public VariableMapper getVariableMapper() {
+					return variableMapper;
+				}
+			};
+		}
 	}
 
-	public void testReturnWithIntParam() {
-		String expected = "sucess";
-		String expression = "#{container.myObject.returnStringFromInt(container.param1)}";
-		int param = 5;
-		container.put("param1", new Integer(param));
-		EasyMock.expect(target.returnStringFromInt(param)).andReturn(expected);
-		EasyMock.replay(new Object[] { target });
-
-		String result = (String) parser.parseExpression(expression).evaluate(context, null);
-		EasyMock.verify(new Object[] { target });
-		assertEquals(expected, result);
+	public void testParseEvalExpression() {
+		String expressionString = "#{value}";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = String.class;
+		ExpressionVariable[] expressionVariables = null;
+		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+				expressionVariables);
+		TestBean target = new TestBean();
+		assertEquals("foo", exp.getValue(target));
 	}
 
-	public void testReturnWithIntAndObject() {
-		String expected = "success";
-		String expression = "#{container.myObject.returnStringFromIntAndObject(container.param1, container.param2)}";
-		int param1 = 5;
-		container.put("param1", new Integer(param1));
-		TestBean param2 = new TestBean();
-		container.put("param2", param2);
-		EasyMock.expect(target.returnStringFromIntAndObject(param1, param2)).andReturn(expected);
-		EasyMock.replay(new Object[] { target });
-
-		String result = (String) parser.parseExpression(expression).evaluate(context, null);
-		EasyMock.verify(new Object[] { target });
-		assertEquals(expected, result);
+	public void testParseLiteralExpressionStringAsEvalExpression() {
+		String expressionString = "value";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = String.class;
+		ExpressionVariable[] expressionVariables = null;
+		Expression exp = parser.parseExpression(parser.parseEvalExpressionString(expressionString),
+				expressionTargetType, expectedEvaluationResultType, expressionVariables);
+		TestBean target = new TestBean();
+		assertEquals("foo", exp.getValue(target));
 	}
 
-	public void testEmptyMethod() {
-
-		String expStr1 = "#{foo.bar()}";
-		Expression result1 = parser.parseExpression(expStr1);
-		assertNotNull(result1);
-		assertEquals(expStr1, result1.toString());
+	public void testParseLiteralExpression() {
+		String expressionString = "value";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = String.class;
+		ExpressionVariable[] expressionVariables = null;
+		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+				expressionVariables);
+		TestBean target = new TestBean();
+		assertEquals("value", exp.getValue(target));
 	}
 
-	public void testMethodWithParams() {
-
-		String expStr1 = "#{foo.bar(moe.curly, groucho.harpo)}";
-		Expression result1 = parser.parseExpression(expStr1);
-		assertNotNull(result1);
-		assertEquals(expStr1, result1.toString());
+	public void testParseExpressionWithVariables() {
+		String expressionString = "#{value}#{max}";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = String.class;
+		ExpressionVariable[] expressionVariables = new ExpressionVariable[] { new ExpressionVariable("max",
+				"#{maximum}") };
+		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+				expressionVariables);
+		TestBean target = new TestBean();
+		assertEquals("foo2", exp.getValue(target));
 	}
 
+	public void testParseExpressionWithVariables2() {
+		String expressionString = "#{value}#{bean.encode(value)}";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = String.class;
+		ExpressionVariable[] expressionVariables = null;
+		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+				expressionVariables);
+		TestBean target = new TestBean(new TestBean());
+		assertEquals("foo!foo", exp.getValue(target));
+	}
+
+	public void testParseExpressionCoerceToInteger() {
+		String expressionString = "#{maximum}#{max}";
+		Class expressionTargetType = TestBean.class;
+		Class expectedEvaluationResultType = Integer.class;
+		ExpressionVariable[] expressionVariables = new ExpressionVariable[] { new ExpressionVariable("max",
+				"#{maximum}") };
+		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+				expressionVariables);
+		TestBean target = new TestBean();
+		assertEquals(new Integer(22), exp.getValue(target));
+	}
+
+	public static class TestBean {
+		private String value = "foo";
+
+		private int maximum = 2;
+
+		private TestBean bean;
+
+		private List list = new ArrayList();
+
+		public TestBean() {
+			initList();
+		}
+
+		public TestBean(TestBean bean) {
+			this.bean = bean;
+			initList();
+		}
+
+		private void initList() {
+			list.add("1");
+			list.add("2");
+			list.add("3");
+		}
+
+		public TestBean getBean() {
+			return bean;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public String encode(String data) {
+			return "!" + data;
+		}
+
+		public void setValue(String value) {
+
+		}
+
+		public int getMaximum() {
+			return maximum;
+		}
+
+		public void setMaximum(int maximum) {
+			this.maximum = maximum;
+		}
+
+	}
 }

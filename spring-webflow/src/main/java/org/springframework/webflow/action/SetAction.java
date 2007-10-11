@@ -15,9 +15,7 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
@@ -34,7 +32,7 @@ public class SetAction extends AbstractAction {
 	/**
 	 * The expression for setting the scoped attribute value.
 	 */
-	private SettableExpression attributeExpression;
+	private Expression attributeExpression;
 
 	/**
 	 * The target scope.
@@ -52,7 +50,7 @@ public class SetAction extends AbstractAction {
 	 * @param scope the target scope of the attribute
 	 * @param valueExpression the evaluatable attribute value expression
 	 */
-	public SetAction(SettableExpression attributeExpression, ScopeType scope, Expression valueExpression) {
+	public SetAction(Expression attributeExpression, ScopeType scope, Expression valueExpression) {
 		Assert.notNull(attributeExpression, "The attribute expression is required");
 		Assert.notNull(scope, "The scope type is required");
 		Assert.notNull(valueExpression, "The value expression is required");
@@ -62,20 +60,9 @@ public class SetAction extends AbstractAction {
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
-		EvaluationContext evaluationContext = getEvaluationContext(context);
-		Object value = valueExpression.evaluate(context, evaluationContext);
+		Object value = valueExpression.getValue(context);
 		MutableAttributeMap scopeMap = scope.getScope(context);
-		attributeExpression.evaluateToSet(scopeMap, value, evaluationContext);
+		attributeExpression.setValue(scopeMap, value);
 		return success();
-	}
-
-	/**
-	 * Template method subclasses may override to customize the expression evaluation context. This implementation
-	 * returns null.
-	 * @param context the request context
-	 * @return the evaluation context
-	 */
-	protected EvaluationContext getEvaluationContext(RequestContext context) {
-		return null;
 	}
 }

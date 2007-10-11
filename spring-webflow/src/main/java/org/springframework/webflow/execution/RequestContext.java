@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.execution;
 
+import org.springframework.binding.message.MessageContext;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -44,9 +45,7 @@ import org.springframework.webflow.definition.TransitionDefinition;
  * code, e.g. a view implementation (JSP).
  * <p>
  * The {@link #getRequestScope() requestScope} property may be used as a store for arbitrary data that should exist for
- * the life of this object. Request-scoped data, along with all data in {@link #getFlashScope() flash scope},
- * {@link #getFlowScope() flow scope} and {@link #getConversationScope() conversation scope} is available for exposing
- * to view templates via a {@link #getModel() model} property.
+ * the life of this object.
  * <p>
  * The web flow system will ensure that a RequestContext object is local to the current thread. It can be safely
  * manipulated without needing to worry about concurrent access.
@@ -77,22 +76,22 @@ public interface RequestContext {
 	public StateDefinition getCurrentState() throws IllegalStateException;
 
 	/**
-	 * Returns a mutable accessor for accessing and/or setting attributes in request scope. <b>Request scoped attributes
+	 * Returns a mutable map for accessing and/or setting attributes in request scope. <b>Request scoped attributes
 	 * exist for the duration of this request only.</b>
 	 * @return the request scope
 	 */
 	public MutableAttributeMap getRequestScope();
 
 	/**
-	 * Returns a mutable accessor for accessing and/or setting attributes in flash scope. <b>Flash scoped attributes
-	 * exist untill the next event is signaled in the flow execution.</b>
+	 * Returns a mutable map for accessing and/or setting attributes in flash scope. <b>Flash scoped attributes exist
+	 * until the next event is signaled in the flow execution.</b>
 	 * @return the flash scope
 	 */
 	public MutableAttributeMap getFlashScope();
 
 	/**
-	 * Returns a mutable accessor for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist
-	 * for the life of the active flow session.</b>
+	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
+	 * the life of the active flow session.</b>
 	 * @return the flow scope
 	 * @see FlowSession
 	 */
@@ -133,6 +132,13 @@ public interface RequestContext {
 	public ExternalContext getExternalContext();
 
 	/**
+	 * Returns the message context of this request. Useful for recording messages during the course of flow execution
+	 * for display to the client.
+	 * @return the message context
+	 */
+	public MessageContext getMessageContext();
+
+	/**
 	 * Returns contextual information about the flow execution itself. Information in this context typically spans more
 	 * than one request.
 	 * @return the flow execution context
@@ -148,7 +154,7 @@ public interface RequestContext {
 
 	/**
 	 * Returns the last state transition that executed in this request.
-	 * @return the last transition, or <code>null</code> if no transition has occured yet
+	 * @return the last transition, or <code>null</code> if no transition has occurred yet
 	 */
 	public TransitionDefinition getLastTransition();
 
@@ -166,11 +172,10 @@ public interface RequestContext {
 	public void setAttributes(AttributeMap attributes);
 
 	/**
-	 * Returns the data model capturing the state of this context, suitable for exposing to clients (mostly web views).
-	 * Typically the model will contain the union of the data available in request, flash, session and conversation
-	 * scope.
-	 * @return the model that can be exposed to a client view for rendering purposes
+	 * Returns the context-relative URL of this flow execution. Needed by response writers that write out the URL of
+	 * this flow execution to allow calling back this execution in a subsequent request.
+	 * @throws IllegalStateException if the flow execution has not yet had its key assigned
+	 * @return the flow execution URL
 	 */
-	public AttributeMap getModel();
-
+	public String getFlowExecutionUrl() throws IllegalStateException;
 }

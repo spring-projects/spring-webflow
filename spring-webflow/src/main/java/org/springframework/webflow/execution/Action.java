@@ -94,9 +94,10 @@ public interface Action {
 	 * context information)
 	 * @return a logical result outcome, used as grounds for a transition in the calling flow (e.g. "success", "error",
 	 * "yes", "no", * ...)
-	 * @throws Exception a exception occured during action execution, either checked or unchecked; note, any
+	 * @throws Exception a exception occurred during action execution, either checked or unchecked; note, any
 	 * <i>recoverable</i> exceptions should be caught within this method and an appropriate result outcome returned
 	 * <i>or</i> be handled by the current state of the calling flow execution.
 	 */
+	// TODO consider changing the execute return value to a simple string for 2.0
 	public Event execute(RequestContext context) throws Exception;
 }

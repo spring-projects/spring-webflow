@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution.repository;
 
+import org.springframework.webflow.execution.FlowExecutionKey;
+
 /**
  * Thrown when the flow execution with the persistent identifier provided could not be found. This could occur if the
  * execution has been removed from the repository and a client still has a handle to the key.

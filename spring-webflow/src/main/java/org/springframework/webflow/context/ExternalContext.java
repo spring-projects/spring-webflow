@@ -15,12 +15,15 @@
  */
 package org.springframework.webflow.context;
 
+import java.io.PrintWriter;
+
+import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * A facade that provides normalized access to an external system that has interacted with Spring Web Flow.
+ * A facade that provides normalized access to an external system that has called into the Spring Web Flow system.
  * <p>
  * This context object provides a normalized interface for internal web flow artifacts to use to reason on and
  * manipulate the state of an external actor calling into SWF to execute flows. It represents the context about a
@@ -36,22 +39,31 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
 public interface ExternalContext {
 
 	/**
-	 * Returns the path (or identifier) of the application that is executing.
-	 * @return the application context path (e.g. "/myapp")
+	 * Returns the unique id of the flow definition invoked by this caller. For a "launch" request, this identifier is
+	 * used directly to create a new flow execution. For a "resume" request, this identifier provides additional flow
+	 * execution context.
+	 * @return the flow definition identifier, never null
+	 * @see #getFlowExecutionKey()
 	 */
-	public String getContextPath();
+	public String getFlowId();
 
 	/**
-	 * Returns the path (or identifier) of the dispatcher <i>within</i> the application that dispatched this request.
-	 * @return the dispatcher path (e.g. "/dispatcher")
+	 * Returns the unique key identifying the flow execution this client wishes to resume.
+	 * @return the flow execution key, may be null if this is not a resume request
 	 */
-	public String getDispatcherPath();
+	public String getFlowExecutionKey();
 
 	/**
-	 * Returns the path info of this external request. Could be null.
-	 * @return the request path info (e.g. "/flows.htm")
+	 * Returns the type of this client request. For example, this request may be a "GET" request or a "POST" request.
+	 * @return the request method
 	 */
-	public String getRequestPathInfo();
+	public String getRequestMethod();
+
+	/**
+	 * Returns the path of this request as a ordered list of fields.
+	 * @return the elements of the request path
+	 */
+	public RequestPath getRequestPath();
 
 	/**
 	 * Provides access to the parameters associated with the user request that led to SWF being called. This map is
@@ -91,5 +103,106 @@ public interface ExternalContext {
 	 * @return the mutable application attribute map
 	 */
 	public SharedAttributeMap getApplicationMap();
+
+	/**
+	 * Provides access to the context object for the current environment.
+	 * @return the environment specific context object
+	 */
+	public Object getContext();
+
+	/**
+	 * Provides access to the request object for the current environment.
+	 * @return the environment specific request object.
+	 */
+	public Object getRequest();
+
+	/**
+	 * Provides access to the response object for the current environment.
+	 * @return the environment specific response object.
+	 */
+	public Object getResponse();
+
+	/**
+	 * Get a writer for writing out a response.
+	 * @return the writer
+	 */
+	public PrintWriter getResponseWriter();
+
+	/**
+	 * Builds a context-relative flow definition URL, suitable for rendering links that a launch new execution of a flow
+	 * definition when accessed.
+	 * @param requestInfo data needed to build the flow definition path
+	 * @return the generated flow definition URL
+	 */
+	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo);
+
+	/**
+	 * Builds a flow execution URL, suitable for rendering links that resume a paused flow execution when accessed.
+	 * @param requestInfo data needed to build the flow execution URL
+	 * @param contextRelative whether the URL returned should be relative to this external context or absolute.
+	 * @return the generated flow execution URL
+	 */
+	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative);
+
+	/**
+	 * Encode the provided string using the encoding scheme of this external context.
+	 * @param string the string
+	 * @return the encoded string
+	 */
+	public String encode(String string);
+
+	/**
+	 * Request that a flow execution redirect be sent as the response. A flow execution redirect tells the caller to
+	 * resume a flow execution in a new request. Sets response committed to true.
+	 * @param requestInfo data needed to issue the flow execution redirect
+	 * @see #isResponseCommitted()
+	 */
+	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo);
+
+	/**
+	 * Request that a flow definition redirect be sent as the response. A flow definition redirect tells the caller to
+	 * start a new execution of the flow definition with the input provided.
+	 * @param requestInfo data needed to issue the flow definition redirect
+	 */
+	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo);
+
+	/**
+	 * Request that a external redirect be sent as the response. An external redirect tells the caller to access the
+	 * resource at the given resource URL. Sets response committed to true. Note: no special encoding is performed on
+	 * the string argument. Callers must perform their own encoding when necessary.
+	 * @param resourceUrl the resource URL string
+	 * @see #isResponseCommitted()
+	 */
+	public void sendExternalRedirect(String resourceUrl);
+
+	/**
+	 * Report that flow execution request processing ended with a "paused" result, indicating the flow execution paused
+	 * and will be waiting to resume on a subsequent request.
+	 * @param flowExecutionKey the flow execution key
+	 */
+	public void setPausedResult(String flowExecutionKey);
+
+	/**
+	 * Report that flow execution request processing ended with a "ended" result, indicating the flow execution
+	 * terminated.
+	 * @param flowExecutionKey the flow execution key, now invalid or null if never assigned
+	 */
+	public void setEndedResult(String flowExecutionKey);
+
+	/**
+	 * Report that flow execution request processing ended with a flow exception.
+	 * @param e the flow exception
+	 */
+	public void setExceptionResult(FlowException e);
+
+	/**
+	 * Returns true if the current request has already provisioned the response that will be sent back to the calling
+	 * system.
+	 * @return true if the response has been committed, false otherwise
+	 * @see #sendFlowExecutionRedirect(FlowExecutionRequestInfo)
+	 * @see #sendFlowDefinitionRedirect(FlowDefinitionRequestInfo)
+	 * @see #sendExternalRedirect(String)
+	 */
+	public boolean isResponseCommitted();
 
 }

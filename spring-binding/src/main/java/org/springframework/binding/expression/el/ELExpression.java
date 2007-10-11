@@ -3,68 +3,60 @@ package org.springframework.binding.expression.el;
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
+import javax.el.VariableMapper;
 
 import org.springframework.binding.expression.EvaluationAttempt;
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.EvaluationException;
-import org.springframework.binding.expression.SettableExpression;
+import org.springframework.binding.expression.Expression;
+import org.springframework.util.Assert;
 
 /**
  * Evaluates a parsed EL expression.
  * 
  * @author Jeremy Grelle
  */
-public class ELExpression implements SettableExpression {
+public class ELExpression implements Expression {
 
-	private ELContextFactory factory;
+	private ELContextFactory elContextFactory;
 
-	private ValueExpression expression;
+	private ValueExpression valueExpression;
 
-	public ELExpression(ELContextFactory factory, ValueExpression expression) {
-		this.factory = factory;
-		this.expression = expression;
-	}
-
-	public void evaluateToSet(Object target, Object value, EvaluationContext context) throws EvaluationException {
-		ELContext ctx = getELContext(target);
-		try {
-			expression.setValue(ctx, value);
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
-	}
-
-	public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
-		ELContext ctx = getELContext(target);
-		try {
-			return expression.getValue(ctx);
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
-	}
-
-	protected Class getType(Object target, EvaluationContext context) throws EvaluationException {
-		ELContext ctx = getELContext(target);
-		try {
-			return expression.getType(ctx);
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target, context), ex);
-		}
-	}
+	private VariableMapper variableMapper;
 
 	/**
-	 * Retrieves an {@link ELContext} instance, configured with a DefaultELResolver if no other resolvers have been
-	 * configured.
-	 * 
-	 * @return {@link ELContext} The thread-bound {@link ELContext} instance.
+	 * Creates a new el expression
+	 * @param factory the el context factory for creating the EL context that will be used during expression evaluation
+	 * @param valueExpression the value expression to evaluate
+	 * @param variableMapper the variable mapper containing variables needed during expression evaluation
 	 */
-	protected ELContext getELContext(Object target) {
-		ELContext ctx = factory.getEvaluationContext(target);
-		return ctx;
+	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, VariableMapper variableMapper) {
+		Assert.notNull(factory, "The ELContextFactory is required to evaluate EL expressions");
+		Assert.notNull(valueExpression, "The EL value expression is required for evaluation");
+		this.elContextFactory = factory;
+		this.valueExpression = valueExpression;
+		this.variableMapper = variableMapper;
+	}
+
+	public Object getValue(Object target) throws EvaluationException {
+		ELContext ctx = elContextFactory.getELContext(target, variableMapper);
+		try {
+			return valueExpression.getValue(ctx);
+		} catch (ELException ex) {
+			throw new EvaluationException(new EvaluationAttempt(this, target), ex);
+		}
+	}
+
+	public void setValue(Object target, Object value) throws EvaluationException {
+		ELContext ctx = elContextFactory.getELContext(target, variableMapper);
+		try {
+			valueExpression.setValue(ctx, value);
+		} catch (ELException ex) {
+			throw new EvaluationException(new EvaluationAttempt(this, target), ex);
+		}
 	}
 
 	public int hashCode() {
-		return expression.hashCode();
+		return valueExpression.hashCode();
 	}
 
 	public boolean equals(Object o) {
@@ -72,11 +64,11 @@ public class ELExpression implements SettableExpression {
 			return false;
 		}
 		ELExpression other = (ELExpression) o;
-		return expression.equals(other.expression);
+		return valueExpression.equals(other.valueExpression);
 	}
 
 	public String toString() {
-		return expression.getExpressionString();
+		return valueExpression.getExpressionString();
 	}
 
 }

@@ -31,29 +31,45 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	private boolean sessionStarting;
 
+	private int sessionCreatingCount;
+
+	private int sessionStartingCount;
+
+	private int sessionStartedCount;
+
 	private boolean started;
 
 	private boolean executing;
 
+	private int stateEnteringCount;
+
+	private int stateEnteredCount;
+
+	private int resumingCount;
+
 	private boolean paused;
+
+	private int pausedCount;
 
 	private int flowNestingLevel;
 
 	private boolean requestInProcess;
 
-	private int requestsSubmitted;
+	private int requestsSubmittedCount;
 
-	private int requestsProcessed;
+	private int requestsProcessedCount;
 
-	private int eventsSignaled;
+	private int eventSignaledCount;
 
 	private boolean stateEntering;
 
-	private int stateTransitions;
-
 	private boolean sessionEnding;
 
-	private int exceptionsThrown;
+	private int sessionEndingCount;
+
+	private int sessionEndedCount;
+
+	private int exceptionThrownCount;
 
 	/**
 	 * Is the flow execution running: it has started but not yet ended.
@@ -96,125 +112,174 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	 * Returns the number of requests submitted so far.
 	 */
 	public int getRequestsSubmittedCount() {
-		return requestsSubmitted;
+		return requestsSubmittedCount;
 	}
 
 	/**
 	 * Returns the number of requests processed so far.
 	 */
 	public int getRequestsProcessedCount() {
-		return requestsProcessed;
+		return requestsProcessedCount;
+	}
+
+	/**
+	 * Returns the number of sessions that have attempted to be created so far.
+	 */
+	public int getSessionCreatingCount() {
+		return sessionCreatingCount;
+	}
+
+	/**
+	 * Returns the number of sessions that have attempted to start so far.
+	 */
+	public int getSessionStartingCount() {
+		return sessionStartingCount;
+	}
+
+	/**
+	 * Returns the number of sessions that started so far.
+	 */
+	public int getSessionStartedCount() {
+		return sessionStartedCount;
+	}
+
+	/**
+	 * Returns the number of state entries attempted so far.
+	 */
+	public int getStateEnteringCount() {
+		return stateEnteringCount;
+	}
+
+	/**
+	 * Returns the number of states entered so far.
+	 */
+	public int getStateEnteredCount() {
+		return stateEnteredCount;
 	}
 
 	/**
 	 * Returns the number of events signaled so far.
 	 */
-	public int getEventsSignaledCount() {
-		return eventsSignaled;
+	public int getEventSignaledCount() {
+		return eventSignaledCount;
 	}
 
 	/**
-	 * Returns the number of state transitions executed so far.
+	 * Returns the number of times the flow execution has paused.
 	 */
-	public int getTransitionCount() {
-		return stateTransitions;
+	public int getPausedCount() {
+		return pausedCount;
+	}
+
+	/**
+	 * Returns the number of times the flow execution has resumed.
+	 */
+	public int getResumingCount() {
+		return resumingCount;
+	}
+
+	/**
+	 * Returns the number of sessions that have attempted to end so far.
+	 */
+	public int getSessionEndingCount() {
+		return sessionEndingCount;
+	}
+
+	/**
+	 * Returns the number of sessions that end so far.
+	 */
+	public int getSessionEndedCount() {
+		return sessionEndedCount;
 	}
 
 	/**
 	 * Returns the number of exceptions thrown.
 	 */
-	public int getExceptionsThrown() {
-		return exceptionsThrown;
+	public int getExceptionThrownCount() {
+		return exceptionThrownCount;
 	}
 
 	public void requestSubmitted(RequestContext context) {
 		Assert.state(!requestInProcess, "There is already a request being processed");
-		requestsSubmitted++;
+		requestsSubmittedCount++;
 		requestInProcess = true;
 	}
 
-	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
+	public void sessionCreating(RequestContext context, FlowDefinition definition) {
 		if (!context.getFlowExecutionContext().isActive()) {
 			Assert.state(!started, "The flow execution was already started");
-			flowNestingLevel = 0;
-			eventsSignaled = 0;
-			stateTransitions = 0;
+			started = true;
 		}
-		sessionStarting = true;
+		sessionCreatingCount++;
 	}
 
-	public void sessionCreated(RequestContext context, FlowSession session) {
-		Assert.state(sessionStarting, "The session should've been starting...");
-		if (session.isRoot()) {
-			Assert.state(!started, "The flow execution was already started");
-			executing = true;
-		} else {
-			assertStarted();
-			flowNestingLevel++;
-		}
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+		sessionStartingCount++;
+		sessionStarting = true;
+		flowNestingLevel++;
 	}
 
 	public void sessionStarted(RequestContext context, FlowSession session) {
 		Assert.state(sessionStarting, "The session should've been starting...");
 		sessionStarting = false;
-		if (session.isRoot()) {
-			Assert.state(!started, "The flow execution was already started");
-			started = true;
-		} else {
-			assertStarted();
-		}
+		sessionStartedCount++;
 	}
 
 	public void requestProcessed(RequestContext context) {
 		Assert.state(requestInProcess, "There is no request being processed");
-		requestsProcessed++;
+		requestsProcessedCount++;
 		requestInProcess = false;
 	}
 
 	public void eventSignaled(RequestContext context, Event event) {
-		eventsSignaled++;
+		eventSignaledCount++;
 	}
 
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
 		stateEntering = true;
+		stateEnteringCount++;
 	}
 
 	public void stateEntered(RequestContext context, StateDefinition newState, StateDefinition previousState) {
 		Assert.state(stateEntering, "State should've entering...");
 		stateEntering = false;
-		stateTransitions++;
+		stateEnteredCount++;
 	}
 
-	public void paused(RequestContext context, ViewSelection selectedView) {
+	public void paused(RequestContext context) {
 		executing = false;
 		paused = true;
+		pausedCount++;
 	}
 
-	public void resumed(RequestContext context) {
+	public void resuming(RequestContext context) {
 		executing = true;
 		paused = false;
+		resumingCount++;
 	}
 
 	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
 		sessionEnding = true;
+		sessionEndingCount++;
+		flowNestingLevel--;
 	}
 
 	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
 		assertStarted();
 		Assert.state(sessionEnding, "Should have been ending");
 		sessionEnding = false;
+		sessionEndedCount++;
 		if (session.isRoot()) {
 			Assert.state(flowNestingLevel == 0, "The flow execution should have ended");
 			started = false;
 			executing = false;
 		} else {
-			flowNestingLevel--;
 			Assert.state(started, "The flow execution prematurely ended");
 		}
 	}
 
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-		exceptionsThrown++;
+		exceptionThrownCount++;
 	}
 
 	/**
@@ -230,8 +295,19 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	public void reset() {
 		started = false;
 		executing = false;
-		requestsSubmitted = 0;
-		requestsProcessed = 0;
-		exceptionsThrown = 0;
+		requestsSubmittedCount = 0;
+		requestsProcessedCount = 0;
+		sessionCreatingCount = 0;
+		sessionStartingCount = 0;
+		sessionStartedCount = 0;
+		stateEnteringCount = 0;
+		stateEnteredCount = 0;
+		eventSignaledCount = 0;
+		pausedCount = 0;
+		resumingCount = 0;
+		sessionEndingCount = 0;
+		sessionEndedCount = 0;
+		exceptionThrownCount = 0;
+		flowNestingLevel = 0;
 	}
 }

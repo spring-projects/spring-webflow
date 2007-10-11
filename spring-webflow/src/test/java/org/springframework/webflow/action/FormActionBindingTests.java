@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -49,11 +50,12 @@ public class FormActionBindingTests extends TestCase {
 
 	public void testMessageCodesOnBindFailure() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setPathInfo("/fooFlow");
 		request.setMethod("POST");
 		request.addParameter("prop", "A");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockRequestContext context = new MockRequestContext();
-		context.setExternalContext(new ServletExternalContext(null, request, response));
+		context.setExternalContext(new ServletExternalContext(new MockServletContext(), request, response));
 		context.setAttribute("method", "bindAndValidate");
 
 		// use a FormAction to do the binding

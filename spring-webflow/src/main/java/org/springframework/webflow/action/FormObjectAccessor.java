@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
@@ -24,10 +24,10 @@ import org.springframework.webflow.execution.ScopeType;
  * Convenience helper that encapsulates logic on how to retrieve and expose form objects and associated errors to and
  * from a flow execution request context.
  * <p>
- * <b>Note</b>: The form object available under the well known attribute name {@link #CURRENT_FORM_OBJECT_ATTRIBUTE}
- * will be the last ("current") form object set in the request context. The same is true for the associated errors
- * object. This implies that special care should be taken when accessing the form object using this alias if there are
- * multiple form objects available in the flow execution request context!
+ * <b>Note</b>: The form object available under the well known attribute name will be the last ("current") form object
+ * set in the request context. The same is true for the associated errors object. This implies that special care should
+ * be taken when accessing the form object using this alias if there are multiple form objects available in the flow
+ * execution request context!
  * 
  * @see org.springframework.webflow.execution.RequestContext
  * @see org.springframework.validation.Errors
@@ -53,8 +53,7 @@ public class FormObjectAccessor {
 	/**
 	 * The errors prefix.
 	 */
-	// use deprecated API to remain compatible with Spring 1.2.x
-	private static final String ERRORS_PREFIX = BindException.ERROR_KEY_PREFIX;
+	private static final String ERRORS_PREFIX = BindingResult.MODEL_KEY_PREFIX;
 
 	/**
 	 * The wrapped request context.
@@ -86,8 +85,7 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Gets the form object from the context, using the well-known attribute name {@link #CURRENT_FORM_OBJECT_ATTRIBUTE}.
-	 * Will try all scopes.
+	 * Gets the form object from the context, using the well-known attribute name. Will try all scopes.
 	 * @return the form object, or null if not found
 	 */
 	public Object getCurrentFormObject() {
@@ -107,7 +105,7 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Gets the form object from the context, using the well-known attribute name {@link #CURRENT_FORM_OBJECT_ATTRIBUTE}.
+	 * Gets the form object from the context, using the well-known attribute name.
 	 * @param scopeType the scope to obtain the form object from
 	 * @return the form object, or null if not found
 	 */
@@ -116,8 +114,7 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Expose given form object using the well known alias {@link #CURRENT_FORM_OBJECT_ATTRIBUTE} in the specified
-	 * scope.
+	 * Expose given form object using the well known alias in the specified scope.
 	 * @param formObject the form object
 	 * @param scopeType the scope in which to expose the form object
 	 */
@@ -160,8 +157,8 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Gets the form object <code>Errors</code> tracker from the context, using the form object name
-	 * {@link #CURRENT_FORM_OBJECT_ATTRIBUTE}. This method will search all scopes.
+	 * Gets the form object <code>Errors</code> tracker from the context, using the form object name. This method will
+	 * search all scopes.
 	 * @return the form object Errors tracker, or null if not found
 	 */
 	public Errors getCurrentFormErrors() {
@@ -181,8 +178,7 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Gets the form object <code>Errors</code> tracker from the context, using the form object name
-	 * {@link #CURRENT_FORM_OBJECT_ATTRIBUTE}.
+	 * Gets the form object <code>Errors</code> tracker from the context, using the form object name.
 	 * @param scopeType the scope to obtain the errors from
 	 * @return the form object Errors tracker, or null if not found
 	 */
@@ -191,8 +187,7 @@ public class FormObjectAccessor {
 	}
 
 	/**
-	 * Expose given errors instance using the well known alias {@link #CURRENT_FORM_OBJECT_ATTRIBUTE} in the specified
-	 * scope.
+	 * Expose given errors instance using the well known alias in the specified scope.
 	 * @param errors the errors instance
 	 * @param scopeType the scope in which to expose the errors instance
 	 */
@@ -203,7 +198,7 @@ public class FormObjectAccessor {
 	/**
 	 * Gets the form object <code>Errors</code> tracker from the context, using the specified form object name.
 	 * @param formObjectName the name of the Errors object, which will be prefixed with
-	 * {@link BindException#ERROR_KEY_PREFIX}
+	 * {@link BindingResult#MODEL_KEY_PREFIX}
 	 * @param scopeType the scope to obtain the errors from
 	 * @return the form object errors instance, or null if not found
 	 */

@@ -17,11 +17,9 @@ package org.springframework.binding.expression.support;
 
 import java.util.Collection;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.SetValueAttempt;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -30,7 +28,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class CollectionAddingExpression implements SettableExpression {
+public class CollectionAddingExpression implements Expression {
 
 	/**
 	 * The expression that resolves a mutable collection reference.
@@ -45,14 +43,14 @@ public class CollectionAddingExpression implements SettableExpression {
 		this.collectionExpression = collectionExpression;
 	}
 
-	public Object evaluate(Object target, EvaluationContext context) throws EvaluationException {
-		return collectionExpression.evaluate(target, context);
+	public Object getValue(Object target) throws EvaluationException {
+		return collectionExpression.getValue(target);
 	}
 
-	public void evaluateToSet(Object target, Object value, EvaluationContext context) throws EvaluationException {
-		Object result = evaluate(target, context);
+	public void setValue(Object target, Object value) throws EvaluationException {
+		Object result = getValue(target);
 		if (result == null) {
-			throw new EvaluationException(new SetValueAttempt(this, target, value, null), new IllegalArgumentException(
+			throw new EvaluationException(new SetValueAttempt(this, target, value), new IllegalArgumentException(
 					"The collection expression evaluated to a [null] reference"));
 		}
 		Assert.isInstanceOf(Collection.class, result, "Not a collection: ");

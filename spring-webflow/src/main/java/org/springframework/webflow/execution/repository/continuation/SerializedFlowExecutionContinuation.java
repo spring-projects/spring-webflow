@@ -24,6 +24,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -39,7 +40,7 @@ import org.springframework.webflow.execution.FlowExecution;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-public class SerializedFlowExecutionContinuation extends FlowExecutionContinuation implements Externalizable {
+class SerializedFlowExecutionContinuation extends FlowExecutionContinuation implements Externalizable {
 
 	/**
 	 * The serialized flow execution.
@@ -118,6 +119,22 @@ public class SerializedFlowExecutionContinuation extends FlowExecutionContinuati
 		} catch (IOException e) {
 			throw new IllegalStateException();
 		}
+	}
+
+	public boolean equals(Object o) {
+		if (!(o instanceof SerializedFlowExecutionContinuation)) {
+			return false;
+		}
+		SerializedFlowExecutionContinuation c = (SerializedFlowExecutionContinuation) o;
+		return Arrays.equals(flowExecutionData, c.flowExecutionData);
+	}
+
+	public int hashCode() {
+		int hashCode = 0;
+		for (int i = 0; i < flowExecutionData.length; i++) {
+			hashCode += flowExecutionData[i];
+		}
+		return hashCode;
 	}
 
 	// implementing Externalizable for custom serialization

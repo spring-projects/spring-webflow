@@ -15,11 +15,10 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.context.FlowExecutionRequestInfo;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -35,9 +34,8 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
-import org.springframework.webflow.execution.FlowSessionStatus;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * Default request control context implementation used internally by the web flow system. This class is closely coupled
@@ -45,14 +43,11 @@ import org.springframework.webflow.execution.ViewSelection;
  * complete flow execution implementation based on a finite state machine.
  * 
  * @see FlowExecutionImpl
- * @see FlowSessionImpl
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
 class RequestControlContextImpl implements RequestControlContext {
-
-	private static final Log logger = LogFactory.getLog(RequestControlContextImpl.class);
 
 	/**
 	 * The owning flow execution carrying out this request.
@@ -63,6 +58,11 @@ class RequestControlContextImpl implements RequestControlContext {
 	 * A source context for the caller who initiated this request.
 	 */
 	private ExternalContext externalContext;
+
+	/**
+	 * A source context for messages to record during this flow execution request.
+	 */
+	private MessageContext messageContext;
 
 	/**
 	 * The request scope data map. Never null, initially empty.
@@ -89,11 +89,14 @@ class RequestControlContextImpl implements RequestControlContext {
 	 * Create a new request context.
 	 * @param flowExecution the owning flow execution
 	 * @param externalContext the external context that originated the flow execution request
+	 * @param messageContext the message context for recording status or validation messages during the execution of
+	 * this request
 	 */
-	public RequestControlContextImpl(FlowExecutionImpl flowExecution, ExternalContext externalContext) {
-		Assert.notNull(flowExecution, "The owning flow execution is required");
+	public RequestControlContextImpl(FlowExecutionImpl flowExecution, ExternalContext externalContext,
+			MessageContext messageContext) {
 		this.flowExecution = flowExecution;
 		this.externalContext = externalContext;
+		this.messageContext = messageContext;
 	}
 
 	// implementing RequestContext
@@ -130,6 +133,10 @@ class RequestControlContextImpl implements RequestControlContext {
 		return externalContext;
 	}
 
+	public MessageContext getMessageContext() {
+		return messageContext;
+	}
+
 	public FlowExecutionContext getFlowExecutionContext() {
 		return flowExecution;
 	}
@@ -154,102 +161,62 @@ class RequestControlContextImpl implements RequestControlContext {
 		}
 	}
 
-	public AttributeMap getModel() {
-		return getConversationScope().union(getFlowScope()).union(getFlashScope()).union(getRequestScope());
-	}
-
 	// implementing RequestControlContext
 
-	public void setLastEvent(Event lastEvent) {
-		this.lastEvent = lastEvent;
+	public String getFlowExecutionUrl() {
+		if (flowExecution.getKey() == null) {
+			throw new IllegalStateException(
+					"Flow execution key not yet assigned; unable to generate flow execution URL at this time");
+		} else {
+			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowExecution.getFlowId(),
+					flowExecution.getKey().toString());
+			return externalContext.buildFlowExecutionUrl(requestInfo, true);
+		}
+	}
+
+	public void sendFlowExecutionRedirect() {
+		if (flowExecution.getKey() == null) {
+			throw new IllegalStateException(
+					"Flow execution key not yet assigned; unable to send a flow execution redirect request");
+		} else {
+			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowExecution.getFlowId(),
+					flowExecution.getKey().toString());
+			externalContext.sendFlowExecutionRedirect(requestInfo);
+		}
+	}
+
+	public void setCurrentState(State state) {
+		flowExecution.setCurrentState(state, this);
 	}
 
 	public void setLastTransition(Transition lastTransition) {
 		this.lastTransition = lastTransition;
 	}
 
-	public void setCurrentState(State state) {
-		getExecutionListeners().fireStateEntering(this, state);
-		State previousState = getCurrentStateInternal();
-		flowExecution.setCurrentState(state);
-		if (previousState == null) {
-			getActiveSession().setStatus(FlowSessionStatus.ACTIVE);
-		}
-		getExecutionListeners().fireStateEntered(this, previousState);
+	public FlowExecutionKey assignFlowExecutionKey() {
+		return flowExecution.assignKey();
 	}
 
-	public ViewSelection start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
-		if (input == null) {
-			// create a mutable map so entries can be added by listeners!
-			input = new LocalAttributeMap();
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Activating new session for flow '" + flow.getId() + "' in state '"
-					+ flow.getStartState().getId() + "' with input " + input);
-		}
-		getExecutionListeners().fireSessionStarting(this, flow, input);
-		FlowSession session = flowExecution.activateSession(flow);
-		getExecutionListeners().fireSessionCreated(this, session);
-		ViewSelection selectedView = flow.start(this, input);
-		getExecutionListeners().fireSessionStarted(this, session);
-		return selectedView;
+	public boolean getAlwaysRedirectOnPause() {
+		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
+		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
 
-	public ViewSelection signalEvent(Event event) throws FlowExecutionException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Signaling event '" + event.getId() + "' in state '" + getCurrentState().getId()
-					+ "' of flow '" + getActiveFlow().getId() + "'");
-		}
-		setLastEvent(event);
-		getExecutionListeners().fireEventSignaled(this, event);
-		ViewSelection selectedView = getActiveFlowInternal().onEvent(this);
-		return selectedView;
+	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
+		flowExecution.start(flow, input, this);
+	}
+
+	public void handleEvent(Event event) throws FlowExecutionException {
+		this.lastEvent = event;
+		flowExecution.handleEvent(event, this);
+	}
+
+	public void execute(Transition transition) {
+		flowExecution.execute(transition, this);
 	}
 
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {
-		FlowSession session = getFlowExecutionContext().getActiveSession();
-		getExecutionListeners().fireSessionEnding(this, session, output);
-		getActiveFlowInternal().end(this, output);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Ending active session " + session + "; exposed session output is " + output);
-		}
-		session = flowExecution.endActiveFlowSession();
-		getExecutionListeners().fireSessionEnded(this, session, output);
-		return session;
-	}
-
-	public ViewSelection execute(Transition transition) {
-		return transition.execute(getCurrentStateInternal(), this);
-	}
-
-	// internal helpers
-
-	/**
-	 * Returns the execution listeners for the flow execution of this request context.
-	 */
-	protected FlowExecutionListeners getExecutionListeners() {
-		return flowExecution.getListeners();
-	}
-
-	/**
-	 * Returns the active flow in the flow execution of this request context.
-	 */
-	protected Flow getActiveFlowInternal() {
-		return (Flow) getActiveSession().getDefinition();
-	}
-
-	/**
-	 * Returns the current state in the flow execution of this request context.
-	 */
-	protected State getCurrentStateInternal() {
-		return (State) getActiveSession().getState();
-	}
-
-	/**
-	 * Returns the active flow session in the flow execution of this request context.
-	 */
-	protected FlowSessionImpl getActiveSession() {
-		return flowExecution.getActiveSessionInternal();
+		return flowExecution.endActiveFlowSession(output, this);
 	}
 
 	public String toString() {

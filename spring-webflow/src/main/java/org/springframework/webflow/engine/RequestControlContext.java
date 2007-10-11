@@ -19,17 +19,16 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * Mutable control interface used to manipulate an ongoing flow execution in the context of one client request.
  * Primarily used internally by the various flow artifacts when they are invoked.
  * <p>
  * This interface acts as a facade for core definition constructs such as the central <code>Flow</code> and
- * <code>State</code> classes, abstracting away details about the runtime execution machine defined in the
- * {@link org.springframework.webflow.engine.impl execution engine implementation} package.
+ * <code>State</code> classes, abstracting away details about the runtime execution machine.
  * <p>
  * Note this type is not the same as the {@link FlowExecutionContext}. Objects of this type are <i>request specific</i>:
  * they provide a control interface for manipulating exactly one flow execution locally from exactly one request. A
@@ -47,12 +46,12 @@ import org.springframework.webflow.execution.ViewSelection;
 public interface RequestControlContext extends RequestContext {
 
 	/**
-	 * Record the last event signaled in the executing flow. This method will be called as part of signaling an event in
-	 * a flow to indicate the 'lastEvent' that was signaled.
-	 * @param lastEvent the last event signaled
-	 * @see Flow#onEvent(RequestControlContext)
+	 * Record the current state that has entered in the executing flow. This method will be called as part of entering a
+	 * new state by the State type itself.
+	 * @param state the current state
+	 * @see State#enter(RequestControlContext)
 	 */
-	public void setLastEvent(Event lastEvent);
+	public void setCurrentState(State state);
 
 	/**
 	 * Record the last transition that executed in the executing flow. This method will be called as part of executing a
@@ -63,12 +62,10 @@ public interface RequestControlContext extends RequestContext {
 	public void setLastTransition(Transition lastTransition);
 
 	/**
-	 * Record the current state that has entered in the executing flow. This method will be called as part of entering a
-	 * new state by the State type itself.
-	 * @param state the current state
-	 * @see State#enter(RequestControlContext)
+	 * Assign the ongoing flow execution its flow execution key. This method will be called before a state is about to
+	 * render a view and pause the flow execution.
 	 */
-	public void setCurrentState(State state);
+	public FlowExecutionKey assignFlowExecutionKey();
 
 	/**
 	 * Spawn a new flow session and activate it in the currently executing flow. Also transitions the spawned flow to
@@ -77,26 +74,22 @@ public interface RequestControlContext extends RequestContext {
 	 * This will start a new flow session in the current flow execution, which is already active.
 	 * @param flow the flow to start, its <code>start()</code> method will be called
 	 * @param input initial contents of the newly created flow session (may be <code>null</code>, e.g. empty)
-	 * @return the selected starting view, which returns control to the client and requests that a view be rendered with
-	 * model data
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow during execution of this
 	 * start operation
 	 * @see Flow#start(RequestControlContext, MutableAttributeMap)
 	 */
-	public ViewSelection start(Flow flow, MutableAttributeMap input) throws FlowExecutionException;
+	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException;
 
 	/**
-	 * Signals the occurence of an event in the current state of this flow execution request context. This method should
-	 * be called by clients that report internal event occurences, such as action states. The <code>onEvent()</code>
-	 * method of the flow involved in the flow execution will be called.
-	 * @param event the event that occured
-	 * @return the next selected view, which returns control to the client and requests that a view be rendered with
-	 * model data
+	 * Signals the occurrence of an event in the current state of this flow execution request context. This method
+	 * should be called by clients that report internal event occurrences, such as action states. The
+	 * <code>onEvent()</code> method of the flow involved in the flow execution will be called.
+	 * @param event the event that occurred
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow during execution of this
 	 * signalEvent operation
-	 * @see Flow#onEvent(RequestControlContext)
+	 * @see Flow#handleEvent(RequestControlContext)
 	 */
-	public ViewSelection signalEvent(Event event) throws FlowExecutionException;
+	public void handleEvent(Event event) throws FlowExecutionException;
 
 	/**
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
@@ -113,9 +106,21 @@ public interface RequestControlContext extends RequestContext {
 	 * Execute this transition out of the current source state. Allows for privileged execution of an arbitrary
 	 * transition.
 	 * @param transition the transition
-	 * @return a new view selection
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
-	public ViewSelection execute(Transition transition);
+	public void execute(Transition transition);
+
+	/**
+	 * Returns true if the 'always redirect pause' flow execution attribute is set to true, false otherwise.
+	 * @return true or false
+	 */
+	public boolean getAlwaysRedirectOnPause();
+
+	/**
+	 * Request that a redirect be sent to this flow execution after the current request has processed. The current flow
+	 * execution must have its key assigned for this operation to be supported.
+	 * @throws IllegalStateException if the flow execution has not yet had its key assigned
+	 */
+	public void sendFlowExecutionRedirect() throws IllegalStateException;
 
 }

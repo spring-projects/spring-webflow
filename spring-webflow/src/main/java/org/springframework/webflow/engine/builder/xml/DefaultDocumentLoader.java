@@ -87,7 +87,6 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	/**
 	 * Set a SAX entity resolver to be used for parsing. Can be overridden for custom entity resolution, for example
 	 * relative to some specific base path.
-	 * @see org.springframework.webflow.engine.builder.xml.WebFlowEntityResolver
 	 */
 	public void setEntityResolver(EntityResolver entityResolver) {
 		this.entityResolver = entityResolver;

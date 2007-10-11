@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.action;
 
-import java.lang.reflect.Method;
-
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.PropertyEditorRegistry;
@@ -26,7 +24,7 @@ import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MessageCodesResolver;
@@ -36,7 +34,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.util.DispatchMethodInvoker;
-import org.springframework.webflow.util.ReflectionUtils;
 
 /**
  * Multi-action that implements common logic dealing with input forms. This class leverages the Spring Web data binding
@@ -241,20 +238,6 @@ import org.springframework.webflow.util.ReflectionUtils;
  * @author Keith Donald
  */
 public class FormAction extends MultiAction implements InitializingBean {
-
-	/*
-	 * Implementation note: Uses deprecated DataBinder.getErrors() to remain compatible with Spring 1.2.x.
-	 */
-
-	/*
-	 * Implementation note: Introspects BindException at class init time to preserve 1.2.x compatability.
-	 */
-	private static boolean hasPropertyEditorRegistryAccessor;
-
-	static {
-		hasPropertyEditorRegistryAccessor = ClassUtils
-				.hasMethod(BindException.class, "getPropertyEditorRegistry", null);
-	}
 
 	/**
 	 * The default form object name ("formObject").
@@ -510,7 +493,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Executing validation");
 			}
-			doValidate(context, formObject, binder.getErrors());
+			doValidate(context, formObject, binder.getBindingResult());
 		} else {
 			if (logger.isDebugEnabled()) {
 				if (getValidator() == null) {
@@ -520,8 +503,8 @@ public class FormAction extends MultiAction implements InitializingBean {
 				}
 			}
 		}
-		putFormErrors(context, binder.getErrors());
-		return binder.getErrors().hasErrors() ? error() : success();
+		putFormErrors(context, binder.getBindingResult());
+		return binder.getBindingResult().hasErrors() ? error() : success();
 	}
 
 	/**
@@ -542,8 +525,8 @@ public class FormAction extends MultiAction implements InitializingBean {
 		Object formObject = getFormObject(context);
 		DataBinder binder = createBinder(context, formObject);
 		doBind(context, binder);
-		putFormErrors(context, binder.getErrors());
-		return binder.getErrors().hasErrors() ? error() : success();
+		putFormErrors(context, binder.getBindingResult());
+		return binder.getBindingResult().hasErrors() ? error() : success();
 	}
 
 	/**
@@ -635,7 +618,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating new form errors for object with name '" + getFormObjectName() + "'");
 		}
-		Errors errors = createBinder(context, formObject).getErrors();
+		Errors errors = createBinder(context, formObject).getBindingResult();
 		putFormErrors(context, errors);
 		return errors;
 	}
@@ -691,8 +674,8 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 */
 	private boolean formErrorsValid(RequestContext context, Object formObject) {
 		Errors errors = getFormObjectAccessor(context).getFormErrors(getFormObjectName(), getFormErrorsScope());
-		if (errors instanceof BindException) {
-			BindException be = (BindException) errors;
+		if (errors instanceof BindingResult) {
+			BindingResult be = (BindingResult) errors;
 			if (be.getTarget() != formObject) {
 				if (logger.isInfoEnabled()) {
 					logger.info("Inconsistency detected: the Errors instance in '" + getFormErrorsScope()
@@ -715,29 +698,9 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param context the flow execution request context
 	 */
 	private void reinstallPropertyEditors(RequestContext context) {
-		BindException errors = (BindException) getFormObjectAccessor(context).getFormErrors(getFormObjectName(),
+		BindingResult errors = (BindingResult) getFormObjectAccessor(context).getFormErrors(getFormObjectName(),
 				getFormErrorsScope());
-		registerPropertyEditors(context, getPropertyEditorRegistry(errors));
-	}
-
-	/**
-	 * Obtain a property editor registry from given bind exception (errors instance).
-	 */
-	private PropertyEditorRegistry getPropertyEditorRegistry(BindException errors) {
-		Method accessor;
-		try {
-			if (hasPropertyEditorRegistryAccessor) {
-				accessor = errors.getClass().getMethod("getPropertyEditorRegistry", null);
-			} else {
-				// only way to get at the registry in 1.2.8 or <.
-				accessor = errors.getClass().getDeclaredMethod("getBeanWrapper", null);
-				accessor.setAccessible(true);
-			}
-		} catch (NoSuchMethodException e) {
-			throw new IllegalStateException(
-					"Unable to resolve property editor registry accessor method as expected - this should not happen");
-		}
-		return (PropertyEditorRegistry) ReflectionUtils.invokeMethod(accessor, errors);
+		registerPropertyEditors(context, errors.getPropertyEditorRegistry());
 	}
 
 	/**
@@ -852,8 +815,8 @@ public class FormAction extends MultiAction implements InitializingBean {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Binding completed for form object with name '" + binder.getObjectName()
 					+ "', post-bind formObject toString = " + binder.getTarget());
-			logger.debug("There are [" + binder.getErrors().getErrorCount() + "] errors, details: "
-					+ binder.getErrors().getAllErrors());
+			logger.debug("There are [" + binder.getBindingResult().getErrorCount() + "] errors, details: "
+					+ binder.getBindingResult().getAllErrors());
 		}
 	}
 

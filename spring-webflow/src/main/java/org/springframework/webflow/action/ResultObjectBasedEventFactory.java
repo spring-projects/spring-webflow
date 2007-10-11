@@ -19,7 +19,6 @@ import org.springframework.core.JdkVersion;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
  * Result object-to-event adapter interface that tries to do a sensible conversion of the result object into a web flow
@@ -31,13 +30,13 @@ import org.springframework.webflow.execution.support.EventFactorySupport;
  * </tr>
  * <tr>
  * <td>null</td>
- * <td>{@link org.springframework.webflow.execution.support.EventFactorySupport#getNullEventId()}</td>
+ * <td>{@link org.springframework.webflow.action.EventFactorySupport#getNullEventId()}</td>
  * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.Boolean} or boolean</td>
- * <td>{@link org.springframework.webflow.execution.support.EventFactorySupport#getYesEventId()}/
- * {@link org.springframework.webflow.execution.support.EventFactorySupport#getNoEventId()}</td>
+ * <td>{@link org.springframework.webflow.action.EventFactorySupport#getYesEventId()}/
+ * {@link org.springframework.webflow.action.EventFactorySupport#getNoEventId()}</td>
  * <td>&nbsp;</td>
  * </tr>
  * <tr>

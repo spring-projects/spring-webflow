@@ -20,39 +20,162 @@ import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.context.ExternalContextHolder;
+import org.springframework.webflow.context.FlowDefinitionRequestInfo;
+import org.springframework.webflow.context.FlowExecutionRequestInfo;
+import org.springframework.webflow.context.RequestPath;
+import org.springframework.webflow.executor.FlowExecutor;
+import org.springframework.webflow.test.MockParameterMap;
 
 /**
  * Unit tests for {@link ServletExternalContext}.
  */
 public class ServletExternalContextTests extends TestCase {
 
-	private ServletExternalContext context = new ServletExternalContext(new MockServletContext(),
-			new MockHttpServletRequest(), new MockHttpServletResponse());
+	private MockHttpServletRequest request;
 
-	public void testApplicationMap() {
-		assertEquals(1, context.getApplicationMap().size());
-		context.getApplicationMap().put("foo", "bar");
-		assertEquals("bar", context.getApplicationMap().get("foo"));
-		assertEquals("bar", context.getContext().getAttribute("foo"));
+	private MockHttpServletResponse response;
+
+	private FlowExecutor flowExecutor;
+
+	private ServletExternalContext context;
+
+	protected void setUp() {
+		request = new MockHttpServletRequest();
+		response = new MockHttpServletResponse();
+		flowExecutor = new StubFlowExecutor();
 	}
 
-	public void testSessionMap() {
-		assertEquals(0, context.getSessionMap().size());
-		context.getSessionMap().put("foo", "bar");
-		assertEquals("bar", context.getSessionMap().get("foo"));
-		assertEquals("bar", context.getRequest().getSession().getAttribute("foo"));
+	public void testProcessLaunchFlowRequest() throws Exception {
+		request.setPathInfo("/booking");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("booking", context.getFlowId());
 	}
 
-	public void testRequestMap() {
-		assertEquals(0, context.getRequestMap().size());
-		context.getRequestMap().put("foo", "bar");
-		assertEquals("bar", context.getRequestMap().get("foo"));
-		assertEquals("bar", context.getRequest().getAttribute("foo"));
+	public void testProcessLaunchFlowRequestTrailingSlash() throws Exception {
+		request.setPathInfo("/booking/");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("booking", context.getFlowId());
 	}
 
-	public void testOther() {
-		assertEquals(null, context.getRequestPathInfo());
-		assertEquals("", context.getDispatcherPath());
-		assertNotNull(context.getResponse());
+	public void testProcessLaunchFlowRequestElements() throws Exception {
+		request.setPathInfo("/users/1");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("users", context.getFlowId());
+		assertEquals(context.getRequestPath().getElement(0), "1");
 	}
+
+	public void testProcessLaunchFlowMultipleRequestElements() throws Exception {
+		request.setPathInfo("/users/1/foo/bar//baz/");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("users", context.getFlowId());
+		assertEquals("1", context.getRequestPath().getElement(0));
+		assertEquals("foo", context.getRequestPath().getElement(1));
+		assertEquals("bar", context.getRequestPath().getElement(2));
+		assertEquals("", context.getRequestPath().getElement(3));
+		assertEquals("baz", context.getRequestPath().getElement(4));
+	}
+
+	public void testProcessResumeFlowExecution() throws Exception {
+		request.setPathInfo("/executions/booking/_c12345_k12345");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("booking", context.getFlowId());
+		assertEquals("_c12345_k12345", context.getFlowExecutionKey());
+	}
+
+	public void testExternalContextUnbound() throws Exception {
+		request.setPathInfo("/executions/booking/_c12345_k12345");
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		try {
+			ExternalContextHolder.getExternalContext();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
+	}
+
+	public void testNoRequestPathInfo() {
+		request.setPathInfo(null);
+		try {
+			context = new ServletExternalContext(new MockServletContext(), request, response);
+			fail("Should have failed");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
+	public void testSendFlowExecutionRedirect() throws Exception {
+		request.setPathInfo("/users/1");
+		flowExecutor = new FlowExecutor() {
+			public void execute(ExternalContext context) {
+				context.sendFlowExecutionRedirect(new FlowExecutionRequestInfo("users", "_c12345_k12345"));
+			}
+		};
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("/executions/users/_c12345_k12345", response.getRedirectedUrl());
+	}
+
+	public void testFlowExecutionRedirectAttemptOnEnd() throws Exception {
+		request.setPathInfo("/users/1");
+		flowExecutor = new FlowExecutor() {
+			public void execute(ExternalContext context) {
+				context.sendFlowExecutionRedirect(new FlowExecutionRequestInfo("users", "_c12345_k12345"));
+				context.setEndedResult("_c12345_k12345");
+			}
+		};
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		try {
+			context.executeFlowRequest(flowExecutor);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
+	}
+
+	public void testSendFlowDefinitionRedirect() throws Exception {
+		request.setPathInfo("/users/1");
+		flowExecutor = new FlowExecutor() {
+			public void execute(ExternalContext context) {
+				MockParameterMap parameters = new MockParameterMap();
+				parameters.put("foo", "bar");
+				parameters.put("bar", "baz");
+				RequestPath requestPath = new RequestPath("/1/you&me");
+				FlowDefinitionRequestInfo requestInfo = new FlowDefinitionRequestInfo("customers", requestPath,
+						parameters, "frag");
+				context.sendFlowDefinitionRedirect(requestInfo);
+				context.setEndedResult(null);
+			}
+		};
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("/customers/1/you%26me?foo=bar&bar=baz#frag", response.getRedirectedUrl());
+	}
+
+	public void testSendExternalRedirect() throws Exception {
+		request.setPathInfo("/users/1");
+		flowExecutor = new FlowExecutor() {
+			public void execute(ExternalContext context) {
+				context.sendExternalRedirect("/foo/bar/baz");
+				context.setEndedResult(null);
+			}
+		};
+		context = new ServletExternalContext(new MockServletContext(), request, response);
+		context.executeFlowRequest(flowExecutor);
+		assertEquals("/foo/bar/baz", response.getRedirectedUrl());
+	}
+
+	public class StubFlowExecutor implements FlowExecutor {
+		public void execute(ExternalContext context) {
+			assertNotNull(ExternalContextHolder.getExternalContext());
+		}
+	}
+
 }

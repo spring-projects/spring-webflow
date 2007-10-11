@@ -21,6 +21,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecutionContext;
+import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
 
 /**
@@ -31,6 +32,8 @@ import org.springframework.webflow.execution.FlowSession;
  * @author Keith Donald
  */
 public class MockFlowExecutionContext implements FlowExecutionContext {
+
+	private FlowExecutionKey key;
 
 	private FlowDefinition flow;
 
@@ -54,19 +57,34 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	/**
 	 * Creates a new mock flow execution context for the specified root flow definition.
 	 */
-	public MockFlowExecutionContext(Flow rootFlow) {
-		this.flow = rootFlow;
-		activeSession = new MockFlowSession(rootFlow);
+	public MockFlowExecutionContext(Flow flow) {
+		this(new MockFlowSession(flow));
+	}
+
+	/**
+	 * Creates a new mock flow execution context for the specified active flow session.
+	 */
+	public MockFlowExecutionContext(FlowSession flowSession) {
+		this.flow = flowSession.getDefinition();
+		this.activeSession = flowSession;
+	}
+
+	public FlowExecutionKey getKey() {
+		return key;
 	}
 
 	public String getCaption() {
-		return "Mock flow execution context";
+		return flow.getCaption();
 	}
 
 	// implementing flow execution context
 
 	public FlowDefinition getDefinition() {
 		return flow;
+	}
+
+	public boolean hasStarted() {
+		return isActive();
 	}
 
 	public boolean isActive() {
@@ -99,6 +117,13 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	 */
 	public void setFlow(Flow rootFlow) {
 		this.flow = rootFlow;
+	}
+
+	/**
+	 * Sets the flow execution key
+	 */
+	public void setKey(FlowExecutionKey key) {
+		this.key = key;
 	}
 
 	/**
@@ -147,4 +172,5 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	public void putAttribute(String attributeName, Object attributeValue) {
 		attributes.put(attributeName, attributeValue);
 	}
+
 }

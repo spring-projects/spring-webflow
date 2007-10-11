@@ -29,7 +29,6 @@ import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.execution.FlowSession;
-import org.springframework.webflow.execution.FlowSessionStatus;
 
 /**
  * Implementation of the FlowSession interfaced used internally by the <code>FlowExecutionImpl</code>. This class is
@@ -38,7 +37,6 @@ import org.springframework.webflow.execution.FlowSessionStatus;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
- * @author Ben Hale
  */
 class FlowSessionImpl implements FlowSession, Externalizable {
 
@@ -65,11 +63,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private String stateId;
-
-	/**
-	 * The session status; may be CREATED, STARTING, ACTIVE, PAUSED, SUSPENDED, or ENDED.
-	 */
-	private FlowSessionStatus status = FlowSessionStatus.CREATED;
 
 	/**
 	 * The session data model ("flow scope").
@@ -107,10 +100,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return state;
 	}
 
-	public FlowSessionStatus getStatus() {
-		return status;
-	}
-
 	public MutableAttributeMap getScope() {
 		return scope;
 	}
@@ -123,12 +112,17 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return parent == null;
 	}
 
+	// package-private
+
+	Flow getFlow() {
+		return flow;
+	}
+
 	// custom serialization
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		flowId = (String) in.readObject();
 		stateId = (String) in.readObject();
-		status = (FlowSessionStatus) in.readObject();
 		scope = (MutableAttributeMap) in.readObject();
 		parent = (FlowSessionImpl) in.readObject();
 	}
@@ -136,7 +130,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeObject(flowId);
 		out.writeObject(stateId);
-		out.writeObject(status);
 		out.writeObject(scope);
 		out.writeObject(parent);
 	}
@@ -170,15 +163,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	/**
-	 * Set the status of this flow session.
-	 * @param status the new status to set
-	 */
-	void setStatus(FlowSessionStatus status) {
-		Assert.notNull(status, "The flow session status is requred");
-		this.status = status;
-	}
-
-	/**
 	 * Returns the id of the flow of this session.
 	 */
 	String getFlowId() {
@@ -193,7 +177,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("flow", flowId).append("state", stateId).append("scope", scope).append(
-				"status", status).toString();
+		return new ToStringCreator(this).append("flow", flowId).append("state", stateId).append("scope", scope)
+				.toString();
 	}
 }

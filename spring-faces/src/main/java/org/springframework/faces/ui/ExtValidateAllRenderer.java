@@ -16,11 +16,13 @@ public class ExtValidateAllRenderer extends ExtJsRenderer {
 
 		ResponseWriter writer = context.getResponseWriter();
 
-		if (component.getChildCount() == 0)
+		if (component.getChildCount() == 0) {
 			throw new FacesException("A Spring Faces advisor expects to have at least one child component.");
+		}
 
-		if (!(component.getChildren().get(0) instanceof UICommand))
+		if (!(component.getChildren().get(0) instanceof UICommand)) {
 			throw new FacesException("ValidateAll expects to have a child of type UICommand.");
+		}
 
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 

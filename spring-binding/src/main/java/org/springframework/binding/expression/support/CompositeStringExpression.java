@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.expression.support;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
@@ -41,12 +40,16 @@ public class CompositeStringExpression implements Expression {
 		this.expressions = expressions;
 	}
 
-	public Object evaluate(Object target, EvaluationContext evaluationContext) throws EvaluationException {
+	public Object getValue(Object target) throws EvaluationException {
 		StringBuffer buffer = new StringBuffer(128);
 		for (int i = 0; i < expressions.length; i++) {
-			buffer.append(expressions[i].evaluate(target, evaluationContext));
+			buffer.append(expressions[i].getValue(target));
 		}
 		return buffer.toString();
+	}
+
+	public void setValue(Object target, Object value) throws EvaluationException {
+		throw new UnsupportedOperationException("Cannot set a composite string expression value");
 	}
 
 	public String toString() {

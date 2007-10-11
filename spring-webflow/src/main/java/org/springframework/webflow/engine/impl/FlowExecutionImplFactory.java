@@ -15,96 +15,82 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import java.util.Map;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
-import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.core.collection.CollectionUtils;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
-import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
-import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
+import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowExecutionKeyFactory;
+import org.springframework.webflow.util.RandomGuidUidGenerator;
 
 /**
  * A factory for instances of the {@link FlowExecutionImpl default flow execution} implementation.
- * 
  * @author Keith Donald
  */
-public class FlowExecutionImplFactory implements FlowExecutionFactory {
+public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigurer implements FlowExecutionFactory {
 
 	private static final Log logger = LogFactory.getLog(FlowExecutionImplFactory.class);
 
 	/**
-	 * The strategy for loading listeners that should observe executions of a flow definition. The default simply loads
-	 * an empty static listener list.
+	 * The factory used to assign keys to flow executions that need to be persisted.
 	 */
-	private FlowExecutionListenerLoader executionListenerLoader = StaticFlowExecutionListenerLoader.EMPTY_INSTANCE;
+	private FlowExecutionKeyFactory executionKeyFactory = new RandomFlowExecutionKeyFactory();
 
 	/**
-	 * System execution attributes that may influence flow execution behavior. The default is an empty map.
+	 * Sets the strategy for generating flow execution keys for persistent flow executions.
 	 */
-	private AttributeMap executionAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-
-	/**
-	 * Returns the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
-	 * execution behavior.
-	 * @return flow execution attributes
-	 */
-	public AttributeMap getExecutionAttributes() {
-		return executionAttributes;
-	}
-
-	/**
-	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
-	 * execution behavior.
-	 * @param executionAttributes flow execution system attributes
-	 */
-	public void setExecutionAttributes(AttributeMap executionAttributes) {
-		Assert.notNull(executionAttributes, "The execution attributes map is required");
-		this.executionAttributes = executionAttributes;
-	}
-
-	/**
-	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
-	 * execution behavior.
-	 * <p>
-	 * Convenience setter that takes a simple <code>java.util.Map</code> to ease bean style configuration.
-	 * @param executionAttributes flow execution system attributes
-	 */
-	public void setExecutionAttributesMap(Map executionAttributes) {
-		Assert.notNull(executionAttributes, "The execution attributes map is required");
-		this.executionAttributes = new LocalAttributeMap(executionAttributes);
-	}
-
-	/**
-	 * Returns the strategy for loading listeners that should observe executions of a flow definition. Allows full
-	 * control over what listeners should apply for executions of a flow definition.
-	 */
-	public FlowExecutionListenerLoader getExecutionListenerLoader() {
-		return executionListenerLoader;
-	}
-
-	/**
-	 * Sets the strategy for loading listeners that should observe executions of a flow definition. Allows full control
-	 * over what listeners should apply for executions of a flow definition.
-	 */
-	public void setExecutionListenerLoader(FlowExecutionListenerLoader listenerLoader) {
-		Assert.notNull(listenerLoader, "The listener loader is required");
-		this.executionListenerLoader = listenerLoader;
+	public void setExecutionKeyFactory(FlowExecutionKeyFactory executionKeyFactory) {
+		this.executionKeyFactory = executionKeyFactory;
 	}
 
 	public FlowExecution createFlowExecution(FlowDefinition flowDefinition) {
 		Assert.isInstanceOf(Flow.class, flowDefinition, "Flow definition is of wrong type: ");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating flow execution for flow definition with id '" + flowDefinition.getId() + "'");
+			logger.debug("Creating new execution of '" + flowDefinition.getId() + "'");
 		}
-		FlowExecutionListener[] listeners = executionListenerLoader.getListeners(flowDefinition);
-		return new FlowExecutionImpl((Flow) flowDefinition, listeners, executionAttributes);
+		FlowExecutionImpl execution = new FlowExecutionImpl((Flow) flowDefinition);
+		configureServices(execution);
+		execution.setKeyFactory(executionKeyFactory);
+		return execution;
+	}
+
+	/**
+	 * Generates random flow execution keys.
+	 */
+	private static class RandomFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
+		private RandomGuidUidGenerator idGenerator = new RandomGuidUidGenerator();
+
+		public FlowExecutionKey getKey(FlowExecution execution) {
+			return new SimpleFlowExecutionKey(idGenerator.generateUid());
+		}
+
+		private static class SimpleFlowExecutionKey extends FlowExecutionKey {
+			private Serializable value;
+
+			public SimpleFlowExecutionKey(Serializable value) {
+				this.value = value;
+			}
+
+			public boolean equals(Object o) {
+				if (!(o instanceof SimpleFlowExecutionKey)) {
+					SimpleFlowExecutionKey key = (SimpleFlowExecutionKey) o;
+					return this.value.equals(key.value);
+				}
+				return false;
+			}
+
+			public int hashCode() {
+				return this.value.hashCode();
+			}
+
+			public String toString() {
+				return value.toString();
+			}
+		}
 	}
 }

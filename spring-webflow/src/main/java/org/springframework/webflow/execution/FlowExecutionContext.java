@@ -21,8 +21,8 @@ import org.springframework.webflow.definition.FlowDefinition;
 
 /**
  * Provides contextual information about a flow execution. A flow execution is an runnable instance of a
- * {@link FlowDefinition}. In other words, it is the central Spring Web Flow construct for carrying out a conversation
- * with a client. This immutable interface provides access to runtime information about the conversation, such as it's
+ * {@link FlowDefinition}. It is the central Spring Web Flow construct for carrying out a conversation with a client.
+ * This immutable interface provides access to runtime information about the conversation, such as it's
  * {@link #isActive() status} and {@link #getActiveSession() current state}.
  * <p>
  * An object implementing this interface is also traversable from a execution request context (see
@@ -42,6 +42,13 @@ import org.springframework.webflow.definition.FlowDefinition;
 public interface FlowExecutionContext {
 
 	/**
+	 * Returns the key assigned to this flow execution. The flow execution key is the flow execution's persistent
+	 * identity.
+	 * @return the flow execution key; may be <code>null</code> if a key has not yet been assigned.
+	 */
+	public FlowExecutionKey getKey();
+
+	/**
 	 * Returns the root flow definition associated with this executing flow.
 	 * <p>
 	 * A call to this method always returns the same flow definition -- the top-level "root" -- no matter what flow may
@@ -49,6 +56,14 @@ public interface FlowExecutionContext {
 	 * @return the root flow definition
 	 */
 	public FlowDefinition getDefinition();
+
+	/**
+	 * Returns a flag indicating if this execution has been started. A flow execution that has started and is active is
+	 * currently in progress. A flow execution that has started and is not active has ended.
+	 * @see #isActive()
+	 * @return true if started, false if not started
+	 */
+	public boolean hasStarted();
 
 	/**
 	 * Is the flow execution active?

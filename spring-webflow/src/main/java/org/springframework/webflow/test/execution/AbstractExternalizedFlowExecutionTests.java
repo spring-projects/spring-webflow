@@ -15,21 +15,18 @@
  */
 package org.springframework.webflow.test.execution;
 
-import java.io.File;
-
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.registry.FlowDefinitionResource;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
-import org.springframework.webflow.engine.builder.FlowServiceLocator;
+import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
-import org.springframework.webflow.test.MockFlowServiceLocator;
+import org.springframework.webflow.test.MockFlowBuilderContext;
 
 /**
  * Base class for flow integration tests that verify an externalized flow definition executes as expected. Supports
@@ -91,8 +88,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Sets system attributes to be associated with the flow execution the next time one is {@link #startFlow() started}
-	 * by this test. Useful for assigning attributes that influence flow execution behavior.
+	 * Sets system attributes to be associated with the flow execution the next time one is started. by this test.
+	 * Useful for assigning attributes that influence flow execution behavior.
 	 * @param executionAttributes the system attributes to assign
 	 */
 	protected void setFlowExecutionAttributes(AttributeMap executionAttributes) {
@@ -100,8 +97,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Set a single listener to be attached to the flow execution the next time one is {@link #startFlow() started} by
-	 * this test. Useful for attaching a listener that does test assertions during the execution of the flow.
+	 * Set a single listener to be attached to the flow execution the next time one is started by this test. Useful for
+	 * attaching a listener that does test assertions during the execution of the flow.
 	 * @param executionListener the listener to attach
 	 */
 	protected void setFlowExecutionListener(FlowExecutionListener executionListener) {
@@ -110,10 +107,9 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Set the listeners to be attached to the flow execution the next time one is {@link #startFlow() started} by this
-	 * test. Useful for attaching listeners that do test assertions during the execution of the flow.
+	 * Set the listeners to be attached to the flow execution the next time one is started. by this test. Useful for
+	 * attaching listeners that do test assertions during the execution of the flow.
 	 * @param executionListeners the listeners to attach
-	 * @since 1.0.4
 	 */
 	protected void setFlowExecutionListeners(FlowExecutionListener[] executionListeners) {
 		getFlowExecutionImplFactory().setExecutionListenerLoader(
@@ -127,8 +123,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 		if (isCacheFlowDefinition() && cachedFlowDefinition != null) {
 			return cachedFlowDefinition;
 		}
-		FlowServiceLocator flowServiceLocator = createFlowServiceLocator();
-		Flow flow = createFlow(getFlowDefinitionResource(), flowServiceLocator);
+		Flow flow = buildFlow();
 		if (isCacheFlowDefinition()) {
 			cachedFlowDefinition = flow;
 		}
@@ -136,98 +131,50 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
-	 * Returns the flow service locator to use during flow definition construction time for accessing externally managed
-	 * flow artifacts such as actions and flows to be used as subflows.
-	 * <p>
-	 * This implementation just creates a {@link MockFlowServiceLocator} and populates it with services by calling
-	 * {@link #registerMockServices(MockFlowServiceLocator)}.
-	 * @return the flow artifact factory
-	 */
-	protected FlowServiceLocator createFlowServiceLocator() {
-		MockFlowServiceLocator serviceLocator = new MockFlowServiceLocator();
-		registerMockServices(serviceLocator);
-		return serviceLocator;
-	}
-
-	/**
-	 * Template method called by {@link #createFlowServiceLocator()} to allow registration of mock implementations of
-	 * services needed to test the flow execution. Useful when testing flow definitions in execution in isolation from
-	 * flows and middle-tier services. Subclasses may override.
-	 * @param serviceRegistry the mock service registry (and locator)
-	 */
-	protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
-	}
-
-	/**
 	 * Factory method to assemble a flow definition from a resource. Called by {@link #getFlowDefinition()} to create
 	 * the "main" flow to test. May also be called by subclasses to create subflow definitions whose executions should
 	 * also be exercised by this test.
-	 * @param resource the flow definition resource
 	 * @return the built flow definition, ready for execution
-	 * @see #createFlowBuilder(Resource, FlowServiceLocator)
 	 */
-	protected final Flow createFlow(FlowDefinitionResource resource, FlowServiceLocator serviceLocator) {
-		FlowBuilder builder = createFlowBuilder(resource.getLocation(), serviceLocator);
-		FlowAssembler assembler = new FlowAssembler(resource.getId(), resource.getAttributes(), builder);
+	protected final Flow buildFlow() {
+		FlowDefinitionResource resource = getFlowDefinitionResource();
+		FlowBuilderContext builderContext = createFlowBuilderContext(resource);
+		FlowBuilder builder = createFlowBuilder(resource.getPath());
+		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 		return assembler.assembleFlow();
 	}
 
 	/**
-	 * Returns the pointer to the resource that houses the definition of the flow to be tested. Subclasses must
-	 * implement.
-	 * <p>
-	 * Example usage:
-	 * 
-	 * <pre class="code">
-	 * protected FlowDefinitionResource getFlowDefinitionResource() {
-	 * 	return createFlowDefinitionResource(&quot;/WEB-INF/flows/order-flow.xml&quot;);
-	 * }
-	 * </pre>
-	 * 
+	 * Create the flow builder context to build the flow definition at the resource location provided.
+	 * @param resource the flow definition resource
+	 * @return the flow builder context
+	 */
+	protected FlowBuilderContext createFlowBuilderContext(FlowDefinitionResource resource) {
+		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
+		configure(builderContext);
+		return builderContext;
+	}
+
+	/**
+	 * Subclasses may override this hook to customize the builder context for the flow being tested. Useful for
+	 * registering mock subflows or other builder services.
+	 * @param builderContext the mock flow builder context.
+	 */
+	protected void configure(MockFlowBuilderContext builderContext) {
+
+	}
+
+	/**
+	 * Get the flow definition to be tested.
 	 * @return the flow definition resource
 	 */
 	protected abstract FlowDefinitionResource getFlowDefinitionResource();
 
 	/**
-	 * Factory method to create the builder that will build the flow definition whose execution will be tested.
-	 * Subclasses must implement.
-	 * <p>
-	 * A subclass may return a builder that sets up mock implementations of services needed locally by the flow
-	 * definition at runtime.
-	 * @param resource the externalized flow definition resource location
-	 * @param serviceLocator the flow service locator
-	 * @return the flow builder that will build the flow to be tested
+	 * Create the flow builder to build the flow at the specified resource location.
+	 * @param path the location of the flow definition
+	 * @return the flow builder that can build the flow definition
 	 */
-	protected abstract FlowBuilder createFlowBuilder(Resource resource, FlowServiceLocator serviceLocator);
+	protected abstract FlowBuilder createFlowBuilder(Resource path);
 
-	/**
-	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file path. Typically called by
-	 * subclasses overriding {@link #getFlowDefinitionResource()}.
-	 * @param filePath the full path to the externalized flow definition file
-	 * @return the flow definition resource
-	 */
-	protected final FlowDefinitionResource createFlowDefinitionResource(String filePath) {
-		return createFlowDefinitionResource(new File(filePath));
-	}
-
-	/**
-	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file in a directory. Typically
-	 * called by subclasses overriding {@link #getFlowDefinitionResource()}.
-	 * @param fileDirectory the directory containing the file
-	 * @param fileName the short file name
-	 * @return the flow definition resource pointing to the file
-	 */
-	protected final FlowDefinitionResource createFlowDefinitionResource(String fileDirectory, String fileName) {
-		return createFlowDefinitionResource(new File(fileDirectory, fileName));
-	}
-
-	/**
-	 * Convenient factory method that creates a {@link FlowDefinitionResource} from a file. Typically called by
-	 * subclasses overriding {@link #getFlowDefinitionResource()}.
-	 * @param file the file
-	 * @return the flow definition resource
-	 */
-	protected FlowDefinitionResource createFlowDefinitionResource(File file) {
-		return new FlowDefinitionResource(new FileSystemResource(file));
-	}
 }

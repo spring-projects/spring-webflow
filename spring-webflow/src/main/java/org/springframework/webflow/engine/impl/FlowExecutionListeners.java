@@ -24,7 +24,6 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A helper that aids in publishing events to an array of <code>FlowExecutionListener</code> objects.
@@ -35,6 +34,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * @author Erwin Vervaet
  */
 class FlowExecutionListeners {
+
+	private FlowExecutionListener[] EMPTY_LISTENER_ARRAY = new FlowExecutionListener[0];
 
 	/**
 	 * The list of listeners that should receive event callbacks during managed flow executions.
@@ -56,7 +57,7 @@ class FlowExecutionListeners {
 		if (listeners != null) {
 			this.listeners = listeners;
 		} else {
-			this.listeners = new FlowExecutionListener[0];
+			this.listeners = EMPTY_LISTENER_ARRAY;
 		}
 	}
 
@@ -98,9 +99,9 @@ class FlowExecutionListeners {
 	/**
 	 * Notify all interested listeners that a flow execution session is starting (about to be created).
 	 */
-	public void fireSessionStarting(RequestContext context, FlowDefinition flow, MutableAttributeMap input) {
+	public void fireSessionCreating(RequestContext context, FlowDefinition flow) {
 		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionStarting(context, flow, input);
+			listeners[i].sessionCreating(context, flow);
 		}
 	}
 
@@ -108,9 +109,9 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution session has been activated (created, on the stack and about
 	 * to start).
 	 */
-	public void fireSessionCreated(RequestContext context, FlowSession session) {
+	public void fireSessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
 		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionCreated(context, session);
+			listeners[i].sessionStarting(context, session, input);
 		}
 	}
 
@@ -153,18 +154,18 @@ class FlowExecutionListeners {
 	/**
 	 * Notify all interested listeners that a flow session was paused in the flow execution.
 	 */
-	public void firePaused(RequestContext context, ViewSelection selectedView) {
+	public void firePaused(RequestContext context) {
 		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].paused(context, selectedView);
+			listeners[i].paused(context);
 		}
 	}
 
 	/**
 	 * Notify all interested listeners that the flow execution was resumed.
 	 */
-	public void fireResumed(RequestContext context) {
+	public void fireResuming(RequestContext context) {
 		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].resumed(context);
+			listeners[i].resuming(context);
 		}
 	}
 

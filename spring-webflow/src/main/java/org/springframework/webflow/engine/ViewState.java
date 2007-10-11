@@ -18,16 +18,14 @@ package org.springframework.webflow.engine;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.execution.ViewFactory;
 
 /**
- * A view state is a state that issues a response to the user, for example, for soliciting form input.
- * <p>
- * To accomplish this, a <code>ViewState</code> makes a {@link ViewSelection}, which contains the necessary
- * information to issue a suitable response.
+ * A view state is a state that issues a response to the user, for example, for soliciting form input. To accomplish
+ * this, a <code>ViewState</code> delegates to a {@link ViewFactory}.
  * 
- * @see org.springframework.webflow.engine.ViewSelector
+ * @see ViewFactory
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -40,33 +38,34 @@ public class ViewState extends TransitionableState {
 	private ActionList renderActionList = new ActionList();
 
 	/**
-	 * The factory for the view selection to return when this state is entered.
+	 * Whether or not a redirect should occur before the view is rendered.
 	 */
-	private ViewSelector viewSelector = NullViewSelector.INSTANCE;
+	private boolean redirect;
+
+	/**
+	 * A factory for creating and restoring the view rendered by this view state.
+	 */
+	private ViewFactory viewFactory;
 
 	/**
 	 * Create a new view state.
 	 * @param flow the owning flow
 	 * @param id the state identifier (must be unique to the flow)
+	 * @param viewFactory the view factory
 	 * @throws IllegalArgumentException when this state cannot be added to given flow, e.g. because the id is not unique
 	 */
-	public ViewState(Flow flow, String id) throws IllegalArgumentException {
+	public ViewState(Flow flow, String id, ViewFactory viewFactory) throws IllegalArgumentException {
 		super(flow, id);
+		Assert.notNull(viewFactory, "The view factory is required");
+		this.viewFactory = viewFactory;
 	}
 
 	/**
-	 * Returns the strategy used to select the view to render in this view state.
+	 * Sets whether this view state should send a flow execution redirect when entered.
+	 * @param redirect the redirect flag
 	 */
-	public ViewSelector getViewSelector() {
-		return viewSelector;
-	}
-
-	/**
-	 * Sets the strategy used to select the view to render in this view state.
-	 */
-	public void setViewSelector(ViewSelector viewSelector) {
-		Assert.notNull(viewSelector, "The view selector to make view selections is required");
-		this.viewSelector = viewSelector;
+	public void setRedirect(boolean redirect) {
+		this.redirect = redirect;
 	}
 
 	/**
@@ -77,40 +76,37 @@ public class ViewState extends TransitionableState {
 		return renderActionList;
 	}
 
-	/**
-	 * Specialization of State's <code>doEnter</code> template method that executes behavior specific to this state
-	 * type in polymorphic fashion.
-	 * <p>
-	 * Returns a view selection indicating a response to issue. The view selection typically contains all the data
-	 * necessary to issue the response.
-	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
-	 * execution
-	 * @return a view selection serving as a response instruction
-	 * @throws FlowExecutionException if an exception occurs in this state
-	 */
-	protected ViewSelection doEnter(RequestControlContext context) throws FlowExecutionException {
-		if (viewSelector.isEntrySelectionRenderable(context)) {
-			// the entry selection will be rendered!
+	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+		context.assignFlowExecutionKey();
+		if (shouldRedirect(context)) {
+			context.sendFlowExecutionRedirect();
+		} else {
+			View view = viewFactory.getView(context);
 			renderActionList.execute(context);
+			view.render();
+			context.getMessageContext().clearMessages();
+			context.getFlashScope().clear();
 		}
-		return viewSelector.makeEntrySelection(context);
 	}
 
-	/**
-	 * Request that the current view selection be reconstituted to support reissuing the response. This is an idempotent
-	 * operation that may be safely called any number of times on a paused execution, used primarily to support a flow
-	 * execution redirect.
-	 * @param context the request context
-	 * @return the view selection
-	 * @throws FlowExecutionException if an exception occurs in this state
-	 */
-	public ViewSelection refresh(RequestContext context) throws FlowExecutionException {
-		renderActionList.execute(context);
-		return viewSelector.makeRefreshSelection(context);
+	public void resume(RequestControlContext context) {
+		View view = viewFactory.getView(context);
+		if (view.eventSignaled()) {
+			context.handleEvent(view.getEvent());
+		} else {
+			renderActionList.execute(context);
+			view.render();
+			context.getMessageContext().clearMessages();
+			context.getFlashScope().clear();
+		}
+	}
+
+	private boolean shouldRedirect(RequestControlContext context) {
+		return redirect || context.getAlwaysRedirectOnPause();
 	}
 
 	protected void appendToString(ToStringCreator creator) {
-		creator.append("viewSelector", viewSelector);
 		super.appendToString(creator);
+		creator.append("viewManager", viewFactory);
 	}
 }

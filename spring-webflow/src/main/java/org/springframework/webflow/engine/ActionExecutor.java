@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -29,8 +27,6 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Erwin Vervaet
  */
 public class ActionExecutor {
-
-	private static final Log logger = LogFactory.getLog(ActionExecutor.class);
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -48,14 +44,6 @@ public class ActionExecutor {
 	 */
 	public static Event execute(Action action, RequestContext context) throws ActionExecutionException {
 		try {
-			if (logger.isDebugEnabled()) {
-				if (context.getCurrentState() == null) {
-					logger.debug("Executing start " + action + " for flow '" + context.getActiveFlow().getId() + "'");
-				} else {
-					logger.debug("Executing " + action + " in state '" + context.getCurrentState().getId()
-							+ "' of flow '" + context.getActiveFlow().getId() + "'");
-				}
-			}
 			return action.execute(context);
 		} catch (ActionExecutionException e) {
 			throw e;

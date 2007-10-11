@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 public class NoMatchingTransitionException extends FlowExecutionException {
 
 	/**
-	 * The event that occured that could not be matched to a Transition.
+	 * The event that occurred that could not be matched to a Transition.
 	 */
 	private Event event;
 

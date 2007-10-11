@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.util.StringUtils;
 
 /**
@@ -80,27 +80,17 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		this.expressionSuffix = expressionSuffix;
 	}
 
-	/**
-	 * Check whether or not given criteria are expressed as an expression.
-	 */
-	public boolean isDelimitedExpression(String expressionString) {
-		int prefixIndex = expressionString.indexOf(getExpressionPrefix());
-		if (prefixIndex == -1) {
-			return false;
-		}
-		int suffixIndex = expressionString.indexOf(getExpressionSuffix(), prefixIndex);
-		if (suffixIndex == -1) {
-			return false;
-		} else {
-			if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
-				return false;
-			} else {
-				return true;
-			}
-		}
+	public boolean isEvalExpressionString(String string) {
+		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
 	}
 
-	public final Expression parseExpression(String expressionString) throws ParserException {
+	public String parseEvalExpressionString(String string) {
+		return encloseInDelimitersIfNecessary(string);
+	}
+
+	public Expression parseExpression(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
+		// TODO variables
 		Expression[] expressions = parseExpressions(expressionString);
 		if (expressions.length == 1) {
 			return expressions[0];
@@ -109,15 +99,12 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		}
 	}
 
-	public final SettableExpression parseSettableExpression(String expressionString) throws ParserException,
-			UnsupportedOperationException {
-		expressionString = expressionString.trim();
-		// a settable expression should just be a single expression
-		if (expressionString.startsWith(getExpressionPrefix()) && expressionString.endsWith(getExpressionSuffix())) {
-			expressionString = expressionString.substring(getExpressionPrefix().length(), expressionString.length()
-					- getExpressionSuffix().length());
+	private String encloseInDelimitersIfNecessary(String expressionString) {
+		if (isEvalExpressionString(expressionString)) {
+			return expressionString;
+		} else {
+			return expressionPrefix + expressionString + expressionSuffix;
 		}
-		return doParseSettableExpression(expressionString);
 	}
 
 	/**
@@ -190,15 +177,5 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * @throws ParserException an exception occured during parsing
 	 */
 	protected abstract Expression doParseExpression(String expressionString) throws ParserException;
-
-	/**
-	 * Template method for parsing a filtered settable expression string. Subclasses should override.
-	 * @param expressionString the expression string
-	 * @return the parsed expression
-	 * @throws ParserException an exception occured during parsing
-	 * @throws UnsupportedOperationException this parser does not support settable expressions
-	 */
-	protected abstract SettableExpression doParseSettableExpression(String expressionString) throws ParserException,
-			UnsupportedOperationException;
 
 }

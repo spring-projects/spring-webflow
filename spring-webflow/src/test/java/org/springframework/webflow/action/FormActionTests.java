@@ -18,6 +18,7 @@ package org.springframework.webflow.action;
 import junit.framework.TestCase;
 
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -334,7 +335,7 @@ public class FormActionTests extends TestCase {
 		assertEquals(action.getEventFactorySupport().getSuccessEventId(), action.setupForm(context).getId());
 
 		Object formObject = getFormObject(context);
-		BindException errors = (BindException) getErrors(context);
+		BindingResult errors = (BindingResult) getErrors(context);
 
 		assertTrue(formObject instanceof TestBean);
 		assertTrue(errors.getTarget() instanceof TestBean);
@@ -345,7 +346,7 @@ public class FormActionTests extends TestCase {
 
 		OtherTestBean freshBean = new OtherTestBean();
 		context.getFlowScope().put("test", freshBean);
-		context.getRequestScope().put(BindException.ERROR_KEY_PREFIX + "test", errors);
+		context.getRequestScope().put(BindingResult.MODEL_KEY_PREFIX + "test", errors);
 
 		FormAction otherAction = createFormAction("test");
 		otherAction.setFormObjectClass(OtherTestBean.class);
@@ -353,7 +354,7 @@ public class FormActionTests extends TestCase {
 		assertEquals(action.getEventFactorySupport().getSuccessEventId(), otherAction.setupForm(context).getId());
 
 		formObject = context.getFlowScope().get("test");
-		errors = (BindException) getErrors(context);
+		errors = (BindingResult) getErrors(context);
 
 		assertTrue(formObject instanceof OtherTestBean);
 		assertSame(freshBean, formObject);
@@ -413,7 +414,7 @@ public class FormActionTests extends TestCase {
 		assertSame(testBean, getFormObject(context));
 		assertEquals("bla", getFormObject(context).getProp());
 		assertNotNull(getErrors(context));
-		assertSame(testBean, ((BindException) getErrors(context)).getTarget());
+		assertSame(testBean, ((BindingResult) getErrors(context)).getTarget());
 		assertFalse(getErrors(context).hasErrors());
 	}
 

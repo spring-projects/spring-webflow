@@ -6,11 +6,9 @@
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-binding.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-webflow.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/avalon-framework.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-beanutils.jar"/>
@@ -32,5 +30,7 @@
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-webflow.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-binding.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

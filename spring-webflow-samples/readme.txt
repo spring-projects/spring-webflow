@@ -1,16 +1,7 @@
 /*
  * spring-webflow-samples
  *
- * birthdate - demonstrates Spring Web Flow Struts 1.1 or > integration
- * fileupload - demonstrates multipart file upload
- * flowlauncher - demonstrates the different ways to launch flows from web pages
- * itemlist - demonstrates application transactions and inline flows
- * numberguess - demonstrates how to play a game using a flow
- * phonebook - central sample demonstrating most features
- * phonebook-portlet - the phonebook sample in a portlet environment (notice how the flow definitions do not change)
- * sellitem - demonstrates a wizard with conditional transitions and continuations
- * sellitem-jsf - the sellitem sample in a jsf environment
- * shippingrate - demonstrates Spring Web Flow together with Ajax technology
+ * booking-jsf - The Spring Web Flow 2.x Hotel Booking Reference Application.
  */
 
 Sample pre-requisites:

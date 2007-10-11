@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.binding.expression.EvaluationContext;
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
@@ -70,20 +69,10 @@ public class EvaluateAction extends AbstractAction {
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
-		Object result = expression.evaluate(context, getEvaluationContext(context));
+		Object result = expression.getValue(context);
 		if (evaluationResultExposer != null) {
 			evaluationResultExposer.exposeResult(result, context);
 		}
 		return resultEventFactorySelector.forResult(result).createResultEvent(this, result, context);
-	}
-
-	/**
-	 * Template method subclasses may override to customize the expressin evaluation context. This implementation
-	 * returns null.
-	 * @param context the request context
-	 * @return the evaluation context
-	 */
-	protected EvaluationContext getEvaluationContext(RequestContext context) {
-		return null;
 	}
 }

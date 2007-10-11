@@ -35,20 +35,13 @@ public class EvaluationAttempt {
 	private Object target;
 
 	/**
-	 * The evaluation context.
-	 */
-	private EvaluationContext context;
-
-	/**
 	 * Create an evaluation attempt.
 	 * @param expression the expression that failed to evaluate
 	 * @param target the target of the expression
-	 * @param context the context attributes that might have affected evaluation behavior
 	 */
-	public EvaluationAttempt(Expression expression, Object target, EvaluationContext context) {
+	public EvaluationAttempt(Expression expression, Object target) {
 		this.expression = expression;
 		this.target = target;
-		this.context = context;
 	}
 
 	/**
@@ -65,18 +58,11 @@ public class EvaluationAttempt {
 		return target;
 	}
 
-	/**
-	 * Returns context attributes that may have influenced the evaluation process.
-	 */
-	public EvaluationContext getContext() {
-		return context;
-	}
-
 	public String toString() {
 		return createToString(new ToStringCreator(this)).toString();
 	}
 
 	protected ToStringCreator createToString(ToStringCreator creator) {
-		return creator.append("expression", expression).append("target", target).append("context", context);
+		return creator.append("expression", expression).append("target", target);
 	}
 }

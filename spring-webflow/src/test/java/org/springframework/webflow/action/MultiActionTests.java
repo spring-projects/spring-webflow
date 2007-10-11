@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.webflow.action.MultiAction.MethodResolver;
 import org.springframework.webflow.engine.AnnotatedAction;
+import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowSession;
@@ -52,7 +53,7 @@ public class MultiActionTests extends TestCase {
 
 	public void testDispatchWithCurrentStateId() throws Exception {
 		MockFlowSession session = context.getMockFlowExecutionContext().getMockActiveSession();
-		session.setState(new ViewState(session.getDefinitionInternal(), "increment"));
+		session.setState(new ViewState(session.getDefinitionInternal(), "increment", new StubViewFactory()));
 		action.execute(context);
 		assertEquals(1, action.counter);
 	}

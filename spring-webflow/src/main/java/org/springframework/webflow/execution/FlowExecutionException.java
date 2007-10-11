@@ -22,7 +22,7 @@ import org.springframework.webflow.core.FlowException;
  * encouraged to create a specific subclass for a particular use case.
  * <p>
  * Execution exceptions occur at runtime when the flow is executing requests on behalf of a client. They signal that an
- * execution problem occured: e.g. action execution failed or no transition matched the current request context.
+ * execution problem occurred: e.g. action execution failed or no transition matched the current request context.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -30,19 +30,19 @@ import org.springframework.webflow.core.FlowException;
 public class FlowExecutionException extends FlowException {
 
 	/**
-	 * The id of the flow definition in which the exception occured.
+	 * The id of the flow definition in which the exception occurred.
 	 */
 	private String flowId;
 
 	/**
-	 * The state of the flow where the exception occured (optional).
+	 * The state of the flow where the exception occurred (optional).
 	 */
 	private String stateId;
 
 	/**
 	 * Creates a new flow execution exception.
-	 * @param flowId the flow where the exception occured
-	 * @param stateId the state where the exception occured
+	 * @param flowId the flow where the exception occurred
+	 * @param stateId the state where the exception occurred
 	 * @param message a descriptive message
 	 */
 	public FlowExecutionException(String flowId, String stateId, String message) {

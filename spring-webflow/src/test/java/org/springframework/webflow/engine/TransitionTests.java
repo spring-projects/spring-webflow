@@ -18,49 +18,99 @@ package org.springframework.webflow.engine;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
-import org.springframework.webflow.execution.TestAction;
+import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 public class TransitionTests extends TestCase {
 
-	public void testSimpleTransition() {
-		Transition t = new Transition(to("target"));
+	private boolean reenterCalled;
+	private boolean exitCalled;
+
+	public void testExecuteTransitionFromState() {
 		Flow flow = new Flow("flow");
-		ViewState source = new ViewState(flow, "source");
-		TestAction action = new TestAction();
-		source.getExitActionList().add(action);
-		ViewState target = new ViewState(flow, "target");
+		final TransitionableState source = new TransitionableState(flow, "state 1") {
+			public void exit(RequestControlContext context) {
+				exitCalled = true;
+			}
+
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		final TransitionableState target = new TransitionableState(flow, "state 2") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		TargetStateResolver targetResolver = new TargetStateResolver() {
+			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
+				assertSame(source, sourceState);
+				return target;
+			}
+		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
+		Transition t = new Transition(targetResolver);
 		t.execute(source, context);
-		assertTrue(t.matches(context));
-		assertEquals(t, context.getLastTransition());
-		assertEquals(context.getCurrentState(), target);
-		assertEquals(1, action.getExecutionCount());
+		assertTrue(exitCalled);
+		assertSame(target, context.getCurrentState());
 	}
 
-	public void testTransitionCriteriaDoesNotMatch() {
-		Transition t = new Transition(new EventIdTransitionCriteria("bogus"), to("target"));
-		MockRequestControlContext context = new MockRequestControlContext(new Flow("flow"));
-		assertFalse(t.matches(context));
-	}
-
-	public void testTransitionCannotExecute() {
-		Transition t = new Transition(to("target"));
-		t.setExecutionCriteria(new EventIdTransitionCriteria("bogus"));
+	public void testExecuteTransitionWithNullSourceState() {
 		Flow flow = new Flow("flow");
-		ViewState source = new ViewState(flow, "source");
-		TestAction action = new TestAction();
-		source.getExitActionList().add(action);
-		new ViewState(flow, "target");
+		final TransitionableState target = new TransitionableState(flow, "state 2") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		TargetStateResolver targetResolver = new TargetStateResolver() {
+			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
+				assertNull(sourceState);
+				return target;
+			}
+		};
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		Transition t = new Transition(targetResolver);
+		t.execute(null, context);
+		assertSame(target, context.getCurrentState());
+	}
+
+	public void testTransitionExecutionRefused() {
+		Flow flow = new Flow("flow");
+		final TransitionableState source = new TransitionableState(flow, "state 1") {
+
+			public void reenter(RequestControlContext context) {
+				reenterCalled = true;
+				super.reenter(context);
+			}
+
+			public void exit(RequestControlContext context) {
+				exitCalled = true;
+			}
+
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		final TransitionableState target = new TransitionableState(flow, "state 2") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		TargetStateResolver targetResolver = new TargetStateResolver() {
+			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
+				assertSame(source, sourceState);
+				return target;
+			}
+		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
+		Transition t = new Transition(targetResolver);
+		t.setExecutionCriteria(new TransitionCriteria() {
+			public boolean test(RequestContext context) {
+				return false;
+			}
+		});
 		t.execute(source, context);
-		assertTrue(t.matches(context));
-		assertEquals(null, context.getLastTransition());
-		assertEquals(context.getCurrentState(), source);
-		assertEquals(0, action.getExecutionCount());
+		assertFalse(exitCalled);
+		assertTrue(reenterCalled);
+		assertSame(source, context.getCurrentState());
 	}
 
 	protected TargetStateResolver to(String stateId) {

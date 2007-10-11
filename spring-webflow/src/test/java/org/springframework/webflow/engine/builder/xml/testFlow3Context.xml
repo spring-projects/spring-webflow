@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
-	<bean id="customAction" class="org.springframework.webflow.engine.builder.xml.XmlFlowBuilderCustomTypeTests$CustomAction"/>
-	<bean id="customAttributeMapper" class="org.springframework.webflow.engine.builder.xml.XmlFlowBuilderCustomTypeTests$CustomAttributeMapper"/>
-	<bean id="customExceptionHandler" class="org.springframework.webflow.engine.builder.xml.XmlFlowBuilderCustomTypeTests$CustomExceptionHandler"/>
-</beans>

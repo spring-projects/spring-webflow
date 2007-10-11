@@ -55,7 +55,7 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 	}
 
 	public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-		String stateId = String.valueOf(targetStateIdExpression.evaluate(context, null));
+		String stateId = String.valueOf(targetStateIdExpression.getValue(context));
 		return ((Flow) context.getActiveFlow()).getStateInstance(stateId);
 	}
 

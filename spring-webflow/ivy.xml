@@ -48,6 +48,7 @@
 		<!-- build time only dependencies -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
 		<dependency org="javax.portlet" name="portlet-api" rev="1.0" conf="buildtime->default" />
+		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default" />
 		<dependency org="org.hibernate" name="hibernate" rev="3.2.4.ga" conf="buildtime->default" />
 		<dependency org="org.springframework" name="spring-orm" rev="2.1-m4" conf="buildtime->default" />
 		<dependency org="org.springframework" name="spring-tx" rev="2.1-m4" conf="buildtime->default" />

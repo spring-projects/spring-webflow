@@ -22,7 +22,6 @@ import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A point in a flow where something happens. What happens is determined by a state's type. Standard types of states
@@ -32,8 +31,8 @@ import org.springframework.webflow.execution.ViewSelection;
  * configuration information needed for a specific kind of state.
  * <p>
  * Subclasses should implement the <code>doEnter</code> method to execute the processing that should occur when this
- * state is entered, acting on its configuration information. The ability to plugin custom state types that execute
- * different behaviour polymorphically is the classic GoF state pattern.
+ * state is entered, acting on its configuration information. The ability to plug-in custom state types that execute
+ * different behaviors is the classic GoF state pattern.
  * <p>
  * Equality: Two states are equal if they have the same id and are part of the same flow.
  * 
@@ -178,53 +177,47 @@ public abstract class State extends AnnotatedObject implements StateDefinition {
 	 * the entry actions.
 	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
 	 * execution
-	 * @return a view selection containing model and view information needed to render the results of the state
-	 * processing
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
-	public final ViewSelection enter(RequestControlContext context) throws FlowExecutionException {
+	public final void enter(RequestControlContext context) throws FlowExecutionException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Entering state '" + getId() + "' of flow '" + getFlow().getId() + "'");
 		}
 		context.setCurrentState(this);
 		entryActionList.execute(context);
-		return doEnter(context);
+		doEnter(context);
 	}
 
 	/**
-	 * Hook method to execute custom behaviour as a result of entering this state. By implementing this method
-	 * subclasses specialize the behaviour of the state.
+	 * Hook method to execute custom behavior as a result of entering this state. By implementing this method subclasses
+	 * specialize the behavior of the state.
 	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
 	 * execution
-	 * @return a view selection containing model and view information needed to render the results of the state
-	 * processing
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
-	protected abstract ViewSelection doEnter(RequestControlContext context) throws FlowExecutionException;
+	protected abstract void doEnter(RequestControlContext context) throws FlowExecutionException;
 
 	/**
-	 * Handle an exception that occured in this state during the context of the current flow execution request.
-	 * @param exception the exception that occured
+	 * Handle an exception that occurred in this state during the context of the current flow execution request.
+	 * @param exception the exception that occurred
 	 * @param context the flow execution control context
-	 * @return the selected error view, or <code>null</code> if no handler matched or returned a non-null view
-	 * selection
 	 */
-	public ViewSelection handleException(FlowExecutionException exception, RequestControlContext context) {
+	public boolean handleException(FlowExecutionException exception, RequestControlContext context) {
 		return getExceptionHandlerSet().handleException(exception, context);
 	}
 
 	public String toString() {
-		String flowName = (flow == null ? "<not set>" : flow.getId());
-		ToStringCreator creator = new ToStringCreator(this).append("id", getId()).append("flow", flowName).append(
+		ToStringCreator creator = new ToStringCreator(this).append("id", getId()).append("flow", flow.getId()).append(
 				"entryActionList", entryActionList).append("exceptionHandlerSet", exceptionHandlerSet);
 		appendToString(creator);
 		return creator.toString();
 	}
 
 	/**
-	 * Subclasses may override this hook method to stringify their internal state. This default implementation does
-	 * nothing.
-	 * @param creator the toString creator, to stringify properties
+	 * Subclasses may override this hook method to print their internal state to a string. This default implementation
+	 * does nothing.
+	 * @param creator the toString creator, to print properties to string
+	 * @see #toString()
 	 */
 	protected void appendToString(ToStringCreator creator) {
 	}

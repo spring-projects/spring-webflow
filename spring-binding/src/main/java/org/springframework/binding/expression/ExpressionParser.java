@@ -16,7 +16,7 @@
 package org.springframework.binding.expression;
 
 /**
- * Parses expression strings, returing a configured evaluator instance capable of performing parsed expression
+ * Parses expression strings, returning a configured evaluator instance capable of performing parsed expression
  * evaluation in a thread safe way.
  * 
  * @author Keith Donald
@@ -24,30 +24,38 @@ package org.springframework.binding.expression;
 public interface ExpressionParser {
 
 	/**
-	 * Is this expression string delimited in a manner that indicates it is a parseable expression? For example
-	 * "${expression}".
-	 * @param expressionString the proposed expression string
-	 * @return true if yes, false if not
+	 * Is the provided expression string an "eval" expression: meaning an expression that validates to a dynamic value,
+	 * and not a literal expression? "Eval" expressions are normally enclosed in delimiters like #{}, where literal
+	 * expressions are not delimited.
+	 * @param string the string
+	 * @return true if the expression is an eval expression string, false otherwise.
 	 */
-	public boolean isDelimitedExpression(String expressionString);
+	public boolean isEvalExpressionString(String string);
 
 	/**
-	 * Parse the provided expression string, returning an evaluator capable of evaluating it against input.
-	 * @param expressionString the parseable expression string
-	 * @return the evaluator for the parsed expression
-	 * @throws ParserException an exception occured during parsing
+	 * Parse the raw string into an "eval" expression string that when parsed produces a dynamic value when evaluated
+	 * against a target object. For example, the raw expression string "person.id" might become #{person.id}. If the
+	 * string is already an eval expression string, the string argument is returned unchanged. If the string is an
+	 * composite expression string that mixes eval and literal expressions, a parser exception is thrown.
+	 * @param string the raw string to be transformed into a parseable eval expression string
+	 * @return the eval expression spring
+	 * @throws ParserException an exception occurred during parsing
 	 */
-	public Expression parseExpression(String expressionString) throws ParserException;
+	public String parseEvalExpressionString(String string) throws ParserException;
 
 	/**
-	 * Parse the provided settable expression string, returning an evaluator capable of evaluating its value as well as
-	 * setting its value.
+	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it. The expression
+	 * string may be a literal expression string like "foo", an eval-expression string like #{foo}, or a
+	 * composite-expression string like "foo#{foo}bar#{bar}".
 	 * @param expressionString the parseable expression string
+	 * @param expressionTargetType the class of target object this expression can successfully evaluate; for example,
+	 * <code>Map.class</code> for an expression that is expected to evaluate against Maps.
+	 * @param expectedEvaluationResultType the class of object this expression is expected to return or set: for
+	 * example, <code>Boolean.class</code> for an expression that is expected to get or set a boolean value.
+	 * @param expressionVariables variables providing aliases for this expression during evaluation parsing. Optional.
 	 * @return the evaluator for the parsed expression
-	 * @throws ParserException an exception occured during parsing
-	 * @throws UnsupportedOperationException this parser does not support settable expressions
+	 * @throws ParserException an exception occurred during parsing
 	 */
-	public SettableExpression parseSettableExpression(String expressionString) throws ParserException,
-			UnsupportedOperationException;
-
+	public Expression parseExpression(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException;
 }

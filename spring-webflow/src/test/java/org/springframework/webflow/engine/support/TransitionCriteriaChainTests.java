@@ -15,12 +15,12 @@
  */
 package org.springframework.webflow.engine.support;
 
+import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.support.EventFactorySupport;
 import org.springframework.webflow.test.MockRequestContext;
 
 import junit.framework.TestCase;

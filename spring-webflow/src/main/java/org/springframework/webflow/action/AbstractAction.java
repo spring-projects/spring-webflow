@@ -24,7 +24,6 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
  * Base action that provides assistance commonly needed by action implementations. This includes:
@@ -62,7 +61,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	/**
-	 * Action initializing callback, may be overriden by subclasses to perform custom initialization logic.
+	 * Action initializing callback, may be overridden by subclasses to perform custom initialization logic.
 	 * <p>
 	 * Keep in mind that this hook will only be invoked when this action is deployed in a Spring application context
 	 * since it uses the Spring {@link InitializingBean} mechanism to trigger action initialisation.

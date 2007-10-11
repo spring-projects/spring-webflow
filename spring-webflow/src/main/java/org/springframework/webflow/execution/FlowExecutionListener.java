@@ -29,7 +29,7 @@ import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
  * one or more well-defined flow execution lifecycles.
  * <p>
  * For example, one custom listener may apply security checks at the flow execution level, preventing a flow from
- * starting or a state from entering if the curent user does not have the necessary permissions. Another listener may
+ * starting or a state from entering if the current user does not have the necessary permissions. Another listener may
  * track flow execution navigation history to support bread crumbs. Another may perform auditing, or setup and tear down
  * connections to a transactional resource.
  * <p>
@@ -43,7 +43,6 @@ import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
  * @see FlowExecution
  * @see RequestContext
  * @see Event
- * @see ViewSelection
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -64,24 +63,23 @@ public interface FlowExecutionListener {
 	public void requestProcessed(RequestContext context);
 
 	/**
-	 * Called to indicate a new flow definition session is about to be created and started. Called before the session is
-	 * created. An exception may be thrown from this method to veto the start operation. Any type of runtime exception
-	 * can be used for this purpose.
+	 * Called to indicate a new flow definition session is about to be created. Called before the session is created. An
+	 * exception may be thrown from this method to veto the start operation. Any type of runtime exception can be used
+	 * for this purpose.
 	 * @param context the source of the event
 	 * @param definition the flow for which a new session is starting
-	 * @param input a mutable input map - attributes placed in this map are eligible for input mapping by the flow
-	 * definition at startup
 	 */
-	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input);
+	public void sessionCreating(RequestContext context, FlowDefinition definition);
 
 	/**
 	 * Called after a new flow session has been created but before it starts. Useful for setting arbitrary attributes in
 	 * the session before the flow starts.
 	 * @param context the source of the event
 	 * @param session the session that was created
-	 * @since 1.0.2
+	 * @param input a mutable input map - attributes placed in this map are eligible for input mapping by the flow
+	 * definition at startup
 	 */
-	public void sessionCreated(RequestContext context, FlowSession session);
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input);
 
 	/**
 	 * Called after a new flow session has started. At this point the flow's start state has been entered and any other
@@ -117,15 +115,14 @@ public interface FlowExecutionListener {
 	/**
 	 * Called when a flow execution is paused, for instance when it is waiting for user input (after event processing).
 	 * @param context the source of the event
-	 * @param selectedView the view that will display
 	 */
-	public void paused(RequestContext context, ViewSelection selectedView);
+	public void paused(RequestContext context);
 
 	/**
 	 * Called after a flow execution is successfully reactivated after pause (but before event processing).
 	 * @param context the source of the event
 	 */
-	public void resumed(RequestContext context);
+	public void resuming(RequestContext context);
 
 	/**
 	 * Called when the active flow execution session has been asked to end but before it has ended.

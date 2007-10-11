@@ -1,16 +1,16 @@
 package org.springframework.binding.expression.el;
 
+import java.util.Iterator;
+import java.util.List;
+
 import javax.el.ArrayELResolver;
 import javax.el.BeanELResolver;
 import javax.el.CompositeELResolver;
 import javax.el.ELContext;
+import javax.el.ELResolver;
 import javax.el.ListELResolver;
 import javax.el.MapELResolver;
-import javax.el.PropertyNotFoundException;
-import javax.el.PropertyNotWritableException;
 import javax.el.ResourceBundleELResolver;
-
-import org.springframework.binding.collection.MapAdaptable;
 
 /**
  * A generic ELResolver to be used as a default when no other ELResolvers have been configured by the client
@@ -27,55 +27,48 @@ public class DefaultELResolver extends CompositeELResolver {
 
 	private Object target;
 
-	public DefaultELResolver() {
-		configureResolvers();
-	}
-
-	public Class getType(ELContext context, Object base, Object property) {
-		return super.getType(context, adaptIfNecessary(base), property);
-	}
-
-	public Object getValue(ELContext context, Object base, Object property) {
-		if (base == null) {
-			try {
-				return super.getValue(context, target, property);
-			} catch (PropertyNotFoundException ex) {
-				context.setPropertyResolved(false);
-			}
-		}
-		return super.getValue(context, adaptIfNecessary(base), property);
-	}
-
-	public void setValue(ELContext context, Object base, Object property, Object val) {
-		if (base == null) {
-			try {
-				super.setValue(context, target, property, val);
-				if (context.isPropertyResolved())
-					return;
-			} catch (PropertyNotWritableException ex) {
-				context.setPropertyResolved(false);
-			}
-		}
-		super.setValue(context, adaptIfNecessary(base), property, val);
+	/**
+	 * Creates a new default EL resolver for resolving properties of the root object.
+	 * @param target the target, or "root", object of the expression
+	 */
+	public DefaultELResolver(Object target, List customResolvers) {
+		this.target = target;
+		configureResolvers(customResolvers);
 	}
 
 	public Object getTarget() {
 		return target;
 	}
 
-	public void setTarget(Object target) {
-		this.target = adaptIfNecessary(target);
+	public Class getType(ELContext context, Object base, Object property) {
+		return super.getType(context, base, property);
 	}
 
-	private Object adaptIfNecessary(Object base) {
-		if (base instanceof MapAdaptable) {
-			return ((MapAdaptable) base).asMap();
+	public Object getValue(ELContext context, Object base, Object property) {
+		if (base == null) {
+			return super.getValue(context, target, property);
 		} else {
-			return base;
+			return super.getValue(context, base, property);
 		}
 	}
 
-	private void configureResolvers() {
+	public void setValue(ELContext context, Object base, Object property, Object val) {
+		if (base == null) {
+			super.setValue(context, target, property, val);
+		} else {
+			super.setValue(context, base, property, val);
+		}
+	}
+
+	private void configureResolvers(List customResolvers) {
+		if (customResolvers != null) {
+			Iterator i = customResolvers.iterator();
+			while (i.hasNext()) {
+				ELResolver resolver = (ELResolver) i.next();
+				add(resolver);
+			}
+		}
+		add(new MapAdaptableELResolver());
 		add(new ArrayELResolver());
 		add(new ListELResolver());
 		add(new MapELResolver());

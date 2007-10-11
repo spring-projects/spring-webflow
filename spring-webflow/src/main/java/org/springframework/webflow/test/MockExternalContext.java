@@ -15,10 +15,15 @@
  */
 package org.springframework.webflow.test;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.context.FlowDefinitionRequestInfo;
+import org.springframework.webflow.context.FlowExecutionRequestInfo;
+import org.springframework.webflow.context.RequestPath;
+import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -34,11 +39,13 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  */
 public class MockExternalContext implements ExternalContext {
 
-	private String contextPath;
+	private String flowId;
 
-	private String dispatcherPath;
+	private String flowExecutionKey;
 
-	private String requestPathInfo;
+	private RequestPath requestPath;
+
+	private String requestMethod;
 
 	private ParameterMap requestParameterMap = new MockParameterMap();
 
@@ -49,6 +56,22 @@ public class MockExternalContext implements ExternalContext {
 	private SharedAttributeMap globalSessionMap = sessionMap;
 
 	private SharedAttributeMap applicationMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
+
+	private Object context;
+
+	private Object request;
+
+	private Object response;
+
+	private FlowDefinitionRequestInfo flowDefinitionRedirectResult;
+
+	private FlowExecutionRequestInfo flowExecutionRedirectResult;
+
+	private String externalRedirectResult;
+
+	private String pausedFlowExecutionKeyResult;
+
+	private FlowException exceptionResult;
 
 	/**
 	 * Creates a mock external context with an empty request parameter map. Allows for bean style usage.
@@ -69,16 +92,20 @@ public class MockExternalContext implements ExternalContext {
 
 	// implementing external context
 
-	public String getContextPath() {
-		return contextPath;
+	public String getFlowId() {
+		return flowId;
 	}
 
-	public String getDispatcherPath() {
-		return dispatcherPath;
+	public String getFlowExecutionKey() {
+		return flowExecutionKey;
 	}
 
-	public String getRequestPathInfo() {
-		return requestPathInfo;
+	public String getRequestMethod() {
+		return requestMethod;
+	}
+
+	public RequestPath getRequestPath() {
+		return requestPath;
 	}
 
 	public ParameterMap getRequestParameterMap() {
@@ -103,28 +130,20 @@ public class MockExternalContext implements ExternalContext {
 
 	// helper setters
 
-	/**
-	 * Set the context path.
-	 * @see ExternalContext#getContextPath()
-	 */
-	public void setContextPath(String contextPath) {
-		this.contextPath = contextPath;
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
 	}
 
-	/**
-	 * Set the dispatcher path.
-	 * @see ExternalContext#getDispatcherPath()
-	 */
-	public void setDispatcherPath(String dispatcherPath) {
-		this.dispatcherPath = dispatcherPath;
+	public void setFlowExecutionKey(String flowExecutionKey) {
+		this.flowExecutionKey = flowExecutionKey;
 	}
 
-	/**
-	 * Set the request path info.
-	 * @see ExternalContext#getRequestPathInfo()
-	 */
-	public void setRequestPathInfo(String requestPathInfo) {
-		this.requestPathInfo = requestPathInfo;
+	public void setRequestMethod(String requestMethod) {
+		this.requestMethod = requestMethod;
+	}
+
+	public void setRequestPath(RequestPath requestPath) {
+		this.requestPath = requestPath;
 	}
 
 	/**
@@ -194,5 +213,87 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public void putRequestParameter(String parameterName, String[] parameterValues) {
 		getMockRequestParameterMap().put(parameterName, parameterValues);
+	}
+
+	public Object getContext() {
+		return context;
+	}
+
+	public Object getRequest() {
+		return request;
+	}
+
+	public Object getResponse() {
+		return response;
+	}
+
+	public PrintWriter getResponseWriter() {
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	public String encode(String string) {
+		return string;
+	}
+
+	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo) {
+		this.flowDefinitionRedirectResult = requestInfo;
+	}
+
+	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo) {
+		this.flowExecutionRedirectResult = requestInfo;
+	}
+
+	public void sendExternalRedirect(String resourceUri) {
+		externalRedirectResult = resourceUri;
+	}
+
+	public void setPausedResult(String flowExecutionKey) {
+		this.pausedFlowExecutionKeyResult = flowExecutionKey;
+	}
+
+	public void setEndedResult(String flowExecutionKey) {
+
+	}
+
+	public void setExceptionResult(FlowException e) {
+		exceptionResult = e;
+	}
+
+	public FlowDefinitionRequestInfo getFlowDefinitionRedirectResult() {
+		return flowDefinitionRedirectResult;
+	}
+
+	public FlowExecutionRequestInfo getFlowExecutionRedirectResult() {
+		return flowExecutionRedirectResult;
+	}
+
+	public String getExternalRedirectResult() {
+		return externalRedirectResult;
+	}
+
+	public String getPausedFlowExecutionKeyResult() {
+		return pausedFlowExecutionKeyResult;
+	}
+
+	public FlowException getExceptionResult() {
+		return exceptionResult;
+	}
+
+	public boolean isResponseCommitted() {
+		return false;
+		/*
+		 * return flowExecutionRedirectResult == true || flowDefinitionRedirectResult != null || externalRedirectResult !=
+		 * null;
+		 */
 	}
 }

@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution.repository;
 
+import org.springframework.webflow.execution.FlowExecutionKey;
+
 /**
  * Thrown when access to a flow execution was denied by a repository.
  * 

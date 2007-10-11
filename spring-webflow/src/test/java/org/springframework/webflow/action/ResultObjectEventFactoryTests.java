@@ -17,8 +17,8 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
+import org.springframework.core.enums.StaticLabeledEnum;
 import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.FlowSessionStatus;
 import org.springframework.webflow.test.MockRequestContext;
 
 /**
@@ -37,7 +37,7 @@ public class ResultObjectEventFactoryTests extends TestCase {
 	}
 
 	public void testMappedTypes() {
-		assertTrue(factory.isMappedValueType(FlowSessionStatus.class));
+		assertTrue(factory.isMappedValueType(MyEnum.class));
 		assertTrue(factory.isMappedValueType(boolean.class));
 		assertTrue(factory.isMappedValueType(Boolean.class));
 		assertTrue(factory.isMappedValueType(String.class));
@@ -57,12 +57,20 @@ public class ResultObjectEventFactoryTests extends TestCase {
 	}
 
 	public void testLabeledEnumResult() {
-		Event result = factory.createResultEvent(this, FlowSessionStatus.ACTIVE, context);
-		assertEquals("Active", result.getId());
+		Event result = factory.createResultEvent(this, MyEnum.FOO, context);
+		assertEquals("foo", result.getId());
 	}
 
 	public void testOtherResult() {
 		Event result = factory.createResultEvent(this, "hello", context);
 		assertEquals("hello", result.getId());
+	}
+
+	private static class MyEnum extends StaticLabeledEnum {
+		public static final MyEnum FOO = new MyEnum();
+
+		private MyEnum() {
+			super(1, "foo");
+		}
 	}
 }

@@ -24,7 +24,6 @@ import org.springframework.webflow.definition.FlowDefinition;
  * This selection strategy is typically used by the {@link FlowExecutionListenerLoader} to determine which listeners
  * should apply to which flow definitions.
  * 
- * @see org.springframework.webflow.execution.FlowExecution
  * @see org.springframework.webflow.execution.FlowExecutionListener
  * @see org.springframework.webflow.execution.factory.FlowExecutionListenerLoader
  * 

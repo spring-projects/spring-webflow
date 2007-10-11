@@ -17,7 +17,6 @@ package org.springframework.webflow.action;
 
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.support.EventFactorySupport;
 
 /**
  * Default implementation of the resultObject-to-event mapping interface. Always returns the "success" event.

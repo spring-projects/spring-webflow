@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:flow="http://www.springframework.org/schema/webflow-config"
+       xmlns:web="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
@@ -11,36 +11,33 @@
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
 	
-	<!-- Launches new flow executions and resumes existing executions -->
-	<flow:executor id="flowExecutor" registry-ref="flowRegistry">
-		<flow:execution-attributes>
-			<flow:alwaysRedirectOnPause value="false"/>
-		</flow:execution-attributes>
-		<flow:execution-listeners>
-			<flow:listener ref="jpaConversationListener"/>
-		</flow:execution-listeners>
-	</flow:executor>
+	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<web:flow-execution-listeners>
+			<web:listener ref="jpaFlowExecutionListener" criteria="*"/>
+		</web:flow-execution-listeners>
+	</web:flow-executor>
 	
-	<!-- Creates the registry of flow definitions for this application -->
-	<bean id="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
-        <property name="expressionParser" ref="jsfExpressionParser"/>
-		<property name="flowLocations">
-			<list>
-				<value>/flow/main/main.xml</value>
-				<value>/flow/booking/booking.xml</value>
-			</list>
+	<web:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+		<web:flow-location path="flow/main/main.xml" />
+		<web:flow-location path="flow/booking/booking.xml" />
+		<web:flow-builder class="org.springframework.faces.ui.resource.ResourcesFlowBuilder" />
+	</web:flow-registry>
+
+	<bean id="flowBuilderServices" class="org.springframework.webflow.engine.builder.support.FlowBuilderServices">
+		<property name="expressionParser">
+			<bean class="org.springframework.webflow.core.expression.el.WebFlowELExpressionParser">
+				<constructor-arg >
+					<bean class="org.jboss.el.ExpressionFactoryImpl"/>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="viewFactoryCreator">
+			<bean class="org.springframework.webflow.engine.builder.xml.JsfViewFactoryCreator"/>
 		</property>
 	</bean>
 	
-	<!-- Enables use of the unified expression language (EL) from flow definitions -->
-	<bean id="jsfExpressionParser" class="org.springframework.faces.el.Jsf12ELExpressionParser">
-		<constructor-arg >
-			<bean class="org.jboss.el.ExpressionFactoryImpl"/>
-		</constructor-arg>
-	</bean>
-	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
-	<bean id="jpaConversationListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
 		<constructor-arg>
 			<ref bean="entityManagerFactory"/>
 		</constructor-arg>

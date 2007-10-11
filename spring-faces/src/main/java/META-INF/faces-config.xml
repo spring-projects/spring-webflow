@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
-<!DOCTYPE faces-config PUBLIC
-  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config version="1.2" 
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
 
-<faces-config>
-
-	<application>
-		<navigation-handler>org.springframework.faces.webflow.FlowNavigationHandler</navigation-handler>
-		<variable-resolver>org.springframework.faces.webflow.el.DelegatingFlowVariableResolver</variable-resolver>
-		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
-	</application>
+	<factory>
+		<lifecycle-factory>org.springframework.faces.webflow.FlowLifecycleFactory</lifecycle-factory>
+		<faces-context-factory>org.springframework.faces.webflow.FlowFacesContextFactory</faces-context-factory>
+		<render-kit-factory>org.springframework.faces.webflow.FlowRenderKitFactory</render-kit-factory>
+	</factory>
 	
-	<lifecycle>
-		<phase-listener>org.springframework.faces.webflow.FlowPhaseListener</phase-listener>
-	</lifecycle>
+	<application>
+		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
+		<el-resolver>org.springframework.webflow.core.expression.el.RequestContextELResolver</el-resolver>
+		<el-resolver>org.springframework.webflow.core.expression.el.ScopeSearchingELResolver</el-resolver>
+		<view-handler>org.springframework.faces.webflow.FlowExecutionViewHandler</view-handler>
+	</application>
 
 	<component>
     	<component-type>spring.faces.ClientTextValidator</component-type>

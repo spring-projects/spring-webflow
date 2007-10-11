@@ -20,7 +20,6 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.SettableExpression;
 import org.springframework.binding.expression.support.CollectionAddingExpression;
 import org.springframework.util.Assert;
 
@@ -61,7 +60,7 @@ public class MappingBuilder {
 	/**
 	 * The target mapping settable expression.
 	 */
-	private SettableExpression targetExpression;
+	private Expression targetExpression;
 
 	/**
 	 * The type of the object returned by evaluating the source expression.
@@ -102,7 +101,7 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder source(String expressionString) {
-		sourceExpression = expressionParser.parseExpression(expressionString);
+		sourceExpression = expressionParser.parseExpression(expressionString, Object.class, Object.class, null);
 		return this;
 	}
 
@@ -112,7 +111,7 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder target(String expressionString) {
-		targetExpression = (SettableExpression) expressionParser.parseExpression(expressionString);
+		targetExpression = expressionParser.parseExpression(expressionString, Object.class, Object.class, null);
 		return this;
 	}
 
@@ -122,7 +121,8 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder targetCollection(String expressionString) {
-		targetExpression = new CollectionAddingExpression(expressionParser.parseSettableExpression(expressionString));
+		targetExpression = new CollectionAddingExpression(expressionParser.parseExpression(expressionString,
+				Object.class, Object.class, null));
 		return this;
 	}
 
@@ -164,7 +164,7 @@ public class MappingBuilder {
 	public Mapping value() {
 		Assert.notNull(sourceExpression, "The source expression must be set at a minimum");
 		if (targetExpression == null) {
-			targetExpression = (SettableExpression) sourceExpression;
+			targetExpression = sourceExpression;
 		}
 		ConversionExecutor typeConverter = null;
 		if (sourceType != null) {

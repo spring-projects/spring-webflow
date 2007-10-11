@@ -18,7 +18,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.ViewSelection;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -49,7 +48,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 	public void testFlowNotAPersistenceContext() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		assertSessionNotBound();
 	}
 
@@ -58,7 +57,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -81,17 +80,17 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean(1, "Keith Donald");
 		jpaTemplate.persist(bean1);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		jpaListener.paused(context, ViewSelection.NULL_VIEW);
+		jpaListener.paused(context);
 		assertSessionNotBound();
 
-		jpaListener.resumed(context);
+		jpaListener.resuming(context);
 		TestBean bean2 = new TestBean(2, "Keith Donald");
 		jpaTemplate.persist(bean2);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
@@ -114,7 +113,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -136,7 +135,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -156,7 +155,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
@@ -183,13 +182,13 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionCreated(context, flowSession);
+		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
 		TestBean bean = (TestBean) jpaTemplate.getReference(TestBean.class, Long.valueOf(0));
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
-		jpaListener.paused(context, ViewSelection.NULL_VIEW);
+		jpaListener.paused(context);
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
 		Hibernate.initialize(bean.getAddresses());
 		assertTrue("addresses should be initialized", Hibernate.isInitialized(bean.getAddresses()));

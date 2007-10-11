@@ -40,13 +40,6 @@ public final class StaticFlowExecutionListenerLoader implements FlowExecutionLis
 	private final FlowExecutionListener[] listeners;
 
 	/**
-	 * Creates a new flow execution listener loader that returns an empty listener array on each invocation.
-	 */
-	private StaticFlowExecutionListenerLoader() {
-		this(new FlowExecutionListener[0]);
-	}
-
-	/**
 	 * Creates a new flow execution listener loader that returns the provided listener on each invocation.
 	 * @param listener the listener
 	 */
@@ -62,6 +55,13 @@ public final class StaticFlowExecutionListenerLoader implements FlowExecutionLis
 	public StaticFlowExecutionListenerLoader(FlowExecutionListener[] listeners) {
 		Assert.notNull(listeners, "The flow execution listener array is required");
 		this.listeners = listeners;
+	}
+
+	/**
+	 * Creates a new flow execution listener loader that returns an empty listener array on each invocation.
+	 */
+	private StaticFlowExecutionListenerLoader() {
+		this(new FlowExecutionListener[0]);
 	}
 
 	public FlowExecutionListener[] getListeners(FlowDefinition flowDefinition) {

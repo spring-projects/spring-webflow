@@ -35,10 +35,10 @@ public abstract class FlowExecutionListenerAdapter implements FlowExecutionListe
 	public void requestProcessed(RequestContext context) {
 	}
 
-	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
+	public void sessionCreating(RequestContext context, FlowDefinition definition) {
 	}
 
-	public void sessionCreated(RequestContext context, FlowSession session) {
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
 	}
 
 	public void sessionStarted(RequestContext context, FlowSession session) {
@@ -53,10 +53,10 @@ public abstract class FlowExecutionListenerAdapter implements FlowExecutionListe
 	public void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition newState) {
 	}
 
-	public void resumed(RequestContext context) {
+	public void paused(RequestContext context) {
 	}
 
-	public void paused(RequestContext context, ViewSelection selectedView) {
+	public void resuming(RequestContext context) {
 	}
 
 	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {

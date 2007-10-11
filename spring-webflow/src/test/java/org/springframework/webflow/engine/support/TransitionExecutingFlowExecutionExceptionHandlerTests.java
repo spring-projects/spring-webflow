@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.support;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -28,11 +27,11 @@ import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionableState;
-import org.springframework.webflow.engine.builder.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
-import org.springframework.webflow.engine.impl.FlowExecutionImpl;
+import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
+import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -40,9 +39,9 @@ import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
-import org.springframework.webflow.execution.support.ApplicationView;
+import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowBuilderContext;
 
 public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestCase {
 
@@ -53,7 +52,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 	protected void setUp() {
 		flow = new Flow("myFlow");
 		state = new TransitionableState(flow, "state1") {
-			protected ViewSelection doEnter(RequestControlContext context) {
+			protected void doEnter(RequestControlContext context) {
 				throw new FlowExecutionException(getFlow().getId(), getId(), "Oops!", new TestException());
 			}
 		};
@@ -65,10 +64,10 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		handler.add(TestException.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.handles(e));
+		assertTrue("Doesn't handle state exception", handler.canHandle(e));
 
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new Exception());
-		assertFalse("Shouldn't handle exception", handler.handles(e));
+		assertFalse("Shouldn't handle exception", handler.canHandle(e));
 	}
 
 	public void testTransitionExecutorHandlesExceptionSuperclassMatch() {
@@ -76,14 +75,13 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		handler.add(Exception.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.handles(e));
+		assertTrue("Doesn't handle state exception", handler.canHandle(e));
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new RuntimeException());
-		assertTrue("Doesn't handle state exception", handler.handles(e));
+		assertTrue("Doesn't handle state exception", handler.canHandle(e));
 	}
 
 	public void testFlowStateExceptionHandlingTransition() {
-		EndState state2 = new EndState(flow, "end");
-		state2.setViewSelector(new ApplicationViewSelector(new StaticExpression("view")));
+		new EndState(flow, "end");
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
@@ -94,8 +92,10 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 				assertTrue(context.getFlashScope().get("rootCauseException") instanceof TestException);
 			}
 		};
-		FlowExecutionImpl execution = new FlowExecutionImpl(flow, new FlowExecutionListener[] { listener }, null);
-		execution.start(null, new MockExternalContext());
+		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
+		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
+		FlowExecution execution = factory.createFlowExecution(flow);
+		execution.start(new MockExternalContext());
 		assertTrue("Should have ended", !execution.isActive());
 	}
 
@@ -103,18 +103,18 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
-		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		try {
-			execution.start(null, new MockExternalContext());
+			execution.start(new MockExternalContext());
 			fail("Should have failed no such state");
 		} catch (IllegalArgumentException e) {
 		}
 	}
 
 	public void testStateExceptionHandlingRethrow() {
-		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		try {
-			execution.start(null, new MockExternalContext());
+			execution.start(new MockExternalContext());
 			fail("Should have rethrown");
 		} catch (FlowExecutionException e) {
 			// expected
@@ -124,29 +124,31 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 	public void testStateExceptionHandlingExceptionInEndState() {
 		FlowBuilder builder = new AbstractFlowBuilder() {
 			public void buildStates() throws FlowBuilderException {
-				State state = addEndState("end");
+				State state = new EndState(getFlow(), "end");
 				state.getEntryActionList().add(new AbstractAction() {
 					protected Event doExecute(RequestContext context) throws Exception {
 						throw new NullPointerException("failing");
 					}
 				});
-				addViewState("showError", "error", transition(on("end"), to("end")));
+				new TransitionableState(getFlow(), "showError") {
+					protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+					}
+				};
 			}
 
 			public void buildExceptionHandlers() throws FlowBuilderException {
 				getFlow().getExceptionHandlerSet().add(
 						new TransitionExecutingFlowExecutionExceptionHandler().add(Exception.class, "showError"));
 			}
+
+			public Flow createFlow() throws FlowBuilderException {
+				return Flow.create(getContext().getFlowId(), getContext().getFlowAttributes());
+			}
 		};
-		Flow flow = new FlowAssembler("flow", builder).assembleFlow();
-		FlowExecution execution = new FlowExecutionImpl(flow);
-		ViewSelection view = execution.start(null, new MockExternalContext());
+		Flow flow = new FlowAssembler(builder, new MockFlowBuilderContext("flow")).assembleFlow();
+		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
+		execution.start(new MockExternalContext());
 		assertTrue(execution.isActive());
-		assertEquals("error", ((ApplicationView) view).getViewName());
-		assertTrue(((ApplicationView) view).getModel().containsKey(
-				TransitionExecutingFlowExecutionExceptionHandler.ROOT_CAUSE_EXCEPTION_ATTRIBUTE));
-		assertTrue(((ApplicationView) view).getModel().containsKey(
-				TransitionExecutingFlowExecutionExceptionHandler.FLOW_EXECUTION_EXCEPTION_ATTRIBUTE));
 	}
 
 	protected TargetStateResolver toState(String stateId) {

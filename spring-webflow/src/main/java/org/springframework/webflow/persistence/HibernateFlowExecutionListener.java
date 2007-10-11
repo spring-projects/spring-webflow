@@ -26,13 +26,13 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A {@link FlowExecutionListener} that implements the Flow Managed Persistence Context (FMPC) pattern using the native
@@ -103,7 +103,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		this.entityInterceptor = entityInterceptor;
 	}
 
-	public void sessionCreated(RequestContext context, FlowSession session) {
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
 		if (isPersistenceContext(session.getDefinition())) {
 			Session hibernateSession = createSession(context);
 			session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
@@ -111,15 +111,15 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		}
 	}
 
-	public void resumed(RequestContext context) {
+	public void paused(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			bind(getHibernateSession(context));
+			unbind(getHibernateSession(context));
 		}
 	}
 
-	public void paused(RequestContext context, ViewSelection selectedView) {
+	public void resuming(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getHibernateSession(context));
+			bind(getHibernateSession(context));
 		}
 	}
 

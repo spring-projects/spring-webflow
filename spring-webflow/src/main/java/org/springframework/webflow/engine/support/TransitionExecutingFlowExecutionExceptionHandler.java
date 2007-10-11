@@ -31,7 +31,6 @@ import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A flow execution exception handler that maps the occurrence of a specific type of exception to a transition to a new
@@ -100,17 +99,17 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 		return actionList;
 	}
 
-	public boolean handles(FlowExecutionException e) {
+	public boolean canHandle(FlowExecutionException e) {
 		return getTargetStateResolver(e) != null;
 	}
 
-	public ViewSelection handle(FlowExecutionException exception, RequestControlContext context) {
+	public void handle(FlowExecutionException exception, RequestControlContext context) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Handling flow execution exception " + exception, exception);
 		}
 		exposeException(context, exception, findRootCause(exception));
 		actionList.execute(context);
-		return context.execute(new Transition(getTargetStateResolver(exception)));
+		context.execute(new Transition(getTargetStateResolver(exception)));
 	}
 
 	// helpers

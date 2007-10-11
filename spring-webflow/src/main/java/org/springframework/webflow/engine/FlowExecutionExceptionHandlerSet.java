@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A typed set of state exception handlers, mainly for use internally by artifacts that can apply state exception
@@ -98,28 +97,24 @@ public class FlowExecutionExceptionHandlerSet {
 	}
 
 	/**
-	 * Handle an exception that occured during the context of the current flow execution request.
+	 * Handle an exception that occurred during the context of the current flow execution request.
 	 * <p>
 	 * This implementation iterates over the ordered set of exception handler objects, delegating to each handler in the
-	 * set until one handles the exception that occured and selects a non-null error view.
-	 * @param exception the exception that occured
+	 * set until one handles the exception that occurred.
+	 * @param exception the exception that occurred
 	 * @param context the flow execution control context
-	 * @return the selected error view, or <code>null</code> if no handler matched or returned a non-null view
-	 * selection
+	 * @return true if the exception was handled
 	 */
-	public ViewSelection handleException(FlowExecutionException exception, RequestControlContext context) {
+	public boolean handleException(FlowExecutionException exception, RequestControlContext context) {
 		Iterator it = exceptionHandlers.iterator();
 		while (it.hasNext()) {
 			FlowExecutionExceptionHandler handler = (FlowExecutionExceptionHandler) it.next();
-			if (handler.handles(exception)) {
-				ViewSelection result = handler.handle(exception, context);
-				if (result != null) {
-					return result;
-				}
-				// else continue with next handler
+			if (handler.canHandle(exception)) {
+				handler.handle(exception, context);
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	public String toString() {

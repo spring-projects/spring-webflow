@@ -19,8 +19,6 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.ognl.OgnlExpressionParser;
-import org.springframework.binding.expression.support.TestBean;
 
 /**
  * Unit tests for {@link org.springframework.binding.expression.ognl.OgnlExpressionParser}.
@@ -33,44 +31,44 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseSimpleDelimited() {
 		String exp = "${flag}";
-		Expression e = parser.parseExpression(exp);
+		Expression e = parser.parseExpression(exp, null, null, null);
 		assertNotNull(e);
-		Boolean b = (Boolean) e.evaluate(bean, null);
+		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
 	}
 
 	public void testParseSimple() {
 		String exp = "flag";
-		Expression e = parser.parseExpression(exp);
+		Expression e = parser.parseExpression(exp, null, null, null);
 		assertNotNull(e);
-		Boolean b = (Boolean) e.evaluate(bean, null);
+		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
 	}
 
 	public void testParseNull() {
-		Expression e = parser.parseExpression(null);
+		Expression e = parser.parseExpression(null, null, null, null);
 		assertNotNull(e);
-		assertNull(e.evaluate(bean, null));
+		assertNull(e.getValue(bean));
 	}
 
 	public void testParseEmpty() {
-		Expression e = parser.parseExpression("");
+		Expression e = parser.parseExpression("", null, null, null);
 		assertNotNull(e);
-		assertEquals("", e.evaluate(bean, null));
+		assertEquals("", e.getValue(bean));
 	}
 
 	public void testParseComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
-		Expression e = parser.parseExpression(exp);
+		Expression e = parser.parseExpression(exp, null, null, null);
 		assertNotNull(e);
-		String str = (String) e.evaluate(bean, null);
+		String str = (String) e.getValue(bean);
 		assertEquals("hello false false false", str);
 	}
 
 	public void testEnclosedCompositeNotSupported() {
 		String exp = "${hello ${flag} ${flag} ${flag}}";
 		try {
-			parser.parseExpression(exp);
+			parser.parseExpression(exp, null, null, null);
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -78,14 +76,13 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError1() {
 		try {
-			parser.parseExpression("${");
+			parser.parseExpression("${", null, null, null);
 			fail();
 		} catch (ParserException e) {
 		}
-
 		try {
 			String exp = "hello ${flag} ${abcd defg";
-			parser.parseExpression(exp);
+			parser.parseExpression(exp, null, null, null);
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -93,50 +90,38 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError2() {
 		try {
-			parser.parseExpression("${}");
+			parser.parseExpression("${}", null, null, null);
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
-
 		try {
 			String exp = "hello ${flag} ${}";
-			parser.parseExpression(exp);
+			parser.parseExpression(exp, null, null, null);
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
 	}
 
-	public void testIsDelimitedExpression() {
-		assertTrue(parser.isDelimitedExpression("${foo}"));
-		assertTrue(parser.isDelimitedExpression("${foo ${foo}}"));
-		assertTrue(parser.isDelimitedExpression("foo ${bar}"));
-	}
-
-	public void testIsNotDelimitedExpression() {
-		assertFalse(parser.isDelimitedExpression("foo"));
-		assertFalse(parser.isDelimitedExpression("foo ${"));
-		assertFalse(parser.isDelimitedExpression("$foo}"));
-		assertFalse(parser.isDelimitedExpression("foo ${}"));
-	}
-
-	public void testCollectionContructionSyntax() {
+	public void testCollectionConstructionSyntax() {
 		// lists
-		parser.parseExpression("name in {null, \"Untitled\"}");
-		parser.parseExpression("${name in {null, \"Untitled\"}}");
+		parser.parseExpression("name in {null, \"Untitled\"}", null, null, null);
+		parser.parseExpression("${name in {null, \"Untitled\"}}", null, null, null);
 
 		// native arrays
-		parser.parseExpression("new int[] {1, 2, 3}");
-		parser.parseExpression("${new int[] {1, 2, 3}}");
+		parser.parseExpression("new int[] {1, 2, 3}", null, null, null);
+		parser.parseExpression("${new int[] {1, 2, 3}}", null, null, null);
 
 		// maps
-		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }");
-		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}");
-		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }");
-		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}");
+		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }", null, null, null);
+		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", null, null, null);
+		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }", null, null,
+				null);
+		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}", null, null,
+				null);
 
 		// complex examples
-		parser.parseExpression("b,#{1:2}");
-		parser.parseExpression("${b,#{1:2}}");
-		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k");
+		parser.parseExpression("b,#{1:2}", null, null, null);
+		parser.parseExpression("${b,#{1:2}}", null, null, null);
+		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k", null, null, null);
 	}
 }

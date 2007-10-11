@@ -35,10 +35,10 @@ public interface FlowExecutionContinuationFactory {
 			throws ContinuationCreationException;
 
 	/**
-	 * Creates a new flow execution continuation from the provided byte array.
+	 * Restore a flow execution continuation object from the provided byte array.
 	 * @param bytes the flow execution byte array
 	 * @return the continuation
-	 * @throws ContinuationCreationException when the continuation cannot be created
+	 * @throws ContinuationUnmarshalException when the continuation cannot be restored
 	 */
-	public FlowExecutionContinuation createContinuation(byte[] bytes) throws ContinuationCreationException;
+	public FlowExecutionContinuation restoreContinuation(byte[] bytes) throws ContinuationUnmarshalException;
 }

@@ -25,13 +25,13 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * A {@link FlowExecutionListener} that implements the Flow Managed Persistence Context (FMPC) pattern using the
@@ -93,7 +93,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		this.transactionTemplate = new TransactionTemplate(transactionManager);
 	}
 
-	public void sessionCreated(RequestContext context, FlowSession session) {
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
 		if (isPersistenceContext(session.getDefinition())) {
 			EntityManager em = entityManagerFactory.createEntityManager();
 			session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
@@ -101,15 +101,15 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 	}
 
-	public void resumed(RequestContext context) {
+	public void paused(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			bind(getEntityManager(context));
+			unbind(getEntityManager(context));
 		}
 	}
 
-	public void paused(RequestContext context, ViewSelection selectedView) {
+	public void resuming(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getEntityManager(context));
+			bind(getEntityManager(context));
 		}
 	}
 

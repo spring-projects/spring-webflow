@@ -21,10 +21,10 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
-import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowSession;
-import org.springframework.webflow.execution.FlowSessionStatus;
 
 /**
  * Mock implementation of the {@link FlowSession} interface.
@@ -39,8 +39,6 @@ public class MockFlowSession implements FlowSession {
 
 	private State state;
 
-	private FlowSessionStatus status = FlowSessionStatus.CREATED;
-
 	private MutableAttributeMap scope = new LocalAttributeMap();
 
 	private MutableAttributeMap flashMap = new LocalAttributeMap();
@@ -49,12 +47,14 @@ public class MockFlowSession implements FlowSession {
 
 	/**
 	 * Creates a new mock flow session that sets a flow with id "mockFlow" as the 'active flow' in state "mockState".
-	 * This session marks itself active.
 	 */
 	public MockFlowSession() {
 		setDefinition(new Flow("mockFlow"));
-		State state = new ViewState(definition, "mockState");
-		setStatus(FlowSessionStatus.ACTIVE);
+		State state = new State(definition, "mockState") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				// nothing to do
+			}
+		};
 		setState(state);
 	}
 
@@ -66,7 +66,7 @@ public class MockFlowSession implements FlowSession {
 	}
 
 	/**
-	 * Creates a new mock session in {@link FlowSessionStatus#CREATED} state for the specified flow definition.
+	 * Creates a new mock session for the specified flow definition.
 	 * @param flow the flow definition for the session
 	 * @param input initial contents of 'flow scope'
 	 */
@@ -83,10 +83,6 @@ public class MockFlowSession implements FlowSession {
 
 	public StateDefinition getState() {
 		return state;
-	}
-
-	public FlowSessionStatus getStatus() {
-		return status;
 	}
 
 	public MutableAttributeMap getScope() {
@@ -119,13 +115,6 @@ public class MockFlowSession implements FlowSession {
 	 */
 	public void setState(State state) {
 		this.state = state;
-	}
-
-	/**
-	 * Set the status of this flow session.
-	 */
-	public void setStatus(FlowSessionStatus status) {
-		this.status = status;
 	}
 
 	/**

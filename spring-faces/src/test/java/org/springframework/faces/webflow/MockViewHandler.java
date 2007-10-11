@@ -20,11 +20,14 @@ import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
+import javax.faces.application.StateManager.SerializedView;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 public class MockViewHandler extends ViewHandler {
-	private UIViewRoot viewRoot;
+	private UIViewRoot createViewRoot;
+
+	private UIViewRoot restoreViewRoot;
 
 	public Locale calculateLocale(FacesContext context) {
 		return null;
@@ -35,15 +38,23 @@ public class MockViewHandler extends ViewHandler {
 	}
 
 	public UIViewRoot createView(FacesContext context, String viewId) {
-		return viewRoot;
+		return createViewRoot;
 	}
 
 	/**
-	 * Set the view root that this mpck is supposed to create.
-	 * @param viewRoot the view to set.
+	 * Set the view root that this mock is supposed to create
+	 * @param createViewRoot the view to set.
 	 */
-	public void setCreateView(UIViewRoot viewRoot) {
-		this.viewRoot = viewRoot;
+	public void setCreateView(UIViewRoot createViewRoot) {
+		this.createViewRoot = createViewRoot;
+	}
+
+	/**
+	 * Set the view root that this mock is supposed to restore
+	 * @param restoreViewRoot the view to set.
+	 */
+	public void setRestoreView(UIViewRoot restoreViewRoot) {
+		this.restoreViewRoot = restoreViewRoot;
 	}
 
 	public String getActionURL(FacesContext context, String viewId) {
@@ -54,11 +65,17 @@ public class MockViewHandler extends ViewHandler {
 		return null;
 	}
 
+	/**
+	 * Really simple implementation to exercise rendering and state saving
+	 */
 	public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
+		context.getViewRoot().encodeAll(context);
+		SerializedView state = context.getApplication().getStateManager().saveSerializedView(context);
+		context.getRenderKit().getResponseStateManager().writeState(context, state);
 	}
 
 	public UIViewRoot restoreView(FacesContext context, String viewId) {
-		return null;
+		return restoreViewRoot;
 	}
 
 	public void writeState(FacesContext context) throws IOException {
