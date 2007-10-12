@@ -1,5 +1,9 @@
 package org.springframework.faces.webflow;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+
 import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
@@ -9,14 +13,26 @@ import javax.faces.event.ActionEvent;
 
 import junit.framework.TestCase;
 
+import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
+
 public class FlowActionListenerTests extends TestCase {
 
 	FlowActionListener listener = new FlowActionListener();
 
 	JSFMockHelper jsfMock = new JSFMockHelper();
 
+	RequestContext context = createMock(RequestContext.class);
+
 	protected void setUp() throws Exception {
 		jsfMock.setUp();
+
+		RequestContextHolder.setRequestContext(context);
+		AttributeMap flash = new LocalAttributeMap();
+		expect(context.getFlashScope()).andStubReturn(flash);
+		replay(new Object[] { context });
 	}
 
 	protected void tearDown() throws Exception {
