@@ -13,7 +13,7 @@ import org.springframework.webflow.execution.ViewFactory;
 
 /**
  * A ViewFactoryCreator implementation for creating JSF ViewFactories
- * @author Jeremy Grellex
+ * @author Jeremy Grelle
  * 
  */
 public class JsfViewFactoryCreator implements ViewFactoryCreator {

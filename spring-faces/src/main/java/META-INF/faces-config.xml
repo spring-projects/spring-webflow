@@ -16,6 +16,10 @@
 		<el-resolver>org.springframework.webflow.core.expression.el.ScopeSearchingELResolver</el-resolver>
 		<view-handler>org.springframework.faces.webflow.FlowExecutionViewHandler</view-handler>
 	</application>
+	
+	<lifecycle>
+		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
+	</lifecycle>
 
 	<component>
     	<component-type>spring.faces.ClientTextValidator</component-type>

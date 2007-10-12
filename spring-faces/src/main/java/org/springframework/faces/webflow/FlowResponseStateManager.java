@@ -13,9 +13,11 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 public class FlowResponseStateManager extends ResponseStateManager {
 
-	private static final int TREE_STATE_INDEX = 0;
+	private static final int VIEW_ID_INDEX = 0;
 
-	private static final int COMPONENT_STATE_INDEX = 1;
+	private static final int TREE_STATE_INDEX = 1;
+
+	private static final int COMPONENT_STATE_INDEX = 2;
 
 	// TODO - This needs to be replaced with a common static, probably from FlowExecutorArgumentExtractor
 	private static final String VIEW_STATE_PARAM = "org.springframework.webflow.FlowExecutionKey";
@@ -25,21 +27,32 @@ public class FlowResponseStateManager extends ResponseStateManager {
 
 	private static final char[] STATE_FIELD_END = "\" />".toCharArray();
 
-	public Object getComponentStateToRestore(FacesContext context) {
+	public Object getState(FacesContext context, String viewId) {
+		Object[] structureAndState = new Object[2];
+		structureAndState[0] = getTreeStructureToRestore(context, viewId);
+		if (structureAndState[0] == null) {
+			return null;
+		}
+		structureAndState[1] = getComponentStateToRestore(context);
+		return structureAndState;
+	}
 
-		Object[] state = (Object[]) RequestContextHolder.getRequestContext().getFlashScope().get(JsfView.STATE_KEY);
-		return state[COMPONENT_STATE_INDEX];
+	public Object getComponentStateToRestore(FacesContext context) {
+		Object[] state = (Object[]) RequestContextHolder.getRequestContext().getFlowScope().get(JsfView.STATE_KEY);
+		if (state == null) {
+			return null;
+		} else {
+			return state[COMPONENT_STATE_INDEX];
+		}
 	}
 
 	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
-		Object[] state = (Object[]) RequestContextHolder.getRequestContext().getFlashScope().get(JsfView.STATE_KEY);
-		return state[TREE_STATE_INDEX];
-	}
-
-	public boolean isPostback(FacesContext context) {
-
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		Object[] state = (Object[]) RequestContextHolder.getRequestContext().getFlowScope().get(JsfView.STATE_KEY);
+		if (state == null || !state[VIEW_ID_INDEX].equals(viewId)) {
+			return null;
+		} else {
+			return state[TREE_STATE_INDEX];
+		}
 	}
 
 	private FlowExecution getFlowExecution() {
@@ -54,9 +67,10 @@ public class FlowResponseStateManager extends ResponseStateManager {
 	 */
 	public void writeState(FacesContext context, SerializedView state) throws IOException {
 
-		Object[] serializableState = new Object[] { state.getStructure(), state.getState() };
+		Object[] serializableState = new Object[] { context.getViewRoot().getViewId(), state.getStructure(),
+				state.getState() };
 
-		RequestContextHolder.getRequestContext().getFlashScope().put(JsfView.STATE_KEY, serializableState);
+		RequestContextHolder.getRequestContext().getFlowScope().put(JsfView.STATE_KEY, serializableState);
 
 		Writer writer = context.getResponseWriter();
 		writer.write(STATE_FIELD_START);

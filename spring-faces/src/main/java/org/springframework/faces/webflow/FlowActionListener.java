@@ -25,6 +25,7 @@ public class FlowActionListener implements ActionListener {
 		} else {
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
 		}
+		context.renderResponse();
 	}
 
 }

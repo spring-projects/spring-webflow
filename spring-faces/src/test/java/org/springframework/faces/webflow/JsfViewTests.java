@@ -40,6 +40,7 @@ public class JsfViewTests extends TestCase {
 	private RequestContext requestContext = EasyMock.createMock(RequestContext.class);
 	private FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 	private MutableAttributeMap flashMap = EasyMock.createMock(MutableAttributeMap.class);
+	private MutableAttributeMap flowMap = EasyMock.createMock(MutableAttributeMap.class);
 
 	private FlowExecutionKey key = new FlowExecutionKey() {
 
@@ -92,17 +93,18 @@ public class JsfViewTests extends TestCase {
 	public final void testRender() {
 
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
+		EasyMock.expect(requestContext.getFlowScope()).andStubReturn(flowMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
 		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
-		EasyMock.expect(flashMap.put(EasyMock.matches(JsfView.STATE_KEY), EasyMock.anyObject())).andStubReturn(null);
+		EasyMock.expect(flowMap.put(EasyMock.matches(JsfView.STATE_KEY), EasyMock.anyObject())).andStubReturn(null);
 		EasyMock.expect(flashMap.put(EasyMock.matches("renderResponse"), EasyMock.anyObject())).andStubReturn(null);
 		EasyMock.expect(flashMap.put(EasyMock.matches("responseComplete"), EasyMock.anyObject())).andStubReturn(null);
 
-		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flashMap });
+		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
 
 		view.render();
 
-		EasyMock.verify(new Object[] { requestContext, flowExecutionContext, flashMap });
+		EasyMock.verify(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
 		assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 		assertTrue(output.getBuffer().toString().contains(key.toString()));
 	}
