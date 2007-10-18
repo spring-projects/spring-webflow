@@ -2,6 +2,7 @@ package org.springframework.faces.ui.resource;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,13 +42,21 @@ public class ResolveAndRenderResourceAction implements Action {
 
 	public Event execute(RequestContext context) throws Exception {
 
-		String resourcePath = "META-INF" + context.getExternalContext().getRequestPath().toString();
-		URLConnection resourceConn = ClassUtils.getDefaultClassLoader().getResource(resourcePath).openConnection();
-		long lastModified = resourceConn.getLastModified();
-
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
 		ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+
+		String resourcePath = "META-INF" + context.getExternalContext().getRequestPath().toString();
+
+		URL resource = ClassUtils.getDefaultClassLoader().getResource(resourcePath);
+
+		if (resource == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return new Event(this, "success");
+		}
+
+		URLConnection resourceConn = resource.openConnection();
+		long lastModified = resourceConn.getLastModified();
 
 		long ifModifiedSince = request.getDateHeader(IF_MODIFIED_SINCE_HEADER);
 		if (ifModifiedSince > 0 && lastModified / 1000 <= ifModifiedSince / 1000) {

@@ -22,7 +22,7 @@ public class ResolveAndRenderResourceActionTests extends TestCase {
 
 	ExternalContext externalContext = createMock(ExternalContext.class);
 	RequestContext requestContext = createMock(RequestContext.class);
-	ServletContext servletContext = new MimeAwareMockServletContext();
+	ServletContext servletContext = new ResourceTestMockServletContext();
 	MockHttpServletResponse response = new MockHttpServletResponse();
 	MockHttpServletRequest request = new MockHttpServletRequest();
 
@@ -52,10 +52,24 @@ public class ResolveAndRenderResourceActionTests extends TestCase {
 		action.execute(requestContext);
 	}
 
-	private class MimeAwareMockServletContext extends MockServletContext {
+	public final void testExecute_ResourceNotFound() throws Exception {
+
+		requestPath = new RequestPath("/xxx/xxx.js");
+
+		expect(externalContext.getRequestPath()).andStubReturn(requestPath);
+
+		replay(new Object[] { requestContext, externalContext });
+
+		action.execute(requestContext);
+
+		assertEquals(404, response.getStatus());
+	}
+
+	private class ResourceTestMockServletContext extends MockServletContext {
 
 		public String getMimeType(String filePath) {
 			return null;
 		}
+
 	}
 }

@@ -16,6 +16,8 @@ public class ExtJsRenderer extends Renderer {
 
 	private static final String SPRING_FACES_SCRIPT = "/spring-faces/SpringFaces.js";
 
+	private static final String SPRING_FACES_EXT_SCRIPT = "/spring-faces/SpringFaces-Ext.js";
+
 	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
@@ -31,5 +33,7 @@ public class ExtJsRenderer extends Renderer {
 		}
 
 		resourceHelper.renderScriptLink(context, SPRING_FACES_SCRIPT);
+
+		resourceHelper.renderScriptLink(context, SPRING_FACES_EXT_SCRIPT);
 	}
 }
