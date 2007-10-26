@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.faces.webflow.JSFMockHelper;
+import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.test.MockFlowBuilderContext;

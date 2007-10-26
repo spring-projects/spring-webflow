@@ -1,12 +1,9 @@
-package org.springframework.webflow.engine.builder.xml;
+package org.springframework.faces.webflow;
 
 import javax.faces.FactoryFinder;
 import javax.faces.lifecycle.LifecycleFactory;
 
 import org.springframework.binding.expression.Expression;
-import org.springframework.faces.webflow.FlowLifecycleFactory;
-import org.springframework.faces.webflow.JsfRenderFinalResponseAction;
-import org.springframework.faces.webflow.JsfViewFactory;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
