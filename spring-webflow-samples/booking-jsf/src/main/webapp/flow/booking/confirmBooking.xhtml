@@ -8,33 +8,33 @@
 <ui:define name="content">
 
 <div class="section">
-	<h1>Confirm Hotel Booking</h1>
+	<h1>Confirm Hotel Booking</h1> 
 </div>
 
 <div class="section">
 	<h:form id="confirm">
 	<fieldset>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Name:</div>
 			<div class="output">#{hotel.name}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Address:</div>
 			<div class="output">#{hotel.address}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">City, State:</div>
 			<div class="output">#{hotel.city}, #{hotel.state}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Zip:</div>
 			<div class="output">#{hotel.zip}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Country:</div>
 			<div class="output">#{hotel.country}</div>
 		</div>
-        <div class="entry">
+        <div class="field">
             <div class="label">Total payment:</div>
             <div class="output">
                 <h:outputText value="#{booking.total}">
@@ -43,26 +43,24 @@
                 </h:outputText>
             </div>
         </div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Check In Date:</div>
 			<div class="output"><h:outputText value="#{booking.checkinDate}"/></div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Check Out Date:</div>
 			<div class="output"><h:outputText value="#{booking.checkoutDate}"/></div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Credit Card #:</div>
 			<div class="output">#{booking.creditCard}</div>
 		</div>
-		<div class="entry">
-			<div class="label">&#160;</div>
-			<div class="input">
-				<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
-    			<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
-    			<h:commandButton id="cancel" value="Cancel" action="cancel"/>
-			</div>
+		<div class="buttonGroup">
+			<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
+    		<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
+    		<h:commandButton id="cancel" value="Cancel" action="cancel"/>
 		</div>
+
 	</fieldset>
 	</h:form>
 </div>

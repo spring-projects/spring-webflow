@@ -4,39 +4,37 @@
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:sf="http://www.springframework.org/tags/faces"
+                xmlns:sfe="http://www.springframework.org/tags/faces-ext"
 				template="/template.xhtml">
 
 <ui:define name="content">
 
 <div class="section">
-	<h1>Book Hotel</h1>
-</div>
-
-<div class="section">
+	<h2>Book Hotel</h2>
 	<h:form id="booking">
 	<h:messages errorClass="errors" />
 	<fieldset>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Name:</div>
 			<div class="output">#{hotel.name}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Address:</div>
 			<div class="output">#{hotel.address}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">City, State:</div>
 			<div class="output">#{hotel.city}, #{hotel.state}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Zip:</div>
 			<div class="output">#{hotel.zip}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Country:</div>
 			<div class="output">#{hotel.country}</div>
 		</div>
-        <div class="entry">
+        <div class="field">
             <div class="label">Nightly rate:</div>
             <div class="output">
                 <h:outputText value="#{hotel.price}">
@@ -44,31 +42,31 @@
                 </h:outputText>
             </div>
         </div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="checkinDate">Check In Date:</h:outputLabel>
 			</div>
 			<div class="input">
-				<sf:clientDateValidator allowBlank="false" msgDisplay="block" msgClass="errors">
+				<sf:clientDateValidator required="true" >
 		        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
-	                	<f:convertDateTime pattern="MM/dd/yy" timeZone="EST"/>
+	                	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
 	                </h:inputText>
                	</sf:clientDateValidator>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="checkoutDate">Check Out Date:</h:outputLabel>
 			</div>
 			<div class="input">
-				<sf:clientDateValidator allowBlank="false" msgDisplay="block" msgClass="errors">
+				<sf:clientDateValidator required="true">
 					<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
-						<f:convertDateTime pattern="MM/dd/yy" timeZone="EST"/>
+						<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
 					</h:inputText>
 				</sf:clientDateValidator>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="beds">Room Preference:</h:outputLabel>
 			</div>
@@ -80,7 +78,7 @@
 				</h:selectOneMenu>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="smoking">Smoking Preference:</h:outputLabel>
 			</div>
@@ -91,27 +89,27 @@
 				</h:selectOneRadio>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="creditCard">Credit Card #:</h:outputLabel>
 			</div>
 			<div class="input">
-				<sf:clientNumberValidator allowBlank="false" allowNegative="false" allowDecimals="false" minLength="16" maxLength="16" msgDisplay="block" msgClass="errors">
+				<sf:clientTextValidator required="true" regExp="[0-9]{16}" invalidMessage="A 16-digit credit card number is required.">
 					<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
-				</sf:clientNumberValidator>
+				</sf:clientTextValidator>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="creditCardName">Credit Card Name:</h:outputLabel>
 			</div>
 			<div class="input">
-				<sf:clientTextValidator allowBlank="false" msgDisplay="block" msgClass="errors">
+				<sf:clientTextValidator required="true">
 					<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
 				</sf:clientTextValidator>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
 				<h:outputLabel for="creditCardExpiryMonth">Credit Card Expiry:</h:outputLabel>
 			</div>
@@ -139,18 +137,13 @@
 				</h:selectOneMenu>
 			</div>
 		</div>
-		<div class="entry errors">
-			<h:messages globalOnly="true"/>
-		</div>
-		<div class="entry">
-			<div class="label">&#160;</div>
-			<div class="input">
+
+			<div class="buttonGroup">
 				<sf:validateAllOnClick>
 					<h:commandButton id="proceed" action="proceed" value="Proceed"/>
-				</sf:validateAllOnClick>&#160;
+				</sf:validateAllOnClick>
 				<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
 			</div>
-		</div>
 	</fieldset>
 	</h:form>
 </div>

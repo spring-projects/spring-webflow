@@ -10,6 +10,25 @@
 		<param-value>.xhtml</param-value>
 	</context-param>
 	
+	<!-- Special Facelets Debug Output for Development -->
+  	<context-param>
+        <param-name>facelets.DEVELOPMENT</param-name>
+   		<param-value>true</param-value>
+  	</context-param>
+  	
+  	<!-- Cause Facelets to refresh templates during development -->
+  	<context-param>
+  		<param-name>facelets.REFRESH_PERIOD</param-name>
+  		<param-value>1</param-value>
+  	</context-param>
+  	
+  	<!-- Cause Facelets always reconstruct the component tree, cutting down on the amount of state that needs to be 
+  	serialized -->
+  	<context-param>
+  		<param-name>facelets.BUILD_BEFORE_RESTORE</param-name>
+  		<param-value>false</param-value>
+  	</context-param>
+	
 	<!-- Use JSF client-side state saving to allow management of state by SWF -->
 	<context-param>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>

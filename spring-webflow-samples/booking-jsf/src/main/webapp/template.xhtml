@@ -5,20 +5,32 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
-	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
+	<style type="text/css" media="screen">
+        @import url("/swf-booking-jsf/spring/resources/css-framework/css/tools.css");
+        @import url("/swf-booking-jsf/spring/resources/css-framework/css/typo.css");
+        @import url("/swf-booking-jsf/spring/resources/css-framework/css/forms.css");
+        @import url("/swf-booking-jsf/spring/resources/css-framework/css/layout-navtop-localleft.css");        
+        @import url("/swf-booking-jsf/spring/resources/css-framework/css/layout.css");
+        @import url("/swf-booking-jsf/spring/resources/css/booking.css");
+    </style>
 	<ui:insert name="headIncludes"/>
 </head>
-<body>
+<body class="tundra spring">
 
-<div id="document">
-	<div id="header">
-		<div id="title">Spring Faces: Hotel Booking Sample Application</div>
-		<div id="status">
-            Welcome #{user.name}
+<div id="page">
+	<div id="header" class="clearfix spring">
+		<div id="welcome">
+			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
+			<div class="right">
+	            Welcome #{user.name}
+			</div>
+		</div>
+		<div id="branding" class="spring">
+			<img src="/swf-booking-jsf/spring/resources/images/header.jpg" alt="foo bar"/>
 		</div>
 	</div>
-	<div id="container">
-		<div id="sidebar">
+	<div id="content" class="clearfix spring">
+		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
 				<img src="/swf-booking-jsf/images/diplomat.jpg" />
 			</a>
@@ -32,12 +44,12 @@
 				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
 			</p>
 		</div>
-		<div id="content">
+		<div id="main">
 			<ui:insert name="content"/>
 		</div>
-		<div id="footer">
-			<a href="http://www.springframework.org"><img src="/swf-booking-jsf/images/powered-by-spring.png" /></a>
-		</div>
+	</div>
+	<div id="footer" class="clearfix spring">
+		<a href="http://www.springframework.org"><img src="/swf-booking-jsf/images/powered-by-spring.png" /></a>
 	</div>
 </div>
 
