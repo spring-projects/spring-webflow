@@ -15,6 +15,15 @@ SpringFaces.DojoGenericFieldAdvisor.prototype = {
        	this.decorator = eval("new "+ this.decoratorType + "(" + this.decoratorAttrs +", dojo.byId('"+this.targetElId+"'));" );
 
        	this.decorator.startup();
+	},
+	
+	validate : function(){
+		var isValid = this.decorator.isValid(false);
+		if (!isValid) {
+			this.decorator.state = "Error";
+			this.decorator._setStateClass();
+		}
+		return isValid;
 	}			
 };
 

@@ -20,7 +20,7 @@ public class ExtJsComponent extends UIComponentBase {
 
 	public String getFamily() {
 
-		return "spring.faces.ExtAdvisor";
+		return "spring.faces.Advisor";
 	}
 
 	public Boolean getIncludeExtStyles() {

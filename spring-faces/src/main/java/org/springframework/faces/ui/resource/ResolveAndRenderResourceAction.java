@@ -46,13 +46,18 @@ public class ResolveAndRenderResourceAction implements Action {
 		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
 		ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
 
-		String resourcePath = "META-INF" + context.getExternalContext().getRequestPath().toString();
+		String localResourcePath = context.getExternalContext().getRequestPath().toString();
+		String jarResourcePath = "META-INF" + context.getExternalContext().getRequestPath().toString();
 
-		URL resource = ClassUtils.getDefaultClassLoader().getResource(resourcePath);
+		URL resource;
 
+		resource = servletContext.getResource(localResourcePath);
 		if (resource == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			return new Event(this, "success");
+			resource = ClassUtils.getDefaultClassLoader().getResource(jarResourcePath);
+			if (resource == null) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return new Event(this, "success");
+			}
 		}
 
 		URLConnection resourceConn = resource.openConnection();
@@ -64,9 +69,9 @@ public class ResolveAndRenderResourceAction implements Action {
 			return new Event(this, "success");
 		}
 
-		String mimeType = servletContext.getMimeType(resourcePath);
+		String mimeType = servletContext.getMimeType(jarResourcePath);
 		if (mimeType == null) {
-			String extension = resourcePath.substring(resourcePath.lastIndexOf('.'));
+			String extension = jarResourcePath.substring(jarResourcePath.lastIndexOf('.'));
 			mimeType = defaultMimeTypes.get(extension);
 		}
 		response.setContentType(mimeType);

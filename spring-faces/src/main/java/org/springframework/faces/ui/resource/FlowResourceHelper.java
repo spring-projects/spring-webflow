@@ -87,6 +87,33 @@ public class FlowResourceHelper {
 		markRendered(facesContext, cssPath);
 	}
 
+	/**
+	 * Render a <code><script/></code> tag for a given dojo include.
+	 * @param facesContext
+	 * @param module
+	 * @throws IOException
+	 */
+	public void renderDojoInclude(FacesContext facesContext, String module) throws IOException {
+
+		if (alreadyRendered(facesContext, module)) {
+			return;
+		}
+
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+
+		ResponseWriter writer = facesContext.getResponseWriter();
+
+		writer.startElement("script", null);
+
+		writer.writeAttribute("type", "text/javascript", null);
+
+		writer.writeText("dojo.require('" + module + "');", null);
+
+		writer.endElement("script");
+
+		markRendered(facesContext, module);
+	}
+
 	private void markRendered(FacesContext facesContext, String scriptPath) {
 		Set renderedResources = (Set) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
 		if (renderedResources == null) {

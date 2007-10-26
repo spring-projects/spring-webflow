@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+<facelet-taglib>
+	<namespace>http://www.springframework.org/tags/faces-ext</namespace>
+	
+	<tag>
+		<tag-name>clientTextValidator</tag-name>
+		<component>
+			<component-type>spring.faces.ExtClientTextValidator</component-type>
+			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+		</component>
+	</tag>
+	
+	<tag>
+		<tag-name>clientNumberValidator</tag-name>
+		<component>
+			<component-type>spring.faces.ExtClientNumberValidator</component-type>
+			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+		</component>
+	</tag>
+	
+	<tag>
+		<tag-name>clientDateValidator</tag-name>
+		<component>
+			<component-type>spring.faces.ExtClientDateValidator</component-type>
+			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+		</component>
+	</tag>
+	
+</facelet-taglib>

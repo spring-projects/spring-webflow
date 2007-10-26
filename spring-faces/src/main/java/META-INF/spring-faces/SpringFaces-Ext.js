@@ -20,7 +20,12 @@ SpringFaces.ExtGenericFieldAdvisor.prototype = {
        	
        	this.decorator.msgTarget=msgEl;
        	this.decorator.applyTo(target);
-	}			
+	},
+	
+	validate : function(){
+		return this.decorator.validate();
+	}
+				
 };
 
 Ext.onReady(SpringFaces.applyAdvisors);

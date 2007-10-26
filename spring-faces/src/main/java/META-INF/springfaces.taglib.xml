@@ -8,32 +8,40 @@
 	<tag>
 		<tag-name>clientTextValidator</tag-name>
 		<component>
-			<component-type>spring.faces.ClientTextValidator</component-type>
-			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+			<component-type>spring.faces.DojoClientTextValidator</component-type>
+			<renderer-type>spring.faces.DojoAdvisor</renderer-type>
 		</component>
 	</tag>
 	
 	<tag>
 		<tag-name>clientNumberValidator</tag-name>
 		<component>
-			<component-type>spring.faces.ClientNumberValidator</component-type>
-			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+			<component-type>spring.faces.DojoClientNumberValidator</component-type>
+			<renderer-type>spring.faces.DojoAdvisor</renderer-type>
+		</component>
+	</tag>
+	
+	<tag>
+		<tag-name>clientCurrencyValidator</tag-name>
+		<component>
+			<component-type>spring.faces.DojoClientCurrencyValidator</component-type>
+			<renderer-type>spring.faces.DojoAdvisor</renderer-type>
 		</component>
 	</tag>
 	
 	<tag>
 		<tag-name>clientDateValidator</tag-name>
 		<component>
-			<component-type>spring.faces.ClientDateValidator</component-type>
-			<renderer-type>spring.faces.ExtAdvisor</renderer-type>
+			<component-type>spring.faces.DojoClientDateValidator</component-type>
+			<renderer-type>spring.faces.DojoAdvisor</renderer-type>
 		</component>
 	</tag>
 	
 	<tag>
 		<tag-name>validateAllOnClick</tag-name>
 		<component>
-			<component-type>spring.faces.ExtJsComponent</component-type>
-			<renderer-type>spring.faces.ExtValidateAll</renderer-type>
+			<component-type>spring.faces.ValidateAll</component-type>
+			<renderer-type>spring.faces.ValidateAll</renderer-type>
 		</component>
 	</tag>
 	
