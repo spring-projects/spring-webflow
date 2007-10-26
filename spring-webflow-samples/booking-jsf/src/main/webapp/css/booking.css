@@ -59,7 +59,6 @@
     }
     
     #content.spring input[type="submit"], input[type="button"] {
-    	margin-right: 5px;
 		font-weight: bold;
 		color: #fff;
 		height: 20px;
@@ -109,26 +108,26 @@
 		text-align: right;
 	}
 	
-	#content .searchGroup .searchButton {
-		text-align: right;
-	}
-	
 	#content .buttonGroup {
 		width: 90%;
 		float: left;
 		text-align: center;
 	}
 	
-	#content .prev {
-		float: left;
+	#content .buttonGroup input[type="submit"], .buttonGroup input[type="button"] {
+		margin-right: 5px;
 	}
 	
-	#content .prev a {
-		margin-right: 20px;
+	#content .prev {
+		float: right;
 	}
 	
 	#content .next {
-		float: left;	
+		float: right;	
+	}
+	
+	#content .next a {
+		margin-left: 20px;
 	}
 	
 	#content .summary {
