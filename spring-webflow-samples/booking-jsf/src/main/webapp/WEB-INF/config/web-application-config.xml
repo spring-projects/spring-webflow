@@ -32,7 +32,7 @@
 			</bean>
 		</property>
 		<property name="viewFactoryCreator">
-			<bean class="org.springframework.webflow.engine.builder.xml.JsfViewFactoryCreator"/>
+			<bean class="org.springframework.faces.webflow.JsfViewFactoryCreator"/>
 		</property>
 	</bean>
 	
