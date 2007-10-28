@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow-project-description>
+	<configs>
+		<config>
+			<file>src/main/webapp/flow/booking/booking.xml</file>
+			<name><![CDATA[booking]]></name>
+			<beans-config><![CDATA[1:BeansModel|2:swf-booking-jsf|4:booking]]></beans-config>
+		</config>
+		<config>
+			<file>src/main/webapp/flow/main/main.xml</file>
+			<name><![CDATA[main]]></name>
+			<beans-config><![CDATA[1:BeansModel|2:swf-booking-jsf|4:main]]></beans-config>
+		</config>
+	</configs>
+</webflow-project-description>

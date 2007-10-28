@@ -51,8 +51,11 @@ public interface ExpressionParser {
 	 * @param expressionTargetType the class of target object this expression can successfully evaluate; for example,
 	 * <code>Map.class</code> for an expression that is expected to evaluate against Maps.
 	 * @param expectedEvaluationResultType the class of object this expression is expected to return or set: for
-	 * example, <code>Boolean.class</code> for an expression that is expected to get or set a boolean value.
-	 * @param expressionVariables variables providing aliases for this expression during evaluation parsing. Optional.
+	 * example, <code>Boolean.class</code> for an expression that is expected to get or set a boolean value. Typically
+	 * used to facilitate type conversion by the expression evaluator; for example, if a evaluated expression equates to
+	 * a String value 'true', with an expected Boolean result the string value could be converted to a typed Boolean
+	 * value.
+	 * @param expressionVariables variables providing aliases for this expression during evaluation. Optional.
 	 * @return the evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing
 	 */

@@ -10,7 +10,6 @@
 		
 		<!-- public JSF configurations other projects may use -->
 		<conf name="default" extends="jsf12" />
-		<conf name="jsf11" visibility="public" extends="global" />
 		<conf name="jsf12" visibility="public" extends="global" />
 	</configurations>
 
@@ -40,7 +39,7 @@
 		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
 		<dependency org="jboss" name="jboss-el" rev="1.0" conf="test->default"/>
 		<dependency org="org.apache.shale" name="shale-test" rev="1.0.4" conf="test->default" />
-		<dependency org="org.springframework" name="spring-test" rev="2.1-m4" conf="test->default" />
+		<dependency org="org.springframework" name="spring-test" rev="2.5-rc1" conf="test->default" />
 		
 	</dependencies>
 

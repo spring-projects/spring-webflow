@@ -35,7 +35,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	/**
 	 * The expression prefix.
 	 */
-	private static final String DEFAULT_EXPRESSION_PREFIX = "${";
+	private static final String DEFAULT_EXPRESSION_PREFIX = "#{";
 
 	/**
 	 * The expression suffix.

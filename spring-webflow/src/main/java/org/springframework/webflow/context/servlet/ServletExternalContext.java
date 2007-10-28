@@ -90,11 +90,7 @@ public class ServletExternalContext implements ExternalContext {
 	 */
 	private SharedAttributeMap applicationMap;
 
-	private String flowId;
-
-	private String flowExecutionKey;
-
-	private RequestPath requestPath;
+	private FlowRequestInfo flowRequestInfo;
 
 	private String encodingScheme = DEFAULT_ENCODING_SCHEME;
 
@@ -128,23 +124,49 @@ public class ServletExternalContext implements ExternalContext {
 		this.requestMap = new LocalAttributeMap(new HttpServletRequestMap(this.request));
 		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(this.request));
 		this.applicationMap = new LocalSharedAttributeMap(new HttpServletContextMap(context));
-		parseRequestPathInfo();
+		this.flowRequestInfo = parseFlowRequestInfo(this.request);
+	}
+
+	public static class FlowRequestInfo {
+		private String flowId;
+
+		private String flowExecutionKey;
+
+		private RequestPath requestPath;
+
+		public FlowRequestInfo(String flowId, String flowExecutionKey, RequestPath requestPath) {
+			this.flowId = flowId;
+			this.flowExecutionKey = flowExecutionKey;
+			this.requestPath = requestPath;
+		}
+
+		public String getFlowId() {
+			return flowId;
+		}
+
+		public String getFlowExecutionKey() {
+			return flowExecutionKey;
+		}
+
+		public RequestPath getRequestPath() {
+			return requestPath;
+		}
 	}
 
 	public String getFlowId() {
-		return flowId;
+		return flowRequestInfo.getFlowId();
 	}
 
 	public String getFlowExecutionKey() {
-		return flowExecutionKey;
+		return flowRequestInfo.getFlowExecutionKey();
+	}
+
+	public RequestPath getRequestPath() {
+		return flowRequestInfo.getRequestPath();
 	}
 
 	public String getRequestMethod() {
 		return request.getMethod();
-	}
-
-	public RequestPath getRequestPath() {
-		return requestPath;
 	}
 
 	public ParameterMap getRequestParameterMap() {
@@ -183,14 +205,36 @@ public class ServletExternalContext implements ExternalContext {
 		return flowExecutionRedirector != null || flowDefinitionRedirector != null || resourceUri != null;
 	}
 
-	// response requesters
-
 	public PrintWriter getResponseWriter() {
 		try {
 			return response.getWriter();
 		} catch (IOException e) {
 			// TODO - handle how?
 			throw new RuntimeException(e);
+		}
+	}
+
+	public String encode(String string) {
+		try {
+			return URLEncoder.encode(string, encodingScheme);
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalStateException("Unsupported encoding errors should never happen", e);
+		}
+	}
+
+	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
+		return getFlowExecutorPath() + "/" + requestInfo.getFlowDefinitionId() + requestPath(requestInfo)
+				+ requestParameters(requestInfo) + fragment(requestInfo);
+	}
+
+	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
+		String contextRelativeUrl = getFlowExecutionsPath() + requestInfo.getFlowDefinitionId() + "/"
+				+ requestInfo.getFlowExecutionKey() + requestPath(requestInfo) + requestParameters(requestInfo)
+				+ fragment(requestInfo);
+		if (contextRelative) {
+			return contextRelativeUrl;
+		} else {
+			return request.getScheme() + request.getServerName() + contextRelativeUrl;
 		}
 	}
 
@@ -204,32 +248,6 @@ public class ServletExternalContext implements ExternalContext {
 
 	public void sendExternalRedirect(String resourceUri) {
 		this.resourceUri = resourceUri;
-	}
-
-	// helpers
-
-	public String encode(String string) {
-		try {
-			return URLEncoder.encode(string, encodingScheme);
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException("Unsupported encoding errors should never happen", e);
-		}
-	}
-
-	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
-		return request.getContextPath() + request.getServletPath() + "/" + requestInfo.getFlowDefinitionId()
-				+ requestPath(requestInfo) + requestParameters(requestInfo) + fragment(requestInfo);
-	}
-
-	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
-		String contextRelativeUrl = request.getContextPath() + request.getServletPath() + "/executions/"
-				+ requestInfo.getFlowDefinitionId() + "/" + requestInfo.getFlowExecutionKey()
-				+ requestPath(requestInfo) + requestParameters(requestInfo) + fragment(requestInfo);
-		if (contextRelative) {
-			return contextRelativeUrl;
-		} else {
-			return request.getScheme() + request.getServerName() + contextRelativeUrl;
-		}
 	}
 
 	// execution processing result setters
@@ -247,7 +265,7 @@ public class ServletExternalContext implements ExternalContext {
 	public void setExceptionResult(FlowException e) {
 		result = 2;
 		exception = e;
-		processedFlowExecutionKey = flowExecutionKey;
+		processedFlowExecutionKey = flowRequestInfo.getFlowExecutionKey();
 	}
 
 	/**
@@ -293,29 +311,45 @@ public class ServletExternalContext implements ExternalContext {
 		}
 	}
 
-	private void parseRequestPathInfo() {
+	// hooks subclasses may override
+
+	protected FlowRequestInfo parseFlowRequestInfo(HttpServletRequest request) {
 		String pathInfo = request.getPathInfo();
 		if (pathInfo == null) {
 			throw new IllegalArgumentException(
 					"The requestPathInfo is null: unable to extract flow definition id or flow execution key");
 		}
+		String flowId;
+		String flowExecutionKey;
 		RequestPath path = new RequestPath(pathInfo);
 		if (path.getElement(0).equals("executions")) {
 			flowId = path.getElement(1);
 			flowExecutionKey = path.getElement(2);
 			if (path.getElementCount() > 3) {
-				requestPath = path.pop(3);
+				path = path.pop(3);
 			} else {
-				requestPath = null;
+				path = null;
 			}
 		} else {
 			flowId = path.getElement(0);
+			flowExecutionKey = null;
 			if (path.getElementCount() > 1) {
-				requestPath = path.pop(1);
+				path = path.pop(1);
 			} else {
-				requestPath = null;
+				path = null;
 			}
 		}
+		return new FlowRequestInfo(flowId, flowExecutionKey, path);
+	}
+
+	// private helpers
+
+	private String getFlowExecutorPath() {
+		return request.getContextPath() + request.getServletPath();
+	}
+
+	private String getFlowExecutionsPath() {
+		return getFlowExecutorPath() + "/executions/";
 	}
 
 	private boolean isPausedResult() {
@@ -411,9 +445,7 @@ public class ServletExternalContext implements ExternalContext {
 
 		public void issueRedirect() throws IOException {
 			FlowExecutionRequestInfo requestInfo = (FlowExecutionRequestInfo) getRequestInfo();
-			String targetUrl = request.getContextPath() + request.getServletPath() + "/executions/"
-					+ requestInfo.getFlowDefinitionId() + "/" + requestInfo.getFlowExecutionKey()
-					+ requestPath(getRequestInfo()) + requestParameters(getRequestInfo()) + fragment(getRequestInfo());
+			String targetUrl = buildFlowExecutionUrl(requestInfo, true);
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
 	}
@@ -424,10 +456,8 @@ public class ServletExternalContext implements ExternalContext {
 		}
 
 		public void issueRedirect() throws IOException {
-			FlowDefinitionRequestInfo redirect = (FlowDefinitionRequestInfo) getRequestInfo();
-			String targetUrl = request.getContextPath() + request.getServletPath() + "/"
-					+ redirect.getFlowDefinitionId() + requestPath(getRequestInfo())
-					+ requestParameters(getRequestInfo()) + fragment(getRequestInfo());
+			FlowDefinitionRequestInfo requestInfo = (FlowDefinitionRequestInfo) getRequestInfo();
+			String targetUrl = buildFlowDefinitionUrl(requestInfo);
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
 	}
