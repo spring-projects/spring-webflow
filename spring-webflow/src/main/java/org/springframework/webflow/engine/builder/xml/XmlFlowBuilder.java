@@ -604,7 +604,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			Expression viewName = getExpressionParser().parseExpression(encodedViewName, RequestContext.class,
 					String.class, null);
 			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource);
+			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource,
+					getLocalContext().getResourceLoader());
 			return new ViewInfo(viewFactory, Boolean.TRUE);
 		} else if (encodedView.startsWith(EXTERNAL_REDIRECT_PREFIX)) {
 			String encodedUrl = encodedView.substring(EXTERNAL_REDIRECT_PREFIX.length());
@@ -624,7 +625,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			Expression viewName = getExpressionParser().parseExpression(encodedView, RequestContext.class,
 					String.class, null);
 			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource);
+			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource,
+					getLocalContext().getResourceLoader());
 			return new ViewInfo(viewFactory, null);
 		}
 	}
@@ -649,7 +651,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			Expression viewName = getExpressionParser().parseExpression(encodedView, RequestContext.class,
 					String.class, null);
 			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			return getLocalContext().getViewFactoryCreator().createFinalResponseAction(viewResource);
+			return getLocalContext().getViewFactoryCreator().createFinalResponseAction(viewResource,
+					getLocalContext().getResourceLoader());
 		}
 	}
 
