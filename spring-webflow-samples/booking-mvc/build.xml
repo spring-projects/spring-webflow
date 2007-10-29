@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="swf-booking-MVC" default="dist">
+<project name="swf-booking-mvc" default="dist">
 
 	<property file="build.properties" />
 	<property file="project.properties" />
