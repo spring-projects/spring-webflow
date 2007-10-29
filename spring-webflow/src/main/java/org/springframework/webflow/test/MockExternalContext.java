@@ -128,6 +128,62 @@ public class MockExternalContext implements ExternalContext {
 		return applicationMap;
 	}
 
+	public Object getContext() {
+		return context;
+	}
+
+	public Object getRequest() {
+		return request;
+	}
+
+	public Object getResponse() {
+		return response;
+	}
+
+	public PrintWriter getResponseWriter() {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public String encode(String string) {
+		return string;
+	}
+
+	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo) {
+		this.flowDefinitionRedirectResult = requestInfo;
+	}
+
+	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo) {
+		this.flowExecutionRedirectResult = requestInfo;
+	}
+
+	public void sendExternalRedirect(String resourceUri) {
+		externalRedirectResult = resourceUri;
+	}
+
+	public void setPausedResult(String flowExecutionKey) {
+		this.pausedFlowExecutionKeyResult = flowExecutionKey;
+	}
+
+	public void setEndedResult(String flowExecutionKey) {
+
+	}
+
+	public void setExceptionResult(FlowException e) {
+		exceptionResult = e;
+	}
+
+	public boolean isResponseCommitted() {
+		return false;
+	}
+
 	// helper setters
 
 	public void setFlowId(String flowId) {
@@ -144,6 +200,18 @@ public class MockExternalContext implements ExternalContext {
 
 	public void setRequestPath(RequestPath requestPath) {
 		this.requestPath = requestPath;
+	}
+
+	public void setContext(Object context) {
+		this.context = context;
+	}
+
+	public void setRequest(Object request) {
+		this.request = request;
+	}
+
+	public void setResponse(Object response) {
+		this.response = response;
 	}
 
 	/**
@@ -215,60 +283,6 @@ public class MockExternalContext implements ExternalContext {
 		getMockRequestParameterMap().put(parameterName, parameterValues);
 	}
 
-	public Object getContext() {
-		return context;
-	}
-
-	public Object getRequest() {
-		return request;
-	}
-
-	public Object getResponse() {
-		return response;
-	}
-
-	public PrintWriter getResponseWriter() {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	public String encode(String string) {
-		return string;
-	}
-
-	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo) {
-		this.flowDefinitionRedirectResult = requestInfo;
-	}
-
-	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo) {
-		this.flowExecutionRedirectResult = requestInfo;
-	}
-
-	public void sendExternalRedirect(String resourceUri) {
-		externalRedirectResult = resourceUri;
-	}
-
-	public void setPausedResult(String flowExecutionKey) {
-		this.pausedFlowExecutionKeyResult = flowExecutionKey;
-	}
-
-	public void setEndedResult(String flowExecutionKey) {
-
-	}
-
-	public void setExceptionResult(FlowException e) {
-		exceptionResult = e;
-	}
-
 	public FlowDefinitionRequestInfo getFlowDefinitionRedirectResult() {
 		return flowDefinitionRedirectResult;
 	}
@@ -287,13 +301,5 @@ public class MockExternalContext implements ExternalContext {
 
 	public FlowException getExceptionResult() {
 		return exceptionResult;
-	}
-
-	public boolean isResponseCommitted() {
-		return false;
-		/*
-		 * return flowExecutionRedirectResult == true || flowDefinitionRedirectResult != null || externalRedirectResult !=
-		 * null;
-		 */
 	}
 }
