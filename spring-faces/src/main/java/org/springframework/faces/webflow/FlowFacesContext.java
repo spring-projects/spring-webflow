@@ -67,6 +67,11 @@ public class FlowFacesContext extends FacesContext {
 	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
+		if (RequestContextHolder.getRequestContext() == null) {
+			delegate.addMessage(clientId, message);
+			return;
+		}
+
 		MessageResolver messageResolver;
 
 		StringBuffer msgText = new StringBuffer();
@@ -91,6 +96,9 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<String> getClientIdsWithMessages() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getClientIdsWithMessages();
+		}
 		return new ClientIdIterator();
 	}
 
@@ -99,6 +107,10 @@ public class FlowFacesContext extends FacesContext {
 	 * associated with any specific UIComponent. If no such messages have been queued, return null.
 	 */
 	public FacesMessage.Severity getMaximumSeverity() {
+
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getMaximumSeverity();
+		}
 
 		if (RequestContextHolder.getRequestContext().getMessageContext().getMessages() == null
 				|| RequestContextHolder.getRequestContext().getMessageContext().getMessages().length == 0)
@@ -122,6 +134,9 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getMessages();
+		}
 		return new FacesMessageIterator();
 	}
 
@@ -131,10 +146,17 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages(String clientId) {
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getMessages(clientId);
+		}
 		return new FacesMessageIterator(clientId);
 	}
 
 	public boolean getRenderResponse() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getRenderResponse();
+		}
+
 		Boolean renderResponse = RequestContextHolder.getRequestContext().getFlashScope().getBoolean(
 				RENDER_RESPONSE_KEY);
 		if (renderResponse == null) {
@@ -144,6 +166,11 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public boolean getResponseComplete() {
+
+		if (RequestContextHolder.getRequestContext() == null) {
+			return delegate.getResponseComplete();
+		}
+
 		Boolean responseComplete = RequestContextHolder.getRequestContext().getFlashScope().getBoolean(
 				RESPONSE_COMPLETE_KEY);
 		if (responseComplete == null) {
@@ -153,10 +180,18 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void renderResponse() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			delegate.renderResponse();
+			return;
+		}
 		RequestContextHolder.getRequestContext().getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
 	}
 
 	public void responseComplete() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			delegate.responseComplete();
+			return;
+		}
 		RequestContextHolder.getRequestContext().getFlashScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
 	}
 
