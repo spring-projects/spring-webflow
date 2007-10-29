@@ -27,6 +27,8 @@ public interface ExpressionParser {
 	 * Is the provided expression string an "eval" expression: meaning an expression that validates to a dynamic value,
 	 * and not a literal expression? "Eval" expressions are normally enclosed in delimiters like #{}, where literal
 	 * expressions are not delimited.
+	 * 
+	 * TODO - candidate for removal in a future milestone: is this really needed?
 	 * @param string the string
 	 * @return true if the expression is an eval expression string, false otherwise.
 	 */
@@ -37,6 +39,8 @@ public interface ExpressionParser {
 	 * against a target object. For example, the raw expression string "person.id" might become #{person.id}. If the
 	 * string is already an eval expression string, the string argument is returned unchanged. If the string is an
 	 * composite expression string that mixes eval and literal expressions, a parser exception is thrown.
+	 * 
+	 * TODO - candidate for removal in a future milestone: is this really needed?
 	 * @param string the raw string to be transformed into a parseable eval expression string
 	 * @return the eval expression spring
 	 * @throws ParserException an exception occurred during parsing
@@ -47,7 +51,7 @@ public interface ExpressionParser {
 	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it. The expression
 	 * string may be a literal expression string like "foo", an eval-expression string like #{foo}, or a
 	 * composite-expression string like "foo#{foo}bar#{bar}".
-	 * @param expressionString the parseable expression string
+	 * @param expressionString the parseable expression string; cannot be null
 	 * @param expressionTargetType the class of target object this expression can successfully evaluate; for example,
 	 * <code>Map.class</code> for an expression that is expected to evaluate against Maps.
 	 * @param expectedEvaluationResultType the class of object this expression is expected to return or set: for

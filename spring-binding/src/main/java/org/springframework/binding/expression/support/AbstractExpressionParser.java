@@ -22,7 +22,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 
 /**
  * Abstract base class for expression parsers.
@@ -90,6 +90,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 
 	public Expression parseExpression(String expressionString, Class expressionTargetType,
 			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
+		Assert.notNull(expressionString, "The expression string to parse is required");
 		// TODO variables
 		Expression[] expressions = parseExpressions(expressionString);
 		if (expressions.length == 1) {
@@ -118,52 +119,42 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 */
 	private Expression[] parseExpressions(String expressionString) throws ParserException {
 		List expressions = new LinkedList();
-		if (StringUtils.hasText(expressionString)) {
-			int startIdx = 0;
-			while (startIdx < expressionString.length()) {
-				int prefixIndex = expressionString.indexOf(getExpressionPrefix(), startIdx);
-				if (prefixIndex >= startIdx) {
-					// an expression was found
-					if (prefixIndex > startIdx) {
-						expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
-						startIdx = prefixIndex;
-					}
-					int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(), prefixIndex
-							+ getExpressionPrefix().length());
-					int suffixIndex;
-					if (nextPrefixIndex == -1) {
-						// this is the last expression in the expression string
-						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix());
-					} else {
-						// another expression exists after this one in the expression string
-						suffixIndex = expressionString.lastIndexOf(getExpressionSuffix(), nextPrefixIndex);
-					}
-					if (suffixIndex < (prefixIndex + getExpressionPrefix().length())) {
-						throw new ParserException(expressionString, "No ending suffix '" + getExpressionSuffix()
-								+ "' for expression starting at character " + prefixIndex + ": "
-								+ expressionString.substring(prefixIndex), null);
-					} else if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
-						throw new ParserException(expressionString, "No expression defined within delimiter '"
-								+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex, null);
-					} else {
-						String expr = expressionString.substring(prefixIndex + getExpressionPrefix().length(),
-								suffixIndex);
-						expressions.add(doParseExpression(expr));
-						startIdx = suffixIndex + 1;
-					}
-				} else {
-					if (startIdx == 0) {
-						// treat entire string as one expression
-						expressions.add(doParseExpression(expressionString));
-					} else {
-						// no more ${expressions} found in string
-						expressions.add(new StaticExpression(expressionString.substring(startIdx)));
-					}
-					startIdx = expressionString.length();
+		int startIdx = 0;
+		while (startIdx < expressionString.length()) {
+			int prefixIndex = expressionString.indexOf(getExpressionPrefix(), startIdx);
+			if (prefixIndex >= startIdx) {
+				// an expression was found
+				if (prefixIndex > startIdx) {
+					expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
+					startIdx = prefixIndex;
 				}
+				int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(), prefixIndex
+						+ getExpressionPrefix().length());
+				int suffixIndex;
+				if (nextPrefixIndex == -1) {
+					// this is the last expression in the expression string
+					suffixIndex = expressionString.lastIndexOf(getExpressionSuffix());
+				} else {
+					// another expression exists after this one in the expression string
+					suffixIndex = expressionString.lastIndexOf(getExpressionSuffix(), nextPrefixIndex);
+				}
+				if (suffixIndex < (prefixIndex + getExpressionPrefix().length())) {
+					throw new ParserException(expressionString, "No ending suffix '" + getExpressionSuffix()
+							+ "' for expression starting at character " + prefixIndex + ": "
+							+ expressionString.substring(prefixIndex), null);
+				} else if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
+					throw new ParserException(expressionString, "No expression defined within delimiter '"
+							+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex, null);
+				} else {
+					String expr = expressionString.substring(prefixIndex + getExpressionPrefix().length(), suffixIndex);
+					expressions.add(doParseExpression(expr));
+					startIdx = suffixIndex + 1;
+				}
+			} else {
+				// no more evaluatable ${expressions} found in string
+				expressions.add(new StaticExpression(expressionString.substring(startIdx)));
+				startIdx = expressionString.length();
 			}
-		} else {
-			expressions.add(new StaticExpression(expressionString));
 		}
 		return (Expression[]) expressions.toArray(new Expression[expressions.size()]);
 	}

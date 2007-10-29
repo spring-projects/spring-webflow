@@ -29,26 +29,12 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	private TestBean bean = new TestBean();
 
-	public void testParseSimpleDelimited() {
+	public void testParseSimple() {
 		String exp = "${flag}";
 		Expression e = parser.parseExpression(exp, null, null, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
-	}
-
-	public void testParseSimple() {
-		String exp = "flag";
-		Expression e = parser.parseExpression(exp, null, null, null);
-		assertNotNull(e);
-		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
-	}
-
-	public void testParseNull() {
-		Expression e = parser.parseExpression(null, null, null, null);
-		assertNotNull(e);
-		assertNull(e.getValue(bean));
 	}
 
 	public void testParseEmpty() {

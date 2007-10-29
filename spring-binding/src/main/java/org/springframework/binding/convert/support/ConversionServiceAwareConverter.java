@@ -32,7 +32,7 @@ public abstract class ConversionServiceAwareConverter extends AbstractConverter 
 	private ConversionService conversionService;
 
 	/**
-	 * Default constructor, expectes to conversion service to be injected using
+	 * Default constructor, expects to conversion service to be injected using
 	 * {@link #setConversionService(ConversionService)}.
 	 */
 	protected ConversionServiceAwareConverter() {
