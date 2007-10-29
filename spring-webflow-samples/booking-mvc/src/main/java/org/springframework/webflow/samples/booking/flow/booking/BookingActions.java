@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.EntityManager;
 
+import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
@@ -30,7 +31,11 @@ public class BookingActions extends FormAction {
     @Override
     protected void initBinder(RequestContext context, DataBinder binder) {
 	binder.setRequiredFields(new String[] { "checkinDate", "checkoutDate", "creditCard", "creditCardName" });
-	binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+    }
+
+    @Override
+    protected void registerPropertyEditors(PropertyEditorRegistry registry) {
+	registry.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
     }
 
     @Override
