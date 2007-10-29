@@ -5,22 +5,33 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
-	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
-	<ui:insert name="headIncludes"/>
+	<style type="text/css" media="screen">
+        @import url("spring/resources/css-framework/css/tools.css");
+        @import url("spring/resources/css-framework/css/typo.css");
+        @import url("spring/resources/css-framework/css/forms.css");
+        @import url("spring/resources/css-framework/css/layout-navtop-localleft.css");        
+        @import url("spring/resources/css-framework/css/layout.css");
+        @import url("spring/resources/css/booking.css");
+    </style>
 </head>
-<body>
+<body class="spring">
 
-<div id="document">
-	<div id="header">
-		<div id="title">Spring Faces: Hotel Booking Sample Application</div>
+<div id="page">
+	<div id="header" class="clearfix spring">
+		<div id="welcome">
+			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
+		</div>
+		<div id="branding" class="spring">
+			<img src="/swf-booking-jsf/spring/resources/images/header.jpg" alt="A room at the Westin Diplomat in Hollywood, Florida"/>
+		</div>
 	</div>
-	<div id="container">
-		<div id="sidebar">
+	<div id="content" class="clearfix spring">
+		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+				<img src="images/diplomat.jpg" alt="The Westin Diplomat in Hollywood, Florida"/>
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-jsf/images/tse.gif" />
+				<img src="images/tse.gif" alt="The Spring Experience"/>
 			</a>
 			<p>
 				The features illustrated in this sample are just the beginning.
@@ -29,17 +40,18 @@
 				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
 			</p>
 		</div>
-		<div id="content">
+		<div id="main">
 			<div class="section">
 				<h1>Welcome to the Spring Faces Sample Application</h1>
 				<p>
 				 	This hotel booking sample application illustrates "Spring Faces", Spring's first-class support for Java Server Faces (JSF).
-					Spring Faces integrates Spring, Spring Web Flow, ExtJs, and Facelets to provide a
+					Spring Faces integrates Spring, Spring Web Flow, Dojo, Ext, and Facelets to provide a
 					compelling solution for developing rich web applications with JSF.
 				</p>
 				<p>
 					Currently, Spring Faces is released as a component of the Spring Web Flow distribution, 
-					and is available beginning with Spring Web Flow 2.0 m1.
+					and has been available beginning with Spring Web Flow 2.0 m1.  The current version is running
+					against Spring Web Flow 2.0m2.
 				</p>
 				<p>
 					The key features illustrated in this sample include:
@@ -50,17 +62,17 @@
 					<li>Modularization of web application functionality by domain responsibility</li>
 					<li>Flow-managed persistence contexts with the Java Persistence API (JPA)</li>
 					<li>Unified Expression Language (EL) integration</li>
-					<li>Client-side validation with ExtJs</li>
+					<li>Client-side validation with Dojo</li>
 					<li>Spring IDE integration, with support for graphical flow modeling</li>
 				</ul>
 				<p align="right">
-					<a href="controller.spring?_flowId=main">Start your hotel booking experience</a>
+					<a href="spring/main/">Start your hotel booking experience</a>
 				</p>
 			</div>
 		</div>
-		<div id="footer">
-			<img src="/swf-booking-jsf/images/powered-by-spring.png" />
-		</div>
+	</div>
+	<div id="footer" class="clearfix spring">
+		<a href="http://www.springframework.org"><img src="images/powered-by-spring.png" alt="Powered By Spring" /></a>
 	</div>
 </div>
 </body>
