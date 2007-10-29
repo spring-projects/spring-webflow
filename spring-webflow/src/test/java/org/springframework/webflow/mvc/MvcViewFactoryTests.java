@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockExternalContext;
@@ -56,6 +57,7 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
 		View view = viewFactory.getView(context);
+		assertEquals(false, view.eventSignaled());
 		view.render();
 		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
 	}
@@ -74,8 +76,69 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
 		View view = viewFactory.getView(context);
+		assertEquals(false, view.eventSignaled());
 		view.render();
 		assertEquals("myview", response.getForwardedUrl());
+	}
+
+	public void testRestoreView() {
+		creator.setApplicationContext(context);
+		ResourceLoader viewResourceLoader = new ResourceLoader() {
+			public ClassLoader getClassLoader() {
+				return ClassUtils.getDefaultClassLoader();
+			}
+
+			public Resource getResource(String name) {
+				return new TestContextResource("/parent/" + name);
+			}
+		};
+		Expression viewId = new StaticExpression("myview.jsp");
+		ViewFactory viewFactory = creator.createViewFactory(viewId, viewResourceLoader);
+		MockRequestContext context = new MockRequestContext();
+		MockExternalContext externalContext = new MockExternalContext();
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		externalContext.putRequestParameter("_eventId", "foo");
+		externalContext.setRequest(request);
+		externalContext.setResponse(response);
+		context.setExternalContext(externalContext);
+		View view = viewFactory.getView(context);
+		assertEquals(true, view.eventSignaled());
+		Event e = view.getEvent();
+		assertEquals(view, e.getSource());
+		assertEquals("foo", e.getId());
+		view.render();
+		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
+	}
+
+	public void testRestoreViewButtonEventIdFormat() {
+		creator.setApplicationContext(context);
+		ResourceLoader viewResourceLoader = new ResourceLoader() {
+			public ClassLoader getClassLoader() {
+				return ClassUtils.getDefaultClassLoader();
+			}
+
+			public Resource getResource(String name) {
+				return new TestContextResource("/parent/" + name);
+			}
+		};
+		Expression viewId = new StaticExpression("myview.jsp");
+		ViewFactory viewFactory = creator.createViewFactory(viewId, viewResourceLoader);
+		MockRequestContext context = new MockRequestContext();
+		MockExternalContext externalContext = new MockExternalContext();
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		externalContext.putRequestParameter("_eventId_foo", "true");
+		externalContext.setRequest(request);
+		externalContext.setResponse(response);
+		context.setExternalContext(externalContext);
+		View view = viewFactory.getView(context);
+		assertEquals(true, view.eventSignaled());
+		Event e = view.getEvent();
+		assertEquals(view, e.getSource());
+		assertEquals("foo", e.getId());
+		view.render();
+		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
 	}
 
 	private static class MockViewResolver implements ViewResolver {
