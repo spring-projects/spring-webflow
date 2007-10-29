@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.faces.webflow;
 
 import javax.faces.FacesException;
@@ -6,6 +21,15 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
+/**
+ * Custom {@link Lifecycle} for Spring Web Flow that only executes the APPLY_REQUEST_VALUES through INVOKE_APPLICATION
+ * phases.
+ * <p>
+ * This Lifecycle does not execute the RESTORE_VIEW phase since view creation and restoration are now handled by the
+ * {@link JsfViewFactory}.
+ * 
+ * @author Jeremy Grelle
+ */
 public class FlowLifecycle extends Lifecycle {
 
 	private final Lifecycle delegate;
@@ -27,18 +51,30 @@ public class FlowLifecycle extends Lifecycle {
 		}
 	}
 
+	/**
+	 * Delegates to the wrapped {@link Lifecycle}.
+	 */
 	public void render(FacesContext context) throws FacesException {
 		delegate.render(context);
 	}
 
+	/**
+	 * Delegates to the wrapped {@link Lifecycle}.
+	 */
 	public void addPhaseListener(PhaseListener listener) {
 		delegate.addPhaseListener(listener);
 	}
 
+	/**
+	 * Delegates to the wrapped {@link Lifecycle}.
+	 */
 	public PhaseListener[] getPhaseListeners() {
 		return delegate.getPhaseListeners();
 	}
 
+	/**
+	 * Delegates to the wrapped {@link Lifecycle}.
+	 */
 	public void removePhaseListener(PhaseListener listener) {
 		delegate.removePhaseListener(listener);
 	}
