@@ -25,6 +25,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class MvcViewFactoryTests extends TestCase {
@@ -56,6 +57,7 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setRequest(request);
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(false, view.eventSignaled());
 		view.render();
@@ -75,6 +77,7 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setRequest(request);
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(false, view.eventSignaled());
 		view.render();
@@ -102,6 +105,7 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setRequest(request);
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();
@@ -132,6 +136,7 @@ public class MvcViewFactoryTests extends TestCase {
 		externalContext.setRequest(request);
 		externalContext.setResponse(response);
 		context.setExternalContext(externalContext);
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();

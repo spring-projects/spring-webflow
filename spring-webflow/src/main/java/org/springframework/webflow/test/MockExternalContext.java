@@ -153,7 +153,7 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
-		throw new UnsupportedOperationException("Not yet implemented");
+		return "/executions/" + requestInfo.getFlowDefinitionId() + "/" + requestInfo.getFlowExecutionKey();
 	}
 
 	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo) {
