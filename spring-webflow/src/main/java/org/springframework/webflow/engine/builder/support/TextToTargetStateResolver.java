@@ -71,13 +71,11 @@ class TextToTargetStateResolver extends AbstractConverter {
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
 		String targetStateId = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
-		if (parser.isEvalExpressionString(targetStateId)) {
-			Expression expression = parser.parseExpression(targetStateId, RequestContext.class, String.class, null);
-			return new DefaultTargetStateResolver(expression);
-		} else if (targetStateId.startsWith(BEAN_PREFIX)) {
+		if (targetStateId.startsWith(BEAN_PREFIX)) {
 			return flowBuilderContext.getBeanFactory().getBean(targetStateId.substring(BEAN_PREFIX.length()));
 		} else {
-			return new DefaultTargetStateResolver(targetStateId);
+			Expression expression = parser.parseExpression(targetStateId, RequestContext.class, String.class, null);
+			return new DefaultTargetStateResolver(expression);
 		}
 	}
 }

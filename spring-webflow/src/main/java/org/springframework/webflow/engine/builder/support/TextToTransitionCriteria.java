@@ -78,6 +78,7 @@ class TextToTransitionCriteria extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+		// TODO - add separate transition 'event' and 'condition' attributes
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)

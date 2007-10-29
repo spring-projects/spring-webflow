@@ -17,12 +17,14 @@ package org.springframework.webflow.core.expression;
 
 import java.util.Map;
 
+import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * An extension of {@link OgnlExpressionParser} that registers web flow specific property accessors.
@@ -35,6 +37,7 @@ class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	 * Creates a webflow-specific ognl expression parser.
 	 */
 	public WebFlowOgnlExpressionParser() {
+		addPropertyAccessor(RequestContext.class, new RequestContextPropertyAccessor(new ObjectPropertyAccessor()));
 		addPropertyAccessor(MapAdaptable.class, new MapAdaptablePropertyAccessor());
 		addPropertyAccessor(MutableAttributeMap.class, new MutableAttributeMapPropertyAccessor());
 	}
@@ -64,5 +67,34 @@ class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			((MutableAttributeMap) target).put((String) name, value);
 		}
+	}
+
+	private static class RequestContextPropertyAccessor implements PropertyAccessor {
+		private PropertyAccessor delegate;
+
+		public RequestContextPropertyAccessor(PropertyAccessor delegate) {
+			this.delegate = delegate;
+		}
+
+		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+			String property = name.toString();
+			RequestContext requestContext = (RequestContext) target;
+			if (requestContext.getRequestScope().contains(property)) {
+				return requestContext.getRequestScope().get(property);
+			} else if (requestContext.getFlashScope().contains(property)) {
+				return requestContext.getFlashScope().get(property);
+			} else if (requestContext.getFlowScope().contains(property)) {
+				return requestContext.getFlowScope().get(property);
+			} else if (requestContext.getConversationScope().contains(property)) {
+				return requestContext.getConversationScope().get(property);
+			} else {
+				return delegate.getProperty(context, target, name);
+			}
+		}
+
+		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+			delegate.setProperty(context, target, name, value);
+		}
+
 	}
 }

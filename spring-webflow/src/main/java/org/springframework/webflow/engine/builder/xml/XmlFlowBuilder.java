@@ -51,7 +51,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.webflow.action.ActionResultExposer;
 import org.springframework.webflow.action.EvaluateAction;
 import org.springframework.webflow.action.ExternalRedirectAction;
@@ -603,8 +602,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			String encodedViewName = encodedView.substring(REDIRECT_PREFIX.length());
 			Expression viewName = getExpressionParser().parseExpression(encodedViewName, RequestContext.class,
 					String.class, null);
-			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource,
+			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
 			return new ViewInfo(viewFactory, Boolean.TRUE);
 		} else if (encodedView.startsWith(EXTERNAL_REDIRECT_PREFIX)) {
@@ -624,8 +622,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		} else {
 			Expression viewName = getExpressionParser().parseExpression(encodedView, RequestContext.class,
 					String.class, null);
-			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewResource,
+			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
 			return new ViewInfo(viewFactory, null);
 		}
@@ -650,8 +647,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		} else {
 			Expression viewName = getExpressionParser().parseExpression(encodedView, RequestContext.class,
 					String.class, null);
-			Expression viewResource = new ViewResourceExpression(viewName, getLocalContext().getResourceLoader());
-			return getLocalContext().getViewFactoryCreator().createFinalResponseAction(viewResource,
+			return getLocalContext().getViewFactoryCreator().createFinalResponseAction(viewName,
 					getLocalContext().getResourceLoader());
 		}
 	}
@@ -774,9 +770,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		while (it.hasNext()) {
 			Element argumentElement = (Element) it.next();
-			String expressionString = parser.parseEvalExpressionString(argumentElement
-					.getAttribute(EXPRESSION_ATTRIBUTE));
-			Expression name = parser.parseExpression(expressionString, RequestContext.class, Object.class, null);
+			Expression name = parser.parseExpression(argumentElement.getAttribute(EXPRESSION_ATTRIBUTE),
+					RequestContext.class, Object.class, null);
 			Class type = null;
 			if (argumentElement.hasAttribute(PARAMETER_TYPE_ATTRIBUTE)) {
 				type = (Class) fromStringTo(Class.class)
@@ -807,10 +802,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action parseEvaluateAction(Element element) {
-		String expressionString = getExpressionParser().parseEvalExpressionString(
-				element.getAttribute(EXPRESSION_ATTRIBUTE));
-		Expression expression = getExpressionParser().parseExpression(expressionString, RequestContext.class,
-				Object.class, null);
+		Expression expression = getExpressionParser().parseExpression(element.getAttribute(EXPRESSION_ATTRIBUTE),
+				RequestContext.class, Object.class, null);
 		return new EvaluateAction(expression, parseEvaluationResultExposer(element));
 	}
 
@@ -900,9 +893,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Transition parseThen(Element element) {
-		String expressionString = getExpressionParser().parseEvalExpressionString(element.getAttribute(TEST_ATTRIBUTE));
-		Expression expression = getExpressionParser().parseExpression(expressionString, RequestContext.class,
-				Boolean.class, null);
+		Expression expression = getExpressionParser().parseExpression(element.getAttribute(TEST_ATTRIBUTE),
+				RequestContext.class, Boolean.class, null);
 		TransitionCriteria matchingCriteria = new BooleanExpressionTransitionCriteria(expression);
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(element.getAttribute(THEN_ATTRIBUTE));
@@ -959,16 +951,15 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		List mappingElements = DomUtils.getChildElementsByTagName(element, MAPPING_ELEMENT);
 		for (Iterator it = mappingElements.iterator(); it.hasNext();) {
 			Element mappingElement = (Element) it.next();
-			Expression source = parser.parseExpression(parser.parseEvalExpressionString(mappingElement
-					.getAttribute(SOURCE_ATTRIBUTE)), sourceClass, Object.class, null);
+			Expression source = parser.parseExpression(mappingElement.getAttribute(SOURCE_ATTRIBUTE), sourceClass,
+					Object.class, null);
 			Expression target = null;
 			if (StringUtils.hasText(mappingElement.getAttribute(TARGET_ATTRIBUTE))) {
-				target = parser.parseExpression(parser.parseEvalExpressionString(mappingElement
-						.getAttribute(TARGET_ATTRIBUTE)), targetClass, Object.class, null);
+				target = parser.parseExpression(mappingElement.getAttribute(TARGET_ATTRIBUTE), targetClass,
+						Object.class, null);
 			} else if (StringUtils.hasText(mappingElement.getAttribute(TARGET_COLLECTION_ATTRIBUTE))) {
-				target = new CollectionAddingExpression(parser.parseExpression(parser
-						.parseEvalExpressionString(mappingElement.getAttribute(TARGET_COLLECTION_ATTRIBUTE)),
-						targetClass, Object.class, null));
+				target = new CollectionAddingExpression(parser.parseExpression(mappingElement
+						.getAttribute(TARGET_COLLECTION_ATTRIBUTE), targetClass, Object.class, null));
 			}
 			if (getRequired(mappingElement, false)) {
 				mapper.addMapping(new RequiredMapping(source, target, parseTypeConverter(mappingElement)));
@@ -982,9 +973,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		for (Iterator it = elements.iterator(); it.hasNext();) {
 			Element element = (Element) it.next();
-			String expressionString = parser.parseEvalExpressionString(element.getAttribute(NAME_ATTRIBUTE));
-			Expression attributeExpression = parser.parseExpression(expressionString, MutableAttributeMap.class,
-					Object.class, null);
+			Expression attributeExpression = parser.parseExpression(element.getAttribute(NAME_ATTRIBUTE),
+					MutableAttributeMap.class, Object.class, null);
 			Expression scopedAttributeExpression = new ScopedAttributeExpression(attributeExpression, parseScope(
 					element, ScopeType.FLOW));
 			if (getRequired(element, false)) {
@@ -999,9 +989,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		for (Iterator it = elements.iterator(); it.hasNext();) {
 			Element element = (Element) it.next();
-			String expressionString = parser.parseEvalExpressionString(element.getAttribute(NAME_ATTRIBUTE));
-			Expression attributeExpression = parser.parseExpression(expressionString, MutableAttributeMap.class,
-					Object.class, null);
+			Expression attributeExpression = parser.parseExpression(element.getAttribute(NAME_ATTRIBUTE),
+					MutableAttributeMap.class, Object.class, null);
 			Expression scopedAttributeExpression = new ScopedAttributeExpression(attributeExpression, parseScope(
 					element, ScopeType.FLOW));
 			if (getRequired(element, false)) {
@@ -1132,30 +1121,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		public void setValue(Object target, Object value) throws EvaluationException {
 			MutableAttributeMap scopeMap = scopeType.getScope((RequestContext) target);
 			scopeMapExpression.setValue(scopeMap, value);
-		}
-	}
-
-	private static class ViewResourceExpression implements Expression {
-		private Expression viewLocation;
-		private ResourceLoader viewResourceLoader;
-
-		public ViewResourceExpression(Expression viewLocation, ResourceLoader viewResourceLoader) {
-			this.viewLocation = viewLocation;
-			this.viewResourceLoader = viewResourceLoader;
-		}
-
-		public Object getValue(Object target) throws EvaluationException {
-			String location = (String) viewLocation.getValue(target);
-			Resource resource = viewResourceLoader.getResource(location);
-			if (resource instanceof ServletContextResource) {
-				return ((ServletContextResource) resource).getPath();
-			} else {
-				throw new IllegalArgumentException("Unsupported resource " + resource);
-			}
-		}
-
-		public void setValue(Object target, Object value) throws EvaluationException {
-			throw new UnsupportedOperationException("Set value not supported");
 		}
 	}
 
