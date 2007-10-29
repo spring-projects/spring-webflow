@@ -1,4 +1,7 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <tiles:insertTemplate template="/template.jsp">
 <tiles:putAttribute name="content">
@@ -8,59 +11,53 @@
 </div>
 
 <div class="section">
-	<h:form id="confirm">
+	<form:form id="confirm" modelAttribute="booking">
 	<fieldset>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Name:</div>
-			<div class="output">#{hotel.name}</div>
+			<div class="output">${hotel.name}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Address:</div>
-			<div class="output">#{hotel.address}</div>
+			<div class="output">${hotel.address}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">City, State:</div>
-			<div class="output">#{hotel.city}, #{hotel.state}</div>
+			<div class="output">${hotel.city}, ${hotel.state}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Zip:</div>
-			<div class="output">#{hotel.zip}</div>
+			<div class="output">${hotel.zip}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Country:</div>
-			<div class="output">#{hotel.country}</div>
+			<div class="output">${hotel.country}</div>
 		</div>
-        <div class="entry">
+        <div class="field">
             <div class="label">Total payment:</div>
             <div class="output">
-                <h:outputText value="#{booking.total}">
-                    <f:convertNumber type="currency" 
-                                     currencySymbol="$"/>
-                </h:outputText>
+            	<spring:bind path="total">${status.value}</spring:bind>
             </div>
         </div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Check In Date:</div>
-			<div class="output"><h:outputText value="#{booking.checkinDate}"/></div>
+			<div class="output"><spring:bind path="checkinDate">${status.value}</spring:bind></div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Check Out Date:</div>
-			<div class="output"><h:outputText value="#{booking.checkoutDate}"/></div>
+			<div class="output"><spring:bind path="checkoutDate">${status.value}</spring:bind></div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Credit Card #:</div>
-			<div class="output">#{booking.creditCard}</div>
+			<div class="output">${booking.creditCard}</div>
 		</div>
-		<div class="entry">
-			<div class="label">&#160;</div>
-			<div class="input">
-				<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
-    			<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
-    			<h:commandButton id="cancel" value="Cancel" action="cancel"/>
-			</div>
+		<div class="buttonGroup">
+			<input type="submit" name="_eventId_confirm" value="Confim"/>&#160;
+			<input type="submit" name="_eventId_revise" value="Revise"/>&#160;
+			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 		</div>
 	</fieldset>
-	</h:form>
+	</form:form>
 </div>
 
 </tiles:putAttribute>

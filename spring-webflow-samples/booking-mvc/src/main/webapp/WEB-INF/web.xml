@@ -4,6 +4,10 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
+	<listener>
+		<listener-class>org.apache.tiles.web.startup.TilesListener</listener-class>
+	</listener>
+	
 	<!-- The front controller of the Spring MVC Web application, responsible for handling all application requests -->
 	<servlet>
 		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>

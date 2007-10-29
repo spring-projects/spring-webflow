@@ -1,13 +1,15 @@
 package org.springframework.webflow.samples.booking.flow.booking;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.binding.message.Messages;
-import org.springframework.binding.message.Severity;
-import org.springframework.webflow.action.MultiAction;
-import org.springframework.webflow.execution.Event;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import org.springframework.webflow.action.FormAction;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.samples.booking.app.Booking;
 import org.springframework.webflow.samples.booking.app.Hotel;
@@ -18,8 +20,20 @@ import org.springframework.webflow.samples.booking.app.User;
  * definition at the appropriate points. Actions allow an externalized flow definition to delegate out to Java code to
  * perform processing.
  */
-public class BookingActions extends MultiAction {
+public class BookingActions extends FormAction {
 
+    public BookingActions() {
+	setFormObjectName("booking");
+	setValidator(new BookingValidator());
+    }
+
+    @Override
+    protected void initBinder(RequestContext context, DataBinder binder) {
+	binder.setRequiredFields(new String[] { "checkinDate", "checkoutDate", "creditCard", "creditCardName" });
+	binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+    }
+
+    @Override
     /**
      * Create a new booking object and register it with the flow-managed entity manager. The booking is not actually
      * flushed to the database at this time; that only occurs when the booking flow reaches its "bookingAuthorized"
@@ -31,37 +45,23 @@ public class BookingActions extends MultiAction {
      * @param context the current flow execution request context
      * @return success if the booking was created successfully.
      */
-    public Event createBooking(RequestContext context) {
+    protected Object createFormObject(RequestContext context) throws Exception {
 	Hotel hotel = (Hotel) context.getFlowScope().get("hotel");
 	User user = (User) context.getConversationScope().get("user");
 	Booking booking = new Booking(hotel, user);
 	EntityManager em = (EntityManager) context.getFlowScope().get("entityManager");
 	em.persist(booking);
-	context.getFlowScope().put("booking", booking);
-	return success();
+	return booking;
     }
 
-    /**
-     * Perform some custom server-side validation on the flow-scoped Booking object updated by the booking form.
-     * 
-     * It is expected a future milestone of Spring Web Flow 2.0 will add a Messages abstraction that decouples SWF
-     * artifacts from environment-specific constructs like the FacesContext.
-     * @param context the current flow execution request context
-     * @return success if validation was successful, error if not
-     */
-    public Event validateBooking(RequestContext context) {
-	Booking booking = (Booking) context.getFlowScope().get("booking");
-	Calendar calendar = Calendar.getInstance();
-	calendar.add(Calendar.DAY_OF_MONTH, -1);
-	if (booking.getCheckinDate().before(calendar.getTime())) {
-	    context.getMessageContext().addMessage(
-		    Messages.text("checkinDate", "Check in date must be a future date", Severity.ERROR));
-	    return error();
-	} else if (!booking.getCheckinDate().before(booking.getCheckoutDate())) {
-	    context.getMessageContext().addMessage(
-		    Messages.text("checkoutDate", "Check out date must be later than check in date", Severity.ERROR));
-	    return error();
+    public class BookingValidator implements Validator {
+
+	public boolean supports(Class clazz) {
+	    return Booking.class.equals(clazz);
 	}
-	return success();
+
+	public void validate(Object object, Errors errors) {
+	}
+
     }
 }

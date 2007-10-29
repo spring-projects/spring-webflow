@@ -54,5 +54,4 @@ public class SearchCriteria implements Serializable {
     public void setPage(int page) {
 	this.page = page;
     }
-
 }

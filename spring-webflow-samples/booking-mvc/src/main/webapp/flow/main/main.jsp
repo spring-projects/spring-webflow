@@ -8,7 +8,7 @@
 <form:form modelAttribute="searchCriteria">
 <div class="section">
     <span class="errors">
-    	<form:errors/>
+    	<form:errors path="*"/>
     </span>
 	<h1>Search Hotels</h1>
 	<fieldset> 
@@ -19,15 +19,11 @@
 			<form:option label="10" value="10"/>
 			<form:option label="20" value="20"/>
 		</form:select>
-		<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}" />
-		<input type="submit" class="button" name="_eventId_findHotels" value="Find Hotels" style="width: 165px; height: 15px;" />
+		<input type="submit" class="button" name="_eventId_findHotels" value="Find Hotels" />
     </fieldset>
 </div>
 
 <div class="section">
-	<c:if test="#{hotels.empty == 0}">
-		No Hotels Found
-	</c:if>
 	<table>
 		<thead>
 			<tr>
@@ -38,18 +34,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="hotel" items="#{hotels}">
+			<c:forEach var="hotel" items="${hotels}">
 			<tr>
-				<td>#{hotel.name}</td>
-				<td>#{hotel.address}</td>
-				<td>#{hotel.city}, #{hotel.state}, #{hotel.country}</td>
-				<td>#{hotel.zip}</td>
+				<td>${hotel.name}</td>
+				<td>${hotel.address}</td>
+				<td>${hotel.city}, ${hotel.state}, ${hotel.country}</td>
+				<td>${hotel.zip}</td>
 				<td>
-					<c:url var="viewHotelLink">
-						<c:param name="hotelId" value="#{hotel.id}"/>
-						<c:param name="_flowExecutionKey" value="#{flowExecutionKey}" />
-					</c:url>
-					<a href="#{viewHotelLink}">View Hotel</a>
+					<a href="${flowExecutionUrl}?_eventId=selectHotel&hotelId=${hotel.id}">View Hotel</a>
 				</td>
 			</tr>
 			</c:forEach>
@@ -62,10 +54,6 @@
 </div>
 
 <div class="section">
-	<c:if test="#{bookings.empty}">
-		No Bookings Found
-	</c:if>
-
 	<table>
 		<thead>
 			<tr>
@@ -79,20 +67,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="booking" items="#{bookings}">
+			<c:forEach var="booking" items="${bookings}">
 			<tr>
-				<td>#{booking.hotel.name}</td>
-				<td>#{booking.hotel.address}</td>
-				<td>#{booking.hotel.city}, #{booking.hotel.state}</td>
-				<td>#{booking.checkinDate}</td>
-				<td>#{booking.checkoutDate}</td>
-				<td>#{booking.id}</td>
+				<td>${booking.hotel.name}</td>
+				<td>${booking.hotel.address}</td>
+				<td>${booking.hotel.city}, ${booking.hotel.state}</td>
+				<td>${booking.checkinDate}</td>
+				<td>${booking.checkoutDate}</td>
+				<td>${booking.id}</td>
 				<td>
-					<c:url var="cancelBookingLink">
-						<c:param name="bookingId" value="#{booking.id}"/>
-						<c:param name="_flowExecutionKey" value="#{flowExecutionKey}" />
-					</c:url>
-					<a href="#{cancelBookingLink}">Cancel</a>
+					<a href="${flowExecutionUrl}?_eventId=cancelBooking&bookingId=${booking.id}">Cancel</a>
 				</td>
 			</tr>
 			</c:forEach>

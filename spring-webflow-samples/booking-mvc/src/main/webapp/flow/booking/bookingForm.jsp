@@ -1,4 +1,7 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <tiles:insertTemplate template="/template.jsp">
 <tiles:putAttribute name="content">
@@ -8,146 +11,124 @@
 </div>
 
 <div class="section">
-	<h:form id="booking">
-	<h:messages errorClass="errors" />
+	<form:form id="booking" modelAttribute="booking">
+	<form:errors path="*" cssClass="errors" />
 	<fieldset>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Name:</div>
-			<div class="output">#{hotel.name}</div>
+			<div class="output">${hotel.name}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Address:</div>
-			<div class="output">#{hotel.address}</div>
+			<div class="output">${hotel.address}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">City, State:</div>
-			<div class="output">#{hotel.city}, #{hotel.state}</div>
+			<div class="output">${hotel.city}, ${hotel.state}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Zip:</div>
-			<div class="output">#{hotel.zip}</div>
+			<div class="output">${hotel.zip}</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">Country:</div>
-			<div class="output">#{hotel.country}</div>
+			<div class="output">${hotel.country}</div>
 		</div>
-        <div class="entry">
+        <div class="field">
             <div class="label">Nightly rate:</div>
             <div class="output">
-                <h:outputText value="#{hotel.price}">
-                    <f:convertNumber type="currency" currencySymbol="$"/>
-                </h:outputText>
+	        	<spring:bind path="hotel.price">${status.value}</spring:bind>
             </div>
         </div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="checkinDate">Check In Date:</h:outputLabel>
+				<label for="checkinDate">Check In Date:</label>
 			</div>
 			<div class="input">
-				<sf:clientDateValidator allowBlank="false" msgDisplay="block" msgClass="errors">
-		        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
-	                	<f:convertDateTime pattern="MM/dd/yy" timeZone="EST"/>
-	                </h:inputText>
-               	</sf:clientDateValidator>
+				<form:errors path="checkinDate" cssClass="errors"/>
+				<form:input id="checkinDate" path="checkinDate"/>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="checkoutDate">Check Out Date:</h:outputLabel>
+				<label for="checkoutDate">Check Out Date:</label>
 			</div>
 			<div class="input">
-				<sf:clientDateValidator allowBlank="false" msgDisplay="block" msgClass="errors">
-					<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
-						<f:convertDateTime pattern="MM/dd/yy" timeZone="EST"/>
-					</h:inputText>
-				</sf:clientDateValidator>
+				<form:errors path="checkoutDate" cssClass="errors"/>
+				<form:input id="checkoutDate" path="checkoutDate"/>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="beds">Room Preference:</h:outputLabel>
+				<label for="beds">Room Preference:</label>
 			</div>
 			<div class="input">
-				<h:selectOneMenu id="beds" value="#{booking.beds}">
-					<f:selectItem itemLabel="One king-size bed" itemValue="1"/>
-					<f:selectItem itemLabel="Two double beds" itemValue="2"/>
-					<f:selectItem itemLabel="Three beds" itemValue="3"/>
-				</h:selectOneMenu>
+				<form:select id="beds" path="beds">
+					<form:option label="One king-size bed" value="1"/>
+					<form:option label="Two double beds" value="2"/>
+					<form:option label="Three beds" value="3"/>
+				</form:select>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="smoking">Smoking Preference:</h:outputLabel>
+				<label for="smoking">Smoking Preference:</label>
 			</div>
 			<div id="radio" class="input">
-				<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
-					<f:selectItem itemLabel="Smoking" itemValue="true"/>
-					<f:selectItem itemLabel="Non Smoking" itemValue="false"/>
-				</h:selectOneRadio>
+				<form:radiobutton id="smoking" path="smoking" label="Smoking" value="true"/>
+				<form:radiobutton path="smoking" label="Non Smoking" value="false"/>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="creditCard">Credit Card #:</h:outputLabel>
+				<label for="creditCard">Credit Card #:</label>
 			</div>
 			<div class="input">
-				<sf:clientNumberValidator allowBlank="false" allowNegative="false" allowDecimals="false" minLength="16" maxLength="16" msgDisplay="block" msgClass="errors">
-					<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
-				</sf:clientNumberValidator>
+				<form:errors path="creditCard" cssClass="errors"/>
+				<form:input id="creditCard" path="creditCard"/>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="creditCardName">Credit Card Name:</h:outputLabel>
+				<label for="creditCardName">Credit Card Name:</label>
 			</div>
 			<div class="input">
-				<sf:clientTextValidator allowBlank="false" msgDisplay="block" msgClass="errors">
-					<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
-				</sf:clientTextValidator>
+				<form:errors path="creditCardName" cssClass="errors"/>
+				<form:input id="creditCardName" path="creditCardName"/>
 			</div>
 		</div>
-		<div class="entry">
+		<div class="field">
 			<div class="label">
-				<h:outputLabel for="creditCardExpiryMonth">Credit Card Expiry:</h:outputLabel>
+				<label for="creditCardExpiryMonth">Credit Card Expirty:</label>
 			</div>
 			<div class="input">
-				<h:selectOneMenu id="creditCardExpiryMonth" value="#{booking.creditCardExpiryMonth}">
-					<f:selectItem itemLabel="Jan" itemValue="1"/>
-					<f:selectItem itemLabel="Feb" itemValue="2"/>
-					<f:selectItem itemLabel="Mar" itemValue="3"/>
-					<f:selectItem itemLabel="Apr" itemValue="4"/>
-					<f:selectItem itemLabel="May" itemValue="5"/>
-					<f:selectItem itemLabel="Jun" itemValue="6"/>
-					<f:selectItem itemLabel="Jul" itemValue="7"/>
-					<f:selectItem itemLabel="Aug" itemValue="8"/>
-					<f:selectItem itemLabel="Sep" itemValue="9"/>
-					<f:selectItem itemLabel="Oct" itemValue="10"/>
-					<f:selectItem itemLabel="Nov" itemValue="11"/>
-					<f:selectItem itemLabel="Dec" itemValue="12"/>
-				</h:selectOneMenu>
-				<h:selectOneMenu id="creditCardExpiryYear" value="#{booking.creditCardExpiryYear}">
-					<f:selectItem itemLabel="2005" itemValue="2005"/>
-					<f:selectItem itemLabel="2006" itemValue="2006"/>
-					<f:selectItem itemLabel="2007" itemValue="2007"/>
-					<f:selectItem itemLabel="2008" itemValue="2008"/>
-					<f:selectItem itemLabel="2009" itemValue="2009"/>
-				</h:selectOneMenu>
+				<form:select id="creditCardExpiryMonth" path="creditCardExpiryMonth">
+					<form:option label="Jan" value="1"/>
+					<form:option label="Feb" value="2"/>
+					<form:option label="Mar" value="3"/>
+					<form:option label="Apr" value="4"/>
+					<form:option label="May" value="5"/>
+					<form:option label="Jun" value="6"/>
+					<form:option label="Jul" value="7"/>
+					<form:option label="Aug" value="8"/>
+					<form:option label="Sep" value="9"/>
+					<form:option label="Oct" value="10"/>
+					<form:option label="Nov" value="11"/>
+					<form:option label="Dec" value="12"/>
+				</form:select>
+				<form:select path="creditCardExpiryYear">
+					<form:option label="2007" value="1"/>
+					<form:option label="2008" value="2"/>
+					<form:option label="2009" value="3"/>
+				</form:select>
 			</div>
 		</div>
-		<div class="entry errors">
-			<h:messages globalOnly="true"/>
-		</div>
-		<div class="entry">
-			<div class="label">&#160;</div>
-			<div class="input">
-				<sf:validateAllOnClick>
-					<h:commandButton id="proceed" action="proceed" value="Proceed"/>
-				</sf:validateAllOnClick>&#160;
-				<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
-			</div>
+		<div class="buttonGroup">
+			<input type="submit" name="_eventId_proceed" value="Proceed"/>&#160;
+			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 		</div>
 	</fieldset>
-	</h:form>
+</form:form>
 </div>
 
 </tiles:putAttribute>

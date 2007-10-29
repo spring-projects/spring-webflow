@@ -5,25 +5,35 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
-	<link href="/swf-booking-jsf/css/screen.css" rel="stylesheet" type="text/css" />
-	<tiles:insertAttribute name="headIncludes" />
+	<style type="text/css" media="screen">
+        @import url("/swf-booking-mvc/spring/resources/css-framework/css/tools.css");
+        @import url("/swf-booking-mvc/spring/resources/css-framework/css/typo.css");
+        @import url("/swf-booking-mvc/spring/resources/css-framework/css/forms.css");
+        @import url("/swf-booking-mvc/spring/resources/css-framework/css/layout-navtop-localleft.css");        
+        @import url("/swf-booking-mvc/spring/resources/css-framework/css/layout.css");
+        @import url("/swf-booking-mvc/spring/resources/css/booking.css");
+    </style>
 </head>
-<body>
-
-<div id="document">
-	<div id="header">
-		<div id="title">Spring Faces: Hotel Booking Sample Application</div>
-		<div id="status">
-            Welcome #{user.name}
+<body class="tundra spring">
+<div id="page">
+	<div id="header" class="clearfix spring">
+		<div id="welcome">
+			<div class="left">Spring Web Flow + Spring MVC: Hotel Booking Sample Application</div>
+			<div class="right">
+	            Welcome, ${user.name}
+			</div>
+		</div>
+		<div id="branding" class="spring">
+			<img src="/swf-booking-mvc/spring/resources/images/header.jpg" />
 		</div>
 	</div>
-	<div id="container">
-		<div id="sidebar">
+	<div id="content" class="clearfix spring">
+		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<c:url value="/images/diplomat.jpg" />
+				<img src="/swf-booking-mvc/spring/resources/images/diplomat.jpg"/>
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<c:url value="/images/tse.gif" />
+				<img src="/swf-booking-mvc/spring/resources/images/tse.gif"/>
 			</a>
 			<p>
 				The features illustrated in this sample are just the beginning.
@@ -32,14 +42,15 @@
 				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
 			</p>
 		</div>
-		<div id="content">
+		<div id="main">
 			<tiles:insertAttribute name="content" />
 		</div>
-		<div id="footer">
-			<a href="http://www.springframework.org"><img src="/swf-booking-jsf/images/powered-by-spring.png" /></a>
-		</div>
+	</div>
+	<div id="footer" class="clearfix spring">
+		<a href="http://www.springframework.org">
+			<img src="/swf-booking-mvc/spring/resources/images/powered-by-spring.png"/>
+		</a>
 	</div>
 </div>
-
 </body>
 </html>

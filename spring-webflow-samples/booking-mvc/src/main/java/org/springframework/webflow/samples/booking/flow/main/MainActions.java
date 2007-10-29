@@ -2,7 +2,8 @@ package org.springframework.webflow.samples.booking.flow.main;
 
 import java.util.List;
 
-import org.springframework.webflow.action.MultiAction;
+import org.springframework.validation.DataBinder;
+import org.springframework.webflow.action.FormAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.samples.booking.app.Booking;
@@ -15,7 +16,7 @@ import org.springframework.webflow.samples.booking.app.User;
  * at the appropriate points. Actions allow an externalized flow definition to delegate out to Java code to perform
  * processing.
  */
-public class MainActions extends MultiAction {
+public class MainActions extends FormAction {
 
     private BookingService bookingService;
 
@@ -56,8 +57,10 @@ public class MainActions extends MultiAction {
      * @param context the current flow execution request context
      * @return success
      */
-    public Event findHotels(RequestContext context) {
+    public Event findHotels(RequestContext context) throws Exception {
 	SearchCriteria search = (SearchCriteria) context.getFlowScope().get("searchCriteria");
+	DataBinder binder = createBinder(context, search);
+	doBind(context, binder);
 	List<Hotel> hotels = bookingService
 		.findHotels(search.getSearchString(), search.getPageSize(), search.getPage());
 	context.getFlowScope().put("hotels", hotels);
