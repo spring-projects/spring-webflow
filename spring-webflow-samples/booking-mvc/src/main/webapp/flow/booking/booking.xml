@@ -13,7 +13,7 @@
 	<attribute name="persistenceContext" value="true" />
 	
 	<input-mapper>
-		<input-attribute name="id" scope="flow" />
+		<input-attribute name="${id}" scope="flow" />
 	</input-mapper>
 
 	<start-state idref="displayHotel"/>
@@ -22,7 +22,7 @@
 		<render-actions>
 			<bean-action method="findHotelById" bean="bookingService">
 				<method-arguments>
-					<argument expression="id" />
+					<argument expression="${id}" />
 				</method-arguments>
 				<method-result name="hotel" scope="flow" />
 			</bean-action>		
