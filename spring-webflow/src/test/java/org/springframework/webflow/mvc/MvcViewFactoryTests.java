@@ -2,6 +2,7 @@ package org.springframework.webflow.mvc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
@@ -66,8 +67,8 @@ public class MvcViewFactoryTests extends TestCase {
 
 	public void testViewResolversGetResource() {
 		MockViewResolver viewResolver = new MockViewResolver("myview");
-		context.getBeanFactory().registerSingleton("viewResolver", viewResolver);
 		creator.setApplicationContext(context);
+		creator.setViewResolvers(Collections.singletonList(viewResolver));
 		Expression viewId = new StaticExpression("myview");
 		ViewFactory viewFactory = creator.createViewFactory(viewId, null);
 		MockRequestContext context = new MockRequestContext();

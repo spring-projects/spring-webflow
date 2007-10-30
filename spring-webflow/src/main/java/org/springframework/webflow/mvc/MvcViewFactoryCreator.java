@@ -1,7 +1,5 @@
 package org.springframework.webflow.mvc;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -10,12 +8,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.binding.expression.Expression;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.OrderComparator;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
@@ -61,17 +57,17 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		}
 	}
 
-	public void setApplicationContext(ApplicationContext context) {
-		initViewResolvers(context);
-		this.applicationContext = context;
+	/**
+	 * Sets the view resolvers that will be used to resolve views selected by flows. If multiple resolvers are to be
+	 * used, the resolvers should be ordered in the manner they should be applied.
+	 * @param viewResolvers the view resolver list
+	 */
+	public void setViewResolvers(List viewResolvers) {
+		this.viewResolvers = viewResolvers;
 	}
 
-	private void initViewResolvers(ApplicationContext context) {
-		Map matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, ViewResolver.class, true, false);
-		if (!matchingBeans.isEmpty()) {
-			viewResolvers = new ArrayList(matchingBeans.values());
-			Collections.sort(viewResolvers, new OrderComparator());
-		}
+	public void setApplicationContext(ApplicationContext context) {
+		this.applicationContext = context;
 	}
 
 	/**
