@@ -11,7 +11,18 @@
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
 	
-	<bean name="/*" class="org.springframework.webflow.mvc.FlowController">
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+				/intro=urlFilenameController
+				/main=flowController
+				/resources/*/**=flowController
+				/executions/*/**=flowController
+			</value>
+		</property>
+	</bean>
+		
+	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
 		<property name="flowExecutor" ref="flowExecutor" />
 	</bean>
 	
@@ -42,5 +53,14 @@
 			<ref bean="transactionManager"/>
 		</constructor-arg>
 	</bean>
-		
+
+	<!-- Handles requests to render view templates directly: maps the requested path to a logical view name resolved by the resolver below -->
+	<bean id="urlFilenameController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+
+	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the root webapp directory -->	
+	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp" />
+	</bean>
+			
 </beans>
