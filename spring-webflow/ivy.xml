@@ -33,6 +33,8 @@
 		<dependency org="org.springframework" name="spring-web" rev="2.5-rc1" />
 		
 		<!-- testing support only dependencies -->
+		<dependency org="aopalliance" name="aopalliance" rev="1.0" conf="test->default"/>
+		<dependency org="org.springframework" name="spring-aop" rev="2.5-rc1" conf="test->default" />		
 		<dependency org="junit" name="junit" rev="3.8.2" conf="buildtime, testing->default" />
 
 		<!-- spring mvc only dependencies -->
@@ -45,7 +47,7 @@
 		<dependency org="struts" name="struts" rev="1.2.9" conf="buildtime, struts->default" />
 		<dependency org="org.springframework" name="spring-webmvc-struts" rev="2.5-rc1" conf="buildtime, struts->default" />
 
-		<!-- build time only dependencies -->
+		<!-- build time only dependencies -->		
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
 		<dependency org="javax.portlet" name="portlet-api" rev="1.0" conf="buildtime->default" />
 		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default" />

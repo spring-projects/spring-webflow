@@ -210,6 +210,16 @@ The idref to the registry this executor will use to locate flow definitions for 
 		</xsd:complexType>
 	</xsd:element>
 	
+	<xsd:element name="enable-flow-scopes">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Allows access to the Spring Web Flow scopes (request, flash, flow, conversation) from a Spring ApplicationContext.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
 	<xsd:complexType name="flowExecutionRepositoryType">
 		<xsd:attribute name="type" type="flowExecutionRepositoryTypeAttribute" use="required">
 			<xsd:annotation>
