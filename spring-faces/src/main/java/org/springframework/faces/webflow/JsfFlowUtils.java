@@ -65,4 +65,11 @@ class JsfFlowUtils {
 			}
 		}
 	}
+
+	public static boolean isFlowRequest() {
+		if (RequestContextHolder.getRequestContext() == null) {
+			return false;
+		}
+		return true;
+	}
 }

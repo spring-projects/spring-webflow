@@ -34,7 +34,17 @@ import org.springframework.util.StringUtils;
  */
 public class FlowActionListener implements ActionListener {
 
+	private ActionListener delegate;
+
+	public FlowActionListener(ActionListener delegate) {
+		this.delegate = delegate;
+	}
+
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
+
+		if (!JsfFlowUtils.isFlowRequest()) {
+			delegate.processAction(actionEvent);
+		}
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		ActionSource source = (ActionSource) actionEvent.getSource();

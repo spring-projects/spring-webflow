@@ -20,7 +20,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 public class FlowActionListenerTests extends TestCase {
 
-	FlowActionListener listener = new FlowActionListener();
+	FlowActionListener listener;
 
 	JSFMockHelper jsfMock = new JSFMockHelper();
 
@@ -29,6 +29,7 @@ public class FlowActionListenerTests extends TestCase {
 	protected void setUp() throws Exception {
 		jsfMock.setUp();
 
+		listener = new FlowActionListener(jsfMock.application().getActionListener());
 		RequestContextHolder.setRequestContext(context);
 		AttributeMap flash = new LocalAttributeMap();
 		expect(context.getFlashScope()).andStubReturn(flash);

@@ -57,6 +57,9 @@ public class FlowRenderKitWrapper extends RenderKit {
 	}
 
 	public ResponseStateManager getResponseStateManager() {
+		if (!JsfFlowUtils.isFlowRequest()) {
+			return delegate.getResponseStateManager();
+		}
 		return manager;
 	}
 

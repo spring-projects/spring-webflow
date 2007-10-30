@@ -67,7 +67,7 @@ public class FlowFacesContext extends FacesContext {
 	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			delegate.addMessage(clientId, message);
 			return;
 		}
@@ -96,7 +96,7 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<String> getClientIdsWithMessages() {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getClientIdsWithMessages();
 		}
 		return new ClientIdIterator();
@@ -108,7 +108,7 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	public FacesMessage.Severity getMaximumSeverity() {
 
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getMaximumSeverity();
 		}
 
@@ -134,7 +134,7 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages() {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getMessages();
 		}
 		return new FacesMessageIterator();
@@ -146,14 +146,14 @@ public class FlowFacesContext extends FacesContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages(String clientId) {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getMessages(clientId);
 		}
 		return new FacesMessageIterator(clientId);
 	}
 
 	public boolean getRenderResponse() {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getRenderResponse();
 		}
 
@@ -167,7 +167,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public boolean getResponseComplete() {
 
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			return delegate.getResponseComplete();
 		}
 
@@ -180,7 +180,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void renderResponse() {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			delegate.renderResponse();
 			return;
 		}
@@ -188,7 +188,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void responseComplete() {
-		if (RequestContextHolder.getRequestContext() == null) {
+		if (!JsfFlowUtils.isFlowRequest()) {
 			delegate.responseComplete();
 			return;
 		}
