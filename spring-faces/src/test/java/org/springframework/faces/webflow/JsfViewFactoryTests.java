@@ -29,7 +29,7 @@ import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfViewFactoryTests extends TestCase {
 
-	private static final String VIEW_ID = "testView.xhtml";
+	private static final String VIEW_ID = "/testView.xhtml";
 
 	private ViewFactory factory;
 
@@ -78,7 +78,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null));
+				null), null);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -100,7 +100,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null));
+				null), null);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -122,7 +122,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null));
+				null), null);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -174,7 +174,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null));
+				null), null);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);

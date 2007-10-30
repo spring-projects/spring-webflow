@@ -34,12 +34,12 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 	public Action createFinalResponseAction(Expression viewName, ResourceLoader resourceLoader) {
 		return new JsfRenderFinalResponseAction(new JsfViewFactory(((LifecycleFactory) FactoryFinder
 				.getFactory(FactoryFinder.LIFECYCLE_FACTORY)).getLifecycle(FlowLifecycleFactory.FLOW_LIFECYCLE_ID),
-				viewName));
+				viewName, resourceLoader));
 	}
 
-	public ViewFactory createViewFactory(Expression viewName, ResourceLoader resourceLaoder) {
+	public ViewFactory createViewFactory(Expression viewName, ResourceLoader resourceLoader) {
 		return new JsfViewFactory(((LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY))
-				.getLifecycle(FlowLifecycleFactory.FLOW_LIFECYCLE_ID), viewName);
+				.getLifecycle(FlowLifecycleFactory.FLOW_LIFECYCLE_ID), viewName, resourceLoader);
 	}
 
 }

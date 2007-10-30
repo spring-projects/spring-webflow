@@ -27,6 +27,8 @@ import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.core.io.ContextResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -46,14 +48,18 @@ public class JsfViewFactory implements ViewFactory {
 
 	private final Expression viewExpr;
 
-	public JsfViewFactory(Lifecycle facesLifecycle, Expression viewExpr) {
+	private final ResourceLoader resourceLoader;
+
+	public JsfViewFactory(Lifecycle facesLifecycle, Expression viewExpr, ResourceLoader resourceLoader) {
 
 		this.facesLifecycle = facesLifecycle;
 		this.viewExpr = viewExpr;
+		this.resourceLoader = resourceLoader;
 	}
 
 	public View getView(RequestContext context) {
 
+		String viewName = resolveViewName(context);
 		FacesContext facesContext = JsfFlowUtils.getFacesContext(facesLifecycle);
 		try {
 			boolean restored = false;
@@ -66,11 +72,10 @@ public class JsfViewFactory implements ViewFactory {
 
 			ViewHandler handler = facesContext.getApplication().getViewHandler();
 
-			if (viewExists(facesContext, viewExpr.getValue(context).toString())) {
+			if (viewExists(facesContext, viewName)) {
 				view = new JsfView(facesContext.getViewRoot(), facesLifecycle);
 				restored = true;
 			} else {
-				String viewName = (String) viewExpr.getValue(context);
 				UIViewRoot root = handler.restoreView(facesContext, viewName);
 				if (root != null) {
 					view = new JsfView(root, facesLifecycle);
@@ -97,6 +102,16 @@ public class JsfViewFactory implements ViewFactory {
 			return view;
 		} finally {
 			facesContext.release();
+		}
+	}
+
+	private String resolveViewName(RequestContext context) {
+		String viewId = (String) viewExpr.getValue(context);
+		if (viewId.startsWith("/")) {
+			return viewId;
+		} else {
+			ContextResource viewResource = (ContextResource) resourceLoader.getResource(viewId);
+			return viewResource.getPathWithinContext();
 		}
 	}
 

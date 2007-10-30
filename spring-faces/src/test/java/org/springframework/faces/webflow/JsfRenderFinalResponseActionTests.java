@@ -30,7 +30,7 @@ import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfRenderFinalResponseActionTests extends TestCase {
 
-	private static final String VIEW_ID = "testView.xhtml";
+	private static final String VIEW_ID = "/testView.xhtml";
 
 	private ViewFactory factory;
 
@@ -68,7 +68,7 @@ public class JsfRenderFinalResponseActionTests extends TestCase {
 		jsfMock.application().setViewHandler(viewHandler);
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(lifecycle, parser.parseExpression("#{'" + VIEW_ID + "'}", RequestContext.class,
-				String.class, null));
+				String.class, null), null);
 		finalResponseAction = new JsfRenderFinalResponseAction(factory);
 		RequestContextHolder.setRequestContext(context);
 		ExternalContext ext = new MockExternalContext();

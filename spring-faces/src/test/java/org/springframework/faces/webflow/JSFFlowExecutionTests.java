@@ -78,7 +78,7 @@ public class JSFFlowExecutionTests extends TestCase {
 		flow = Flow.create("jsf-flow", null);
 
 		ViewState view1 = new ViewState(flow, "viewState1", new JsfViewFactory(new TestLifecycle(jsf.lifecycle()),
-				parser.parseExpression("view1", RequestContext.class, String.class, null)));
+				parser.parseExpression("/view1", RequestContext.class, String.class, null), null));
 		view1.getTransitionSet().add(new Transition(on("event1"), to("doSomething")));
 		view1.getTransitionSet().add(new Transition(on("event2"), to("evalSomething")));
 
@@ -99,7 +99,7 @@ public class JSFFlowExecutionTests extends TestCase {
 		evalSomething.getTransitionSet().add(new Transition(on("success"), to("viewState2")));
 
 		ViewState viewState2 = new ViewState(flow, "viewState2", new JsfViewFactory(new TestLifecycle(jsf.lifecycle()),
-				parser.parseExpression("view2", RequestContext.class, String.class, null)));
+				parser.parseExpression("/view2", RequestContext.class, String.class, null), null));
 		viewState2.getEntryActionList().add(new ViewState2SetupAction());
 		viewState2.getTransitionSet().add(new Transition(on("event1"), to("endState1")));
 
