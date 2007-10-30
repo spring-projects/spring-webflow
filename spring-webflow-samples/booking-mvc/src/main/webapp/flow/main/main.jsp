@@ -24,13 +24,14 @@
 </div>
 
 <div class="section">
-	<table>
+	<table class="summary">
 		<thead>
 			<tr>
 				<th>Name</th>
 				<th>Address</th>
 				<th>City, State</th>
 				<th>Zip</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -54,7 +55,7 @@
 </div>
 
 <div class="section">
-	<table>
+	<table class="summary">
 		<thead>
 			<tr>
 				<th>Name</th>
