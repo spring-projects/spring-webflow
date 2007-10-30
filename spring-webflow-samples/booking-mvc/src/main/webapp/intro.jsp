@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -13,23 +14,22 @@
     </style>
 </head>
 <body class="spring">
-
 <div id="page">
 	<div id="header" class="clearfix spring">
 		<div id="welcome">
 			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
 		</div>
 		<div id="branding" class="spring">
-			<img src="resources/images/header.jpg" alt="A room at the Westin Diplomat in Hollywood, Florida"/>
+			<img src="<c:url value="/images/header.jpg"/>" alt="A room at the Westin Diplomat in Hollywood, Florida"/>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
 		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="resources/images/diplomat.jpg" alt="The Westin Diplomat in Hollywood, Florida"/>
+				<img src="<c:url value="/images/diplomat.jpg"/>" alt="The Westin Diplomat in Hollywood, Florida"/>
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="resources/images/tse.gif" alt="The Spring Experience"/>
+				<img src="<c:url value="/images/tse.gif"/>" alt="The Spring Experience"/>
 			</a>
 			<p>
 				The features illustrated in this sample are just the beginning.
@@ -60,7 +60,7 @@
 		</div>
 	</div>
 	<div id="footer" class="clearfix spring">
-		<a href="http://www.springframework.org"><img src="resources/images/powered-by-spring.png" alt="Powered By Spring" /></a>
+		<a href="http://www.springframework.org"><img src="<c:url value="/images/powered-by-spring.png"/>" alt="Powered By Spring" /></a>
 	</div>
 </div>
 </body>

@@ -24,16 +24,16 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<img src="/swf-booking-mvc/spring/resources/images/header.jpg" />
+			<img src="<c:url value="/images/header.jpg"/>"/>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
 		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-mvc/spring/resources/images/diplomat.jpg"/>
+				<img src="<c:url value="/images/diplomat.jpg"/>"/>
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-mvc/spring/resources/images/tse.gif"/>
+				<img src="<c:url value="/images/tse.gif"/>"/>
 			</a>
 			<p>
 				The features illustrated in this sample are just the beginning.
@@ -48,7 +48,7 @@
 	</div>
 	<div id="footer" class="clearfix spring">
 		<a href="http://www.springframework.org">
-			<img src="/swf-booking-mvc/spring/resources/images/powered-by-spring.png"/>
+			<img src="<c:url value="/images/powered-by-spring.png"/>"/>
 		</a>
 	</div>
 </div>
