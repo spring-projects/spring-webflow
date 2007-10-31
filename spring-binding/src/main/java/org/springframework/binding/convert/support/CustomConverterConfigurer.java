@@ -16,6 +16,8 @@
 package org.springframework.binding.convert.support;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyEditorRegistrar;
+import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -36,7 +38,7 @@ public class CustomConverterConfigurer implements BeanFactoryPostProcessor, Init
 	private ConversionService conversionService;
 
 	/**
-	 * Create a new configurer.
+	 * Set the conversion service.
 	 * @param conversionService the conversion service to take converters from
 	 */
 	public void setConversionService(ConversionService conversionService) {
@@ -48,10 +50,15 @@ public class CustomConverterConfigurer implements BeanFactoryPostProcessor, Init
 	}
 
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		ConversionExecutor[] executors = conversionService.getConversionExecutorsForSource(String.class);
-		for (int i = 0; i < executors.length; i++) {
-			ConverterPropertyEditorAdapter editor = new ConverterPropertyEditorAdapter(executors[i]);
-			beanFactory.registerCustomEditor(editor.getTargetClass(), editor);
-		}
+		final ConversionExecutor[] executors = conversionService.getConversionExecutorsForSource(String.class);
+		PropertyEditorRegistrar registrar = new PropertyEditorRegistrar() {
+			public void registerCustomEditors(PropertyEditorRegistry registry) {
+				for (int i = 0; i < executors.length; i++) {
+					ConverterPropertyEditorAdapter editor = new ConverterPropertyEditorAdapter(executors[i]);
+					registry.registerCustomEditor(editor.getTargetClass(), editor);
+				}
+			}
+		};
+		beanFactory.addPropertyEditorRegistrar(registrar);
 	}
 }
