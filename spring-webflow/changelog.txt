@@ -14,6 +14,7 @@ General
   restoration request lifecycles in the context of a web flow execution request.  This simplifies view technology integration
   for the developer, provides a cleaner and more powerful architectural model, and makes it possible to mix-and-match JSF and MVC-style views
   in the same application, if desired. Support for Struts using this integration approach will be added in a future 2.x milestone.
+  Support for Portlet MVC using this approach will be added in a future 2.x milestone.
 * Please see the "booking-jsf" reference application for a complete example of a "standalone" webflow app using JSF as the view technology.
   Please see the "booking-mvc" reference application for a complete example of a "embedded" webflow app using Spring MVC as the view technology.
   Note it would be possible to introduce flows that render JSF-based views in this "embedded" mode, if desired.
