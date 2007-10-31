@@ -1,7 +1,8 @@
 /*
  * spring-webflow-samples
  *
- * booking-jsf - The Spring Web Flow 2.x Hotel Booking Reference Application.
+ * booking-jsf - The Spring Web Flow 2.x Hotel Booking Reference Application (Standalone Web Flow + JSF version).
+ * booking-mvc - The Spring Web Flow 2.x Hotel Booking Reference Application (Embedded Web Flow + Spring MVC version).
  */
 
 Sample pre-requisites:
