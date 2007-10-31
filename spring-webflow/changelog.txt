@@ -5,7 +5,49 @@ http://www.springframework.org/webflow
 Changes in version 2.0 M2 (30.10.2007)
 -------------------------------------
 
+General
+* Spring Web Flow now cares for the entire web request/response lifecycle (through view rendering, too!)
+* Spring Web Flow now runs in a "standalone" mode as well as an "embedded" mode.  "Standalone" mode introduces a Spring Web Servlet that
+  delegates directly to the Spring Web Flow Engine.  "embedded" mode allows Spring Web Flow to be used within another Servlet, such as the 
+  Spring MVC DispatcherServlet.
+* Spring Web Flow now provides first-class JSF and Spring MVC integration by driving their respective view rendering and
+  restoration request lifecycles in the context of a web flow execution request.  This simplifies view technology integration
+  for the developer, provides a cleaner and more powerful architectural model, and makes it possible to mix-and-match JSF and MVC-style views
+  in the same application, if desired. Support for Struts using this integration approach will be added in a future 2.x milestone.
+* Please see the "booking-jsf" reference application for a complete example of a "standalone" webflow app using JSF as the view technology.
+  Please see the "booking-mvc" reference application for a complete example of a "embedded" webflow app using Spring MVC as the view technology.
+  Note it would be possible to introduce flows that render JSF-based views in this "embedded" mode, if desired.
+* The recommended URL scheme for working with flows is now REST-based:
+	http://host/<flowId>[/requestPath][?requestParameters][#fragment] - to launch a new flow execution; for example http://host/booking
+	http://host/executions/<flowId>/<flowExecutionKey> - to resume a paused flow execution; for example http://host/executions/booking
+  This scheme will be configurable in later 2.x milestones, primarily to ease migration to 2.0 from 1.0.
+* Flow execution key assignment now happens before a view state is entered now, allowing a flow execution to send proper callback Url to a 
+  external systems that will take over control of the conversation and return control at a later time.  An example would be a e-shopping site
+  redirecting to paypal to complete a payment authorization.  This was difficult to do in SWF 1.0 and is now supported natively.
+	
+Package org.springframework.binding
+* Simplified Expression and ExpressionParser abstraction, normalized parser contract to be consistent between parser implementations as far as possible.
+  OGNL and the Unified EL are the two supported expression parser implementations.  OGNL is currently the default.  The Unified EL is recommended for
+  a JSF environment.  See booking-jsf for an example of the Unified EL in use.  See booking-mvc for an example of OGNL in use.
+  These changes will require tweaks in flow definitions being upgraded to 2.x that define implicit eval expressions without encasing them in explicit
+  eval expression delimiters (#{} for EL, ${} for OGNL).  Now, such delimiters are required for eval expressions for clarity and consistency.
+   
+Package org.springframework.webflow.engine
+* Added support for "flow relative resources".  Most notably, this allows views to be selected by a flow-relative file path, rather than requiring 
+  a fully-qualified context path.  See booking-mvc and booking-jsf for an example.
+* Removed support for inline flows entirely for 2.x. Use subflows instead.  Support for local flow registries for internal subflows is planned for
+  a future 2.x milestone.
+* Removed support for declaring flow variables whose source value is sourced from a Spring bean factory.  Use simply name/class notation instead.
+  Support for dependency injection of flow variables is planned for a future 2.x milestone.
 
+Package org.springframework.faces
+* Made Dojo the default UI toolkit for the default 'faces' component namespace.  See booking-jsf for an example of using Spring Faces with the Dojo toolkit.
+* Made Ext an alternate UI toolkit and introduced the alternate 'faces-ext' component namespace.
+* Added support for serving web resources from .jar files using the general purpose 'resources' flow.  See booking-jsf or mvc for an example.
+
+Package org.springframework.webflow.samples
+* Introduced booking-mvc, the hotel booking reference application using Spring MVC-based views with Tiles for templating.
+* Removed old SWF 1.x samples, with 2.x now focusing on a smaller set of more comprehensive reference applications.
 
 Changes in version 2.0 M1 (21.08.2007)
 -------------------------------------
