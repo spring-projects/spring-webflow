@@ -52,15 +52,12 @@
 	    <sect2 id="execution-start">
  	  	 	<title>Flow execution startup</title>
  	  	 	<programlisting>
-    MutableAttributeMap input = ...
     ExternalContext context = ...
-    ViewSelection startingView = execution.start(input, context);
+    execution.start(context);
  	  	 	</programlisting>
 			<para>
 				When a flow execution reaches a state where input is required to continue, it is said to have <emphasis>paused</emphasis>,
-				where it waits in that state for user input to be provided.  After pausing, the 
-				<literal>ViewSelection</literal> returned is used to issue a response to the user
-				that provides a vehicle for collecting the required user input.
+				where it waits in that state for user input to be provided.
 			</para>
 			<para>			
 				User input is provided by <emphasis>signaling an event</emphasis> that
@@ -78,7 +75,7 @@
  	  	 	<title>Flow execution resume</title>
  	  	 	<programlisting>
     ExternalContext context = ...
-    ViewSelection nextView = execution.signalEvent("submit", context);
+    execution.resume(context);
     if (execution.isActive()) {
         // still active but paused
     } else {
@@ -544,7 +541,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
                              
         &lt;start-state idref="enterCriteria"/&gt;
     
@@ -671,138 +668,6 @@
 					</tbody>
 				</tgroup>
 			</table>
-	    	<para>
-				The completed test for this example extending <literal>AbstractXmlFlowExecutionTests</literal> is shown below:
-	    	</para>
-	    	<programlisting>
-    public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
-
-        public void testStartFlow() {
-            ApplicationView view = applicationView(startFlow());
-            assertCurrentStateEquals("enterCriteria");
-            assertViewNameEquals("searchCriteria", view);
-            assertModelAttributeNotNull("searchCriteria", view);
-        }
-        
-        public void testCriteriaSubmitSuccess() {
-            startFlow();
-            MockParameterMap parameters = new MockParameterMap();
-            parameters.put("firstName", "Keith");
-            parameters.put("lastName", "Donald");
-            ApplicationView view = applicationView(signalEvent("search", parameters));
-            assertCurrentStateEquals("displayResults");
-            assertViewNameEquals("searchResults", view);
-            assertModelAttributeCollectionSize(1, "results", view);
-        }
-        
-        public void testCriteriaSubmitError() {
-            startFlow();
-            signalEvent("search");
-            assertCurrentStateEquals("enterCriteria");
-        }
-        
-        public void testNewSearch() {
-            testCriteriaSubmitSuccess();
-            ApplicationView view = applicationView(signalEvent("newSearch"));
-            assertCurrentStateEquals("enterCriteria");
-            assertViewNameEquals("searchCriteria", view);
-        }
-        
-        public void testSelectValidResult() {
-            testCriteriaSubmitSuccess();
-            MockParameterMap parameters = new MockParameterMap();
-            parameters.put("id", "1");
-            ApplicationView view = applicationView(signalEvent("select", parameters));
-            assertCurrentStateEquals("displayResults");
-            assertViewNameEquals("searchResults", view);
-            assertModelAttributeCollectionSize(1, "results", view);
-        }
-
-        @Override
-        protected FlowDefinitionResource getFlowDefinitionResource() {
-            return createFlowDefinitionResource("src/main/webapp/WEB-INF/flows/search-flow.xml");
-        }
-        
-        @Override
-        protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
-            Flow mockDetailFlow = new Flow("detail-flow");
-            mockDetailFlow.setInputMapper(new AttributeMapper() {
-                public void map(Object source, Object target, Map context) {
-                    assertEquals("id of value 1 not provided as input by calling search flow", new Long(1), ((AttributeMap)source).get("id"));
-                }
-            });
-            // test responding to finish result
-            new EndState(mockDetailFlow, "finish");
-            
-            serviceRegistry.registerSubflow(mockDetailFlow);
-            serviceRegistry.registerBean("phonebook", new ArrayListPhoneBook());
-        }
-    }
-        </programlisting>
-	    	<para>
-	    		With a well-written flow execution test passing that exercises the scenarios 
-	    		possible for your flow, you have concrete evidence the flow will execute as expected when 
-	    		deployed into a container.
-	    	</para>
-			<mediaobject>
-				<imageobject role="fo">
-					<imagedata fileref="images/junit-greenbar.png" format="PNG" align="center"/>
-				</imageobject>
-				<imageobject role="html">
-					<imagedata fileref="images/junit-greenbar.png" format="PNG" align="center"/>
-				</imageobject>
-				<caption>
-					<para>Go for Green</para>
-				</caption>
-			</mediaobject>
-		</sect2>
-	    <sect2 id="execution-testing-system">
- 	  	 	<title>Execution unit testing vs. full-blown system testing</title>
-   	 		<para>
-   	 			The previous example shows how to test a flow execution in relative isolation with a mock service 
-   	 			layer and mock subflows.  Flow execution testing against a real service-layer 
-   	 			and real subflows is also supported.
-   		 	</para>
-   		 	<para>
-   		 	    The next example shows how the <literal>createFlowServiceLocator</literal> method can 
-   		 	    be overridden to create the service-layer using a Spring application context:
-   		 	</para>
-	    	<programlisting>
-    public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
-
-        ...
-        
-        @Override
-        protected FlowDefinitionResource getFlowDefinitionResource() {
-            return createFlowDefinitionResource("src/main/webapp/WEB-INF/flows/search-flow.xml");
-        }
-        
-        @Override
-        protected FlowServiceLocator createFlowServiceLocator() {
-        
-            // create a context to host our middle tier services
-            ApplicationContext context =
-                new ClassPathXmlApplicationContext(new String[] {
-                   "classpath:service-layer-config.xml",
-                   "classpath:data-access-layer-config.xml"
-                });
-            
-            // create a registry for our flow definitions being tested
-            FlowDefinitionRegistry registry = new FlowDefinitionRegistryImpl();
-            
-            // initialize the service locator
-            DefaultFlowServiceLocator locator = new DefaultFlowServiceLocator(registry, context);
-            
-            // perform subflow definition registration with the help of a registrar
-            XmlFlowRegistrar registrar = new XmlFlowRegistrar(locator);
-            registrar.addResource(createFlowDefinitionResource("/WEB-INF/flows/search-flow.xml"));
-            registrar.addResource(createFlowDefinitionResource("/WEB-INF/flows/detail-flow.xml"));
-            registrar.registerFlowDefinitions(registry);
-            
-            return locator;
-        }
-    }
-	    </programlisting>   		 	
 		</sect2>
     </sect1>
 </chapter>

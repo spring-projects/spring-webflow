@@ -271,8 +271,8 @@
             				</entry>
             				<entry>
 								Core,
-								context.servlet requires Servlet API 2.3,
-								context.portlet requires Portlet API 1.0 in addition to Servlet API 2.3
+								context.servlet requires Servlet API 2.4,
+								context.portlet requires Portlet API 1.0 in addition to Servlet API 2.4
             				</entry>
         	       		</row>
            				<row>
@@ -419,8 +419,8 @@
             				</entry>
             				<entry>
             					Engine Implementation,
-            					Spring Beans 1.2.7,
-            					Spring Context 1.2.7,
+            					Spring Beans 2.0,
+            					Spring Context 2.0,
             					<literal>builder.xml</literal> requires JDK 1.5 or Xerces for XSD support
             				</entry>
         	       		</row>
@@ -475,7 +475,7 @@
             				</entry>
             				<entry>None</entry>
             				<entry>
-            					Spring Beans 1.2.7,
+            					Spring Beans 2.0,
             					JUnit 3.8.1
             				</entry>
         	       		</row>
@@ -533,8 +533,7 @@
             				<entry>None</entry>
             				<entry>
             					Core,
-            					Spring Web MVC 1.2.7,
-            					Portlet MVC requires Spring 2.0
+            					Spring Web MVC 2.0
             				</entry>
         	            </row>
 						<row>
@@ -624,9 +623,6 @@
 		</para>
 		<para>
 			XML-based flow building requires Xerces 2 or JDK 5.0 (for XSD support).
-		</para>
-		<para>
-			The Spring Web Flow Portlet integration requires Spring Portlet MVC 2.0.
 		</para>
 		<para>
 		    Our active community support forum is located at http://forum.springframework.org.

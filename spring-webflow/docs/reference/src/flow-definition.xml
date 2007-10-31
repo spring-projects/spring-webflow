@@ -161,14 +161,6 @@
 				       </entry>
 				       <entry>Empty</entry>
                    </row>
-                   <row>
-                       <entry>inlineFlows</entry>
-                       <entry>A set of inner flows that will be called as subflows; these flows are locally scoped to the outer flow.</entry>
-				       <entry>
-				           <emphasis>0..*</emphasis>
-				       </entry>
-				       <entry>Empty</entry>
-                   </row>
                </tbody>
           </tgroup>
         </table>
@@ -212,10 +204,6 @@
 
         &lt;exception-handler .../&gt;
 
-        &lt;inline-flow&gt;
-            ...
-        &lt;/inline-flow&gt;
-
     &lt;/flow&gt;
          	</programlisting>
         </sect2>
@@ -233,7 +221,6 @@
     flow.setOutputMapper(...);
     flow.getGlobalTransitionSet().add(...);
     flow.getExceptionHandlerSet().add(...);
-    flow.addInlineFlow(...);
           </programlisting>
           <para>
               A Flow is typically built by a FlowBuilder rather than assembled
@@ -364,7 +351,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="myStateId"/&gt;
 
@@ -576,7 +563,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="state1"/&gt;
 
@@ -635,7 +622,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="state1"/&gt;
 
@@ -666,7 +653,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="state1"/&gt;
 
@@ -699,7 +686,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="state1"/&gt;
 
@@ -740,7 +727,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="state1"/&gt;
 
@@ -811,20 +798,12 @@
     			<orderedlist>
     				<listitem>
     					<para>
-	    					The entered view state makes a <literal>org.springframework.webflow.execution.ViewSelection</literal>
-		   	 				that represents a <emphasis>logical</emphasis> response to issue to the caller.
+	    					The entered view state renters a view to issue a response to the caller.
    		 				</para>
     				</listitem>
     				<listitem>
     					<para>
-	    					The flow execution 'pauses' in this state, and control is returned to the calling
-    						system.
-    					</para>
-    				</listitem>
-    				<listitem>
-    					<para>
-	    				    The calling system uses the returned <literal>ViewSelection</literal> to present a
-    					    suitable interface (or other response) to the user.
+	    					The flow execution 'pauses' in this state, and control is returned to the calling system.
     					</para>
     				</listitem>
     				<listitem>
@@ -837,10 +816,7 @@
     		</para>
     		<para>
     		    Spring Web Flow gives you full control over the view selection process and, on resume,
-    		    how a view state responds to a user input event.  Spring Web Flow is currently <emphasis>not</emphasis>
-    		    concerned with rendering the actual response; as a controller, a flow makes a <emphasis>logical</emphasis> view selection when user input is required,
-    		    where a view selection serves as a response instruction.  It is up to the calling system to interpret that instruction to issue a
-    		    response suitable for the environment in which the flow is executing.
+    		    how a view state responds to a user input event.
     		</para>
     	    <para>
     	    	The properties of a <literal>org.springframework.webflow.engine.ViewState</literal> are summarized below:
@@ -862,7 +838,7 @@
 		  			</thead>
 				  	<tbody>
             			<row>
-              				<entry>viewSelector</entry>
+              				<entry>viewFactory</entry>
 							<entry>The strategy that makes the view selection when this state is entered.</entry>
 						    <entry>
 								<emphasis>0..1</emphasis>
@@ -884,13 +860,13 @@
 	          </tgroup>
     	    </table>
     	    <para>
-    	    	The <literal>org.springframework.webflow.execution.ViewSelection</literal> base class is abstract,
-    	    	acting as a marker indicating a response should be issued to the client interacting
-    	    	with the flow.  Concrete subtypes exist for each of the supported response types.
-    	    	These response types are summarized below:
+    	    	The <literal>org.springframework.webflow.execution.ViewFactory</literal> type is an interface,
+    	    	encapsulating knowledge about a particular view rendering technology.
+    	    	with the flow.  Concrete subtypes exist for each of the supported view technologies.
+    	    	These subtypes are summarized below:
     	    </para>
 	    	<table>
-    	        <title>Concrete ViewSelection types</title>
+    	        <title>Concrete ViewFactory types</title>
         	    <tgroup cols="2">
             	    <colspec colname="c1" colwidth="2*" />
         			<colspec colname="c2" colwidth="4*" />
@@ -902,115 +878,23 @@
 		  			</thead>
 				  	<tbody>
             			<row>
-              				<entry>ApplicationView</entry>
-              				<entry>Requests the rendering of a local, internal application view resource such as a JSP, Velocity, or Freemarker template.</entry>
+              				<entry>JsfViewFactory</entry>
+              				<entry>Requests the rendering of Java Server Faces (JSF) view.</entry>
  						</row>
             			<row>
-              				<entry>FlowExecutionRedirect</entry>
+              				<entry>MvcViewFactory</entry>
               				<entry>
-              					Requests a redirect back to the ViewState at a unique <emphasis>flow execution URL</emphasis>.
-              					When this URL is accessed on subsequent requests, an ApplicationView will be reconstituted and rendered.
-              					The URL is refreshable while the flow execution remains active.
-								<note>
-									<para>
-    	          						Multiple flow execution URLs may be generated for a single logical user conversation.
-       		       						In that case, each flow execution URL provides access to the conversation
-       	   	    						from a previous point (ViewState).  Accessing the URL refreshes the execution
-           		   						from that point.
-              						</para>
-              					</note>
-              				</entry>
- 						</row>
-            			<row>
-              				<entry>FlowDefinitionRedirect</entry>
-              				<entry>
-              					Requests a redirect that launches an entirely new flow execution.  Used to support
-              					<emphasis>redirect to flow</emphasis> (flow chaining) and <emphasis>restart flow</emphasis> use cases.
-              				</entry>
- 						</row>
-            			<row>
-              				<entry>ExternalRedirect</entry>
-              				<entry>
-              					Requests a redirect to an arbitrary external URL, typically used to inteface
-              					with an external system.
-              				</entry>
- 						</row>
-            			<row>
-              				<entry>NullView</entry>
-              				<entry>
-              					Requests that no response be issued; for use in corner cases where the flow itself has already
-              					issued the response.
+              					Requests the rendering of a Spring MVC view.
               				</entry>
  						</row>
             	   </tbody>
 	          </tgroup>
     	    </table>
-    	    <sect3 id="viewSelector">
-    			<title>ViewSelector</title>
-	    		<para>
-    				The creational strategy responsible for making a <literal>ViewSelection</literal> when an <literal>ViewState</literal> is entered
-    				is <literal>org.springframework.webflow.engine.ViewSelector</literal>.  This provides a plugin-point for customizing <emphasis>how</emphasis>
-    				a response instruction is constructed.
-    			</para>
-    			<para>
-    			    Four <literal>ViewSelector</literal> implementations are provided with Spring Web Flow:
-    			</para>
-	    		<table>
-    	   			<title>ViewSelector implementations</title>
-        		    <tgroup cols="2">
-		           	    <colspec colname="c1" colwidth="2*" />
-        				<colspec colname="c2" colwidth="4*" />
-	        	        <thead>
-       		    	        <row>
-               			        <entry>Implementation</entry>
-               					<entry>Description</entry>
-               			    </row>
-						</thead>
-					  	<tbody>
-            				<row>
-              					<entry>ApplicationViewSelector</entry>
-								<entry>
-									Returns an ApplicationView referencing a logical <literal>viewName</literal> to render and containing a
-									<literal>modelMap</literal> with the application data needed by the rendering process
-									(by default, this map contains the union of the data scopes such flow, flash, and request scope).
-									Supports setting a <literal>redirect</literal> flag that triggers
-									a browser redirect to the selected view using a <literal>FlowExecutionRedirect</literal>.
-									The default implementation.
-								</entry>
-	        	   	        </row>
-	        	   	        <row>
-              					<entry>FlowDefinitionRedirectSelector</entry>
-								<entry>
-									Returns a FlowDefinitionRedirect with a <literal>flowId</literal> and <literal>executionInput</literal> map requesting
-									the launch of an entirely new flow execution (an instance of the FlowDefinition identified by the flowId).
-									Useful for <emphasis>redirect after flow completion</emphasis>, where one flow ending should trigger
-									the start of another flow independently.
-								</entry>
-	        	   	        </row>
-            				<row>
-              					<entry>ExternalRedirectSelector</entry>
-								<entry>
-									Returns an ExternalRedirect that triggers a browser redirect to an abitrary external URL.
-									Mainly used by end states to redirect to external systems after flow completion,
-									but can also be used by view states to interface with an external system that may
-									call back into the flow execution at a later point.
-								</entry>
-	        	   	        </row>
-            				<row>
-              					<entry>NullViewSelector</entry>
-								<entry>
-									Returns an NullView indicating that no response should be issued.
-								</entry>
-	        	   	        </row>
-	            		</tbody>
-		       		</tgroup>
-    		    </table>
-    		</sect3>
     		<sect3>
     			<title>ViewState class diagram</title>
 	    		<para>
 	    			The class diagram below shows the ViewState and the associated types used to carry
-	    			out the view selection process:
+	    			out the view selection process (TODO - needs updating for 2.0):
 	    		</para>
 				<mediaobject>
 					<imageobject role="fo">
@@ -1037,7 +921,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="displaySearchForm"/&gt;
 
@@ -1089,7 +973,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="displayList"/&gt;
 
@@ -1150,7 +1034,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="displayPdf"/&gt;
 
@@ -1201,7 +1085,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="displayForm"/&gt;
 
@@ -1467,7 +1351,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="executeSearch"/&gt;
 
@@ -1553,7 +1437,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="executeSearch"/&gt;
 
@@ -1659,7 +1543,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;start-state idref="executeSearch"/&gt;
 
@@ -1735,7 +1619,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -1830,7 +1714,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -1869,7 +1753,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
 
         &lt;action-state id="getNextInterviewQuestion"&gt;
@@ -1904,7 +1788,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;view-state id="selectFile" view="fileUploadForm"&gt;
             &lt;transition on="submit" to="uploadFile"/&gt;
@@ -2060,7 +1944,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
         ...
 
         &lt;decision-state id="shippingRequired"&gt;
@@ -2233,7 +2117,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -2306,7 +2190,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         &lt;input-mapper&gt;
             &lt;input-attribute name="shipping"/&gt;
@@ -2338,13 +2222,12 @@
     		<para>
     			If the ended flow was acting as a top-level or <emphasis>root flow</emphasis>, the
     			entire flow execution ends and cannot be resumed.  In this case, the end state is responsible
-    			for making a <literal>ViewSelection</literal> that is the basis for the ending response (for example,
-    			a confirmation page, or a redirect request to another flow or an external URL).
+    			for issuing a final response (for example, a confirmation page, or a redirect request to another flow or an external URL).
     		</para>
     		<para>
     			If the ended flow was acting as a subflow, the spawned subflow session ends and
     			the calling parent flow <emphasis>resumes</emphasis> by responding to the end
-    			result returned.  In this case, the responsibility for any <literal>ViewSelection</literal>
+    			result returned.  In this case, the responsibility for any final response
     			falls on the parent flow.
     		</para>
     		<para>
@@ -2352,8 +2235,8 @@
     			and become eligible for garbage collection.
     		</para>
     		<para>
-    			As outlined, an end state entered as part of a root flow messages its <literal>ViewSelector</literal>
-    			to make a ending view selection.  Typically this is a redirect-based <literal>ViewSelector</literal>,
+    			As outlined, an end state entered as part of a root flow messages its <literal>finalResponseAction</literal>
+    			to make a ending view selection.  Typically this is a redirect-based response type,
     			allowing for <emphasis>redirect after flow completion</emphasis>.  An end state entered as part of
     			a subflow is not responsible for a view selection; this responsibility falls on the calling flow.
     		</para>
@@ -2399,8 +2282,8 @@
 			  			</thead>
 					  	<tbody>
 	            			<row>
-	            				<entry>viewSelector</entry>
-								<entry>The strategy that makes the ending view selection when this state is entered and the flow is a root flow.</entry>
+	            				<entry>finalResponseAction</entry>
+								<entry>The strategy that makes the ending response when this state is entered and the flow is a root flow.</entry>
 							    <entry>
 									<emphasis>0..1</emphasis>
 						       </entry>
@@ -2433,7 +2316,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -2459,7 +2342,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -2490,7 +2373,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
@@ -2543,7 +2426,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
               http://www.springframework.org/schema/webflow
-              http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd"&gt;
+              http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
         ...
 
