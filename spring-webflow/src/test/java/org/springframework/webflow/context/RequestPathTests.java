@@ -2,8 +2,6 @@ package org.springframework.webflow.context;
 
 import junit.framework.TestCase;
 
-import org.springframework.webflow.context.RequestPath;
-
 public class RequestPathTests extends TestCase {
 	public void testNewPathParse() {
 		RequestPath path = new RequestPath("/users/1");
@@ -21,7 +19,7 @@ public class RequestPathTests extends TestCase {
 
 	public void testNewPathParseNoLeadingSlash() {
 		try {
-			RequestPath path = new RequestPath("users/1/");
+			new RequestPath("users/1/");
 			fail("should have failed");
 		} catch (IllegalArgumentException e) {
 

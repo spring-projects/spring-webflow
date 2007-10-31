@@ -24,7 +24,7 @@ public class EnableScopesBeanDefinitionParserTests extends TestCase {
 	public void testExecute() {
 		MockExternalContext context = new MockExternalContext();
 		context.setFlowId("flow");
-		executor.execute(context);
+		executor.executeFlowRequest(context);
 	}
 
 	public static class ConfigurationListener extends FlowExecutionListenerAdapter {

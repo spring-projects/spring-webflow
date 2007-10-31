@@ -16,13 +16,13 @@
 package org.springframework.webflow.engine;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
-import org.springframework.core.CollectionFactory;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -38,8 +38,8 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * A single flow definition. A Flow definition is a reusable, self-contained controller module that provides the blue
- * print for a user dialog or conversation. Flows typically orchestrate controlled navigations within web applications
- * to guide users through fulfillment of a business process/goal that takes place over a series of steps, modeled as
+ * print for a user dialog or conversation. Flows typically drive controlled navigations within web applications to
+ * guide users through fulfillment of a business process/goal that takes place over a series of steps, modeled as
  * states.
  * <p>
  * A simple Flow definition could do nothing more than execute an action and display a view all in one request. A more
@@ -115,7 +115,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of state definitions for this flow.
 	 */
-	private Set states = CollectionFactory.createLinkedSetIfPossible(9);
+	private Set states = new LinkedHashSet(9);
 
 	/**
 	 * The default start state for this flow.
@@ -125,7 +125,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of flow variables created by this flow.
 	 */
-	private Set variables = CollectionFactory.createLinkedSetIfPossible(3);
+	private Set variables = new LinkedHashSet(3);
 
 	/**
 	 * The mapper to map flow input attributes.

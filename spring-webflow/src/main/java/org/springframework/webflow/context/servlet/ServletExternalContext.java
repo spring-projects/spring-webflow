@@ -276,7 +276,7 @@ public class ServletExternalContext implements ExternalContext {
 	public void executeFlowRequest(FlowExecutor flowExecutor) throws IOException {
 		ExternalContextHolder.setExternalContext(this);
 		try {
-			flowExecutor.execute(this);
+			flowExecutor.executeFlowRequest(this);
 			if (isPausedResult()) {
 				if (flowExecutionRedirector != null) {
 					flowExecutionRedirector.issueRedirect();

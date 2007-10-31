@@ -16,9 +16,9 @@
 package org.springframework.webflow.execution.factory;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.springframework.core.CollectionFactory;
 import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionListener;
@@ -42,7 +42,7 @@ class ConditionalFlowExecutionListenerHolder {
 	/**
 	 * The listener criteria set.
 	 */
-	private Set criteriaSet = CollectionFactory.createLinkedSetIfPossible(3);
+	private Set criteriaSet = new LinkedHashSet(3);
 
 	/**
 	 * Create a new conditional flow execution listener holder.

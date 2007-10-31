@@ -40,7 +40,7 @@ public class FlowExecutorImplTests extends TestCase {
 		context.setFlowId("flow");
 
 		ExternalContextHolder.setExternalContext(context);
-		executor.execute(context);
+		executor.executeFlowRequest(context);
 		ExternalContextHolder.setExternalContext(null);
 
 		assertNull(context.getFlowExecutionRedirectResult());
@@ -56,7 +56,7 @@ public class FlowExecutorImplTests extends TestCase {
 		context.setFlowId("flow");
 
 		ExternalContextHolder.setExternalContext(context);
-		executor.execute(context);
+		executor.executeFlowRequest(context);
 		ExternalContextHolder.setExternalContext(null);
 
 		assertNotNull(context.getPausedFlowExecutionKeyResult());
@@ -69,7 +69,7 @@ public class FlowExecutorImplTests extends TestCase {
 		context2.setFlowExecutionKey(context.getPausedFlowExecutionKeyResult());
 
 		ExternalContextHolder.setExternalContext(context);
-		executor.execute(context2);
+		executor.executeFlowRequest(context2);
 		ExternalContextHolder.setExternalContext(null);
 	}
 
@@ -86,7 +86,7 @@ public class FlowExecutorImplTests extends TestCase {
 		context.setFlowId("flow");
 
 		ExternalContextHolder.setExternalContext(context);
-		executor.execute(context);
+		executor.executeFlowRequest(context);
 		ExternalContextHolder.setExternalContext(null);
 
 		assertNull(context.getFlowExecutionRedirectResult());

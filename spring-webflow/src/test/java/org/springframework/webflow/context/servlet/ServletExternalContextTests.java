@@ -114,7 +114,7 @@ public class ServletExternalContextTests extends TestCase {
 	public void testSendFlowExecutionRedirect() throws Exception {
 		request.setPathInfo("/users/1");
 		flowExecutor = new FlowExecutor() {
-			public void execute(ExternalContext context) {
+			public void executeFlowRequest(ExternalContext context) {
 				context.sendFlowExecutionRedirect(new FlowExecutionRequestInfo("users", "_c12345_k12345"));
 			}
 		};
@@ -126,7 +126,7 @@ public class ServletExternalContextTests extends TestCase {
 	public void testFlowExecutionRedirectAttemptOnEnd() throws Exception {
 		request.setPathInfo("/users/1");
 		flowExecutor = new FlowExecutor() {
-			public void execute(ExternalContext context) {
+			public void executeFlowRequest(ExternalContext context) {
 				context.sendFlowExecutionRedirect(new FlowExecutionRequestInfo("users", "_c12345_k12345"));
 				context.setEndedResult("_c12345_k12345");
 			}
@@ -143,7 +143,7 @@ public class ServletExternalContextTests extends TestCase {
 	public void testSendFlowDefinitionRedirect() throws Exception {
 		request.setPathInfo("/users/1");
 		flowExecutor = new FlowExecutor() {
-			public void execute(ExternalContext context) {
+			public void executeFlowRequest(ExternalContext context) {
 				MockParameterMap parameters = new MockParameterMap();
 				parameters.put("foo", "bar");
 				parameters.put("bar", "baz");
@@ -162,7 +162,7 @@ public class ServletExternalContextTests extends TestCase {
 	public void testSendExternalRedirect() throws Exception {
 		request.setPathInfo("/users/1");
 		flowExecutor = new FlowExecutor() {
-			public void execute(ExternalContext context) {
+			public void executeFlowRequest(ExternalContext context) {
 				context.sendExternalRedirect("/foo/bar/baz");
 				context.setEndedResult(null);
 			}
@@ -173,7 +173,7 @@ public class ServletExternalContextTests extends TestCase {
 	}
 
 	public class StubFlowExecutor implements FlowExecutor {
-		public void execute(ExternalContext context) {
+		public void executeFlowRequest(ExternalContext context) {
 			assertNotNull(ExternalContextHolder.getExternalContext());
 		}
 	}

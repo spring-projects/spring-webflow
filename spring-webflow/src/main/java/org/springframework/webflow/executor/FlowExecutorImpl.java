@@ -101,7 +101,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 		this.executionRepository = executionRepository;
 	}
 
-	public void execute(ExternalContext context) {
+	public void executeFlowRequest(ExternalContext context) {
 		if (context.getFlowExecutionKey() != null) {
 			resumeExecution(context.getFlowExecutionKey(), context);
 		} else {
