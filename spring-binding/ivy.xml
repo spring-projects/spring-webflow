@@ -22,7 +22,7 @@
 		
 		<!-- test dependencies -->
 		<dependency org="jboss" name="jboss-el" rev="1.0" conf="test->default"/>
-		<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default" />
+		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
 		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default"/>
 	</dependencies>
