@@ -46,7 +46,11 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 	}
 
 	public FlowDefinitionLocator getFlowDefinitionLocator() {
-		return (FlowDefinitionLocator) localFlowBeanFactory.getBean("flowRegistry", FlowDefinitionLocator.class);
+		if (localFlowBeanFactory.containsBean("flowRegistry")) {
+			return (FlowDefinitionLocator) localFlowBeanFactory.getBean("flowRegistry", FlowDefinitionLocator.class);
+		} else {
+			return parent.getFlowDefinitionLocator();
+		}
 	}
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
