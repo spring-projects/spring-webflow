@@ -17,6 +17,7 @@ package org.springframework.webflow.test.execution;
 
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.config.FlowDefinitionResource;
+import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
@@ -46,6 +47,11 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * cached.
 	 */
 	private boolean cacheFlowDefinition = false;
+
+	/**
+	 * A helper for constructing paths to flow definition resources in the filesystem, classpath, or other location.
+	 */
+	private FlowDefinitionResourceFactory resourceFactory = new FlowDefinitionResourceFactory();
 
 	/**
 	 * Constructs a default externalized flow execution test.
@@ -137,7 +143,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * @return the built flow definition, ready for execution
 	 */
 	protected final Flow buildFlow() {
-		FlowDefinitionResource resource = getFlowDefinitionResource();
+		FlowDefinitionResource resource = getResource(resourceFactory);
 		FlowBuilderContext builderContext = createFlowBuilderContext(resource);
 		FlowBuilder builder = createFlowBuilder(resource.getPath());
 		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
@@ -166,9 +172,10 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 
 	/**
 	 * Get the flow definition to be tested.
+	 * @param a helper for constructing the resource to be tested
 	 * @return the flow definition resource
 	 */
-	protected abstract FlowDefinitionResource getFlowDefinitionResource();
+	protected abstract FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory);
 
 	/**
 	 * Create the flow builder to build the flow at the specified resource location.

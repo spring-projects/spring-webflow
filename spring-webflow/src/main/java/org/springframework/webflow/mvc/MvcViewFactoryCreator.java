@@ -18,6 +18,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
@@ -237,23 +238,6 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			return null;
 		}
 
-	}
-
-	/**
-	 * Simple adapter that adapts a view factory render cycle to the action interface.
-	 * @author Keith Donald
-	 */
-	private static class ViewFactoryActionAdapter implements Action {
-		private ViewFactory viewFactory;
-
-		public ViewFactoryActionAdapter(ViewFactory viewFactory) {
-			this.viewFactory = viewFactory;
-		}
-
-		public Event execute(RequestContext context) throws Exception {
-			viewFactory.getView(context).render();
-			return new Event(this, "success");
-		}
 	}
 
 }

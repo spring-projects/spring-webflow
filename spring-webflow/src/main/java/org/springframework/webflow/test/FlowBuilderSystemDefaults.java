@@ -15,10 +15,15 @@ class FlowBuilderSystemDefaults {
 		defaultServices = new FlowBuilderServices();
 		defaultServices.setFlowArtifactFactory(new FlowArtifactFactory());
 		defaultServices.setBeanInvokingActionFactory(new BeanInvokingActionFactory());
+		defaultServices.setViewFactoryCreator(new MockViewFactoryCreator());
 		defaultServices.setConversionService(new DefaultConversionService());
 		defaultServices.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		defaultServices.setResourceLoader(new DefaultResourceLoader());
 		defaultServices.setBeanFactory(new StaticListableBeanFactory());
+	}
+
+	public static FlowBuilderServices get() {
+		return new FlowBuilderSystemDefaults().createBuilderServices();
 	}
 
 	public FlowBuilderServices createBuilderServices() {
@@ -27,16 +32,13 @@ class FlowBuilderSystemDefaults {
 		return builderServices;
 	}
 
-	public void applyDefaults(FlowBuilderServices services) {
+	private void applyDefaults(FlowBuilderServices services) {
 		services.setFlowArtifactFactory(defaultServices.getFlowArtifactFactory());
 		services.setBeanInvokingActionFactory(defaultServices.getBeanInvokingActionFactory());
+		services.setViewFactoryCreator(defaultServices.getViewFactoryCreator());
 		services.setConversionService(defaultServices.getConversionService());
 		services.setExpressionParser(defaultServices.getExpressionParser());
 		services.setResourceLoader(defaultServices.getResourceLoader());
 		services.setBeanFactory(defaultServices.getBeanFactory());
-	}
-
-	public static FlowBuilderServices get() {
-		return new FlowBuilderSystemDefaults().createBuilderServices();
 	}
 }

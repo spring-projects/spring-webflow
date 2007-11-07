@@ -2,7 +2,7 @@
 <flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
-                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<start-state idref="enterCriteria"/>
 
@@ -19,7 +19,7 @@
 		<render-actions>
 			<bean-action bean="phonebook" method="search">
 				<method-arguments>
-					<argument expression="flowScope.searchCriteria"/>			
+					<argument expression="${flowScope.searchCriteria}"/>			
 				</method-arguments>
 				<method-result name="results"/>
 			</bean-action>
@@ -31,7 +31,7 @@
 	<subflow-state id="browseDetails" flow="detail-flow">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="requestParameters.id" target="id" from="string" to="long"/>
+				<mapping source="${requestParameters.id}" target="${id}" from="string" to="long"/>
 			</input-mapper>
 		</attribute-mapper>
 		<transition on="finish" to="displayResults"/>

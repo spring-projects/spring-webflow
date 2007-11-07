@@ -22,6 +22,7 @@ import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
@@ -32,21 +33,34 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
  */
 public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
-	protected FlowDefinitionResource getFlowDefinitionResource() {
-		return new FlowDefinitionResourceFactory().createClassPathResource("search-flow.xml", getClass());
+	protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
+		return resourceFactory.createClassPathResource("search-flow.xml", getClass());
 	}
 
 	public void testStartFlow() {
-		// startFlow(new MockExternalContext());
+		ExternalContext context = new MockExternalContext();
+		startFlow(context);
+		assertCurrentStateEquals("enterCriteria");
 	}
 
 	public void testCriteriaSubmitSuccess() {
+		startFlow(new MockExternalContext());
+		signalEvent("search");
+		assertCurrentStateEquals("displayResults");
 	}
 
 	public void testNewSearch() {
+		startFlow(new MockExternalContext());
+		signalEvent("search");
+		signalEvent("newSearch");
+		assertCurrentStateEquals("enterCriteria");
 	}
 
 	public void testSelectValidResult() {
+		startFlow(new MockExternalContext());
+		signalEvent("search");
+		signalEvent("select", "id", "1");
+		assertCurrentStateEquals("displayResults");
 	}
 
 	protected void configure(MockFlowBuilderContext builderContext) {
@@ -63,7 +77,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		builderContext.registerBean("phonebook", new TestPhoneBook());
 	}
 
-	static class TestPhoneBook {
+	public static class TestPhoneBook {
 		public List search(Object criteria) {
 			ArrayList res = new ArrayList();
 			res.add(new Object());

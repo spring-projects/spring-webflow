@@ -24,6 +24,8 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionFactory;
+import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockParameterMap;
 
 /**
  * Base class for integration tests that verify a flow executes as expected. Flow execution tests captured by subclasses
@@ -115,6 +117,45 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 		Assert.state(flowExecution != null, "The flow execution to test is [null]; "
 				+ "you must start the flow execution before you can signal an event against it!");
 		flowExecution.resume(context);
+	}
+
+	/**
+	 * Signal the event against the paused flow execution. The event id will be translated into a Event object by the
+	 * configured view factory and raised as an Event against the current view state. The event will cause the flow to
+	 * change states if it matches a transition.
+	 * @param eventId the event identifier
+	 */
+	protected void signalEvent(String eventId) {
+		MockExternalContext context = new MockExternalContext();
+		context.putRequestParameter("_eventId", eventId);
+		resumeFlow(context);
+	}
+
+	/**
+	 * Signal the event against the paused flow execution. The event id will be translated into a Event object by the
+	 * configured view factory and raised as an Event against the current view state. The event will cause the flow to
+	 * change states if it matches a transition.
+	 * @param eventId the event identifier
+	 * @param input event input parameters
+	 */
+	protected void signalEvent(String eventId, MockParameterMap input) {
+		MockExternalContext context = new MockExternalContext(input);
+		context.putRequestParameter("_eventId", eventId);
+		resumeFlow(context);
+	}
+
+	/**
+	 * Signal the event against the paused flow execution. The event id will be translated into a Event object by the
+	 * configured view factory and raised as an Event against the current view state. The event will cause the flow to
+	 * change states if it matches a transition.
+	 * @param eventId the event identifier
+	 * @param parameterName the name of the parameter
+	 * @param parameterValue the value of the parameter
+	 */
+	protected void signalEvent(String eventId, String parameterName, String parameterValue) {
+		MockParameterMap input = new MockParameterMap();
+		input.put(parameterName, parameterValue);
+		signalEvent(eventId, input);
 	}
 
 	// convenience accessors
