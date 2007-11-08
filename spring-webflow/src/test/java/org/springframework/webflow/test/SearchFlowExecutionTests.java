@@ -45,7 +45,10 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	public void testCriteriaSubmitSuccess() {
 		startFlow(new MockExternalContext());
-		signalEvent("search");
+		MockParameterMap input = new MockParameterMap();
+		input.put("firstName", "Keith");
+		input.put("lastName", "Donald");
+		signalEvent("search", input);
 		assertCurrentStateEquals("displayResults");
 	}
 
