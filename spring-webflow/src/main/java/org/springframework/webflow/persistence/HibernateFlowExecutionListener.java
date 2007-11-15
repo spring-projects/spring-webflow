@@ -113,7 +113,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 
 	public void paused(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getHibernateSession(context));
+			Session session = getHibernateSession(context);
+			unbind(session);
+			session.disconnect();
 		}
 	}
 
