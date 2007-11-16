@@ -41,7 +41,7 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 	/**
 	 * The definition registry produced by this factory bean.
 	 */
-	private FlowDefinitionRegistry flowRegistry;
+	private FlowDefinitionRegistryImpl flowRegistry;
 
 	/**
 	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
@@ -129,8 +129,8 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 	private void registerFlowBuilders() {
 		if (flowBuilders != null) {
 			for (int i = 0; i < flowBuilders.length; i++) {
-				FlowBuilderInfo builder = flowBuilders[i];
-				flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(builder));
+				FlowBuilderInfo builderInfo = flowBuilders[i];
+				flowRegistry.registerFlowDefinition(buildFlowDefinition(builderInfo));
 			}
 		}
 	}
@@ -184,56 +184,27 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 		}
 	}
 
-	private FlowDefinitionHolder createFlowDefinitionHolder(FlowBuilderInfo builder) {
-		ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
-		AttributeMap flowAttributes = getFlowAttributes(builder.getAttributes());
-		FlowBuilderContext builderContext = new FlowBuilderContextImpl(builder.getId(), flowAttributes, flowRegistry,
-				flowBuilderServices);
-		return new FlowBuilderCreatingFlowDefinitionHolder(builder.getClassName(), classLoader, builderContext);
+	private FlowDefinition buildFlowDefinition(FlowBuilderInfo builderInfo) {
+		try {
+			Class flowBuilderClass = ClassUtils.forName(builderInfo.getClassName());
+			FlowBuilder builder = (FlowBuilder) flowBuilderClass.newInstance();
+			AttributeMap flowAttributes = getFlowAttributes(builderInfo.getAttributes());
+			FlowBuilderContext builderContext = new FlowBuilderContextImpl(builderInfo.getId(), flowAttributes,
+					flowRegistry, flowBuilderServices);
+			FlowAssembler assembler = new FlowAssembler(builder, builderContext);
+			return assembler.assembleFlow();
+		} catch (ClassNotFoundException e) {
+			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
+		} catch (InstantiationException e) {
+			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
+		} catch (IllegalAccessException e) {
+			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
+		}
 	}
 
 	private void initFlowBuilderServices() {
 		flowBuilderServices = new FlowBuilderServices();
 		flowBuilderServices.setResourceLoader(resourceLoader);
 		flowBuilderServices.setBeanFactory(beanFactory);
-	}
-
-	class FlowBuilderCreatingFlowDefinitionHolder implements FlowDefinitionHolder {
-
-		private String flowBuilderClassName;
-
-		private ClassLoader classLoader;
-
-		private FlowBuilderContext builderContext;
-
-		public FlowBuilderCreatingFlowDefinitionHolder(String flowBuilderClassName, ClassLoader classLoader,
-				FlowBuilderContext builderContext) {
-			this.flowBuilderClassName = flowBuilderClassName;
-			this.classLoader = classLoader;
-			this.builderContext = builderContext;
-		}
-
-		public String getFlowDefinitionId() {
-			return builderContext.getFlowId();
-		}
-
-		public FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException {
-			try {
-				Class flowBuilderClass = classLoader.loadClass(flowBuilderClassName);
-				FlowBuilder builder = (FlowBuilder) flowBuilderClass.newInstance();
-				FlowAssembler assembler = new FlowAssembler(builder, builderContext);
-				return assembler.assembleFlow();
-			} catch (ClassNotFoundException e) {
-				throw new FlowDefinitionConstructionException(getFlowDefinitionId(), e);
-			} catch (InstantiationException e) {
-				throw new FlowDefinitionConstructionException(getFlowDefinitionId(), e);
-			} catch (IllegalAccessException e) {
-				throw new FlowDefinitionConstructionException(getFlowDefinitionId(), e);
-			}
-		}
-
-		public void refresh() throws FlowDefinitionConstructionException {
-		}
-
 	}
 }
