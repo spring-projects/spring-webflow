@@ -69,9 +69,21 @@
 		<dependency org="org.springframework" name="spring-jdbc" rev="2.5-rc2" conf="test->default" />
 		<dependency org="org.springframework" name="spring-test" rev="2.5-rc2" conf="test->default" />
 		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" conf="buildtime, test->default" />
-		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="3.3.1.ga" conf="test->default" />
-		<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga" conf="test->default" />
-
+		<dependency org="org.apache.openjpa" name="openjpa" rev="1.0.1" conf="test->default">
+			<!-- Exclusions required because open jpa pom is poorly designed -->
+			<exclude module="openjpa-lib" />
+			<exclude module="openjpa-kernel" />
+			<exclude module="openjpa-kernel-5" />
+			<exclude module="openjpa-jdbc" />
+			<exclude module="openjpa-jdbc-5" />
+			<exclude module="openjpa-persistence" />
+			<exclude module="openjpa-persistence-jdbc" />
+			<exclude module="openjpa-xmlstore" />
+		</dependency>
+		<!-- lang and serp required by open jpa -->
+		<dependency org="commons-lang" name="commons-lang" rev="2.1" conf="test->default" />
+		<dependency org="commons-collections" name="commons-collections" rev="3.2" conf="test->default" />
+		<dependency org="net.sourceforge.serp" name="serp" rev="1.13.1" conf="test->default" />
 	</dependencies>
 
 </ivy-module>

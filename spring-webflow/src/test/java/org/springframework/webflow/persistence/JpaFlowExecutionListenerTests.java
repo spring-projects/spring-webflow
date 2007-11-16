@@ -8,13 +8,12 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.hibernate.Hibernate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -178,22 +177,6 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
-	public void testLazilyInitalizedCollection() {
-		MockRequestContext context = new MockRequestContext();
-		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
-		jpaListener.sessionStarting(context, flowSession, null);
-		context.setActiveSession(flowSession);
-		assertSessionBound();
-
-		TestBean bean = (TestBean) jpaTemplate.getReference(TestBean.class, Long.valueOf(0));
-		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
-		jpaListener.paused(context);
-		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
-		Hibernate.initialize(bean.getAddresses());
-		assertTrue("addresses should be initialized", Hibernate.isInitialized(bean.getAddresses()));
-	}
-
 	private DataSource getDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
@@ -236,8 +219,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");
-		HibernateJpaVendorAdapter hibernate = new HibernateJpaVendorAdapter();
-		factory.setJpaVendorAdapter(hibernate);
+		OpenJpaVendorAdapter openJpa = new OpenJpaVendorAdapter();
+		factory.setJpaVendorAdapter(openJpa);
 		factory.afterPropertiesSet();
 		return factory.getObject();
 	}
