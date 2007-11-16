@@ -31,12 +31,17 @@
 		<!-- note that at this time we depend on MyFaces, not JSF-RI -->
 		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.0" conf="buildtime, jsf12->default" />
 		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.0" conf="buildtime, jsf12->default" />
-    	<dependency org="commons-digester" name="commons-digester" rev="1.8" conf="buildtime, jsf12->default" >
-    		<exclude module="servlet-api"/>
+    	<dependency org="commons-beanutils" name="commons-beanutils" rev="1.7.0" conf="buildtime, jsf12->default" >
+			<exclude module="commons-logging"/>
     	</dependency>
     	<dependency org="commons-codec" name="commons-codec" rev="1.3" conf="buildtime, jsf12->default" />
-    	<dependency org="commons-discovery" name="commons-discovery" rev="0.4" conf="buildtime, jsf12->default" />
     	<dependency org="commons-collections" name="commons-collections" rev="3.2" conf="buildtime, jsf12->default" />
+    	<dependency org="commons-discovery" name="commons-discovery" rev="0.4" conf="buildtime, jsf12->default">
+			<exclude module="commons-logging"/>
+    	</dependency>
+    	<dependency org="commons-digester" name="commons-digester" rev="1.8" conf="buildtime, jsf12->default">
+			<exclude module="commons-logging"/>
+    	</dependency>
     			
 		<!-- test dependencies -->
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
