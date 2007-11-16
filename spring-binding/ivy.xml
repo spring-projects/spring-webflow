@@ -11,11 +11,16 @@
 
 	<dependencies defaultconf="global->default">
 		<!-- global dependencies -->
-		<dependency org="commons-logging" name="commons-logging" rev="1.0.4"/>
+		<dependency org="commons-logging" name="commons-logging" rev="1.1">
+			<exclude module="log4j"/>
+			<exclude module="logkit"/>
+			<exclude module="avalon-framework"/>
+			<exclude module="servlet-api"/>
+		</dependency>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
-		<dependency org="org.springframework" name="spring-beans" rev="2.5-rc1" />
-		<dependency org="org.springframework" name="spring-context"	rev="2.5-rc1" />
-		<dependency org="org.springframework" name="spring-core" rev="2.5-rc1" />
+		<dependency org="org.springframework" name="spring-beans" rev="2.5-rc2" />
+		<dependency org="org.springframework" name="spring-context"	rev="2.5-rc2" />
+		<dependency org="org.springframework" name="spring-core" rev="2.5-rc2" />
 
 		<!-- build time only dependencies -->
 		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default"/>
