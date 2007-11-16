@@ -20,12 +20,12 @@
 	<dependency org="org.apache.tiles" name="tiles-jsp" rev="2.0.4" />
     <dependency org="org.springframework" name="spring-faces" rev="latest.integration" />
     <dependency org="org.springframework" name="spring-webflow" rev="latest.integration" conf="global->mvc"/>
-    <dependency org="org.springframework" name="spring-aop" rev="2.5-rc1"/>
-    <dependency org="org.springframework" name="spring-orm" rev="2.5-rc1"/>
-    <dependency org="org.springframework" name="spring-jdbc" rev="2.5-rc1"/>
-    <dependency org="org.springframework" name="spring-tx" rev="2.5-rc1"/>
+    <dependency org="org.springframework" name="spring-aop" rev="2.5-rc2"/>
+    <dependency org="org.springframework" name="spring-orm" rev="2.5-rc2"/>
+    <dependency org="org.springframework" name="spring-jdbc" rev="2.5-rc2"/>
+    <dependency org="org.springframework" name="spring-tx" rev="2.5-rc2"/>
     <dependency org="jboss" name="jboss-el" rev="1.0"/>
-	<dependency org="org.hibernate" name="hibernate" rev="3.2.4.ga" />
+	<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" />
 	<dependency org="org.hibernate" name="hibernate-entitymanager" rev="3.3.1.ga"/>
 	<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga"/>
 	<dependency org="javax.persistence" name="persistence-api" rev="1.0b"/>	
@@ -37,7 +37,7 @@
 		
 	<!-- test-time only dependencies -->
     <dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
-    <dependency org="org.springframework" name="spring-test" rev="2.5-rc1" conf="test->default"/>
+    <dependency org="org.springframework" name="spring-test" rev="2.5-rc2" conf="test->default"/>
   </dependencies>
   
 </ivy-module>
