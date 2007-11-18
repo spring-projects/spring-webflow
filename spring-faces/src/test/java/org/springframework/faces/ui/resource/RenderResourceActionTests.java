@@ -18,7 +18,7 @@ import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.RequestPath;
 import org.springframework.webflow.execution.RequestContext;
 
-public class ResolveAndRenderResourceActionTests extends TestCase {
+public class RenderResourceActionTests extends TestCase {
 
 	ExternalContext externalContext = createMock(ExternalContext.class);
 	RequestContext requestContext = createMock(RequestContext.class);
@@ -29,10 +29,10 @@ public class ResolveAndRenderResourceActionTests extends TestCase {
 	RequestPath requestPath;
 	String[] requestElements;
 
-	ResolveAndRenderResourceAction action;
+	RenderResourceAction action;
 
 	protected void setUp() throws Exception {
-		action = new ResolveAndRenderResourceAction();
+		action = new RenderResourceAction();
 
 		expect(requestContext.getExternalContext()).andStubReturn(externalContext);
 		expect(externalContext.getContext()).andStubReturn(servletContext);

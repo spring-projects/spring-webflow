@@ -10,7 +10,7 @@ import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
  */
 public class ResourcesFlowBuilder extends AbstractFlowBuilder {
 	public void buildStates() throws FlowBuilderException {
-		EndState endState = new EndState(getFlow(), "renderResource");
-		endState.setFinalResponseAction(new ResolveAndRenderResourceAction());
+		EndState renderResource = new EndState(getFlow(), "renderResource");
+		renderResource.setFinalResponseAction(new RenderResourceAction());
 	}
 }

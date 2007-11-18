@@ -21,13 +21,17 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Jeremy Grelle
  */
-public class ResolveAndRenderResourceAction implements Action {
+public class RenderResourceAction implements Action {
 
 	private static final String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
 
 	private static final String HTTP_CONTENT_LENGTH_HEADER = "Content-Length";
 
 	private static final String HTTP_LAST_MODIFIED_HEADER = "Last-Modified";
+
+	private static final String HTTP_EXPIRES_HEADER = "Expires";
+
+	private static final String HTTP_CACHE_CONTROL_HEADER = "Cache-Control";
 
 	private Map<String, String> defaultMimeTypes = new HashMap<String, String>();
 	{
@@ -77,10 +81,8 @@ public class ResolveAndRenderResourceAction implements Action {
 		response.setContentType(mimeType);
 
 		response.setHeader(HTTP_CONTENT_LENGTH_HEADER, Long.toString(resourceConn.getContentLength()));
-
 		response.setDateHeader(HTTP_LAST_MODIFIED_HEADER, lastModified);
-
-		// TODO - Should probably be setting cache and expires headers as well
+		configureCaching(response, 31556926);
 
 		InputStream in = resourceConn.getInputStream();
 		OutputStream out = response.getOutputStream();
@@ -95,5 +97,16 @@ public class ResolveAndRenderResourceAction implements Action {
 			out.close();
 		}
 		return new Event(this, "success");
+	}
+
+	/**
+	 * Set HTTP headers to allow caching for the given number of seconds.
+	 * @param seconds number of seconds into the future that the response should be cacheable for
+	 */
+	private void configureCaching(HttpServletResponse response, int seconds) {
+		// HTTP 1.0 header
+		response.setDateHeader(HTTP_EXPIRES_HEADER, System.currentTimeMillis() + seconds * 1000L);
+		// HTTP 1.1 header
+		response.setHeader(HTTP_CACHE_CONTROL_HEADER, "max-age=" + seconds);
 	}
 }
