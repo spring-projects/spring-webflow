@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.5.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
