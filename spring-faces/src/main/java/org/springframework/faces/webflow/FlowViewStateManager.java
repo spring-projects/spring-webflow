@@ -37,7 +37,9 @@ public class FlowViewStateManager extends StateManager {
 			viewMap = new SerializedViewMap();
 			requestContext.getFlowScope().put(VIEW_MAP, viewMap);
 		}
-		logger.debug("Saving view root in flow scope");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in flow scope");
+		}
 		return viewMap.putSerializedView(context);
 	}
 
@@ -48,7 +50,9 @@ public class FlowViewStateManager extends StateManager {
 			logger.debug("No view map in flow scope; no views have been saved yet...");
 			return null;
 		}
-		logger.debug("Restoring view root from flow scope");
+		if (logger.isDebugEnabled()) {
+			logger.debug("Restoring view root with id '" + viewId + "' from flow scope");
+		}
 		return viewMap.getDeserializedView(viewId, context);
 	}
 
