@@ -4,9 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/tx 
-       http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+       http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<!-- The central service of this application that can query hotels and bookings, as well as cancel bookings -->
 	<bean id="bookingService" class="org.springframework.webflow.samples.booking.app.JpaBookingService" />

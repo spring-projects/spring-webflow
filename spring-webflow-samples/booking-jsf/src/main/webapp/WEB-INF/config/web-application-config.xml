@@ -4,9 +4,9 @@
        xmlns:web="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.5.xsd">
 
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
@@ -26,7 +26,7 @@
 	<bean id="flowBuilderServices" class="org.springframework.webflow.engine.builder.support.FlowBuilderServices">
 		<property name="expressionParser">
 			<bean class="org.springframework.webflow.core.expression.el.WebFlowELExpressionParser">
-				<constructor-arg >
+				<constructor-arg>
 					<bean class="org.jboss.el.ExpressionFactoryImpl"/>
 				</constructor-arg>
 			</bean>
@@ -38,12 +38,8 @@
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
-		<constructor-arg>
-			<ref bean="entityManagerFactory"/>
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="transactionManager"/>
-		</constructor-arg>
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
 	</bean>
 		
 </beans>

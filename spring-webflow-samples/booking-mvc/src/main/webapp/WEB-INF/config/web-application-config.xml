@@ -4,9 +4,9 @@
        xmlns:web="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.5.xsd">
 
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
@@ -15,11 +15,9 @@
 		<property name="mappings">
 			<value>
 				/intro=urlFilenameController
-				/main=flowController
-				/resources/*/**=flowController
-				/executions/*/**=flowController
 			</value>
 		</property>
+		<property name="defaultHandler" ref="flowController" />
 	</bean>
 		
 	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
@@ -40,18 +38,14 @@
 
 	<bean id="flowBuilderServices" class="org.springframework.webflow.engine.builder.support.FlowBuilderServices">
 		<property name="viewFactoryCreator">
-			<bean class="org.springframework.webflow.mvc.MvcViewFactoryCreator"/>
+			<bean class="org.springframework.webflow.mvc.MvcViewFactoryCreator" />
 		</property>
 	</bean>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
-		<constructor-arg>
-			<ref bean="entityManagerFactory"/>
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="transactionManager"/>
-		</constructor-arg>
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
 	</bean>
 
 	<!-- Handles requests to render view templates directly: maps the requested path to a logical view name resolved by the resolver below -->
@@ -59,7 +53,7 @@
 
 	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the root webapp directory -->	
 	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/"/>
+		<property name="prefix" value="/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 			
