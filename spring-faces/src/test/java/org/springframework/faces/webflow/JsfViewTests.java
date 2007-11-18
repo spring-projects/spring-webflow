@@ -4,20 +4,15 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.Renderer;
-import javax.faces.render.ResponseStateManager;
 
 import junit.framework.TestCase;
 
-import org.apache.shale.test.mock.MockRenderKit;
 import org.apache.shale.test.mock.MockResponseWriter;
 import org.apache.shale.test.mock.MockStateManager;
 import org.easymock.EasyMock;
@@ -25,7 +20,6 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
 
 public class JsfViewTests extends TestCase {
 
@@ -64,9 +58,6 @@ public class JsfViewTests extends TestCase {
 		jsfMock.application().setStateManager(new TestStateManager());
 		jsfMock.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
 
-		RenderKitFactory rkf = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-		rkf.addRenderKit("TEST_KIT", new TestRenderKit());
-
 		UIViewRoot viewToRender = new UIViewRoot();
 		viewToRender.setRenderKitId("TEST_KIT");
 		viewToRender.setViewId(VIEW_ID);
@@ -81,9 +72,7 @@ public class JsfViewTests extends TestCase {
 		form.getChildren().add(input);
 		viewToRender.getChildren().add(form);
 
-		view = new JsfView(viewToRender, jsfMock.lifecycle());
-
-		RequestContextHolder.setRequestContext(requestContext);
+		view = new JsfView(viewToRender, jsfMock.lifecycle(), requestContext);
 	}
 
 	protected void tearDown() throws Exception {
@@ -96,7 +85,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.expect(requestContext.getFlowScope()).andStubReturn(flowMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
 		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
-		EasyMock.expect(flowMap.put(EasyMock.matches(JsfView.STATE_KEY), EasyMock.anyObject())).andStubReturn(null);
 		EasyMock.expect(flashMap.put(EasyMock.matches("renderResponse"), EasyMock.anyObject())).andStubReturn(null);
 		EasyMock.expect(flashMap.put(EasyMock.matches("responseComplete"), EasyMock.anyObject())).andStubReturn(null);
 
@@ -137,19 +125,6 @@ public class JsfViewTests extends TestCase {
 		public SerializedView saveSerializedView(FacesContext context) {
 			SerializedView state = new SerializedView(new Object[] { "tree_state" }, new Object[] { "component_state" });
 			return state;
-		}
-	}
-
-	private class TestRenderKit extends MockRenderKit {
-		Renderer renderer = new Renderer() {
-		};
-
-		public Renderer getRenderer(String family, String rendererType) {
-			return renderer;
-		}
-
-		public ResponseStateManager getResponseStateManager() {
-			return new FlowResponseStateManager();
 		}
 	}
 }

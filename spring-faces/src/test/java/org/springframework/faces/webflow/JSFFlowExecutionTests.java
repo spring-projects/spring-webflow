@@ -48,6 +48,7 @@ import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
+import org.springframework.webflow.test.MockRequestContext;
 
 public class JSFFlowExecutionTests extends TestCase {
 
@@ -77,8 +78,8 @@ public class JSFFlowExecutionTests extends TestCase {
 
 		flow = Flow.create("jsf-flow", null);
 
-		ViewState view1 = new ViewState(flow, "viewState1", new JsfViewFactory(new TestLifecycle(jsf.lifecycle()),
-				parser.parseExpression("/view1", RequestContext.class, String.class, null), null));
+		ViewState view1 = new ViewState(flow, "viewState1", new JsfViewFactory(parser.parseExpression("/view1",
+				RequestContext.class, String.class, null), null));
 		view1.getTransitionSet().add(new Transition(on("event1"), to("doSomething")));
 		view1.getTransitionSet().add(new Transition(on("event2"), to("evalSomething")));
 
@@ -98,8 +99,8 @@ public class JSFFlowExecutionTests extends TestCase {
 						String.class, null)));
 		evalSomething.getTransitionSet().add(new Transition(on("success"), to("viewState2")));
 
-		ViewState viewState2 = new ViewState(flow, "viewState2", new JsfViewFactory(new TestLifecycle(jsf.lifecycle()),
-				parser.parseExpression("/view2", RequestContext.class, String.class, null), null));
+		ViewState viewState2 = new ViewState(flow, "viewState2", new JsfViewFactory(parser.parseExpression("/view2",
+				RequestContext.class, String.class, null), null));
 		viewState2.getEntryActionList().add(new ViewState2SetupAction());
 		viewState2.getTransitionSet().add(new Transition(on("event1"), to("endState1")));
 
@@ -114,7 +115,7 @@ public class JSFFlowExecutionTests extends TestCase {
 		jsf = new JSFMockHelper();
 		jsf.tearDown();
 		jsf.setUp();
-		FacesContext flowContext = new FlowFacesContext(jsf.facesContext());
+		FacesContext flowContext = new FlowFacesContext(new MockRequestContext(), jsf.facesContext());
 		org.apache.shale.test.mock.MockFacesContext.setCurrentInstance(flowContext);
 
 		viewHandler = new NoRenderViewHandler();

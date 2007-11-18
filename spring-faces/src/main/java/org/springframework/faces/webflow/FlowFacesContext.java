@@ -33,6 +33,7 @@ import org.springframework.binding.message.Messages;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
@@ -44,42 +45,30 @@ import org.springframework.webflow.execution.RequestContextHolder;
 public class FlowFacesContext extends FacesContext {
 
 	/**
-	 * The key for storing the responseComplete flag
+	 * The Web Flow request context.
 	 */
-	static final String RESPONSE_COMPLETE_KEY = "responseComplete";
-
-	/**
-	 * The key for storing the renderResponse flag
-	 */
-	static final String RENDER_RESPONSE_KEY = "renderResponse";
+	private RequestContext context;
 
 	/**
 	 * The base FacesContext delegate
 	 */
 	private FacesContext delegate;
 
-	public FlowFacesContext(FacesContext delegate) {
+	public FlowFacesContext(RequestContext context, FacesContext delegate) {
+		this.context = context;
 		this.delegate = delegate;
-		FacesContext.setCurrentInstance(this);
+		setCurrentInstance(this);
 	}
 
 	/**
 	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			delegate.addMessage(clientId, message);
-			return;
-		}
-
 		MessageResolver messageResolver;
-
 		StringBuffer msgText = new StringBuffer();
-
 		if (StringUtils.hasText(message.getSummary())) {
 			msgText.append(message.getSummary());
 		}
-
 		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
 			messageResolver = Messages.text(msgText.toString(), Severity.INFO);
 		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
@@ -87,18 +76,13 @@ public class FlowFacesContext extends FacesContext {
 		} else {
 			messageResolver = Messages.text(msgText.toString(), Severity.ERROR);
 		}
-
-		RequestContextHolder.getRequestContext().getMessageContext().addMessage(messageResolver);
+		context.getMessageContext().addMessage(messageResolver);
 	}
 
 	/**
 	 * Returns an Iterator for all component clientId's for which messages have been added.
 	 */
-	@SuppressWarnings("unchecked")
 	public Iterator<String> getClientIdsWithMessages() {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getClientIdsWithMessages();
-		}
 		return new ClientIdIterator();
 	}
 
@@ -107,15 +91,9 @@ public class FlowFacesContext extends FacesContext {
 	 * associated with any specific UIComponent. If no such messages have been queued, return null.
 	 */
 	public FacesMessage.Severity getMaximumSeverity() {
-
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getMaximumSeverity();
-		}
-
-		if (RequestContextHolder.getRequestContext().getMessageContext().getMessages() == null
-				|| RequestContextHolder.getRequestContext().getMessageContext().getMessages().length == 0)
+		if (context.getMessageContext().getMessages().length == 0) {
 			return null;
-
+		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
 		Iterator<FacesMessage> i = getMessages();
 		while (i.hasNext()) {
@@ -132,11 +110,7 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * Returns an Iterator for all Messages in the current MessageContext that does translation to FacesMessages.
 	 */
-	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages() {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getMessages();
-		}
 		return new FacesMessageIterator();
 	}
 
@@ -144,55 +118,24 @@ public class FlowFacesContext extends FacesContext {
 	 * Returns an Iterator for all Messages with the given clientId in the current MessageContext that does translation
 	 * to FacesMessages.
 	 */
-	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages(String clientId) {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getMessages(clientId);
-		}
 		return new FacesMessageIterator(clientId);
 	}
 
 	public boolean getRenderResponse() {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getRenderResponse();
-		}
-
-		Boolean renderResponse = RequestContextHolder.getRequestContext().getFlashScope().getBoolean(
-				RENDER_RESPONSE_KEY);
-		if (renderResponse == null) {
-			return false;
-		}
-		return renderResponse;
+		return delegate.getRenderResponse();
 	}
 
 	public boolean getResponseComplete() {
-
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getResponseComplete();
-		}
-
-		Boolean responseComplete = RequestContextHolder.getRequestContext().getFlashScope().getBoolean(
-				RESPONSE_COMPLETE_KEY);
-		if (responseComplete == null) {
-			return false;
-		}
-		return responseComplete;
+		return delegate.getResponseComplete();
 	}
 
 	public void renderResponse() {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			delegate.renderResponse();
-			return;
-		}
-		RequestContextHolder.getRequestContext().getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
+		delegate.renderResponse();
 	}
 
 	public void responseComplete() {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			delegate.responseComplete();
-			return;
-		}
-		RequestContextHolder.getRequestContext().getFlashScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
+		delegate.responseComplete();
 	}
 
 	// ------------------ Pass-through delegate methods ----------------------//
@@ -227,6 +170,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public void release() {
 		delegate.release();
+		setCurrentInstance(null);
 	}
 
 	public void setResponseStream(ResponseStream responseStream) {
@@ -245,7 +189,7 @@ public class FlowFacesContext extends FacesContext {
 		return delegate;
 	}
 
-	private class FacesMessageIterator implements Iterator {
+	private class FacesMessageIterator implements Iterator<FacesMessage> {
 
 		private Message[] messages;
 
@@ -263,10 +207,9 @@ public class FlowFacesContext extends FacesContext {
 			return messages.length > currentIndex + 1;
 		}
 
-		public Object next() {
+		public FacesMessage next() {
 			currentIndex++;
 			Message nextMessage = messages[currentIndex];
-
 			FacesMessage facesMessage;
 			if (nextMessage.getSeverity() == Severity.INFO) {
 				facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, nextMessage.getText(), nextMessage
@@ -287,13 +230,12 @@ public class FlowFacesContext extends FacesContext {
 
 	}
 
-	private class ClientIdIterator implements Iterator {
+	private class ClientIdIterator implements Iterator<String> {
 
 		private Message[] messages;
 
 		int currentIndex = -1;
 
-		@SuppressWarnings("unchecked")
 		protected ClientIdIterator() {
 			this.messages = RequestContextHolder.getRequestContext().getMessageContext().getMessages();
 		}
@@ -309,7 +251,7 @@ public class FlowFacesContext extends FacesContext {
 			return false;
 		}
 
-		public Object next() {
+		public String next() {
 			Message next = messages[++currentIndex];
 			while (next.getSource() == null || "".equals(next.getSource())) {
 				next = messages[++currentIndex];

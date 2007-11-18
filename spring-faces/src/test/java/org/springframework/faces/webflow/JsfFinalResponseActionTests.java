@@ -25,16 +25,15 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class JsfRenderFinalResponseActionTests extends TestCase {
+public class JsfFinalResponseActionTests extends TestCase {
 
 	private static final String VIEW_ID = "/testView.xhtml";
 
-	private ViewFactory factory;
+	private JsfViewFactory factory;
 
-	private JsfRenderFinalResponseAction finalResponseAction;
+	private JsfFinalResponseAction finalResponseAction;
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
@@ -67,9 +66,9 @@ public class JsfRenderFinalResponseActionTests extends TestCase {
 		jsfMock.facesContext().setViewRoot(null);
 		jsfMock.application().setViewHandler(viewHandler);
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(lifecycle, parser.parseExpression("#{'" + VIEW_ID + "'}", RequestContext.class,
-				String.class, null), null);
-		finalResponseAction = new JsfRenderFinalResponseAction(factory);
+		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", RequestContext.class, String.class,
+				null), null);
+		finalResponseAction = new JsfFinalResponseAction(factory);
 		RequestContextHolder.setRequestContext(context);
 		ExternalContext ext = new MockExternalContext();
 		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);

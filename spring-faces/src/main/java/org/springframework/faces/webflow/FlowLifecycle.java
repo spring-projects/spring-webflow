@@ -21,6 +21,9 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Custom {@link Lifecycle} for Spring Web Flow that only executes the APPLY_REQUEST_VALUES through INVOKE_APPLICATION
  * phases.
@@ -30,7 +33,9 @@ import javax.faces.lifecycle.Lifecycle;
  * 
  * @author Jeremy Grelle
  */
-public class FlowLifecycle extends Lifecycle {
+class FlowLifecycle extends Lifecycle {
+
+	private static final Log logger = LogFactory.getLog(FlowLifecycle.class);
 
 	private final Lifecycle delegate;
 
@@ -42,7 +47,7 @@ public class FlowLifecycle extends Lifecycle {
 	 * Executes APPLY_REQUEST_VALUES through INVOKE_APPLICATION.
 	 */
 	public void execute(FacesContext context) throws FacesException {
-
+		logger.debug("Executing view post back lifecycle");
 		for (int p = PhaseId.APPLY_REQUEST_VALUES.getOrdinal(); p <= PhaseId.INVOKE_APPLICATION.getOrdinal(); p++) {
 			PhaseId phaseId = (PhaseId) PhaseId.VALUES.get(p);
 			if (!skipPhase(context, phaseId)) {
@@ -90,16 +95,20 @@ public class FlowLifecycle extends Lifecycle {
 	}
 
 	private void invokePhase(FacesContext context, PhaseId phaseId) {
-		JsfFlowUtils.notifyBeforeListeners(phaseId, this);
+		JsfUtils.notifyBeforeListeners(phaseId, this, context);
 		if (phaseId == PhaseId.APPLY_REQUEST_VALUES) {
+			logger.debug("Processing decodes");
 			context.getViewRoot().processDecodes(context);
 		} else if (phaseId == PhaseId.PROCESS_VALIDATIONS) {
+			logger.debug("Processing validators");
 			context.getViewRoot().processValidators(context);
 		} else if (phaseId == PhaseId.UPDATE_MODEL_VALUES) {
+			logger.debug("Processing model updates");
 			context.getViewRoot().processUpdates(context);
 		} else {
+			logger.debug("Processing application");
 			context.getViewRoot().processApplication(context);
 		}
-		JsfFlowUtils.notifyAfterListeners(phaseId, this);
+		JsfUtils.notifyAfterListeners(phaseId, this, context);
 	}
 }

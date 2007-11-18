@@ -16,12 +16,14 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.application.NavigationHandler;
-import javax.faces.component.ActionSource;
+import javax.faces.component.ActionSource2;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,32 +36,29 @@ import org.springframework.util.StringUtils;
  */
 public class FlowActionListener implements ActionListener {
 
-	private ActionListener delegate;
+	private static final Log logger = LogFactory.getLog(FlowActionListener.class);
 
 	public FlowActionListener(ActionListener delegate) {
-		this.delegate = delegate;
 	}
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
-
-		if (!JsfFlowUtils.isFlowRequest()) {
-			delegate.processAction(actionEvent);
-		}
-
 		FacesContext context = FacesContext.getCurrentInstance();
-		ActionSource source = (ActionSource) actionEvent.getSource();
+		ActionSource2 source = (ActionSource2) actionEvent.getSource();
 		String result = null;
-
-		if (source.getAction() != null) {
-			result = (String) source.getAction().invoke(context, null);
+		if (source.getActionExpression() != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Invoking action expression " + source.getActionExpression());
+			}
+			result = (String) source.getActionExpression().invoke(context.getELContext(), null);
 		}
-
 		if (StringUtils.hasText(result)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Event '" + result + "' detected");
+			}
 			context.getExternalContext().getRequestMap().put(JsfView.EVENT_KEY, result);
 		} else {
+			logger.debug("No action event detected");
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
 		}
-		context.renderResponse();
 	}
-
 }

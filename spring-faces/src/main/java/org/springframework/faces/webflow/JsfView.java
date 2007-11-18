@@ -18,15 +18,17 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 
 /**
@@ -36,42 +38,32 @@ import org.springframework.webflow.execution.View;
  */
 public class JsfView implements View {
 
-	public static final String EVENT_KEY = "org.springframework.webflow.FacesEvent";
+	private static final Log logger = LogFactory.getLog(JsfView.class);
 
-	public static final String STATE_KEY = "org.springframework.webflow.FacesState";
+	public static final String EVENT_KEY = "org.springframework.webflow.FacesEvent";
 
 	/**
 	 * The root of the JSF component tree managed by this view
 	 */
 	private UIViewRoot viewRoot;
 
-	private Event event;
-
 	private Lifecycle facesLifecycle;
 
-	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle) {
+	private RequestContext context;
 
-		Assert.notNull(viewRoot);
-		Assert.notNull(facesLifecycle);
-
+	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle, RequestContext context) {
 		this.viewRoot = viewRoot;
 		this.facesLifecycle = facesLifecycle;
+		this.context = context;
 	}
 
 	public boolean eventSignaled() {
-		return getEvent() != null;
+		return context.getExternalContext().getRequestMap().contains(EVENT_KEY);
 	}
 
 	public Event getEvent() {
-		if (event == null) {
-
-			String jsfEvent = (String) RequestContextHolder.getRequestContext().getExternalContext().getRequestMap()
-					.get(EVENT_KEY);
-			if (StringUtils.hasText(jsfEvent)) {
-				event = new Event(this, jsfEvent);
-			}
-		}
-		return event;
+		String eventId = (String) context.getExternalContext().getRequestMap().get(EVENT_KEY);
+		return new Event(this, eventId);
 	}
 
 	public UIViewRoot getViewRoot() {
@@ -82,19 +74,33 @@ public class JsfView implements View {
 	 * This implementation performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() {
-		FacesContext facesContext = JsfFlowUtils.getFacesContext(facesLifecycle);
+		FacesContext facesContext = createFlowFacesContext();
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
 		try {
-			JsfFlowUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle);
+			JsfUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
+			logger.debug("Asking view handler to render view");
 			facesContext.getApplication().getViewHandler().renderView(facesContext, viewRoot);
-			JsfFlowUtils.notifyAfterListeners(PhaseId.RENDER_RESPONSE, facesLifecycle);
+			JsfUtils.notifyAfterListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
 		} catch (IOException e) {
 			throw new FacesException("An I/O error occurred during view rendering", e);
 		} finally {
+			logger.debug("View rendering complete");
 			facesContext.responseComplete();
 			facesContext.release();
 		}
 	}
 
+	private FacesContext createFlowFacesContext() {
+		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
+				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
+				.getContext(), context.getExternalContext().getRequest(), context.getExternalContext().getResponse(),
+				facesLifecycle);
+		return new FlowFacesContext(context, defaultFacesContext);
+	}
+
+	public String toString() {
+		return "[JSFView = '" + viewRoot.getViewId() + "']";
+	}
 }

@@ -17,15 +17,19 @@ package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 
-import javax.el.ELContext;
 import javax.el.ValueExpression;
+import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
@@ -44,65 +48,65 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class JsfViewFactory implements ViewFactory {
 
-	private final Lifecycle facesLifecycle;
+	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
 
 	private final Expression viewExpr;
 
 	private final ResourceLoader resourceLoader;
 
-	public JsfViewFactory(Lifecycle facesLifecycle, Expression viewExpr, ResourceLoader resourceLoader) {
-
-		this.facesLifecycle = facesLifecycle;
+	public JsfViewFactory(Expression viewExpr, ResourceLoader resourceLoader) {
 		this.viewExpr = viewExpr;
 		this.resourceLoader = resourceLoader;
 	}
 
 	public View getView(RequestContext context) {
-
-		String viewName = resolveViewName(context);
-		FacesContext facesContext = JsfFlowUtils.getFacesContext(facesLifecycle);
+		Lifecycle lifecycle = createFlowFacesLifecycle();
+		FacesContext facesContext = createFlowFacesContext(context, lifecycle);
 		try {
-			boolean restored = false;
-
 			if (!facesContext.getRenderResponse()) {
-				JsfFlowUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, facesLifecycle);
+				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			}
-
-			JsfView view;
-
-			ViewHandler handler = facesContext.getApplication().getViewHandler();
-
-			if (viewExists(facesContext, viewName)) {
-				view = new JsfView(facesContext.getViewRoot(), facesLifecycle);
-				restored = true;
-			} else {
-				UIViewRoot root = handler.restoreView(facesContext, viewName);
-				if (root != null) {
-					view = new JsfView(root, facesLifecycle);
-					restored = true;
-				} else {
-					view = new JsfView(handler.createView(facesContext, viewName), facesLifecycle);
-					restored = false;
+			String viewName = resolveViewName(context);
+			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+			viewHandler.initView(facesContext);
+			UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+			if (viewRoot != null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("View root restored for '" + viewName + "'");
 				}
+				facesContext.setViewRoot(viewRoot);
+				processComponentBinding(facesContext, viewRoot);
+				JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+				lifecycle.execute(facesContext);
+				return new JsfView(viewRoot, lifecycle, context);
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Creating view root for '" + viewName + "'");
+				}
+				viewRoot = viewHandler.createView(facesContext, viewName);
+				facesContext.setViewRoot(viewRoot);
+				JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+				return new JsfView(viewRoot, lifecycle, context);
 			}
-
-			facesContext.setViewRoot(view.getViewRoot());
-
-			processBindings(facesContext.getELContext(), view.getViewRoot());
-
-			if (!facesContext.getRenderResponse()) {
-				JsfFlowUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, facesLifecycle);
-			}
-
-			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
-				facesLifecycle.execute(facesContext);
-				facesContext.renderResponse();
-			}
-
-			return view;
 		} finally {
 			facesContext.release();
 		}
+	}
+
+	private Lifecycle createFlowFacesLifecycle() {
+		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+		return new FlowLifecycle(defaultLifecycle);
+	}
+
+	private FacesContext createFlowFacesContext(RequestContext context, Lifecycle lifecycle) {
+		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
+				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
+				.getContext(), context.getExternalContext().getRequest(), context.getExternalContext().getResponse(),
+				lifecycle);
+		return new FlowFacesContext(context, defaultFacesContext);
 	}
 
 	private String resolveViewName(RequestContext context) {
@@ -115,24 +119,13 @@ public class JsfViewFactory implements ViewFactory {
 		}
 	}
 
-	private boolean viewExists(FacesContext facesContext, String viewId) {
-		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewId)) {
-			return true;
+	private void processComponentBinding(FacesContext context, UIComponent component) {
+		ValueExpression binding = component.getValueExpression("binding");
+		if (binding != null) {
+			binding.setValue(context.getELContext(), component);
 		}
-		return false;
-	}
-
-	private void processBindings(ELContext elContext, UIComponent component) {
-
-		ValueExpression expr = component.getValueExpression("binding");
-		if (expr != null) {
-			expr.setValue(elContext, component);
-		}
-
-		Iterator i = component.getChildren().iterator();
-		while (i.hasNext()) {
-			UIComponent child = (UIComponent) i.next();
-			processBindings(elContext, child);
+		for (Iterator<UIComponent> iter = component.getFacetsAndChildren(); iter.hasNext();) {
+			processComponentBinding(context, iter.next());
 		}
 	}
 }

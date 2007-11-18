@@ -31,18 +31,15 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 
  * @author Jeremy Grelle
  */
-public class FlowExecutionViewHandler extends ViewHandler {
+public class FlowViewHandler extends ViewHandler {
 
-	ViewHandler delegate;
+	private ViewHandler delegate;
 
-	public FlowExecutionViewHandler(ViewHandler delegate) {
+	public FlowViewHandler(ViewHandler delegate) {
 		this.delegate = delegate;
 	}
 
 	public String getActionURL(FacesContext context, String viewId) {
-		if (!JsfFlowUtils.isFlowRequest()) {
-			return delegate.getActionURL(context, viewId);
-		}
 		return RequestContextHolder.getRequestContext().getFlowExecutionUrl();
 	}
 

@@ -77,8 +77,7 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Create() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -99,8 +98,7 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_NoEvent() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -121,8 +119,7 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_EventSignaled() {
 
 		lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -173,8 +170,7 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_ExternalViewRoot() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(lifecycle, parser.parseExpression(VIEW_ID, RequestContext.class, String.class,
-				null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);

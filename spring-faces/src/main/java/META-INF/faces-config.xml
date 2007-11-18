@@ -4,23 +4,14 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
 
-	<factory>
-		<lifecycle-factory>org.springframework.faces.webflow.FlowLifecycleFactory</lifecycle-factory>
-		<faces-context-factory>org.springframework.faces.webflow.FlowFacesContextFactory</faces-context-factory>
-		<render-kit-factory>org.springframework.faces.webflow.FlowRenderKitFactory</render-kit-factory>
-	</factory>
-	
 	<application>
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
 		<el-resolver>org.springframework.webflow.core.expression.el.RequestContextELResolver</el-resolver>
 		<el-resolver>org.springframework.webflow.core.expression.el.ScopeSearchingELResolver</el-resolver>
-		<view-handler>org.springframework.faces.webflow.FlowExecutionViewHandler</view-handler>
+		<state-manager>org.springframework.faces.webflow.FlowViewStateManager</state-manager>
+		<view-handler>org.springframework.faces.webflow.FlowViewHandler</view-handler>
 	</application>
 	
-	<lifecycle>
-		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
-	</lifecycle>
-
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>
     	<component-class>org.springframework.faces.ui.DojoClientTextValidator</component-class>

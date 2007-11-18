@@ -17,13 +17,11 @@ package org.springframework.faces.webflow;
 
 import javax.faces.component.UIViewRoot;
 
-import org.springframework.util.Assert;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
-import org.springframework.webflow.execution.ViewFactory;
 
 /**
  * Specialized {@link Action} implementation for rendering the JSF view in an {@link EndState}.
@@ -33,26 +31,19 @@ import org.springframework.webflow.execution.ViewFactory;
  * 
  * @author Jeremy Grelle
  */
-public class JsfRenderFinalResponseAction implements Action {
+public class JsfFinalResponseAction implements Action {
 
-	ViewFactory viewFactory;
+	private JsfViewFactory viewFactory;
 
-	public JsfRenderFinalResponseAction(ViewFactory viewFactory) {
-		Assert.notNull(viewFactory);
+	public JsfFinalResponseAction(JsfViewFactory viewFactory) {
 		this.viewFactory = viewFactory;
 	}
 
 	public Event execute(RequestContext context) throws Exception {
-
 		View view = viewFactory.getView(context);
-		Assert.isInstanceOf(JsfView.class, view);
-
 		((JsfView) view).getViewRoot().setTransient(true);
-
 		view.render();
-
 		return new Event(this, "success");
-
 	}
 
 }

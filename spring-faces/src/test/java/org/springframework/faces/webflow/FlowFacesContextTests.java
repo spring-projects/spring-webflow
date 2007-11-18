@@ -16,7 +16,6 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Severity;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
 
 public class FlowFacesContextTests extends TestCase {
 
@@ -30,8 +29,7 @@ public class FlowFacesContextTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		jsf.setUp();
-		facesContext = new FlowFacesContext(jsf.facesContext());
-		RequestContextHolder.setRequestContext(requestContext);
+		facesContext = new FlowFacesContext(requestContext, jsf.facesContext());
 	}
 
 	protected void tearDown() throws Exception {

@@ -3,6 +3,8 @@ package org.springframework.faces.webflow;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 
@@ -29,9 +31,6 @@ public class JSFMockHelper {
 	private JSFMock mock = new JSFMock();
 
 	public Application application() {
-		if (mock.application() == null) {
-			return mock.facesContext.getApplication();
-		}
 		return mock.application();
 	}
 
@@ -43,11 +42,11 @@ public class JSFMockHelper {
 		return mock.externalContext();
 	}
 
-	public FlowFacesContext facesContext() {
+	public FacesContext facesContext() {
 		return mock.facesContext();
 	}
 
-	public FlowFacesContextFactory facesContextFactory() {
+	public FacesContextFactory facesContextFactory() {
 		return mock.facesContextFactory();
 	}
 
@@ -93,8 +92,8 @@ public class JSFMockHelper {
 			super("JSFMock");
 		}
 
-		FlowFacesContextFactory facesContextFactory;
-		FlowFacesContext facesContext;
+		FacesContextFactory facesContextFactory;
+		FacesContext facesContext;
 
 		public void setUp() throws Exception {
 
@@ -116,19 +115,18 @@ public class JSFMockHelper {
 			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
 					"org.springframework.faces.webflow.MockBaseFacesContextFactory");
 			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
-					"org.springframework.faces.webflow.FlowFacesContextFactory");
+					"org.apache.shale.test.mock.MockFacesContextFactory");
 			FactoryFinder
 					.setFactory(FactoryFinder.LIFECYCLE_FACTORY, "org.apache.shale.test.mock.MockLifecycleFactory");
 			FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY,
 					"org.apache.shale.test.mock.MockRenderKitFactory");
 
+			application = new MockApplication();
 			externalContext = new MockExternalContext(servletContext, request, response);
 			lifecycleFactory = (MockLifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 			lifecycle = (MockLifecycle) lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-			facesContextFactory = (FlowFacesContextFactory) FactoryFinder
-					.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			facesContext = (FlowFacesContext) facesContextFactory.getFacesContext(servletContext, request, response,
-					lifecycle);
+			facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			facesContext = facesContextFactory.getFacesContext(servletContext, request, response, lifecycle);
 			externalContext = (MockExternalContext) facesContext.getExternalContext();
 			UIViewRoot root = new UIViewRoot();
 			root.setViewId("/viewId");
@@ -171,11 +169,11 @@ public class JSFMockHelper {
 			return externalContext;
 		}
 
-		public FlowFacesContext facesContext() {
+		public FacesContext facesContext() {
 			return facesContext;
 		}
 
-		public FlowFacesContextFactory facesContextFactory() {
+		public FacesContextFactory facesContextFactory() {
 			return facesContextFactory;
 		}
 
