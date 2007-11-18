@@ -119,9 +119,6 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	public Conversation getConversation(ConversationId id) throws ConversationException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Getting conversation " + id);
-		}
 		return getConversationContainer().getConversation(id);
 	}
 

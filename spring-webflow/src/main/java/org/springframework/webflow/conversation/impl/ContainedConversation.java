@@ -130,7 +130,7 @@ class ContainedConversation implements Conversation, Serializable {
 		return id.hashCode();
 	}
 
-	// custom serialisation
+	// custom serialization
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();

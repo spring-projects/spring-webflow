@@ -578,7 +578,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	private class NoInputMapper implements AttributeMapper {
 		public void map(Object source, Object target, MappingContext context) {
-			logger.debug("No input attributes mapped");
 		}
 
 		public String toString() {
@@ -592,7 +591,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	private class NoOutputMapper implements AttributeMapper {
 		public void map(Object source, Object target, MappingContext context) {
-			logger.debug("No output attributes mapped");
 		}
 
 		public String toString() {

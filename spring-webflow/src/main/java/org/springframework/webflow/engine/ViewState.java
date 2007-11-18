@@ -17,6 +17,7 @@ package org.springframework.webflow.engine;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -83,6 +84,9 @@ public class ViewState extends TransitionableState {
 		} else {
 			View view = viewFactory.getView(context);
 			renderActionList.execute(context);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Rendering view " + view);
+			}
 			view.render();
 			context.getMessageContext().clearMessages();
 			context.getFlashScope().clear();
@@ -92,9 +96,16 @@ public class ViewState extends TransitionableState {
 	public void resume(RequestControlContext context) {
 		View view = viewFactory.getView(context);
 		if (view.eventSignaled()) {
-			context.handleEvent(view.getEvent());
+			Event event = view.getEvent();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Event '" + event.getId() + "' signaled on view " + view);
+			}
+			context.handleEvent(event);
 		} else {
 			renderActionList.execute(context);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Rendering refreshed view " + view);
+			}
 			view.render();
 			context.getMessageContext().clearMessages();
 			context.getFlashScope().clear();
