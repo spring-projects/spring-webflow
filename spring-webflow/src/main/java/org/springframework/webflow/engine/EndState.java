@@ -142,7 +142,6 @@ public class EndState extends State {
 	 */
 	private class NoOutputMapper implements AttributeMapper {
 		public void map(Object source, Object target, MappingContext context) {
-			logger.debug("No output attributes mapped");
 		}
 
 		public String toString() {
