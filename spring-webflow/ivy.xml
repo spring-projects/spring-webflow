@@ -80,7 +80,7 @@
 			<exclude module="openjpa-persistence-jdbc" />
 			<exclude module="openjpa-xmlstore" />
 		</dependency>
-		<!-- lang and serp required by open jpa -->
+		<!-- lang and serp are required by open jpa -->
 		<dependency org="commons-lang" name="commons-lang" rev="2.1" conf="test->default" />
 		<dependency org="commons-collections" name="commons-collections" rev="3.2" conf="test->default" />
 		<dependency org="net.sourceforge.serp" name="serp" rev="1.13.1" conf="test->default" />
