@@ -20,6 +20,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfViewTests extends TestCase {
 
@@ -54,12 +55,12 @@ public class JsfViewTests extends TestCase {
 	protected void setUp() throws Exception {
 
 		jsfMock.setUp();
-		jsfMock.application().setViewHandler(new MockViewHandler());
+		jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
 		jsfMock.application().setStateManager(new TestStateManager());
 		jsfMock.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
 
 		UIViewRoot viewToRender = new UIViewRoot();
-		viewToRender.setRenderKitId("TEST_KIT");
+		viewToRender.setRenderKitId("HTML_BASIC");
 		viewToRender.setViewId(VIEW_ID);
 		jsfMock.facesContext().setViewRoot(viewToRender);
 
@@ -81,6 +82,7 @@ public class JsfViewTests extends TestCase {
 
 	public final void testRender() {
 
+		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
 		EasyMock.expect(requestContext.getFlowScope()).andStubReturn(flowMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
@@ -94,11 +96,11 @@ public class JsfViewTests extends TestCase {
 
 		EasyMock.verify(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
 		assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
-		assertTrue(output.getBuffer().toString().contains(key.toString()));
 	}
 
 	public final void testRenderException() {
 
+		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
 		EasyMock.expect(flashMap.put(EasyMock.matches("renderResponse"), EasyMock.anyObject())).andStubReturn(null);
 		EasyMock.expect(flashMap.put(EasyMock.matches("responseComplete"), EasyMock.anyObject())).andStubReturn(null);

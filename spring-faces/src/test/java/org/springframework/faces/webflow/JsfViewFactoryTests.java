@@ -68,7 +68,7 @@ public class JsfViewFactoryTests extends TestCase {
 		trackingListener = new TrackingPhaseListener();
 		jsfMock.lifecycle().addPhaseListener(trackingListener);
 		jsfMock.facesContext().setViewRoot(null);
-		jsfMock.application().setViewHandler(viewHandler);
+		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
 	}
 
 	/**
@@ -77,7 +77,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Create() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null,
+				lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -98,7 +99,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_NoEvent() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null,
+				lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -119,7 +121,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_EventSignaled() {
 
 		lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null,
+				lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -170,7 +173,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_ExternalViewRoot() {
 
 		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, RequestContext.class, String.class, null), null,
+				lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);

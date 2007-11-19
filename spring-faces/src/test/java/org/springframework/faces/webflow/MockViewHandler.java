@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
-import javax.faces.application.StateManager.SerializedView;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
@@ -70,8 +69,7 @@ public class MockViewHandler extends ViewHandler {
 	 */
 	public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
 		context.getViewRoot().encodeAll(context);
-		SerializedView state = context.getApplication().getStateManager().saveSerializedView(context);
-		context.getRenderKit().getResponseStateManager().writeState(context, state);
+
 	}
 
 	public UIViewRoot restoreView(FacesContext context, String viewId) {

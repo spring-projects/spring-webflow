@@ -15,6 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
+import javax.faces.FactoryFinder;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
@@ -28,12 +32,25 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class JsfViewFactoryCreator implements ViewFactoryCreator {
 
+	private Lifecycle lifecycle;
+
+	public JsfViewFactoryCreator() {
+		lifecycle = createFlowFacesLifecycle();
+	}
+
 	public Action createFinalResponseAction(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfFinalResponseAction(new JsfViewFactory(viewName, resourceLoader));
+		return new JsfFinalResponseAction(new JsfViewFactory(viewName, resourceLoader, lifecycle));
 	}
 
 	public ViewFactory createViewFactory(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfViewFactory(viewName, resourceLoader);
+		return new JsfViewFactory(viewName, resourceLoader, lifecycle);
+	}
+
+	private Lifecycle createFlowFacesLifecycle() {
+		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+		return new FlowLifecycle(defaultLifecycle);
 	}
 
 }

@@ -114,8 +114,10 @@ public class JSFMockHelper {
 					"org.apache.shale.test.mock.MockApplicationFactory");
 			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
 					"org.springframework.faces.webflow.MockBaseFacesContextFactory");
-			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
-					"org.apache.shale.test.mock.MockFacesContextFactory");
+			/*
+			 * FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
+			 * "org.apache.shale.test.mock.MockFacesContextFactory");
+			 */
 			FactoryFinder
 					.setFactory(FactoryFinder.LIFECYCLE_FACTORY, "org.apache.shale.test.mock.MockLifecycleFactory");
 			FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY,

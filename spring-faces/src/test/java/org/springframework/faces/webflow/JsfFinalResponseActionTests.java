@@ -64,10 +64,10 @@ public class JsfFinalResponseActionTests extends TestCase {
 		trackingListener = new TrackingPhaseListener();
 		jsfMock.lifecycle().addPhaseListener(trackingListener);
 		jsfMock.facesContext().setViewRoot(null);
-		jsfMock.application().setViewHandler(viewHandler);
+		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", RequestContext.class, String.class,
-				null), null);
+				null), null, lifecycle);
 		finalResponseAction = new JsfFinalResponseAction(factory);
 		RequestContextHolder.setRequestContext(context);
 		ExternalContext ext = new MockExternalContext();
@@ -80,7 +80,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
-		newRoot.setRenderKitId("TEST_KIT");
+		newRoot.setRenderKitId("HTML_BASIC");
 		((MockViewHandler) viewHandler).setCreateView(newRoot);
 
 		EasyMock.replay(new Object[] { context });
@@ -141,6 +141,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 		public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
 			rendered = true;
 		}
+
 	}
 
 }

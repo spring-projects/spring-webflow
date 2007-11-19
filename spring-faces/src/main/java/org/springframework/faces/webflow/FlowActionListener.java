@@ -16,7 +16,7 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.application.NavigationHandler;
-import javax.faces.component.ActionSource2;
+import javax.faces.component.ActionSource;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -43,13 +43,13 @@ public class FlowActionListener implements ActionListener {
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
 		FacesContext context = FacesContext.getCurrentInstance();
-		ActionSource2 source = (ActionSource2) actionEvent.getSource();
+		ActionSource source = (ActionSource) actionEvent.getSource();
 		String result = null;
-		if (source.getActionExpression() != null) {
+		if (source.getAction() != null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Invoking action expression " + source.getActionExpression());
+				logger.debug("Invoking action " + source.getAction());
 			}
-			result = (String) source.getActionExpression().invoke(context.getELContext(), null);
+			result = (String) source.getAction().invoke(context, null);
 		}
 		if (StringUtils.hasText(result)) {
 			if (logger.isDebugEnabled()) {

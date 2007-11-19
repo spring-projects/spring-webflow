@@ -34,7 +34,6 @@ import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Custom {@link FacesContext} implementation that delegates all standard FacesContext messaging functionality to a
@@ -196,11 +195,11 @@ public class FlowFacesContext extends FacesContext {
 		private int currentIndex = -1;
 
 		protected FacesMessageIterator() {
-			this.messages = RequestContextHolder.getRequestContext().getMessageContext().getMessages();
+			this.messages = context.getMessageContext().getMessages();
 		}
 
 		protected FacesMessageIterator(String clientId) {
-			this.messages = RequestContextHolder.getRequestContext().getMessageContext().getMessages(clientId);
+			this.messages = context.getMessageContext().getMessages(clientId);
 		}
 
 		public boolean hasNext() {
@@ -237,7 +236,7 @@ public class FlowFacesContext extends FacesContext {
 		int currentIndex = -1;
 
 		protected ClientIdIterator() {
-			this.messages = RequestContextHolder.getRequestContext().getMessageContext().getMessages();
+			this.messages = context.getMessageContext().getMessages();
 		}
 
 		public boolean hasNext() {

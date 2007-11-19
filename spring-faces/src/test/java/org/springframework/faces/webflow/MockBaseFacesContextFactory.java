@@ -16,10 +16,16 @@ public class MockBaseFacesContextFactory extends FacesContextFactory {
 	public FacesContext getFacesContext(Object context, Object request, Object response, Lifecycle lifecycle)
 			throws FacesException {
 
-		ExternalContext ext = new MockExternalContext((ServletContext) context, (HttpServletRequest) request,
-				(HttpServletResponse) response);
+		if (FacesContext.getCurrentInstance() != null
+				&& FacesContext.getCurrentInstance() instanceof MockBaseFacesContext) {
+			return FacesContext.getCurrentInstance();
+		} else {
 
-		return new MockBaseFacesContext(ext, lifecycle);
+			ExternalContext ext = new MockExternalContext((ServletContext) context, (HttpServletRequest) request,
+					(HttpServletResponse) response);
+
+			return new MockBaseFacesContext(ext, lifecycle);
+		}
 	}
 
 }
