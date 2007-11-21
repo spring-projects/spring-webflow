@@ -9,8 +9,8 @@
 		<conf name="test" visibility="private" />
 		
 		<!-- public JSF configurations other projects may use -->
-		<conf name="default" extends="jsf12" />
-		<conf name="jsf12" visibility="public" extends="global" />
+		<conf name="jsf12" visibility="public"/>
+		<conf name="jsf11" visibility="public"/>
 	</configurations>
 
 	<dependencies defaultconf="global->default">
@@ -42,6 +42,11 @@
     	<dependency org="commons-digester" name="commons-digester" rev="1.8" conf="buildtime, jsf12->default">
 			<exclude module="commons-logging"/>
     	</dependency>
+    	
+    	<!-- JSF 1.1 dependencies -->
+    	<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.5" conf="jsf11->default" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.1.5" conf="jsf11->default" />
+    	
     			
 		<!-- test dependencies -->
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
