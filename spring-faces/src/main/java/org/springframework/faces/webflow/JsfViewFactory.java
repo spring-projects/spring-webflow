@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -117,7 +118,11 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		return new JsfView(root, lifecycle, context);
+		if (JsfUtils.isAsynchronousFlowRequest()) {
+			return new JsfView(new AjaxViewRoot(root), lifecycle, context);
+		} else {
+			return new JsfView(root, lifecycle, context);
+		}
 	}
 
 	private FacesContext createFlowFacesContext(RequestContext context, Lifecycle lifecycle) {

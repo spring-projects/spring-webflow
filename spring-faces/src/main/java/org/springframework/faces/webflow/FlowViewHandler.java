@@ -40,7 +40,11 @@ public class FlowViewHandler extends ViewHandler {
 	}
 
 	public String getActionURL(FacesContext context, String viewId) {
-		return RequestContextHolder.getRequestContext().getFlowExecutionUrl();
+		if (JsfUtils.isFlowRequest()) {
+			return RequestContextHolder.getRequestContext().getFlowExecutionUrl();
+		} else {
+			return delegate.getActionURL(context, viewId);
+		}
 	}
 
 	// ------------------- Pass-through delegate methods ------------------//

@@ -20,7 +20,17 @@ public class FlowViewStateManager extends StateManager {
 
 	private static final String ACTIVE_VIEW_ROOT = "org.springframework.webflow.viewRoot";
 
+	private StateManager delegate;
+
+	public FlowViewStateManager(StateManager original) {
+		this.delegate = original;
+	}
+
 	protected Object getComponentStateToSave(FacesContext context) {
+		if (!JsfUtils.isFlowRequest()) {
+			return super.getComponentStateToSave(context);
+		}
+
 		UIViewRoot viewRoot = context.getViewRoot();
 		if (viewRoot.isTransient()) {
 			return null;
@@ -30,6 +40,10 @@ public class FlowViewStateManager extends StateManager {
 	}
 
 	protected Object getTreeStructureToSave(FacesContext context) {
+		if (!JsfUtils.isFlowRequest()) {
+			return super.getTreeStructureToSave(context);
+		}
+
 		UIViewRoot viewRoot = context.getViewRoot();
 		if (viewRoot.isTransient()) {
 			return null;
@@ -39,6 +53,11 @@ public class FlowViewStateManager extends StateManager {
 	}
 
 	protected void restoreComponentState(FacesContext context, UIViewRoot viewRoot, String renderKitId) {
+		if (!JsfUtils.isFlowRequest()) {
+			super.restoreComponentState(context, viewRoot, renderKitId);
+			return;
+		}
+
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		SerializedView view = (SerializedView) requestContext.getFlowScope().get(SERIALIZED_VIEW_STATE);
 		viewRoot.processRestoreState(context, view.componentState);
@@ -46,6 +65,10 @@ public class FlowViewStateManager extends StateManager {
 	}
 
 	protected UIViewRoot restoreTreeStructure(FacesContext context, String viewId, String renderKitId) {
+		if (!JsfUtils.isFlowRequest()) {
+			return super.restoreTreeStructure(context, viewId, renderKitId);
+		}
+
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		SerializedView view = (SerializedView) requestContext.getFlowScope().get(SERIALIZED_VIEW_STATE);
 		if (view == null || !view.viewId.equals(viewId)) {
@@ -66,17 +89,29 @@ public class FlowViewStateManager extends StateManager {
 
 	public void writeState(FacesContext context, javax.faces.application.StateManager.SerializedView state)
 			throws IOException {
+		if (!JsfUtils.isFlowRequest()) {
+			delegate.writeState(context, state);
+		}
+
 		// nothing to do, as saving state to client always returns false
 	}
 
 	public boolean isSavingStateInClient(FacesContext context) {
-		return false;
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.isSavingStateInClient(context);
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * JSF 1.1 version of state saving
 	 */
 	public javax.faces.application.StateManager.SerializedView saveSerializedView(FacesContext context) {
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.saveSerializedView(context);
+		}
+
 		SerializedView view = (SerializedView) saveView(context);
 		return new javax.faces.application.StateManager.SerializedView(view.treeStructure, view.componentState);
 	}
@@ -85,6 +120,10 @@ public class FlowViewStateManager extends StateManager {
 	 * JSF 1.2 version of state saving
 	 */
 	public Object saveView(FacesContext context) {
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.saveView(context);
+		}
+
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in flow scope");
@@ -96,6 +135,9 @@ public class FlowViewStateManager extends StateManager {
 	}
 
 	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.restoreView(context, viewId, renderKitId);
+		}
 
 		UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
 		if (viewRoot != null) {

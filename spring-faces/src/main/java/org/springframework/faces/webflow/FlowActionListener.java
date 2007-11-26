@@ -38,10 +38,18 @@ public class FlowActionListener implements ActionListener {
 
 	private static final Log logger = LogFactory.getLog(FlowActionListener.class);
 
+	private ActionListener delegate;
+
 	public FlowActionListener(ActionListener delegate) {
+		this.delegate = delegate;
 	}
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
+		if (!JsfUtils.isFlowRequest()) {
+			delegate.processAction(actionEvent);
+			return;
+		}
+
 		FacesContext context = FacesContext.getCurrentInstance();
 		ActionSource source = (ActionSource) actionEvent.getSource();
 		String result = null;

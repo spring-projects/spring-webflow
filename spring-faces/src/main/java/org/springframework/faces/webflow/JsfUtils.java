@@ -50,9 +50,16 @@ class JsfUtils {
 		}
 	}
 
+	public static boolean isFlowRequest() {
+		if (RequestContextHolder.getRequestContext() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static boolean isAsynchronousFlowRequest() {
-		if (RequestContextHolder.getRequestContext() != null
-				&& RequestContextHolder.getRequestContext().getRequestParameters().contains("ajaxSource")) {
+		if (isFlowRequest() && RequestContextHolder.getRequestContext().getRequestParameters().contains("ajaxSource")) {
 			return true;
 		} else {
 			return false;
