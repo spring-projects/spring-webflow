@@ -1,8 +1,6 @@
 package org.springframework.faces.webflow;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import org.easymock.EasyMock;
 
 import java.util.Iterator;
 
@@ -23,7 +21,7 @@ public class FlowFacesContextTests extends TestCase {
 
 	FacesContext facesContext;
 
-	RequestContext requestContext = createMock(RequestContext.class);
+	RequestContext requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
 
 	MessageContext messageContext;
 
@@ -42,8 +40,8 @@ public class FlowFacesContextTests extends TestCase {
 
 	public final void testAddMessage() {
 		messageContext = new TestAddMessageContext();
-		expect(requestContext.getMessageContext()).andStubReturn(messageContext);
-		replay(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
 
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "foo"));
 
@@ -52,11 +50,11 @@ public class FlowFacesContextTests extends TestCase {
 
 	public final void testGetMessages() {
 		messageContext = new TestGetMessagesContext();
-		expect(requestContext.getMessageContext()).andStubReturn(messageContext);
-		replay(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator<FacesMessage> i = facesContext.getMessages();
+		Iterator i = facesContext.getMessages();
 		while (i.hasNext()) {
 			assertNotNull(i.next());
 			iterationCount++;
@@ -66,11 +64,11 @@ public class FlowFacesContextTests extends TestCase {
 
 	public final void testGetMessagesByClientId() {
 		messageContext = new TestGetMessagesContext();
-		expect(requestContext.getMessageContext()).andStubReturn(messageContext);
-		replay(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator<FacesMessage> i = facesContext.getMessages("componentId");
+		Iterator i = facesContext.getMessages("componentId");
 		while (i.hasNext()) {
 			assertNotNull(i.next());
 			iterationCount++;
@@ -80,13 +78,13 @@ public class FlowFacesContextTests extends TestCase {
 
 	public final void testGetClientIdsWithMessages() {
 		messageContext = new TestGetMessagesContext();
-		expect(requestContext.getMessageContext()).andStubReturn(messageContext);
-		replay(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator<String> i = facesContext.getClientIdsWithMessages();
+		Iterator i = facesContext.getClientIdsWithMessages();
 		while (i.hasNext()) {
-			String id = i.next();
+			String id = (String) i.next();
 			assertEquals("componentId", id);
 			iterationCount++;
 		}
@@ -95,8 +93,8 @@ public class FlowFacesContextTests extends TestCase {
 
 	public final void testGetMaximumSeverity() {
 		messageContext = new TestGetMessagesContext();
-		expect(requestContext.getMessageContext()).andStubReturn(messageContext);
-		replay(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
 
 		assertEquals(FacesMessage.SEVERITY_ERROR, facesContext.getMaximumSeverity());
 	}

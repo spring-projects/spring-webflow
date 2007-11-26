@@ -17,13 +17,13 @@ package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 
-import javax.el.ValueExpression;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
@@ -96,6 +96,7 @@ public class JsfViewFactory implements ViewFactory {
 						logger.debug("Creating view root for '" + viewName + "'");
 					}
 					view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
+					facesContext.setViewRoot(view.getViewRoot());
 					restored = false;
 				}
 			}
@@ -146,9 +147,9 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private void processComponentBinding(FacesContext context, UIComponent component) {
-		ValueExpression binding = component.getValueExpression("binding");
+		ValueBinding binding = component.getValueBinding("binding");
 		if (binding != null) {
-			binding.setValue(context.getELContext(), component);
+			binding.setValue(context, component);
 		}
 
 		Iterator i = component.getChildren().iterator();

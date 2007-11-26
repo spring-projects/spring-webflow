@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -32,6 +33,7 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Messages;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -44,7 +46,17 @@ import org.springframework.webflow.execution.RequestContext;
 public class FlowFacesContext extends FacesContext {
 
 	/**
-	 * The Web Flow request context.
+	 * The key for storing the responseComplete flag
+	 */
+	static final String RESPONSE_COMPLETE_KEY = "responseComplete";
+
+	/**
+	 * The key for storing the renderResponse flag
+	 */
+	static final String RENDER_RESPONSE_KEY = "renderResponse";
+
+	/**
+	 * The key for storing the renderResponse flag
 	 */
 	private RequestContext context;
 
@@ -68,12 +80,18 @@ public class FlowFacesContext extends FacesContext {
 		if (StringUtils.hasText(message.getSummary())) {
 			msgText.append(message.getSummary());
 		}
+
+		String source = null;
+		if (StringUtils.hasText(clientId)) {
+			source = clientId;
+		}
+
 		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
-			messageResolver = Messages.text(msgText.toString(), Severity.INFO);
+			messageResolver = Messages.text(source, msgText.toString(), Severity.INFO);
 		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
-			messageResolver = Messages.text(msgText.toString(), Severity.WARNING);
+			messageResolver = Messages.text(source, msgText.toString(), Severity.WARNING);
 		} else {
-			messageResolver = Messages.text(msgText.toString(), Severity.ERROR);
+			messageResolver = Messages.text(source, msgText.toString(), Severity.ERROR);
 		}
 		context.getMessageContext().addMessage(messageResolver);
 	}
@@ -81,7 +99,7 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * Returns an Iterator for all component clientId's for which messages have been added.
 	 */
-	public Iterator<String> getClientIdsWithMessages() {
+	public Iterator getClientIdsWithMessages() {
 		return new ClientIdIterator();
 	}
 
@@ -94,9 +112,9 @@ public class FlowFacesContext extends FacesContext {
 			return null;
 		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
-		Iterator<FacesMessage> i = getMessages();
+		Iterator i = getMessages();
 		while (i.hasNext()) {
-			FacesMessage message = i.next();
+			FacesMessage message = (FacesMessage) i.next();
 			if (message.getSeverity().getOrdinal() > max.getOrdinal()) {
 				max = message.getSeverity();
 			}
@@ -109,7 +127,7 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * Returns an Iterator for all Messages in the current MessageContext that does translation to FacesMessages.
 	 */
-	public Iterator<FacesMessage> getMessages() {
+	public Iterator getMessages() {
 		return new FacesMessageIterator();
 	}
 
@@ -117,24 +135,32 @@ public class FlowFacesContext extends FacesContext {
 	 * Returns an Iterator for all Messages with the given clientId in the current MessageContext that does translation
 	 * to FacesMessages.
 	 */
-	public Iterator<FacesMessage> getMessages(String clientId) {
+	public Iterator getMessages(String clientId) {
 		return new FacesMessageIterator(clientId);
 	}
 
 	public boolean getRenderResponse() {
-		return delegate.getRenderResponse();
+		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
+		if (renderResponse == null) {
+			return false;
+		}
+		return renderResponse.booleanValue();
 	}
 
 	public boolean getResponseComplete() {
-		return delegate.getResponseComplete();
+		Boolean responseComplete = context.getFlashScope().getBoolean(RESPONSE_COMPLETE_KEY);
+		if (responseComplete == null) {
+			return false;
+		}
+		return responseComplete.booleanValue();
 	}
 
 	public void renderResponse() {
-		delegate.renderResponse();
+		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
 	}
 
 	public void responseComplete() {
-		delegate.responseComplete();
+		context.getFlashScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
 	}
 
 	// ------------------ Pass-through delegate methods ----------------------//
@@ -144,7 +170,16 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public ELContext getELContext() {
-		return delegate.getELContext();
+		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext", null);
+		if (delegateMethod != null) {
+			try {
+				return (ELContext) delegateMethod.invoke(delegate, null);
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			return null;
+		}
 	}
 
 	public ExternalContext getExternalContext() {
@@ -188,7 +223,7 @@ public class FlowFacesContext extends FacesContext {
 		return delegate;
 	}
 
-	private class FacesMessageIterator implements Iterator<FacesMessage> {
+	private class FacesMessageIterator implements Iterator {
 
 		private Message[] messages;
 
@@ -206,7 +241,7 @@ public class FlowFacesContext extends FacesContext {
 			return messages.length > currentIndex + 1;
 		}
 
-		public FacesMessage next() {
+		public Object next() {
 			currentIndex++;
 			Message nextMessage = messages[currentIndex];
 			FacesMessage facesMessage;
@@ -229,7 +264,7 @@ public class FlowFacesContext extends FacesContext {
 
 	}
 
-	private class ClientIdIterator implements Iterator<String> {
+	private class ClientIdIterator implements Iterator {
 
 		private Message[] messages;
 
@@ -250,7 +285,7 @@ public class FlowFacesContext extends FacesContext {
 			return false;
 		}
 
-		public String next() {
+		public Object next() {
 			Message next = messages[++currentIndex];
 			while (next.getSource() == null || "".equals(next.getSource())) {
 				next = messages[++currentIndex];

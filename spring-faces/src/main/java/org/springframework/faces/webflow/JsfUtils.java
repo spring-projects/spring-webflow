@@ -21,6 +21,8 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
+import org.springframework.webflow.execution.RequestContextHolder;
+
 /**
  * Common support for the JSF integration with Spring Web Flow.
  * 
@@ -45,6 +47,15 @@ class JsfUtils {
 			if (listener.getPhaseId() == phaseId || listener.getPhaseId() == PhaseId.ANY_PHASE) {
 				listener.beforePhase(beforePhaseEvent);
 			}
+		}
+	}
+
+	public static boolean isAsynchronousFlowRequest() {
+		if (RequestContextHolder.getRequestContext() != null
+				&& RequestContextHolder.getRequestContext().getRequestParameters().contains("ajaxSource")) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

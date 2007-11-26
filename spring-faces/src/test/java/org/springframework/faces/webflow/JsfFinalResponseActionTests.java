@@ -3,6 +3,7 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.FacesException;
@@ -22,6 +23,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -37,7 +39,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
+	private RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
 
 	private ViewHandler viewHandler = new NoRenderViewHandler();
 
@@ -74,6 +76,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);
 		AttributeMap flash = new LocalAttributeMap();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
 	}
 
 	public void testRender() throws Exception {
@@ -109,7 +112,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List<String> phaseCallbacks = new ArrayList<String>();
+		private List phaseCallbacks = new ArrayList();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();

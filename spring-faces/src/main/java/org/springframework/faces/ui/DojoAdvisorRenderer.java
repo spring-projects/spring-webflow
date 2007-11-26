@@ -40,7 +40,7 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 		if (component.getChildCount() == 0)
 			throw new FacesException("A Spring Faces advisor expects to have at least one child component.");
 
-		UIComponent advisedChild = component.getChildren().get(0);
+		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
 		resourceHelper.renderDojoInclude(context, ((DojoAdvisor) component).getDojoComponentType());
 

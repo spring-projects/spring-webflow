@@ -33,7 +33,7 @@ public class RenderResourceAction implements Action {
 
 	private static final String HTTP_CACHE_CONTROL_HEADER = "Cache-Control";
 
-	private Map<String, String> defaultMimeTypes = new HashMap<String, String>();
+	private Map defaultMimeTypes = new HashMap();
 	{
 		defaultMimeTypes.put(".css", "text/css");
 		defaultMimeTypes.put(".gif", "image/gif");
@@ -76,7 +76,7 @@ public class RenderResourceAction implements Action {
 		String mimeType = servletContext.getMimeType(jarResourcePath);
 		if (mimeType == null) {
 			String extension = jarResourcePath.substring(jarResourcePath.lastIndexOf('.'));
-			mimeType = defaultMimeTypes.get(extension);
+			mimeType = (String) defaultMimeTypes.get(extension);
 		}
 		response.setContentType(mimeType);
 

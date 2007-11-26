@@ -32,10 +32,11 @@ public class JsfViewTests extends TestCase {
 
 	private StringWriter output = new StringWriter();
 
-	private RequestContext requestContext = EasyMock.createMock(RequestContext.class);
-	private FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
-	private MutableAttributeMap flashMap = EasyMock.createMock(MutableAttributeMap.class);
-	private MutableAttributeMap flowMap = EasyMock.createMock(MutableAttributeMap.class);
+	private RequestContext requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
+	private FlowExecutionContext flowExecutionContext = (FlowExecutionContext) EasyMock
+			.createMock(FlowExecutionContext.class);
+	private MutableAttributeMap flashMap = (MutableAttributeMap) EasyMock.createMock(MutableAttributeMap.class);
+	private MutableAttributeMap flowMap = (MutableAttributeMap) EasyMock.createMock(MutableAttributeMap.class);
 
 	private FlowExecutionKey key = new FlowExecutionKey() {
 

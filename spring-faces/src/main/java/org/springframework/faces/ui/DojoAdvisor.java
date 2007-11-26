@@ -15,9 +15,9 @@
  */
 package org.springframework.faces.ui;
 
-import javax.el.ValueExpression;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 public abstract class DojoAdvisor extends UIComponentBase {
 
@@ -46,8 +46,8 @@ public abstract class DojoAdvisor extends UIComponentBase {
 		if (disabled != null) {
 			return disabled;
 		}
-		ValueExpression exp = getValueExpression("disabled");
-		return exp != null ? (Boolean) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("disabled");
+		return exp != null ? (Boolean) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setDisabled(Boolean disabled) {
@@ -82,8 +82,8 @@ public abstract class DojoAdvisor extends UIComponentBase {
 		if (promptMessage != null) {
 			return promptMessage;
 		}
-		ValueExpression exp = getValueExpression("promptMessage");
-		return exp != null ? (String) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("promptMessage");
+		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setPromptMessage(String promptMessage) {
@@ -94,8 +94,8 @@ public abstract class DojoAdvisor extends UIComponentBase {
 		if (invalidMessage != null) {
 			return invalidMessage;
 		}
-		ValueExpression exp = getValueExpression("invalidMessage");
-		return exp != null ? (String) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("invalidMessage");
+		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setInvalidMessage(String invalidMessage) {

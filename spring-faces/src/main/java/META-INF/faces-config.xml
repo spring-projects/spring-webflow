@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
-<faces-config version="1.2" 
-              xmlns="http://java.sun.com/xml/ns/javaee"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
+<faces-config>
+  
 	<application>
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
-		<el-resolver>org.springframework.webflow.core.expression.el.RequestContextELResolver</el-resolver>
-		<el-resolver>org.springframework.webflow.core.expression.el.ScopeSearchingELResolver</el-resolver>
+		<variable-resolver>org.springframework.faces.expression.CompositeFlowVariableResolver</variable-resolver>
+		<property-resolver>org.springframework.faces.expression.CompositeFlowPropertyResolver</property-resolver>
 		<state-manager>org.springframework.faces.webflow.FlowViewStateManager</state-manager>
 		<view-handler>org.springframework.faces.webflow.FlowViewHandler</view-handler>
 	</application>
+	
+	<lifecycle>
+		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
+	</lifecycle>
 	
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>

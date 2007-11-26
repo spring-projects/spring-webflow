@@ -44,10 +44,6 @@ public class FlowViewHandler extends ViewHandler {
 	}
 
 	// ------------------- Pass-through delegate methods ------------------//
-	public String calculateCharacterEncoding(FacesContext context) {
-		return delegate.calculateCharacterEncoding(context);
-	}
-
 	public Locale calculateLocale(FacesContext context) {
 		return delegate.calculateLocale(context);
 	}
@@ -62,10 +58,6 @@ public class FlowViewHandler extends ViewHandler {
 
 	public String getResourceURL(FacesContext context, String path) {
 		return delegate.getResourceURL(context, path);
-	}
-
-	public void initView(FacesContext context) throws FacesException {
-		delegate.initView(context);
 	}
 
 	public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {

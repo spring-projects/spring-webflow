@@ -15,8 +15,8 @@
  */
 package org.springframework.faces.ui;
 
-import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 public abstract class ExtAdvisor extends ExtJsComponent {
 
@@ -123,8 +123,8 @@ public abstract class ExtAdvisor extends ExtJsComponent {
 		if (disabled != null) {
 			return disabled;
 		}
-		ValueExpression exp = getValueExpression("disabled");
-		return exp != null ? (Boolean) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("disabled");
+		return exp != null ? (Boolean) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setDisabled(Boolean disabled) {
@@ -167,8 +167,8 @@ public abstract class ExtAdvisor extends ExtJsComponent {
 		if (invalidText != null) {
 			return invalidText;
 		}
-		ValueExpression exp = getValueExpression("invalidText");
-		return exp != null ? (String) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("invalidText");
+		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setInvalidText(String invalidText) {
@@ -179,8 +179,8 @@ public abstract class ExtAdvisor extends ExtJsComponent {
 		if (msgClass != null) {
 			return msgClass;
 		}
-		ValueExpression exp = getValueExpression("msgClass");
-		return exp != null ? (String) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("msgClass");
+		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setMsgClass(String msgClass) {
@@ -199,8 +199,8 @@ public abstract class ExtAdvisor extends ExtJsComponent {
 		if (readOnly != null) {
 			return readOnly;
 		}
-		ValueExpression exp = getValueExpression("readOnly");
-		return exp != null ? (Boolean) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("readOnly");
+		return exp != null ? (Boolean) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setReadOnly(Boolean readOnly) {

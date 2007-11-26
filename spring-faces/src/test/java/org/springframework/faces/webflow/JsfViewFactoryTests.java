@@ -1,6 +1,7 @@
 package org.springframework.faces.webflow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.FacesException;
@@ -20,6 +21,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -35,7 +37,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
+	private RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
 
 	private AttributeMap flashMap = new LocalAttributeMap();
 
@@ -56,6 +58,7 @@ public class JsfViewFactoryTests extends TestCase {
 		RequestContextHolder.setRequestContext(context);
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flashMap);
 		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
 		EasyMock.replay(new Object[] { context });
 	}
 
@@ -188,7 +191,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
 		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
 		assertFalse("An unexpected event was signaled,", newView.eventSignaled());
-		assertFalse("The lifecycle should not have been invoked", ((NoEventLifecycle) lifecycle).executed);
+		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
 	}
 
 	private class NoEventLifecycle extends FlowLifecycle {
@@ -214,7 +217,6 @@ public class JsfViewFactoryTests extends TestCase {
 			super(delegate);
 		}
 
-		@SuppressWarnings("unchecked")
 		public void execute(FacesContext context) throws FacesException {
 			assertFalse("Lifecycle executed more than once", executed);
 			super.execute(context);

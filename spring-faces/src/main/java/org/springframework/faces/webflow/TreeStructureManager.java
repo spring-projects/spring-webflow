@@ -41,7 +41,7 @@ class TreeStructureManager {
 		// children
 		if (component.getChildCount() > 0) {
 			List childList = component.getChildren();
-			List<TreeStructComponent> structChildList = new ArrayList<TreeStructComponent>();
+			List structChildList = new ArrayList();
 			for (int i = 0, len = childList.size(); i < len; i++) {
 				UIComponent child = (UIComponent) childList.get(i);
 				if (!child.isTransient()) {
@@ -49,14 +49,15 @@ class TreeStructureManager {
 					structChildList.add(structChild);
 				}
 			}
-			TreeStructComponent[] childArray = structChildList.toArray(new TreeStructComponent[structChildList.size()]);
+			TreeStructComponent[] childArray = (TreeStructComponent[]) structChildList
+					.toArray(new TreeStructComponent[structChildList.size()]);
 			structComp.setChildren(childArray);
 		}
 
 		// facets
-		Map<String, UIComponent> facetMap = component.getFacets();
+		Map facetMap = component.getFacets();
 		if (!facetMap.isEmpty()) {
-			List<Object[]> structFacetList = new ArrayList<Object[]>();
+			List structFacetList = new ArrayList();
 			for (Iterator it = facetMap.entrySet().iterator(); it.hasNext();) {
 				Map.Entry entry = (Map.Entry) it.next();
 				UIComponent child = (UIComponent) entry.getValue();
@@ -90,7 +91,7 @@ class TreeStructureManager {
 		// children
 		TreeStructComponent[] childArray = treeStructComp.getChildren();
 		if (childArray != null) {
-			List<UIComponent> childList = component.getChildren();
+			List childList = component.getChildren();
 			for (int i = 0, len = childArray.length; i < len; i++) {
 				UIComponent child = internalRestoreTreeStructure(childArray[i]);
 				childList.add(child);
@@ -100,7 +101,7 @@ class TreeStructureManager {
 		// facets
 		Object[] facetArray = treeStructComp.getFacets();
 		if (facetArray != null) {
-			Map<String, UIComponent> facetMap = component.getFacets();
+			Map facetMap = component.getFacets();
 			for (int i = 0, len = facetArray.length; i < len; i++) {
 				Object[] tuple = (Object[]) facetArray[i];
 				String facetName = (String) tuple[0];

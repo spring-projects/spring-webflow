@@ -15,8 +15,8 @@
  */
 package org.springframework.faces.ui;
 
-import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 public class DojoClientCurrencyValidator extends DojoAdvisor {
 
@@ -38,8 +38,8 @@ public class DojoClientCurrencyValidator extends DojoAdvisor {
 		if (currency != null) {
 			return currency;
 		}
-		ValueExpression exp = getValueExpression("currency");
-		return exp != null ? (String) exp.getValue(getFacesContext().getELContext()) : null;
+		ValueBinding exp = getValueBinding("currency");
+		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
 	}
 
 	public void setCurrency(String currency) {
