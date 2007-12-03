@@ -916,7 +916,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			return (FlowAttributeMapper) getLocalContext().getBeanFactory().getBean(
 					mapperElement.getAttribute(BEAN_ATTRIBUTE), FlowAttributeMapper.class);
 		} else {
-			return new ImmutableFlowAttributeMapper(parseInputMapper(mapperElement), parseOutputMapper(mapperElement));
+			return new ImmutableFlowAttributeMapper(parseSubflowInputMapper(mapperElement),
+					parseSubflowOutputMapper(mapperElement));
 		}
 	}
 
@@ -933,6 +934,19 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
+	private AttributeMapper parseSubflowInputMapper(Element element) {
+		Element mapperElement = DomUtils.getChildElementByTagName(element, INPUT_MAPPER_ELEMENT);
+		if (mapperElement != null) {
+			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
+			parseSimpleInputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
+					INPUT_ATTRIBUTE_ELEMENT));
+			parseMappings(mapper, mapperElement, RequestContext.class, MutableAttributeMap.class);
+			return mapper;
+		} else {
+			return null;
+		}
+	}
+
 	private AttributeMapper parseOutputMapper(Element element) {
 		Element mapperElement = DomUtils.getChildElementByTagName(element, OUTPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
@@ -940,6 +954,19 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			parseSimpleOutputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
 					OUTPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement, RequestContext.class, MutableAttributeMap.class);
+			return mapper;
+		} else {
+			return null;
+		}
+	}
+
+	private AttributeMapper parseSubflowOutputMapper(Element element) {
+		Element mapperElement = DomUtils.getChildElementByTagName(element, OUTPUT_MAPPER_ELEMENT);
+		if (mapperElement != null) {
+			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
+			parseSimpleOutputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
+					OUTPUT_ATTRIBUTE_ELEMENT));
+			parseMappings(mapper, mapperElement, MutableAttributeMap.class, RequestContext.class);
 			return mapper;
 		} else {
 			return null;
