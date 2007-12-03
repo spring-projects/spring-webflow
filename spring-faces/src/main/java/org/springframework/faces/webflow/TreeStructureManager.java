@@ -21,10 +21,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.ClassUtils;
 
 /**
  * @author Manfred Geiler (latest modification by $Author: dennisbyrne $)
@@ -85,7 +87,12 @@ class TreeStructureManager {
 	private UIComponent internalRestoreTreeStructure(TreeStructComponent treeStructComp) {
 		String compClass = treeStructComp.getComponentClass();
 		String compId = treeStructComp.getComponentId();
-		UIComponent component = (UIComponent) ClassUtils.newInstance(compClass);
+		UIComponent component;
+		try {
+			component = (UIComponent) BeanUtils.instantiateClass(ClassUtils.forName(compClass));
+		} catch (Exception ex) {
+			throw new FacesException("Could not restore the component tree structure.", ex);
+		}
 		component.setId(compId);
 
 		// children
