@@ -38,7 +38,7 @@ public class DojoRenderer extends SpringFacesRenderer {
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + "/" + dijitTheme + "/" + dijitTheme + ".css");
+		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
 		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
 

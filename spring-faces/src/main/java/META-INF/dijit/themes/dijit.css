@@ -22,26 +22,30 @@
 }
 
 .dijitInline {
-	/* MOW: similar to InlineBox below, but this has fewer side-effects in Moz.  
+	/*  To inline block elements.
+		Similar to InlineBox below, but this has fewer side-effects in Moz.  
 		Also, apparently works on a DIV as well as a FIELDSET.
-		Consider abandoning inlineBox in favor of this.  ???
 	*/
-	display:-moz-inline-box;		/* gecko */
-	display:inline-block;			/* webkit */
+	display:-moz-inline-box;		/* FF2 */
+	display:inline-block;			/* webkit and FF3 */
 	border:0px;
 	padding:0px;
 	vertical-align:middle;
 }
-.dj_ie .dijitInline {
-	display:inline;
-	zoom: 1;
+
+.dj_ie .dijitInline { 
+	zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline;
 }
 
-.dijitInlineBox {
-	/* To inline block elements, surround them with <fieldset class="dijitInlineBox"> */
-	display:inline-block;			/* webkit */
-	display: -moz-inline-stack;		/* gecko  */
-	#display:inline;				/* MSIE   */
+.dijitInlineTable {
+	/* To inline tables with a given width set (otherwise, use dijitInline above)
+	 * Must also put style="-moz-inline-stack" on the node itself to workaround FF2 bugs
+	 */
+	display: -moz-inline-stack;			/* FF2 */
+	display:inline-table;
+	display:inline-block;			/* webkit and FF3 */
+	#display:inline;				/* MSIE   (TODO: is this needed???) */
 	border:0px;
 	padding:0px;
 	vertical-align:middle;
@@ -71,6 +75,12 @@
 }
 .dj_ie .dijit_a11y .dijitPopup * {
 	filter: none;
+}
+
+.dijitInputField {
+	font-family:inherit;
+	font-size:inherit;
+	font-weight:inherit;
 }
 
 .dijitPositionOnly {
@@ -120,7 +130,7 @@
 
 .dijitContainer {
 	/* for all layout containers */
-	overflow: hidden;	/* need on IE so something can be reduced in size, and so scrollbars aren't temporarily displayed */
+	overflow: hidden;	/* need on IE so something can be reduced in size, and so scrollbars aren't temporarily displayed when resizing */
 }
 
 /**** 
@@ -167,7 +177,7 @@
 .dijit_a11y .dijitButton .dijitButtonNode,
 .dijit_a11y .dijitDropDownButton .dijitButtonNode,
 .dijit_a11y .dijitComboButton .dijitButtonNode,
-.dijit_a11y .dijitComboBox .dijitComboBoxInput,
+.dijit_a11y .dijitComboBox .dijitInputField,
 .dijit_a11y .dijitComboBox .dijitButtonNode {
 	border:1px solid black !important;
 	background:white !important;
@@ -177,10 +187,10 @@
 .dijit_a11y .dijitButtonDisabled .dijitButtonNode,
 .dijit_a11y .dijitDropDownButtonDisabled .dijitButtonNode,
 .dijit_a11y .dijitComboButtonDisabled .dijitButtonNode,
-.dijit_a11y .dijitComboBoxDisabled .dijitComboBoxInput,
+.dijit_a11y .dijitComboBoxDisabled .dijitInputField,
 .dijit_a11y .dijitComboBoxDisabled .dijitButtonNode,
 .dijit_a11y .dijitSpinnerDisabled .dijitButtonNode,
-.dijit_a11y .dijitSpinnerDisabled .dijitSpinnerInput {
+.dijit_a11y .dijitSpinnerDisabled .dijitInputField {
 	border:1px dotted #999999 !important;
 	color:#999999 !important;
 }
@@ -190,6 +200,10 @@
 	border-left:0px !important;
 }
 
+/* In high contrast mode, display the check symbol */
+.dijit_a11y .dijitToggleButtonChecked .dijitToggleButtonIconChar { 
+	display: inline !important; 
+}
 
 
 
@@ -241,7 +255,13 @@
 .dijitComboButton,
 .dijitComboBox {
 	/* outside of button */
-	margin:.2em;
+	margin: 0.2em;
+	/* normalize line-heights inside the button */
+	line-height: 1.3em;
+}
+
+.dj_safari .dijitToolbar .dijitDropDownButton {
+	padding-left: 0.3em;
 }
 
 .dijitButtonNode {
@@ -266,6 +286,7 @@
 	/* place AFTER dijitButtonNode so it overrides */
 	padding:0em .4em;
 	margin:0px;
+	font-size: 0.7em;
 }
 
 
@@ -303,60 +324,79 @@ table .dijitComboButton .dijitButtonNode {
 	margin-bottom:.2em;
 }
 
+/******
+	TextBox related.
+	Everything that has an <input>
+*******/
 
-/****
-		dijit.form.NumberSpinner  (template: form/templates/Spinner.html)
-
-		Note: works differently than other TextBox types:
-			The outer fieldset element is the one that shows the border, etc.
-			rather than the actual INPUT element. 
-
- ****/
-
+.dijitTextBox,
+.dijitComboBox,
 .dijitSpinner {
-	/* outer element - also has .dijitInline */
-	vertical-align:middle;
-	padding:0px !important;
-	width:auto !important;
-	height:auto !important;
+	border: solid black 1px;
+	width: 15em;	/* need to set default size on outer node since inner nodes say <input style="width:100%"> and <td width=100%>.  user can override */
 }
 
-.dijitSpinner TABLE {
-	border-collapse: collapse;
+/* rules for safari to deal with fuzzy blue focus border */
+.dijitTextBox input:focus,
+.dijitComboBox input:focus,
+.dijitSpinner input:focus {
+	outline: none;	/* blue fuzzy line looks wrong on combobox or something w/validation icon showing */
 }
-.dijitSpinner .dijitButtonNode {
-	padding: 0;
-}
-
-.dijitSpinnerInput {
-	/* container for the input element */
-	font-family:inherit;
-	font-size:inherit;
-	font-weight:inherit;
-	border:1px inset gray;
-	padding:.1em .2em .2em .2em;
+.dijitTextBoxFocused,
+.dijitComboBoxFocused,
+.dijitSpinnerFocused {
+	/* should we display focus like we do on other browsers, or use the safari standard focus indicator?? */
+	outline: auto 5px -webkit-focus-ring-color;
 }
 
+.dijitTextBox INPUT,
+.dijitComboBox INPUT,
 .dijitSpinner INPUT {
-	/* The .style assigned to the spinner dijit is actually copied 
-		on to the INPUT element as well as the outer element.
-		The below turns off things on the input that should apply to the outer element.
-	*/
+	padding:0px;
+	border-left: solid black 1px;	/* TODO: for RTL mode should be border-right */
 	display:inline;
 	position:static !important;
-	/* turn off the border on the actual input element */
-	border:0px !important;
-	
-	padding:0px;
-	margin:0px;
-	vertical-align:middle !important;
-	padding:0px !important;
-	margin:auto !important;
-	border:0px !important;
+	border:0px !important;	
+	margin:0px !important;
+	vertical-align:0em !important;
 	visibility:visible !important;
-	font-size:100% !important;
 	background-color:transparent !important;
 	background-image:none !important;
+	width:100% !important;
+}
+
+/* #4711: prevent IE from over-expanding 100% width input boxes */
+.dj_ie .dijitTextBox .dijitInputField,
+.dj_ie .dijitComboBox .dijitInputField,
+.dj_ie .dijitSpinner .dijitInputField {
+	position:relative;
+}
+.dj_ie .dijitTextBox .dijitInputField INPUT,
+.dj_ie .dijitComboBox .dijitInputField INPUT,
+.dj_ie .dijitSpinner .dijitInputField INPUT {
+	position:absolute !important;
+	top:auto !important;
+	left:auto !important;
+	right:auto !important;
+	bottom:auto !important;
+	font-size:100%;
+}
+
+.dj_ie INPUT.dijitTextBox {
+	font-size:100%;
+}
+
+/* Display an "X" for invalid input. Themes will override these rules to display an icon instead.
+*/
+.dijitValidationIcon { display: none; background-position-y:center; }
+.dijitValidationIconText { visibility: hidden; }
+.dijit_a11y .dijitValidationIcon { display: none !important; }
+.dijit_a11y .dijitValidationIconText { display: block !important; }
+
+.dijitTextBoxError .dijitValidationIconText,
+.dijitComboBoxError .dijitValidationIconText,
+.dijitSpinnerError .dijitValidationIconText {
+	visibility: visible;
 }
 
 .dijitSpinner .dijitDownArrowButton,
@@ -381,74 +421,10 @@ table .dijitComboButton .dijitButtonNode {
     margin: 0 auto;
 }
 
-/****
-		dijit.form.ComboBox 
-
-		Note: these works differently than other TextBox types:
-			The outer fieldset element is the one that shows the border, etc.
-			rather than the actual INPUT element. 
-
- ****/
-.dijitComboBox {
-	/* Allow user to specify width without messing up defaults; other attributes are put on parent node */
-	width:auto !important;
-}
-
-.dijitComboBox TABLE {
-	/* each cell in a combo-table should have its own separate border */
-	border-collapse: separate;
-	border:0px;
-	padding:0px;
-	margin:0px;
-}
-
-.dijitComboBoxInput {
-	/* container for the input element */
-	font-family:inherit;
-	font-size:inherit;
-	font-weight:inherit;
-	border:1px inset gray;
-	padding:.1em .2em .2em .2em;
-	border-right-width:0px !important;
-}
-
-.dijitComboBox INPUT {
-	/* turn off the border on the actual input element */
-	border:0px !important;
-	background-color:transparent;
-}
-
-.dijitComboBoxNoArrow .dijitDownArrowButton {
+.dijitTextBox .dijitDownArrowButton {
+	/* this is for a combo box with no arrow displayed; we set baseClass=TextBox */
 	display:none;
 }
-
-.dijitComboBoxNoArrow table {
-	padding:0px;
-	margin:0px;
-}		 
-
-.dijitComboBoxNoArrow INPUT {
-	border:0px !important;
-	background-color:transparent;
-}		 
-
-.dijitComboBoxNoArrow .dijitComboBoxInput {
-	border-right-width:1px !important;
-}
-
-/*
-.dj_safari .dijitComboBoxInput {
-	padding:0px;
-	border:0px !important;
-}
-*/
-
-.dj_safari .dijitComboBox INPUT {
-	margin:-2px -4px -3px -3px;
-	line-height:2em;
-	font-size:1em;
-}
-
 
 /****
 		dijit.form.CheckBox
@@ -462,19 +438,22 @@ table .dijitComboButton .dijitButtonNode {
 	padding: 0;
 	border: 0;
 	width: 16px;
-	height: 15px;
-	overflow:hidden;
+	height: 16px;
+	background-position:center center;
+	background-repeat:no-repeat;
 }
 
 .dijitCheckBox INPUT,
 .dijitRadio INPUT {
 	margin: 0; 
 	padding: 0;
-} 
-
+	display: block;
+}
+ 
 .dijitCheckBoxInput {
 	/* place the actual input on top, but all-but-invisible */
 	opacity: 0.01;
+	overflow:hidden;
 }
 
 .dj_ie .dijitCheckBoxInput {
@@ -607,9 +586,12 @@ table .dijitComboButton .dijitButtonNode {
 	top: -10000px;
 	overflow: visible;
 }
+/*
+See http://trac.dojotoolkit.org/ticket/5006
 .dijitTooltipDialog {
 	position: relative;
 }
+*/
 .dijitTooltipContainer {
 	border: solid black 2px;
 	background: #b8b5b5;
@@ -673,10 +655,6 @@ body .dijitAlignRight {
 }
 
 body .dijitAlignClient { position: absolute; }
-
-.dijitAlignClient { overflow: auto; }
-
-
 
 /* SplitContainer 
 
@@ -749,17 +727,33 @@ body .dijitAlignClient { position: absolute; }
 }
 
 /* Color Palette */
+
+.dijitColorPalette {
+	border:1px solid #999;
+	background:#fff;
+	-moz-border-radius:3pt; 
+}
+
+img.dijitColorPaletteUnder {
+	border-style:none;
+	position:absolute;
+	left:0;
+	top:0;
+}
+.dijitColorPaletteInner {
+	position: relative; 
+	overflow:hidden;
+	outline:0;
+}
 .dijitPaletteImg {
 	width: 16px; /*This is the width of one color in the provided palettes. */
-	height: 13px; /* Height of one color in the provided palettes. */
+	height: 14px; /* Height of one color in the provided palettes. */
 	position: absolute;
 	overflow: hidden;
 	cursor: default;
 	z-index: 10;
-	border-style: solid;
-	border-bottom-width: 1px;
-	border-right-width: 1px;
-	border-color: #000000;		
+	border:1px solid #999; 
+	/* -moz-border-radius:2pt; */
 }
 
 .dijitPaletteImgHighlight {
@@ -771,24 +765,26 @@ body .dijitAlignClient { position: absolute; }
 	z-index: 10;
 }
 
-.dijitPaletteImg:hover, 
+/* .dijitPaletteImg:hover, */
+.dijitPaletteImg:focus,
 .dijitPaletteImgHighlight {
 	width: 14px; /*This is the width of one color in the provided palettes. */
 	height: 12px; /* Height of one color in the provided palettes. */
-	border-style: solid;
-	border-width: 2px;
-	border-color: #ffffff;
+	border:2px solid #000; 
+	outline:2px solid #dedede;
+	/* -moz-border-radius:0; */	
 }
 
 
 .dijitColorPaletteCell {
 	width:16px;
-	height:16px;
+	height:14px;
 	border: 1px solid;
 }
 
 .dijitColorPaletteCell:hover {
 	border-style: solid;
+	outline:0;
 }
 
 /* Accordion */
@@ -799,6 +795,12 @@ body .dijitAlignClient { position: absolute; }
 
 .dijitAccordionPane .dijitAccordionBody {
 	overflow: auto;
+}
+
+
+.dijitAccordionContainer {
+	border:1px solid #b7b7b7;
+	border-top:0 !important; 
 }
 
 .dijitAccordionPane .dijitAccordionTitle:hover {
@@ -928,8 +930,11 @@ body .dijitAlignClient { position: absolute; }
 	opacity:0.3;
 	cursor:default;
 }
-.dj_ie .dijitMenuItemDisabled * {
-	filter: alpha(opacity=30);
+.dj_ie .dijit_a11y .dijitMenuItemDisabled td,
+.dj_ie .dijitMenuItemDisabled *,
+.dj_ie .dijitMenuItemDisabled td {
+	color:gray !important;
+	filter: alpha(opacity=35);
 }
 
 .dijitMenuItemLabel {
@@ -941,6 +946,13 @@ body .dijitAlignClient { position: absolute; }
 	border-width: 1px;
 	border-style: solid;
 }
+.dijit_a11y .dijitMenuItemHover {
+	border: 1px #fff dotted !important;
+}
+
+.dijit_a11y .dijitMenuExpandInner { 
+	display:block !important;
+} 
 
 /* separator can be two pixels -- set border of either one to 0px to have only one */
 .dijitMenuSeparatorTop {
@@ -1021,8 +1033,6 @@ body .dijitAlignClient { position: absolute; }
 	display:none;
 	padding: 0px 2px;
 	margin: 0px 2px;
-	border-left:thin solid;
-	border-right:thin solid;
 }
 .dijit_a11y .dijitTab .closeImage {
 	padding: 0px !important;
@@ -1037,7 +1047,13 @@ body .dijitAlignClient { position: absolute; }
 .dijit_a11y .closeText:hover { 
 	border:thin solid;
 } 
+.dijit_a11y .dijitTabChecked {
+	border-style:dashed !important;
+}
 
+.dijit_a11y .dijitTabInnerDiv {
+	border-left:none !important;
+ }
 
 
 .dijitInlineEditor {
@@ -1089,8 +1105,11 @@ body .dijitAlignClient { position: absolute; }
 .dijit_a11y .dijitExpandoText { 
 	float: left; 
 	display: inline; 
-	padding-right: 3px; 
-	font: 0.75em Arial; 
+	padding-left: 10px;
+	padding-right: 10px; 
+	font-family: monospace;
+	border-style: solid;
+	border-width: thin;
 } 
 
 /* Dialog */
@@ -1153,6 +1172,11 @@ body .dijitAlignClient { position: absolute; }
 	border:8px solid gray;
 	width:0px;
 	height:0px;
+}
+.dijit_a11y .dijitSliderFocused .dijitSliderImageHandle {
+	border:4px solid #000;
+	height:8px;
+	width:8px;
 }
 
 .dijitVerticalSliderImageHandle {
@@ -1254,6 +1278,10 @@ body .dijitAlignClient { position: absolute; }
 	display:block;
 }
 
+.dijit_a11y .dijitSliderButtonInner {
+	visibility:visible !important; 
+}
+
 .dijitSlider .dijitVerticalSliderTopButton {
 	vertical-align:bottom;
 }
@@ -1270,6 +1298,10 @@ body .dijitAlignClient { position: absolute; }
 .dijitSlider .dijitButtonNode {
 	padding:0px;
 	display:block;
+}
+
+.dj_ie .RuleContainer {
+	z-index: -1; /* #4809 */
 }
 
 .RuleContainer {
@@ -1339,7 +1371,11 @@ body .dijitAlignClient { position: absolute; }
 
 /* Toolbar A11y */
 .dijit_a11y .dijitButtonContents .dijitButtonText {
-	display: block !important;
+	display: inline !important;
+}
+
+.dijitTextArea {
+	width:100%;
 }
 
 .dj_ie .dijitTextArea p {
@@ -1352,4 +1388,72 @@ body .dijitAlignClient { position: absolute; }
 	position:absolute;
 	/* top:0; */
 	top: expression(eval((document.documentElement||document.body).scrollTop));
+}
+
+/* TimePicker */
+
+.dijitTimePickerItemInner {
+	text-align:center;
+	border:0;
+	padding:2px 8px 2px 8px;
+}
+.dijitTimePickerTick {
+	/* opacity:0.1 !important; */
+	color:#dedede;	
+	border-bottom:1px solid #dedede;
+	border-top:1px solid #dedede;
+	position:relative;
+}
+.dijitTimePickerTick .dijitTimePickerItemInner {
+	font-size:0.25em;
+}
+.dijitTimePickerMarker {
+	background-color:#ededed;
+	border-top:1px solid #999;
+	border-bottom:1px solid #999;
+}
+
+.dijitTimePickerItemHover {
+	opacity:1 !important;
+	background-color:#808080;
+	color:#fff;
+	border-top:1px solid #333;
+	border-bottom:1px solid #333;
+	cursor:pointer;
+}
+.dijitTimePickerMarker.dijitTimePickerItemHover {
+	font-size:1.3em;
+}
+
+.dijitTimePickerItemHover .dijitTimePickerItemInner {
+	display:block;
+	overflow:visible;
+	background-color:#808080;
+	font-size:1em;
+}
+
+.dijitTimePickerItemSelected {
+	font-weight:bold;
+	color:#333;
+	background-color:#b7cdee !important;
+}
+
+.dijit_a11y .dijitTimePickerItem {
+	border-bottom:1px solid #333;	
+}
+
+
+/* Disable the high contrast character */
+.dijitToggleButtonIconChar {
+        display:none !important;
+}
+.dijit_a11y .dijitToggleButtonIconChar {
+	display:inline !important;
+}
+
+.dijit_a11y .dijitToggleButtonIconChar {
+	visibility:hidden; 
+}
+.dijit_a11y .dijitToggleButtonChecked .dijitToggleButtonIconChar {
+	visibility:visible !important;
 }

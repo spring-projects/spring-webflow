@@ -49,7 +49,7 @@ dojo.declare("dijit.layout._LayoutWidget",
 				this.connect(window, 'onresize', function(){this.resize();});
 			}
 		},
-		
+
 		resize: function(args){
 			// summary:
 			//		Explicitly set this widget's size (in pixels),
@@ -115,7 +115,7 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 	var size = function(widget, dim){
 		// size the child
 		widget.resize ? widget.resize(dim) : dojo.marginBox(widget.domNode, dim);
-		
+
 		// record child's size, but favor our own numbers when we have them.
 		// the browser lies sometimes
 		dojo.mixin(widget, dojo.marginBox(widget.domNode));
@@ -138,6 +138,12 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		dim = dojo.mixin({}, dim);
 
 		dojo.addClass(container, "dijitLayoutContainer");
+
+		// Move "client" elements to the end of the array for layout.  a11y dictates that the author
+		// needs to be able to put them in the document in tab-order, but this algorithm requires that
+		// client be last.
+		children = dojo.filter(children, function(item){ return item.layoutAlign != "client"; })
+			.concat(dojo.filter(children, function(item){ return item.layoutAlign == "client"; }));
 
 		// set positions/sizes
 		dojo.forEach(children, function(child){
@@ -170,7 +176,7 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 				}else{
 					elmStyle.left = dim.l + dim.w + "px";
 				}
-			}else if(pos=="flood" || pos=="client"){
+			}else if(pos=="client"){
 				size(child, dim);
 			}
 		});

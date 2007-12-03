@@ -12,15 +12,19 @@ dojo.declare(
 		// summary:
 		//		A mixin for all number textboxes
 		regExpGen: dojo.number.regexp,
+
 		format: function(/*Number*/ value, /*Object*/ constraints){
-			if(isNaN(value)){ return null; }
+			if(isNaN(value)){ return ""; }
 			return dojo.number.format(value, constraints);
 		},
-		serialize: function(/*Number*/ value){
-			if(isNaN(value)){ return null; }
-			return this.inherited('serialize', arguments);
-		},
+
 		parse: dojo.number.parse,
+
+		filter: function(/*Number*/ value){
+			if(typeof value == "string"){ return this.inherited('filter', arguments); }
+			return (isNaN(value) ? '' : value);
+		},
+
 		value: NaN
 	}
 );

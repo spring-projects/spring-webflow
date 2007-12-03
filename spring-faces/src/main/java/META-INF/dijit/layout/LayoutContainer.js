@@ -28,10 +28,10 @@ dojo.declare(
 	//	<style>
 	//		html, body{ height: 100%; width: 100%; }
 	//	</style>
-	//	<div dojoType="LayoutContainer" style="width: 100%; height: 100%">
-	//		<div dojoType="ContentPane" layoutAlign="top">header text</div>
-	//		<div dojoType="ContentPane" layoutAlign="left" style="width: 200px;">table of contents</div>
-	//		<div dojoType="ContentPane" layoutAlign="client">client area</div>
+	//	<div dojoType="dijit.layout.LayoutContainer" style="width: 100%; height: 100%">
+	//		<div dojoType="dijit.layout.ContentPane" layoutAlign="top">header text</div>
+	//		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 200px;">table of contents</div>
+	//		<div dojoType="dijit.layout.ContentPane" layoutAlign="client">client area</div>
 	//	</div>
 	//
 	//	Lays out each child in the natural order the children occur in.
@@ -51,8 +51,8 @@ dojo.declare(
 	},
 
 	removeChild: function(/*Widget*/ widget){
-        dijit._Container.prototype.removeChild.apply(this, arguments);
-        if(this._started){
+		dijit._Container.prototype.removeChild.apply(this, arguments);
+		if(this._started){
 			dijit.layout.layoutChildren(this.domNode, this._contentBox, this.getChildren());
 		}
 	}

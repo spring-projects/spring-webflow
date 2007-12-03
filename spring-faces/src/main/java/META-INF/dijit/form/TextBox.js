@@ -28,45 +28,47 @@ dojo.declare(
 		//		Converts the first character of each word to uppercase if true.
 		propercase: false,
 
-		// size: String
-		//		HTML INPUT tag size declaration.
-		size: "20",
+		// maxLength: String
+		//		HTML INPUT tag maxLength declaration.
+		maxLength: "",
 
-		// maxlength: String
-		//		HTML INPUT tag maxlength declaration.
-		maxlength: "999999",
+		templateString:"<input class=\"dojoTextBox\" dojoAttachPoint='textbox,focusNode' name=\"${name}\"\n\tdojoAttachEvent='onmouseenter:_onMouse,onmouseleave:_onMouse,onfocus:_onMouse,onblur:_onMouse,onkeyup,onkeypress:_onKeyPress'\n\tautocomplete=\"off\" type=\"${type}\"\n\t/>\n",
+		baseClass: "dijitTextBox",
 
-		templateString:"<input dojoAttachPoint='textbox,focusNode' dojoAttachEvent='onfocus,onkeyup,onkeypress:_onKeyPress' autocomplete=\"off\"\n\tid='${id}' name='${name}' class=\"dijitInputField\" type='${type}' size='${size}' maxlength='${maxlength}' tabIndex='${tabIndex}'>\n",
+		attributeMap: dojo.mixin(dojo.clone(dijit.form._FormWidget.prototype.attributeMap),
+			{maxLength:"focusNode"}),
 
-		getTextValue: function(){
+		getDisplayedValue: function(){
 			return this.filter(this.textbox.value);
 		},
 
 		getValue: function(){
-			return this.parse(this.getTextValue(), this.constraints);
+			return this.parse(this.getDisplayedValue(), this.constraints);
 		},
 
 		setValue: function(value, /*Boolean, optional*/ priorityChange, /*String, optional*/ formattedValue){
-			if(value == null){ value = ""; }
-			value = this.filter(value);
-			if(typeof formattedValue == "undefined" ){
-				formattedValue = (typeof value == "undefined" || value == null || value == NaN) ? null : this.format(value, this.constraints);
+			var filteredValue = this.filter(value);
+			if((typeof filteredValue == typeof value) && (formattedValue == null || formattedValue == undefined)){
+				formattedValue = this.format(filteredValue, this.constraints);
 			}
-			if(formattedValue != null){
-				var _this = this;
-				// synchronous value set needed for InlineEditBox
+			if(formattedValue != null && formattedValue != undefined){
 				this.textbox.value = formattedValue;
 			}
-			dijit.form.TextBox.superclass.setValue.call(this, value, priorityChange);
+			dijit.form.TextBox.superclass.setValue.call(this, filteredValue, priorityChange);
+		},
+
+		setDisplayedValue: function(/*String*/value){
+			this.textbox.value = value;
+			this.setValue(this.getValue(), true);
 		},
 
 		forWaiValuenow: function(){
-			return this.getTextValue();
+			return this.getDisplayedValue();
 		},
 
 		format: function(/* String */ value, /* Object */ constraints){
 			// summary: Replacable function to convert a value to a properly formatted string
-			return value;
+			return ((value == null || value == undefined) ? "" : (value.toString ? value.toString() : value));
 		},
 
 		parse: function(/* String */ value, /* Object */ constraints){
@@ -75,19 +77,36 @@ dojo.declare(
 		},
 
 		postCreate: function(){
-			// get the node for which the background color will be updated
-			if(typeof this.nodeWithBorder != "object"){
-				this.nodeWithBorder = this.textbox;
-			}
 			// setting the value here is needed since value="" in the template causes "undefined"
 			// and setting in the DOM (instead of the JS object) helps with form reset actions
-			this.textbox.setAttribute("value", this.getTextValue());
+			this.textbox.setAttribute("value", this.getDisplayedValue());
 			this.inherited('postCreate', arguments);
+
+			if(this.srcNodeRef){
+				dojo.style(this.textbox, "cssText", this.style);
+				this.textbox.className += " " + this["class"];
+			}
+			this._layoutHack();
+		},
+
+		_layoutHack: function(){
+			// summary: work around table sizing bugs on FF2 by forcing redraw
+			if(dojo.isFF == 2 && this.domNode.tagName=="TABLE"){
+				var node=this.domNode, _this = this;
+				setTimeout(function(){
+					var oldWidth = node.style.width;
+					node.style.width = "0";
+					setTimeout(function(){
+						node.style.width = oldWidth;
+					}, 0);
+				 }, 0);
+			}			
 		},
 
 		filter: function(val){
 			// summary: Apply various filters to textbox value
-			if(val == null){ return null; }
+			if(val == undefined || val == null){ return ""; }
+			else if(typeof val != "string"){ return val; }
 			if(this.trim){
 				val = dojo.trim(val);
 			}
@@ -106,15 +125,8 @@ dojo.declare(
 		},
 
 		// event handlers, you can over-ride these in your own subclasses
-		// TODO: this should be _onFocus (and onfocus removed from the template)
-		onfocus: function(){
-			dojo.addClass(this.nodeWithBorder, "dijitInputFieldFocused");
-		},
-
 		_onBlur: function(){
-			dojo.removeClass(this.nodeWithBorder, "dijitInputFieldFocused");
-
-			this.setValue(this.getValue(), true);
+			this.setValue(this.getValue(), (this.isValid ? this.isValid() : true));
 		},
 
 		onkeyup: function(){

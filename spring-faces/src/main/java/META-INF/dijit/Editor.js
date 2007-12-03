@@ -6,27 +6,31 @@ dojo.require("dijit.Toolbar");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit._Container");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dijit._editor", "commands", null, "it,ROOT,de");
+dojo.requireLocalization("dijit._editor", "commands", null, "ko,zh,ja,zh-tw,ru,it,hu,fr,pt,pl,es,ROOT,de,cs");
 
 dojo.declare(
 	"dijit.Editor",
-	[ dijit._editor.RichText, dijit._Container ],
+	dijit._editor.RichText,
 	{
-		// plugins:
+	// summary: A rich-text Editing widget
+
+		// plugins: Array
 		//		a list of plugin names (as strings) or instances (as objects)
 		//		for this widget.
-//		plugins: [ "dijit._editor.plugins.DefaultToolbar" ],
 		plugins: null,
+
+		// extraPlugins: Array
+		//		a list of extra plugin names which will be appended to plugins array
 		extraPlugins: null,
-		preamble: function(){
-			this.inherited('preamble',arguments);
+
+		constructor: function(){
 			this.plugins=["undo","redo","|","cut","copy","paste","|","bold","italic","underline","strikethrough","|",
-			"insertOrderedList","insertUnorderedList","indent","outdent","|","justifyLeft","justifyRight","justifyCenter","justifyFull"/*"createlink"*/];
+			"insertOrderedList","insertUnorderedList","indent","outdent","|","justifyLeft","justifyRight","justifyCenter","justifyFull"/*"createLink"*/];
 
 			this._plugins=[];
 			this._editInterval = this.editActionInterval * 1000;
 		},
-		toolbar: null,
+
 		postCreate: function(){
 			//for custom undo/redo
 			if(this.customUndo){
@@ -47,11 +51,13 @@ dojo.declare(
 
 			if(!this.toolbar){
 				// if we haven't been assigned a toolbar, create one
-				this.toolbar = new dijit.Toolbar();
-				dojo.place(this.toolbar.domNode, this.editingArea, "before");
+				var toolbarNode = dojo.doc.createElement("div");
+				dojo.place(toolbarNode, this.editingArea, "before");
+				this.toolbar = new dijit.Toolbar({}, toolbarNode);
 			}
 
 			dojo.forEach(this.plugins, this.addPlugin, this);
+			this.onNormalizedDisplayChanged(); //update toolbar button status
 //			}catch(e){ console.debug(e); }
 		},
 		destroy: function(){
@@ -61,6 +67,7 @@ dojo.declare(
 				}
 			});
 			this._plugins=[];
+			this.toolbar.destroy(); delete this.toolbar;
 			this.inherited('destroy',arguments);
 		},
 		addPlugin: function(/*String||Object*/plugin, /*Integer?*/index){
@@ -70,7 +77,7 @@ dojo.declare(
 			//		instance. The resulting plugin is added to the Editor's
 			//		plugins array. If index is passed, it's placed in the plugins
 			//		array at that index. No big magic, but a nice helper for
-			//		passing in plugin names via markup. 
+			//		passing in plugin names via markup.
 			//	plugin: String, args object or plugin instance. Required.
 			//	args: This object will be passed to the plugin constructor.
 			//	index:	
@@ -88,7 +95,7 @@ dojo.declare(
 					}
 				}
 				if(!o.plugin){
-					console.debug('Can not find plugin',plugin);
+					console.debug('Cannot find plugin',plugin);
 					return;
 				}
 				plugin=o.plugin;
@@ -104,7 +111,7 @@ dojo.declare(
 			}
 		},
 		/* beginning of custom undo/redo support */
-		
+
 		// customUndo: Boolean
 		//		Whether we shall use custom undo/redo support instead of the native
 		//		browser support. By default, we only enable customUndo for IE, as it
@@ -113,11 +120,11 @@ dojo.declare(
 		customUndo: dojo.isIE,
 
 		//	editActionInterval: Integer
-		//		When using customUndo, not every keystroke will be saved as a step. 
-		//		Instead typing (including delete) will be grouped together: after 
-		//		a user stop typing for editActionInterval seconds, a step will be 
-		//		saved; if a user resume typing within editActionInterval seconds, 
-		//		the timeout will be restarted. By default, editActionInterval is 3 
+		//		When using customUndo, not every keystroke will be saved as a step.
+		//		Instead typing (including delete) will be grouped together: after
+		//		a user stop typing for editActionInterval seconds, a step will be
+		//		saved; if a user resume typing within editActionInterval seconds,
+		//		the timeout will be restarted. By default, editActionInterval is 3
 		//		seconds.
 		editActionInterval: 3,
 		beginEditing: function(cmd){
@@ -136,7 +143,7 @@ dojo.declare(
 		_undoedSteps:[],
 		execCommand: function(cmd){
 			if(this.customUndo && (cmd=='undo' || cmd=='redo')){
-				return cmd=='undo'?this.undo():this.redo();
+				return this[cmd]();
 			}else{
 				try{
 					if(this.customUndo){
@@ -149,14 +156,13 @@ dojo.declare(
 					}
 					return r;
 				}catch(e){
-					if(dojo.isMoz){
-						if('copy'==cmd){
-							alert(this.commands['copyErrorFF']);
-						}else if('cut'==cmd){
-							alert(this.commands['cutErrorFF']);
-						}else if('paste'==cmd){
-							alert(this.commands['pasteErrorFF']);
-						}
+					if(dojo.isMoz && /copy|cut|paste/.test(cmd)){
+						// Warn user of platform limitation.  Cannot programmatically access keyboard. See ticket #4136
+						var sub = dojo.string.substitute,
+							accel = {cut:'X', copy:'C', paste:'V'},
+							isMac = navigator.userAgent.indexOf("Macintosh") != -1;
+						alert(sub(this.commands.systemShortcutFF,
+							[cmd, sub(this.commands[isMac ? 'appleKey' : 'ctrlKey'], [accel[cmd]])]));
 					}
 					return false;
 				}
@@ -190,7 +196,7 @@ dojo.declare(
 			dojo.withGlobal(this.window,'moveToBookmark',dijit,[b]);
 		},
 		undo: function(){
-			console.log('undo');
+//			console.log('undo');
 			this.endEditing(true);
 			var s=this._steps.pop();
 			if(this._steps.length>0){
@@ -203,7 +209,7 @@ dojo.declare(
 			return false;
 		},
 		redo: function(){
-			console.log('redo');
+//			console.log('redo');
 			this.endEditing(true);
 			var s=this._undoedSteps.pop();
 			if(s && this._steps.length>0){
@@ -272,7 +278,7 @@ dojo.declare(
 				}
 			}
 			this.inherited('onKeyDown',arguments);
-			
+
 			switch(k){
 					case ks.ENTER:
 						this.beginEditing();
@@ -319,6 +325,7 @@ dojo.declare(
 					//maybe ctrl+backspace/delete, so don't endEditing when ctrl is pressed
 					case ks.CTRL:
 					case ks.SHIFT:
+					case ks.TAB:
 						break;
 				}	
 		},
@@ -334,6 +341,7 @@ dojo.declare(
 	}
 );
 
+/* the following code is to registered a handler to get default plugins */
 dojo.subscribe("dijit.Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var args=o.args, p;
@@ -346,20 +354,23 @@ dojo.subscribe("dijit.Editor.getPlugin",null,function(o){
 		case "selectAll": case "removeFormat":
 			p = new _p({ command: name });
 			break;
-			
-		case "bold": case "italic": case "underline": case "strikethrough": 
+
+		case "bold": case "italic": case "underline": case "strikethrough":
 		case "subscript": case "superscript":
-			//shall we try to auto require here? or require user to worry about it?
-//					dojo['require']('dijit.form.Button');
 			p = new _p({ buttonClass: dijit.form.ToggleButton, command: name });
 			break;
 		case "|":
 			p = new _p({ button: new dijit.ToolbarSeparator() });
 			break;
-		case "createlink":
+		case "createLink":
 //					dojo['require']('dijit._editor.plugins.LinkDialog');
-			p = new dijit._editor.plugins.LinkDialog();
+			p = new dijit._editor.plugins.LinkDialog({ command: name });
 			break;
+		case "foreColor": case "hiliteColor":
+			p = new dijit._editor.plugins.TextColor({ command: name });
+			break;
+		case "fontName": case "fontSize": case "formatBlock":
+			p = new dijit._editor.plugins.FontChoice({ command: name });
 	}
 //	console.log('name',name,p);
 	o.plugin=p;

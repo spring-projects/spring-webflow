@@ -143,17 +143,20 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private String[] removeNestedChildren(FacesContext context, String[] ids) {
 		List idList = Arrays.asList(ids);
-		List trimmedIds = new ArrayList(idList);
-		for (ListIterator i = trimmedIds.listIterator(); i.hasNext();) {
+		final List trimmedIds = new ArrayList(idList);
+
+		for (final ListIterator i = trimmedIds.listIterator(); i.hasNext();) {
 			String id = (String) i.next();
-			UIComponent component = findComponent(id);
-			Assert.notNull(component, "Component with id " + id + " does not exist.");
-			while (!(component.getParent() instanceof UIViewRoot)) {
-				component = component.getParent();
-				if (trimmedIds.contains(component.getClientId(context))) {
-					i.remove();
+			invokeOnComponent(context, id, new ContextCallback() {
+				public void invokeContextCallback(FacesContext context, UIComponent component) {
+					while (!(component.getParent() instanceof UIViewRoot)) {
+						component = component.getParent();
+						if (trimmedIds.contains(component.getClientId(context))) {
+							i.remove();
+						}
+					}
 				}
-			}
+			});
 		}
 		return (String[]) trimmedIds.toArray(new String[trimmedIds.size()]);
 	}

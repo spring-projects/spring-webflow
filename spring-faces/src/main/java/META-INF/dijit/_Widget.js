@@ -5,9 +5,9 @@ dojo.provide("dijit._Widget");
 dojo.require("dijit._base");
 
 dojo.declare("dijit._Widget", null, {
-	constructor: function(params, srcNodeRef){
-		this.create(params, srcNodeRef);
-	},
+	// summary:
+	//		The foundation of dijit widgets. 	
+	//
 	// id: String
 	//		a unique, opaque ID string that can be assigned by users or by the
 	//		system. If the developer passes an ID which is known not to be
@@ -24,20 +24,42 @@ dojo.declare("dijit._Widget", null, {
 	//  Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".
 	dir: "",
 
+	// class: String
+	// HTML class attribute
+	"class": "",
+
+	// style: String
+	// HTML style attribute
+	style: "",
+
+	// title: String
+	// HTML title attribute
+	title: "",
+
 	// srcNodeRef: DomNode
 	//		pointer to original dom node
 	srcNodeRef: null,
 
-	// domNode DomNode:
+	// domNode: DomNode
 	//		this is our visible representation of the widget! Other DOM
 	//		Nodes may by assigned to other properties, usually through the
 	//		template system's dojoAttachPonit syntax, but the domNode
 	//		property is the canonical "top level" node in widget UI.
 	domNode: null,
 
+	// attributeMap: Object
+	//		A map of attributes and attachpoints -- typically standard HTML attributes -- to set
+	//		on the widget's dom, at the "domNode" attach point, by default.
+	//		Other node references can be specified as properties of 'this'
+	attributeMap: {id:"", dir:"", lang:"", "class":"", style:"", title:""},  // TODO: add on* handlers?
+
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
-	
-	create: function(params, srcNodeRef) {
+
+	postscript: function(params, srcNodeRef){
+		this.create(params, srcNodeRef);
+	},
+
+	create: function(params, srcNodeRef){
 		// summary:
 		//		To understand the process by which widgets are instantiated, it
 		//		is critical to understand what other methods create calls and
@@ -72,14 +94,14 @@ dojo.declare("dijit._Widget", null, {
 		// _attaches: String[]
 		// 		names of all our dojoAttachPoint variables
 		this._attaches=[];
-	
+
 		//mixin our passed parameters
 		if(this.srcNodeRef && (typeof this.srcNodeRef.id == "string")){ this.id = this.srcNodeRef.id; }
 		if(params){
 			dojo.mixin(this,params);
 		}
 		this.postMixInProperties();
-		
+
 		// generate an id for the widget if one wasn't specified
 		// (be sure to do this before buildRendering() because that function might
 		// expect the id to be there.
@@ -89,18 +111,44 @@ dojo.declare("dijit._Widget", null, {
 		dijit.registry.add(this);
 
 		this.buildRendering();
+
+		// Copy attributes listed in attributeMap into the [newly created] DOM for the widget.
+		// The placement of these attributes is according to the property mapping in attributeMap.
+		// Note special handling for 'style' and 'class' attributes which are lists and can
+		// have elements from both old and new structures, and some attributes like "type"
+		// cannot be processed this way as they are not mutable.
+		if(this.domNode){
+			for(var attr in this.attributeMap){
+				var mapNode = this[this.attributeMap[attr] || "domNode"];
+				var value = this[attr];
+				if(typeof value != "object" && (value !== "" || (params && params[attr]))){
+					switch(attr){
+					case "class":
+						dojo.addClass(mapNode, value);
+						break;
+					case "style":
+						if(mapNode.style.cssText){
+							mapNode.style.cssText += "; " + value;// FIXME: Opera
+						}else{
+							mapNode.style.cssText = value;
+						}
+						break;
+					default:
+						mapNode.setAttribute(attr, value);
+					}
+				}
+			}
+		}
+
 		if(this.domNode){
 			this.domNode.setAttribute("widgetId", this.id);
-			if(this.srcNodeRef && this.srcNodeRef.dir){
-				this.domNode.dir = this.srcNodeRef.dir;
-			}
 		}
 		this.postCreate();
 
 		// If srcNodeRef has been processed and removed from the DOM (e.g. TemplatedWidget) then delete it to allow GC.
 		if(this.srcNodeRef && !this.srcNodeRef.parentNode){
 			delete this.srcNodeRef;
-		}
+		}	
 	},
 
 	postMixInProperties: function(){
@@ -114,7 +162,7 @@ dojo.declare("dijit._Widget", null, {
 		// summary:
 		//		Construct the UI for this widget, setting this.domNode.
 		//		Most widgets will mixin TemplatedWidget, which overrides this method.
-		this.domNode = this.srcNodeRef;
+		this.domNode = this.srcNodeRef || dojo.doc.createElement('div');
 	},
 
 	postCreate: function(){
@@ -237,7 +285,7 @@ dojo.declare("dijit._Widget", null, {
 				handles.push(dojo.connect(obj, "onkeydown", this,
 					function(e){
 						if(e.keyCode == dojo.keys.ENTER){
-							return (dojo.isString(method))? 
+							return (dojo.isString(method))?
 								w[method](e) : method.call(w, e);
 						}else if(e.keyCode == dojo.keys.SPACE){
 							// stop space down as it causes IE to scroll
@@ -248,7 +296,7 @@ dojo.declare("dijit._Widget", null, {
 				handles.push(dojo.connect(obj, "onkeyup", this,
 					function(e){
 						if(e.keyCode == dojo.keys.SPACE){
-							return dojo.isString(method) ? 
+							return dojo.isString(method) ?
 								w[method](e) : method.call(w, e);
 						}
 			 		}));
@@ -285,9 +333,16 @@ dojo.declare("dijit._Widget", null, {
 		//		See HTML spec, DIR attribute for more information.
 
 		if(typeof this._ltr == "undefined"){
-			this._ltr = (this.dir || dojo.getComputedStyle(this.domNode).direction) != "rtl";
+			this._ltr = dojo.getComputedStyle(this.domNode).direction != "rtl";
 		}
 		return this._ltr; //Boolean
+	},
+
+	isFocusable: function(){
+		// summary:
+		//		Return true if this widget can currently be focused
+		//		and false if not
+		return this.focus && (dojo.style(this.domNode, "display") != "none");
 	}
 });
 

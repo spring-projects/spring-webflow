@@ -28,7 +28,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 
  * @author Jeremy Grelle
  */
-class JsfUtils {
+public class JsfUtils {
 
 	public static void notifyAfterListeners(PhaseId phaseId, Lifecycle lifecycle, FacesContext context) {
 		PhaseEvent afterPhaseEvent = new PhaseEvent(context, phaseId, lifecycle);

@@ -2,27 +2,33 @@ if(!dojo._hasResource["dojo.io.script"]){ //_hasResource checks added by build. 
 dojo._hasResource["dojo.io.script"] = true;
 dojo.provide("dojo.io.script");
 
-dojo.io.script = {
-	get: function(/*Object*/args){
-		//summary: sends a get request using a dynamically created script tag.
-		//See dojo._ioArgs() in _base/xhr.js for a list of commonly accepted 
-		//properties on the args argument. Additional properties
-		//that apply to all of the dojo.xhr* methods:
-		//callbackParamName:
-		//		String. The URL parameter name that indicates the JSONP callback string.
-		//		For instance, when using Yahoo JSONP calls it is normally, 
-		//		callbackParamName: "callback". For AOL JSONP calls it is normally 
-		//		callbackParamName: "c".
-		//checkString: 
-		//		String. A string of JavaScript that when evaluated like so: 
-		//		"typeof(" + checkString + ") != 'undefined'"
-		//		being true means that the script fetched has been loaded. 
-		//		Do not use this if doing a JSONP type of call (use callbackParamName instead).
-		//"handleAs" is NOT applicable to dojo.io.script.get() calls, since it is
-		//implied by the usage of "callbackParamName" (response will be a JSONP call
-		//returning JSON) or "checkString" (response is pure JavaScript defined in
-		//the body of the script that was attached).
+/*=====
+dojo.io.script.__ioArgs = function(kwArgs){
+	//	summary:
+	//		All the properties described in the dojo.__ioArgs type, apply to this
+	//		type as well, EXCEPT "handleAs". It is not applicable to
+	//		dojo.io.script.get() calls, since it is implied by the usage of
+	//		"callbackParamName" (response will be a JSONP call returning JSON)
+	//		or "checkString" (response is pure JavaScript defined in
+	//		the body of the script that was attached). The following additional
+	//		properties are allowed for dojo.io.script.get():
+	//	callbackParamName: String
+	//		The URL parameter name that indicates the JSONP callback string.
+	//		For instance, when using Yahoo JSONP calls it is normally, 
+	//		callbackParamName: "callback". For AOL JSONP calls it is normally 
+	//		callbackParamName: "c".
+	//	checkString: String
+	//		A string of JavaScript that when evaluated like so: 
+	//		"typeof(" + checkString + ") != 'undefined'"
+	//		being true means that the script fetched has been loaded. 
+	//		Do not use this if doing a JSONP type of call (use callbackParamName instead).
+}
+=====*/
 
+dojo.io.script = {
+	get: function(/*dojo.io.script.__ioArgs*/args){
+		//	summary:
+		//		sends a get request using a dynamically created script tag.
 		var dfd = this._makeScriptDeferred(args);
 		var ioArgs = dfd.ioArgs;
 		dojo._ioAddQueryToUrl(ioArgs);
@@ -33,9 +39,13 @@ dojo.io.script = {
 	},
 
 	attach: function(/*String*/id, /*String*/url){
-		//Attaches the script element to the DOM.
-		//Use this method if you just want to attach a script to the
-		//DOM and do not care when or if it loads.
+		//	summary:
+		//		creates a new <script> tag pointing to the specified URL and
+		//		adds it to the document.
+		//	description:
+		//		Attaches the script element to the DOM.  Use this method if you
+		//		just want to attach a script to the DOM and do not care when or
+		//		if it loads.
 		var element = dojo.doc.createElement("script");
 		element.type = "text/javascript";
 		element.src = url;
@@ -54,7 +64,8 @@ dojo.io.script = {
 	},
 
 	_makeScriptDeferred: function(/*Object*/args){
-		//summary: sets up the Deferred object for script request.
+		//summary: 
+		//		sets up a Deferred object for an IO request.
 		var dfd = dojo._ioSetArgs(args, this._deferredCancel, this._deferredOk, this._deferredError);
 
 		var ioArgs = dfd.ioArgs;
@@ -75,7 +86,7 @@ dojo.io.script = {
 			dfd._jsonpCallback = this._jsonpCallback;
 			this["jsonp_" + ioArgs.id] = dfd;
 		}
-		return dfd;
+		return dfd; // dojo.Deferred
 	},
 	
 	_deferredCancel: function(/*Deferred*/dfd){
@@ -180,10 +191,11 @@ dojo.io.script = {
 	},
 
 	_jsonpCallback: function(/*JSON Object*/json){
-		//summary: generic handler for jsonp callback. A pointer
-		//to this function is used for all jsonp callbacks.
-		//NOTE: the "this" in this function will be the Deferred
-		//object that represents the script request.
+		//summary: 
+		//		generic handler for jsonp callback. A pointer to this function
+		//		is used for all jsonp callbacks.  NOTE: the "this" in this
+		//		function will be the Deferred object that represents the script
+		//		request.
 		this.ioArgs.json = json;
 	}
 }

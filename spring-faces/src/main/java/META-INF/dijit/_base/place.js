@@ -15,8 +15,27 @@ dijit.getViewport = function(){
 	var w = 0, h = 0;
 	if(dojo.isMozilla){
 		// mozilla
-		w = _document.documentElement.clientWidth;
-		h = _window.innerHeight;
+		// _window.innerHeight includes the height taken by the scroll bar
+		// clientHeight is ideal but has DTD issues:
+		// #4539: FF reverses the roles of body.clientHeight/Width and documentElement.clientHeight/Width based on the DTD!
+		// check DTD to see whether body or documentElement returns the viewport dimensions using this algorithm:
+		var minw, minh, maxw, maxh;
+		if(_document.body.clientWidth>_document.documentElement.clientWidth){
+			minw = _document.documentElement.clientWidth;
+			maxw = _document.body.clientWidth;
+		}else{
+			maxw = _document.documentElement.clientWidth;
+			minw = _document.body.clientWidth;
+		}
+		if(_document.body.clientHeight>_document.documentElement.clientHeight){
+			minh = _document.documentElement.clientHeight;
+			maxh = _document.body.clientHeight;
+		}else{
+			maxh = _document.documentElement.clientHeight;
+			minh = _document.body.clientHeight;
+		}
+		w = (maxw > _window.innerWidth) ? minw : maxw;
+		h = (maxh > _window.innerHeight) ? minh : maxh;
 	}else if(!dojo.isOpera && _window.innerWidth){
 		//in opera9, dojo.body().clientWidth should be used, instead
 		//of window.innerWidth/document.documentElement.clientWidth
@@ -31,7 +50,7 @@ dijit.getViewport = function(){
 		w = dojo.body().clientWidth;
 		h = dojo.body().clientHeight;
 	}
-	
+
 	// get scroll position
 	var scroll = dojo._docScroll();
 
@@ -39,7 +58,7 @@ dijit.getViewport = function(){
 };
 
 dijit.placeOnScreen = function(
-	/* HTMLElement */	node,
+	/* DomNode */	node,
 	/* Object */		pos,
 	/* Object */		corners,
 	/* boolean? */		tryOnly){
@@ -58,13 +77,13 @@ dijit.placeOnScreen = function(
 	//		all of the specified corners, and choose the most appropriate one.
 	//		
 	//		NOTE: node is assumed to be absolutely or relatively positioned.
-	
+
 	var choices = dojo.map(corners, function(corner){ return { corner: corner, pos: pos }; });
-	
+
 	return dijit._place(node, choices);
 }
 
-dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function */ layoutNode){
+dijit._place = function(/*DomNode*/ node, /* Array */ choices, /* Function */ layoutNode){
 	// summary:
 	//		Given a list of spots to put node, put it at the first spot where it fits,
 	//		of if it doesn't fit anywhere then the place with the least overflow
@@ -74,7 +93,7 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 	//	layoutNode: Function(node, orient)
 	//		for things like tooltip, they are displayed differently (and have different dimensions)
 	//		based on their orientation relative to the parent.   This adjusts the popup based on orientation.
-			
+
 	// get {x: 10, y: 10, w: 100, h:100} type obj representing position of
 	// viewport over document
 	var view = dijit.getViewport();
@@ -116,7 +135,7 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 			width = endX-startX,
 			height = endY-startY,
 			overflow = (mb.w-width) + (mb.h-height);
-			
+
 		if(best==null || overflow<best.overflow){
 			best = {
 				corner: corner,
@@ -139,8 +158,8 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 }
 
 dijit.placeOnScreenAroundElement = function(
-	/* HTMLElement */	node,
-	/* HTMLElement */	aroundNode,
+	/* DomNode */		node,
+	/* DomNode */		aroundNode,
 	/* Object */		aroundCorners,
 	/* Function */		layoutNode){
 
@@ -158,7 +177,7 @@ dijit.placeOnScreenAroundElement = function(
 	//		for things like tooltip, they are displayed differently (and have different dimensions)
 	//		based on their orientation relative to the parent.   This adjusts the popup based on orientation.
 
-	
+
 	// get coordinates of aroundNode
 	aroundNode = dojo.byId(aroundNode);
 	var oldDisplay = aroundNode.style.display;
@@ -181,7 +200,7 @@ dijit.placeOnScreenAroundElement = function(
 			}
 		});
 	}
-	
+
 	return dijit._place(node, choices, layoutNode);
 }
 

@@ -2,37 +2,34 @@
 
 /* Dialog */
 .dijitRtl .dijitDialogTitleBar .dijitDialogCloseIcon {
-	background : url("images/tabClose.png") no-repeat left top;
+	background-position:-65px -1px; 
 	float: left;
 	right: auto;
 	left: 5px;
+	width:16px; height:16px; 
 }
 
 .dijitRtl .dijitDialogTitleBar {
-	background: #fafafa url("images/titleBarBg.gif") repeat-x bottom left;
 	padding: 4px 4px 2px 8px;
 }
 
 /* Menu */
-
 .dijitRtl .dijitMenuItem .dijitMenuItemIcon {
 	padding-left: 3px;
 	padding-right: 0px;
 }
 
 .dijitRtl .dijitMenuItem .dijitMenuExpandEnabled {
-	background:url('images/arrowLeft.png') no-repeat bottom center;
+	background-position:-16px 0px;
 }
 
 /* TitlePane */
-.dijitRtl .dijitClosed .dijitTitlePaneTitle .dijitArrowNode  {
-	background:url('images/arrowLeft.png') no-repeat center center; 
+.dijitRtl .dijitTitlePane .dijitClosed .dijitArrowNode  {
+	background-position:-16px 0px;
 }
 
 /* Tree */
 .dijitRtl .dijitTreeContainer .dijitTreeNode {
-    background-image : url('images/i_rtl.gif');
-    background-position : top right;
     margin-left: auto;
     margin-right: 19px;
 }
@@ -42,9 +39,6 @@
     margin-right: 0;
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeIsLast {
-    background-image: url('images/i_half_rtl.gif');
-}
 
 .dijitRtl .dijitTreeContainer .dijitTreeContent {
     margin-left: auto;
@@ -62,35 +56,35 @@
 }
 
 .dijitRtl .dijitTreeContainer .dijitTreeExpandoLeaf {
-	background-image: url('images/treeExpand_leaf_rtl.gif');
+
 }
 
 /* ToolTip */
-
 .dj_ie .dijitRtl .dijitTooltipLeft {
 	margin-right: 0px;
-	margin-left: 13px;
+	margin-left: 16px;
 }
 
 .dj_ie .dijitRtl .dijitTooltipRight {
 	margin-left: 26px;
-	margin-right: -13px;
+	margin-right: -16px;
 }
-
 .dj_ie .dijitRtl .dijitTooltipDialog {
 	zoom:1 !important;
 }
 
 /* Calendar */
-
 .dijitRtl .dijitCalendarDecrease {
-	background:url(images/arrowRight.png) no-repeat center center; 
+	background-position:-48px 0px;
 	margin-left:0;
 	margin-right:2px;
 }
-
 .dijitRtl .dijitCalendarIncrease {
-	background:url(images/arrowLeft.png) no-repeat center center; 
+	background-position:-16px 0px;
 	margin-right:0;
 	margin-left:4px; 
 }
+
+/* Slider: an attempt, but Slider is broken in RTL in code anyway. */
+.dijitRtl .dijitHorizontalSliderIncrementIcon { background-position:-16px 0px; }
+.dijitRtl .dijitHorizontalSliderDecrementIcon { background-position:-48px 0px; }

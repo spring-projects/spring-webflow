@@ -1,12 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<title>Test Widget Templates in Multiple Themes</title>
 
-		<script type="text/javascript" src="../tests/testBidi.js"></script>
 		<script type="text/javascript" src="../../dojo/dojo.js"
 			djConfig="parseOnLoad: true, isDebug: true"></script>
+		<script type="text/javascript" src="../tests/_testCommon.js"></script>
+
 		<script type="text/javascript">
 			dojo.require("dijit.Menu");
 			dojo.require("dijit.form.Button");
@@ -19,6 +20,8 @@
 			@import "../../dojo/resources/dojo.css";
 			@import "noir/noir.css";
 			@import "tundra/tundra.css";
+			@import "soria/soria.css";
+			@import "../tests/css/dijitTests.css"; 
 
 			/* group multiple buttons in a row */
 			body {
@@ -34,14 +37,6 @@
 		</style>
 	</head>
 	<body>
-	<script language='javascript'>
-	/*
-		var match = (window.location.search+"&").match(/theme=(.*?)&/);
-		var theme = (match ? match[1] : "tundra");
-		document.getElementsByTagName("BODY")[0].className = theme;
-		document.write("<style>	@import '../../themes/"+theme+"/"+theme+".css'; <\/style>");
-	*/
-	</script>
 		<h2>Tundra</h2>
 		<div id='tundra' class="box tundra">
 			<button id='foo' dojoType="dijit.form.Button" onClick='logMessage("clicked simple")'>
@@ -119,7 +114,7 @@
 			<input dojoType="dijit.form.ComboBox"
 					value="California"
 					class="medium"
-					url="../tests/form/comboBoxData.json"
+					url="../tests/form/states.json"
 					searchAttr="name"
 					labelField="label"
 					labelType="html"
@@ -132,7 +127,7 @@
 			<input dojoType="dijit.form.ComboBox"
 					value="California"
 					class="medium"
-					url="../tests/form/comboBoxData.json"
+					url="../tests/form/states.json"
 					searchAttr="name"
 					labelField="label"
 					labelType="html"
@@ -148,7 +143,7 @@
 			onChange="console.debug('onChange fired for widget id = ' + this.id + ' with value = ' + arguments[0]);"
 			value="900" 
 			constraints={max:1550,places:0}
-			maxlength="10" 
+			maxLength="10" 
 			id="integerspinner1">
 
 
@@ -157,7 +152,7 @@
 			value="900" 
 			disabled='true'
 			constraints={max:1550,places:0}
-			maxlength="10" 
+			maxLength="10" 
 			id="integerspinner1">
 
 		</div>
@@ -168,14 +163,23 @@
 		</div>
 		<br clear=both>
 
+		<h2>Soria</h2>
+		<div id='soria' class="box soria">
+		</div>
+		<br clear=both>
+
 		<h2>a11y mode</h2>
 		<div id='a11y' class="box dijit_a11y">
 		</div>
 		<br clear=both>
+
+		
+
 <script language='javascript'>
 	var html = dojo.byId("tundra").innerHTML;
 	dojo.byId("noir").innerHTML = html;
 	dojo.byId("a11y").innerHTML = html;
+	dojo.byId("soria").innerHTML = html;
 </script>
 
 	</body>

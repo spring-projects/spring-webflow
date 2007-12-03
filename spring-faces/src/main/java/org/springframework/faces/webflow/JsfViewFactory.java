@@ -89,8 +89,8 @@ public class JsfViewFactory implements ViewFactory {
 						logger.debug("View root restored for '" + viewName + "'");
 					}
 					view = createJsfView(viewRoot, lifecycle, context);
-					facesContext.setViewRoot(viewRoot);
-					processComponentBinding(facesContext, viewRoot);
+					facesContext.setViewRoot(view.getViewRoot());
+					processComponentBinding(facesContext, view.getViewRoot());
 					restored = true;
 				} else {
 					if (logger.isDebugEnabled()) {

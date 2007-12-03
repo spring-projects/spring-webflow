@@ -8,12 +8,12 @@ dojo.require("dijit._Templated");
 
 dojo.declare(
 	"dijit.Menu",
-	[dijit._Widget, dijit._Templated, dijit._Container],
+	[dijit._Widget, dijit._Templated, dijit._KeyNavContainer],
 {
-	preamble: function() {
+	constructor: function() {
 		this._bindings = [];
 	},
-	
+
 	templateString:
 			'<table class="dijit dijitMenu dijitReset dijitMenuTable" waiRole="menu" dojoAttachEvent="onkeypress:_onKeyPress">' +
 				'<tbody class="dijitReset" dojoAttachPoint="containerNode"></tbody>'+
@@ -48,10 +48,12 @@ dojo.declare(
 		}else{
 			dojo.forEach(this.targetNodeIds, this.bindDomNode, this);
 		}
+		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
 	},
 
 	startup: function(){
 		dojo.forEach(this.getChildren(), function(child){ child.startup(); });
+		this.startupKeyNavChildren();
 	},
 
 	onExecute: function(){
@@ -62,23 +64,10 @@ dojo.declare(
 		// summary: attach point for notification about when the user cancels the current menu
 	},
 
-	focus: function(){
-		this._focusFirstItem();
-	},
-
 	_moveToPopup: function(/*Event*/ evt){
-		if(this._focusedItem && this._focusedItem.popup && !this._focusedItem.disabled){
-			return this._activateCurrentItem(evt);
+		if(this.focusedChild && this.focusedChild.popup && !this.focusedChild.disabled){
+			this.focusedChild._onClick(evt);
 		}
-		return false;
-	},
-
-	_activateCurrentItem: function(/*Event*/ evt){
-		if(this._focusedItem){
-			this._focusedItem._onClick(evt);
-			return true; //do not pass to parent menu
-		}
-		return false;
 	},
 
 	_onKeyPress: function(/*Event*/ evt){
@@ -86,16 +75,7 @@ dojo.declare(
 		//	Handle keyboard based menu navigation.
 		if(evt.ctrlKey || evt.altKey){ return; }
 
-		var key = (evt.charCode == dojo.keys.SPACE ? dojo.keys.SPACE : evt.keyCode);
-		switch(key){
- 			case dojo.keys.DOWN_ARROW:
-				this._focusNeighborItem(1);
-				dojo.stopEvent(evt);
-				break;
-			case dojo.keys.UP_ARROW:
-				this._focusNeighborItem(-1);
-				dojo.stopEvent(evt);
-				break;
+		switch(evt.keyCode){
 			case dojo.keys.RIGHT_ARROW:
 				this._moveToPopup(evt);
 				dojo.stopEvent(evt);
@@ -107,87 +87,25 @@ dojo.declare(
 					dojo.stopEvent(evt);
 				}
 				break;
-			case dojo.keys.TAB:
-				dojo.stopEvent(evt);
-				// Hmm, there's no good infrastructure to support cancel closing the whole tree
-				// of menus, but it's close to an execute event, in the sense that focus is returned
-				// to the previously focused node (for a context menu) or to the DropDownButton
-				this.onExecute();
-				break;
 		}
-	},
-
-	_findValidItem: function(dir){
-		// summary: find the next/previous item to focus on (depending on dir setting).
-
-		var curItem = this._focusedItem;
-		if(curItem){
-			curItem = dir>0 ? curItem.getNextSibling() : curItem.getPreviousSibling();
-		}
-
-		var children = this.getChildren();
-		for(var i=0; i < children.length; ++i){
-			if(!curItem){
-				curItem = children[(dir>0) ? 0 : (children.length-1)];
-			}
-			//find next/previous visible menu item, not including separators
-			if(curItem._onHover && dojo.style(curItem.domNode, "display") != "none"){
-				return curItem;
-			}
-			curItem = dir>0 ? curItem.getNextSibling() : curItem.getPreviousSibling();
-		}
-	},
-
-	_focusNeighborItem: function(dir){
-		// summary: focus on the next / previous item (depending on dir setting)
-		var item = this._findValidItem(dir);
-		this._focusItem(item);
-	},
-
-	_focusFirstItem: function(){
-		// blur focused item to make findValidItem() find the first item in the menu
-		if(this._focusedItem){
-			this._blurFocusedItem();
-		}
-		var item = this._findValidItem(1);
-		this._focusItem(item);
-	},
-
-	_focusItem: function(/*MenuItem*/ item){
-		// summary: internal function to focus a given menu item
-
-		if(!item || item==this._focusedItem){
-			return;
-		}
-
-		if(this._focusedItem){
-			this._blurFocusedItem();
-		}
-		item._focus();
-		this._focusedItem = item;
 	},
 
 	onItemHover: function(/*MenuItem*/ item){
-		this._focusItem(item);
+		this.focusChild(item);
 
-		if(this._focusedItem.popup && !this._focusedItem.disabled && !this.hover_timer){
+		if(this.focusedChild.popup && !this.focusedChild.disabled && !this.hover_timer){
 			this.hover_timer = setTimeout(dojo.hitch(this, "_openPopup"), this.popupDelay);
 		}
 	},
 
-	_blurFocusedItem: function(){
-		// summary: internal function to remove focus from the currently focused item
-		if(this._focusedItem){
-			// Close all popups that are open and descendants of this menu
-			dijit.popup.closeTo(this);
-			this._focusedItem._blur();
-			this._stopPopupTimer();
-			this._focusedItem = null;
-		}
+	_onChildBlur: function(item){
+		// Close all popups that are open and descendants of this menu
+		dijit.popup.close(item.popup);
+		item._blur();
+		this._stopPopupTimer();
 	},
 
 	onItemUnhover: function(/*MenuItem*/ item){
-		//this._blurFocusedItem();
 	},
 
 	_stopPopupTimer: function(){
@@ -256,7 +174,7 @@ dojo.declare(
 		// to capture these events at the top level,
 		// attach to document, not body
 		var cn = (node == dojo.body() ? dojo.doc : node);
-		
+
 		node[this.id] = this._bindings.push([
 			dojo.connect(cn, "oncontextmenu", this, "_openMyself"),
 			dojo.connect(cn, "onkeydown", this, "_contextKey"),
@@ -299,7 +217,7 @@ dojo.declare(
 		//		does a right-click or something similar
 
 		dojo.stopEvent(e);
-		
+
 		// Get coordinates.
 		// if we are opening the menu with the mouse or on safari open
 		// the menu at the mouse cursor
@@ -322,7 +240,7 @@ dojo.declare(
 		function closeAndRestoreFocus(){
 			// user has clicked on a menu or popup
 			dijit.focus(savedFocus);
-			dijit.popup.closeAll();
+			dijit.popup.close(self);
 		}
 		dijit.popup.open({
 			popup: this,
@@ -333,12 +251,12 @@ dojo.declare(
 			orient: this.isLeftToRight() ? 'L' : 'R'
 		});
 		this.focus();
-		
+
 		this._onBlur = function(){
 			// Usually the parent closes the child widget but if this is a context
 			// menu then there is no parent
-			dijit.popup.closeAll();
-			// don't try to restor focus; user has clicked another part of the screen
+			dijit.popup.close(this);
+			// don't try to restore focus; user has clicked another part of the screen
 			// and set focus there
 		}
 	},
@@ -355,15 +273,16 @@ dojo.declare(
 		this.parentMenu = null;
 		this.isShowingNow = false;
 		this.currentPopup = null;
-		if(this._focusedItem){
-			this._blurFocusedItem();
+		if(this.focusedChild){
+			this._onChildBlur(this.focusedChild);
+			this.focusedChild = null;
 		}
 	},
 
 	_openPopup: function(){
 		// summary: open the popup to the side of the current menu item
 		this._stopPopupTimer();
-		var from_item = this._focusedItem;
+		var from_item = this.focusedChild;
 		var popup = from_item.popup;
 
 		if(popup.isShowingNow){ return; }
@@ -374,18 +293,16 @@ dojo.declare(
 			popup: popup,
 			around: from_item.arrowCell,
 			orient: this.isLeftToRight() ? {'TR': 'TL', 'TL': 'TR'} : {'TL': 'TR', 'TR': 'TL'},
-			submenu: true,
 			onCancel: function(){
 				// called when the child menu is canceled
-				dijit.popup.close();
-				self._focusedItem._focus();	// put focus back on my node
+				dijit.popup.close(popup);
+				from_item.focus();	// put focus back on my node
 				self.currentPopup = null;
 			}
 		});
-			
 
 		this.currentPopup = popup;
-		
+
 		if(popup.focus){
 			popup.focus();
 		}
@@ -404,19 +321,15 @@ dojo.declare(
 	//   icon, label, and expand arrow (BiDi-dependent) indicating sub-menu
 	templateString:
 		 '<tr class="dijitReset dijitMenuItem"'
-		+'dojoAttachEvent="onmouseover:_onHover,onmouseout:_onUnhover,ondijitclick:_onClick">'
-		+'<td class="dijitReset"><div class="dijitMenuItemIcon ${iconClass}"></div></td>'
+		+'dojoAttachEvent="onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick">'
+		+'<td class="dijitReset"><div class="dijitMenuItemIcon ${iconClass}" dojoAttachPoint="iconNode" ></div></td>'
 		+'<td tabIndex="-1" class="dijitReset dijitMenuItemLabel" dojoAttachPoint="containerNode" waiRole="menuitem"></td>'
 		+'<td class="dijitReset" dojoAttachPoint="arrowCell">'
 			+'<div class="dijitMenuExpand" dojoAttachPoint="expand" style="display:none">'
-			+'<span class="dijit_a11y dijitInline dijitArrowNode dijitMenuExpandInner">+</span>'
+			+'<span class="dijitInline dijitArrowNode dijitMenuExpandInner">+</span>'
 			+'</div>'
 		+'</td>'
 		+'</tr>',
-
-	// iconSrc: String
-	//	path to icon to display to the left of the menu text
-	iconSrc: '',
 
 	// label: String
 	//	menu text
@@ -461,7 +374,7 @@ dojo.declare(
 		//	User defined function to handle clicks
 	},
 
-	_focus: function(){
+	focus: function(){
 		dojo.addClass(this.domNode, 'dijitMenuItemHover');
 		try{
 			dijit.focus(this.containerNode);
@@ -478,7 +391,7 @@ dojo.declare(
 		// summary: enable or disable this menu item
 		this.disabled = value;
 		dojo[value ? "addClass" : "removeClass"](this.domNode, 'dijitMenuItemDisabled');
-		dijit.wai.setAttr(this.containerNode, 'waiState', 'disabled', value ? 'true' : 'false');
+		dijit.setWaiState(this.containerNode, 'disabled', value ? 'true' : 'false');
 	}
 });
 
@@ -496,7 +409,7 @@ dojo.declare(
 		if(this.srcNodeRef){
 			var nodes = dojo.query("*", this.srcNodeRef);
 			dijit.PopupMenuItem.superclass._fillContent.call(this, nodes[0]);
-			
+
 			// save pointer to srcNode so we can grab the drop down widget after it's instantiated
 			this.dropDownContainer = this.srcNodeRef;
 		}
@@ -514,7 +427,7 @@ dojo.declare(
 		this.popup.domNode.style.display="none";
 		dojo.addClass(this.expand, "dijitMenuExpandEnabled");
 		dojo.style(this.expand, "display", "");
-		dijit.wai.setAttr(this.containerNode, "waiState", "haspopup", "true");
+		dijit.setWaiState(this.containerNode, "haspopup", "true");
 	}
 });
 
@@ -532,6 +445,12 @@ dojo.declare(
 
 	postCreate: function(){
 		dojo.setSelectable(this.domNode, false);
+	},
+	
+	isFocusable: function(){
+		// summary:
+		//		over ride to always return false
+		return false;
 	}
 });
 

@@ -14,13 +14,13 @@ dojo.declare(
 		 *
 		 *	Similar features:
 		 *	  - There is a drop down list of possible values.
-		 *    - You can only enter a value from the drop down list.  (You can't enter an arbitrary value.)
-		 *    - The value submitted with the form is the hidden value (ex: CA),
-		 *      not the displayed value a.k.a. label (ex: California)
+		 *	- You can only enter a value from the drop down list.  (You can't enter an arbitrary value.)
+		 *	- The value submitted with the form is the hidden value (ex: CA),
+		 *	  not the displayed value a.k.a. label (ex: California)
 		 *
 		 *	Enhancements over plain HTML version:
-		 *    - If you type in some text then it will filter down the list of possible values in the drop down list.
-		 *    - List can be specified either as a static list or via a javascript function (that can get the list from a server)
+		 *	- If you type in some text then it will filter down the list of possible values in the drop down list.
+		 *	- List can be specified either as a static list or via a javascript function (that can get the list from a server)
 		 */
 
 		// searchAttr: String
@@ -46,7 +46,7 @@ dojo.declare(
 			//	Callback function that dynamically sets the label of the ComboBox
 
 			// setValue does a synchronous lookup,
-			// so it calls _callbackSetLabel directly, 
+			// so it calls _callbackSetLabel directly,
 			// and so does not pass dataObject
 			// dataObject==null means do not test the lastQuery, just continue
 			if(dataObject&&dataObject.query[this.searchAttr]!=this._lastQuery){return;}
@@ -54,6 +54,8 @@ dojo.declare(
 				//#3268: do nothing on bad input
 				//this._setValue("", "");
 				//#3285: change CSS to indicate error
+				if(!this._hasFocus){ this.valueNode.value=""; }
+				dijit.form.TextBox.superclass.setValue.call(this, undefined, !this._hasFocus);
 				this._isvalid=false;
 				this.validate(this._hasFocus);
 			}else{
@@ -82,6 +84,7 @@ dojo.declare(
 		_setValue:function(/*String*/ value, /*String*/ displayedValue){
 			this.valueNode.value = value;
 			dijit.form.FilteringSelect.superclass.setValue.call(this, value, true, displayedValue);
+			this._lastDisplayedValue = displayedValue;
 		},
 
 		setValue: function(/*String*/ value){
@@ -131,7 +134,7 @@ dojo.declare(
 			// summary:
 			//	ComboBox's menu callback function
 			//	FilteringSelect overrides this to set both the visible and hidden value from the information stored in the menu
-
+			this.item = tgt.item;
 			this._setValueFromItem(tgt.item);
 		},
 
@@ -148,6 +151,7 @@ dojo.declare(
 				// so the last valid value will get the warning textbox
 				// set the textbox value now so that the impending warning will make sense to the user
 				this.textbox.value=label;
+				this._lastDisplayedValue=label;
 				this.store.fetch({query:query, queryOptions:{ignoreCase:this.ignoreCase, deep:true}, onComplete: dojo.hitch(this, this._callbackSetLabel)});
 			}
 		},
@@ -159,6 +163,11 @@ dojo.declare(
 				// because this function is called by ComboBoxMenu, this.inherited tries to find the superclass of ComboBoxMenu
 				return dijit.form.ComboBoxMixin.prototype._getMenuLabelFromItem.apply(this, arguments);
 			}
+		},
+
+		postMixInProperties: function(){
+			dijit.form.ComboBoxMixin.prototype.postMixInProperties.apply(this, arguments);
+			dijit.form.MappedTextBox.prototype.postMixInProperties.apply(this, arguments);
 		}
 	}
 );

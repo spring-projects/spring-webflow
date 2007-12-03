@@ -72,7 +72,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	item: 
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){ 
-			throw new Error("dojo.data.ItemFileReadStore: a function was passed an item argument that was not an item");
+			throw new Error("dojo.data.ItemFileReadStore: Invalid item argument.");
 		}
 	},
 
@@ -82,7 +82,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	attribute: 
 		//		The attribute to test for being contained by the store.
 		if(typeof attribute !== "string"){ 
-			throw new Error("dojo.data.ItemFileReadStore: a function was passed an attribute argument that was not an attribute name string");
+			throw new Error("dojo.data.ItemFileReadStore: Invalid attribute argument.");
 		}
 	},
 
@@ -92,7 +92,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	summary: 
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
-		return (values.length > 0)?values[0]:defaultValue; // Anything
+		return (values.length > 0)?values[0]:defaultValue; // mixed
 	},
 
 	getValues: function(/* item */ item, 
@@ -158,19 +158,15 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
 		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
-		var values = this.getValues(item, attribute);
-		for(var i = 0; i < values.length; ++i){
-			var possibleValue = values[i];
-			if(typeof possibleValue === "string" && regexp){
-				return (possibleValue.match(regexp) !== null);
-			}else{
-				//Non-string matching.
-				if(value === possibleValue){
+		return dojo.some(this.getValues(item, attribute), function(possibleValue){
+			if(possibleValue !== null && !dojo.isObject(possibleValue) && regexp){
+				if(possibleValue.toString().match(regexp)){
 					return true; // Boolean
 				}
+			}else if(value === possibleValue){
+				return true; // Boolean
 			}
-		}
-		return false; // Boolean
+		});
 	},
 
 	isItem: function(/* anything */ something){
@@ -379,15 +375,15 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			//		Given any sort of value that could be in the raw json data,
 			//		return true if we should interpret the value as being an
 			//		item itself, rather than a literal value or a reference.
-			// examples:
-			// 		false == valueIsAnItem("Kermit");
-			// 		false == valueIsAnItem(42);
-			// 		false == valueIsAnItem(new Date());
-			// 		false == valueIsAnItem({_type:'Date', _value:'May 14, 1802'});
-			// 		false == valueIsAnItem({_reference:'Kermit'});
-			// 		true == valueIsAnItem({name:'Kermit', color:'green'});
-			// 		true == valueIsAnItem({iggy:'pop'});
-			// 		true == valueIsAnItem({foo:42});
+			// example:
+			// 	|	false == valueIsAnItem("Kermit");
+			// 	|	false == valueIsAnItem(42);
+			// 	|	false == valueIsAnItem(new Date());
+			// 	|	false == valueIsAnItem({_type:'Date', _value:'May 14, 1802'});
+			// 	|	false == valueIsAnItem({_reference:'Kermit'});
+			// 	|	true == valueIsAnItem({name:'Kermit', color:'green'});
+			// 	|	true == valueIsAnItem({iggy:'pop'});
+			// 	|	true == valueIsAnItem({foo:42});
 			var isItem = (
 				(aValue != null) &&
 				(typeof aValue == "object") &&
@@ -487,8 +483,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		var arrayOfValues;
 
 		var identifier = dataObject.identifier;
-		this._itemsByIdentity = {};
 		if(identifier){
+			this._itemsByIdentity = {};
 			this._features['dojo.data.api.Identity'] = identifier;
 			for(i = 0; i < this._arrayOfAllItems.length; ++i){
 				item = this._arrayOfAllItems[i];
@@ -666,11 +662,11 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		var item = null;
 		if(this._itemsByIdentity){
 			item = this._itemsByIdentity[identity];
-			if(item === undefined){
-				item = null;
-			}
 		}else{
-			this._arrayOfAllItems[identity];
+			item = this._arrayOfAllItems[identity];
+		}
+		if(item === undefined){
+			item = null;
 		}
 		return item; // Object
 	},

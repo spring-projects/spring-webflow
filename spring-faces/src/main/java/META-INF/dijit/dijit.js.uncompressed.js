@@ -5,7 +5,7 @@
 	Licensed under the Academic Free License version 2.1 or above OR the
 	modified BSD license. For more information on Dojo licensing, see:
 
-		http://dojotoolkit.org/community/licensing.shtml
+		http://dojotoolkit.org/book/dojo-book-0-9/introduction/licensing
 */
 
 /*
@@ -39,7 +39,7 @@ dojo.mixin(dijit,
 	// _curFocus: DomNode
 	//		Currently focused item on screen
 	_curFocus: null,
-	
+
 	// _prevFocus: DomNode
 	//		Previously focused item on screen
 	_prevFocus: null,
@@ -127,13 +127,13 @@ dojo.mixin(dijit,
 		return {
 			// Node to return focus to
 			node: menu && dojo.isDescendant(dijit._curFocus, menu.domNode) ? dijit._prevFocus : dijit._curFocus,
-			
+
 			// Previously selected text
-			bookmark: 
+			bookmark:
 				!dojo.withGlobal(openedForWindow||dojo.global, dijit.isCollapsed) ?
 				dojo.withGlobal(openedForWindow||dojo.global, dijit.getBookmark) :
 				null,
-				
+
 			openedForWindow: openedForWindow
 		}; // Object
 	},
@@ -195,9 +195,8 @@ dojo.mixin(dijit,
 		}
 
 		dojo.connect(targetWindow.document, "onmousedown", null, function(evt){
-			// this mouse down event will probably be immediately followed by a blur event; ignore it
-			dijit._ignoreNextBlurEvent = true;
-			setTimeout(function(){ dijit._ignoreNextBlurEvent = false; }, 0);
+			dijit._justMouseDowned = true;
+			setTimeout(function(){ dijit._justMouseDowned = false; }, 0);
 			dijit._onTouchNode(evt.target||evt.srcElement);
 		});
 		//dojo.connect(targetWindow, "onscroll", ???);
@@ -211,31 +210,41 @@ dojo.mixin(dijit,
 						dijit._onFocusNode(evt.srcElement);
 					}
 				});
-				body.attachEvent('ondeactivate', function(evt){ dijit._onBlurNode(); });
+				body.attachEvent('ondeactivate', function(evt){ dijit._onBlurNode(evt.srcElement); });
 			}else{
 				body.addEventListener('focus', function(evt){ dijit._onFocusNode(evt.target); }, true);
-				body.addEventListener('blur', function(evt){ dijit._onBlurNode(); }, true);
+				body.addEventListener('blur', function(evt){ dijit._onBlurNode(evt.target); }, true);
 			}
 		}
+		body = null;	// prevent memory leak (apparent circular reference via closure)
 	},
-	
-	_onBlurNode: function(){
+
+	_onBlurNode: function(/*DomNode*/ node){
 		// summary:
 		// 		Called when focus leaves a node.
 		//		Usually ignored, _unless_ it *isn't* follwed by touching another node,
 		//		which indicates that we tabbed off the last field on the page,
-		//		in which case everything is blurred
-		if(dijit._ignoreNextBlurEvent){
-			dijit._ignoreNextBlurEvent = false;
-			return;
-		}
+		//		in which case every widget is marked inactive
 		dijit._prevFocus = dijit._curFocus;
 		dijit._curFocus = null;
-		if(dijit._blurAllTimer){
-			clearTimeout(dijit._blurAllTimer);
+
+		var w = dijit.getEnclosingWidget(node);
+		if (w && w._setStateClass){
+			w._focused = false;
+			w._setStateClass();
 		}
-		dijit._blurAllTimer = setTimeout(function(){ 
-			delete dijit._blurAllTimer; dijit._setStack([]); }, 100);
+		if(dijit._justMouseDowned){
+			// the mouse down caused a new widget to be marked as active; this blur event
+			// is coming late, so ignore it.
+			return;
+		}
+
+		// if the blur event isn't followed by a focus event then mark all widgets as inactive.
+		if(dijit._clearActiveWidgetsTimer){
+			clearTimeout(dijit._clearActiveWidgetsTimer);
+		}
+		dijit._clearActiveWidgetsTimer = setTimeout(function(){
+			delete dijit._clearActiveWidgetsTimer; dijit._setStack([]); }, 100);
 	},
 
 	_onTouchNode: function(/*DomNode*/ node){
@@ -243,9 +252,9 @@ dojo.mixin(dijit,
 		//		Callback when node is focused or mouse-downed
 
 		// ignore the recent blurNode event
-		if(dijit._blurAllTimer){
-			clearTimeout(dijit._blurAllTimer);
-			delete dijit._blurAllTimer;
+		if(dijit._clearActiveWidgetsTimer){
+			clearTimeout(dijit._clearActiveWidgetsTimer);
+			delete dijit._clearActiveWidgetsTimer;
 		}
 
 		// compute stack of active widgets (ex: ComboButton --> Menu --> MenuItem)
@@ -289,16 +298,10 @@ dojo.mixin(dijit,
 		dojo.publish("focusNode", [node]);
 
 		// handle focus/blur styling
-		var w = dijit.byId(node.id);
+		var w = dijit.getEnclosingWidget(node);
 		if (w && w._setStateClass){
 			w._focused = true;
 			w._setStateClass();
-			// watch for a blur on the node that received focus
-			var blurConnector = dojo.connect(node, "onblur", function(){
-				w._focused = false;
-				w._setStateClass();
-				dojo.disconnect(blurConnector);
-			});
 		}
 	},
 
@@ -355,11 +358,14 @@ dojo.declare("dijit.WidgetSet", null, {
 		//	A set of widgets indexed by id
 		this._hash={};
 	},
-	
+
 	add: function(/*Widget*/ widget){
+		if(this._hash[widget.id]){
+			throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
+		}
 		this._hash[widget.id]=widget;
 	},
-	
+
 	remove: function(/*String*/ id){
 		delete this._hash[id];
 	},
@@ -369,7 +375,7 @@ dojo.declare("dijit.WidgetSet", null, {
 			func(this._hash[id]);
 		}
 	},
-	
+
 	filter: function(/*Function*/ filter){
 		var res = new dijit.WidgetSet();
 		this.forEach(function(widget){
@@ -377,7 +383,7 @@ dojo.declare("dijit.WidgetSet", null, {
 		});
 		return res;		// dijit.WidgetSet
 	},
-	
+
 	byId: function(/*String*/ id){
 		return this._hash[id];
 	},
@@ -426,6 +432,19 @@ dijit.byNode = function(/* DOMNode */ node){
 	return dijit.registry.byId(node.getAttribute("widgetId")); // Widget
 };
 
+dijit.getEnclosingWidget = function(/* DOMNode */ node){
+	// summary:
+	//		Returns the widget whose dom tree contains node or null if
+	//		the node is not contained within the dom tree of any widget
+	while(node){
+		if(node.getAttribute && node.getAttribute("widgetId")){
+			return dijit.registry.byId(node.getAttribute("widgetId"));
+		}
+		node = node.parentNode;
+	}
+	return null;
+};
+
 }
 
 if(!dojo._hasResource["dijit._base.place"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
@@ -445,8 +464,27 @@ dijit.getViewport = function(){
 	var w = 0, h = 0;
 	if(dojo.isMozilla){
 		// mozilla
-		w = _document.documentElement.clientWidth;
-		h = _window.innerHeight;
+		// _window.innerHeight includes the height taken by the scroll bar
+		// clientHeight is ideal but has DTD issues:
+		// #4539: FF reverses the roles of body.clientHeight/Width and documentElement.clientHeight/Width based on the DTD!
+		// check DTD to see whether body or documentElement returns the viewport dimensions using this algorithm:
+		var minw, minh, maxw, maxh;
+		if(_document.body.clientWidth>_document.documentElement.clientWidth){
+			minw = _document.documentElement.clientWidth;
+			maxw = _document.body.clientWidth;
+		}else{
+			maxw = _document.documentElement.clientWidth;
+			minw = _document.body.clientWidth;
+		}
+		if(_document.body.clientHeight>_document.documentElement.clientHeight){
+			minh = _document.documentElement.clientHeight;
+			maxh = _document.body.clientHeight;
+		}else{
+			maxh = _document.documentElement.clientHeight;
+			minh = _document.body.clientHeight;
+		}
+		w = (maxw > _window.innerWidth) ? minw : maxw;
+		h = (maxh > _window.innerHeight) ? minh : maxh;
 	}else if(!dojo.isOpera && _window.innerWidth){
 		//in opera9, dojo.body().clientWidth should be used, instead
 		//of window.innerWidth/document.documentElement.clientWidth
@@ -461,7 +499,7 @@ dijit.getViewport = function(){
 		w = dojo.body().clientWidth;
 		h = dojo.body().clientHeight;
 	}
-	
+
 	// get scroll position
 	var scroll = dojo._docScroll();
 
@@ -469,7 +507,7 @@ dijit.getViewport = function(){
 };
 
 dijit.placeOnScreen = function(
-	/* HTMLElement */	node,
+	/* DomNode */	node,
 	/* Object */		pos,
 	/* Object */		corners,
 	/* boolean? */		tryOnly){
@@ -488,13 +526,13 @@ dijit.placeOnScreen = function(
 	//		all of the specified corners, and choose the most appropriate one.
 	//		
 	//		NOTE: node is assumed to be absolutely or relatively positioned.
-	
+
 	var choices = dojo.map(corners, function(corner){ return { corner: corner, pos: pos }; });
-	
+
 	return dijit._place(node, choices);
 }
 
-dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function */ layoutNode){
+dijit._place = function(/*DomNode*/ node, /* Array */ choices, /* Function */ layoutNode){
 	// summary:
 	//		Given a list of spots to put node, put it at the first spot where it fits,
 	//		of if it doesn't fit anywhere then the place with the least overflow
@@ -504,7 +542,7 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 	//	layoutNode: Function(node, orient)
 	//		for things like tooltip, they are displayed differently (and have different dimensions)
 	//		based on their orientation relative to the parent.   This adjusts the popup based on orientation.
-			
+
 	// get {x: 10, y: 10, w: 100, h:100} type obj representing position of
 	// viewport over document
 	var view = dijit.getViewport();
@@ -546,7 +584,7 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 			width = endX-startX,
 			height = endY-startY,
 			overflow = (mb.w-width) + (mb.h-height);
-			
+
 		if(best==null || overflow<best.overflow){
 			best = {
 				corner: corner,
@@ -569,8 +607,8 @@ dijit._place = function(/*HtmlElement*/ node, /* Array */ choices, /* Function *
 }
 
 dijit.placeOnScreenAroundElement = function(
-	/* HTMLElement */	node,
-	/* HTMLElement */	aroundNode,
+	/* DomNode */		node,
+	/* DomNode */		aroundNode,
 	/* Object */		aroundCorners,
 	/* Function */		layoutNode){
 
@@ -588,7 +626,7 @@ dijit.placeOnScreenAroundElement = function(
 	//		for things like tooltip, they are displayed differently (and have different dimensions)
 	//		based on their orientation relative to the parent.   This adjusts the popup based on orientation.
 
-	
+
 	// get coordinates of aroundNode
 	aroundNode = dojo.byId(aroundNode);
 	var oldDisplay = aroundNode.style.display;
@@ -611,7 +649,7 @@ dijit.placeOnScreenAroundElement = function(
 			}
 		});
 	}
-	
+
 	return dijit._place(node, choices, layoutNode);
 }
 
@@ -693,14 +731,12 @@ dijit.popup = new function(){
 		//		orient: Object
 		//			structure specifying possible positions of popup relative to "around" node
 		//		onCancel: Function
-		//			callback when user has canceled the popup by 
-		//          	1. hitting ESC or
+		//			callback when user has canceled the popup by
+		//				1. hitting ESC or
 		//				2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
 		//				   ie: whenever popupWidget.onCancel() is called, args.onCancel is called
 		//		onClose: Function
-		//			callback whenever this popup is closed (via close(), closeAll(), or closeTo())
-		//		submenu: Boolean
-		//			Is this a submenu off of the existing popup?
+		//			callback whenever this popup is closed
 		//		onExecute: Function
 		//			callback when user "executed" on the popup/sub-popup by selecting a menu choice, etc. (top menu only)
 		//
@@ -718,10 +754,6 @@ dijit.popup = new function(){
 			around = args.around,
 			id = (args.around && args.around.id) ? (args.around.id+"_dropdown") : ("popup_"+idGen++);
 
-		if(!args.submenu){
-			this.closeAll();
-		}
-
 		// make wrapper div to hold widget and possibly hold iframe behind it.
 		// we can't attach the iframe as a child of the widget.domNode because
 		// widget.domNode might be a <table>, <ul>, etc.
@@ -729,6 +761,7 @@ dijit.popup = new function(){
 		wrapper.id = id;
 		wrapper.className="dijitPopup";
 		wrapper.style.zIndex = beginZIndex + stack.length;
+		wrapper.style.visibility = "hidden";
 		if(args.parent){
 			wrapper.dijitPopupParent=args.parent.id;
 		}
@@ -744,14 +777,29 @@ dijit.popup = new function(){
 			dijit.placeOnScreenAroundElement(wrapper, around, orient, widget.orient ? dojo.hitch(widget, "orient") : null) :
 			dijit.placeOnScreen(wrapper, args, orient == 'R' ? ['TR','BR','TL','BL'] : ['TL','BL','TR','BR']);
 
+		wrapper.style.visibility = "visible";
 		// TODO: use effects to fade in wrapper
 
 		var handlers = [];
 
-		// provide default escape key handling 
+		// Compute the closest ancestor popup that's *not* a child of another popup.
+		// Ex: For a TooltipDialog with a button that spawns a tree of menus, find the popup of the button.
+		function getTopPopup(){
+			for(var pi=stack.length-1; pi > 0 && stack[pi].parent === stack[pi-1].widget; pi--);
+			return stack[pi];
+		}
+
+		// provide default escape and tab key handling
+		// (this will work for any widget, not just menu)
 		handlers.push(dojo.connect(wrapper, "onkeypress", this, function(evt){
-			if (evt.keyCode == dojo.keys.ESCAPE){
+			if(evt.keyCode == dojo.keys.ESCAPE && args.onCancel){
 				args.onCancel();
+			}else if(evt.keyCode == dojo.keys.TAB){
+				dojo.stopEvent(evt);
+				var topPopup = getTopPopup();
+				if(topPopup && topPopup.onCancel){
+					topPopup.onCancel();
+				}
 			}
 		}));
 
@@ -760,10 +808,11 @@ dijit.popup = new function(){
 		if(widget.onCancel){
 			handlers.push(dojo.connect(widget, "onCancel", null, args.onCancel));
 		}
-		
+
 		handlers.push(dojo.connect(widget, widget.onExecute ? "onExecute" : "onChange", null, function(){
-			if(stack[0] && stack[0].onExecute){
-				stack[0].onExecute();
+			var topPopup = getTopPopup();
+			if(topPopup && topPopup.onExecute){
+				topPopup.onExecute();
 			}
 		}));
 
@@ -771,6 +820,7 @@ dijit.popup = new function(){
 			wrapper: wrapper,
 			iframe: iframe,
 			widget: widget,
+			parent: args.parent,
 			onExecute: args.onExecute,
 			onCancel: args.onCancel,
  			onClose: args.onClose,
@@ -784,54 +834,33 @@ dijit.popup = new function(){
 		return best;
 	};
 
-	this.close = function(){
+	this.close = function(/*Widget*/ popup){
 		// summary:
-		//		Close popup on the top of the stack (the highest z-index popup)
-
-		// this needs to happen before the stack is popped, because menu's
-		// onClose calls closeTo(this)
-		var widget = stack[stack.length-1].widget;
-		if(widget.onClose){
-			widget.onClose();
-		}
-
-		if(!stack.length){
-			return;
-		}
-		var top = stack.pop();
-		var wrapper = top.wrapper,
-			iframe = top.iframe,
-			widget = top.widget,
-			onClose = top.onClose;
-
-		dojo.forEach(top.handlers, dojo.disconnect);
-
-		// #2685: check if the widget still has a domNode so ContentPane can change its URL without getting an error
-		if(!widget||!widget.domNode){ return; }
-		dojo.style(widget.domNode, "display", "none");
-		dojo.body().appendChild(widget.domNode);
-		iframe.destroy();
-		dojo._destroyElement(wrapper);
-
-		if(onClose){
-			onClose();
+		//		Close specified popup and any popups that it parented
+		while(dojo.some(stack, function(elem){return elem.widget == popup;})){
+			var top = stack.pop(),
+				wrapper = top.wrapper,
+				iframe = top.iframe,
+				widget = top.widget,
+				onClose = top.onClose;
+	
+			if(widget.onClose){
+				widget.onClose();
+			}
+			dojo.forEach(top.handlers, dojo.disconnect);
+	
+			// #2685: check if the widget still has a domNode so ContentPane can change its URL without getting an error
+			if(!widget||!widget.domNode){ return; }
+			dojo.style(widget.domNode, "display", "none");
+			dojo.body().appendChild(widget.domNode);
+			iframe.destroy();
+			dojo._destroyElement(wrapper);
+	
+			if(onClose){
+				onClose();
+			}
 		}
 	};
-
-	this.closeAll = function(){
-		// summary: close every popup, from top of stack down to the first one
-		while(stack.length){
-			this.close();
-		}
-	};
-
-	this.closeTo = function(/*Widget*/ widget){
-		// summary: closes every popup above specified widget
-		while(stack.length && stack[stack.length-1].widget.id != widget.id){
-			this.close();
-		}
-	};
-
 }();
 
 dijit._frames = new function(){
@@ -859,7 +888,7 @@ dijit._frames = new function(){
 		}
 		return iframe;
 	};
-	
+
 	this.push = function(iframe){
 		iframe.style.display="";
 		if(dojo.isIE){
@@ -879,7 +908,7 @@ if(dojo.isIE && dojo.isIE < 7){
 }
 
 
-dijit.BackgroundIframe = function(/* HTMLElement */node){
+dijit.BackgroundIframe = function(/* DomNode */node){
 	//	summary:
 	//		For IE z-index schenanigans. id attribute is required.
 	//
@@ -916,7 +945,7 @@ if(!dojo._hasResource["dijit._base.scroll"]){ //_hasResource checks added by bui
 dojo._hasResource["dijit._base.scroll"] = true;
 dojo.provide("dijit._base.scroll");
 
-dijit.scrollIntoView = function(/* HTMLElement */node){
+dijit.scrollIntoView = function(/* DomNode */node){
 	//	summary
 	//	Scroll the passed node into view, if it is not.
 
@@ -1010,10 +1039,10 @@ dojo.provide("dijit._base.typematic");
 
 dijit.typematic = {
 	// summary:
-	//              These functions are used to repetitively call a user specified callback
-	//		method when a specific key or mouse click over a specific DOM node is
-	//		held down for a specific amount of time.
-	//		Only 1 such event is allowed to occur on the browser page at 1 time.
+	//	These functions are used to repetitively call a user specified callback
+	//	method when a specific key or mouse click over a specific DOM node is
+	//	held down for a specific amount of time.
+	//	Only 1 such event is allowed to occur on the browser page at 1 time.
 
 	_fireEventAndReload: function(){
 		this._timer = null;
@@ -1025,19 +1054,25 @@ dijit.typematic = {
 	trigger: function(/*Event*/ evt, /* Object */ _this, /*DOMNode*/ node, /* Function */ callback, /* Object */ obj, /* Number */ subsequentDelay, /* Number */ initialDelay){
 		// summary:
 		//      Start a timed, repeating callback sequence.
-		//	If already started, the function call is ignored.
-		//	This method is not normally called by the user but can be
-		//	when the normal listener code is insufficient.
+		//      If already started, the function call is ignored.
+		//      This method is not normally called by the user but can be
+		//      when the normal listener code is insufficient.
+		//	Parameters:
+		//	evt: key or mouse event object to pass to the user callback
 		//	_this: pointer to the user's widget space.
-		//	callback: function name to call until the sequence is stopped.
-		//	obj: any user space object to pass to the callback.
+		//	node: the DOM node object to pass the the callback function
+		//	callback: function to call until the sequence is stopped called with 3 parameters:
+		//		count: integer representing number of repeated calls (0..n) with -1 indicating the iteration has stopped
+		//		node: the DOM node object passed in
+		//		evt: key or mouse event object
+		//	obj: user space object used to uniquely identify each typematic sequence
 		//	subsequentDelay: if > 1, the number of milliseconds until the 3->n events occur
-		//		or else the fractional time multiplier for the next event.
-		//	initialDelay: the number of milliseconds until the 2nd event occurs.
-		if (obj != this._obj){
+		//		or else the fractional time multiplier for the next event's delay, default=0.9
+		//	initialDelay: the number of milliseconds until the 2nd event occurs, default=500ms
+		if(obj != this._obj){
 			this.stop();
-			this._initialDelay = initialDelay ? initialDelay : 500;
-			this._subsequentDelay = subsequentDelay ? subsequentDelay : 0.90;
+			this._initialDelay = initialDelay || 500;
+			this._subsequentDelay = subsequentDelay || 0.90;
 			this._obj = obj;
 			this._evt = evt;
 			this._node = node;
@@ -1050,7 +1085,7 @@ dijit.typematic = {
 
 	stop: function(){
 		// summary:
-		//      Stop an ongoing timed, repeating callback sequence.
+		//	  Stop an ongoing timed, repeating callback sequence.
 		if(this._timer){
 			clearTimeout(this._timer);
 			this._timer = null;
@@ -1063,7 +1098,6 @@ dijit.typematic = {
 
 	addKeyListener: function(/*DOMNode*/ node, /*Object*/ keyObject, /*Object*/ _this, /*Function*/ callback, /*Number*/ subsequentDelay, /*Number*/ initialDelay){
 		// summary: Start listening for a specific typematic key.
-		//	node: the DOM node object to listen on for key events.
 		//	keyObject: an object defining the key to listen for.
 		//		key: (mandatory) the keyCode (number) or character (string) to listen for.
 		//		ctrlKey: desired ctrl key state to initiate the calback sequence:
@@ -1073,54 +1107,56 @@ dijit.typematic = {
 		//		altKey: same as ctrlKey but for the alt key
 		//		shiftKey: same as ctrlKey but for the shift key
 		//	See the trigger method for other parameters.
-		var ary = [];
-		ary.push(dojo.connect(node, "onkeypress", this, function(evt){
-			if(evt.keyCode == keyObject.keyCode && (!keyObject.charCode || keyObject.charCode == evt.charCode)
-			&& ((typeof keyObject.ctrlKey == "undefined") || keyObject.ctrlKey == evt.ctrlKey)
-			&& ((typeof keyObject.altKey == "undefined") || keyObject.altKey == evt.ctrlKey)
-			&& ((typeof keyObject.shiftKey == "undefined") || keyObject.shiftKey == evt.ctrlKey)){
-				dojo.stopEvent(evt);
-				dijit.typematic.trigger(keyObject, _this, node, callback, keyObject, subsequentDelay, initialDelay);
-			}else if (dijit.typematic._obj == keyObject){
-				dijit.typematic.stop();
-			}
-		}));
-		ary.push(dojo.connect(node, "onkeyup", this, function(evt){
-			if(dijit.typematic._obj == keyObject){
-				dijit.typematic.stop();
-			}
-		}));
-		return ary;
+		//	Returns an array of dojo.connect handles
+		return [
+			dojo.connect(node, "onkeypress", this, function(evt){
+				if(evt.keyCode == keyObject.keyCode && (!keyObject.charCode || keyObject.charCode == evt.charCode) &&
+				(keyObject.ctrlKey === undefined || keyObject.ctrlKey == evt.ctrlKey) &&
+				(keyObject.altKey === undefined || keyObject.altKey == evt.ctrlKey) &&
+				(keyObject.shiftKey === undefined || keyObject.shiftKey == evt.ctrlKey)){
+					dojo.stopEvent(evt);
+					dijit.typematic.trigger(keyObject, _this, node, callback, keyObject, subsequentDelay, initialDelay);
+				}else if(dijit.typematic._obj == keyObject){
+					dijit.typematic.stop();
+				}
+			}),
+			dojo.connect(node, "onkeyup", this, function(evt){
+				if(dijit.typematic._obj == keyObject){
+					dijit.typematic.stop();
+				}
+			})
+		];
 	},
 
 	addMouseListener: function(/*DOMNode*/ node, /*Object*/ _this, /*Function*/ callback, /*Number*/ subsequentDelay, /*Number*/ initialDelay){
 		// summary: Start listening for a typematic mouse click.
-		//	node: the DOM node object to listen on for mouse events.
 		//	See the trigger method for other parameters.
-		var ary = [];
-		ary.push(dojo.connect(node, "mousedown", this, function(evt){
-			dojo.stopEvent(evt);
-			dijit.typematic.trigger(evt, _this, node, callback, node, subsequentDelay, initialDelay);
-		}));
-		ary.push(dojo.connect(node, "mouseup", this, function(evt){
-			dojo.stopEvent(evt);
-			dijit.typematic.stop();
-		}));
-		ary.push(dojo.connect(node, "mouseout", this, function(evt){
-			dojo.stopEvent(evt);
-			dijit.typematic.stop();
-		}));
-		ary.push(dojo.connect(node, "mousemove", this, function(evt){
-			dojo.stopEvent(evt);
-		}));
-		ary.push(dojo.connect(node, "dblclick", this, function(evt){
-			dojo.stopEvent(evt);
-			if(dojo.isIE){
+		//	Returns an array of dojo.connect handles
+		var dc = dojo.connect;
+		return [
+			dc(node, "mousedown", this, function(evt){
+				dojo.stopEvent(evt);
 				dijit.typematic.trigger(evt, _this, node, callback, node, subsequentDelay, initialDelay);
-				setTimeout("dijit.typematic.stop()",50);
-			}
-		}));
-		return ary;
+			}),
+			dc(node, "mouseup", this, function(evt){
+				dojo.stopEvent(evt);
+				dijit.typematic.stop();
+			}),
+			dc(node, "mouseout", this, function(evt){
+				dojo.stopEvent(evt);
+				dijit.typematic.stop();
+			}),
+			dc(node, "mousemove", this, function(evt){
+				dojo.stopEvent(evt);
+			}),
+			dc(node, "dblclick", this, function(evt){
+				dojo.stopEvent(evt);
+				if(dojo.isIE){
+					dijit.typematic.trigger(evt, _this, node, callback, node, subsequentDelay, initialDelay);
+					setTimeout(dijit.typematic.stop, 50);
+				}
+			})
+		];
 	},
 
 	addListener: function(/*Node*/ mouseNode, /*Node*/ keyNode, /*Object*/ keyObject, /*Object*/ _this, /*Function*/ callback, /*Number*/ subsequentDelay, /*Number*/ initialDelay){
@@ -1128,8 +1164,8 @@ dijit.typematic = {
 		//	This is a thin wrapper to addKeyListener and addMouseListener.
 		//	mouseNode: the DOM node object to listen on for mouse events.
 		//	keyNode: the DOM node object to listen on for key events.
-		//	The mouseNode is used as the callback obj parameter.
-		//	See the trigger method for other parameters.
+		//	See the addMouseListener and addKeyListener methods for other parameters.
+		//	Returns an array of dojo.connect handles
 		return this.addKeyListener(keyNode, keyObject, _this, callback, subsequentDelay, initialDelay).concat(
 			this.addMouseListener(mouseNode, _this, callback, subsequentDelay, initialDelay));
 	}
@@ -1141,77 +1177,7 @@ if(!dojo._hasResource["dijit._base.wai"]){ //_hasResource checks added by build.
 dojo._hasResource["dijit._base.wai"] = true;
 dojo.provide("dijit._base.wai");
 
-dijit.waiNames  = ["waiRole", "waiState"];
-
 dijit.wai = {
-	// summary: Contains functions to set accessibility roles and states
-	//		onto widget elements
-	waiRole: { 	
-				// name: String:
-				//		information for mapping accessibility role
-				name: "waiRole",
-				// namespace: String:
-				//		URI of the namespace for the set of roles
-				"namespace": "http://www.w3.org/TR/xhtml2",
-				// alias: String:
-				//		The alias to assign the namespace
-				alias: "x2",
-				// prefix: String:
-				//		The prefix to assign to the role value
-				prefix: "wairole:"
-	},
-	waiState: {
-				// name: String:
-				//		information for mapping accessibility state
-				name: "waiState",
-				// namespace: String:
-				//		URI of the namespace for the set of states
-				"namespace": "http://www.w3.org/2005/07/aaa",
-				// alias: String:
-				//		The alias to assign the namespace
-				alias: "aaa",
-				// prefix: String:
-				//		empty string - state value does not require prefix
-				prefix: ""
-	},
-	setAttr: function(/*DomNode*/node, /*String*/ ns, /*String*/ attr, /*String|Boolean*/value){
-		// summary: Use appropriate API to set the role or state attribute onto the element.
-		// description: In IE use the generic setAttribute() api.  Append a namespace
-		//   alias to the attribute name and appropriate prefix to the value.
-		//   Otherwise, use the setAttribueNS api to set the namespaced attribute. Also
-		//   add the appropriate prefix to the attribute value.
-		if(dojo.isIE){
-			node.setAttribute(this[ns].alias+":"+ attr, this[ns].prefix+value);
-		}else{
-			node.setAttributeNS(this[ns]["namespace"], attr, this[ns].prefix+value);
-		}
-	},
-
-	getAttr: function(/*DomNode*/ node, /*String*/ ns, /*String|Boolena*/ attr){
-		// Summary:  Use the appropriate API to retrieve the role or state value
-		// Description: In IE use the generic getAttribute() api.  An alias value
-		// 	was added to the attribute name to simulate a namespace when the attribute
-		//  was set.  Otherwise use the getAttributeNS() api to retrieve the state value
-		if(dojo.isIE){
-			return node.getAttribute(this[ns].alias+":"+attr);
-		}else{
-			return node.getAttributeNS(this[ns]["namespace"], attr);
-		}
-	},
-	removeAttr: function(/*DomNode*/ node, /*String*/ ns, /*String|Boolena*/ attr){
-		// summary:  Use the appropriate API to remove the role or state value
-		// description: In IE use the generic removeAttribute() api.  An alias value
-		// 	was added to the attribute name to simulate a namespace when the attribute
-		//  was set.  Otherwise use the removeAttributeNS() api to remove the state value
-		var success = true; //only IE returns a value
-		if(dojo.isIE){
-			 success = node.removeAttribute(this[ns].alias+":"+attr);
-		}else{
-			node.removeAttributeNS(this[ns]["namespace"], attr);
-		}
-		return success;
-	},
-
 	onload: function(){
 		// summary:
 		//		Function that detects if we are in high-contrast mode or not,
@@ -1230,7 +1196,7 @@ dijit.wai = {
 		div.style.cssText = 'border: 1px solid;'
 			+ 'border-color:red green;'
 			+ 'position: absolute;'
-			+ 'left: -999px;'
+			+ 'height: 5px;'
 			+ 'top: -999px;'
 			+ 'background-image: url("' + dojo.moduleUrl("dijit", "form/templates/blank.gif") + '");';
 		dojo.body().appendChild(div);
@@ -1256,6 +1222,105 @@ dijit.wai = {
 if(dojo.isIE || dojo.isMoz){	// NOTE: checking in Safari messes things up
 	dojo._loaders.unshift(dijit.wai.onload);
 }
+
+dojo.mixin(dijit,
+{
+	hasWaiRole: function(/*Element*/ elem){
+		// Summary: Return true if elem has a role attribute and false if not.
+		if(elem.hasAttribute){
+			return elem.hasAttribute("role");
+		}else{
+			return elem.getAttribute("role") ? true : false;
+		}
+	},
+
+	getWaiRole: function(/*Element*/ elem){
+		// Summary: Return the role of elem or an empty string if
+		//		elem does not have a role.
+		var value = elem.getAttribute("role");
+		if(value){
+			var prefixEnd = value.indexOf(":");
+			return prefixEnd == -1 ? value : value.substring(prefixEnd+1);
+		}else{
+			return "";
+		}
+	},
+
+	setWaiRole: function(/*Element*/ elem, /*String*/ role){
+		// Summary: Set the role on elem. On Firefox 2 and below, "wairole:" is
+		//		prepended to the provided role value.
+		if(dojo.isFF && dojo.isFF < 3){
+			elem.setAttribute("role", "wairole:"+role);
+		}else{
+			elem.setAttribute("role", role);
+		}
+	},
+
+	removeWaiRole: function(/*Element*/ elem){
+		// Summary: Removes the role attribute from elem.
+		elem.removeAttribute("role");
+	},
+
+	hasWaiState: function(/*Element*/ elem, /*String*/ state){
+		// Summary: Return true if elem has a value for the given state and
+		//		false if it does not.
+		//		On Firefox 2 and below, we check for an attribute in namespace
+		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
+		//		On all other browsers, we check for an attribute called
+		//		"aria-"+state.
+		if(dojo.isFF && dojo.isFF < 3){
+			return elem.hasAttributeNS("http://www.w3.org/2005/07/aaa", state);
+		}else{
+			if(elem.hasAttribute){
+				return elem.hasAttribute("aria-"+state);
+			}else{
+				return elem.getAttribute("aria-"+state) ? true : false;
+			}
+		}
+	},
+
+	getWaiState: function(/*Element*/ elem, /*String*/ state){
+		// Summary: Return the value of the requested state on elem
+		//		or an empty string if elem has no value for state.
+		//		On Firefox 2 and below, we check for an attribute in namespace
+		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
+		//		On all other browsers, we check for an attribute called
+		//		"aria-"+state.
+		if(dojo.isFF && dojo.isFF < 3){
+			return elem.getAttributeNS("http://www.w3.org/2005/07/aaa", state);
+		}else{
+			var value =  elem.getAttribute("aria-"+state);
+			return value ? value : "";
+		}
+	},
+
+	setWaiState: function(/*Element*/ elem, /*String*/ state, /*String*/ value){
+		// Summary: Set state on elem to value.
+		//		On Firefox 2 and below, we set an attribute in namespace
+		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
+		//		On all other browsers, we set an attribute called
+		//		"aria-"+state.
+		if(dojo.isFF && dojo.isFF < 3){
+			elem.setAttributeNS("http://www.w3.org/2005/07/aaa",
+				"aaa:"+state, value);
+		}else{
+			elem.setAttribute("aria-"+state, value);
+		}
+	},
+
+	removeWaiState: function(/*Element*/ elem, /*String*/ state){
+		// Summary: Removes the given state from elem.
+		//		On Firefox 2 and below, we remove the attribute in namespace
+		//		"http://www.w3.org/2005/07/aaa" with a name of the given state.
+		//		On all other browsers, we remove the attribute called
+		//		"aria-"+state.
+		if(dojo.isFF && dojo.isFF < 3){
+			elem.removeAttributeNS("http://www.w3.org/2005/07/aaa", state);
+		}else{
+			elem.removeAttribute("aria-"+state);
+		}
+	}
+});
 
 }
 
@@ -1362,7 +1427,8 @@ dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*Object?*/options){
 	//
 	//	description:
 	//		When options.selector is omitted, output follows RFC3339 (http://www.ietf.org/rfc/rfc3339.txt)
-	//		Times are formatted using the local time zone.  Does not check bounds.
+	//		The local time zone is included as an offset from GMT, except when selector=='time' (time without a date)
+	//		Does not check bounds.
 	//
 	//	dateObject:
 	//		A Date object
@@ -1390,7 +1456,7 @@ dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*Object?*/options){
 		}
 		if(options.zulu){
 			time += "Z";
-		}else{
+		}else if(options.selector != "time"){
 			var timezoneOffset = dateObject.getTimezoneOffset();
 			var absOffset = Math.abs(timezoneOffset);
 			time += (timezoneOffset > 0 ? "-" : "+") + 
@@ -1523,26 +1589,7 @@ dojo.parser = new function(){
 		return new Function(preamble+script.innerHTML+suffix);
 	}
 
-	this._wireUpMethod = function(instance, script){
-		var nf = this._functionFromScript(script);
-		// if there's a destination, connect it to that, otherwise run it now
-		var source = script.getAttribute("event");
-		if(source){
-			var mode = script.getAttribute("type");
-			if(mode && (mode == "dojo/connect")){
-				// FIXME: need to implement EL here!!
-				d.connect(instance, source, null, nf);
-			}else{ 
-				// otherwise we assume it's type "dojo/method", and therefore a
-				// replacement
-				instance[source] = nf;
-			}
-		}else{
-			nf.call(instance);
-		}
-	}
-
-	this.instantiate = function(nodes){
+	this.instantiate = function(/* Array */nodes){
 		// summary:
 		//		Takes array of nodes, and turns them into class instances and
 		//		potentially calls a layout method to allow them to connect with
@@ -1563,25 +1610,42 @@ dojo.parser = new function(){
 			for(var name in clsInfo.params){
 				var item = attributes.getNamedItem(name);
 				if(!item || (!item.specified && (!dojo.isIE || name.toLowerCase()!="value"))){ continue; }
+				var value = item.value;
+				// Deal with IE quirks for 'class' and 'style'
+				switch(name){
+				case "class":
+					value = node.className;
+					break;
+				case "style":
+					value = node.style && node.style.cssText; // FIXME: Opera?
+				}
 				var _type = clsInfo.params[name];
-				params[name] = str2obj(item.value, _type);
+				params[name] = str2obj(value, _type);
 			}
 
-			// FIXME (perf): making two iterations of the DOM to find the
-			// <script> elements feels dirty. Still need a separate iteration
-			// if we do it another way, though, so we should probably benchmark
-			// the various approaches at some point.
-
+			// Process <script type="dojo/*"> script tags
+			// <script type="dojo/method" event="foo"> tags are added to params, and passed to
+			// the widget on instantiation.
+			// <script type="dojo/method"> tags (with no event) are executed after instantiation
+			// <script type="dojo/connect" event="foo"> tags are dojo.connected after instantiation
 			if(!ps){
-				// preambles are magic. Handle it.
-				var preambles = d.query("> script[type='dojo/method'][event='preamble']", node).orphan();
-				if(preambles.length){
-					// we only support one preamble. So be it.
-					params.preamble = d.parser._functionFromScript(preambles[0]);
-				}
+				var connects = [],	// functions to connect after instantiation
+					calls = [];		// functions to call after instantiation
 
-				// grab the rest of the scripts for processing later
-				var scripts = d.query("> script[type^='dojo/']", node).orphan();
+				d.query("> script[type^='dojo/']", node).orphan().forEach(function(script){
+					var event = script.getAttribute("event"),
+						type = script.getAttribute("type"),
+						nf = d.parser._functionFromScript(script);
+					if(event){
+						if(type == "dojo/connect"){
+							connects.push({event: event, func: nf});
+						}else{
+							params[event] = nf;
+						}
+					}else{
+						calls.push(nf);
+					}
+				});
 			}
 
 			var markupFactory = clazz["markupFactory"];
@@ -1598,10 +1662,13 @@ dojo.parser = new function(){
 				d.setObject(jsname, instance);
 			}
 
-			// check to see if we need to hook up events for non-declare()-built classes
+			// process connections and startup functions
 			if(!ps){
-				scripts.forEach(function(script){
-					d.parser._wireUpMethod(instance, script);
+				dojo.forEach(connects, function(connect){
+					dojo.connect(instance, connect.event, null, connect.func);
+				});
+				dojo.forEach(calls, function(func){
+					func.call(instance);
 				});
 			}
 		});
@@ -1628,15 +1695,6 @@ dojo.parser = new function(){
 		var list = d.query('[dojoType]', rootNode);
 		// go build the object instances
 		var instances = this.instantiate(list);
-		
-		// FIXME: clean up any dangling scripts that we may need to run
-		/*
-		var scripts = d.query("script[type='dojo/method']", rootNode).orphan();
-		scripts.forEach(function(script){
-			wireUpMethod(instance, script);
-		});
-		*/
-
 		return instances;
 	};
 }();
@@ -1691,9 +1749,9 @@ dojo.provide("dijit._Widget");
 
 
 dojo.declare("dijit._Widget", null, {
-	constructor: function(params, srcNodeRef){
-		this.create(params, srcNodeRef);
-	},
+	// summary:
+	//		The foundation of dijit widgets. 	
+	//
 	// id: String
 	//		a unique, opaque ID string that can be assigned by users or by the
 	//		system. If the developer passes an ID which is known not to be
@@ -1710,20 +1768,42 @@ dojo.declare("dijit._Widget", null, {
 	//  Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".
 	dir: "",
 
+	// class: String
+	// HTML class attribute
+	"class": "",
+
+	// style: String
+	// HTML style attribute
+	style: "",
+
+	// title: String
+	// HTML title attribute
+	title: "",
+
 	// srcNodeRef: DomNode
 	//		pointer to original dom node
 	srcNodeRef: null,
 
-	// domNode DomNode:
+	// domNode: DomNode
 	//		this is our visible representation of the widget! Other DOM
 	//		Nodes may by assigned to other properties, usually through the
 	//		template system's dojoAttachPonit syntax, but the domNode
 	//		property is the canonical "top level" node in widget UI.
 	domNode: null,
 
+	// attributeMap: Object
+	//		A map of attributes and attachpoints -- typically standard HTML attributes -- to set
+	//		on the widget's dom, at the "domNode" attach point, by default.
+	//		Other node references can be specified as properties of 'this'
+	attributeMap: {id:"", dir:"", lang:"", "class":"", style:"", title:""},  // TODO: add on* handlers?
+
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
-	
-	create: function(params, srcNodeRef) {
+
+	postscript: function(params, srcNodeRef){
+		this.create(params, srcNodeRef);
+	},
+
+	create: function(params, srcNodeRef){
 		// summary:
 		//		To understand the process by which widgets are instantiated, it
 		//		is critical to understand what other methods create calls and
@@ -1758,14 +1838,14 @@ dojo.declare("dijit._Widget", null, {
 		// _attaches: String[]
 		// 		names of all our dojoAttachPoint variables
 		this._attaches=[];
-	
+
 		//mixin our passed parameters
 		if(this.srcNodeRef && (typeof this.srcNodeRef.id == "string")){ this.id = this.srcNodeRef.id; }
 		if(params){
 			dojo.mixin(this,params);
 		}
 		this.postMixInProperties();
-		
+
 		// generate an id for the widget if one wasn't specified
 		// (be sure to do this before buildRendering() because that function might
 		// expect the id to be there.
@@ -1775,18 +1855,44 @@ dojo.declare("dijit._Widget", null, {
 		dijit.registry.add(this);
 
 		this.buildRendering();
+
+		// Copy attributes listed in attributeMap into the [newly created] DOM for the widget.
+		// The placement of these attributes is according to the property mapping in attributeMap.
+		// Note special handling for 'style' and 'class' attributes which are lists and can
+		// have elements from both old and new structures, and some attributes like "type"
+		// cannot be processed this way as they are not mutable.
+		if(this.domNode){
+			for(var attr in this.attributeMap){
+				var mapNode = this[this.attributeMap[attr] || "domNode"];
+				var value = this[attr];
+				if(typeof value != "object" && (value !== "" || (params && params[attr]))){
+					switch(attr){
+					case "class":
+						dojo.addClass(mapNode, value);
+						break;
+					case "style":
+						if(mapNode.style.cssText){
+							mapNode.style.cssText += "; " + value;// FIXME: Opera
+						}else{
+							mapNode.style.cssText = value;
+						}
+						break;
+					default:
+						mapNode.setAttribute(attr, value);
+					}
+				}
+			}
+		}
+
 		if(this.domNode){
 			this.domNode.setAttribute("widgetId", this.id);
-			if(this.srcNodeRef && this.srcNodeRef.dir){
-				this.domNode.dir = this.srcNodeRef.dir;
-			}
 		}
 		this.postCreate();
 
 		// If srcNodeRef has been processed and removed from the DOM (e.g. TemplatedWidget) then delete it to allow GC.
 		if(this.srcNodeRef && !this.srcNodeRef.parentNode){
 			delete this.srcNodeRef;
-		}
+		}	
 	},
 
 	postMixInProperties: function(){
@@ -1800,7 +1906,7 @@ dojo.declare("dijit._Widget", null, {
 		// summary:
 		//		Construct the UI for this widget, setting this.domNode.
 		//		Most widgets will mixin TemplatedWidget, which overrides this method.
-		this.domNode = this.srcNodeRef;
+		this.domNode = this.srcNodeRef || dojo.doc.createElement('div');
 	},
 
 	postCreate: function(){
@@ -1923,7 +2029,7 @@ dojo.declare("dijit._Widget", null, {
 				handles.push(dojo.connect(obj, "onkeydown", this,
 					function(e){
 						if(e.keyCode == dojo.keys.ENTER){
-							return (dojo.isString(method))? 
+							return (dojo.isString(method))?
 								w[method](e) : method.call(w, e);
 						}else if(e.keyCode == dojo.keys.SPACE){
 							// stop space down as it causes IE to scroll
@@ -1934,7 +2040,7 @@ dojo.declare("dijit._Widget", null, {
 				handles.push(dojo.connect(obj, "onkeyup", this,
 					function(e){
 						if(e.keyCode == dojo.keys.SPACE){
-							return dojo.isString(method) ? 
+							return dojo.isString(method) ?
 								w[method](e) : method.call(w, e);
 						}
 			 		}));
@@ -1971,9 +2077,16 @@ dojo.declare("dijit._Widget", null, {
 		//		See HTML spec, DIR attribute for more information.
 
 		if(typeof this._ltr == "undefined"){
-			this._ltr = (this.dir || dojo.getComputedStyle(this.domNode).direction) != "rtl";
+			this._ltr = dojo.getComputedStyle(this.domNode).direction != "rtl";
 		}
 		return this._ltr; //Boolean
+	},
+
+	isFocusable: function(){
+		// summary:
+		//		Return true if this widget can currently be focused
+		//		and false if not
+		return this.focus && (dojo.style(this.domNode, "display") != "none");
 	}
 });
 
@@ -2016,8 +2129,8 @@ dojo.string.substitute = function(	/*String*/template,
 	//		exception if any parameter is unmatched.
 	// description:
 	//		For example,
-	//			dojo.string.substitute("File '${0}' is not found in directory '${1}'.",["foo.html","/temp"]);
-	//			dojo.string.substitute("File '${name}' is not found in directory '${info.dir}'.",{name: "foo.html", info: {dir: "/temp"}});
+	//		|	dojo.string.substitute("File '${0}' is not found in directory '${1}'.",["foo.html","/temp"]);
+	//		|	dojo.string.substitute("File '${name}' is not found in directory '${info.dir}'.",{name: "foo.html", info: {dir: "/temp"}});
 	//		both return
 	//			"File 'foo.html' is not found in directory '/temp'."
 	// template: 
@@ -2100,16 +2213,21 @@ dojo.declare("dijit._Templated",
 		//		the src dom node will be placed
 		containerNode: null,
 
+		// skipNodeCache Boolean:
+		//		if using a cached widget template node poses issues for a
+		//		particular widget class, it can set this property to ensure
+		//		that its template is always re-built from a string
+		_skipNodeCache: false,
+
 		// method over-ride
 		buildRendering: function(){
 			// summary:
-			//		Construct the UI for this widget from a template.
-			// description:
+			//		Construct the UI for this widget from a template, setting this.domNode.
+
 			// Lookup cached version of template, and download to cache if it
 			// isn't there already.  Returns either a DomNode or a string, depending on
 			// whether or not the template contains ${foo} replacement parameters.
-
-			var cached = dijit._Templated.getCachedTemplate(this.templatePath, this.templateString);
+			var cached = dijit._Templated.getCachedTemplate(this.templatePath, this.templateString, this._skipNodeCache);
 
 			var node;
 			if(dojo.isString(cached)){
@@ -2119,6 +2237,7 @@ dojo.declare("dijit._Templated",
 				var tstr = dojo.string.substitute(cached, this, function(value, key){
 					if(key.charAt(0) == '!'){ value = _this[key.substr(1)]; }
 					if(typeof value == "undefined"){ throw new Error(className+" template:"+key); } // a debugging aide
+					if(!value){ return ""; }
 
 					// Substitution keys beginning with ! will skip the transform step,
 					// in case a user wishes to insert unescaped markup, e.g. ${!foo}
@@ -2137,25 +2256,21 @@ dojo.declare("dijit._Templated",
 			// recurse through the node, looking for, and attaching to, our
 			// attachment points which should be defined on the template node.
 			this._attachTemplateNodes(node);
-			if(this.srcNodeRef){
-				dojo.style(this.styleNode || node, "cssText", this.srcNodeRef.style.cssText);
-				if(this.srcNodeRef.className){
-					node.className += " " + this.srcNodeRef.className;
-				}
+
+			var source = this.srcNodeRef;
+			if(source && source.parentNode){
+				source.parentNode.replaceChild(node, source);
 			}
 
 			this.domNode = node;
-			if(this.srcNodeRef && this.srcNodeRef.parentNode){
-				this.srcNodeRef.parentNode.replaceChild(this.domNode, this.srcNodeRef);
-			}
 			if(this.widgetsInTemplate){
-				var childWidgets = dojo.parser.parse(this.domNode);
+				var childWidgets = dojo.parser.parse(node);
 				this._attachTemplateNodes(childWidgets, function(n,p){
 					return n[p];
 				});
 			}
 
-			this._fillContent(this.srcNodeRef);
+			this._fillContent(source);
 		},
 
 		_fillContent: function(/*DomNode*/ source){
@@ -2234,24 +2349,18 @@ dojo.declare("dijit._Templated",
 				}
 
 				// waiRole, waiState
-				var name, names = ["waiRole", "waiState"];
-				while(name=names.shift()){
-					var wai = dijit.wai[name];
-					var values = getAttrFunc(baseNode, wai.name);
-					if(values){
-						var role = "role";
-						var val;
-						values = values.split(/\s*,\s*/);
-						while(val=values.shift()){
-							if(val.indexOf('-') != -1){
-								// this is a state-value pair
-								var statePair = val.split('-');
-								role = statePair[0];
-								val = statePair[1];
-							}
-							dijit.wai.setAttr(baseNode, wai.name, role, val);
+				var role = getAttrFunc(baseNode, "waiRole");
+				if(role){
+					dijit.setWaiRole(baseNode, role);
+				}
+				var values = getAttrFunc(baseNode, "waiState");
+				if(values){
+					dojo.forEach(values.split(/\s*,\s*/), function(stateValue){
+						if(stateValue.indexOf('-') != -1){
+							var pair = stateValue.split('-');
+							dijit.setWaiState(baseNode, pair[0], pair[1]);
 						}
-					}
+					});
 				}
 
 			}
@@ -2262,7 +2371,7 @@ dojo.declare("dijit._Templated",
 // key is either templatePath or templateString; object is either string or DOM tree
 dijit._Templated._templateCache = {};
 
-dijit._Templated.getCachedTemplate = function(templatePath, templateString){
+dijit._Templated.getCachedTemplate = function(templatePath, templateString, alwaysUseString){
 	// summary:
 	//		static method to get a template based on the templatePath or
 	//		templateString key
@@ -2289,7 +2398,7 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString){
 
 	templateString = dojo.string.trim(templateString);
 
-	if(templateString.match(/\$\{([^\}]+)\}/g)){
+	if(templateString.match(/\$\{([^\}]+)\}/g) || alwaysUseString){
 		// there are variables in the template so all we can do is cache the string
 		return (tmplts[key] = templateString); //String
 	}else{
@@ -2299,9 +2408,10 @@ dijit._Templated.getCachedTemplate = function(templatePath, templateString){
 };
 
 dijit._Templated._sanitizeTemplateString = function(/*String*/tString){
-	//summary: Strips <?xml ...?> declarations so that external SVG and XML
-	//documents can be added to a document without worry. Also, if the string
-	//is an HTML document, only the part inside the body tag is returned.
+	// summary: 
+	//		Strips <?xml ...?> declarations so that external SVG and XML
+	// 		documents can be added to a document without worry. Also, if the string
+	//		is an HTML document, only the part inside the body tag is returned.
 	if(tString){
 		tString = tString.replace(/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, "");
 		var matches = tString.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
@@ -2339,12 +2449,13 @@ if(dojo.isIE){
 	var tn;
 
 	dijit._Templated._createNodesFromText = function(/*String*/text){
-		//	summary
+		// summary:
 		//	Attempts to create a set of nodes based on the structure of the passed text.
 
 		if(!tn){
 			tn = dojo.doc.createElement("div");
 			tn.style.display="none";
+			dojo.body().appendChild(tn);
 		}
 		var tableType = "none";
 		var rtext = text.replace(/^\s+/, "");
@@ -2358,7 +2469,6 @@ if(dojo.isIE){
 		}
 
 		tn.innerHTML = text;
-		dojo.body().appendChild(tn);
 		if(tn.normalize){
 			tn.normalize();
 		}
@@ -2454,10 +2564,17 @@ dojo.declare("dijit._Container",
 			//		Process the given child widget, inserting it's dom node as
 			//		a child of our dom node
 
-			if(typeof insertIndex == "undefined"){
+			if(insertIndex === undefined){
 				insertIndex = "last";
 			}
-			dojo.place(widget.domNode, this.containerNode || this.domNode, insertIndex);
+			var refNode = this.containerNode || this.domNode;
+			if(insertIndex && typeof insertIndex == "number"){
+				var children = dojo.query("> [widgetid]", refNode);
+				if(children && children.length >= insertIndex){
+					refNode = children[insertIndex-1]; insertIndex = "after";
+				}
+			}
+			dojo.place(widget.domNode, refNode, insertIndex);
 
 			// If I've been started but the child widget hasn't been started,
 			// start it now.  Make sure to do this after widget has been
@@ -2493,15 +2610,205 @@ dojo.declare("dijit._Container",
 
 		getChildren: function(){
 			// summary:
-			//		returns array of children widgets
+			//		Returns array of children widgets
 			return dojo.query("> [widgetId]", this.containerNode || this.domNode).map(dijit.byNode); // Array
 		},
 
 		hasChildren: function(){
 			// summary:
-			//		returns true if widget has children
+			//		Returns true if widget has children
 			var cn = this.containerNode || this.domNode;
 			return !!this._firstElement(cn); // Boolean
+		},
+
+		_getSiblingOfChild: function(/*Widget*/ child, /*int*/ dir){
+			// summary:
+			//		get the next or previous widget sibling of child
+			// dir:
+			//		if 1, get the next sibling
+			//		if -1, get the previous sibling
+			var node = child.domNode;
+			var which = (dir>0 ? "nextSibling" : "previousSibling");
+			do{
+				node = node[which];
+			}while(node && (node.nodeType != 1 || !dijit.byNode(node)));
+			return node ? dijit.byNode(node) : null;
+		}
+	}
+);
+
+dojo.declare("dijit._KeyNavContainer",
+	[dijit._Container],
+	{
+
+		// summary:
+		//		A _Container with keyboard navigation of its children.
+		//		To use this mixin, call connectKeyNavHandlers() in
+		//		postCreate() and call startupKeyNavChildren() in startup().
+
+/*=====
+		// focusedChild: Widget
+		//		The currently focused child widget, or null if there isn't one
+		focusedChild: null,
+=====*/
+
+		_keyNavCodes: {},
+
+		connectKeyNavHandlers: function(/*Array*/ prevKeyCodes, /*Array*/ nextKeyCodes){
+			// summary:
+			//		Call in postCreate() to attach the keyboard handlers
+			//		to the container.
+			// preKeyCodes: Array
+			//		Key codes for navigating to the previous child.
+			// nextKeyCodes: Array
+			//		Key codes for navigating to the next child.
+
+			var keyCodes = this._keyNavCodes = {};
+			var prev = dojo.hitch(this, this.focusPrev);
+			var next = dojo.hitch(this, this.focusNext);
+			dojo.forEach(prevKeyCodes, function(code){ keyCodes[code] = prev });
+			dojo.forEach(nextKeyCodes, function(code){ keyCodes[code] = next });
+			this.connect(this.domNode, "onkeypress", "_onContainerKeypress");
+			if(dojo.isIE){
+				this.connect(this.domNode, "onactivate", "_onContainerFocus");
+				this.connect(this.domNode, "ondeactivate", "_onContainerBlur");
+			}else{
+				this.connect(this.domNode, "onfocus", "_onContainerFocus");
+				this.connect(this.domNode, "onblur", "_onContainerBlur");
+			}
+		},
+
+		startupKeyNavChildren: function(){
+			// summary:
+			//		Call in startup() to set child tabindexes to -1
+			dojo.forEach(this.getChildren(), dojo.hitch(this, "_setTabIndexMinusOne"));
+		},
+
+		addChild: function(/*Widget*/ widget, /*int?*/ insertIndex){
+			// summary: Add a child to our _Container
+			dijit._KeyNavContainer.superclass.addChild.apply(this, arguments);
+			this._setTabIndexMinusOne(widget);
+		},
+
+		focus: function(){
+			// summary: Default focus() implementation: focus the first child.
+			this.focusFirstChild();
+		},
+
+		focusFirstChild: function(){
+			// summary: Focus the first focusable child in the container.
+			this.focusChild(this._getFirstFocusableChild());
+		},
+
+		focusNext: function(){
+			// summary: Focus the next widget or focal node (for widgets
+			//		with multiple focal nodes) within this container.
+			if(this.focusedChild && this.focusedChild.hasNextFocalNode
+					&& this.focusedChild.hasNextFocalNode()){
+				this.focusedChild.focusNext();
+				return;
+			}
+			var child = this._getNextFocusableChild(this.focusedChild, 1);
+			if(child.getFocalNodes){
+				this.focusChild(child, child.getFocalNodes()[0]);
+			}else{
+				this.focusChild(child);
+			}
+		},
+
+		focusPrev: function(){
+			// summary: Focus the previous widget or focal node (for widgets
+			//		with multiple focal nodes) within this container.
+			if(this.focusedChild && this.focusedChild.hasPrevFocalNode
+					&& this.focusedChild.hasPrevFocalNode()){
+				this.focusedChild.focusPrev();
+				return;
+			}
+			var child = this._getNextFocusableChild(this.focusedChild, -1);
+			if(child.getFocalNodes){
+				var nodes = child.getFocalNodes();
+				this.focusChild(child, nodes[nodes.length-1]);
+			}else{
+				this.focusChild(child);
+			}
+		},
+
+		focusChild: function(/*Widget*/ widget, /*Node?*/ node){
+			// summary: Focus widget. Optionally focus 'node' within widget.
+			if(widget){
+				if(this.focusedChild && widget !== this.focusedChild){
+					this._onChildBlur(this.focusedChild);
+				}
+				this.focusedChild = widget;
+				if(node && widget.focusFocalNode){
+					widget.focusFocalNode(node);
+				}else{
+					widget.focus();
+				}
+			}
+		},
+
+		_setTabIndexMinusOne: function(/*Widget*/ widget){
+			if(widget.getFocalNodes){
+				dojo.forEach(widget.getFocalNodes(), function(node){
+					node.setAttribute("tabIndex", -1);
+				});
+			}else{
+				(widget.focusNode || widget.domNode).setAttribute("tabIndex", -1);
+			}
+		},
+
+		_onContainerFocus: function(evt){
+			this.domNode.setAttribute("tabIndex", -1);
+			if(evt.target === this.domNode){
+				this.focusFirstChild();
+			}else{
+				var widget = dijit.getEnclosingWidget(evt.target);
+				if(widget && widget.isFocusable()){
+					this.focusedChild = widget;
+				}
+			}
+		},
+
+		_onContainerBlur: function(evt){
+			if(this.tabIndex){
+				this.domNode.setAttribute("tabIndex", this.tabIndex);
+			}
+		},
+
+		_onContainerKeypress: function(evt){
+			if(evt.ctrlKey || evt.altKey){ return; }
+			var func = this._keyNavCodes[evt.keyCode];
+			if(func){
+				func();
+				dojo.stopEvent(evt);
+			}
+		},
+
+		_onChildBlur: function(/*Widget*/ widget){
+			// summary:
+			//		Called when focus leaves a child widget to go
+			//		to a sibling widget.
+		},
+
+		_getFirstFocusableChild: function(){
+			return this._getNextFocusableChild(null, 1);
+		},
+
+		_getNextFocusableChild: function(child, dir){
+			if(child){
+				child = this._getSiblingOfChild(child, dir);
+			}
+			var children = this.getChildren();
+			for(var i=0; i < children.length; i++){
+				if(!child){
+					child = children[(dir>0) ? 0 : (children.length-1)];
+				}
+				if(child.isFocusable()){
+					return child;
+				}
+				child = this._getSiblingOfChild(child, dir);
+			}
 		}
 	}
 );
@@ -2559,7 +2866,7 @@ dojo.declare("dijit.layout._LayoutWidget",
 				this.connect(window, 'onresize', function(){this.resize();});
 			}
 		},
-		
+
 		resize: function(args){
 			// summary:
 			//		Explicitly set this widget's size (in pixels),
@@ -2625,7 +2932,7 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 	var size = function(widget, dim){
 		// size the child
 		widget.resize ? widget.resize(dim) : dojo.marginBox(widget.domNode, dim);
-		
+
 		// record child's size, but favor our own numbers when we have them.
 		// the browser lies sometimes
 		dojo.mixin(widget, dojo.marginBox(widget.domNode));
@@ -2648,6 +2955,12 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		dim = dojo.mixin({}, dim);
 
 		dojo.addClass(container, "dijitLayoutContainer");
+
+		// Move "client" elements to the end of the array for layout.  a11y dictates that the author
+		// needs to be able to put them in the document in tab-order, but this algorithm requires that
+		// client be last.
+		children = dojo.filter(children, function(item){ return item.layoutAlign != "client"; })
+			.concat(dojo.filter(children, function(item){ return item.layoutAlign == "client"; }));
 
 		// set positions/sizes
 		dojo.forEach(children, function(child){
@@ -2680,7 +2993,7 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 				}else{
 					elmStyle.left = dim.l + dim.w + "px";
 				}
-			}else if(pos=="flood" || pos=="client"){
+			}else if(pos=="client"){
 				size(child, dim);
 			}
 		});
@@ -2713,8 +3026,9 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	*/
 
 	// baseClass: String
-	//		Used to add CSS classes like FormElementDisabled
-	// TODO: remove this in favor of this.domNode.baseClass?
+	//		Root CSS class of the widget (ex: dijitTextBox), used to add CSS classes of widget
+	//		(ex: "dijitTextBox dijitTextBoxInvalid dijitTextBoxFocused dijitTextBoxInvalidFocused")
+	//		See _setStateClass().
 	baseClass: "",
 
 	// value: String
@@ -2748,8 +3062,15 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	disabled: false,
 
 	// intermediateChanges: Boolean
-	//              Fires onChange for each value change or only on demand
+	//		Fires onChange for each value change or only on demand
 	intermediateChanges: false,
+
+	// These mixins assume that the focus node is an INPUT, as many but not all _FormWidgets are.
+	// Don't attempt to mixin the 'type', 'name' attributes here programatically -- they must be declared
+	// directly in the template as read by the parser in order to function. IE is known to specifically 
+	// require the 'name' attribute at element creation time.
+	attributeMap: dojo.mixin(dojo.clone(dijit._Widget.prototype.attributeMap),
+		{id:"focusNode", tabIndex:"focusNode", alt:"focusNode"}),
 
 	setDisabled: function(/*Boolean*/ disabled){
 		// summary:
@@ -2765,35 +3086,34 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 			this._hovering = false;
 			this._active = false;
 		}
-		dijit.wai.setAttr(this.focusNode || this.domNode, "waiState", "disabled", disabled);
+		dijit.setWaiState(this.focusNode || this.domNode, "disabled", disabled);
 		this._setStateClass();
 	},
 
 
 	_onMouse : function(/*Event*/ event){
 		// summary:
-		//	Sets _hovering, _active, and baseClass attributes depending on mouse state,
-		//	then calls setStateClass() to set appropriate CSS class for this.domNode.
+		//	Sets _hovering, _active, and stateModifier properties depending on mouse state,
+		//	then calls setStateClass() to set appropriate CSS classes for this.domNode.
 		//
 		//	To get a different CSS class for hover, send onmouseover and onmouseout events to this method.
 		//	To get a different CSS class while mouse button is depressed, send onmousedown to this method.
 
 		var mouseNode = event.target;
+		if(mouseNode && mouseNode.getAttribute){
+			this.stateModifier = mouseNode.getAttribute("stateModifier") || "";
+		}
 
 		if(!this.disabled){
 			switch(event.type){
+				case "mouseenter" :	
 				case "mouseover" :
 					this._hovering = true;
-					var baseClass, node=mouseNode;
-					while( node.nodeType===1 && !(baseClass=node.getAttribute("baseClass")) && node != this.domNode ){
-						node=node.parentNode;
-					}
-					this.baseClass= baseClass || "dijit"+this.declaredClass.replace(/.*\./g,"");
 					break;
 
 				case "mouseout" :	
-					this._hovering = false;	
-					this.baseClass=null;
+				case "mouseleave" :	
+					this._hovering = false;
 					break;
 
 				case "mousedown" :
@@ -2813,41 +3133,53 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 		}
 	},
 
+	isFocusable: function(){
+		return !this.disabled && (dojo.style(this.domNode, "display") != "none");
+	},
+
 	focus: function(){
 		dijit.focus(this.focusNode);
 	},
 
-	_setStateClass: function(/*String*/ base){
-		// summary:
-		//	Update the visual state of the widget by changing the css class on the domnode
-		//	according to widget state.
+	_setStateClass: function(){
+		// summary
+		//	Update the visual state of the widget by setting the css classes on this.domNode
+		//  (or this.stateNode if defined) by combining this.baseClass with
+		//	various suffixes that represent the current widget state(s).
 		//
-		//	State will be one of:
-		//		<baseClass>
-		//		<baseClass> + "Disabled"	- if the widget is disabled
-		//		<baseClass> + "Active"		- if the mouse (or space/enter key?) is being pressed down
-		//		<baseClass> + "Hover"		- if the mouse is over the widget
-		//		<baseClass> + "Focused"		- if the widget has focus
+		//	In the case where a widget has multiple
+		//	states, it sets the class based on all possible
+		//  combinations.  For example, an invalid form widget that is being hovered
+		//	will be "dijitInput dijitInputInvalid dijitInputHover dijitInputInvalidHover".
 		//
-		//	Note: if you don't want to change the way the widget looks on hover, then don't call
-		//	this routine on hover.  Similarly for mousedown --> active
+		//	For complex widgets with multiple regions, there can be various hover/active states,
+		//	such as "Hover" or "CloseButtonHover" (for tab buttons).
+		//	This is controlled by a stateModifier="CloseButton" attribute on the close button node.
 		//
-		//	For widgets which can be in a checked state (like checkbox or radio),
-		//	in addition to the above classes...
-		//		<baseClass> + "Checked"
-		//		<baseClass> + "CheckedDisabled"	- if the widget is disabled
-		//		<baseClass> + "CheckedActive"		- if the mouse is being pressed down
-		//		<baseClass> + "CheckedHover"		- if the mouse is over the widget
-		//		<baseClass> + "CheckedFocused"		- if the widget has focus
+		//	The widget may have one or more of the following states, determined
+		//	by this.state, this.checked, this.valid, and this.selected:
+		//		Error - ValidationTextBox sets this.state to "Error" if the current input value is invalid
+		//		Checked - ex: a checkmark or a ToggleButton in a checked state, will have this.checked==true
+		//		Selected - ex: currently selected tab will have this.selected==true
+		//
+		//	In addition, it may have at most one of the following states,
+		//	based on this.disabled and flags set in _onMouse (this._active, this._hovering, this._focused):
+		//		Disabled	- if the widget is disabled
+		//		Active		- if the mouse (or space/enter key?) is being pressed down
+		//		Focused		- if the widget has focus
+		//		Hover		- if the mouse is over the widget
+		//
+		//	(even if multiple af the above conditions are true we only pick the first matching one)
 
-		// get original class (non state related) specified in template
-		var origClass = (this.styleNode||this.domNode).className;
 
-		// compute list of classname representing the states of the widget
-		var base = this.baseClass || this.domNode.getAttribute("baseClass") || "dijitFormWidget";
-		origClass = origClass.replace(new RegExp("\\b"+base+"(Checked)?(Selected)?(Disabled|Active|Focused|Hover)?\\b\\s*", "g"), "");
-		var classes = [ base ];
-		
+		// Get original (non state related, non baseClass related) class specified in template
+		if(!("staticClass" in this)){
+			this.staticClass = (this.stateNode||this.domNode).className;
+		}
+
+		// Compute new set of classes
+		var classes = [ this.baseClass ];
+
 		function multiply(modifier){
 			classes=classes.concat(dojo.map(classes, function(c){ return c+modifier; }));
 		}
@@ -2855,23 +3187,26 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 		if(this.checked){
 			multiply("Checked");
 		}
+		if(this.state){
+			multiply(this.state);
+		}
 		if(this.selected){
 			multiply("Selected");
 		}
-		
+
 		// Only one of these four can be applied.
 		// Active trumps Focused, Focused trumps Hover, and Disabled trumps all.
 		if(this.disabled){
 			multiply("Disabled");
 		}else if(this._active){
-			multiply("Active");
+			multiply(this.stateModifier+"Active");
 		}else if(this._focused){
 			multiply("Focused");
 		}else if(this._hovering){
-			multiply("Hover");
+			multiply(this.stateModifier+"Hover");
 		}
 
-		(this.styleNode || this.domNode).className = origClass + " " + classes.join(" ");
+		(this.stateNode || this.domNode).className = this.staticClass + " " + classes.join(" ");
 	},
 
 	onChange: function(newValue){
@@ -2879,7 +3214,7 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	},
 
 	postCreate: function(){
-		this.setValue(this.value, true);
+		this.setValue(this.value, null); // null reserved for initial value
 		this.setDisabled(this.disabled);
 		this._setStateClass();
 	},
@@ -2887,8 +3222,11 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	setValue: function(/*anything*/ newValue, /*Boolean, optional*/ priorityChange){
 		// summary: set the value of the widget.
 		this._lastValue = newValue;
-		dijit.wai.setAttr(this.focusNode || this.domNode, "waiState", "valuenow", this.forWaiValuenow());
-		if((this.intermediateChanges || priorityChange) && newValue != this._lastValueReported){
+		dijit.setWaiState(this.focusNode || this.domNode, "valuenow", this.forWaiValuenow());
+		if(this._lastValueReported == undefined && priorityChange === null){ // don't report the initial value
+			this._lastValueReported = newValue;
+		}
+		if((this.intermediateChanges || priorityChange) && newValue !== this._lastValueReported){
 			this._lastValueReported = newValue;
 			this.onChange(newValue);
 		}
@@ -2908,10 +3246,10 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 		if(e.keyCode == dojo.keys.ESCAPE && !e.shiftKey && !e.ctrlKey && !e.altKey){
 			var v = this.getValue();
 			var lv = this._lastValueReported;
-			// Equality comparison of objects such as dates are done by reference so 
-			// two distinct objects are != even if they have the same data. So use 
+			// Equality comparison of objects such as dates are done by reference so
+			// two distinct objects are != even if they have the same data. So use
 			// toStrings in case the values are objects.
-			if(lv != undefined && v.toString() != lv.toString()){	
+			if((typeof lv != "undefined") && ((v!==null && v.toString)?v.toString():null) !== lv.toString()){	
 				this.undo();
 				dojo.stopEvent(e);
 				return false;

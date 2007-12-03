@@ -25,7 +25,7 @@ Create widgets via
 
 createWidget() call removed since multiple renderers are no longer supported (see next section).
 
-At least for the dijit widgets, all widgets are guaranteed to work programatically, which in
+At least for the dijit widgets, all widgets are guaranteed to work programmatically, which in
 effect means that all widgets must have templates, unless the default <div> works.
 
 Renderers
@@ -57,6 +57,9 @@ dojoAttachEvent="onclick: onClick"
 
 lists within dojoAttachPoint, dojoAttachEvent, waiRole, and waiState are now comma-separated
 (not separated by semi-colons)
+
+Standard HTML attributes like 'id', 'name', 'lang', etc. are carried over programmatically
+by the _Widget constructor and do not need to be declared in the template (see _Widget.attributeMap)
 
 Parent/Child relationships
 --------------------------

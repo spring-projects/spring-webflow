@@ -90,7 +90,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 		//	all supported browsers. See property blockNodeForEnter for available options
 		if(!this.blockNodeForEnter){ return true; } //let browser handle this
 		if(e.shiftKey  //shift+enter always generates <br>
-		    || this.blockNodeForEnter=='BR'){
+			|| this.blockNodeForEnter=='BR'){
 			var parent = dojo.withGlobal(this.editor.window, "getParentElement", dijit._editor.selection);
 			var header = dijit.range.getAncestor(parent,this.editor.blockNodes);
 			if(header){
@@ -219,16 +219,16 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 		if(typeof this.editor.document.__INSERTED_EDITIOR_NEWLINE_CSS == "undefined"){
 			var lineFixingStyles = "p{margin:0 !important;}";
 			var insertCssText = function(
-				/*String*/ cssStr, 
-				/*Document*/ doc, 
+				/*String*/ cssStr,
+				/*Document*/ doc,
 				/*String*/ URI)
 			{
 				//	summary:
 				//		Attempt to insert CSS rules into the document through inserting a
 				//		style element
-			
+
 				// DomNode Style  = insertCssText(String ".dojoMenu {color: green;}"[, DomDoc document, dojo.uri.Uri Url ])
-				if(!cssStr){ 
+				if(!cssStr){
 					return; //	HTMLStyleElement
 				}
 				if(!doc){ doc = document; }
@@ -240,14 +240,14 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 				// IE is b0rken enough to require that we add the element to the doc
 				// before changing it's properties
 				var head = doc.getElementsByTagName("head")[0];
-				if(!head){ // must have a head tag 
+				if(!head){ // must have a head tag
 					console.debug("No head tag in document, aborting styles");
 					return;	//	HTMLStyleElement
 				}else{
 					head.appendChild(style);
 				}
 				if(style.styleSheet){// IE
-					var setFunc = function(){ 
+					var setFunc = function(){
 						try{
 							style.styleSheet.cssText = cssStr;
 						}catch(e){ dojo.debug(e); }
@@ -277,7 +277,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 				var newP = nodes[0].ownerDocument.createElement('p'); // FIXME: not very idiomatic
 				nodes[0].parentNode.insertBefore(newP, nodes[0]);
 				for(var i=0; i<nodes.length; i++){
-				    newP.appendChild(nodes[i]);
+					newP.appendChild(nodes[i]);
 				}
 			}
 
@@ -309,11 +309,11 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 		}
 
 		function splitP(el){
-		    // split a paragraph into seperate paragraphs at BRs
-		    var currentNode = null;
-		    var trailingNodes = [];
-		    var lastNodeIndex = el.childNodes.length-1;
-		    for(var i=lastNodeIndex; i>=0; i--){
+			// split a paragraph into seperate paragraphs at BRs
+			var currentNode = null;
+			var trailingNodes = [];
+			var lastNodeIndex = el.childNodes.length-1;
+			for(var i=lastNodeIndex; i>=0; i--){
 				currentNode = el.childNodes[i];
 				if(currentNode.nodeName=="BR"){
 					var newP = currentNode.ownerDocument.createElement('p');
@@ -329,7 +329,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling",null,{
 				}else{
 					trailingNodes.unshift(currentNode);
 				}
-		    }
+			}
 		}
 
 		var pList = [];

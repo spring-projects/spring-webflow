@@ -7,6 +7,7 @@
   
 	<application>
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
+		<action-listener>org.springframework.faces.model.SelectionTrackingActionListener</action-listener>
 		<variable-resolver>org.springframework.faces.expression.CompositeFlowVariableResolver</variable-resolver>
 		<property-resolver>org.springframework.faces.expression.CompositeFlowPropertyResolver</property-resolver>
 		<state-manager>org.springframework.faces.webflow.FlowViewStateManager</state-manager>
@@ -17,6 +18,21 @@
 		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
 	</lifecycle>
 	
+	<component>
+    	<component-type>spring.faces.ProgressiveCommandButton</component-type>
+    	<component-class>org.springframework.faces.ui.ProgressiveCommandButton</component-class>
+  	</component>
+  	
+  	<component>
+    	<component-type>spring.faces.ProgressiveCommandLink</component-type>
+    	<component-class>org.springframework.faces.ui.ProgressiveCommandLink</component-class>
+  	</component>
+  	
+  	<component>
+    	<component-type>spring.faces.AjaxEventInterceptor</component-type>
+    	<component-class>org.springframework.faces.ui.AjaxEventInterceptor</component-class>
+  	</component>
+  	
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>
     	<component-class>org.springframework.faces.ui.DojoClientTextValidator</component-class>
@@ -64,6 +80,24 @@
 
 	<render-kit>
 		<render-kit-id>HTML_BASIC</render-kit-id>
+		
+		<renderer>
+			<component-family>javax.faces.Command</component-family>
+			<renderer-type>spring.faces.ProgressiveCommandButton</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ProgressiveCommandButtonRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>javax.faces.Command</component-family>
+			<renderer-type>spring.faces.ProgressiveCommandLink</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ProgressiveCommandLinkRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>javax.faces.Command</component-family>
+			<renderer-type>spring.faces.AjaxEventInterceptor</renderer-type>
+			<renderer-class>org.springframework.faces.ui.AjaxEventInterceptorRenderer</renderer-class>
+		</renderer>
 		
 		<renderer>
 			<component-family>spring.faces.Advisor</component-family>

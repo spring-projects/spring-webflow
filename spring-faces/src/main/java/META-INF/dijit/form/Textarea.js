@@ -4,7 +4,7 @@ dojo.provide("dijit.form.Textarea");
 
 dojo.require("dijit.form._FormWidget");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dijit.form", "Textarea", null, "ROOT");
+dojo.requireLocalization("dijit", "Textarea", null, "ROOT");
 
 dojo.declare(
 	"dijit.form.Textarea",
@@ -17,14 +17,18 @@ dojo.declare(
 	//	Rows is not supported since this widget adjusts the height.
 	// usage:
 	//	<textarea dojoType="dijit.form.TextArea">...</textarea>
+
+	attributeMap: dojo.mixin(dojo.clone(dijit.form._FormWidget.prototype.attributeMap),
+		{style:"styleNode", 'class':"styleNode"}),
+
 	templateString: (dojo.isIE || dojo.isSafari || dojo.isMozilla) ?
-				((dojo.isIE || dojo.isSafari) ? '<fieldset id="${id}" class="dijitInlineBox dijitInputField dijitTextArea"><div dojoAttachPoint="editNode" waiRole="textarea" tabIndex="${tabIndex}" style="text-decoration:none;_padding-bottom:16px;display:block;overflow:auto;" contentEditable="true"></div>'
-					: '<span id="${id}" class="dijitReset"><iframe dojoAttachPoint="iframe, styleNode" dojoAttachEvent="onblur:_onIframeBlur" src="javascript:void(0)" class="dijitInlineBox dijitInputField dijitTextArea"></iframe>')
+				((dojo.isIE || dojo.isSafari) ? '<fieldset id="${id}" class="dijitInline dijitInputField dijitTextArea" dojoAttachPoint="styleNode" waiRole="presentation"><div dojoAttachPoint="editNode,focusNode,eventNode" dojoAttachEvent="onpaste:_changing,oncut:_changing" waiRole="textarea" style="text-decoration:none;_padding-bottom:16px;display:block;overflow:auto;" contentEditable="true"></div>'
+					: '<span id="${id}" class="dijitReset">'+
+					'<iframe src="javascript:<html><head><title>${_iframeEditTitle}</title></head><body><script>var _postCreate=window.frameElement?window.frameElement.postCreate:null;if(_postCreate)_postCreate();</script></body></html>"'+
+							' dojoAttachPoint="iframe,styleNode" dojoAttachEvent="onblur:_onIframeBlur" class="dijitInline dijitInputField dijitTextArea"></iframe>')
 				+ '<textarea name="${name}" value="${value}" dojoAttachPoint="formValueNode" style="display:none;"></textarea>'
 				+ ((dojo.isIE || dojo.isSafari) ? '</fieldset>':'</span>')
-			: '<textarea id="${id}" name="${name}" value="${value}" dojoAttachPoint="formValueNode,editNode" class="dijitInputField dijitTextArea"></textarea>',
-
-	_nlsResources: null,	// Needed for screen readers on FF2
+			: '<textarea id="${id}" name="${name}" value="${value}" dojoAttachPoint="formValueNode,editNode,focusNode,styleNode" class="dijitInputField dijitTextArea"></textarea>',
 
 	focus: function(){
 		// summary: Received focus, needed for the InlineEditBox widget
@@ -55,10 +59,6 @@ dojo.declare(
 			}else{
 				editNode.appendChild(document.createTextNode(value));
 			}
-			if(this.iframe){
-				this.sizeNode = document.createElement('div');
-				editNode.appendChild(this.sizeNode);
-			}
 		}else{
 			// blah<BR>blah --> blah\nblah
 			// <P>blah</P><P>blah</P> --> blah\nblah
@@ -70,21 +70,24 @@ dojo.declare(
 			}
 			value = value.replace(/\s*\r?\n|^\s+|\s+$|&nbsp;/g,"").replace(/>\s+</g,"><").replace(/<\/(p|div)>$|^<(p|div)[^>]*>/gi,"").replace(/([^>])<div>/g,"$1\n").replace(/<\/p>\s*<p[^>]*>|<br[^>]*>/gi,"\n").replace(/<[^>]*>/g,"").replace(/&amp;/gi,"\&").replace(/&lt;/gi,"<").replace(/&gt;/gi,">");
 		}
-		this.formValueNode.value = value;
+		this.value = this.formValueNode.value = value;
 		if(this.iframe){
-			var newHeight = this.sizeNode.offsetTop;
+			var sizeNode = document.createElement('div');
+			editNode.appendChild(sizeNode);
+			var newHeight = sizeNode.offsetTop;
 			if(editNode.scrollWidth > editNode.clientWidth){ newHeight+=16; } // scrollbar space needed?
 			if(this.lastHeight != newHeight){ // cache size so that we don't get a resize event because of a resize event
 				if(newHeight == 0){ newHeight = 16; } // height = 0 causes the browser to not set scrollHeight
 				dojo.contentBox(this.iframe, {h: newHeight});
 				this.lastHeight = newHeight;
 			}
+			editNode.removeChild(sizeNode);
 		}
-		dijit.form.Textarea.superclass.setValue.call(this, value, priorityChange);
+		dijit.form.Textarea.superclass.setValue.call(this, this.getValue(), priorityChange);
 	},
 
 	getValue: function(){
-		return this.formValueNode.value;
+		return this.formValueNode.value.replace(/\r/g,"");
 	},
 
 	postMixInProperties: function(){
@@ -99,17 +102,7 @@ dojo.declare(
 		}
 		if(!this.value){ this.value = ""; }
 		this.value = this.value.replace(/\r\n/g,"\n").replace(/&gt;/g,">").replace(/&lt;/g,"<").replace(/&amp;/g,"&");
-	},
-
-	postCreate: function(){
-		if(dojo.isIE || dojo.isSafari){
-			this.domNode.style.overflowY = 'hidden';
-			this.eventNode = this.focusNode = this.editNode;
-			this.connect(this.eventNode, "oncut", this._changing);
-			this.connect(this.eventNode, "onpaste", this._changing);
-		}else if(dojo.isMozilla){
-			var w = this.iframe.contentWindow;
-			var d = w.document;
+		if(dojo.isMozilla){
 			// In the case of Firefox an iframe is used and when the text gets focus,
 			// focus is fired from the document object.  There isn't a way to put a
 			// waiRole on the document object and as a result screen readers don't
@@ -117,7 +110,7 @@ dojo.declare(
 			//
 			// An additional problem is that the browser gives the document object a
 			// very cryptic accessible name, e.g.
-			// wyciwyg://13/http://archive.dojotoolkit.org/nightly/dojotoolkit/dijit/tests/form/test_InlineEditBox.html
+			// wysiwyg://13/http://archive.dojotoolkit.org/nightly/dojotoolkit/dijit/tests/form/test_InlineEditBox.html
 			// When focus is fired from the document object, the screen reader speaks
 			// the accessible name.  The cyptic accessile name is confusing.
 			//
@@ -126,19 +119,38 @@ dojo.declare(
 			// "edit area".  This will be used as the accessible name which will replace
 			// the cryptic name and will also convey the role information to the user.
 			// Because it is read directly to the user, the string must be localized.
-			this._nlsResources = dojo.i18n.getLocalization("dijit.form", "Textarea");
-			d.open();
-			d.write('<html><head><title>' +
-				this._nlsResources.iframeTitle1 +	// "edit area"
-				'</title></head><body style="margin:0px;padding:0px;border:0px;"></body></html>');
-				// body > br style is to remove the <br> that gets added by FF
-			d.close();
-			this.editNode = d.body;
+			var _nlsResources = dojo.i18n.getLocalization("dijit", "Textarea");
+			this._iframeEditTitle = _nlsResources.iframeEditTitle;
+			this._iframeFocusTitle = _nlsResources.iframeFocusTitle;
+			var body = this.focusNode = this.editNode = document.createElement('BODY');
+			body.style.margin="0px";
+			body.style.padding="0px";
+			body.style.border="0px";
+		}
+	},
+
+	postCreate: function(){
+		if(dojo.isIE || dojo.isSafari){
+			this.domNode.style.overflowY = 'hidden';
+		}else if(dojo.isMozilla){
+			var w = this.iframe.contentWindow;
+			try { // #4715: peeking at the title can throw a security exception during iframe setup
+				var title = this.iframe.contentDocument.title;
+			} catch(e) { var title = ''; }
+			if(!w || !title){
+				this.iframe.postCreate = dojo.hitch(this, this.postCreate);
+				return;
+			}
+			var d = w.document;
+			d.getElementsByTagName('HTML')[0].replaceChild(this.editNode, d.getElementsByTagName('BODY')[0]);
+			if(!this.isLeftToRight()){
+				d.getElementsByTagName('HTML')[0].dir = "rtl";
+			}			
 			this.iframe.style.overflowY = 'hidden';
-			// resize is a method of window, not document
 			this.eventNode = d;
-			this.focusNode = this.editNode;
-			this.connect(w, "resize", this._changed); // resize is only on the window object
+			// this.connect won't destroy this handler cleanly since its on the iframe's window object
+			// resize is a method of window, not document
+			w.addEventListener("resize", dojo.hitch(this, this._changed), false); // resize is only on the window object
 		}else{
 			this.focusNode = this.domNode;
 		}
@@ -167,7 +179,7 @@ dojo.declare(
 
 	_onIframeBlur: function(){
 		// Reset the title back to "edit area".
-		this.iframe.contentDocument.title = this._nlsResources.iframeTitle1;
+		this.iframe.contentDocument.title = this._iframeEditTitle;
 	},
 
 	_onKeyPress: function(e){
@@ -180,10 +192,10 @@ dojo.declare(
 			// announced twice which causes confusion.  By setting the
 			// contentDocument's title to "edit area frame" the confusion should be
 			// eliminated.
-			this.iframe.contentDocument.title = this._nlsResources.iframeTitle2;
+			this.iframe.contentDocument.title = this._iframeFocusTitle;
 			// Place focus on the iframe. A subsequent tab or shift tab will put focus
 			// on the correct control.
-			// Note: Can't use this.focus() because that results in a call to 
+			// Note: Can't use this.focus() because that results in a call to
 			// dijit.focus and if that receives an iframe target it will set focus
 			// on the iframe's contentWindow.
 			this.iframe.focus();  // this.focus(); won't work

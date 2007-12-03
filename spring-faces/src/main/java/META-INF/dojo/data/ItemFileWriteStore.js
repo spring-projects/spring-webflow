@@ -80,22 +80,28 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 		}else{
 			newIdentity = keywordArgs[identifierAttribute];
 			if (typeof newIdentity === "undefined"){
-				throw new Error("newItem() was not passed an identify for the new item");
+				throw new Error("newItem() was not passed an identity for the new item");
 			}
 			if (dojo.isArray(newIdentity)){
 				throw new Error("newItem() was not passed an single-valued identity");
 			}
 		}
 		
-		// make sure this identity is not already in use by another item
-		this._assert(typeof this._itemsByIdentity[newIdentity] === "undefined");
+		// make sure this identity is not already in use by another item, if identifiers were 
+		// defined in the file.  Otherwise it would be the item count, 
+		// which should always be unique in this case.
+		if(this._itemsByIdentity){
+			this._assert(typeof this._itemsByIdentity[newIdentity] === "undefined");
+		}
 		this._assert(typeof this._pending._newItems[newIdentity] === "undefined");
 		this._assert(typeof this._pending._deletedItems[newIdentity] === "undefined");
 		
 		var newItem = {};
 		newItem[this._storeRefPropName] = this;		
 		newItem[this._itemNumPropName] = this._arrayOfAllItems.length;
-		this._itemsByIdentity[newIdentity] = newItem;
+		if(this._itemsByIdentity){
+			this._itemsByIdentity[newIdentity] = newItem;
+		}
 		this._arrayOfAllItems.push(newItem);
 
 		//We need to construct some data for the onNew call too...
@@ -184,7 +190,9 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 		
 		var identity = this.getIdentity(item);
 		item[this._storeRefPropName] = null;
-		delete this._itemsByIdentity[identity];
+		if(this._itemsByIdentity){
+			delete this._itemsByIdentity[identity];
+		}
 		this._pending._deletedItems[identity] = item;
 		
 		//Remove from the toplevel items, if necessary...
@@ -383,20 +391,21 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 		// this._saveInProgress is set to true, briefly, from when save is first called to when it completes
 		this._saveInProgress = true;
 		
+		var self = this;
 		var saveCompleteCallback = function(){
-			this._pending = {
+			self._pending = {
 				_newItems:{}, 
 				_modifiedItems:{},
 				_deletedItems:{}
 			};
-			this._saveInProgress = false; // must come after this._pending is cleared, but before any callbacks
+			self._saveInProgress = false; // must come after this._pending is cleared, but before any callbacks
 			if(keywordArgs && keywordArgs.onComplete){
 				var scope = keywordArgs.scope || dojo.global;
 				keywordArgs.onComplete.call(scope);
 			}
 		};
 		var saveFailedCallback = function(){
-			this._saveInProgress = false;
+			self._saveInProgress = false;
 			if(keywordArgs && keywordArgs.onError){
 				var scope = keywordArgs.scope || dojo.global;
 				keywordArgs.onError.call(scope);
@@ -426,16 +435,25 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 		for(identity in this._pending._newItems){
 			var newItem = this._pending._newItems[identity];
 			newItem[this._storeRefPropName] = null;
-			this._removeArrayElement(this._arrayOfAllItems, newItem);
+			// null out the new item, but don't change the array index so
+			// so we can keep using _arrayOfAllItems.length.
+			this._arrayOfAllItems[newItem._itemNumPropName] = null;
 			if(newItem[this._rootItemPropName]){
 				this._removeArrayElement(this._arrayOfTopLevelItems, newItem);
 			}
-			delete this._itemsByIdentity[identity];
+			if(this._itemsByIdentity){
+				delete this._itemsByIdentity[identity];
+			}
 		}
 		for(identity in this._pending._modifiedItems){
 			// find the original item and the modified item that replaced it
 			var originalItem = this._pending._modifiedItems[identity];
-			var modifiedItem = this._itemsByIdentity[identity];
+			var modifiedItem = null;
+			if(this._itemsByIdentity){
+				modifiedItem = this._itemsByIdentity[identity];
+			}else{
+				modifiedItem = this._arrayOfAllItems[identity];
+			}
 			
 			// make the original item into a full-fledged item again
 			originalItem[this._storeRefPropName] = this;
@@ -449,14 +467,18 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 				arrayIndex = modifiedItem[this._itemNumPropName];
 				this._arrayOfTopLevelItems[arrayIndex] = originalItem;
 			}
-			this._itemsByIdentity[identity] = originalItem;
+			if(this._itemsByIdentity){
+				this._itemsByIdentity[identity] = originalItem;
+			}			
 		}
 		for(identity in this._pending._deletedItems){
 			var deletedItem = this._pending._deletedItems[identity];
 			deletedItem[this._storeRefPropName] = this;
-			this._itemsByIdentity[identity] = deletedItem;
 			var index = deletedItem[this._itemNumPropName];
 			this._arrayOfAllItems[index] = deletedItem;
+			if (this._itemsByIdentity) {
+				this._itemsByIdentity[identity] = deletedItem;
+			}
 			if(deletedItem[this._rootItemPropName]){
 				this._arrayOfTopLevelItems.push(deletedItem);
 			}

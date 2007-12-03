@@ -6,7 +6,7 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.colors");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dojo", "colors", null, "ROOT");
+dojo.requireLocalization("dojo", "colors", null, "ko,zh,ja,zh-tw,ru,it,hu,ROOT,fr,pt,pl,es,de,cs");
 
 dojo.declare(
 		"dijit.ColorPalette",
@@ -16,13 +16,13 @@ dojo.declare(
 	//		Grid showing various colors, so the user can pick a certain color
 
 	// defaultTimeout: Number
-	//      number of milliseconds before a held key or button becomes typematic
+	//		number of milliseconds before a held key or button becomes typematic
 	defaultTimeout: 500,
 
 	// timeoutChangeRate: Number
-	//      fraction of time used to change the typematic timer between events
-	//      1.0 means that each typematic event fires at defaultTimeout intervals
-	//      < 1.0 means that each typematic event fires at an increasing faster rate
+	//		fraction of time used to change the typematic timer between events
+	//		1.0 means that each typematic event fires at defaultTimeout intervals
+	//		< 1.0 means that each typematic event fires at an increasing faster rate
 	timeoutChangeRate: 0.90,
 
 	// palette: String
@@ -50,7 +50,7 @@ dojo.declare(
 	//		The first level is a hashmap of the different arrays available
 	//		The next two dimensions represent the columns and rows of colors.
 	_palettes: {
-			
+
 		"7x10":	[["white", "seashell", "cornsilk", "lemonchiffon","lightyellow", "palegreen", "paleturquoise", "lightcyan",	"lavender", "plum"],
 				["lightgray", "pink", "bisque", "moccasin", "khaki", "lightgreen", "lightseagreen", "lightskyblue", "cornflowerblue", "violet"],
 				["silver", "lightcoral", "sandybrown", "orange", "palegoldenrod", "chartreuse", "mediumturquoise", 	"skyblue", "mediumslateblue","orchid"],
@@ -58,11 +58,11 @@ dojo.declare(
 				["dimgray", "crimson", 	"chocolate", "coral", "gold", "forestgreen", "seagreen", "blue", "blueviolet", "darkorchid"],
 				["darkslategray","firebrick","saddlebrown", "sienna", "olive", "green", "darkcyan", "mediumblue","darkslateblue", "darkmagenta" ],
 				["black", "darkred", "maroon", "brown", "darkolivegreen", "darkgreen", "midnightblue", "navy", "indigo", 	"purple"]],
-				
+
 		"3x4": [["white", "lime", "green", "blue"],
 			["silver", "yellow", "fuchsia", "navy"],
 			["gray", "red", "purple", "black"]]	
-			
+
 	},
 
 	// _imagePaths: Map
@@ -76,18 +76,20 @@ dojo.declare(
 	//		This is a map that is used to calculate the coordinates of the
 	//		images that make up the palette.
 	_paletteCoords: {
-		"leftOffset": 3, "topOffset": 3,
-		"cWidth": 18, "cHeight": 16
+		"leftOffset": 4, "topOffset": 4,
+		"cWidth": 20, "cHeight": 20
+		
 	},
 
 	// templatePath: String
 	//		Path to the template of this widget.
-	templateString:"<fieldset class=\"dijitInlineBox\">\n\t<div style=\"overflow: hidden\" dojoAttachPoint=\"divNode\" waiRole=\"grid\" tabIndex=\"-1\">\n\t\t<img style=\"border-style: none;\" dojoAttachPoint=\"imageNode\" tabIndex=\"-1\" />\n\t</div>\t\n</fieldset>\n",
+	templateString:"<div class=\"dijitInline dijitColorPalette\">\n\t<div class=\"dijitColorPaletteInner\" dojoAttachPoint=\"divNode\" waiRole=\"grid\" tabIndex=\"-1\">\n\t\t<img class=\"dijitColorPaletteUnder\" dojoAttachPoint=\"imageNode\" waiRole=\"presentation\">\n\t</div>\t\n</div>\n",
 
-
+	// _paletteDims: Object
+	//		Size of the supported palettes for alignment purposes.
 	_paletteDims: {
-		"7x10": {"width": "185px", "height": "117px"},
-		"3x4": {"width": "77px", "height": "53px"}
+		"7x10": {"width": "206px", "height": "145px"},
+		"3x4": {"width": "86px", "height": "64px"}
 	},
 
 
@@ -120,7 +122,7 @@ dojo.declare(
 				highlightStyle.left = coords.leftOffset + (col * coords.cWidth) + "px";
 				highlightNode.setAttribute("tabIndex","-1");
 				highlightNode.title = this.colorNames[color];
-				dijit.wai.setAttr(highlightNode, "waiRole", "role", "gridcell");
+				dijit.setWaiRole(highlightNode, "gridcell");
 				highlightNode.index = this._highlightNodes.length;
 				this._highlightNodes.push(highlightNode);
 			}
@@ -166,7 +168,7 @@ dojo.declare(
 		//		Callback when a color is selected.
 		// color: String
 		//		Hex value corresponding to color.
-		console.debug("Color selected is: "+color);
+//		console.debug("Color selected is: "+color);
 	},
 
 	_onColorDijitclick: function(/*Event*/ evt){
@@ -231,8 +233,7 @@ dojo.declare(
 		// 		This selects a color. It triggers the onChange event
 		// area:
 		//		The area node that covers the color being selected.
-		this.value = selectNode.color;
-		this.onChange(selectNode.color);
+		this.onChange(this.value = selectNode.color);
 	},
 
 	_navigateByKey: function(increment, typeCount){
@@ -241,7 +242,7 @@ dojo.declare(
 		// 		It changes the focus and the highlighed color.
 		// increment:
 		// 		How much the key is navigated.
-		//	typeCount:
+		// typeCount:
 		//		How many times typematic has fired.
 
 		// typecount == -1 means the key is released.

@@ -15,11 +15,11 @@ dojo.declare(
 	[dijit._Widget, dijit._Templated],
 	{
 		// summary: the thing that grays out the screen behind the dialog
-		
+
 		// Template has two divs; outer div is used for fade-in/fade-out, and also to hold background iframe.
 		// Inner div has opacity specified in CSS file.
 		templateString: "<div class=dijitDialogUnderlayWrapper id='${id}_underlay'><div class=dijitDialogUnderlay dojoAttachPoint='node'></div></div>",
-		
+
 		postCreate: function(){
 			dojo.body().appendChild(this.domNode);
 			this.bgIframe = new dijit.BackgroundIframe(this.domNode);
@@ -39,7 +39,7 @@ dojo.declare(
 			os.left = viewport.l + "px";
 			is.width = viewport.w + "px";
 			is.height = viewport.h + "px";
-			
+
 			// process twice since the scroll bar may have been removed
 			// by the previous resizing
 			var viewport2 = dijit.getViewport();
@@ -58,7 +58,6 @@ dojo.declare(
 
 		hide: function(){
 			this.domNode.style.display = "none";
-			this.domNode.style.width = this.domNode.style.height = "1px";
 			if(this.bgIframe.iframe){
 				this.bgIframe.iframe.style.display = "none";
 			}
@@ -72,7 +71,7 @@ dojo.declare(
 		}
 	}
 );
-	
+
 dojo.declare(
 	"dijit.Dialog",
 	[dijit.layout.ContentPane, dijit._Templated, dijit.form._FormMixin],
@@ -83,29 +82,34 @@ dojo.declare(
 		//		ContentPane so it supports all the same parameters (href, etc.)
 
 		templateString: null,
-		templateString:"<div class=\"dijitDialog\">\n\t\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\" tabindex=\"0\" waiRole=\"dialog\" title=\"${title}\">\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\">${title}</span>\n\t\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"onclick: hide\">\n\t\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\">x</span>\n\t\t</span>\n\t</div>\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\n\t<span dojoAttachPoint=\"tabEnd\" dojoAttachEvent=\"onfocus:_cycleFocus\" tabindex=\"0\"></span>\n</div>\n",
+		templateString:"<div class=\"dijitDialog\">\n\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\" tabindex=\"0\" waiRole=\"dialog\">\n\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\">${title}</span>\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"onclick: hide\">\n\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\">x</span>\n\t</span>\n\t</div>\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\n\t<span dojoAttachPoint=\"tabEnd\" dojoAttachEvent=\"onfocus:_cycleFocus\" tabindex=\"0\"></span>\n</div>\n",
 
-		// title: String
-		//		Title of the dialog
-		title: "",
+		// open: Boolean
+		//		is True or False depending on state of dialog
+		open: false,
 
+		// duration: Integer
+		//		The time in milliseconds it takes the dialog to fade in and out
 		duration: 400,
-		
+
 		_lastFocusItem:null,
-				
+
+		attributeMap: dojo.mixin(dojo.clone(dijit._Widget.prototype.attributeMap),
+			{title: "titleBar"}),
+
 		postCreate: function(){
 			dojo.body().appendChild(this.domNode);
-			dijit.Dialog.superclass.postCreate.apply(this, arguments);
+			this.inherited("postCreate",arguments);
 			this.domNode.style.display="none";
 			this.connect(this, "onExecute", "hide");
 			this.connect(this, "onCancel", "hide");
 		},
 
 		onLoad: function(){
-			// when href is specified we need to reposition
-			// the dialog after the data is loaded
+			// summary: 
+			//		when href is specified we need to reposition the dialog after the data is loaded
 			this._position();
-			dijit.Dialog.superclass.onLoad.call(this);
+			this.inherited("onLoad",arguments);
 		},
 
 		_setup: function(){
@@ -161,23 +165,24 @@ dojo.declare(
 
 		_position: function(){
 			// summary: position modal dialog in center of screen
-
+			
+			if(dojo.hasClass(dojo.body(),"dojoMove")){ return; }
 			var viewport = dijit.getViewport();
 			var mb = dojo.marginBox(this.domNode);
 
 			var style = this.domNode.style;
-			style.left = (viewport.l + (viewport.w - mb.w)/2) + "px";
-			style.top = (viewport.t + (viewport.h - mb.h)/2) + "px";
+			style.left = Math.floor((viewport.l + (viewport.w - mb.w)/2)) + "px";
+			style.top = Math.floor((viewport.t + (viewport.h - mb.h)/2)) + "px";
 		},
-		
+
 		_findLastFocus: function(/*Event*/ evt){
-			// summary:  called from onblur of dialog container to determine the last focusable item 
+			// summary:  called from onblur of dialog container to determine the last focusable item
 			this._lastFocused = evt.target;
 		},
-		
+
 		_cycleFocus: function(/*Event*/ evt){
 			// summary: when tabEnd receives focus, advance focus around to titleBar
-			
+
 			// on first focus to tabEnd, store the last focused item in dialog
 			if(!this._lastFocusItem){
 				this._lastFocusItem = this._lastFocused;
@@ -190,15 +195,15 @@ dojo.declare(
 				var node = evt.target;
 				// see if we are shift-tabbing from titleBar
 				if(node == this.titleBar && evt.shiftKey && evt.keyCode == dojo.keys.TAB){
-					if (this._lastFocusItem){
+					if(this._lastFocusItem){
 						this._lastFocusItem.focus(); // send focus to last item in dialog if known
 					}
 					dojo.stopEvent(evt);
 				}else{
 					// see if the key is for the dialog
-					while (node){
+					while(node){
 						if(node == this.domNode){
-							if (evt.keyCode == dojo.keys.ESCAPE){
+							if(evt.keyCode == dojo.keys.ESCAPE){
 								this.hide(); 
 							}else{
 								return; // just let it go
@@ -207,7 +212,7 @@ dojo.declare(
 						node = node.parentNode;
 					}
 					// this key is for the disabled document window
-					if (evt.keyCode != dojo.keys.TAB){ // allow tabbing into the dialog for a11y
+					if(evt.keyCode != dojo.keys.TAB){ // allow tabbing into the dialog for a11y
 						dojo.stopEvent(evt);
 					// opera won't tab to a div
 					}else if (!dojo.isOpera){
@@ -234,23 +239,22 @@ dojo.declare(
 
 			this._modalconnects.push(dojo.connect(window, "onscroll", this, "layout"));
 			this._modalconnects.push(dojo.connect(document.documentElement, "onkeypress", this, "_onKey"));
-			
+
 			// IE doesn't bubble onblur events - use ondeactivate instead
 			var ev = typeof(document.ondeactivate) == "object" ? "ondeactivate" : "onblur";
 			this._modalconnects.push(dojo.connect(this.containerNode, ev, this, "_findLastFocus"));
-			
-			
+
 			dojo.style(this.domNode, "opacity", 0);
 			this.domNode.style.display="block";
-
+			this.open = true;
 			this._loadCheck(); // lazy load trigger
 
 			this._position();
 
 			this._fadeIn.play();
-			
+
 			this._savedFocus = dijit.getFocus(this);
-			
+
 			// set timeout to allow the browser to render dialog
 			setTimeout(dojo.hitch(this, function(){
 				dijit.focus(this.titleBar);
@@ -277,12 +281,14 @@ dojo.declare(
 			dojo.forEach(this._modalconnects, dojo.disconnect);
 			this._modalconnects = [];
 
-			// TODO: this is failing on FF presumably because the DialogUnderlay hasn't disappeared yet?
-			// Attach it to fire at the end of the animation
-			dijit.focus(this._savedFocus);
+			this.connect(this._fadeOut,"onEnd",dojo.hitch(this,function(){
+				dijit.focus(this._savedFocus);
+			}));
+			this.open = false;
 		},
 
 		layout: function() {
+			// summary: position the Dialog and the underlay
 			if(this.domNode.style.display == "block"){
 				this._underlay.layout();
 				this._position();
@@ -290,25 +296,24 @@ dojo.declare(
 		}
 	}
 );
-	
+
 dojo.declare(
 	"dijit.TooltipDialog",
 	[dijit.layout.ContentPane, dijit._Templated, dijit.form._FormMixin],
 	{
 		// summary:
 		//		Pops up a dialog that appears like a Tooltip
-
 		// title: String
-		// Description of tooltip dialog (required for a11Y)
+		// 		Description of tooltip dialog (required for a11Y)
 		title: "",
 
 		_lastFocusItem: null,
 
 		templateString: null,
-		templateString:"<div id=\"${id}\" class=\"dijitTooltipDialog\" >\n\t<div class=\"dijitTooltipContainer\">\n\t\t<div  class =\"dijitTooltipContents dijitTooltipFocusNode\" dojoAttachPoint=\"containerNode\" tabindex=\"0\" waiRole=\"dialog\"></div>\n\t</div>\n\t<span dojoAttachPoint=\"tabEnd\" tabindex=\"0\" dojoAttachEvent=\"focus:_cycleFocus\"></span>\n\t<div class=\"dijitTooltipConnector\" ></div>\n</div>\n",
+		templateString:"<div class=\"dijitTooltipDialog\" >\n\t<div class=\"dijitTooltipContainer\">\n\t\t<div class =\"dijitTooltipContents dijitTooltipFocusNode\" dojoAttachPoint=\"containerNode\" tabindex=\"0\" waiRole=\"dialog\"></div>\n\t</div>\n\t<span dojoAttachPoint=\"tabEnd\" tabindex=\"0\" dojoAttachEvent=\"focus:_cycleFocus\"></span>\n\t<div class=\"dijitTooltipConnector\" ></div>\n</div>\n",
 
 		postCreate: function(){
-			dijit.TooltipDialog.superclass.postCreate.apply(this, arguments);
+			this.inherited("postCreate",arguments);
 			this.connect(this.containerNode, "onkeypress", "_onKey");
 
 			// IE doesn't bubble onblur events - use ondeactivate instead
@@ -328,27 +333,31 @@ dojo.declare(
 			this._loadCheck(); // lazy load trigger
 			this.containerNode.focus();
 		},
-		
+
 		_onKey: function(/*Event*/ evt){
-			//summary: keep keyboard focus in dialog; close dialog on escape key
-			if (evt.keyCode == dojo.keys.ESCAPE){
+			// summary: keep keyboard focus in dialog; close dialog on escape key
+			if(evt.keyCode == dojo.keys.ESCAPE){
 				this.onCancel();
-			}else if (evt.target == this.containerNode && evt.shiftKey && evt.keyCode == dojo.keys.TAB){
+			}else if(evt.target == this.containerNode && evt.shiftKey && evt.keyCode == dojo.keys.TAB){
 				if (this._lastFocusItem){
 					this._lastFocusItem.focus();
 				}
 				dojo.stopEvent(evt);
+			}else if(evt.keyCode == dojo.keys.TAB){
+				// we want the browser's default tab handling to move focus
+				// but we don't want the tab to propagate upwards
+				evt.stopPropagation();
 			}
 		},
-		
+
 		_findLastFocus: function(/*Event*/ evt){
-			// summary:  called from onblur of dialog container to determine the last focusable item 
+			// summary: called from onblur of dialog container to determine the last focusable item
 			this._lastFocused = evt.target;
 		},
 
 		_cycleFocus: function(/*Event*/ evt){
 			// summary: when tabEnd receives focus, advance focus around to containerNode
-			
+
 			// on first focus to tabEnd, store the last focused item in dialog
 			if(!this._lastFocusItem){
 				this._lastFocusItem = this._lastFocused;

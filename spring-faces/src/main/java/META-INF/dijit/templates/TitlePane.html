@@ -1,8 +1,8 @@
 <div class="dijitTitlePane">
-	<div dojoAttachEvent="onclick:toggle,onkeypress: _onTitleKey" tabindex="0"
+	<div dojoAttachEvent="onclick:toggle,onkeypress: _onTitleKey,onfocus:_handleFocus,onblur:_handleFocus" tabindex="0"
 			waiRole="button" class="dijitTitlePaneTitle" dojoAttachPoint="focusNode">
-		<span dojoAttachPoint="arrowNode" class="dijitInline dijitArrowNode"><span dojoAttachPoint="arrowNodeInner" class="dijit_a11y dijitArrowNodeInner"></span></span>
-		<span dojoAttachPoint="titleNode" class="dijitInlineBox dijitTitleNode"></span>
+		<div dojoAttachPoint="arrowNode" class="dijitInline dijitArrowNode"><span dojoAttachPoint="arrowNodeInner" class="dijitArrowNodeInner"></span></div>
+		<div dojoAttachPoint="titleNode" class="dijitTitlePaneTextNode"></div>
 	</div>
 	<div class="dijitTitlePaneContentOuter" dojoAttachPoint="hideNode">
 		<div class="dijitReset" dojoAttachPoint="wipeNode">

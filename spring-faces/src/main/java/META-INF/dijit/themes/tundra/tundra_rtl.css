@@ -49,6 +49,7 @@
 .dijitRtl .dijitTreeContainer .dijitTreeIsRoot {
 	margin-left: auto;
     margin-right: 0;
+    background-image: none;
 }
 
 .dijitRtl .dijitTreeContainer .dijitTreeIsLast {
@@ -92,13 +93,13 @@
 
 /* Calendar */
 
-.dijitRtl .tundra .dijitCalendarDecrease {
+.dijitRtl .dijitCalendarDecrease {
 	background:url(images/arrowRight.png) no-repeat center center; 
 	margin-left:0;
 	margin-right:2px;
 }
 
-.dijitRtl .tundra .dijitCalendarIncrease {
+.dijitRtl .dijitCalendarIncrease {
 	background:url(images/arrowLeft.png) no-repeat center center; 
 	margin-right:0;
 	margin-left:4px; 
@@ -108,4 +109,109 @@
 }
 .dj_ie6 .dijitRtl .dijitCalendarDecrease {
 	background-image:url(images/arrowRight.gif); 
+}
+
+/* Slider */
+
+.dijitRtl .dijitHorizontalSliderProgressBar {
+	background: #c0c2c5 url("images/sliderFull.png") repeat-x top right;
+}
+
+.dijitRtl .dijitVerticalSliderProgressBar {
+	background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom right;
+}
+
+.dijitRtl .dijitVerticalSliderRemainingBar {
+	background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y bottom right;
+}
+
+.dijitRtl .dijitHorizontalSliderRemainingBar {
+	background: #dcdcdc url("images/sliderEmpty.png") repeat-x top right;
+}
+
+.dijitRtl .dijitHorizontalSliderLeftBumper {
+	border-left-width: 0px;
+	border-right-width: 1px;
+	background: #c0c2c5 url("images/sliderFull.png") repeat-x top right;
+}
+
+.dijitRtl .dijitHorizontalSliderRightBumper {
+	background: #dcdcdc url("images/sliderEmpty.png") repeat-x top right;
+	border-left-width: 1px;
+	border-right-width: 0px;
+}
+
+.dijitRtl .dijitVerticalSliderBottomBumper {
+	background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom right;
+}
+
+.dijitRtl .dijitVerticalSliderTopBumper {
+	background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y top right;
+}
+
+/* TabContainer */
+
+.dijitRtl .dijitTab {
+	margin-right:0;
+	margin-left:5px;		/* space between one tab and the next in top/bottom mode */
+}
+
+.dijitRtl .dijitTab .dijitTabInnerDiv {
+	border-left:none;
+	border-right:1px solid #fff;
+}
+
+.dijitRtl .dijitTab .dijitClosable {
+	padding:6px 10px 4px 20px;
+}
+
+.dijitRtl .dijitTab .closeImage {
+	position:static;
+	padding: 0px 12px 0px 0px;
+}
+
+.dj_gecko .dijitTab .closeImage {
+	position:relative;
+	float:none;
+	padding:0;
+}
+
+.dijitRtl .dijitTab .dijitClosable .closeImage {
+	right:auto;
+	left:3px;
+	background: url("images/tabClose.png") no-repeat left top;
+}
+
+.dj_ie .dijitRtl .dijitTab .dijitClosable .closeImage {
+	width:12px !important;
+}
+
+.dijitRtl .dijitAlignLeft .dijitTab,
+.dijitRtl .dijitAlignRight .dijitTab {
+	margin-left:0px;
+}
+
+.dijitRtl .dijitAlignBottom .dijitTab .dijitClosable .closeImage {
+	right:auto;
+	left:3px;
+}
+
+.dijitRtl .dijitAlignRight .dijitTab .dijitTabInnerDiv {
+	padding-left:10px;
+	padding-right:20px;
+}
+
+.dijitRtl .dijitAlignLeft .dijitTab .dijitTabInnerDiv {
+	padding-left:20px;
+	padding-right:10px;
+}
+
+.dijitRtl .dijitAlignRight .dijitTab .dijitClosable .closeImage {
+	left:auto;
+	right:3px;
+}
+
+.dijitRtl .dijitAlignLeft .dijitTab .dijitClosable .closeImage {
+	right:auto;
+	left:3px;
 }

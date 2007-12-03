@@ -7,7 +7,7 @@
 
 .dj_safari .tundra .dijitPopup {
 	/* -webkit-border-radius: 5px; */
-	-webkit-box-shadow: 0px 3px 7px #adadad;
+	-webkit-box-shadow: 0px 5px 10px #adadad;
 }
 
 /*
@@ -25,16 +25,44 @@
 		dijit.form.ComboBox (partial)
  *****/
 
-
 .tundra .dijitButtonNode {
 	/* enabled state - inner */
 	/* border:1px outset #a0a0a0; */
 	border:1px solid #9b9b9b;
-	padding:.3em .4em .2em .4em;
+	vertical-align: middle;
+	padding: 0.2em 0.2em;
 	background:#e9e9e9 url("images/buttonEnabled.png") repeat-x top;
 }
-.dj_ie6 .tundra .dijitButtonNode {
-	position:relative; 
+.dj_ie .tundra .dijitButtonNode {
+	zoom: 1;
+	padding-bottom: 0.1em;
+}
+
+/* button inner contents - labels, icons etc. */
+.tundra .dijitButtonNode * {
+	display: -moz-inline-box;
+	display: inline-block;
+	vertical-align: middle;
+}
+.dj_ie .tundra .dijitButtonNode * {
+	zoom: 1;
+	display:inline;
+}
+.tundra .dijitButtonText {
+	padding: 0 0.3em;
+}
+
+.dijitComboBox .dijitButtonNode,
+.dijitSpinner .dijitButtonNode {
+	border: 0px;
+	padding: 0 .4em 0 .4em;	/* the inner node will be vertically centered automatically because it's in a <td> */
+}
+
+.tundra .dijitA11yDownArrow,
+.tundra .dijitDownArrowButton,
+.tundra .dijitUpArrowButton {
+	font-size: 0.75em;
+	color: #848484;
 }
 
 
@@ -42,22 +70,21 @@
 .tundra .dijitToggleButtonDisabled .dijitButtonNode,
 .tundra .dijitDropDownButtonDisabled .dijitButtonNode,
 .tundra .dijitComboButtonDisabled .dijitButtonNode,
-.tundra .dijitComboBoxDisabled .dijitDownArrowButton,
-.tundra .dijitComboBoxDisabled .dijitComboBoxInput,
-.tundra .dijitSpinnerDisabled .dijitSpinnerInput,
+.tundra .dijitComboBoxDisabled,
+.tundra .dijitSpinnerDisabled,
 .tundra .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border: 1px solid #d5d5d5;
 	/*color:#b4b4b4;*/
 	background:#e4e4e4 url("images/buttonDisabled.png") top repeat-x;
-	opacity: 0.30; /* Safari, Opera and Mozilla */
+	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
 .tundra .dijitButtonDisabled .dijitButtonNode *,
 .tundra .dijitToggleButtonDisabled .dijitButtonNode *,
 .tundra .dijitDropDownButtonDisabled .dijitButtonNode *,
 .tundra .dijitComboButtonDisabled .dijitButtonNode *,
 .tundra .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=30); /* IE */
+	filter: gray() alpha(opacity=50); /* IE */
 }
 
 .tundra .dijitButtonHover .dijitButtonNode,
@@ -72,7 +99,7 @@
 	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
 	border-color:#366dba;
 	color:#366dba;
-	background:url("images/buttonHover.png") repeat-x bottom;
+	background:#f1f6fc url("images/buttonHover.png") repeat-x bottom;
 }
 
 .tundra .dijitButtonActive .dijitButtonNode,
@@ -88,7 +115,6 @@
 	background: #ededed url("images/buttonActive.png") bottom repeat-x;
 }
 
-
 .tundra .dijitToolbar {
 	border: 1px solid #9b9b9b;
 	background:#e9e9e9 url("images/buttonEnabled.png") repeat-x top;
@@ -97,9 +123,9 @@
 .tundra .dijitToolbar * {
 	padding: 0px;
 	margin: 0px;
-	#margin-top: -1px; /*IE*/
+	/* #margin-top: -1px; */
+	/*IE*/
 }
-
 .dj_ie .tundra .dijitToolbar {
 	padding-bottom: 1px;
 }
@@ -109,7 +135,11 @@
 	margin: 0px;
 	border: 1px solid transparent;
 	background: none;
+	_margin: 1px;
+	_padding: 0px 1px 0px 1px;
+	_border: 0px;
 }
+
 .tundra .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {
 	background-color:#C1D2EE;
 	border:1px solid #316AC5;
@@ -128,7 +158,12 @@
 .tundra .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode {
 	/* TODO: change this from Hover to Selected so that button is still highlighted while drop down is being used */
 	border-color: #366dba;
+	/* IE hackery */
+	_border: 1px solid #366dba;
+	_margin: -1px 0px 0px 0px;
+	_padding: 0px;
 }
+
 .dijitToolbarSeparator {
 	background: url('images/editor.gif');
 	height: 18px;
@@ -145,6 +180,9 @@
 .tundra .dijitComboBox .dijitDownArrowButtonChar {
 	/* visibility:hidden;  */
 	display:none; 
+}
+.dijit_a11y .dijitComboBox .dijitDownArrowButtonChar {
+	display:inline; 
 }
 .tundra .dijitComboBox .dijitDownArrowButtonInner {
 	width:16px; 
@@ -180,65 +218,107 @@
 		dijit.form.ComboBox (partial)
  ****/
 
-.tundra .dijitComboBox {
-	/* put margin on the outer element of the autocompleter rather than the input */
-	margin:.0em .1em .2em .1em;
+.tundra .dijitInputField INPUT,
+.tundra .dijitTextBox,
+.tundra .dijitComboBox,
+.tundra .dijitSpinner {
+	margin: 0em 0.1em 0.0em 0.1em;
 }
 
-.tundra .dijitInputField,
+.tundra .dijitTextBox,
+.tundra .dijitComboBox,
+.tundra .dijitSpinner,
 .tundra .dijitInlineEditor input,
-.tundra .dijitTextaArea,
-.tundra .dijitComboBoxInput,
-.tundra .dijitSpinnerInput {
+.tundra .dijitTextArea {
 	/* 	For all except dijit.form.NumberSpinner:  the actual input element.
-		For dijit.form.NumberSpinner: the outer fieldset that contains the input.
+		For TextBox, ComboBox, Spinner: the table that contains the input.
+		Otherwise the actual input element.
 	*/
-	font-size: inherit;
 	background:#fff url("images/validationInputBg.png") repeat-x top left;
+	#background:#fff url('images/validationInputBg.gif') repeat-x top left; 
 	border:1px solid #9b9b9b;
 	line-height: normal;
-	padding: 0.2em 0.3em;
 }
 
-.tundra .dijitComboBoxFocused .dijitComboBoxInput {
-	/* input field when focused (eg: typing affects it) */
+.dj_safari .tundra INPUT.dijitTextBox {
+	padding:0.15em 0em; /* make it roughly the same size as a validation input box */
+}
+
+.dj_ie .tundra INPUT.dijitTextBox,
+.dj_ie .tundra TD.dijitInputField,
+.dj_ie .tundra .dijitInputField INPUT {
+	height: 1.2em; /* needed since the INPUT is position:absolute */
+}
+
+.tundra .dijitComboBox .dijitButtonNode,
+.tundra .dijitSpinner .dijitButtonNode {
+	/* line between the input area and the drop down button */
+	border-left:1px solid #9b9b9b;
+}
+.tundra .dijitSpinner .dijitDownArrowButton {
+	border-top:1px solid #9b9b9b;	/* line between top and bottom arrow */
+}
+
+.tundra .dijitTextBoxFocused,
+.tundra .dijitComboBoxFocused,
+.tundra .dijitSpinnerFocused {
+	/* input field when focused (ie: typing affects it) */
 	border-color:#366dba;
-	border-style:inset;
+}
+.tundra .dijitComboBoxFocused .dijitButtonNode, .tundra .dijitSpinnerFocused .dijitButtonNode {
+	border-left:1px solid #366dba;
+}
+.tundra .dijitSpinnerFocused .dijitDownArrowButton {
+	border-top:1px solid #366dba;
 }
 
-.tundra .dijitComboBoxDisabled .dijitComboBoxInput {
-	/* input field when disabled (also set above) */
-}
-
-.tundra .dijitComboBoxHover .dijitComboBoxInput  {
-	/* input field when hovered over */
-	border-color:#366dba;
-}
-
-.tundra .dijitComboBoxActive .dijitComboBoxInput {
-	/* input field when mouse is down (?) */
-}
-
-/* Dojo Input Field */
-
-.tundra .dijitInputFieldValidationNormal {
-	
-}
-
-.tundra .dijitInputFieldValidationError {
+.tundra .dijitTextBoxError,
+.tundra .dijitComboBoxError,
+.tundra .dijitSpinnerError {
 	border:1px solid #f3d118;
-	background-color::#f9f7ba;
-	background-image:none; 
+	background-color:#f9f7ba;
+	background-image:none;
+}
+.dj_ie6 .tundra .dijitTextBoxError input,
+.dj_ie6 .tundra .dijitComboBoxError input,
+.dj_ie6 .tundra .dijitSpinnerError input {
+	/* background-color: transparent on an <input> doesn't work on IE6 */
+	background-color:#f9f7ba !important;
 }
 
-.tundra .dijitInputFieldFocused { 
-	border:1px solid #666; 
-}
-
-.tundra .dijitInputFieldValidationError:hover,
-.tundra .dijitInputFieldValidationError:focus {
+.tundra .dijitTextBoxErrorFocused,
+.tundra .dijitComboBoxErrorFocused,
+.tundra .dijitSpinnerErrorFocused {
 	background-color:#ff6;
-	background-image:none;	
+	background-image:none;
+}
+.dj_ie6 .tundra .dijitTextBoxErrorFocused input,
+.dj_ie6 .tundra .dijitComboBoxErrorFocused input,
+.dj_ie6 .tundra .dijitSpinnerErrorFocused input {
+	/* background-color: transparent on an <input> doesn't work on IE6 */
+	background-color:#ff6 !important;
+}
+
+/* Validation errors  */
+.tundra .dijitValidationIcon {
+	/* prevent height change when widget goes from valid to invalid state, and
+	 * workaround browser (FF and safari) sizing bugs when last table column is empty or display:null
+	 */
+	display: block;
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-image: url('images/warning.png');
+	visibility: hidden;
+}
+.tundra .dijitValidationIconText {
+	display: none;
+}
+
+.tundra .dijitTextBoxError .dijitValidationIcon,
+.tundra .dijitComboBoxError .dijitValidationIcon,
+.tundra .dijitSpinnerError .dijitValidationIcon {
+	visibility: visible;
 }
 
 /*
@@ -273,80 +353,80 @@
 .tundra .dijitCheckBoxIcon,		/* inside a toggle button */
 .tundra .dijitRadioIcon	{		/* inside a toggle button */
 	background-image: url('images/checkmark.gif'); /* checkbox sprite image */
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
-	overflow:hidden; 
-	margin:0; padding:0; 
+	overflow: visible; 
+	margin: 0;
+	padding: 0; 
 }
-
 
 .tundra .dijitCheckBox,
 .tundra .dijitToggleButton .dijitCheckBoxIcon {
 	/* unchecked */
-	background-position: -16px 0px; 
+	background-position: -16px;
 }
  
 .tundra .dijitCheckBoxChecked,
 .tundra .dijitToggleButtonChecked .dijitCheckBoxIcon {
 	/* checked */
-	background-position: 0px 0px;
+	background-position: 0px;
 }
 
 .tundra .dijitCheckBoxDisabled {
 	/* disabled */
-	background-position: -48px 0px;
+	background-position: -48px;
 }
 
 .tundra .dijitCheckBoxCheckedDisabled {
 	/* disabled but checked */
-	background-position: -32px 0px;
+	background-position: -32px;
 }
 
 .tundra .dijitCheckBoxHover,
 .tundra .dijitCheckBoxFocused {
 	/* hovering over an unchecked enabled checkbox */
-	background-position: -80px 0px;
+	background-position: -80px;
 }
 
 .tundra .dijitCheckBoxCheckedHover,
 		.tundra .dijitCheckBoxCheckedFocused {
 	/* hovering over a checked enabled checkbox */
-	background-position: -64px 0px;
+	background-position: -64px;
 }
 
 .tundra .dijitRadio,
 .tundra .dijitToggleButton .dijitRadioIcon {
 	/* unselected */
-	background-position: -112px -1px;
+	background-position: -112px;
 }
 
 .tundra .dijitRadioChecked,
 .tundra .dijitToggleButtonChecked .dijitRadioIcon {
 	/* selected */
-	background-position: -96px -1px;
+	background-position: -96px;
 }
 
 .tundra .dijitRadioCheckedDisabled {
 	/* selected but disabled */
-	background-position: -128px -1px;
+	background-position: -128px;
 }
 
 .tundra .dijitRadioDisabled {
 	/* unselected and disabled */
-	background-position: -144px -1px;
+	background-position: -144px;
 }
 
 .tundra .dijitRadioHover,
 .tundra .dijitRadioFocused {
 	/* hovering over an unselected enabled radio button */
-	background-position: -176px -1px;
+	background-position: -176px;
 }
 
 .tundra .dijitRadioCheckedHover,
 .tundra .dijitRadioCheckedFocused {
 	/* hovering over a selected enabled radio button */
-	background-position: -160px -1px;
+	background-position: -160px;
 }
 
 /* Menu */
@@ -361,13 +441,15 @@
 	font: menu;
 	margin: 0;
 }
-
+.tundra .dijitMenuPreviousButton, .tundra .dijitMenuNextButton {
+	font-style: italic;
+}
 .tundra .dijitMenuItem TD {
 	padding:2px;
 }
 
 .tundra .dijitMenuItemHover {
-	background-color: #95a0b0; /* #555555; #aaaaaa; #646464;  #60a1ea; */
+	background-color: #808080; /* #95a0b0; #555555; #aaaaaa; #646464;  #60a1ea; #848484; */
 	color:#fff;
 }
 
@@ -391,7 +473,7 @@
 	background-image:url('images/arrowRight.gif'); 
 }
 .tundra .dijitMenuExpandInner {
-	display:none !important;
+	display:none;
 }
 
 .tundra .dijitMenuSeparator {
@@ -421,10 +503,16 @@
 .tundra .dijitTitlePane .dijitArrowNode {
 	width:16px;
 	height:16px;
+	float:right;
 }
 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background:url('images/arrowRight.png') no-repeat center center; 
 }
+
+.tundra .dijitTitlePaneFocused .dijitTitlePaneTextNode {
+	text-decoration:underline;
+}
+
 .dj_ie6 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background-image:url('images/arrowRight.gif');
 }
@@ -436,6 +524,9 @@
 }
 .tundra .dijitTitlePane .dijitArrowNodeInner { 
 	visibility:hidden;
+}
+.dijit_a11y .dijitTitlePane .dijitArrowNodeInner { 
+	visibility:visible;
 }
 
 .tundra .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
@@ -640,7 +731,7 @@
 .tundra .dijitDialog {
 	background: #eee;
 	border: 1px solid #999;
-	-webkit-box-shadow: 0px 3px 7px #adadad;
+	-webkit-box-shadow: 0px 5px 10px #adadad;
 }
 
 .tundra .dijitDialog .dijitDialogTitle {
@@ -809,16 +900,21 @@
 
 .tundra .dijitAccordionPane .dijitAccordionTitle {
 	background:#fafafa url("images/titleBar.png") repeat-x bottom left;
-	border: 1px solid #bfbfbf;
+	border-top: 1px solid #bfbfbf;
 	padding:4px 4px 2px 4px;
 }
 
 .tundra .dijitAccordionPane-selected .dijitAccordionTitle {
 	background: #ededed url("images/buttonActive.png") bottom repeat-x;
 	font-weight: bold;
-	/* border:1px solid #84a3d1; */
-	border: 1px solid #aaaaaa;
+	border-top: 1px solid #aaaaaa;
 	padding: 4px 4px 2px 4px;
+}
+.tundra .dijitAccordionPaneFocused .dijitAccordionText {
+	text-decoration:underline !important;
+	/*border-left:1px solid #999;
+	border-right:1px solid #999;
+	border-top:1px solid #999; */
 }
 
 .tundra .dijitAccordionPane .dijitAccordionArrow {
@@ -832,16 +928,16 @@
 }
 
 .tundra .dijitAccordionPane-selected .dijitAccordionArrow {
-	background:url("images/arrowDown.png") no-repeat;
+	background:url("images/circleIcon.png") no-repeat;
 	margin-top:2px;
 }
 .dj_ie6 .tundra .dijitAccordionPane-selected .dijitAccordionArrow {
-	background-image: url("images/arrowDown.gif"); 
+	background-image: url("images/circleIcon.gif"); 
 }
 
 .tundra .dijitAccordionPane .dijitAccordionBody {
 	background: #fff;
-	border:1px solid #bfbfbf;
+	border-top: 1px solid #bfbfbf;
 }
 
 /* Tree */
@@ -853,13 +949,15 @@
     margin-left: 19px;
     zoom: 1;	/* MOW: what the heck is this doing in here? */
 }
-.tundra .dijitTreeIsRoot {
-    margin-left: 0;
-}
  
 /* left vertical line (grid) for all nodes */
 .tundra .dijitTreeIsLast {
     background: url('images/i_half.gif') no-repeat;
+}
+
+.tundra .dijitTreeIsRoot {
+    margin-left: 0;
+    background-image: none;
 }
 
 .tundra .dijitTreeExpando {
@@ -1148,12 +1246,22 @@
 	background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom left;
 }
 
+.tundra .dijitSliderFocused .dijitHorizontalSliderProgressBar,
+.tundra .dijitSliderFocused .dijitHorizontalSliderLeftBumper {
+	background-image:url("images/sliderFullFocus.png");
+}
+
+.tundra .dijitSliderFocused .dijitVerticalSliderProgressBar,
+.tundra .dijitSliderFocused .dijitVerticalSliderBottomBumper {
+	background-image:url("images/sliderFullVerticalFocus.png");
+}
+
 .tundra .dijitVerticalSliderRemainingBar {
 	border-color: #b4b4b4;
 	background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y bottom left;
 }
 
-.dijitHorizontalSliderRemainingBar {
+.tundra .dijitHorizontalSliderRemainingBar {
 	border-color: #b4b4b4;
 	background: #dcdcdc url("images/sliderEmpty.png") repeat-x top left;
 }
@@ -1163,15 +1271,27 @@
 	outline:1px; 
 	/* border-color: #b4b4b4; */
 }
+.tundra .dijitSliderFocused .dijitSliderBar {
+	border-color:#333;	
+}
+
+.dijit_a11y .dijitSliderProgressBar { 
+	background-color:#333 !important; 
+}
 
 .tundra .dijitHorizontalSliderImageHandle {
 	border:0px;
 	width:16px;
 	height:16px;
-	background:url("images/preciseSliderThumb.png") no-repeat center center; 
+	background:url("images/preciseSliderThumb.png") no-repeat center top; 
 	cursor:pointer; 
 }
-.dj_ie6 .dijitHorizontalSliderImageHandle {
+.tundra .dijitSliderFocused .dijitHorizontalSliderImageHandle {
+	background-image:url("images/preciseSliderThumbFocus.png");
+	#background-image:url("images/preciseSliderThumbFocus.gif");
+}
+
+.dj_ie6 .tundra .dijitHorizontalSliderImageHandle {
 	background-image:url("images/preciseSliderThumb.gif"); 
 }
 
@@ -1195,6 +1315,13 @@
 	cursor:pointer;
 }
 
+.tundra .dijitSliderFocused .dijitVerticalSliderImageHandle {
+	background-image:url("images/sliderThumbFocus.png");
+}
+.dj_ie6 .tundra .dijitSliderFocused .dijitVerticalSliderImageHandle {
+	background-image:url("images/sliderThumbFocus.gif");
+}
+
 .tundra .dijitVerticalSliderBottomBumper {
 	border-bottom-width: 1px;
 	border-color: #aab0bb;
@@ -1205,6 +1332,40 @@
 	background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y top left;
 	border-color: #b4b4b4;
 	border-top-width: 1px;
+}
+
+.tundra .dijitHorizontalSliderIncrementIcon,
+.tundra .dijitVerticalSliderIncrementIcon {
+	background:url('images/arrowUp.png') no-repeat center center;
+	width:16px; height:16px;
+	cursor:pointer;
+}
+.tundra .dijitHorizontalSliderIncrementIcon {
+	background-image:url('images/arrowRight.png');
+}
+
+.tundra .dijitHorizontalSliderDecrementIcon,
+.tundra .dijitVerticalSliderDecrementIcon {
+	width:16px;
+	height:16px;
+	cursor:pointer; 
+	background:url('images/arrowDown.png') no-repeat center center;
+}
+.tundra .dijitHorizontalSliderDecrementIcon { background-image:url('images/arrowLeft.png'); }
+
+.tundra .dijitSliderButtonInner {
+	visibility:hidden;
+}
+
+.tundra .dijitSliderDisabled {
+	opacity:0.6 !important;
+}
+
+.dj_ie6 .tundra .dijitSliderDisabled,
+.dj_ie6 .tundra .dijitSliderDisabled .RuleContainer,
+.dj_ie6 .tundra .dijitSliderDisabled .dijitSliderRemainingBar,
+.dj_ie6 .tundra .dijitSliderDisabled .dijitSliderProgressBar {
+	filter: gray() alpha(opacity=40);
 }
 
 /**** ICONS *****/
@@ -1262,18 +1423,13 @@
  * to the main page, rather than relative to this file... using gifs for now
  */
 
-.dj_ie6 .tundra .dijitInputField,
-.dj_ie6 .tundra .dijitComboBoxInput, 
-.dj_ie6 .tundra .dijitSpinnerInput
- {
-	background:transparent;  
-	/* FIXME: un-comment when a pretty version of .gif is made */
-	/* background-image: url("images/dojoTundraGradientBg.gif"); */
+.dj_ie6 .tundra .dijitInputField
+{
+	background: url("images/validationInputBg.gif") repeat-x top left #fff; 
 }
 
-
-/** TODO: add all other PNGs here that need this */
 /**** Disabled cursor *****/
+.tundra .dijitSliderDisabled *,
 .tundra .dijitDisabledClickableRegion,	/* a region the user would be able to click on, but it's disabled */
 .tundra .dijitSpinnerDisabled *,
 .tundra .dijitButtonDisabled *,
@@ -1282,7 +1438,6 @@
 .tundra .dijitComboBoxDisabled *
 {
 	cursor: not-allowed !important;
-	cursor: url("no.gif"), not-allowed, default;
 }
 
 /* DnD avatar-specific settings */
@@ -1295,3 +1450,13 @@
 .tundra.dojoDndCopy .dojoDndAvatarHeader	{background-image: url(images/dndNoCopy.png); background-repeat: no-repeat;}
 .tundra.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-image: url(images/dndMove.png); background-repeat: no-repeat;}
 .tundra.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-image: url(images/dndCopy.png); background-repeat: no-repeat;}
+
+.tundra .dijitContentPaneLoading {
+	background:url('images/loading.gif') no-repeat left center;
+	padding-left:25px; 
+}
+
+.tundra .dijitContentPaneError {
+	background:url('images/warning.png') no-repeat left center;
+	padding-left:25px; 
+}

@@ -28,8 +28,7 @@ dojo.requireLocalization("dojo.cldr", "gregorian", null, "ko,zh-cn,zh,ja,en,it-i
 			var widthList = ["abbr", "wide", "narrow"];
 			switch(c){
 				case 'G':
-//					if(l>3){/*unimplemented*/}
-					s = bundle.eras[dateObject.getFullYear() < 0 ? 1 : 0];
+					s = bundle[(l < 4) ? "eraAbbr" : "eraNames"][dateObject.getFullYear() < 0 ? 0 : 1];
 					break;
 				case 'y':
 					s = dateObject.getFullYear();
@@ -481,7 +480,9 @@ function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
 }
 
 function _buildDateTimeRE(tokens, bundle, options, pattern){
-	return dojo.regexp.escapeString(pattern).replace(/([a-z])\1*/ig, function(match){
+	pattern = dojo.regexp.escapeString(pattern);
+	if(!options.strict){ pattern = pattern.replace(" a", " ?a"); } // kludge to tolerate no space before am/pm
+	return pattern.replace(/([a-z])\1*/ig, function(match){
 		// Build a simple regexp.  Avoid captures, which would ruin the tokens list
 		var s;
 		var c = match.charAt(0);

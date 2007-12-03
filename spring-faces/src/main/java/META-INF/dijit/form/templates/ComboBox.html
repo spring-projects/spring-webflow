@@ -1,18 +1,20 @@
-<table class="dijit dijitReset dijitInline dijitLeft" baseClass="${baseClass}" cellspacing="0" cellpadding="0"
-	id="widget_${id}" name="${name}" dojoAttachEvent="onmouseover:_onMouse,onmouseout:_onMouse" waiRole="presentation"
-	><tr
-		><td class='dijitReset dijitStretch dijitComboBoxInput'
-			><input class='XdijitInputField' type="text" autocomplete="off" name="${name}"
+<table style="display: -moz-inline-stack;" class="dijit dijitReset dijitInlineTable dijitLeft" cellspacing="0" cellpadding="0"
+	id="widget_${id}" name="${name}" dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse" waiRole="presentation"
+	><tr class="dijitReset"
+		><td class='dijitReset dijitStretch dijitInputField' width="100%"
+			><input type="text" autocomplete="off" name="${name}"
 			dojoAttachEvent="onkeypress, onkeyup, onfocus, onblur, compositionend"
-			dojoAttachPoint="textbox,focusNode" id='${id}'
-			tabIndex='${tabIndex}' size='${size}' maxlength='${maxlength}'
-			waiRole="combobox"
+			dojoAttachPoint="textbox,focusNode" waiRole="combobox"
+		/></td
+		><td class="dijitReset dijitValidationIconField" width="0%"
+			><div dojoAttachPoint='iconNode' class='dijitValidationIcon'></div><div class='dijitInline dijitValidationIconText'>&Chi;</div
 		></td
-		><td class='dijitReset dijitRight dijitButtonNode dijitDownArrowButton'
+		><td class='dijitReset dijitRight dijitButtonNode dijitDownArrowButton' width="0%"
 			dojoAttachPoint="downArrowNode"
-			dojoAttachEvent="ondijitclick:_onArrowClick,onmousedown:_onMouse,onmouseup:_onMouse,onmouseover:_onMouse,onmouseout:_onMouse"
-		><div class="dijitDownArrowButtonInner" waiRole="presentation" tabIndex="-1">
-			<div class="dijit_a11y dijitDownArrowButtonChar">&#9660;</div>
-		</div>
-	</td></tr>
-</table>
+			dojoAttachEvent="ondijitclick:_onArrowClick,onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse"
+			><div class="dijitDownArrowButtonInner" waiRole="presentation" tabIndex="-1"
+				><div class="dijitDownArrowButtonChar">&#9660;</div
+			></div
+		></td	
+	></tr
+></table>

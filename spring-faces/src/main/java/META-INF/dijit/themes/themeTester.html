@@ -1,32 +1,20 @@
 <html>
 <head>
 	<title>Dijit Theme Tester</title>
-	<script type="text/javascript" src="../tests/testBidi.js"></script>
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		djConfig="parseOnLoad: false, isDebug: true"></script>
+	<!--
+	<script type="text/javascript" src="http://prototypejs.org/assets/2007/10/16/prototype.js"></script>
+	-->
 	<script type="text/javascript" src="../dijit.js"></script>
 	<script type="text/javascript" src="../dijit-all.js"></script>
 	<script type="text/javascript">
-		// if you create a custom theme, pass ?theme=String to the url
-		var themeBase = location.search.match(/theme=([a-zA-Z.]*)/);
-		var themeName = (themeBase ? themeBase[1] : "tundra");
-		var docHead = document.getElementsByTagName("head")[0];
-		var thisTheme = docHead.appendChild(document.createElement('link'));
-		thisTheme.rel = "stylesheet";
-		thisTheme.href = themeName + '/' + themeName + '.css';
-		thisTheme.type = "text/css"; 
-
-		var thisThemeRtl = docHead.appendChild(document.createElement('link'));
-		thisThemeRtl.rel = "stylesheet";
-		thisThemeRtl.href = themeName + '/' + themeName + '_rtl.css';
-		thisThemeRtl.type = "text/css"; 
-
 		// this is just a list of 'official' dijit themes, you can use ?theme=String 
 		// for 'un-supported' themes, too. (eg: yours) 
 		var availableThemes = [
 			{ theme:"tundra", author:"Dojo", baseUri:"../themes/"},
-			{ theme:"soria", author:"dante", baseUri:"../themes/"},
-			{ theme:"noir", author:"owen", baseUri:"../themes/"}
+			{ theme:"soria", author:"dante", baseUri:"../themes/"}//,
+			//{ theme:"noir", author:"owen", baseUri:"../themes/"}
 		];
 	</script>
 	<style type="text/css">
@@ -63,6 +51,7 @@
 
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; } 
 	</style>
+	<script type="text/javascript" src="../tests/_testCommon.js"></script>
 	<script type="text/javascript"> // dojo.requires()
 
 		dojo.require("dijit.Menu");
@@ -77,7 +66,7 @@
 		dojo.require("dijit.Editor"); 
 		
 		// dnd:
-		dojo.require("dojo.dnd.source");
+		dojo.require("dojo.dnd.Source");
 
 		// various Form elemetns
 		dojo.require("dijit.form.CheckBox");
@@ -86,7 +75,7 @@
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.DateTextBox");	
 		dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.InlineEditBox");
+		dojo.require("dijit.InlineEditBox");
 		dojo.require("dijit.form.NumberSpinner");
 		dojo.require("dijit.form.Slider"); 
 
@@ -192,17 +181,15 @@
 		***/
 	</script>
 </head>
-<body class="" id="container">
-	<!-- basic preloader: --><div id="loader"><div id="loaderInner">Loading themeTester ... </div></div>
-        <script type="text/javascript">
-                document.getElementById('container').className = themeName;
-        </script>
+<body>
+	<!-- basic preloader: -->
+	<div id="loader"><div id="loaderInner">Loading themeTester ... </div></div>
 
 	<!-- data for tree and combobox -->
 	<div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore"
-		url="../tests/countries.json"></div>
+		url="../tests/_data/countries.json"></div>
 	<div dojoType="dojo.data.ItemFileReadStore" jsId="stateStore"
-		url="../tests/form/comboBoxData.json"></div>
+		url="../tests/_data/states.json"></div>
 	<!-- contentMenu popup -->
 	<div dojoType="dijit.Menu" id="submenu1" contextMenuForWindow="true" style="display: none;">
 		<div dojoType="dijit.MenuItem" onClick="alert('Hello world');">Enabled Item</div>
@@ -222,7 +209,7 @@
 				<div dojoType="dijit.MenuItem" onClick="alert('Submenu 2!')">Submenu Item Two</div>
 				<div dojoType="dijit.PopupMenuItem">
 					<span>Deeper Submenu</span>
-					<div dojoType="dijit.Menu" id="submenu4"">
+					<div dojoType="dijit.Menu" id="submenu4">
 						<div dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 1!')">Sub-sub-menu Item One</div>
 						<div dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 2!')">Sub-sub-menu Item Two</div>
 					</div>
@@ -306,7 +293,7 @@
 				<div dojoType="dijit.layout.AccordionPane" title="Dojo Tree from Store">
 					<!-- tree widget -->
 					<div dojoType="dijit.Tree" store="continentStore" query="{type:'continent'}"
-						labelAttr="name" typeAttr="type">
+						labelAttr="name" typeAttr="type" label="Continents">
 					</div>
 				</div>
 	
@@ -372,8 +359,8 @@
 
 						<hr class="spacer">
 
-						<h2>dijit.form.NumberSpinner</h2>
-						<input dojoType="dijit.form.NumberSpinner" id="integertextbox3" value="10">
+						<h2>dijit.form.NumberSpinner max=100</h2>
+						<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="integertextbox3" value="10">
 						
 						<hr class="spacer">	
 
@@ -427,35 +414,21 @@
 				
 								<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
 								<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
-								<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;color:gray;">
-									<li>
-									<li>20
-									<li>40
-									<li>60
-									<li>80
-									<li>
-								</ol>
+								<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;color:gray;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
 						</div>
-						<br> Slider2 Value:<input readonly id=slider2input size=3>
+						<br> Slider2 Value:<input readonly id="slider2input" size="3" value="10">
 						</div>					
-                                                <h2>Sliders</h2>
+												<h2>Sliders</h2>
 						<div dojoType="dijit.form.HorizontalSlider" name="horizontal1"
-							onChange="dojo.byId('slider1input').value=arguments[0];"
+							onChange="dojo.byId('slider1input').value=dojo.number.format(arguments[0]/100,{places:1,pattern:'#%'});"
 							value="10"
 							maximum="100"
 							minimum="0"
 							showButtons="false"
 							intermediateChanges="true"
 							style="width:50%; height: 20px;"
-							id="slider1">
-								<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;color:gray;">
-									<li>
-									<li>20%
-									<li>40%
-									<li>60%
-									<li>80%
-									<li>
-								</ol>
+							id="horizontal1">
+								<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;color:gray;" numericMargin="1" count="6"></ol>
 								<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=11 style="height:5px;"></div>
 								<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
 								<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;color:gray;">
@@ -465,9 +438,9 @@
 								</ol>
 
 						</div>
-						<br>Value: <input id="slider1input" size="5">
+						<br>Value: <input readonly id="slider1input" size="5" value="10.0%">
 
-						<div dojoType="dijit.form.HorizontalSlider" name="horizontal1"
+						<div dojoType="dijit.form.HorizontalSlider" name="horizontal2"
 							minimum="1"
 							value="2"
 							maximum="3"
@@ -475,7 +448,7 @@
 							showButtons="false"
 							intermediateChanges="true"
 							style="width:300px; height: 40px;"
-							id="slider1">
+							id="horizontal2">
 								<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
 								<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;color:gray;">
 									<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
@@ -647,24 +620,23 @@
 						<hr class="spacer">
 					
 
-						<h2 class="testTitle">dijit.form.InLineEditBox + dijit.form.TextBox</h2>
+						<h2 class="testTitle">dijit.InlineEditBox + dijit.form.TextBox</h2>
 	
-						This is an InLine Sentence, 
-						<span id="editable" style="font-size:larger;" dojoType="dijit.form.InlineEditBox" onChange="myHandler(this.id,arguments[0])">
-							<input dojoType="dijit.form.TextBox" value="Edit me - I trigger the onChange callback">
-						</span>
-						And Keep the text around me satic. 
+						This is an editable header, 
+						<h3 id="editable" style="font-size:larger;" dojoType="dijit.InlineEditBox" onChange="myHandler(this.id,arguments[0])">
+							Edit me - I trigger the onChange callback
+						</h3>
+						And keep the text around me static. 
 
 						<hr class="spacer">
 	
-						<h2>dijit.form.InlineEditBox + dijit.form.Textarea</h2>
+						<h2>dijit.InlineEditBox + dijit.form.Textarea</h2>
 
 						(HTML before)
-						<div style="width:300px;">
-							<p><span id="areaEditable" dojoType="dijit.form.InlineEditBox">
-							<textarea dojoType="dijit.form.Textarea">I'm one big paragraph.  Go ahead and <i>edit</i> me.  <b>I dare you.</b> The quick brown fox jumped over the lazy dog.  Blah blah blah blah blah blah blah ...</textarea>
-							</span></p>
-						</div>
+						<p id="areaEditable" dojoType="dijit.InlineEditBox" editor="dijit.form.Textarea">
+							I'm one big paragraph.  Go ahead and <i>edit</i> me.  <b>I dare you.</b>
+							The quick brown fox jumped over the lazy dog.  Blah blah blah blah blah blah blah ...
+						</p>
 						(HTML after)
 
 						<p>
@@ -678,29 +650,29 @@
 
 						<h2>dijit.form.DateTextBox:</h2>
 		
-						(HTML before)
-						<span id="backgroundArea" dojoType="dijit.form.InlineEditBox">
-						<input name="date" value="2005-12-30"
-							dojoType="dijit.form.DateTextBox"
-							constraints={locale:'en-us'}
-							required="true"
-							promptMessage="mm/dd/yyyy"
-							invalidMessage="Invalid date. Use mm/dd/yyyy format.">
-						</span>
+						(HTML inline before)
+						<span id="backgroundArea" dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="170px">12/30/2005</span>
+						(HTML after)
+
+						<hr class="spacer">
+
+						<h2>dijit.form.TimeTextBox:</h2>
+		
+						(HTML inline before)
+						<span id="timePicker" dojoType="dijit.InlineEditBox" editor="dijit.form.TimeTextBox" width="150px">9:00 AM</span>
 						(HTML after)
 
 						<hr class="spacer">
 
 						
 						<h2>dijit.form.FilteringSelect + Inline + remote data store:</h2>
-						(HTML BEFORE)
-						<p id="backgroundArea2" dojoType="dijit.form.InlineEditBox">
-						<input searchField="name" keyField="abbreviation" id="setvaluetest"
-							dojoType="dijit.form.FilteringSelect" value="IA"
-							store="stateStore" name="state1" autocomplete="true"
-							promptMessage="Please enter a state">
-						</p>
-						(HTML AFTER)
+						(HTML inline before)
+						<span id="backgroundArea2" dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
+							editorParams="{store: stateStore, autoComplete: true, promptMessage: 'Please enter a state'}"
+							width="300px">
+							Indiana
+						</span>
+						(HTML after)
 	
 					</div><!-- end fourth upper tab -->
 	
@@ -740,9 +712,8 @@
 						<p>You can explore this single page after applying a Theme
 						for use in creation of your own theme.</p>
 	
-						<p>I am a Split Container, containing a Split Container on
-						the right. TabContainer on the top right, Bottom-aligned Tab Container
-						bottom right. AccordionPane on the left.</p>
+						<p>I am whole slew of Widgets on a page. Jump to <a href="../tests/">dijit tests</a> to
+						test individual components.</p>
 	
 						<p>There is a right-click [context] pop-up menu here, as well.</p>
 					</div><!-- end:info btab1 -->

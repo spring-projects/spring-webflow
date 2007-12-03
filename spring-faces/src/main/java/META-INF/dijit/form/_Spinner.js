@@ -14,23 +14,24 @@ dojo.declare(
 		//	It modifies the template to have up/down arrows, and provides related handling code.
 
 		// defaultTimeout: Number
-		//      number of milliseconds before a held key or button becomes typematic
+		//	  number of milliseconds before a held key or button becomes typematic
 		defaultTimeout: 500,
 
 		// timeoutChangeRate: Number
-		//      fraction of time used to change the typematic timer between events
-		//      1.0 means that each typematic event fires at defaultTimeout intervals
-		//      < 1.0 means that each typematic event fires at an increasing faster rate
+		//	  fraction of time used to change the typematic timer between events
+		//	  1.0 means that each typematic event fires at defaultTimeout intervals
+		//	  < 1.0 means that each typematic event fires at an increasing faster rate
 		timeoutChangeRate: 0.90,
 
 		// smallDelta: Number
-		//      adjust the value by this much when spinning using the arrow keys/buttons
+		//	  adjust the value by this much when spinning using the arrow keys/buttons
 		smallDelta: 1,
 		// largeDelta: Number
-		//      adjust the value by this much when spinning using the PgUp/Dn keys
+		//	  adjust the value by this much when spinning using the PgUp/Dn keys
 		largeDelta: 10,
 
-		templateString:"<table class=\"dijit dijitReset dijitInline dijitLeft dijitSpinner\" baseClass=\"dijitSpinner\" cellspacing=\"0\"  cellpadding=\"0\"\n\tid=\"widget_${id}\" name=\"${name}\"\n\tdojoAttachEvent=\"onmouseover:_onMouse,onmouseout:_onMouse,onkeypress:_onKeyPress\"\n\twaiRole=\"presentation\">\n\t<tr class=\"dijitReset\">\n\t\t<td rowspan=\"2\" class=\"dijitReset dijitStretch dijitSpinnerInput\">\n\t\t\t<input dojoAttachPoint=\"textbox,focusNode\" type=\"${type}\" dojoAttachEvent=\"onfocus,onkeyup\"\n\t\t\t\tvalue=\"${value}\" name=\"${name}\" size=\"${size}\" maxlength=\"${maxlength}\"\n\t\t\t\twaiRole=\"spinbutton\" autocomplete=\"off\" tabIndex=\"${tabIndex}\" id=\"${id}\"\n\t\t\t></td>\n\t\t<td class=\"dijitReset dijitRight dijitButtonNode dijitUpArrowButton\" \n\t\t\t\tdojoAttachPoint=\"upArrowNode\"\n\t\t\t\tdojoAttachEvent=\"onmousedown:_handleUpArrowEvent,onmouseup:_handleUpArrowEvent,onmouseover:_handleUpArrowEvent,onmouseout:_handleUpArrowEvent\"\n\t\t\t\tbaseClass=\"dijitSpinnerUpArrow\"\n\t\t\t><div class=\"dijitA11yUpArrow\" waiRole=\"presentation\" tabIndex=\"-1\">&#9650;</div></td>\n\t</tr><tr class=\"dijitReset\">\n\t\t<td class=\"dijitReset dijitRight dijitButtonNode dijitDownArrowButton\" \n\t\t\t\tdojoAttachPoint=\"downArrowNode\"\n\t\t\t\tdojoAttachEvent=\"onmousedown:_handleDownArrowEvent,onmouseup:_handleDownArrowEvent,onmouseover:_handleDownArrowEvent,onmouseout:_handleDownArrowEvent\"\n\t\t\t\tbaseClass=\"dijitSpinnerDownArrow\"\n\t\t\t><div class=\"dijitA11yDownArrow\" waiRole=\"presentation\" tabIndex=\"-1\">&#9660;</div></td>\n\t</tr>\n</table>\n\n",
+		templateString:"<table style=\"-moz-inline-stack;\" class=\"dijit dijitReset dijitInlineTable dijitLeft\" cellspacing=\"0\"  cellpadding=\"0\"\n\tid=\"widget_${id}\" name=\"${name}\"\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onkeypress:_onKeyPress\"\n\twaiRole=\"presentation\"\n\t><tr class=\"dijitReset\"\n\t\t><td rowspan=\"2\" class=\"dijitReset dijitStretch dijitInputField\" width=\"100%\"\n\t\t\t><input dojoAttachPoint=\"textbox,focusNode\" type=\"${type}\" dojoAttachEvent=\"onfocus,onkeyup\"\n\t\t\t\twaiRole=\"spinbutton\" autocomplete=\"off\" name=\"${name}\"\n\t\t></td\n\t\t><td rowspan=\"2\" class=\"dijitReset dijitValidationIconField\" width=\"0%\" \n\t\t\t><div dojoAttachPoint='iconNode' class='dijitInline dijitValidationIcon'></div\n\t\t></td\n\t\t><td class=\"dijitReset dijitRight dijitButtonNode dijitUpArrowButton\" width=\"0%\"\n\t\t\t\tdojoAttachPoint=\"upArrowNode\"\n\t\t\t\tdojoAttachEvent=\"onmousedown:_handleUpArrowEvent,onmouseup:_handleUpArrowEvent,onmouseover:_handleUpArrowEvent,onmouseout:_handleUpArrowEvent\"\n\t\t\t\tstateModifier=\"UpArrow\"\n\t\t\t><div class=\"dijitA11yUpArrow\">&#9650;</div\n\t\t></td\n\t></tr\n\t><tr class=\"dijitReset\"\n\t\t><td class=\"dijitReset dijitRight dijitButtonNode dijitDownArrowButton\" width=\"0%\"\n\t\t\t\tdojoAttachPoint=\"downArrowNode\"\n\t\t\t\tdojoAttachEvent=\"onmousedown:_handleDownArrowEvent,onmouseup:_handleDownArrowEvent,onmouseover:_handleDownArrowEvent,onmouseout:_handleDownArrowEvent\"\n\t\t\t\tstateModifier=\"DownArrow\"\n\t\t\t><div class=\"dijitA11yDownArrow\">&#9660;</div\n\t\t></td\n\t></tr\n></table>\n\n",
+		baseClass: "dijitSpinner",
 
 		adjust: function(/* Object */ val, /*Number*/ delta){
 			// summary: user replaceable function used to adjust a primitive value(Number/Date/...) by the delta amount specified
@@ -92,12 +93,6 @@ dojo.declare(
 
 		postCreate: function(){
 			this.inherited('postCreate', arguments);
-
-			// textbox and domNode get the same style but the css separates the 2 using !important
-			if(this.srcNodeRef){
-				dojo.style(this.textbox, "cssText", this.srcNodeRef.style.cssText);
-				this.textbox.className += " " + this.srcNodeRef.className;
-			}
 
 			// extra listeners
 			this.connect(this.textbox, dojo.isIE ? "onmousewheel" : 'DOMMouseScroll', "_mouseWheeled");

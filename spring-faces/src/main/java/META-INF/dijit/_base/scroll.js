@@ -2,7 +2,7 @@ if(!dojo._hasResource["dijit._base.scroll"]){ //_hasResource checks added by bui
 dojo._hasResource["dijit._base.scroll"] = true;
 dojo.provide("dijit._base.scroll");
 
-dijit.scrollIntoView = function(/* HTMLElement */node){
+dijit.scrollIntoView = function(/* DomNode */node){
 	//	summary
 	//	Scroll the passed node into view, if it is not.
 

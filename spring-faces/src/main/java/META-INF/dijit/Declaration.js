@@ -25,8 +25,11 @@ dojo.declare(
 
 			var propList = this.defaults||{};
 
-			this.mixins = this.mixins.length ? 
-				dojo.map(this.mixins, dojo.getObject) : 
+			// map array of strings like [ "dijit.form.Button" ] to array of mixin objects
+			// (note that dojo.map(this.mixins, dojo.getObject) doesn't work because it passes
+			// a bogus third argument to getObject(), confusing it)
+			this.mixins = this.mixins.length ?
+				dojo.map(this.mixins, function(name){ return dojo.getObject(name); } ) :
 				[ dijit._Widget, dijit._Templated ];
 
 			if(preambles.length){
@@ -34,17 +37,14 @@ dojo.declare(
 				propList.preamble = dojo.parser._functionFromScript(preambles[0]);
 			}
 			propList.widgetsInTemplate = true;
-			propList.templateString = "<"+srcType+" class='"+src.className+"'>"+src.innerHTML.replace(/\%7B/g,"{").replace(/\%7D/g,"}")+"</"+srcType+">";
+			propList._skipNodeCache = true;
+			propList.templateString = "<"+srcType+" class='"+src.className+"' dojoAttachPoint='"+(src.getAttribute("dojoAttachPoint")||'')+"' dojoAttachEvent='"+(src.getAttribute("dojoAttachEvent")||'')+"' >"+src.innerHTML.replace(/\%7B/g,"{").replace(/\%7D/g,"}")+"</"+srcType+">";
+			// console.debug(propList.templateString);
 
 			// strip things so we don't create stuff under us in the initial setup phase
 			dojo.query("[dojoType]", src).forEach(function(node){
 				node.removeAttribute("dojoType");
 			});
-			scripts.forEach(function(s){
-				if(!s.getAttribute("event")){
-					this.mixins.push(dojo.parser._functionFromScript(s));
-				}
-			}, this);
 
 			// create the new widget class
 			dojo.declare(
@@ -53,11 +53,12 @@ dojo.declare(
 				propList
 			);
 
+			// do the connects for each <script type="dojo/connect" event="foo"> block and make
+			// all <script type="dojo/method"> tags execute right after construction
 			var wcp = dojo.getObject(this.widgetClass).prototype;
 			scripts.forEach(function(s){
-				if(s.getAttribute("event")){
-					dojo.parser._wireUpMethod(wcp, s);
-				}
+				var event = s.getAttribute("event");
+				dojo.connect(wcp, event || "postscript", null, dojo.parser._functionFromScript(s));
 			});
 		}
 	}

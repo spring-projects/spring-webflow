@@ -3,9 +3,11 @@ dojo._hasResource["dijit.layout.ContentPane"] = true;
 dojo.provide("dijit.layout.ContentPane");
 
 dojo.require("dijit._Widget");
+dojo.require("dijit.layout._LayoutWidget");
+
 dojo.require("dojo.parser");
 dojo.require("dojo.string");
-dojo.requireLocalization("dijit", "loading", null, "ROOT");
+dojo.requireLocalization("dijit", "loading", null, "ko,zh,ja,zh-tw,ru,it,ROOT,hu,fr,pt,pl,es,de,cs");
 
 dojo.declare(
 	"dijit.layout.ContentPane",
@@ -21,7 +23,7 @@ dojo.declare(
 	//		Don't confuse it with an iframe, it only needs/wants document fragments.
 	//		It's useful as a child of LayoutContainer, SplitContainer, or TabContainer.
 	//		But note that those classes can contain any widget as a child.
-	// usage:
+	// example:
 	//		Some quick samples:
 	//		To change the innerHTML use .setContent('<b>new content</b>')
 	//
@@ -29,7 +31,7 @@ dojo.declare(
 	//		please note that the nodes in NodeList will copied, not moved
 	//
 	//		To do a ajax update use .setHref('url')
-
+	//
 	// href: String
 	//		The href of the content that displays now.
 	//		Set this at construction if you want to load data externally when the
@@ -59,11 +61,11 @@ dojo.declare(
 
 	// loadingMessage: String
 	//	Message that shows while downloading
-	loadingMessage: "<span class='dijitContentPaneLoading'>${loadingState}</span>", // TODO: consider a graphical representation for this state which does not require localization
+	loadingMessage: "<span class='dijitContentPaneLoading'>${loadingState}</span>", 
 
 	// errorMessage: String
 	//	Message that shows if an error occurs
-	errorMessage: "<span class='dijitContentPaneError'>${errorState}</span>", // TODO: consider a graphical representation for this state which does not require localization
+	errorMessage: "<span class='dijitContentPaneError'>${errorState}</span>", 
 
 	// isLoaded: Boolean
 	//	Tells loading status see onLoad|onUnload for event hooks
@@ -92,15 +94,34 @@ dojo.declare(
 	},
 
 	startup: function(){
-		if(!this._started){
-			this._loadCheck();
-			this._started = true;
+		if(this._started){ return; }
+		this._checkIfSingleChild();
+		if(this._singleChild){
+			this._singleChild.startup();
+		}
+		this._loadCheck();
+		this._started = true;
+	},
+
+	_checkIfSingleChild: function(){
+		// summary:
+		// 	Test if we have exactly one widget as a child, and if so assume that we are a container for that widget,
+		//	and should propogate startup() and resize() calls to it.
+		var childNodes = dojo.query(">", this.containerNode || this.domNode),
+			childWidgets = childNodes.filter("[widgetId]");
+
+		if(childNodes.length == 1 && childWidgets.length == 1){
+			this.isContainer = true;
+			this._singleChild = dijit.byNode(childWidgets[0]);
+		}else{
+			delete this.isContainer;
+			delete this._singleChild;
 		}
 	},
 
 	refresh: function(){
 		// summary:
-		//		Force a refresh (re-download) of content, be sure to turn off cache
+		//	Force a refresh (re-download) of content, be sure to turn off cache
 
 		// we return result of _prepareLoad here to avoid code dup. in dojox.layout.ContentPane
 		return this._prepareLoad(true);
@@ -142,16 +163,20 @@ dojo.declare(
 			this._createSubWidgets();
 		}
 
+		this._checkIfSingleChild();
+		if(this._singleChild && this._singleChild.resize){
+			this._singleChild.resize(this._contentBox);
+		}
+
 		this._onLoadHandler();
 	},
 
 	cancel: function(){
-		// summary
+		// summary:
 		//		Cancels a inflight download of content
 		if(this._xhrDfd && (this._xhrDfd.fired == -1)){
 			this._xhrDfd.cancel();
 		}
-
 		delete this._xhrDfd; // garbage collect
 	},
 
@@ -163,11 +188,25 @@ dojo.declare(
 		// make sure we call onUnload
 		this._onUnloadHandler();
 		this._beingDestroyed = true;
-		dijit.layout.ContentPane.superclass.destroy.call(this);
+		this.inherited("destroy",arguments);
 	},
 
 	resize: function(size){
 		dojo.marginBox(this.domNode, size);
+
+		// Compute content box size in case we [later] need to size child
+		// If either height or width wasn't specified by the user, then query node for it.
+		// But note that setting the margin box and then immediately querying dimensions may return
+		// inaccurate results, so try not to depend on it.
+		var node = this.containerNode || this.domNode,
+			mb = dojo.mixin(dojo.marginBox(node), size||{});
+
+		this._contentBox = dijit.layout.marginBox2contentBox(node, mb);
+
+		// If we have a single widget child then size it to fit snugly within my borders
+		if(this._singleChild && this._singleChild.resize){
+			this._singleChild.resize(this._contentBox);
+		}
 	},
 
 	_prepareLoad: function(forceLoad){
@@ -208,7 +247,6 @@ dojo.declare(
 		this._onUnloadHandler();
 
 		// display loading message
-		// TODO: maybe we should just set a css class with a loading image as background?
 		this._setContent(
 			this.onDownloadStart.call(this)
 		);

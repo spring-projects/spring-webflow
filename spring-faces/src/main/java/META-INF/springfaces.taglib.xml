@@ -4,7 +4,27 @@
   "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
 <facelet-taglib>
 	<namespace>http://www.springframework.org/tags/faces</namespace>
-	
+	<tag>
+		<tag-name>commandButton</tag-name>
+		<component>
+			<component-type>spring.faces.ProgressiveCommandButton</component-type>
+			<renderer-type>spring.faces.ProgressiveCommandButton</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>commandLink</tag-name>
+		<component>
+			<component-type>spring.faces.ProgressiveCommandLink</component-type>
+			<renderer-type>spring.faces.ProgressiveCommandLink</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>ajaxEvent</tag-name>
+		<component>
+			<component-type>spring.faces.AjaxEventInterceptor</component-type>
+			<renderer-type>spring.faces.AjaxEventInterceptor</renderer-type>
+		</component>
+	</tag>
 	<tag>
 		<tag-name>clientTextValidator</tag-name>
 		<component>

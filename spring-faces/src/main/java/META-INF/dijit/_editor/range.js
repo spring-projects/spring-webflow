@@ -101,7 +101,7 @@ dijit.range.getAncestor = function(/*DomNode*/node, /*RegEx?*/regex, /*DomNode?*
 		if(regex.test(name)){
 			return node;
 		}
-		
+
 		node = node.parentNode;
 	}
 	return null;
@@ -120,7 +120,7 @@ dijit.range.getBlockAncestor = function(/*DomNode*/node, /*RegEx?*/regex, /*DomN
 		if(!blockContainer && (/^(?:BODY|TD|TH|CAPTION)$/).test(name)){
 			blockContainer = node;
 		}
-		
+
 		node = node.parentNode;
 	}
 	return {blockNode:block, blockContainer:blockContainer || node.ownerDocument.body};
@@ -218,7 +218,7 @@ dijit.range.getSelection = function(win, /*Boolean?*/ignoreUpdate){
 		return s;
 	}
 }
-		
+
 if(!dijit.range._w3c){
 	dijit.range.ie={
 		cachedSelection: {},
@@ -378,7 +378,7 @@ if(!dijit.range._w3c){
 					if(offset > 0){
 						var node = container.childNodes[offset-1];
 						if(node.nodeType==3){
-							container = node; 
+							container = node;
 							offset = node.length;
 							//pass through
 						}else{
@@ -412,7 +412,7 @@ if(!dijit.range._w3c){
 					atmrange.collapse(false);
 				}
 			}
-			
+
 			return atmrange;
 		},
 		decomposeTextRange: function(range){
@@ -430,7 +430,7 @@ if(!dijit.range._w3c){
 			}
 			return [[startContainter, startOffset],[endContainter, endOffset], range.parentElement()];
 		},
-		setRange: function(range, startContainter, 
+		setRange: function(range, startContainter,
 			startOffset, endContainter, endOffset, check){
 			var startrange = dijit.range.ie.setEndPoint(range, startContainter, startOffset);
 			range.setEndPoint('StartToStart', startrange);

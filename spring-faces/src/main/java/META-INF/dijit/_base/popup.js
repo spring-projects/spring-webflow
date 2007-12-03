@@ -29,14 +29,12 @@ dijit.popup = new function(){
 		//		orient: Object
 		//			structure specifying possible positions of popup relative to "around" node
 		//		onCancel: Function
-		//			callback when user has canceled the popup by 
-		//          	1. hitting ESC or
+		//			callback when user has canceled the popup by
+		//				1. hitting ESC or
 		//				2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
 		//				   ie: whenever popupWidget.onCancel() is called, args.onCancel is called
 		//		onClose: Function
-		//			callback whenever this popup is closed (via close(), closeAll(), or closeTo())
-		//		submenu: Boolean
-		//			Is this a submenu off of the existing popup?
+		//			callback whenever this popup is closed
 		//		onExecute: Function
 		//			callback when user "executed" on the popup/sub-popup by selecting a menu choice, etc. (top menu only)
 		//
@@ -54,10 +52,6 @@ dijit.popup = new function(){
 			around = args.around,
 			id = (args.around && args.around.id) ? (args.around.id+"_dropdown") : ("popup_"+idGen++);
 
-		if(!args.submenu){
-			this.closeAll();
-		}
-
 		// make wrapper div to hold widget and possibly hold iframe behind it.
 		// we can't attach the iframe as a child of the widget.domNode because
 		// widget.domNode might be a <table>, <ul>, etc.
@@ -65,6 +59,7 @@ dijit.popup = new function(){
 		wrapper.id = id;
 		wrapper.className="dijitPopup";
 		wrapper.style.zIndex = beginZIndex + stack.length;
+		wrapper.style.visibility = "hidden";
 		if(args.parent){
 			wrapper.dijitPopupParent=args.parent.id;
 		}
@@ -80,14 +75,29 @@ dijit.popup = new function(){
 			dijit.placeOnScreenAroundElement(wrapper, around, orient, widget.orient ? dojo.hitch(widget, "orient") : null) :
 			dijit.placeOnScreen(wrapper, args, orient == 'R' ? ['TR','BR','TL','BL'] : ['TL','BL','TR','BR']);
 
+		wrapper.style.visibility = "visible";
 		// TODO: use effects to fade in wrapper
 
 		var handlers = [];
 
-		// provide default escape key handling 
+		// Compute the closest ancestor popup that's *not* a child of another popup.
+		// Ex: For a TooltipDialog with a button that spawns a tree of menus, find the popup of the button.
+		function getTopPopup(){
+			for(var pi=stack.length-1; pi > 0 && stack[pi].parent === stack[pi-1].widget; pi--);
+			return stack[pi];
+		}
+
+		// provide default escape and tab key handling
+		// (this will work for any widget, not just menu)
 		handlers.push(dojo.connect(wrapper, "onkeypress", this, function(evt){
-			if (evt.keyCode == dojo.keys.ESCAPE){
+			if(evt.keyCode == dojo.keys.ESCAPE && args.onCancel){
 				args.onCancel();
+			}else if(evt.keyCode == dojo.keys.TAB){
+				dojo.stopEvent(evt);
+				var topPopup = getTopPopup();
+				if(topPopup && topPopup.onCancel){
+					topPopup.onCancel();
+				}
 			}
 		}));
 
@@ -96,10 +106,11 @@ dijit.popup = new function(){
 		if(widget.onCancel){
 			handlers.push(dojo.connect(widget, "onCancel", null, args.onCancel));
 		}
-		
+
 		handlers.push(dojo.connect(widget, widget.onExecute ? "onExecute" : "onChange", null, function(){
-			if(stack[0] && stack[0].onExecute){
-				stack[0].onExecute();
+			var topPopup = getTopPopup();
+			if(topPopup && topPopup.onExecute){
+				topPopup.onExecute();
 			}
 		}));
 
@@ -107,6 +118,7 @@ dijit.popup = new function(){
 			wrapper: wrapper,
 			iframe: iframe,
 			widget: widget,
+			parent: args.parent,
 			onExecute: args.onExecute,
 			onCancel: args.onCancel,
  			onClose: args.onClose,
@@ -120,54 +132,33 @@ dijit.popup = new function(){
 		return best;
 	};
 
-	this.close = function(){
+	this.close = function(/*Widget*/ popup){
 		// summary:
-		//		Close popup on the top of the stack (the highest z-index popup)
-
-		// this needs to happen before the stack is popped, because menu's
-		// onClose calls closeTo(this)
-		var widget = stack[stack.length-1].widget;
-		if(widget.onClose){
-			widget.onClose();
-		}
-
-		if(!stack.length){
-			return;
-		}
-		var top = stack.pop();
-		var wrapper = top.wrapper,
-			iframe = top.iframe,
-			widget = top.widget,
-			onClose = top.onClose;
-
-		dojo.forEach(top.handlers, dojo.disconnect);
-
-		// #2685: check if the widget still has a domNode so ContentPane can change its URL without getting an error
-		if(!widget||!widget.domNode){ return; }
-		dojo.style(widget.domNode, "display", "none");
-		dojo.body().appendChild(widget.domNode);
-		iframe.destroy();
-		dojo._destroyElement(wrapper);
-
-		if(onClose){
-			onClose();
+		//		Close specified popup and any popups that it parented
+		while(dojo.some(stack, function(elem){return elem.widget == popup;})){
+			var top = stack.pop(),
+				wrapper = top.wrapper,
+				iframe = top.iframe,
+				widget = top.widget,
+				onClose = top.onClose;
+	
+			if(widget.onClose){
+				widget.onClose();
+			}
+			dojo.forEach(top.handlers, dojo.disconnect);
+	
+			// #2685: check if the widget still has a domNode so ContentPane can change its URL without getting an error
+			if(!widget||!widget.domNode){ return; }
+			dojo.style(widget.domNode, "display", "none");
+			dojo.body().appendChild(widget.domNode);
+			iframe.destroy();
+			dojo._destroyElement(wrapper);
+	
+			if(onClose){
+				onClose();
+			}
 		}
 	};
-
-	this.closeAll = function(){
-		// summary: close every popup, from top of stack down to the first one
-		while(stack.length){
-			this.close();
-		}
-	};
-
-	this.closeTo = function(/*Widget*/ widget){
-		// summary: closes every popup above specified widget
-		while(stack.length && stack[stack.length-1].widget.id != widget.id){
-			this.close();
-		}
-	};
-
 }();
 
 dijit._frames = new function(){
@@ -195,7 +186,7 @@ dijit._frames = new function(){
 		}
 		return iframe;
 	};
-	
+
 	this.push = function(iframe){
 		iframe.style.display="";
 		if(dojo.isIE){
@@ -215,7 +206,7 @@ if(dojo.isIE && dojo.isIE < 7){
 }
 
 
-dijit.BackgroundIframe = function(/* HTMLElement */node){
+dijit.BackgroundIframe = function(/* DomNode */node){
 	//	summary:
 	//		For IE z-index schenanigans. id attribute is required.
 	//
