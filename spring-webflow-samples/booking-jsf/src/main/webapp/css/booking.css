@@ -47,6 +47,12 @@
     	float: right;
     }
     
+    #content.spring form div, 
+    #content.spring form p {
+    	padding: 0px;
+		margin: 0 0 .5em 0;
+    }
+    
     #content.spring {
     	width: 740px;
     	background: #fff url(../images/bg.gif) 0 0 repeat;
@@ -58,12 +64,31 @@
     	float: left;
     }
     
-    #content.spring input[type="submit"], input[type="button"] {
+    #content.spring input[type="submit"], input[type="button"], button {
 		font-weight: bold;
 		color: #fff;
 		height: 20px;
 		background: #fff url(../images/btn.bg.gif) 0 0 repeat-x;
 		border-style: none;
+		vertical-align: middle;
+	}
+	
+	#content.spring button
+	{
+		font-size: 1em;
+		font-family: arial,helvetica,verdana,sans-serif;
+		margin-top: 0pt;
+		margin-right: 0pt;
+		margin-bottom: 0pt;
+		margin-left: 0pt;
+		padding-top: 2px;
+		padding-right: 2px;
+		padding-bottom: 2px;
+		padding-left: 2px;
+	}
+	
+	#content.spring button
+	{
 		vertical-align: middle;
 	}
 	

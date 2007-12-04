@@ -2,6 +2,7 @@ package org.springframework.webflow.samples.booking.flow.main;
 
 import java.util.List;
 
+import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -9,7 +10,6 @@ import org.springframework.webflow.samples.booking.app.Booking;
 import org.springframework.webflow.samples.booking.app.BookingService;
 import org.springframework.webflow.samples.booking.app.Hotel;
 import org.springframework.webflow.samples.booking.app.User;
-import org.springframework.webflow.samples.booking.web.util.SerializableListDataModel;
 
 /**
  * Actions invoked by the main flow. These actions are extensions of the flow definition, called by the flow definition
@@ -48,7 +48,7 @@ public class MainActions extends MultiAction {
     public Event findCurrentUserBookings(RequestContext context) {
 	User user = (User) context.getConversationScope().get("user");
 	List<Booking> bookings = bookingService.findBookings(user.getUsername());
-	context.getFlowScope().put("bookings", new SerializableListDataModel(bookings));
+	context.getFlowScope().put("bookings", new OneSelectionTrackingListDataModel(bookings));
 	return success();
     }
 
@@ -61,7 +61,7 @@ public class MainActions extends MultiAction {
 	SearchCriteria search = (SearchCriteria) context.getFlowScope().get("searchCriteria");
 	List<Hotel> hotels = bookingService
 		.findHotels(search.getSearchString(), search.getPageSize(), search.getPage());
-	context.getFlowScope().put("hotels", new SerializableListDataModel(hotels));
+	context.getFlowScope().put("hotels", new OneSelectionTrackingListDataModel(hotels));
 	return success();
     }
 }

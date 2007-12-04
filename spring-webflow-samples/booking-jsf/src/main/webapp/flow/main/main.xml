@@ -17,7 +17,9 @@
 	
 	<view-state id="displayMain" view="main.xhtml">
 		<transition on="findHotels" to="findHotels" />
-		<transition on="selectHotel" to="bookHotel" />
+		<transition on="selectHotel" to="displayHotel">
+			<set attribute="#{hotel}" value="#{hotels.selectedRow}" scope="flash"/>
+		</transition>
 		<transition on="cancelBooking" to="cancelBooking" />
 	</view-state>
 	
@@ -26,10 +28,15 @@
 		<transition on="success" to="displayMain" />
 	</action-state>
 	
+	<view-state id="displayHotel" view="hotelDetails.xhtml">
+		<transition on="book" to="bookHotel" />
+		<transition on="cancel" to="displayMain" />
+	</view-state>
+	
 	<subflow-state id="bookHotel" flow="booking">
 		<attribute-mapper>
 			<input-mapper>
-				<mapping source="#{requestParameters.hotelId}" target="#{id}" from="string" to="long" />
+				<mapping source="#{hotels.selectedRow.id}" target="#{id}"/>
 			</input-mapper>
 		</attribute-mapper>
 		<transition on="bookingAuthorized" to="reloadCurrentUserBookings" />
@@ -39,7 +46,7 @@
 	<action-state id="cancelBooking">
 		<bean-action method="cancelBooking" bean="bookingService">
 			<method-arguments>
-				<argument expression="${requestParameters.bookingId}" parameter-type="long"/>
+				<argument expression="#{bookings.selectedRow.id}" parameter-type="long"/>
 			</method-arguments>
 		</bean-action>
 		<transition on="success" to="reloadCurrentUserBookings" />
@@ -50,6 +57,6 @@
 		<transition on="success" to="displayMain" />
 	</action-state>
 	
-	<import resource="main-beans.xml" />
+	<import resource="main-beans.xml"/>
 
 </flow>

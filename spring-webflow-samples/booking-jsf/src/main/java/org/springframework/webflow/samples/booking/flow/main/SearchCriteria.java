@@ -1,8 +1,11 @@
 package org.springframework.webflow.samples.booking.flow.main;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 
 import org.springframework.webflow.samples.booking.app.BookingService;
 
@@ -26,12 +29,17 @@ public class SearchCriteria implements Serializable {
     /**
      * The maximum page size of the Hotel result list
      */
-    private int pageSize;
+    private int pageSize = 5;
 
     /**
      * The current page of the Hotel result list.
      */
     private int page;
+
+    /**
+     * The available page size options.
+     */
+    private List pageSizeOptions;
 
     /**
      * Increase the current page
@@ -78,4 +86,13 @@ public class SearchCriteria implements Serializable {
 	this.page = page;
     }
 
+    public List getPageSizeOptions() {
+	if (pageSizeOptions == null) {
+	    pageSizeOptions = new ArrayList();
+	    pageSizeOptions.add(new SelectItem(new Integer(5), "5"));
+	    pageSizeOptions.add(new SelectItem(new Integer(10), "10"));
+	    pageSizeOptions.add(new SelectItem(new Integer(20), "20"));
+	}
+	return pageSizeOptions;
+    }
 }

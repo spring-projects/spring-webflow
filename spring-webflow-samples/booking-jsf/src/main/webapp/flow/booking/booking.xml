@@ -12,24 +12,23 @@
 	-->
 	<attribute name="persistenceContext" value="true" />
 	
+	<var name="bookingOptions" class="org.springframework.webflow.samples.booking.flow.booking.BookingOptions"/>
+	
 	<input-mapper>
 		<input-attribute name="#{id}" scope="flow" />
 	</input-mapper>
 
-	<start-state idref="displayHotel"/>
+	<start-state idref="loadHotel"/>
 	
-	<view-state id="displayHotel" view="hotelDetails.xhtml">
-		<render-actions>
-			<bean-action method="findHotelById" bean="bookingService">
-				<method-arguments>
-					<argument expression="#{id}" />
-				</method-arguments>
-				<method-result name="hotel" scope="flow" />
-			</bean-action>		
-		</render-actions>
-		<transition on="book" to="createBooking" />
-		<transition on="cancel" to="cancel" />
-	</view-state>
+	<action-state id="loadHotel">
+		<bean-action method="findHotelById" bean="bookingService">
+			<method-arguments>
+				<argument expression="#{id}" />
+			</method-arguments>
+			<method-result name="hotel" scope="flow" />
+		</bean-action>	
+		<transition on="success" to="createBooking"/>	
+	</action-state>
 	
 	<action-state id="createBooking">
 		<action method="createBooking" bean="bookingActions"/>

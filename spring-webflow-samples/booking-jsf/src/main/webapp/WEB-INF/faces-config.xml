@@ -4,6 +4,11 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+	<managed-bean>
+		<managed-bean-name>testBean</managed-bean-name>
+		<managed-bean-class>org.springframework.webflow.samples.booking.TestJsfBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 	<application>
 		<!-- Enables Facelets -->
 		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  

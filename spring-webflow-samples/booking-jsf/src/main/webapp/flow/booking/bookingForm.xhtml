@@ -72,9 +72,7 @@
 			</div>
 			<div class="input">
 				<h:selectOneMenu id="beds" value="#{booking.beds}">
-					<f:selectItem itemLabel="One king-size bed" itemValue="1"/>
-					<f:selectItem itemLabel="Two double beds" itemValue="2"/>
-					<f:selectItem itemLabel="Three beds" itemValue="3"/>
+					<f:selectItems value="#{bookingOptions.bedOptions}"/>
 				</h:selectOneMenu>
 			</div>
 		</div>
@@ -84,8 +82,7 @@
 			</div>
 			<div id="radio" class="input">
 				<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
-					<f:selectItem itemLabel="Smoking" itemValue="true"/>
-					<f:selectItem itemLabel="Non Smoking" itemValue="false"/>
+					<f:selectItems value="#{bookingOptions.smokingOptions}"/>
 				</h:selectOneRadio>
 			</div>
 		</div>
@@ -115,25 +112,10 @@
 			</div>
 			<div class="input">
 				<h:selectOneMenu id="creditCardExpiryMonth" value="#{booking.creditCardExpiryMonth}">
-					<f:selectItem itemLabel="Jan" itemValue="1"/>
-					<f:selectItem itemLabel="Feb" itemValue="2"/>
-					<f:selectItem itemLabel="Mar" itemValue="3"/>
-					<f:selectItem itemLabel="Apr" itemValue="4"/>
-					<f:selectItem itemLabel="May" itemValue="5"/>
-					<f:selectItem itemLabel="Jun" itemValue="6"/>
-					<f:selectItem itemLabel="Jul" itemValue="7"/>
-					<f:selectItem itemLabel="Aug" itemValue="8"/>
-					<f:selectItem itemLabel="Sep" itemValue="9"/>
-					<f:selectItem itemLabel="Oct" itemValue="10"/>
-					<f:selectItem itemLabel="Nov" itemValue="11"/>
-					<f:selectItem itemLabel="Dec" itemValue="12"/>
+					<f:selectItems value="#{bookingOptions.creditCardExpMonths}" />
 				</h:selectOneMenu>
 				<h:selectOneMenu id="creditCardExpiryYear" value="#{booking.creditCardExpiryYear}">
-					<f:selectItem itemLabel="2005" itemValue="2005"/>
-					<f:selectItem itemLabel="2006" itemValue="2006"/>
-					<f:selectItem itemLabel="2007" itemValue="2007"/>
-					<f:selectItem itemLabel="2008" itemValue="2008"/>
-					<f:selectItem itemLabel="2009" itemValue="2009"/>
+					<f:selectItems value="#{bookingOptions.creditCardExpYears}"/>
 				</h:selectOneMenu>
 			</div>
 		</div>

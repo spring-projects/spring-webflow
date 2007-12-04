@@ -7,7 +7,7 @@
 				template="/template.xhtml">
 
 <ui:define name="content">
-<h:form id="main">
+<h:form id="mainForm">
 
 <div class="section">
     <span class="errors">
@@ -15,6 +15,8 @@
     </span>
 	<h2>Search Hotels</h2>
 	<div id="hotelsearch">
+	<br/>
+	<br/>
 	<fieldset>
 		<div class="searchGroup">
 			<div class="searchField">
@@ -24,52 +26,64 @@
 			</div>
 			<div class="searchSize">
 			   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-			   	<h:selectOneMenu value="#{searchCriteria.pageSize}" id="pageSize">
-			    	<f:selectItem itemLabel="5" itemValue="5"/>
-			      	<f:selectItem itemLabel="10" itemValue="10"/>
-			      	<f:selectItem itemLabel="20" itemValue="20"/>
-			   	</h:selectOneMenu>  
+			   	<sf:ajaxEvent actionListener="#{searchCriteria.findHotelsListener}" action="findHotels" 
+			   		event="onchange" processIds="mainForm:searchString, mainForm:pageSize, mainForm:hotelsSection" renderIds="mainForm:hotelsSection"> 
+				   	<h:selectOneMenu value="#{searchCriteria.pageSize}" id="pageSize">
+				    	<f:selectItem itemLabel="5" itemValue="5"/>
+				      	<f:selectItem itemLabel="10" itemValue="10"/>
+				      	<f:selectItem itemLabel="20" itemValue="20"/>
+				   	</h:selectOneMenu>  
+			   	</sf:ajaxEvent>
 	   		</div>
 			<div class="searchButton">
-		   		<h:commandButton id="findHotels" value="Find Hotels" actionListener="#{searchCriteria.findHotelsListener}" action="findHotels"/>
+				<sf:commandButton id="findHotels" value="Find Hotels" actionListener="#{searchCriteria.findHotelsListener}" action="findHotels"
+					processIds="mainForm:searchString, mainForm:pageSize, mainForm:hotelsSection" renderIds="mainForm:hotelsSection"/>
 			</div>
 		</div>
     </fieldset>
     </div>
 
-	<h:outputText value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
-	<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
-		<h:column>
-			<f:facet name="header">Name</f:facet>
-			#{hotel.name}
-		</h:column>
-		<h:column>
-			<f:facet name="header">Address</f:facet>
-			#{hotel.address}
-		</h:column>
-		<h:column>
-			<f:facet name="header">City, State</f:facet>
-			#{hotel.city}, #{hotel.state}, #{hotel.country}
-		</h:column> 
-		<h:column>
-			<f:facet name="header">Zip</f:facet>
-			#{hotel.zip}
-		</h:column>
-		<h:column>
-			<f:facet name="header">Action</f:facet>
-			<h:commandLink id="viewHotelLink" value="View Hotel" action="selectHotel">
-				<f:param name="hotelId" value="#{hotel.id}"/>
-			</h:commandLink>
-		</h:column>
-	</h:dataTable>
-	<div class="next">
-		<h:commandLink id="nextPageLink" value="More results" actionListener="#{searchCriteria.nextPageListener}" action="findHotels" rendered="#{hotels != null and hotels.rowCount == searchCriteria.pageSize}"/>
-	</div>
-	<div class="prev">
-		<h:commandLink id="prevPageLink" value="Previous results" actionListener="#{searchCriteria.prevPageListener}" action="findHotels" rendered="#{searchCriteria.page > 0}"/>
-	</div>
+	<ui:fragment id="hotelsSection">
+		<div id="hotelsPlaceholder">
+			<h:outputText id="noHotelsTxt" value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
+			<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
+				<h:column>
+					<f:facet name="header">Name</f:facet>
+					#{hotel.name}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Address</f:facet>
+					#{hotel.address}
+				</h:column>
+				<h:column>
+					<f:facet name="header">City, State</f:facet>
+					#{hotel.city}, #{hotel.state}, #{hotel.country}
+				</h:column> 
+				<h:column>
+					<f:facet name="header">Zip</f:facet>
+					#{hotel.zip}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Action</f:facet>
+					<!-- @TODO - THIS LINK DOES NOT WORK ON MYFACES 1.2.0 WHEN AJAX IS ENABLED BECAUSE THEY HAVE NOT IMPLEMENTED UIData.invokeOnComponent -->
+					<sf:commandLink id="viewHotelLink" value="View Hotel" ajaxEnabled="false" action="selectHotel"/>
+				</h:column>
+			</h:dataTable>
+			<div class="next">
+				<sf:commandLink id="nextPageLink" value="More Results" actionListener="#{searchCriteria.nextPageListener}" action="findHotels" 
+					rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"
+					processIds="mainForm:hotelsSection"/>
+			</div>
+			<div class="prev">
+				<sf:commandLink id="prevPageLink" value="Previous results" actionListener="#{searchCriteria.prevPageListener}" action="findHotels" 
+					rendered="#{searchCriteria.page > 0}"
+					processIds="mainForm:hotelsSection"/>
+			</div>
+		</div>
+	</ui:fragment>
 </div>
 
+<ui:fragment id="bookingsSection">
 <div class="section">
 	<h2>Current Hotel Bookings</h2>
 	
@@ -101,12 +115,12 @@
 		</h:column>
 		<h:column>
 			<f:facet name="header">Action</f:facet>
-			<h:commandLink id="cancel" value="Cancel" action="cancelBooking">
-				<f:param name="bookingId" value="#{booking.id}"/>
-			</h:commandLink>
+			<!-- @TODO - THIS LINK DOES NOT WORK ON MYFACES 1.2.0 WHEN AJAX IS ENABLED BECAUSE THEY HAVE NOT IMPLEMENTED UIData.invokeOnComponent -->
+			<sf:commandLink id="cancel" value="Cancel" ajaxEnabled="false" action="cancelBooking"/>
 		</h:column>
 	</h:dataTable>
 </div>
+</ui:fragment>
 
 </h:form>
 </ui:define>
