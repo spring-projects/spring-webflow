@@ -17,18 +17,21 @@
 	
 	<view-state id="displayMain" view="main.xhtml">
 		<transition on="findHotels" to="findHotels" />
-		<transition on="selectHotel" to="displayHotel">
-			<set attribute="#{hotel}" value="#{hotels.selectedRow}" scope="flash"/>
-		</transition>
 		<transition on="cancelBooking" to="cancelBooking" />
 	</view-state>
 	
-	<action-state id="findHotels">
-		<action method="findHotels" bean="mainActions" />
-		<transition on="success" to="displayMain" />
-	</action-state>
+	<view-state id="findHotels" view="displayHotels.xhtml">
+		<render-actions>
+			<action method="findHotels" bean="mainActions" />
+		</render-actions>
+		<transition on="selectHotel" to="displayHotel"/>
+		<transition on="changeSearch" to="displayMain"/>
+	</view-state>
 	
 	<view-state id="displayHotel" view="hotelDetails.xhtml">
+		<render-actions>
+			<set attribute="#{hotel}" value="#{hotels.selectedRow}" scope="request"/>
+		</render-actions>
 		<transition on="book" to="bookHotel" />
 		<transition on="cancel" to="displayMain" />
 	</view-state>

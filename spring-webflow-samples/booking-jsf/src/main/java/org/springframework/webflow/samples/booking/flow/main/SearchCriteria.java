@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.samples.booking.app.BookingService;
 
 /**
@@ -95,4 +96,14 @@ public class SearchCriteria implements Serializable {
 	}
 	return pageSizeOptions;
     }
+
+    public String toString() {
+	StringBuffer criteria = new StringBuffer();
+	if (StringUtils.hasText(searchString)) {
+	    criteria.append("Text: " + searchString + ", ");
+	}
+	criteria.append("Page Size: " + pageSize);
+	return criteria.toString();
+    }
+
 }
