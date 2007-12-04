@@ -15,8 +15,8 @@ public abstract class BaseSpringFacesParentComponentRenderer extends BaseParentC
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
-		resourceHelper.renderScriptLink(context, springFacesJsResourceUri);
-
 		super.encodeBegin(context, component);
+
+		resourceHelper.renderScriptLink(context, springFacesJsResourceUri);
 	}
 }

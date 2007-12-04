@@ -1,7 +1,10 @@
 package org.springframework.faces.ui.resource;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
@@ -31,6 +34,17 @@ public class FlowResourceHelper {
 	 * @throws IOException
 	 */
 	public void renderScriptLink(FacesContext facesContext, String scriptPath) throws IOException {
+		renderScriptLink(facesContext, scriptPath, Collections.EMPTY_MAP);
+	}
+
+	/**
+	 * Render a <code><script/></code> tag for a given script resource.
+	 * @param facesContext
+	 * @param scriptPath
+	 * @param attributes - a map of additional attributes to render on the script tag
+	 * @throws IOException
+	 */
+	public void renderScriptLink(FacesContext facesContext, String scriptPath, Map attributes) throws IOException {
 
 		if (alreadyRendered(facesContext, scriptPath)) {
 			return;
@@ -43,6 +57,12 @@ public class FlowResourceHelper {
 		writer.startElement("script", null);
 
 		writer.writeAttribute("type", "text/javascript", null);
+
+		Iterator i = attributes.keySet().iterator();
+		while (i.hasNext()) {
+			String key = (String) i.next();
+			writer.writeAttribute(key, attributes.get(key), null);
+		}
 
 		FlowDefinitionRequestInfo requestInfo = new FlowDefinitionRequestInfo("resources", new RequestPath(scriptPath),
 				null, null);
