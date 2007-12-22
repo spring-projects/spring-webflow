@@ -12,6 +12,9 @@
 	<import resource="application-layer-config.xml"/>
 	
 	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<web:flow-execution-attributes>
+            <web:alwaysRedirectOnPause value="false"/>
+        </web:flow-execution-attributes>
 		<web:flow-execution-listeners>
 			<web:listener ref="jpaFlowExecutionListener" criteria="*"/>
 		</web:flow-execution-listeners>
