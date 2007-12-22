@@ -2,9 +2,16 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
-Changes in version 2.0 M3 (2007)
+Changes in version 2.0 M3 (20.12.2007)
 -------------------------------------
-
+Package org.springframework.webflow.faces
+* Added built-in Ajax support for rendering partial page views in response to asynchronous Web Flow events.
+  See the booking-jsf sample for an example.
+* Added built-in support for progressive enhancement, including a library of JSF components that degrade nicely if Javascript
+  is not available on the client.  See booking-jsf for an example of two such components: first, the Spring Faces command link which
+  renders as a standard submit button if Javascript is not available, and second a popup window that displays a partial response if
+  Javascript is available (otherwise a full page navigation occurs).
+* Polished overall JSF integration approach since M2, including refinements to the state saving strategy
 
 Changes in version 2.0 M2 (30.10.2007)
 -------------------------------------

@@ -17,7 +17,7 @@
 		<title>Spring Web Flow</title>
 		<subtitle>Reference Documentation</subtitle>
 		<releaseinfo>Version 2.0-m3</releaseinfo>
-		<pubdate>October 2007</pubdate>
+		<pubdate>December 2007</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>
@@ -28,7 +28,7 @@
 				<surname>Vervaet</surname>
 			</author>
 			<author>
-				<firstname>Ross</firstname>
+				<firstname>Rossen</firstname>
 				<surname>Stoyanchev</surname>
 			</author>
 			<author>
@@ -46,35 +46,6 @@
 			</para>
 		</legalnotice>
 	</bookinfo>
-
-	<dedication>
-		<title>Sponsors</title>
-		<para>
-			<emphasis>
-				Spring Web Flow would not be possible without the investment of its sponsors:
-				<ulink url="http://www.interface21.com/">Interface21</ulink> and
-				<ulink url="http://www.ervacon.com">Ervacon</ulink>.
-			</emphasis>
-		</para>
-		<para>
-			<inlinemediaobject>
-				<imageobject role="fo">
-					<imagedata fileref="images/logo-interface21.png" format="PNG"/>
-				</imageobject>
-				<imageobject role="html">
-					<imagedata fileref="images/logo-interface21.png" format="PNG"/>
-				</imageobject>
-			</inlinemediaobject>
-			<inlinemediaobject>
-				<imageobject role="fo">
-					<imagedata fileref="images/logo-ervacon.png" format="PNG"/>
-				</imageobject>
-				<imageobject role="html">
-					<imagedata fileref="images/logo-ervacon.png" format="PNG"/>
-				</imageobject>
-			</inlinemediaobject>
-		</para>
-	</dedication>
 	
 	<toc />
 	

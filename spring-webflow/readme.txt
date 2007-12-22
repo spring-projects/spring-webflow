@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0-M3 (2007)
+SPRING WEB FLOW 2.0-M3 (December 2007)
 ----------------------------------
 http://www.springframework.org/webflow
 http://forum.springframework.org
