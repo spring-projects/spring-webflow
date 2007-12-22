@@ -9,9 +9,11 @@ Package org.springframework.webflow.faces
   See the booking-jsf sample for an example.
 * Added built-in support for progressive enhancement, including a library of JSF components that degrade nicely if Javascript
   is not available on the client.  See booking-jsf for an example of two such components: first, the Spring Faces command link which
-  renders as a standard submit button if Javascript is not available, and second a popup window that displays a partial response if
-  Javascript is available (otherwise a full page navigation occurs).
-* Polished overall JSF integration approach since M2, including refinements to the state saving strategy
+  renders as a standard submit button if Javascript is not available, and second a popup window that displays a partial asynchronous response if
+  Javascript is available (otherwise a full synchronous page navigation occurs).
+* Polished overall JSF integration approach since M2, including applying refinements and performance optimizations
+  to the UIViewRoot state saving strategy.
+* Upgraded to Dojo 1.0 from 0.9.
 
 Changes in version 2.0 M2 (30.10.2007)
 -------------------------------------
