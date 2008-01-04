@@ -52,6 +52,7 @@ public class MapAccessor implements MapAdaptable {
 	 * Returns a value in the map, returning null if the attribute is not present.
 	 * @param key the key
 	 * @return the value
+	 * @since 1.0.5
 	 */
 	public Object get(Object key) {
 		return map.get(key);

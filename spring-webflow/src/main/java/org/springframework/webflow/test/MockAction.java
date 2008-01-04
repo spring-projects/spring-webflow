@@ -25,12 +25,14 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
 /**
  * A trivial stub action implementation that can be parameterized to return a particular action execution result. Useful
  * for simulating different action results a flow should be capable of responding to.
- * 
+ * <p>
  * Instances of this class can be conveniently installed in the bean factory that hosts the Web Flow action
  * implementations in a test environment by overriding <code>registerMockServices</code> on
  * {@link AbstractExternalizedFlowExecutionTests}. If you are using a XML-based flow definition with a flow-local
  * context to host your actions, consider overriding <code>registerLocalMockServices</code> on
  * {@link AbstractXmlFlowExecutionTests} to install mock instances.
+ * 
+ * @since 1.0.5
  * 
  * @author Keith Donald
  */

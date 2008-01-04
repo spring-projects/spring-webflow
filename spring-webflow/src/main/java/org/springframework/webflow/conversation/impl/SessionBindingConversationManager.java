@@ -44,7 +44,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 
 	/**
 	 * The name of the session attribute that will hold the conversation container used by this conversation manager.
-	 * 
+	 * <p>
 	 * To support multiple independent conversation containers in the same web application, for example, for use with
 	 * multiple flow executors each configured with their own session-binding conversation manager, set this field's
 	 * value to something unique.
@@ -65,6 +65,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 
 	/**
 	 * Returns the used generator for conversation ids. Defaults to {@link RandomGuidUidGenerator}.
+	 * @since 1.0.1
 	 */
 	public UidGenerator getConversationIdGenerator() {
 		return conversationIdGenerator;
@@ -79,6 +80,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 
 	/**
 	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
+	 * @since 1.0.1
 	 */
 	public int getMaxConversations() {
 		return maxConversations;
@@ -104,6 +106,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * binding conversation managers are used in the same web application to back independent flow executors, this value
 	 * should be unique among them.
 	 * @param sessionKey the session key
+	 * @since 1.0.5
 	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
