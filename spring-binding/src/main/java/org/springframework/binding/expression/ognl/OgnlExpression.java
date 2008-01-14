@@ -75,13 +75,7 @@ class OgnlExpression implements Expression {
 	public Object getValue(Object target) throws EvaluationException {
 		Assert.notNull(target, "The target object to evaluate is required");
 		try {
-			Map context;
-			if (variables != null && variables.length > 0) {
-				context = new HashMap(variables.length);
-			} else {
-				context = Collections.EMPTY_MAP;
-			}
-			return Ognl.getValue(expression, context, target);
+			return Ognl.getValue(expression, getContext(), target);
 		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it
@@ -97,9 +91,17 @@ class OgnlExpression implements Expression {
 		Assert.notNull(target, "The target object to evaluate is required");
 		try {
 			// TODO context map
-			Ognl.setValue(expression, Collections.EMPTY_MAP, target, value);
+			Ognl.setValue(expression, getContext(), target, value);
 		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, target, value), e);
+		}
+	}
+
+	private Map getContext() {
+		if (variables != null && variables.length > 0) {
+			return new HashMap(variables.length);
+		} else {
+			return Collections.EMPTY_MAP;
 		}
 	}
 
