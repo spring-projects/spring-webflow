@@ -90,6 +90,8 @@ SpringFaces.DojoAjaxHandler.prototype = {
 			
 			handleAs: "text",
 			
+			headers: {"Accept" : "text/html;type=ajax"},
+			
 			// The LOAD function will be called on a successful response.
 	        load: this.handleResponse,
 	
@@ -131,11 +133,7 @@ SpringFaces.DojoAjaxHandler.prototype = {
 	
 		//Insert the new DOM nodes and update the Form's action URL
 		newNodes.forEach(function(item) {
-			if (item.id == 'flowExecutionUrl'){
-				dojo.query("form").forEach(function (formNode) {
-					formNode.action = item.firstChild.nodeValue;
-				});				
-			} else if (item.id != null && item.id != "") {
+			if (item.id != null && item.id != "") {
 			    var target = dojo.byId(item.id);
 				target.parentNode.replaceChild(item, target);
 			}

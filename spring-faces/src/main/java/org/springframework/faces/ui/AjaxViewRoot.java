@@ -52,7 +52,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		Iterator i = target.getChildren().iterator();
 		while (i.hasNext()) {
 			UIComponent child = (UIComponent) i.next();
-			child.setParent(this);
+			child.setParent(target);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		context.setViewRoot(getOriginalViewRoot());
 		if (!getAttributes().containsKey(FORM_RENDERED)) {
 			context.getApplication().getViewHandler().writeState(context);
-			writeFormURL(context);
+			updateFormAction(context);
 		}
 
 		broadCastEvents(context, PhaseId.APPLY_REQUEST_VALUES);
@@ -92,16 +92,33 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	 * 
 	 * @param context
 	 */
-	private void writeFormURL(FacesContext context) {
+	private void updateFormAction(FacesContext context) {
 		ResponseWriter writer = context.getResponseWriter();
 		try {
-			writer.startElement("div", null);
-			writer.writeAttribute("id", "flowExecutionUrl", null);
-			writer.writeText(context.getApplication().getViewHandler().getActionURL(context, getViewId()), null);
-			writer.endElement("div");
+			String formId = findContainingFormId(context);
+			if (StringUtils.hasLength(formId)) {
+				String script = "dojo.byId('" + formId + "').action = "
+						+ context.getApplication().getViewHandler().getActionURL(context, getViewId());
+				writer.startElement("script", null);
+				writer.writeText(script, null);
+				writer.endElement("script");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String findContainingFormId(FacesContext context) {
+		for (int i = 0; i < renderIds.length; i++) {
+			UIComponent component = context.getViewRoot().findComponent(renderIds[i]);
+			while (!(component instanceof UIViewRoot)) {
+				component = component.getParent();
+				if (component instanceof UIForm) {
+					return component.getClientId(context);
+				}
+			}
+		}
+		return null;
 	}
 
 	/*
