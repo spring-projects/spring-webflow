@@ -21,6 +21,7 @@ import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.AbstractExpressionParser;
 
@@ -31,9 +32,10 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  */
 public class OgnlExpressionParser extends AbstractExpressionParser {
 
-	protected Expression doParseExpression(String expressionString) throws ParserException {
+	protected Expression doParseExpression(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
 		try {
-			return new OgnlExpression(Ognl.parseExpression(expressionString));
+			return new OgnlExpression(Ognl.parseExpression(expressionString), expressionVariables);
 		} catch (OgnlException e) {
 			throw new ParserException(expressionString, e);
 		}

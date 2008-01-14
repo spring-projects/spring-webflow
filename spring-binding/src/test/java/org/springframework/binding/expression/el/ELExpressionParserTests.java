@@ -2,6 +2,7 @@ package org.springframework.binding.expression.el;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
@@ -13,6 +14,7 @@ import junit.framework.TestCase;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.ParserException;
 
 public class ELExpressionParserTests extends TestCase {
 
@@ -40,6 +42,20 @@ public class ELExpressionParserTests extends TestCase {
 		}
 	}
 
+	public void testParseEvalExpressionExpectedResultTypeNull() {
+		String expressionString = "#{value}";
+		Class expressionTargetType = null;
+		Class expectedEvaluationResultType = null;
+		ExpressionVariable[] expressionVariables = null;
+		try {
+			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+					expressionVariables);
+			fail("Should have failed");
+		} catch (ParserException e) {
+
+		}
+	}
+
 	public void testParseEvalExpression() {
 		String expressionString = "#{value}";
 		Class expressionTargetType = TestBean.class;
@@ -51,15 +67,31 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals("foo", exp.getValue(target));
 	}
 
-	public void testParseLiteralExpressionStringAsEvalExpression() {
-		String expressionString = "value";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = String.class;
+	public void testParseEvalExpressionNoTargetType() {
+		String expressionString = "#{value}";
+		Class expressionTargetType = null;
+		Class expectedEvaluationResultType = Object.class;
 		ExpressionVariable[] expressionVariables = null;
-		Expression exp = parser.parseExpression(parser.parseEvalExpressionString(expressionString),
-				expressionTargetType, expectedEvaluationResultType, expressionVariables);
-		TestBean target = new TestBean();
-		assertEquals("foo", exp.getValue(target));
+		try {
+			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+					expressionVariables);
+			fail("Should have failed");
+		} catch (ParserException e) {
+
+		}
+	}
+
+	public void testParseEvalExpressionNotRegisteredTargetType() {
+		String expressionString = "#{value}";
+		Class expressionTargetType = Map.class;
+		Class expectedEvaluationResultType = Object.class;
+		ExpressionVariable[] expressionVariables = null;
+		try {
+			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
+					expressionVariables);
+			fail("Should have failed");
+		} catch (ParserException e) {
+		}
 	}
 
 	public void testParseLiteralExpression() {

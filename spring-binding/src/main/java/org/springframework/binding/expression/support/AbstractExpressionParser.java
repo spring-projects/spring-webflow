@@ -80,31 +80,15 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		this.expressionSuffix = expressionSuffix;
 	}
 
-	public boolean isEvalExpressionString(String string) {
-		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
-	}
-
-	public String parseEvalExpressionString(String string) {
-		return encloseInDelimitersIfNecessary(string);
-	}
-
 	public Expression parseExpression(String expressionString, Class expressionTargetType,
 			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
-		// TODO variables
-		Expression[] expressions = parseExpressions(expressionString);
+		Expression[] expressions = parseExpressions(expressionString, expressionTargetType,
+				expectedEvaluationResultType, expressionVariables);
 		if (expressions.length == 1) {
 			return expressions[0];
 		} else {
 			return new CompositeStringExpression(expressions);
-		}
-	}
-
-	private String encloseInDelimitersIfNecessary(String expressionString) {
-		if (isEvalExpressionString(expressionString)) {
-			return expressionString;
-		} else {
-			return expressionPrefix + expressionString + expressionSuffix;
 		}
 	}
 
@@ -117,7 +101,8 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * @return the parsed expressions
 	 * @throws ParserException when the expressions cannot be parsed
 	 */
-	private Expression[] parseExpressions(String expressionString) throws ParserException {
+	private Expression[] parseExpressions(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
 		List expressions = new LinkedList();
 		int startIdx = 0;
 		while (startIdx < expressionString.length()) {
@@ -147,7 +132,8 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 							+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex, null);
 				} else {
 					String expr = expressionString.substring(prefixIndex + getExpressionPrefix().length(), suffixIndex);
-					expressions.add(doParseExpression(expr));
+					expressions.add(doParseExpression(expr, expressionTargetType, expectedEvaluationResultType,
+							expressionVariables));
 					startIdx = suffixIndex + 1;
 				}
 			} else {
@@ -165,8 +151,9 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * Template method for parsing a filtered expression string. Subclasses should override.
 	 * @param expressionString the expression string
 	 * @return the parsed expression
-	 * @throws ParserException an exception occured during parsing
+	 * @throws ParserException an exception occurred during parsing
 	 */
-	protected abstract Expression doParseExpression(String expressionString) throws ParserException;
+	protected abstract Expression doParseExpression(String expressionString, Class expressionTargetType,
+			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException;
 
 }

@@ -16,6 +16,8 @@
 package org.springframework.binding.expression.ognl;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import ognl.Ognl;
 import ognl.OgnlException;
@@ -23,6 +25,7 @@ import ognl.OgnlException;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
@@ -42,11 +45,17 @@ class OgnlExpression implements Expression {
 	private Object expression;
 
 	/**
+	 * Expression variable initial values.
+	 */
+	private ExpressionVariable[] variables;
+
+	/**
 	 * Creates a new OGNL expression.
 	 * @param expression the parsed expression
 	 */
-	public OgnlExpression(Object expression) {
+	public OgnlExpression(Object expression, ExpressionVariable[] variables) {
 		this.expression = expression;
+		this.variables = variables;
 	}
 
 	public int hashCode() {
@@ -66,8 +75,13 @@ class OgnlExpression implements Expression {
 	public Object getValue(Object target) throws EvaluationException {
 		Assert.notNull(target, "The target object to evaluate is required");
 		try {
-			// TODO context map
-			return Ognl.getValue(expression, Collections.EMPTY_MAP, target);
+			Map context;
+			if (variables != null && variables.length > 0) {
+				context = new HashMap(variables.length);
+			} else {
+				context = Collections.EMPTY_MAP;
+			}
+			return Ognl.getValue(expression, context, target);
 		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it

@@ -3,28 +3,25 @@ package org.springframework.binding.expression;
 import org.springframework.util.Assert;
 
 /**
- * A simple, convenient alias for a more-complex expression.
- * 
- * TODO - consider making the valueExpressionString a parsed Expression object for more flexibility.
- * 
+ * An expression variable.
  * @author Keith Donald
  */
 public class ExpressionVariable {
 
 	private String name;
 
-	private String valueExpressionString;
+	private String value;
 
 	/**
 	 * Creates a new expression variable
 	 * @param name the name of the variable, acting as an convenient alias
-	 * @param valueExpressionString the complex expression to be aliased in string form
+	 * @param value the initial value of the variable
 	 */
-	public ExpressionVariable(String name, String valueExpressionString) {
+	public ExpressionVariable(String name, String value) {
 		Assert.hasText(name, "The expression variable must be named");
-		Assert.hasText(valueExpressionString, "The expression value expression string is required");
+		Assert.hasText(value, "The expression variable value is required");
 		this.name = name;
-		this.valueExpressionString = valueExpressionString;
+		this.value = value;
 	}
 
 	/**
@@ -39,8 +36,8 @@ public class ExpressionVariable {
 	 * Returns the expression that will be evaluated when the variable is referenced by its name in another expression.
 	 * @return the expression value.
 	 */
-	public String getValueExpressionString() {
-		return valueExpressionString;
+	public String getValue() {
+		return value;
 	}
 
 	public boolean equals(Object o) {
