@@ -32,7 +32,7 @@ public interface ExpressionParser {
 	 * example, <code>Boolean.class</code> for an expression that is expected to get or set a boolean value. Typically
 	 * used to facilitate type conversion by the expression evaluator; for example, if a evaluated expression equates to
 	 * a String value 'true', with an expected Boolean result the string value could be converted to a typed Boolean
-	 * value (required).
+	 * value (required). If the type of the evaluation result cannot be determined, use Object.class.
 	 * @param expressionVariables variables providing aliases for this expression during evaluation (optional).
 	 * @return the evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing
