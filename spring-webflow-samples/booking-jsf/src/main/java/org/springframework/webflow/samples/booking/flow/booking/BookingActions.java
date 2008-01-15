@@ -4,8 +4,7 @@ import java.util.Calendar;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.binding.message.Messages;
-import org.springframework.binding.message.Severity;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -55,11 +54,13 @@ public class BookingActions extends MultiAction {
 	calendar.add(Calendar.DAY_OF_MONTH, -1);
 	if (booking.getCheckinDate().before(calendar.getTime())) {
 	    context.getMessageContext().addMessage(
-		    Messages.text("checkinDate", "Check in date must be a future date", Severity.ERROR));
+		    new MessageBuilder().source("checkinDate").defaultText("Check in date must be a future date")
+			    .error().build());
 	    return error();
 	} else if (!booking.getCheckinDate().before(booking.getCheckoutDate())) {
 	    context.getMessageContext().addMessage(
-		    Messages.text("checkoutDate", "Check out date must be later than check in date", Severity.ERROR));
+		    new MessageBuilder().source("checkoutDate").defaultText(
+			    "Check out date must be later than check in date").error().build());
 	    return error();
 	}
 	return success();
