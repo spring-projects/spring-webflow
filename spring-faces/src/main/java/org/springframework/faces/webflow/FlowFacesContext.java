@@ -29,8 +29,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 
 import org.springframework.binding.message.Message;
-import org.springframework.binding.message.MessageResolver;
-import org.springframework.binding.message.Messages;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.util.ClassUtils;
@@ -75,7 +74,7 @@ public class FlowFacesContext extends FacesContext {
 	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		MessageResolver messageResolver;
+		MessageBuilder builder = new MessageBuilder();
 		StringBuffer msgText = new StringBuffer();
 		if (StringUtils.hasText(message.getSummary())) {
 			msgText.append(message.getSummary());
@@ -87,13 +86,13 @@ public class FlowFacesContext extends FacesContext {
 		}
 
 		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
-			messageResolver = Messages.text(source, msgText.toString(), Severity.INFO);
+			builder.source(source).defaultText(msgText.toString()).info();
 		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
-			messageResolver = Messages.text(source, msgText.toString(), Severity.WARNING);
+			builder.source(source).defaultText(msgText.toString()).warning();
 		} else {
-			messageResolver = Messages.text(source, msgText.toString(), Severity.ERROR);
+			builder.source(source).defaultText(msgText.toString()).error();
 		}
-		context.getMessageContext().addMessage(messageResolver);
+		context.getMessageContext().addMessage(builder.build());
 	}
 
 	/**

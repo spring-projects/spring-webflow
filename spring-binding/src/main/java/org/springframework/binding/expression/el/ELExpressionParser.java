@@ -23,6 +23,16 @@ import org.springframework.binding.expression.ParserException;
 public class ELExpressionParser implements ExpressionParser {
 
 	/**
+	 * The expression prefix.
+	 */
+	private static final String EXPRESSION_PREFIX = "#{";
+
+	/**
+	 * The expression suffix.
+	 */
+	private static final String EXPRESSION_SUFFIX = "}";
+
+	/**
 	 * The ExpressionFactory for constructing EL expressions
 	 */
 	private ExpressionFactory expressionFactory;
@@ -43,6 +53,10 @@ public class ELExpressionParser implements ExpressionParser {
 	 */
 	public void putContextFactory(Class expressionTargetType, ELContextFactory contextFactory) {
 		this.contextFactories.put(expressionTargetType, contextFactory);
+	}
+
+	public boolean isEvalExpressionString(String expressionString) {
+		return expressionString.startsWith(EXPRESSION_PREFIX) && expressionString.endsWith(EXPRESSION_SUFFIX);
 	}
 
 	public Expression parseExpression(String expressionString, Class expressionTargetType,

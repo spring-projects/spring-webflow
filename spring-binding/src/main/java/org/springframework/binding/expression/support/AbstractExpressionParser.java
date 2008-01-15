@@ -80,6 +80,10 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		this.expressionSuffix = expressionSuffix;
 	}
 
+	public boolean isEvalExpressionString(String string) {
+		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
+	}
+
 	public Expression parseExpression(String expressionString, Class expressionTargetType,
 			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");

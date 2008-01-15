@@ -54,10 +54,6 @@ public final class DefaultExpressionParserFactory {
 				return getDefaultExpressionParser().isEvalExpressionString(string);
 			}
 
-			public String parseEvalExpressionString(String string) throws ParserException {
-				return getDefaultExpressionParser().parseEvalExpressionString(string);
-			}
-
 			public Expression parseExpression(String expressionString, Class expressionTargetType,
 					Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables)
 					throws ParserException {

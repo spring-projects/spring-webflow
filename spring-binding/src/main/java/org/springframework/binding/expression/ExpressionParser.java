@@ -24,6 +24,17 @@ package org.springframework.binding.expression;
 public interface ExpressionParser {
 
 	/**
+	 * Is the provided expression string an "eval" expression: meaning an expression that validates to a dynamic value,
+	 * and not a literal expression? "Eval" expressions are normally enclosed in delimiters like #{}, where literal
+	 * expressions are not delimited.
+	 * 
+	 * TODO - candidate for removal in a future milestone: is this really needed?
+	 * @param string the string
+	 * @return true if the expression is an eval expression string, false otherwise.
+	 */
+	public boolean isEvalExpressionString(String string);
+	
+	/**
 	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it.
 	 * @param expressionString the parseable expression string; cannot be null
 	 * @param expressionTargetType the class of target object this expression can successfully evaluate; for example,
