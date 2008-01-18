@@ -31,9 +31,6 @@ import org.springframework.util.Assert;
 
 /**
  * Evaluates a parsed Ognl expression.
- * <p>
- * IMPLEMENTATION NOTE: Ognl 2.6.7 expression objects do not respect equality properly, so the equality operations
- * defined within this class do not function properly.
  * 
  * @author Keith Donald
  */
@@ -65,8 +62,6 @@ class OgnlExpression implements Expression {
 		if (!(o instanceof OgnlExpression)) {
 			return false;
 		}
-		// as late as Ognl 2.6.7, their expression objects don't implement equals
-		// so this always returns false
 		OgnlExpression other = (OgnlExpression) o;
 		return expression.equals(other.expression);
 	}
@@ -106,7 +101,6 @@ class OgnlExpression implements Expression {
 				ExpressionVariable var = variables[i];
 				variableMap.put(var.getName(), var.getValue());
 			}
-			System.out.println(variableMap);
 			return variableMap;
 		} else {
 			return Collections.EMPTY_MAP;

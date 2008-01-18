@@ -72,6 +72,7 @@ public class ELExpressionParser implements ExpressionParser {
 	}
 
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
+		Assert.notNull(expressionString, "The expression string to parse is required");
 		if (context == null) {
 			context = NullParserContext.INSTANCE;
 		}

@@ -33,6 +33,16 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseSimple() {
 		String exp = "${flag}";
+		assertTrue(parser.isDelimitedExpression(exp));
+		Expression e = parser.parseExpression(exp, null);
+		assertNotNull(e);
+		Boolean b = (Boolean) e.getValue(bean);
+		assertFalse(b.booleanValue());
+	}
+
+	public void testParseSimpleNotDelimited() {
+		String exp = "flag";
+		assertFalse(parser.isDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);

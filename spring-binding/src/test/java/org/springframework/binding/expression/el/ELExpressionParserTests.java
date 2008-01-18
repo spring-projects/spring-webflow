@@ -30,6 +30,16 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals(new Long(7), exp.getValue(null));
 	}
 
+	public void testParseNullExpressionString() {
+		String expressionString = null;
+		try {
+			parser.parseExpression(expressionString, null);
+			fail("should have thrown iae");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "#{3 + 4}";
 		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));

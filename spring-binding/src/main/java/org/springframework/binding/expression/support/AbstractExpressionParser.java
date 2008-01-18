@@ -81,10 +81,23 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	}
 
 	public boolean isDelimitedExpression(String string) {
-		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
+		int prefixIndex = string.indexOf(getExpressionPrefix());
+		if (prefixIndex == -1) {
+			return false;
+		}
+		int suffixIndex = string.indexOf(getExpressionSuffix(), prefixIndex);
+		if (suffixIndex == -1) {
+			return false;
+		} else {
+			// make sure there is actually something inside the ${}
+			if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 	}
 
-	// TODO - add back 1.0 and 2.0 m1 semantics
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
 		Expression[] expressions = parseExpressions(expressionString, context);
@@ -110,7 +123,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		while (startIdx < expressionString.length()) {
 			int prefixIndex = expressionString.indexOf(getExpressionPrefix(), startIdx);
 			if (prefixIndex >= startIdx) {
-				// an expression was found
+				// a inner expression was found - this is a composite
 				if (prefixIndex > startIdx) {
 					expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
 					startIdx = prefixIndex;
@@ -138,8 +151,13 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 					startIdx = suffixIndex + 1;
 				}
 			} else {
-				// no more evaluatable ${expressions} found in string
-				expressions.add(new StaticExpression(expressionString.substring(startIdx)));
+				if (startIdx == 0) {
+					// treat the entire string as one expression
+					expressions.add(doParseExpression(expressionString, context));
+				} else {
+					// no more ${expressions} found in string, add rest as static text
+					expressions.add(new StaticExpression(expressionString.substring(startIdx)));
+				}
 				startIdx = expressionString.length();
 			}
 		}
