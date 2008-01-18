@@ -50,7 +50,7 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseEvalExpressionWithContextCustomTestBeanResolver() {
 		String expressionString = "#{specialProperty}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().context(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().eval(TestBean.class));
 		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
 	}
 

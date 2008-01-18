@@ -31,7 +31,7 @@ public class ParserContextImpl implements ParserContext {
 		return (ExpressionVariable[]) expressionVariables.toArray(new ExpressionVariable[expressionVariables.size()]);
 	}
 
-	public ParserContextImpl context(Class contextType) {
+	public ParserContextImpl eval(Class contextType) {
 		evaluationContextType = contextType;
 		return ParserContextImpl.this;
 	}

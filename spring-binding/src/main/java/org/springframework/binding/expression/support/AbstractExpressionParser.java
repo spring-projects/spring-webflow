@@ -84,6 +84,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
 	}
 
+	// TODO - add back 1.0 and 2.0 m1 semantics
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
 		Expression[] expressions = parseExpressions(expressionString, context);
