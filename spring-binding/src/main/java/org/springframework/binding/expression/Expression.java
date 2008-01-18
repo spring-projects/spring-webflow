@@ -24,19 +24,18 @@ package org.springframework.binding.expression;
 public interface Expression {
 
 	/**
-	 * Evaluate the expression encapsulated by this evaluator against the provided target object and return the result
-	 * of the evaluation.
-	 * @param target the target of the expression
+	 * Evaluate this expression in the provided context and return the result of evaluation.
+	 * @param context the context to evaluate this expression in
 	 * @return the evaluation result
 	 * @throws EvaluationException an exception occured during evaluation
 	 */
-	public Object getValue(Object target) throws EvaluationException;
+	public Object getValue(Object context) throws EvaluationException;
 
 	/**
-	 * Evaluate this expression against the target object to set its value to the value provided.
-	 * @param target the target object
+	 * Set this expression in the provided context to the value provided.
+	 * @param context the context to apply this value to
 	 * @param value the new value to be set
 	 * @throws EvaluationException an exception occurred during evaluation
 	 */
-	public void setValue(Object target, Object value) throws EvaluationException;
+	public void setValue(Object context, Object value) throws EvaluationException;
 }

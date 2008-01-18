@@ -101,7 +101,7 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder source(String expressionString) {
-		sourceExpression = expressionParser.parseExpression(expressionString, Object.class, Object.class, null);
+		sourceExpression = expressionParser.parseExpression(expressionString, null);
 		return this;
 	}
 
@@ -111,7 +111,7 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder target(String expressionString) {
-		targetExpression = expressionParser.parseExpression(expressionString, Object.class, Object.class, null);
+		targetExpression = expressionParser.parseExpression(expressionString, null);
 		return this;
 	}
 
@@ -121,8 +121,7 @@ public class MappingBuilder {
 	 * @return this, to support call-chaining
 	 */
 	public MappingBuilder targetCollection(String expressionString) {
-		targetExpression = new CollectionAddingExpression(expressionParser.parseExpression(expressionString,
-				Object.class, Object.class, null));
+		targetExpression = new CollectionAddingExpression(expressionParser.parseExpression(expressionString, null));
 		return this;
 	}
 

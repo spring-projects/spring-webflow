@@ -18,44 +18,37 @@ package org.springframework.binding.expression;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * A simple holder for information about an evaluation attempt.
+ * A simple holder for information about an expression evaluation attempt.
  * 
  * @author Keith Donald
  */
 public class EvaluationAttempt {
 
-	/**
-	 * The expression that attempted to evaluate.
-	 */
 	private Expression expression;
-
-	/**
-	 * The target object being evaluated.
-	 */
-	private Object target;
+	private Object context;
 
 	/**
 	 * Create an evaluation attempt.
 	 * @param expression the expression that failed to evaluate
-	 * @param target the target of the expression
+	 * @param context the context of the expression evaluation
 	 */
-	public EvaluationAttempt(Expression expression, Object target) {
+	public EvaluationAttempt(Expression expression, Object context) {
 		this.expression = expression;
-		this.target = target;
+		this.context = context;
 	}
 
 	/**
-	 * Returns the expression that attempted to evaluate.
+	 * Returns the expression that attempted an evaluation.
 	 */
 	public Expression getExpression() {
 		return expression;
 	}
 
 	/**
-	 * Returns the target object upon which evaluation was attempted.
+	 * Returns the context object in which expression evaluation was attempted.
 	 */
-	public Object getTarget() {
-		return target;
+	public Object getContext() {
+		return context;
 	}
 
 	public String toString() {
@@ -63,6 +56,6 @@ public class EvaluationAttempt {
 	}
 
 	protected ToStringCreator createToString(ToStringCreator creator) {
-		return creator.append("expression", expression).append("target", target);
+		return creator.append("expression", expression).append("context", context);
 	}
 }

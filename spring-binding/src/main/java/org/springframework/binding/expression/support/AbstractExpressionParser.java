@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.util.Assert;
 
@@ -80,15 +80,13 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		this.expressionSuffix = expressionSuffix;
 	}
 
-	public boolean isEvalExpressionString(String string) {
+	public boolean isDelimitedExpression(String string) {
 		return string.startsWith(expressionPrefix) && string.endsWith(expressionSuffix);
 	}
 
-	public Expression parseExpression(String expressionString, Class expressionTargetType,
-			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
+	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
-		Expression[] expressions = parseExpressions(expressionString, expressionTargetType,
-				expectedEvaluationResultType, expressionVariables);
+		Expression[] expressions = parseExpressions(expressionString, context);
 		if (expressions.length == 1) {
 			return expressions[0];
 		} else {
@@ -105,8 +103,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * @return the parsed expressions
 	 * @throws ParserException when the expressions cannot be parsed
 	 */
-	private Expression[] parseExpressions(String expressionString, Class expressionTargetType,
-			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException {
+	private Expression[] parseExpressions(String expressionString, ParserContext context) throws ParserException {
 		List expressions = new LinkedList();
 		int startIdx = 0;
 		while (startIdx < expressionString.length()) {
@@ -136,8 +133,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 							+ getExpressionPrefix() + getExpressionSuffix() + "' at character " + prefixIndex, null);
 				} else {
 					String expr = expressionString.substring(prefixIndex + getExpressionPrefix().length(), suffixIndex);
-					expressions.add(doParseExpression(expr, expressionTargetType, expectedEvaluationResultType,
-							expressionVariables));
+					expressions.add(doParseExpression(expr, context));
 					startIdx = suffixIndex + 1;
 				}
 			} else {
@@ -157,7 +153,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * @return the parsed expression
 	 * @throws ParserException an exception occurred during parsing
 	 */
-	protected abstract Expression doParseExpression(String expressionString, Class expressionTargetType,
-			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException;
+	protected abstract Expression doParseExpression(String expressionString, ParserContext context)
+			throws ParserException;
 
 }

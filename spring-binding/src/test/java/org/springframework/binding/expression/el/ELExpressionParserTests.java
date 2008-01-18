@@ -1,8 +1,8 @@
 package org.springframework.binding.expression.el;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
-import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.support.ParserContextImpl;
 
 public class ELExpressionParserTests extends TestCase {
 
@@ -24,120 +24,54 @@ public class ELExpressionParserTests extends TestCase {
 		parser.putContextFactory(TestBean.class, new TestELContextFactory());
 	}
 
-	private static class TestELContextFactory implements ELContextFactory {
-		public ELContext getELContext(final Object target, final VariableMapper variableMapper) {
-			return new ELContext() {
-				public ELResolver getELResolver() {
-					return new DefaultELResolver(target, null);
-				}
-
-				public FunctionMapper getFunctionMapper() {
-					return null;
-				}
-
-				public VariableMapper getVariableMapper() {
-					return variableMapper;
-				}
-			};
-		}
+	public void testParseSimpleEvalExpressionNoParserContext() {
+		String expressionString = "#{3 + 4}";
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals(new Long(7), exp.getValue(null));
 	}
 
-	public void testParseEvalExpressionExpectedResultTypeNull() {
-		String expressionString = "#{value}";
-		Class expressionTargetType = null;
-		Class expectedEvaluationResultType = null;
-		ExpressionVariable[] expressionVariables = null;
-		try {
-			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-					expressionVariables);
-			fail("Should have failed");
-		} catch (ParserException e) {
-
-		}
+	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
+		String expressionString = "#{3 + 4}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));
+		assertEquals(new Integer(7), exp.getValue(null));
 	}
 
-	public void testParseEvalExpression() {
+	public void testParseBeanEvalExpressionNoParserContext() {
 		String expressionString = "#{value}";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = String.class;
-		ExpressionVariable[] expressionVariables = null;
-		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-				expressionVariables);
-		TestBean target = new TestBean();
-		assertEquals("foo", exp.getValue(target));
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals("foo", exp.getValue(new TestBean()));
 	}
 
-	public void testParseEvalExpressionNoTargetType() {
-		String expressionString = "#{value}";
-		Class expressionTargetType = null;
-		Class expectedEvaluationResultType = Object.class;
-		ExpressionVariable[] expressionVariables = null;
-		try {
-			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-					expressionVariables);
-			fail("Should have failed");
-		} catch (ParserException e) {
-
-		}
+	public void testParseEvalExpressionWithContextTypeCoersion() {
+		String expressionString = "#{maximum}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Long.class));
+		assertEquals(new Long(2), exp.getValue(new TestBean()));
 	}
 
-	public void testParseEvalExpressionNotRegisteredTargetType() {
-		String expressionString = "#{value}";
-		Class expressionTargetType = Map.class;
-		Class expectedEvaluationResultType = Object.class;
-		ExpressionVariable[] expressionVariables = null;
-		try {
-			parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-					expressionVariables);
-			fail("Should have failed");
-		} catch (ParserException e) {
-		}
+	public void testParseEvalExpressionWithContextCustomTestBeanResolver() {
+		String expressionString = "#{specialProperty}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().context(TestBean.class));
+		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
 	}
 
 	public void testParseLiteralExpression() {
 		String expressionString = "value";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = String.class;
-		ExpressionVariable[] expressionVariables = null;
-		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-				expressionVariables);
-		TestBean target = new TestBean();
-		assertEquals("value", exp.getValue(target));
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals("value", exp.getValue(null));
 	}
 
 	public void testParseExpressionWithVariables() {
 		String expressionString = "#{value}#{max}";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = String.class;
-		ExpressionVariable[] expressionVariables = new ExpressionVariable[] { new ExpressionVariable("max",
-				"#{maximum}") };
-		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-				expressionVariables);
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
+				.variable(new ExpressionVariable("max", "#{maximum}")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target));
 	}
 
-	public void testParseExpressionWithVariables2() {
-		String expressionString = "#{value}#{bean.encode(value)}";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = String.class;
-		ExpressionVariable[] expressionVariables = null;
-		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-				expressionVariables);
-		TestBean target = new TestBean(new TestBean());
-		assertEquals("foo!foo", exp.getValue(target));
-	}
-
-	public void testParseExpressionCoerceToInteger() {
-		String expressionString = "#{maximum}#{max}";
-		Class expressionTargetType = TestBean.class;
-		Class expectedEvaluationResultType = Integer.class;
-		ExpressionVariable[] expressionVariables = new ExpressionVariable[] { new ExpressionVariable("max",
-				"#{maximum}") };
-		Expression exp = parser.parseExpression(expressionString, expressionTargetType, expectedEvaluationResultType,
-				expressionVariables);
-		TestBean target = new TestBean();
-		assertEquals(new Integer(22), exp.getValue(target));
+	public void testParseImmediateEvalExpression() {
+		String expressionString = "${3 + 4}";
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals(new Long(7), exp.getValue(null));
 	}
 
 	public static class TestBean {
@@ -187,6 +121,52 @@ public class ELExpressionParserTests extends TestCase {
 		public void setMaximum(int maximum) {
 			this.maximum = maximum;
 		}
-
 	}
+
+	private static class TestELContextFactory implements ELContextFactory {
+		public ELContext getELContext(final Object target, final VariableMapper variableMapper) {
+			return new ELContext() {
+				public ELResolver getELResolver() {
+					return new ELResolver() {
+						public Class getCommonPropertyType(ELContext arg0, Object arg1) {
+							return Object.class;
+						}
+
+						public Iterator getFeatureDescriptors(ELContext arg0, Object arg1) {
+							return null;
+						}
+
+						public Class getType(ELContext arg0, Object arg1, Object arg2) {
+							return String.class;
+						}
+
+						public Object getValue(ELContext arg0, Object arg1, Object arg2) {
+							if (arg1 == null && arg2.equals("specialProperty")) {
+								return "Custom resolver resolved this special property!";
+							} else {
+								throw new IllegalStateException();
+							}
+						}
+
+						public boolean isReadOnly(ELContext arg0, Object arg1, Object arg2) {
+							return true;
+						}
+
+						public void setValue(ELContext arg0, Object arg1, Object arg2, Object arg3) {
+							throw new UnsupportedOperationException("Not supported");
+						}
+					};
+				}
+
+				public FunctionMapper getFunctionMapper() {
+					return null;
+				}
+
+				public VariableMapper getVariableMapper() {
+					return variableMapper;
+				}
+			};
+		}
+	}
+
 }

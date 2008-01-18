@@ -24,30 +24,20 @@ package org.springframework.binding.expression;
 public interface ExpressionParser {
 
 	/**
-	 * Is the provided expression string an "eval" expression: meaning an expression that validates to a dynamic value,
-	 * and not a literal expression? "Eval" expressions are normally enclosed in delimiters like #{}, where literal
-	 * expressions are not delimited.
-	 * 
-	 * TODO - candidate for removal in a future milestone: is this really needed?
+	 * Is the provided string an explicitly delimited expression this parser knows how to parse? For example, this
+	 * method might return true if the string provided is enclosed in ${}.
 	 * @param string the string
-	 * @return true if the expression is an eval expression string, false otherwise.
+	 * @return true if the string is a delimited expression, false otherwise.
 	 */
-	public boolean isEvalExpressionString(String string);
-	
+	public boolean isDelimitedExpression(String string);
+
 	/**
 	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it.
-	 * @param expressionString the parseable expression string; cannot be null
-	 * @param expressionTargetType the class of target object this expression can successfully evaluate; for example,
-	 * <code>Map.class</code> for an expression that is expected to evaluate against Maps.
-	 * @param expectedEvaluationResultType the class of object this expression is expected to return or set: for
-	 * example, <code>Boolean.class</code> for an expression that is expected to get or set a boolean value. Typically
-	 * used to facilitate type conversion by the expression evaluator; for example, if a evaluated expression equates to
-	 * a String value 'true', with an expected Boolean result the string value could be converted to a typed Boolean
-	 * value (required). If the type of the evaluation result cannot be determined, use Object.class.
-	 * @param expressionVariables variables providing aliases for this expression during evaluation (optional).
+	 * @param expressionString the parseable expression string; cannot be null (required)
+	 * @param context a context used to set attributes that influence expression parsing routine (optional)
 	 * @return the evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing
 	 */
-	public Expression parseExpression(String expressionString, Class expressionTargetType,
-			Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables) throws ParserException;
+	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException;
+
 }

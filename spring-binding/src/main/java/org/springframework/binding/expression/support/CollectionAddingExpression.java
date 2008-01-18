@@ -43,14 +43,14 @@ public class CollectionAddingExpression implements Expression {
 		this.collectionExpression = collectionExpression;
 	}
 
-	public Object getValue(Object target) throws EvaluationException {
-		return collectionExpression.getValue(target);
+	public Object getValue(Object context) throws EvaluationException {
+		return collectionExpression.getValue(context);
 	}
 
-	public void setValue(Object target, Object value) throws EvaluationException {
-		Object result = getValue(target);
+	public void setValue(Object context, Object value) throws EvaluationException {
+		Object result = getValue(context);
 		if (result == null) {
-			throw new EvaluationException(new SetValueAttempt(this, target, value), new IllegalArgumentException(
+			throw new EvaluationException(new SetValueAttempt(this, context, value), new IllegalArgumentException(
 					"The collection expression evaluated to a [null] reference"));
 		}
 		Assert.isInstanceOf(Collection.class, result, "Not a collection: ");

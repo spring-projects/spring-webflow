@@ -40,15 +40,15 @@ public class CompositeStringExpression implements Expression {
 		this.expressions = expressions;
 	}
 
-	public Object getValue(Object target) throws EvaluationException {
+	public Object getValue(Object context) throws EvaluationException {
 		StringBuffer buffer = new StringBuffer(128);
 		for (int i = 0; i < expressions.length; i++) {
-			buffer.append(expressions[i].getValue(target));
+			buffer.append(expressions[i].getValue(context));
 		}
 		return buffer.toString();
 	}
 
-	public void setValue(Object target, Object value) throws EvaluationException {
+	public void setValue(Object context, Object value) throws EvaluationException {
 		throw new UnsupportedOperationException("Cannot set a composite string expression value");
 	}
 

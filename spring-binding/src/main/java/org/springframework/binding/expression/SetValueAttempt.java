@@ -32,11 +32,11 @@ public class SetValueAttempt extends EvaluationAttempt {
 	/**
 	 * Creates a new set attempt.
 	 * @param expression the settable expression
-	 * @param target the target of the expression
+	 * @param context the target of the expression
 	 * @param value the value that was attempted to be set
 	 */
-	public SetValueAttempt(Expression expression, Object target, Object value) {
-		super(expression, target);
+	public SetValueAttempt(Expression expression, Object context, Object value) {
+		super(expression, context);
 		this.value = value;
 	}
 

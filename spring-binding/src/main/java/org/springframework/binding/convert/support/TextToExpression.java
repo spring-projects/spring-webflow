@@ -60,6 +60,6 @@ public class TextToExpression extends AbstractConverter {
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
 		String expressionString = (String) source;
-		return expressionParser.parseExpression(expressionString, Object.class, Object.class, null);
+		return expressionParser.parseExpression(expressionString, null);
 	}
 }

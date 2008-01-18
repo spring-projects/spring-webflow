@@ -9,17 +9,15 @@ import org.springframework.util.Assert;
 public class ExpressionVariable {
 
 	private String name;
-
-	private String value;
+	private Object value;
 
 	/**
 	 * Creates a new expression variable
 	 * @param name the name of the variable, acting as an convenient alias
 	 * @param value the initial value of the variable
 	 */
-	public ExpressionVariable(String name, String value) {
+	public ExpressionVariable(String name, Object value) {
 		Assert.hasText(name, "The expression variable must be named");
-		Assert.hasText(value, "The expression variable value is required");
 		this.name = name;
 		this.value = value;
 	}
@@ -36,7 +34,7 @@ public class ExpressionVariable {
 	 * Returns the expression that will be evaluated when the variable is referenced by its name in another expression.
 	 * @return the expression value.
 	 */
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 

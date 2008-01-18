@@ -37,21 +37,21 @@ public class ELExpression implements Expression {
 		this.variableMapper = variableMapper;
 	}
 
-	public Object getValue(Object target) throws EvaluationException {
-		ELContext ctx = elContextFactory.getELContext(target, variableMapper);
+	public Object getValue(Object context) throws EvaluationException {
+		ELContext ctx = elContextFactory.getELContext(context, variableMapper);
 		try {
 			return valueExpression.getValue(ctx);
 		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target), ex);
+			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}
 	}
 
-	public void setValue(Object target, Object value) throws EvaluationException {
-		ELContext ctx = elContextFactory.getELContext(target, variableMapper);
+	public void setValue(Object context, Object value) throws EvaluationException {
+		ELContext ctx = elContextFactory.getELContext(context, variableMapper);
 		try {
 			valueExpression.setValue(ctx, value);
 		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, target), ex);
+			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}
 	}
 

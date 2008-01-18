@@ -47,15 +47,14 @@ class OgnlExpression implements Expression {
 	/**
 	 * Expression variable initial values.
 	 */
-	private ExpressionVariable[] variables;
+	private Map variableMap;;
 
 	/**
 	 * Creates a new OGNL expression.
 	 * @param expression the parsed expression
 	 */
 	public OgnlExpression(Object expression, ExpressionVariable[] variables) {
-		this.expression = expression;
-		this.variables = variables;
+		init(expression, variables);
 	}
 
 	public int hashCode() {
@@ -72,34 +71,43 @@ class OgnlExpression implements Expression {
 		return expression.equals(other.expression);
 	}
 
-	public Object getValue(Object target) throws EvaluationException {
-		Assert.notNull(target, "The target object to evaluate is required");
+	public Object getValue(Object context) throws EvaluationException {
 		try {
-			return Ognl.getValue(expression, getContext(), target);
+			return Ognl.getValue(expression, variableMap, context);
 		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it
 				// and there is not generic (getCause) way to get to it later on
-				throw new EvaluationException(new EvaluationAttempt(this, target), e.getReason());
+				throw new EvaluationException(new EvaluationAttempt(this, context), e.getReason());
 			} else {
-				throw new EvaluationException(new EvaluationAttempt(this, target), e);
+				throw new EvaluationException(new EvaluationAttempt(this, context), e);
 			}
 		}
 	}
 
-	public void setValue(Object target, Object value) {
-		Assert.notNull(target, "The target object to evaluate is required");
+	public void setValue(Object context, Object value) {
+		Assert.notNull(context, "The context to set the provided value in is required");
 		try {
-			// TODO context map
-			Ognl.setValue(expression, getContext(), target, value);
+			Ognl.setValue(expression, variableMap, context, value);
 		} catch (OgnlException e) {
-			throw new EvaluationException(new SetValueAttempt(this, target, value), e);
+			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
 		}
 	}
 
-	private Map getContext() {
+	private void init(Object expression, ExpressionVariable[] variables) {
+		this.expression = expression;
+		variableMap = createVariableMap(variables);
+	}
+
+	private Map createVariableMap(ExpressionVariable[] variables) {
 		if (variables != null && variables.length > 0) {
-			return new HashMap(variables.length);
+			Map variableMap = new HashMap(variables.length);
+			for (int i = 0; i < variables.length; i++) {
+				ExpressionVariable var = variables[i];
+				variableMap.put(var.getName(), var.getValue());
+			}
+			System.out.println(variableMap);
+			return variableMap;
 		} else {
 			return Collections.EMPTY_MAP;
 		}
