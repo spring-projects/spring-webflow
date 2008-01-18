@@ -21,6 +21,7 @@ import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
@@ -78,16 +79,15 @@ class TextToTransitionCriteria extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		// TODO - add separate transition 'event' and 'condition' attributes
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)
 				|| WildcardTransitionCriteria.WILDCARD_EVENT_ID.equals(encodedCriteria)) {
 			return WildcardTransitionCriteria.INSTANCE;
-		} else if (parser.isEvalExpressionString(encodedCriteria)) {
-			ExpressionVariable[] variables = new ExpressionVariable[] { new ExpressionVariable("result", "lastEvent.id") };
-			Expression expression = parser.parseExpression(encodedCriteria, RequestContext.class, Boolean.class,
-					variables);
+		} else if (parser.isDelimitedExpression(encodedCriteria)) {
+			Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().eval(
+					RequestContext.class).expect(Boolean.class).variable(
+					new ExpressionVariable("result", "lastEvent.id")));
 			return createBooleanExpressionTransitionCriteria(expression);
 		} else if (encodedCriteria.startsWith(BEAN_PREFIX)) {
 			return flowBuilderContext.getBeanFactory().getBean(encodedCriteria.substring(BEAN_PREFIX.length()),

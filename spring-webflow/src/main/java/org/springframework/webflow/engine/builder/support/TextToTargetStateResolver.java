@@ -19,6 +19,7 @@ import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
@@ -74,7 +75,8 @@ class TextToTargetStateResolver extends AbstractConverter {
 		if (targetStateId.startsWith(BEAN_PREFIX)) {
 			return flowBuilderContext.getBeanFactory().getBean(targetStateId.substring(BEAN_PREFIX.length()));
 		} else {
-			Expression expression = parser.parseExpression(targetStateId, RequestContext.class, String.class, null);
+			Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().eval(
+					RequestContext.class).expect(String.class));
 			return new DefaultTargetStateResolver(expression);
 		}
 	}
