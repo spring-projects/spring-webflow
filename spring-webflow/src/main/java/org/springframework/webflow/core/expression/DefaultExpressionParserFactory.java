@@ -17,7 +17,7 @@ package org.springframework.webflow.core.expression;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
 
 /**
@@ -50,15 +50,12 @@ public final class DefaultExpressionParserFactory {
 		// this prevents the default OGNL-based parser from being initialized until it is actually used
 		// which allows OGNL to be an optional dependency if the expression parser wrapper is replaced and never used
 		return new ExpressionParser() {
-			public boolean isEvalExpressionString(String string) {
-				return getDefaultExpressionParser().isEvalExpressionString(string);
+			public boolean isDelimitedExpression(String string) {
+				return getDefaultExpressionParser().isDelimitedExpression(string);
 			}
 
-			public Expression parseExpression(String expressionString, Class expressionTargetType,
-					Class expectedEvaluationResultType, ExpressionVariable[] expressionVariables)
-					throws ParserException {
-				return getDefaultExpressionParser().parseExpression(expressionString, expressionTargetType,
-						expectedEvaluationResultType, expressionVariables);
+			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
+				return getDefaultExpressionParser().parseExpression(expressionString, context);
 			}
 		};
 	}
