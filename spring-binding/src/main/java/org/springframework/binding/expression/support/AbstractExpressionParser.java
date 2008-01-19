@@ -80,7 +80,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 		this.expressionSuffix = expressionSuffix;
 	}
 
-	public boolean isDelimitedExpression(String string) {
+	public boolean hasDelimitedExpression(String string) {
 		int prefixIndex = string.indexOf(getExpressionPrefix());
 		if (prefixIndex == -1) {
 			return false;

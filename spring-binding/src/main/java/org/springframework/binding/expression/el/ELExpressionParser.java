@@ -65,7 +65,7 @@ public class ELExpressionParser implements ExpressionParser {
 		contextFactories.put(contextType, contextFactory);
 	}
 
-	public boolean isDelimitedExpression(String expressionString) {
+	public boolean hasDelimitedExpression(String expressionString) {
 		return (expressionString.startsWith(EXPRESSION_PREFIX_DEFERRED) && expressionString.endsWith(EXPRESSION_SUFFIX))
 				|| (expressionString.startsWith(EXPRESSION_PREFIX_IMMEDIATE) && expressionString
 						.endsWith(EXPRESSION_SUFFIX));

@@ -25,11 +25,13 @@ public interface ExpressionParser {
 
 	/**
 	 * Is the provided string an explicitly delimited expression this parser knows how to parse? For example, this
-	 * method might return true if the string provided is enclosed in ${}.
+	 * method may return true if the string provided is enclosed in "${}". It may also return true if the string
+	 * provided is a mix of literal text and delimited expression syntax, for example "hello world ${name}!" The exact
+	 * semantics are determined by the parser implementation.
 	 * @param string the string
 	 * @return true if the string is a delimited expression, false otherwise.
 	 */
-	public boolean isDelimitedExpression(String string);
+	public boolean hasDelimitedExpression(String string);
 
 	/**
 	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it.

@@ -33,16 +33,34 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseSimple() {
 		String exp = "${flag}";
-		assertTrue(parser.isDelimitedExpression(exp));
+		assertTrue(parser.hasDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
 	}
 
+	public void testHasDelimitedExpression() {
+		String exp = "some literal text";
+		String exp2 = "${a delimited expression}";
+		String exp3 = "${a malformed delimited expression";
+		String exp4 = "a malformed delimited expression}";
+		String exp5 = "${}";
+		String exp6 = "a ${composite} expression";
+		String exp7 = "a ${composite} ${malformed expression";
+
+		assertFalse(parser.hasDelimitedExpression(exp));
+		assertTrue(parser.hasDelimitedExpression(exp2));
+		assertFalse(parser.hasDelimitedExpression(exp3));
+		assertFalse(parser.hasDelimitedExpression(exp4));
+		assertFalse(parser.hasDelimitedExpression(exp5));
+		assertTrue(parser.hasDelimitedExpression(exp6));
+		assertTrue(parser.hasDelimitedExpression(exp7));
+	}
+
 	public void testParseSimpleNotDelimited() {
 		String exp = "flag";
-		assertFalse(parser.isDelimitedExpression(exp));
+		assertFalse(parser.hasDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
@@ -57,6 +75,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
+		assertTrue(parser.hasDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		String str = (String) e.getValue(bean);

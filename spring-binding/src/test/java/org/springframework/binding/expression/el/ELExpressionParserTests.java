@@ -46,6 +46,12 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals(new Integer(7), exp.getValue(null));
 	}
 
+	public void testAssignment() {
+		String expressionString = "#{value = 12345}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));
+		assertEquals(new Integer(7), exp.getValue(null));
+	}
+
 	public void testParseBeanEvalExpressionNoParserContext() {
 		String expressionString = "#{value}";
 		Expression exp = parser.parseExpression(expressionString, null);
