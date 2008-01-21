@@ -22,9 +22,6 @@ import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.ParserContextImpl;
 
-/**
- * Unit tests for {@link org.springframework.binding.expression.ognl.OgnlExpressionParser}.
- */
 public class OgnlExpressionParserTests extends TestCase {
 
 	private OgnlExpressionParser parser = new OgnlExpressionParser();
@@ -33,14 +30,31 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseSimple() {
 		String exp = "${flag}";
-		assertTrue(parser.hasDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
 	}
 
-	public void testHasDelimitedExpression() {
+	public void testIsTemplateExpressionAllowUndelimitedOgnlExpressions() {
+		String exp = "some literal text";
+		String exp2 = "${a delimited expression}";
+		String exp3 = "${a malformed delimited expression";
+		String exp4 = "a malformed delimited expression}";
+		String exp5 = "${}";
+		String exp6 = "a ${composite} expression";
+		String exp7 = "a ${composite} ${malformed expression";
+		assertTrue(parser.isTemplateExpression(exp));
+		assertTrue(parser.isTemplateExpression(exp2));
+		assertTrue(parser.isTemplateExpression(exp3));
+		assertTrue(parser.isTemplateExpression(exp4));
+		assertTrue(parser.isTemplateExpression(exp5));
+		assertTrue(parser.isTemplateExpression(exp6));
+		assertTrue(parser.isTemplateExpression(exp7));
+	}
+
+	public void testIsTemplateExpressionDoNotAllowUndelimitedOgnlExpressions() {
+		parser.setAllowUndelimitedEvalExpressions(true);
 		String exp = "some literal text";
 		String exp2 = "${a delimited expression}";
 		String exp3 = "${a malformed delimited expression";
@@ -49,22 +63,29 @@ public class OgnlExpressionParserTests extends TestCase {
 		String exp6 = "a ${composite} expression";
 		String exp7 = "a ${composite} ${malformed expression";
 
-		assertFalse(parser.hasDelimitedExpression(exp));
-		assertTrue(parser.hasDelimitedExpression(exp2));
-		assertFalse(parser.hasDelimitedExpression(exp3));
-		assertFalse(parser.hasDelimitedExpression(exp4));
-		assertFalse(parser.hasDelimitedExpression(exp5));
-		assertTrue(parser.hasDelimitedExpression(exp6));
-		assertTrue(parser.hasDelimitedExpression(exp7));
+		assertFalse(parser.isTemplateExpression(exp));
+		assertTrue(parser.isTemplateExpression(exp2));
+		assertFalse(parser.isTemplateExpression(exp3));
+		assertFalse(parser.isTemplateExpression(exp4));
+		assertFalse(parser.isTemplateExpression(exp5));
+		assertTrue(parser.isTemplateExpression(exp6));
+		assertTrue(parser.isTemplateExpression(exp7));
 	}
 
-	public void testParseSimpleNotDelimited() {
+	public void testParseSimpleNotDelimitedAllowUndelimited() {
+		parser.setAllowUndelimitedEvalExpressions(true);
 		String exp = "flag";
-		assertFalse(parser.hasDelimitedExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
 		assertFalse(b.booleanValue());
+	}
+
+	public void testParseSimpleLiteral() {
+		String exp = "flag";
+		Expression e = parser.parseExpression(exp, null);
+		assertNotNull(e);
+		assertEquals("flag", e.getValue(bean));
 	}
 
 	public void testParseEmpty() {
@@ -75,7 +96,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
-		assertTrue(parser.hasDelimitedExpression(exp));
+		assertTrue(parser.isTemplateExpression(exp));
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		String str = (String) e.getValue(bean);
@@ -142,7 +163,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testVariables() {
 		Expression exp = parser.parseExpression("${#var}", new ParserContextImpl().variable(new ExpressionVariable(
-				"var", new Integer(1))));
-		assertEquals(new Integer(1), exp.getValue(bean));
+				"var", "${flag}")));
+		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
 }

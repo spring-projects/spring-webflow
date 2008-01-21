@@ -46,12 +46,6 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals(new Integer(7), exp.getValue(null));
 	}
 
-	public void testAssignment() {
-		String expressionString = "#{value = 12345}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));
-		assertEquals(new Integer(7), exp.getValue(null));
-	}
-
 	public void testParseBeanEvalExpressionNoParserContext() {
 		String expressionString = "#{value}";
 		Expression exp = parser.parseExpression(expressionString, null);
@@ -140,7 +134,7 @@ public class ELExpressionParserTests extends TestCase {
 	}
 
 	private static class TestELContextFactory implements ELContextFactory {
-		public ELContext getELContext(final Object target, final VariableMapper variableMapper) {
+		public ELContext getELContext(final Object target) {
 			return new ELContext() {
 				public ELResolver getELResolver() {
 					return new ELResolver() {
@@ -179,7 +173,7 @@ public class ELExpressionParserTests extends TestCase {
 				}
 
 				public VariableMapper getVariableMapper() {
-					return variableMapper;
+					return null;
 				}
 			};
 		}

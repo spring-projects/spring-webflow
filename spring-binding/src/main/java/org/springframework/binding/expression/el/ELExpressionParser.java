@@ -27,21 +27,6 @@ import org.springframework.util.Assert;
 public class ELExpressionParser implements ExpressionParser {
 
 	/**
-	 * The expression prefix.
-	 */
-	private static final String EXPRESSION_PREFIX_IMMEDIATE = "${";
-
-	/**
-	 * The expression prefix.
-	 */
-	private static final String EXPRESSION_PREFIX_DEFERRED = "#{";
-
-	/**
-	 * The expression suffix.
-	 */
-	private static final String EXPRESSION_SUFFIX = "}";
-
-	/**
 	 * The ExpressionFactory for constructing EL expressions
 	 */
 	private ExpressionFactory expressionFactory;
@@ -65,12 +50,6 @@ public class ELExpressionParser implements ExpressionParser {
 		contextFactories.put(contextType, contextFactory);
 	}
 
-	public boolean hasDelimitedExpression(String expressionString) {
-		return (expressionString.startsWith(EXPRESSION_PREFIX_DEFERRED) && expressionString.endsWith(EXPRESSION_SUFFIX))
-				|| (expressionString.startsWith(EXPRESSION_PREFIX_IMMEDIATE) && expressionString
-						.endsWith(EXPRESSION_SUFFIX));
-	}
-
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
 		if (context == null) {
@@ -82,7 +61,7 @@ public class ELExpressionParser implements ExpressionParser {
 			ValueExpression expression = expressionFactory.createValueExpression(elContext, expressionString,
 					getExpectedType(context));
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
-			return new ELExpression(contextFactory, expression, elContext.getVariableMapper());
+			return new ELExpression(contextFactory, expression);
 		} catch (ELException e) {
 			throw new ParserException(expressionString, e);
 		}
@@ -132,8 +111,8 @@ public class ELExpressionParser implements ExpressionParser {
 				variableMapper = new VariableMapperImpl();
 				for (int i = 0; i < variables.length; i++) {
 					ExpressionVariable var = variables[i];
-					ValueExpression expr = expressionFactory.createValueExpression(this,
-							String.valueOf(var.getValue()), Object.class);
+					ValueExpression expr = expressionFactory.createValueExpression(this, var.getValueExpression(),
+							Object.class);
 					variableMapper.setVariable(var.getName(), expr);
 				}
 			}

@@ -17,6 +17,7 @@ package org.springframework.binding.expression.ognl;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import ognl.Ognl;
@@ -25,7 +26,6 @@ import ognl.OgnlException;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
@@ -44,14 +44,21 @@ class OgnlExpression implements Expression {
 	/**
 	 * Expression variable initial values.
 	 */
-	private Map variableMap;;
+	private Map variableExpressions;
+
+	/**
+	 * The expected type of object returned from evaluating the expression.
+	 */
+	private Class expectedResultType;
 
 	/**
 	 * Creates a new OGNL expression.
 	 * @param expression the parsed expression
 	 */
-	public OgnlExpression(Object expression, ExpressionVariable[] variables) {
-		init(expression, variables);
+	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType) {
+		this.expression = expression;
+		this.variableExpressions = variableExpressions;
+		this.expectedResultType = expectedResultType;
 	}
 
 	public int hashCode() {
@@ -68,7 +75,7 @@ class OgnlExpression implements Expression {
 
 	public Object getValue(Object context) throws EvaluationException {
 		try {
-			return Ognl.getValue(expression, variableMap, context);
+			return Ognl.getValue(expression, getVariables(context), context, expectedResultType);
 		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it
@@ -83,28 +90,23 @@ class OgnlExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		Assert.notNull(context, "The context to set the provided value in is required");
 		try {
-			Ognl.setValue(expression, variableMap, context, value);
+			Ognl.setValue(expression, getVariables(context), context, value);
 		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
 		}
 	}
 
-	private void init(Object expression, ExpressionVariable[] variables) {
-		this.expression = expression;
-		variableMap = createVariableMap(variables);
-	}
-
-	private Map createVariableMap(ExpressionVariable[] variables) {
-		if (variables != null && variables.length > 0) {
-			Map variableMap = new HashMap(variables.length);
-			for (int i = 0; i < variables.length; i++) {
-				ExpressionVariable var = variables[i];
-				variableMap.put(var.getName(), var.getValue());
-			}
-			return variableMap;
-		} else {
+	private Map getVariables(Object context) {
+		if (variableExpressions == null) {
 			return Collections.EMPTY_MAP;
 		}
+		Map variables = new HashMap(variableExpressions.size(), 1);
+		for (Iterator it = variableExpressions.entrySet().iterator(); it.hasNext();) {
+			Map.Entry var = (Map.Entry) it.next();
+			Expression valueExpression = (Expression) var.getValue();
+			variables.put(var.getKey(), valueExpression.getValue(context));
+		}
+		return variables;
 	}
 
 	public String toString() {

@@ -2,7 +2,6 @@ package org.springframework.binding.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
-import javax.el.VariableMapper;
 
 /**
  * A factory for creating a EL context object that will be used to evaluate a target object of an EL expression.
@@ -16,9 +15,8 @@ public interface ELContextFactory {
 	 * object. In certain environments the target will be null and the base object of the expression is expected to be
 	 * resolved via the ELContext's {@link ELResolver} chain.
 	 * @param target The base object for the expression evaluation
-	 * @param variableMapper The mapping storing variables needed during expression evaluation
 	 * @return ELContext The configured ELContext instance for evaluating expressions.
 	 */
-	public ELContext getELContext(Object target, VariableMapper variableMapper);
+	public ELContext getELContext(Object target);
 
 }
