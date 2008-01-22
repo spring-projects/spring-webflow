@@ -272,7 +272,7 @@ public class OgnlExpressionParser implements ExpressionParser {
 		Map variableExpressions = new HashMap(variables.length, 1);
 		for (int i = 0; i < variables.length; i++) {
 			ExpressionVariable var = variables[i];
-			variableExpressions.put(var.getName(), parseExpression(var.getValueExpression(), null));
+			variableExpressions.put(var.getName(), parseExpression(var.getValueExpression(), var.getParserContext()));
 		}
 		return variableExpressions;
 	}

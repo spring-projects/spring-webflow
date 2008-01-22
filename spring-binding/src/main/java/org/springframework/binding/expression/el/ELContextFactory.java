@@ -6,6 +6,11 @@ import javax.el.ELResolver;
 /**
  * A factory for creating a EL context object that will be used to evaluate a target object of an EL expression.
  * 
+ * Note this ELContextFactory is not used at parse time, only evaluation time. Therefore, factories should not be
+ * concerned with setting up parse-time context attributes such as the variable mapper and function mapper that play no
+ * part during expression evaluation.
+ * 
+ * @author Keith Donald
  * @author Jeremy Grelle
  */
 public interface ELContextFactory {

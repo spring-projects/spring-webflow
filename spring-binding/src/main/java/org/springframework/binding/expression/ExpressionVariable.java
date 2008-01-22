@@ -10,17 +10,25 @@ public class ExpressionVariable {
 
 	private String name;
 	private String valueExpression;
+	private ParserContext parserContext;
 
 	/**
-	 * Creates a new expression variable
-	 * @param name the name of the variable, acting as an convenient alias
-	 * @param value the value expression
+	 * Creates a new expression variable.
+	 * @param name the name of the variable, acting as an convenient alias (required)
+	 * @param valueExpression the value expression (required)
 	 */
-	public ExpressionVariable(String name, String value) {
-		Assert.hasText(name, "The expression variable must be named");
-		Assert.hasText(value, "The expression variable's value expression is required");
-		this.name = name;
-		this.valueExpression = value;
+	public ExpressionVariable(String name, String valueExpression) {
+		init(name, valueExpression, null);
+	}
+
+	/**
+	 * Creates a new expression variable with a populated parser context.
+	 * @param name the name of the variable, acting as an convenient alias (required)
+	 * @param valueExpression the value expression (required)
+	 * @param parserContext the parser context to use to parse the value expression (optional)
+	 */
+	public ExpressionVariable(String name, String valueExpression, ParserContext parserContext) {
+		init(name, valueExpression, parserContext);
 	}
 
 	/**
@@ -39,6 +47,14 @@ public class ExpressionVariable {
 		return valueExpression;
 	}
 
+	/**
+	 * Returns the parser context to use to parse the variable's value expression.
+	 * @return the value expression parser context
+	 */
+	public ParserContext getParserContext() {
+		return parserContext;
+	}
+
 	public boolean equals(Object o) {
 		if (!(o instanceof ExpressionVariable)) {
 			return false;
@@ -54,4 +70,13 @@ public class ExpressionVariable {
 	public String toString() {
 		return "[Expression Variable '" + name + "']";
 	}
+
+	private void init(String name, String valueExpression, ParserContext parserContext) {
+		Assert.hasText(name, "The expression variable must be named");
+		Assert.hasText(valueExpression, "The expression variable's value expression is required");
+		this.name = name;
+		this.valueExpression = valueExpression;
+		this.parserContext = parserContext;
+	}
+
 }

@@ -21,8 +21,8 @@ import org.springframework.util.Assert;
 
 /**
  * An expression parser that parses EL expressions.
- * @author Jeremy Grelle
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class ELExpressionParser implements ExpressionParser {
 
@@ -56,15 +56,18 @@ public class ELExpressionParser implements ExpressionParser {
 			context = NullParserContext.INSTANCE;
 		}
 		try {
-			ParserELContext elContext = new ParserELContext();
-			elContext.mapVariables(context.getExpressionVariables(), expressionFactory);
-			ValueExpression expression = expressionFactory.createValueExpression(elContext, expressionString,
-					getExpectedType(context));
+			ValueExpression expression = parseValueExpression(expressionString, context);
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
 			return new ELExpression(contextFactory, expression);
 		} catch (ELException e) {
 			throw new ParserException(expressionString, e);
 		}
+	}
+
+	private ValueExpression parseValueExpression(String expressionString, ParserContext context) throws ELException {
+		ParserELContext elContext = new ParserELContext();
+		elContext.mapVariables(context.getExpressionVariables(), expressionFactory);
+		return expressionFactory.createValueExpression(elContext, expressionString, getExpectedType(context));
 	}
 
 	private Class getExpectedType(ParserContext context) {
@@ -91,7 +94,7 @@ public class ELExpressionParser implements ExpressionParser {
 		putContextFactory(Object.class, defaultContextFactory);
 	}
 
-	private static class ParserELContext extends ELContext {
+	private class ParserELContext extends ELContext {
 		private VariableMapper variableMapper;
 
 		public ELResolver getELResolver() {
@@ -111,8 +114,9 @@ public class ELExpressionParser implements ExpressionParser {
 				variableMapper = new VariableMapperImpl();
 				for (int i = 0; i < variables.length; i++) {
 					ExpressionVariable var = variables[i];
-					ValueExpression expr = expressionFactory.createValueExpression(this, var.getValueExpression(),
-							Object.class);
+					ParserContext context = var.getParserContext() != null ? var.getParserContext()
+							: NullParserContext.INSTANCE;
+					ValueExpression expr = parseValueExpression(var.getValueExpression(), context);
 					variableMapper.setVariable(var.getName(), expr);
 				}
 			}
