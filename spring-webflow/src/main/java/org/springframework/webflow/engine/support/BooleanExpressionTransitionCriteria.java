@@ -46,7 +46,12 @@ public class BooleanExpressionTransitionCriteria implements TransitionCriteria {
 	}
 
 	public boolean test(RequestContext context) {
-		return ((Boolean) booleanExpression.getValue(context)).booleanValue();
+		Object result = booleanExpression.getValue(context);
+		if (result instanceof Boolean) {
+			return ((Boolean) result).booleanValue();
+		} else {
+			return context.getLastEvent().getId().equals(String.valueOf(result));
+		}
 	}
 
 	public String toString() {

@@ -50,10 +50,6 @@ public final class DefaultExpressionParserFactory {
 		// this prevents the default OGNL-based parser from being initialized until it is actually used
 		// which allows OGNL to be an optional dependency if the expression parser wrapper is replaced and never used
 		return new ExpressionParser() {
-			public boolean isDelimitedExpression(String string) {
-				return getDefaultExpressionParser().isDelimitedExpression(string);
-			}
-
 			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 				return getDefaultExpressionParser().parseExpression(expressionString, context);
 			}

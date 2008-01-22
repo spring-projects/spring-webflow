@@ -21,6 +21,7 @@ import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TransitionCriteria;
@@ -84,16 +85,21 @@ class TextToTransitionCriteria extends AbstractConverter {
 		if (!StringUtils.hasText(encodedCriteria)
 				|| WildcardTransitionCriteria.WILDCARD_EVENT_ID.equals(encodedCriteria)) {
 			return WildcardTransitionCriteria.INSTANCE;
-		} else if (parser.isDelimitedExpression(encodedCriteria)) {
-			Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().eval(
-					RequestContext.class).expect(Boolean.class).variable(
-					new ExpressionVariable("result", "lastEvent.id")));
-			return createBooleanExpressionTransitionCriteria(expression);
 		} else if (encodedCriteria.startsWith(BEAN_PREFIX)) {
 			return flowBuilderContext.getBeanFactory().getBean(encodedCriteria.substring(BEAN_PREFIX.length()),
 					TransitionCriteria.class);
 		} else {
-			return createEventIdTransitionCriteria(encodedCriteria);
+			if (parser instanceof OgnlExpressionParser) {
+				// 1.0 compatability
+				OgnlExpressionParser ognl = (OgnlExpressionParser) parser;
+				if (ognl.isTemplateExpression(encodedCriteria)) {
+					return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
+				} else {
+					return createEventIdTransitionCriteria(encodedCriteria);
+				}
+			} else {
+				return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
+			}
 		}
 	}
 
@@ -110,12 +116,15 @@ class TextToTransitionCriteria extends AbstractConverter {
 	/**
 	 * Hook method subclasses can override to return a specialized expression evaluating transition criteria
 	 * implementation.
-	 * @param expression the expression to evaluate
+	 * @param encodedCriteria the encoded transition criteria expression
+	 * @param parser the parser that should parse the expression
 	 * @return the transition criteria object
 	 * @throws ConversionException when something goes wrong
 	 */
-	protected TransitionCriteria createBooleanExpressionTransitionCriteria(Expression expression)
-			throws ConversionException {
+	protected TransitionCriteria createBooleanExpressionTransitionCriteria(String encodedCriteria,
+			ExpressionParser parser) throws ConversionException {
+		Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().eval(
+				RequestContext.class).variable(new ExpressionVariable("result", "lastEvent.id")));
 		return new BooleanExpressionTransitionCriteria(expression);
 	}
 }
