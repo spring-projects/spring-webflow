@@ -22,6 +22,8 @@ public class TestBean {
 
 	private boolean flag;
 
+	private int number;
+
 	private List list = new ArrayList();
 
 	public boolean isFlag() {
@@ -30,6 +32,14 @@ public class TestBean {
 
 	public void setFlag(boolean flag) {
 		this.flag = flag;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public List getList() {

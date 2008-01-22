@@ -166,4 +166,19 @@ public class OgnlExpressionParserTests extends TestCase {
 				"var", "${flag}")));
 		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
+
+	public void testVariablesWithCoersion() {
+		Expression exp = parser.parseExpression("${#var}", new ParserContextImpl().variable(new ExpressionVariable(
+				"var", "${number}", new ParserContextImpl().expect(Long.class))));
+		assertEquals(new Long(0), exp.getValue(bean));
+	}
+
+	public void testNestedVariables() {
+		Expression exp = parser
+				.parseExpression("${#var}", new ParserContextImpl()
+						.variable(new ExpressionVariable("var", "${flag}${#var}", new ParserContextImpl()
+								.variable(new ExpressionVariable("var", "${number}")))));
+		assertEquals("false0", exp.getValue(bean));
+	}
+
 }

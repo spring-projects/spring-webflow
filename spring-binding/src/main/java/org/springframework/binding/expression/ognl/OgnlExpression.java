@@ -75,7 +75,8 @@ class OgnlExpression implements Expression {
 
 	public Object getValue(Object context) throws EvaluationException {
 		try {
-			return Ognl.getValue(expression, getVariables(context), context, expectedResultType);
+			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
+			return Ognl.getValue(expression, evaluationContext, context, expectedResultType);
 		} catch (OgnlException e) {
 			if (e.getReason() != null && e.getReason() != e) {
 				// unwrap the OgnlException since the actual exception is wrapped inside it
@@ -90,7 +91,8 @@ class OgnlExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		Assert.notNull(context, "The context to set the provided value in is required");
 		try {
-			Ognl.setValue(expression, getVariables(context), context, value);
+			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
+			Ognl.setValue(expression, evaluationContext, context, value);
 		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
 		}

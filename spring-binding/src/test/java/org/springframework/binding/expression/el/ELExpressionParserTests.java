@@ -78,6 +78,23 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals("foo2", exp.getValue(target));
 	}
 
+	public void testVariablesWithCoersion() {
+		String expressionString = "#{max}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
+				.variable(new ExpressionVariable("max", "#{maximum}", new ParserContextImpl().expect(Long.class))));
+		TestBean target = new TestBean();
+		assertEquals(new Long(2), exp.getValue(target));
+	}
+
+	public void testNestedVariables() {
+		String expressionString = "#{value}#{max}";
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
+				.variable(new ExpressionVariable("max", "#{maximum}#{var}", new ParserContextImpl()
+						.variable(new ExpressionVariable("var", "bar")))));
+		TestBean target = new TestBean();
+		assertEquals("foo2bar", exp.getValue(target));
+	}
+
 	public void testParseImmediateEvalExpression() {
 		String expressionString = "${3 + 4}";
 		Expression exp = parser.parseExpression(expressionString, null);
