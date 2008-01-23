@@ -13,7 +13,7 @@
 			<h2>Hotel Results</h2>
 			<p>
 				<b>Search Criteria:</b> #{searchCriteria}<br/>
-				<sf:commandLink value="Edit Criteria" onclick="dijit.byId('dialog1').show();" action="changeSearch" renderIds="hotelSearchFragment"/>
+				<sf:commandLink value="Edit Criteria" action="changeSearch" renderIds="hotelSearchFragment"/>
 			</p>
 			<h:outputText id="noHotelsTxt" value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
 			<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
@@ -36,7 +36,7 @@
 				<h:column>
 					<f:facet name="header">Action</f:facet>
 					<!-- @TODO - THIS LINK DOES NOT WORK ON MYFACES 1.2.0 WHEN AJAX IS ENABLED BECAUSE THEY HAVE NOT IMPLEMENTED UIData.invokeOnComponent -->
-					<sf:commandLink id="viewHotelLink" value="View Hotel" ajaxEnabled="false" action="selectHotel"/>
+					<sf:commandLink id="viewHotelLink" value="View Hotel" action="selectHotel"/>
 				</h:column>
 			</h:dataTable>
 			<div class="next">
@@ -51,12 +51,5 @@
 			</div>
 	</div>
 </h:form>
-<script type="text/javascript">
-	dojo.require("dijit.Dialog");
-	dojo.require("dojo.parser");
-</script>
-<div dojoType="dijit.Dialog" id="dialog1" title="First Dialog">
-	<div id="hotelSearch"> </div>
-</div>
 </ui:define>
 </ui:composition>

@@ -33,6 +33,10 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class ViewState extends TransitionableState {
 
+	private static final String FLOW_MODAL_VIEW_HEADER = "Flow-Modal-View";
+
+	private static final String MODAL_ATTR = "modal";
+
 	/**
 	 * The list of actions to be executed when this state is entered.
 	 */
@@ -79,6 +83,10 @@ public class ViewState extends TransitionableState {
 
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
+		if (context.getExternalContext().isAjaxRequest()
+				&& Boolean.TRUE.equals(context.getCurrentState().getAttributes().getBoolean(MODAL_ATTR))) {
+			context.getExternalContext().setResponseHeader(FLOW_MODAL_VIEW_HEADER, "true");
+		}
 		if (shouldRedirect(context)) {
 			context.sendFlowExecutionRedirect();
 		} else {

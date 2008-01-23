@@ -25,7 +25,12 @@
 			<action method="findHotels" bean="mainActions" />
 		</render-actions>
 		<transition on="selectHotel" to="displayHotel"/>
-		<transition on="changeSearch" to="displayMain"/>
+		<transition on="changeSearch" to="editSearchPopup"/>
+	</view-state>
+	
+	<view-state id="editSearchPopup" view="main.xhtml">
+		<attribute name="modal" value="true" type="java.lang.Boolean"/>
+		<transition on="findHotels" to="findHotels" />
 	</view-state>
 	
 	<view-state id="displayHotel" view="hotelDetails.xhtml">

@@ -1,9 +1,9 @@
-SpringFaces.DojoGenericFieldAdvisor = function(config){
+SpringUI.DojoValidatingFieldAdvisor = function(config){
 			
 	dojo.mixin(this, config);
 };
 		
-SpringFaces.DojoGenericFieldAdvisor.prototype = {
+SpringUI.DojoValidatingFieldAdvisor.prototype = {
 			
 	targetElId : "",
 	decoratorType : "",
@@ -29,11 +29,13 @@ SpringFaces.DojoGenericFieldAdvisor.prototype = {
 	}			
 };
 
-SpringFaces.DojoAjaxEventAdvisor = function(config){
+SpringUI.ValidatingFieldAdvisor = SpringUI.DojoValidatingFieldAdvisor;
+
+SpringUI.DojoRemoteEventAdvisor = function(config){
 	dojo.mixin(this, config);
 };
 
-SpringFaces.DojoAjaxEventAdvisor.prototype = {
+SpringUI.DojoRemoteEventAdvisor.prototype = {
 	
 	event : "",
 	targetId : "",
@@ -53,14 +55,24 @@ SpringFaces.DojoAjaxEventAdvisor.prototype = {
 		dojo.disconnect(this.connection);
 	},
 	
-	submit : function(){
-		SpringFaces.AjaxHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
+	submit : function(event){
+		if (this.sourceId == ""){
+			this.sourceId = this.targetId;
+		}
+		if(this.formId == ""){
+			SpringUI.RemotingHandler.getResource(this.sourceId, this.processIds, this.renderIds);
+		} else {
+			SpringUI.RemotingHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
+		}
+		dojo.stopEvent(event);
 	}
 };
 
-SpringFaces.DojoAjaxHandler = function(){};
+SpringUI.RemoteEventAdvisor = SpringUI.DojoRemoteEventAdvisor;
 
-SpringFaces.DojoAjaxHandler.prototype = {
+SpringUI.DojoRemotingHandler = function(){};
+
+SpringUI.DojoRemotingHandler.prototype = {
 	
 	submitForm : function(/*String */ sourceId, /*String*/formId, /*String*/ processIds, /*String*/renderIds, /*Array*/ params) {
 		var content = new Object();
@@ -70,9 +82,9 @@ SpringFaces.DojoAjaxHandler.prototype = {
 	
 	    if (sourceComponent != null){
 	    	if(sourceComponent.value) {
-	    		content[sourceId] = sourceComponent.value;
+	    		content[sourceComponent.name] = sourceComponent.value;
 	    	} else {
-	    		content[sourceId] = sourceId;
+	    		content[sourceComponent.name] = sourceId;
 	    	}
 	    }
 	    
@@ -101,25 +113,31 @@ SpringFaces.DojoAjaxHandler.prototype = {
 
 	},
 	
+	getResource: function(/*String */ sourceId, /*String*/ processIds, /*String*/renderIds) {
+		var content = new Object();
+		var sourceComponent = dojo.byId(sourceId);
+		content['processIds'] = processIds; 
+		content['renderIds'] = renderIds;
+		content['ajaxSource'] = sourceId;
+		
+		dojo.xhrGet({
+			
+			url: sourceComponent.href,
+			
+			content: content,
+			
+			handleAs: "text",
+			
+			headers: {"Accept" : "text/html;type=ajax"},
+			
+			load: this.handleResponse,
+			
+			error: this.handleError
+		});
+	},
+	
 	handleResponse: function(response, ioArgs) {
 		//alert("handling the response");
-		
-		//First check if this response should redirect
-		var redirectURL = ioArgs.xhr.getResponseHeader('Flow-Redirect-URL');
-		var modalViewHeader = ioArgs.xhr.getResponseHeader('Flow-Modal-View');
-		var modalView = dojo.isString(modalViewHeader) && modalViewHeader.length > 0;
-		
-		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
-			if (modalView) {
-				//render a popup with the new URL
-				SpringFaces.AjaxHandler.renderURLToModalDialog(redirectURL, ioArgs);
-				return response;
-			}
-			else {
-				window.location.pathname = redirectURL;
-				return response;
-			}
-		}
 		
 		//Extract and store all <script> elements from the response
 		var scriptPattern = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
@@ -148,15 +166,13 @@ SpringFaces.DojoAjaxHandler.prototype = {
 		var newNodes = tempContainer.addContent(response, "first").query("#ajaxResponse > *").orphan();
 		tempContainer.orphan();
 	
-		//For a modal view, just dump the new nodes into a modal dialog
-		if (modalView) {
-			SpringFaces.AjaxHandler.renderNodeListToModalDialog(newNodes);
-			return response;
-		}
-	
 		//Insert the new DOM nodes and update the Form's action URL
 		newNodes.forEach(function(item) {
-			if (item.id != null && item.id != "") {
+			if (item.id == 'flowExecutionUrl'){
+				dojo.query("form").forEach(function (formNode) {
+					formNode.action = item.firstChild.nodeValue;
+				});				
+			} else if (item.id != null && item.id != "") {
 			    var target = dojo.byId(item.id);
 				target.parentNode.replaceChild(item, target);
 			}
@@ -174,34 +190,16 @@ SpringFaces.DojoAjaxHandler.prototype = {
 		//alert("handling an error");
 		console.error("HTTP status code: ", ioArgs.xhr.status);
 		return response;
-	},
-	
-	renderURLToModalDialog: function(url, ioArgs) {
-		dojo.require("dijit.Dialog");
-		
-		url = url + "?"+dojo.objectToQuery(ioArgs.args.content);
-		
-		var dialog = new dijit.Dialog({href: url});
-		dialog.show();
-		
-	},
-	
-	renderNodeListToModalDialog: function(nodes) {
-		dojo.require("dijit.Dialog");
-		
-		var dialog = new dijit.Dialog({});
-		dialog.setContent(nodes);
-		dialog.show();
 	}
 };
 
-SpringFaces.AjaxHandler = new SpringFaces.DojoAjaxHandler();
+SpringUI.RemotingHandler = new SpringUI.DojoRemotingHandler();
 
-SpringFaces.DojoCommandLinkAdvisor = function(config){
+SpringUI.DojoSubmitLinkAdvisor = function(config){
 	dojo.mixin(this, config);
 };
 
-SpringFaces.DojoCommandLinkAdvisor.prototype = {
+SpringUI.DojoSubmitLinkAdvisor.prototype = {
 	
 	targetElId : "",
 	
@@ -221,10 +219,6 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
    		return this;
 	},
 	
-	validate : function() {
-		//No-op
-	},
-	
 	submitFormFromLink : function(/*String*/ formId, /*String*/ sourceId, /*Array of name,value params*/ params){
 		var addedNodes = [];
 		var formNode = dojo.byId(formId);
@@ -241,7 +235,7 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
 		});
 		
 		dojo.forEach(addedNodes, function(nodeToAdd){
-			dojo.addClass(nodeToAdd, "springFacesLinkInput");
+			dojo.addClass(nodeToAdd, "SpringUILinkInput");
 			dojo.place(nodeToAdd, formNode, "last");
 		});		
 		
@@ -253,4 +247,6 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
 	}
 };
 
-dojo.addOnLoad(SpringFaces.applyAdvisors);
+SpringUI.SubmitLinkAdvisor = SpringUI.DojoSubmitLinkAdvisor;
+
+dojo.addOnLoad(SpringUI.applyAdvisors);

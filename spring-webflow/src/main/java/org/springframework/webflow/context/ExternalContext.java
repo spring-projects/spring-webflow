@@ -35,6 +35,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Jeremy Grelle
  */
 public interface ExternalContext {
 
@@ -204,5 +205,13 @@ public interface ExternalContext {
 	 * @see #sendExternalRedirect(String)
 	 */
 	public boolean isResponseCommitted();
+
+	/**
+	 * Returns true if the current request is an Ajax request, determined by the value of the http accept header.
+	 * @return true if the current request is an Ajax request
+	 */
+	public boolean isAjaxRequest();
+
+	public void setResponseHeader(String name, String value);
 
 }

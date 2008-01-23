@@ -17,6 +17,7 @@ package org.springframework.webflow.test;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
@@ -72,6 +73,10 @@ public class MockExternalContext implements ExternalContext {
 	private String pausedFlowExecutionKeyResult;
 
 	private FlowException exceptionResult;
+
+	private boolean ajaxRequest;
+
+	private Map responseHeaders = new HashMap();
 
 	/**
 	 * Creates a mock external context with an empty request parameter map. Allows for bean style usage.
@@ -301,5 +306,21 @@ public class MockExternalContext implements ExternalContext {
 
 	public FlowException getExceptionResult() {
 		return exceptionResult;
+	}
+
+	public boolean isAjaxRequest() {
+		return ajaxRequest;
+	}
+
+	public void setAjaxRequest(boolean ajaxRequest) {
+		this.ajaxRequest = ajaxRequest;
+	}
+
+	public void setResponseHeader(String name, String value) {
+		this.responseHeaders.put(name, value);
+	}
+
+	public String getResponseHeader(String name) {
+		return (String) responseHeaders.get(name);
 	}
 }

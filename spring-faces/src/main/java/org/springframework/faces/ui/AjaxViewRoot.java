@@ -35,6 +35,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	protected static final String FORM_RENDERED = "formRendered";
 
+	protected static final String PROCESS_ALL = "*";
+
 	private List events = new ArrayList();
 
 	private String[] processIds;
@@ -150,8 +152,12 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	private void processRequestParams(FacesContext context) {
 
 		String processIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(PROCESS_IDS_PARAM);
-		processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
-		processIds = removeNestedChildren(context, processIds);
+		if (StringUtils.hasText(processIdsParam) && processIdsParam.contains("*")) {
+			processIds = new String[] { context.getViewRoot().getClientId(context) };
+		} else {
+			processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
+			processIds = removeNestedChildren(context, processIds);
+		}
 
 		String renderIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(RENDER_IDS_PARAM);
 		renderIds = StringUtils.delimitedListToStringArray(renderIdsParam, ",", " ");

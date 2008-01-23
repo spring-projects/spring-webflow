@@ -59,7 +59,7 @@ public class JsfUtils {
 	}
 
 	public static boolean isAsynchronousFlowRequest() {
-		if (isFlowRequest() && RequestContextHolder.getRequestContext().getRequestParameters().contains("ajaxSource")) {
+		if (isFlowRequest() && RequestContextHolder.getRequestContext().getExternalContext().isAjaxRequest()) {
 			return true;
 		} else {
 			return false;

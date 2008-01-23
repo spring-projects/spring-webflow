@@ -118,7 +118,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		if (JsfUtils.isAsynchronousFlowRequest()) {
+		if (context.getExternalContext().isAjaxRequest()) {
 			return new JsfView(new AjaxViewRoot(root), lifecycle, context);
 		} else {
 			return new JsfView(root, lifecycle, context);

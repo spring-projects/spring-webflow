@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.context.AbstractFlowRequestInfo;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
@@ -49,11 +50,21 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Jeremy Grelle
  */
 public class ServletExternalContext implements ExternalContext {
 
 	/** The default encoding scheme: UTF-8 */
 	private static final String DEFAULT_ENCODING_SCHEME = "UTF-8";
+
+	/** The accept header value that signifies an Ajax request */
+	private static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
+
+	/** Alternate request paramater to indicate an ajax request for cases when control of the header is not available */
+	private static final String AJAX_SOURCE_PARAM = "ajaxSource";
+
+	/** The response header to be set on an Ajax redirect */
+	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
 
 	/**
 	 * The context.
@@ -412,7 +423,11 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	private void sendRedirect(String targetUrl) throws IOException {
-		response.sendRedirect(response.encodeRedirectURL(targetUrl));
+		if (isAjaxRequest()) {
+			setResponseHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+		} else {
+			response.sendRedirect(response.encodeRedirectURL(targetUrl));
+		}
 	}
 
 	public String toString() {
@@ -446,7 +461,7 @@ public class ServletExternalContext implements ExternalContext {
 		public void issueRedirect() throws IOException {
 			FlowExecutionRequestInfo requestInfo = (FlowExecutionRequestInfo) getRequestInfo();
 			String targetUrl = buildFlowExecutionUrl(requestInfo, true);
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
+			sendRedirect(targetUrl);
 		}
 	}
 
@@ -458,7 +473,21 @@ public class ServletExternalContext implements ExternalContext {
 		public void issueRedirect() throws IOException {
 			FlowDefinitionRequestInfo requestInfo = (FlowDefinitionRequestInfo) getRequestInfo();
 			String targetUrl = buildFlowDefinitionUrl(requestInfo);
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
+			sendRedirect(targetUrl);
 		}
+	}
+
+	public boolean isAjaxRequest() {
+		String acceptHeader = request.getHeader("Accept");
+		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
+		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void setResponseHeader(String name, String value) {
+		response.setHeader(name, value);
 	}
 }
