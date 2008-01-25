@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
  * {@link MethodInvoker method invoker attempt}.
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class MethodSignature {
 
@@ -38,11 +39,16 @@ public class MethodSignature {
 	private Parameters parameters;
 
 	/**
+	 * The desired result type of the method invocation
+	 */
+	private Class desiredResultType;
+
+	/**
 	 * Creates a method signature with no parameters.
 	 * @param methodName the name of the method
 	 */
 	public MethodSignature(String methodName) {
-		this(methodName, Parameters.NONE);
+		this(methodName, Parameters.NONE, null);
 	}
 
 	/**
@@ -51,19 +57,21 @@ public class MethodSignature {
 	 * @param parameter the method parameter
 	 */
 	public MethodSignature(String methodName, Parameter parameter) {
-		this(methodName, new Parameters(parameter));
+		this(methodName, new Parameters(parameter), null);
 	}
 
 	/**
 	 * Creates a method signature with a list of parameters.
 	 * @param methodName the name of the method
 	 * @param parameters the method parameters
+	 * @param desiredResultType the desired result type of the method invocation
 	 */
-	public MethodSignature(String methodName, Parameters parameters) {
+	public MethodSignature(String methodName, Parameters parameters, Class desiredResultType) {
 		Assert.notNull(methodName, "The method name is required");
 		Assert.notNull(parameters, "The parameters are required");
 		this.methodName = methodName;
 		this.parameters = parameters;
+		this.desiredResultType = desiredResultType;
 	}
 
 	/**
@@ -78,6 +86,14 @@ public class MethodSignature {
 	 */
 	public Parameters getParameters() {
 		return parameters;
+	}
+
+	/**
+	 * Returns the desired result type of the method invocation
+	 * @return the desired result type
+	 */
+	public Class getDesiredResultType() {
+		return desiredResultType;
 	}
 
 	public boolean equals(Object obj) {

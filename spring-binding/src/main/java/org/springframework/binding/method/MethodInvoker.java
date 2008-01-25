@@ -26,17 +26,18 @@ import org.springframework.core.style.StylerUtils;
 import org.springframework.util.CachingMapDecorator;
 
 /**
- * A helper for invoking typed methods on abritrary objects, with support for argument value type conversion from values
- * retrieved from a argument attribute source.
+ * A helper for invoking typed methods on arbitrary objects, with support for argument value type conversion from values
+ * retrieved from an argument attribute source, and conversion of the result to a desired type.
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class MethodInvoker {
 
 	private static final Log logger = LogFactory.getLog(MethodInvoker.class);
 
 	/**
-	 * Conversion service for converting arguments to the neccessary type if required.
+	 * Conversion service for converting arguments to the necessary type if required.
 	 */
 	private ConversionService conversionService = new DefaultConversionService();
 
@@ -90,7 +91,7 @@ public class MethodInvoker {
 						+ StylerUtils.style(arguments) + " on bean [" + bean + "]");
 
 			}
-			Object returnValue = method.invoke(bean, arguments);
+			Object returnValue = applyTypeConversion(method.invoke(bean, arguments), signature.getDesiredResultType());
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoked method with signature [" + key + "] returned value [" + returnValue + "]");
 			}
@@ -103,16 +104,16 @@ public class MethodInvoker {
 	}
 
 	/**
-	 * Apply type conversion on the event parameter if neccessary
+	 * Apply type conversion on the supplied value
 	 * 
-	 * @param parameterValue the raw argument value
-	 * @param targetType the target type for the matching method argument
-	 * @return the converted method argument
+	 * @param value the raw value to be converted
+	 * @param targetType the target type for the conversion
+	 * @return the converted result
 	 */
-	protected Object applyTypeConversion(Object parameterValue, Class targetType) {
-		if (parameterValue == null || targetType == null) {
-			return parameterValue;
+	protected Object applyTypeConversion(Object value, Class targetType) {
+		if (value == null || targetType == null) {
+			return value;
 		}
-		return conversionService.getConversionExecutor(parameterValue.getClass(), targetType).execute(parameterValue);
+		return conversionService.getConversionExecutor(value.getClass(), targetType).execute(value);
 	}
 }
