@@ -1012,8 +1012,8 @@ parameter type, a type conversion will be attempted.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The name of the attribute that will expose the return value of the target bean-action method.
-Used in conjunction with the 'scope' attribute.
+An expression used to expose the return value of the target bean-action method, such as "#{flowScope.myResult}".
+Can be a simple literal when used in conjunction with the 'scope' attribute.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1032,6 +1032,16 @@ The available scope types are:
 </ol>
 <br>  
 If not specified the default scope type is used ('request' by default).
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="result-type" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The desired method result type.  Optional.  If specified and the method return value is not of the 
+desired result type, a type conversion will be attempted.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>

@@ -147,6 +147,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private static final String METHOD_RESULT_ELEMENT = "method-result";
 
+	private static final String RESULT_TYPE_ATTRIBUTE = "result-type";
+
 	private static final String EVALUATE_ACTION_ELEMENT = "evaluate-action";
 
 	private static final String SET_ELEMENT = "set";
@@ -754,7 +756,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		String beanId = element.getAttribute(BEAN_ATTRIBUTE);
 		String methodName = element.getAttribute(METHOD_ATTRIBUTE);
 		Parameters parameters = parseMethodParameters(element);
-		MethodSignature methodSignature = new MethodSignature(methodName, parameters);
+		Class desiredResultType = parseMethodResultType(element);
+		MethodSignature methodSignature = new MethodSignature(methodName, parameters, desiredResultType);
 		ActionResultExposer resultExposer = parseMethodResultExposer(element);
 		return getLocalContext().getBeanInvokingActionFactory().createBeanInvokingAction(beanId,
 				getLocalContext().getBeanFactory(), methodSignature, resultExposer,
@@ -781,6 +784,17 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			parameters.add(new Parameter(type, name));
 		}
 		return parameters;
+	}
+
+	private Class parseMethodResultType(Element element) {
+		Element resultElement = DomUtils.getChildElementByTagName(element, METHOD_RESULT_ELEMENT);
+		Class type = null;
+		if (resultElement != null) {
+			if (resultElement.hasAttribute(RESULT_TYPE_ATTRIBUTE)) {
+				type = (Class) fromStringTo(Class.class).execute(resultElement.getAttribute(RESULT_TYPE_ATTRIBUTE));
+			}
+		}
+		return type;
 	}
 
 	private ActionResultExposer parseMethodResultExposer(Element element) {
