@@ -1,6 +1,7 @@
 package org.springframework.faces.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.DataModel;
@@ -18,11 +19,18 @@ public class SerializableListDataModel extends DataModel implements Serializable
 
 	private List data;
 
+	public SerializableListDataModel() {
+		this(new ArrayList());
+	}
+
 	/**
 	 * Adapt the list to a data model;
 	 * @param list the list
 	 */
 	public SerializableListDataModel(List list) {
+		if (list == null) {
+			list = new ArrayList();
+		}
 		setWrappedData(list);
 	}
 
@@ -65,7 +73,9 @@ public class SerializableListDataModel extends DataModel implements Serializable
 	}
 
 	public void setWrappedData(Object data) {
-		Assert.notNull(data, "A non-null List is required for " + getClass());
+		if (data == null) {
+			data = new ArrayList();
+		}
 		Assert.isInstanceOf(List.class, data, "The data object for " + getClass() + " must be a List");
 		this.data = (List) data;
 		int newRowIndex = 0;
