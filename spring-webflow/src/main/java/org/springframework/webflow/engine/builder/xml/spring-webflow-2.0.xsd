@@ -1036,7 +1036,7 @@ If not specified the default scope type is used ('request' by default).
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="result-type" type="xsd:string">
+			<xsd:attribute name="type" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[

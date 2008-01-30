@@ -147,8 +147,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private static final String METHOD_RESULT_ELEMENT = "method-result";
 
-	private static final String RESULT_TYPE_ATTRIBUTE = "result-type";
-
 	private static final String EVALUATE_ACTION_ELEMENT = "evaluate-action";
 
 	private static final String SET_ELEMENT = "set";
@@ -790,8 +788,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element resultElement = DomUtils.getChildElementByTagName(element, METHOD_RESULT_ELEMENT);
 		Class type = null;
 		if (resultElement != null) {
-			if (resultElement.hasAttribute(RESULT_TYPE_ATTRIBUTE)) {
-				type = (Class) fromStringTo(Class.class).execute(resultElement.getAttribute(RESULT_TYPE_ATTRIBUTE));
+			if (resultElement.hasAttribute(TYPE_ATTRIBUTE)) {
+				type = (Class) fromStringTo(Class.class).execute(resultElement.getAttribute(TYPE_ATTRIBUTE));
 			}
 		}
 		return type;
