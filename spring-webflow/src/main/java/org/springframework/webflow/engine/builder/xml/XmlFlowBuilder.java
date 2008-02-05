@@ -805,8 +805,17 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private ActionResultExposer parseActionResultExposer(Element element) {
-		String resultName = element.getAttribute(NAME_ATTRIBUTE);
-		return new ActionResultExposer(resultName, parseScope(element, ScopeType.REQUEST));
+		String nameExpressionString = element.getAttribute(NAME_ATTRIBUTE);
+		ScopeType scope = parseScope(element, null);
+		Expression nameExpression;
+		if (scope != null) {
+			nameExpression = getExpressionParser().parseExpression(nameExpressionString,
+					new ParserContextImpl().eval(MutableAttributeMap.class));
+		} else {
+			nameExpression = getExpressionParser().parseExpression(nameExpressionString,
+					new ParserContextImpl().eval(RequestContext.class));
+		}
+		return new ActionResultExposer(nameExpression, scope);
 	}
 
 	private AnnotatedAction parseAnnotatedEvaluateAction(Element element) {
@@ -839,12 +848,20 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action parseSetAction(Element element) {
+		ScopeType scope = parseScope(element, null);
 		String attributeExpressionString = element.getAttribute(ATTRIBUTE_ATTRIBUTE);
-		Expression attributeExpression = getExpressionParser().parseExpression(attributeExpressionString,
-				new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression attributeExpression;
+		if (scope != null) {
+			attributeExpression = getExpressionParser().parseExpression(attributeExpressionString,
+					new ParserContextImpl().eval(MutableAttributeMap.class));
+		} else {
+			attributeExpression = getExpressionParser().parseExpression(attributeExpressionString,
+					new ParserContextImpl().eval(RequestContext.class));
+		}
+
 		Expression valueExpression = getExpressionParser().parseExpression(element.getAttribute(VALUE_ATTRIBUTE),
 				new ParserContextImpl().eval(RequestContext.class));
-		return new SetAction(attributeExpression, parseScope(element, ScopeType.REQUEST), valueExpression);
+		return new SetAction(attributeExpression, scope, valueExpression);
 	}
 
 	private ScopeType parseScope(Element element, ScopeType defaultValue) {

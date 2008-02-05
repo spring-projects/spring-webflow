@@ -1018,7 +1018,7 @@ Can be a simple literal when used in conjunction with the 'scope' attribute.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="scope" type="scopeType" default="default">
+			<xsd:attribute name="scope" type="scopeType" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1031,7 +1031,7 @@ The available scope types are:
 <li>conversation - The result goes out of scope when the overall conversation governing this flow execution ends.
 </ol>
 <br>  
-If not specified the default scope type is used ('request' by default).
+If not specified then the name attribute must be a fully resolvable expression such as "#{flowScope.myResult}".
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1116,12 +1116,13 @@ An action with a name is often referred to as a "named action".
 					<xsd:documentation>
 						<![CDATA[
 The name of the attribute that will expose the result of expression evaluation.
-Used in conjunction with the 'scope' attribute.
+It may be used in conjunction with the 'scope' attribute, or else it may be a fully resolvable 
+expression such as #{flowScope.foo}.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="scope" type="scopeType" default="default">
+			<xsd:attribute name="scope" type="scopeType" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1134,7 +1135,7 @@ The available scope types are:
 <li>conversation - The result goes out of scope when the overall conversation governing this flow execution ends.
 </ol>
 <br>	  
-If not specified the default scope type is used ('request' by default).	  
+If not specified the name attribute must be a fully resolvable expression such as "#{flowScope.foo}".	 
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1159,12 +1160,13 @@ An attribute describing this bean action.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The name of the attribute to set.  May be a nested path using Java beans notation (e.g. bean.property).
+The name of the attribute to set.  May be a nested path using Java beans notation (e.g. bean.property) to set a property
+on a bean in the specified scope, or it may be a fully resolvable expression such as "#{flowScope.foo}" instead.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="scope" type="scopeType" default="default">
+			<xsd:attribute name="scope" type="scopeType" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1176,7 +1178,7 @@ The scope the attribute value will be stored in.  The available scope types are:
 <li>conversation - The attribute goes out of scope when the overall conversation governing this flow execution ends.
 </ol>
 <br>
-If not specified the default scope type is used ('request' by default).	  
+If not specified the attribute to set must be a fully resolvable expression such as "#{flowScope.foo}".	  
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>

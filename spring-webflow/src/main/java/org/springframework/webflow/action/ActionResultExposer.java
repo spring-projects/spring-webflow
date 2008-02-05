@@ -17,8 +17,10 @@ package org.springframework.webflow.action;
 
 import java.io.Serializable;
 
+import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
@@ -36,7 +38,7 @@ public class ActionResultExposer implements Serializable {
 	/**
 	 * The name of the attribute to index the return value with.
 	 */
-	private String resultName;
+	private Expression nameExpression;
 
 	/**
 	 * The scope of the attribute indexing the return value.
@@ -45,21 +47,20 @@ public class ActionResultExposer implements Serializable {
 
 	/**
 	 * Creates a action result exposer
-	 * @param resultName the result name
+	 * @param nameExpression the result name
 	 * @param resultScope the result scope
 	 */
-	public ActionResultExposer(String resultName, ScopeType resultScope) {
-		Assert.notNull(resultName, "The result name is required");
-		Assert.notNull(resultScope, "The result scope is required");
-		this.resultName = resultName;
+	public ActionResultExposer(Expression nameExpression, ScopeType resultScope) {
+		Assert.notNull(nameExpression, "The result name is required");
+		this.nameExpression = nameExpression;
 		this.resultScope = resultScope;
 	}
 
 	/**
 	 * Returns name of the attribute to index the return value with.
 	 */
-	public String getResultName() {
-		return resultName;
+	public Expression getNameExpression() {
+		return nameExpression;
 	}
 
 	/**
@@ -75,10 +76,16 @@ public class ActionResultExposer implements Serializable {
 	 * @param context the request context
 	 */
 	public void exposeResult(Object result, RequestContext context) {
-		resultScope.getScope(context).put(resultName, result);
+		if (resultScope != null) {
+			MutableAttributeMap scopeMap = resultScope.getScope(context);
+			nameExpression.setValue(scopeMap, result);
+		} else {
+			nameExpression.setValue(context, result);
+		}
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("resultName", resultName).append("resultScope", resultScope).toString();
+		return new ToStringCreator(this).append("resultName", nameExpression).append("resultScope", resultScope)
+				.toString();
 	}
 }

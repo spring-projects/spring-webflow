@@ -52,7 +52,6 @@ public class SetAction extends AbstractAction {
 	 */
 	public SetAction(Expression attributeExpression, ScopeType scope, Expression valueExpression) {
 		Assert.notNull(attributeExpression, "The attribute expression is required");
-		Assert.notNull(scope, "The scope type is required");
 		Assert.notNull(valueExpression, "The value expression is required");
 		this.attributeExpression = attributeExpression;
 		this.scope = scope;
@@ -61,8 +60,12 @@ public class SetAction extends AbstractAction {
 
 	protected Event doExecute(RequestContext context) throws Exception {
 		Object value = valueExpression.getValue(context);
-		MutableAttributeMap scopeMap = scope.getScope(context);
-		attributeExpression.setValue(scopeMap, value);
+		if (scope != null) {
+			MutableAttributeMap scopeMap = scope.getScope(context);
+			attributeExpression.setValue(scopeMap, value);
+		} else {
+			attributeExpression.setValue(context, value);
+		}
 		return success();
 	}
 }

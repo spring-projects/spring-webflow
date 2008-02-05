@@ -31,7 +31,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  */
-class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
+public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 
 	/**
 	 * Creates a webflow-specific ognl expression parser.
