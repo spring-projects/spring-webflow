@@ -46,5 +46,6 @@
 	<classpathentry kind="lib" path="lib/test/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/test/serp.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
