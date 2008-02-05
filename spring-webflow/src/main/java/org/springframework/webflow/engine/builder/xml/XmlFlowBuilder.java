@@ -155,6 +155,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private static final String EVALUATION_RESULT_ELEMENT = "evaluation-result";
 
+	private static final String RESULT_ATTRIBUTE = "result";
+
 	private static final String DEFAULT_VALUE = "default";
 
 	private static final String VIEW_STATE_ELEMENT = "view-state";
@@ -835,6 +837,11 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element resultElement = DomUtils.getChildElementByTagName(element, EVALUATION_RESULT_ELEMENT);
 		if (resultElement != null) {
 			return parseActionResultExposer(resultElement);
+		} else if (element.hasAttribute(RESULT_ATTRIBUTE)) {
+			String resultExpressionString = element.getAttribute(RESULT_ATTRIBUTE);
+			Expression resultExpression = getExpressionParser().parseExpression(resultExpressionString,
+					new ParserContextImpl().eval(RequestContext.class));
+			return new ActionResultExposer(resultExpression, null, parseResultType(element));
 		} else {
 			return null;
 		}

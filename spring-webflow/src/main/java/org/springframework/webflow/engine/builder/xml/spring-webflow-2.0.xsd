@@ -1065,7 +1065,8 @@ An attribute describing this bean action.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-The rule for how the evaluated expression result should be exposed to the flow.
+The rule for how the evaluated expression result should be exposed to the flow. Use of this sub-element is deprecated in 
+favor of the newer "result" and "type" attributes and will be removed in a future release.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -1076,6 +1077,25 @@ The rule for how the evaluated expression result should be exposed to the flow.
 					<xsd:documentation>
 						<![CDATA[
 The expression to evaluate when this action is invoked.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="result" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+A fully resolvable expression such as #{flowScope.foo} or #{bean.bar} for exposing the result of the evaluation.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The desired evaluation result type.  Optional.  If specified and the method return value is not of the 
+desired result type, a type conversion will be attempted.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1110,6 +1130,14 @@ An action with a name is often referred to as a "named action".
 	</xsd:element>
 
 	<xsd:element name="evaluation-result">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+This element is deprecated in favor of the newer "result" and "type" attributes on the <evaluate-action> and will
+be removed in a future release.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexType>
 			<xsd:attribute name="name" type="xsd:string" use="required">
 				<xsd:annotation>
