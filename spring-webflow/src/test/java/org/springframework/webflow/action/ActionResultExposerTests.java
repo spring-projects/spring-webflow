@@ -23,7 +23,7 @@ public class ActionResultExposerTests extends TestCase {
 		Expression nameExpression = parser.parseExpression("#{foo}", new ParserContextImpl()
 				.eval(MutableAttributeMap.class));
 
-		ActionResultExposer exposer = new ActionResultExposer(nameExpression, ScopeType.REQUEST);
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, ScopeType.REQUEST, null);
 
 		RequestContext context = new MockRequestContext();
 
@@ -31,6 +31,24 @@ public class ActionResultExposerTests extends TestCase {
 
 		assertTrue("Key 'foo' not found in request scope", context.getRequestScope().contains("foo"));
 		assertEquals("Value stored at key 'foo' is incorrect", valueToSet, context.getRequestScope().get("foo"));
+	}
+
+	public void testExposeResult_ScopeSpecifiedWithTypeConversion() {
+
+		String valueToSet = "true";
+
+		ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
+		Expression nameExpression = parser.parseExpression("#{foo}", new ParserContextImpl()
+				.eval(MutableAttributeMap.class));
+
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, ScopeType.REQUEST, Boolean.class);
+
+		RequestContext context = new MockRequestContext();
+
+		exposer.exposeResult(valueToSet, context);
+
+		assertTrue("Key 'foo' not found in request scope", context.getRequestScope().contains("foo"));
+		assertEquals("Value stored at key 'foo' is incorrect", Boolean.TRUE, context.getRequestScope().get("foo"));
 	}
 
 	public void testExposeResult_ScopeExpression() {
@@ -41,7 +59,7 @@ public class ActionResultExposerTests extends TestCase {
 		Expression nameExpression = parser.parseExpression("#{requestScope.foo}", new ParserContextImpl()
 				.eval(RequestContext.class));
 
-		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null);
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, null);
 
 		RequestContext context = new MockRequestContext();
 
@@ -49,6 +67,24 @@ public class ActionResultExposerTests extends TestCase {
 
 		assertTrue("Key 'foo' not found in request scope", context.getRequestScope().contains("foo"));
 		assertEquals("Value stored at key 'foo' is incorrect", valueToSet, context.getRequestScope().get("foo"));
+	}
+
+	public void testExposeResult_ScopeExpressionWithTypeConversion() {
+
+		String valueToSet = "true";
+
+		ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
+		Expression nameExpression = parser.parseExpression("#{requestScope.foo}", new ParserContextImpl()
+				.eval(RequestContext.class));
+
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, Boolean.class);
+
+		RequestContext context = new MockRequestContext();
+
+		exposer.exposeResult(valueToSet, context);
+
+		assertTrue("Key 'foo' not found in request scope", context.getRequestScope().contains("foo"));
+		assertEquals("Value stored at key 'foo' is incorrect", Boolean.TRUE, context.getRequestScope().get("foo"));
 	}
 
 	public void testExposeResult_SearchExpression() {
@@ -59,7 +95,7 @@ public class ActionResultExposerTests extends TestCase {
 		Expression nameExpression = parser.parseExpression("#{bean.foo}", new ParserContextImpl()
 				.eval(RequestContext.class));
 
-		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null);
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, null);
 
 		RequestContext context = new MockRequestContext();
 		TestBean bean = new TestBean();
@@ -78,7 +114,7 @@ public class ActionResultExposerTests extends TestCase {
 		Expression nameExpression = parser.parseExpression("${foo}", new ParserContextImpl()
 				.eval(MutableAttributeMap.class));
 
-		ActionResultExposer exposer = new ActionResultExposer(nameExpression, ScopeType.REQUEST);
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, ScopeType.REQUEST, null);
 
 		RequestContext context = new MockRequestContext();
 
@@ -96,7 +132,7 @@ public class ActionResultExposerTests extends TestCase {
 		Expression nameExpression = parser.parseExpression("${requestScope.foo}", new ParserContextImpl()
 				.eval(RequestContext.class));
 
-		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null);
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, null);
 
 		RequestContext context = new MockRequestContext();
 

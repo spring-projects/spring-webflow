@@ -31,6 +31,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @see ResultEventFactorySelector
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class EvaluateAction extends AbstractAction {
 

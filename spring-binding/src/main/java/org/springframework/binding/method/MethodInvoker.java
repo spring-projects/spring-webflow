@@ -91,7 +91,7 @@ public class MethodInvoker {
 						+ StylerUtils.style(arguments) + " on bean [" + bean + "]");
 
 			}
-			Object returnValue = applyTypeConversion(method.invoke(bean, arguments), signature.getDesiredResultType());
+			Object returnValue = method.invoke(bean, arguments);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoked method with signature [" + key + "] returned value [" + returnValue + "]");
 			}

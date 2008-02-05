@@ -17,6 +17,8 @@ package org.springframework.webflow.action;
 
 import java.io.Serializable;
 
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -46,14 +48,26 @@ public class ActionResultExposer implements Serializable {
 	private ScopeType resultScope;
 
 	/**
+	 * The desired type to expose the result as
+	 */
+	private Class desiredResultType;
+
+	/**
+	 * The {@link ConversionService} to use to convert the result to the desired type
+	 */
+	private ConversionService conversionService = new DefaultConversionService();
+
+	/**
 	 * Creates a action result exposer
 	 * @param nameExpression the result name
 	 * @param resultScope the result scope
+	 * @param desiredResultType the desired result type
 	 */
-	public ActionResultExposer(Expression nameExpression, ScopeType resultScope) {
+	public ActionResultExposer(Expression nameExpression, ScopeType resultScope, Class desiredResultType) {
 		Assert.notNull(nameExpression, "The result name is required");
 		this.nameExpression = nameExpression;
 		this.resultScope = resultScope;
+		this.desiredResultType = desiredResultType;
 	}
 
 	/**
@@ -71,6 +85,13 @@ public class ActionResultExposer implements Serializable {
 	}
 
 	/**
+	 * Returns the desired result type to be exposed
+	 */
+	public Class getDesiredResultType() {
+		return desiredResultType;
+	}
+
+	/**
 	 * Expose given bean method return value in given flow execution request context.
 	 * @param result the return value
 	 * @param context the request context
@@ -78,14 +99,28 @@ public class ActionResultExposer implements Serializable {
 	public void exposeResult(Object result, RequestContext context) {
 		if (resultScope != null) {
 			MutableAttributeMap scopeMap = resultScope.getScope(context);
-			nameExpression.setValue(scopeMap, result);
+			nameExpression.setValue(scopeMap, applyTypeConversion(result, desiredResultType));
 		} else {
-			nameExpression.setValue(context, result);
+			nameExpression.setValue(context, applyTypeConversion(result, desiredResultType));
 		}
 	}
 
 	public String toString() {
 		return new ToStringCreator(this).append("resultName", nameExpression).append("resultScope", resultScope)
 				.toString();
+	}
+
+	/**
+	 * Apply type conversion on the supplied value
+	 * 
+	 * @param value the raw value to be converted
+	 * @param targetType the target type for the conversion
+	 * @return the converted result
+	 */
+	protected Object applyTypeConversion(Object value, Class targetType) {
+		if (value == null || targetType == null) {
+			return value;
+		}
+		return conversionService.getConversionExecutor(value.getClass(), targetType).execute(value);
 	}
 }

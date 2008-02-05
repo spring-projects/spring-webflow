@@ -56,21 +56,15 @@ public class MethodInvokerTests extends TestCase {
 		Parameters parameters = new Parameters();
 		Bean bean = new Bean();
 		parameters.add(new Parameter(Bean.class, new StaticExpression(bean)));
-		MethodSignature method = new MethodSignature("testBeanArg", parameters, null);
+		MethodSignature method = new MethodSignature("testBeanArg", parameters);
 		assertSame(bean, methodInvoker.invoke(method, new TestObject(), null));
 	}
 
 	public void testPrimitiveArg() {
 		Parameters parameters = new Parameters();
 		parameters.add(new Parameter(Boolean.class, new StaticExpression(Boolean.TRUE)));
-		MethodSignature method = new MethodSignature("testPrimitiveArg", parameters, null);
+		MethodSignature method = new MethodSignature("testPrimitiveArg", parameters);
 		assertEquals(Boolean.TRUE, methodInvoker.invoke(method, new TestObject(), null));
-	}
-
-	public void testResultConversion() {
-		Parameters parameters = Parameters.NONE;
-		MethodSignature method = new MethodSignature("testConvertResult", parameters, Class.class);
-		assertEquals(Object.class, methodInvoker.invoke(method, new TestObject(), null));
 	}
 
 	private static class TestObject {
@@ -81,10 +75,6 @@ public class MethodInvokerTests extends TestCase {
 
 		public Object testBeanArg(Bean bean) {
 			return bean;
-		}
-
-		public String testConvertResult() {
-			return "java.lang.Object";
 		}
 
 		public boolean testPrimitiveArg(boolean primitive) {

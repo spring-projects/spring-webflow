@@ -754,8 +754,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		String beanId = element.getAttribute(BEAN_ATTRIBUTE);
 		String methodName = element.getAttribute(METHOD_ATTRIBUTE);
 		Parameters parameters = parseMethodParameters(element);
-		Class desiredResultType = parseMethodResultType(element);
-		MethodSignature methodSignature = new MethodSignature(methodName, parameters, desiredResultType);
+		MethodSignature methodSignature = new MethodSignature(methodName, parameters);
 		ActionResultExposer resultExposer = parseMethodResultExposer(element);
 		return getLocalContext().getBeanInvokingActionFactory().createBeanInvokingAction(beanId,
 				getLocalContext().getBeanFactory(), methodSignature, resultExposer,
@@ -784,8 +783,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		return parameters;
 	}
 
-	private Class parseMethodResultType(Element element) {
-		Element resultElement = DomUtils.getChildElementByTagName(element, METHOD_RESULT_ELEMENT);
+	private Class parseResultType(Element resultElement) {
 		Class type = null;
 		if (resultElement != null) {
 			if (resultElement.hasAttribute(TYPE_ATTRIBUTE)) {
@@ -815,7 +813,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			nameExpression = getExpressionParser().parseExpression(nameExpressionString,
 					new ParserContextImpl().eval(RequestContext.class));
 		}
-		return new ActionResultExposer(nameExpression, scope);
+		return new ActionResultExposer(nameExpression, scope, parseResultType(element));
 	}
 
 	private AnnotatedAction parseAnnotatedEvaluateAction(Element element) {

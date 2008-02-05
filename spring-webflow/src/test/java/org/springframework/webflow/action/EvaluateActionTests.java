@@ -31,6 +31,8 @@ import org.springframework.webflow.test.MockRequestContext;
 
 /**
  * Unit tests for {@link EvaluateAction}.
+ * 
+ * @author Jeremy Grelle
  */
 public class EvaluateActionTests extends TestCase {
 
@@ -54,7 +56,7 @@ public class EvaluateActionTests extends TestCase {
 				.eval(MutableAttributeMap.class));
 
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), new ActionResultExposer(nameExpression,
-				ScopeType.FLOW));
+				ScopeType.FLOW, null));
 		Event result = action.execute(context);
 		assertEquals("bar", result.getId());
 		assertEquals("bar", context.getFlowScope().get("baz"));
@@ -68,10 +70,22 @@ public class EvaluateActionTests extends TestCase {
 		TestBean bean = new TestBean();
 
 		EvaluateAction action = new EvaluateAction(new StaticExpression(bean), new ActionResultExposer(nameExpression,
-				ScopeType.FLOW));
+				ScopeType.FLOW, null));
 		Event result = action.execute(context);
 		assertEquals("success", result.getId());
 		assertEquals(bean, context.getFlowScope().get("baz"));
+	}
+
+	public void testStringResult_ScopeSpecifiedWithTypeConversion() throws Exception {
+		ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
+		Expression nameExpression = parser.parseExpression("#{baz}", new ParserContextImpl()
+				.eval(MutableAttributeMap.class));
+
+		EvaluateAction action = new EvaluateAction(new StaticExpression("true"), new ActionResultExposer(
+				nameExpression, ScopeType.FLOW, Boolean.class));
+		Event result = action.execute(context);
+		assertEquals("true", result.getId());
+		assertEquals(Boolean.TRUE, context.getFlowScope().get("baz"));
 	}
 
 	public void testEvaluateExpressionResult_ScopeExpression() throws Exception {
@@ -80,7 +94,7 @@ public class EvaluateActionTests extends TestCase {
 				.eval(MutableAttributeMap.class));
 
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), new ActionResultExposer(nameExpression,
-				null));
+				null, null));
 		Event result = action.execute(context);
 		assertEquals("bar", result.getId());
 		assertEquals("bar", context.getFlowScope().get("baz"));
@@ -95,7 +109,7 @@ public class EvaluateActionTests extends TestCase {
 		context.getFlowScope().put("baz", bean);
 
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), new ActionResultExposer(nameExpression,
-				null));
+				null, null));
 		Event result = action.execute(context);
 		assertEquals("bar", result.getId());
 		assertEquals("bar", bean.getFoo());

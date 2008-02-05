@@ -1140,6 +1140,16 @@ If not specified the name attribute must be a fully resolvable expression such a
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The desired evaluation result type.  Optional.  If specified and the method return value is not of the 
+desired result type, a type conversion will be attempted.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 
