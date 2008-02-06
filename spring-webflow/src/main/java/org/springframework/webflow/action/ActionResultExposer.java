@@ -123,4 +123,8 @@ public class ActionResultExposer implements Serializable {
 		}
 		return conversionService.getConversionExecutor(value.getClass(), targetType).execute(value);
 	}
+
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
 }
