@@ -815,7 +815,9 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			nameExpression = getExpressionParser().parseExpression(nameExpressionString,
 					new ParserContextImpl().eval(RequestContext.class));
 		}
-		return new ActionResultExposer(nameExpression, scope, parseResultType(element));
+		ActionResultExposer exposer = new ActionResultExposer(nameExpression, scope, parseResultType(element));
+		exposer.setConversionService(getLocalContext().getConversionService());
+		return exposer;
 	}
 
 	private AnnotatedAction parseAnnotatedEvaluateAction(Element element) {
@@ -841,7 +843,10 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			String resultExpressionString = element.getAttribute(RESULT_ATTRIBUTE);
 			Expression resultExpression = getExpressionParser().parseExpression(resultExpressionString,
 					new ParserContextImpl().eval(RequestContext.class));
-			return new ActionResultExposer(resultExpression, null, parseResultType(element));
+
+			ActionResultExposer exposer = new ActionResultExposer(resultExpression, null, parseResultType(element));
+			exposer.setConversionService(getLocalContext().getConversionService());
+			return exposer;
 		} else {
 			return null;
 		}
