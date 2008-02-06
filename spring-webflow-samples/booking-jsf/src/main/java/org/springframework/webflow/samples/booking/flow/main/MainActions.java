@@ -1,14 +1,9 @@
 package org.springframework.webflow.samples.booking.flow.main;
 
-import java.util.List;
-
-import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.samples.booking.app.Booking;
 import org.springframework.webflow.samples.booking.app.BookingService;
-import org.springframework.webflow.samples.booking.app.Hotel;
 import org.springframework.webflow.samples.booking.app.User;
 
 /**
@@ -37,31 +32,6 @@ public class MainActions extends MultiAction {
     public Event initCurrentUser(RequestContext context) {
 	User user = new User("springer", "springrocks", "Springer");
 	context.getConversationScope().put("user", user);
-	return success();
-    }
-
-    /**
-     * Find all active bookings made by the current user.
-     * @param context the current flow execution request context
-     * @return success
-     */
-    public Event findCurrentUserBookings(RequestContext context) {
-	User user = (User) context.getConversationScope().get("user");
-	List<Booking> bookings = bookingService.findBookings(user.getUsername());
-	context.getFlowScope().put("bookings", new OneSelectionTrackingListDataModel(bookings));
-	return success();
-    }
-
-    /**
-     * Find all hotels that meet the current search criteria in flow scope.
-     * @param context the current flow execution request context
-     * @return success
-     */
-    public Event findHotels(RequestContext context) {
-	SearchCriteria search = (SearchCriteria) context.getFlowScope().get("searchCriteria");
-	List<Hotel> hotels = bookingService
-		.findHotels(search.getSearchString(), search.getPageSize(), search.getPage());
-	context.getFlowScope().put("hotels", new OneSelectionTrackingListDataModel(hotels));
 	return success();
     }
 }
