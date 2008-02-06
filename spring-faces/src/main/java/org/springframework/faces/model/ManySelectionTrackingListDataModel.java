@@ -8,7 +8,7 @@ import javax.faces.model.DataModel;
 import org.springframework.util.Assert;
 
 /**
- * A {@link DataModel} implementation that tracks the currently selected rows, allowing any number of rows to be 
+ * A {@link DataModel} implementation that tracks the currently selected rows, allowing any number of rows to be
  * selected at one time.
  * 
  * @author Jeremy Grelle
@@ -16,10 +16,6 @@ import org.springframework.util.Assert;
 public class ManySelectionTrackingListDataModel extends SerializableListDataModel implements SelectionAware {
 
 	private List selections = new ArrayList();
-
-	public ManySelectionTrackingListDataModel(List list) {
-		super(list);
-	}
 
 	public List getSelections() {
 		return selections;

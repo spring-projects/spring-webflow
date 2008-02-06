@@ -16,10 +16,6 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 
 	private List selections = new ArrayList();
 
-	public OneSelectionTrackingListDataModel(List list) {
-		super(list);
-	}
-
 	public List getSelections() {
 		return selections;
 	}

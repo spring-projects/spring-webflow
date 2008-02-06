@@ -1,9 +1,10 @@
 package org.springframework.faces.model.converter;
 
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.CompositeConversionService;
 import org.springframework.binding.convert.support.DefaultConversionService;
-import org.springframework.binding.convert.support.GenericConversionService;
+import org.springframework.faces.model.ManySelectionTrackingListDataModel;
+import org.springframework.faces.model.OneSelectionTrackingListDataModel;
+import org.springframework.faces.model.SerializableListDataModel;
 
 /**
  * Convenient {@link ConversionService} implementation for JSF that composes JSF-specific converters with the standard
@@ -11,29 +12,18 @@ import org.springframework.binding.convert.support.GenericConversionService;
  * 
  * @author Jeremy Grelle
  */
-public class FacesConversionService extends CompositeConversionService {
-
-	private static ConversionService[] conversionServices = new ConversionService[] { new DefaultConversionService(),
-			new InternalFacesConversionService() };
+public class FacesConversionService extends DefaultConversionService {
 
 	public FacesConversionService() {
-		super(conversionServices);
+		super();
+		addFacesConverters();
 	}
 
-	private static class InternalFacesConversionService extends GenericConversionService {
+	protected void addFacesConverters() {
+		addConverter(new DataModelConverter());
 
-		/**
-		 * Creates a new default conversion service, installing the default converters.
-		 */
-		public InternalFacesConversionService() {
-			addFacesConverters();
-		}
-
-		/**
-		 * Add all default converters to the conversion service.
-		 */
-		protected void addFacesConverters() {
-			addConverter(new DataModelConverter());
-		}
+		addAlias("listDataModel", SerializableListDataModel.class);
+		addAlias("selectOneDataModel", OneSelectionTrackingListDataModel.class);
+		addAlias("selectManyDataModel", ManySelectionTrackingListDataModel.class);
 	}
 }
