@@ -3,6 +3,7 @@ package org.springframework.faces.expression;
 import javax.el.CompositeELResolver;
 import javax.faces.el.PropertyResolver;
 
+import org.springframework.binding.expression.el.MapAdaptableELResolver;
 import org.springframework.webflow.core.expression.el.RequestContextELResolver;
 import org.springframework.webflow.core.expression.el.ScopeSearchingELResolver;
 
@@ -19,6 +20,7 @@ public class CompositeFlowPropertyResolver extends ELDelegatingPropertyResolver 
 	static {
 		composite.add(new RequestContextELResolver());
 		composite.add(new ScopeSearchingELResolver());
+		composite.add(new MapAdaptableELResolver());
 	}
 
 	public CompositeFlowPropertyResolver(PropertyResolver nextResolver) {

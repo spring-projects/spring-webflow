@@ -3,6 +3,7 @@ package org.springframework.faces.expression;
 import javax.el.CompositeELResolver;
 import javax.faces.el.VariableResolver;
 
+import org.springframework.binding.expression.el.MapAdaptableELResolver;
 import org.springframework.webflow.core.expression.el.RequestContextELResolver;
 import org.springframework.webflow.core.expression.el.ScopeSearchingELResolver;
 
@@ -18,7 +19,9 @@ public class CompositeFlowVariableResolver extends ELDelegatingVariableResolver 
 
 	static {
 		composite.add(new RequestContextELResolver());
+		composite.add(new ImplicitFlowVariableELResolver());
 		composite.add(new ScopeSearchingELResolver());
+		composite.add(new MapAdaptableELResolver());
 	}
 
 	public CompositeFlowVariableResolver(VariableResolver nextResolver) {
