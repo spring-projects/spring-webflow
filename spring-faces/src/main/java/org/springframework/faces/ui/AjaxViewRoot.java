@@ -13,6 +13,7 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
@@ -31,8 +32,6 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	public static final String PROCESS_IDS_PARAM = "processIds";
 
-	public static final String RENDER_IDS_PARAM = "renderIds";
-
 	protected static final String FORM_RENDERED = "formRendered";
 
 	protected static final String PROCESS_ALL = "*";
@@ -43,8 +42,14 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private String[] renderIds;
 
+	private static final String RENDER_IDS_EXPRESSION = "#{renderIds}";
+
+	private final ValueBinding renderIdsExpr;
+
 	public AjaxViewRoot(UIViewRoot original) {
 		super(original);
+		renderIdsExpr = FacesContext.getCurrentInstance().getApplication().createValueBinding(RENDER_IDS_EXPRESSION);
+		original.setId(createUniqueId());
 		swapChildren(original, this);
 		setId(original.getId() + "_ajax");
 	}
@@ -63,9 +68,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	 * @see org.springframework.faces.webflow.DelegatingViewRoot#encodeAll(javax.faces.context.FacesContext)
 	 */
 	public void encodeAll(FacesContext context) throws IOException {
-		processRequestParams(context);
-		for (int i = 0; i < renderIds.length; i++) {
-			String renderId = renderIds[i];
+		for (int i = 0; i < getRenderIds().length; i++) {
+			String renderId = getRenderIds()[i];
 			ContextCallback callback = new ContextCallback() {
 				public void invokeContextCallback(FacesContext context, UIComponent target) {
 					try {
@@ -111,8 +115,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	}
 
 	private String findContainingFormId(FacesContext context) {
-		for (int i = 0; i < renderIds.length; i++) {
-			UIComponent component = context.getViewRoot().findComponent(renderIds[i]);
+		for (int i = 0; i < getRenderIds().length; i++) {
+			UIComponent component = context.getViewRoot().findComponent(getRenderIds()[i]);
 			while (!(component instanceof UIViewRoot)) {
 				component = component.getParent();
 				if (component instanceof UIForm) {
@@ -136,9 +140,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processDecodes(javax.faces.context.FacesContext)
 	 */
 	public void processDecodes(FacesContext context) {
-		processRequestParams(context);
-		for (int i = 0; i < processIds.length; i++) {
-			String processId = processIds[i];
+		for (int i = 0; i < getProcessIds().length; i++) {
+			String processId = getProcessIds()[i];
 			ContextCallback callback = new ContextCallback() {
 				public void invokeContextCallback(FacesContext context, UIComponent target) {
 					target.processDecodes(context);
@@ -147,21 +150,6 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			invokeOnComponent(context, processId, callback);
 		}
 		broadCastEvents(context, PhaseId.APPLY_REQUEST_VALUES);
-	}
-
-	private void processRequestParams(FacesContext context) {
-
-		String processIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(PROCESS_IDS_PARAM);
-		if (StringUtils.hasText(processIdsParam) && processIdsParam.contains("*")) {
-			processIds = new String[] { context.getViewRoot().getClientId(context) };
-		} else {
-			processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
-			processIds = removeNestedChildren(context, processIds);
-		}
-
-		String renderIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(RENDER_IDS_PARAM);
-		renderIds = StringUtils.delimitedListToStringArray(renderIdsParam, ",", " ");
-		renderIds = removeNestedChildren(context, renderIds);
 	}
 
 	private String[] removeNestedChildren(FacesContext context, String[] ids) {
@@ -189,8 +177,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processUpdates(javax.faces.context.FacesContext)
 	 */
 	public void processUpdates(FacesContext context) {
-		for (int i = 0; i < processIds.length; i++) {
-			String processId = processIds[i];
+		for (int i = 0; i < getProcessIds().length; i++) {
+			String processId = getProcessIds()[i];
 			ContextCallback callback = new ContextCallback() {
 				public void invokeContextCallback(FacesContext context, UIComponent target) {
 					target.processUpdates(context);
@@ -206,8 +194,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processValidators(javax.faces.context.FacesContext)
 	 */
 	public void processValidators(FacesContext context) {
-		for (int i = 0; i < processIds.length; i++) {
-			String processId = processIds[i];
+		for (int i = 0; i < getProcessIds().length; i++) {
+			String processId = getProcessIds()[i];
 			ContextCallback callback = new ContextCallback() {
 				public void invokeContextCallback(FacesContext context, UIComponent target) {
 					target.processValidators(context);
@@ -261,10 +249,32 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	}
 
 	protected String[] getProcessIds() {
+		if (processIds == null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			String processIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(
+					PROCESS_IDS_PARAM);
+			if (StringUtils.hasText(processIdsParam) && processIdsParam.contains(PROCESS_ALL)) {
+				processIds = new String[] { getOriginalViewRoot().getClientId(context) };
+			} else {
+				processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
+				processIds = removeNestedChildren(context, processIds);
+			}
+		}
 		return processIds;
 	}
 
 	protected String[] getRenderIds() {
+		if (renderIds == null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			String renderIdsValue = (String) renderIdsExpr.getValue(context);
+			if (StringUtils.hasText(renderIdsValue)) {
+				renderIds = StringUtils.delimitedListToStringArray(renderIdsValue, ",", " ");
+				renderIds = removeNestedChildren(context, getRenderIds());
+			} else {
+				renderIds = getProcessIds();
+			}
+		}
 		return renderIds;
 	}
 

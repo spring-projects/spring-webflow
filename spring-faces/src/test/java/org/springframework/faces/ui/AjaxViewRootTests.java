@@ -1,14 +1,19 @@
 package org.springframework.faces.ui;
 
-import javax.faces.component.UICommand;
+import java.io.IOException;
+import java.io.StringWriter;
+
 import javax.faces.component.UIForm;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.render.RenderKitFactory;
 
-import org.springframework.faces.webflow.JSFMockHelper;
-
 import junit.framework.TestCase;
+
+import org.apache.shale.test.mock.MockResponseWriter;
+import org.springframework.faces.webflow.JSFMockHelper;
+import org.springframework.faces.webflow.MockViewHandler;
+import org.springframework.util.StringUtils;
 
 public class AjaxViewRootTests extends TestCase {
 
@@ -16,8 +21,12 @@ public class AjaxViewRootTests extends TestCase {
 
 	UIViewRoot testTree = new UIViewRoot();
 
+	private StringWriter output = new StringWriter();
+
 	protected void setUp() throws Exception {
 		jsf.setUp();
+		jsf.facesContext().getApplication().setViewHandler(new MockViewHandler());
+		jsf.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
 
 		UIForm form = new UIForm();
 		form.setId("foo");
@@ -25,7 +34,7 @@ public class AjaxViewRootTests extends TestCase {
 		UIPanel panel = new UIPanel();
 		panel.setId("bar");
 		form.getChildren().add(panel);
-		UICommand command = new UICommand();
+		ProgressiveCommandButton command = new ProgressiveCommandButton();
 		command.setId("baz");
 		panel.getChildren().add(command);
 
@@ -40,14 +49,37 @@ public class AjaxViewRootTests extends TestCase {
 
 	public void testProcessDecodes() {
 		jsf.externalContext().getRequestParameterMap().put("processIds", "foo:bar, foo:baz");
-		jsf.externalContext().getRequestParameterMap().put("renderIds", "foo:bar, foo:baz");
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 
 		ajaxRoot.processDecodes(jsf.facesContext());
 
 		assertEquals(1, ajaxRoot.getProcessIds().length);
-		assertEquals(1, ajaxRoot.getRenderIds().length);
 	}
 
+	public void testEncodeAll_NoRenderIds() throws IOException {
+		jsf.externalContext().getRequestParameterMap().put("processIds", "foo:bar, foo:baz");
+
+		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
+
+		ajaxRoot.encodeAll(jsf.facesContext());
+
+		assertEquals(1, ajaxRoot.getProcessIds().length);
+		assertEquals(1, ajaxRoot.getRenderIds().length);
+		assertEquals(StringUtils.arrayToCommaDelimitedString(ajaxRoot.getProcessIds()), StringUtils
+				.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
+	}
+
+	public void testEncodeAll_RenderIdsExpr() throws IOException {
+
+		jsf.externalContext().getRequestMap().put("renderIds", "foo:bar,foo:baz");
+
+		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
+
+		ajaxRoot.encodeAll(jsf.facesContext());
+
+		assertEquals(1, ajaxRoot.getRenderIds().length);
+
+		assertEquals("foo:bar", StringUtils.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
+	}
 }
