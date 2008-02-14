@@ -29,8 +29,8 @@
 		
 		<!-- JSF 1.2 dependencies -->
 		<!-- note that at this time we depend on MyFaces, not JSF-RI -->
-		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.0" conf="buildtime, jsf12->default" />
-		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.0" conf="buildtime, jsf12->default" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.2" conf="buildtime, jsf12->default" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.2" conf="buildtime, jsf12->default" />
     	<dependency org="commons-beanutils" name="commons-beanutils" rev="1.7.0" conf="buildtime, jsf12->default" >
 			<exclude module="commons-logging"/>
     	</dependency>
