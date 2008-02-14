@@ -45,14 +45,14 @@ public class SearchCriteria implements Serializable {
     /**
      * Increase the current page
      */
-    public void nextPageListener(ActionEvent event) {
+    public void nextPage() {
 	page++;
     }
 
     /**
      * Decrease the current page
      */
-    public void prevPageListener(ActionEvent event) {
+    public void prevPage() {
 	page--;
     }
 

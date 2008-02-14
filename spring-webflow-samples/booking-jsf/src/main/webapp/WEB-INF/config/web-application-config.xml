@@ -37,6 +37,9 @@
 		<property name="viewFactoryCreator">
 			<bean class="org.springframework.faces.webflow.JsfViewFactoryCreator"/>
 		</property>
+		<property name="conversionService">
+			<bean class="org.springframework.faces.model.converter.FacesConversionService"/>
+		</property>
 	</bean>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->

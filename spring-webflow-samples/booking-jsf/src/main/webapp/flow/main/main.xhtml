@@ -21,12 +21,12 @@
 							<div class="searchGroup">
 								<div class="searchField">
 								<sf:clientTextValidator promptMessage="Search hotels by name, address, city or zip.">
-									<h:inputText id="searchString" value="#{searchCriteria.searchString}" style="width: 165px; height: 15px;"/>
+									<h:inputText id="searchString" value="#{flowScope.searchCriteria.searchString}" style="width: 165px; height: 15px;"/>
 								</sf:clientTextValidator>
 								</div>
 								<div class="searchSize">
 								   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-								   	<h:selectOneMenu value="#{searchCriteria.pageSize}" id="pageSize">
+								   	<h:selectOneMenu value="#{flowScope.searchCriteria.pageSize}" id="pageSize">
 										<f:selectItem itemLabel="5" itemValue="5"/>
 									    <f:selectItem itemLabel="10" itemValue="10"/>
 									    <f:selectItem itemLabel="20" itemValue="20"/>

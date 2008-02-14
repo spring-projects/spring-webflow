@@ -6,12 +6,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
 	<style type="text/css" media="screen">
-        @import url("/swf-booking-jsf/spring/resources/css-framework/css/tools.css");
-        @import url("/swf-booking-jsf/spring/resources/css-framework/css/typo.css");
-        @import url("/swf-booking-jsf/spring/resources/css-framework/css/forms.css");
-        @import url("/swf-booking-jsf/spring/resources/css-framework/css/layout-navtop-localleft.css");        
-        @import url("/swf-booking-jsf/spring/resources/css-framework/css/layout.css");
-        @import url("/swf-booking-jsf/spring/resources/css/booking.css");
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css-framework/css/tools.css");
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css-framework/css/typo.css");
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css-framework/css/forms.css");
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css-framework/css/layout-navtop-localleft.css");        
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css-framework/css/layout.css");
+        @import url("${facesContext.externalContext.requestContextPath}/spring/resources/css/booking.css");
     </style>
 	<ui:insert name="headIncludes"/>
 </head>
@@ -26,16 +26,16 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<img src="/swf-booking-jsf/images/header.jpg" alt="foo bar"/>
+			<img src="${facesContext.externalContext.requestContextPath}/images/header.jpg" alt="foo bar"/>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
 		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-jsf/images/diplomat.jpg" />
+				<img src="${facesContext.externalContext.requestContextPath}/images/diplomat.jpg" />
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="/swf-booking-jsf/images/tse.gif" />
+				<img src="${facesContext.externalContext.requestContextPath}/images/tse.gif" />
 			</a>
 			<p>
 				The features illustrated in this sample are just the beginning.
@@ -49,7 +49,7 @@
 		</div>
 	</div>
 	<div id="footer" class="clearfix spring">
-		<a href="http://www.springframework.org"><img src="/swf-booking-jsf/images/powered-by-spring.png" /></a>
+		<a href="http://www.springframework.org"><img src="${facesContext.externalContext.requestContextPath}/images/powered-by-spring.png" /></a>
 	</div>
 </div>
 
