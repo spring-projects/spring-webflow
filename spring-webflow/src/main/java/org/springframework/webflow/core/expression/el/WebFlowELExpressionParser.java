@@ -29,6 +29,10 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 		putContextFactory(MutableAttributeMap.class, new AttributeMapELContextFactory());
 	}
 
+	public WebFlowELExpressionParser() {
+		this(ExpressionFactory.newInstance());
+	}
+
 	private static class RequestContextELContextFactory implements ELContextFactory {
 		public ELContext getELContext(Object target) {
 			List customResolvers = new ArrayList();
