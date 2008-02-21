@@ -32,7 +32,14 @@ public class LegacyJSFELExpressionParser extends ELExpressionParser {
 	}
 
 	public LegacyJSFELExpressionParser() {
-		this(ExpressionFactory.newInstance());
+		this(getDefaultExpressionFactory());
+	}
+
+	private static ExpressionFactory getDefaultExpressionFactory() {
+		if (!System.getProperties().containsKey("javax.el.ExpressionFactory")) {
+			System.setProperty("javax.el.ExpressionFactory", "org.jboss.el.ExpressionFactoryImpl");
+		}
+		return ExpressionFactory.newInstance();
 	}
 
 	private static class RequestContextELContextFactory implements ELContextFactory {
