@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +23,10 @@ import org.springframework.webflow.executor.FlowExecutor;
 
 public class FlowHandlerAdapter extends WebApplicationObjectSupport implements HandlerAdapter {
 
+	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
+
 	private FlowExecutor flowExecutor;
+
 	private FlowUrlHandler urlHandler;
 
 	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
@@ -79,6 +84,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	protected ModelAndView defaultHandleFlowOutcome(String flowId, String outcome, AttributeMap endedOutput,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// by default, just start the flow over passing the output as input
+		if (logger.isDebugEnabled()) {
+			logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+		}
 		response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, endedOutput, request));
 		return null;
 	}
@@ -86,6 +94,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	protected ModelAndView defaultHandleFlowException(String flowId, FlowException e, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+			}
 			// by default, attempt to restart the flow
 			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
 			return null;
@@ -101,9 +112,15 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		if (result.paused()) {
 			if (context.flowExecutionRedirectRequested()) {
 				String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending flow execution redirect to " + url);
+				}
 				response.sendRedirect(url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
+				}
 				response.sendRedirect(context.getExternalRedirectUrl());
 				return null;
 			} else {
@@ -113,9 +130,16 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			if (context.flowDefinitionRedirectRequested()) {
 				String flowId = context.getFlowRedirectFlowId();
 				AttributeMap input = context.getFlowRedirectFlowInput();
-				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, input, request));
+				String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending flow definition to " + url);
+				}
+				response.sendRedirect(url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
+				}
 				response.sendRedirect(context.getExternalRedirectUrl());
 				return null;
 			} else {

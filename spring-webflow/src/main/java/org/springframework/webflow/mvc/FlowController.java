@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
@@ -25,6 +27,8 @@ import org.springframework.webflow.executor.FlowExecutor;
  * Flow to run in "embedded" mode as a Controller within a DispatcherServlet.
  */
 public class FlowController extends AbstractController {
+
+	private static final Log logger = LogFactory.getLog(FlowController.class);
 
 	private FlowExecutor flowExecutor;
 
@@ -92,6 +96,9 @@ public class FlowController extends AbstractController {
 	protected ModelAndView defaultHandleFlowOutcome(String flowId, String outcome, AttributeMap endedOutput,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// by default, just start the flow over passing the output as input
+		if (logger.isDebugEnabled()) {
+			logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+		}
 		response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, endedOutput, request));
 		return null;
 	}
@@ -100,6 +107,9 @@ public class FlowController extends AbstractController {
 			HttpServletResponse response) throws IOException {
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
 			// by default, attempt to restart the flow
+			if (logger.isDebugEnabled()) {
+				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+			}
 			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
 			return null;
 		} else {
@@ -114,9 +124,15 @@ public class FlowController extends AbstractController {
 		if (result.paused()) {
 			if (context.flowExecutionRedirectRequested()) {
 				String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending flow execution redirect to " + url);
+				}
 				response.sendRedirect(url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
+				}
 				response.sendRedirect(context.getExternalRedirectUrl());
 				return null;
 			} else {
@@ -127,9 +143,16 @@ public class FlowController extends AbstractController {
 			if (context.flowDefinitionRedirectRequested()) {
 				String flowId = context.getFlowRedirectFlowId();
 				AttributeMap input = context.getFlowRedirectFlowInput();
-				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, input, request));
+				String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending flow definition to " + url);
+				}
+				response.sendRedirect(url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
+				}
 				response.sendRedirect(context.getExternalRedirectUrl());
 				return null;
 			} else {

@@ -172,6 +172,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public void sendFlowExecutionRedirect() {
+		externalContext.requestFlowExecutionRedirect();
 	}
 
 	public void setCurrentState(State state) {
