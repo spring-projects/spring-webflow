@@ -34,16 +34,12 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 
 	private Lifecycle lifecycle;
 
-	public JsfViewFactoryCreator() {
-		lifecycle = createFlowFacesLifecycle();
-	}
-
 	public Action createFinalResponseAction(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfFinalResponseAction(new JsfViewFactory(viewName, resourceLoader, lifecycle));
+		return new JsfFinalResponseAction(new JsfViewFactory(viewName, resourceLoader, getLifecycle()));
 	}
 
 	public ViewFactory createViewFactory(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfViewFactory(viewName, resourceLoader, lifecycle);
+		return new JsfViewFactory(viewName, resourceLoader, getLifecycle());
 	}
 
 	private Lifecycle createFlowFacesLifecycle() {
@@ -51,6 +47,13 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 		return new FlowLifecycle(defaultLifecycle);
+	}
+
+	private Lifecycle getLifecycle() {
+		if (lifecycle == null) {
+			lifecycle = createFlowFacesLifecycle();
+		}
+		return lifecycle;
 	}
 
 }

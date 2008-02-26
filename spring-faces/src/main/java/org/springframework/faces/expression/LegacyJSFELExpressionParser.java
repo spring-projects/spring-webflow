@@ -15,6 +15,7 @@ import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.expression.el.RequestContextELResolver;
 import org.springframework.webflow.core.expression.el.ScopeSearchingELResolver;
+import org.springframework.webflow.core.expression.el.SpringBeanWebFlowELResolver;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -46,6 +47,7 @@ public class LegacyJSFELExpressionParser extends ELExpressionParser {
 		public ELContext getELContext(Object target) {
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver());
+			customResolvers.add(new SpringBeanWebFlowELResolver());
 			customResolvers.add(new ScopeSearchingELResolver());
 			customResolvers.add(new LegacyJSFBeanResolver());
 			ELResolver resolver = new DefaultELResolver(target, customResolvers);
