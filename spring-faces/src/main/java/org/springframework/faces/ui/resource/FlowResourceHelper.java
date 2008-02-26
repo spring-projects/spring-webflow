@@ -113,8 +113,6 @@ public class FlowResourceHelper {
 			return;
 		}
 
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-
 		ResponseWriter writer = facesContext.getResponseWriter();
 
 		writer.startElement("script", null);
