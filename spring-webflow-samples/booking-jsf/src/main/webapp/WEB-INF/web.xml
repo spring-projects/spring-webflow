@@ -28,6 +28,18 @@
   		<param-name>facelets.BUILD_BEFORE_RESTORE</param-name>
   		<param-value>false</param-value>
   	</context-param>
+
+	<servlet>
+		<servlet-name>Resources Servlet</servlet-name>
+		<servlet-class>org.springframework.faces.ui.resource.ResourceServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+		
+	<!-- Map all *.spring requests to the Web Servlet for handling -->
+	<servlet-mapping>
+		<servlet-name>Resources Servlet</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
 	
 	<!-- Here so the JSF implementation can initialize, not used at runtime -->
 	<servlet>
@@ -50,7 +62,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 		
 	<!-- Map all *.spring requests to the Web Servlet for handling -->

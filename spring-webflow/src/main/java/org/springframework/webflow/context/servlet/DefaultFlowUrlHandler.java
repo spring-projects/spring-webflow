@@ -33,10 +33,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(request.getContextPath());
-		url.append(request.getServletPath());
-		url.append('/');
-		url.append(encode(flowId));
+		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, "execution", flowExecutionKey);
 		return url.toString();
@@ -44,8 +41,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(request.getContextPath());
-		url.append(request.getServletPath());
+		url.append(getFlowHandlerUri(request));
 		url.append('/');
 		url.append(encode(flowId));
 		if (input != null && !input.isEmpty()) {
@@ -82,6 +78,12 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalArgumentException("Cannot url encode " + value);
 		}
+	}
+
+	private String getFlowHandlerUri(HttpServletRequest request) {
+		String flowRequestUri = request.getRequestURI();
+		int lastSlash = flowRequestUri.lastIndexOf('/');
+		return flowRequestUri.substring(0, lastSlash);
 	}
 
 }

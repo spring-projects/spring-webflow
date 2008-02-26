@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 
@@ -34,6 +33,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
 		String url = urlHandler.createFlowDefinitionUrl("bookHotel", null, request);
 		assertEquals("/springtravel/app/bookHotel", url);
 	}
@@ -42,6 +42,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
 		String url = urlHandler.createFlowDefinitionUrl("bookHotel", CollectionUtils.EMPTY_ATTRIBUTE_MAP, request);
 		assertEquals("/springtravel/app/bookHotel", url);
 	}
@@ -50,6 +51,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
 		LocalAttributeMap input = new LocalAttributeMap(new LinkedHashMap());
 		input.put("foo", "bar");
 		input.put("bar", "needs encoding");
@@ -63,6 +65,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
 		String url = urlHandler.createFlowExecutionUrl("foo", "12345", request);
 		assertEquals("/springtravel/app/foo?execution=12345", url);
 	}
