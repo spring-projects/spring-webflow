@@ -36,6 +36,9 @@ public class FlowController extends AbstractController {
 
 	private Map flowHandlers = new HashMap();
 
+	/** The response header to be set on an Ajax redirect */
+	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
+
 	/**
 	 * @param flowExecutor the web flow executor service
 	 */
@@ -127,13 +130,13 @@ public class FlowController extends AbstractController {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow execution redirect to " + url);
 				}
-				response.sendRedirect(url);
+				sendRedirect(context, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				response.sendRedirect(context.getExternalRedirectUrl());
+				sendRedirect(context, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				// nothing to do: flow has handled the response
@@ -147,13 +150,13 @@ public class FlowController extends AbstractController {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow definition to " + url);
 				}
-				response.sendRedirect(url);
+				sendRedirect(context, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				response.sendRedirect(context.getExternalRedirectUrl());
+				sendRedirect(context, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				return handleFlowOutcome(result.getFlowId(), result.getEndedOutcome(), result.getEndedOutput(),
@@ -161,6 +164,15 @@ public class FlowController extends AbstractController {
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
+		}
+	}
+
+	private void sendRedirect(ServletExternalContext context, HttpServletResponse response, String targetUrl)
+			throws IOException {
+		if (context.isAjaxRequest()) {
+			context.setResponseHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+		} else {
+			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
 	}
 

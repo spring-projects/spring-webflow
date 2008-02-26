@@ -11,6 +11,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.expression.WebFlowOgnlExpressionParser;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -52,6 +53,7 @@ public class SetActionTests extends TestCase {
 		SetAction action = new SetAction(attributeExpression, scope, valueExpression);
 
 		RequestContext context = new MockRequestContext();
+		RequestContextHolder.setRequestContext(context);
 		action.execute(context);
 
 		assertTrue(context.getRequestScope().contains("foo"));
@@ -73,6 +75,7 @@ public class SetActionTests extends TestCase {
 		SetAction action = new SetAction(attributeExpression, scope, valueExpression);
 
 		RequestContext context = new MockRequestContext();
+		RequestContextHolder.setRequestContext(context);
 		TestBean bean = new TestBean();
 		context.getRequestScope().put("bean", bean);
 

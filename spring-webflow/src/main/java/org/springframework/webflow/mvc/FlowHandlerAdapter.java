@@ -29,6 +29,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private FlowUrlHandler urlHandler;
 
+	/** The response header to be set on an Ajax redirect */
+	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
+
 	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
 		this.urlHandler = new DefaultFlowUrlHandler();
@@ -115,13 +118,13 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow execution redirect to " + url);
 				}
-				response.sendRedirect(url);
+				sendRedirect(context, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				response.sendRedirect(context.getExternalRedirectUrl());
+				sendRedirect(context, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				return null;
@@ -134,13 +137,13 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow definition to " + url);
 				}
-				response.sendRedirect(url);
+				sendRedirect(context, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				response.sendRedirect(context.getExternalRedirectUrl());
+				sendRedirect(context, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				ModelAndView mv = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
@@ -150,6 +153,15 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
+		}
+	}
+
+	private void sendRedirect(ServletExternalContext context, HttpServletResponse response, String targetUrl)
+			throws IOException {
+		if (context.isAjaxRequest()) {
+			context.setResponseHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+		} else {
+			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
 	}
 

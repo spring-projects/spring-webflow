@@ -26,6 +26,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -39,6 +40,7 @@ public class EvaluateActionTests extends TestCase {
 	private MockRequestContext context = new MockRequestContext();
 
 	protected void setUp() throws Exception {
+		RequestContextHolder.setRequestContext(context);
 		context.getFlowScope().put("foo", "bar");
 		context.getFlowScope().put("bean", new TestBean());
 	}

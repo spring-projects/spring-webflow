@@ -322,7 +322,9 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	protected Flow createFlow() {
-		return parseFlow(getDocumentElement());
+		Flow flow = parseFlow(getDocumentElement());
+		flow.setLocalBeanFactory(getLocalContext().getBeanFactory());
+		return flow;
 	}
 
 	public void buildVariables() throws FlowBuilderException {

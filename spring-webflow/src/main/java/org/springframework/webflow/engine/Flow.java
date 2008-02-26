@@ -21,6 +21,10 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
 import org.springframework.core.style.StylerUtils;
@@ -99,8 +103,9 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Colin Sampaleanu
+ * @author Jeremy Grelle
  */
-public class Flow extends AnnotatedObject implements FlowDefinition {
+public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory {
 
 	/**
 	 * Logger, can be used in subclasses.
@@ -159,6 +164,11 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * The set of exception handlers for this flow.
 	 */
 	private FlowExecutionExceptionHandlerSet exceptionHandlerSet = new FlowExecutionExceptionHandlerSet();
+
+	/**
+	 * The local bean factory for this flow
+	 */
+	private BeanFactory localBeanFactory = new StaticListableBeanFactory();
 
 	/**
 	 * Construct a new flow definition with the given id. The id should be unique among all flows.
@@ -604,6 +614,46 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 						startActionList).append("exceptionHandlerSet", exceptionHandlerSet).append(
 						"globalTransitionSet", globalTransitionSet).append("endActionList", endActionList).append(
 						"outputMapper", outputMapper).toString();
+	}
+
+	public void setLocalBeanFactory(BeanFactory localBeanFactory) {
+		this.localBeanFactory = localBeanFactory;
+	}
+
+	public boolean containsBean(String name) {
+		return localBeanFactory.containsBean(name);
+	}
+
+	public String[] getAliases(String name) {
+		return localBeanFactory.getAliases(name);
+	}
+
+	public Object getBean(String name, Class requiredType) throws BeansException {
+		return localBeanFactory.getBean(name, requiredType);
+	}
+
+	public Object getBean(String name, Object[] args) throws BeansException {
+		return localBeanFactory.getBean(name, args);
+	}
+
+	public Object getBean(String name) throws BeansException {
+		return localBeanFactory.getBean(name);
+	}
+
+	public Class getType(String name) throws NoSuchBeanDefinitionException {
+		return localBeanFactory.getType(name);
+	}
+
+	public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
+		return localBeanFactory.isPrototype(name);
+	}
+
+	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+		return localBeanFactory.isSingleton(name);
+	}
+
+	public boolean isTypeMatch(String name, Class targetType) throws NoSuchBeanDefinitionException {
+		return localBeanFactory.isTypeMatch(name, targetType);
 	}
 
 }

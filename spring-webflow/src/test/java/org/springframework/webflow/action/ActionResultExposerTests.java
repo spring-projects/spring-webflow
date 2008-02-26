@@ -10,6 +10,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.expression.WebFlowOgnlExpressionParser;
 import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -62,6 +63,7 @@ public class ActionResultExposerTests extends TestCase {
 		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, null);
 
 		RequestContext context = new MockRequestContext();
+		RequestContextHolder.setRequestContext(context);
 
 		exposer.exposeResult(valueToSet, context);
 
@@ -80,6 +82,7 @@ public class ActionResultExposerTests extends TestCase {
 		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, Boolean.class);
 
 		RequestContext context = new MockRequestContext();
+		RequestContextHolder.setRequestContext(context);
 
 		exposer.exposeResult(valueToSet, context);
 
@@ -98,6 +101,7 @@ public class ActionResultExposerTests extends TestCase {
 		ActionResultExposer exposer = new ActionResultExposer(nameExpression, null, null);
 
 		RequestContext context = new MockRequestContext();
+		RequestContextHolder.setRequestContext(context);
 		TestBean bean = new TestBean();
 		context.getRequestScope().put("bean", bean);
 
