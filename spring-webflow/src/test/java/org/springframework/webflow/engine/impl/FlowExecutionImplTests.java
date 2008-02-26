@@ -36,8 +36,8 @@ import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
-import org.springframework.webflow.test.MockFlowExecutionKey;
 
 /**
  * General flow execution tests.
@@ -59,7 +59,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
 		MockExternalContext context = new MockExternalContext();
 		assertFalse(execution.hasStarted());
-		execution.start(context);
+		execution.start(null, context);
 		assertTrue(execution.hasStarted());
 		assertFalse(execution.isActive());
 		assertEquals(1, mockListener.getRequestsSubmittedCount());
@@ -91,7 +91,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setListeners(listeners);
 		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		assertTrue(execution.isActive());
 		assertEquals(1, mockListener.getPausedCount());
 	}
@@ -111,7 +111,7 @@ public class FlowExecutionImplTests extends TestCase {
 		MockExternalContext context = new MockExternalContext();
 		assertFalse(execution.hasStarted());
 		try {
-			execution.start(context);
+			execution.start(null, context);
 			fail("Should have failed");
 		} catch (FlowExecutionException e) {
 			assertEquals(flow.getId(), e.getFlowId());
@@ -131,7 +131,7 @@ public class FlowExecutionImplTests extends TestCase {
 		MockExternalContext context = new MockExternalContext();
 		assertFalse(execution.hasStarted());
 		try {
-			execution.start(context);
+			execution.start(null, context);
 			fail("Should have failed");
 		} catch (FlowExecutionException e) {
 			assertEquals(flow.getId(), e.getFlowId());
@@ -152,7 +152,7 @@ public class FlowExecutionImplTests extends TestCase {
 		MockExternalContext context = new MockExternalContext();
 		assertFalse(execution.hasStarted());
 		try {
-			execution.start(context);
+			execution.start(null, context);
 			fail("Should have failed");
 		} catch (FlowExecutionException ex) {
 			assertSame(e, ex);
@@ -165,9 +165,9 @@ public class FlowExecutionImplTests extends TestCase {
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
 		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		try {
-			execution.start(context);
+			execution.start(null, context);
 			fail("Should've failed");
 		} catch (IllegalStateException e) {
 
@@ -184,7 +184,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setListeners(listeners);
 		execution.setKeyFactory(new MockFlowExecutionKeyFactory());
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		context = new MockExternalContext();
 		execution.resume(context);
 		assertEquals(1, mockListener.getResumingCount());
@@ -204,7 +204,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
 		execution.setListeners(listeners);
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		context = new MockExternalContext();
 		try {
 			execution.resume(context);
@@ -221,7 +221,7 @@ public class FlowExecutionImplTests extends TestCase {
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
 		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		try {
 			execution.resume(context);
 			fail("Should've failed");
@@ -244,7 +244,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setListeners(listeners);
 		execution.setKeyFactory(new MockFlowExecutionKeyFactory());
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		context = new MockExternalContext();
 		try {
 			execution.resume(context);
@@ -270,7 +270,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setListeners(listeners);
 		execution.setKeyFactory(new MockFlowExecutionKeyFactory());
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		context = new MockExternalContext();
 		try {
 			execution.resume(context);
@@ -294,7 +294,7 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.setKeyFactory(new MockFlowExecutionKeyFactory());
 
 		MockExternalContext context = new MockExternalContext();
-		execution.start(context);
+		execution.start(null, context);
 		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
 
 		context = new MockExternalContext();
@@ -305,7 +305,7 @@ public class FlowExecutionImplTests extends TestCase {
 
 	private static class MockFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
 		public FlowExecutionKey getKey(FlowExecution execution) {
-			return new MockFlowExecutionKey();
+			return new GeneratedFlowExecutionKey();
 		}
 	}
 

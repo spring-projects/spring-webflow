@@ -43,7 +43,7 @@ public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 
 	public void testCreateContinuation() {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
-		flowExecution.start(new MockExternalContext());
+		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
 		FlowExecutionContinuation continuation = factory.createContinuation(flowExecution);
 		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) continuation.unmarshal();
@@ -58,7 +58,7 @@ public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 
 	public void testRestoreContinuation() {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
-		flowExecution.start(new MockExternalContext());
+		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
 		FlowExecutionContinuation continuation = factory.createContinuation(flowExecution);
 		byte[] bytes = continuation.toByteArray();

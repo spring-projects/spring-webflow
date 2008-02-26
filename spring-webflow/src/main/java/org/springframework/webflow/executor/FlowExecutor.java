@@ -16,6 +16,8 @@
 package org.springframework.webflow.executor;
 
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
  * The central facade and entry-point service interface into the Spring Web Flow system for <i>driving the executions of
@@ -23,15 +25,27 @@ import org.springframework.webflow.context.ExternalContext;
  * clients.
  * <p>
  * Implementations of this interface abstract away much of the internal complexity of the web flow execution subsystem,
- * which consists of launching and resuming managed flow executions from repositories.
+ * which consists of launching and resuming managed flow executions.
  * 
  * @author Keith Donald
  */
 public interface FlowExecutor {
 
 	/**
-	 * Execute the flow request initiated by the provided external context.
-	 * @param context the external context, representing a client environment calling into Spring Web Flow
+	 * Launch a new execution of the flow with the provided id.
+	 * @param flowId the flow definition identifier; should be unique among all top-level flow definitions (required).
+	 * @param input input to pass to the new execution on startup (optional)
+	 * @param context access to the calling environment (required)
 	 */
-	public void executeFlowRequest(ExternalContext context);
+	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
+			throws FlowException;
+
+	/**
+	 * Resume the flow execution with the provided execution key.
+	 * @param flowId the id of the flow definition
+	 * @param flowExecutionKey the key of a paused execution of the flow definition
+	 * @param context access to the calling environment
+	 */
+	public FlowExecutionResult resumeExecution(String flowExecutionKey, ExternalContext context) throws FlowException;
+
 }

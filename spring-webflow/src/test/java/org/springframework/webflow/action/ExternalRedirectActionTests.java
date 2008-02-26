@@ -1,9 +1,9 @@
 package org.springframework.webflow.action;
 
+import junit.framework.TestCase;
+
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.test.MockRequestContext;
-
-import junit.framework.TestCase;
 
 public class ExternalRedirectActionTests extends TestCase {
 	private ExternalRedirectAction action;
@@ -12,7 +12,7 @@ public class ExternalRedirectActionTests extends TestCase {
 		action = new ExternalRedirectAction(new StaticExpression("/wherever"));
 		MockRequestContext context = new MockRequestContext();
 		action.execute(context);
-		assertEquals("/wherever", context.getMockExternalContext().getExternalRedirectResult());
+		assertEquals("/wherever", context.getMockExternalContext().getExternalRedirectUrl());
 	}
 
 	public void testExecuteWithNullResourceUri() throws Exception {

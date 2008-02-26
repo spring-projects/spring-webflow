@@ -140,6 +140,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	private Serializable messagesMemento;
 
+	private transient Event outcome;
+
 	/**
 	 * Default constructor required for externalizable serialization. Should NOT be called programmatically.
 	 */
@@ -186,6 +188,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return !flowSessions.isEmpty();
 	}
 
+	public boolean hasEnded() {
+		return hasStarted() && !isActive();
+	}
+
+	public Event getOutcome() {
+		return outcome;
+	}
+
 	public FlowSession getActiveSession() {
 		if (!isActive()) {
 			if (started) {
@@ -211,7 +221,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	// methods implementing FlowExecution
 
-	public void start(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
+	public void start(MutableAttributeMap input, ExternalContext externalContext) throws FlowExecutionException,
+			IllegalStateException {
 		Assert.state(!started, "This flow has already been started; you cannot call 'start()' more than once");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Starting execution in " + externalContext);
@@ -221,13 +232,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		RequestContextHolder.setRequestContext(context);
 		listeners.fireRequestSubmitted(context);
 		try {
-			start(flow, flow.createExecutionInputMap(externalContext), context);
+			start(flow, input, context);
 		} catch (FlowExecutionException e) {
 			handleException(e, context);
 		} catch (Exception e) {
 			handleException(wrap(e), context);
 		} finally {
-			if (isActive()) {
+			if (!hasEnded()) {
 				saveMessages(context);
 				try {
 					listeners.firePaused(context);
@@ -266,7 +277,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} catch (Exception e) {
 			handleException(wrap(e), context);
 		} finally {
-			if (isActive()) {
+			if (!hasEnded()) {
 				saveMessages(context);
 				try {
 					listeners.firePaused(context);
@@ -348,6 +359,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		session.getFlow().end(context, output);
 		flowSessions.removeLast();
 		listeners.fireSessionEnded(context, session, output);
+		if (hasEnded()) {
+			this.outcome = new Event(this, session.getState().getId(), output);
+		}
 		return session;
 	}
 

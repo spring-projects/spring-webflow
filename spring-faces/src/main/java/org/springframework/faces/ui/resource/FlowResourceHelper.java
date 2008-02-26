@@ -10,8 +10,6 @@ import java.util.Set;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.springframework.webflow.context.FlowDefinitionRequestInfo;
-import org.springframework.webflow.context.RequestPath;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -64,9 +62,7 @@ public class FlowResourceHelper {
 			writer.writeAttribute(key, attributes.get(key), null);
 		}
 
-		FlowDefinitionRequestInfo requestInfo = new FlowDefinitionRequestInfo("resources", new RequestPath(scriptPath),
-				null, null);
-		String src = requestContext.getExternalContext().buildFlowDefinitionUrl(requestInfo);
+		String src = requestContext.getExternalContext().getContextPath() + "/resources" + scriptPath;
 
 		writer.writeAttribute("src", src, null);
 
@@ -96,9 +92,7 @@ public class FlowResourceHelper {
 		writer.writeAttribute("type", "text/css", null);
 		writer.writeAttribute("rel", "stylesheet", null);
 
-		FlowDefinitionRequestInfo requestInfo = new FlowDefinitionRequestInfo("resources", new RequestPath(cssPath),
-				null, null);
-		String src = requestContext.getExternalContext().buildFlowDefinitionUrl(requestInfo);
+		String src = requestContext.getExternalContext().getContextPath() + "/resources" + cssPath;
 
 		writer.writeAttribute("href", src, null);
 

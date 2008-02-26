@@ -75,6 +75,21 @@ public interface FlowExecutionContext {
 	public boolean isActive();
 
 	/**
+	 * Returns a flag indicating if this execution has ended. A flow execution that has ended has been started but is no
+	 * longer active.
+	 * @see #hasStarted()
+	 * @see #isActive()
+	 * @return true if ended, false if not started or still active
+	 */
+	public boolean hasEnded();
+
+	/**
+	 * Returns the ending outcome event of this execution, or null if this execution has not yet ended.
+	 * @return the outcome event
+	 */
+	public Event getOutcome();
+
+	/**
 	 * Returns the active flow session of this flow execution. The active flow session is the currently executing
 	 * session -- it may be the "root flow" session, or it may be a subflow session if this flow execution has spawned a
 	 * subflow.

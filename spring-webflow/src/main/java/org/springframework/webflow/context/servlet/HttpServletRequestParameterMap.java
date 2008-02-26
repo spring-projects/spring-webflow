@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.binding.collection.CompositeIterator;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
@@ -41,6 +42,7 @@ public class HttpServletRequestParameterMap extends StringKeyedMapAdapter {
 	 * Create a new map wrapping the parameters of given request.
 	 */
 	public HttpServletRequestParameterMap(HttpServletRequest request) {
+		Assert.notNull(request, "The HTTP servlet request is required");
 		this.request = request;
 	}
 

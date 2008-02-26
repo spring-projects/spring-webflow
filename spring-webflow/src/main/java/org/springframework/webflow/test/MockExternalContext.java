@@ -15,16 +15,14 @@
  */
 package org.springframework.webflow.test;
 
-import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.context.FlowDefinitionRequestInfo;
-import org.springframework.webflow.context.FlowExecutionRequestInfo;
-import org.springframework.webflow.context.RequestPath;
-import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -33,20 +31,12 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
  * Mock implementation of the {@link ExternalContext} interface.
- * 
  * @see ExternalContext
- * 
  * @author Keith Donald
  */
 public class MockExternalContext implements ExternalContext {
 
-	private String flowId;
-
-	private String flowExecutionKey;
-
-	private RequestPath requestPath;
-
-	private String requestMethod;
+	private String contextPath;
 
 	private ParameterMap requestParameterMap = new MockParameterMap();
 
@@ -58,25 +48,25 @@ public class MockExternalContext implements ExternalContext {
 
 	private SharedAttributeMap applicationMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
 
-	private Object context;
+	private Object nativeContext = new Object();
 
-	private Object request;
+	private Object nativeRequest = new Object();
 
-	private Object response;
+	private Object nativeResponse = new Object();
 
-	private FlowDefinitionRequestInfo flowDefinitionRedirectResult;
-
-	private FlowExecutionRequestInfo flowExecutionRedirectResult;
-
-	private String externalRedirectResult;
-
-	private String pausedFlowExecutionKeyResult;
-
-	private FlowException exceptionResult;
+	private StringWriter responseWriter = new StringWriter();
 
 	private boolean ajaxRequest;
 
 	private Map responseHeaders = new HashMap();
+
+	private boolean flowExecutionRedirectRequested;
+
+	private String flowDefinitionRedirectFlowId;
+
+	private AttributeMap flowDefinitionRedirectFlowInput;
+
+	private String externalRedirectUrl;
 
 	/**
 	 * Creates a mock external context with an empty request parameter map. Allows for bean style usage.
@@ -97,20 +87,8 @@ public class MockExternalContext implements ExternalContext {
 
 	// implementing external context
 
-	public String getFlowId() {
-		return flowId;
-	}
-
-	public String getFlowExecutionKey() {
-		return flowExecutionKey;
-	}
-
-	public String getRequestMethod() {
-		return requestMethod;
-	}
-
-	public RequestPath getRequestPath() {
-		return requestPath;
+	public String getContextPath() {
+		return contextPath;
 	}
 
 	public ParameterMap getRequestParameterMap() {
@@ -133,90 +111,57 @@ public class MockExternalContext implements ExternalContext {
 		return applicationMap;
 	}
 
-	public Object getContext() {
-		return context;
+	public Object getNativeContext() {
+		return nativeContext;
 	}
 
-	public Object getRequest() {
-		return request;
+	public Object getNativeRequest() {
+		return nativeRequest;
 	}
 
-	public Object getResponse() {
-		return response;
+	public Object getNativeResponse() {
+		return nativeResponse;
 	}
 
-	public PrintWriter getResponseWriter() {
-		throw new UnsupportedOperationException("Not yet implemented");
+	public boolean isAjaxRequest() {
+		return ajaxRequest;
 	}
 
-	public String encode(String string) {
-		return string;
+	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
+		return "/" + flowId + "?execution=" + flowExecutionKey;
 	}
 
-	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo) {
-		throw new UnsupportedOperationException("Not yet implemented");
+	public Writer getResponseWriter() {
+		return responseWriter;
 	}
 
-	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative) {
-		return "/executions/" + requestInfo.getFlowDefinitionId() + "/" + requestInfo.getFlowExecutionKey();
-	}
-
-	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo) {
-		this.flowDefinitionRedirectResult = requestInfo;
-	}
-
-	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo) {
-		this.flowExecutionRedirectResult = requestInfo;
-	}
-
-	public void sendExternalRedirect(String resourceUri) {
-		externalRedirectResult = resourceUri;
-	}
-
-	public void setPausedResult(String flowExecutionKey) {
-		this.pausedFlowExecutionKeyResult = flowExecutionKey;
-	}
-
-	public void setEndedResult(String flowExecutionKey) {
-
-	}
-
-	public void setExceptionResult(FlowException e) {
-		exceptionResult = e;
+	public void setResponseHeader(String name, String value) {
+		this.responseHeaders.put(name, value);
 	}
 
 	public boolean isResponseCommitted() {
-		return false;
+		return flowExecutionRedirectRequested() || flowDefinitionRedirectRequested() || externalRedirectRequested();
 	}
 
-	// helper setters
-
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void requestFlowExecutionRedirect() {
+		flowExecutionRedirectRequested = true;
 	}
 
-	public void setFlowExecutionKey(String flowExecutionKey) {
-		this.flowExecutionKey = flowExecutionKey;
+	public void requestExternalRedirect(String uri) {
+		externalRedirectUrl = uri;
 	}
 
-	public void setRequestMethod(String requestMethod) {
-		this.requestMethod = requestMethod;
+	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input) {
+		flowDefinitionRedirectFlowId = flowId;
+		flowDefinitionRedirectFlowInput = input;
 	}
 
-	public void setRequestPath(RequestPath requestPath) {
-		this.requestPath = requestPath;
-	}
-
-	public void setContext(Object context) {
-		this.context = context;
-	}
-
-	public void setRequest(Object request) {
-		this.request = request;
-	}
-
-	public void setResponse(Object response) {
-		this.response = response;
+	/**
+	 * Set the context path of the application.
+	 * @param contextPath the context path
+	 */
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
 	}
 
 	/**
@@ -260,6 +205,30 @@ public class MockExternalContext implements ExternalContext {
 		this.applicationMap = applicationMap;
 	}
 
+	/**
+	 * Set the native context object.
+	 * @param nativeContext the native context
+	 */
+	public void setNativeContext(Object nativeContext) {
+		this.nativeContext = nativeContext;
+	}
+
+	/**
+	 * Set the native request object.
+	 * @param nativeRequest the native request object
+	 */
+	public void setNativeRequest(Object nativeRequest) {
+		this.nativeRequest = nativeRequest;
+	}
+
+	/**
+	 * Set the native response object.
+	 * @param nativeResponse the native response object
+	 */
+	public void setNativeResponse(Object nativeResponse) {
+		this.nativeResponse = nativeResponse;
+	}
+
 	// convenience helpers
 
 	/**
@@ -288,39 +257,45 @@ public class MockExternalContext implements ExternalContext {
 		getMockRequestParameterMap().put(parameterName, parameterValues);
 	}
 
-	public FlowDefinitionRequestInfo getFlowDefinitionRedirectResult() {
-		return flowDefinitionRedirectResult;
-	}
-
-	public FlowExecutionRequestInfo getFlowExecutionRedirectResult() {
-		return flowExecutionRedirectResult;
-	}
-
-	public String getExternalRedirectResult() {
-		return externalRedirectResult;
-	}
-
-	public String getPausedFlowExecutionKeyResult() {
-		return pausedFlowExecutionKeyResult;
-	}
-
-	public FlowException getExceptionResult() {
-		return exceptionResult;
-	}
-
-	public boolean isAjaxRequest() {
-		return ajaxRequest;
-	}
-
+	/**
+	 * Set whether this request is an ajax request.
+	 * @param ajaxRequest true or false
+	 */
 	public void setAjaxRequest(boolean ajaxRequest) {
 		this.ajaxRequest = ajaxRequest;
 	}
 
-	public void setResponseHeader(String name, String value) {
-		this.responseHeaders.put(name, value);
-	}
-
+	/**
+	 * Returns the value of the response header entry
+	 * @param name the entry name
+	 * @return the entry value, or null if no entry was set with this name
+	 */
 	public String getResponseHeader(String name) {
 		return (String) responseHeaders.get(name);
 	}
+
+	public boolean flowExecutionRedirectRequested() {
+		return flowExecutionRedirectRequested;
+	}
+
+	public boolean flowDefinitionRedirectRequested() {
+		return flowDefinitionRedirectFlowId != null;
+	}
+
+	public String getFlowRedirectFlowId() {
+		return flowDefinitionRedirectFlowId;
+	}
+
+	public AttributeMap getFlowRedirectFlowInput() {
+		return flowDefinitionRedirectFlowInput;
+	}
+
+	public boolean externalRedirectRequested() {
+		return externalRedirectUrl != null;
+	}
+
+	public String getExternalRedirectUrl() {
+		return externalRedirectUrl;
+	}
+
 }

@@ -19,7 +19,6 @@ import org.springframework.binding.message.DefaultMessageContextFactory;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.context.FlowExecutionRequestInfo;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -173,9 +172,7 @@ public class MockRequestContext implements RequestContext {
 					"Flow execution key not yet assigned; unable to build the flow execution url");
 		} else {
 			String flowDefinitionId = flowExecutionContext.getDefinition().getId();
-			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowDefinitionId, flowExecutionContext
-					.getKey().toString());
-			return externalContext.buildFlowExecutionUrl(requestInfo, true);
+			return externalContext.getFlowExecutionUri(flowDefinitionId, flowExecutionContext.getKey().toString());
 		}
 	}
 
@@ -184,10 +181,7 @@ public class MockRequestContext implements RequestContext {
 			throw new IllegalStateException(
 					"Flow execution key not yet assigned; unable to send a flow execution redirect request");
 		} else {
-			String flowDefinitionId = flowExecutionContext.getDefinition().getId();
-			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowDefinitionId, flowExecutionContext
-					.getKey().toString());
-			externalContext.sendFlowExecutionRedirect(requestInfo);
+			externalContext.requestFlowExecutionRedirect();
 		}
 	}
 

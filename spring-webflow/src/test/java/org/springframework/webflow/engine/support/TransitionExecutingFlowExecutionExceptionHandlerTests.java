@@ -95,7 +95,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		FlowExecution execution = factory.createFlowExecution(flow);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertTrue("Should have ended", !execution.isActive());
 	}
 
@@ -105,7 +105,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		flow.getExceptionHandlerSet().add(handler);
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		try {
-			execution.start(new MockExternalContext());
+			execution.start(null, new MockExternalContext());
 			fail("Should have failed no such state");
 		} catch (IllegalArgumentException e) {
 		}
@@ -114,7 +114,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 	public void testStateExceptionHandlingRethrow() {
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		try {
-			execution.start(new MockExternalContext());
+			execution.start(null, new MockExternalContext());
 			fail("Should have rethrown");
 		} catch (FlowExecutionException e) {
 			// expected
@@ -147,7 +147,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		};
 		Flow flow = new FlowAssembler(builder, new MockFlowBuilderContext("flow")).assembleFlow();
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertTrue(execution.isActive());
 	}
 

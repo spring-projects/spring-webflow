@@ -25,8 +25,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
-import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class MvcViewFactoryTests extends TestCase {
@@ -55,10 +55,10 @@ public class MvcViewFactoryTests extends TestCase {
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		externalContext.setRequest(request);
-		externalContext.setResponse(response);
+		externalContext.setNativeRequest(request);
+		externalContext.setNativeResponse(response);
 		context.setExternalContext(externalContext);
-		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
+		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(false, view.eventSignaled());
 		view.render();
@@ -75,10 +75,10 @@ public class MvcViewFactoryTests extends TestCase {
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		externalContext.setRequest(request);
-		externalContext.setResponse(response);
+		externalContext.setNativeRequest(request);
+		externalContext.setNativeResponse(response);
 		context.setExternalContext(externalContext);
-		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
+		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(false, view.eventSignaled());
 		view.render();
@@ -103,10 +103,10 @@ public class MvcViewFactoryTests extends TestCase {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		externalContext.putRequestParameter("_eventId", "foo");
-		externalContext.setRequest(request);
-		externalContext.setResponse(response);
+		externalContext.setNativeRequest(request);
+		externalContext.setNativeResponse(response);
 		context.setExternalContext(externalContext);
-		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
+		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();
@@ -134,10 +134,10 @@ public class MvcViewFactoryTests extends TestCase {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		externalContext.putRequestParameter("_eventId_foo", "true");
-		externalContext.setRequest(request);
-		externalContext.setResponse(response);
+		externalContext.setNativeRequest(request);
+		externalContext.setNativeResponse(response);
 		context.setExternalContext(externalContext);
-		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey());
+		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();

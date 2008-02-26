@@ -95,8 +95,8 @@ public class JsfView implements View {
 		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
-				.getContext(), context.getExternalContext().getRequest(), context.getExternalContext().getResponse(),
-				facesLifecycle);
+				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
+				.getNativeResponse(), facesLifecycle);
 		return new FlowFacesContext(context, defaultFacesContext);
 	}
 

@@ -184,8 +184,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			model.put("flowExecutionRequestContext", context);
 			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
 			try {
-				view.render(model, (HttpServletRequest) context.getExternalContext().getRequest(),
-						(HttpServletResponse) context.getExternalContext().getResponse());
+				view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
+						(HttpServletResponse) context.getExternalContext().getNativeResponse());
 			} catch (Exception e) {
 				throw new IllegalStateException("Exception rendering view", e);
 			}

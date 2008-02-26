@@ -18,6 +18,7 @@ package org.springframework.webflow.executor;
 import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.execution.FlowExecution;
@@ -64,8 +65,8 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * @see FlowExecutionFactory
  * @see FlowExecutionRepository
  * 
- * @author Erwin Vervaet
  * @author Keith Donald
+ * @author Erwin Vervaet
  * @author Colin Sampaleanu
  */
 public class FlowExecutorImpl implements FlowExecutor {
@@ -101,59 +102,38 @@ public class FlowExecutorImpl implements FlowExecutor {
 		this.executionRepository = executionRepository;
 	}
 
-	public void executeFlowRequest(ExternalContext context) {
-		if (context.getFlowExecutionKey() != null) {
-			resumeExecution(context.getFlowExecutionKey(), context);
+	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
+			throws FlowException {
+		FlowDefinition flowDefinition = definitionLocator.getFlowDefinition(flowId);
+		FlowExecution flowExecution = executionFactory.createFlowExecution(flowDefinition);
+		flowExecution.start(input, context);
+		if (!flowExecution.hasEnded()) {
+			executionRepository.putFlowExecution(flowExecution);
+			return FlowExecutionResult.createPausedResult(flowExecution.getDefinition().getId(), flowExecution.getKey()
+					.toString());
 		} else {
-			launchExecution(context.getFlowId(), context);
+			return FlowExecutionResult.createEndedResult(flowExecution.getDefinition().getId(), flowExecution
+					.getOutcome());
 		}
 	}
 
-	private void launchExecution(String flowId, ExternalContext context) {
+	public FlowExecutionResult resumeExecution(String flowExecutionKey, ExternalContext context) throws FlowException {
+		FlowExecutionKey key = executionRepository.parseFlowExecutionKey(flowExecutionKey);
+		FlowExecutionLock lock = executionRepository.getLock(key);
 		try {
-			FlowDefinition flowDefinition = definitionLocator.getFlowDefinition(flowId);
-			FlowExecution flowExecution = executionFactory.createFlowExecution(flowDefinition);
-			flowExecution.start(context);
-			if (flowExecution.isActive()) {
+			FlowExecution flowExecution = executionRepository.getFlowExecution(key);
+			flowExecution.resume(context);
+			if (!flowExecution.hasEnded()) {
 				executionRepository.putFlowExecution(flowExecution);
-				context.setPausedResult(flowExecution.getKey().toString());
+				return FlowExecutionResult.createPausedResult(flowExecution.getDefinition().getId(), flowExecution
+						.getKey().toString());
 			} else {
-				context.setEndedResult(null);
+				executionRepository.removeFlowExecution(flowExecution);
+				return FlowExecutionResult.createEndedResult(flowExecution.getDefinition().getId(), flowExecution
+						.getOutcome());
 			}
-		} catch (FlowException e) {
-			if (!handleException(e, context)) {
-				context.setExceptionResult(e);
-			}
+		} finally {
+			lock.unlock();
 		}
-	}
-
-	private void resumeExecution(String encodedKey, ExternalContext context) {
-		try {
-			FlowExecutionKey key = executionRepository.parseFlowExecutionKey(encodedKey);
-			FlowExecutionLock lock = executionRepository.getLock(key);
-			lock.lock();
-			try {
-				FlowExecution flowExecution = executionRepository.getFlowExecution(key);
-				flowExecution.resume(context);
-				if (flowExecution.isActive()) {
-					executionRepository.putFlowExecution(flowExecution);
-					context.setPausedResult(flowExecution.getKey().toString());
-				} else {
-					executionRepository.removeFlowExecution(flowExecution);
-					context.setEndedResult(flowExecution.getKey().toString());
-				}
-			} finally {
-				lock.unlock();
-			}
-		} catch (FlowException e) {
-			if (!handleException(e, context)) {
-				context.setExceptionResult(e);
-			}
-		}
-	}
-
-	private boolean handleException(FlowException e, ExternalContext context) {
-		// TODO
-		return false;
 	}
 }

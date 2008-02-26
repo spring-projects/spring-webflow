@@ -19,21 +19,19 @@ import org.springframework.webflow.execution.FlowExecutionKey;
 
 /**
  * A simple flow execution key implementation. New instances of this class get their values from a sequence encapsulated
- * as a stativ private variable of this class.
+ * as a static private variable of this class.
  * 
  * @author Keith Donald
  */
 public class MockFlowExecutionKey extends FlowExecutionKey {
 
-	private static int nextKey = 1;
-
-	private int value;
+	private String value;
 
 	/**
 	 * Creates a new mock flow execution key.
 	 */
-	public MockFlowExecutionKey() {
-		this.value = nextKey();
+	public MockFlowExecutionKey(String value) {
+		this.value = value;
 	}
 
 	public boolean equals(Object o) {
@@ -41,20 +39,14 @@ public class MockFlowExecutionKey extends FlowExecutionKey {
 			return false;
 		}
 		MockFlowExecutionKey key = (MockFlowExecutionKey) o;
-		return value == key.value;
+		return value.equals(key.value);
 	}
 
 	public int hashCode() {
-		return value * 29;
+		return value.hashCode();
 	}
 
 	public String toString() {
-		return String.valueOf(value);
-	}
-
-	private static int nextKey() {
-		int key = nextKey;
-		nextKey++;
-		return key;
+		return value;
 	}
 }

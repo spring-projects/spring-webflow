@@ -20,6 +20,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
@@ -44,6 +45,8 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	private MutableAttributeMap conversationScope = new LocalAttributeMap();
 
 	private MutableAttributeMap attributes = new LocalAttributeMap();
+
+	private Event outcome;
 
 	/**
 	 * Creates a new mock flow execution context -- automatically installs a root flow definition and active flow
@@ -91,6 +94,10 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 		return activeSession != null;
 	}
 
+	public boolean hasEnded() {
+		return hasStarted() && !isActive();
+	}
+
 	public FlowSession getActiveSession() throws IllegalStateException {
 		if (activeSession == null) {
 			throw new IllegalStateException("No flow session is active");
@@ -108,6 +115,10 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 
 	public AttributeMap getAttributes() {
 		return attributes;
+	}
+
+	public Event getOutcome() {
+		return outcome;
 	}
 
 	// mutators
@@ -145,6 +156,14 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	 */
 	public void setConversationScope(MutableAttributeMap scope) {
 		this.conversationScope = scope;
+	}
+
+	/**
+	 * Sets the result of this flow ending.
+	 * @param outcome the ending outcome event.
+	 */
+	public void setOutcome(Event outcome) {
+		this.outcome = outcome;
 	}
 
 	// convenience accessors

@@ -129,8 +129,8 @@ public class JsfViewFactory implements ViewFactory {
 		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
-				.getContext(), context.getExternalContext().getRequest(), context.getExternalContext().getResponse(),
-				lifecycle);
+				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
+				.getNativeResponse(), lifecycle);
 		return new FlowFacesContext(context, defaultFacesContext);
 	}
 

@@ -85,7 +85,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener1));
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertFalse(execution.isActive());
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertTrue(starting);
 	}
 
@@ -103,7 +103,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 			}
 		});
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertTrue(getKeyCalled);
 		assertNull(execution.getKey());
 	}

@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.StaticExpression;
-import org.springframework.webflow.context.FlowDefinitionRequestInfo;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowDefinitionRedirectActionTests extends TestCase {
@@ -15,32 +14,26 @@ public class FlowDefinitionRedirectActionTests extends TestCase {
 
 	public void testExecute() throws Exception {
 		Expression flowId = new StaticExpression("user");
-		Expression[] requestElements = new Expression[] { new StaticExpression("1") };
-		Map requestParameters = new HashMap();
-		requestParameters.put(new StaticExpression("foo"), new StaticExpression("bar"));
-		action = new FlowDefinitionRedirectAction(flowId, requestElements, requestParameters);
+		Map input = new HashMap();
+		input.put(new StaticExpression("foo"), new StaticExpression("bar"));
+		action = new FlowDefinitionRedirectAction(flowId, input);
 		MockRequestContext context = new MockRequestContext();
 		action.execute(context);
-		FlowDefinitionRequestInfo result = context.getMockExternalContext().getFlowDefinitionRedirectResult();
-		assertEquals("user", result.getFlowDefinitionId());
-		assertEquals("1", result.getRequestPath().getElement(0));
-		assertEquals("bar", result.getRequestParameters().get("foo"));
+		assertEquals("user", context.getMockExternalContext().getFlowRedirectFlowId());
+		assertEquals("bar", context.getMockExternalContext().getFlowRedirectFlowInput().get("foo"));
 	}
 
 	public void testExecuteWithNullRequestFields() throws Exception {
 		Expression flowId = new StaticExpression("user");
-		action = new FlowDefinitionRedirectAction(flowId, null, null);
+		action = new FlowDefinitionRedirectAction(flowId, null);
 		MockRequestContext context = new MockRequestContext();
 		action.execute(context);
-		FlowDefinitionRequestInfo result = context.getMockExternalContext().getFlowDefinitionRedirectResult();
-		assertEquals("user", result.getFlowDefinitionId());
-		assertEquals(null, result.getRequestPath());
-		assertEquals(null, result.getRequestParameters());
+		assertEquals("user", context.getMockExternalContext().getFlowRedirectFlowId());
 	}
 
 	public void testExecuteWithNullFlowId() throws Exception {
 		try {
-			action = new FlowDefinitionRedirectAction(null, null, null);
+			action = new FlowDefinitionRedirectAction(null, null);
 			fail("Should have failed");
 		} catch (IllegalArgumentException e) {
 

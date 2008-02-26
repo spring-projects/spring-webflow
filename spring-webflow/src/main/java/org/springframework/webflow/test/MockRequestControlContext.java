@@ -90,7 +90,7 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	}
 
 	public FlowExecutionKey assignFlowExecutionKey() {
-		MockFlowExecutionKey key = new MockFlowExecutionKey();
+		GeneratedFlowExecutionKey key = new GeneratedFlowExecutionKey();
 		getMockFlowExecutionContext().setKey(key);
 		return key;
 	}

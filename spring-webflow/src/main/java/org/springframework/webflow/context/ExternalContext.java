@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.context;
 
-import java.io.PrintWriter;
+import java.io.Writer;
 
-import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
@@ -40,31 +40,10 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
 public interface ExternalContext {
 
 	/**
-	 * Returns the unique id of the flow definition invoked by this caller. For a "launch" request, this identifier is
-	 * used directly to create a new flow execution. For a "resume" request, this identifier provides additional flow
-	 * execution context.
-	 * @return the flow definition identifier, never null
-	 * @see #getFlowExecutionKey()
+	 * Returns the logical path to the application hosting this external context.
+	 * @return the context path
 	 */
-	public String getFlowId();
-
-	/**
-	 * Returns the unique key identifying the flow execution this client wishes to resume.
-	 * @return the flow execution key, may be null if this is not a resume request
-	 */
-	public String getFlowExecutionKey();
-
-	/**
-	 * Returns the type of this client request. For example, this request may be a "GET" request or a "POST" request.
-	 * @return the request method
-	 */
-	public String getRequestMethod();
-
-	/**
-	 * Returns the path of this request as a ordered list of fields.
-	 * @return the elements of the request path
-	 */
-	public RequestPath getRequestPath();
+	public String getContextPath();
 
 	/**
 	 * Provides access to the parameters associated with the user request that led to SWF being called. This map is
@@ -106,112 +85,81 @@ public interface ExternalContext {
 	public SharedAttributeMap getApplicationMap();
 
 	/**
+	 * Returns true if the current request is an Ajax request.
+	 * @return true if the current request is an Ajax request
+	 */
+	public boolean isAjaxRequest();
+
+	/**
+	 * Get a context-relative flow execution URL for the execution with the provided key. Typically used by response
+	 * writers that write out references to the flow execution to support postback on a subsequent request.
+	 * @param flowId the flow definition id
+	 * @param flowExecutionKey the flow execution key
+	 * @return the flow execution URL
+	 */
+	public String getFlowExecutionUri(String flowId, String flowExecutionKey);
+
+	/**
 	 * Provides access to the context object for the current environment.
 	 * @return the environment specific context object
 	 */
-	public Object getContext();
+	public Object getNativeContext();
 
 	/**
 	 * Provides access to the request object for the current environment.
 	 * @return the environment specific request object.
 	 */
-	public Object getRequest();
+	public Object getNativeRequest();
 
 	/**
 	 * Provides access to the response object for the current environment.
 	 * @return the environment specific response object.
 	 */
-	public Object getResponse();
+	public Object getNativeResponse();
 
 	/**
 	 * Get a writer for writing out a response.
 	 * @return the writer
 	 */
-	public PrintWriter getResponseWriter();
+	public Writer getResponseWriter();
 
 	/**
-	 * Builds a context-relative flow definition URL, suitable for rendering links that a launch new execution of a flow
-	 * definition when accessed.
-	 * @param requestInfo data needed to build the flow definition path
-	 * @return the generated flow definition URL
+	 * Sets an entry in the response header.
+	 * @param name the entry name
+	 * @param value the entry value
 	 */
-	public String buildFlowDefinitionUrl(FlowDefinitionRequestInfo requestInfo);
+	public void setResponseHeader(String name, String value);
 
 	/**
-	 * Builds a flow execution URL, suitable for rendering links that resume a paused flow execution when accessed.
-	 * @param requestInfo data needed to build the flow execution URL
-	 * @param contextRelative whether the URL returned should be relative to this external context or absolute.
-	 * @return the generated flow execution URL
-	 */
-	public String buildFlowExecutionUrl(FlowExecutionRequestInfo requestInfo, boolean contextRelative);
-
-	/**
-	 * Encode the provided string using the encoding scheme of this external context.
-	 * @param string the string
-	 * @return the encoded string
-	 */
-	public String encode(String string);
-
-	/**
-	 * Request that a flow execution redirect be sent as the response. A flow execution redirect tells the caller to
-	 * resume a flow execution in a new request. Sets response committed to true.
-	 * @param requestInfo data needed to issue the flow execution redirect
+	 * Request that a flow execution redirect be performed by the calling environment. Typically called from within a
+	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
+	 * Calling this method commits the response.
 	 * @see #isResponseCommitted()
 	 */
-	public void sendFlowExecutionRedirect(FlowExecutionRequestInfo requestInfo);
+	public void requestFlowExecutionRedirect();
 
 	/**
-	 * Request that a flow definition redirect be sent as the response. A flow definition redirect tells the caller to
-	 * start a new execution of the flow definition with the input provided.
-	 * @param requestInfo data needed to issue the flow definition redirect
-	 */
-	public void sendFlowDefinitionRedirect(FlowDefinitionRequestInfo requestInfo);
-
-	/**
-	 * Request that a external redirect be sent as the response. An external redirect tells the caller to access the
-	 * resource at the given resource URL. Sets response committed to true. Note: no special encoding is performed on
-	 * the string argument. Callers must perform their own encoding when necessary.
-	 * @param resourceUrl the resource URL string
+	 * Request that a flow definition redirect be performed by the calling environment. Typically called from within a
+	 * flow execution end state to request starting a new, independent execution of a flow in a chain-like manner.
+	 * Calling this method commits the response.
 	 * @see #isResponseCommitted()
+	 * @param flowId the id of the flow definition to redirect to
+	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
 	 */
-	public void sendExternalRedirect(String resourceUrl);
+	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input);
 
 	/**
-	 * Report that flow execution request processing ended with a "paused" result, indicating the flow execution paused
-	 * and will be waiting to resume on a subsequent request.
-	 * @param flowExecutionKey the flow execution key
+	 * Request a redirect to an arbitrary resource URI. May not be supported in some environments. Calling this method
+	 * commits the response.
+	 * @see #isResponseCommitted()
+	 * @param uri the URI to redirect to
 	 */
-	public void setPausedResult(String flowExecutionKey);
+	public void requestExternalRedirect(String uri);
 
 	/**
-	 * Report that flow execution request processing ended with a "ended" result, indicating the flow execution
-	 * terminated.
-	 * @param flowExecutionKey the flow execution key, now invalid or null if never assigned
-	 */
-	public void setEndedResult(String flowExecutionKey);
-
-	/**
-	 * Report that flow execution request processing ended with a flow exception.
-	 * @param e the flow exception
-	 */
-	public void setExceptionResult(FlowException e);
-
-	/**
-	 * Returns true if the current request has already provisioned the response that will be sent back to the calling
-	 * system.
-	 * @return true if the response has been committed, false otherwise
-	 * @see #sendFlowExecutionRedirect(FlowExecutionRequestInfo)
-	 * @see #sendFlowDefinitionRedirect(FlowDefinitionRequestInfo)
-	 * @see #sendExternalRedirect(String)
+	 * Has the response been committed?
+	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseCommitted();
-
-	/**
-	 * Returns true if the current request is an Ajax request, determined by the value of the http accept header.
-	 * @return true if the current request is an Ajax request
-	 */
-	public boolean isAjaxRequest();
-
-	public void setResponseHeader(String name, String value);
 
 }

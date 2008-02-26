@@ -12,6 +12,6 @@ import org.springframework.webflow.execution.FlowExecutionKeyFactory;
  */
 public class MockFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
 	public FlowExecutionKey getKey(FlowExecution execution) {
-		return new MockFlowExecutionKey();
+		return new GeneratedFlowExecutionKey();
 	}
 }

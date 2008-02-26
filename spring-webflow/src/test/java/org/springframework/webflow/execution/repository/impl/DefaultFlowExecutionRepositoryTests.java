@@ -90,7 +90,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		factory.setExecutionKeyFactory(repository);
 		FlowExecution execution = factory.createFlowExecution(flow);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertNotNull(execution.getKey());
 		repository.putFlowExecution(execution);
 		FlowExecution execution2 = repository.getFlowExecution(execution.getKey());
@@ -113,7 +113,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		factory.setExecutionKeyFactory(repository);
 		FlowExecution execution = factory.createFlowExecution(flow);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		assertNotNull(execution.getKey());
 		repository.putFlowExecution(execution);
 		repository.removeFlowExecution(execution);
@@ -140,7 +140,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		factory.setExecutionKeyFactory(repository);
 		FlowExecution execution = factory.createFlowExecution(flow);
-		execution.start(new MockExternalContext());
+		execution.start(null, new MockExternalContext());
 		try {
 			repository.removeFlowExecution(execution);
 			repository.removeFlowExecution(execution);

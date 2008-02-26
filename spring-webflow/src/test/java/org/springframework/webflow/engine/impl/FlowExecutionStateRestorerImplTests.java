@@ -17,7 +17,7 @@ import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
-import org.springframework.webflow.test.MockFlowExecutionKey;
+import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 
 public class FlowExecutionStateRestorerImplTests extends TestCase {
 	private SimpleFlowDefinitionLocator definitionLocator;
@@ -25,7 +25,7 @@ public class FlowExecutionStateRestorerImplTests extends TestCase {
 	private LocalAttributeMap executionAttributes = new LocalAttributeMap();
 	private FlowExecutionListener listener = new MockFlowExecutionListener();
 	private FlowExecutionListenerLoader executionListenerLoader = new StaticFlowExecutionListenerLoader(listener);
-	MockFlowExecutionKey newKey = new MockFlowExecutionKey();
+	GeneratedFlowExecutionKey newKey = new GeneratedFlowExecutionKey();
 	private FlowExecutionKeyFactory executionKeyFactory = new FlowExecutionKeyFactory() {
 		public FlowExecutionKey getKey(FlowExecution execution) {
 			return newKey;
@@ -40,7 +40,7 @@ public class FlowExecutionStateRestorerImplTests extends TestCase {
 	}
 
 	public void testRestoreStateNoSessions() {
-		FlowExecutionKey key = new MockFlowExecutionKey();
+		FlowExecutionKey key = new GeneratedFlowExecutionKey();
 		LocalAttributeMap conversationScope = new LocalAttributeMap();
 		FlowExecutionImpl execution = new FlowExecutionImpl("parent", new LinkedList());
 		stateRestorer.restoreState(execution, key, conversationScope, executionKeyFactory);
@@ -55,7 +55,7 @@ public class FlowExecutionStateRestorerImplTests extends TestCase {
 	}
 
 	public void testRestoreStateFlowDefinitionIdNotSet() {
-		FlowExecutionKey key = new MockFlowExecutionKey();
+		FlowExecutionKey key = new GeneratedFlowExecutionKey();
 		LocalAttributeMap conversationScope = new LocalAttributeMap();
 		FlowExecutionImpl execution = new FlowExecutionImpl();
 		try {
@@ -67,7 +67,7 @@ public class FlowExecutionStateRestorerImplTests extends TestCase {
 	}
 
 	public void testRestoreStateFlowSessionsNotSet() {
-		FlowExecutionKey key = new MockFlowExecutionKey();
+		FlowExecutionKey key = new GeneratedFlowExecutionKey();
 		LocalAttributeMap conversationScope = new LocalAttributeMap();
 		FlowExecutionImpl execution = new FlowExecutionImpl("parent", null);
 		try {

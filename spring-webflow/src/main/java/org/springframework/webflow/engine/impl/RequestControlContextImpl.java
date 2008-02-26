@@ -18,7 +18,6 @@ package org.springframework.webflow.engine.impl;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.context.FlowExecutionRequestInfo;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -164,25 +163,15 @@ class RequestControlContextImpl implements RequestControlContext {
 	// implementing RequestControlContext
 
 	public String getFlowExecutionUrl() {
-		if (flowExecution.getKey() == null) {
-			throw new IllegalStateException(
-					"Flow execution key not yet assigned; unable to generate flow execution URL at this time");
+		String key = flowExecution.getKey() != null ? flowExecution.getKey().toString() : null;
+		if (key != null) {
+			return externalContext.getFlowExecutionUri(flowExecution.getDefinition().getId(), key);
 		} else {
-			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowExecution.getFlowId(),
-					flowExecution.getKey().toString());
-			return externalContext.buildFlowExecutionUrl(requestInfo, true);
+			return null;
 		}
 	}
 
 	public void sendFlowExecutionRedirect() {
-		if (flowExecution.getKey() == null) {
-			throw new IllegalStateException(
-					"Flow execution key not yet assigned; unable to send a flow execution redirect request");
-		} else {
-			FlowExecutionRequestInfo requestInfo = new FlowExecutionRequestInfo(flowExecution.getFlowId(),
-					flowExecution.getKey().toString());
-			externalContext.sendFlowExecutionRedirect(requestInfo);
-		}
 	}
 
 	public void setCurrentState(State state) {

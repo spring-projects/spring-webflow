@@ -16,23 +16,10 @@
 package org.springframework.webflow.execution;
 
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.execution.repository.FlowExecutionRepository;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
- * An execution of a flow definition. This is the central interface for manipulating a runtime execution of a flow
- * definition.
- * 
- * A FlowExecution instance is typically created by a {@link FlowExecutionFactory factory}. A FlowExecution instance is
- * persisted using a {@link FlowExecutionRepository repository}. A FlowExecution's lifecycle is observed by zero or
- * more {@link FlowExecutionListener listeners}
- * 
- * @see FlowDefinition
- * @see FlowSession
- * @see RequestContext
- * @see FlowExecutionListener
- * @see org.springframework.webflow.execution.repository.FlowExecutionRepository
- * @see org.springframework.webflow.executor.FlowExecutor
+ * An execution of a flow definition. This is the central interface for manipulating a instance of a flow definition.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -44,11 +31,12 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * <p>
 	 * When this method returns, execution status is either "paused" or "ended". If ended, the flow execution cannot be
 	 * used again. If "paused", the flow execution may be {@link #resume(ExternalContext)}.
+	 * @param input flow execution input
 	 * @param context the external context representing the calling environment
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow execution during request
 	 * processing
 	 */
-	public void start(ExternalContext context) throws FlowExecutionException;
+	public void start(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException;
 
 	/**
 	 * Resume this flow execution. May be called when the flow execution is paused.

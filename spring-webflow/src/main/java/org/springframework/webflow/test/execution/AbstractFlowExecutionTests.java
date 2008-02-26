@@ -104,7 +104,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 */
 	protected void startFlow(ExternalContext context) throws FlowExecutionException {
 		flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
-		flowExecution.start(context);
+		flowExecution.start(null, context);
 	}
 
 	/**
