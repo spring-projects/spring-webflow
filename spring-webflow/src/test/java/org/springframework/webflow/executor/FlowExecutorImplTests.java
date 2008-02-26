@@ -178,10 +178,10 @@ public class FlowExecutorImplTests extends TestCase {
 	}
 
 	private void replayMocks() {
-		EasyMock.replay(new Object[] { locator, definition, factory, execution, repository });
+		EasyMock.replay(new Object[] { locator, definition, factory, execution, repository, lock });
 	}
 
 	private void verifyMocks() {
-		EasyMock.verify(new Object[] { locator, definition, factory, execution, repository });
+		EasyMock.verify(new Object[] { locator, definition, factory, execution, repository, lock });
 	}
 }

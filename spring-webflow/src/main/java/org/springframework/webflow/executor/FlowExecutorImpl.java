@@ -126,6 +126,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 			ExternalContextHolder.setExternalContext(context);
 			FlowExecutionKey key = executionRepository.parseFlowExecutionKey(flowExecutionKey);
 			FlowExecutionLock lock = executionRepository.getLock(key);
+			lock.lock();
 			try {
 				FlowExecution flowExecution = executionRepository.getFlowExecution(key);
 				flowExecution.resume(context);
