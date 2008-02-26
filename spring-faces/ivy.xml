@@ -54,7 +54,7 @@
 		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
 		<dependency org="jboss" name="jboss-el" rev="1.0" conf="test->default"/>
 		<dependency org="org.apache.shale" name="shale-test" rev="1.0.4" conf="test->default" />
-		<dependency org="org.springframework" name="spring-test" rev="2.5-rc2" conf="test->default" />
+		<dependency org="org.springframework" name="spring-test" rev="2.5.1" conf="test->default" />
 		
 	</dependencies>
 

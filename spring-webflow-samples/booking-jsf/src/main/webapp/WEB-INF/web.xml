@@ -44,10 +44,10 @@
 
 	<!-- The front controller of the Spring Web application, responsible for handling all application requests -->
 	<servlet>
-		<servlet-name>Spring Web Servlet</servlet-name>
-		<servlet-class>org.springframework.webflow.servlet.SpringWebServlet</servlet-class>
+		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispacherServlet</servlet-class>
 		<init-param>
-			<param-name>configLocations</param-name>
+			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
@@ -55,7 +55,7 @@
 		
 	<!-- Map all *.spring requests to the Web Servlet for handling -->
 	<servlet-mapping>
-		<servlet-name>Spring Web Servlet</servlet-name>
+		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
 		<url-pattern>/spring/*</url-pattern>
 	</servlet-mapping>
 
