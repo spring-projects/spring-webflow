@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.context;
 
-import org.springframework.util.Assert;
-
 /**
  * Simple holder class that associates an {@link ExternalContext} instance with the current thread. The ExternalContext
  * will not be inherited by any child threads spawned by the current thread.
@@ -43,14 +41,13 @@ public final class ExternalContextHolder {
 	/**
 	 * Return the ExternalContext associated with the current thread, if any.
 	 * @return the current ExternalContext
-	 * @throws IllegalStateException if no ExternalContext is bound to this thread
 	 */
 	public static ExternalContext getExternalContext() {
-		Assert.state(externalContextHolder.get() != null, "No external context is bound to this thread");
 		return (ExternalContext) externalContextHolder.get();
 	}
 
 	// not instantiable
 	private ExternalContextHolder() {
 	}
+
 }

@@ -3,6 +3,7 @@ package org.springframework.webflow.executor;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -66,6 +67,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertFalse(result.ended());
 		assertNull(result.getEndedOutcome());
 		assertNull(result.getEndedOutput());
+		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 	}
 
@@ -94,6 +96,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertTrue(result.getEndedOutput().isEmpty());
 		assertFalse(result.paused());
 		assertNull(result.getPausedKey());
+		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 	}
 
@@ -130,6 +133,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertFalse(result.ended());
 		assertNull(result.getEndedOutcome());
 		assertNull(result.getEndedOutput());
+		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 
 	}
@@ -169,7 +173,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertEquals(output, result.getEndedOutput());
 		assertFalse(result.paused());
 		assertNull(result.getPausedKey());
-
+		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 	}
 

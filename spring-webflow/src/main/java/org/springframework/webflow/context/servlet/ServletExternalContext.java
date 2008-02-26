@@ -243,6 +243,8 @@ public class ServletExternalContext implements ExternalContext {
 	private void init(ServletContext context, HttpServletRequest request, HttpServletResponse response,
 			FlowUrlHandler flowUrlHandler) {
 		this.context = context;
+		this.request = request;
+		this.response = response;
 		this.requestParameterMap = new LocalParameterMap(new HttpServletRequestParameterMap(request));
 		this.requestMap = new LocalAttributeMap(new HttpServletRequestMap(request));
 		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(request));

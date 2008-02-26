@@ -45,7 +45,7 @@
 	<!-- The front controller of the Spring Web application, responsible for handling all application requests -->
 	<servlet>
 		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispacherServlet</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/web-application-config.xml</param-value>

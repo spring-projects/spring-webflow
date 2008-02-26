@@ -19,11 +19,14 @@ import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
 /**
  * Unit tests for {@link ServletExternalContext}.
  */
 public class ServletExternalContextTests extends TestCase {
+
+	private MockServletContext servletContext;
 
 	private MockHttpServletRequest request;
 
@@ -32,12 +35,63 @@ public class ServletExternalContextTests extends TestCase {
 	private ServletExternalContext context;
 
 	protected void setUp() {
+		servletContext = new MockServletContext();
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
+		context = new ServletExternalContext(servletContext, request, response);
 	}
 
-	public void testtest() {
+	public void testGetContextPath() {
+		request.setContextPath("/foo");
+		assertEquals("/foo", request.getContextPath());
+	}
 
+	public void testRequestParameters() {
+		assertTrue(context.getRequestParameterMap().isEmpty());
+	}
+
+	public void testGetNativeObjects() {
+		assertEquals(servletContext, context.getNativeContext());
+		assertEquals(request, context.getNativeRequest());
+		assertEquals(response, context.getNativeResponse());
+	}
+
+	public void testNotAnAjaxRequest() {
+		assertFalse(context.isAjaxRequest());
+	}
+
+	public void testAjaxRequestAcceptHeader() {
+		request.addHeader("Accept", "text/html;type=ajax");
+		assertTrue(context.isAjaxRequest());
+	}
+
+	public void testAjaxRequestParam() {
+		request.addParameter("ajaxSource", "myButton");
+		assertTrue(context.isAjaxRequest());
+	}
+
+	public void testNotResponseCommitted() {
+		assertFalse(context.isResponseCommitted());
+	}
+
+	public void testCommitExecutionRedirect() {
+		context.requestFlowExecutionRedirect();
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.flowExecutionRedirectRequested());
+	}
+
+	public void testCommitFlowRedirect() {
+		context.requestFlowDefinitionRedirect("foo", null);
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.flowDefinitionRedirectRequested());
+		assertEquals("foo", context.getFlowRedirectFlowId());
+	}
+
+	public void testCommitExternalRedirect() {
+		context.requestExternalRedirect("foo");
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.externalRedirectRequested());
+		assertEquals("foo", context.getExternalRedirectUrl());
 	}
 
 }
