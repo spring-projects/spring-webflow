@@ -2,11 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:faces="http://www.springframework.org/schema/faces-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           http://www.springframework.org/schema/faces-config
+           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd">
 
 	<!-- Imports the "application-layer" definining business logic and data access services -->
 	<import resource="application-layer-config.xml"/>
@@ -16,34 +19,17 @@
 	</bean>
 	
 	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<web:flow-execution-attributes>
-            <web:alwaysRedirectOnPause value="true" />
-        </web:flow-execution-attributes>
 		<web:flow-execution-listeners>
-			<web:listener ref="jpaFlowExecutionListener" criteria="*" />
+			<web:listener ref="jpaFlowExecutionListener" criteria="*"/>
 		</web:flow-execution-listeners>
 	</web:flow-executor>
 	
-	<web:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
-		<web:flow-location path="flow/main/main.xml" />
-		<web:flow-location path="flow/booking/booking.xml" />
+	<web:flow-registry id="flowRegistry" flow-builder-services="facesServices">
+		<web:flow-location path="/WEB-INF/flow/main/main.xml" />
+		<web:flow-location path="/WEB-INF/flow/booking/booking.xml" />
 	</web:flow-registry>
-
-	<bean id="flowBuilderServices" class="org.springframework.webflow.engine.builder.support.FlowBuilderServices">
-		<property name="expressionParser">
-			<bean class="org.springframework.webflow.core.expression.el.WebFlowELExpressionParser">
-				<constructor-arg >
-					<bean class="org.jboss.el.ExpressionFactoryImpl" />
-				</constructor-arg>
-			</bean>
-		</property>
-		<property name="viewFactoryCreator">
-			<bean class="org.springframework.faces.webflow.JsfViewFactoryCreator"/>
-		</property>
-		<property name="conversionService">
-			<bean class="org.springframework.faces.model.converter.FacesConversionService"/>
-		</property>
-	</bean>
+	
+	<faces:flow-builder-services id="facesServices"/>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
