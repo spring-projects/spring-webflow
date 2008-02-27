@@ -35,19 +35,6 @@
 		<url-pattern>/resources/*</url-pattern>
 	</servlet-mapping>
 	
-	<!-- Here so the JSF implementation can initialize, *not* used at runtime -->
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
-	<!-- Dummy mapping for faces initialization -->
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.faces</url-pattern>
-	</servlet-mapping>
-
 	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
 	<servlet>
 		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
