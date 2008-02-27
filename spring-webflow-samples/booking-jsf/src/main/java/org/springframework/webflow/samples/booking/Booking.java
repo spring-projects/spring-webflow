@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,11 +16,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+
 /**
  * A Hotel Booking made by a User.
  */
 @Entity
 public class Booking implements Serializable {
+
+    private static final long serialVersionUID = 1171567558348174963L;
+
     private Long id;
 
     private User user;
@@ -166,6 +172,18 @@ public class Booking implements Serializable {
 
     public void setCreditCardExpiryYear(int creditCardExpiryYear) {
 	this.creditCardExpiryYear = creditCardExpiryYear;
+    }
+
+    public void validate(MessageContext context) {
+	Calendar calendar = Calendar.getInstance();
+	calendar.add(Calendar.DAY_OF_MONTH, -1);
+	if (checkinDate.before(calendar.getTime())) {
+	    context.addMessage(new MessageBuilder().source("checkinDate").defaultText(
+		    "Check in date must be a future date").error().build());
+	} else if (!checkinDate.before(checkoutDate)) {
+	    context.addMessage(new MessageBuilder().source("checkoutDate").defaultText(
+		    "Check out date must be later than check in date").error().build());
+	}
     }
 
     @Override

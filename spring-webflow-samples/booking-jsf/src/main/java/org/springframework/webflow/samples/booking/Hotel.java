@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,6 +13,9 @@ import javax.persistence.Id;
  */
 @Entity
 public class Hotel implements Serializable {
+
+    private static final long serialVersionUID = 4011346719502656269L;
+
     private Long id;
 
     private String name;

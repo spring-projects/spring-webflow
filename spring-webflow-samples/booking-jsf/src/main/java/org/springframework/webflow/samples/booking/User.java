@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 
@@ -12,6 +12,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Customer")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = -3652559447682574722L;
+
     private String username;
 
     private String password;

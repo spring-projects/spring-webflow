@@ -12,10 +12,8 @@
 	-->
 	<attribute name="persistenceContext" value="true" />
 	
-	<var name="bookingOptions" class="org.springframework.webflow.samples.booking.flow.booking.BookingOptions"/>
-	
 	<input-mapper>
-		<input-attribute name="#{id}" scope="flow" />
+		<mapping source="#{id}" target="#{flowScope.id}" />
 	</input-mapper>
 
 	<start-state idref="loadHotel"/>
@@ -26,12 +24,13 @@
 	</action-state>
 	
 	<action-state id="createBooking">
-		<action method="createBooking" bean="bookingActions"/>
+		<evaluate-action expression="#{bookingService.createBooking(hotel, user)}" result="#{flowScope.booking}"/>
 		<transition on="success" to="enterBookingDetails" />
 	</action-state>
 	
 	<view-state id="enterBookingDetails" view="bookingForm.xhtml">
 		<transition on="proceed" to="confirmBooking">
+			<evaluate-action expression="booking.validate(messageContext)" />
 			<action method="validateBooking" bean="bookingActions" />
 		</transition>
 		<transition on="cancel" to="cancel" />

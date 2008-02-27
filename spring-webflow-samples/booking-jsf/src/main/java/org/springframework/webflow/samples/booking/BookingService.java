@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.util.List;
 
@@ -17,12 +17,10 @@ public interface BookingService {
 
     /**
      * Find hotels available for booking by some criteria.
-     * @param searchString the search query string to filter hotels by name
-     * @param pageSize the page size
-     * @param page the current page
-     * @return a list of hotels not exceeding the page size
+     * @param criteria the search criteria
+     * @return a list of hotels meeting the criteria
      */
-    public List<Hotel> findHotels(String searchString, int pageSize, int page);
+    public List<Hotel> findHotels(SearchCriteria criteria);
 
     /**
      * Find hotels by their identifier.
@@ -30,6 +28,14 @@ public interface BookingService {
      * @return the hotel
      */
     public Hotel findHotelById(Long id);
+
+    /**
+     * Returns a new booking object attached to the current persistence context.
+     * @param hotel the hotel being booked
+     * @param user the user performing the booking
+     * @return the booking
+     */
+    public Booking createBooking(Hotel hotel, User user);
 
     /**
      * Cancel an existing booking.

@@ -5,9 +5,9 @@
              version="1.0">
    <persistence-unit name="bookingDatabase">
       <provider>org.hibernate.ejb.HibernatePersistence</provider>
-      <class>org.springframework.webflow.samples.booking.app.User</class>
-      <class>org.springframework.webflow.samples.booking.app.Booking</class>
-      <class>org.springframework.webflow.samples.booking.app.Hotel</class>
+      <class>org.springframework.webflow.samples.booking.User</class>
+      <class>org.springframework.webflow.samples.booking.Booking</class>
+      <class>org.springframework.webflow.samples.booking.Hotel</class>
       <properties>
       	 <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
       	 <property name="hibernate.hbm2ddl.auto" value="create-drop" />

@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * A JPA-based implementation of the Booking Service. Delegates to a JPA entity manager to issue data access calls
@@ -33,13 +32,12 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Hotel> findHotels(String searchString, int pageSize, int page) {
-	String pattern = !StringUtils.hasText(searchString) ? "'%'" : "'%"
-		+ searchString.toLowerCase().replace('*', '%') + "%'";
+    public List<Hotel> findHotels(SearchCriteria criteria) {
+	String pattern = getSearchPattern(criteria);
 	return em.createQuery(
 		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
 			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
-		pageSize).setFirstResult(page * pageSize).getResultList();
+		criteria.getPageSize()).setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +45,15 @@ public class JpaBookingService implements BookingService {
 	return em.find(Hotel.class, id);
     }
 
-    // this one is a read/write transaction
+    // read-write transactional methods
+
+    @Transactional
+    public Booking createBooking(Hotel hotel, User user) {
+	Booking booking = new Booking(hotel, user);
+	em.persist(booking);
+	return booking;
+    }
+
     @Transactional
     public void cancelBooking(Long id) {
 	Booking booking = em.find(Booking.class, id);
@@ -55,4 +61,15 @@ public class JpaBookingService implements BookingService {
 	    em.remove(booking);
 	}
     }
+
+    // helpers
+
+    private String getSearchPattern(SearchCriteria criteria) {
+	if (criteria.getSearchString().length() > 0) {
+	    return "'%'" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	} else {
+	    return "'%";
+	}
+    }
+
 }
