@@ -10,26 +10,5 @@
 		<config>src/main/webapp/WEB-INF/web-application-config.xml</config>
 	</configs>
 	<configSets>
-		<configSet>
-			<name><![CDATA[webapp-config]]></name>
-			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
-			<incomplete>false</incomplete>
-			<configs>
-			</configs>
-		</configSet>
-		<configSet>
-			<name><![CDATA[booking]]></name>
-			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
-			<incomplete>false</incomplete>
-			<configs>
-			</configs>
-		</configSet>
-		<configSet>
-			<name><![CDATA[main]]></name>
-			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
-			<incomplete>false</incomplete>
-			<configs>
-			</configs>
-		</configSet>
 	</configSets>
 </beansProjectDescription>
