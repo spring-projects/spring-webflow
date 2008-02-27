@@ -13,7 +13,7 @@ public interface BookingService {
      * @param username the user's name
      * @return their bookings
      */
-    public List<Booking> findBookings(String username);
+    public List<Booking> findBookings(User user);
 
     /**
      * Find hotels available for booking by some criteria.
@@ -30,16 +30,8 @@ public interface BookingService {
     public Hotel findHotelById(Long id);
 
     /**
-     * Returns a new booking object attached to the current persistence context.
-     * @param hotel the hotel being booked
-     * @param user the user performing the booking
-     * @return the booking
-     */
-    public Booking createBooking(Hotel hotel, User user);
-
-    /**
      * Cancel an existing booking.
      * @param id the booking id
      */
-    public void cancelBooking(Long id);
+    public void cancelBooking(Booking booking);
 }

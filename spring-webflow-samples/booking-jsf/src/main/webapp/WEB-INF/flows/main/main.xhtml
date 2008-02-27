@@ -7,46 +7,42 @@
 				template="/template.xhtml">
 
 <ui:define name="content">
+
 	<ui:fragment id="hotelSearchFragment">
 		<div id="hotelSearch" class="section">
 		    <span class="errors">
 		       <h:messages globalOnly="true"/>
 		    </span>
 			<h2>Search Hotels</h2>
-
-					<h:form id="mainForm">
-						<br/>
-						<br/>
-						<fieldset>
-							<div class="searchGroup">
-								<div class="searchField">
-								<sf:clientTextValidator promptMessage="Search hotels by name, address, city or zip.">
-									<h:inputText id="searchString" value="#{flowScope.searchCriteria.searchString}" style="width: 165px; height: 15px;"/>
-								</sf:clientTextValidator>
-								</div>
-								<div class="searchSize">
-								   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-								   	<h:selectOneMenu value="#{flowScope.searchCriteria.pageSize}" id="pageSize">
-										<f:selectItem itemLabel="5" itemValue="5"/>
-									    <f:selectItem itemLabel="10" itemValue="10"/>
-									    <f:selectItem itemLabel="20" itemValue="20"/>
-									</h:selectOneMenu>  
-						   		</div>
-								<div class="searchButton">
-									<sf:commandButton id="findHotels" value="Find Hotels" processIds="*" actionListener="#{searchCriteria.findHotelsListener}" action="findHotels"/>
-								</div>
-							</div>
-					    </fieldset>
-					</h:form>
-			  
+			<h:form id="mainForm"><br/><br/>
+				<fieldset>
+					<div class="searchGroup">
+						<div class="searchField">
+						<sf:clientTextValidator promptMessage="Search hotels by name, address, city, or zip.">
+							<h:inputText id="searchString" value="#{flowScope.searchCriteria.searchString}" style="width: 165px; height: 15px;"/>
+						</sf:clientTextValidator>
+						</div>
+						<div class="searchSize">
+						   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
+						   	<h:selectOneMenu value="#{flowScope.searchCriteria.pageSize}" id="pageSize">
+								<f:selectItem itemLabel="5" itemValue="5"/>
+							    <f:selectItem itemLabel="10" itemValue="10"/>
+							    <f:selectItem itemLabel="20" itemValue="20"/>
+							</h:selectOneMenu>  
+				   		</div>
+						<div class="searchButton">
+							<sf:commandButton id="findHotels" value="Find Hotels" processIds="hotelSearchFragment" action="findHotels"/>
+						</div>
+					</div>
+			    </fieldset>
+			</h:form>			  
 		</div>
 	</ui:fragment>
 
-	<ui:fragment id="bookingsSection">
+	<ui:fragment id="bookingsFragment">
 		<div class="section">
 			<h:form id="bookingsForm">
-				<h2>Current Hotel Bookings</h2>
-				
+				<h2>Current Hotel Bookings</h2>				
 				<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount == 0}"/>
 				<h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" rendered="#{bookings.rowCount > 0}">
 					<h:column>
@@ -75,13 +71,12 @@
 					</h:column>
 					<h:column>
 						<f:facet name="header">Action</f:facet>
-						<!-- @TODO - THIS LINK DOES NOT WORK ON MYFACES 1.2.0 WHEN AJAX IS ENABLED BECAUSE THEY HAVE NOT IMPLEMENTED UIData.invokeOnComponent -->			
-						<sf:commandLink id="cancel" value="Cancel" ajaxEnabled="false" processIds="bookingsSection" action="cancelBooking"/>
+						<sf:commandLink id="cancel" value="Cancel" ajaxEnabled="false" processIds="bookingsFragment" action="cancelBooking"/>
 					</h:column>
 				</h:dataTable>
 			</h:form>
 		</div>
 	</ui:fragment>
-</ui:define>
 
+</ui:define>
 </ui:composition>

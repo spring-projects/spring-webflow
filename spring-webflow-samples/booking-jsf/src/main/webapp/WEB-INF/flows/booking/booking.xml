@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<attribute name="description" value="The flow that handles the process of booking a hotel for a user"/>
+	<attribute name="description" value="The flow that handles the process of booking a hotel for a user" />
 
 	<!-- 
 		Indicates this flow requires a persistence context
@@ -19,12 +19,12 @@
 	<start-state idref="loadHotel"/>
 	
 	<action-state id="loadHotel">
-		<evaluate-action expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}"/>
+		<evaluate-action expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />
 		<transition on="success" to="createBooking"/>	
 	</action-state>
 	
 	<action-state id="createBooking">
-		<evaluate-action expression="#{bookingService.createBooking(hotel, user)}" result="#{flowScope.booking}"/>
+		<evaluate-action expression="#{flowHelper.createBooking(hotel, user, entityManager)}" result="#{flowScope.booking}" />
 		<transition on="success" to="enterBookingDetails" />
 	</action-state>
 	

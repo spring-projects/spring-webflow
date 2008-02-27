@@ -38,8 +38,7 @@
             <div class="label">Total payment:</div>
             <div class="output">
                 <h:outputText value="#{booking.total}">
-                    <f:convertNumber type="currency" 
-                                     currencySymbol="$"/>
+                    <f:convertNumber type="currency" currencySymbol="$"/>
                 </h:outputText>
             </div>
         </div>
@@ -60,7 +59,6 @@
     		<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
     		<h:commandButton id="cancel" value="Cancel" action="cancel"/>
 		</div>
-
 	</fieldset>
 	</h:form>
 </div>

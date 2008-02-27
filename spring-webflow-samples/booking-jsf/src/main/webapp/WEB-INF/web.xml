@@ -10,38 +10,32 @@
 		<param-value>.xhtml</param-value>
 	</context-param>
 	
-	<!-- Special Facelets Debug Output for Development -->
+	<!-- Enables special Facelets debug output during development -->
   	<context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
    		<param-value>true</param-value>
   	</context-param>
   	
-  	<!-- Cause Facelets to refresh templates during development -->
+  	<!-- Causes Facelets to refresh templates during development -->
   	<context-param>
   		<param-name>facelets.REFRESH_PERIOD</param-name>
   		<param-value>1</param-value>
   	</context-param>
   	
-  	<!-- Cause Facelets always reconstruct the component tree, cutting down on the amount of state that needs to be 
-  	serialized -->
-  	<context-param>
-  		<param-name>facelets.BUILD_BEFORE_RESTORE</param-name>
-  		<param-value>false</param-value>
-  	</context-param>
-
+  	<!-- Serves static resource content from .jar files such as spring-faces.jar -->
 	<servlet>
 		<servlet-name>Resources Servlet</servlet-name>
 		<servlet-class>org.springframework.faces.ui.resource.ResourceServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 		
-	<!-- Map all *.spring requests to the Web Servlet for handling -->
+	<!-- Map all /resources requests to the Resource Servlet for handling -->
 	<servlet-mapping>
 		<servlet-name>Resources Servlet</servlet-name>
 		<url-pattern>/resources/*</url-pattern>
 	</servlet-mapping>
 	
-	<!-- Here so the JSF implementation can initialize, not used at runtime -->
+	<!-- Here so the JSF implementation can initialize, *not* used at runtime -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -54,18 +48,18 @@
 		<url-pattern>*.faces</url-pattern>
 	</servlet-mapping>
 
-	<!-- The front controller of the Spring Web application, responsible for handling all application requests -->
+	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
 	<servlet>
 		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
+			<param-value>/WEB-INF/web-application-config.xml</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 		
-	<!-- Map all *.spring requests to the Web Servlet for handling -->
+	<!-- Map all /spring requests to the Dispatcher Servlet for handling -->
 	<servlet-mapping>
 		<servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
 		<url-pattern>/spring/*</url-pattern>

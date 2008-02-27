@@ -7,6 +7,7 @@
 				template="/template.xhtml">
 
 <ui:define name="content">
+
 <h:form id="displayHotelsForm">
 	<div class="section">
 			<sf:commandLink ajaxEnabled="false" value="Return to Main" action="changeSearch"/>
@@ -17,7 +18,7 @@
 			</p>
 			<ui:fragment id="searchResultsFragment">
 				<div id="searchResults">
-					<h:outputText id="noHotelsTxt" value="No Hotels Found" rendered="#{hotels.rowCount==0}"/>
+					<h:outputText id="noHotelsTxt" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
 					<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
 						<h:column>
 							<f:facet name="header">Name</f:facet>
@@ -37,17 +38,14 @@
 						</h:column>
 						<h:column>
 							<f:facet name="header">Action</f:facet>
-							<!-- @TODO - THIS LINK DOES NOT WORK ON MYFACES 1.2.0 WHEN AJAX IS ENABLED BECAUSE THEY HAVE NOT IMPLEMENTED UIData.invokeOnComponent -->
 							<sf:commandLink id="viewHotelLink" value="View Hotel" action="selectHotel"/>
 						</h:column>
 					</h:dataTable>
 					<div class="next">
-						<sf:commandLink id="nextPageLink" value="More Results" action="next"
-							rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
+						<sf:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
 					</div>
 					<div class="prev">
-						<sf:commandLink id="prevPageLink" value="Previous results" action="previous" 
-							rendered="#{searchCriteria.page > 0}"/>
+						<sf:commandLink id="prevPageLink" value="Previous results" action="previous" rendered="#{searchCriteria.page > 0}"/>
 					</div>
 				</div>
 			</ui:fragment>

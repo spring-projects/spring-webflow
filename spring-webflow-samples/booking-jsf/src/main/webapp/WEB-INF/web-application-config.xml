@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+       xmlns:faces="http://www.springframework.org/schema/faces-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           http://www.springframework.org/schema/faces-config
+           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd">
+
+	<!-- Activates annotation-based bean configuration -->
+	<context:annotation-config/>
+	
+	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
+	<tx:annotation-driven />
+	
+	<!-- Handles requests to the Spring Web Flow system -->
+	<bean name="/flows/*" class="org.springframework.webflow.mvc.FlowController">
+		<constructor-arg ref="flowExecutor" />
+	</bean>
+	
+	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="jpaFlowExecutionListener" criteria="*"/>
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
+	
+	<!-- The registry of executable flow definitions -->
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
+		<webflow:flow-location path="/WEB-INF/flows/*/*-flow.xml" />
+	</webflow:flow-registry>
+	
+	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
+	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
+	</bean>
+
+	<!-- Configures the Spring Web Flow JSF integration -->
+	<faces:flow-builder-services id="facesFlowBuilderServices"/>
+
+	<!-- Drives transactions using local JPA APIs -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+		
+	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider and a simple in-memory data source populated with test data -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+		</property>
+	</bean>
+
+	<!-- Deploys a in-memory "booking" datasource populated -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:booking" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+		
+</beans>

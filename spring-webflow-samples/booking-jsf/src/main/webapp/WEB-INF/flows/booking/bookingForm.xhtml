@@ -4,7 +4,6 @@
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:sf="http://www.springframework.org/tags/faces"
-                xmlns:sfe="http://www.springframework.org/tags/faces-ext"
 				template="/template.xhtml">
 
 <ui:define name="content">
@@ -119,13 +118,12 @@
 				</h:selectOneMenu>
 			</div>
 		</div>
-
-			<div class="buttonGroup">
-				<sf:validateAllOnClick>
-					<h:commandButton id="proceed" action="proceed" value="Proceed"/>
-				</sf:validateAllOnClick>
-				<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
-			</div>
+		<div class="buttonGroup">
+			<sf:validateAllOnClick>
+				<h:commandButton id="proceed" action="proceed" value="Proceed"/>
+			</sf:validateAllOnClick>
+			<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
+		</div>
 	</fieldset>
 	</h:form>
 </div>

@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * against the backing repository. The EntityManager reference is provided by the managing container (Spring)
  * automatically.
  */
+@Service
 @Repository
 public class JpaBookingService implements BookingService {
 
@@ -25,9 +27,9 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Booking> findBookings(String username) {
+    public List<Booking> findBookings(User user) {
 	return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
-		.setParameter("username", username).getResultList();
+		.setParameter("username", user.getName()).getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -48,18 +50,8 @@ public class JpaBookingService implements BookingService {
     // read-write transactional methods
 
     @Transactional
-    public Booking createBooking(Hotel hotel, User user) {
-	Booking booking = new Booking(hotel, user);
-	em.persist(booking);
-	return booking;
-    }
-
-    @Transactional
-    public void cancelBooking(Long id) {
-	Booking booking = em.find(Booking.class, id);
-	if (booking != null) {
-	    em.remove(booking);
-	}
+    public void cancelBooking(Booking booking) {
+	em.remove(booking);
     }
 
     // helpers
