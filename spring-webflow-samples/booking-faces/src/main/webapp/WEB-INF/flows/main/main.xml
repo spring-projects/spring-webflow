@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd" start-state="enterSearchCriteria">
+	
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
+	
+	<view-state id="enterSearchCriteria">
+		<render-actions>
+			<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" type="dataModel" />
+		</render-actions>
+		<transition on="search" to="reviewHotels" />
+		<transition on="cancelBooking" to="cancelBooking" />
+	</view-state>
+	
+	<view-state id="reviewHotels">
+		<render-actions>
+			<evaluate-action expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" type="dataModel" />
+		</render-actions>
+		<transition on="previous">
+			<evaluate-action expression="#{searchCriteria.previousPage()}" />
+			<render components="searchResultsFragment" />
+		</transition>
+		<transition on="next">
+			<evaluate-action expression="#{searchCriteria.nextPage()}" />
+			<render components="searchResultsFragment" />
+		</transition>
+		<transition on="select" to="reviewHotel" />
+		<transition on="changeSearch" to="changeSearchCriteria" />
+	</view-state>
+	
+	<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" modal="true">
+		<entry-actions>
+			<render components="searchResultsFragment"/>
+		</entry-actions>
+		<transition on="search" to="reviewHotels" />
+	</view-state>
+	
+	<view-state id="reviewHotel">
+		<render-actions>
+			<set attribute="#{requestScope.hotel}" value="#{hotels.selectedRow}" />
+		</render-actions>
+		<transition on="book" to="bookHotel" />
+		<transition on="cancel" to="enterSearchCriteria" />
+	</view-state>
+	
+	<subflow-state id="bookHotel" flow="booking">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="#{hotels.selectedRow.id}" target="#{id}" />
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="bookingConfirmed" to="finish" />
+		<transition on="bookingCancelled" to="enterSearchCriteria" />
+	</subflow-state>
+	
+	<end-state id="finish"/>
+			
+</flow>

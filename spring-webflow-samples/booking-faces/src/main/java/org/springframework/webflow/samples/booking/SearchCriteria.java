@@ -58,7 +58,7 @@ public class SearchCriteria implements Serializable {
     /**
      * Decrease the current page
      */
-    public void prevPage() {
+    public void previousPage() {
 	page--;
     }
 

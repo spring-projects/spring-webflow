@@ -40,7 +40,7 @@
 	
 	<!-- The registry of executable flow definitions -->
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
-		<webflow:flow-location path="/WEB-INF/flows/*/*-flow.xml" />
+		<webflow:flow-location path="/WEB-INF/flows/*/*.xml" />
 	</webflow:flow-registry>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
