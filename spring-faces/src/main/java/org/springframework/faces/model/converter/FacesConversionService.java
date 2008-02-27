@@ -2,9 +2,7 @@ package org.springframework.faces.model.converter;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.DefaultConversionService;
-import org.springframework.faces.model.ManySelectionTrackingListDataModel;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
-import org.springframework.faces.model.SerializableListDataModel;
 
 /**
  * Convenient {@link ConversionService} implementation for JSF that composes JSF-specific converters with the standard
@@ -22,8 +20,6 @@ public class FacesConversionService extends DefaultConversionService {
 	protected void addFacesConverters() {
 		addConverter(new DataModelConverter());
 
-		addAlias("listDataModel", SerializableListDataModel.class);
-		addAlias("selectOneDataModel", OneSelectionTrackingListDataModel.class);
-		addAlias("selectManyDataModel", ManySelectionTrackingListDataModel.class);
+		addAlias("dataModel", OneSelectionTrackingListDataModel.class);
 	}
 }
