@@ -9,7 +9,7 @@
 	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
 	
 	<start-actions>
-		<evaluate-action expression="#{bookingService.findBookings(sessionMap.currentUser)}" result="#{flowScope.bookings}" type="dataModel" />
+		<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" type="dataModel" />
 	</start-actions>
 	
 	<start-state idref="displayMain" />
