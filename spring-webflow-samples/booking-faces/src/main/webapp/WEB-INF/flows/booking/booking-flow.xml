@@ -5,7 +5,7 @@
                           http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<attribute name="description" value="The flow that handles the process of booking a hotel for a user" />
-	<attribute name="persistenceContext" value="true" />
+	<attribute name="persistenceContext" value="true" type="boolean"/>
 	
 	<input-mapper>
 		<mapping source="#{id}" target="#{flowScope.id}" />
