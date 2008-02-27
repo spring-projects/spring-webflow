@@ -9,7 +9,7 @@
        http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<!-- The central service of this application that can query hotels and bookings, as well as cancel bookings -->
-	<bean id="bookingService" class="org.springframework.webflow.samples.booking.app.JpaBookingService" />
+	<bean id="bookingService" class="org.springframework.webflow.samples.booking.JpaBookingService" />
 
 	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider and a simple in-memory data source populated with test data -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
