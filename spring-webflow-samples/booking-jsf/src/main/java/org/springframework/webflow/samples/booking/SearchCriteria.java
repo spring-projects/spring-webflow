@@ -2,8 +2,6 @@ package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 
-import org.springframework.util.StringUtils;
-
 /**
  * A backing bean for the main hotel search form. Encapsulates the criteria needed to perform a hotel search.
  */
@@ -65,12 +63,6 @@ public class SearchCriteria implements Serializable {
     }
 
     public String toString() {
-	StringBuffer criteria = new StringBuffer();
-	if (StringUtils.hasText(searchString)) {
-	    criteria.append("Text: " + searchString + ", ");
-	}
-	criteria.append("Page Size: " + pageSize);
-	return criteria.toString();
+	return "searchString = '" + searchString + "'";
     }
-
 }

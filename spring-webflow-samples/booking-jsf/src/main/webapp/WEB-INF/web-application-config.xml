@@ -18,7 +18,7 @@
            http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd">
 
 	<!-- Activates annotation-based bean configuration -->
-	<context:annotation-config/>
+	<context:annotation-config />
 	
 	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
 	<tx:annotation-driven />
@@ -31,7 +31,7 @@
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<webflow:flow-execution-listeners>
-			<webflow:listener ref="jpaFlowExecutionListener" criteria="*"/>
+			<webflow:listener ref="jpaFlowExecutionListener" criteria="*" />
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
 	
@@ -47,7 +47,7 @@
 	</bean>
 
 	<!-- Configures the Spring Web Flow JSF integration -->
-	<faces:flow-builder-services id="facesFlowBuilderServices"/>
+	<faces:flow-builder-services id="facesFlowBuilderServices" />
 
 	<!-- Drives transactions using local JPA APIs -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -58,7 +58,7 @@
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
 	</bean>
 
