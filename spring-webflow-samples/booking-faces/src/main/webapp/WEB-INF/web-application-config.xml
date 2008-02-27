@@ -22,7 +22,10 @@
 	
 	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
 	<tx:annotation-driven />
-	
+
+	<!-- Scans for application components to deploy -->
+	<context:component-scan base-package="org.springframework.webflow.samples.booking" />
+		
 	<!-- Handles requests to the Spring Web Flow system -->
 	<bean name="/flows/*" class="org.springframework.webflow.mvc.FlowController">
 		<constructor-arg ref="flowExecutor" />
