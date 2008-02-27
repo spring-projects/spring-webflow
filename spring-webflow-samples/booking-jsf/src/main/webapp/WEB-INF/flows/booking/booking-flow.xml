@@ -31,7 +31,6 @@
 	<view-state id="enterBookingDetails" view="bookingForm.xhtml">
 		<transition on="proceed" to="confirmBooking">
 			<evaluate-action expression="booking.validate(messageContext)" />
-			<action method="validateBooking" bean="bookingActions" />
 		</transition>
 		<transition on="cancel" to="cancel" />
 	</view-state>
@@ -51,7 +50,5 @@
 		<!-- Indicates changes to managed persistent entities should be committed to the database at this point -->
 		<attribute name="commit" value="true" type="boolean" />
 	</end-state>
-	
-	<import resource="booking-beans.xml"/>
 	
 </flow>

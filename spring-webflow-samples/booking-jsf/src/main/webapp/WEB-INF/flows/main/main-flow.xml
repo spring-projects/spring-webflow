@@ -23,11 +23,11 @@
 		<render-actions>
 			<evaluate-action expression="#{bookingService.findHotels(searchCriteria)}" result="#{flowScope.hotels}" type="dataModel" />
 		</render-actions>
-		<transition on="previous" to="findHotels">
+		<transition on="previous">
 			<evaluate-action expression="#{searchCriteria.prevPage()}" />
 			<set attribute="#{flashScope.renderIds}" value="searchResultsFragment" />
 		</transition>
-		<transition on="next" to="findHotels">
+		<transition on="next">
 			<evaluate-action expression="#{searchCriteria.nextPage()}" />
 			<set attribute="#{flashScope.renderIds}" value="searchResultsFragment" />
 		</transition>
