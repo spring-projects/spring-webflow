@@ -179,7 +179,7 @@ SpringFaces.DojoAjaxHandler.prototype = {
 	renderURLToModalDialog: function(url, ioArgs) {
 		dojo.require("dijit.Dialog");
 		
-		url = url + "?"+dojo.objectToQuery(ioArgs.args.content);
+		url = url + "&"+dojo.objectToQuery(ioArgs.args.content);
 		
 		var dialog = new dijit.Dialog({href: url});
 		dialog.show();
