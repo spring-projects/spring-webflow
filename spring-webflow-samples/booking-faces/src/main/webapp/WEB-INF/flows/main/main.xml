@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi=" http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
-      start-state="enterSearchCriteria">
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 	
 	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
 	
 	<view-state id="enterSearchCriteria">
 		<render-actions>
-			<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" type="dataModel" />
+			<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" result-type="dataModel" />
 		</render-actions>
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
@@ -18,15 +17,15 @@
 	
 	<view-state id="reviewHotels">
 		<render-actions>
-			<evaluate-action expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" type="dataModel" />
+			<evaluate-action expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
 		</render-actions>
 		<transition on="previous">
 			<evaluate-action expression="#{searchCriteria.previousPage()}" />
-			<render components="searchResultsFragment" />
+			<render fragments="searchResultsFragment" />
 		</transition>
 		<transition on="next">
 			<evaluate-action expression="#{searchCriteria.nextPage()}" />
-			<render components="searchResultsFragment" />
+			<render fragments="searchResultsFragment" />
 		</transition>
 		<transition on="select" to="reviewHotel" />
 		<transition on="changeSearch" to="changeSearchCriteria" />
@@ -50,9 +49,9 @@
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>
 
-	<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" modal="true">
+	<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
 		<entry-actions>
-			<render components="hotelSearchFragment" />
+			<render fragments="hotelSearchFragment" />
 		</entry-actions>
 		<transition on="search" to="reviewHotels" />
 	</view-state>
