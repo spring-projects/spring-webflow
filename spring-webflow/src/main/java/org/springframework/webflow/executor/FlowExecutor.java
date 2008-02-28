@@ -42,7 +42,6 @@ public interface FlowExecutor {
 
 	/**
 	 * Resume the flow execution with the provided execution key.
-	 * @param flowId the id of the flow definition
 	 * @param flowExecutionKey the key of a paused execution of the flow definition
 	 * @param context access to the calling environment
 	 */

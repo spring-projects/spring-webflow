@@ -172,7 +172,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 
 	/**
 	 * Get the flow definition to be tested.
-	 * @param a helper for constructing the resource to be tested
+	 * @param resourceFactory a helper for constructing the resource to be tested
 	 * @return the flow definition resource
 	 */
 	protected abstract FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory);
