@@ -19,6 +19,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 
 /**
@@ -46,6 +47,7 @@ import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Scott Andrews
  */
 public interface FlowExecutionListener {
 
@@ -92,9 +94,16 @@ public interface FlowExecutionListener {
 	/**
 	 * Called when an event is signaled in the current state, but prior to any state transition.
 	 * @param context the source of the event
-	 * @param event the event that occured
+	 * @param event the event that occurred
 	 */
 	public void eventSignaled(RequestContext context, Event event);
+
+	/**
+	 * Called when a transition is matched but before the transition occurs.
+	 * @param context the source of the event
+	 * @param transition the proposed transition
+	 */
+	public void transitionExecuting(RequestContext context, TransitionDefinition transition);
 
 	/**
 	 * Called when a state transitions, after the transition is matched but before the transition occurs.
@@ -105,7 +114,7 @@ public interface FlowExecutionListener {
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException;
 
 	/**
-	 * Called when a state transitions, after the transition occured.
+	 * Called when a state transitions, after the transition occurred.
 	 * @param context the source of the event
 	 * @param previousState <i>from</i> state of the transition
 	 * @param state <i>to</i> state of the transition

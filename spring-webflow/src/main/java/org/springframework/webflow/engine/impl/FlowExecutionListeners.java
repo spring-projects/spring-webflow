@@ -19,6 +19,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
@@ -32,6 +33,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Scott Andrews
  */
 class FlowExecutionListeners {
 
@@ -148,6 +150,15 @@ class FlowExecutionListeners {
 	public void fireStateEntered(RequestContext context, StateDefinition previousState) {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].stateEntered(context, previousState, context.getCurrentState());
+		}
+	}
+
+	/**
+	 * Notify all interested listeners that a transition is being entered in the flow execution.
+	 */
+	public void fireTransitionExecuting(RequestContext context, TransitionDefinition transition) {
+		for (int i = 0; i < listeners.length; i++) {
+			listeners[i].transitionExecuting(context, transition);
 		}
 	}
 

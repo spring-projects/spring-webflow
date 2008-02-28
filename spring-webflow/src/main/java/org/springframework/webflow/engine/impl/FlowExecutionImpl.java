@@ -350,6 +350,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	void execute(Transition transition, RequestControlContext context) {
+		listeners.fireTransitionExecuting(context, transition);
 		transition.execute(getCurrentState(), context);
 	}
 

@@ -20,12 +20,14 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 
 /**
  * Mock implementation of the <code>FlowExecutionListener</code> interface for use in unit tests.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Scott Andrews
  */
 public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 
@@ -44,6 +46,8 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	private int stateEnteringCount;
 
 	private int stateEnteredCount;
+
+	private int transitionExecutingCount;
 
 	private int resumingCount;
 
@@ -158,6 +162,13 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	/**
+	 * Returns the number of transitions entered so far.
+	 */
+	public int getTransitionExecutingCount() {
+		return transitionExecutingCount;
+	}
+
+	/**
 	 * Returns the number of events signaled so far.
 	 */
 	public int getEventSignaledCount() {
@@ -246,6 +257,10 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		stateEnteredCount++;
 	}
 
+	public void transitionExecuting(RequestContext context, TransitionDefinition transition) {
+		transitionExecutingCount++;
+	}
+
 	public void paused(RequestContext context) {
 		executing = false;
 		paused = true;
@@ -302,6 +317,7 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		sessionStartedCount = 0;
 		stateEnteringCount = 0;
 		stateEnteredCount = 0;
+		transitionExecutingCount = 0;
 		eventSignaledCount = 0;
 		pausedCount = 0;
 		resumingCount = 0;

@@ -25,7 +25,9 @@ import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.StubViewFactory;
+import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
@@ -72,6 +74,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(1, mockListener.getSessionEndingCount());
 		assertEquals(1, mockListener.getSessionEndedCount());
 		assertEquals(0, mockListener.getEventSignaledCount());
+		assertEquals(0, mockListener.getTransitionExecutingCount());
 		assertEquals(0, mockListener.getPausedCount());
 		assertEquals(0, mockListener.getResumingCount());
 		assertEquals(0, mockListener.getExceptionThrownCount());
@@ -280,6 +283,29 @@ public class FlowExecutionImplTests extends TestCase {
 			assertEquals(1, mockListener.getResumingCount());
 			assertEquals(2, mockListener.getPausedCount());
 		}
+	}
+
+	public void testExecuteTransition() {
+		Flow flow = new Flow("flow");
+		ViewState state = new ViewState(flow, "view", new StubViewFactory()) {
+			public void resume(RequestControlContext context) {
+				context.execute(getRequiredTransition(context));
+			}
+		};
+		state.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("finish")));
+		EndState end = new EndState(flow, "finish");
+		MockFlowExecutionListener mockListener = new MockFlowExecutionListener();
+		FlowExecutionListener[] listeners = new FlowExecutionListener[] { mockListener };
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		execution.setListeners(listeners);
+		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
+		execution.setKeyFactory(new MockFlowExecutionKeyFactory());
+		MockExternalContext context = new MockExternalContext();
+		execution.start(null, context);
+		assertEquals(0, mockListener.getTransitionExecutingCount());
+		execution.resume(context);
+		assertTrue(execution.hasEnded());
+		assertEquals(1, mockListener.getTransitionExecutingCount());
 	}
 
 	public void testRequestContextManagedOnStartAndResume() {

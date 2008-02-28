@@ -19,6 +19,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 
 /**
  * An abstract adapter class for listeners (observers) of flow execution lifecycle events. The methods in this class are
@@ -26,6 +27,7 @@ import org.springframework.webflow.definition.StateDefinition;
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public abstract class FlowExecutionListenerAdapter implements FlowExecutionListener {
 
@@ -45,6 +47,9 @@ public abstract class FlowExecutionListenerAdapter implements FlowExecutionListe
 	}
 
 	public void eventSignaled(RequestContext context, Event event) {
+	}
+
+	public void transitionExecuting(RequestContext context, TransitionDefinition transition) {
 	}
 
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
