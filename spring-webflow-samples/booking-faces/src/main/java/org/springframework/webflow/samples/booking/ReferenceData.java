@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.web;
+package org.springframework.webflow.samples.booking;
 
 import java.util.ArrayList;
 import java.util.List;
