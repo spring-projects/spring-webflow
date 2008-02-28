@@ -11,8 +11,9 @@
 	</input-mapper>
 
 	<start-actions>
-		<evaluate-action expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />	
-		<evaluate-action expression="#{flowHelper.createBooking(hotel, user, entityManager)}" result="#{flowScope.booking}" />
+		<evaluate-action expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />
+		<evaluate-action expression="Booking.newInstance(hotel, user)" result="#{flowScope.booking}"/>
+		<evaluate-action expression="entityManager.persist(booking)"/>
 	</start-actions>
 	
 	<view-state id="enterBookingDetails">
