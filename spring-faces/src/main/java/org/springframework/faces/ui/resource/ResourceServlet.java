@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -31,6 +33,8 @@ public class ResourceServlet extends HttpServlet {
 
 	private static final String HTTP_CACHE_CONTROL_HEADER = "Cache-Control";
 
+	private static final Log log = LogFactory.getLog(ResourceServlet.class);
+
 	private Map defaultMimeTypes = new HashMap();
 	{
 		defaultMimeTypes.put(".css", "text/css");
@@ -44,9 +48,18 @@ public class ResourceServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		URL resource = getRequestResourceURL(request);
+		String localResourcePath = request.getPathInfo();
+
+		if (log.isDebugEnabled()) {
+			log.debug("Attempting to GET resource: " + localResourcePath);
+		}
+
+		URL resource = getRequestResourceURL(localResourcePath);
 
 		if (resource == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("Resource not found: " + localResourcePath);
+			}
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
@@ -80,9 +93,12 @@ public class ResourceServlet extends HttpServlet {
 	}
 
 	protected long getLastModified(HttpServletRequest request) {
+		if (log.isDebugEnabled()) {
+			log.debug("Checking last modified of resource: " + request.getPathInfo());
+		}
 		URL resource;
 		try {
-			resource = getRequestResourceURL(request);
+			resource = getRequestResourceURL(request.getPathInfo());
 		} catch (MalformedURLException e) {
 			return -1;
 		}
@@ -100,14 +116,16 @@ public class ResourceServlet extends HttpServlet {
 		return resourceConn.getLastModified();
 	}
 
-	private URL getRequestResourceURL(HttpServletRequest request) throws MalformedURLException {
-		String localResourcePath = request.getPathInfo().toString();
-		String jarResourcePath = "META-INF" + request.getPathInfo().toString();
+	private URL getRequestResourceURL(String localResourcePath) throws MalformedURLException {
+		String jarResourcePath = "META-INF" + localResourcePath;
 
 		URL resource;
 
 		resource = getServletContext().getResource(localResourcePath);
 		if (resource == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("Searching classpath for resource: " + jarResourcePath);
+			}
 			resource = ClassUtils.getDefaultClassLoader().getResource(jarResourcePath);
 		}
 
