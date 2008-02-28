@@ -99,6 +99,10 @@ public class Hotel implements Serializable {
 	this.price = price;
     }
 
+    public Booking createBooking(User user) {
+	return new Booking(this, user);
+    }
+
     @Override
     public String toString() {
 	return "Hotel(" + name + "," + address + "," + city + "," + zip + ")";

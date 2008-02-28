@@ -71,7 +71,7 @@
 			</div>
 			<div class="input">
 				<h:selectOneMenu id="beds" value="#{booking.beds}">
-					<f:selectItems value="#{bookingOptions.bedOptions}"/>
+					<f:selectItems value="#{referenceData.bedOptions}"/>
 				</h:selectOneMenu>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 			</div>
 			<div id="radio" class="input">
 				<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
-					<f:selectItems value="#{bookingOptions.smokingOptions}"/>
+					<f:selectItems value="#{referenceData.smokingOptions}"/>
 				</h:selectOneRadio>
 			</div>
 		</div>
@@ -111,10 +111,10 @@
 			</div>
 			<div class="input">
 				<h:selectOneMenu id="creditCardExpiryMonth" value="#{booking.creditCardExpiryMonth}">
-					<f:selectItems value="#{bookingOptions.creditCardExpMonths}" />
+					<f:selectItems value="#{referenceData.creditCardExpMonths}" />
 				</h:selectOneMenu>
 				<h:selectOneMenu id="creditCardExpiryYear" value="#{booking.creditCardExpiryYear}">
-					<f:selectItems value="#{bookingOptions.creditCardExpYears}"/>
+					<f:selectItems value="#{referenceData.creditCardExpYears}"/>
 				</h:selectOneMenu>
 			</div>
 		</div>

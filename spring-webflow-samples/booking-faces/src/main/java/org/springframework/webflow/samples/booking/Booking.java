@@ -190,10 +190,6 @@ public class Booking implements Serializable {
 	return valid;
     }
 
-    public static Booking newInstance(Hotel hotel, User user) {
-	return new Booking(hotel, user);
-    }
-
     @Override
     public String toString() {
 	return "Booking(" + user + "," + hotel + ")";

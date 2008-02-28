@@ -24,11 +24,9 @@
 						</div>
 						<div class="searchSize">
 						   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-						   	<h:selectOneMenu value="#{flowScope.searchCriteria.pageSize}" id="pageSize">
-								<f:selectItem itemLabel="5" itemValue="5"/>
-							    <f:selectItem itemLabel="10" itemValue="10"/>
-							    <f:selectItem itemLabel="20" itemValue="20"/>
-							</h:selectOneMenu>  
+							<h:selectOneMenu id="pageSize" value="#{flowScope.searchCriteria.pageSize}">
+								<f:selectItems value="#{referenceData.pageSizeOptions}"/>
+							</h:selectOneMenu>
 				   		</div>
 						<div class="searchButton">
 							<sf:commandButton id="findHotels" value="Find Hotels" processIds="hotelSearchFragment" action="findHotels"/>
