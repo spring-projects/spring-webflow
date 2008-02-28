@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
-import org.springframework.webflow.samples.booking.Booking;
-import org.springframework.webflow.samples.booking.Hotel;
-import org.springframework.webflow.samples.booking.User;
 
 @Service
-public class FlowHelper {
+public class ReferenceData {
 
     private List<SelectItem> bedOptions;
 
@@ -83,12 +79,6 @@ public class FlowHelper {
 	    pageSizeOptions.add(new SelectItem(new Integer(20), "20"));
 	}
 	return pageSizeOptions;
-    }
-
-    public Booking createBooking(Hotel hotel, User user, EntityManager em) {
-	Booking booking = new Booking(hotel, user);
-	em.persist(booking);
-	return booking;
     }
 
 }
