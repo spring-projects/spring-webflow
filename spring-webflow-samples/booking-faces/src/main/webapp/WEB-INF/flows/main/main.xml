@@ -11,7 +11,9 @@
 			<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" type="dataModel" />
 		</render-actions>
 		<transition on="search" to="reviewHotels" />
-		<transition on="cancelBooking" to="cancelBooking" />
+		<transition on="cancelBooking">
+			<evaluate-action expression="#{bookingService.cancelBooking(bookings.selectedRow)}" />
+		</transition>
 	</view-state>
 	
 	<view-state id="reviewHotels">
