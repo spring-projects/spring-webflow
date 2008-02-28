@@ -14,9 +14,16 @@ import org.springframework.webflow.core.expression.DefaultExpressionParserFactor
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
+import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
 
+/**
+ * A simple holder for services needed by a flow builder. These services are typically exposed via a Flow Builder's
+ * {@link FlowBuilderContext}.
+ * 
+ * @author Keith Donald
+ */
 public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAware {
 
 	/**
@@ -32,17 +39,19 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	private BeanInvokingActionFactory beanInvokingActionFactory = new BeanInvokingActionFactory();
 
 	/**
-	 * The view factory creator.
+	 * The view factory creator for creating views to render during flow execution. The default is <code>null</code>
+	 * and this service must be configured externally.
 	 */
 	private ViewFactoryCreator viewFactoryCreator;
 
 	/**
-	 * The conversion service.
+	 * The conversion service for converting from one object type to another.
 	 */
 	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
-	 * The parser for parsing expression strings into expression objects.
+	 * The parser for parsing expression strings into expression objects. The default is Web Flow's default expression
+	 * parser implementation.
 	 */
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
 
@@ -52,7 +61,7 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	private ResourceLoader resourceLoader;
 
 	/**
-	 * The Spring bean factory used.
+	 * The Spring bean factory that provides access to the services of the user application.
 	 */
 	private BeanFactory beanFactory;
 

@@ -26,6 +26,11 @@ import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 
+/**
+ * A builder context that delegates to a flow-local bean factory for builder services. Such builder services override
+ * the services of the external "parent" context.
+ * @author Keith Donald
+ */
 class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	private FlowBuilderContext parent;

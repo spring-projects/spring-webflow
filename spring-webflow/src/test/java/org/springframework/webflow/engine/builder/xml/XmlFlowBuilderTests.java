@@ -37,4 +37,32 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertEquals("flow", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
 	}
+
+	public void testBuildFlowWithDefaultStartState() {
+		ClassPathResource resource = new ClassPathResource("flow-startstate-default.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertEquals("flow", flow.getId());
+		assertEquals("end", flow.getStartState().getId());
+	}
+
+	public void testBuildFlowWithStartStateAttribute() {
+		ClassPathResource resource = new ClassPathResource("flow-startstate-attribute.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertEquals("flow", flow.getId());
+		assertEquals("end", flow.getStartState().getId());
+	}
+
+	public void testBuildFlowWithStartStateElement() {
+		ClassPathResource resource = new ClassPathResource("flow-startstate-element.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertEquals("flow", flow.getId());
+		assertEquals("end", flow.getStartState().getId());
+	}
+
 }

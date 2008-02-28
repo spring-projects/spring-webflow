@@ -12,6 +12,10 @@ import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 
+/**
+ * Generic implementation of a flow builder context, suitable for use by most flow assembly systems.
+ * @author Keith Donald
+ */
 public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	private String flowId;
@@ -24,6 +28,13 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	private GenericConversionService flowConversionService;
 
+	/**
+	 * Creates a new flow builder context.
+	 * @param flowId the id to assign the flow being built
+	 * @param flowAttributes attributes to assign the flow being built
+	 * @param flowDefinitionLocator a locator to find dependent subflows
+	 * @param flowBuilderServices a parameter object providing access to additional services needed by the flow builder
+	 */
 	public FlowBuilderContextImpl(String flowId, AttributeMap flowAttributes,
 			FlowDefinitionLocator flowDefinitionLocator, FlowBuilderServices flowBuilderServices) {
 		this.flowId = flowId;
@@ -35,6 +46,12 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		flowConversionService.addConverter(new TextToTargetStateResolver(this));
 		flowConversionService.setParent(this.flowBuilderServices.getConversionService());
 	}
+
+	public FlowBuilderServices getFlowBuilderServices() {
+		return flowBuilderServices;
+	}
+
+	// implementing flow builder context
 
 	public String getFlowId() {
 		return flowId;
@@ -76,7 +93,4 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowDefinitionLocator;
 	}
 
-	public FlowBuilderServices getFlowBuilderServices() {
-		return flowBuilderServices;
-	}
 }

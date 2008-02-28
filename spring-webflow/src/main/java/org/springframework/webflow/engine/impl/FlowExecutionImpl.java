@@ -367,11 +367,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	FlowExecutionKey assignKey() {
-		this.key = keyFactory.getKey(this);
+		key = keyFactory.getKey(this);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Assigned key " + this.key);
+			logger.debug("Assigned key " + key);
 		}
-		return this.key;
+		return key;
 	}
 
 	// package private setters for restoring transient state used by FlowExecutionImplServicesConfigurer

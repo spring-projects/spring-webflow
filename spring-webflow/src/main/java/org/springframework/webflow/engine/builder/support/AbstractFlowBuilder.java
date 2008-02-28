@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,15 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 	 */
 	private Flow flow;
 
+	/**
+	 * The flow builder context providing access to services needed to build the flow.
+	 */
 	private FlowBuilderContext context;
 
+	/**
+	 * Returns this flow builder's context.
+	 * @return the flow builder context
+	 */
 	protected FlowBuilderContext getContext() {
 		return context;
 	}
@@ -48,10 +55,18 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 		this.flow = createFlow();
 	}
 
+	/**
+	 * Flow builder initialization hook. Does nothing by default. May be overridden by subclasses.
+	 */
 	protected void doInit() {
 
 	}
 
+	/**
+	 * Factory method that initially creates the flow implementation during flow builder initialization. Simply
+	 * delegates to the configured flow artifact factory by default.
+	 * @return the flow instance, initially created but not yet built
+	 */
 	protected Flow createFlow() {
 		String id = getContext().getFlowId();
 		AttributeMap attributes = getContext().getFlowAttributes();
@@ -81,15 +96,18 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 	public void buildExceptionHandlers() throws FlowBuilderException {
 	}
 
-	public Flow getFlow() {
+	public Flow getFlow() throws FlowBuilderException {
 		return flow;
 	}
 
-	public void dispose() {
+	public void dispose() throws FlowBuilderException {
 		flow = null;
 		doDispose();
 	}
 
+	/**
+	 * Flow builder destruction hook. Does nothing by default. May be overridden by subclasses.
+	 */
 	protected void doDispose() {
 
 	}

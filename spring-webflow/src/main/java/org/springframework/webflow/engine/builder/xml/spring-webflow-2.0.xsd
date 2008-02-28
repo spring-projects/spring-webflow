@@ -280,11 +280,16 @@ Defines flow startup logic to execute. This logic will always execute when this 
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="start-state">
+				<xsd:element ref="start-state" minOccurs="0">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
 Identifies the starting point of this flow.  The start state is the point where flow execution begins.
+
+This element is an alternative to the 'start-state' attribute.  In general, the 'start-state' attribute
+is performed when you wish to explictly denote the flow start-state.
+
+If not specified, the default start state is the first state defined in the document.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -453,6 +458,16 @@ definition resource location.
 					</xsd:annotation>
 				</xsd:element>
 			</xsd:sequence>
+			<xsd:attribute name="start-state" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Identifies the starting point of this flow.  The start state is the point where flow execution begins.
+If not specified, the default start state is the first state defined in the document.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 

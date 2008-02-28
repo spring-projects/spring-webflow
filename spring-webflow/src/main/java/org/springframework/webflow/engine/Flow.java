@@ -27,6 +27,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -105,7 +108,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Colin Sampaleanu
  * @author Jeremy Grelle
  */
-public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory {
+public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory, ResourceLoader {
 
 	/**
 	 * Logger, can be used in subclasses.
@@ -166,9 +169,14 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	private FlowExecutionExceptionHandlerSet exceptionHandlerSet = new FlowExecutionExceptionHandlerSet();
 
 	/**
-	 * The local bean factory for this flow
+	 * An optional bean factory hosting services needed by this flow.
 	 */
-	private BeanFactory localBeanFactory = new StaticListableBeanFactory();
+	private BeanFactory beanFactory = new StaticListableBeanFactory();
+
+	/**
+	 * An optional resource loader capable of loading resources relative to this flow.
+	 */
+	private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
 	/**
 	 * Construct a new flow definition with the given id. The id should be unique among all flows.
@@ -433,6 +441,22 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 		return globalTransitionSet;
 	}
 
+	/**
+	 * Sets a reference to a bean factory hosting application objects needed by this flow.
+	 * @param beanFactory the bean factory
+	 */
+	public void setBeanFactory(BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+	}
+
+	/**
+	 * Sets a reference to a resource loader capable of loading resources relative to this flow.
+	 * @param resourceLoader the resource loader
+	 */
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
+
 	// id based equality
 
 	public boolean equals(Object o) {
@@ -536,6 +560,52 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 		return getExceptionHandlerSet().handleException(exception, context);
 	}
 
+	// implementing bean factory
+
+	public boolean containsBean(String name) {
+		return beanFactory.containsBean(name);
+	}
+
+	public String[] getAliases(String name) {
+		return beanFactory.getAliases(name);
+	}
+
+	public Object getBean(String name, Class requiredType) throws BeansException {
+		return beanFactory.getBean(name, requiredType);
+	}
+
+	public Object getBean(String name, Object[] args) throws BeansException {
+		return beanFactory.getBean(name, args);
+	}
+
+	public Object getBean(String name) throws BeansException {
+		return beanFactory.getBean(name);
+	}
+
+	public Class getType(String name) throws NoSuchBeanDefinitionException {
+		return beanFactory.getType(name);
+	}
+
+	public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
+		return beanFactory.isPrototype(name);
+	}
+
+	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+		return beanFactory.isSingleton(name);
+	}
+
+	public boolean isTypeMatch(String name, Class targetType) throws NoSuchBeanDefinitionException {
+		return beanFactory.isTypeMatch(name, targetType);
+	}
+
+	public ClassLoader getClassLoader() {
+		return resourceLoader.getClassLoader();
+	}
+
+	public Resource getResource(String name) {
+		return resourceLoader.getResource(name);
+	}
+
 	// internal helpers
 
 	private void assertStartStateSet() {
@@ -614,46 +684,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 						startActionList).append("exceptionHandlerSet", exceptionHandlerSet).append(
 						"globalTransitionSet", globalTransitionSet).append("endActionList", endActionList).append(
 						"outputMapper", outputMapper).toString();
-	}
-
-	public void setLocalBeanFactory(BeanFactory localBeanFactory) {
-		this.localBeanFactory = localBeanFactory;
-	}
-
-	public boolean containsBean(String name) {
-		return localBeanFactory.containsBean(name);
-	}
-
-	public String[] getAliases(String name) {
-		return localBeanFactory.getAliases(name);
-	}
-
-	public Object getBean(String name, Class requiredType) throws BeansException {
-		return localBeanFactory.getBean(name, requiredType);
-	}
-
-	public Object getBean(String name, Object[] args) throws BeansException {
-		return localBeanFactory.getBean(name, args);
-	}
-
-	public Object getBean(String name) throws BeansException {
-		return localBeanFactory.getBean(name);
-	}
-
-	public Class getType(String name) throws NoSuchBeanDefinitionException {
-		return localBeanFactory.getType(name);
-	}
-
-	public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
-		return localBeanFactory.isPrototype(name);
-	}
-
-	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
-		return localBeanFactory.isSingleton(name);
-	}
-
-	public boolean isTypeMatch(String name, Class targetType) throws NoSuchBeanDefinitionException {
-		return localBeanFactory.isTypeMatch(name, targetType);
 	}
 
 }

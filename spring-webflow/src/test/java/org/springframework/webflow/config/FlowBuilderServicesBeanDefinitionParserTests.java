@@ -43,7 +43,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
-		public Action createFinalResponseAction(Expression viewId, ResourceLoader viewResourceLoader) {
+		public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

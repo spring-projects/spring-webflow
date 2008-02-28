@@ -57,6 +57,7 @@ import org.springframework.webflow.action.EvaluateAction;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.action.SetAction;
+import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -71,7 +72,7 @@ import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
-import org.springframework.webflow.engine.builder.support.ActionInvokingViewFactory;
+import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
 import org.springframework.webflow.engine.support.BeanFactoryFlowVariable;
 import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
 import org.springframework.webflow.engine.support.SimpleFlowVariable;
@@ -96,13 +97,13 @@ import org.xml.sax.SAXException;
  *     &lt;flow xmlns=&quot;http://www.springframework.org/schema/webflow&quot;
  *           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
  *           xsi:schemaLocation=&quot;http://www.springframework.org/schema/webflow
- *                               http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd&quot;&gt;
+ *                               http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd&quot;&gt;
  *         &lt;!-- Define your states here --&gt;
  *     &lt;/flow&gt;
  * </pre>
  * 
  * <p>
- * Consult the <a href="http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">web flow XML schema</a>
+ * Consult the <a href="http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">web flow XML schema</a>
  * for more information on the XML-based flow definition format.
  * <p>
  * This builder will setup a flow-local bean factory for the flow being constructed. That flow-local bean factory will
@@ -124,8 +125,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private static final String BEAN_ATTRIBUTE = "bean";
 
 	private static final String FLOW_ELEMENT = "flow";
-
-	private static final String START_STATE_ELEMENT = "start-state";
 
 	private static final String ACTION_STATE_ELEMENT = "action-state";
 
@@ -323,7 +322,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	protected Flow createFlow() {
 		Flow flow = parseFlow(getDocumentElement());
-		flow.setLocalBeanFactory(getLocalContext().getBeanFactory());
+		flow.setBeanFactory(getLocalContext().getBeanFactory());
+		flow.setResourceLoader(getLocalContext().getResourceLoader());
 		return flow;
 	}
 
@@ -542,12 +542,27 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private void parseAndSetStartState(Element element, Flow flow) {
 		String startStateId = getStartStateId(element);
-		flow.setStartState(startStateId);
+		if (StringUtils.hasText(startStateId)) {
+			flow.setStartState(startStateId);
+		}
 	}
 
 	private String getStartStateId(Element element) {
-		Element startStateElement = DomUtils.getChildElementByTagName(element, START_STATE_ELEMENT);
-		return startStateElement.getAttribute(IDREF_ATTRIBUTE);
+		String startState = "start-state";
+		if (element.hasAttribute(startState)) {
+			Element startStateElement = DomUtils.getChildElementByTagName(element, startState);
+			Assert
+					.isNull(startStateElement,
+							"Define either a flow 'start-state' attribute or use the classic 'start-state' element.  Do not use both.");
+			return element.getAttribute(startState);
+		} else {
+			Element startStateElement = DomUtils.getChildElementByTagName(element, startState);
+			if (startStateElement != null) {
+				return startStateElement.getAttribute(IDREF_ATTRIBUTE);
+			} else {
+				return null;
+			}
+		}
 	}
 
 	private void parseAndAddActionState(Element element, Flow flow) {
@@ -614,11 +629,11 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			String encodedUrl = encodedView.substring(EXTERNAL_REDIRECT_PREFIX.length());
 			Expression externalUrl = getExpressionParser().parseExpression(encodedUrl,
 					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			ViewFactory viewFactory = new ActionInvokingViewFactory(new ExternalRedirectAction(externalUrl));
+			ViewFactory viewFactory = new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
 			return new ViewInfo(viewFactory, Boolean.FALSE);
 		} else if (encodedView.startsWith(FLOW_DEFINITION_REDIRECT_PREFIX)) {
 			String flowRedirect = encodedView.substring(FLOW_DEFINITION_REDIRECT_PREFIX.length());
-			ViewFactory viewFactory = new ActionInvokingViewFactory(FlowDefinitionRedirectAction.create(flowRedirect));
+			ViewFactory viewFactory = new ActionExecutingViewFactory(FlowDefinitionRedirectAction.create(flowRedirect));
 			return new ViewInfo(viewFactory, Boolean.FALSE);
 		} else if (encodedView.startsWith(BEAN_PREFIX)) {
 			ViewFactory viewFactory = (ViewFactory) getLocalContext().getBeanFactory().getBean(
@@ -652,8 +667,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		} else {
 			Expression viewName = getExpressionParser().parseExpression(encodedView,
 					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			return getLocalContext().getViewFactoryCreator().createFinalResponseAction(viewName,
-					getLocalContext().getResourceLoader());
+			return new ViewFactoryActionAdapter(getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
+					getLocalContext().getResourceLoader()));
 		}
 	}
 

@@ -46,7 +46,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 
 	private ApplicationContext applicationContext;
 
-	public Action createFinalResponseAction(Expression viewId, ResourceLoader viewResourceLoader) {
+	public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
 		return new ViewFactoryActionAdapter(createViewFactory(viewId, viewResourceLoader));
 	}
 

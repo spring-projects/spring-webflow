@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.springframework.webflow.engine.Flow;
  * <li> Call {@link #buildInputMapper()} to create and set the input mapper for the flow.
  * <li> Call {@link #buildStartActions()} to create and add any start actions to the flow.
  * <li> Call {@link #buildStates()} to create the states of the flow and add them to the flow definition.
- * <li> Call {@link #buildGlobalTransitions()} to create the any transitions shared by all states of the flow and add
- * them to the flow definition.
+ * <li> Call {@link #buildGlobalTransitions()} to create any transitions shared by all states of the flow and add them
+ * to the flow definition.
  * <li> Call {@link #buildEndActions()} to create and add any end actions to the flow.
  * <li> Call {@link #buildOutputMapper()} to create and set the output mapper for the flow.
  * <li> Call {@link #buildExceptionHandlers()} to create the exception handlers of the flow and add them to the flow
@@ -44,9 +44,10 @@ import org.springframework.webflow.engine.Flow;
  * reused, however, exercise caution when doing this as these objects are not thread safe. Also, for each use be sure to
  * call init, followed by the build* methods, getFlow, and dispose completely in that order.
  * <p>
- * This is an example of the classic GoF builder pattern.
+ * This is a good example of the classic GoF builder pattern.
  * 
  * @see Flow
+ * @see FlowBuilderContext
  * @see FlowAssembler
  * 
  * @author Keith Donald
@@ -111,15 +112,17 @@ public interface FlowBuilder {
 	public void buildExceptionHandlers() throws FlowBuilderException;
 
 	/**
-	 * Get the fully constructed and configured Flow object - called by the builder's assembler (director) after
+	 * Get the fully constructed and configured Flow object. Called by the builder's assembler (director) after
 	 * assembly. When this method is called by the assembler, it is expected flow construction has completed and the
-	 * returned flow is ready for use.
+	 * returned flow is fully configured and ready for use.
+	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public Flow getFlow();
+	public Flow getFlow() throws FlowBuilderException;
 
 	/**
 	 * Shutdown the builder, releasing any resources it holds. A new flow construction process should start with another
 	 * call to the {@link #init(FlowBuilderContext)} method.
+	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public void dispose();
+	public void dispose() throws FlowBuilderException;
 }

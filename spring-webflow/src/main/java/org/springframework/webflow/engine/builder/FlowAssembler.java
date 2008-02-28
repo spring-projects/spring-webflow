@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import org.springframework.webflow.engine.Flow;
  * 
  * <pre>
  *     FlowBuilder builder = ...;
- *     Flow flow = new FlowAssembler(&quot;myFlow&quot;, builder, null).assembleFlow();
+ *     FlowBuilder context = ...;
+ *     Flow flow = new FlowAssembler(builder, builderContext).assembleFlow();
  * </pre>
  * 
  * @see org.springframework.webflow.engine.builder.FlowBuilder

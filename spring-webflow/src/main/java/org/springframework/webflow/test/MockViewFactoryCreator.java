@@ -32,7 +32,7 @@ import org.springframework.webflow.execution.ViewFactory;
  * @author Keith Donald
  */
 class MockViewFactoryCreator implements ViewFactoryCreator {
-	public Action createFinalResponseAction(Expression viewId, ResourceLoader viewResourceLoader) {
+	public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
 		return new ViewFactoryActionAdapter(createViewFactory(viewId, viewResourceLoader));
 	}
 
