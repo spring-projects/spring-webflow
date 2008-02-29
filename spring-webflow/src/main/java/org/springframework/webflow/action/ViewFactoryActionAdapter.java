@@ -16,7 +16,9 @@ public class ViewFactoryActionAdapter extends AbstractAction {
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
-		viewFactory.getView(context).render();
+		if (viewFactory != null) {
+			viewFactory.getView(context).render();
+		}
 		return new Event(this, "success");
 	}
 }

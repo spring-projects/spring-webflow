@@ -572,7 +572,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void parseAndAddViewState(Element element, Flow flow) {
-		ViewFactory viewFactory = parseViewFactory(element);
+		ViewFactory viewFactory = parseViewFactory(element, false);
 		boolean redirect = false;
 		if (element.hasAttribute("redirect")) {
 			redirect = ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("redirect"))).booleanValue();
@@ -607,8 +607,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		MutableAttributeMap attributes = parseAttributes(element);
 		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createEndState(parseId(element), flow, parseEntryActions(element),
-				parseFinalResponseAction(element), parseOutputMapper(element), parseExceptionHandlers(element),
-				attributes);
+				new ViewFactoryActionAdapter(parseViewFactory(element, true)), parseOutputMapper(element),
+				parseExceptionHandlers(element), attributes);
 	}
 
 	private String parseId(Element element) {
@@ -640,14 +640,18 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
-	private ViewFactory parseViewFactory(Element element) {
+	private ViewFactory parseViewFactory(Element element, boolean endState) {
 		String encodedView = element.getAttribute(VIEW_ATTRIBUTE);
 		if (!StringUtils.hasText(encodedView)) {
-			encodedView = createViewId(element.getAttribute(ID_ATTRIBUTE));
-			Expression viewName = getExpressionParser().parseExpression(encodedView,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
-					getLocalContext().getResourceLoader());
+			if (endState) {
+				return null;
+			} else {
+				encodedView = createViewId(element.getAttribute(ID_ATTRIBUTE));
+				Expression viewName = getExpressionParser().parseExpression(encodedView,
+						new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+				return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
+						getLocalContext().getResourceLoader());
+			}
 		} else if (encodedView.startsWith(EXTERNAL_REDIRECT_PREFIX)) {
 			String encodedUrl = encodedView.substring(EXTERNAL_REDIRECT_PREFIX.length());
 			Expression externalUrl = getExpressionParser().parseExpression(encodedUrl,
@@ -655,7 +659,9 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			return new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
 		} else if (encodedView.startsWith(FLOW_DEFINITION_REDIRECT_PREFIX)) {
 			String flowRedirect = encodedView.substring(FLOW_DEFINITION_REDIRECT_PREFIX.length());
-			return new ActionExecutingViewFactory(FlowDefinitionRedirectAction.create(flowRedirect));
+			Expression expression = getExpressionParser().parseExpression(flowRedirect,
+					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+			return new ActionExecutingViewFactory(new FlowDefinitionRedirectAction(expression));
 		} else if (encodedView.startsWith(BEAN_PREFIX)) {
 			return (ViewFactory) getLocalContext().getBeanFactory().getBean(
 					encodedView.substring(BEAN_PREFIX.length()), ViewFactory.class);
@@ -1068,30 +1074,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			Assert.isTrue(!StringUtils.hasText(to), "Use of the 'to' attribute requires use of the 'from' attribute");
 		}
 		return null;
-	}
-
-	private Action parseFinalResponseAction(Element element) {
-		String encodedView = element.getAttribute(VIEW_ATTRIBUTE);
-		if (encodedView == null || encodedView.length() == 0) {
-			// null final responses are allowed
-			return null;
-		} else if (encodedView.startsWith(EXTERNAL_REDIRECT_PREFIX)) {
-			String encodedUrl = encodedView.substring(EXTERNAL_REDIRECT_PREFIX.length());
-			Expression externalUrl = getExpressionParser().parseExpression(encodedUrl,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			return new ExternalRedirectAction(externalUrl);
-		} else if (encodedView.startsWith(FLOW_DEFINITION_REDIRECT_PREFIX)) {
-			String flowRedirect = encodedView.substring(FLOW_DEFINITION_REDIRECT_PREFIX.length());
-			return FlowDefinitionRedirectAction.create(flowRedirect);
-		} else if (encodedView.startsWith(BEAN_PREFIX)) {
-			return (Action) getLocalContext().getBeanFactory().getBean(encodedView.substring(BEAN_PREFIX.length()),
-					Action.class);
-		} else {
-			Expression viewName = getExpressionParser().parseExpression(encodedView,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			return new ViewFactoryActionAdapter(getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
-					getLocalContext().getResourceLoader()));
-		}
 	}
 
 	private FlowExecutionExceptionHandler[] parseExceptionHandlers(Element element) {

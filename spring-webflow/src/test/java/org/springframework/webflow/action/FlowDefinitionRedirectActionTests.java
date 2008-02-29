@@ -1,8 +1,5 @@
 package org.springframework.webflow.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
@@ -13,10 +10,8 @@ public class FlowDefinitionRedirectActionTests extends TestCase {
 	private FlowDefinitionRedirectAction action;
 
 	public void testExecute() throws Exception {
-		Expression flowId = new StaticExpression("user");
-		Map input = new HashMap();
-		input.put(new StaticExpression("foo"), new StaticExpression("bar"));
-		action = new FlowDefinitionRedirectAction(flowId, input);
+		Expression flowId = new StaticExpression("user?foo=bar");
+		action = new FlowDefinitionRedirectAction(flowId);
 		MockRequestContext context = new MockRequestContext();
 		action.execute(context);
 		assertEquals("user", context.getMockExternalContext().getFlowRedirectFlowId());
@@ -25,7 +20,7 @@ public class FlowDefinitionRedirectActionTests extends TestCase {
 
 	public void testExecuteWithNullRequestFields() throws Exception {
 		Expression flowId = new StaticExpression("user");
-		action = new FlowDefinitionRedirectAction(flowId, null);
+		action = new FlowDefinitionRedirectAction(flowId);
 		MockRequestContext context = new MockRequestContext();
 		action.execute(context);
 		assertEquals("user", context.getMockExternalContext().getFlowRedirectFlowId());
@@ -33,7 +28,7 @@ public class FlowDefinitionRedirectActionTests extends TestCase {
 
 	public void testExecuteWithNullFlowId() throws Exception {
 		try {
-			action = new FlowDefinitionRedirectAction(null, null);
+			action = new FlowDefinitionRedirectAction(null);
 			fail("Should have failed");
 		} catch (IllegalArgumentException e) {
 

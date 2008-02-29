@@ -1,51 +1,53 @@
 package org.springframework.webflow.action;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.Assert;
-import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 public class FlowDefinitionRedirectAction extends AbstractAction {
-	private Expression flowId;
-	private Map input;
+	private Expression expression;
 
-	public FlowDefinitionRedirectAction(Expression flowId, Map input) {
-		Assert.notNull(flowId, "The flow id to redirect to is required");
-		this.flowId = flowId;
-		this.input = input;
+	public FlowDefinitionRedirectAction(Expression expression) {
+		Assert.notNull(expression, "The flow definition redirect expression is required");
+		this.expression = expression;
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
-		String flowId = (String) this.flowId.getValue(context);
-		AttributeMap input = evaluateInput(context);
-		context.getExternalContext().requestFlowDefinitionRedirect(flowId, input);
-		return success();
-	}
-
-	private AttributeMap evaluateInput(RequestContext context) {
-		if (this.input == null) {
-			return null;
-		} else {
-			Map input = new HashMap();
-			for (Iterator it = this.input.entrySet().iterator(); it.hasNext();) {
-				Map.Entry entry = (Map.Entry) it.next();
-				Expression name = (Expression) entry.getKey();
-				Expression value = (Expression) entry.getValue();
-				String paramName = (String) name.getValue(context);
-				Object paramValue = value.getValue(context);
-				input.put(paramName, paramValue);
-			}
-			return new LocalAttributeMap(input);
+		String encodedRedirect = (String) expression.getValue(context);
+		if (encodedRedirect == null) {
+			throw new IllegalStateException(
+					"Flow definition redirect expression evaluated to [null], the expression was " + expression);
 		}
-	}
-
-	public static FlowDefinitionRedirectAction create(String encodedFlowRedirect) {
-		throw new UnsupportedOperationException("Not yet implemented");
+		// the encoded FlowDefinitionRedirect should look something like
+		// "flowDefinitionId?param0=value0&param1=value1"
+		// now parse that and build a corresponding view selection
+		int index = encodedRedirect.indexOf('?');
+		String flowDefinitionId;
+		LocalAttributeMap executionInput = null;
+		if (index != -1) {
+			flowDefinitionId = encodedRedirect.substring(0, index);
+			String[] parameters = StringUtils.delimitedListToStringArray(encodedRedirect.substring(index + 1), "&");
+			executionInput = new LocalAttributeMap(parameters.length, 1);
+			for (int i = 0; i < parameters.length; i++) {
+				String nameAndValue = parameters[i];
+				index = nameAndValue.indexOf('=');
+				if (index != -1) {
+					executionInput.put(nameAndValue.substring(0, index), nameAndValue.substring(index + 1));
+				} else {
+					executionInput.put(nameAndValue, "");
+				}
+			}
+		} else {
+			flowDefinitionId = encodedRedirect;
+		}
+		if (!StringUtils.hasText(flowDefinitionId)) {
+			// equivalent to restart
+			flowDefinitionId = context.getFlowExecutionContext().getDefinition().getId();
+		}
+		context.getExternalContext().requestFlowDefinitionRedirect(flowDefinitionId, executionInput);
+		return success();
 	}
 }
