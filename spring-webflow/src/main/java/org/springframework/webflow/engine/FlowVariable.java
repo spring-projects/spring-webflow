@@ -17,7 +17,6 @@ package org.springframework.webflow.engine;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -85,10 +84,6 @@ public class FlowVariable extends AnnotatedObject {
 		return name.hashCode() + valueFactory.hashCode() + local.hashCode();
 	}
 
-	/**
-	 * Creates a new instance of this flow variable in the configured scope.
-	 * @param context the flow execution request context
-	 */
 	public final void create(RequestContext context) {
 		Object value = valueFactory.createVariableValue(context);
 		if (local == Boolean.TRUE) {
@@ -98,10 +93,10 @@ public class FlowVariable extends AnnotatedObject {
 		}
 	}
 
-	public final Object restore(FlowSession session, RequestContext context) {
+	public final Object restore(RequestContext context) {
 		Object value;
 		if (local == Boolean.TRUE) {
-			value = session.getScope().get(name);
+			value = context.getFlowScope().get(name);
 		} else {
 			value = context.getConversationScope().get(name);
 		}

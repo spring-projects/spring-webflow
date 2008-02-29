@@ -30,6 +30,7 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.engine.ViewVariable;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -38,7 +39,7 @@ import org.springframework.webflow.execution.ViewFactory;
  * {@link Transition transitions}.
  * <p>
  * This factory encapsulates the construction of each Flow implementation as well as each core artifact type. Subclasses
- * may customize how the core elements are created, useful for plugging in custom implementations.
+ * may customize how the core elements are created.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -69,6 +70,7 @@ public class FlowArtifactFactory {
 	 * @param entryActions any state entry actions; may be null
 	 * @param viewFactory the state view factory strategy
 	 * @param redirect whether to send a flow execution redirect before rendering
+	 * @param popup whether to display the view in a popup window
 	 * @param renderActions any 'render actions' to execute on entry and refresh; may be null
 	 * @param transitions any transitions (paths) out of this state; may be null
 	 * @param exceptionHandlers any exception handlers; may be null
@@ -77,11 +79,13 @@ public class FlowArtifactFactory {
 	 * null
 	 * @return the fully initialized view state instance
 	 */
-	public State createViewState(String id, Flow flow, Action[] entryActions, ViewFactory viewFactory,
-			boolean redirect, Action[] renderActions, Transition[] transitions,
+	public State createViewState(String id, Flow flow, ViewVariable[] variables, Action[] entryActions,
+			ViewFactory viewFactory, boolean redirect, boolean popup, Action[] renderActions, Transition[] transitions,
 			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
 		ViewState viewState = new ViewState(flow, id, viewFactory);
+		viewState.addVariables(variables);
 		viewState.setRedirect(redirect);
+		viewState.setPopup(popup);
 		viewState.getRenderActionList().addAll(renderActions);
 		configureCommonProperties(viewState, entryActions, transitions, exceptionHandlers, exitActions, attributes);
 		return viewState;

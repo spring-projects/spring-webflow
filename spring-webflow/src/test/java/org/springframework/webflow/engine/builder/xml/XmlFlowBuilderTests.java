@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.test.MockFlowBuilderContext;
@@ -79,9 +80,17 @@ public class XmlFlowBuilderTests extends TestCase {
 		builder = new XmlFlowBuilder(resource);
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		Flow flow = assembler.assembleFlow();
-		assertEquals("flow-foo", flow.getVariables()[0].getName());
-		assertEquals(true, flow.getVariables()[0].isLocal());
+		assertEquals("flow-foo", flow.getVariable("flow-foo").getName());
+		assertEquals(true, flow.getVariable("flow-foo").isLocal());
 		assertEquals("conversation-foo", flow.getVariables()[1].getName());
 		assertEquals(false, flow.getVariables()[1].isLocal());
+	}
+
+	public void testViewStateVariable() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-var.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertNotNull(((ViewState) flow.getStateInstance("view")).getVariable("foo"));
 	}
 }

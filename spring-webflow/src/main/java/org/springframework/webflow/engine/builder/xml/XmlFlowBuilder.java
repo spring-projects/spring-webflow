@@ -16,6 +16,7 @@
 package org.springframework.webflow.engine.builder.xml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ import org.springframework.binding.method.MethodSignature;
 import org.springframework.binding.method.Parameter;
 import org.springframework.binding.method.Parameters;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -70,6 +72,7 @@ import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.VariableValueFactory;
+import org.springframework.webflow.engine.ViewVariable;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
@@ -435,7 +438,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 						+ importElement.getAttribute(RESOURCE_ATTRIBUTE) + "'", e);
 			}
 		}
-		this.localFlowBuilderContext = new LocalFlowBuilderContext(getContext(), createFlowApplicationContext(resources));
+		this.localFlowBuilderContext = new LocalFlowBuilderContext(getContext(),
+				createFlowApplicationContext(resources));
 	}
 
 	private GenericApplicationContext createFlowApplicationContext(Resource[] resources) {
@@ -459,6 +463,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			}
 		}
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(resource));
+		AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getDefaultListableBeanFactory());
 		flowContext.refresh();
@@ -561,14 +566,35 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void parseAndAddViewState(Element element, Flow flow) {
-		ViewInfo viewInfo = parseViewInfo(element);
+		ViewFactory viewFactory = parseViewFactory(element);
 		boolean redirect = false;
-		if (viewInfo.redirect != null) {
-			redirect = viewInfo.redirect.booleanValue();
+		if (element.hasAttribute("redirect")) {
+			redirect = ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("redirect"))).booleanValue();
 		}
-		getFlowArtifactFactory().createViewState(parseId(element), flow, parseEntryActions(element),
-				viewInfo.viewFactory, redirect, parseRenderActions(element), parseTransitions(element),
-				parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
+		boolean popup = false;
+		if (element.hasAttribute("popup")) {
+			popup = ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("popup"))).booleanValue();
+		}
+		getFlowArtifactFactory().createViewState(parseId(element), flow, parseViewVariables(element),
+				parseEntryActions(element), viewFactory, redirect, popup, parseRenderActions(element),
+				parseTransitions(element), parseExceptionHandlers(element), parseExitActions(element),
+				parseAttributes(element));
+	}
+
+	private ViewVariable[] parseViewVariables(Element viewStateElement) {
+		List varElements = DomUtils.getChildElementsByTagName(viewStateElement, VAR_ELEMENT);
+		List variables = new ArrayList(varElements.size());
+		for (Iterator it = varElements.iterator(); it.hasNext();) {
+			variables.add(parseViewVariable((Element) it.next()));
+		}
+		return (ViewVariable[]) variables.toArray(new ViewVariable[variables.size()]);
+	}
+
+	private ViewVariable parseViewVariable(Element element) {
+		Class clazz = (Class) fromStringTo(Class.class).execute(element.getAttribute(CLASS_ATTRIBUTE));
+		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
+				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
+		return new ViewVariable(element.getAttribute("name"), valueFactory);
 	}
 
 	private void parseAndAddDecisionState(Element element, Flow flow) {
@@ -602,39 +628,36 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
-	private ViewInfo parseViewInfo(Element element) {
+	private ViewFactory parseViewFactory(Element element) {
 		String encodedView = element.getAttribute(VIEW_ATTRIBUTE);
-		if (encodedView == null || encodedView.length() == 0) {
-			// TODO what to do here?
-			return null;
-		} else if (encodedView.startsWith(REDIRECT_PREFIX)) {
-			String encodedViewName = encodedView.substring(REDIRECT_PREFIX.length());
-			Expression viewName = getExpressionParser().parseExpression(encodedViewName,
+		if (!StringUtils.hasText(encodedView)) {
+			encodedView = createViewId(element.getAttribute(ID_ATTRIBUTE));
+			Expression viewName = getExpressionParser().parseExpression(encodedView,
 					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
+			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
-			return new ViewInfo(viewFactory, Boolean.TRUE);
 		} else if (encodedView.startsWith(EXTERNAL_REDIRECT_PREFIX)) {
 			String encodedUrl = encodedView.substring(EXTERNAL_REDIRECT_PREFIX.length());
 			Expression externalUrl = getExpressionParser().parseExpression(encodedUrl,
 					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			ViewFactory viewFactory = new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
-			return new ViewInfo(viewFactory, Boolean.FALSE);
+			return new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
 		} else if (encodedView.startsWith(FLOW_DEFINITION_REDIRECT_PREFIX)) {
 			String flowRedirect = encodedView.substring(FLOW_DEFINITION_REDIRECT_PREFIX.length());
-			ViewFactory viewFactory = new ActionExecutingViewFactory(FlowDefinitionRedirectAction.create(flowRedirect));
-			return new ViewInfo(viewFactory, Boolean.FALSE);
+			return new ActionExecutingViewFactory(FlowDefinitionRedirectAction.create(flowRedirect));
 		} else if (encodedView.startsWith(BEAN_PREFIX)) {
-			ViewFactory viewFactory = (ViewFactory) getLocalContext().getBeanFactory().getBean(
+			return (ViewFactory) getLocalContext().getBeanFactory().getBean(
 					encodedView.substring(BEAN_PREFIX.length()), ViewFactory.class);
-			return new ViewInfo(viewFactory, Boolean.FALSE);
 		} else {
 			Expression viewName = getExpressionParser().parseExpression(encodedView,
 					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
-			ViewFactory viewFactory = getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
+			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
-			return new ViewInfo(viewFactory, null);
 		}
+	}
+
+	// TODO - make configurable
+	private String createViewId(String viewStateId) {
+		return viewStateId + ".html";
 	}
 
 	private Action parseFinalResponseAction(Element element) {
@@ -1123,12 +1146,14 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 		private ViewFactory viewFactory;
 
-		private Boolean redirect;
-
-		public ViewInfo(ViewFactory viewFactory, Boolean redirect) {
+		public ViewInfo(ViewFactory viewFactory) {
 			this.viewFactory = viewFactory;
-			this.redirect = redirect;
 		}
+
+		public ViewFactory getViewFactory() {
+			return viewFactory;
+		}
+
 	}
 
 	private static class FlowRelativeResourceLoader implements ResourceLoader {

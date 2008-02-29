@@ -16,7 +16,9 @@
 package org.springframework.webflow.engine;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -129,7 +131,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of flow variables created by this flow.
 	 */
-	private Set variables = new LinkedHashSet(3);
+	private Map variables = new LinkedHashMap();
 
 	/**
 	 * The mapper to map flow input attributes.
@@ -350,7 +352,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param variable the variable
 	 */
 	public void addVariable(FlowVariable variable) {
-		variables.add(variable);
+		variables.put(variable.getName(), variable);
 	}
 
 	/**
@@ -367,10 +369,18 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
+	 * Returns the flow variable with the given name.
+	 * @param name the name of the variable
+	 */
+	public FlowVariable getVariable(String name) {
+		return (FlowVariable) variables.get(name);
+	}
+
+	/**
 	 * Returns the flow variables.
 	 */
 	public FlowVariable[] getVariables() {
-		return (FlowVariable[]) variables.toArray(new FlowVariable[variables.size()]);
+		return (FlowVariable[]) variables.values().toArray(new FlowVariable[variables.size()]);
 	}
 
 	/**
@@ -513,6 +523,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @throws FlowExecutionException when an exception occurs during the resume operation
 	 */
 	public void resume(RequestControlContext context) throws FlowExecutionException {
+		restoreVariables(context);
 		getCurrentViewState(context).resume(context);
 	}
 
@@ -575,11 +586,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		}
 	}
 
-	/**
-	 * Create (setup) all known flow variables in flow scope.
-	 */
 	private void createVariables(RequestContext context) {
-		Iterator it = variables.iterator();
+		Iterator it = variables.values().iterator();
 		while (it.hasNext()) {
 			FlowVariable variable = (FlowVariable) it.next();
 			if (logger.isDebugEnabled()) {
@@ -589,9 +597,17 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		}
 	}
 
-	/**
-	 * Returns the current state and makes sure it is a view state.
-	 */
+	private void restoreVariables(RequestContext context) {
+		Iterator it = variables.values().iterator();
+		while (it.hasNext()) {
+			FlowVariable variable = (FlowVariable) it.next();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Restoring " + variable);
+			}
+			variable.restore(context);
+		}
+	}
+
 	private ViewState getCurrentViewState(RequestControlContext context) {
 		State currentState = (State) context.getCurrentState();
 		if (!(currentState instanceof ViewState)) {
@@ -601,9 +617,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		return (ViewState) currentState;
 	}
 
-	/**
-	 * Returns the current state and makes sure it is transitionable.
-	 */
 	private TransitionableState getCurrentTransitionableState(RequestControlContext context) {
 		State currentState = (State) context.getCurrentState();
 		if (!(currentState instanceof TransitionableState)) {

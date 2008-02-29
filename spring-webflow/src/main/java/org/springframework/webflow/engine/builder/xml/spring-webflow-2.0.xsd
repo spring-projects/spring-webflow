@@ -1295,6 +1295,16 @@ An attribute describing this state.
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
+						<xsd:element ref="var" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+A view variable definition.  View variables are automatically created when a view-state is entered and
+destroyed when the view-state exits.  A view variable is stored in flow scope.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>		
 						<xsd:element ref="entry-actions" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
@@ -1365,13 +1375,6 @@ This value may also be a view name expression evaluated against the request cont
 <pre>
 	${flowScope.view}
 </pre>
-Use of the "redirect:" prefix indicates this view state should trigger a redirect to a 
-unique "flow execution URL".  This causes the application view to render on the
-redirected request to that URL.  This allows browsers to refresh a specific
-state of the conversation while it remains active:
-<pre>
-	redirect:priceForm
-</pre>
 Use of the "externalRedirect:" prefix indicates this view state should trigger a 
 redirect to an absolute external URL, typically to interface with an external system.
 External redirect query parameters may be specified using ${expressions} that evaluate
@@ -1379,23 +1382,39 @@ against the request context:
 <pre>
 	externalRedirect:/someOtherSystem.htm?orderId=${flowScope.order.id}
 </pre> 
-Use of the "flowRedirect:" prefix has this view state generate a redirect to a URL
-that launches a new flow execution of an identified flow:
+Use of the "flowRedirect:" prefix requests a redirect to a new execution of another flow:
 <pre>
-	flowRedirect:editOrderFlow?orderId=${flowScope.order.id}
+	flowRedirect:myOtherFlow?someData=${flowScope.data}
 </pre>
-Use of the "bean:" prefix references a custom ViewSelector implementation you define,
+Use of the "bean:" prefix references a custom ViewFactory implementation you define,
 exposed by id in either a flow-local context using the "import" element or in the parent 
 context.
 <pre>
-	bean:myCustomViewSelector
+	bean:myCustomViewFactory
 </pre>
-The exact semantics regarding the interpretation of this value are determined by the
-installed TextToViewSelector converter.
 <br>
-Note when no view name is provided, this view state will make a "null" view selection. A null
-view does not request the rendering of a view, it only pauses the flow and returns control 
-the client. Use a null view when another state is expected to generate the response.
+Note when no view name is provided, the view to render will be determined by convention.
+The default convention is to treat the id of this view state as the view identifier.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="redirect" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Determines if this view state should request a flow execution redirect instead of rendering.
+Default is false.					
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="popup" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Determines if this view state should render its view in a modal popup dialog.
+Default is false.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

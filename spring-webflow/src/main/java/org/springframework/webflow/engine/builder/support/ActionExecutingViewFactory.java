@@ -65,7 +65,9 @@ public class ActionExecutingViewFactory implements ViewFactory {
 		}
 
 		public void render() {
-			ActionExecutor.execute(action, context);
+			if (action != null) {
+				ActionExecutor.execute(action, context);
+			}
 		}
 
 	}

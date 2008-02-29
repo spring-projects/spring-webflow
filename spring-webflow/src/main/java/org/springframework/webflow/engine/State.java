@@ -184,8 +184,19 @@ public abstract class State extends AnnotatedObject implements StateDefinition {
 			logger.debug("Entering state '" + getId() + "' of flow '" + getFlow().getId() + "'");
 		}
 		context.setCurrentState(this);
+		doPreEntryActions(context);
 		entryActionList.execute(context);
 		doEnter(context);
+	}
+
+	/**
+	 * Hook method to execute before running state entry actions upon state entry. Does nothing by default. Subclasses
+	 * may override.
+	 * @param context the request control context
+	 * @throws FlowExecutionException if an exception occurs
+	 */
+	protected void doPreEntryActions(RequestControlContext context) throws FlowExecutionException {
+
 	}
 
 	/**

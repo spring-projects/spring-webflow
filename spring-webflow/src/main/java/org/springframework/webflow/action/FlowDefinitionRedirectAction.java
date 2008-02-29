@@ -46,7 +46,6 @@ public class FlowDefinitionRedirectAction extends AbstractAction {
 	}
 
 	public static FlowDefinitionRedirectAction create(String encodedFlowRedirect) {
-		// TODO
-		return null;
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 }

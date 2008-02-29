@@ -15,10 +15,15 @@
  */
 package org.springframework.webflow.engine;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -33,9 +38,7 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class ViewState extends TransitionableState {
 
-	private static final String FLOW_MODAL_VIEW_HEADER = "Flow-Modal-View";
-
-	private static final String MODAL_ATTR = "modal";
+	private static final String POPUP_VIEW_HEADER = "Flow-Modal-View";
 
 	/**
 	 * The list of actions to be executed when this state is entered.
@@ -43,14 +46,24 @@ public class ViewState extends TransitionableState {
 	private ActionList renderActionList = new ActionList();
 
 	/**
-	 * Whether or not a redirect should occur before the view is rendered.
-	 */
-	private boolean redirect;
-
-	/**
 	 * A factory for creating and restoring the view rendered by this view state.
 	 */
 	private ViewFactory viewFactory;
+
+	/**
+	 * The set of view variables created by this view state.
+	 */
+	private Map variables = new LinkedHashMap();
+
+	/**
+	 * Whether or not a redirect should occur before the view is rendered.
+	 */
+	private Boolean redirect;
+
+	/**
+	 * Whether or not the view should render as a popup.
+	 */
+	private boolean popup;
 
 	/**
 	 * Create a new view state.
@@ -66,11 +79,52 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
+	 * Adds a view variable.
+	 * @param variable the variable
+	 */
+	public void addVariable(ViewVariable variable) {
+		variables.put(variable.getName(), variable);
+	}
+
+	/**
+	 * Adds a set of view variables.
+	 * @param variables the variables
+	 */
+	public void addVariables(ViewVariable[] variables) {
+		for (int i = 0; i < variables.length; i++) {
+			addVariable(variables[i]);
+		}
+	}
+
+	/**
+	 * Returns the view variable with the given name.
+	 * @param name the name of the variable
+	 */
+	public ViewVariable getVariable(String name) {
+		return (ViewVariable) variables.get(name);
+	}
+
+	/**
+	 * Returns the flow variables.
+	 */
+	public ViewVariable[] getVariables() {
+		return (ViewVariable[]) variables.values().toArray(new ViewVariable[variables.size()]);
+	}
+
+	/**
 	 * Sets whether this view state should send a flow execution redirect when entered.
 	 * @param redirect the redirect flag
 	 */
 	public void setRedirect(boolean redirect) {
-		this.redirect = redirect;
+		this.redirect = Boolean.valueOf(redirect);
+	}
+
+	/**
+	 * Sets whether this view state should render as a popup.
+	 * @param popup the popup flag
+	 */
+	public void setPopup(boolean popup) {
+		this.popup = popup;
 	}
 
 	/**
@@ -81,13 +135,16 @@ public class ViewState extends TransitionableState {
 		return renderActionList;
 	}
 
+	protected void doPreEntryActions(RequestControlContext context) throws FlowExecutionException {
+		createVariables(context);
+	}
+
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
-		if (context.getExternalContext().isAjaxRequest()
-				&& Boolean.TRUE.equals(context.getCurrentState().getAttributes().getBoolean(MODAL_ATTR))) {
-			context.getExternalContext().setResponseHeader(FLOW_MODAL_VIEW_HEADER, "true");
-		}
 		if (shouldRedirect(context)) {
+			if (context.getExternalContext().isAjaxRequest() && popup) {
+				context.getExternalContext().setResponseHeader(POPUP_VIEW_HEADER, "true");
+			}
 			context.sendFlowExecutionRedirect();
 		} else {
 			View view = viewFactory.getView(context);
@@ -103,6 +160,7 @@ public class ViewState extends TransitionableState {
 
 	public void resume(RequestControlContext context) {
 		View view = viewFactory.getView(context);
+		restoreVariables(context);
 		if (view.eventSignaled()) {
 			Event event = view.getEvent();
 			if (logger.isDebugEnabled()) {
@@ -120,12 +178,58 @@ public class ViewState extends TransitionableState {
 		}
 	}
 
+	public void exit(RequestControlContext context) {
+		destroyVariables(context);
+		super.exit(context);
+	}
+
+	// internal helpers
+
 	private boolean shouldRedirect(RequestControlContext context) {
-		return redirect || context.getAlwaysRedirectOnPause();
+		if (redirect != null) {
+			return redirect.booleanValue();
+		} else {
+			return context.getAlwaysRedirectOnPause();
+		}
+	}
+
+	private void createVariables(RequestContext context) {
+		Iterator it = variables.values().iterator();
+		while (it.hasNext()) {
+			ViewVariable variable = (ViewVariable) it.next();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating " + variable);
+			}
+			variable.create(context);
+		}
+	}
+
+	private void restoreVariables(RequestContext context) {
+		Iterator it = variables.values().iterator();
+		while (it.hasNext()) {
+			ViewVariable variable = (ViewVariable) it.next();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Destroying " + variable);
+
+			}
+			variable.restore(context);
+		}
+	}
+
+	private void destroyVariables(RequestContext context) {
+		Iterator it = variables.values().iterator();
+		while (it.hasNext()) {
+			ViewVariable variable = (ViewVariable) it.next();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Destroying " + variable);
+
+			}
+			variable.destroy(context);
+		}
 	}
 
 	protected void appendToString(ToStringCreator creator) {
 		super.appendToString(creator);
-		creator.append("viewManager", viewFactory);
+		creator.append("viewFactory", viewFactory).append("variables", variables);
 	}
 }
