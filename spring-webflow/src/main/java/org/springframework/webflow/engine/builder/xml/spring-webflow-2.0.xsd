@@ -202,7 +202,10 @@ A flow may also exhibit the following characteristics:
 <li>Be annotated with attributes that define descriptive properties that may affect flow execution.
 (See the &lt;attribute/&gt; element)
 
-<li>Instantiate a set of application variables when started.
+<li>Be a persistence context for managing persistent objects during the course of flow execution.
+(See the &lt;persistence-context/&gt; element)
+
+<li>Instantiate a set of instance variables when started.
 (See the &lt;var/&gt; element)
 
 <li>Map input provided by callers that start it
@@ -235,6 +238,19 @@ A flow may also exhibit the following characteristics:
 						<xsd:documentation>
 							<![CDATA[
 An attribute describing this flow.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element ref="persistence-context" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates this flow manages a persistence context.  The persistence context is created when a new instance of this flow starts.
+The persistence context is closed when the flow instance ends.  If the flow ends by reaching a "commit" end-state, changes
+made to managed persistent entities during the course of flow execution are flushed to the database in a transaction.
+<br>
+The persistence context can be referenced from within this flow by the "entityManager" variable.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -489,17 +505,6 @@ The identifier of the start state of this flow.  The start state is the point wh
 	<xsd:element name="input-mapper">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="input-attribute" minOccurs="0" maxOccurs="unbounded">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-A rule that maps an input attribute in a source attribute map to a target attribute map.
-This is a convenient form of the more flexible 'mapping' element for mapping attributes between
-attribute maps.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
 				<xsd:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -580,39 +585,6 @@ evaluates to null an error will be reported.
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="input-attribute">
-		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:string" use="required">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The name of the input attribute.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="scope" type="scopeType" default="default">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The scope of the input attribute.  If not specified the default scope type is used ('flow' by default).
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="required" type="xsd:boolean">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Whether or not this input attribute is required.  If marked required and it evaluates to null
-an error will be reported.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-		</xsd:complexType>
-	</xsd:element>
-
 	<xsd:element name="attribute">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -661,6 +633,9 @@ The value of this attribute; a short-cut alternative to an explicit child 'value
 		<xsd:complexType mixed="true">
 			<xsd:choice minOccurs="0" maxOccurs="unbounded" />
 		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="persistence-context">
 	</xsd:element>
 
 	<xsd:element name="var">
@@ -1651,18 +1626,6 @@ For the output mapper the following mapping characteristics apply:
 <li>The 'target' of each output mapping is the RequestContext, exposing access to 
 internal data structures of this flow such as flowScope.
 </ul>
-<br>
-For example:
-<pre>
-    &lt;attribute-mapper&gt;
-	    &lt;input-mapper&gt;
-		    &lt;input-attribute name="myFlowAttribute"/&gt;
-    	&lt;/input-mapper&gt;
-    	&lt;output-mapper&gt;
-    		&lt;output-attribute name="aSubflowOutputAttribute"/&gt;
-    	&lt;/output-mapper&gt;
-    &lt;/attribute-mapper&gt;
-</pre>
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1925,17 +1888,6 @@ and may execute one or more actions before executing.
 	<xsd:element name="output-mapper">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="output-attribute" minOccurs="0" maxOccurs="unbounded">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-A rule that maps an output attribute in a source attribute map to a target attribute map.
-This is a convenient form of the more flexible 'mapping' element for mapping attributes between
-attribute maps.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
 				<xsd:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -1948,39 +1900,6 @@ support for type conversion.
 					</xsd:annotation>
 				</xsd:element>
 			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="output-attribute">
-		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:string" use="required">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The name of the output attribute.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="scope" type="scopeType" default="default">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The scope of the output attribute.  If not specified the default scope type is used ('flow' by default).
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="required" type="xsd:boolean">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Whether or not this output attribute is required.  If marked required and it evaluates to null
-an error will be reported.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 

@@ -30,7 +30,6 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.CollectionAddingExpression;
@@ -120,8 +119,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private static final String ID_ATTRIBUTE = "id";
 
-	private static final String IDREF_ATTRIBUTE = "idref";
-
 	private static final String BEAN_ATTRIBUTE = "bean";
 
 	private static final String FLOW_ELEMENT = "flow";
@@ -178,11 +175,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private static final String OUTPUT_MAPPER_ELEMENT = "output-mapper";
 
-	private static final String OUTPUT_ATTRIBUTE_ELEMENT = "output-attribute";
-
 	private static final String INPUT_MAPPER_ELEMENT = "input-mapper";
-
-	private static final String INPUT_ATTRIBUTE_ELEMENT = "input-attribute";
 
 	private static final String MAPPING_ELEMENT = "mapping";
 
@@ -413,8 +406,16 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 		String flowId = getLocalContext().getFlowId();
 		AttributeMap externallyAssignedAttributes = getLocalContext().getFlowAttributes();
-		AttributeMap flowAttributes = parseAttributes(flowElement).union(externallyAssignedAttributes);
-		return getFlowArtifactFactory().createFlow(flowId, flowAttributes);
+		MutableAttributeMap flowAttributes = parseAttributes(flowElement);
+		parseAndSetPersistenceContextAttribute(flowElement, flowAttributes);
+		return getFlowArtifactFactory().createFlow(flowId, flowAttributes.union(externallyAssignedAttributes));
+	}
+
+	private void parseAndSetPersistenceContextAttribute(Element flowElement, MutableAttributeMap flowAttributes) {
+		Element element = DomUtils.getChildElementByTagName(flowElement, "persistence-context");
+		if (element != null) {
+			flowAttributes.put("persistenceContext", Boolean.TRUE);
+		}
 	}
 
 	private boolean isFlowElement(Element flowElement) {
@@ -558,7 +559,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		} else {
 			Element startStateElement = DomUtils.getChildElementByTagName(element, startState);
 			if (startStateElement != null) {
-				return startStateElement.getAttribute(IDREF_ATTRIBUTE);
+				return startStateElement.getAttribute("idref");
 			} else {
 				return null;
 			}
@@ -726,16 +727,12 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 				continue;
 			}
 			if (DomUtils.nodeNameEquals(childNode, ACTION_ELEMENT)) {
-				// parse standard action
 				actions.add(parseAnnotatedAction((Element) childNode));
 			} else if (DomUtils.nodeNameEquals(childNode, BEAN_ACTION_ELEMENT)) {
-				// parse bean invoking action
 				actions.add(parseAnnotatedBeanInvokingAction((Element) childNode));
 			} else if (DomUtils.nodeNameEquals(childNode, EVALUATE_ACTION_ELEMENT)) {
-				// parse evaluate action
 				actions.add(parseAnnotatedEvaluateAction((Element) childNode));
 			} else if (DomUtils.nodeNameEquals(childNode, SET_ELEMENT)) {
-				// parse set action
 				actions.add(parseAnnotatedSetAction((Element) childNode));
 			}
 		}
@@ -899,7 +896,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
-	private AttributeMap parseAttributes(Element element) {
+	private MutableAttributeMap parseAttributes(Element element) {
 		LocalAttributeMap attributes = new LocalAttributeMap();
 		List propertyElements = DomUtils.getChildElementsByTagName(element, ATTRIBUTE_ELEMENT);
 		for (int i = 0; i < propertyElements.size(); i++) {
@@ -982,8 +979,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element mapperElement = DomUtils.getChildElementByTagName(element, INPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleInputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					INPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement, MutableAttributeMap.class, RequestContext.class);
 			return mapper;
 		} else {
@@ -995,8 +990,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element mapperElement = DomUtils.getChildElementByTagName(element, INPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleInputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					INPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement, RequestContext.class, MutableAttributeMap.class);
 			return mapper;
 		} else {
@@ -1008,8 +1001,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element mapperElement = DomUtils.getChildElementByTagName(element, OUTPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleOutputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					OUTPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement, RequestContext.class, MutableAttributeMap.class);
 			return mapper;
 		} else {
@@ -1021,8 +1012,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		Element mapperElement = DomUtils.getChildElementByTagName(element, OUTPUT_MAPPER_ELEMENT);
 		if (mapperElement != null) {
 			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseSimpleOutputAttributeMappings(mapper, DomUtils.getChildElementsByTagName(mapperElement,
-					OUTPUT_ATTRIBUTE_ELEMENT));
 			parseMappings(mapper, mapperElement, MutableAttributeMap.class, RequestContext.class);
 			return mapper;
 		} else {
@@ -1049,40 +1038,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 				mapper.addMapping(new RequiredMapping(source, target, parseTypeConverter(mappingElement)));
 			} else {
 				mapper.addMapping(new Mapping(source, target, parseTypeConverter(mappingElement)));
-			}
-		}
-	}
-
-	// this looks really complicated and possibly wrong
-	private void parseSimpleInputAttributeMappings(DefaultAttributeMapper mapper, List elements) {
-		ExpressionParser parser = getLocalContext().getExpressionParser();
-		for (Iterator it = elements.iterator(); it.hasNext();) {
-			Element element = (Element) it.next();
-			Expression attributeExpression = parser.parseExpression(element.getAttribute(NAME_ATTRIBUTE),
-					new ParserContextImpl().eval(RequestContext.class));
-			Expression scopedAttributeExpression = new ScopedAttributeExpression(attributeExpression, parseScope(
-					element, ScopeType.FLOW));
-			if (getRequired(element, false)) {
-				mapper.addMapping(new RequiredMapping(attributeExpression, scopedAttributeExpression, null));
-			} else {
-				mapper.addMapping(new Mapping(attributeExpression, scopedAttributeExpression, null));
-			}
-		}
-	}
-
-	// this looks really complicated and possibly wrong
-	private void parseSimpleOutputAttributeMappings(DefaultAttributeMapper mapper, List elements) {
-		ExpressionParser parser = getLocalContext().getExpressionParser();
-		for (Iterator it = elements.iterator(); it.hasNext();) {
-			Element element = (Element) it.next();
-			Expression attributeExpression = parser.parseExpression(element.getAttribute(NAME_ATTRIBUTE),
-					new ParserContextImpl().eval(RequestContext.class));
-			Expression scopedAttributeExpression = new ScopedAttributeExpression(attributeExpression, parseScope(
-					element, ScopeType.FLOW));
-			if (getRequired(element, false)) {
-				mapper.addMapping(new RequiredMapping(scopedAttributeExpression, attributeExpression, null));
-			} else {
-				mapper.addMapping(new Mapping(scopedAttributeExpression, attributeExpression, null));
 			}
 		}
 	}
@@ -1185,28 +1140,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		public ViewInfo(ViewFactory viewFactory, Boolean redirect) {
 			this.viewFactory = viewFactory;
 			this.redirect = redirect;
-		}
-	}
-
-	private static class ScopedAttributeExpression implements Expression {
-
-		private Expression scopeMapExpression;
-
-		private ScopeType scopeType;
-
-		public ScopedAttributeExpression(Expression scopeMapExpression, ScopeType scopeType) {
-			this.scopeMapExpression = scopeMapExpression;
-			this.scopeType = scopeType;
-		}
-
-		public Object getValue(Object target) throws EvaluationException {
-			MutableAttributeMap scopeMap = scopeType.getScope((RequestContext) target);
-			return scopeMapExpression.getValue(scopeMap);
-		}
-
-		public void setValue(Object target, Object value) throws EvaluationException {
-			MutableAttributeMap scopeMap = scopeType.getScope((RequestContext) target);
-			scopeMapExpression.setValue(scopeMap, value);
 		}
 	}
 

@@ -65,4 +65,21 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertEquals("end", flow.getStartState().getId());
 	}
 
+	public void testCustomFlowAttribute() {
+		ClassPathResource resource = new ClassPathResource("flow-custom-attribute.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertEquals("bar", flow.getAttributes().get("foo"));
+		assertEquals(new Integer(1), flow.getAttributes().get("number"));
+	}
+
+	public void testPersistenceContextFlow() {
+		ClassPathResource resource = new ClassPathResource("flow-persistencecontext.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertNotNull(flow.getAttributes().get("persistenceContext"));
+		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
+	}
 }
