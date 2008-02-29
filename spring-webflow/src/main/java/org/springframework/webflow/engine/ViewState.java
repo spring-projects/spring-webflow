@@ -111,6 +111,10 @@ public class ViewState extends TransitionableState {
 		return (ViewVariable[]) variables.values().toArray(new ViewVariable[variables.size()]);
 	}
 
+	public boolean getRedirect() {
+		return redirect.booleanValue();
+	}
+
 	/**
 	 * Sets whether this view state should send a flow execution redirect when entered.
 	 * @param redirect the redirect flag
@@ -119,12 +123,20 @@ public class ViewState extends TransitionableState {
 		this.redirect = Boolean.valueOf(redirect);
 	}
 
+	public boolean getPopup() {
+		return popup;
+	}
+
 	/**
 	 * Sets whether this view state should render as a popup.
 	 * @param popup the popup flag
 	 */
 	public void setPopup(boolean popup) {
 		this.popup = popup;
+	}
+
+	public ViewFactory getViewFactory() {
+		return viewFactory;
 	}
 
 	/**
@@ -232,4 +244,5 @@ public class ViewState extends TransitionableState {
 		super.appendToString(creator);
 		creator.append("viewFactory", viewFactory).append("variables", variables);
 	}
+
 }

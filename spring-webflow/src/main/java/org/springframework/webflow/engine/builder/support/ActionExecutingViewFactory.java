@@ -41,6 +41,10 @@ public class ActionExecutingViewFactory implements ViewFactory {
 		this.action = action;
 	}
 
+	public Action getAction() {
+		return action;
+	}
+
 	public View getView(RequestContext context) {
 		return new ActionExecutingView(action, context);
 	}
@@ -71,5 +75,4 @@ public class ActionExecutingViewFactory implements ViewFactory {
 		}
 
 	}
-
 }

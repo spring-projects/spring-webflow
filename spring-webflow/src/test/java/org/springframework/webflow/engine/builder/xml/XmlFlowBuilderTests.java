@@ -4,10 +4,14 @@ import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.webflow.action.ExternalRedirectAction;
+import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
+import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
+import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
@@ -132,4 +136,43 @@ public class XmlFlowBuilderTests extends TestCase {
 		Flow flow = assembler.assembleFlow();
 		assertNotNull(((ViewState) flow.getStateInstance("view")).getVariable("foo"));
 	}
+
+	public void testViewStateRedirect() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-redirect.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertTrue(((ViewState) flow.getStateInstance("view")).getRedirect());
+	}
+
+	public void testViewStatePopup() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-popup.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertTrue(((ViewState) flow.getStateInstance("view")).getPopup());
+	}
+
+	public void testViewStateFlowRedirect() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-flowredirect.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
+		assertTrue(vf instanceof ActionExecutingViewFactory);
+		ActionExecutingViewFactory avf = (ActionExecutingViewFactory) vf;
+		assertTrue(avf.getAction() instanceof FlowDefinitionRedirectAction);
+	}
+
+	public void testViewStateExternalRedirect() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-externalredirect.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
+		assertTrue(vf instanceof ActionExecutingViewFactory);
+		ActionExecutingViewFactory avf = (ActionExecutingViewFactory) vf;
+		assertTrue(avf.getAction() instanceof ExternalRedirectAction);
+	}
+
 }
