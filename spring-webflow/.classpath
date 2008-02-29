@@ -47,5 +47,6 @@
 	<classpathentry kind="lib" path="lib/test/serp.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
 	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-security-core.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

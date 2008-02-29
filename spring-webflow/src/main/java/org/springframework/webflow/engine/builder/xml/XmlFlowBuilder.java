@@ -85,6 +85,7 @@ import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.util.ResourceHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -116,6 +117,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolder {
 
@@ -236,6 +238,12 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private static final String RESOURCE_ATTRIBUTE = "resource";
 
 	private static final String VIEW_ATTRIBUTE = "view";
+
+	private static final String SECURED_ELEMENT = "secured";
+
+	private static final String AUTHORITIES_ATTRIBUTE = "authorities";
+
+	private static final String MATCH_ATTRIBUTE = "match";
 
 	/**
 	 * Prefix used when the encoded view name wants to specify that a redirect to an external URL is required.
@@ -407,6 +415,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		AttributeMap externallyAssignedAttributes = getLocalContext().getFlowAttributes();
 		MutableAttributeMap flowAttributes = parseAttributes(flowElement);
 		parseAndSetPersistenceContextAttribute(flowElement, flowAttributes);
+		parseAndSetSecuredAttribute(flowElement, flowAttributes);
 		return getFlowArtifactFactory().createFlow(flowId, flowAttributes.union(externallyAssignedAttributes));
 	}
 
@@ -555,9 +564,11 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void parseAndAddActionState(Element element, Flow flow) {
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createActionState(parseId(element), flow, parseEntryActions(element),
 				parseAnnotatedActions(element), parseTransitions(element), parseExceptionHandlers(element),
-				parseExitActions(element), parseAttributes(element));
+				parseExitActions(element), attributes);
 	}
 
 	private void parseAndAddViewState(Element element, Flow flow) {
@@ -570,28 +581,34 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		if (element.hasAttribute("popup")) {
 			popup = ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("popup"))).booleanValue();
 		}
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createViewState(parseId(element), flow, parseViewVariables(element),
 				parseEntryActions(element), viewFactory, redirect, popup, parseRenderActions(element),
-				parseTransitions(element), parseExceptionHandlers(element), parseExitActions(element),
-				parseAttributes(element));
+				parseTransitions(element), parseExceptionHandlers(element), parseExitActions(element), attributes);
 	}
 
 	private void parseAndAddDecisionState(Element element, Flow flow) {
-		getFlowArtifactFactory()
-				.createDecisionState(parseId(element), flow, parseEntryActions(element), parseIfs(element),
-						parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
+		getFlowArtifactFactory().createDecisionState(parseId(element), flow, parseEntryActions(element),
+				parseIfs(element), parseExceptionHandlers(element), parseExitActions(element), attributes);
 	}
 
 	private void parseAndAddSubflowState(Element element, Flow flow) {
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createSubflowState(parseId(element), flow, parseEntryActions(element),
 				parseSubflow(element), parseFlowAttributeMapper(element), parseTransitions(element),
-				parseExceptionHandlers(element), parseExitActions(element), parseAttributes(element));
+				parseExceptionHandlers(element), parseExitActions(element), attributes);
 	}
 
 	private void parseAndAddEndState(Element element, Flow flow) {
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createEndState(parseId(element), flow, parseEntryActions(element),
 				parseFinalResponseAction(element), parseOutputMapper(element), parseExceptionHandlers(element),
-				parseAttributes(element));
+				attributes);
 	}
 
 	private String parseId(Element element) {
@@ -691,8 +708,10 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(element.getAttribute(TO_ATTRIBUTE));
 		TransitionCriteria executionCriteria = TransitionCriteriaChain.criteriaChainFor(parseAnnotatedActions(element));
+		MutableAttributeMap attributes = parseAttributes(element);
+		parseAndSetSecuredAttribute(element, attributes);
 		return getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, executionCriteria,
-				parseAttributes(element));
+				attributes);
 	}
 
 	private Flow parseSubflow(Element element) {
@@ -1131,6 +1150,25 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private FlowExecutionExceptionHandler parseCustomExceptionHandler(Element element) {
 		return (FlowExecutionExceptionHandler) getLocalContext().getBeanFactory().getBean(
 				element.getAttribute(BEAN_ATTRIBUTE), FlowExecutionExceptionHandler.class);
+	}
+
+	private void parseAndSetSecuredAttribute(Element element, MutableAttributeMap attributes) {
+		Element secured = DomUtils.getChildElementByTagName(element, SECURED_ELEMENT);
+		if (secured != null) {
+			SecurityRule rule = new SecurityRule();
+			rule.setRequiredAuthorities(SecurityRule.convertAuthoritiesFromCommaSeparatedString(secured
+					.getAttribute(AUTHORITIES_ATTRIBUTE)));
+			String comparisonType = secured.getAttribute(MATCH_ATTRIBUTE);
+			if ("any".equals(comparisonType)) {
+				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
+			} else if ("all".equals(comparisonType)) {
+				rule.setComparisonType(SecurityRule.COMPARISON_ALL);
+			} else {
+				// default to any
+				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
+			}
+			attributes.put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+		}
 	}
 
 	private ConversionExecutor fromStringTo(Class targetType) throws ConversionException {

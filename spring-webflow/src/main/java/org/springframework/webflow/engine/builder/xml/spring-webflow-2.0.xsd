@@ -202,6 +202,9 @@ A flow may also exhibit the following characteristics:
 <li>Be annotated with attributes that define descriptive properties that may affect flow execution.
 (See the &lt;attribute/&gt; element)
 
+<li>Secured flow
+(See the &lt;secured/&gt; element)
+
 <li>Be a persistence context for managing persistent objects during the course of flow execution.
 (See the &lt;persistence-context/&gt; element)
 
@@ -238,6 +241,15 @@ A flow may also exhibit the following characteristics:
 						<xsd:documentation>
 							<![CDATA[
 An attribute describing this flow.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates this flow is secured
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -670,6 +682,15 @@ If not specified the default scope type is used ('flow' by default).
 								<xsd:documentation>
 									<![CDATA[
 An attribute describing this state.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Indicates this state is secured
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1219,6 +1240,15 @@ An attribute describing this transition.
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
+				<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates this transition is secured
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
 				<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
 			</xsd:sequence>
 			<xsd:attribute name="on" type="xsd:string">
@@ -1295,6 +1325,15 @@ An attribute describing this state.
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
+						<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Indicates this state is secured
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
 						<xsd:element ref="var" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation>
@@ -1304,7 +1343,7 @@ destroyed when the view-state exits.  A view variable is stored in flow scope.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
-						</xsd:element>		
+						</xsd:element>	
 						<xsd:element ref="entry-actions" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
@@ -1456,6 +1495,15 @@ An attribute describing this state.
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
+						<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Indicates this state is secured
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
 						<xsd:element ref="entry-actions" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
@@ -1569,6 +1617,15 @@ exact interpretation of this attribute value depends on the installed TextToTarg
 								<xsd:documentation>
 									<![CDATA[
 An attribute describing this state.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Indicates this state is secured
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1732,6 +1789,15 @@ when you need full control of attribute mapping behavior for this subflow state.
 								<xsd:documentation>
 									<![CDATA[
 An attribute describing this state.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element ref="secured" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Indicates this state is secured
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1911,6 +1977,59 @@ For example:
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="secured">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Applies attributes to Spring Secuirty based principal authorities upon enterance.  
+If the security requirement is not met, an AccessDeniedException is thrown.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="authorities" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Comma separated list of security authorities.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="match" use="optional" default="any">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Method used to match authorities.  Accepted values are 'any' and 'all'.  Default is 'any'.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="any">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Matching any of the authorities will allow access
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="all">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Matching all of the authorities will allow access
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
 			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>

@@ -95,5 +95,6 @@
 		<module organisation="org.springframework" name="spring-xml" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="spring-ldap" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="various" resolver="spring-projects"/>
+		<module organisation="org.springframework.security" name="spring-security-core" resolver="spring-projects"/>
 	</modules>
 </ivysettings>
