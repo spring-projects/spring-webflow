@@ -36,11 +36,11 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	private FlowBuilderContext parent;
 
-	private GenericApplicationContext localFlowBeanFactory;
+	private GenericApplicationContext localFlowContext;
 
-	public LocalFlowBuilderContext(FlowBuilderContext parent, GenericApplicationContext localFlowBeanFactory) {
+	public LocalFlowBuilderContext(FlowBuilderContext parent, GenericApplicationContext localFlowContext) {
 		this.parent = parent;
-		this.localFlowBeanFactory = localFlowBeanFactory;
+		this.localFlowContext = localFlowContext;
 	}
 
 	public String getFlowId() {
@@ -52,24 +52,24 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 	}
 
 	public FlowDefinitionLocator getFlowDefinitionLocator() {
-		if (localFlowBeanFactory.containsBean("flowRegistry")) {
-			return (FlowDefinitionLocator) localFlowBeanFactory.getBean("flowRegistry", FlowDefinitionLocator.class);
+		if (localFlowContext.containsLocalBean("flowRegistry")) {
+			return (FlowDefinitionLocator) localFlowContext.getBean("flowRegistry", FlowDefinitionLocator.class);
 		} else {
 			return parent.getFlowDefinitionLocator();
 		}
 	}
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
-		if (localFlowBeanFactory.containsBean("flowArtifactFactory")) {
-			return (FlowArtifactFactory) localFlowBeanFactory.getBean("flowArtifactFactory", FlowArtifactFactory.class);
+		if (localFlowContext.containsLocalBean("flowArtifactFactory")) {
+			return (FlowArtifactFactory) localFlowContext.getBean("flowArtifactFactory", FlowArtifactFactory.class);
 		} else {
 			return parent.getFlowArtifactFactory();
 		}
 	}
 
 	public BeanInvokingActionFactory getBeanInvokingActionFactory() {
-		if (localFlowBeanFactory.containsBean("beanInvokingActionFactory")) {
-			return (BeanInvokingActionFactory) localFlowBeanFactory.getBean("beanInvokingActionFactory",
+		if (localFlowContext.containsLocalBean("beanInvokingActionFactory")) {
+			return (BeanInvokingActionFactory) localFlowContext.getBean("beanInvokingActionFactory",
 					BeanInvokingActionFactory.class);
 		} else {
 			return parent.getBeanInvokingActionFactory();
@@ -77,34 +77,34 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 	}
 
 	public ViewFactoryCreator getViewFactoryCreator() {
-		if (localFlowBeanFactory.containsBean("viewFactoryCreator")) {
-			return (ViewFactoryCreator) localFlowBeanFactory.getBean("viewFactoryCreator", ViewFactoryCreator.class);
+		if (localFlowContext.containsLocalBean("viewFactoryCreator")) {
+			return (ViewFactoryCreator) localFlowContext.getBean("viewFactoryCreator", ViewFactoryCreator.class);
 		} else {
 			return parent.getViewFactoryCreator();
 		}
 	}
 
 	public ConversionService getConversionService() {
-		if (localFlowBeanFactory.containsBean("conversionService")) {
-			return (ConversionService) localFlowBeanFactory.getBean("conversionService", ConversionService.class);
+		if (localFlowContext.containsLocalBean("conversionService")) {
+			return (ConversionService) localFlowContext.getBean("conversionService", ConversionService.class);
 		} else {
 			return parent.getConversionService();
 		}
 	}
 
 	public ExpressionParser getExpressionParser() {
-		if (localFlowBeanFactory.containsBean("expressionParser")) {
-			return (ExpressionParser) localFlowBeanFactory.getBean("expressionParser", ExpressionParser.class);
+		if (localFlowContext.containsLocalBean("expressionParser")) {
+			return (ExpressionParser) localFlowContext.getBean("expressionParser", ExpressionParser.class);
 		} else {
 			return parent.getExpressionParser();
 		}
 	}
 
 	public ResourceLoader getResourceLoader() {
-		return localFlowBeanFactory;
+		return localFlowContext;
 	}
 
 	public BeanFactory getBeanFactory() {
-		return localFlowBeanFactory.getBeanFactory();
+		return localFlowContext.getBeanFactory();
 	}
 }

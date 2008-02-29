@@ -435,10 +435,10 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 						+ importElement.getAttribute(RESOURCE_ATTRIBUTE) + "'", e);
 			}
 		}
-		this.localFlowBuilderContext = new LocalFlowBuilderContext(getContext(), createFlowBeanFactory(resources));
+		this.localFlowBuilderContext = new LocalFlowBuilderContext(getContext(), createFlowApplicationContext(resources));
 	}
 
-	private GenericApplicationContext createFlowBeanFactory(Resource[] resources) {
+	private GenericApplicationContext createFlowApplicationContext(Resource[] resources) {
 		// see if this factory has a parent
 		BeanFactory parent = getContext().getBeanFactory();
 		// determine the context implementation based on the current environment
