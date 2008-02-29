@@ -238,11 +238,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private static final String VIEW_ATTRIBUTE = "view";
 
 	/**
-	 * Prefix used when the encoded view name wants to specify that a redirect is required. ("redirect:")
-	 */
-	private static final String REDIRECT_PREFIX = "redirect:";
-
-	/**
 	 * Prefix used when the encoded view name wants to specify that a redirect to an external URL is required.
 	 * ("externalRedirect:")
 	 */
