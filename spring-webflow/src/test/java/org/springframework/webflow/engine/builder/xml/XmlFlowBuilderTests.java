@@ -73,4 +73,15 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertNotNull(flow.getAttributes().get("persistenceContext"));
 		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
 	}
+
+	public void testFlowVariable() {
+		ClassPathResource resource = new ClassPathResource("flow-var.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		assertEquals("flow-foo", flow.getVariables()[0].getName());
+		assertEquals(true, flow.getVariables()[0].isLocal());
+		assertEquals("conversation-foo", flow.getVariables()[1].getName());
+		assertEquals(false, flow.getVariables()[1].isLocal());
+	}
 }

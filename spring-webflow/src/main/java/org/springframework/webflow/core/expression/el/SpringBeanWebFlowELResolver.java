@@ -52,8 +52,8 @@ public class SpringBeanWebFlowELResolver extends SpringBeanFacesELResolver {
 
 	protected BeanFactory getBeanFactory(ELContext elContext) {
 		RequestContext rc = RequestContextHolder.getRequestContext();
-		if (rc.getActiveFlow() instanceof BeanFactory) {
-			return (BeanFactory) rc.getActiveFlow();
+		if (rc.getActiveFlow().getBeanFactory() != null) {
+			return rc.getActiveFlow().getBeanFactory();
 		} else {
 			return EMPTY_BEAN_FACTORY;
 		}

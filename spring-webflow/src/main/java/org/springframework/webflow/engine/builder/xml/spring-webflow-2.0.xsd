@@ -260,6 +260,7 @@ The persistence context can be referenced from within this flow by the "entityMa
 						<xsd:documentation>
 							<![CDATA[
 A flow variable definition.  Flow variables are automatically created when an execution of this flow starts.
+A flow variable can either be stored in 'flow' or 'conversation' scope.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -623,6 +624,16 @@ of a non-singleton bean in the configured Bean Factory to use as the initial var
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="class" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The implementation class of the variable's value.  The class may be an alias (e.g 'int') or a
+fully-qualified class (e.g. 'java.lang.Integer').  The class cannot be abstract or an interface.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 			<xsd:attribute name="scope" type="scopeType" default="default">
 				<xsd:annotation>
 					<xsd:documentation>
@@ -636,30 +647,6 @@ This scope of this variable.  The available scope types are:
 </ol>
 <br>    
 If not specified the default scope type is used ('flow' by default).
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="class" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The implementation class of the variable's value.  The class may be an alias (e.g 'int') or a
-fully-qualified class (e.g. 'java.lang.Integer').  The class cannot be abstract or an interface.
-Only required if the variable should be instantiated directly by calling the default constructor
-on its class rather than having the initial variable value returned by a Spring Bean Factory.
-
-Use this or the 'bean' attribute, not both.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="bean" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The bean defining the initial flow variable value.  The bean *must* be a non-singleton prototype.
-Only required if the bean name differs from the variable name.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>

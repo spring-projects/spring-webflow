@@ -21,14 +21,10 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContext;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
@@ -108,7 +104,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Colin Sampaleanu
  * @author Jeremy Grelle
  */
-public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory, ResourceLoader {
+public class Flow extends AnnotatedObject implements FlowDefinition {
 
 	/**
 	 * Logger, can be used in subclasses.
@@ -138,7 +134,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	/**
 	 * The mapper to map flow input attributes.
 	 */
-	private AttributeMapper inputMapper = new NoInputMapper();
+	private AttributeMapper inputMapper;
 
 	/**
 	 * The list of actions to execute when this flow starts.
@@ -161,7 +157,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	/**
 	 * The mapper to map flow output attributes.
 	 */
-	private AttributeMapper outputMapper = new NoOutputMapper();
+	private AttributeMapper outputMapper;
 
 	/**
 	 * The set of exception handlers for this flow.
@@ -217,6 +213,14 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 
 	public StateDefinition getState(String stateId) {
 		return getStateInstance(stateId);
+	}
+
+	public BeanFactory getBeanFactory() {
+		return beanFactory;
+	}
+
+	public ResourceLoader getResourceLoader() {
+		return resourceLoader;
 	}
 
 	/**
@@ -382,7 +386,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	 * @param inputMapper the input mapper
 	 */
 	public void setInputMapper(AttributeMapper inputMapper) {
-		Assert.notNull(inputMapper, "The input mapper cannot be null");
 		this.inputMapper = inputMapper;
 	}
 
@@ -417,7 +420,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	 * @param outputMapper the output mapper
 	 */
 	public void setOutputMapper(AttributeMapper outputMapper) {
-		Assert.notNull(outputMapper, "The output mapper cannot be null");
 		this.outputMapper = outputMapper;
 	}
 
@@ -498,7 +500,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	public void start(RequestControlContext context, MutableAttributeMap input) throws FlowExecutionException {
 		assertStartStateSet();
 		createVariables(context);
-		inputMapper.map(input, context, null);
+		if (inputMapper != null) {
+			inputMapper.map(input, context, null);
+		}
 		startActionList.execute(context);
 		startState.enter(context);
 	}
@@ -547,7 +551,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	 */
 	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
 		endActionList.execute(context);
-		outputMapper.map(context, output, null);
+		if (outputMapper != null) {
+			outputMapper.map(context, output, null);
+		}
 	}
 
 	/**
@@ -558,52 +564,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 	public boolean handleException(FlowExecutionException exception, RequestControlContext context)
 			throws FlowExecutionException {
 		return getExceptionHandlerSet().handleException(exception, context);
-	}
-
-	// implementing bean factory
-
-	public boolean containsBean(String name) {
-		return beanFactory.containsBean(name);
-	}
-
-	public String[] getAliases(String name) {
-		return beanFactory.getAliases(name);
-	}
-
-	public Object getBean(String name, Class requiredType) throws BeansException {
-		return beanFactory.getBean(name, requiredType);
-	}
-
-	public Object getBean(String name, Object[] args) throws BeansException {
-		return beanFactory.getBean(name, args);
-	}
-
-	public Object getBean(String name) throws BeansException {
-		return beanFactory.getBean(name);
-	}
-
-	public Class getType(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.getType(name);
-	}
-
-	public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.isPrototype(name);
-	}
-
-	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.isSingleton(name);
-	}
-
-	public boolean isTypeMatch(String name, Class targetType) throws NoSuchBeanDefinitionException {
-		return beanFactory.isTypeMatch(name, targetType);
-	}
-
-	public ClassLoader getClassLoader() {
-		return resourceLoader.getClassLoader();
-	}
-
-	public Resource getResource(String name) {
-		return resourceLoader.getResource(name);
 	}
 
 	// internal helpers
@@ -651,31 +611,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition, BeanFactory
 					+ context.getCurrentState() + " is not transitionable - programmer error");
 		}
 		return (TransitionableState) currentState;
-	}
-
-	/**
-	 * Maps no input attributes. The default implementation.
-	 */
-	private class NoInputMapper implements AttributeMapper {
-		public void map(Object source, Object target, MappingContext context) {
-		}
-
-		public String toString() {
-			return "none";
-		}
-
-	}
-
-	/**
-	 * Maps no input attributes. The default implementation.
-	 */
-	private class NoOutputMapper implements AttributeMapper {
-		public void map(Object source, Object target, MappingContext context) {
-		}
-
-		public String toString() {
-			return "none";
-		}
 	}
 
 	public String toString() {

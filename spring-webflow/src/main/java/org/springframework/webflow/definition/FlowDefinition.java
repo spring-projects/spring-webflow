@@ -15,6 +15,9 @@
  */
 package org.springframework.webflow.definition;
 
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.core.io.ResourceLoader;
+
 /**
  * The definition of a flow, a program that when executed carries out the orchestration of a task on behalf of a single
  * client.
@@ -60,4 +63,15 @@ public interface FlowDefinition extends Annotated {
 	 * @throws IllegalArgumentException if a state with this id does not exist
 	 */
 	public StateDefinition getState(String id) throws IllegalArgumentException;
+
+	/**
+	 * Returns a reference to a bean factory hosting application objects needed by this flow definition.
+	 */
+	public BeanFactory getBeanFactory();
+
+	/**
+	 * Returns a reference to a resource loader capable of loading resources relative to this flow.
+	 */
+	public ResourceLoader getResourceLoader();
+
 }

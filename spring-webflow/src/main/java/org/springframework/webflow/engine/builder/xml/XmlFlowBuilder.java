@@ -25,6 +25,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionException;
@@ -68,13 +69,13 @@ import org.springframework.webflow.engine.FlowVariable;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionCriteria;
+import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
-import org.springframework.webflow.engine.support.BeanFactoryFlowVariable;
+import org.springframework.webflow.engine.support.BeanFactoryVariableValueFactory;
 import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
-import org.springframework.webflow.engine.support.SimpleFlowVariable;
 import org.springframework.webflow.engine.support.TransitionCriteriaChain;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Action;
@@ -437,7 +438,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		this.localFlowBuilderContext = new LocalFlowBuilderContext(getContext(), createFlowBeanFactory(resources));
 	}
 
-	private BeanFactory createFlowBeanFactory(Resource[] resources) {
+	private GenericApplicationContext createFlowBeanFactory(Resource[] resources) {
 		// see if this factory has a parent
 		BeanFactory parent = getContext().getBeanFactory();
 		// determine the context implementation based on the current environment
@@ -478,24 +479,20 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private void parseAndAddFlowVariables(Element flowElement, Flow flow) {
 		List varElements = DomUtils.getChildElementsByTagName(flowElement, VAR_ELEMENT);
 		for (Iterator it = varElements.iterator(); it.hasNext();) {
-			flow.addVariable(parseVariable((Element) it.next()));
+			flow.addVariable(parseFlowVariable((Element) it.next()));
 		}
 	}
 
-	private FlowVariable parseVariable(Element element) {
+	private FlowVariable parseFlowVariable(Element element) {
+		Class clazz = (Class) fromStringTo(Class.class).execute(element.getAttribute(CLASS_ATTRIBUTE));
+		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
+				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
 		ScopeType scope = parseScope(element, ScopeType.FLOW);
-		if (StringUtils.hasText(element.getAttribute(BEAN_ATTRIBUTE))) {
-			return new BeanFactoryFlowVariable(element.getAttribute(NAME_ATTRIBUTE), element
-					.getAttribute(BEAN_ATTRIBUTE), getLocalContext().getBeanFactory(), scope);
-		} else {
-			if (StringUtils.hasText(element.getAttribute(CLASS_ATTRIBUTE))) {
-				Class variableClass = (Class) fromStringTo(Class.class).execute(element.getAttribute(CLASS_ATTRIBUTE));
-				return new SimpleFlowVariable(element.getAttribute(NAME_ATTRIBUTE), variableClass, scope);
-			} else {
-				return new BeanFactoryFlowVariable(element.getAttribute(NAME_ATTRIBUTE), null, getLocalContext()
-						.getBeanFactory(), scope);
-			}
+		if (!(scope == ScopeType.FLOW || scope == ScopeType.CONVERSATION)) {
+			throw new IllegalArgumentException("Only " + ScopeType.FLOW + " or " + ScopeType.CONVERSATION
+					+ " scope is allowed for flow variables");
 		}
+		return new FlowVariable(element.getAttribute("name"), valueFactory, scope == ScopeType.FLOW ? true : false);
 	}
 
 	private void parseAndAddStartActions(Element element, Flow flow) {

@@ -21,19 +21,16 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.mapping.DefaultAttributeMapper;
 import org.springframework.binding.mapping.MappingBuilder;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.TestMultiAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.expression.DefaultExpressionParserFactory;
-import org.springframework.webflow.engine.support.BeanFactoryFlowVariable;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
-import org.springframework.webflow.engine.support.SimpleFlowVariable;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.ScopeType;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
 
@@ -184,13 +181,17 @@ public class FlowTests extends TestCase {
 
 	public void testStartWithVariables() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		flow.addVariable(new SimpleFlowVariable("var1", ArrayList.class, ScopeType.FLOW));
-		StaticApplicationContext beanFactory = new StaticApplicationContext();
-		beanFactory.registerPrototype("bean", ArrayList.class);
-		flow.addVariable(new BeanFactoryFlowVariable("var2", "bean", beanFactory, ScopeType.FLOW));
+		flow.addVariable(new FlowVariable("var1", new VariableValueFactory() {
+			public Object createVariableValue(RequestContext context) {
+				return new ArrayList();
+			}
+
+			public Object restoreReferences(Object value, RequestContext context) {
+				return value;
+			}
+		}, true));
 		flow.start(context, new LocalAttributeMap());
 		context.getFlowScope().getRequired("var1", ArrayList.class);
-		context.getFlowScope().getRequired("var2", ArrayList.class);
 	}
 
 	public void testStartWithMapper() {

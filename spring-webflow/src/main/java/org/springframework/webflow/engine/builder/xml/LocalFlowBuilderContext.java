@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.builder.xml;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -35,9 +36,9 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	private FlowBuilderContext parent;
 
-	private BeanFactory localFlowBeanFactory;
+	private GenericApplicationContext localFlowBeanFactory;
 
-	public LocalFlowBuilderContext(FlowBuilderContext parent, BeanFactory localFlowBeanFactory) {
+	public LocalFlowBuilderContext(FlowBuilderContext parent, GenericApplicationContext localFlowBeanFactory) {
 		this.parent = parent;
 		this.localFlowBeanFactory = localFlowBeanFactory;
 	}
@@ -100,10 +101,10 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 	}
 
 	public ResourceLoader getResourceLoader() {
-		return (ResourceLoader) getBeanFactory();
+		return localFlowBeanFactory;
 	}
 
 	public BeanFactory getBeanFactory() {
-		return localFlowBeanFactory;
+		return localFlowBeanFactory.getBeanFactory();
 	}
 }

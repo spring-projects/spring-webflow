@@ -15,12 +15,10 @@
  */
 package org.springframework.webflow.engine;
 
-import java.io.Serializable;
-
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ScopeType;
 
 /**
  * A value object that defines a specification for a flow variable. Encapsulates information about the variable and the
@@ -28,7 +26,7 @@ import org.springframework.webflow.execution.ScopeType;
  * 
  * @author Keith Donald
  */
-public abstract class FlowVariable extends AnnotatedObject implements Serializable {
+public class FlowVariable extends AnnotatedObject {
 
 	/**
 	 * The variable name.
@@ -36,20 +34,27 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 	private String name;
 
 	/**
-	 * The variable scope.
+	 * Is this flow variable local or global? Local variables go into flow scope. Global variables go into conversation
+	 * scope.
 	 */
-	private ScopeType scope;
+	private Boolean local;
+
+	/**
+	 * The value factory that provides this variable's value.
+	 */
+	private VariableValueFactory valueFactory;
 
 	/**
 	 * Creates a new flow variable.
 	 * @param name the variable name
-	 * @param scope the variable scope type
+	 * @param local the local variable
 	 */
-	public FlowVariable(String name, ScopeType scope) {
+	public FlowVariable(String name, VariableValueFactory valueFactory, boolean local) {
 		Assert.hasText(name, "The variable name is required");
-		Assert.notNull(scope, "The variable scope type is required");
+		Assert.notNull(valueFactory, "The variable value factory is required");
 		this.name = name;
-		this.scope = scope;
+		this.valueFactory = valueFactory;
+		this.local = Boolean.valueOf(local);
 	}
 
 	/**
@@ -60,10 +65,10 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 	}
 
 	/**
-	 * Returns the scope of this variable.
+	 * Is this a local flow variable or a conversation-scoped flow variable?
 	 */
-	public ScopeType getScope() {
-		return scope;
+	public boolean isLocal() {
+		return local.booleanValue();
 	}
 
 	// name and scope based equality
@@ -73,11 +78,11 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 			return false;
 		}
 		FlowVariable other = (FlowVariable) o;
-		return name.equals(other.name) && scope.equals(other.scope);
+		return name.equals(other.name) && valueFactory.equals(other.valueFactory) && local.equals(other.local);
 	}
 
 	public int hashCode() {
-		return name.hashCode() + scope.hashCode();
+		return name.hashCode() + valueFactory.hashCode() + local.hashCode();
 	}
 
 	/**
@@ -85,18 +90,26 @@ public abstract class FlowVariable extends AnnotatedObject implements Serializab
 	 * @param context the flow execution request context
 	 */
 	public final void create(RequestContext context) {
-		scope.getScope(context).put(name, createVariableValue(context));
+		Object value = valueFactory.createVariableValue(context);
+		if (local == Boolean.TRUE) {
+			context.getFlowScope().put(name, value);
+		} else {
+			context.getConversationScope().put(name, value);
+		}
 	}
 
-	/**
-	 * Hook method that needs to be implemented by subclasses to calculate the value of this flow variable based on the
-	 * information available in the request context.
-	 * @param context the flow execution request context
-	 * @return the flow variable value
-	 */
-	protected abstract Object createVariableValue(RequestContext context);
+	public final Object restore(FlowSession session, RequestContext context) {
+		Object value;
+		if (local == Boolean.TRUE) {
+			value = session.getScope().get(name);
+		} else {
+			value = context.getConversationScope().get(name);
+		}
+		return valueFactory.restoreReferences(value, context);
+	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("name", name).append("scope", scope).toString();
+		return new ToStringCreator(this).append("name", name).append("valueFactory", valueFactory).append("local",
+				local).toString();
 	}
 }
