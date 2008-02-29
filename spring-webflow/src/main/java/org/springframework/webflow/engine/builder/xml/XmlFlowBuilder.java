@@ -551,18 +551,9 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private String getStartStateId(Element element) {
 		String startState = "start-state";
 		if (element.hasAttribute(startState)) {
-			Element startStateElement = DomUtils.getChildElementByTagName(element, startState);
-			Assert
-					.isNull(startStateElement,
-							"Define either a flow 'start-state' attribute or use the classic 'start-state' element.  Do not use both.");
 			return element.getAttribute(startState);
 		} else {
-			Element startStateElement = DomUtils.getChildElementByTagName(element, startState);
-			if (startStateElement != null) {
-				return startStateElement.getAttribute("idref");
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 

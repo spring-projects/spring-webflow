@@ -296,20 +296,6 @@ Defines flow startup logic to execute. This logic will always execute when this 
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="start-state" minOccurs="0">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-Identifies the starting point of this flow.  The start state is the point where flow execution begins.
-
-This element is an alternative to the 'start-state' attribute.  In general, the 'start-state' attribute
-is performed when you wish to explictly denote the flow start-state.
-
-If not specified, the default start state is the first state defined in the document.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
 				<xsd:choice maxOccurs="unbounded">
 					<xsd:element ref="action-state">
 						<xsd:annotation>
@@ -488,20 +474,6 @@ If not specified, the default start state is the first state defined in the docu
 	</xsd:element>
 
 	<!-- Sub elements -->
-	<xsd:element name="start-state">
-		<xsd:complexType>
-			<xsd:attribute name="idref" type="xsd:IDREF" use="required">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The identifier of the start state of this flow.  The start state is the point where flow execution begins.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-		</xsd:complexType>
-	</xsd:element>
-
 	<xsd:element name="input-mapper">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -635,8 +607,7 @@ The value of this attribute; a short-cut alternative to an explicit child 'value
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="persistence-context">
-	</xsd:element>
+	<xsd:element name="persistence-context"/>
 
 	<xsd:element name="var">
 		<xsd:complexType>

@@ -56,15 +56,6 @@ public class XmlFlowBuilderTests extends TestCase {
 		assertEquals("end", flow.getStartState().getId());
 	}
 
-	public void testBuildFlowWithStartStateElement() {
-		ClassPathResource resource = new ClassPathResource("flow-startstate-element.xml", getClass());
-		builder = new XmlFlowBuilder(resource);
-		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
-		Flow flow = assembler.assembleFlow();
-		assertEquals("flow", flow.getId());
-		assertEquals("end", flow.getStartState().getId());
-	}
-
 	public void testCustomFlowAttribute() {
 		ClassPathResource resource = new ClassPathResource("flow-custom-attribute.xml", getClass());
 		builder = new XmlFlowBuilder(resource);
