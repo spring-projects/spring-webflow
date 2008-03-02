@@ -182,12 +182,11 @@ public class FlowTests extends TestCase {
 	public void testStartWithVariables() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.addVariable(new FlowVariable("var1", new VariableValueFactory() {
-			public Object createVariableValue(RequestContext context) {
+			public Object createInitialValue(RequestContext context) {
 				return new ArrayList();
 			}
 
-			public Object restoreReferences(Object value, RequestContext context) {
-				return value;
+			public void restoreReferences(Object value, RequestContext context) {
 			}
 		}, true));
 		flow.start(context, new LocalAttributeMap());

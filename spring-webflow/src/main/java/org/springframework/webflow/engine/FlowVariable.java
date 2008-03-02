@@ -20,8 +20,9 @@ import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A value object that defines a specification for a flow variable. Encapsulates information about the variable and the
- * behavior necessary to create a new variable instance in a flow execution scope.
+ * A value object that defines a specification for a flow variable. Such a variable is allocated when a flow starts and
+ * destroyed when that flow ends. This class encapsulates information about the variable and the behavior necessary to
+ * allocate the variable instance in flow scope.
  * 
  * @author Keith Donald
  */
@@ -84,8 +85,12 @@ public class FlowVariable extends AnnotatedObject {
 		return name.hashCode() + valueFactory.hashCode() + local.hashCode();
 	}
 
-	public final void create(RequestContext context) {
-		Object value = valueFactory.createVariableValue(context);
+	/**
+	 * Creates this flow variable. This method allocates the variable's value in the correct flow scope.
+	 * @param context the executing flow
+	 */
+	public void create(RequestContext context) {
+		Object value = valueFactory.createInitialValue(context);
 		if (local == Boolean.TRUE) {
 			context.getFlowScope().put(name, value);
 		} else {
@@ -93,14 +98,31 @@ public class FlowVariable extends AnnotatedObject {
 		}
 	}
 
-	public final Object restore(RequestContext context) {
+	/**
+	 * Restores this variable's dependencies. This method asks the variable's value factory to restore any references
+	 * the variable has to transient objects.
+	 * @param context the executing flow
+	 */
+	public void restore(RequestContext context) {
 		Object value;
 		if (local == Boolean.TRUE) {
 			value = context.getFlowScope().get(name);
 		} else {
 			value = context.getConversationScope().get(name);
 		}
-		return valueFactory.restoreReferences(value, context);
+		valueFactory.restoreReferences(value, context);
+	}
+
+	/**
+	 * Destroys this flow variable. This method removes the variable's value in the correct flow scope.
+	 * @param context the executing flow
+	 */
+	public Object destroy(RequestContext context) {
+		if (local == Boolean.TRUE) {
+			return context.getFlowScope().remove(name);
+		} else {
+			return context.getConversationScope().remove(name);
+		}
 	}
 
 	public String toString() {

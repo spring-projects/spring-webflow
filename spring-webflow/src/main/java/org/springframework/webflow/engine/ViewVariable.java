@@ -2,20 +2,38 @@ package org.springframework.webflow.engine;
 
 import org.springframework.webflow.execution.RequestContext;
 
+/**
+ * A variable scoped to a particular view. Such a variable is allocated when a view-state is entered and destroyed when
+ * that view-state exits. The flow scope map is used as the backing variable store.
+ * 
+ * @author Keith Donald
+ */
 public class ViewVariable extends AnnotatedObject {
+
 	private String name;
 
 	private VariableValueFactory valueFactory;
 
+	/**
+	 * Creates a new view variable.
+	 * @param name the name of the variable
+	 * @param valueFactory the source for the variable value
+	 */
 	public ViewVariable(String name, VariableValueFactory valueFactory) {
 		this.name = name;
 		this.valueFactory = valueFactory;
 	}
 
+	/**
+	 * Returns the name of this view variable.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Returns the source of the variable's initial value.
+	 */
 	public VariableValueFactory getValueFactory() {
 		return valueFactory;
 	}
@@ -34,17 +52,30 @@ public class ViewVariable extends AnnotatedObject {
 		return name.hashCode() + valueFactory.hashCode();
 	}
 
-	public final void create(RequestContext context) {
-		Object value = valueFactory.createVariableValue(context);
+	/**
+	 * Creates this view variable. This method allocates the variable's value in flow scope.
+	 * @param context the executing flow
+	 */
+	public void create(RequestContext context) {
+		Object value = valueFactory.createInitialValue(context);
 		context.getFlowScope().put(name, value);
 	}
 
-	public final Object restore(RequestContext context) {
+	/**
+	 * Restores this view variable's dependencies. This method asks the variable's value factory to restore any
+	 * references the variable has to transient objects.
+	 * @param context the executing flow
+	 */
+	public void restore(RequestContext context) {
 		Object value = context.getFlowScope().get(name);
-		return valueFactory.restoreReferences(value, context);
+		valueFactory.restoreReferences(value, context);
 	}
 
-	public final Object destroy(RequestContext context) {
+	/**
+	 * Destroy this view variable. This method removes the variable's value in flow scope.
+	 * @param context the executing flow
+	 */
+	public Object destroy(RequestContext context) {
 		return context.getFlowScope().remove(name);
 	}
 }

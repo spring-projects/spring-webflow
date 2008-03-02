@@ -12,7 +12,14 @@ public class BeanFactoryVariableValueFactoryTests extends TestCase {
 	public void testCreateValue() {
 		factory = new BeanFactoryVariableValueFactory(TestBean.class, new DefaultListableBeanFactory());
 		MockRequestContext context = new MockRequestContext();
-		Object value = factory.createVariableValue(context);
+		Object value = factory.createInitialValue(context);
 		assertTrue(value instanceof TestBean);
+	}
+
+	public void testRestoreValue() {
+		factory = new BeanFactoryVariableValueFactory(TestBean.class, new DefaultListableBeanFactory());
+		MockRequestContext context = new MockRequestContext();
+		TestBean bean = new TestBean();
+		factory.restoreReferences(bean, context);
 	}
 }

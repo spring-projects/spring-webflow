@@ -16,27 +16,48 @@
 package org.springframework.webflow.engine.support;
 
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.execution.RequestContext;
 
+/**
+ * A bean-factory backed variable value factory. Relies on an autowire-capable bean factory to wire variable value
+ * dependencies on value creation and restoration.
+ * 
+ * @author Keith Donald
+ */
 public class BeanFactoryVariableValueFactory implements VariableValueFactory {
 
+	/**
+	 * The class of variable value. Typically a Java bean.
+	 */
 	private Class type;
 
+	/**
+	 * The backing bean factory that will create and restore variable instances.
+	 */
 	private AutowireCapableBeanFactory beanFactory;
 
+	/**
+	 * Creates a new bean factory variable factory.
+	 * @param type the variable class
+	 * @param beanFactory the bean factory that will create and restore variable instances.
+	 */
 	public BeanFactoryVariableValueFactory(Class type, AutowireCapableBeanFactory beanFactory) {
 		this.type = type;
 		this.beanFactory = beanFactory;
 	}
 
-	public Object createVariableValue(RequestContext context) {
+	public Object createInitialValue(RequestContext context) {
 		return beanFactory.createBean(type);
 	}
 
-	public Object restoreReferences(Object value, RequestContext context) {
+	public void restoreReferences(Object value, RequestContext context) {
 		beanFactory.autowireBean(value);
-		return value;
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("type").append(type).toString();
 	}
 
 }

@@ -11,28 +11,41 @@ public class FlowVariableTests extends TestCase {
 
 	public void testCreateVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
-			public Object createVariableValue(RequestContext context) {
+			public Object createInitialValue(RequestContext context) {
 				return "bar";
 			}
 
-			public Object restoreReferences(Object value, RequestContext context) {
-				return value;
+			public void restoreReferences(Object value, RequestContext context) {
 			}
-
 		}, true);
 		MockRequestContext context = new MockRequestContext();
 		var.create(context);
 		assertEquals("bar", context.getFlowScope().get("foo"));
 	}
 
-	public void testCreateConversationVariable() {
+	public void testDestroyVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
-			public Object createVariableValue(RequestContext context) {
+			public Object createInitialValue(RequestContext context) {
 				return "bar";
 			}
 
-			public Object restoreReferences(Object value, RequestContext context) {
-				return value;
+			public void restoreReferences(Object value, RequestContext context) {
+			}
+		}, true);
+		MockRequestContext context = new MockRequestContext();
+		var.create(context);
+		assertEquals("bar", context.getFlowScope().get("foo"));
+		var.destroy(context);
+		assertFalse(context.getFlowScope().contains("foo"));
+	}
+
+	public void testCreateConversationVariable() {
+		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
+			public Object createInitialValue(RequestContext context) {
+				return "bar";
+			}
+
+			public void restoreReferences(Object value, RequestContext context) {
 			}
 		}, false);
 		MockRequestContext context = new MockRequestContext();
@@ -40,16 +53,31 @@ public class FlowVariableTests extends TestCase {
 		assertEquals("bar", context.getConversationScope().get("foo"));
 	}
 
-	public void testCreateRestoreVariable() {
+	public void testDestroyConversationVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
-			public Object createVariableValue(RequestContext context) {
+			public Object createInitialValue(RequestContext context) {
 				return "bar";
 			}
 
-			public Object restoreReferences(Object value, RequestContext context) {
+			public void restoreReferences(Object value, RequestContext context) {
+			}
+		}, false);
+		MockRequestContext context = new MockRequestContext();
+		var.create(context);
+		assertEquals("bar", context.getConversationScope().get("foo"));
+		var.destroy(context);
+		assertFalse(context.getConversationScope().contains("foo"));
+	}
+
+	public void testRestoreVariable() {
+		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
+			public Object createInitialValue(RequestContext context) {
+				return "bar";
+			}
+
+			public void restoreReferences(Object value, RequestContext context) {
 				restoreCalled = true;
 				assertEquals("bar", value);
-				return value;
 			}
 		}, false);
 		MockRequestContext context = new MockRequestContext();
@@ -58,4 +86,5 @@ public class FlowVariableTests extends TestCase {
 		assertEquals("bar", context.getConversationScope().get("foo"));
 		assertTrue(restoreCalled);
 	}
+
 }
