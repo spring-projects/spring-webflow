@@ -15,12 +15,7 @@
 
 	<dependencies defaultconf="global->default">
 		<!-- global dependencies -->
-		<dependency org="commons-logging" name="commons-logging" rev="1.1">
-			<exclude module="log4j"/>
-			<exclude module="logkit"/>
-			<exclude module="avalon-framework"/>
-			<exclude module="servlet-api"/>
-		</dependency>
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" />
 		<dependency org="org.springframework" name="spring-webflow" rev="latest.integration" />
 
 		<!-- build time only dependencies -->
@@ -47,14 +42,13 @@
     	<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.5" conf="jsf11->default" />
 		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.1.5" conf="jsf11->default" />
     	
-    			
 		<!-- test dependencies -->
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
 		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default" />
 		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
 		<dependency org="jboss" name="jboss-el" rev="1.0" conf="test->default"/>
 		<dependency org="org.apache.shale" name="shale-test" rev="1.0.4" conf="test->default" />
-		<dependency org="org.springframework" name="spring-test" rev="2.5.1" conf="test->default" />
+		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default" />
 		
 	</dependencies>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="swf-booking-jsf" default="dist">
+<project name="swf-booking-faces" default="dist">
 
 	<property file="build.properties" />
 	<property file="project.properties" />
