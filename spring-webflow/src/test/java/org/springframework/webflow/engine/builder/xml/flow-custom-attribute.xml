@@ -4,6 +4,7 @@
 
 	<attribute name="foo" value="bar"/>
 	<attribute name="number" value="1" type="integer"/>
+	
 	<end-state id="end"/>
 
 </flow>
