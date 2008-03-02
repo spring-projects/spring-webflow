@@ -35,7 +35,7 @@ public class BeanFactoryVariableValueFactory implements VariableValueFactory {
 	}
 
 	public Object restoreReferences(Object value, RequestContext context) {
-		beanFactory.autowireBeanProperties(value, AutowireCapableBeanFactory.AUTOWIRE_NO, false);
+		beanFactory.autowireBean(value);
 		return value;
 	}
 
