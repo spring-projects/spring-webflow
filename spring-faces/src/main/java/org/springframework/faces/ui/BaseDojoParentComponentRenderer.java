@@ -19,7 +19,7 @@ public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesPar
 
 	private String dijitTheme = "tundra";
 
-	private String springFacesDojoJsResourceUri = "/spring-faces/SpringFaces-Dojo.js";
+	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
 
 	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
 
@@ -33,7 +33,7 @@ public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesPar
 		dojoAttributes.put("djConfig", "parseOnLoad: true");
 		resourceHelper.renderScriptLink(context, dojoJsResourceUri, dojoAttributes);
 
-		resourceHelper.renderScriptLink(context, springFacesDojoJsResourceUri);
+		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
 	}
 
 }

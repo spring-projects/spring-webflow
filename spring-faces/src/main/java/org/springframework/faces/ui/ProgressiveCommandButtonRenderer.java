@@ -64,7 +64,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoParentComponentRen
 				if (!StringUtils.hasText(renderIds)) {
 					renderIds = processIds;
 				}
-				onclick.append("SpringFaces.AjaxHandler.submitForm('" + component.getClientId(context) + "', ");
+				onclick.append("Spring.RemotingHandler.submitForm('" + component.getClientId(context) + "', ");
 				onclick.append("'" + RendererUtils.getFormId(context, component) + "', ");
 				onclick.append("'" + processIds + "', '" + renderIds + "', " + encodeParams(context, component)
 						+ "); return false;");

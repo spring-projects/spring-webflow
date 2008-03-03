@@ -9,7 +9,7 @@ import org.springframework.faces.ui.resource.FlowResourceHelper;
 
 public abstract class BaseSpringFacesParentComponentRenderer extends BaseParentComponentRenderer {
 
-	private String springFacesJsResourceUri = "/spring-faces/SpringFaces.js";
+	private String springJsResourceUri = "/spring/Spring.js";
 
 	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
 
@@ -17,6 +17,6 @@ public abstract class BaseSpringFacesParentComponentRenderer extends BaseParentC
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderScriptLink(context, springFacesJsResourceUri);
+		resourceHelper.renderScriptLink(context, springJsResourceUri);
 	}
 }

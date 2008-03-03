@@ -51,7 +51,7 @@ public class ValidateAllRenderer extends SpringFacesRenderer {
 						+ "');");
 		script.append(" var " + handlerVar + " = " + elementVar + ".onclick;");
 		script.append(elementVar + ".onclick" + " = function(){");
-		script.append(" if(!SpringFaces.validateAll()) return false; ");
+		script.append(" if(!Spring.validateAll()) return false; ");
 		script.append(handlerVar + "();");
 		script.append("};");
 

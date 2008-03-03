@@ -32,7 +32,7 @@ public class AjaxEventInterceptorRenderer extends DojoRenderer {
 			renderIds = processIds;
 		}
 		StringBuffer script = new StringBuffer();
-		script.append("SpringFaces.advisors.push(new SpringFaces.DojoAjaxEventAdvisor({");
+		script.append("Spring.advisors.push(new Spring.RemoteEventAdvisor({");
 		script.append("event:'" + event + "'");
 		script.append(", targetId: '" + ((UIComponent) component.getChildren().get(0)).getClientId(context) + "'");
 		script.append(", sourceId : '" + component.getClientId(context) + "'");

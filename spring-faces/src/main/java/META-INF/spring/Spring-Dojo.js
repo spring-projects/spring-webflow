@@ -1,9 +1,9 @@
-SpringFaces.DojoGenericFieldAdvisor = function(config){
+Spring.DojoValidatingFieldAdvisor = function(config){
 			
 	dojo.mixin(this, config);
 };
 		
-SpringFaces.DojoGenericFieldAdvisor.prototype = {
+Spring.DojoValidatingFieldAdvisor.prototype = {
 			
 	targetElId : "",
 	decoratorType : "",
@@ -29,11 +29,13 @@ SpringFaces.DojoGenericFieldAdvisor.prototype = {
 	}			
 };
 
-SpringFaces.DojoAjaxEventAdvisor = function(config){
+Spring.ValidatingFieldAdvisor = Spring.DojoValidatingFieldAdvisor;
+
+Spring.DojoRemoteEventAdvisor = function(config){
 	dojo.mixin(this, config);
 };
 
-SpringFaces.DojoAjaxEventAdvisor.prototype = {
+Spring.DojoRemoteEventAdvisor.prototype = {
 	
 	event : "",
 	targetId : "",
@@ -54,13 +56,15 @@ SpringFaces.DojoAjaxEventAdvisor.prototype = {
 	},
 	
 	submit : function(){
-		SpringFaces.AjaxHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
+		Spring.RemotingHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
 	}
 };
 
-SpringFaces.DojoAjaxHandler = function(){};
+Spring.RemoteEventAdvisor = Spring.DojoRemoteEventAdvisor;
 
-SpringFaces.DojoAjaxHandler.prototype = {
+Spring.DojoRemotingHandler = function(){};
+
+Spring.DojoRemotingHandler.prototype = {
 	
 	submitForm : function(/*String */ sourceId, /*String*/formId, /*String*/ processIds, /*String*/renderIds, /*Array*/ params) {
 		var content = new Object();
@@ -112,7 +116,7 @@ SpringFaces.DojoAjaxHandler.prototype = {
 		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
 			if (modalView) {
 				//render a popup with the new URL
-				SpringFaces.AjaxHandler.renderURLToModalDialog(redirectURL, ioArgs);
+				Spring.RemotingHandler.renderURLToModalDialog(redirectURL, ioArgs);
 				return response;
 			}
 			else {
@@ -150,7 +154,7 @@ SpringFaces.DojoAjaxHandler.prototype = {
 	
 		//For a modal view, just dump the new nodes into a modal dialog
 		if (modalView) {
-			SpringFaces.AjaxHandler.renderNodeListToModalDialog(newNodes);
+			Spring.RemotingHandler.renderNodeListToModalDialog(newNodes);
 			return response;
 		}
 	
@@ -195,13 +199,13 @@ SpringFaces.DojoAjaxHandler.prototype = {
 	}
 };
 
-SpringFaces.AjaxHandler = new SpringFaces.DojoAjaxHandler();
+Spring.RemotingHandler = new Spring.DojoRemotingHandler();
 
-SpringFaces.DojoCommandLinkAdvisor = function(config){
+Spring.DojoCommandLinkAdvisor = function(config){
 	dojo.mixin(this, config);
 };
 
-SpringFaces.DojoCommandLinkAdvisor.prototype = {
+Spring.DojoCommandLinkAdvisor.prototype = {
 	
 	targetElId : "",
 	
@@ -221,10 +225,6 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
    		return this;
 	},
 	
-	validate : function() {
-		//No-op
-	},
-	
 	submitFormFromLink : function(/*String*/ formId, /*String*/ sourceId, /*Array of name,value params*/ params){
 		var addedNodes = [];
 		var formNode = dojo.byId(formId);
@@ -241,7 +241,7 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
 		});
 		
 		dojo.forEach(addedNodes, function(nodeToAdd){
-			dojo.addClass(nodeToAdd, "springFacesLinkInput");
+			dojo.addClass(nodeToAdd, "SpringLinkInput");
 			dojo.place(nodeToAdd, formNode, "last");
 		});		
 		
@@ -253,4 +253,6 @@ SpringFaces.DojoCommandLinkAdvisor.prototype = {
 	}
 };
 
-dojo.addOnLoad(SpringFaces.applyAdvisors);
+Spring.CommandLinkAdvisor = Spring.DojoCommandLinkAdvisor;
+
+dojo.addOnLoad(Spring.applyAdvisors);

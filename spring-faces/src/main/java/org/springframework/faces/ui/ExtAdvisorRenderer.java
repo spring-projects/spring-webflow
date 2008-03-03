@@ -54,7 +54,7 @@ public class ExtAdvisorRenderer extends ExtJsRenderer {
 
 		writer.startElement(SCRIPT_ELEMENT, component);
 		StringBuffer script = new StringBuffer();
-		script.append("  SpringFaces.advisors.push(new SpringFaces.ExtGenericFieldAdvisor({  ");
+		script.append("  Spring.advisors.push(new Spring.ValidatingFieldAdvisor({  ");
 		script.append("  targetElId : '" + advisedChild.getClientId(context) + "',  ");
 		script.append("  msgElId : '" + advisedChild.getClientId(context) + ":msg',  ");
 		script.append("  decoratorType : '" + ((ExtAdvisor) component).getExtComponentType() + "',  ");

@@ -28,7 +28,7 @@ public class ExtJsRenderer extends SpringFacesRenderer {
 
 	private static final String EXT_SCRIPT = "/ext/ext.js";
 
-	private static final String SPRING_FACES_EXT_SCRIPT = "/spring-faces/SpringFaces-Ext.js";
+	private static final String SPRING_EXT_SCRIPT = "/spring/Spring-Ext.js";
 
 	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
 
@@ -46,6 +46,6 @@ public class ExtJsRenderer extends SpringFacesRenderer {
 			resourceHelper.renderScriptLink(context, EXT_SCRIPT);
 		}
 
-		resourceHelper.renderScriptLink(context, SPRING_FACES_EXT_SCRIPT);
+		resourceHelper.renderScriptLink(context, SPRING_EXT_SCRIPT);
 	}
 }

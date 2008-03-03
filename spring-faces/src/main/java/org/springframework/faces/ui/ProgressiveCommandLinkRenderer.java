@@ -107,8 +107,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 		advisorParams.append("}");
 		StringBuffer advisorScript = new StringBuffer();
-		advisorScript.append("SpringFaces.advisors.push(new SpringFaces.DojoCommandLinkAdvisor("
-				+ advisorParams.toString() + ")");
+		advisorScript.append("Spring.advisors.push(new Spring.CommandLinkAdvisor(" + advisorParams.toString() + ")");
 		// Apply the advisor immediately if this is an AJAX request
 		if (JsfUtils.isAsynchronousFlowRequest()) {
 			advisorScript.append(".apply()");
