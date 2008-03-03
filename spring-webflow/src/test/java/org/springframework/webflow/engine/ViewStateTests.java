@@ -43,7 +43,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(true);
+		state.setRedirect(Boolean.TRUE);
 		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
 		new EndState(flow, "finish");
 		MockRequestControlContext context = new MockRequestControlContext(flow);

@@ -573,9 +573,9 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	private void parseAndAddViewState(Element element, Flow flow) {
 		ViewFactory viewFactory = parseViewFactory(element, false);
-		boolean redirect = false;
+		Boolean redirect = null;
 		if (element.hasAttribute("redirect")) {
-			redirect = ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("redirect"))).booleanValue();
+			redirect = (Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("redirect"));
 		}
 		boolean popup = false;
 		if (element.hasAttribute("popup")) {

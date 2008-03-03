@@ -80,7 +80,7 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized view state instance
 	 */
 	public State createViewState(String id, Flow flow, ViewVariable[] variables, Action[] entryActions,
-			ViewFactory viewFactory, boolean redirect, boolean popup, Action[] renderActions, Transition[] transitions,
+			ViewFactory viewFactory, Boolean redirect, boolean popup, Action[] renderActions, Transition[] transitions,
 			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
 		ViewState viewState = new ViewState(flow, id, viewFactory);
 		viewState.addVariables(variables);

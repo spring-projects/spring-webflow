@@ -119,8 +119,8 @@ public class ViewState extends TransitionableState {
 	 * Sets whether this view state should send a flow execution redirect when entered.
 	 * @param redirect the redirect flag
 	 */
-	public void setRedirect(boolean redirect) {
-		this.redirect = Boolean.valueOf(redirect);
+	public void setRedirect(Boolean redirect) {
+		this.redirect = redirect;
 	}
 
 	public boolean getPopup() {
