@@ -5,32 +5,25 @@
 
 	<view-state id="enterCriteria" view="searchCriteria">
 		<render-actions>
-			<action bean="formAction" method="setupForm"/>
+			<evaluate expression="formAction.setupForm" />
 		</render-actions>
 		<transition on="search" to="displayResults">
-			<action bean="formAction" method="bindAndValidate"/>
+			<evaluate expression="formAction.bindAndValidate" />
 		</transition>
 	</view-state>
 
 	<view-state id="displayResults" view="searchResults">
 		<render-actions>
-			<bean-action bean="phonebook" method="search">
-				<method-arguments>
-					<argument expression="${flowScope.searchCriteria}"/>			
-				</method-arguments>
-				<method-result name="results"/>
-			</bean-action>
+			<evaluate expression="phonebook.search(searchCriteria)" result="results" />
 		</render-actions>
 		<transition on="newSearch" to="enterCriteria"/>
 		<transition on="select" to="browseDetails"/>
 	</view-state>
 
-	<subflow-state id="browseDetails" flow="detail-flow">
-		<attribute-mapper>
-			<input-mapper>
-				<mapping source="${requestParameters.id}" target="${id}" from="string" to="long"/>
-			</input-mapper>
-		</attribute-mapper>
+	<subflow-state id="browseDetails" subflow="detail-flow">
+		<input-mapper>
+			<mapping source="${requestParameters.id}" target="${id}" from="string" to="long"/>
+		</input-mapper>
 		<transition on="finish" to="displayResults"/>
 	</subflow-state>
 

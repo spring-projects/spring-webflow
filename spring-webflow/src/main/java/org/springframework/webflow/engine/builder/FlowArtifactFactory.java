@@ -15,15 +15,16 @@
  */
 package org.springframework.webflow.engine.builder;
 
+import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.DecisionState;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
-import org.springframework.webflow.engine.FlowAttributeMapper;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 import org.springframework.webflow.engine.State;
+import org.springframework.webflow.engine.SubflowAttributeMapper;
 import org.springframework.webflow.engine.SubflowState;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
@@ -152,8 +153,8 @@ public class FlowArtifactFactory {
 	 * null
 	 * @return the fully initialized subflow state instance
 	 */
-	public State createSubflowState(String id, Flow flow, Action[] entryActions, Flow subflow,
-			FlowAttributeMapper attributeMapper, Transition[] transitions,
+	public State createSubflowState(String id, Flow flow, Action[] entryActions, Expression subflow,
+			SubflowAttributeMapper attributeMapper, Transition[] transitions,
 			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
 		SubflowState subflowState = new SubflowState(flow, id, subflow);
 		if (attributeMapper != null) {

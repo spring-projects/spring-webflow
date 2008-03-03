@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine.builder.xml;
+package org.springframework.webflow.engine.support;
 
 import java.io.Serializable;
 
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.webflow.engine.support.AbstractFlowAttributeMapper;
 
 /**
- * Simple flow attribute mapper that holds an input and output mapper strategy. This is an internal helper class of the
- * XmlFlowBuilder.
- * 
- * @see org.springframework.webflow.engine.builder.xml.XmlFlowBuilder
+ * Simple flow attribute mapper that holds an input and output mapper strategy.
  * 
  * @author Keith Donald
  */
-final class ImmutableFlowAttributeMapper extends AbstractFlowAttributeMapper implements Serializable {
+public final class GenericSubflowAttributeMapper extends AbstractSubflowAttributeMapper implements Serializable {
 
 	private final AttributeMapper inputMapper;
 
@@ -40,7 +36,7 @@ final class ImmutableFlowAttributeMapper extends AbstractFlowAttributeMapper imp
 	 * @param inputMapper the input mapping strategy
 	 * @param outputMapper the output mapping strategy
 	 */
-	public ImmutableFlowAttributeMapper(AttributeMapper inputMapper, AttributeMapper outputMapper) {
+	public GenericSubflowAttributeMapper(AttributeMapper inputMapper, AttributeMapper outputMapper) {
 		this.inputMapper = inputMapper;
 		this.outputMapper = outputMapper;
 	}

@@ -21,9 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
+import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -85,7 +85,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	 * Create a transition criteria chain chaining given list of actions.
 	 * @param actions the actions (and their execution properties) to chain together
 	 */
-	public static TransitionCriteria criteriaChainFor(AnnotatedAction[] actions) {
+	public static TransitionCriteria criteriaChainFor(Action[] actions) {
 		if (actions == null || actions.length == 0) {
 			return WildcardTransitionCriteria.INSTANCE;
 		}

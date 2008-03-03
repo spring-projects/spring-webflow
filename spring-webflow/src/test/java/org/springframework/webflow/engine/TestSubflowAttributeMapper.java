@@ -20,7 +20,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 
-class TestAttributeMapper implements FlowAttributeMapper {
+class TestSubflowAttributeMapper implements SubflowAttributeMapper {
 	public MutableAttributeMap createFlowInput(RequestContext context) {
 		LocalAttributeMap inputMap = new LocalAttributeMap();
 		inputMap.put("childInputAttribute", context.getFlowScope().get("parentInputAttribute"));

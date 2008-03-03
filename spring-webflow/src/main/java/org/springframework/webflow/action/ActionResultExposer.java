@@ -18,13 +18,10 @@ package org.springframework.webflow.action;
 import java.io.Serializable;
 
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Specifies how an action result value should be exposed to an executing flow. The return value is exposed as an
@@ -38,57 +35,48 @@ import org.springframework.webflow.execution.ScopeType;
 public class ActionResultExposer implements Serializable {
 
 	/**
-	 * The name of the attribute to index the return value with.
+	 * The expression to set the result to.
 	 */
-	private Expression nameExpression;
-
-	/**
-	 * The scope of the attribute indexing the return value.
-	 */
-	private ScopeType resultScope;
+	private Expression resultExpression;
 
 	/**
 	 * The desired type to expose the result as
 	 */
-	private Class desiredResultType;
+	private Class expectedResultType;
 
 	/**
 	 * The {@link ConversionService} to use to convert the result to the desired type
 	 */
-	private ConversionService conversionService = new DefaultConversionService();
+	private ConversionService conversionService;
 
 	/**
 	 * Creates a action result exposer
-	 * @param nameExpression the result name
-	 * @param resultScope the result scope
-	 * @param desiredResultType the desired result type
+	 * @param resultExpression the result expression
+	 * @param expectedResultType the expected result type
 	 */
-	public ActionResultExposer(Expression nameExpression, ScopeType resultScope, Class desiredResultType) {
-		Assert.notNull(nameExpression, "The result name is required");
-		this.nameExpression = nameExpression;
-		this.resultScope = resultScope;
-		this.desiredResultType = desiredResultType;
+	public ActionResultExposer(Expression resultExpression, Class expectedResultType,
+			ConversionService conversionService) {
+		Assert.notNull(resultExpression, "The result expression is required");
+		this.resultExpression = resultExpression;
+		this.expectedResultType = expectedResultType;
+		if (this.expectedResultType != null) {
+			Assert.notNull(conversionService, "A conversionService is required with an expectedResultType");
+			this.conversionService = conversionService;
+		}
 	}
 
 	/**
 	 * Returns name of the attribute to index the return value with.
 	 */
 	public Expression getNameExpression() {
-		return nameExpression;
-	}
-
-	/**
-	 * Returns the scope the attribute indexing the return value.
-	 */
-	public ScopeType getResultScope() {
-		return resultScope;
+		return resultExpression;
 	}
 
 	/**
 	 * Returns the desired result type to be exposed
 	 */
-	public Class getDesiredResultType() {
-		return desiredResultType;
+	public Class getExpectedResultType() {
+		return expectedResultType;
 	}
 
 	/**
@@ -97,34 +85,22 @@ public class ActionResultExposer implements Serializable {
 	 * @param context the request context
 	 */
 	public void exposeResult(Object result, RequestContext context) {
-		if (resultScope != null) {
-			MutableAttributeMap scopeMap = resultScope.getScope(context);
-			nameExpression.setValue(scopeMap, applyTypeConversion(result, desiredResultType));
-		} else {
-			nameExpression.setValue(context, applyTypeConversion(result, desiredResultType));
-		}
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("resultName", nameExpression).append("resultScope", resultScope)
-				.toString();
+		resultExpression.setValue(context, applyTypeConversion(result));
 	}
 
 	/**
 	 * Apply type conversion on the supplied value
-	 * 
 	 * @param value the raw value to be converted
-	 * @param targetType the target type for the conversion
-	 * @return the converted result
 	 */
-	protected Object applyTypeConversion(Object value, Class targetType) {
-		if (value == null || targetType == null) {
+	private Object applyTypeConversion(Object value) {
+		if (expectedResultType == null) {
 			return value;
 		}
-		return conversionService.getConversionExecutor(value.getClass(), targetType).execute(value);
+		return conversionService.getConversionExecutor(value.getClass(), expectedResultType).execute(value);
 	}
 
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
+	public String toString() {
+		return new ToStringCreator(this).append("resultExpression", resultExpression).append("expectedResultType",
+				expectedResultType).toString();
 	}
 }

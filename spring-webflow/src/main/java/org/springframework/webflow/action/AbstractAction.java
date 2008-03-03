@@ -183,9 +183,6 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	}
 
 	public final Event execute(RequestContext context) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Action '" + getActionNameForLogging() + "' beginning execution");
-		}
 		Event result = doPreExecute(context);
 		if (result == null) {
 			result = doExecute(context);

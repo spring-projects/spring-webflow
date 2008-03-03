@@ -15,13 +15,13 @@
  */
 package org.springframework.webflow.engine;
 
+import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.RequestContext;
 
 /**
  * A transitionable state that spawns a subflow when executed. When the subflow this state spawns ends, the ending
@@ -29,10 +29,10 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * A subflow state may be configured to map input data from its flow -- acting as the parent flow -- down to the subflow
  * when the subflow is spawned. In addition, output data produced by the subflow may be mapped up to the parent flow
- * when the subflow ends and the parent flow resumes. See the {@link FlowAttributeMapper} interface definition for more
- * information on how to do this. The logic for ending a subflow is located in the {@link EndState} implementation.
+ * when the subflow ends and the parent flow resumes. See the {@link SubflowAttributeMapper} interface definition for
+ * more information on how to do this. The logic for ending a subflow is located in the {@link EndState} implementation.
  * 
- * @see org.springframework.webflow.engine.FlowAttributeMapper
+ * @see org.springframework.webflow.engine.SubflowAttributeMapper
  * @see org.springframework.webflow.engine.EndState
  * 
  * @author Keith Donald
@@ -41,14 +41,14 @@ import org.springframework.webflow.execution.RequestContext;
 public class SubflowState extends TransitionableState {
 
 	/**
-	 * The subflow that should be spawned when this subflow state is entered. TODO - late binding
+	 * The subflow that should be spawned when this subflow state is entered.
 	 */
-	private Flow subflow;
+	private Expression subflow;
 
 	/**
 	 * The attribute mapper that should map attributes from the parent flow down to the spawned subflow and visa versa.
 	 */
-	private FlowAttributeMapper attributeMapper = new NoAttributeMapper();
+	private SubflowAttributeMapper subflowAttributeMapper;
 
 	/**
 	 * Create a new subflow state.
@@ -56,9 +56,9 @@ public class SubflowState extends TransitionableState {
 	 * @param id the state identifier (must be unique to the flow)
 	 * @param subflow the subflow to spawn
 	 * @throws IllegalArgumentException when this state cannot be added to given flow, e.g. because the id is not unique
-	 * @see #setAttributeMapper(FlowAttributeMapper)
+	 * @see #setAttributeMapper(SubflowAttributeMapper)
 	 */
-	public SubflowState(Flow flow, String id, Flow subflow) throws IllegalArgumentException {
+	public SubflowState(Flow flow, String id, Expression subflow) throws IllegalArgumentException {
 		super(flow, id);
 		setSubflow(subflow);
 	}
@@ -66,7 +66,7 @@ public class SubflowState extends TransitionableState {
 	/**
 	 * Set the subflow this state will call.
 	 */
-	private void setSubflow(Flow subflow) {
+	private void setSubflow(Expression subflow) {
 		Assert.notNull(subflow, "A subflow state must have a subflow; the subflow is required");
 		this.subflow = subflow;
 	}
@@ -74,9 +74,8 @@ public class SubflowState extends TransitionableState {
 	/**
 	 * Set the attribute mapper used to map model data between the parent and child flow.
 	 */
-	public void setAttributeMapper(FlowAttributeMapper attributeMapper) {
-		Assert.notNull(attributeMapper, "The attribute mapper is required");
-		this.attributeMapper = attributeMapper;
+	public void setAttributeMapper(SubflowAttributeMapper attributeMapper) {
+		this.subflowAttributeMapper = attributeMapper;
 	}
 
 	/**
@@ -89,10 +88,17 @@ public class SubflowState extends TransitionableState {
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Calling subflow '" + subflow.getId() + "'");
+		MutableAttributeMap flowInput;
+		if (subflowAttributeMapper != null) {
+			flowInput = subflowAttributeMapper.createFlowInput(context);
+		} else {
+			flowInput = new LocalAttributeMap();
 		}
-		context.start(subflow, attributeMapper.createFlowInput(context));
+		Flow subflow = (Flow) this.subflow.getValue(context);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Calling subflow '" + subflow.getId() + "' with input " + flowInput);
+		}
+		context.start(subflow, flowInput);
 	}
 
 	/**
@@ -100,27 +106,19 @@ public class SubflowState extends TransitionableState {
 	 * the subflow.
 	 */
 	public void handleEvent(RequestControlContext context) {
-		attributeMapper.mapFlowOutput(context.getLastEvent().getAttributes(), context);
+		if (subflowAttributeMapper != null) {
+			AttributeMap subflowOutput = context.getLastEvent().getAttributes();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Mapping subflow output " + subflowOutput);
+			}
+			subflowAttributeMapper.mapFlowOutput(subflowOutput, context);
+		}
 		super.handleEvent(context);
 	}
 
 	protected void appendToString(ToStringCreator creator) {
-		creator.append("subflow", subflow.getId()).append("attributeMapper", attributeMapper);
+		creator.append("subflow", subflow).append("subflowAttributeMapper", subflowAttributeMapper);
 		super.appendToString(creator);
-	}
-
-	/**
-	 * Maps no output attributes. The default implementation.
-	 */
-	private class NoAttributeMapper implements FlowAttributeMapper {
-		public MutableAttributeMap createFlowInput(RequestContext context) {
-			logger.debug("No input will be passed to subflow");
-			return new LocalAttributeMap();
-		}
-
-		public void mapFlowOutput(AttributeMap flowOutput, RequestContext context) {
-			logger.debug("No subflow output will be mapped");
-		}
 	}
 
 }

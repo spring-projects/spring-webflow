@@ -123,6 +123,9 @@ public class ViewState extends TransitionableState {
 		this.redirect = redirect;
 	}
 
+	/**
+	 * Returns whether this view state should render as a popup.
+	 */
 	public boolean getPopup() {
 		return popup;
 	}
@@ -135,6 +138,9 @@ public class ViewState extends TransitionableState {
 		this.popup = popup;
 	}
 
+	/**
+	 * Returns the view factory.
+	 */
 	public ViewFactory getViewFactory() {
 		return viewFactory;
 	}
@@ -242,7 +248,8 @@ public class ViewState extends TransitionableState {
 
 	protected void appendToString(ToStringCreator creator) {
 		super.appendToString(creator);
-		creator.append("viewFactory", viewFactory).append("variables", variables);
+		creator.append("viewFactory", viewFactory).append("variables", variables).append("redirect", redirect).append(
+				"popup", popup);
 	}
 
 }

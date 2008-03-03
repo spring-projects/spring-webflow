@@ -25,6 +25,11 @@ package org.springframework.webflow.execution;
 public interface View {
 
 	/**
+	 * Well-known attribute name for storing a render fragments value.
+	 */
+	public static final String RENDER_FRAGMENTS_ATTRIBUTE = "webflow-render-fragments";
+
+	/**
 	 * Render this view's content.
 	 */
 	public void render();

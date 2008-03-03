@@ -480,7 +480,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return "success" when binding and validation is successful, "error" if there were binding and/or validation
 	 * errors
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 */
 	public Event bindAndValidate(RequestContext context) throws Exception {
 		if (logger.isDebugEnabled()) {

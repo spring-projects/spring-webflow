@@ -17,6 +17,8 @@ package org.springframework.webflow.engine;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.EvaluationException;
+import org.springframework.binding.expression.support.AbstractGetValueExpression;
 import org.springframework.binding.mapping.DefaultAttributeMapper;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingBuilder;
@@ -74,12 +76,16 @@ public class EndStateTests extends TestCase {
 	}
 
 	public void testEnterEndStateTerminateFlowSession() {
-		Flow subflow = new Flow("mySubflow");
+		final Flow subflow = new Flow("mySubflow");
 		EndState state = new EndState(subflow, "end");
 		MockFlowSession session = new MockFlowSession(subflow);
 
 		Flow parent = new Flow("parent");
-		SubflowState subflowState = new SubflowState(parent, "subflow", subflow);
+		SubflowState subflowState = new SubflowState(parent, "subflow", new AbstractGetValueExpression() {
+			public Object getValue(Object context) throws EvaluationException {
+				return subflow;
+			}
+		});
 		subflowState.getTransitionSet().add(new Transition(on("end"), to("end")));
 		new EndState(parent, "end");
 

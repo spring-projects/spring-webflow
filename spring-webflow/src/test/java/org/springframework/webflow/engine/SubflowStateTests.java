@@ -17,6 +17,8 @@ package org.springframework.webflow.engine;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.EvaluationException;
+import org.springframework.binding.expression.support.AbstractGetValueExpression;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -43,7 +45,11 @@ public class SubflowStateTests extends TestCase {
 	public void setUp() {
 		parentFlow = new Flow("parent");
 		subflow = new Flow("child");
-		subflowState = new SubflowState(parentFlow, "subflow", subflow);
+		subflowState = new SubflowState(parentFlow, "subflow", new AbstractGetValueExpression() {
+			public Object getValue(Object context) throws EvaluationException {
+				return subflow;
+			}
+		});
 		context = new MockRequestControlContext(parentFlow);
 		context.setCurrentState(subflowState);
 	}
@@ -58,7 +64,7 @@ public class SubflowStateTests extends TestCase {
 	}
 
 	public void testEnterWithInput() {
-		subflowState.setAttributeMapper(new FlowAttributeMapper() {
+		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap createFlowInput(RequestContext context) {
 				return new LocalAttributeMap("foo", "bar");
 			}
@@ -81,7 +87,7 @@ public class SubflowStateTests extends TestCase {
 	}
 
 	public void testReturnWithOutput() {
-		subflowState.setAttributeMapper(new FlowAttributeMapper() {
+		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap createFlowInput(RequestContext context) {
 				return new LocalAttributeMap();
 			}

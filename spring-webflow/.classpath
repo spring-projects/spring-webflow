@@ -10,7 +10,9 @@
 	<classpathentry kind="lib" path="lib/buildtime/cglib.jar"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-digester.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-validator.jar"/>
@@ -21,12 +23,16 @@
 	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/hibernate.jar"/>
 	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/jta.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/junit.jar"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/test/openjpa.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/oro.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/portlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/test/serp.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-aop.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
@@ -35,6 +41,7 @@
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-jdbc.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-orm.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-security-core.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/spring-tx.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
@@ -42,11 +49,5 @@
 	<classpathentry kind="lib" path="lib/buildtime/spring-webmvc-portlet.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/struts.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/xalan.jar"/>
-	<classpathentry kind="lib" path="lib/test/openjpa.jar"/>
-	<classpathentry kind="lib" path="lib/test/commons-lang.jar"/>
-	<classpathentry kind="lib" path="lib/test/serp.jar"/>
-	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
-	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/spring-security-core.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

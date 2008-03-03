@@ -16,43 +16,43 @@
 package org.springframework.webflow.action;
 
 import org.springframework.binding.expression.Expression;
-import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ScopeType;
+import org.springframework.webflow.execution.View;
 
 /**
- * An action that sets an attribute in a {@link ScopeType scope} when executed. Always returns the "success" event.
+ * An action that sets a special attribute that views use to render partial views called "fragments", instead of the
+ * entire view.
  * 
  * @author Keith Donald
  */
-public class SetAction extends AbstractAction {
+public class RenderAction extends AbstractAction {
 
 	/**
 	 * The expression for setting the scoped attribute value.
 	 */
-	private Expression nameExpression;
+	private Expression[] fragmentExpressions;
 
 	/**
-	 * The expression for resolving the scoped attribute value.
+	 * Creates a new render action.
+	 * @param fragmentExpressions the set of expressions to resolve the view fragments to render
 	 */
-	private Expression valueExpression;
-
-	/**
-	 * Creates a new set attribute action.
-	 * @param nameExpression the name of the property to set
-	 * @param valueExpression the expression to obtain the new property value
-	 */
-	public SetAction(Expression nameExpression, Expression valueExpression) {
-		Assert.notNull(nameExpression, "The name expression is required");
-		Assert.notNull(valueExpression, "The value expression is required");
-		this.nameExpression = nameExpression;
-		this.valueExpression = valueExpression;
+	public RenderAction(Expression[] fragmentExpressions) {
+		if (fragmentExpressions == null || fragmentExpressions.length == 0) {
+			throw new IllegalArgumentException(
+					"You must provide at least one fragment expression to this render action");
+		}
+		this.fragmentExpressions = fragmentExpressions;
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
-		Object value = valueExpression.getValue(context);
-		nameExpression.setValue(context, value);
+		String[] fragments = new String[fragmentExpressions.length];
+		for (int i = 0; i < fragmentExpressions.length; i++) {
+			Expression exp = fragmentExpressions[i];
+			fragments[i] = (String) exp.getValue(context);
+		}
+		context.getFlashScope().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragments);
 		return success();
 	}
+
 }

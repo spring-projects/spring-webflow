@@ -52,21 +52,21 @@ public class EvaluateAction extends AbstractAction {
 
 	/**
 	 * Create a new evaluate action.
-	 * @param expression the expression to evaluate
-	 */
-	public EvaluateAction(Expression expression) {
-		this(expression, null);
-	}
-
-	/**
-	 * Create a new evaluate action.
-	 * @param expression the expression to evaluate
-	 * @param evaluationResultExposer the strategy for how the expression result will be exposed to the flow
+	 * @param expression the expression to evaluate (required)
+	 * @param evaluationResultExposer the strategy for how the expression result will be exposed to the flow (optional)
 	 */
 	public EvaluateAction(Expression expression, ActionResultExposer evaluationResultExposer) {
 		Assert.notNull(expression, "The expression this action should evaluate is required");
 		this.expression = expression;
 		this.evaluationResultExposer = evaluationResultExposer;
+	}
+
+	/**
+	 * Sets a custom result event factory selector
+	 * @param factorySelector the factor for creating the evaluation action result event
+	 */
+	public void setResultEventFactorySelector(ResultEventFactorySelector factorySelector) {
+		this.resultEventFactorySelector = factorySelector;
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
