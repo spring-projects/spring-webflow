@@ -1,4 +1,4 @@
-package org.springframework.webflow.core.expression.el;
+package org.springframework.webflow.expression.el;
 
 import java.util.Iterator;
 
@@ -6,10 +6,8 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.RequestContextHolder;
 
 public class ActionExecutingELResolver extends ELResolver {
 
@@ -34,13 +32,9 @@ public class ActionExecutingELResolver extends ELResolver {
 		if (base instanceof Action) {
 			Action action = (Action) base;
 			elContext.setPropertyResolved(true);
-			if (property == null) {
-				return ActionExecutor.execute(action, RequestContextHolder.getRequestContext());
-			} else {
-				AnnotatedAction decorator = new AnnotatedAction(action);
-				decorator.setMethod((String) property);
-				return ActionExecutor.execute(decorator, RequestContextHolder.getRequestContext());
-			}
+			AnnotatedAction decorator = new AnnotatedAction(action);
+			decorator.setMethod((String) property);
+			return decorator;
 		} else {
 			return null;
 		}

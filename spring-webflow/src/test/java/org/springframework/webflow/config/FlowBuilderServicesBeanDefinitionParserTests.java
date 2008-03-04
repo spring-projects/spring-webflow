@@ -9,11 +9,11 @@ import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.mvc.MvcViewFactoryCreator;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {

@@ -1,4 +1,4 @@
-package org.springframework.webflow.core.expression.el;
+package org.springframework.webflow.expression.el;
 
 import java.util.Iterator;
 

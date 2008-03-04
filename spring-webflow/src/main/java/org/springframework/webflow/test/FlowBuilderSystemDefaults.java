@@ -4,9 +4,9 @@ import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
-import org.springframework.webflow.core.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 class FlowBuilderSystemDefaults {
 	private FlowBuilderServices defaultServices;

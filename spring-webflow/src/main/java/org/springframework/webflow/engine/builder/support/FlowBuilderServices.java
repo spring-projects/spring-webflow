@@ -10,13 +10,13 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
-import org.springframework.webflow.core.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 /**
  * A simple holder for services needed by a flow builder. These services are typically exposed via a Flow Builder's

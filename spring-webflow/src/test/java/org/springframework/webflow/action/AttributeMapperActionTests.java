@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.mapping.DefaultAttributeMapper;
 import org.springframework.binding.mapping.MappingBuilder;
-import org.springframework.webflow.core.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.test.MockRequestContext;
 
 /**

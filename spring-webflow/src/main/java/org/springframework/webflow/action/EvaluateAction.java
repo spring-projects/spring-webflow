@@ -17,6 +17,8 @@ package org.springframework.webflow.action;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.Assert;
+import org.springframework.webflow.engine.ActionExecutor;
+import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -71,9 +73,13 @@ public class EvaluateAction extends AbstractAction {
 
 	protected Event doExecute(RequestContext context) throws Exception {
 		Object result = expression.getValue(context);
-		if (evaluationResultExposer != null) {
-			evaluationResultExposer.exposeResult(result, context);
+		if (result instanceof Action) {
+			return ActionExecutor.execute((Action) result, context);
+		} else {
+			if (evaluationResultExposer != null) {
+				evaluationResultExposer.exposeResult(result, context);
+			}
+			return resultEventFactorySelector.forResult(result).createResultEvent(this, result, context);
 		}
-		return resultEventFactorySelector.forResult(result).createResultEvent(this, result, context);
 	}
 }

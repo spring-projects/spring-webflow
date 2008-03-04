@@ -24,7 +24,6 @@ import org.springframework.binding.mapping.MappingBuilder;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.TestMultiAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
-import org.springframework.webflow.core.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
@@ -32,6 +31,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**

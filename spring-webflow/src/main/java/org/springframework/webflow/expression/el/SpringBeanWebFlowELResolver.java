@@ -1,22 +1,19 @@
-package org.springframework.webflow.core.expression.el;
+package org.springframework.webflow.expression.el;
 
 import javax.el.ELContext;
 import javax.el.ELException;
 
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.access.el.SpringBeanELResolver;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.web.jsf.el.SpringBeanFacesELResolver;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * EL resolver for Spring Beans accessible to the flow's local bean factory.
- * 
  * @author Jeremy Grelle
- * 
- * TODO - Extend SpringBeanELResolver when Spring 2.5.2 is available.
  */
-public class SpringBeanWebFlowELResolver extends SpringBeanFacesELResolver {
+public class SpringBeanWebFlowELResolver extends SpringBeanELResolver {
 
 	private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
 
