@@ -31,7 +31,7 @@ public interface ConversionService {
 	 * @param sourceClass the source class to convert from
 	 * @param targetClass the target class to convert to
 	 * @return the executor that can execute instance conversion, never null
-	 * @throws ConversionException an exception occured retrieving a converter for the source-to-target pair
+	 * @throws ConversionException an exception occurred retrieving a converter for the source-to-target pair
 	 */
 	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass) throws ConversionException;
 

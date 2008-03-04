@@ -15,9 +15,10 @@
  */
 package org.springframework.binding.mapping;
 
-import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.support.RuntimeBindingConversionExecutor;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.CollectionAddingExpression;
@@ -166,16 +167,14 @@ public class MappingBuilder {
 			targetExpression = sourceExpression;
 		}
 		ConversionExecutor typeConverter = null;
-		if (sourceType != null) {
-			Assert.notNull(targetType, "The target type is required when the source type is specified");
-			typeConverter = conversionService.getConversionExecutor(sourceType, targetType);
+		if (targetType != null) {
+			if (sourceType != null) {
+				typeConverter = conversionService.getConversionExecutor(sourceType, targetType);
+			} else {
+				typeConverter = new RuntimeBindingConversionExecutor(targetType, conversionService);
+			}
 		}
-		Mapping result;
-		if (required) {
-			result = new RequiredMapping(sourceExpression, targetExpression, typeConverter);
-		} else {
-			result = new Mapping(sourceExpression, targetExpression, typeConverter);
-		}
+		Mapping result = new Mapping(sourceExpression, targetExpression, typeConverter, required);
 		reset();
 		return result;
 	}

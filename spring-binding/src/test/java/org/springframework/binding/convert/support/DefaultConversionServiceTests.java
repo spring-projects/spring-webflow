@@ -54,7 +54,8 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		DefaultConversionService service = new DefaultConversionService();
 
-		ConversionExecutor executor = service.getConversionExecutor(String.class, Boolean.class);
+		ConversionExecutorImpl executor = (ConversionExecutorImpl) service.getConversionExecutor(String.class,
+				Boolean.class);
 		assertNotSame(customConverter, executor.getConverter());
 		try {
 			executor.execute("ja");
@@ -65,7 +66,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		service.addConverter(customConverter);
 
-		executor = service.getConversionExecutor(String.class, Boolean.class);
+		executor = (ConversionExecutorImpl) service.getConversionExecutor(String.class, Boolean.class);
 		assertSame(customConverter, executor.getConverter());
 		assertTrue(((Boolean) executor.execute("ja")).booleanValue());
 	}

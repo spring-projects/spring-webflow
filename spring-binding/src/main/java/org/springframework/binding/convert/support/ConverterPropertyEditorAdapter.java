@@ -40,8 +40,10 @@ public class ConverterPropertyEditorAdapter extends PropertyEditorSupport {
 	 */
 	public ConverterPropertyEditorAdapter(ConversionExecutor conversionExecutor) {
 		Assert.notNull(conversionExecutor, "A conversion executor is required");
-		Assert.isTrue(conversionExecutor.getSourceClass().equals(String.class),
-				"A string conversion executor is required");
+		if (conversionExecutor.getSourceClass() != null) {
+			Assert.isTrue(conversionExecutor.getSourceClass().equals(String.class),
+					"A string conversion executor is required");
+		}
 		this.conversionExecutor = conversionExecutor;
 	}
 

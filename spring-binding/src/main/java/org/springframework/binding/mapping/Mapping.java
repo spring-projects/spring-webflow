@@ -23,7 +23,7 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
- * A single mapping definition, encapulating the information neccessary to map the result of evaluating an expression on
+ * A single mapping definition, encapsulating the information necessary to map the result of evaluating an expression on
  * a source object to a property on a target object, optionally applying a type conversion during the mapping process.
  * 
  * @author Keith Donald
@@ -69,7 +69,7 @@ public class Mapping implements AttributeMapper {
 	 * @param typeConverter a type converter
 	 * @param required whether or not this mapping is required
 	 */
-	protected Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter,
+	public Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter,
 			boolean required) {
 		Assert.notNull(sourceExpression, "The source expression is required");
 		Assert.notNull(targetExpression, "The target expression is required");

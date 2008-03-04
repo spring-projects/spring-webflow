@@ -21,8 +21,8 @@ import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.util.Assert;
 
 /**

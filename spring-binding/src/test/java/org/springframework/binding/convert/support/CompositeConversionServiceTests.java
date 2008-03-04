@@ -70,10 +70,10 @@ public class CompositeConversionServiceTests extends TestCase {
 				service.getConversionExecutorsForSource(String.class).length);
 		assertEquals(0, service.getConversionExecutorsForSource(Date.class).length);
 		ConversionExecutor[] fromStringConversionExecutors = service.getConversionExecutorsForSource(String.class);
-		ConversionExecutor booleanConversionExecutor = null;
+		ConversionExecutorImpl booleanConversionExecutor = null;
 		for (int i = 0; i < fromStringConversionExecutors.length; i++) {
-			if (fromStringConversionExecutors[i].getConverter() instanceof TextToBoolean) {
-				booleanConversionExecutor = fromStringConversionExecutors[i];
+			if (((ConversionExecutorImpl) fromStringConversionExecutors[i]).getConverter() instanceof TextToBoolean) {
+				booleanConversionExecutor = (ConversionExecutorImpl) fromStringConversionExecutors[i];
 			}
 		}
 		assertEquals(Boolean.TRUE, booleanConversionExecutor.execute("ja"));

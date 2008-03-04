@@ -135,13 +135,13 @@ public class GenericConversionService implements ConversionService {
 			throw new IllegalStateException("No converters have been added to this service's registry");
 		}
 		if (targetClass.isAssignableFrom(sourceClass)) {
-			return new ConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
+			return new ConversionExecutorImpl(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
 		Map sourceTargetConverters = findConvertersForSource(sourceClass);
 		Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
 		if (converter != null) {
 			// we found a converter
-			return new ConversionExecutor(sourceClass, targetClass, converter);
+			return new ConversionExecutorImpl(sourceClass, targetClass, converter);
 		} else {
 			if (parent != null) {
 				// try the parent
@@ -172,8 +172,8 @@ public class GenericConversionService implements ConversionService {
 			return getConversionExecutor(sourceClass, (Class) targetType);
 		} else {
 			Assert.isInstanceOf(Converter.class, targetType, "Not a converter: ");
-			Converter conv = (Converter) targetType;
-			return new ConversionExecutor(sourceClass, Object.class, conv);
+			Converter converter = (Converter) targetType;
+			return new ConversionExecutorImpl(sourceClass, Object.class, converter);
 		}
 	}
 
@@ -196,8 +196,8 @@ public class GenericConversionService implements ConversionService {
 			Iterator it = sourceTargetConverters.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry entry = (Map.Entry) it.next();
-				executors
-						.add(new ConversionExecutor(sourceClass, (Class) entry.getKey(), (Converter) entry.getValue()));
+				executors.add(new ConversionExecutorImpl(sourceClass, (Class) entry.getKey(), (Converter) entry
+						.getValue()));
 			}
 			return (ConversionExecutor[]) executors.toArray(new ConversionExecutor[executors.size()]);
 		}

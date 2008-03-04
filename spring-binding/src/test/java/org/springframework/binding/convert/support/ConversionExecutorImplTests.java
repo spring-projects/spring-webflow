@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert;
+package org.springframework.binding.convert.support;
 
 import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.support.AbstractConverter;
+import org.springframework.binding.convert.ConversionContext;
+import org.springframework.binding.convert.ConversionException;
 
 /**
- * Test case for {@link ConversionExecutor}.
+ * Test case for {@link ConversionExecutorImpl}.
  */
-public class ConversionExecutorTests extends TestCase {
+public class ConversionExecutorImplTests extends TestCase {
 
-	private ConversionExecutor conversionExecutor;
+	private ConversionExecutorImpl conversionExecutor;
 
 	protected void setUp() throws Exception {
-		conversionExecutor = new ConversionExecutor(String.class, Date.class, new TestTextToDate());
+		conversionExecutor = new ConversionExecutorImpl(String.class, Date.class, new TestTextToDate());
 	}
 
 	public void testTypeConversion() {
