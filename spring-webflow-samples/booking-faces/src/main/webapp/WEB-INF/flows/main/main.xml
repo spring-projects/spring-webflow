@@ -7,24 +7,24 @@
 	
 	<view-state id="enterSearchCriteria">
 		<render-actions>
-			<evaluate-action expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" result-type="dataModel" />
+			<evaluate expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" result-type="dataModel" />
 		</render-actions>
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
-			<evaluate-action expression="#{bookingService.cancelBooking(bookings.selectedRow)}" />
+			<evaluate expression="#{bookingService.cancelBooking(bookings.selectedRow)}" />
 		</transition>
 	</view-state>
 	
 	<view-state id="reviewHotels">
 		<render-actions>
-			<evaluate-action expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
+			<evaluate expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
 		</render-actions>
 		<transition on="previous">
-			<evaluate-action expression="#{searchCriteria.previousPage()}" />
+			<evaluate expression="#{searchCriteria.previousPage()}" />
 			<render fragments="searchResultsFragment" />
 		</transition>
 		<transition on="next">
-			<evaluate-action expression="#{searchCriteria.nextPage()}" />
+			<evaluate expression="#{searchCriteria.nextPage()}" />
 			<render fragments="searchResultsFragment" />
 		</transition>
 		<transition on="select" to="reviewHotel" />
@@ -33,18 +33,16 @@
 	
 	<view-state id="reviewHotel">
 		<render-actions>
-			<set attribute="#{requestScope.hotel}" value="#{hotels.selectedRow}" />
+			<set name="#{requestScope.hotel}" value="#{hotels.selectedRow}" />
 		</render-actions>
 		<transition on="book" to="bookHotel" />
 		<transition on="cancel" to="enterSearchCriteria" />
 	</view-state>
 
-	<subflow-state id="bookHotel" flow="booking">
-		<attribute-mapper>
-			<input-mapper>
-				<mapping source="#{hotels.selectedRow.id}" target="#{id}" />
-			</input-mapper>
-		</attribute-mapper>
+	<subflow-state id="bookHotel" subflow="booking">
+		<input-mapper>
+			<mapping source="#{hotels.selectedRow.id}" target="#{id}" />
+		</input-mapper>
 		<transition on="bookingConfirmed" to="finish" />
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>
