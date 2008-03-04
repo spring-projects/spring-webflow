@@ -15,7 +15,7 @@
 		view-factory-creator="customViewFactoryCreator"
 		conversion-service="customConversionService"/>
 	
-	<bean id="customExpressionParser" class="org.springframework.webflow.core.expression.el.WebFlowELExpressionParser"/>
+	<bean id="customExpressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser"/>
 	
 	<bean id="customViewFactoryCreator" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
 	
