@@ -5,16 +5,16 @@
 
 	<view-state id="enterCriteria" view="searchCriteria">
 		<render-actions>
-			<evaluate expression="formAction.setupForm" />
+			<evaluate expression="#{formAction.setupForm}" />
 		</render-actions>
 		<transition on="search" to="displayResults">
-			<evaluate expression="formAction.bindAndValidate" />
+			<evaluate expression="#{formAction.bindAndValidate}" />
 		</transition>
 	</view-state>
 
 	<view-state id="displayResults" view="searchResults">
 		<render-actions>
-			<evaluate expression="phonebook.search(searchCriteria)" result="results" />
+			<evaluate expression="#{phonebook.search(searchCriteria)}" result="#{flowScope.results}" />
 		</render-actions>
 		<transition on="newSearch" to="enterCriteria"/>
 		<transition on="select" to="browseDetails"/>
@@ -22,7 +22,7 @@
 
 	<subflow-state id="browseDetails" subflow="detail-flow">
 		<input-mapper>
-			<mapping source="${requestParameters.id}" target="${id}" from="string" to="long"/>
+			<mapping source="#{requestParameters.id}" target="#{id}" from="string" to="long"/>
 		</input-mapper>
 		<transition on="finish" to="displayResults"/>
 	</subflow-state>

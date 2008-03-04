@@ -45,6 +45,7 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver());
 			customResolvers.add(new SpringBeanWebFlowELResolver());
+			customResolvers.add(new ActionExecutingELResolver());
 			customResolvers.add(new ScopeSearchingELResolver());
 			ELResolver resolver = new DefaultELResolver(target, customResolvers);
 			return new WebFlowELContext(resolver);

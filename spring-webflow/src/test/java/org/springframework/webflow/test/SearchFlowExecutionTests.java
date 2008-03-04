@@ -24,6 +24,7 @@ import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
@@ -67,6 +68,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	}
 
 	protected void configure(MockFlowBuilderContext builderContext) {
+		builderContext.getFlowBuilderServices().setExpressionParser(new WebFlowELExpressionParser());
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper(new AttributeMapper() {
 			public void map(Object source, Object target, MappingContext context) {
