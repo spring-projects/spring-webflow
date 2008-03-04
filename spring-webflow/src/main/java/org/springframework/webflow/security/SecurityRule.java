@@ -118,7 +118,7 @@ public class SecurityRule {
 	 * @return true if authorized
 	 */
 	private boolean isAuthorizedAll(Collection principalAuthorities) {
-		return getRequiredAuthorities().containsAll(principalAuthorities);
+		return principalAuthorities.containsAll(getRequiredAuthorities());
 	}
 
 	/**

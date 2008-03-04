@@ -81,6 +81,7 @@ public class SecurityRuleTests extends TestCase {
 		Collection principalAuthorities = new HashSet();
 		principalAuthorities.add("ROLE_USER");
 		principalAuthorities.add("ROLE_SUPERVISOR");
+		principalAuthorities.add("ROLE_NEVERTOBEHAD");
 		return principalAuthorities;
 	}
 }
