@@ -4,7 +4,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
@@ -16,7 +15,6 @@ import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 /**
  * A simple holder for services needed by a flow builder. These services are typically exposed via a Flow Builder's
@@ -47,13 +45,12 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	/**
 	 * The conversion service for converting from one object type to another.
 	 */
-	private ConversionService conversionService = new DefaultConversionService();
-
+	private ConversionService conversionService;
 	/**
 	 * The parser for parsing expression strings into expression objects. The default is Web Flow's default expression
 	 * parser implementation.
 	 */
-	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
+	private ExpressionParser expressionParser;
 
 	/**
 	 * A resource loader that can load resources.

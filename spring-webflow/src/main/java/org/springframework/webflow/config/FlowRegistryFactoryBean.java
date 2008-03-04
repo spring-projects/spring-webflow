@@ -28,7 +28,6 @@ import org.springframework.webflow.engine.builder.RefreshableFlowDefinitionHolde
 import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
-import org.springframework.webflow.mvc.MvcViewFactoryCreator;
 
 /**
  * A factory for a flow definition registry. Is a Spring FactoryBean, for provision by the flow definition registry bean
@@ -98,9 +97,6 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		if (flowBuilderServices == null) {
-			initFlowBuilderServices();
-		}
 		flowResourceFactory = new FlowDefinitionResourceFactory(resourceLoader);
 		flowRegistry = new FlowDefinitionRegistryImpl();
 		registerFlowLocations();
@@ -204,10 +200,4 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 		}
 	}
 
-	private void initFlowBuilderServices() {
-		flowBuilderServices = new FlowBuilderServices();
-		flowBuilderServices.setResourceLoader(resourceLoader);
-		flowBuilderServices.setBeanFactory(beanFactory);
-		flowBuilderServices.setViewFactoryCreator(new MvcViewFactoryCreator());
-	}
 }

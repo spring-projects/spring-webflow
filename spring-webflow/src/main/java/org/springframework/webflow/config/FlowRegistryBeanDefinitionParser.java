@@ -25,6 +25,7 @@ import java.util.Set;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -68,10 +69,13 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		return FlowRegistryFactoryBean.class;
 	}
 
-	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
+	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
 		String flowBuilderServices = getFlowBuilderServicesAttribute(element);
 		if (StringUtils.hasText(flowBuilderServices)) {
 			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY, flowBuilderServices);
+		} else {
+			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY,
+					FlowBuilderServicesBeanDefinitionParser.registerDefaultBeanDefinition(parserContext).getBeanName());
 		}
 		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, parseLocations(element));
 		definitionBuilder.addPropertyValue(FLOW_BUILDERS_PROPERTY, parseFlowBuilders(element));

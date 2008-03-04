@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<web:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+	<web:flow-registry id="flowRegistry">
 		<web:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
 			<web:flow-definition-attributes>
 				<web:attribute name="foo" value="bar" />
@@ -25,7 +25,5 @@
 			</web:flow-definition-attributes>
 		</web:flow-builder>
 	</web:flow-registry>
-	
-	<bean id="flowBuilderServices" class="org.springframework.webflow.engine.builder.support.FlowBuilderServices" />
 	
 </beans>
