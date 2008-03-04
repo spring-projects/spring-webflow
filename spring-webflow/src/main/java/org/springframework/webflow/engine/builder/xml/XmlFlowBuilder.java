@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.builder.xml;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,16 +33,15 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.support.RuntimeBindingConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
-import org.springframework.binding.expression.support.CollectionAddingExpression;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.DefaultAttributeMapper;
 import org.springframework.binding.mapping.Mapping;
-import org.springframework.binding.mapping.RequiredMapping;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.GenericApplicationContext;
@@ -373,15 +373,86 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
+	private AttributeMapper parseInputMapper(Element element, Class sourceType, Class targetType) {
+		Collection inputs = DomUtils.getChildElementsByTagName(element, "input");
+		if (inputs.size() == 0) {
+			return null;
+		}
+		DefaultAttributeMapper inputMapper = new DefaultAttributeMapper();
+		for (Iterator it = inputs.iterator(); it.hasNext();) {
+			parseInputMapping((Element) it.next(), inputMapper, sourceType, targetType);
+		}
+		return inputMapper;
+	}
+
+	private AttributeMapper parseOutputMapper(Element element, Class sourceType, Class targetType) {
+		Collection inputs = DomUtils.getChildElementsByTagName(element, "output");
+		if (inputs.size() == 0) {
+			return null;
+		}
+		DefaultAttributeMapper outputMapper = new DefaultAttributeMapper();
+		for (Iterator it = inputs.iterator(); it.hasNext();) {
+			parseOutputMapping((Element) it.next(), outputMapper, sourceType, targetType);
+		}
+		return outputMapper;
+	}
+
+	private Mapping parseInputMapping(Element element, DefaultAttributeMapper mapper, Class sourceClass,
+			Class targetClass) {
+		ExpressionParser parser = getLocalContext().getExpressionParser();
+		String name = element.getAttribute("name");
+		String value = null;
+		if (element.hasAttribute("value")) {
+			value = element.getAttribute("value");
+		} else {
+			value = element.getAttribute(name);
+		}
+		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(sourceClass));
+		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(targetClass));
+		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
+	}
+
+	private Mapping parseOutputMapping(Element element, DefaultAttributeMapper mapper, Class sourceClass,
+			Class targetClass) {
+		ExpressionParser parser = getLocalContext().getExpressionParser();
+		String name = element.getAttribute("name");
+		String value = null;
+		if (element.hasAttribute("value")) {
+			value = element.getAttribute("value");
+		} else {
+			value = element.getAttribute(name);
+		}
+		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(sourceClass));
+		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(targetClass));
+		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
+	}
+
+	private ConversionExecutor parseMappingConversionExecutor(Element element) {
+		if (element.hasAttribute("type")) {
+			Class type = (Class) fromStringTo(Class.class).execute(element.getAttribute("type"));
+			return new RuntimeBindingConversionExecutor(type, getConversionService());
+		} else {
+			return null;
+		}
+	}
+
+	private boolean parseMappingRequired(Element element) {
+		if (element.hasAttribute("required")) {
+			return ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("required"))).booleanValue();
+		} else {
+			return false;
+		}
+	}
+
 	private void parseAndAddStartActions(Element element, Flow flow) {
-		Element startElement = DomUtils.getChildElementByTagName(element, "start-actions");
+		Element startElement = DomUtils.getChildElementByTagName(element, "on-start");
 		if (startElement != null) {
 			flow.getStartActionList().addAll(parseActions(startElement));
 		}
 	}
 
 	private void parseAndAddEndActions(Element element, Flow flow) {
-		Element endElement = DomUtils.getChildElementByTagName(element, "end-actions");
+		Element endElement = DomUtils.getChildElementByTagName(element, "on-end");
 		if (endElement != null) {
 			flow.getEndActionList().addAll(parseActions(endElement));
 		}
@@ -479,27 +550,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		return new SubflowExpression(subflowId, getLocalContext().getFlowDefinitionLocator());
 	}
 
-	private static class SubflowExpression implements Expression {
-
-		private Expression subflowId;
-
-		private FlowDefinitionLocator flowDefinitionLocator;
-
-		public SubflowExpression(Expression subflowId, FlowDefinitionLocator flowDefinitionLocator) {
-			this.subflowId = subflowId;
-			this.flowDefinitionLocator = flowDefinitionLocator;
-		}
-
-		public Object getValue(Object context) throws EvaluationException {
-			String subflowId = (String) this.subflowId.getValue(context);
-			return flowDefinitionLocator.getFlowDefinition(subflowId);
-		}
-
-		public void setValue(Object context, Object value) throws EvaluationException {
-			throw new UnsupportedOperationException("Cannot set a subflow expression");
-		}
-	}
-
 	private void parseAndAddEndState(Element element, Flow flow) {
 		MutableAttributeMap attributes = parseMetaAttributes(element);
 		if (element.hasAttribute("commit")) {
@@ -533,7 +583,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action[] parseEntryActions(Element element) {
-		Element entryActionsElement = DomUtils.getChildElementByTagName(element, "entry-actions");
+		Element entryActionsElement = DomUtils.getChildElementByTagName(element, "on-entry");
 		if (entryActionsElement != null) {
 			return parseActions(entryActionsElement);
 		} else {
@@ -580,7 +630,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action[] parseRenderActions(Element element) {
-		Element renderActionsElement = DomUtils.getChildElementByTagName(element, "render-actions");
+		Element renderActionsElement = DomUtils.getChildElementByTagName(element, "on-render");
 		if (renderActionsElement != null) {
 			return parseActions(renderActionsElement);
 		} else {
@@ -589,7 +639,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action[] parseExitActions(Element element) {
-		Element exitActionsElement = DomUtils.getChildElementByTagName(element, "exit-actions");
+		Element exitActionsElement = DomUtils.getChildElementByTagName(element, "on-exit");
 		if (exitActionsElement != null) {
 			return parseActions(exitActionsElement);
 		} else {
@@ -762,77 +812,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
-	private AttributeMapper parseInputMapper(Element element, Class sourceType, Class targetType) {
-		Element mapperElement = DomUtils.getChildElementByTagName(element, "input-mapper");
-		if (mapperElement != null) {
-			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseMappings(mapper, mapperElement, sourceType, targetType);
-			return mapper;
-		} else {
-			return null;
-		}
-	}
-
-	private AttributeMapper parseOutputMapper(Element element, Class sourceType, Class targetType) {
-		Element mapperElement = DomUtils.getChildElementByTagName(element, "output-mapper");
-		if (mapperElement != null) {
-			DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-			parseMappings(mapper, mapperElement, sourceType, targetType);
-			return mapper;
-		} else {
-			return null;
-		}
-	}
-
-	private void parseMappings(DefaultAttributeMapper mapper, Element element, Class sourceClass, Class targetClass) {
-		ExpressionParser parser = getLocalContext().getExpressionParser();
-		List mappingElements = DomUtils.getChildElementsByTagName(element, "mapping");
-		for (Iterator it = mappingElements.iterator(); it.hasNext();) {
-			Element mappingElement = (Element) it.next();
-			Expression source = parser.parseExpression(mappingElement.getAttribute("source"), new ParserContextImpl()
-					.eval(sourceClass));
-			Expression target = null;
-			if (StringUtils.hasText(mappingElement.getAttribute("target"))) {
-				target = parser.parseExpression(mappingElement.getAttribute("target"), new ParserContextImpl()
-						.eval(targetClass));
-			} else if (StringUtils.hasText(mappingElement.getAttribute("target-collection"))) {
-				target = new CollectionAddingExpression(parser.parseExpression(mappingElement
-						.getAttribute("target-collection"), new ParserContextImpl().eval(targetClass)));
-			}
-			if (getRequiredAttribute(mappingElement, false)) {
-				mapper.addMapping(new RequiredMapping(source, target, parseTypeConverter(mappingElement)));
-			} else {
-				mapper.addMapping(new Mapping(source, target, parseTypeConverter(mappingElement)));
-			}
-		}
-	}
-
-	private ConversionExecutor parseTypeConverter(Element element) {
-		String from = element.getAttribute("from");
-		String to = element.getAttribute("to");
-		if (StringUtils.hasText(from)) {
-			if (StringUtils.hasText(to)) {
-				ConversionService service = getLocalContext().getConversionService();
-				Class sourceClass = (Class) fromStringTo(Class.class).execute(from);
-				Class targetClass = (Class) fromStringTo(Class.class).execute(to);
-				return service.getConversionExecutor(sourceClass, targetClass);
-			} else {
-				throw new IllegalArgumentException("Use of the 'from' attribute requires use of the 'to' attribute");
-			}
-		} else {
-			Assert.isTrue(!StringUtils.hasText(to), "Use of the 'to' attribute requires use of the 'from' attribute");
-		}
-		return null;
-	}
-
-	private boolean getRequiredAttribute(Element element, boolean defaultValue) {
-		if (StringUtils.hasText(element.getAttribute("required"))) {
-			return ((Boolean) fromStringTo(Boolean.class).execute(element.getAttribute("required"))).booleanValue();
-		} else {
-			return defaultValue;
-		}
-	}
-
 	private FlowExecutionExceptionHandler[] parseExceptionHandlers(Element element) {
 		FlowExecutionExceptionHandler[] transitionExecutingHandlers = parseTransitionExecutingExceptionHandlers(element);
 		FlowExecutionExceptionHandler[] customHandlers = parseCustomExceptionHandlers(element);
@@ -892,7 +871,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void parseAndSetSecuredAttribute(Element element, MutableAttributeMap attributes) {
-		Element secured = DomUtils.getChildElementByTagName(element, "secured");
+		Element secured = DomUtils.getChildElementByTagName(element, SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
 		if (secured != null) {
 			SecurityRule rule = new SecurityRule();
 			rule.setRequiredAuthorities(SecurityRule.convertAuthoritiesFromCommaSeparatedString(secured
@@ -906,7 +885,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 				// default to any
 				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
 			}
-			attributes.put("secured", rule);
+			attributes.put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
 		}
 	}
 
@@ -939,6 +918,27 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+
+	private static class SubflowExpression implements Expression {
+
+		private Expression subflowId;
+
+		private FlowDefinitionLocator flowDefinitionLocator;
+
+		public SubflowExpression(Expression subflowId, FlowDefinitionLocator flowDefinitionLocator) {
+			this.subflowId = subflowId;
+			this.flowDefinitionLocator = flowDefinitionLocator;
+		}
+
+		public Object getValue(Object context) throws EvaluationException {
+			String subflowId = (String) this.subflowId.getValue(context);
+			return flowDefinitionLocator.getFlowDefinition(subflowId);
+		}
+
+		public void setValue(Object context, Object value) throws EvaluationException {
+			throw new UnsupportedOperationException("Cannot set a subflow expression");
 		}
 	}
 

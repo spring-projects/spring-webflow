@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema
-	xmlns="http://www.springframework.org/schema/webflow"
+<xsd:schema xmlns="http://www.springframework.org/schema/webflow"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.springframework.org/schema/webflow"
 	version="2.0">
@@ -11,19 +10,18 @@
 Spring Web Flow Schema
 Authors: Keith Donald, Erwin Vervaet
 <br>
-This Schema defines the Spring Web Flow (SWF) XML syntax.
+This schema defines Spring Web Flow's XML-based flow definition language.
 <br>
-The root "flow" element of this document defines exactly one flow definition.
-A flow definition is a blueprint for an executable task that involves a 
-single user (aka conversation or dialog).
+The root "flow" element in this document defines exactly one flow definition.
+A flow definition is a blueprint for a carrying out a conversation with a single user.
 <br>
 A flow is composed of one or more states that form the steps of the flow.
-Each state executes behavior when entered. What behavior is executed is a
+Each state executes a behavior when entered. What behavior is executed is a
 function of the state's type. Core state types include view states,
 action states, subflow states, decision states, and end states.
 <br>
-Each flow definition must specify exactly one start state.
-Events that occur in transitionable states drive state transitions.
+A flow definition has exactly one start state.
+Events that occur within states drive state transitions.
 ]]>
 		</xsd:documentation>
 	</xsd:annotation>
@@ -43,6 +41,14 @@ The unique identifier of this state; must be unique to this flow.
 		</xsd:attribute>
 	</xsd:complexType>
 
+	<xsd:simpleType name="expression">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	
 	<xsd:simpleType name="scopeType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="request">
@@ -58,7 +64,7 @@ Goes out of scope when a single call into this flow completes.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Goes out of scope when the next user event is signaled into this flow.
+Goes out of scope after the next view is rendered by this flow.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -67,7 +73,7 @@ Goes out of scope when the next user event is signaled into this flow.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Goes out of scope when this local flow session ends.
+Goes out of scope when this flow ends.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -76,7 +82,7 @@ Goes out of scope when this local flow session ends.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Goes out of scope when the overall governing flow execution ends.
+Goes out of scope when the governing conversation ends.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -90,7 +96,7 @@ Goes out of scope when the overall governing flow execution ends.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Evaluates an arbitrary expression aganst the flow request context.
+Evaluates an expression against the flow request context.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -99,7 +105,7 @@ Evaluates an arbitrary expression aganst the flow request context.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Requests that a specific fragment of the next view be rendered instead of the entire view.
+Requests that the next view render a fragment of content.
 Multiple fragments may be specified using a comma delimiter.
 ]]>
 					</xsd:documentation>
@@ -109,15 +115,7 @@ Multiple fragments may be specified using a comma delimiter.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Sets an attribute value in a scope.  Use this element when you need to set a variable value
-during the course of flow execution.
-<br>
-For example:
-<pre>
-	&lt;set attribute="fileUploaded" scope="flash" value="true"/&gt;
-</pre>
-The above example instructs this flow to set the "fileUploaded" attribute in "flash scope" to "true".
-This action always returns a "success" event unless an exception is thrown.
+Sets an attribute value in a scope.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -130,16 +128,16 @@ This action always returns a "success" event unless an exception is thrown.
 		<xsd:annotation>
 			<xsd:documentation>
 				<![CDATA[
-Defines exactly one flow definition.  A flow is composed of one or more states
-that define the steps of a task.  One of those steps is the start state, which defines
-the starting point of the task.
+Defines exactly one flow definition.
+A flow is composed of one or more states that define the steps of a conversation.
+One of those steps is the start state, which defines the conversation's starting point.
 <br>
 A flow may also exhibit the following characteristics:
 <ul>
 <li>Be annotated with attributes that define descriptive properties that may affect flow execution.
 (See the &lt;attribute/&gt; element)
 
-<li>Secured flow
+<li>Be secured
 (See the &lt;secured/&gt; element)
 
 <li>Be a persistence context for managing persistent objects during the course of flow execution.
@@ -149,24 +147,23 @@ A flow may also exhibit the following characteristics:
 (See the &lt;var/&gt; element)
 
 <li>Map input provided by callers that start it
-(See the &lt;input-mapper/&gt; element)
+(See the &lt;input/&gt; element)
 
 <li>Return output to callers that end it.
-(See the &lt;output-mapper/&gt; element)
+(See the &lt;output/&gt; element)
 
-<li>Execute custom behaviors at start time and end time.
-(See the &lt;start-actions/&gt; and &lt;end-actions/&gt; elements)
+<li>Execute actions at start time and end time.
+(See the &lt;on-start/&gt; and &lt;on-end/&gt; elements)
 
 <li>Define transitions shared by all states.
 (See the &lt;global-transitions/&gt; element)
 
-<li>Handle exceptions thrown by its states during execution.
+<li>Handle exceptions thrown by during flow execution.
 (See the &lt;exception-handler/&gt; element)
 
 <li>Import one or more local bean definition files defining custom flow artifacts
 (such as actions, exception handlers, view factories, transition criteria, etc).
-(See the &lt;import/&gt; element)
-
+(See the &lt;bean-import/&gt; element)
 </ul>
 ]]>
 			</xsd:documentation>
@@ -177,7 +174,7 @@ A flow may also exhibit the following characteristics:
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-An attribute describing this flow.
+A meta attribute describing or otherwise annotating this flow definition.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -186,7 +183,7 @@ An attribute describing this flow.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Indicates this flow is secured
+Secures this flow.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -195,9 +192,9 @@ Indicates this flow is secured
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Indicates this flow manages a persistence context.  The persistence context is created when a new instance of this flow starts.
-The persistence context is closed when the flow instance ends.  If the flow ends by reaching a "commit" end-state, changes
-made to managed persistent entities during the course of flow execution are flushed to the database in a transaction.
+Allocates a persistence context when this flow starts.  The persistence context is closed when the flow ends.
+If the flow ends by reaching a "commit" end-state, changes made to managed persistent entities
+during the course of flow execution are flushed to the database in a transaction.
 <br>
 The persistence context can be referenced from within this flow by the "entityManager" variable.
 ]]>
@@ -208,32 +205,25 @@ The persistence context can be referenced from within this flow by the "entityMa
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-A flow variable definition.  Flow variables are automatically created when an execution of this flow starts.
-A flow variable can either be stored in 'flow' or 'conversation' scope.
+A flow instance variable.  Flow variables are created when this flow starts.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="input-mapper" minOccurs="0">
+				<xsd:element ref="input" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Maps input attributes provided to this flow at startup.  The following mapping characteristics apply:
-<ul>
-<li>The 'source' of each mapping is a Map containing all the input provided by the caller
-that launched this flow.
-<li>The 'target' of each mapping is this flow execution's RequestContext, exposing access to
-data structures such as 'flowScope'.
-</ul>
+Maps a single input attribute provided by the caller into this flow.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="start-actions" minOccurs="0">
+				<xsd:element ref="on-start" minOccurs="0">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Defines flow startup logic to execute. This logic will always execute when this flow is started.
+Actions to execute when this flow starts.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -243,10 +233,10 @@ Defines flow startup logic to execute. This logic will always execute when this 
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Defines an action state, a state where one or more actions are executed.
-This state type is typically used to invoke application code, often business services.
-An action state is a transitionable state.  A transition out of this state 
-is driven by the result of action execution (e.g. success, error).
+A state where one or more actions are executed.
+This state type is typically used to invoke application code.
+An action state is a transitionable state.
+A transition out of this state is driven by the result of action execution.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -255,21 +245,18 @@ is driven by the result of action execution (e.g. success, error).
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Defines a view state, a state where an user (or other external actor) participates
-in the flow.  When a view state is entered the flow execution "pauses" and control
-goes to the user.  After some think time, the user "resumes" the flow execution
-from the paused view-state by signaling an input event.
+A state where the user participates.
+When a view state is entered, this flow pauses and control goes to the user.
+After some think time, the user resumes this flow at the view-state by signaling an event.
 <br>
-Once paused a view-state may be 'refreshed' by the user, for example, when the 
-browser refresh button is clicked.  A refresh causes the response to be reissued, 
-at which point control goes back to the user.
+Once paused, a view-state may be 'refreshed' by the user.
+A refresh causes the response to be reissued and then returns control back to the user.
 <br>
-A view state may be configured with one or more &lt;render-action/&gt; elements.  Render
-actions are executed before the view is rendered.  Such actions are often
-idempotent and execute without side effects.
+A view state may be configured with one or more render-actions using the 'on-render' element.
+Render actions are executed immediately before the view is rendered.
 <br>
-A view state is a transitionable state. A view state transition is triggered by a
-user input event.
+A view state is a transitionable state.
+A view state transition is triggered by a user event.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -278,21 +265,19 @@ user input event.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Defines a decision state, a state that evaluates one or more expressions or method 
-return values to decide which state to enter next.  Intended to be used purely as an
-idempotent 'navigation' or 'routing' state and is not intended to execute non-idempotent
-(or mutating) behavior.
+Evaluates one or more expressions to decide what state to transition to next.
+Intended to be used as an idempotent 'navigation' or 'routing' state.
 <br>
-A decision state is a transitionable state. A decision state transition can be triggered by
-evaluating a boolean expression against the flow execution request context.  To 
-define expressions, use the 'if' element.
+A decision state is a transitionable state.
+A decision state transition can be triggered by evaluating a boolean expression against the flow execution request context.
+To define transition expressions, use the 'if' element.
 <br>
 Examples:
 <br>
 A simple boolean expression test, using the convenient 'if' element:
 <pre>
     &lt;decision-state id="requiresShipping"&gt;
-	    &lt;if test="flowScope.sale.shipping" then="enterShippingDetails" else="processSale"/&gt;
+	    &lt;if test="#{sale.requiresShipping}" then="enterShippingDetails" else="processSale"/&gt;
     &lt;/decision-state&gt;
 </pre>
 ]]>
@@ -303,17 +288,11 @@ A simple boolean expression test, using the convenient 'if' element:
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Defines a subflow state, a state that spawns another flow as a subflow when entered.  When the
-subflow ends, this state is expected to respond to its result.
+Starts another flow as a subflow when entered.
+When the subflow ends, this state is expected to respond to its result by executing a transition.
 <br>
-A subflow state is a transitionable state.  A state transition is triggered by a
-subflow result event, which describes the logical subflow outcome that occurred.  Typically the 
-criteria for this transition is the id of the subflow end state that was entered.
-<br>
-While the subflow is active, this flow is suspended waiting for the subflow to complete execution.
-When the subflow completes execution by reaching an end state, this state is expected 
-to respond to the result of that execution. The result of subflow execution, the end state 
-that was reached, should be used as grounds for a transition out of this state.
+A subflow state is a transitionable state.
+A transition is triggered by the subflow outcome that was reached.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -322,16 +301,13 @@ that was reached, should be used as grounds for a transition out of this state.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Defines an end state, a state that terminates this flow when entered.
+A state that terminates this flow when entered.  Defines a flow outcome.
 <br>
-A end state is not transitionable--there are never transitions out of an end state.
+An end state is not transitionable; there are never transitions out of an end state.
 When an end-state is entered, an instance of this flow is terminated.
 <br>
-When this flow terminates, if it was acting as the "root" or top-level flow the entire  
-execution (conversation) is terminated. If this flow was acting as a subflow the subflow
-session ends and the calling parent session resumes. To resume, the parent session
-responds to the result of the subflow, typically by reasoning on the id of the end
-state that was reached.
+When this flow terminates, if it was the "root" flow the entire execution is terminated.
+If this flow was a subflow, its parent flow resumes.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -341,34 +317,25 @@ state that was reached.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Defines flow-level transitions eligible for execution if a state-level transition cannot be matched.
+Transitions shared by all states and eligible for execution if no transition associated with the current state matches.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="end-actions" minOccurs="0">
+				<xsd:element ref="on-end" minOccurs="0">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Defines flow ending logic to be executed. This logic will always execute when this flow is ended.
+Actions to execute when this flow ends.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="output-mapper" minOccurs="0">
+				<xsd:element ref="output" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							<![CDATA[
-The mapper that will map flow output attributes when this flow ends.  Output attributes act 
-as flow return values.
-<br>
-For the output mapper the following mapping characteristics apply:
-<ul>
-<li>The 'source' of each mapping is this flow execution's RequestContext, exposing access to 
-internal data structures such as 'flowScope'.
-<li>The 'target' of each mapping is the flow output map that will contain the output returned to the
-caller that launched this flow.
-</ul>
+								<![CDATA[
+Output to return when this flow ends.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -377,18 +344,17 @@ caller that launched this flow.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur during flow execution. Exception handlers may be attached at the state or flow level.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element ref="import" minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="bean-import" minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Requests the import of all custom flow artifacts contained within a single bean
-definition resource location.
+Imports user-defined beans defined at a resource location.
+These beans become part of the flow's bean factory and are resolvable using flow expressions.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -398,8 +364,7 @@ definition resource location.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Identifies the starting point of this flow.  The start state is the point where flow execution begins.
-If not specified, the default start state is the first state defined in the document.
+The starting point of this flow.  If not specified, the start state is the first state defined in this document.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -407,73 +372,31 @@ If not specified, the default start state is the first state defined in the docu
 		</xsd:complexType>
 	</xsd:element>
 
-	<!-- Sub elements -->
-	<xsd:element name="input-mapper">
+	<xsd:element name="input">
 		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-A rule that maps the value of a source expression to a property of a target data structure.
-Extremely flexible, allowing mapping of input attributes from any data structure with 
-support for type conversion.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="mapping">
-		<xsd:complexType>
-			<xsd:attribute name="source" type="xsd:string" use="required">
+			<xsd:attribute name="name" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The expression resolving the source value to be mapped.
+The name of the input attribute.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="target" type="xsd:string">
+			<xsd:attribute name="value" type="expression">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The property expression defining the target property to be set.
+The value of the input attribute.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="target-collection" type="xsd:string">
+			<xsd:attribute name="type" type="type">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The expression resolving the target collection that the source value should be added to.
-Use this or the 'target' attribute, not both.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="from" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The source value type.  If the source type differs from the target type a type conversion
-will be performed.  The type may be an alias (e.g 'string') or a fully-qualified class
-(e.g. 'java.lang.String').
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-			<xsd:attribute name="to" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The target value type.  If the source type differs from the target type a type conversion
-will be performed.  The type may be an alias (e.g 'int') or a fully-qualified class
-(e.g. 'java.lang.Integer').
+The expected value type.  If the actual value type is not compatible with the expected type, a type conversion will be attempted.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -482,8 +405,50 @@ will be performed.  The type may be an alias (e.g 'int') or a fully-qualified cl
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Whether or not this mapping is a required mapping.  If marked required and the source 
-evaluates to null an error will be reported.
+Whether or not this input is required.
+If marked required and the value evaluates to null an error will be reported.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="output">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="expression" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The name of the output attribute.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="value" type="expression">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The value of the output attribute.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="type">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The expected value type.  If the actual value type is not compatible with the expected type, a type conversion will be attempted.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="required" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Whether or not this output is required.
+If marked required and the value evaluates to null an error will be reported.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -498,7 +463,7 @@ evaluates to null an error will be reported.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-The value of this attribute, defined within an element for supporting longer free-text values.
+The value of this attribute, defined as an element to support free-text values.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -513,12 +478,12 @@ The name of this attribute.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="type" type="xsd:string">
+			<xsd:attribute name="type" type="type">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The target type of the attribute value; to facilitate from-string type conversion. This type
-string may be an alias (e.g 'int') or a fully-qualified class (e.g. 'java.lang.Integer').
+The type of attribute.  The attribute value is converted from string to an instance of this type automatically.
+The type string may be an type alias (e.g 'int') or a fully-qualified Java Class (e.g. 'java.lang.Integer').
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -527,7 +492,7 @@ string may be an alias (e.g 'int') or a fully-qualified class (e.g. 'java.lang.I
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The value of this attribute; a short-cut alternative to an explicit child 'value' element.
+The value of this attribute.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -549,20 +514,17 @@ The value of this attribute; a short-cut alternative to an explicit child 'value
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The name of this variable, used as the index of the variable value set in the configured scope.
-<br>
-When specified without the 'class' or 'bean' attributes, this name is also used as the bean name
-of a non-singleton bean in the configured Bean Factory to use as the initial variable value.
+The name of this variable.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="class" type="xsd:string" use="required">
+			<xsd:attribute name="class" type="type" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The implementation class of the variable's value.  The class may be an alias (e.g 'int') or a
-fully-qualified class (e.g. 'java.lang.Integer').  The class cannot be abstract or an interface.
+The name of this variable's implementation class.  The class name may be an alias (e.g 'int') or the
+fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a concrete class.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -578,8 +540,6 @@ This scope of this variable.  The available scope types are:
 <li>flow - The variable goes out of scope when this flow session ends.
 <li>conversation - The variable goes out of scope when the overall conversation governing this flow ends.
 </ol>
-<br>    
-If not specified the default scope type is used ('flow' by default).
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -587,7 +547,7 @@ If not specified the default scope type is used ('flow' by default).
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="start-actions">
+	<xsd:element name="on-start">
 		<xsd:complexType>
 			<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 		</xsd:complexType>
@@ -602,7 +562,7 @@ If not specified the default scope type is used ('flow' by default).
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-An attribute describing this state.
+A meta attribute describing or otherwise annotating this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -611,16 +571,16 @@ An attribute describing this state.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Indicates this state is secured.
+Secures this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="entry-actions" minOccurs="0">
+						<xsd:element ref="on-entry" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state entry logic to be executed. This logic will always execute when this state is entered.
+Actions to execute when this state is entered.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -630,20 +590,18 @@ Defines state entry logic to be executed. This logic will always execute when th
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines a transition from one state to another.
-<br>
-A transition defines a supported path through the flow.  Transitions may be annotated with attributes
-and may execute one or more actions before executing.
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="exit-actions" minOccurs="0">
+						<xsd:element ref="on-exit" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state exit logic to be executed. This logic will always execute when this state is exited 
-regardless of what transition is executed.
+Actions to execute when this state exits.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -652,8 +610,7 @@ regardless of what transition is executed.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur within this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -666,30 +623,30 @@ execution of this flow definition. Exception handlers may be attached at the sta
 
 	<xsd:element name="evaluate">
 		<xsd:complexType>
-			<xsd:attribute name="expression" type="xsd:string" use="required">
+			<xsd:attribute name="expression" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The expression to evaluate when this action is invoked.
+The expression to evaluate.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="result" type="xsd:string" use="optional">
+			<xsd:attribute name="result" type="expression" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-A fully resolvable expression such as #{flowScope.foo} or #{bean.bar} for exposing the result of the evaluation.
+Where to assign the expression evaluation result.  If not specified, the result will not be assigned.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="result-type" type="xsd:string" use="optional">
+			<xsd:attribute name="result-type" type="type" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The desired evaluation result type.  Optional.  If specified and the method return value is not of the 
-desired result type, a type conversion will be attempted.
+The type of result expected to be returned from evaluating the expresion.
+If specified and the result is not compatible with the expected type, a type conversion will be attempted. 
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -699,7 +656,7 @@ desired result type, a type conversion will be attempted.
 
 	<xsd:element name="render">
 		<xsd:complexType>
-			<xsd:attribute name="fragments" type="xsd:string" use="required">
+			<xsd:attribute name="fragments" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -713,21 +670,20 @@ The fragments of the next view to render.  Multiple fragments may be specified b
 
 	<xsd:element name="set">
 		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:attribute name="name" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The name of the attribute to set.  May be a nested path using Java beans notation (e.g. bean.property) to set a property
-on a bean in the specified scope, or it may be a fully resolvable expression such as "#{flowScope.foo}" instead.
+Where to set the value.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="value" type="xsd:string" use="required">
+			<xsd:attribute name="value" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The attribute value expression.
+The value to be set.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -751,36 +707,32 @@ An attribute describing this transition.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Indicates this transition is secured
+Secures this transition.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
 				<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
 			</xsd:sequence>
-			<xsd:attribute name="on" type="xsd:string">
+			<xsd:attribute name="on" type="expression">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The criteria that determines when this transition should execute.  This criteria typically evaluates 
-the last event that occurred in this flow to determine if the transition matches and should execute.
-<br>	
+The criteria that determines when this transition should execute.
 The most basic value is a static event id:
 <pre>
 	&lt;transition on="submit" to="state"/&gt;
 </pre>
-... which reads "on an occurrence of the 'submit' event transition to 'state'"
+... which reads "on the occurrence of the 'submit' event, transition to 'state'"
 <br>
-Sophisticated transitional expressions are also supported when enclosed within ${brackets}:
+Sophisticated transitional expressions are also supported when enclosed in a delimited expression:
 <pre>
-	&lt;transition on="${#result == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
+	&lt;transition on="#{event == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
 </pre>
-Custom transition criteria implementations can be referenced by id:
+For exotic usage scenarios, custom TransitionCriteria beans can be plugged in as follows:
 <pre>
-	&lt;transition on="bean:myCustomCriteria" to="state"/&gt;
+	&lt;transition on="bean:myCustomCriteriaBean" to="state"/&gt;
 </pre>
-The exact interpretation of this attribute value depends on the TextToTransitionCriteria
-converter that is installed.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -789,28 +741,23 @@ converter that is installed.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The exception type that should trigger execution of this transition.
+Triggers execution of this transition when a particular exception occurs.
 <br>
-The value must be a fully-qualified Exception class name (e.g. example.booking.ItineraryExpiredException).
-When an exception is thrown, superclasses of the configured exception class match by default.
-<br>
-Use of this attribute results in an exception handler being attached to the object associated
-with this transition definition.  Use this attribute or the 'on' attribute, not both.
+The value of this attribute must be a fully-qualified java.lang.Exception class name (e.g. example.booking.ItineraryExpiredException).
+Superclasses of the configured exception class match by default.  Use this attribute or the 'on' attribute, not both.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="to" type="xsd:string" use="required">
+			<xsd:attribute name="to" type="expression" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
 The target state to transition to.
 <br>
-The value of this attribute may be a static state identifier (e.g. to="displayForm")
-or an expression to be evaluated at runtime against the request context
-(e.g. to="${flowScope.previousViewState}"). Custom target state resolvers implementations
-can be referenced by id (e.g. to="bean:myCustomTargetStateResolver"). The
-exact interpretation of this attribute value depends on the installed TextToTargetStateResolver.
+The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic eval expression (e.g. to="#{flowScope.previousViewState}").
+For exotic usage scenarios, custom target state resolver beans can also be plugged in (e.g. to="bean:myCustomTargetStateResolver").
+If no value is specified, this transition acts as a simple event handler and will not change the state of the flow.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -827,7 +774,7 @@ exact interpretation of this attribute value depends on the installed TextToTarg
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-An attribute describing this state.
+An attribute describing or otherwise annotating this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -836,7 +783,7 @@ An attribute describing this state.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Indicates this state is secured
+Secures this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -845,27 +792,25 @@ Indicates this state is secured
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-A view variable definition.  View variables are automatically created when a view-state is entered and
-destroyed when the view-state exits.  A view variable is stored in flow scope.
+A view instance variable.  View variables are created when this state is entered and destroyed when this state exits.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>	
-						<xsd:element ref="entry-actions" minOccurs="0">
+						<xsd:element ref="on-entry" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state entry logic to be executed. This logic will always execute when this state is entered.
+Actions to execute when this state is entered.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="render-actions" minOccurs="0">
+						<xsd:element ref="on-render" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines view-state render logic to be executed. This logic will always execute when this state is asked 
-to make a view selection capable of rendering a response in the current request.
+Actions to execute immediately before view rendering.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -874,20 +819,18 @@ to make a view selection capable of rendering a response in the current request.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines a transition from one state to another.
-<br>
-A transition defines a supported path through the flow.  Transitions may be annotated with attributes
-and may execute one or more actions before executing.
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="exit-actions" minOccurs="0">
+						<xsd:element ref="on-exit" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state exit logic to be executed. This logic will always execute when the state is exited 
-regardless of what transition is executed.
+Actions to execute when this state exits.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -896,50 +839,39 @@ regardless of what transition is executed.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur within this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="view" type="xsd:string">
+					<xsd:attribute name="view" type="expression">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The name of the view to render when this view state issues its response.
-<br>
-This value may be a logical application view name which gets resolved to a template:
+The name of the view to render.  Is typically a flow-relative path to a view template:
 <pre>
-	priceForm
+    priceForm.jsp
 </pre>
-It may even be a direct pointer to a view template:
+Can also be an evaluatable expression:
 <pre>
-	/WEB-INF/jsp/priceForm.jsp
+	${flowScope.myViewExpression}
 </pre>
-This value may also be a view name expression evaluated against the request context:
+Use the externalRedirect: prefix to redirect to an external URL, typically to interface with an external system.
+External redirect query parameters may be specified using ${expressions} that evaluate against the request context:
 <pre>
-	${flowScope.view}
-</pre>
-Use of the "externalRedirect:" prefix indicates this view state should trigger a 
-redirect to an absolute external URL, typically to interface with an external system.
-External redirect query parameters may be specified using ${expressions} that evaluate
-against the request context:
-<pre>
-	externalRedirect:/someOtherSystem.htm?orderId=${flowScope.order.id}
+	externalRedirect:/http://someOtherSystem?orderId=${flowScope.order.id}&amp;callbackUrl=#{flowExecutionUrl}
 </pre> 
-Use of the "flowRedirect:" prefix requests a redirect to a new execution of another flow:
+Use the flowRedirect: prefix to redirect to another flow:
 <pre>
-	flowRedirect:myOtherFlow?someData=${flowScope.data}
+	flowRedirect:myOtherFlow?someData=#{flowScope.data}
 </pre>
-Use of the "bean:" prefix references a custom ViewFactory implementation you define,
-exposed by id in either a flow-local context using the "import" element or in the parent 
-context.
+For exotic usages, use the bean: prefix to plug in a custom ViewFactory bean you define.
 <pre>
 	bean:myCustomViewFactory
 </pre>
 <br>
-Note when no view name is provided, the view to render will be determined by convention.
+When this attribute is not specified, the view to render will be determined by convention.
 The default convention is to treat the id of this view state as the view identifier.
 ]]>
 							</xsd:documentation>
@@ -949,8 +881,7 @@ The default convention is to treat the id of this view state as the view identif
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Determines if this view state should request a flow execution redirect instead of rendering.
-Default is false.					
+Requests this view-state send a flow execution redirect before rendering.  Default is false.				
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -959,8 +890,7 @@ Default is false.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Determines if this view state should render its view in a modal popup dialog.
-Default is false.
+Displays the view in a popup dialog.  Default is false.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -970,19 +900,19 @@ Default is false.
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="entry-actions">
+	<xsd:element name="on-entry">
 		<xsd:complexType>
 			<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="render-actions">
+	<xsd:element name="on-render">
 		<xsd:complexType>
 			<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="exit-actions">
+	<xsd:element name="on-exit">
 		<xsd:complexType>
 			<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 		</xsd:complexType>
@@ -997,7 +927,7 @@ Default is false.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-An attribute describing this state.
+An attribute describing or otherwise annotating this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1006,16 +936,16 @@ An attribute describing this state.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Indicates this state is secured
+Secures this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="entry-actions" minOccurs="0">
+						<xsd:element ref="on-entry" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state entry logic to be executed. This logic will always execute when this state is entered.
+Actions to execute when this state is entered.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1024,25 +954,22 @@ Defines state entry logic to be executed. This logic will always execute when th
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-A transition specification that defines a boolean expression to evaluate when this state
-is entered and a state to transition to if that expression evaluates to true.
-Optionally, this element may also define an 'else' attribute to define a state to
-transition to if the expression evaluates to false.
+Defines a boolean expression to evaluate a target state to transition to if that expression evaluates to true.
+Optionally, this element may define an 'else' attribute to define a state to transition to if the expression evaluates to false.
 <br>
 The form is:
 <pre>
-	&lt;if test="${criteria}" then="trueStateId" else="falseStateId"/&gt;
+	&lt;if test="#{criteria}" then="trueStateId" else="falseStateId"/&gt;
 </pre>
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="exit-actions" minOccurs="0">
+						<xsd:element ref="on-exit" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state exit logic to be executed. This logic will always execute when this state is exited 
-regardless of what transition is executed.
+Actions to execute when this state exits.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1051,8 +978,7 @@ regardless of what transition is executed.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur within this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1065,48 +991,33 @@ execution of this flow definition. Exception handlers may be attached at the sta
 
 	<xsd:element name="if">
 		<xsd:complexType>
-			<xsd:attribute name="test" type="xsd:string" use="required">
+			<xsd:attribute name="test" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The transition criteria expression to be tested. This should be a boolean
-${expression} that evaluates against this flow's request context.
-<br>
+The boolean expression to test.
 For example:
 <pre>
-	&lt;if test="${flowScope.sale.shipping} then="enterShippingDetails"/&gt;
-	&lt;if test="${lastEvent.id == 'search'} then="bindSearchParameters"/&gt;
+	&lt;if test="#{sale.requiresShipping} then="enterShippingDetails"/&gt;
 </pre>
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="then" type="xsd:string" use="required">
+			<xsd:attribute name="then" type="expression" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The state to transition to if the boolean expression is true.
-<br>
-The value of this attribute may be a static state identifier (e.g. then="displayForm")
-or an expression to be evaluated at runtime against the request context
-(e.g. then="${flowScope.previousViewState}"). Custom target state resolvers implementations
-can be referenced by id (e.g. to="bean:myCustomTargetStateResolver"). The
-exact interpretation of this attribute value depends on the installed TextToTargetStateResolver.
+The state to transition to if the boolean expression evaluates to true.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="else" type="xsd:string">
+			<xsd:attribute name="else" type="expression">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The state to transition to if the boolean expression is false (optional).
-
-The value of this attribute may be a static state identifier (e.g. else="displayForm")
-or an expression to be evaluated at runtime against the request context
-(e.g. else="${flowScope.previousViewState}"). Custom target state resolvers implementations
-can be referenced by id (e.g. to="bean:myCustomTargetStateResolver"). The
-exact interpretation of this attribute value depends on the installed TextToTargetStateResolver.
+The state to transition to if the boolean expression evaluates to false.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1123,7 +1034,7 @@ exact interpretation of this attribute value depends on the installed TextToTarg
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-An attribute describing this state.
+An attribute describing or otherwise annotating this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1132,47 +1043,34 @@ An attribute describing this state.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Indicates this state is secured
+Secures this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="entry-actions" minOccurs="0">
+						<xsd:element ref="on-entry" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state entry logic to be executed. This logic will always execute when the state is entered.
+Actions to execute when this state is entered.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="input-mapper" minOccurs="0">
+						<xsd:element ref="input" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Maps data from this flow to the subflow as input.  The following mapping characteristics apply:
-<ul>
-<li>The 'source' of each mapping is this flow execution's RequestContext, exposing access to 
-internal data structures such as 'flowScope'.
-<li>The 'target' of each mapping is the input map that will be passed to the subflow.
-</ul>
+An input to pass the subflow.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="output-mapper" minOccurs="0">
+						<xsd:element ref="output" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-The mapper that will map flow output attributes when this flow ends by entering this 
-end state.  Output attributes act as flow return values.
-<br>
-For the output mapper the following mapping characteristics apply:
-<ul>
-<li>The 'source' of each mapping is a Map containing all the output returned by the subflow.
-<li>The 'target' of each mapping is this flow execution's RequestContext, exposing access to
-data structures such as 'flowScope'.
-</ul>
+An output from the subflow to process.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1181,20 +1079,18 @@ data structures such as 'flowScope'.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines a transition from one state to another.
-<br>
-A transition defines a supported path through the flow.  Transitions may be annotated with attributes
-and may specify one or more actions to execute before executing.
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="exit-actions" minOccurs="0">
+						<xsd:element ref="on-exit" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state exit logic to be executed. This logic will always execute when this state is exited 
-regardless of what transition is executed.
+Actions to execute when this state exits.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1203,18 +1099,17 @@ regardless of what transition is executed.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur within this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="subflow" type="xsd:string" use="required">
+					<xsd:attribute name="subflow" type="expression" use="required">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The id of the flow to be spawned as a subflow when this subflow state is entered.
+The subflow to start.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -1223,8 +1118,8 @@ The id of the flow to be spawned as a subflow when this subflow state is entered
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The id of a custom bean to use to map attributes to and from the subflow.  Specifiy this attribute or one of the
-input-mapper/output-mapper sub-elements, not both.
+For exotic usage scenarios, a custom SubflowAttributeMapper bean to use to map data to the subflow.
+Use this attribute or the input/output sub-elements, not both.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -1252,34 +1147,25 @@ An attribute describing this state.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Indicates this state is secured
+Secures this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="entry-actions" minOccurs="0">
+						<xsd:element ref="on-entry" minOccurs="0">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines state entry logic to be executed. This logic will always execute when this state is entered.
+Actions to execute when this state is entered.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element ref="output-mapper" minOccurs="0">
+						<xsd:element ref="output" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-The mapper that will map flow output attributes when this flow ends by entering this 
-end state.  Output attributes act as flow return values.
-<br>
-For the output mapper the following mapping characteristics apply:
-<ul>
-<li>The 'source' of each mapping is this flow execution's RequestContext, exposing access to 
-internal data structures such as 'flowScope'.
-<li>The 'target' of each mapping is the flow output map that will contain the output returned to the
-caller that launched this flow.
-</ul>
+An output attribute to return when this flow ends by reaching this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1288,8 +1174,7 @@ caller that launched this flow.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Defines an exception handler to handle one or more exceptions that may occur during the
-execution of this flow definition. Exception handlers may be attached at the state or flow level.
+Handles exceptions that occur in this state.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1299,47 +1184,31 @@ execution of this flow definition. Exception handlers may be attached at the sta
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The name of the view to render when this end state is entered.
+The name of a view to render as a final flow response.
+Is often not specified when the caller handles this flow outcome and cares for the response.
+When specified, the value can be a flow-relative path to a view template:
+<pre>
+    priceForm.jsp
+</pre>
+It can also be an evaluatable expression:
+<pre>
+	#{flowScope.myViewExpression}
+</pre>
+Use the externalRedirect: prefix to redirect to an external URL:
+<pre>
+	externalRedirect:/someController?orderId=#{order.id}
+</pre> 
+Use the flowRedirect: prefix to redirect to another flow:
+<pre>
+	flowRedirect:myOtherFlow?someData=#{flowScope.data}
+</pre>
+For exotic usages, use the bean: prefix to plug in a custom ViewFactory bean you define:
+<pre>
+	bean:myCustomViewFactory
+</pre>
 <br>
-This value may be a logical application view name which gets resolved to a template:
-<pre>
-	priceForm
-</pre>
-It may even be a direct pointer to a view template:
-<pre>
-	/WEB-INF/jsp/priceForm.jsp
-</pre>
-This value may also be a view name expression evaluated against the request context:
-<pre>
-	${flowScope.view}
-</pre>
-Use of the "externalRedirect:" prefix triggers a redirect to a specific "after conversation completion"
-external URL:
-<pre>
-    externalRedirect:/home.html
-</pre>
-Redirect query parameters may also be specified using ${expressions} that evaluate against
-the request context:
-<pre>
-    externalRedirect:/thankyou.htm?confirmationNumber=${flowScope.order.confirmation.id}
-</pre>
-Use of the "flowRedirect:" prefix indicates this end state should trigger a redirect that
-starts another flow.  Flow input parameters may be specified using ${expressions} that 
-evaluate against the request context:
-<pre>
-	flowRedirect:search-flow?firstName=${flowScope.searchCriteria.firstName}
-</pre>
-Use of the "bean:" prefix references a custom ViewSelector implementation you define,
-exposed by id in either a flow-local context using the "import" element or in the parent 
-context.
-<pre>
-    bean:myCustomViewSelector
-</pre>
-The exact semantics regarding the interpretation of this value are determined by the
-installed TextToViewSelector converter.
-<br>
-Note when no view name is provided, this end state will issue no final response.  In this case,
-it is expected the calling flow controller will handle issuing the final response.
+When this attribute is not specified, no final response will be issued.  In this case, 
+the caller is expected to handle this flow outcome.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -1348,7 +1217,7 @@ it is expected the calling flow controller will handle issuing the final respons
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-Indicates if this end-state is a "commit state".  If true, any changes made to managed entities attached to the flow's persistence context
+Marks this end-state a "commit state".  If true, any changes made to managed entities attached to the flow's persistence context
 will be flushed in a system transaction when this state is reached.  If false, no flush will occur. This attribute has no effect
 if the flow is not a persistence-context.
 								]]>
@@ -1367,10 +1236,9 @@ if the flow is not a persistence-context.
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
-Defines a transition from one state to another.
-<br>
-A transition defines a supported path through the flow.  Transitions may be annotated with attributes
-and may execute one or more actions before executing.
+A global transition defines a path through the flow that can be taken from all states.
+A global transition may execute one or more actions before executing.
+All transition actions must execute successfully for the transition itself to execute.
 ]]>
 						</xsd:documentation>
 					</xsd:annotation>
@@ -1379,27 +1247,9 @@ and may execute one or more actions before executing.
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="end-actions">
+	<xsd:element name="on-end">
 		<xsd:complexType>
 			<xsd:group ref="actionTypes" maxOccurs="unbounded" />
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="output-mapper">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-A rule that maps the value of a source expression to a property of a target data structure.
-Extremely flexible, allowing mapping of output attributes from any data structure with 
-support for type conversion.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
-			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -1409,7 +1259,7 @@ support for type conversion.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The bean id of a custom exception handler implementation to attach.
+The bean id of the custom exception handler.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1417,18 +1267,18 @@ The bean id of a custom exception handler implementation to attach.
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="import">
+	<xsd:element name="bean-import">
 		<xsd:complexType>
 			<xsd:attribute name="resource" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The relative resource path to a bean definition file to import.  Imported bean definitions 
-are referenceable by this flow.  The resource path is relative to this document.
+The relative resource path to the bean definition file to import.  Imported bean definitions 
+are then referenceable by this flow.  The resource path is relative to this document.
 <br>
 For example:
 <pre>
-    &lt;import resource="orderitem-flow-beans.xml"/&gt;
+    &lt;bean-import resource="orderitem-flow-beans.xml"/&gt;
 </pre>       
 ... would look for 'orderitem-flow-beans.xml' in the same directory as this document.
 ]]>
@@ -1442,8 +1292,8 @@ For example:
 		<xsd:annotation>
 			<xsd:documentation>
 				<![CDATA[
-Applies attributes to Spring Secuirty based principal authorities upon enterance.  
-If the security requirement is not met, an AccessDeniedException is thrown.
+Secures this flow definition element.
+The user invoking this element must meet the required authorities otherwise access to the element will be denied.
 ]]>
 			</xsd:documentation>
 		</xsd:annotation>
@@ -1452,16 +1302,16 @@ If the security requirement is not met, an AccessDeniedException is thrown.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Comma separated list of security authorities.
+The comma separated list of security authorities.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="match" use="optional" default="any">
+			<xsd:attribute name="match" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Method used to match authorities.  Accepted values are 'any' and 'all'.  Default is 'any'.
+The method for matching the authorities.  Accepted values are 'any' and 'all'.  Default is 'any'.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1471,7 +1321,7 @@ Method used to match authorities.  Accepted values are 'any' and 'all'.  Default
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Matching any of the authorities will allow access
+Matching any of the authorities grants access.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1480,7 +1330,7 @@ Matching any of the authorities will allow access
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Matching all of the authorities will allow access
+Matching all of the authorities grants access.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>

@@ -4,29 +4,27 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<view-state id="enterCriteria" view="searchCriteria">
-		<render-actions>
+		<on-render>
 			<evaluate expression="#{formAction.setupForm}" />
-		</render-actions>
+		</on-render>
 		<transition on="search" to="displayResults">
 			<evaluate expression="#{formAction.bindAndValidate}" />
 		</transition>
 	</view-state>
 
 	<view-state id="displayResults" view="searchResults">
-		<render-actions>
+		<on-render>
 			<evaluate expression="#{phonebook.search(searchCriteria)}" result="#{flowScope.results}" />
-		</render-actions>
+		</on-render>
 		<transition on="newSearch" to="enterCriteria"/>
 		<transition on="select" to="browseDetails"/>
 	</view-state>
 
 	<subflow-state id="browseDetails" subflow="detail-flow">
-		<input-mapper>
-			<mapping source="#{requestParameters.id}" target="#{id}" from="string" to="long"/>
-		</input-mapper>
+		<input name="id" value="#{requestParameters.id}" type="long" required="true"/>
 		<transition on="finish" to="displayResults"/>
 	</subflow-state>
 
-	<import resource="search-flow-beans.xml"/>
+	<bean-import resource="search-flow-beans.xml"/>
 	
 </flow>
