@@ -9,7 +9,14 @@ import javax.el.PropertyNotWritableException;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
 
-public class ActionExecutingELResolver extends ELResolver {
+/**
+ * Resolves the method to invoke on a resolved Web Flow Action instance. The resolved Action is usually a
+ * {@link org.springframework.webflow.action.MultiAction}. Returns an AnnotatedAction wrapper around the target Action
+ * configured with the appropriate method dispatching rules.
+ * 
+ * @author Keith Donald
+ */
+public class ActionMethodELResolver extends ELResolver {
 
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
 		return Action.class;
@@ -32,9 +39,9 @@ public class ActionExecutingELResolver extends ELResolver {
 		if (base instanceof Action) {
 			Action action = (Action) base;
 			elContext.setPropertyResolved(true);
-			AnnotatedAction decorator = new AnnotatedAction(action);
-			decorator.setMethod((String) property);
-			return decorator;
+			AnnotatedAction annotated = new AnnotatedAction(action);
+			annotated.setMethod(property.toString());
+			return annotated;
 		} else {
 			return null;
 		}
