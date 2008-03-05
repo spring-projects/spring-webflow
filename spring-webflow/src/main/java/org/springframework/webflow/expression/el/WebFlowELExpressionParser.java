@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.ELContext;
+import javax.el.ELException;
 import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
 import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -22,6 +25,10 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Jeremy Grelle
  */
 public class WebFlowELExpressionParser extends ELExpressionParser {
+
+	private static final String EXPRESSION_FACTORY_PROPERTY = "javax.el.ExpressionFactory";
+
+	private static final String DEFAULT_EXPRESSION_FACTORY = "org.jboss.el.ExpressionFactoryImpl";
 
 	public WebFlowELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
@@ -34,10 +41,18 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 	}
 
 	private static ExpressionFactory getDefaultExpressionFactory() {
-		if (!System.getProperties().containsKey("javax.el.ExpressionFactory")) {
-			System.setProperty("javax.el.ExpressionFactory", "org.jboss.el.ExpressionFactoryImpl");
+		if (!System.getProperties().containsKey(EXPRESSION_FACTORY_PROPERTY)) {
+			System.setProperty(EXPRESSION_FACTORY_PROPERTY, DEFAULT_EXPRESSION_FACTORY);
 		}
-		return ExpressionFactory.newInstance();
+		if (ReflectionUtils.findMethod(ExpressionFactory.class, "newInstance") != null) {
+			return ExpressionFactory.newInstance();
+		} else { // Fallback in case using an older version of el-api
+			try {
+				return (ExpressionFactory) BeanUtils.instantiateClass(Class.forName(DEFAULT_EXPRESSION_FACTORY));
+			} catch (Exception e) {
+				throw new ELException("Could not create the default ExpressionFactory", e);
+			}
+		}
 	}
 
 	private static class RequestContextELContextFactory implements ELContextFactory {

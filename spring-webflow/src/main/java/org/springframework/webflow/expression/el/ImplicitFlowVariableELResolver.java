@@ -23,13 +23,10 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext context, Object base, Object property) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return null;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		if (requestContext == null) {
-			return null;
-		}
 		if (ImplicitVariables.matches(property)) {
 			context.setPropertyResolved(true);
 			return ImplicitVariables.value(context, requestContext, property).getClass();
@@ -39,7 +36,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return null;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();

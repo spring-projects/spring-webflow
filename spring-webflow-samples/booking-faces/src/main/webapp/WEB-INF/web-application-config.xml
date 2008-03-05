@@ -31,6 +31,14 @@
 		<constructor-arg ref="flowExecutor" />
 	</bean>
 	
+	<bean name="/*" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+	
+	<bean id="jsfViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
+		<property name="prefix" value="WEB-INF/" />
+		<property name="suffix" value=".xhtml" />
+	</bean>
+	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<webflow:flow-execution-listeners>

@@ -28,7 +28,7 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext elContext, Object base, Object property) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return null;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
@@ -51,7 +51,7 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext elContext, Object base, Object property) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return null;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
@@ -74,7 +74,7 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public boolean isReadOnly(ELContext elContext, Object base, Object property) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return false;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
@@ -97,7 +97,7 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public void setValue(ELContext elContext, Object base, Object property, Object value) {
-		if (base != null) {
+		if (base != null || RequestContextHolder.getRequestContext() == null) {
 			return;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();

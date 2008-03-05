@@ -18,8 +18,6 @@ public class CompositeFlowPropertyResolver extends ELDelegatingPropertyResolver 
 	private static final CompositeELResolver composite = new CompositeELResolver();
 
 	static {
-		composite.add(new RequestContextELResolver());
-		composite.add(new ScopeSearchingELResolver());
 		composite.add(new MapAdaptableELResolver());
 	}
 

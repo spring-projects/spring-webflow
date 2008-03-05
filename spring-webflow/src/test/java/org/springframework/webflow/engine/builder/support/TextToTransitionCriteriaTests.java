@@ -23,6 +23,7 @@ import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -66,18 +67,11 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	/*
-	public void testNonBooleanEvaluation() throws Exception {
-		String expression = "${flowScope.foo}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
-		RequestContext ctx = getRequestContext();
-		try {
-			criterion.test(ctx);
-			fail("Non-boolean evaluations are not allowed");
-		} catch (IllegalArgumentException e) {
-			// success
-		}
-	}
-	*/
+	 * public void testNonBooleanEvaluation() throws Exception { String expression = "${flowScope.foo}";
+	 * TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression); RequestContext ctx =
+	 * getRequestContext(); try { criterion.test(ctx); fail("Non-boolean evaluations are not allowed"); } catch
+	 * (IllegalArgumentException e) { // success } }
+	 */
 
 	public void testInvalidSyntax() throws Exception {
 		try {
@@ -90,16 +84,12 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	/*
-	public void testEventId() throws Exception {
-		String expression = "${lastEvent.id == 'sample'}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
-		RequestContext ctx = getRequestContext();
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
-		expression = "${#result == 'sample'}";
-		criterion = (TransitionCriteria) converter.convert(expression);
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
-	}
-	*/
+	 * public void testEventId() throws Exception { String expression = "${lastEvent.id == 'sample'}";
+	 * TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression); RequestContext ctx =
+	 * getRequestContext(); assertTrue("Criterion should evaluate to true", criterion.test(ctx)); expression =
+	 * "${#result == 'sample'}"; criterion = (TransitionCriteria) converter.convert(expression); assertTrue("Criterion
+	 * should evaluate to true", criterion.test(ctx)); }
+	 */
 
 	public void testBean() {
 		TransitionCriteria myTransitionCriteria = new TransitionCriteria() {
@@ -115,6 +105,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	private RequestContext getRequestContext() {
 		Flow flow = new Flow("id");
 		MockRequestContext ctx = new MockRequestContext(flow);
+		RequestContextHolder.setRequestContext(ctx);
 		ctx.getFlowScope().put("foo", "bar");
 		ctx.setLastEvent(new Event(this, "sample"));
 		return ctx;
