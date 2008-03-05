@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop" 
-       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
@@ -11,25 +11,25 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<web:enable-flow-scopes/>
+	<webflow:enable-flow-scopes/>
 	
-	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<web:flow-execution-repository type="continuation" max-conversations="1" max-continuations="2"/>
-		<web:flow-execution-attributes>
-			<web:alwaysRedirectOnPause value="false"/>
-			<web:attribute name="foo" value="bar"/>		
-			<web:attribute name="bar" value="2" type="integer"/>		
-		</web:flow-execution-attributes>
-		<web:flow-execution-listeners>
-			<web:listener ref="listener" criteria="*"/>
-		</web:flow-execution-listeners>
-	</web:flow-executor>
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-repository type="continuation" max-conversations="1" max-continuations="2"/>
+		<webflow:flow-execution-attributes>
+			<webflow:alwaysRedirectOnPause value="false"/>
+			<webflow:attribute name="foo" value="bar"/>		
+			<webflow:attribute name="bar" value="2" type="integer"/>		
+		</webflow:flow-execution-attributes>
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="listener" criteria="*"/>
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
 	
 	<bean id="listener" class="org.springframework.webflow.config.EnableScopesBeanDefinitionParserTests$ConfigurationListener" />
 	
-	<web:flow-registry id="flowRegistry">
-		<web:flow-location path="org/springframework/webflow/config/enable-flow-scopes-flowdef.xml" />
-	</web:flow-registry>
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location path="org/springframework/webflow/config/enable-flow-scopes-flowdef.xml" />
+	</webflow:flow-registry>
 
 	<bean id="user" class="org.springframework.webflow.config.EnableScopesUser" scope="flow">
 		<aop:scoped-proxy/>

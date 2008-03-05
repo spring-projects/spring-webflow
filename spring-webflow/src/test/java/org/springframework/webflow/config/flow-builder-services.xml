@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 	
-	<web:flow-builder-services id="flowBuilderServicesDefault"/>
+	<webflow:flow-builder-services id="flowBuilderServicesDefault"/>
 	
-	<web:flow-builder-services id="flowBuilderServicesCustom" 
+	<webflow:flow-builder-services id="flowBuilderServicesCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
 		conversion-service="customConversionService"/>

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<web:flow-registry id="flowRegistry">
-		<web:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
-			<web:flow-definition-attributes>
-				<web:attribute name="foo" value="bar" />
-				<web:attribute name="bar" value="2" type="integer" />
-			</web:flow-definition-attributes>
-		</web:flow-location>
-		<web:flow-location path="/some/path/that/is/bogus.xml" />
-		<web:flow-builder class="org.springframework.webflow.config.FooFlowBuilder" />
-		<web:flow-builder id="foo2" class="org.springframework.webflow.config.FooFlowBuilder" />
-		<web:flow-builder id="foo3" class="org.springframework.webflow.config.FooFlowBuilder">
-			<web:flow-definition-attributes>
-				<web:attribute name="foo" value="bar" />
-				<web:attribute name="bar" value="2" type="integer" />
-			</web:flow-definition-attributes>
-		</web:flow-builder>
-	</web:flow-registry>
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
+			<webflow:flow-definition-attributes>
+				<webflow:attribute name="foo" value="bar" />
+				<webflow:attribute name="bar" value="2" type="integer" />
+			</webflow:flow-definition-attributes>
+		</webflow:flow-location>
+		<webflow:flow-location path="/some/path/that/is/bogus.xml" />
+		<webflow:flow-builder class="org.springframework.webflow.config.FooFlowBuilder" />
+		<webflow:flow-builder id="foo2" class="org.springframework.webflow.config.FooFlowBuilder" />
+		<webflow:flow-builder id="foo3" class="org.springframework.webflow.config.FooFlowBuilder">
+			<webflow:flow-definition-attributes>
+				<webflow:attribute name="foo" value="bar" />
+				<webflow:attribute name="bar" value="2" type="integer" />
+			</webflow:flow-definition-attributes>
+		</webflow:flow-builder>
+	</webflow:flow-registry>
 	
 </beans>
