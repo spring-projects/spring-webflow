@@ -23,7 +23,6 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
-import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
@@ -144,34 +143,24 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 */
 	protected final Flow buildFlow() {
 		FlowDefinitionResource resource = getResource(resourceFactory);
-		FlowBuilderContext builderContext = createFlowBuilderContext(resource);
+		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
+		configureFlowBuilderContext(builderContext);
 		FlowBuilder builder = createFlowBuilder(resource.getPath());
 		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 		return assembler.assembleFlow();
 	}
 
 	/**
-	 * Create the flow builder context to build the flow definition at the resource location provided.
-	 * @param resource the flow definition resource
-	 * @return the flow builder context
-	 */
-	protected FlowBuilderContext createFlowBuilderContext(FlowDefinitionResource resource) {
-		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
-		configure(builderContext);
-		return builderContext;
-	}
-
-	/**
 	 * Subclasses may override this hook to customize the builder context for the flow being tested. Useful for
-	 * registering mock subflows or other builder services.
-	 * @param builderContext the mock flow builder context.
+	 * registering mock subflows or other builder services. By default, this method does nothing.
+	 * @param builderContext the mock flow builder context to configure
 	 */
-	protected void configure(MockFlowBuilderContext builderContext) {
+	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 
 	}
 
 	/**
-	 * Get the flow definition to be tested.
+	 * Get the resource defining the flow to be tested.
 	 * @param resourceFactory a helper for constructing the resource to be tested
 	 * @return the flow definition resource
 	 */

@@ -49,7 +49,7 @@ public class MockFlowBuilderContext extends FlowBuilderContextImpl {
 	 * Creates a new mock flow service locator.
 	 */
 	public MockFlowBuilderContext(String flowId, AttributeMap attributes) {
-		super(flowId, attributes, new FlowDefinitionRegistryImpl(), FlowBuilderSystemDefaults.get());
+		super(flowId, attributes, new FlowDefinitionRegistryImpl(), TestFlowBuilderServicesFactory.getServices());
 	}
 
 	/**

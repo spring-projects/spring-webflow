@@ -28,24 +28,20 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
  * <pre>
  * public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
  * 
- * 	protected FlowDefinitionResource getFlowDefinitionResource() {
- * 		return createFlowDefinitionResource(&quot;src/main/webapp/WEB-INF/flows/search-flow.xml&quot;);
+ * 	protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
+ * 		return resourceFactory.createClassPathResource(&quot;search-flow.xml&quot;, getClass());
  * 	}
  * 
  * 	public void testStartFlow() {
- * 		startFlow();
- * 		assertCurrentStateEquals(&quot;displaySearchCriteria&quot;);
+ * 		ExternalContext context = new MockExternalContext();
+ * 		startFlow(context);
+ * 		assertCurrentStateEquals(&quot;enterSearchCriteria&quot;);
  * 	}
  * 
- * 	public void testDisplayCriteriaSubmitSuccess() {
- * 		startFlow();
- * 		MockParameterMap parameters = new MockParameterMap();
- * 		parameters.put(&quot;firstName&quot;, &quot;Keith&quot;);
- * 		parameters.put(&quot;lastName&quot;, &quot;Donald&quot;);
- * 		ViewSelection view = signalEvent(&quot;search&quot;, parameters);
- * 		assertCurrentStateEquals(&quot;displaySearchResults&quot;);
- * 		assertModelAttributeCollectionSize(1, &quot;results&quot;, view);
+ * 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
+ * 		builderContext.registerBean(&quot;searchService&quot;, new TestSearchService());
  * 	}
+ * 
  * }
  * </pre>
  * 
@@ -80,8 +76,8 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 
 	/**
 	 * Template method subclasses may override to register mock implementations of services used locally by the flow
-	 * being tested.
-	 * @param flowBeanFactory the local flow service registry; register mock services with it using
+	 * being tested. By default, this method does nothing.
+	 * @param flowBeanFactory the local flow bean factory, you may register mock services with it using
 	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
 	 */
 	protected void registerMockFlowBeans(ConfigurableBeanFactory flowBeanFactory) {

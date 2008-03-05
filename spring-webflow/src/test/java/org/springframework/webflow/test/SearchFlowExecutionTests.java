@@ -67,7 +67,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		assertCurrentStateEquals("displayResults");
 	}
 
-	protected void configure(MockFlowBuilderContext builderContext) {
+	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 		builderContext.getFlowBuilderServices().setExpressionParser(new WebFlowELExpressionParser());
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper(new AttributeMapper() {

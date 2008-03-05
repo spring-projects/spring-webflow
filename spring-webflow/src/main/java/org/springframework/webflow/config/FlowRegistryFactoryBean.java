@@ -3,15 +3,10 @@ package org.springframework.webflow.config;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -37,7 +32,7 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
  * @author Keith Donald
  * @author Jeremy Grelle
  */
-class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanFactoryAware, InitializingBean {
+class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 
 	/**
 	 * The definition registry produced by this factory bean.
@@ -66,16 +61,6 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 	 */
 	private FlowDefinitionResourceFactory flowResourceFactory;
 
-	/**
-	 * The container's resource loader.
-	 */
-	private ResourceLoader resourceLoader;
-
-	/**
-	 * The containing bean factory this factory bean was deployed in.
-	 */
-	private BeanFactory beanFactory;
-
 	public void setFlowLocations(FlowLocation[] flowLocations) {
 		this.flowLocations = flowLocations;
 	}
@@ -88,16 +73,8 @@ class FlowRegistryFactoryBean implements FactoryBean, ResourceLoaderAware, BeanF
 		this.flowBuilderServices = flowBuilderServices;
 	}
 
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
-
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = beanFactory;
-	}
-
 	public void afterPropertiesSet() throws Exception {
-		flowResourceFactory = new FlowDefinitionResourceFactory(resourceLoader);
+		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getResourceLoader());
 		flowRegistry = new FlowDefinitionRegistryImpl();
 		registerFlowLocations();
 		registerFlowBuilders();

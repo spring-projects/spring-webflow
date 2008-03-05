@@ -3,6 +3,7 @@ package org.springframework.webflow.engine.builder.support;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ResourceLoaderAware;
@@ -17,12 +18,18 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Action;
 
 /**
- * A simple holder for services needed by a flow builder. These services are typically exposed via a Flow Builder's
+ * A simple holder for configuring the services used by flow builders. These services are exposed to a builder in a
  * {@link FlowBuilderContext}.
+ * 
+ * Note this class does not attempt to default any service implementations other than the {@link FlowArtifactFactory}
+ * and {@link BeanInvokingActionFactory}, which are more like builder helper objects than services. It is expected
+ * clients inject non-null references to concrete service implementations appropriate for their environment.
+ * 
+ * @see FlowBuilderContextImpl
  * 
  * @author Keith Donald
  */
-public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAware {
+public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAware, InitializingBean {
 
 	/**
 	 * The factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and
@@ -46,6 +53,7 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	 * The conversion service for converting from one object type to another.
 	 */
 	private ConversionService conversionService;
+
 	/**
 	 * The parser for parsing expression strings into expression objects. The default is Web Flow's default expression
 	 * parser implementation.
@@ -67,7 +75,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setFlowArtifactFactory(FlowArtifactFactory flowArtifactFactory) {
-		Assert.notNull(flowArtifactFactory, "The flow artifact factory is required");
 		this.flowArtifactFactory = flowArtifactFactory;
 	}
 
@@ -76,7 +83,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setBeanInvokingActionFactory(BeanInvokingActionFactory beanInvokingActionFactory) {
-		Assert.notNull(beanInvokingActionFactory, "The bean invoking action factory is required");
 		this.beanInvokingActionFactory = beanInvokingActionFactory;
 	}
 
@@ -85,7 +91,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setViewFactoryCreator(ViewFactoryCreator viewFactoryCreator) {
-		Assert.notNull("The view factory creator cannot be null");
 		this.viewFactoryCreator = viewFactoryCreator;
 	}
 
@@ -94,7 +99,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setConversionService(ConversionService conversionService) {
-		Assert.notNull(conversionService, "The type conversion service cannot be null");
 		this.conversionService = conversionService;
 	}
 
@@ -103,7 +107,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setExpressionParser(ExpressionParser expressionParser) {
-		Assert.notNull(expressionParser, "The expression parser cannot be null");
 		this.expressionParser = expressionParser;
 	}
 
@@ -112,7 +115,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setResourceLoader(ResourceLoader resourceLoader) {
-		Assert.notNull("The resource loader cannot be null");
 		this.resourceLoader = resourceLoader;
 	}
 
@@ -121,7 +123,19 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		Assert.notNull("The bean factory cannot be null");
 		this.beanFactory = beanFactory;
 	}
+
+	// implementing InitializingBean
+
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(flowArtifactFactory, "The flow artifact factory is required");
+		Assert.notNull(beanInvokingActionFactory, "The bean invoking action factory is required");
+		Assert.notNull(viewFactoryCreator, "The view factory creator is required");
+		Assert.notNull(conversionService, "The type conversion service is required");
+		Assert.notNull(expressionParser, "The expression parser is required");
+		Assert.notNull(resourceLoader, "The resource loader is required");
+		Assert.notNull(beanFactory, "The bean factory is required");
+	}
+
 }

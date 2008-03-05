@@ -20,9 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
+import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
@@ -34,7 +33,7 @@ import org.w3c.dom.Element;
  * 
  * @author Keith Donald
  */
-class FlowExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
+class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	// elements and attributes
 
@@ -78,15 +77,15 @@ class FlowExecutorBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
 	private static final String MAX_CONVERSATIONS_PROPERTY = "maxConversations";
 
-	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder
-				.rootBeanDefinition(FlowExecutorFactoryBean.class);
-		definitionBuilder.setSource(parserContext.extractSource(element));
+	protected Class getBeanClass(Element element) {
+		return FlowExecutorFactoryBean.class;
+	}
+
+	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
 		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistryRef(element, parserContext));
 		definitionBuilder.addPropertyValue(EXECUTION_ATTRIBUTES_PROPERTY, parseAttributes(element));
 		addExecutionListenerLoader(element, parserContext, definitionBuilder);
 		configureRepository(element, definitionBuilder, parserContext);
-		return definitionBuilder.getBeanDefinition();
 	}
 
 	/**

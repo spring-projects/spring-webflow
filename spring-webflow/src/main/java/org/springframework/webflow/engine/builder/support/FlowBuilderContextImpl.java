@@ -5,6 +5,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.Assert;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
@@ -26,7 +27,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	private FlowBuilderServices flowBuilderServices;
 
-	private GenericConversionService flowConversionService;
+	private ConversionService conversionService;
 
 	/**
 	 * Creates a new flow builder context.
@@ -37,14 +38,14 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 */
 	public FlowBuilderContextImpl(String flowId, AttributeMap flowAttributes,
 			FlowDefinitionLocator flowDefinitionLocator, FlowBuilderServices flowBuilderServices) {
+		Assert.hasText(flowId, "The flow id is required");
+		Assert.notNull(flowDefinitionLocator, "The flow definition locator is required");
+		Assert.notNull(flowBuilderServices, "The flow builder services holder is required");
 		this.flowId = flowId;
 		this.flowAttributes = flowAttributes;
 		this.flowDefinitionLocator = flowDefinitionLocator;
 		this.flowBuilderServices = flowBuilderServices;
-		flowConversionService = new GenericConversionService();
-		flowConversionService.addConverter(new TextToTransitionCriteria(this));
-		flowConversionService.addConverter(new TextToTargetStateResolver(this));
-		flowConversionService.setParent(this.flowBuilderServices.getConversionService());
+		this.conversionService = createConversionService();
 	}
 
 	public FlowBuilderServices getFlowBuilderServices() {
@@ -78,7 +79,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	}
 
 	public ConversionService getConversionService() {
-		return flowConversionService;
+		return conversionService;
 	}
 
 	public ResourceLoader getResourceLoader() {
@@ -91,6 +92,20 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	public FlowDefinitionLocator getFlowDefinitionLocator() {
 		return flowDefinitionLocator;
+	}
+
+	/**
+	 * Factory method that creates the conversion service the flow builder will use. Subclasses may override. The
+	 * default implementation registers Web Flow-specific converters thought to be useful for most builder
+	 * implementations, setting the externally-provided builder services conversion service as its parent.
+	 * @return the flow builder conversion service
+	 */
+	protected ConversionService createConversionService() {
+		GenericConversionService service = new GenericConversionService();
+		service.addConverter(new TextToTransitionCriteria(this));
+		service.addConverter(new TextToTargetStateResolver(this));
+		service.setParent(flowBuilderServices.getConversionService());
+		return service;
 	}
 
 }

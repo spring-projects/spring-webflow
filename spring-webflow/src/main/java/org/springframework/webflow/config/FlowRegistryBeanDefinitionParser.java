@@ -75,7 +75,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY, flowBuilderServices);
 		} else {
 			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY,
-					FlowBuilderServicesBeanDefinitionParser.registerDefaultBeanDefinition(parserContext).getBeanName());
+					FlowBuilderServicesBeanDefinitionParser.registerDefaultFlowBuilderServicesBeanDefinition(
+							parserContext).getBeanName());
 		}
 		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, parseLocations(element));
 		definitionBuilder.addPropertyValue(FLOW_BUILDERS_PROPERTY, parseFlowBuilders(element));

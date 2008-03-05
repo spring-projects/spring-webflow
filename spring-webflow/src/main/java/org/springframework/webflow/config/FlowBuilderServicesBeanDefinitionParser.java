@@ -18,39 +18,24 @@ import org.w3c.dom.Element;
  * 
  * @author Jeremy Grelle
  */
-public class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-
-	private static final String EXPRESSION_PARSER_ATTRIBUTE = "expression-parser";
-
-	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
-
-	private static final String VIEW_FACTORY_CREATOR_ATTRIBUTE = "view-factory-creator";
-
-	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
+class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 	private static final String CONVERSION_SERVICE_ATTRIBUTE = "conversion-service";
 
+	private static final String EXPRESSION_PARSER_ATTRIBUTE = "expression-parser";
+
+	private static final String VIEW_FACTORY_CREATOR_ATTRIBUTE = "view-factory-creator";
+
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
 
-	public static BeanDefinitionHolder registerDefaultBeanDefinition(ParserContext context) {
-		FlowBuilderServicesBeanDefinitionParser parser = new FlowBuilderServicesBeanDefinitionParser();
-		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		defaultBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, parser.createBeanDefinitionForClass(
-				DefaultConversionService.class, context).getBeanName());
-		defaultBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, parser.createBeanDefinitionForClass(
-				MvcViewFactoryCreator.class, context).getBeanName());
-		defaultBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
-				.getExpressionParser());
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(defaultBuilder.getBeanDefinition(),
-				BeanDefinitionReaderUtils.generateBeanName(defaultBuilder.getBeanDefinition(), context.getRegistry()));
-		parser.registerBeanDefinition(holder, context.getRegistry());
-		return holder;
-	}
+	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
+
+	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
 
 	protected void doParse(Element element, ParserContext context, BeanDefinitionBuilder builder) {
+		parseConversionService(element, builder, context);
 		parseExpressionParser(element, builder, context);
 		parseViewFactoryCreator(element, builder, context);
-		parseConversionService(element, builder, context);
 	}
 
 	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
@@ -58,18 +43,7 @@ public class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanD
 		if (StringUtils.hasText(conversionService)) {
 			definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
 		} else {
-			definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, createBeanDefinitionForClass(
-					DefaultConversionService.class, context).getBeanName());
-		}
-	}
-
-	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String viewFactoryCreator = element.getAttribute(VIEW_FACTORY_CREATOR_ATTRIBUTE);
-		if (StringUtils.hasText(viewFactoryCreator)) {
-			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
-		} else {
-			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, createBeanDefinitionForClass(
-					MvcViewFactoryCreator.class, context).getBeanName());
+			definitionBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, new DefaultConversionService());
 		}
 	}
 
@@ -80,6 +54,16 @@ public class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanD
 		} else {
 			definitionBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
 					.getExpressionParser());
+		}
+	}
+
+	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
+		String viewFactoryCreator = element.getAttribute(VIEW_FACTORY_CREATOR_ATTRIBUTE);
+		if (StringUtils.hasText(viewFactoryCreator)) {
+			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
+		} else {
+			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, createBeanDefinitionForClass(
+					MvcViewFactoryCreator.class, context).getBeanName());
 		}
 	}
 
@@ -95,4 +79,17 @@ public class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanD
 		return FlowBuilderServices.class;
 	}
 
+	public static BeanDefinitionHolder registerDefaultFlowBuilderServicesBeanDefinition(ParserContext context) {
+		FlowBuilderServicesBeanDefinitionParser parser = new FlowBuilderServicesBeanDefinitionParser();
+		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
+		defaultBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, new DefaultConversionService());
+		defaultBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
+				.getExpressionParser());
+		defaultBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, parser.createBeanDefinitionForClass(
+				MvcViewFactoryCreator.class, context).getBeanName());
+		BeanDefinitionHolder holder = new BeanDefinitionHolder(defaultBuilder.getBeanDefinition(),
+				BeanDefinitionReaderUtils.generateBeanName(defaultBuilder.getBeanDefinition(), context.getRegistry()));
+		parser.registerBeanDefinition(holder, context.getRegistry());
+		return holder;
+	}
 }
