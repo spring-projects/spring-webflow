@@ -4,8 +4,9 @@ import javax.el.CompositeELResolver;
 import javax.faces.el.VariableResolver;
 
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
-import org.springframework.webflow.core.expression.el.RequestContextELResolver;
-import org.springframework.webflow.core.expression.el.ScopeSearchingELResolver;
+import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
+import org.springframework.webflow.expression.el.RequestContextELResolver;
+import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
 
 /**
  * Assembles {@link RequestContextELResolver} and {@link ScopeSearchingELResolver} into a composite that may be used

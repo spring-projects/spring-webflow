@@ -13,10 +13,12 @@ import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.core.expression.el.RequestContextELResolver;
-import org.springframework.webflow.core.expression.el.ScopeSearchingELResolver;
-import org.springframework.webflow.core.expression.el.SpringBeanWebFlowELResolver;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.expression.el.ActionMethodELResolver;
+import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
+import org.springframework.webflow.expression.el.RequestContextELResolver;
+import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
+import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
 
 /**
  * A JSF-specific ExpressionParser that allows beans managed by either JSF, Spring, or Web Flow referenced in
@@ -47,7 +49,9 @@ public class LegacyJSFELExpressionParser extends ELExpressionParser {
 		public ELContext getELContext(Object target) {
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver());
+			customResolvers.add(new ImplicitFlowVariableELResolver());
 			customResolvers.add(new SpringBeanWebFlowELResolver());
+			customResolvers.add(new ActionMethodELResolver());
 			customResolvers.add(new ScopeSearchingELResolver());
 			customResolvers.add(new LegacyJSFBeanResolver());
 			ELResolver resolver = new DefaultELResolver(target, customResolvers);

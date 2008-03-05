@@ -27,9 +27,9 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
-import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfFinalResponseActionTests extends TestCase {

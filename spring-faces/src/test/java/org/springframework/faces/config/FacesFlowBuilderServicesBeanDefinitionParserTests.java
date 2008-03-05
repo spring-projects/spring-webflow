@@ -7,8 +7,8 @@ import org.springframework.faces.expression.LegacyJSFELExpressionParser;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
-import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 
 public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 

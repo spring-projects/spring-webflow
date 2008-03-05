@@ -23,13 +23,13 @@ import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
-import org.springframework.webflow.core.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfViewFactoryTests extends TestCase {
