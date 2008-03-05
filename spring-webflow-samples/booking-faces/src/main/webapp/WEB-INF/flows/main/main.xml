@@ -14,7 +14,7 @@
 			<evaluate expression="#{bookingService.cancelBooking(bookings.selectedRow)}" />
 		</transition>
 	</view-state>
-	
+	 
 	<view-state id="reviewHotels">
 		<render-actions>
 			<evaluate expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
@@ -40,9 +40,7 @@
 	</view-state>
 
 	<subflow-state id="bookHotel" subflow="booking">
-		<input-mapper>
-			<mapping source="#{hotels.selectedRow.id}" target="#{id}" />
-		</input-mapper>
+		<input name="#{id}" value="#{hotels.selectedRow.id}"/>
 		<transition on="bookingConfirmed" to="finish" />
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>

@@ -5,9 +5,7 @@
 
 	<persistence-context/>
 	
-	<input-mapper>
-		<mapping source="#{id}" target="#{flowScope.id}" />
-	</input-mapper>
+	<input name="#{id}" value="#{flowScope.id}"/>
 
 	<start-actions>
 		<evaluate expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />
