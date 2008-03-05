@@ -12,7 +12,7 @@ import javax.el.PropertyNotWritableException;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-public class WebFlowImplicitObjectELResolver extends ELResolver {
+public class ImplicitFlowVariableELResolver extends ELResolver {
 
 	public Class getCommonPropertyType(ELContext context, Object base) {
 		return Object.class;
@@ -23,43 +23,63 @@ public class WebFlowImplicitObjectELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext context, Object base, Object property) {
-		if (base == null && RequestContextHolder.getRequestContext() == null && ImplicitVariable.matches(property)) {
-			return ImplicitVariable.value(context, RequestContextHolder.getRequestContext(), property).getClass();
+		if (base != null) {
+			return null;
 		}
-		return null;
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		if (ImplicitVariables.matches(property)) {
+			context.setPropertyResolved(true);
+			return ImplicitVariables.value(context, requestContext, property).getClass();
+		} else {
+			return null;
+		}
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {
-		if (base == null && RequestContextHolder.getRequestContext() == null && ImplicitVariable.matches(property)) {
-			return ImplicitVariable.value(context, RequestContextHolder.getRequestContext(), property);
+		if (base != null) {
+			return null;
 		}
-		return null;
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		if (ImplicitVariables.matches(property)) {
+			context.setPropertyResolved(true);
+			return ImplicitVariables.value(context, requestContext, property);
+		} else {
+			return null;
+		}
 	}
 
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
-		if (base == null && RequestContextHolder.getRequestContext() == null && ImplicitVariable.matches(property)) {
+		if (base != null) {
+			return false;
+		}
+		if (ImplicitVariables.matches(property)) {
 			context.setPropertyResolved(true);
 			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	public void setValue(ELContext context, Object base, Object property, Object value) {
-		if (base == null && RequestContextHolder.getRequestContext() == null && ImplicitVariable.matches(property)) {
+		if (base != null) {
+			return;
+		}
+		if (ImplicitVariables.matches(property)) {
 			context.setPropertyResolved(true);
 			throw new PropertyNotWritableException("The implicit flow variable " + property + " is not writable.");
 		}
 	}
 
-	private static final class ImplicitVariable {
+	private static final class ImplicitVariables {
 		private static final Set vars = new HashSet();
 
 		static {
+			vars.add("requestParameters");
 			vars.add("requestScope");
 			vars.add("flashScope");
 			vars.add("flowScope");
 			vars.add("conversationScope");
-			vars.add("requestParameters");
+			vars.add("messageContext");
 		}
 
 		private static final BeanELResolver internalResolver = new BeanELResolver();
@@ -70,6 +90,6 @@ public class WebFlowImplicitObjectELResolver extends ELResolver {
 
 		public static Object value(ELContext elContext, RequestContext requestContext, Object property) {
 			return internalResolver.getValue(elContext, requestContext, property);
-		};
+		}
 	}
 }

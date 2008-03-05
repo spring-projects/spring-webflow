@@ -21,7 +21,7 @@
 	</view-state>
 
 	<subflow-state id="browseDetails" subflow="detail-flow">
-		<input name="id" value="#{requestParameters.id}" type="long" required="true"/>
+		<input name="#{id}" value="#{requestParameters.id}" type="long" required="true"/>
 		<transition on="finish" to="displayResults"/>
 	</subflow-state>
 

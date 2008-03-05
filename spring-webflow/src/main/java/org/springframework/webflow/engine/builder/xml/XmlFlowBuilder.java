@@ -192,7 +192,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	public void buildInputMapper() throws FlowBuilderException {
-		AttributeMapper inputMapper = parseInputMapper(getDocumentElement(), AttributeMap.class, RequestContext.class);
+		AttributeMapper inputMapper = parseFlowInputMapper(getDocumentElement());
 		if (inputMapper != null) {
 			getFlow().setInputMapper(inputMapper);
 		}
@@ -215,8 +215,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	public void buildOutputMapper() throws FlowBuilderException {
-		AttributeMapper outputMapper = parseOutputMapper(getDocumentElement(), RequestContext.class,
-				MutableAttributeMap.class);
+		AttributeMapper outputMapper = parseFlowOutputMapper(getDocumentElement());
 		if (outputMapper != null) {
 			getFlow().setOutputMapper(outputMapper);
 		}
@@ -373,32 +372,45 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 	}
 
-	private AttributeMapper parseInputMapper(Element element, Class sourceType, Class targetType) {
+	private AttributeMapper parseFlowInputMapper(Element element) {
 		Collection inputs = DomUtils.getChildElementsByTagName(element, "input");
 		if (inputs.size() == 0) {
 			return null;
 		}
 		DefaultAttributeMapper inputMapper = new DefaultAttributeMapper();
 		for (Iterator it = inputs.iterator(); it.hasNext();) {
-			parseInputMapping((Element) it.next(), inputMapper, sourceType, targetType);
+			inputMapper.addMapping(parseFlowInputMapping((Element) it.next()));
 		}
 		return inputMapper;
 	}
 
-	private AttributeMapper parseOutputMapper(Element element, Class sourceType, Class targetType) {
+	private Mapping parseFlowInputMapping(Element element) {
+		ExpressionParser parser = getLocalContext().getExpressionParser();
+		String name = element.getAttribute("name");
+		String value = null;
+		if (element.hasAttribute("value")) {
+			value = element.getAttribute("value");
+		} else {
+			value = element.getAttribute(name);
+		}
+		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
+	}
+
+	private AttributeMapper parseFlowOutputMapper(Element element) {
 		Collection inputs = DomUtils.getChildElementsByTagName(element, "output");
 		if (inputs.size() == 0) {
 			return null;
 		}
 		DefaultAttributeMapper outputMapper = new DefaultAttributeMapper();
 		for (Iterator it = inputs.iterator(); it.hasNext();) {
-			parseOutputMapping((Element) it.next(), outputMapper, sourceType, targetType);
+			outputMapper.addMapping(parseFlowOutputMapping((Element) it.next()));
 		}
 		return outputMapper;
 	}
 
-	private Mapping parseInputMapping(Element element, DefaultAttributeMapper mapper, Class sourceClass,
-			Class targetClass) {
+	private Mapping parseFlowOutputMapping(Element element) {
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		String name = element.getAttribute("name");
 		String value = null;
@@ -407,23 +419,8 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		} else {
 			value = element.getAttribute(name);
 		}
-		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(sourceClass));
-		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(targetClass));
-		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
-	}
-
-	private Mapping parseOutputMapping(Element element, DefaultAttributeMapper mapper, Class sourceClass,
-			Class targetClass) {
-		ExpressionParser parser = getLocalContext().getExpressionParser();
-		String name = element.getAttribute("name");
-		String value = null;
-		if (element.hasAttribute("value")) {
-			value = element.getAttribute("value");
-		} else {
-			value = element.getAttribute(name);
-		}
-		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(sourceClass));
-		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(targetClass));
+		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(RequestContext.class));
+		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(MutableAttributeMap.class));
 		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
 	}
 
@@ -557,8 +554,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		}
 		parseAndSetSecuredAttribute(element, attributes);
 		getFlowArtifactFactory().createEndState(parseId(element), flow, parseEntryActions(element),
-				new ViewFactoryActionAdapter(parseViewFactory(element, true)),
-				parseOutputMapper(element, RequestContext.class, MutableAttributeMap.class),
+				new ViewFactoryActionAdapter(parseViewFactory(element, true)), parseFlowOutputMapper(element),
 				parseExceptionHandlers(element), attributes);
 	}
 
@@ -806,10 +802,62 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			return (SubflowAttributeMapper) getLocalContext().getBeanFactory().getBean(attributeMapperBeanId,
 					SubflowAttributeMapper.class);
 		} else {
-			AttributeMapper inputMapper = parseInputMapper(element, RequestContext.class, MutableAttributeMap.class);
-			AttributeMapper outputMapper = parseOutputMapper(element, AttributeMap.class, RequestContext.class);
+			AttributeMapper inputMapper = parseSubflowInputMapper(element);
+			AttributeMapper outputMapper = parseSubflowOutputMapper(element);
 			return new GenericSubflowAttributeMapper(inputMapper, outputMapper);
 		}
+	}
+
+	private AttributeMapper parseSubflowInputMapper(Element element) {
+		Collection inputs = DomUtils.getChildElementsByTagName(element, "input");
+		if (inputs.size() == 0) {
+			return null;
+		}
+		DefaultAttributeMapper inputMapper = new DefaultAttributeMapper();
+		for (Iterator it = inputs.iterator(); it.hasNext();) {
+			inputMapper.addMapping(parseSubflowInputMapping((Element) it.next()));
+		}
+		return inputMapper;
+	}
+
+	private Mapping parseSubflowInputMapping(Element element) {
+		ExpressionParser parser = getLocalContext().getExpressionParser();
+		String name = element.getAttribute("name");
+		String value = null;
+		if (element.hasAttribute("value")) {
+			value = element.getAttribute("value");
+		} else {
+			value = element.getAttribute(name);
+		}
+		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
+		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
+	}
+
+	private AttributeMapper parseSubflowOutputMapper(Element element) {
+		Collection inputs = DomUtils.getChildElementsByTagName(element, "output");
+		if (inputs.size() == 0) {
+			return null;
+		}
+		DefaultAttributeMapper outputMapper = new DefaultAttributeMapper();
+		for (Iterator it = inputs.iterator(); it.hasNext();) {
+			outputMapper.addMapping(parseSubflowOutputMapping((Element) it.next()));
+		}
+		return outputMapper;
+	}
+
+	private Mapping parseSubflowOutputMapping(Element element) {
+		ExpressionParser parser = getLocalContext().getExpressionParser();
+		String name = element.getAttribute("name");
+		String value = null;
+		if (element.hasAttribute("value")) {
+			value = element.getAttribute("value");
+		} else {
+			value = element.getAttribute(name);
+		}
+		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
 	}
 
 	private FlowExecutionExceptionHandler[] parseExceptionHandlers(Element element) {
