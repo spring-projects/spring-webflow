@@ -52,6 +52,19 @@
 		<url-pattern>/spring/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Just here so the JSF implementation can initialize, *not* used at runtime -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<!-- Just here so the JSF implementation can initialize -->
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.faces</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
