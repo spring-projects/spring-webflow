@@ -19,6 +19,9 @@
 			<!-- pull from the main release repository third -->
 			<ibiblio name="maven-central" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2"/>
 
+			<!-- if still not resolved, try release -->
+			<ibiblio name="maven-spring-release" checkconsistency="false" m2compatible="true" root="http://s3.amazonaws.com/maven.springframework.org/release/"/>
+			
 			<!-- if still not resolved, try milestones -->
 			<ibiblio name="maven-spring-milestone" checkconsistency="false" m2compatible="true" root="http://s3.amazonaws.com/maven.springframework.org/milestone/"/>
 
@@ -96,5 +99,7 @@
 		<module organisation="org.springframework" name="spring-ldap" resolver="spring-projects"/>
 		<module organisation="org.springframework" name="various" resolver="spring-projects"/>
 		<module organisation="org.springframework.security" name="spring-security-core" resolver="spring-projects"/>
+		<module organisation="org.springframework.security" name="spring-security-acl" resolver="spring-projects"/>
+		<module organisation="org.springframework.security" name="spring-security-taglibs" resolver="spring-projects"/>
 	</modules>
 </ivysettings>
