@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
@@ -23,6 +24,7 @@ import org.springframework.webflow.execution.RequestContext;
  * FlowDefinition.
  * 
  * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 public class WebFlowELExpressionParser extends ELExpressionParser {
 
@@ -59,6 +61,9 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 		public ELContext getELContext(Object target) {
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver());
+			if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
+				customResolvers.add(new SpringSecurityELResolver());
+			}
 			customResolvers.add(new ImplicitFlowVariableELResolver());
 			customResolvers.add(new SpringBeanWebFlowELResolver());
 			customResolvers.add(new ActionMethodELResolver());

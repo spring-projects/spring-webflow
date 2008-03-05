@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -37,10 +38,13 @@ import org.springframework.webflow.execution.ViewFactory;
  * infrastructure is configured, JSP resources relative to the flow definition being built.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
 
 	private static final boolean jstlPresent = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
+	private static final boolean springSecurityPresent = ClassUtils
+			.isPresent("org.springframework.security.context.SecurityContextHolder");
 
 	private List viewResolvers;
 
@@ -183,6 +187,9 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 					.union(context.getRequestScope()).asMap());
 			model.put("flowExecutionRequestContext", context);
 			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
+			if (springSecurityPresent && !model.containsKey("currentUser")) {
+				model.put("currentUser", SecurityContextHolder.getContext().getAuthentication());
+			}
 			try {
 				view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
 						(HttpServletResponse) context.getExternalContext().getNativeResponse());
