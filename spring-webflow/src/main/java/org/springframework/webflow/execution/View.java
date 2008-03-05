@@ -27,7 +27,7 @@ public interface View {
 	/**
 	 * Well-known attribute name for storing a render fragments value.
 	 */
-	public static final String RENDER_FRAGMENTS_ATTRIBUTE = "webflow-render-fragments";
+	public static final String RENDER_FRAGMENTS_ATTRIBUTE = "webflowRenderFragments";
 
 	/**
 	 * Render this view's content.
