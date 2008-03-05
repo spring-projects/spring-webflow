@@ -32,6 +32,10 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 
 	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
 
+	protected Class getBeanClass(Element element) {
+		return FlowBuilderServices.class;
+	}
+
 	protected void doParse(Element element, ParserContext context, BeanDefinitionBuilder builder) {
 		parseConversionService(element, builder, context);
 		parseExpressionParser(element, builder, context);
@@ -73,10 +77,6 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 				.generateBeanName(builder.getBeanDefinition(), context.getRegistry()));
 		registerBeanDefinition(holder, context.getRegistry());
 		return holder;
-	}
-
-	protected Class getBeanClass(Element element) {
-		return FlowBuilderServices.class;
 	}
 
 	public static BeanDefinitionHolder registerDefaultFlowBuilderServicesBeanDefinition(ParserContext context) {
