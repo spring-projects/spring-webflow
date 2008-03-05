@@ -622,7 +622,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 
 	// TODO - make configurable
 	private String createViewId(String viewStateId) {
-		return viewStateId + ".html";
+		return viewStateId + ".xhtml";
 	}
 
 	private Action[] parseRenderActions(Element element) {
