@@ -8,12 +8,20 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class ActionResultExposerTests extends TestCase {
 
-	public void testEvaluateExpressionNullResult() throws Exception {
+	public void testEvaluateExpressionResult() throws Exception {
 		StaticExpression resultExpression = new StaticExpression("");
 		ActionResultExposer exposer = new ActionResultExposer(resultExpression, null, null);
 		MockRequestContext context = new MockRequestContext();
 		exposer.exposeResult("foo", context);
 		assertEquals("foo", resultExpression.getValue(null));
+	}
+
+	public void testEvaluateExpressionNullResult() throws Exception {
+		StaticExpression resultExpression = new StaticExpression("");
+		ActionResultExposer exposer = new ActionResultExposer(resultExpression, null, null);
+		MockRequestContext context = new MockRequestContext();
+		exposer.exposeResult(null, context);
+		assertEquals(null, resultExpression.getValue(null));
 	}
 
 	public void testEvaluateExpressionResultExposerWithTypeConversion() throws Exception {

@@ -57,12 +57,12 @@ public class ActionResultExposer implements Serializable {
 	public ActionResultExposer(Expression resultExpression, Class expectedResultType,
 			ConversionService conversionService) {
 		Assert.notNull(resultExpression, "The result expression is required");
+		if (expectedResultType != null) {
+			Assert.notNull(conversionService, "A conversionService is required with an expectedResultType");
+		}
 		this.resultExpression = resultExpression;
 		this.expectedResultType = expectedResultType;
-		if (this.expectedResultType != null) {
-			Assert.notNull(conversionService, "A conversionService is required with an expectedResultType");
-			this.conversionService = conversionService;
-		}
+		this.conversionService = conversionService;
 	}
 
 	/**
@@ -93,10 +93,11 @@ public class ActionResultExposer implements Serializable {
 	 * @param value the raw value to be converted
 	 */
 	private Object applyTypeConversion(Object value) {
-		if (expectedResultType == null) {
+		if (value == null || expectedResultType == null) {
 			return value;
+		} else {
+			return conversionService.getConversionExecutor(value.getClass(), expectedResultType).execute(value);
 		}
-		return conversionService.getConversionExecutor(value.getClass(), expectedResultType).execute(value);
 	}
 
 	public String toString() {
