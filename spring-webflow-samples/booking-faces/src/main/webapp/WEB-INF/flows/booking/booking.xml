@@ -7,11 +7,11 @@
 	
 	<input name="#{id}" value="#{flowScope.id}"/>
 
-	<start-actions>
+	<on-start>
 		<evaluate expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />
 		<evaluate expression="#{hotel.createBooking(currentUser)}" result="#{flowScope.booking}" />
 		<evaluate expression="#{entityManager.persist(booking)}" />
-	</start-actions>
+	</on-start>
 	
 	<view-state id="enterBookingDetails">
 		<transition on="proceed" to="reviewBooking">
