@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.support;
 
-import org.springframework.util.Assert;
 import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;
@@ -39,7 +38,7 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 	/**
 	 * The result event id that should map to a <code>true</code> return value.
 	 */
-	private String trueEventId = "success";
+	private String[] trueEventIds = new String[] { "success", "yes", "true" };
 
 	/**
 	 * The action to execute when the criteria is tested, annotated with usage attributes.
@@ -55,21 +54,20 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 	}
 
 	/**
-	 * Returns the action result <code>eventId</code> that should cause this criteria to return true (it will return
+	 * Returns the action result <code>eventIds</code> that should cause this criteria to return true (it will return
 	 * false otherwise). Defaults to "success".
 	 */
-	public String getTrueEventId() {
-		return trueEventId;
+	public String[] getTrueEventIds() {
+		return trueEventIds;
 	}
 
 	/**
-	 * Sets the action result <code>eventId</code> that should cause this precondition to return true (it will return
+	 * Sets the action result <code>eventIds</code> that should cause this precondition to return true (it will return
 	 * false otherwise).
-	 * @param trueEventId the true result event ID
+	 * @param trueEventIds the true result event IDs
 	 */
-	public void setTrueEventId(String trueEventId) {
-		Assert.notNull(trueEventId, "The trueEventId is required");
-		this.trueEventId = trueEventId;
+	public void setTrueEventIds(String[] trueEventIds) {
+		this.trueEventIds = trueEventIds;
 	}
 
 	/**
@@ -82,6 +80,15 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 
 	public boolean test(RequestContext context) {
 		Event result = ActionExecutor.execute(getAction(), context);
-		return result != null && getTrueEventId().equals(result.getId());
+		return result != null && isTrueEvent(result.getId());
+	}
+
+	private boolean isTrueEvent(String eventId) {
+		for (int i = 0; i < trueEventIds.length; i++) {
+			if (trueEventIds[i].equals(eventId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -17,50 +17,41 @@ package org.springframework.webflow.engine.support;
 
 import junit.framework.TestCase;
 
-import org.easymock.EasyMock;
-import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.test.MockAction;
 import org.springframework.webflow.test.MockRequestContext;
 
-/**
- * Unit tests for the ActionTransitionCriteria class.
- * 
- * @author Ulrik Sandberg
- */
 public class ActionTransitionCriteriaTests extends TestCase {
 
-	private Action actionMock;
+	private MockAction action;
 
-	private ActionTransitionCriteria tested;
+	private ActionTransitionCriteria criteria;
 
 	protected void setUp() throws Exception {
-		super.setUp();
-		actionMock = (Action) EasyMock.createMock(Action.class);
-		tested = new ActionTransitionCriteria(actionMock);
+		action = new MockAction();
+		criteria = new ActionTransitionCriteria(action);
 	}
 
-	public void testGetTrueEventId() {
-		String id = tested.getTrueEventId();
-		assertEquals("success", id);
+	public void testExecuteSuccessResult() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		assertTrue(criteria.test(context));
 	}
 
-	public void testSetTrueEventId() {
-		tested.setTrueEventId("something");
-		String id = tested.getTrueEventId();
-		assertEquals("something", id);
+	public void testExecuteTrueResult() throws Exception {
+		action.setResultEventId("true");
+		MockRequestContext context = new MockRequestContext();
+		assertTrue(criteria.test(context));
 	}
 
-	public void testGetAction() {
-		Action action = tested.getAction();
-		assertSame(actionMock, action);
+	public void testExecuteYesResult() throws Exception {
+		action.setResultEventId("yes");
+		MockRequestContext context = new MockRequestContext();
+		assertTrue(criteria.test(context));
 	}
 
-	public void testTest() throws Exception {
-		MockRequestContext mockRequestContext = new MockRequestContext();
-		EasyMock.expect(actionMock.execute(mockRequestContext)).andReturn(new Event(this, "success"));
-		EasyMock.replay(new Object[] { actionMock });
-		boolean result = tested.test(mockRequestContext);
-		EasyMock.verify(new Object[] { actionMock });
-		assertEquals(true, result);
+	public void testExecuteErrorResult() throws Exception {
+		action.setResultEventId("whatever");
+		MockRequestContext context = new MockRequestContext();
+		assertFalse(criteria.test(context));
 	}
+
 }
