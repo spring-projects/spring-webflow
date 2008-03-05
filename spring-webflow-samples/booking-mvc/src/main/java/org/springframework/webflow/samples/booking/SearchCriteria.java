@@ -1,8 +1,7 @@
-package org.springframework.webflow.samples.booking.flow.main;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 
-import org.springframework.webflow.samples.booking.app.BookingService;
 
 /**
  * A backing bean for the main hotel search form. Encapsulates the criteria needed to perform a hotel search.

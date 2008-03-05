@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 

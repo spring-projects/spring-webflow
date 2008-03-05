@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+				/intro=urlFilenameController
+				/login=urlFilenameController
+				/logout-success=urlFilenameController
+			</value>
+		</property>
+		<property name="defaultHandler" ref="flowController" />
+	</bean>
+		
+	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
+		<constructor-arg ref="flowExecutor" />
+	</bean>
+	
+	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<web:flow-execution-listeners>
+			<web:listener ref="jpaFlowExecutionListener" criteria="*" />
+			<web:listener ref="securityFlowExecutionListener" criteria="*" />
+		</web:flow-execution-listeners>
+	</web:flow-executor>
+	
+	<web:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+		<web:flow-location path="WEB-INF/flows/main/main.xml" />
+		<web:flow-location path="WEB-INF/flows/booking/booking.xml" />
+	</web:flow-registry>
+	
+	<web:flow-builder-services id="flowBuilderServices" expression-parser="expressionParser" />
+	
+	<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
+		<constructor-arg>
+			<bean class="org.jboss.el.ExpressionFactoryImpl" />
+		</constructor-arg>
+	</bean>
+	
+	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
+	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
+	</bean>
+	
+	<!-- Installs a listener to apply Spring Security authorities -->
+	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
+
+	<!-- Handles requests to render view templates directly: maps the requested path to a logical view name resolved by the resolver below -->
+	<bean id="urlFilenameController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+
+	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the root webapp directory -->	
+	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- Handels form binding for the hotel search -->
+	<bean id="mainActions" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.SearchCriteria" />
+	</bean>
+	
+	<!-- Handels form binding and validation for the hotel booking -->
+	<bean id="bookingActions" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.Booking" />
+		<property name="propertyEditorRegistrar">
+			<bean class="org.springframework.webflow.samples.booking.PropertyEditors" />
+		</property>
+		<property name="validator">
+			<bean class="org.springframework.webflow.samples.booking.BookingValidator" />
+		</property>
+	</bean>
+	
+	<!-- The central service of this application that can query hotels and bookings, as well as cancel bookings -->
+	<bean id="bookingService" class="org.springframework.webflow.samples.booking.JpaBookingService" />
+
+	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider and a simple in-memory data source populated with test data -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+	</bean>
+
+	<!-- Deploys a in-memory "booking" datasource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:booking" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+
+	<!-- Executes transactions around @Transactional methods -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- Drives transactions using local JPA APIs -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Automatically injects EntityManager references into data access objects that require one -->
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+	<!-- Maps JPA exceptions that occur to Spring's DataAccessException hierarchy -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	
+	<!-- Configure Spring Security -->
+	<security:http auto-config="true">
+		<!-- restrict URLs based on role -->
+		<security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
+		<security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" />
+		<security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
+		
+		<!-- override default login and logout pages -->
+		<security:form-login login-page="/spring/login" login-url="/spring/login-process" default-target-url="/spring/main" authentication-failure-url="/spring/login?login_error=1" />
+		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" />
+	</security:http>
+	
+	<!--
+		Define local authentication provider, a real app would use an external provider (JDBC, LDAP, CAS, etc)
+		
+		usernames/passwords are:
+			rod/koala
+			dianne/emu
+			scott/wombat
+	-->
+	<security:authentication-provider>
+		<security:password-encoder hash="md5" />
+		<security:user-service>
+			<security:user name="rod" password="a564de63c2d0da68cf47586ee05984d7" authorities="ROLE_USER, ROLE_SUPERVISOR" />
+			<security:user name="dianne" password="65d15fe9156f9c4bbffd98085992a44e" authorities="ROLE_USER" />
+			<security:user name="scott" password="2b58af6dddbd072ed27ffc86725d7d3a" authorities="ROLE_USER" />
+		</security:user-service>
+	</security:authentication-provider>
+			
+</beans>

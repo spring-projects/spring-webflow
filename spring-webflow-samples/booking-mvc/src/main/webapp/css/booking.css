@@ -166,3 +166,8 @@
     	float: right;
     	padding-right: 20px;
     }
+    
+    div#header a {
+    	color: inherit;
+    	background-color: inherit;
+    }

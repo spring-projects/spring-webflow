@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -94,6 +94,10 @@ public class Hotel implements Serializable {
 
     public void setPrice(BigDecimal price) {
 	this.price = price;
+    }
+
+    public Booking createBooking(User user) {
+	return new Booking(this, user);
     }
 
     @Override

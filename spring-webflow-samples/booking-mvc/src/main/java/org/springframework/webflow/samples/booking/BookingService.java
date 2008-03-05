@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.util.List;
 
@@ -17,12 +17,10 @@ public interface BookingService {
 
     /**
      * Find hotels available for booking by some criteria.
-     * @param searchString the search query string to filter hotels by name
-     * @param pageSize the page size
-     * @param page the current page
+     * @param searchCriteria the search criteria
      * @return a list of hotels not exceeding the page size
      */
-    public List<Hotel> findHotels(String searchString, int pageSize, int page);
+    public List<Hotel> findHotels(SearchCriteria searchCriteria);
 
     /**
      * Find hotels by their identifier.
@@ -36,4 +34,11 @@ public interface BookingService {
      * @param id the booking id
      */
     public void cancelBooking(Long id);
+
+    /**
+     * Lookup a user based on their username
+     * @param username the user's username
+     * @return the user
+     */
+    public User findUser(String username);
 }

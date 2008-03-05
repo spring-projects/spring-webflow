@@ -1,4 +1,4 @@
-package org.springframework.webflow.samples.booking.app;
+package org.springframework.webflow.samples.booking;
 
 import java.util.List;
 
@@ -27,19 +27,24 @@ public class JpaBookingService implements BookingService {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public List<Booking> findBookings(String username) {
-	return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
-		.setParameter("username", username).getResultList();
+	if (username != null) {
+	    return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
+		    .setParameter("username", username).getResultList();
+	} else {
+	    return null;
+	}
     }
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Hotel> findHotels(String searchString, int pageSize, int page) {
-	String pattern = !StringUtils.hasText(searchString) ? "'%'" : "'%"
-		+ searchString.toLowerCase().replace('*', '%') + "%'";
+    public List<Hotel> findHotels(SearchCriteria search) {
+	String pattern = !StringUtils.hasText(search.getSearchString()) ? "%" : "%"
+		+ search.getSearchString().toLowerCase().replace('*', '%') + "%";
 	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
-			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
-		pageSize).setFirstResult(page * pageSize).getResultList();
+		"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern").setParameter("pattern",
+		pattern).setMaxResults(search.getPageSize()).setFirstResult(search.getPage() * search.getPageSize())
+		.getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -54,5 +59,11 @@ public class JpaBookingService implements BookingService {
 	if (booking != null) {
 	    em.remove(booking);
 	}
+    }
+
+    @Transactional(readOnly = true)
+    public User findUser(String username) {
+	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
+		username).getSingleResult();
     }
 }

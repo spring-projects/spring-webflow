@@ -4,9 +4,52 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
+    <!--
+	  - Location of the XML file that defines the root application context
+	  - Applied by ContextLoaderListener.
+	  -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/web-application-config.xml
+		</param-value>
+	</context-param>
+	
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<!--
+	  - Loads the root application context of this web app at startup.
+	  - The application context is then available via
+	  - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+    -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
 	<listener>
 		<listener-class>org.apache.tiles.web.startup.TilesListener</listener-class>
 	</listener>
+  	
+  	<!-- Serves static resource content from .jar files such as spring-faces.jar -->
+	<servlet>
+		<servlet-name>Resources Servlet</servlet-name>
+		<servlet-class>org.springframework.faces.ui.resource.ResourceServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+		
+	<!-- Map all /resources requests to the Resource Servlet for handling -->
+	<servlet-mapping>
+		<servlet-name>Resources Servlet</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
 	
 	<!-- The front controller of the Spring MVC Web application, responsible for handling all application requests -->
 	<servlet>
@@ -14,7 +57,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
+			<param-value>/WEB-INF/web-application-config.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
