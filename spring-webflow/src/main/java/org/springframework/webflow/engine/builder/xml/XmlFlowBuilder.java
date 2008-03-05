@@ -723,12 +723,15 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private Action parseSetAction(Element element) {
-		String nameExpressionString = element.getAttribute("name");
-		Expression nameExpression = getExpressionParser().parseExpression(nameExpressionString,
+		Expression nameExpression = getExpressionParser().parseExpression(element.getAttribute("name"),
 				new ParserContextImpl().eval(RequestContext.class));
-		Expression valueExpression = getExpressionParser().parseExpression("value",
+		Expression valueExpression = getExpressionParser().parseExpression(element.getAttribute("value"),
 				new ParserContextImpl().eval(RequestContext.class));
-		return new SetAction(nameExpression, valueExpression);
+		Class expectedType = null;
+		if (element.hasAttribute("type")) {
+			expectedType = (Class) fromStringTo(Class.class).execute(element.getAttribute("type"));
+		}
+		return new SetAction(nameExpression, valueExpression, expectedType, getConversionService());
 	}
 
 	private MutableAttributeMap parseMetaAttributes(Element element) {

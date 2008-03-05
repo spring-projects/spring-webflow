@@ -85,14 +85,14 @@ public class ActionResultExposer implements Serializable {
 	 * @param context the request context
 	 */
 	public void exposeResult(Object result, RequestContext context) {
-		resultExpression.setValue(context, applyTypeConversion(result));
+		resultExpression.setValue(context, applyTypeConversionIfNecessary(result));
 	}
 
 	/**
-	 * Apply type conversion on the supplied value
+	 * Apply type conversion on the supplied value if necessary.
 	 * @param value the raw value to be converted
 	 */
-	private Object applyTypeConversion(Object value) {
+	private Object applyTypeConversionIfNecessary(Object value) {
 		if (value == null || expectedResultType == null) {
 			return value;
 		} else {

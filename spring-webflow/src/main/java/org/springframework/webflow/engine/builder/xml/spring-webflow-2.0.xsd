@@ -688,6 +688,15 @@ The value to be set.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="type" type="type">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The expected value type. If the actual value type does not match the expected, a type conversion will be attempted.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 

@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.action;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
@@ -39,20 +40,52 @@ public class SetAction extends AbstractAction {
 	private Expression valueExpression;
 
 	/**
-	 * Creates a new set attribute action.
-	 * @param nameExpression the name of the property to set
-	 * @param valueExpression the expression to obtain the new property value
+	 * The expected value type.
 	 */
-	public SetAction(Expression nameExpression, Expression valueExpression) {
+	private Class expectedType;
+
+	/**
+	 * The service to perform the type conversion if the actual value type does not match the expected.
+	 */
+	private ConversionService conversionService;
+
+	/**
+	 * Creates a new set attribute action.
+	 * @param nameExpression the name of the property to set (required)
+	 * @param valueExpression the expression to obtain the new property value (required)
+	 * @param expectedType the expected value type
+	 * @param conversionService the service to perform the type conversion if the actual value type does not match the
+	 * expected
+	 */
+	public SetAction(Expression nameExpression, Expression valueExpression, Class expectedType,
+			ConversionService conversionService) {
 		Assert.notNull(nameExpression, "The name expression is required");
 		Assert.notNull(valueExpression, "The value expression is required");
+		if (expectedType != null) {
+			Assert.notNull(conversionService, "The conversion service is required if the expectedType is provided");
+		}
 		this.nameExpression = nameExpression;
 		this.valueExpression = valueExpression;
+		this.expectedType = expectedType;
+		this.conversionService = conversionService;
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
 		Object value = valueExpression.getValue(context);
-		nameExpression.setValue(context, value);
+		nameExpression.setValue(context, applyTypeConversionIfNecessary(value));
 		return success();
 	}
+
+	/**
+	 * Apply type conversion on the supplied value if necessary.
+	 * @param value the raw value to be converted
+	 */
+	private Object applyTypeConversionIfNecessary(Object value) {
+		if (value == null || expectedType == null) {
+			return value;
+		} else {
+			return conversionService.getConversionExecutor(value.getClass(), expectedType).execute(value);
+		}
+	}
+
 }
