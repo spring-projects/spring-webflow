@@ -13,7 +13,6 @@
 		<conf name="default" extends="mvc" />
 		<conf name="mvc" visibility="public" extends="global" />
 		<conf name="portlet" visibility="public" extends="mvc" />
-		<conf name="struts" visibility="public" extends="global" />
 		<conf name="testing" visibility="public" extends="global" />
 	</configurations>
 
@@ -31,19 +30,11 @@
 		<dependency org="org.springframework" name="spring-core" rev="2.5.2" />
 		<dependency org="org.springframework" name="spring-context" rev="2.5.2" />
 		<dependency org="org.springframework" name="spring-web" rev="2.5.2" />
-		
-		<!-- testing support only dependencies -->
-		<dependency org="junit" name="junit" rev="3.8.2" conf="buildtime, testing->default" />
-
-		<!-- spring mvc only dependencies -->
 		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.2" conf="buildtime, mvc->default" />
-
-		<!-- spring portlet mvc only dependencies -->
 		<dependency org="org.springframework" name="spring-webmvc-portlet" rev="2.5.2" conf="buildtime, portlet->default" />
 
-		<!-- struts only dependencies -->
-		<dependency org="struts" name="struts" rev="1.2.9" conf="buildtime, struts->default" />
-		<dependency org="org.springframework" name="spring-webmvc-struts" rev="2.5.2" conf="buildtime, struts->default" />
+		<!-- testing support only dependencies -->
+		<dependency org="junit" name="junit" rev="3.8.2" conf="buildtime, testing->default" />
 
 		<!-- build time only dependencies -->		
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
