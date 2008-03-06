@@ -28,39 +28,7 @@ public class SecurityRule {
 	public static final short COMPARISON_ALL = 2;
 
 	private Collection requiredAuthorities;
-	private short comparisonType;
-
-	/**
-	 * Test the required authorities against the principal's authorities
-	 * @param principalAuthorities the principal's granted authorities
-	 * @return true if authorized
-	 */
-	public boolean isAuthorized(Collection principalAuthorities) {
-		if (getComparisonType() == COMPARISON_ANY) {
-			return isAuthorizedAny(principalAuthorities);
-		} else if (getComparisonType() == COMPARISON_ALL) {
-			return isAuthorizedAll(principalAuthorities);
-		} else {
-			throw new IllegalStateException("Unknow comparisonType");
-		}
-	}
-
-	/**
-	 * Get authorities that are required but not granted
-	 * @param principalAuthorities the principal's granted authorities
-	 * @return non granted authorities
-	 */
-	public Collection getNonGrantedAuthorities(Collection principalAuthorities) {
-		Collection nonGrantedAuthorities = new HashSet();
-		Iterator authorityIt = getRequiredAuthorities().iterator();
-		while (authorityIt.hasNext()) {
-			String authority = (String) authorityIt.next();
-			if (!principalAuthorities.contains(authority)) {
-				nonGrantedAuthorities.add(authority);
-			}
-		}
-		return nonGrantedAuthorities;
-	}
+	private short comparisonType = COMPARISON_ANY;
 
 	/**
 	 * Convert authorities to comma separated String
@@ -94,31 +62,6 @@ public class SecurityRule {
 			}
 		}
 		return auths;
-	}
-
-	/**
-	 * Test that any of the required authorities match the principal's authorities
-	 * @param principalAuthorities the principal's granted authorities
-	 * @return true if authorized
-	 */
-	private boolean isAuthorizedAny(Collection principalAuthorities) {
-		boolean authorized = false;
-		Iterator authorityIt = principalAuthorities.iterator();
-		while (!authorized && authorityIt.hasNext()) {
-			if (getRequiredAuthorities().contains(authorityIt.next())) {
-				authorized = true;
-			}
-		}
-		return authorized;
-	}
-
-	/**
-	 * Test that all of the required authorities match the principal's authorities
-	 * @param principalAuthorities the principal's granted authorities
-	 * @return true if authorized
-	 */
-	private boolean isAuthorizedAll(Collection principalAuthorities) {
-		return principalAuthorities.containsAll(getRequiredAuthorities());
 	}
 
 	/**

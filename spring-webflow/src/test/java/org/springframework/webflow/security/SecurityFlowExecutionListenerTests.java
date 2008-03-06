@@ -32,29 +32,14 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.sessionCreating(context, definition);
 	}
 
-	public void testSessionCreatingAuthorized() {
+	public void testSessionCreatingWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
 		Flow flow = new Flow("flow");
-		SecurityRule rule = getSecurityRuleAuthorized();
+		SecurityRule rule = getSecurityRuleAnyAuthorized();
 		((LocalAttributeMap) flow.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.sessionCreating(context, flow);
-	}
-
-	public void testSessionCreatingDenied() {
-		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
-		RequestContext context = new MockRequestContext();
-		Flow flow = new Flow("flow");
-		SecurityRule rule = getSecurityRuleDenied();
-		((LocalAttributeMap) flow.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
-		configureSecurityContext();
-		try {
-			listener.sessionCreating(context, flow);
-			fail("expected AccessDeniedException");
-		} catch (AccessDeniedException e) {
-			// success
-		}
 	}
 
 	public void testStateEnteringNoSecurity() {
@@ -65,31 +50,15 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.stateEntering(context, state);
 	}
 
-	public void testStateEnteringAuthorized() {
+	public void testStateEnteringWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory());
-		SecurityRule rule = getSecurityRuleAuthorized();
+		SecurityRule rule = getSecurityRuleAllAuthorized();
 		((LocalAttributeMap) state.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.stateEntering(context, state);
-	}
-
-	public void testStateEnteringDenied() {
-		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
-		RequestContext context = new MockRequestContext();
-		Flow flow = new Flow("flow");
-		ViewState state = new ViewState(flow, "view", new StubViewFactory());
-		SecurityRule rule = getSecurityRuleDenied();
-		((LocalAttributeMap) state.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
-		configureSecurityContext();
-		try {
-			listener.stateEntering(context, state);
-			fail("expected AccessDeniedException");
-		} catch (AccessDeniedException e) {
-			// success
-		}
 	}
 
 	public void testTransitionExecutingNoSecurity() {
@@ -99,54 +68,95 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.transitionExecuting(context, transition);
 	}
 
-	public void testTransitionExecutingAuthorized() {
+	public void testTransitionExecutingWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
 		Transition transition = new Transition(new DefaultTargetStateResolver("target"));
-		SecurityRule rule = getSecurityRuleAuthorized();
+		SecurityRule rule = getSecurityRuleAnyAuthorized();
 		((LocalAttributeMap) transition.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.transitionExecuting(context, transition);
 	}
 
-	public void testTransitionExecutingDenied() {
-		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
-		RequestContext context = new MockRequestContext();
-		Transition transition = new Transition(new DefaultTargetStateResolver("target"));
-		SecurityRule rule = getSecurityRuleDenied();
-		((LocalAttributeMap) transition.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+	public void testDecideAnyAuthorized() {
+		configureSecurityContext();
+		new SecurityFlowExecutionListener().decide(getSecurityRuleAnyAuthorized(), this);
+	}
+
+	public void testDecideAnyDenied() {
 		configureSecurityContext();
 		try {
-			listener.transitionExecuting(context, transition);
-			fail("expected AccessDeniedException");
+			new SecurityFlowExecutionListener().decide(getSecurityRuleAnyDenied(), this);
+			fail("expected AccessDeniedExpetion");
 		} catch (AccessDeniedException e) {
-			// success
+			// we want this
 		}
 	}
 
-	private SecurityRule getSecurityRuleAuthorized() {
-		SecurityRule rule = new SecurityRule();
-		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_USER");
-		rule.setRequiredAuthorities(authorities);
-		return rule;
+	public void testDecideAllAuthorized() {
+		configureSecurityContext();
+		new SecurityFlowExecutionListener().decide(getSecurityRuleAllAuthorized(), this);
 	}
 
-	private SecurityRule getSecurityRuleDenied() {
-		SecurityRule rule = new SecurityRule();
-		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_ANONYMOUS");
-		rule.setRequiredAuthorities(authorities);
-		return rule;
+	public void testDecideAllDenied() {
+		configureSecurityContext();
+		try {
+			new SecurityFlowExecutionListener().decide(getSecurityRuleAllDenied(), this);
+			fail("expected AccessDeniedExpetion");
+		} catch (AccessDeniedException e) {
+			// we want this
+		}
 	}
 
 	private void configureSecurityContext() {
-		GrantedAuthority[] authorities = { new GrantedAuthorityImpl("ROLE_USER") };
-		Authentication authentication = new TestingAuthenticationToken("test", "", authorities);
 		SecurityContext sc = new SecurityContextImpl();
-		sc.setAuthentication(authentication);
+		sc.setAuthentication(getAuthentication());
 		SecurityContextHolder.setContext(sc);
+	}
+
+	private SecurityRule getSecurityRuleAnyAuthorized() {
+		SecurityRule rule = new SecurityRule();
+		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
+		Collection authorities = new HashSet();
+		authorities.add("ROLE_1");
+		authorities.add("ROLE_A");
+		rule.setRequiredAuthorities(authorities);
+		return rule;
+	}
+
+	private SecurityRule getSecurityRuleAnyDenied() {
+		SecurityRule rule = new SecurityRule();
+		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
+		Collection authorities = new HashSet();
+		authorities.add("ROLE_A");
+		authorities.add("ROLE_B");
+		rule.setRequiredAuthorities(authorities);
+		return rule;
+	}
+
+	private SecurityRule getSecurityRuleAllAuthorized() {
+		SecurityRule rule = new SecurityRule();
+		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
+		Collection authorities = new HashSet();
+		authorities.add("ROLE_1");
+		authorities.add("ROLE_3");
+		rule.setRequiredAuthorities(authorities);
+		return rule;
+	}
+
+	private SecurityRule getSecurityRuleAllDenied() {
+		SecurityRule rule = new SecurityRule();
+		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
+		Collection authorities = new HashSet();
+		authorities.add("ROLE_1");
+		authorities.add("ROLE_A");
+		rule.setRequiredAuthorities(authorities);
+		return rule;
+	}
+
+	private Authentication getAuthentication() {
+		GrantedAuthority[] authorities = { new GrantedAuthorityImpl("ROLE_1"), new GrantedAuthorityImpl("ROLE_2"),
+				new GrantedAuthorityImpl("ROLE_3") };
+		return new TestingAuthenticationToken("test", "", authorities);
 	}
 }
