@@ -44,13 +44,18 @@
     </div>
 </div>
 
+<!--This is here only to get state saving to run -->
+<h:form id="stateWriter"> </h:form>
+
 <div class="section">
-	<h:form id="hotel">
+	<!--This is a temporary workaround as spring-security 2.0-M2 is not forwarding to the correct URL when using a POST -->
+	<form id="hotel" method="GET">
+	<input name="execution" type="hidden" value="${requestContext.flowExecutionContext.key}"/>
 	<fieldset class="buttonGroup">
-		<h:commandButton id="book" action="book" value="Book Hotel"/>
-		<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
+		<sf:commandButton id="book" ajaxEnabled="false" action="book" value="Book Hotel"/>
+		<sf:commandButton id="cancel" ajaxEnabled="false" action="cancel" value="Back to Search"/>
 	</fieldset>
-	</h:form>
+	</form>
 </div>
 
 </ui:define>
