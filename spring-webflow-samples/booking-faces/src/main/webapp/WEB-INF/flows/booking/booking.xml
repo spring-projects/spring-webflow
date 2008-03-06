@@ -3,19 +3,21 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+	<secured authorities="ROLE_USER" />
+
 	<persistence-context/>
 	
 	<input name="#{id}" value="#{flowScope.id}"/>
 
 	<on-start>
 		<evaluate expression="#{bookingService.findHotelById(id)}" result="#{flowScope.hotel}" />
-		<evaluate expression="#{hotel.createBooking(currentUser)}" result="#{flowScope.booking}" />
+		<evaluate expression="${hotel.createBooking(bookingService.findUser(currentUser.name))}" result="${flowScope.booking}" />
 		<evaluate expression="#{entityManager.persist(booking)}" />
 	</on-start>
 	
 	<view-state id="enterBookingDetails">
 		<transition on="proceed" to="reviewBooking">
-			<evaluate expression="booking.validate(messageContext)" />
+			<evaluate expression="#{booking.validate(messageContext)}" />
 		</transition>
 		<transition on="cancel" to="bookingCancelled" />
 	</view-state>

@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:c="http://java.sun.com/jstl/core">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
@@ -21,7 +22,9 @@
 		<div id="welcome">
 			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
 			<div class="right">
-	            Welcome, #{currentUser.name}
+				<c:if test="${currentUser.name != 'roleAnonymous'}">
+	            	Welcome, ${currentUser.name}
+				</c:if>
 			</div>
 		</div>
 		<div id="branding" class="spring">

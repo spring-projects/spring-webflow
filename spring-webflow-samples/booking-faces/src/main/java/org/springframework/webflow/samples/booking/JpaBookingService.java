@@ -8,13 +8,14 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * A JPA-based implementation of the Booking Service. Delegates to a JPA entity manager to issue data access calls
  * against the backing repository. The EntityManager reference is provided by the managing container (Spring)
  * automatically.
  */
-@Service
+@Service("bookingService")
 @Repository
 public class JpaBookingService implements BookingService {
 
@@ -27,15 +28,20 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Booking> findBookings(User user) {
-	return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
-		.setParameter("username", user.getName()).getResultList();
+    public List<Booking> findBookings(String username) {
+	if (username != null) {
+	    return em.createQuery("select b from Booking b where b.user.username = :username order by b.checkinDate")
+		    .setParameter("username", username).getResultList();
+	} else {
+	    return null;
+	}
     }
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotels(SearchCriteria criteria) {
-	String pattern = getSearchPattern(criteria);
+	String pattern = !StringUtils.hasText(criteria.getSearchString()) ? "'%'" : "'%"
+		+ criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
 	return em.createQuery(
 		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
 			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
@@ -47,11 +53,19 @@ public class JpaBookingService implements BookingService {
 	return em.find(Hotel.class, id);
     }
 
-    // read-write transactional methods
+    @Transactional(readOnly = true)
+    public User findUser(String username) {
+	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
+		username).getSingleResult();
+    }
 
+    // read-write transactional methods
     @Transactional
     public void cancelBooking(Booking booking) {
-	em.remove(booking);
+	booking = em.find(Booking.class, booking.getId());
+	if (booking != null) {
+	    em.remove(booking);
+	}
     }
 
     // helpers

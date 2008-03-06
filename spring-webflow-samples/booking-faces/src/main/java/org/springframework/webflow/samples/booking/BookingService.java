@@ -13,7 +13,7 @@ public interface BookingService {
      * @param username the user's name
      * @return their bookings
      */
-    public List<Booking> findBookings(User user);
+    public List<Booking> findBookings(String username);
 
     /**
      * Find hotels available for booking by some criteria.
@@ -34,4 +34,11 @@ public interface BookingService {
      * @param id the booking id
      */
     public void cancelBooking(Booking booking);
+
+    /**
+     * Lookup a user based on their username
+     * @param username the user's username
+     * @return the user
+     */
+    public User findUser(String username);
 }

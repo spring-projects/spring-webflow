@@ -7,7 +7,7 @@
 	
 	<view-state id="enterSearchCriteria">
 		<on-render>
-			<evaluate expression="#{bookingService.findBookings(currentUser)}" result="#{flowScope.bookings}" result-type="dataModel" />
+			<evaluate expression="#{bookingService.findBookings(currentUser.name)}" result="#{flowScope.bookings}" result-type="dataModel" />
 		</on-render>
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
@@ -17,7 +17,7 @@
 	 
 	<view-state id="reviewHotels">
 		<on-render>
-			<evaluate expression="#{bookingService.searchHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
+			<evaluate expression="#{bookingService.findHotels(searchCriteria)}" result="#{flowScope.hotels}" result-type="dataModel" />
 		</on-render>
 		<transition on="previous">
 			<evaluate expression="#{searchCriteria.previousPage()}" />

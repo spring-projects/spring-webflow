@@ -14,6 +14,7 @@ import org.apache.shale.test.mock.MockResponseWriter;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.MockViewHandler;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.View;
 
 public class AjaxViewRootTests extends TestCase {
 
@@ -72,7 +73,8 @@ public class AjaxViewRootTests extends TestCase {
 
 	public void testEncodeAll_RenderIdsExpr() throws IOException {
 
-		jsf.externalContext().getRequestMap().put("renderIds", "foo:bar,foo:baz");
+		jsf.externalContext().getRequestMap().put(View.RENDER_FRAGMENTS_ATTRIBUTE,
+				StringUtils.delimitedListToStringArray("foo:bar,foo:baz", ",", " "));
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 

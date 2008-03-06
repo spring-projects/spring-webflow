@@ -35,7 +35,11 @@ public class ELExpression implements Expression {
 	public Object getValue(Object context) throws EvaluationException {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
-			return valueExpression.getValue(ctx);
+			Object result = valueExpression.getValue(ctx);
+			if (result == null && !ctx.isPropertyResolved()) {
+				throw new EvaluationException(new EvaluationAttempt(this, context), null);
+			}
+			return result;
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}
@@ -45,6 +49,9 @@ public class ELExpression implements Expression {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
 			valueExpression.setValue(ctx, value);
+			if (!ctx.isPropertyResolved()) {
+				throw new EvaluationException(new EvaluationAttempt(this, context), null);
+			}
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}

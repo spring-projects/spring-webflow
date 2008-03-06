@@ -20,6 +20,7 @@ import javax.faces.event.PhaseId;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.View;
 
 /**
  * Customizes the behavior of an existing UIViewRoot with Ajax-aware processing.
@@ -42,7 +43,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private String[] renderIds;
 
-	private static final String RENDER_IDS_EXPRESSION = "#{renderIds}";
+	private static final String RENDER_IDS_EXPRESSION = "#{" + View.RENDER_FRAGMENTS_ATTRIBUTE + "}";
 
 	private final ValueBinding renderIdsExpr;
 
@@ -267,12 +268,11 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		if (renderIds == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
 
-			String renderIdsValue = (String) renderIdsExpr.getValue(context);
-			if (StringUtils.hasText(renderIdsValue)) {
-				renderIds = StringUtils.delimitedListToStringArray(renderIdsValue, ",", " ");
-				renderIds = removeNestedChildren(context, getRenderIds());
-			} else {
+			renderIds = (String[]) renderIdsExpr.getValue(context);
+			if (renderIds == null || renderIds.length == 0) {
 				renderIds = getProcessIds();
+			} else {
+				renderIds = removeNestedChildren(context, renderIds);
 			}
 		}
 		return renderIds;

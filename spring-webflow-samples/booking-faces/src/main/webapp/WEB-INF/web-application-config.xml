@@ -5,6 +5,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xmlns:faces="http://www.springframework.org/schema/faces-config"
+       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
@@ -15,7 +16,9 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
            http://www.springframework.org/schema/faces-config
-           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd">
+           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
 	<!-- Activates annotation-based bean configuration -->
 	<context:annotation-config />
@@ -35,14 +38,15 @@
 	
 	<bean id="jsfViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
-		<property name="prefix" value="WEB-INF/" />
+		<property name="prefix" value="/WEB-INF/" />
 		<property name="suffix" value=".xhtml" />
 	</bean>
 	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<webflow:flow-execution-listeners>
-			<webflow:listener ref="jpaFlowExecutionListener" criteria="*" />
+			<webflow:listener ref="jpaFlowExecutionListener" />
+			<webflow:listener ref="securityFlowExecutionListener" />
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
 	
@@ -61,6 +65,9 @@
 		<constructor-arg ref="entityManagerFactory" />
 		<constructor-arg ref="transactionManager" />
 	</bean>
+	
+	<!-- Installs a listener to apply Spring Security authorities -->
+	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 
 	<!-- Drives transactions using local JPA APIs -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -82,5 +89,34 @@
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
+	
+	<!-- Configure Spring Security -->
+	<security:http auto-config="true">
+		<!-- restrict URLs based on role -->
+		<security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
+		<security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" />
+		<security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
+		
+		<!-- override default login and logout pages -->
+		<security:form-login login-page="/spring/login" login-url="/spring/login-process" default-target-url="/spring/flows/main" authentication-failure-url="/spring/login?login_error=1" />
+		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" />
+	</security:http>
+	
+	<!--
+		Define local authentication provider, a real app would use an external provider (JDBC, LDAP, CAS, etc)
+		
+		usernames/passwords are:
+			rod/koala
+			dianne/emu
+			scott/wombat
+	-->
+	<security:authentication-provider>
+		<security:password-encoder hash="md5" />
+		<security:user-service>
+			<security:user name="rod" password="a564de63c2d0da68cf47586ee05984d7" authorities="ROLE_USER, ROLE_SUPERVISOR" />
+			<security:user name="dianne" password="65d15fe9156f9c4bbffd98085992a44e" authorities="ROLE_USER" />
+			<security:user name="scott" password="2b58af6dddbd072ed27ffc86725d7d3a" authorities="ROLE_USER" />
+		</security:user-service>
+	</security:authentication-provider>
 		
 </beans>
