@@ -41,11 +41,40 @@ The unique identifier of this state; must be unique to this flow.
 		</xsd:attribute>
 	</xsd:complexType>
 
+	<!-- Reusable types -->
+	<xsd:simpleType name="type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
 	<xsd:simpleType name="expression">
 		<xsd:restriction base="xsd:string"/>
 	</xsd:simpleType>
 
-	<xsd:simpleType name="type">
+	<xsd:simpleType name="template">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="viewFactory">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="transitionCriteria">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="targetStateResolver">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="flowId">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="beanName">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="resource">
 		<xsd:restriction base="xsd:string"/>
 	</xsd:simpleType>
 	
@@ -656,11 +685,12 @@ If specified and the result is not compatible with the expected type, a type con
 
 	<xsd:element name="render">
 		<xsd:complexType>
-			<xsd:attribute name="fragments" type="expression" use="required">
+			<xsd:attribute name="fragments" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
 The fragments of the next view to render.  Multiple fragments may be specified by using the comma delimiter.
+Each fragment is a template expression.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -723,7 +753,7 @@ Secures this transition.
 				</xsd:element>
 				<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
 			</xsd:sequence>
-			<xsd:attribute name="on" type="expression">
+			<xsd:attribute name="on" type="transitionCriteria">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -758,7 +788,7 @@ Superclasses of the configured exception class match by default.  Use this attri
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="to" type="expression" use="optional">
+			<xsd:attribute name="to" type="targetStateResolver" use="optional">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -854,7 +884,7 @@ Handles exceptions that occur within this state.
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="view" type="expression">
+					<xsd:attribute name="view" type="viewFactory">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
@@ -1013,7 +1043,7 @@ For example:
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="then" type="expression" use="required">
+			<xsd:attribute name="then" type="targetStateResolver" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1022,7 +1052,7 @@ The state to transition to if the boolean expression evaluates to true.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="else" type="expression">
+			<xsd:attribute name="else" type="targetStateResolver">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1114,7 +1144,7 @@ Handles exceptions that occur within this state.
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="subflow" type="expression" use="required">
+					<xsd:attribute name="subflow" type="flowId" use="required">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
@@ -1123,7 +1153,7 @@ The subflow to start.
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="subflow-attribute-mapper" type="xsd:string">
+					<xsd:attribute name="subflow-attribute-mapper" type="beanName">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
@@ -1189,7 +1219,7 @@ Handles exceptions that occur in this state.
 							</xsd:annotation>
 						</xsd:element>
 					</xsd:sequence>
-					<xsd:attribute name="view" type="xsd:string">
+					<xsd:attribute name="view" type="viewFactory">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
@@ -1264,7 +1294,7 @@ All transition actions must execute successfully for the transition itself to ex
 
 	<xsd:element name="exception-handler">
 		<xsd:complexType>
-			<xsd:attribute name="bean" type="xsd:string" use="required">
+			<xsd:attribute name="bean" type="beanName" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1278,7 +1308,7 @@ The bean id of the custom exception handler.
 
 	<xsd:element name="bean-import">
 		<xsd:complexType>
-			<xsd:attribute name="resource" type="xsd:string" use="required">
+			<xsd:attribute name="resource" type="resource" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[

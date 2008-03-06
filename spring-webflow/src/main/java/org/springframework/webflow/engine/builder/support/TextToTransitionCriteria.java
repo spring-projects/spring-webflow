@@ -21,14 +21,12 @@ import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
-import org.springframework.binding.expression.ognl.OgnlExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -89,28 +87,8 @@ class TextToTransitionCriteria extends AbstractConverter {
 			return flowBuilderContext.getBeanFactory().getBean(encodedCriteria.substring(BEAN_PREFIX.length()),
 					TransitionCriteria.class);
 		} else {
-			if (parser instanceof OgnlExpressionParser) {
-				// 1.0 compatability
-				OgnlExpressionParser ognl = (OgnlExpressionParser) parser;
-				if (ognl.isTemplateExpression(encodedCriteria)) {
-					return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
-				} else {
-					return createEventIdTransitionCriteria(encodedCriteria);
-				}
-			} else {
-				return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
-			}
+			return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
 		}
-	}
-
-	/**
-	 * Hook method subclasses can override to return a specialized eventId matching transition criteria implementation.
-	 * @param eventId the event id to match
-	 * @return the transition criteria object
-	 * @throws ConversionException when something goes wrong
-	 */
-	protected TransitionCriteria createEventIdTransitionCriteria(String eventId) throws ConversionException {
-		return new EventIdTransitionCriteria(eventId);
 	}
 
 	/**
@@ -123,7 +101,7 @@ class TextToTransitionCriteria extends AbstractConverter {
 	 */
 	protected TransitionCriteria createBooleanExpressionTransitionCriteria(String encodedCriteria,
 			ExpressionParser parser) throws ConversionException {
-		Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().eval(
+		Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().template().eval(
 				RequestContext.class).variable(new ExpressionVariable("result", "lastEvent.id")));
 		return new BooleanExpressionTransitionCriteria(expression);
 	}

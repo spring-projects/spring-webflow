@@ -33,8 +33,8 @@ public class AttributeMapperActionTests extends TestCase {
 
 	public void testMapping() throws Exception {
 		DefaultAttributeMapper mapper = new DefaultAttributeMapper();
-		mapper.addMapping(mappingBuilder.source("${externalContext.requestParameterMap.foo}")
-				.target("${flowScope.bar}").value());
+		mapper.addMapping(mappingBuilder.source("externalContext.requestParameterMap.foo").target("flowScope.bar")
+				.value());
 		AttributeMapperAction action = new AttributeMapperAction(mapper);
 
 		MockRequestContext context = new MockRequestContext();

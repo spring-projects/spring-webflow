@@ -67,7 +67,7 @@ public class EndStateTests extends TestCase {
 		EndState state = new EndState(flow, "end");
 		DefaultAttributeMapper mapper = new DefaultAttributeMapper();
 		MappingBuilder builder = new MappingBuilder(DefaultExpressionParserFactory.getExpressionParser());
-		Mapping mapping = builder.source("${flowScope.x}").target("${y}").value();
+		Mapping mapping = builder.source("flowScope.x").target("y").value();
 		mapper.addMapping(mapping);
 		state.setOutputMapper(mapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);

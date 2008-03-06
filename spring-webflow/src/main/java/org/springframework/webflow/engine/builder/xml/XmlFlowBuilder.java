@@ -543,7 +543,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private Expression parseSubflowExpression(Element element) {
 		String subflow = element.getAttribute("subflow");
 		Expression subflowId = getExpressionParser().parseExpression(subflow,
-				new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+				new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 		return new SubflowExpression(subflowId, getLocalContext().getFlowDefinitionLocator());
 	}
 
@@ -595,26 +595,26 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			} else {
 				encodedView = getLocalContext().getViewFactoryCreator().createViewIdByConvention(parseId(element));
 				Expression viewName = getExpressionParser().parseExpression(encodedView,
-						new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+						new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 				return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 						getLocalContext().getResourceLoader());
 			}
 		} else if (encodedView.startsWith("externalRedirect:")) {
 			String encodedUrl = encodedView.substring("externalRedirect:".length());
 			Expression externalUrl = getExpressionParser().parseExpression(encodedUrl,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 			return new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
 		} else if (encodedView.startsWith("flowRedirect:")) {
 			String flowRedirect = encodedView.substring("flowRedirect:".length());
 			Expression expression = getExpressionParser().parseExpression(flowRedirect,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 			return new ActionExecutingViewFactory(new FlowDefinitionRedirectAction(expression));
 		} else if (encodedView.startsWith("bean:")) {
 			return (ViewFactory) getLocalContext().getBeanFactory().getBean(encodedView.substring("bean:".length()),
 					ViewFactory.class);
 		} else {
 			Expression viewName = getExpressionParser().parseExpression(encodedView,
-					new ParserContextImpl().eval(RequestContext.class).expect(String.class));
+					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
 		}

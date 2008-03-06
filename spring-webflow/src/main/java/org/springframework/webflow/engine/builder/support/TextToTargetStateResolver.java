@@ -75,7 +75,7 @@ class TextToTargetStateResolver extends AbstractConverter {
 		if (targetStateId.startsWith(BEAN_PREFIX)) {
 			return flowBuilderContext.getBeanFactory().getBean(targetStateId.substring(BEAN_PREFIX.length()));
 		} else {
-			Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().eval(
+			Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().template().eval(
 					RequestContext.class).expect(String.class));
 			return new DefaultTargetStateResolver(expression);
 		}

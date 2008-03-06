@@ -50,6 +50,11 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
+
+		public String createViewIdByConvention(String viewStateId) {
+			return viewStateId;
+		}
+
 	}
 
 	public static class TestConversionService implements ConversionService {
