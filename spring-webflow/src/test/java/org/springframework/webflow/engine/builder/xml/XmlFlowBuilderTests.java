@@ -3,16 +3,24 @@ package org.springframework.webflow.engine.builder.xml;
 import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
+import org.springframework.binding.mapping.RequiredMappingException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
+import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
+import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
 public class XmlFlowBuilderTests extends TestCase {
@@ -31,7 +39,6 @@ public class XmlFlowBuilderTests extends TestCase {
 			assembler.assembleFlow();
 			fail("Should have failed");
 		} catch (FlowBuilderException e) {
-
 		}
 	}
 
@@ -78,6 +85,64 @@ public class XmlFlowBuilderTests extends TestCase {
 		Flow flow = assembler.assembleFlow();
 		assertNotNull(flow.getAttributes().get("persistenceContext"));
 		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
+	}
+
+	public void testFlowInputOutputMapping() {
+		ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
+		FlowExecution execution = factory.createFlowExecution(flow);
+		MockExternalContext context = new MockExternalContext();
+		MutableAttributeMap input = new LocalAttributeMap();
+		input.put("foo", "bar");
+		input.put("number", "3");
+		input.put("required", "9");
+		execution.start(input, context);
+		Event outcome = execution.getOutcome();
+		assertEquals("end", outcome.getId());
+		assertEquals("bar", outcome.getAttributes().get("foo"));
+		assertEquals("bar", outcome.getAttributes().get("differentName"));
+		assertEquals(new Integer(3), outcome.getAttributes().get("number"));
+		assertEquals(new Integer(3), outcome.getAttributes().get("required"));
+		assertEquals("a literal", outcome.getAttributes().get("literal"));
+		assertNull(outcome.getAttributes().get("notReached"));
+	}
+
+	public void testFlowRequiredInputMapping() {
+		ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
+		FlowExecution execution = factory.createFlowExecution(flow);
+		MockExternalContext context = new MockExternalContext();
+		MutableAttributeMap input = new LocalAttributeMap();
+		try {
+			execution.start(input, context);
+			fail("Should have failed");
+		} catch (FlowExecutionException e) {
+			RequiredMappingException me = (RequiredMappingException) e.getRootCause();
+		}
+	}
+
+	public void testFlowRequiredOutputMapping() {
+		ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
+		builder = new XmlFlowBuilder(resource);
+		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
+		FlowExecution execution = factory.createFlowExecution(flow);
+		MockExternalContext context = new MockExternalContext();
+		MutableAttributeMap input = new LocalAttributeMap();
+		input.put("required", "yo");
+		try {
+			execution.start(input, context);
+			fail("Should have failed");
+		} catch (FlowExecutionException e) {
+			RequiredMappingException me = (RequiredMappingException) e.getRootCause();
+		}
 	}
 
 	public void testFlowSecured() {

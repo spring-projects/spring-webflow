@@ -291,7 +291,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void initLocalFlowContext(Element flowElement) {
-		List importElements = DomUtils.getChildElementsByTagName(flowElement, "import");
+		List importElements = DomUtils.getChildElementsByTagName(flowElement, "bean-import");
 		Resource[] resources = new Resource[importElements.size()];
 		for (int i = 0; i < importElements.size(); i++) {
 			Element importElement = (Element) importElements.get(i);
@@ -391,7 +391,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		if (element.hasAttribute("value")) {
 			value = element.getAttribute("value");
 		} else {
-			value = element.getAttribute(name);
+			value = name;
 		}
 		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
@@ -417,10 +417,10 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		if (element.hasAttribute("value")) {
 			value = element.getAttribute("value");
 		} else {
-			value = element.getAttribute(name);
+			value = name;
 		}
-		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(RequestContext.class));
-		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		return new Mapping(source, target, parseMappingConversionExecutor(element), parseMappingRequired(element));
 	}
 
@@ -830,7 +830,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		if (element.hasAttribute("value")) {
 			value = element.getAttribute("value");
 		} else {
-			value = element.getAttribute(name);
+			value = name;
 		}
 		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
 		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
@@ -856,7 +856,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		if (element.hasAttribute("value")) {
 			value = element.getAttribute("value");
 		} else {
-			value = element.getAttribute(name);
+			value = name;
 		}
 		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
