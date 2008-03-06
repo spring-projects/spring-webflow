@@ -31,8 +31,8 @@ import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.CompositeStringExpression;
+import org.springframework.binding.expression.support.LiteralExpression;
 import org.springframework.binding.expression.support.NullParserContext;
-import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.util.Assert;
 
 /**
@@ -209,7 +209,7 @@ public class OgnlExpressionParser implements ExpressionParser {
 			if (prefixIndex >= startIdx) {
 				// a inner expression was found - this is a composite
 				if (prefixIndex > startIdx) {
-					expressions.add(new StaticExpression(expressionString.substring(startIdx, prefixIndex)));
+					expressions.add(new LiteralExpression(expressionString.substring(startIdx, prefixIndex)));
 					startIdx = prefixIndex;
 				}
 				int nextPrefixIndex = expressionString.indexOf(getExpressionPrefix(), prefixIndex
@@ -241,11 +241,11 @@ public class OgnlExpressionParser implements ExpressionParser {
 						expressions.add(doParseExpression(expressionString, context));
 					} else {
 						// treat entire string as a literal
-						expressions.add(new StaticExpression(expressionString));
+						expressions.add(new LiteralExpression(expressionString));
 					}
 				} else {
 					// no more ${expressions} found in string, add rest as static text
-					expressions.add(new StaticExpression(expressionString.substring(startIdx)));
+					expressions.add(new LiteralExpression(expressionString.substring(startIdx)));
 				}
 				startIdx = expressionString.length();
 			}

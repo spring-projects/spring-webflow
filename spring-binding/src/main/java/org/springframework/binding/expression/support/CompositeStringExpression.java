@@ -17,6 +17,7 @@ package org.springframework.binding.expression.support;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -49,7 +50,8 @@ public class CompositeStringExpression implements Expression {
 	}
 
 	public void setValue(Object context, Object value) throws EvaluationException {
-		throw new UnsupportedOperationException("Cannot set a composite string expression value");
+		throw new EvaluationException(new SetValueAttempt(this, context, value), new UnsupportedOperationException(
+				"Cannot set a composite string expression value"));
 	}
 
 	public String toString() {
