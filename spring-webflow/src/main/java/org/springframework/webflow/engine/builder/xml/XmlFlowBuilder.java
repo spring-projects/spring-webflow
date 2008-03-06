@@ -593,7 +593,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			if (endState) {
 				return null;
 			} else {
-				encodedView = createViewId(parseId(element));
+				encodedView = getLocalContext().getViewFactoryCreator().createViewIdByConvention(parseId(element));
 				Expression viewName = getExpressionParser().parseExpression(encodedView,
 						new ParserContextImpl().eval(RequestContext.class).expect(String.class));
 				return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
@@ -618,11 +618,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
 					getLocalContext().getResourceLoader());
 		}
-	}
-
-	// TODO - make configurable
-	private String createViewId(String viewStateId) {
-		return viewStateId + ".xhtml";
 	}
 
 	private Action[] parseRenderActions(Element element) {

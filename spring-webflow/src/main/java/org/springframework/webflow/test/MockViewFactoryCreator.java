@@ -40,6 +40,10 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 		return new MockViewFactory(viewId);
 	}
 
+	public String createViewIdByConvention(String viewStateId) {
+		return viewStateId;
+	}
+
 	/**
 	 * Returns a Mock View implementation that simply holds the evaluated view identifier.
 	 * @author Keith Donald

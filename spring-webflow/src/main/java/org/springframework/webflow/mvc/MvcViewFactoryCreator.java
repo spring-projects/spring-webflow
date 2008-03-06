@@ -62,6 +62,11 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		}
 	}
 
+	public String createViewIdByConvention(String viewStateId) {
+		// TODO - make configurable
+		return viewStateId + ".jsp";
+	}
+
 	/**
 	 * Sets the view resolvers that will be used to resolve views selected by flows. If multiple resolvers are to be
 	 * used, the resolvers should be ordered in the manner they should be applied.

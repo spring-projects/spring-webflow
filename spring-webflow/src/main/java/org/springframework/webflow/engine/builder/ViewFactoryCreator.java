@@ -35,4 +35,10 @@ public interface ViewFactoryCreator {
 	 */
 	public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader);
 
+	/**
+	 * Create the default id of the view to render in the provided view state by convention.
+	 * @param viewStateId the view state id
+	 * @return the default view id
+	 */
+	public String createViewIdByConvention(String viewStateId);
 }
