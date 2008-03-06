@@ -708,7 +708,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 				.getAttribute("fragments"));
 		fragmentExpressionStrings = StringUtils.trimArrayElements(fragmentExpressionStrings);
 		ExpressionParser parser = getExpressionParser();
-		ParserContext context = new ParserContextImpl().eval(RequestContext.class).expect(String.class);
+		ParserContext context = new ParserContextImpl().template().eval(RequestContext.class).expect(String.class);
 		Expression[] fragments = new Expression[fragmentExpressionStrings.length];
 		for (int i = 0; i < fragmentExpressionStrings.length; i++) {
 			String fragment = fragmentExpressionStrings[i];
