@@ -186,6 +186,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			model.putAll(context.getConversationScope().union(context.getFlowScope()).union(context.getFlashScope())
 					.union(context.getRequestScope()).asMap());
 			model.put("flowExecutionRequestContext", context);
+			model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
 			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
 			if (springSecurityPresent && !model.containsKey("currentUser")) {
 				model.put("currentUser", SecurityContextHolder.getContext().getAuthentication());
