@@ -11,7 +11,8 @@
 </div>
 
 <div class="section">
-	<form:form id="hotel" modelAttribute="hotel">
+	<form:form id="hotel" modelAttribute="hotel" method="get">
+	<input type="hidden" name="execution" value="${flowExecutionKey}" />
 	<fieldset>
 		<div class="field">
 			<div class="label">Name:</div>
