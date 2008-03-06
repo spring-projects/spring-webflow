@@ -15,17 +15,17 @@
 		<evaluate expression="${hotel.createBooking(bookingService.findUser(currentUser.name))}" result="${flowScope.booking}" />
 	</on-start>
 	
-	<view-state id="enterBookingDetails" view="bookingForm.jsp">
+	<view-state id="enterBookingDetails">
 		<on-render>
 			<evaluate expression="${bookingActions.setupForm}"/>
 		</on-render>
-		<transition on="proceed" to="confirmBooking">
+		<transition on="proceed" to="reviewBooking">
 			<evaluate expression="${bookingActions.bindAndValidate}" />
 		</transition>
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
-	<view-state id="confirmBooking" view="confirmBooking.jsp">
+	<view-state id="reviewBooking">
 		<on-render>
 			<evaluate expression="${bookingActions.setupForm}"/>
 		</on-render>
