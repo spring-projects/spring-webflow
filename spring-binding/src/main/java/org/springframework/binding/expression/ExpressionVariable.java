@@ -9,7 +9,9 @@ import org.springframework.util.Assert;
 public class ExpressionVariable {
 
 	private String name;
+
 	private String valueExpression;
+
 	private ParserContext parserContext;
 
 	/**

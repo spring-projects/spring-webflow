@@ -63,11 +63,11 @@ public class OgnlExpressionParser implements ExpressionParser {
 	private String expressionSuffix = DEFAULT_EXPRESSION_SUFFIX;
 
 	/**
-	 * Should we allow undelimited OGNL eval expressions like "foo.bar"? If not, evalutable OGNL expressions must be
-	 * enclosed in delimiters like ${foo.bar} else they are treated as literal expressions. Mainly here for
-	 * compatability reasons, as Web Flow 1.0 allows undelimited OGNL eval expressions by default.
+	 * Should we allow delimited OGNL eval expressions like "#{foo.bar}"? If not, evalutable OGNL expressions must not
+	 * be enclosed in delimiters like ${foo.bar} else an exception is thrown. Only here for compatability reasons, as
+	 * Web Flow 1.0 allows delimited OGNL eval expressions while 2.x does not.
 	 */
-	private boolean allowUndelimitedEvalExpressions;
+	private boolean allowDelimitedEvalExpressions;
 
 	/**
 	 * Returns the configured expression delimiter prefix. Defaults to "${".
@@ -98,26 +98,17 @@ public class OgnlExpressionParser implements ExpressionParser {
 	}
 
 	/**
-	 * Returns if this parser should we allow undelimited OGNL eval expressions like <code>foo.bar</code>.
+	 * Returns if this parser allows delimited OGNL eval expressions like <code>${foo.bar}</code>.
 	 */
-	public boolean getAllowUndelimitedEvalExpressions() {
-		return allowUndelimitedEvalExpressions;
+	public boolean getAllowDelimitedEvalExpressions() {
+		return allowDelimitedEvalExpressions;
 	}
 
 	/**
-	 * Sets if this parser should allow undelimited OGNL eval expressions like "foo.bar"? If not, evalutable OGNL
-	 * expressions must be enclosed in delimiters like ${foo.bar}, else they are treated as literal expressions.
+	 * Sets if this parser allows OGNL eval expressions like ${foo.bar}.
 	 */
-	public void setAllowUndelimitedEvalExpressions(boolean allowUndelmitedEvalExpressions) {
-		this.allowUndelimitedEvalExpressions = allowUndelmitedEvalExpressions;
-	}
-
-	public static String getDEFAULT_EXPRESSION_PREFIX() {
-		return DEFAULT_EXPRESSION_PREFIX;
-	}
-
-	public static String getDEFAULT_EXPRESSION_SUFFIX() {
-		return DEFAULT_EXPRESSION_SUFFIX;
+	public void setAllowDelimitedEvalExpressions(boolean allowDelmitedEvalExpressions) {
+		this.allowDelimitedEvalExpressions = allowDelmitedEvalExpressions;
 	}
 
 	/**
@@ -133,6 +124,33 @@ public class OgnlExpressionParser implements ExpressionParser {
 
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
+		if (context == null) {
+			context = NullParserContext.INSTANCE;
+		}
+		if (context.isTemplate()) {
+			return parseTemplate(expressionString, context);
+		} else {
+			if (expressionString.startsWith(getExpressionPrefix()) && expressionString.endsWith(getExpressionSuffix())) {
+				if (!allowDelimitedEvalExpressions) {
+					throw new ParserException(
+							expressionString,
+							"The expression '"
+									+ expressionString
+									+ "' being parsed is expected be a standard OGNL expression. Do not attempt to enclose such expression strings in ${} delimiters--this is redundant. If you need to parse a template that mixes literal text with evaluatable blocks, set the 'template' parser context attribute to true.",
+							null);
+				} else {
+					int lastIndex = expressionString.length() - getExpressionSuffix().length();
+					String ognlExpression = expressionString.substring(getExpressionPrefix().length(), lastIndex);
+					return doParseExpression(ognlExpression, context);
+				}
+			} else {
+				return doParseExpression(expressionString, context);
+			}
+		}
+	}
+
+	private Expression parseTemplate(String expressionString, ParserContext context) throws ParserException {
+		Assert.notNull(expressionString, "The expression string to parse is required");
 		if (expressionString.length() == 0) {
 			return parseEmptyExpressionString(context);
 		}
@@ -144,62 +162,13 @@ public class OgnlExpressionParser implements ExpressionParser {
 		}
 	}
 
-	/**
-	 * Is the provided string a template expression this parser can parse? Always returns <code>true</code> if this
-	 * OGNL expression parser is configured to <b>not</b> allow undelimited OGNL expressions. If undelimited OGNL
-	 * expressions are allowed like "foo.bar", this method only returns true if an explicitly delimited expression is
-	 * present in the string like "hello my name is ${name}" or "${foo.bar}".
-	 * 
-	 * In general, a template expression is either:
-	 * <ol>
-	 * <li>static literal text like "hello world". In this case, evaluating the expression simply returns the literal
-	 * text.
-	 * <li>a single eval expression like ${requestParameters.foo}. In this case, evaluating the expression returns the
-	 * evaluated value.
-	 * <li>a mix of literal text with one or more eval expressions like "hello #{name}". In this case, evaluating the
-	 * expression returns a string with the result of #{name} evaluated (often called a composite expression).
-	 * </ol>
-	 * 
-	 * This method and the {@link #getAllowUndelimitedEvalExpressions()} flag primarily exist for compatibility reasons.
-	 * The OgnlExpressionParser in SWF 1.0 does not treat literal text like "hello world" as a template expression, but
-	 * rather a standard, evaluatable OGNL expression. Therefore, callers expecting standard template evaluation
-	 * semantics are expected to work with these literal string values themselves, and not pass those strings to
-	 * {@link #parseExpression(String, ParserContext)}.
-	 * 
-	 * @param string the string
-	 * @return true if the string is a template expression, false otherwise.
-	 */
-	public boolean isTemplateExpression(String string) {
-		if (!allowUndelimitedEvalExpressions) {
-			// every string provided is a "template" style expression - return true
-			return true;
-		}
-		// only returns true when there is ${} somewhere in the string
-		// this is version 1.0 semantics, there for compatability reasons
-		int prefixIndex = string.indexOf(getExpressionPrefix());
-		if (prefixIndex == -1) {
-			return false;
-		}
-		int suffixIndex = string.indexOf(getExpressionSuffix(), prefixIndex);
-		if (suffixIndex == -1) {
-			return false;
-		} else {
-			// make sure there is actually something inside the ${}
-			if (suffixIndex == prefixIndex + getExpressionPrefix().length()) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-	}
-
 	// helper methods
 
 	/**
 	 * Helper that handles a empty expression string.
 	 */
 	private Expression parseEmptyExpressionString(ParserContext context) {
-		if (allowUndelimitedEvalExpressions) {
+		if (allowDelimitedEvalExpressions) {
 			// let the parser handle it
 			return doParseExpression("", context);
 		} else {
@@ -253,7 +222,7 @@ public class OgnlExpressionParser implements ExpressionParser {
 			} else {
 				if (startIdx == 0) {
 					// treat the entire string as one expression
-					if (allowUndelimitedEvalExpressions) {
+					if (allowDelimitedEvalExpressions) {
 						expressions.add(doParseExpression(expressionString, context));
 					} else {
 						// treat entire string as a literal

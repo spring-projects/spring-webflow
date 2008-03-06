@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
+import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.ParserContextImpl;
 
 public class ELExpressionParserTests extends TestCase {
@@ -25,7 +26,7 @@ public class ELExpressionParserTests extends TestCase {
 	}
 
 	public void testParseSimpleEvalExpressionNoParserContext() {
-		String expressionString = "#{3 + 4}";
+		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals(new Long(7), exp.getValue(null));
 	}
@@ -42,69 +43,66 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseEmptyExpressionString() {
 		String expressionString = "";
-		Expression exp = parser.parseExpression(expressionString, null);
-		assertEquals("", exp.getValue(null));
+		try {
+			parser.parseExpression(expressionString, null);
+			fail("Should have failed");
+		} catch (ParserException e) {
+
+		}
 	}
 
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
-		String expressionString = "#{3 + 4}";
+		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));
 		assertEquals(new Integer(7), exp.getValue(null));
 	}
 
 	public void testParseBeanEvalExpressionNoParserContext() {
-		String expressionString = "#{value}";
+		String expressionString = "value";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals("foo", exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextTypeCoersion() {
-		String expressionString = "#{maximum}";
+		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Long.class));
 		assertEquals(new Long(2), exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextCustomTestBeanResolver() {
-		String expressionString = "#{specialProperty}";
+		String expressionString = "specialProperty";
 		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().eval(TestBean.class));
 		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
 	}
 
 	public void testParseLiteralExpression() {
-		String expressionString = "value";
+		String expressionString = "'value'";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals("value", exp.getValue(null));
 	}
 
-	public void testParseExpressionWithVariables() {
+	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
-				.variable(new ExpressionVariable("max", "#{maximum}")));
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().template().variable(
+				new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target));
 	}
 
 	public void testVariablesWithCoersion() {
-		String expressionString = "#{max}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
-				.variable(new ExpressionVariable("max", "#{maximum}", new ParserContextImpl().expect(Long.class))));
+		Expression exp = parser.parseExpression("max", new ParserContextImpl().variable(new ExpressionVariable("max",
+				"maximum", new ParserContextImpl().expect(Long.class))));
 		TestBean target = new TestBean();
 		assertEquals(new Long(2), exp.getValue(target));
 	}
 
-	public void testNestedVariables() {
+	public void testTemplateNestedVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl()
-				.variable(new ExpressionVariable("max", "#{maximum}#{var}", new ParserContextImpl()
-						.variable(new ExpressionVariable("var", "bar")))));
+		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().template().variable(
+				new ExpressionVariable("max", "#{maximum}#{var}", new ParserContextImpl().template().variable(
+						new ExpressionVariable("var", "'bar'")))));
 		TestBean target = new TestBean();
 		assertEquals("foo2bar", exp.getValue(target));
-	}
-
-	public void testParseImmediateEvalExpression() {
-		String expressionString = "${3 + 4}";
-		Expression exp = parser.parseExpression(expressionString, null);
-		assertEquals(new Long(7), exp.getValue(null));
 	}
 
 	public static class TestBean {

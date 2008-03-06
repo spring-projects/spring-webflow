@@ -28,7 +28,7 @@ public class RequiredMappingTests extends TestCase {
 
 	public void testRequired() {
 		MappingBuilder builder = new MappingBuilder(new OgnlExpressionParser());
-		Mapping mapping = builder.source("${foo}").target("${bar}").required().value();
+		Mapping mapping = builder.source("foo").target("bar").required().value();
 		HashMap source = new HashMap();
 		source.put("foo", "baz");
 		HashMap target = new HashMap();
@@ -38,7 +38,7 @@ public class RequiredMappingTests extends TestCase {
 
 	public void testRequiredExceptionOnNull() {
 		MappingBuilder builder = new MappingBuilder(new OgnlExpressionParser());
-		Mapping mapping = builder.source("${foo}").target("${bar}").required().value();
+		Mapping mapping = builder.source("foo").target("bar").required().value();
 		HashMap source = new HashMap();
 		source.put("foo", null);
 		HashMap target = new HashMap();
@@ -50,7 +50,7 @@ public class RequiredMappingTests extends TestCase {
 
 	public void testRequiredExceptionOnNoKey() {
 		MappingBuilder builder = new MappingBuilder(new OgnlExpressionParser());
-		Mapping mapping = builder.source("${foo}").target("${bar}").required().value();
+		Mapping mapping = builder.source("foo").target("bar").required().value();
 		HashMap source = new HashMap();
 		HashMap target = new HashMap();
 		try {

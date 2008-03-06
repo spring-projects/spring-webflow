@@ -29,6 +29,15 @@ public class OgnlExpressionParserTests extends TestCase {
 	private TestBean bean = new TestBean();
 
 	public void testParseSimple() {
+		String exp = "flag";
+		Expression e = parser.parseExpression(exp, null);
+		assertNotNull(e);
+		Boolean b = (Boolean) e.getValue(bean);
+		assertFalse(b.booleanValue());
+	}
+
+	public void testParseSimpleAllowDelimited() {
+		parser.setAllowDelimitedEvalExpressions(true);
 		String exp = "${flag}";
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
@@ -36,77 +45,40 @@ public class OgnlExpressionParserTests extends TestCase {
 		assertFalse(b.booleanValue());
 	}
 
-	public void testIsTemplateExpressionAllowUndelimitedOgnlExpressions() {
-		String exp = "some literal text";
-		String exp2 = "${a delimited expression}";
-		String exp3 = "${a malformed delimited expression";
-		String exp4 = "a malformed delimited expression}";
-		String exp5 = "${}";
-		String exp6 = "a ${composite} expression";
-		String exp7 = "a ${composite} ${malformed expression";
-		assertTrue(parser.isTemplateExpression(exp));
-		assertTrue(parser.isTemplateExpression(exp2));
-		assertTrue(parser.isTemplateExpression(exp3));
-		assertTrue(parser.isTemplateExpression(exp4));
-		assertTrue(parser.isTemplateExpression(exp5));
-		assertTrue(parser.isTemplateExpression(exp6));
-		assertTrue(parser.isTemplateExpression(exp7));
+	public void testParseSimpleDelimitedNotAllowed() {
+		String exp = "${flag}";
+		try {
+			parser.parseExpression(exp, null);
+			fail("should have failed");
+		} catch (ParserException e) {
+		}
 	}
 
-	public void testIsTemplateExpressionDoNotAllowUndelimitedOgnlExpressions() {
-		parser.setAllowUndelimitedEvalExpressions(true);
-		String exp = "some literal text";
-		String exp2 = "${a delimited expression}";
-		String exp3 = "${a malformed delimited expression";
-		String exp4 = "a malformed delimited expression}";
-		String exp5 = "${}";
-		String exp6 = "a ${composite} expression";
-		String exp7 = "a ${composite} ${malformed expression";
-
-		assertFalse(parser.isTemplateExpression(exp));
-		assertTrue(parser.isTemplateExpression(exp2));
-		assertFalse(parser.isTemplateExpression(exp3));
-		assertFalse(parser.isTemplateExpression(exp4));
-		assertFalse(parser.isTemplateExpression(exp5));
-		assertTrue(parser.isTemplateExpression(exp6));
-		assertTrue(parser.isTemplateExpression(exp7));
-	}
-
-	public void testParseSimpleNotDelimitedAllowUndelimited() {
-		parser.setAllowUndelimitedEvalExpressions(true);
+	public void testParseTemplateSimpleLiteral() {
 		String exp = "flag";
-		Expression e = parser.parseExpression(exp, null);
-		assertNotNull(e);
-		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
-	}
-
-	public void testParseSimpleLiteral() {
-		String exp = "flag";
-		Expression e = parser.parseExpression(exp, null);
+		Expression e = parser.parseExpression(exp, new ParserContextImpl().template());
 		assertNotNull(e);
 		assertEquals("flag", e.getValue(bean));
 	}
 
-	public void testParseEmpty() {
-		Expression e = parser.parseExpression("", null);
+	public void testParseTemplateEmpty() {
+		Expression e = parser.parseExpression("", new ParserContextImpl().template());
 		assertNotNull(e);
 		assertEquals("", e.getValue(bean));
 	}
 
-	public void testParseComposite() {
+	public void testParseTemplateComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
-		assertTrue(parser.isTemplateExpression(exp));
-		Expression e = parser.parseExpression(exp, null);
+		Expression e = parser.parseExpression(exp, new ParserContextImpl().template());
 		assertNotNull(e);
 		String str = (String) e.getValue(bean);
 		assertEquals("hello false false false", str);
 	}
 
-	public void testEnclosedCompositeNotSupported() {
+	public void testTemplateEnclosedCompositeNotSupported() {
 		String exp = "${hello ${flag} ${flag} ${flag}}";
 		try {
-			parser.parseExpression(exp, null);
+			parser.parseExpression(exp, new ParserContextImpl().template());
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -114,7 +86,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError1() {
 		try {
-			parser.parseExpression("${", null);
+			parser.parseExpression("${", new ParserContextImpl().template());
 			fail();
 		} catch (ParserException e) {
 		}
@@ -128,7 +100,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError2() {
 		try {
-			parser.parseExpression("${}", null);
+			parser.parseExpression("${}", new ParserContextImpl().template());
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -143,41 +115,41 @@ public class OgnlExpressionParserTests extends TestCase {
 	public void testCollectionConstructionSyntax() {
 		// lists
 		parser.parseExpression("name in {null, \"Untitled\"}", null);
-		parser.parseExpression("${name in {null, \"Untitled\"}}", null);
+		parser.parseExpression("${name in {null, \"Untitled\"}}", new ParserContextImpl().template());
 
 		// native arrays
 		parser.parseExpression("new int[] {1, 2, 3}", null);
-		parser.parseExpression("${new int[] {1, 2, 3}}", null);
+		parser.parseExpression("${new int[] {1, 2, 3}}", new ParserContextImpl().template());
 
 		// maps
 		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
-		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", null);
+		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new ParserContextImpl().template());
 		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
-		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}", null);
+		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}",
+				new ParserContextImpl().template());
 
 		// complex examples
 		parser.parseExpression("b,#{1:2}", null);
-		parser.parseExpression("${b,#{1:2}}", null);
-		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k", null);
+		parser.parseExpression("${b,#{1:2}}", new ParserContextImpl().template());
+		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k", new ParserContextImpl().template());
 	}
 
 	public void testVariables() {
-		Expression exp = parser.parseExpression("${#var}", new ParserContextImpl().variable(new ExpressionVariable(
-				"var", "${flag}")));
+		Expression exp = parser.parseExpression("#var", new ParserContextImpl().variable(new ExpressionVariable("var",
+				"flag")));
 		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
 
 	public void testVariablesWithCoersion() {
-		Expression exp = parser.parseExpression("${#var}", new ParserContextImpl().variable(new ExpressionVariable(
-				"var", "${number}", new ParserContextImpl().expect(Long.class))));
+		Expression exp = parser.parseExpression("#var", new ParserContextImpl().variable(new ExpressionVariable("var",
+				"number", new ParserContextImpl().expect(Long.class))));
 		assertEquals(new Long(0), exp.getValue(bean));
 	}
 
-	public void testNestedVariables() {
-		Expression exp = parser
-				.parseExpression("${#var}", new ParserContextImpl()
-						.variable(new ExpressionVariable("var", "${flag}${#var}", new ParserContextImpl()
-								.variable(new ExpressionVariable("var", "${number}")))));
+	public void testNestedVariablesWithTemplates() {
+		Expression exp = parser.parseExpression("#var", new ParserContextImpl()
+				.variable(new ExpressionVariable("var", "${flag}${#var}", new ParserContextImpl().template().variable(
+						new ExpressionVariable("var", "number")))));
 		assertEquals("false0", exp.getValue(bean));
 	}
 

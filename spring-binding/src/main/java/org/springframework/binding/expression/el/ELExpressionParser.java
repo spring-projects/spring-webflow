@@ -55,6 +55,17 @@ public class ELExpressionParser implements ExpressionParser {
 		if (context == null) {
 			context = NullParserContext.INSTANCE;
 		}
+		if (context.isTemplate()) {
+			return parseTemplate(expressionString, context);
+		} else {
+			assertNotDelimited(expressionString);
+			assertHasText(expressionString);
+			return parseTemplate("#{" + expressionString + "}", context);
+		}
+	}
+
+	private Expression parseTemplate(String expressionString, ParserContext context) throws ParserException {
+		Assert.notNull(expressionString, "The expression string to parse is required");
 		try {
 			ValueExpression expression = parseValueExpression(expressionString, context);
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
@@ -94,6 +105,24 @@ public class ELExpressionParser implements ExpressionParser {
 		putContextFactory(Object.class, defaultContextFactory);
 	}
 
+	private void assertNotDelimited(String expressionString) {
+		if ((expressionString.startsWith("#{") && expressionString.endsWith("}"))
+				|| (expressionString.startsWith("${") && expressionString.endsWith("}"))) {
+			throw new ParserException(
+					expressionString,
+					"This expression '"
+							+ expressionString
+							+ "' being parsed is expected be an 'eval' EL expression string.  Do not attempt to enclose such expression strings in #{} or ${} delimiters--this is redundant. If you need to parse a template that mixes literal text with evaluatable blocks, set the 'template' parser context attribute to true.",
+					null);
+		}
+	}
+
+	private void assertHasText(String expressionString) {
+		if (expressionString.length() == 0) {
+			throw new ParserException(expressionString, "The EL eval expression to parse must have text", null);
+		}
+	}
+
 	private class ParserELContext extends ELContext {
 		private VariableMapper variableMapper;
 
@@ -116,7 +145,14 @@ public class ELExpressionParser implements ExpressionParser {
 					ExpressionVariable var = variables[i];
 					ParserContext context = var.getParserContext() != null ? var.getParserContext()
 							: NullParserContext.INSTANCE;
-					ValueExpression expr = parseValueExpression(var.getValueExpression(), context);
+					ValueExpression expr;
+					if (context.isTemplate()) {
+						expr = parseValueExpression(var.getValueExpression(), context);
+					} else {
+						assertNotDelimited(var.getValueExpression());
+						assertHasText(var.getValueExpression());
+						expr = parseValueExpression("#{" + var.getValueExpression() + "}", context);
+					}
 					variableMapper.setVariable(var.getName(), expr);
 				}
 			}

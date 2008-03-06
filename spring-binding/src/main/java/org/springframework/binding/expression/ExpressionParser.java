@@ -16,16 +16,23 @@
 package org.springframework.binding.expression;
 
 /**
- * Parses expression strings, returning a configured evaluator instance capable of performing parsed expression
- * evaluation in a thread safe way.
+ * Parses expression strings into compiled expressions that can be evaluated. Supports parsing templates as well as
+ * standard expression strings.
  * 
  * @author Keith Donald
  */
 public interface ExpressionParser {
 
 	/**
-	 * Parse the provided expression string, returning an expression evaluator capable of evaluating it.
-	 * @param expressionString the parseable expression string; cannot be null (required)
+	 * Parse the expression string and return a compiled Expression object you can use for evaluation. Some examples:
+	 * 
+	 * <pre>
+	 *     3 + 4
+	 *     name.firstName
+	 * </pre>
+	 * 
+	 * @param expressionString the raw expression spring to parse; cannot be null; cannot be encased in any special
+	 * delimiters; cannot be a template
 	 * @param context a context used to set attributes that influence expression parsing routine (optional)
 	 * @return the evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing

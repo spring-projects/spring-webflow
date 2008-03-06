@@ -9,7 +9,6 @@ import org.springframework.binding.expression.ParserContext;
 
 /**
  * Default implementation of the ParserContext interface that has a fluent API for building parser context attributes.
- * 
  * @author Keith Donald
  */
 public class ParserContextImpl implements ParserContext {
@@ -20,12 +19,15 @@ public class ParserContextImpl implements ParserContext {
 
 	private List expressionVariables;
 
+	private boolean template;
+
 	/**
 	 * Create a new parser context, initially with all context attributes as null. Post construction, call one or more
 	 * of the fluent builder methods to configure this context.
 	 * @see #eval(Class)
 	 * @see #expect(Class)
 	 * @see #variable(ExpressionVariable)
+	 * @see #template()
 	 */
 	public ParserContextImpl() {
 		init();
@@ -43,6 +45,10 @@ public class ParserContextImpl implements ParserContext {
 		return (ExpressionVariable[]) expressionVariables.toArray(new ExpressionVariable[expressionVariables.size()]);
 	}
 
+	public boolean isTemplate() {
+		return template;
+	}
+
 	/**
 	 * Configure the evaluationContextType attribute with the value provided.
 	 * @param contextType the type of context object the parsed expression will evaluate in
@@ -50,7 +56,7 @@ public class ParserContextImpl implements ParserContext {
 	 */
 	public ParserContextImpl eval(Class contextType) {
 		evaluationContextType = contextType;
-		return ParserContextImpl.this;
+		return this;
 	}
 
 	/**
@@ -60,7 +66,7 @@ public class ParserContextImpl implements ParserContext {
 	 */
 	public ParserContextImpl expect(Class resultType) {
 		evaluationResultType = resultType;
-		return ParserContextImpl.this;
+		return this;
 	}
 
 	/**
@@ -70,7 +76,7 @@ public class ParserContextImpl implements ParserContext {
 	 */
 	public ParserContextImpl variable(ExpressionVariable variable) {
 		expressionVariables.add(variable);
-		return ParserContextImpl.this;
+		return this;
 	}
 
 	/**
@@ -80,7 +86,16 @@ public class ParserContextImpl implements ParserContext {
 	 */
 	public ParserContextImpl variables(ExpressionVariable[] variables) {
 		expressionVariables.addAll(Arrays.asList(variables));
-		return ParserContextImpl.this;
+		return this;
+	}
+
+	/**
+	 * Sets a flag indicating the expression to parse is a template.
+	 * @return this
+	 */
+	public ParserContextImpl template() {
+		template = true;
+		return this;
 	}
 
 	private void init() {

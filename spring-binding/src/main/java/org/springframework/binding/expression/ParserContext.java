@@ -25,4 +25,19 @@ public interface ParserContext {
 	 * expression parser will register these variables for reference during evaluation.
 	 */
 	public ExpressionVariable[] getExpressionVariables();
+
+	/**
+	 * Whether or not the expression being parsed is a template. A template expression consists of literal text that can
+	 * be mixed with evaluatable blocks. Some examples:
+	 * 
+	 * <pre>
+	 * 	   Some literal text
+	 *     Hello #{name.firstName}!
+	 *     #{3 + 4}
+	 * </pre>
+	 * 
+	 * @return true if the expression is a template, false otherwise
+	 */
+	public boolean isTemplate();
+
 }

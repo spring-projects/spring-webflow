@@ -44,4 +44,8 @@ public final class NullParserContext implements ParserContext {
 	public ExpressionVariable[] getExpressionVariables() {
 		return null;
 	}
+
+	public boolean isTemplate() {
+		return false;
+	}
 }
