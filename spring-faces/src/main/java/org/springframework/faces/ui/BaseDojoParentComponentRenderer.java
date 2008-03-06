@@ -13,8 +13,6 @@ public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesPar
 
 	private String dojoJsResourceUri = "/dojo/dojo.js";
 
-	private String dojoCssResourceUri = "/dojo/resources/dojo.css";
-
 	private String dijitThemePath = "/dijit/themes/";
 
 	private String dijitTheme = "tundra";
@@ -26,7 +24,6 @@ public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesPar
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dojoCssResourceUri);
 		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
 		Map dojoAttributes = new HashMap();

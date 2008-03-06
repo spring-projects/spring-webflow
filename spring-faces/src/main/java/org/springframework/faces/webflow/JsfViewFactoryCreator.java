@@ -32,6 +32,8 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class JsfViewFactoryCreator implements ViewFactoryCreator {
 
+	private static final String FACELETS_EXTENSION = ".xhtml";
+
 	private Lifecycle lifecycle;
 
 	public Action createFinalResponseAction(Expression viewName, ResourceLoader resourceLoader) {
@@ -54,6 +56,10 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 			lifecycle = createFlowFacesLifecycle();
 		}
 		return lifecycle;
+	}
+
+	public String createViewIdByConvention(String viewStateId) {
+		return viewStateId + FACELETS_EXTENSION;
 	}
 
 }

@@ -28,8 +28,6 @@ public class DojoRenderer extends SpringFacesRenderer {
 
 	private String dojoJsResourceUri = "/dojo/dojo.js";
 
-	private String dojoCssResourceUri = "/dojo/resources/dojo.css";
-
 	private String dijitThemePath = "/dijit/themes/";
 
 	private String dijitTheme = "tundra";
@@ -42,7 +40,6 @@ public class DojoRenderer extends SpringFacesRenderer {
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dojoCssResourceUri);
 		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
 		Map dojoAttributes = new HashMap();

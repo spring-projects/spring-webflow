@@ -117,10 +117,7 @@ public class ResourceServlet extends HttpServlet {
 	}
 
 	private URL getRequestResourceURL(String localResourcePath) throws MalformedURLException {
-		if (localResourcePath.contains("/resources")){
-			localResourcePath = localResourcePath.replaceAll("/resources", "");
-		}
-		
+
 		String jarResourcePath = "META-INF" + localResourcePath;
 
 		URL resource;
