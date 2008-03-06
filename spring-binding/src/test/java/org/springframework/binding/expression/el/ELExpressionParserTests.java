@@ -40,6 +40,12 @@ public class ELExpressionParserTests extends TestCase {
 		}
 	}
 
+	public void testParseEmptyExpressionString() {
+		String expressionString = "";
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals("", exp.getValue(null));
+	}
+
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "#{3 + 4}";
 		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));

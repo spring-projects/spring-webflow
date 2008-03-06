@@ -133,6 +133,9 @@ public class OgnlExpressionParser implements ExpressionParser {
 
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
+		if (expressionString.length() == 0) {
+			return parseEmptyExpressionString(context);
+		}
 		Expression[] expressions = parseExpressions(expressionString, context);
 		if (expressions.length == 1) {
 			return expressions[0];
@@ -191,6 +194,19 @@ public class OgnlExpressionParser implements ExpressionParser {
 	}
 
 	// helper methods
+
+	/**
+	 * Helper that handles a empty expression string.
+	 */
+	private Expression parseEmptyExpressionString(ParserContext context) {
+		if (allowUndelimitedEvalExpressions) {
+			// let the parser handle it
+			return doParseExpression("", context);
+		} else {
+			// return a literal expression containing the empty string
+			return new LiteralExpression("");
+		}
+	}
 
 	/**
 	 * Helper that parses given expression string using the configured parser. The expression string can contain any
