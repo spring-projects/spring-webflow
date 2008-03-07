@@ -219,6 +219,8 @@ public class ViewState extends TransitionableState {
 	private void render(RequestControlContext context, View view) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rendering + " + view);
+			logger.debug("  Flash scope = " + context.getFlashScope());
+			logger.debug("  Messages = " + context.getMessageContext());
 		}
 		renderActionList.execute(context);
 		view.render();
