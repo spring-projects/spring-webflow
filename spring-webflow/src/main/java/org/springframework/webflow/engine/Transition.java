@@ -76,6 +76,16 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	private TargetStateResolver targetStateResolver;
 
 	/**
+	 * Create a new transition that always matches and always executes, but its execution does nothing by default.
+	 * @see #setMatchingCriteria(TransitionCriteria)
+	 * @see #setExecutionCriteria(TransitionCriteria)
+	 * @see #setTargetStateResolver(TargetStateResolver)
+	 */
+	public Transition() {
+		this(WildcardTransitionCriteria.INSTANCE, null);
+	}
+
+	/**
 	 * Create a new transition that always matches and always executes, transitioning to the target state calculated by
 	 * the provided targetStateResolver.
 	 * @param targetStateResolver the resolver of the target state of this transition

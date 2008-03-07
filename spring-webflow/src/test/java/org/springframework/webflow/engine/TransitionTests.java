@@ -98,6 +98,25 @@ public class TransitionTests extends TestCase {
 		assertSame(source, context.getCurrentState());
 	}
 
+	public void testExecuteTransitionNullTargetStateResolver() {
+		Flow flow = new Flow("flow");
+		final TransitionableState source = new TransitionableState(flow, "state 1") {
+			public void exit(RequestControlContext context) {
+				exitCalled = true;
+			}
+
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+			}
+		};
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.setCurrentState(source);
+		Transition t = new Transition();
+		boolean stateExited = t.execute(source, context);
+		assertFalse(stateExited);
+		assertFalse(exitCalled);
+		assertSame(source, context.getCurrentState());
+	}
+
 	public void testTransitionExecutionRefused() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {
