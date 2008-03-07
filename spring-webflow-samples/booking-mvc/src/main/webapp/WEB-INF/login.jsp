@@ -24,8 +24,8 @@
 	<ul>
 		<li>keith/melbourne</li>
 	    <li>erwin/leuven</li>
-	    <li>scott/rochester</li>
 	    <li>jeremy/atlanta</li>
+	    <li>scott/rochester</li>
 	</ul>
 </div>
 
