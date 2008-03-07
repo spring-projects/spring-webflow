@@ -121,7 +121,7 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	 * @param matchingCriteria the transition matching criteria
 	 */
 	public void setMatchingCriteria(TransitionCriteria matchingCriteria) {
-		Assert.notNull(matchingCriteria, "The matching criteria is required");
+		Assert.notNull(matchingCriteria, "The criteria for matching this transition is required");
 		this.matchingCriteria = matchingCriteria;
 	}
 
@@ -140,7 +140,6 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	 * @param executionCriteria the transition execution criteria
 	 */
 	public void setExecutionCriteria(TransitionCriteria executionCriteria) {
-		Assert.notNull(executionCriteria, "The execution criteria is required");
 		this.executionCriteria = executionCriteria;
 	}
 
@@ -157,7 +156,6 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	 * @param targetStateResolver the target state resolver
 	 */
 	public void setTargetStateResolver(TargetStateResolver targetStateResolver) {
-		Assert.notNull(targetStateResolver, "The target state resolver is required");
 		this.targetStateResolver = targetStateResolver;
 	}
 
@@ -178,7 +176,11 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	 * @return true if this transition can complete execution, false if it should roll back
 	 */
 	public boolean canExecute(RequestContext context) {
-		return executionCriteria.test(context);
+		if (executionCriteria != null) {
+			return executionCriteria.test(context);
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -186,44 +188,40 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	 * for the given context.
 	 * @param sourceState the source state to transition from, may be null if the current state is null
 	 * @param context the flow execution control context
+	 * @return a boolean indicating if executing this transition caused the current state to exit and a new state to
+	 * enter
 	 * @throws FlowExecutionException when transition execution fails
 	 */
-	public void execute(State sourceState, RequestControlContext context) throws FlowExecutionException {
+	public boolean execute(State sourceState, RequestControlContext context) throws FlowExecutionException {
 		if (canExecute(context)) {
-			if (sourceState != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Executing " + this + " out of state '" + sourceState.getId() + "'");
-				}
-				if (sourceState instanceof TransitionableState) {
-					// make exit call back on transitionable state
-					((TransitionableState) sourceState).exit(context);
-				}
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Executing " + this);
-				}
+			if (logger.isDebugEnabled()) {
+				logger.debug("Executing " + this);
 			}
-			State targetState = targetStateResolver.resolveTargetState(this, sourceState, context);
 			context.setLastTransition(this);
-			// enter the target state (note: any exceptions are propagated)
-			targetState.enter(context);
-		} else {
-			if (sourceState != null && sourceState instanceof TransitionableState) {
-				((TransitionableState) sourceState).reenter(context);
-			} else {
-				throw new IllegalStateException("Execution of '" + this + "' was blocked by '" + getExecutionCriteria()
-						+ "', " + "; however, no source state is set at runtime.  "
-						+ "This is an illegal situation: check your flow definition.");
+			if (targetStateResolver != null) {
+				State targetState = targetStateResolver.resolveTargetState(this, sourceState, context);
+				if (sourceState != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Exiting state '" + sourceState.getId() + "'");
+					}
+					if (sourceState instanceof TransitionableState) {
+						((TransitionableState) sourceState).exit(context);
+					}
+				}
+				targetState.enter(context);
+				if (logger.isDebugEnabled()) {
+					if (context.getFlowExecutionContext().isActive()) {
+						logger.debug("Completed transition execution.  As a result, the new state is '"
+								+ context.getCurrentState().getId() + "' in flow '" + context.getActiveFlow().getId()
+								+ "'");
+					} else {
+						logger.debug("Completed transition execution.  As a result, the flow execution has ended");
+					}
+				}
+				return true;
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			if (context.getFlowExecutionContext().isActive()) {
-				logger.debug("Completed execution of " + this + "; as a result, the new state is '"
-						+ context.getCurrentState().getId() + "' in flow '" + context.getActiveFlow().getId() + "'");
-			} else {
-				logger.debug("Completed execution of " + this + "; as a result, the flow execution has ended");
-			}
-		}
+		return false;
 	}
 
 	public String toString() {

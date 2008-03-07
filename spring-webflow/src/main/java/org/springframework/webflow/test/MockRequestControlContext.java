@@ -73,9 +73,9 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		flow.start(this, input);
 	}
 
-	public void handleEvent(Event event) {
+	public boolean handleEvent(Event event) {
 		setLastEvent(event);
-		((Flow) getActiveFlow()).handleEvent(this);
+		return ((Flow) getActiveFlow()).handleEvent(this);
 	}
 
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {
@@ -85,8 +85,8 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		return endingSession;
 	}
 
-	public void execute(Transition transition) {
-		transition.execute((TransitionableState) getCurrentState(), this);
+	public boolean execute(Transition transition) {
+		return transition.execute((TransitionableState) getCurrentState(), this);
 	}
 
 	public FlowExecutionKey assignFlowExecutionKey() {

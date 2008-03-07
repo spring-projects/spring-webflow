@@ -24,7 +24,6 @@ import org.springframework.webflow.test.MockRequestControlContext;
 
 public class TransitionTests extends TestCase {
 
-	private boolean reenterCalled;
 	private boolean exitCalled;
 
 	public void testExecuteTransitionFromState() {
@@ -50,7 +49,8 @@ public class TransitionTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
 		Transition t = new Transition(targetResolver);
-		t.execute(source, context);
+		boolean stateExited = t.execute(source, context);
+		assertTrue(stateExited);
 		assertTrue(exitCalled);
 		assertSame(target, context.getCurrentState());
 	}
@@ -69,19 +69,14 @@ public class TransitionTests extends TestCase {
 		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		Transition t = new Transition(targetResolver);
-		t.execute(null, context);
+		boolean stateChanged = t.execute(null, context);
+		assertTrue(stateChanged);
 		assertSame(target, context.getCurrentState());
 	}
 
 	public void testTransitionExecutionRefused() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {
-
-			public void reenter(RequestControlContext context) {
-				reenterCalled = true;
-				super.reenter(context);
-			}
-
 			public void exit(RequestControlContext context) {
 				exitCalled = true;
 			}
@@ -107,9 +102,9 @@ public class TransitionTests extends TestCase {
 				return false;
 			}
 		});
-		t.execute(source, context);
+		boolean stateExited = t.execute(source, context);
+		assertFalse(stateExited);
 		assertFalse(exitCalled);
-		assertTrue(reenterCalled);
 		assertSame(source, context.getCurrentState());
 	}
 

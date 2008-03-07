@@ -105,7 +105,7 @@ public class SubflowState extends TransitionableState {
 	 * Called on completion of the subflow to handle the subflow result event as determined by the end state reached by
 	 * the subflow.
 	 */
-	public void handleEvent(RequestControlContext context) {
+	public boolean handleEvent(RequestControlContext context) {
 		if (subflowAttributeMapper != null) {
 			AttributeMap subflowOutput = context.getLastEvent().getAttributes();
 			if (logger.isDebugEnabled()) {
@@ -113,7 +113,7 @@ public class SubflowState extends TransitionableState {
 			}
 			subflowAttributeMapper.mapFlowOutput(subflowOutput, context);
 		}
-		super.handleEvent(context);
+		return super.handleEvent(context);
 	}
 
 	protected void appendToString(ToStringCreator creator) {

@@ -85,11 +85,12 @@ public interface RequestControlContext extends RequestContext {
 	 * should be called by clients that report internal event occurrences, such as action states. The
 	 * <code>onEvent()</code> method of the flow involved in the flow execution will be called.
 	 * @param event the event that occurred
+	 * @return a boolean indicating if handling this event caused the current state to exit and a new state to enter
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow during execution of this
 	 * signalEvent operation
 	 * @see Flow#handleEvent(RequestControlContext)
 	 */
-	public void handleEvent(Event event) throws FlowExecutionException;
+	public boolean handleEvent(Event event) throws FlowExecutionException;
 
 	/**
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
@@ -108,7 +109,7 @@ public interface RequestControlContext extends RequestContext {
 	 * @param transition the transition
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
-	public void execute(Transition transition);
+	public boolean execute(Transition transition);
 
 	/**
 	 * Returns true if the 'always redirect pause' flow execution attribute is set to true, false otherwise.

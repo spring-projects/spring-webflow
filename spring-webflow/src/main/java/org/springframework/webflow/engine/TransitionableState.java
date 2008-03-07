@@ -101,19 +101,8 @@ public abstract class TransitionableState extends State implements Transitionabl
 	 * @param context the flow execution control context
 	 * @throws NoMatchingTransitionException when a matching transition cannot be found
 	 */
-	public void handleEvent(RequestControlContext context) throws NoMatchingTransitionException {
-		context.execute(getRequiredTransition(context));
-	}
-
-	/**
-	 * Re-enter this state. This is typically called when a transition out of this state is selected, but transition
-	 * execution rolls back and as a result the flow reenters the source state.
-	 * <p>
-	 * By default, this just calls <code>enter()</code>.
-	 * @param context the flow control context in an executing flow (a client instance of a flow)
-	 */
-	public void reenter(RequestControlContext context) {
-		enter(context);
+	public boolean handleEvent(RequestControlContext context) throws NoMatchingTransitionException {
+		return context.execute(getRequiredTransition(context));
 	}
 
 	/**

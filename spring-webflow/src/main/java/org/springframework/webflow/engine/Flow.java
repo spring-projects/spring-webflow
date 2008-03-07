@@ -531,15 +531,15 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Handle the last event that occurred against an active session of this flow.
 	 * @param context the flow execution control context
 	 */
-	public void handleEvent(RequestControlContext context) {
+	public boolean handleEvent(RequestControlContext context) {
 		TransitionableState currentState = getCurrentTransitionableState(context);
 		try {
-			currentState.handleEvent(context);
+			return currentState.handleEvent(context);
 		} catch (NoMatchingTransitionException e) {
 			// try the flow level transition set for a match
 			Transition transition = globalTransitionSet.getTransition(context);
 			if (transition != null) {
-				transition.execute(currentState, context);
+				return transition.execute(currentState, context);
 			} else {
 				// no matching global transition => let the original exception
 				// propagate

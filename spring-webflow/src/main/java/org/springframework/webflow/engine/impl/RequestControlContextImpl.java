@@ -196,13 +196,13 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.start(flow, input, this);
 	}
 
-	public void handleEvent(Event event) throws FlowExecutionException {
+	public boolean handleEvent(Event event) throws FlowExecutionException {
 		this.lastEvent = event;
-		flowExecution.handleEvent(event, this);
+		return flowExecution.handleEvent(event, this);
 	}
 
-	public void execute(Transition transition) {
-		flowExecution.execute(transition, this);
+	public boolean execute(Transition transition) {
+		return flowExecution.execute(transition, this);
 	}
 
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {

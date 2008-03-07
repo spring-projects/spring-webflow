@@ -344,14 +344,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		listeners.fireStateEntered(context, previousState);
 	}
 
-	void handleEvent(Event event, RequestControlContext context) {
+	boolean handleEvent(Event event, RequestControlContext context) {
 		listeners.fireEventSignaled(context, event);
-		getActiveSessionInternal().getFlow().handleEvent(context);
+		return getActiveSessionInternal().getFlow().handleEvent(context);
 	}
 
-	void execute(Transition transition, RequestControlContext context) {
+	boolean execute(Transition transition, RequestControlContext context) {
 		listeners.fireTransitionExecuting(context, transition);
-		transition.execute(getCurrentState(), context);
+		return transition.execute(getCurrentState(), context);
 	}
 
 	FlowSession endActiveFlowSession(MutableAttributeMap output, RequestControlContext context) {

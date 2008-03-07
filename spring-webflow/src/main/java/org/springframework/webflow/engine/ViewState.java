@@ -169,13 +169,7 @@ public class ViewState extends TransitionableState {
 			context.sendFlowExecutionRedirect();
 		} else {
 			View view = viewFactory.getView(context);
-			renderActionList.execute(context);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Rendering view " + view);
-			}
-			view.render();
-			context.getMessageContext().clearMessages();
-			context.getFlashScope().clear();
+			render(context, view);
 		}
 	}
 
@@ -187,15 +181,12 @@ public class ViewState extends TransitionableState {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Event '" + event.getId() + "' signaled on view " + view);
 			}
-			context.handleEvent(event);
-		} else {
-			renderActionList.execute(context);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Rendering refreshed view " + view);
+			boolean stateExited = context.handleEvent(event);
+			if (!stateExited) {
+				render(context, view);
 			}
-			view.render();
-			context.getMessageContext().clearMessages();
-			context.getFlashScope().clear();
+		} else {
+			render(context, view);
 		}
 	}
 
@@ -206,14 +197,6 @@ public class ViewState extends TransitionableState {
 
 	// internal helpers
 
-	private boolean shouldRedirect(RequestControlContext context) {
-		if (redirect != null) {
-			return redirect.booleanValue();
-		} else {
-			return context.getAlwaysRedirectOnPause();
-		}
-	}
-
 	private void createVariables(RequestContext context) {
 		Iterator it = variables.values().iterator();
 		while (it.hasNext()) {
@@ -223,6 +206,24 @@ public class ViewState extends TransitionableState {
 			}
 			variable.create(context);
 		}
+	}
+
+	private boolean shouldRedirect(RequestControlContext context) {
+		if (redirect != null) {
+			return redirect.booleanValue();
+		} else {
+			return context.getAlwaysRedirectOnPause();
+		}
+	}
+
+	private void render(RequestControlContext context, View view) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Rendering + " + view);
+		}
+		renderActionList.execute(context);
+		view.render();
+		context.getMessageContext().clearMessages();
+		context.getFlashScope().clear();
 	}
 
 	private void restoreVariables(RequestContext context) {
