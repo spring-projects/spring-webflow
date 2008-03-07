@@ -62,6 +62,8 @@
     #content .section {
     	width: 505px;
     	float: left;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
     
     #content.spring input[type="submit"], input[type="button"], button {

@@ -20,7 +20,7 @@
 <div id="page">
 	<div id="header" class="clearfix spring">
 		<div id="welcome">
-			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
+			<div class="left">Spring Travel: A Spring Faces Reference Application</div>
 			<div class="right">
 				<c:if test="${currentUser.name != 'roleAnonymous'}">
 	            	Welcome, ${currentUser.name}  <a href="${request.contextPath}/spring/logout">Logout</a>
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<img src="${request.contextPath}/images/header.jpg" alt="foo bar"/>
+			<a href="#{request.contextPath}"><img src="${request.contextPath}/images/header.jpg" alt="Spring Travel"/></a>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
