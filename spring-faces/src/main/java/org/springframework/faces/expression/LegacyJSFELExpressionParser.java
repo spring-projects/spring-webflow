@@ -12,6 +12,7 @@ import javax.el.VariableMapper;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.expression.el.ActionMethodELResolver;
@@ -19,6 +20,7 @@ import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
 import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
+import org.springframework.webflow.expression.el.SpringSecurityELResolver;
 
 /**
  * A JSF-specific ExpressionParser that allows beans managed by either JSF, Spring, or Web Flow referenced in
@@ -49,6 +51,9 @@ public class LegacyJSFELExpressionParser extends ELExpressionParser {
 		public ELContext getELContext(Object target) {
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver());
+			if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
+				customResolvers.add(new SpringSecurityELResolver());
+			}
 			customResolvers.add(new ImplicitFlowVariableELResolver());
 			customResolvers.add(new SpringBeanWebFlowELResolver());
 			customResolvers.add(new ActionMethodELResolver());
