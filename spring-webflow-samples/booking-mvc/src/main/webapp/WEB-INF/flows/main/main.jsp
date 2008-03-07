@@ -25,7 +25,7 @@
 </div>
 </form:form>
 
-<c:if test="${not empty searchCriteria.searchString}">
+<c:if test="${not empty searchCriteria.searchString or not empty hotels}">
 <div class="section">
 	<table class="summary">
 		<thead>
