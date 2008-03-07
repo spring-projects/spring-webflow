@@ -8,20 +8,20 @@
 	
 	<view-state id="main">
 		<on-render>
-			<evaluate expression="${bookingService.findBookings(currentUser.name)}" result="${requestScope.bookings}" />
+			<evaluate expression="bookingService.findBookings(currentUser.name)" result="requestScope.bookings" />
 		</on-render>
 		<transition on="findHotels" to="findHotels">
-			<evaluate expression="${mainActions.bindAndValidate}" />
+			<evaluate expression="mainActions.bindAndValidate" />
 		</transition>
 		<transition on="selectHotel" to="reviewHotel">
-			<set name="${requestScope.id}" value="${requestParameters.hotelId}" type="long" />
-			<evaluate expression="${bookingService.findHotelById(id)}" result="${flowScope.hotel}" />
+			<set name="requestScope.id" value="requestParameters.hotelId" type="long" />
+			<evaluate expression="bookingService.findHotelById(id)" result="flowScope.hotel" />
 		</transition>
 		<transition on="cancelBooking" to="cancelBooking" />
 	</view-state>
 	
 	<action-state id="findHotels">
-		<evaluate expression="${bookingService.findHotels(searchCriteria)}" result="${flowScope.hotels}" />
+		<evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" />
 		<transition on="success" to="main" />
 	</action-state>
 	
@@ -31,13 +31,13 @@
 	</view-state>
 	
 	<subflow-state id="bookHotel" subflow="booking">
-		<input name="${id}" value="${flowScope.hotel.id}" />
+		<input name="id" value="flowScope.hotel.id" />
 		<transition on="bookingAuthorized" to="main" />
 		<transition on="cancel" to="main" />
 	</subflow-state>
 	
 	<action-state id="cancelBooking">
-		<evaluate expression="${bookingService.cancelBooking(requestParameters.bookingId)}" />
+		<evaluate expression="bookingService.cancelBooking(requestParameters.bookingId)" />
 		<transition on="success" to="main" />
 	</action-state>
 

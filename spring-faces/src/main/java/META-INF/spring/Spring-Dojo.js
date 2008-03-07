@@ -120,7 +120,7 @@ Spring.DojoRemotingHandler.prototype = {
 				return response;
 			}
 			else {
-				window.location.pathname = redirectURL;
+				window.location = window.location.protocol + "//" + window.location.host + redirectURL;
 				return response;
 			}
 		}

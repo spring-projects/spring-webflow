@@ -105,18 +105,21 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
-	 * Returns the flow variables.
+	 * Returns the configured view variables.
 	 */
 	public ViewVariable[] getVariables() {
 		return (ViewVariable[]) variables.values().toArray(new ViewVariable[variables.size()]);
 	}
 
+	/**
+	 * Returns whether this view state should request a flow execution redirect when entered.
+	 */
 	public boolean getRedirect() {
 		return redirect.booleanValue();
 	}
 
 	/**
-	 * Sets whether this view state should send a flow execution redirect when entered.
+	 * Sets whether this view state should requests a flow execution redirect when entered.
 	 * @param redirect the redirect flag
 	 */
 	public void setRedirect(Boolean redirect) {

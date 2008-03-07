@@ -45,10 +45,6 @@
 				<img src="<c:url value="/images/tse.gif"/>"/>
 			</a>
 			<p>
-				The features illustrated in this sample are just the beginning.
-				To see what is in store for developing rich web applications with Spring, join us at
-				<a href="http://www.thespringexperience.com">The Spring Experience</a>
-				December 12 - 15, 2007 at the Westin Diplomat in Hollywood, Florida.
 			</p>
 		</div>
 		<div id="main">
