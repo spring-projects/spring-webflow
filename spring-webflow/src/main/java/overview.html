@@ -35,7 +35,6 @@ as well as execute those flow definitions.  As the "bottom layer", this layer de
 <li>{@link org.springframework.webflow.action Action}
 <li>{@link org.springframework.webflow.util Util}
 </ol>
-</p>
 <h3>Executor Layer</h3>
 <p>
 Contains services called "flow executors" that drive the execution of flow definitions. This layer defines the 
@@ -52,7 +51,6 @@ implementation.
 <li>{@link org.springframework.webflow.executor.jsf Java Server Faces (JSF)}
 </ol>
 <h3>Execution Engine Layer</h3>
-</p>
 <p>
 Contains concrete implementations of the stable Execution Engine abstractions.  This layer defines the
 finite-state machine that carries out runtime flow execution. It also contains a builder subsystem for
@@ -64,7 +62,6 @@ assembling flows from externalized resources such as XML files.
 <li>{@link org.springframework.webflow.engine.builder Flow Builder}
 </ol>
 <h3>Test Layer</h3>
-</p>
 <p>
 Contains support code for testing flow executions. Two types of support are provided: stubs for unit 
 testing engine artifacts, and base classes for writing flow execution integration tests. This layer 
@@ -76,7 +73,6 @@ depends on the Execution Core and Execution Engine layers.
 <li>{@link org.springframework.webflow.test.execution Execution Test}
 </ol>
 <h3>System Configuration Layer</h3>
-</p>
 <h4>Subsystems</h4>
 <p>
 Contains support for configuring the flow executor engine using Spring. A Spring 2.0 config schema is provided.
