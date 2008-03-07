@@ -3,7 +3,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 	
 	<end-state id="end">
-		<secured authorities="ROLE_USER"/>
+		<secured attributes="ROLE_USER"/>
 	</end-state>
 
 </flow>

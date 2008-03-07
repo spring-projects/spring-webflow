@@ -914,11 +914,11 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	}
 
 	private void parseAndSetSecuredAttribute(Element element, MutableAttributeMap attributes) {
-		Element secured = DomUtils.getChildElementByTagName(element, SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+		Element secured = DomUtils.getChildElementByTagName(element, "secured");
 		if (secured != null) {
 			SecurityRule rule = new SecurityRule();
-			rule.setRequiredAuthorities(SecurityRule.convertAuthoritiesFromCommaSeparatedString(secured
-					.getAttribute("authorities")));
+			rule.setAttributes(SecurityRule.convertAttributesFromCommaSeparatedString(secured
+					.getAttribute("attributes")));
 			String comparisonType = secured.getAttribute("match");
 			if ("any".equals(comparisonType)) {
 				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
@@ -928,7 +928,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 				// default to any
 				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
 			}
-			attributes.put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+			attributes.put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		}
 	}
 

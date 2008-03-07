@@ -6,7 +6,7 @@
 	
 	<global-transitions>
 		<transition to="end">
-			<secured authorities="ROLE_USER"/>
+			<secured attributes="ROLE_USER"/>
 		</transition>
 	</global-transitions>
 

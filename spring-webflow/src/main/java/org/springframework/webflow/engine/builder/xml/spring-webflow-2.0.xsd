@@ -1322,16 +1322,29 @@ For example:
 			<xsd:documentation>
 				<![CDATA[
 Secures this flow definition element.
-The user invoking this element must meet the required authorities otherwise access to the element will be denied.
+The user invoking this element must meet the required attributes otherwise access to the element will be denied.
+<br>
+WARNING: This element will only configure a security attribute in the definition.  The flow execution must also be secured with a SecurityFlowExecutionListener.
+<br>
+For example:
+<pre>
+	&lt;web:flow-executor id="flowExecutor" flow-registry="flowRegistry"&gt;
+		&lt;web:flow-execution-listeners&gt;
+			&lt;web:listener ref="securityFlowExecutionListener" /&gt;
+		&lt;/web:flow-execution-listeners&gt;
+	&lt;/web:flow-executor&gt;
+	
+	&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" /&gt;
+</pre>
 ]]>
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexType>
-			<xsd:attribute name="authorities" type="xsd:string" use="required">
+			<xsd:attribute name="attributes" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The comma separated list of security authorities.
+The comma separated list of security attributes.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1340,7 +1353,7 @@ The comma separated list of security authorities.
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-The method for matching the authorities.  Accepted values are 'any' and 'all'.  Default is 'any'.
+The method for matching the attributes.  Accepted values are 'any' and 'all'.  Default is 'any'.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1350,7 +1363,7 @@ The method for matching the authorities.  Accepted values are 'any' and 'all'.  
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Matching any of the authorities grants access.
+Matching any of the attributes grants access.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
@@ -1359,7 +1372,7 @@ Matching any of the authorities grants access.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Matching all of the authorities grants access.
+Matching all of the attributes grants access.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>

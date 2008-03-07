@@ -150,11 +150,11 @@ public class XmlFlowBuilderTests extends TestCase {
 		builder = new XmlFlowBuilder(resource);
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		Flow flow = assembler.assembleFlow();
-		SecurityRule rule = (SecurityRule) flow.getAttributes().get(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+		SecurityRule rule = (SecurityRule) flow.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		assertNotNull(rule);
 		assertEquals(SecurityRule.COMPARISON_ANY, rule.getComparisonType());
-		assertEquals(1, rule.getRequiredAuthorities().size());
-		assertTrue(rule.getRequiredAuthorities().contains("ROLE_USER"));
+		assertEquals(1, rule.getAttributes().size());
+		assertTrue(rule.getAttributes().contains("ROLE_USER"));
 	}
 
 	public void testFlowSecuredState() {
@@ -163,11 +163,11 @@ public class XmlFlowBuilderTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		Flow flow = assembler.assembleFlow();
 		SecurityRule rule = (SecurityRule) flow.getState("end").getAttributes().get(
-				SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+				SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		assertNotNull(rule);
 		assertEquals(SecurityRule.COMPARISON_ANY, rule.getComparisonType());
-		assertEquals(1, rule.getRequiredAuthorities().size());
-		assertTrue(rule.getRequiredAuthorities().contains("ROLE_USER"));
+		assertEquals(1, rule.getAttributes().size());
+		assertTrue(rule.getAttributes().contains("ROLE_USER"));
 	}
 
 	public void testFlowSecuredTransition() {
@@ -176,11 +176,11 @@ public class XmlFlowBuilderTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		Flow flow = assembler.assembleFlow();
 		SecurityRule rule = (SecurityRule) flow.getGlobalTransitionSet().toArray()[0].getAttributes().get(
-				SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+				SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		assertNotNull(rule);
 		assertEquals(SecurityRule.COMPARISON_ANY, rule.getComparisonType());
-		assertEquals(1, rule.getRequiredAuthorities().size());
-		assertTrue(rule.getRequiredAuthorities().contains("ROLE_USER"));
+		assertEquals(1, rule.getAttributes().size());
+		assertTrue(rule.getAttributes().contains("ROLE_USER"));
 	}
 
 	public void testFlowVariable() {

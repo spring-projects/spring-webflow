@@ -8,20 +8,18 @@ import junit.framework.TestCase;
 
 public class SecurityRuleTests extends TestCase {
 
-	public void testConvertAuthoritiesToCommaSeparatedString() {
-		Collection authorities = new ArrayList();
-		authorities.add("ROLE_USER");
-		authorities.add("ROLE_ANONYMOUS");
-		Assert.assertEquals("ROLE_USER, ROLE_ANONYMOUS", SecurityRule
-				.convertAuthoritiesToCommaSeparatedString(authorities));
+	public void testConvertAttributesToCommaSeparatedString() {
+		Collection attributes = new ArrayList();
+		attributes.add("ROLE_1");
+		attributes.add("ROLE_2");
+		Assert.assertEquals("ROLE_1, ROLE_2", SecurityRule.convertAttributesToCommaSeparatedString(attributes));
 	}
 
-	public void testConvertAuthoritiesFromCommaSeparatedString() {
-		Collection authorities = SecurityRule
-				.convertAuthoritiesFromCommaSeparatedString(" ,,ROLE_USER, ROLE_ANONYMOUS");
-		Assert.assertEquals(2, authorities.size());
-		Assert.assertTrue(authorities.contains("ROLE_USER"));
-		Assert.assertTrue(authorities.contains("ROLE_ANONYMOUS"));
+	public void testConvertAttributesFromCommaSeparatedString() {
+		Collection attributes = SecurityRule.convertAttributesFromCommaSeparatedString(" ,,ROLE_1, ROLE_2");
+		Assert.assertEquals(2, attributes.size());
+		Assert.assertTrue(attributes.contains("ROLE_1"));
+		Assert.assertTrue(attributes.contains("ROLE_2"));
 	}
 
 	public void testDefaultComparisonType() {

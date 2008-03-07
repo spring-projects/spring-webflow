@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * Encapsulates the rules for comparing security authorities
+ * Encapsulates the rules for comparing security attributes
  * 
  * @author Scott Andrews
  */
@@ -15,69 +15,69 @@ public class SecurityRule {
 	/**
 	 * Attribute name for the location of the security rule
 	 */
-	public static final String SECURITY_AUTHORITY_ATTRIBUTE_NAME = "secured";
+	public static final String SECURITY_ATTRIBUTE_NAME = "secured";
 
 	/**
-	 * Compare method where any of the required authorities can match the principal's authorities
+	 * Compare method where any attribute authorization allows access
 	 */
 	public static final short COMPARISON_ANY = 1;
 
 	/**
-	 * Compare method where all of the required authorities must match the principal's authorities
+	 * Compare method where all attribute authorization allows access
 	 */
 	public static final short COMPARISON_ALL = 2;
 
-	private Collection requiredAuthorities;
+	private Collection attributes;
 	private short comparisonType = COMPARISON_ANY;
 
 	/**
-	 * Convert authorities to comma separated String
-	 * @param authorities the authorities to convert
+	 * Convert attributes to comma separated String
+	 * @param attributes the attributes to convert
 	 * @return comma separated String
 	 */
-	public static String convertAuthoritiesToCommaSeparatedString(Collection authorities) {
-		StringBuffer str = new StringBuffer();
-		Iterator authorityIt = authorities.iterator();
-		while (authorityIt.hasNext()) {
-			if (str.length() != 0) {
-				str.append(", ");
+	public static String convertAttributesToCommaSeparatedString(Collection attributes) {
+		StringBuffer attrs = new StringBuffer();
+		Iterator attributeIt = attributes.iterator();
+		while (attributeIt.hasNext()) {
+			if (attrs.length() != 0) {
+				attrs.append(", ");
 			}
-			str.append(authorityIt.next());
+			attrs.append(attributeIt.next());
 		}
-		return str.toString();
+		return attrs.toString();
 	}
 
 	/**
-	 * Convert authorities from comma separated String to Collection
-	 * @param authorities the authorities to convert
+	 * Convert attributes from comma separated String to Collection
+	 * @param attributes the attributes to convert
 	 * @return comma parsed Collection
 	 */
-	public static Collection convertAuthoritiesFromCommaSeparatedString(String authorities) {
-		Collection auths = new HashSet();
-		Iterator authorityIt = Arrays.asList(authorities.split(",")).iterator();
-		while (authorityIt.hasNext()) {
-			String authority = ((String) authorityIt.next()).trim();
-			if (!"".equals(authority)) {
-				auths.add(authority);
+	public static Collection convertAttributesFromCommaSeparatedString(String attributes) {
+		Collection attrs = new HashSet();
+		Iterator attributeIt = Arrays.asList(attributes.split(",")).iterator();
+		while (attributeIt.hasNext()) {
+			String attribute = ((String) attributeIt.next()).trim();
+			if (!"".equals(attribute)) {
+				attrs.add(attribute);
 			}
 		}
-		return auths;
+		return attrs;
 	}
 
 	/**
-	 * Gets required authorities
-	 * @return required authorities
+	 * Gets security attributes
+	 * @return security attributes
 	 */
-	public Collection getRequiredAuthorities() {
-		return requiredAuthorities;
+	public Collection getAttributes() {
+		return attributes;
 	}
 
 	/**
-	 * Sets required authorities
-	 * @param requiredAuthorities required authorities
+	 * Sets security attributes
+	 * @param attributes security attributes
 	 */
-	public void setRequiredAuthorities(Collection requiredAuthorities) {
-		this.requiredAuthorities = requiredAuthorities;
+	public void setAttributes(Collection attributes) {
+		this.attributes = attributes;
 	}
 
 	/**

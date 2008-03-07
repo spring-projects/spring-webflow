@@ -37,7 +37,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		RequestContext context = new MockRequestContext();
 		Flow flow = new Flow("flow");
 		SecurityRule rule = getSecurityRuleAnyAuthorized();
-		((LocalAttributeMap) flow.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+		((LocalAttributeMap) flow.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.sessionCreating(context, flow);
 	}
@@ -56,7 +56,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory());
 		SecurityRule rule = getSecurityRuleAllAuthorized();
-		((LocalAttributeMap) state.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+		((LocalAttributeMap) state.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.stateEntering(context, state);
 	}
@@ -73,7 +73,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		RequestContext context = new MockRequestContext();
 		Transition transition = new Transition(new DefaultTargetStateResolver("target"));
 		SecurityRule rule = getSecurityRuleAnyAuthorized();
-		((LocalAttributeMap) transition.getAttributes()).put(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME, rule);
+		((LocalAttributeMap) transition.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.transitionExecuting(context, transition);
 	}
@@ -117,40 +117,40 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_1");
-		authorities.add("ROLE_A");
-		rule.setRequiredAuthorities(authorities);
+		Collection attributes = new HashSet();
+		attributes.add("ROLE_1");
+		attributes.add("ROLE_A");
+		rule.setAttributes(attributes);
 		return rule;
 	}
 
 	private SecurityRule getSecurityRuleAnyDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_A");
-		authorities.add("ROLE_B");
-		rule.setRequiredAuthorities(authorities);
+		Collection attributes = new HashSet();
+		attributes.add("ROLE_A");
+		attributes.add("ROLE_B");
+		rule.setAttributes(attributes);
 		return rule;
 	}
 
 	private SecurityRule getSecurityRuleAllAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_1");
-		authorities.add("ROLE_3");
-		rule.setRequiredAuthorities(authorities);
+		Collection attributes = new HashSet();
+		attributes.add("ROLE_1");
+		attributes.add("ROLE_3");
+		rule.setAttributes(attributes);
 		return rule;
 	}
 
 	private SecurityRule getSecurityRuleAllDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection authorities = new HashSet();
-		authorities.add("ROLE_1");
-		authorities.add("ROLE_A");
-		rule.setRequiredAuthorities(authorities);
+		Collection attributes = new HashSet();
+		attributes.add("ROLE_1");
+		attributes.add("ROLE_A");
+		rule.setAttributes(attributes);
 		return rule;
 	}
 

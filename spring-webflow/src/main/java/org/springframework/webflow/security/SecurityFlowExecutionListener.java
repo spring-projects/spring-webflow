@@ -33,8 +33,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * Check security authorization when flow session starts
 	 */
 	public void sessionCreating(RequestContext context, FlowDefinition definition) {
-		SecurityRule rule = (SecurityRule) definition.getAttributes().get(
-				SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+		SecurityRule rule = (SecurityRule) definition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
 			decide(rule, definition);
 		}
@@ -44,7 +43,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * Check security authorization when entering state
 	 */
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
-		SecurityRule rule = (SecurityRule) state.getAttributes().get(SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+		SecurityRule rule = (SecurityRule) state.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
 			decide(rule, state);
 		}
@@ -54,8 +53,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * Check security authorization on transition
 	 */
 	public void transitionExecuting(RequestContext context, TransitionDefinition transition) {
-		SecurityRule rule = (SecurityRule) transition.getAttributes().get(
-				SecurityRule.SECURITY_AUTHORITY_ATTRIBUTE_NAME);
+		SecurityRule rule = (SecurityRule) transition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
 			decide(rule, transition);
 		}
@@ -95,9 +93,9 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 */
 	protected List getConfigAttributes(SecurityRule rule) {
 		List configAttributes = new ArrayList();
-		Iterator requiredAuthorityIt = rule.getRequiredAuthorities().iterator();
-		while (requiredAuthorityIt.hasNext()) {
-			configAttributes.add(new SecurityConfig((String) requiredAuthorityIt.next()));
+		Iterator attributeIt = rule.getAttributes().iterator();
+		while (attributeIt.hasNext()) {
+			configAttributes.add(new SecurityConfig((String) attributeIt.next()));
 		}
 		return configAttributes;
 	}
