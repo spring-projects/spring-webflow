@@ -57,11 +57,15 @@
 					</h:column>
 			        <h:column>
 			            <f:facet name="header">Check in date</f:facet>
-			            <h:outputText value="#{booking.checkinDate}"/>
+			            <h:outputText value="#{booking.checkinDate}">
+			            	<f:convertDateTime dateStyle="short"/>
+						</h:outputText>
 			        </h:column>
 			        <h:column>
 			            <f:facet name="header">Check out date</f:facet>
-			            <h:outputText value="#{booking.checkoutDate}"/>
+			            <h:outputText value="#{booking.checkoutDate}">
+			            	<f:convertDateTime dateStyle="short"/>
+						</h:outputText>
 			        </h:column>
 					<h:column>
 						<f:facet name="header">Confirmation number</f:facet>
