@@ -9,7 +9,7 @@
 	<style type="text/css" media="screen">
         @import url("${request.contextPath}/resources/css-framework/css/tools.css");
         @import url("${request.contextPath}/resources/css-framework/css/typo.css");
-        @import url("${request.contextPath}/resources/css-framework/css/forms.css");
+        @import url("       cresources/css-framework/css/forms.css");
         @import url("${request.contextPath}/resources/css-framework/css/layout-navtop-localleft.css");        
         @import url("${request.contextPath}/resources/css-framework/css/layout.css");
         @import url("${request.contextPath}/styles/booking.css");
@@ -23,7 +23,7 @@
 			<div class="left">Spring Faces: Hotel Booking Sample Application</div>
 			<div class="right">
 				<c:if test="${currentUser.name != 'roleAnonymous'}">
-	            	Welcome, ${currentUser.name}
+	            	Welcome, ${currentUser.name}  <a href="${request.contextPath}/spring/logout">Logout</a>
 				</c:if>
 			</div>
 		</div>
