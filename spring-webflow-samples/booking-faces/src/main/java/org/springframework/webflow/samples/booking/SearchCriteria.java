@@ -48,21 +48,19 @@ public class SearchCriteria implements Serializable {
 	this.page = page;
     }
 
-    /**
-     * Increase the current page
-     */
     public void nextPage() {
 	page++;
     }
 
-    /**
-     * Decrease the current page
-     */
     public void previousPage() {
 	page--;
     }
 
+    public void resetPage() {
+	page = 0;
+    }
+
     public String toString() {
-	return "searchString = '" + searchString + "'";
+	return "[Search Criteria searchString = '" + searchString + "'";
     }
 }

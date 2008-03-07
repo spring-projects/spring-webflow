@@ -12,6 +12,7 @@
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
 			<evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" />
+			<render fragments="bookingsFragment"/>
 		</transition>
 	</view-state>
 	 
@@ -21,11 +22,11 @@
 		</on-render>
 		<transition on="previous">
 			<evaluate expression="searchCriteria.previousPage()" />
-			<render fragments="searchResultsFragment" />
+			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="next">
 			<evaluate expression="searchCriteria.nextPage()" />
-			<render fragments="searchResultsFragment" />
+			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="select" to="reviewHotel" />
 		<transition on="changeSearch" to="changeSearchCriteria" />
@@ -49,7 +50,9 @@
 		<on-entry>
 			<render fragments="hotelSearchFragment" />
 		</on-entry>
-		<transition on="search" to="reviewHotels" />
+		<transition on="search" to="reviewHotels">
+			<evaluate expression="searchCriteria.resetPage()"/>
+		</transition>
 	</view-state>
 			
 	<end-state id="finish" />

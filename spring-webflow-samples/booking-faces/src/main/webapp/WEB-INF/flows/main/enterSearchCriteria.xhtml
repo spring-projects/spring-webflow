@@ -38,7 +38,7 @@
 	</ui:fragment>
 
 	<ui:fragment id="bookingsFragment">
-		<div class="section">
+		<div id="bookingsSection" class="section">
 			<h:form id="bookingsForm">
 				<h2>Current Hotel Bookings</h2>				
 				<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount == 0}"/>
@@ -69,7 +69,7 @@
 					</h:column>
 					<h:column>
 						<f:facet name="header">Action</f:facet>
-						<sf:commandLink id="cancel" value="Cancel" ajaxEnabled="false" processIds="bookingsFragment" action="cancelBooking"/>
+						<sf:commandLink id="cancel" value="Cancel" processIds="bookingsFragment" action="cancelBooking"/>
 					</h:column>
 				</h:dataTable>
 			</h:form>

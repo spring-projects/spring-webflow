@@ -55,19 +55,13 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		setId(original.getId() + "_ajax");
 	}
 
-	private void swapChildren(UIViewRoot source, UIViewRoot target) {
-		target.getChildren().addAll(source.getChildren());
-		Iterator i = target.getChildren().iterator();
-		while (i.hasNext()) {
-			UIComponent child = (UIComponent) i.next();
-			child.setParent(target);
-		}
+	// implementing view root
+
+	public void queueEvent(FacesEvent event) {
+		Assert.notNull(event, "Cannot queue a null event.");
+		events.add(event);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#encodeAll(javax.faces.context.FacesContext)
-	 */
 	public void encodeAll(FacesContext context) throws IOException {
 		for (int i = 0; i < getRenderIds().length; i++) {
 			String renderId = getRenderIds()[i];
@@ -91,55 +85,9 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			context.getApplication().getViewHandler().writeState(context);
 			updateFormAction(context);
 		}
-
 		broadCastEvents(context, PhaseId.APPLY_REQUEST_VALUES);
 	}
 
-	/**
-	 * 
-	 * @param context
-	 */
-	private void updateFormAction(FacesContext context) {
-		ResponseWriter writer = context.getResponseWriter();
-		try {
-			String formId = findContainingFormId(context);
-			if (StringUtils.hasLength(formId)) {
-				String script = "dojo.byId('" + formId + "').action = "
-						+ context.getApplication().getViewHandler().getActionURL(context, getViewId());
-				writer.startElement("script", null);
-				writer.writeText(script, null);
-				writer.endElement("script");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private String findContainingFormId(FacesContext context) {
-		for (int i = 0; i < getRenderIds().length; i++) {
-			UIComponent component = context.getViewRoot().findComponent(getRenderIds()[i]);
-			while (!(component instanceof UIViewRoot)) {
-				component = component.getParent();
-				if (component instanceof UIForm) {
-					return component.getClientId(context);
-				}
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processApplication(javax.faces.context.FacesContext)
-	 */
-	public void processApplication(FacesContext context) {
-		broadCastEvents(context, PhaseId.INVOKE_APPLICATION);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processDecodes(javax.faces.context.FacesContext)
-	 */
 	public void processDecodes(FacesContext context) {
 		for (int i = 0; i < getProcessIds().length; i++) {
 			String processId = getProcessIds()[i];
@@ -153,30 +101,6 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		broadCastEvents(context, PhaseId.APPLY_REQUEST_VALUES);
 	}
 
-	private String[] removeNestedChildren(FacesContext context, String[] ids) {
-		List idList = Arrays.asList(ids);
-		final List trimmedIds = new ArrayList(idList);
-
-		for (final ListIterator i = trimmedIds.listIterator(); i.hasNext();) {
-			String id = (String) i.next();
-			invokeOnComponent(context, id, new ContextCallback() {
-				public void invokeContextCallback(FacesContext context, UIComponent component) {
-					while (!(component.getParent() instanceof UIViewRoot)) {
-						component = component.getParent();
-						if (trimmedIds.contains(component.getClientId(context))) {
-							i.remove();
-						}
-					}
-				}
-			});
-		}
-		return (String[]) trimmedIds.toArray(new String[trimmedIds.size()]);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processUpdates(javax.faces.context.FacesContext)
-	 */
 	public void processUpdates(FacesContext context) {
 		for (int i = 0; i < getProcessIds().length; i++) {
 			String processId = getProcessIds()[i];
@@ -190,10 +114,6 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		broadCastEvents(context, PhaseId.UPDATE_MODEL_VALUES);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#processValidators(javax.faces.context.FacesContext)
-	 */
 	public void processValidators(FacesContext context) {
 		for (int i = 0; i < getProcessIds().length; i++) {
 			String processId = getProcessIds()[i];
@@ -207,47 +127,11 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		broadCastEvents(context, PhaseId.PROCESS_VALIDATIONS);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.faces.webflow.DelegatingViewRoot#queueEvent(javax.faces.event.FacesEvent)
-	 */
-	public void queueEvent(FacesEvent event) {
-		Assert.notNull(event, "Cannot queue a null event.");
-		events.add(event);
+	public void processApplication(FacesContext context) {
+		broadCastEvents(context, PhaseId.INVOKE_APPLICATION);
 	}
 
-	private void broadCastEvents(FacesContext context, PhaseId phaseId) {
-
-		List processedEvents = new ArrayList();
-
-		if (events.size() == 0)
-			return;
-
-		boolean abort = false;
-
-		int phaseIdOrdinal = phaseId.getOrdinal();
-		Iterator i = events.iterator();
-		while (i.hasNext()) {
-			FacesEvent event = (FacesEvent) i.next();
-			int ordinal = event.getPhaseId().getOrdinal();
-			if (ordinal == PhaseId.ANY_PHASE.getOrdinal() || ordinal == phaseIdOrdinal) {
-				UIComponent source = event.getComponent();
-				try {
-					processedEvents.add(event);
-					source.broadcast(event);
-				} catch (AbortProcessingException e) {
-					abort = true;
-					break;
-				}
-			}
-		}
-
-		if (abort) {
-			events.clear();
-		} else {
-			events.removeAll(processedEvents);
-		}
-	}
+	// subclassing hooks
 
 	protected String[] getProcessIds() {
 		if (processIds == null) {
@@ -267,7 +151,6 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	protected String[] getRenderIds() {
 		if (renderIds == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
-
 			renderIds = (String[]) renderIdsExpr.getValue(context);
 			if (renderIds == null || renderIds.length == 0) {
 				renderIds = getProcessIds();
@@ -276,6 +159,95 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			}
 		}
 		return renderIds;
+	}
+
+	// internal helpers
+
+	private void swapChildren(UIViewRoot source, UIViewRoot target) {
+		target.getChildren().addAll(source.getChildren());
+		Iterator i = target.getChildren().iterator();
+		while (i.hasNext()) {
+			UIComponent child = (UIComponent) i.next();
+			child.setParent(target);
+		}
+	}
+
+	private void updateFormAction(FacesContext context) {
+		ResponseWriter writer = context.getResponseWriter();
+		try {
+			String formId = findContainingFormId(context);
+			if (StringUtils.hasLength(formId)) {
+				String script = "dojo.byId('" + formId + "').action = "
+						+ context.getApplication().getViewHandler().getActionURL(context, getViewId());
+				writer.startElement("script", null);
+				writer.writeText(script, null);
+				writer.endElement("script");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String findContainingFormId(FacesContext context) {
+		for (int i = 0; i < getRenderIds().length; i++) {
+			UIComponent component = context.getViewRoot().findComponent(getRenderIds()[i]);
+			Assert.notNull(component, "Component to be rendered with id '" + getRenderIds()[i]
+					+ "' could not be found.");
+			while (!(component instanceof UIViewRoot)) {
+				component = component.getParent();
+				if (component instanceof UIForm) {
+					return component.getClientId(context);
+				}
+			}
+		}
+		return null;
+	}
+
+	private String[] removeNestedChildren(FacesContext context, String[] ids) {
+		List idList = Arrays.asList(ids);
+		final List trimmedIds = new ArrayList(idList);
+		for (final ListIterator i = trimmedIds.listIterator(); i.hasNext();) {
+			String id = (String) i.next();
+			invokeOnComponent(context, id, new ContextCallback() {
+				public void invokeContextCallback(FacesContext context, UIComponent component) {
+					while (!(component.getParent() instanceof UIViewRoot)) {
+						component = component.getParent();
+						if (trimmedIds.contains(component.getClientId(context))) {
+							i.remove();
+						}
+					}
+				}
+			});
+		}
+		return (String[]) trimmedIds.toArray(new String[trimmedIds.size()]);
+	}
+
+	private void broadCastEvents(FacesContext context, PhaseId phaseId) {
+		List processedEvents = new ArrayList();
+		if (events.size() == 0)
+			return;
+		boolean abort = false;
+		int phaseIdOrdinal = phaseId.getOrdinal();
+		Iterator i = events.iterator();
+		while (i.hasNext()) {
+			FacesEvent event = (FacesEvent) i.next();
+			int ordinal = event.getPhaseId().getOrdinal();
+			if (ordinal == PhaseId.ANY_PHASE.getOrdinal() || ordinal == phaseIdOrdinal) {
+				UIComponent source = event.getComponent();
+				try {
+					processedEvents.add(event);
+					source.broadcast(event);
+				} catch (AbortProcessingException e) {
+					abort = true;
+					break;
+				}
+			}
+		}
+		if (abort) {
+			events.clear();
+		} else {
+			events.removeAll(processedEvents);
+		}
 	}
 
 }

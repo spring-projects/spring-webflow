@@ -44,19 +44,19 @@
     </div>
 </div>
 
-<!--This is here only to get state saving to run -->
-<h:form id="stateWriter"> </h:form>
-
 <div class="section">
-	<!--This is a temporary workaround as spring-security 2.0-M2 is not forwarding to the correct URL when using a POST -->
-	<form id="hotel" method="GET">
+	<!-- Use of a plain form element instead of the h:form component is a temporary workaround as spring-security 2.0-M2 is not forwarding to the correct URL when using a post -->
+	<form id="hotel" method="get">
 	<input name="execution" type="hidden" value="${requestContext.flowExecutionContext.key}"/>
 	<fieldset class="buttonGroup">
-		<sf:commandButton id="book" ajaxEnabled="false" action="book" value="Book Hotel"/>
+		<sf:commandButton id="book" ajaxEnabled="false" action="book" value="Book Hotel"/>&#160;
 		<sf:commandButton id="cancel" ajaxEnabled="false" action="cancel" value="Back to Search"/>
 	</fieldset>
 	</form>
 </div>
+
+<!--Only used to enable view state saving with Facelets due to spring-security workaround above -->
+<h:form id="hotel_stateSaving"></h:form>
 
 </ui:define>
 </ui:composition>

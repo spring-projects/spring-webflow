@@ -8,7 +8,7 @@
 
 <ui:define name="content">
 
-<h:form id="displayHotelsForm">
+<h:form id="hotels">
 	<div class="section">
 		<h2>Hotel Results</h2>
 		<p>
@@ -42,8 +42,8 @@
 				<div class="next">
 					<sf:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
 				</div>
-				<div class="prev">
-					<sf:commandLink id="prevPageLink" value="Previous results" action="previous" rendered="#{searchCriteria.page > 0}"/>
+				<div class="previous">
+					<sf:commandLink id="previousPageLink" value="Previous results" action="previous" rendered="#{searchCriteria.page > 0}"/>
 				</div>
 			</div>
 		</ui:fragment>
