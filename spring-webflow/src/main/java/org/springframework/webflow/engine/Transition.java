@@ -200,25 +200,27 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 			context.setLastTransition(this);
 			if (targetStateResolver != null) {
 				State targetState = targetStateResolver.resolveTargetState(this, sourceState, context);
-				if (sourceState != null) {
+				if (targetState != null) {
+					if (sourceState != null) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("Exiting state '" + sourceState.getId() + "'");
+						}
+						if (sourceState instanceof TransitionableState) {
+							((TransitionableState) sourceState).exit(context);
+						}
+					}
+					targetState.enter(context);
 					if (logger.isDebugEnabled()) {
-						logger.debug("Exiting state '" + sourceState.getId() + "'");
+						if (context.getFlowExecutionContext().isActive()) {
+							logger.debug("Completed transition execution.  As a result, the new state is '"
+									+ context.getCurrentState().getId() + "' in flow '"
+									+ context.getActiveFlow().getId() + "'");
+						} else {
+							logger.debug("Completed transition execution.  As a result, the flow execution has ended");
+						}
 					}
-					if (sourceState instanceof TransitionableState) {
-						((TransitionableState) sourceState).exit(context);
-					}
+					return true;
 				}
-				targetState.enter(context);
-				if (logger.isDebugEnabled()) {
-					if (context.getFlowExecutionContext().isActive()) {
-						logger.debug("Completed transition execution.  As a result, the new state is '"
-								+ context.getCurrentState().getId() + "' in flow '" + context.getActiveFlow().getId()
-								+ "'");
-					} else {
-						logger.debug("Completed transition execution.  As a result, the flow execution has ended");
-					}
-				}
-				return true;
 			}
 		}
 		return false;

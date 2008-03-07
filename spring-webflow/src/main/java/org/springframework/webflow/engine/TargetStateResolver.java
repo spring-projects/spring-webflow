@@ -31,7 +31,7 @@ public interface TargetStateResolver {
 	 * @param transition the transition
 	 * @param sourceState the source state of the transition, could be null
 	 * @param context the current request context
-	 * @return the transition's target state
+	 * @return the transition's target state - may be null if no state change should occur
 	 */
 	public State resolveTargetState(Transition transition, State sourceState, RequestContext context);
 }
