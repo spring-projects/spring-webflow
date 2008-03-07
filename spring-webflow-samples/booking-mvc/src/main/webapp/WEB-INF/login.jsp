@@ -10,8 +10,7 @@
 <tiles:insertTemplate template="/WEB-INF/layouts/standard.jsp">
 <tiles:putAttribute name="content">
 
-
-<h1>Login</h1>
+<h1>Login Required</h1>
 
 <c:if test="${not empty param.login_error}">
 	<div class="errors">
@@ -21,11 +20,12 @@
 </c:if>
 
 <div class="section">
-	<p>Valid users:</p>
+	<p>Valid username/passwords are:</p>
 	<ul>
-		<li>rod/koala</li>
-	    <li>dianne/emu</li>
-	    <li>scott/wombat</li>
+		<li>keith/melbourne</li>
+	    <li>erwin/leuven</li>
+	    <li>scott/rochester</li>
+	    <li>jeremy/atlanta</li>
 	</ul>
 </div>
 
