@@ -50,14 +50,14 @@ public class JsfViewFactory implements ViewFactory {
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
 
-	private final Expression viewExpr;
+	private final Expression viewIdExpression;
 
 	private final ResourceLoader resourceLoader;
 
 	private final Lifecycle lifecycle;
 
-	public JsfViewFactory(Expression viewExpr, ResourceLoader resourceLoader, Lifecycle lifecycle) {
-		this.viewExpr = viewExpr;
+	public JsfViewFactory(Expression viewIdExpression, ResourceLoader resourceLoader, Lifecycle lifecycle) {
+		this.viewIdExpression = viewIdExpression;
 		this.resourceLoader = resourceLoader;
 		this.lifecycle = lifecycle;
 	}
@@ -135,7 +135,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private String resolveViewName(RequestContext context) {
-		String viewId = (String) viewExpr.getValue(context);
+		String viewId = (String) viewIdExpression.getValue(context);
 		if (viewId.startsWith("/")) {
 			return viewId;
 		} else {

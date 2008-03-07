@@ -7,6 +7,7 @@ import javax.el.ValueExpression;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
 /**
@@ -50,7 +51,7 @@ public class ELExpression implements Expression {
 		try {
 			valueExpression.setValue(ctx, value);
 			if (!ctx.isPropertyResolved()) {
-				throw new EvaluationException(new EvaluationAttempt(this, context), null);
+				throw new EvaluationException(new SetValueAttempt(this, context, value), null);
 			}
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);

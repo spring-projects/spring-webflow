@@ -22,39 +22,41 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Transition criteria that tests the value of an expression. The expression is used to express a condition that guards
- * transition execution in a web flow. Expressions will be evaluated agains the request context and should return a
- * boolean result.
+ * transition execution in a web flow. Expressions will be evaluated against the request context. Boolean, string, and
+ * custom TransitonCriteria evaluation results are supported.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-public class BooleanExpressionTransitionCriteria implements TransitionCriteria {
+public class DefaultTransitionCriteria implements TransitionCriteria {
 
 	/**
 	 * The expression evaluator to use.
 	 */
-	private Expression booleanExpression;
+	private Expression expression;
 
 	/**
 	 * Create a new expression based transition criteria object.
-	 * @param booleanExpression the expression evaluator testing the criteria, this expression should be a condition
-	 * that returns a Boolean value
+	 * @param expression the expression evaluator testing the criteria
 	 */
-	public BooleanExpressionTransitionCriteria(Expression booleanExpression) {
-		Assert.notNull(booleanExpression, "The expression to test is required");
-		this.booleanExpression = booleanExpression;
+	public DefaultTransitionCriteria(Expression expression) {
+		Assert.notNull(expression, "The transition criteria expression to test is required");
+		this.expression = expression;
 	}
 
 	public boolean test(RequestContext context) {
-		Object result = booleanExpression.getValue(context);
-		if (result instanceof Boolean) {
+		Object result = expression.getValue(context);
+		if (result == null) {
+			return false;
+		} else if (result instanceof Boolean) {
 			return ((Boolean) result).booleanValue();
 		} else {
-			return context.getLastEvent().getId().equals(String.valueOf(result));
+			String eventId = String.valueOf(result);
+			return context.getLastEvent().getId().equals(eventId);
 		}
 	}
 
 	public String toString() {
-		return booleanExpression.toString();
+		return expression.toString();
 	}
 }

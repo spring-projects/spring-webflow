@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
@@ -25,7 +27,5 @@
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-webflow.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-binding.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

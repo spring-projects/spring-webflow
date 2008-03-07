@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/test/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/antlr.jar"/>
@@ -36,7 +37,6 @@
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-aop.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-binding.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-jdbc.jar"/>

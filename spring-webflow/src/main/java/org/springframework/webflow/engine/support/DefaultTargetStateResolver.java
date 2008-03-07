@@ -35,11 +35,11 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 	/**
 	 * The expression for the target state identifier.
 	 */
-	private Expression targetStateIdExpression;
+	private Expression targetStateExpression;
 
 	/**
 	 * Creates a new target state resolver that always returns the same target state id.
-	 * @param targetStateId the id of the target state
+	 * @param targetStateId a static target target state
 	 */
 	public DefaultTargetStateResolver(String targetStateId) {
 		this(new StaticExpression(targetStateId));
@@ -47,23 +47,23 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 
 	/**
 	 * Creates a new target state resolver.
-	 * @param targetStateIdExpression the target state id expression
+	 * @param targetStateExpression the target state expression
 	 */
-	public DefaultTargetStateResolver(Expression targetStateIdExpression) {
-		Assert.notNull(targetStateIdExpression, "The target state id expression is required");
-		this.targetStateIdExpression = targetStateIdExpression;
+	public DefaultTargetStateResolver(Expression targetStateExpression) {
+		Assert.notNull(targetStateExpression, "The target state expression is required");
+		this.targetStateExpression = targetStateExpression;
 	}
 
 	public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-		String stateId = String.valueOf(targetStateIdExpression.getValue(context));
-		if (stateId != null) {
-			return ((Flow) context.getActiveFlow()).getStateInstance(stateId);
+		String targetStateId = (String) targetStateExpression.getValue(context);
+		if (targetStateId != null) {
+			return ((Flow) context.getActiveFlow()).getStateInstance(targetStateId);
 		} else {
 			return null;
 		}
 	}
 
 	public String toString() {
-		return targetStateIdExpression.toString();
+		return targetStateExpression.toString();
 	}
 }

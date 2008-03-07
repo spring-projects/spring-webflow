@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
-import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
+import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -39,9 +39,8 @@ import org.springframework.webflow.execution.RequestContext;
  * </li>
  * <li>"eventId" - will result in a TransitionCriteria object that matches given event id ({@link org.springframework.webflow.engine.support.EventIdTransitionCriteria})
  * </li>
- * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an expression ({@link org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria})
+ * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an expression ({@link org.springframework.webflow.engine.support.DefaultTransitionCriteria})
  * </li>
- * <li>"bean:&lt;id&gt;" - will result in usage of a custom TransitionCriteria bean implementation.</li>
  * </ul>
  * 
  * @see org.springframework.webflow.engine.TransitionCriteria
@@ -50,11 +49,6 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Erwin Vervaet
  */
 class TextToTransitionCriteria extends AbstractConverter {
-
-	/**
-	 * Prefix used when the user wants to use a custom TransitionCriteria implementation managed by a bean factory.
-	 */
-	private static final String BEAN_PREFIX = "bean:";
 
 	/**
 	 * Context for flow builder services.
@@ -83,9 +77,6 @@ class TextToTransitionCriteria extends AbstractConverter {
 		if (!StringUtils.hasText(encodedCriteria)
 				|| WildcardTransitionCriteria.WILDCARD_EVENT_ID.equals(encodedCriteria)) {
 			return WildcardTransitionCriteria.INSTANCE;
-		} else if (encodedCriteria.startsWith(BEAN_PREFIX)) {
-			return flowBuilderContext.getBeanFactory().getBean(encodedCriteria.substring(BEAN_PREFIX.length()),
-					TransitionCriteria.class);
 		} else {
 			return createBooleanExpressionTransitionCriteria(encodedCriteria, parser);
 		}
@@ -103,6 +94,6 @@ class TextToTransitionCriteria extends AbstractConverter {
 			ExpressionParser parser) throws ConversionException {
 		Expression expression = parser.parseExpression(encodedCriteria, new ParserContextImpl().template().eval(
 				RequestContext.class).variable(new ExpressionVariable("result", "lastEvent.id")));
-		return new BooleanExpressionTransitionCriteria(expression);
+		return new DefaultTransitionCriteria(expression);
 	}
 }

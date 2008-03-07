@@ -22,7 +22,6 @@ import javax.faces.lifecycle.LifecycleFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
-import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
 
 /**
@@ -36,12 +35,12 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 
 	private Lifecycle lifecycle;
 
-	public Action createFinalResponseAction(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfFinalResponseAction(new JsfViewFactory(viewName, resourceLoader, getLifecycle()));
+	public ViewFactory createViewFactory(Expression viewIdExpression, ResourceLoader resourceLoader) {
+		return new JsfViewFactory(viewIdExpression, resourceLoader, getLifecycle());
 	}
 
-	public ViewFactory createViewFactory(Expression viewName, ResourceLoader resourceLoader) {
-		return new JsfViewFactory(viewName, resourceLoader, getLifecycle());
+	public String getViewIdByConvention(String viewStateId) {
+		return viewStateId + FACELETS_EXTENSION;
 	}
 
 	private Lifecycle createFlowFacesLifecycle() {
@@ -56,10 +55,6 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 			lifecycle = createFlowFacesLifecycle();
 		}
 		return lifecycle;
-	}
-
-	public String createViewIdByConvention(String viewStateId) {
-		return viewStateId + FACELETS_EXTENSION;
 	}
 
 }

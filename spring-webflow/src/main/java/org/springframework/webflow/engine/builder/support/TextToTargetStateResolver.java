@@ -20,6 +20,7 @@ import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
@@ -33,20 +34,14 @@ import org.springframework.webflow.execution.RequestContext;
  * <ul>
  * <li>"stateId" - will result in a TargetStateResolver that always resolves the same state. </li>
  * <li>"${stateIdExpression} - will result in a TargetStateResolver that resolves the target state by evaluating an
- * expression against the request context.</li>
- * <li>"bean:&lt;id&gt;" - will result in usage of a custom TargetStateResolver bean implementation configured in an
- * external context.</li>
+ * expression against the request context. The resolved value can be a target state identifier or a custom
+ * TargetStateResolver to delegate to.</li>
  * </ul>
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
 class TextToTargetStateResolver extends AbstractConverter {
-
-	/**
-	 * Prefix used when the user wants to use a custom TargetStateResolver implementation managed by a factory.
-	 */
-	private static final String BEAN_PREFIX = "bean:";
 
 	/**
 	 * Context for flow builder services.
@@ -71,16 +66,13 @@ class TextToTargetStateResolver extends AbstractConverter {
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
 		String targetStateId = (String) source;
-		if (targetStateId == null) {
+		if (!StringUtils.hasText(targetStateId)) {
 			return null;
 		}
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
-		if (targetStateId.startsWith(BEAN_PREFIX)) {
-			return flowBuilderContext.getBeanFactory().getBean(targetStateId.substring(BEAN_PREFIX.length()));
-		} else {
-			Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().template().eval(
-					RequestContext.class).expect(String.class));
-			return new DefaultTargetStateResolver(expression);
-		}
+		Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().template().eval(
+				RequestContext.class).expect(String.class));
+		return new DefaultTargetStateResolver(expression);
+
 	}
 }

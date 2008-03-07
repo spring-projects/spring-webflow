@@ -35,8 +35,7 @@ public class EvaluationException extends NestedRuntimeException {
 	 * @param cause the underlying cause of this exception
 	 */
 	public EvaluationException(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		super("Expression " + evaluationAttempt
-				+ " failed - make sure the expression is evaluatable in the context provided", cause);
+		super(evaluationAttempt + " failed - make sure the expression is evaluatable in the context provided", cause);
 		this.evaluationAttempt = evaluationAttempt;
 	}
 

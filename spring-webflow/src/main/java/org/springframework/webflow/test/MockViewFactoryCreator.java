@@ -40,7 +40,7 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 		return new MockViewFactory(viewId);
 	}
 
-	public String createViewIdByConvention(String viewStateId) {
+	public String getViewIdByConvention(String viewStateId) {
 		return viewStateId;
 	}
 

@@ -185,7 +185,7 @@ public class MockRequestContext implements RequestContext {
 		}
 	}
 
-	// mutators
+	// mutators for configuring the mock
 
 	/**
 	 * Sets the active flow session of the executing flow associated with this request. This will influence
@@ -243,7 +243,32 @@ public class MockRequestContext implements RequestContext {
 		attributes.remove(attributeName);
 	}
 
+	/**
+	 * Adds a request parameter to the configured external context.
+	 * @param parameterName the parameter name
+	 * @param parameterValue the parameter value
+	 */
+	public void putRequestParameter(String parameterName, String parameterValue) {
+		getMockExternalContext().putRequestParameter(parameterName, parameterValue);
+	}
+
+	/**
+	 * Adds a multi-valued request parameter to the configured external context.
+	 * @param parameterName the parameter name
+	 * @param parameterValues the parameter values
+	 */
+	public void putRequestParameter(String parameterName, String[] parameterValues) {
+		getMockExternalContext().putRequestParameter(parameterName, parameterValues);
+	}
+
 	// convenience accessors
+
+	/**
+	 * Returns the root flow definition for this request context. Assumes a {@link Flow} implementation.
+	 */
+	public Flow getRootFlow() {
+		return getMockFlowExecutionContext().getDefinitionInternal();
+	}
 
 	/**
 	 * Returns the contained mutable context {@link AttributeMap attribute map} allowing setting of mock context
@@ -266,24 +291,6 @@ public class MockRequestContext implements RequestContext {
 	 */
 	public MockExternalContext getMockExternalContext() {
 		return (MockExternalContext) externalContext;
-	}
-
-	/**
-	 * Adds a request parameter to the configured external context.
-	 * @param parameterName the parameter name
-	 * @param parameterValue the parameter value
-	 */
-	public void putRequestParameter(String parameterName, String parameterValue) {
-		getMockExternalContext().putRequestParameter(parameterName, parameterValue);
-	}
-
-	/**
-	 * Adds a multi-valued request parameter to the configured external context.
-	 * @param parameterName the parameter name
-	 * @param parameterValues the parameter values
-	 */
-	public void putRequestParameter(String parameterName, String[] parameterValues) {
-		getMockExternalContext().putRequestParameter(parameterName, parameterValues);
 	}
 
 }

@@ -768,10 +768,6 @@ Sophisticated transitional expressions are also supported when enclosed in a del
 <pre>
 	&lt;transition on="#{event == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
 </pre>
-For exotic usage scenarios, custom TransitionCriteria beans can be plugged in as follows:
-<pre>
-	&lt;transition on="bean:myCustomCriteriaBean" to="state"/&gt;
-</pre>
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -794,8 +790,7 @@ Superclasses of the configured exception class match by default.  Use this attri
 						<![CDATA[
 The target state to transition to.
 <br>
-The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic eval expression (e.g. to="#{flowScope.previousViewState}").
-For exotic usage scenarios, custom target state resolver beans can also be plugged in (e.g. to="bean:myCustomTargetStateResolver").
+The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic expression (e.g. to="${flowScope.previousViewState}").
 If no value is specified, this transition acts as a simple event handler and will not change the state of the flow.
 ]]>
 					</xsd:documentation>
@@ -905,11 +900,6 @@ Use the flowRedirect: prefix to redirect to another flow:
 <pre>
 	flowRedirect:myOtherFlow?someData=#{flowScope.data}
 </pre>
-For exotic usages, use the bean: prefix to plug in a custom ViewFactory bean you define.
-<pre>
-	bean:myCustomViewFactory
-</pre>
-<br>
 When this attribute is not specified, the view to render will be determined by convention.
 The default convention is to treat the id of this view state as the view identifier.
 ]]>
@@ -1241,9 +1231,9 @@ Use the flowRedirect: prefix to redirect to another flow:
 <pre>
 	flowRedirect:myOtherFlow?someData=#{flowScope.data}
 </pre>
-For exotic usages, use the bean: prefix to plug in a custom ViewFactory bean you define:
+For exotic usages, you may plug in a custom ViewFactory bean you define:
 <pre>
-	bean:myCustomViewFactory
+	#{myCustomViewFactory}
 </pre>
 <br>
 When this attribute is not specified, no final response will be issued.  In this case, 

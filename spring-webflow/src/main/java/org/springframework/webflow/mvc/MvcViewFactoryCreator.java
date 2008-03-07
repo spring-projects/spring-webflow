@@ -19,10 +19,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.JstlView;
-import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
-import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -43,29 +41,13 @@ import org.springframework.webflow.execution.ViewFactory;
 public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
 
 	private static final boolean jstlPresent = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
+
 	private static final boolean springSecurityPresent = ClassUtils
 			.isPresent("org.springframework.security.context.SecurityContextHolder");
 
 	private List viewResolvers;
 
 	private ApplicationContext applicationContext;
-
-	public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
-		return new ViewFactoryActionAdapter(createViewFactory(viewId, viewResourceLoader));
-	}
-
-	public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader) {
-		if (viewResolvers != null) {
-			return new ViewResolvingMvcViewFactory(viewId, viewResolvers);
-		} else {
-			return new InternalFlowResourceMvcViewFactory(viewId, applicationContext, viewResourceLoader);
-		}
-	}
-
-	public String createViewIdByConvention(String viewStateId) {
-		// TODO - make configurable
-		return viewStateId + ".jsp";
-	}
 
 	/**
 	 * Sets the view resolvers that will be used to resolve views selected by flows. If multiple resolvers are to be
@@ -80,27 +62,40 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.applicationContext = context;
 	}
 
+	public ViewFactory createViewFactory(Expression viewIdExpression, ResourceLoader viewResourceLoader) {
+		if (viewResolvers != null) {
+			return new ViewResolvingMvcViewFactory(viewIdExpression, viewResolvers);
+		} else {
+			return new InternalFlowResourceMvcViewFactory(viewIdExpression, applicationContext, viewResourceLoader);
+		}
+	}
+
+	public String getViewIdByConvention(String viewStateId) {
+		// TODO - make configurable
+		return viewStateId + ".jsp";
+	}
+
 	/**
 	 * View factory implementation that creates a Spring-MVC Internal Resource view to render a flow-relative view
 	 * resource such as a JSP or Velocity template.
 	 * @author Keith Donald
 	 */
 	static class InternalFlowResourceMvcViewFactory implements ViewFactory {
-		private Expression viewExpression;
+		private Expression viewIdExpression;
 
 		private ApplicationContext applicationContext;
 
 		private ResourceLoader resourceLoader;
 
-		public InternalFlowResourceMvcViewFactory(Expression viewExpression, ApplicationContext context,
+		public InternalFlowResourceMvcViewFactory(Expression viewIdExpression, ApplicationContext context,
 				ResourceLoader resourceLoader) {
-			this.viewExpression = viewExpression;
+			this.viewIdExpression = viewIdExpression;
 			this.applicationContext = context;
 			this.resourceLoader = resourceLoader;
 		}
 
 		public View getView(RequestContext context) {
-			String viewId = (String) viewExpression.getValue(context);
+			String viewId = (String) viewIdExpression.getValue(context);
 			if (viewId.startsWith("/")) {
 				return getViewInternal(viewId, context);
 			} else {
@@ -133,17 +128,17 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	 * @author Keith Donald
 	 */
 	private static class ViewResolvingMvcViewFactory implements ViewFactory {
-		private Expression viewId;
+		private Expression viewIdExpression;
 
 		private List viewResolvers;
 
-		public ViewResolvingMvcViewFactory(Expression viewId, List viewResolvers) {
-			this.viewId = viewId;
+		public ViewResolvingMvcViewFactory(Expression viewIdExpression, List viewResolvers) {
+			this.viewIdExpression = viewIdExpression;
 			this.viewResolvers = viewResolvers;
 		}
 
 		public View getView(RequestContext context) {
-			String view = (String) viewId.getValue(context);
+			String view = (String) viewIdExpression.getValue(context);
 			return new MvcView(resolveView(view), context);
 		}
 
@@ -190,7 +185,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			Map model = new HashMap();
 			model.putAll(context.getConversationScope().union(context.getFlowScope()).union(context.getFlashScope())
 					.union(context.getRequestScope()).asMap());
-			model.put("flowExecutionRequestContext", context);
+			model.put("flowRequestContext", context);
 			model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
 			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
 			if (springSecurityPresent && !model.containsKey("currentUser")) {

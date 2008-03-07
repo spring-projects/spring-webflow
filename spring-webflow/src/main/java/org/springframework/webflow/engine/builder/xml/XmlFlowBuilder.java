@@ -78,7 +78,7 @@ import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
 import org.springframework.webflow.engine.support.BeanFactoryVariableValueFactory;
-import org.springframework.webflow.engine.support.BooleanExpressionTransitionCriteria;
+import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 import org.springframework.webflow.engine.support.GenericSubflowAttributeMapper;
 import org.springframework.webflow.engine.support.TransitionCriteriaChain;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
@@ -593,7 +593,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			if (endState) {
 				return null;
 			} else {
-				encodedView = getLocalContext().getViewFactoryCreator().createViewIdByConvention(parseId(element));
+				encodedView = getLocalContext().getViewFactoryCreator().getViewIdByConvention(parseId(element));
 				Expression viewName = getExpressionParser().parseExpression(encodedView,
 						new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 				return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
@@ -609,13 +609,10 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			Expression expression = getExpressionParser().parseExpression(flowRedirect,
 					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
 			return new ActionExecutingViewFactory(new FlowDefinitionRedirectAction(expression));
-		} else if (encodedView.startsWith("bean:")) {
-			return (ViewFactory) getLocalContext().getBeanFactory().getBean(encodedView.substring("bean:".length()),
-					ViewFactory.class);
 		} else {
-			Expression viewName = getExpressionParser().parseExpression(encodedView,
+			Expression viewId = getExpressionParser().parseExpression(encodedView,
 					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
-			return getLocalContext().getViewFactoryCreator().createViewFactory(viewName,
+			return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
 					getLocalContext().getResourceLoader());
 		}
 	}
@@ -782,7 +779,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 	private Transition parseThen(Element element) {
 		Expression expression = getExpressionParser().parseExpression(element.getAttribute("test"),
 				new ParserContextImpl().eval(RequestContext.class).expect(Boolean.class));
-		TransitionCriteria matchingCriteria = new BooleanExpressionTransitionCriteria(expression);
+		TransitionCriteria matchingCriteria = new DefaultTransitionCriteria(expression);
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(element.getAttribute("then"));
 		return getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, null, null);

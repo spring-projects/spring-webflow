@@ -121,12 +121,18 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 		return outcome;
 	}
 
+	// convenience mock accessors
+
+	public Flow getDefinitionInternal() {
+		return (Flow) getDefinition();
+	}
+
 	// mutators
 
 	/**
 	 * Sets the top-level flow definition.
 	 */
-	public void setFlow(Flow rootFlow) {
+	public void setFlow(FlowDefinition rootFlow) {
 		this.flow = rootFlow;
 	}
 

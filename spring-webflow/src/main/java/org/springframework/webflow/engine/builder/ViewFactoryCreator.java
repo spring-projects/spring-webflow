@@ -29,16 +29,16 @@ public interface ViewFactoryCreator {
 	/**
 	 * Create a view factory capable of creating {@link View} objects that can render the view template with the
 	 * provided identifier.
-	 * @param viewId an expression that resolves the id of the view template
+	 * @param viewIdExpression an expression that resolves the id of the view template
 	 * @param viewResourceLoader an optional resource loader to use to load the view template from an input stream
 	 * @return the view factory
 	 */
-	public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader);
+	public ViewFactory createViewFactory(Expression viewIdExpression, ResourceLoader viewResourceLoader);
 
 	/**
-	 * Create the default id of the view to render in the provided view state by convention.
+	 * Get the default id of the view to render in the provided view state by convention.
 	 * @param viewStateId the view state id
 	 * @return the default view id
 	 */
-	public String createViewIdByConvention(String viewStateId);
+	public String getViewIdByConvention(String viewStateId);
 }
