@@ -12,14 +12,13 @@
 
 <h1>Login Required</h1>
 
-<c:if test="${not empty param.login_error}">
-	<div class="errors">
-		Your login attempt was not successful, try again.<br /><br />
-		Reason: <%= ((AuthenticationException) session.getAttribute(AbstractProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
-	</div>
-</c:if>
-
 <div class="section">
+	<c:if test="${not empty param.login_error}">
+		<div class="errors">
+			Your login attempt was not successful, try again.<br /><br />
+			Reason: <%= ((AuthenticationException) session.getAttribute(AbstractProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
+		</div>
+	</c:if>
 	<p>Valid username/passwords are:</p>
 	<ul>
 		<li>keith/melbourne</li>

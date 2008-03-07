@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Spring Faces: Hotel Booking Sample Application</title>
+	<title>Spring Web Flow: Hotel Booking Sample Application</title>
 	<style type="text/css" media="screen">
         @import url("<c:url value="/resources/css-framework/css/tools.css" />");
         @import url("<c:url value="/resources/css-framework/css/typo.css" />");
@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<img src="<c:url value="/images/header.jpg"/>"/>
+			<a href="<c:url value="/" />"><img src="<c:url value="/images/header.jpg"/>"/></a>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
