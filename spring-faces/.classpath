@@ -6,7 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>

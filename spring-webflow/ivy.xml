@@ -19,7 +19,6 @@
 	<dependencies defaultconf="global->default">
 		<!--  global (core) dependencies -->
 		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" />
-		<dependency org="ognl" name="ognl" rev="2.6.9" />
 		<!-- Xerces and XML-apis are required only under JDK 1.4 for XSD support -->
 		<!-- Note: POMs are incorrect in m2 repo; ignoring since they are optional anyway
 		<dependency org="xerces" name="xercesImpl" rev="2.8.0"/>
@@ -30,8 +29,7 @@
 		<dependency org="org.springframework" name="spring-core" rev="2.5.2" />
 		<dependency org="org.springframework" name="spring-context" rev="2.5.2" />
 		<dependency org="org.springframework" name="spring-web" rev="2.5.2" />
-		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.2" conf="buildtime, mvc->default" />
-		<dependency org="org.springframework" name="spring-webmvc-portlet" rev="2.5.2" conf="buildtime, portlet->default" />
+		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.2" />
 
 		<!-- testing support only dependencies -->
 		<dependency org="junit" name="junit" rev="3.8.2" conf="buildtime, testing->default" />
@@ -40,7 +38,9 @@
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
 		<dependency org="javax.portlet" name="portlet-api" rev="1.0" conf="buildtime->default" />
 		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default" />
+		<dependency org="ognl" name="ognl" rev="2.6.9" conf="buildtime->default" />
 		<dependency org="org.springframework" name="spring-orm" rev="2.5.2" conf="buildtime->default" />
+		<dependency org="org.springframework" name="spring-webmvc-portlet" rev="2.5.2" conf="buildtime, portlet->default" />
 		<dependency org="org.springframework" name="spring-tx" rev="2.5.2" conf="buildtime->default" />
 		<dependency org="org.springframework.security" name="spring-security-core" rev="2.0-M2" conf="buildtime->default" />
 		<dependency org="javax.persistence" name="persistence-api" rev="1.0b" conf="buildtime->default" />

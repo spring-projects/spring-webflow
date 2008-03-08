@@ -24,7 +24,7 @@
 	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/jta.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/junit.jar"/>
-	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/test/openjpa.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/persistence-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/portlet-api.jar"/>
