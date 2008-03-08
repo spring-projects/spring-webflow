@@ -17,6 +17,7 @@ package org.springframework.webflow.engine;
 
 import junit.framework.TestCase;
 
+import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
@@ -48,9 +49,7 @@ public class ViewStateTests extends TestCase {
 			}
 
 			public void restoreReferences(Object value, RequestContext context) {
-
 			}
-
 		}));
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
@@ -79,6 +78,19 @@ public class ViewStateTests extends TestCase {
 		state.enter(context);
 		assertTrue("Render called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getMockExternalContext().flowExecutionRedirectRequested());
+	}
+
+	public void testEnterViewStateRedirectInPopup() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setRedirect(Boolean.TRUE);
+		state.setPopup(true);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
+		assertTrue(context.getMockExternalContext().redirectInPopup());
 	}
 
 	public void testEnterViewStateWithAlwaysRedirectOnPause() {
@@ -118,6 +130,28 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlowExecutionRedirectSent());
 	}
 
+	public void testResumeViewStateRestoreVariables() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.addVariable(new ViewVariable("foo", new VariableValueFactory() {
+			public Object createInitialValue(RequestContext context) {
+				return new TestBean();
+			}
+
+			public void restoreReferences(Object value, RequestContext context) {
+				((TestBean) value).datum1 = "Restored";
+			}
+		}));
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		state.resume(context);
+		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getFlowExecutionRedirectSent());
+		assertEquals("Restored", ((TestBean) context.getFlowScope().get("foo")).datum1);
+	}
+
 	public void testResumeViewStateForEvent() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -130,6 +164,31 @@ public class ViewStateTests extends TestCase {
 		context.putRequestParameter("_eventId", "submit");
 		state.resume(context);
 		assertFalse(context.getFlowExecutionContext().isActive());
+	}
+
+	public void testResumeViewStateForEventDestroyVariables() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.addVariable(new ViewVariable("foo", new VariableValueFactory() {
+			public Object createInitialValue(RequestContext context) {
+				return "bar";
+			}
+
+			public void restoreReferences(Object value, RequestContext context) {
+			}
+		}));
+		state.getTransitionSet().add(new Transition(on("submit"), to("next")));
+		new ViewState(flow, "next", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		assertTrue(context.getFlowScope().contains("foo"));
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertEquals("next", context.getCurrentState().getId());
+		assertFalse(context.getFlowScope().contains("foo"));
 	}
 
 	protected TransitionCriteria on(String event) {
