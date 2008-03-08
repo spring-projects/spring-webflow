@@ -11,7 +11,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Custom EL resolver that resolves to a thread-bound RequestContext object for binding expressions prefixed with a
- * {@link #REQUEST_CONTEXT_VARIABLE_NAME}. For instance "#{requestContext.conversationScope.myProperty}".
+ * {@link #REQUEST_CONTEXT_VARIABLE_NAME}. For instance "#{flowRequestContext.conversationScope.myProperty}".
  * @author Jeremy Grelle
  */
 public class RequestContextELResolver extends ELResolver {
@@ -19,7 +19,16 @@ public class RequestContextELResolver extends ELResolver {
 	/**
 	 * Name of the request context variable.
 	 */
-	public static final String REQUEST_CONTEXT_VARIABLE_NAME = "requestContext";
+	public static final String REQUEST_CONTEXT_VARIABLE_NAME = "flowRequestContext";
+
+	private RequestContext context;
+
+	public RequestContextELResolver() {
+	}
+
+	public RequestContextELResolver(RequestContext context) {
+		this.context = context;
+	}
 
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
 		return Object.class;
@@ -41,7 +50,7 @@ public class RequestContextELResolver extends ELResolver {
 	public Object getValue(ELContext elContext, Object base, Object property) {
 		if (base == null && REQUEST_CONTEXT_VARIABLE_NAME.equals(property)) {
 			elContext.setPropertyResolved(true);
-			return RequestContextHolder.getRequestContext();
+			return getRequestContext();
 		} else {
 			return null;
 		}
@@ -62,4 +71,9 @@ public class RequestContextELResolver extends ELResolver {
 			throw new PropertyNotWritableException("The RequestContext cannot be set with an expression.");
 		}
 	}
+
+	protected RequestContext getRequestContext() {
+		return context != null ? context : RequestContextHolder.getRequestContext();
+	}
+
 }

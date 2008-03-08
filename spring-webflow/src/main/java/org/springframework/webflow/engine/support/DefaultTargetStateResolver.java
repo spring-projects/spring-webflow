@@ -35,7 +35,7 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 	/**
 	 * The expression for the target state identifier.
 	 */
-	private Expression targetStateExpression;
+	private Expression targetStateIdExpression;
 
 	/**
 	 * Creates a new target state resolver that always returns the same target state id.
@@ -47,15 +47,15 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 
 	/**
 	 * Creates a new target state resolver.
-	 * @param targetStateExpression the target state expression
+	 * @param targetStateIdExpression the target state expression
 	 */
-	public DefaultTargetStateResolver(Expression targetStateExpression) {
-		Assert.notNull(targetStateExpression, "The target state expression is required");
-		this.targetStateExpression = targetStateExpression;
+	public DefaultTargetStateResolver(Expression targetStateIdExpression) {
+		Assert.notNull(targetStateIdExpression, "The target state id expression is required");
+		this.targetStateIdExpression = targetStateIdExpression;
 	}
 
 	public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-		String targetStateId = (String) targetStateExpression.getValue(context);
+		String targetStateId = (String) targetStateIdExpression.getValue(context);
 		if (targetStateId != null) {
 			return ((Flow) context.getActiveFlow()).getStateInstance(targetStateId);
 		} else {
@@ -64,6 +64,6 @@ public class DefaultTargetStateResolver implements TargetStateResolver {
 	}
 
 	public String toString() {
-		return targetStateExpression.toString();
+		return targetStateIdExpression.toString();
 	}
 }

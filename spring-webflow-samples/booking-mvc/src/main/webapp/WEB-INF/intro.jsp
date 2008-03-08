@@ -6,21 +6,26 @@
 <tiles:putAttribute name="content">
 
 <div class="section">
-	<h1>Welcome to the Spring Web Flow + Spring MVC Sample Application</h1>
+	<h1>Welcome to Spring Travel</h1>
 	<p>
-	 	This hotel booking sample application illustrates Spring Web Flow in a Spring MVC environment.
+	 	This reference application shows how to use Spring MVC and Web Flow together with JavaServerPages (JSP) and Tiles to develop web applications.
+	</p>
+	<p>
 		The key features illustrated in this sample include:
 	</p>
 	<ul>
-		<li>A unified navigation model</li>
-		<li>A robust state management model</li>
-		<li>Modularization of web application functionality by domain responsibility</li>
-		<li>Flow-managed persistence contexts with the Java Persistence API (JPA)</li>
-		<li>OGNL Expression Language (EL) integration</li>
-		<li>Spring IDE integration, with support for graphical flow modeling</li>
+		<li>A declarative navigation model enabling full browser button support and dynamic navigation rules</li>
+		<li>A fine-grained state management model, including support for ConversationScope and ViewScope</li>
+		<li>Modularization of web application functionality by domain use case, illustrating project structure best-practices</li>
+		<li>Managed persistence contexts with the Java Persistence API (JPA)</li>
+		<li>Unified Expression Language (EL) integration</li>
+		<li>Spring Security integration</li>
+		<li>Applying reusable page layouts with Tiles</li>
+		<li>Exception handling support across all layers of the application</li>
+		<li>Spring IDE tooling integration, with support for graphical flow modeling and visualization</li>
 	</ul>
 	<p align="right">
-		<a href="main">Start your hotel booking experience</a>
+		<a href="main">Start your Spring Travel experience</a>
 	</p>
 </div>
 

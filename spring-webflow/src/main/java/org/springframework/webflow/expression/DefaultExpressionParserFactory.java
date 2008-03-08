@@ -15,17 +15,26 @@
  */
 package org.springframework.webflow.expression;
 
+import javax.el.ExpressionFactory;
+
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
+import org.springframework.util.ClassUtils;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 
 /**
- * Static helper factory that creates instances of the default expression parser used by Spring Web Flow when requested.
- * Marked final with a private constructor to prevent subclassing.
+ * Static factory that returns the default {@link ExpressionParser} for use by Spring Web Flow. Marked final with a
+ * private constructor to prevent subclassing.
  * <p>
- * The default is an OGNL based expression parser. Also asserts that OGNL is in the classpath the first time the parser
- * is used.
+ * This factory employs the following algorithm when the returned ExpressionParser instance is used for the first time:
+ * <ul>
+ * <li>If a Unified EL implementation is configured for the VM, make the ELExpressionParser the default.
+ * <li>If no Unified EL implementation is configured and OGNL is configured, make the OgnlExpressionParser the default.
+ * <li>If neither Unified EL or OGNL are configured, throw an IllegalStateException.
+ * </ul>
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -42,13 +51,13 @@ public final class DefaultExpressionParserFactory {
 	}
 
 	/**
-	 * Returns the default expression parser. The returned expression parser is a thread-safe object.
+	 * Returns the default expression parser for Spring Web Flow. The returned instance is a thread-safe object.
 	 * @return the expression parser
 	 */
 	public static synchronized ExpressionParser getExpressionParser() {
 		// return a wrapper that will lazily load the default expression parser
-		// this prevents the default OGNL-based parser from being initialized until it is actually used
-		// which allows OGNL to be an optional dependency if the expression parser wrapper is replaced and never used
+		// this prevents the underlying parser from being initialized until it is actually used
+		// this allows the EL to be an optional dependency if the expression parser wrapper is replaced and never used
 		return new ExpressionParser() {
 			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
 				return getDefaultExpressionParser().parseExpression(expressionString, context);
@@ -68,23 +77,24 @@ public final class DefaultExpressionParserFactory {
 	}
 
 	/**
-	 * Create the default expression parser.
-	 * @return the default expression parser
+	 * Create the default expression parser. This implementation tries EL first, then OGNL if EL is not configured.
+	 * @return the default Web Flow expression parser
 	 */
 	private static ExpressionParser createDefaultExpressionParser() throws IllegalStateException {
 		try {
-			Class.forName("ognl.Ognl");
-			return new WebFlowOgnlExpressionParser();
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException(
-					"Unable to load the default expression parser: OGNL could not be found in the classpath.  "
-							+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "
-							+ "Details: " + e.getMessage());
-		} catch (NoClassDefFoundError e) {
-			throw new IllegalStateException(
-					"Unable to construct the default expression parser: ognl.Ognl could not be instantiated.  "
-							+ "Please add OGNL 2.x to your classpath or set the default ExpressionParser instance to something that is in the classpath.  "
-							+ "Details: " + e);
+			ExpressionFactory elFactory = DefaultExpressionFactoryUtils.createExpressionFactory();
+			return new WebFlowELExpressionParser(elFactory);
+		} catch (Exception e) {
+			try {
+				ClassUtils.forName("ognl.Ognl");
+				return new WebFlowOgnlExpressionParser();
+			} catch (ClassNotFoundException ex) {
+				throw new IllegalStateException(
+						"Unable to create the default expression parser for Spring Web Flow: Neither a Unified EL implementation or OGNL could be found.");
+			} catch (NoClassDefFoundError ex) {
+				throw new IllegalStateException(
+						"Unable to create the default expression parser for Spring Web Flow: Neither a Unified EL implementation or OGNL could be found.");
+			}
 		}
 	}
 }

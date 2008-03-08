@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="/spring"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>

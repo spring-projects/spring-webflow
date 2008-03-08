@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.ELContext;
-import javax.el.ELException;
 import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
 import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -28,46 +25,24 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class WebFlowELExpressionParser extends ELExpressionParser {
 
-	private static final String EXPRESSION_FACTORY_PROPERTY = "javax.el.ExpressionFactory";
-
-	private static final String DEFAULT_EXPRESSION_FACTORY = "org.jboss.el.ExpressionFactoryImpl";
-
 	public WebFlowELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
 		putContextFactory(RequestContext.class, new RequestContextELContextFactory());
 		putContextFactory(MutableAttributeMap.class, new AttributeMapELContextFactory());
 	}
 
-	public WebFlowELExpressionParser() {
-		this(getDefaultExpressionFactory());
-	}
-
-	private static ExpressionFactory getDefaultExpressionFactory() {
-		if (!System.getProperties().containsKey(EXPRESSION_FACTORY_PROPERTY)) {
-			System.setProperty(EXPRESSION_FACTORY_PROPERTY, DEFAULT_EXPRESSION_FACTORY);
-		}
-		if (ReflectionUtils.findMethod(ExpressionFactory.class, "newInstance") != null) {
-			return ExpressionFactory.newInstance();
-		} else { // Fallback in case using an older version of el-api
-			try {
-				return (ExpressionFactory) BeanUtils.instantiateClass(Class.forName(DEFAULT_EXPRESSION_FACTORY));
-			} catch (Exception e) {
-				throw new ELException("Could not create the default ExpressionFactory", e);
-			}
-		}
-	}
-
 	private static class RequestContextELContextFactory implements ELContextFactory {
 		public ELContext getELContext(Object target) {
+			RequestContext context = (RequestContext) target;
 			List customResolvers = new ArrayList();
-			customResolvers.add(new RequestContextELResolver());
+			customResolvers.add(new RequestContextELResolver(context));
+			customResolvers.add(new ImplicitFlowVariableELResolver(context));
+			customResolvers.add(new ScopeSearchingELResolver(context));
+			customResolvers.add(new ActionMethodELResolver());
 			if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
 				customResolvers.add(new SpringSecurityELResolver());
 			}
-			customResolvers.add(new ImplicitFlowVariableELResolver());
-			customResolvers.add(new SpringBeanWebFlowELResolver());
-			customResolvers.add(new ActionMethodELResolver());
-			customResolvers.add(new ScopeSearchingELResolver());
+			customResolvers.add(new SpringBeanWebFlowELResolver(context));
 			ELResolver resolver = new DefaultELResolver(null, customResolvers);
 			return new WebFlowELContext(resolver);
 		}

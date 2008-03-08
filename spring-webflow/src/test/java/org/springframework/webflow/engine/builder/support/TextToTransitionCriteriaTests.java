@@ -17,6 +17,11 @@ package org.springframework.webflow.engine.builder.support;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.ParserContext;
+import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
@@ -74,8 +79,12 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testNullExpressionEvaluation() throws Exception {
-		String expression = "${null}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		serviceLocator.getFlowBuilderServices().setExpressionParser(new ExpressionParser() {
+			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
+				return new StaticExpression(null);
+			}
+		});
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert("doesnt matter");
 		RequestContext ctx = getRequestContext();
 		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
 	}

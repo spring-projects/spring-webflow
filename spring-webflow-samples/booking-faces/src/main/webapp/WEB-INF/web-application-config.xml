@@ -23,19 +23,29 @@
 	<!-- Activates annotation-based bean configuration -->
 	<context:annotation-config />
 	
-	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
-	<tx:annotation-driven />
-
-	<!-- Scans for application components to deploy -->
+	<!-- Scans for application @Components to deploy -->
 	<context:component-scan base-package="org.springframework.webflow.samples.booking" />
-		
-	<!-- Handles requests to the Spring Web Flow system -->
-	<bean name="/flows/*" class="org.springframework.webflow.mvc.FlowController">
+
+	<!-- Maps request URIs to controllers -->			
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+				/main=flowController
+				/booking=flowController
+			</value>
+		</property>
+		<property name="defaultHandler">
+			<!-- Handles requests mapped directly to facelet .xhtml view templates -->	
+			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+		</property>
+	</bean>
+
+	<!-- Handles requests mapped to the Spring Web Flow system -->
+	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
-	
-	<bean name="/*" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
-	
+
+	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml' -->
 	<bean id="jsfViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
 		<property name="prefix" value="/WEB-INF/" />
@@ -54,7 +64,6 @@
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
 		<webflow:flow-location path="/WEB-INF/flows/main/main.xml" />
 		<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
-		<!--  TODO <webflow:flow-location path="/WEB-INF/flows/*/*.xml" /> -->
 	</webflow:flow-registry>
 	
 	<!-- Configures the Spring Web Flow JSF integration -->
@@ -68,6 +77,9 @@
 	
 	<!-- Installs a listener to apply Spring Security authorities -->
 	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
+
+	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
+	<tx:annotation-driven />
 
 	<!-- Drives transactions using local JPA APIs -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -120,5 +132,5 @@
 			<security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" authorities="ROLE_USER" />
 		</security:user-service>
 	</security:authentication-provider>
-		
+	
 </beans>

@@ -19,6 +19,15 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class ScopeSearchingELResolver extends ELResolver {
 
+	private RequestContext requestContext;
+
+	public ScopeSearchingELResolver() {
+	}
+
+	public ScopeSearchingELResolver(RequestContext requestContext) {
+		this.requestContext = requestContext;
+	}
+
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
 		return Object.class;
 	}
@@ -28,10 +37,10 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext elContext, Object base, Object property) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return null;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
@@ -51,10 +60,10 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext elContext, Object base, Object property) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return null;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
@@ -74,10 +83,10 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public boolean isReadOnly(ELContext elContext, Object base, Object property) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return false;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
@@ -97,10 +106,10 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public void setValue(ELContext elContext, Object base, Object property, Object value) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
@@ -116,4 +125,9 @@ public class ScopeSearchingELResolver extends ELResolver {
 			requestContext.getConversationScope().put(attributeName, value);
 		}
 	}
+
+	protected RequestContext getRequestContext() {
+		return requestContext != null ? requestContext : RequestContextHolder.getRequestContext();
+	}
+
 }

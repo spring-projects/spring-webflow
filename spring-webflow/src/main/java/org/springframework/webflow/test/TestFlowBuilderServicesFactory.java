@@ -11,22 +11,16 @@ import org.springframework.webflow.expression.DefaultExpressionParserFactory;
  * @author Keith Donald
  */
 public class TestFlowBuilderServicesFactory {
-	private static FlowBuilderServices services;
-
 	private TestFlowBuilderServicesFactory() {
 	}
 
 	public static FlowBuilderServices getServices() {
-		if (services != null) {
-			return services;
-		} else {
-			services = new FlowBuilderServices();
-			services.setViewFactoryCreator(new MockViewFactoryCreator());
-			services.setConversionService(new DefaultConversionService());
-			services.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
-			services.setResourceLoader(new DefaultResourceLoader());
-			services.setBeanFactory(new StaticListableBeanFactory());
-			return services;
-		}
+		FlowBuilderServices services = new FlowBuilderServices();
+		services.setViewFactoryCreator(new MockViewFactoryCreator());
+		services.setConversionService(new DefaultConversionService());
+		services.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		services.setResourceLoader(new DefaultResourceLoader());
+		services.setBeanFactory(new StaticListableBeanFactory());
+		return services;
 	}
 }

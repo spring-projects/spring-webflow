@@ -14,6 +14,15 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 public class ImplicitFlowVariableELResolver extends ELResolver {
 
+	private RequestContext requestContext;
+
+	public ImplicitFlowVariableELResolver() {
+	}
+
+	public ImplicitFlowVariableELResolver(RequestContext requestContext) {
+		this.requestContext = requestContext;
+	}
+
 	public Class getCommonPropertyType(ELContext context, Object base) {
 		return Object.class;
 	}
@@ -23,10 +32,10 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext context, Object base, Object property) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return null;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (ImplicitVariables.matches(property)) {
 			context.setPropertyResolved(true);
 			return ImplicitVariables.value(context, requestContext, property).getClass();
@@ -36,10 +45,10 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {
-		if (base != null || RequestContextHolder.getRequestContext() == null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return null;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (ImplicitVariables.matches(property)) {
 			context.setPropertyResolved(true);
 			return ImplicitVariables.value(context, requestContext, property);
@@ -70,6 +79,10 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 		}
 	}
 
+	protected RequestContext getRequestContext() {
+		return requestContext != null ? requestContext : RequestContextHolder.getRequestContext();
+	}
+
 	private static final class ImplicitVariables {
 		private static final Set vars = new HashSet();
 
@@ -80,6 +93,8 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 			vars.add("flowScope");
 			vars.add("conversationScope");
 			vars.add("messageContext");
+			vars.add("flowExecutionContext");
+			vars.add("flowExecutionUrl");
 		}
 
 		private static final BeanELResolver internalResolver = new BeanELResolver();

@@ -13,7 +13,6 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.mvc.MvcViewFactoryCreator;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
@@ -36,7 +35,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 	public void testFlowBuilderServicesCustomized() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesCustom");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertNotNull(builderServices.getExpressionParser());
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
 	}

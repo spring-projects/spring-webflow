@@ -29,6 +29,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
@@ -37,8 +38,6 @@ public class JsfFinalResponseActionTests extends TestCase {
 	private static final String VIEW_ID = "/testView.xhtml";
 
 	private JsfViewFactory factory;
-
-	private JsfFinalResponseAction finalResponseAction;
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
@@ -73,7 +72,6 @@ public class JsfFinalResponseActionTests extends TestCase {
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new ParserContextImpl().template()
 				.eval(RequestContext.class).expect(String.class)), null, lifecycle);
-		finalResponseAction = new JsfFinalResponseAction(factory);
 		RequestContextHolder.setRequestContext(context);
 		MockExternalContext ext = new MockExternalContext();
 		ext.setNativeContext(new MockServletContext());
@@ -94,7 +92,9 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 		EasyMock.replay(new Object[] { context });
 
-		finalResponseAction.execute(context);
+		View view = factory.getView(context);
+		((JsfView) view).getViewRoot().setTransient(true);
+		view.render();
 
 		assertTrue(newRoot.isTransient());
 		assertTrue(((NoRenderViewHandler) viewHandler).rendered);

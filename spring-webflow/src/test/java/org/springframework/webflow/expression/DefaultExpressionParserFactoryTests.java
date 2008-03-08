@@ -18,7 +18,6 @@ package org.springframework.webflow.expression;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 /**
  * Unit tests for {@link DefaultExpressionParserFactory}.

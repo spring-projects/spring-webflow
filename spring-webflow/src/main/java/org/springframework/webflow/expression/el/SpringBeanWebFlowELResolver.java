@@ -16,14 +16,27 @@ public class SpringBeanWebFlowELResolver extends SpringBeanELResolver {
 
 	private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
 
+	private RequestContext context;
+
+	public SpringBeanWebFlowELResolver() {
+	}
+
+	public SpringBeanWebFlowELResolver(RequestContext context) {
+		this.context = context;
+	}
+
 	protected BeanFactory getBeanFactory(ELContext elContext) {
-		RequestContext rc = RequestContextHolder.getRequestContext();
-		if (rc != null && rc.getActiveFlow().getBeanFactory() != null) {
-			BeanFactory factory = rc.getActiveFlow().getBeanFactory();
+		RequestContext requestContext = getRequestContext();
+		if (context != null && requestContext.getActiveFlow().getBeanFactory() != null) {
+			BeanFactory factory = requestContext.getActiveFlow().getBeanFactory();
 			return factory;
 		} else {
 			return EMPTY_BEAN_FACTORY;
 		}
+	}
+
+	protected RequestContext getRequestContext() {
+		return context != null ? context : RequestContextHolder.getRequestContext();
 	}
 
 }

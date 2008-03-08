@@ -42,7 +42,11 @@ public class SpringSecurityELResolver extends ELResolver {
 	public Object getValue(ELContext elContext, Object base, Object property) {
 		if (base == null && SECURITY_PRINCIPAL_VARIABLE_NAME.equals(property)) {
 			elContext.setPropertyResolved(true);
-			return SecurityContextHolder.getContext().getAuthentication();
+			if (SecurityContextHolder.getContext() != null) {
+				return SecurityContextHolder.getContext().getAuthentication();
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}

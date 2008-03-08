@@ -14,40 +14,38 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
-	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<!-- Maps request URIs to controllers -->			
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
-				/intro=urlFilenameController
-				/login=urlFilenameController
-				/logout-success=urlFilenameController
+				/main=flowController
+				/booking=flowController
 			</value>
 		</property>
-		<property name="defaultHandler" ref="flowController" />
+		<property name="defaultHandler">
+			<!-- Handles requests mapped directly to facelet .xhtml view templates -->	
+			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+		</property>
 	</bean>
-		
+
+	<!-- Handles requests mapped to the Spring Web Flow system -->			
 	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
-	
+
+	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
 	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<web:flow-execution-listeners>
 			<web:listener ref="jpaFlowExecutionListener" criteria="*" />
 			<web:listener ref="securityFlowExecutionListener" criteria="*" />
 		</web:flow-execution-listeners>
 	</web:flow-executor>
-	
-	<web:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+
+	<!-- The registry of executable flow definitions -->	
+	<web:flow-registry id="flowRegistry">
 		<web:flow-location path="WEB-INF/flows/main/main.xml" />
 		<web:flow-location path="WEB-INF/flows/booking/booking.xml" />
 	</web:flow-registry>
-	
-	<web:flow-builder-services id="flowBuilderServices" expression-parser="expressionParser" />
-	
-	<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
-		<constructor-arg>
-			<bean class="org.jboss.el.ExpressionFactoryImpl" />
-		</constructor-arg>
-	</bean>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
@@ -58,10 +56,7 @@
 	<!-- Installs a listener to apply Spring Security authorities -->
 	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 
-	<!-- Handles requests to render view templates directly: maps the requested path to a logical view name resolved by the resolver below -->
-	<bean id="urlFilenameController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-
-	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the root webapp directory -->	
+	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the /WEB-INF directory -->	
 	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/" />
 		<property name="suffix" value=".jsp" />
@@ -72,7 +67,7 @@
 		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.SearchCriteria" />
 	</bean>
 	
-	<!-- Handels form binding and validation for the hotel booking -->
+	<!-- Handels form binding and validation for the hotel booking process -->
 	<bean id="bookingActions" class="org.springframework.webflow.action.FormAction">
 		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.Booking" />
 		<property name="propertyEditorRegistrar">
@@ -103,7 +98,7 @@
 	</bean>
 
 	<!-- Executes transactions around @Transactional methods -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven />
 
 	<!-- Drives transactions using local JPA APIs -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
