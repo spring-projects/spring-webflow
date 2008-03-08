@@ -2,6 +2,8 @@ package org.springframework.binding.message;
 
 import java.io.Serializable;
 
+import org.springframework.core.style.ToStringCreator;
+
 /**
  * An object of communication that provides text information from a source. For example, a validation message may inform
  * a web application user a business rule was violated. A messages comes from a source, has text providing the basis for
@@ -24,7 +26,6 @@ public class Message implements Serializable {
 	 * @param severity the message severity
 	 */
 	public Message(Object source, String text, Severity severity) {
-		super();
 		this.source = source;
 		this.text = text;
 		this.severity = severity;
@@ -52,6 +53,11 @@ public class Message implements Serializable {
 	 */
 	public Severity getSeverity() {
 		return severity;
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("source", source).append("severity", severity).append("text", text)
+				.toString();
 	}
 
 }
