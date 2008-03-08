@@ -32,7 +32,7 @@
 	
 	<subflow-state id="bookHotel" subflow="booking">
 		<input name="id" value="flowScope.hotel.id" />
-		<transition on="bookingAuthorized" to="main" />
+		<transition on="bookingConfirmed" to="finish" />
 		<transition on="cancel" to="main" />
 	</subflow-state>
 	
@@ -40,5 +40,7 @@
 		<evaluate expression="bookingService.cancelBooking(requestParameters.bookingId)" />
 		<transition on="success" to="main" />
 	</action-state>
+	
+	<end-state id="finish"/>
 
 </flow>

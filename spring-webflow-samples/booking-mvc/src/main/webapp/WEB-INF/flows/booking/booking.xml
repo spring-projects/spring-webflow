@@ -29,15 +29,15 @@
 		<on-render>
 			<evaluate expression="bookingActions.setupForm"/>
 		</on-render>
-		<transition on="confirm" to="bookingAuthorized">
+		<transition on="confirm" to="bookingConfirmed">
 			<evaluate expression="entityManager.persist(booking)" />
 		</transition>
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
+	<end-state id="bookingConfirmed" commit="true" />
+
 	<end-state id="cancel"/>
-	
-	<end-state id="bookingAuthorized" commit="true" />
-	
+		
 </flow>
