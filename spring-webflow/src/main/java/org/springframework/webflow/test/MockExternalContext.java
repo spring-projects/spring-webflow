@@ -18,7 +18,6 @@ package org.springframework.webflow.test;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
@@ -58,8 +57,6 @@ public class MockExternalContext implements ExternalContext {
 
 	private boolean ajaxRequest;
 
-	private Map responseHeaders = new HashMap();
-
 	private boolean flowExecutionRedirectRequested;
 
 	private String flowDefinitionRedirectFlowId;
@@ -67,6 +64,8 @@ public class MockExternalContext implements ExternalContext {
 	private AttributeMap flowDefinitionRedirectFlowInput;
 
 	private String externalRedirectUrl;
+
+	private boolean redirectInPopup;
 
 	/**
 	 * Creates a mock external context with an empty request parameter map. Allows for bean style usage.
@@ -135,10 +134,6 @@ public class MockExternalContext implements ExternalContext {
 		return responseWriter;
 	}
 
-	public void setResponseHeader(String name, String value) {
-		this.responseHeaders.put(name, value);
-	}
-
 	public boolean isResponseCommitted() {
 		return flowExecutionRedirectRequested() || flowDefinitionRedirectRequested() || externalRedirectRequested();
 	}
@@ -147,13 +142,17 @@ public class MockExternalContext implements ExternalContext {
 		flowExecutionRedirectRequested = true;
 	}
 
+	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input) {
+		flowDefinitionRedirectFlowId = flowId;
+		flowDefinitionRedirectFlowInput = input;
+	}
+
 	public void requestExternalRedirect(String uri) {
 		externalRedirectUrl = uri;
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input) {
-		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = input;
+	public void requestRedirectInPopup() {
+		redirectInPopup = true;
 	}
 
 	/**
@@ -266,36 +265,54 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	/**
-	 * Returns the value of the response header entry
-	 * @param name the entry name
-	 * @return the entry value, or null if no entry was set with this name
+	 * Returns the flag indicating if a flow execution redirect response has been requested by the flow.
 	 */
-	public String getResponseHeader(String name) {
-		return (String) responseHeaders.get(name);
-	}
-
 	public boolean flowExecutionRedirectRequested() {
 		return flowExecutionRedirectRequested;
 	}
 
+	/**
+	 * Returns the flag indicating if a flow definition redirect response has been requested by the flow.
+	 */
 	public boolean flowDefinitionRedirectRequested() {
 		return flowDefinitionRedirectFlowId != null;
 	}
 
+	/**
+	 * Returns the id of the flow definition to redirect to. Only set when {@link #flowDefinitionRedirectRequested()}
+	 * returns true.
+	 */
 	public String getFlowRedirectFlowId() {
 		return flowDefinitionRedirectFlowId;
 	}
 
+	/**
+	 * Returns the input to pass the flow definition through the redirect. Only set when
+	 * {@link #flowDefinitionRedirectRequested()} returns true.
+	 */
 	public AttributeMap getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 
+	/**
+	 * Returns the flag indicating if an external redirect response has been requested by the flow.
+	 */
 	public boolean externalRedirectRequested() {
 		return externalRedirectUrl != null;
 	}
 
+	/**
+	 * Returns the URL to redirect to. Only set if {@link #externalRedirectRequested()} returns true.
+	 */
 	public String getExternalRedirectUrl() {
 		return externalRedirectUrl;
+	}
+
+	/**
+	 * If a redirect response has been requested, indicates if the redirect should be issued from a popup dialog.
+	 */
+	public boolean redirectInPopup() {
+		return redirectInPopup;
 	}
 
 }

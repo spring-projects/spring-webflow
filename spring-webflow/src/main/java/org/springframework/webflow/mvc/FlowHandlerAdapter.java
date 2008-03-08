@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,14 +24,31 @@ import org.springframework.webflow.executor.FlowExecutor;
 
 public class FlowHandlerAdapter extends WebApplicationObjectSupport implements HandlerAdapter {
 
+	/**
+	 * The response header to be set on an Ajax redirect
+	 */
+	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
+
+	/**
+	 * The response header to be set on an redirect that should be issued from a popup window.
+	 */
+	private static final String POPUP_VIEW_HEADER = "Flow-Modal-View";
+
+	/**
+	 * The accept header value that signifies an Ajax request.
+	 */
+	private static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
+
+	/**
+	 * Alternate request parameter to indicate an Ajax request for cases when control of the header is not available.
+	 */
+	private static final String AJAX_SOURCE_PARAM = "ajaxSource";
+
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
 	private FlowExecutor flowExecutor;
 
 	private FlowUrlHandler urlHandler;
-
-	/** The response header to be set on an Ajax redirect */
-	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
 
 	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
@@ -77,7 +95,19 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
-		return new ServletExternalContext(getServletContext(), request, response, urlHandler);
+		ServletExternalContext context = new ServletExternalContext(getServletContext(), request, response, urlHandler);
+		context.setAjaxRequest(isAjaxRequest(request));
+		return context;
+	}
+
+	protected boolean isAjaxRequest(HttpServletRequest request) {
+		String acceptHeader = request.getHeader("Accept");
+		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
+		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected MutableAttributeMap defaultFlowExecutionInputMap(HttpServletRequest request) {
@@ -159,7 +189,10 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	private void sendRedirect(ServletExternalContext context, HttpServletResponse response, String targetUrl)
 			throws IOException {
 		if (context.isAjaxRequest()) {
-			context.setResponseHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+			if (context.redirectInPopup()) {
+				response.setHeader(POPUP_VIEW_HEADER, "true");
+			}
+			response.setHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
 		} else {
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}

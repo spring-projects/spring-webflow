@@ -117,11 +117,4 @@ public interface RequestControlContext extends RequestContext {
 	 */
 	public boolean getAlwaysRedirectOnPause();
 
-	/**
-	 * Request that a redirect be sent to this flow execution after the current request has processed. The current flow
-	 * execution must have its key assigned for this operation to be supported.
-	 * @throws IllegalStateException if the flow execution has not yet had its key assigned
-	 */
-	public void sendFlowExecutionRedirect() throws IllegalStateException;
-
 }

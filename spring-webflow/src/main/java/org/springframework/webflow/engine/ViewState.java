@@ -38,8 +38,6 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class ViewState extends TransitionableState {
 
-	private static final String POPUP_VIEW_HEADER = "Flow-Modal-View";
-
 	/**
 	 * The list of actions to be executed when this state is entered.
 	 */
@@ -163,10 +161,10 @@ public class ViewState extends TransitionableState {
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
 		if (shouldRedirect(context)) {
-			if (context.getExternalContext().isAjaxRequest() && popup) {
-				context.getExternalContext().setResponseHeader(POPUP_VIEW_HEADER, "true");
+			context.getExternalContext().requestFlowExecutionRedirect();
+			if (popup) {
+				context.getExternalContext().requestRedirectInPopup();
 			}
-			context.sendFlowExecutionRedirect();
 		} else {
 			View view = viewFactory.getView(context);
 			render(context, view);

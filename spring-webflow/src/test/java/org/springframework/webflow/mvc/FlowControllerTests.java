@@ -142,8 +142,52 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.replay(new Object[] { executor });
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
-		EasyMock.verify(new Object[] { executor });
 		assertEquals("/springtravel/app/foo?execution=12345", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { executor });
+	}
+
+	public void testLaunchFlowWithExecutionRedirectAjaxHeaderOpenInPopup() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		request.addHeader("Accept", "text/html;type=ajax");
+		Map parameters = new HashMap();
+		request.setParameters(parameters);
+		context.setAjaxRequest(true);
+		context.requestFlowExecutionRedirect();
+		context.requestRedirectInPopup();
+		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { executor });
+		ModelAndView mv = controller.handleRequest(request, response);
+		assertNull(mv);
+		assertEquals(null, response.getRedirectedUrl());
+		assertEquals("true", response.getHeader("Flow-Modal-View"));
+		assertEquals("/springtravel/app/foo?execution=12345", response.getHeader("Flow-Redirect-URL"));
+		EasyMock.verify(new Object[] { executor });
+	}
+
+	public void testLaunchFlowWithExecutionRedirectAjaxParameter() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		request.addParameter("ajaxSource", "this");
+		context.setAjaxRequest(true);
+		context.requestFlowExecutionRedirect();
+		executor.launchExecution("foo", new LocalAttributeMap(request.getParameterMap()), context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { executor });
+		ModelAndView mv = controller.handleRequest(request, response);
+		assertNull(mv);
+		assertEquals(null, response.getRedirectedUrl());
+		assertEquals(null, response.getHeader("Flow-Modal-View"));
+		assertEquals("/springtravel/app/foo?execution=12345", response.getHeader("Flow-Redirect-URL"));
 		EasyMock.verify(new Object[] { executor });
 	}
 

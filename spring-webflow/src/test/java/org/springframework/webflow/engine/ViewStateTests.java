@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -27,14 +28,33 @@ import org.springframework.webflow.test.MockRequestControlContext;
  */
 public class ViewStateTests extends TestCase {
 
-	public void testEnterViewState() {
+	public void testEnterViewStateDefaultBehavior() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
-		new EndState(flow, "finish");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
+		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getFlowExecutionRedirectSent());
+	}
+
+	public void testEnterViewStateWithVariables() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.addVariable(new ViewVariable("foo", new VariableValueFactory() {
+			public Object createInitialValue(RequestContext context) {
+				return "bar";
+			}
+
+			public void restoreReferences(Object value, RequestContext context) {
+
+			}
+
+		}));
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		assertEquals("bar", context.getFlowScope().getString("foo"));
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getFlowExecutionRedirectSent());
 	}
@@ -44,20 +64,39 @@ public class ViewStateTests extends TestCase {
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
 		state.setRedirect(Boolean.TRUE);
-		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
-		new EndState(flow, "finish");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
 		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
 	}
 
+	public void testEnterViewStateWithNoLocalRedirect() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setRedirect(Boolean.FALSE);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		assertTrue("Render called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getMockExternalContext().flowExecutionRedirectRequested());
+	}
+
 	public void testEnterViewStateWithAlwaysRedirectOnPause() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
-		new EndState(flow, "finish");
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.setAlwaysRedirectOnPause(true);
+		state.enter(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
+	}
+
+	public void testEnterViewStateWithPopup() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setPopup(true);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setAlwaysRedirectOnPause(true);
 		state.enter(context);

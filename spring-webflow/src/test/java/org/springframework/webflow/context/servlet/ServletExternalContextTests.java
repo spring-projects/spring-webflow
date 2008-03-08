@@ -61,12 +61,7 @@ public class ServletExternalContextTests extends TestCase {
 	}
 
 	public void testAjaxRequestAcceptHeader() {
-		request.addHeader("Accept", "text/html;type=ajax");
-		assertTrue(context.isAjaxRequest());
-	}
-
-	public void testAjaxRequestParam() {
-		request.addParameter("ajaxSource", "myButton");
+		context.setAjaxRequest(true);
 		assertTrue(context.isAjaxRequest());
 	}
 
@@ -92,6 +87,32 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.isResponseCommitted());
 		assertTrue(context.externalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
+	}
+
+	public void testCommitExecutionRedirectPopup() {
+		context.requestFlowExecutionRedirect();
+		context.requestRedirectInPopup();
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.flowExecutionRedirectRequested());
+		assertTrue(context.redirectInPopup());
+	}
+
+	public void testCommitFlowRedirectPopup() {
+		context.requestFlowDefinitionRedirect("foo", null);
+		context.requestRedirectInPopup();
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.flowDefinitionRedirectRequested());
+		assertEquals("foo", context.getFlowRedirectFlowId());
+		assertTrue(context.redirectInPopup());
+	}
+
+	public void testCommitExternalRedirectPopup() {
+		context.requestExternalRedirect("foo");
+		context.requestRedirectInPopup();
+		assertTrue(context.isResponseCommitted());
+		assertTrue(context.externalRedirectRequested());
+		assertEquals("foo", context.getExternalRedirectUrl());
+		assertTrue(context.redirectInPopup());
 	}
 
 }

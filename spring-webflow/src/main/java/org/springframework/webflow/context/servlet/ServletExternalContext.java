@@ -22,7 +22,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.util.StringUtils;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -40,12 +39,6 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * @author Jeremy Grelle
  */
 public class ServletExternalContext implements ExternalContext {
-
-	/** The accept header value that signifies an Ajax request */
-	private static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
-
-	/** Alternate request parameter to indicate an Ajax request for cases when control of the header is not available */
-	private static final String AJAX_SOURCE_PARAM = "ajaxSource";
 
 	/**
 	 * The context.
@@ -110,6 +103,17 @@ public class ServletExternalContext implements ExternalContext {
 	private FlowUrlHandler flowUrlHandler;
 
 	/**
+	 * Whether this external request context originated from an Ajax request or not.
+	 */
+	private boolean ajaxRequest;
+
+	/**
+	 * In the case where a redirect response is requested, this flag indicates if the redirect should be issued from a
+	 * popup dialog.
+	 */
+	private boolean redirectInPopup;
+
+	/**
 	 * Create a new external context wrapping given servlet HTTP request and response and given servlet context.
 	 * @param context the servlet context
 	 * @param request the http servlet request
@@ -129,6 +133,15 @@ public class ServletExternalContext implements ExternalContext {
 	public ServletExternalContext(ServletContext context, HttpServletRequest request, HttpServletResponse response,
 			FlowUrlHandler flowUrlHandler) {
 		init(context, request, response, flowUrlHandler);
+	}
+
+	/**
+	 * Indicates if the current request from this client is an ajax request. This flag may effect the handling of
+	 * response writing within Spring Web Flow.
+	 * @param ajaxRequest the ajax request flag
+	 */
+	public void setAjaxRequest(boolean ajaxRequest) {
+		this.ajaxRequest = ajaxRequest;
 	}
 
 	// implementing external context
@@ -170,13 +183,7 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public boolean isAjaxRequest() {
-		String acceptHeader = request.getHeader("Accept");
-		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
-		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
-			return true;
-		} else {
-			return false;
-		}
+		return ajaxRequest;
 	}
 
 	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
@@ -189,10 +196,6 @@ public class ServletExternalContext implements ExternalContext {
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to obtain response writer", e);
 		}
-	}
-
-	public void setResponseHeader(String name, String value) {
-		response.setHeader(name, value);
 	}
 
 	public boolean isResponseCommitted() {
@@ -212,30 +215,61 @@ public class ServletExternalContext implements ExternalContext {
 		flowDefinitionRedirectFlowInput = input;
 	}
 
+	public void requestRedirectInPopup() {
+		redirectInPopup = true;
+	}
+
 	// implementation specific methods
 
+	/**
+	 * Returns the flag indicating if a flow execution redirect response has been requested by the flow.
+	 */
 	public boolean flowExecutionRedirectRequested() {
 		return flowExecutionRedirectRequested;
 	}
 
+	/**
+	 * Returns the flag indicating if a flow definition redirect response has been requested by the flow.
+	 */
 	public boolean flowDefinitionRedirectRequested() {
 		return flowDefinitionRedirectFlowId != null;
 	}
 
+	/**
+	 * Returns the id of the flow definition to redirect to. Only set when {@link #flowDefinitionRedirectRequested()}
+	 * returns true.
+	 */
 	public String getFlowRedirectFlowId() {
 		return flowDefinitionRedirectFlowId;
 	}
 
+	/**
+	 * Returns the input to pass the flow definition through the redirect. Only set when
+	 * {@link #flowDefinitionRedirectRequested()} returns true.
+	 */
 	public AttributeMap getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 
+	/**
+	 * Returns the flag indicating if an external redirect response has been requested by the flow.
+	 */
 	public boolean externalRedirectRequested() {
 		return externalRedirectUrl != null;
 	}
 
+	/**
+	 * Returns the URL to redirect to. Only set if {@link #externalRedirectRequested()} returns true.
+	 */
 	public String getExternalRedirectUrl() {
 		return externalRedirectUrl;
+	}
+
+	/**
+	 * If a redirect response has been requested, indicates if the redirect should be issued from a popup dialog.
+	 */
+	public boolean redirectInPopup() {
+		return redirectInPopup;
 	}
 
 	// private helpers

@@ -85,7 +85,7 @@ public interface ExternalContext {
 	public SharedAttributeMap getApplicationMap();
 
 	/**
-	 * Returns true if the current request is an Ajax request.
+	 * Returns true if the current request is an asynchronous Ajax request.
 	 * @return true if the current request is an Ajax request
 	 */
 	public boolean isAjaxRequest();
@@ -124,13 +124,6 @@ public interface ExternalContext {
 	public Writer getResponseWriter();
 
 	/**
-	 * Sets an entry in the response header.
-	 * @param name the entry name
-	 * @param value the entry value
-	 */
-	public void setResponseHeader(String name, String value);
-
-	/**
 	 * Request that a flow execution redirect be performed by the calling environment. Typically called from within a
 	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
 	 * Calling this method commits the response.
@@ -155,6 +148,15 @@ public interface ExternalContext {
 	 * @param uri the URI to redirect to
 	 */
 	public void requestExternalRedirect(String uri);
+
+	/**
+	 * Request that the redirect response requested be sent to the client in a manner that causes the client to issue
+	 * the redirect from a popup dialog. Calling this method only has an effect when a redirect has been requested.
+	 * @see #requestFlowExecutionRedirect()
+	 * @see #requestFlowDefinitionRedirect(String, AttributeMap)
+	 * @see #requestExternalRedirect(String)
+	 */
+	public void requestRedirectInPopup();
 
 	/**
 	 * Has the response been committed?
