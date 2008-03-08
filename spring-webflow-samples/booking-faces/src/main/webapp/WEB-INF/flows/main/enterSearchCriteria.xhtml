@@ -11,7 +11,7 @@
 	<ui:fragment id="hotelSearchFragment">
 		<div id="hotelSearch" class="section">
 		    <span class="errors">
-		       <h:messages globalOnly="true"/>
+		       <h:messages globalOnly="true" />
 		    </span>
 			<h2>Search Hotels</h2>
 			<h:form id="mainForm">
@@ -19,17 +19,17 @@
 					<div class="searchGroup">
 						<div class="searchField">
 						<sf:clientTextValidator promptMessage="Search hotels by name, address, city, or zip.">
-							<h:inputText id="searchString" value="#{flowScope.searchCriteria.searchString}" style="width: 165px; height: 15px;"/>
+							<h:inputText id="searchString" value="#{searchCriteria.searchString}" style="width: 165px; height: 15px;" />
 						</sf:clientTextValidator>
 						</div>
 						<div class="searchSize">
 						   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-							<h:selectOneMenu id="pageSize" value="#{flowScope.searchCriteria.pageSize}">
-								<f:selectItems value="#{referenceData.pageSizeOptions}"/>
+							<h:selectOneMenu id="pageSize" value="#{searchCriteria.pageSize}">
+								<f:selectItems value="#{referenceData.pageSizeOptions}" />
 							</h:selectOneMenu>
 				   		</div>
 						<div class="searchButton">
-							<sf:commandButton id="findHotels" value="Find Hotels" processIds="hotelSearchFragment" action="search"/>
+							<sf:commandButton id="findHotels" value="Find Hotels" processIds="hotelSearchFragment" action="search" />
 						</div>
 					</div>
 			    </fieldset>
@@ -73,7 +73,7 @@
 					</h:column>
 					<h:column>
 						<f:facet name="header">Action</f:facet>
-						<sf:commandLink id="cancel" value="Cancel" processIds="bookingsFragment" action="cancelBooking"/>
+						<sf:commandLink id="cancel" value="Cancel" processIds="bookingsFragment" action="cancelBooking" />
 					</h:column>
 				</h:dataTable>
 			</h:form>
