@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Spring Web Flow: Hotel Booking Sample Application</title>
+	<title>Spring Travel: Spring MVC and Web Flow Reference Application</title>
 	<style type="text/css" media="screen">
         @import url("<c:url value="/resources/css-framework/css/tools.css" />");
         @import url("<c:url value="/resources/css-framework/css/typo.css" />");
@@ -19,11 +19,11 @@
 <div id="page">
 	<div id="header" class="clearfix spring">
 		<div id="welcome">
-			<div class="left">Spring Web Flow + Spring MVC: Hotel Booking Sample Application</div>
+			<div class="left">Spring Travel: Spring MVC and Web Flow Reference Application</div>
 			<div class="right">
 				<security:authorize ifAllGranted="ROLE_USER">
 					<c:if test="${not empty currentUser}">
-						Welcome ${currentUser.name}!
+						Welcome, ${currentUser.name} |
 					</c:if>
 					<a href="<c:url value="/spring/logout" />">Logout</a>
 				</security:authorize>

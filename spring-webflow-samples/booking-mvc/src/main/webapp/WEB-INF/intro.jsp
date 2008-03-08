@@ -8,7 +8,7 @@
 <div class="section">
 	<h1>Welcome to Spring Travel</h1>
 	<p>
-	 	This reference application shows how to use Spring MVC and Web Flow together with JavaServerPages (JSP) and Tiles to develop web applications.
+	 	This reference application shows how to use Spring MVC and Web Flow together with JavaServerPages (JSP) and Tiles to power web applications.
 	</p>
 	<p>
 		The key features illustrated in this sample include:
@@ -20,6 +20,7 @@
 		<li>Managed persistence contexts with the Java Persistence API (JPA)</li>
 		<li>Unified Expression Language (EL) integration</li>
 		<li>Spring Security integration</li>
+		<li>Declarative page authoring with JSP, JSTL, and Spring MVC's form tag library
 		<li>Applying reusable page layouts with Tiles</li>
 		<li>Exception handling support across all layers of the application</li>
 		<li>Spring IDE tooling integration, with support for graphical flow modeling and visualization</li>
