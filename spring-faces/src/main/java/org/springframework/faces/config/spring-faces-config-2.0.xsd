@@ -21,6 +21,35 @@ be used by a flow definition registry.
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
+					<xsd:attribute name="conversion-service">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The idref of the conversion service that should be used.  If not provided, the default conversion service will be used.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="expression-parser">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The idref of the expression parser instance that should be used.  If not provided, the default OGNL expression parser 
+will be used.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="view-factory-creator">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The idref of the view factory creator that should be used.  The view factory creator is specific to the view technology
+being used.  If not provided, the default Spring MVC view factory creator  will be used.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
 					<xsd:attribute name="enable-managed-beans" type="xsd:boolean">
 						<xsd:annotation>
 							<xsd:documentation>
@@ -31,51 +60,8 @@ from EL expressions in flow definitions.
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="expression-parser" use="optional">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The idref of the expression parser instance that should be used.  If not provided, the default OGNL expression parser 
-will be used.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="view-factory-creator" use="optional">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The idref of the view factory creator that should be used.  The view factory creator is specific to the view technology
-being used.  If not provided, the default Spring MVC view factory creator  will be used.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="conversion-service" use="optional">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The idref of the conversion service that should be used.  If not provided, the default conversion service will be used.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
-	
-	
-	<!-- 
-		<xsd:attribute name="enable-managed-beans" type="xsd:boolean">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-When this attribute is set to true, a special EL expression parser will be enabled that allows access to JSF-managed beans
-from EL expressions in flow definitions. 
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-	 -->
 </xsd:schema>
