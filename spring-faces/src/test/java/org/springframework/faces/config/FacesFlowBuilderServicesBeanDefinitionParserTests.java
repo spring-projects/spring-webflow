@@ -3,10 +3,10 @@ package org.springframework.faces.config;
 import junit.framework.TestCase;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.faces.expression.LegacyJSFELExpressionParser;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
+import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 
@@ -36,7 +36,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	public void testEnableManagedBeans() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesLegacy");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof LegacyJSFELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof JsfManagedBeanAwareELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
 	}

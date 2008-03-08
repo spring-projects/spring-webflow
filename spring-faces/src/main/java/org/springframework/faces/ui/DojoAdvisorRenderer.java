@@ -24,14 +24,14 @@ import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.springframework.faces.ui.resource.FlowResourceHelper;
+import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.util.StringUtils;
 
 public class DojoAdvisorRenderer extends DojoRenderer {
 
 	private static final String SCRIPT_ELEMENT = "script";
 
-	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
+	private ResourceHelper resourceHelper = new ResourceHelper();
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 

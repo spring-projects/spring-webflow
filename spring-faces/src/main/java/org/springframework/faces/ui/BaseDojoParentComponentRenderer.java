@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.springframework.faces.ui.resource.FlowResourceHelper;
+import org.springframework.faces.ui.resource.ResourceHelper;
 
 public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesParentComponentRenderer {
 
@@ -19,7 +19,7 @@ public abstract class BaseDojoParentComponentRenderer extends BaseSpringFacesPar
 
 	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
 
-	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
+	private ResourceHelper resourceHelper = new ResourceHelper();
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);

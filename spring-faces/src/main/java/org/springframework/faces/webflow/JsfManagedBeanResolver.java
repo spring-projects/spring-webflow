@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.expression;
+package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 
@@ -32,7 +32,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 
  * @author Jeremy Grelle
  */
-public class LegacyJSFBeanResolver extends ELResolver {
+public class JsfManagedBeanResolver extends ELResolver {
 
 	public Class getCommonPropertyType(ELContext context, Object base) {
 		return Object.class;

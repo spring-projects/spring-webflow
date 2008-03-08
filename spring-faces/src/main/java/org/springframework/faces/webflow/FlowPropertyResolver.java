@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.expression;
+package org.springframework.faces.webflow;
 
 import javax.el.CompositeELResolver;
 import javax.faces.el.PropertyResolver;
 
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
-import org.springframework.webflow.expression.el.RequestContextELResolver;
-import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
+import org.springframework.faces.expression.ELDelegatingPropertyResolver;
 
 /**
- * Assembles {@link RequestContextELResolver} and {@link ScopeSearchingELResolver} into a composite that may be used
- * with JSF 1.1 and higher for property resolution.
+ * For resolving MapAdaptable properties with JSF 1.1 or >.
  * 
  * @author Jeremy Grelle
  */
-public class CompositeFlowPropertyResolver extends ELDelegatingPropertyResolver {
+public class FlowPropertyResolver extends ELDelegatingPropertyResolver {
 
 	private static final CompositeELResolver composite = new CompositeELResolver();
 
@@ -36,7 +34,7 @@ public class CompositeFlowPropertyResolver extends ELDelegatingPropertyResolver 
 		composite.add(new MapAdaptableELResolver());
 	}
 
-	public CompositeFlowPropertyResolver(PropertyResolver nextResolver) {
+	public FlowPropertyResolver(PropertyResolver nextResolver) {
 		super(nextResolver, composite);
 	}
 }

@@ -25,9 +25,6 @@ import java.util.Set;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
-
 /**
  * Helper used by Spring Faces component renderers to add links to javascript and css resources. The resource links will
  * be rendered in the correct format for the requests to be handled by Web Flow and routed to a special "resources" flow
@@ -36,7 +33,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @author Jeremy Grelle
  * 
  */
-public class FlowResourceHelper {
+public class ResourceHelper {
 
 	private static final String RENDERED_RESOURCES_KEY = "org.springframework.faces.RenderedResources";
 
@@ -58,31 +55,20 @@ public class FlowResourceHelper {
 	 * @throws IOException
 	 */
 	public void renderScriptLink(FacesContext facesContext, String scriptPath, Map attributes) throws IOException {
-
 		if (alreadyRendered(facesContext, scriptPath)) {
 			return;
 		}
-
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-
 		ResponseWriter writer = facesContext.getResponseWriter();
-
 		writer.startElement("script", null);
-
 		writer.writeAttribute("type", "text/javascript", null);
-
 		Iterator i = attributes.keySet().iterator();
 		while (i.hasNext()) {
 			String key = (String) i.next();
 			writer.writeAttribute(key, attributes.get(key), null);
 		}
-
-		String src = requestContext.getExternalContext().getContextPath() + "/resources" + scriptPath;
-
+		String src = facesContext.getExternalContext().getRequestContextPath() + "/resources" + scriptPath;
 		writer.writeAttribute("src", src, null);
-
 		writer.endElement("script");
-
 		markRendered(facesContext, scriptPath);
 	}
 
@@ -93,26 +79,16 @@ public class FlowResourceHelper {
 	 * @throws IOException
 	 */
 	public void renderStyleLink(FacesContext facesContext, String cssPath) throws IOException {
-
 		if (alreadyRendered(facesContext, cssPath)) {
 			return;
 		}
-
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-
 		ResponseWriter writer = facesContext.getResponseWriter();
-
 		writer.startElement("link", null);
-
 		writer.writeAttribute("type", "text/css", null);
 		writer.writeAttribute("rel", "stylesheet", null);
-
-		String src = requestContext.getExternalContext().getContextPath() + "/resources" + cssPath;
-
+		String src = facesContext.getExternalContext().getRequestContextPath() + "/resources" + cssPath;
 		writer.writeAttribute("href", src, null);
-
 		writer.endElement("link");
-
 		markRendered(facesContext, cssPath);
 	}
 
@@ -123,21 +99,14 @@ public class FlowResourceHelper {
 	 * @throws IOException
 	 */
 	public void renderDojoInclude(FacesContext facesContext, String module) throws IOException {
-
 		if (alreadyRendered(facesContext, module)) {
 			return;
 		}
-
 		ResponseWriter writer = facesContext.getResponseWriter();
-
 		writer.startElement("script", null);
-
 		writer.writeAttribute("type", "text/javascript", null);
-
 		writer.writeText("dojo.require('" + module + "');", null);
-
 		writer.endElement("script");
-
 		markRendered(facesContext, module);
 	}
 

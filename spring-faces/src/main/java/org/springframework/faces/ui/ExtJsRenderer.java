@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.springframework.faces.ui.resource.FlowResourceHelper;
+import org.springframework.faces.ui.resource.ResourceHelper;
 
 public class ExtJsRenderer extends SpringFacesRenderer {
 
@@ -30,7 +30,7 @@ public class ExtJsRenderer extends SpringFacesRenderer {
 
 	private static final String SPRING_EXT_SCRIPT = "/spring/Spring-Ext.js";
 
-	private FlowResourceHelper resourceHelper = new FlowResourceHelper();
+	private ResourceHelper resourceHelper = new ResourceHelper();
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 

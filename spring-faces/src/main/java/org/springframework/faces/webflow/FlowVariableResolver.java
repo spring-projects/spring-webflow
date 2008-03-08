@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.expression;
+package org.springframework.faces.webflow;
 
 import javax.el.CompositeELResolver;
 import javax.faces.el.VariableResolver;
 
+import org.springframework.faces.expression.ELDelegatingVariableResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
@@ -26,26 +27,25 @@ import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
 import org.springframework.webflow.expression.el.SpringSecurityELResolver;
 
 /**
- * Assembles {@link RequestContextELResolver} and {@link ScopeSearchingELResolver} into a composite that may be used
- * with JSF 1.1 and higher for variable resolution.
+ * For resolving flow request context variables with JSF 1.1 or >.
  * 
  * @author Jeremy Grelle
  */
-public class CompositeFlowVariableResolver extends ELDelegatingVariableResolver {
+public class FlowVariableResolver extends ELDelegatingVariableResolver {
 
 	private static final CompositeELResolver composite = new CompositeELResolver();
 
 	static {
 		composite.add(new RequestContextELResolver());
+		composite.add(new ImplicitFlowVariableELResolver());
+		composite.add(new ScopeSearchingELResolver());
 		if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
 			composite.add(new SpringSecurityELResolver());
 		}
 		composite.add(new SpringBeanWebFlowELResolver());
-		composite.add(new ImplicitFlowVariableELResolver());
-		composite.add(new ScopeSearchingELResolver());
 	}
 
-	public CompositeFlowVariableResolver(VariableResolver nextResolver) {
+	public FlowVariableResolver(VariableResolver nextResolver) {
 		super(nextResolver, composite);
 	}
 }

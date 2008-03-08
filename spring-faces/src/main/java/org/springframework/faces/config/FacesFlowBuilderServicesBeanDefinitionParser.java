@@ -19,9 +19,9 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
-import org.springframework.faces.expression.LegacyJSFELExpressionParser;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
+import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
@@ -54,7 +54,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
 		boolean enableManagedBeans = parseEnableManagedBeans(element, definitionBuilder);
 		if (enableManagedBeans) {
-			definitionBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, new LegacyJSFELExpressionParser(
+			definitionBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, new JsfManagedBeanAwareELExpressionParser(
 					DefaultExpressionFactoryUtils.createExpressionFactory()));
 		} else {
 			parseExpressionParser(element, definitionBuilder);

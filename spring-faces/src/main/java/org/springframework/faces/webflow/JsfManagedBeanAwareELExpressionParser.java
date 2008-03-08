@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.expression;
+package org.springframework.faces.webflow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +43,9 @@ import org.springframework.webflow.expression.el.SpringSecurityELResolver;
  * 
  * @author Jeremy Grelle
  */
-public class LegacyJSFELExpressionParser extends ELExpressionParser {
+public class JsfManagedBeanAwareELExpressionParser extends ELExpressionParser {
 
-	public LegacyJSFELExpressionParser(ExpressionFactory expressionFactory) {
+	public JsfManagedBeanAwareELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
 		putContextFactory(RequestContext.class, new RequestContextELContextFactory());
 		putContextFactory(MutableAttributeMap.class, new AttributeMapELContextFactory());
@@ -63,7 +63,7 @@ public class LegacyJSFELExpressionParser extends ELExpressionParser {
 				customResolvers.add(new SpringSecurityELResolver());
 			}
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
-			customResolvers.add(new LegacyJSFBeanResolver());
+			customResolvers.add(new JsfManagedBeanResolver());
 			ELResolver resolver = new DefaultELResolver(target, customResolvers);
 			return new WebFlowELContext(resolver);
 		}
