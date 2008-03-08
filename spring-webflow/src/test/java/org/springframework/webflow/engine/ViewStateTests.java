@@ -18,9 +18,11 @@ package org.springframework.webflow.engine;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.TestBean;
+import org.springframework.webflow.engine.support.ActionTransitionCriteria;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -164,6 +166,24 @@ public class ViewStateTests extends TestCase {
 		context.putRequestParameter("_eventId", "submit");
 		state.resume(context);
 		assertFalse(context.getFlowExecutionContext().isActive());
+	}
+
+	public void testResumeViewStateForEventStateNotExited() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		TestAction action = new TestAction();
+		t.setExecutionCriteria(new ActionTransitionCriteria(action));
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertEquals(1, action.getExecutionCount());
+		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
 	}
 
 	public void testResumeViewStateForEventDestroyVariables() {
