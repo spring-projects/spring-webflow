@@ -2,6 +2,9 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
+Changes in version 2.0 M4 (06.03.2008)
+-------------------------------------
+
 Changes in version 2.0 M3 (20.12.2007)
 -------------------------------------
 Package org.springframework.webflow.faces

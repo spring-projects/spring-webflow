@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0-M3 (December 2007)
+SPRING WEB FLOW 2.0-M4 (March 2008)
 ----------------------------------
 http://www.springframework.org/webflow
 http://forum.springframework.org
@@ -14,17 +14,16 @@ of a business task, and represents a single user conversation. Flows often execu
 have state, exhibit transactional characteristics, and may be dynamic and/or long-running in nature.
 
 Spring Web Flow exists at a higher level of abstraction, integrating as a self-contained flow engine
-within base frameworks such as Struts, Spring MVC, Portlet MVC, and JSF. SWF provides you the
-capability to capture your application's UI flow explicitly in a declarative, portable,
-and manageable fashion. SWF is a powerful controller framework based on a finite-state machine,
-fully addressing the "C" in MVC. 
+within base frameworks such as Spring MVC and JSF. SWF provides you the capability to capture your
+application's UI flow explicitly in a declarative, portable, and manageable fashion.
+
+SWF is a controller framework that addresses the "C" in MVC. 
 
 2. RELEASE INFO
 
 Spring Web Flow 2.0 requires J2SE 1.4 and J2EE 1.4 (Servlet 2.4) or > to run.
 
-J2SE 5.0 with Ant 1.6 and Ivy 1.3 or > is required to build.  A compatible version of Ivy
-is shipped with this release.
+J2SE 5.0 with Ant 1.6 and Ivy 2.0 or > is required to build.  A compatible version of Ivy is shipped with this release.
 
 SWF release contents:
 
@@ -50,35 +49,30 @@ The following distinct jar files are included in the distribution. This list
 specifies the respective contents and third-party dependencies. Libraries in [brackets] are
 optional, i.e. just necessary for certain functionality.
 
-* spring-webflow-2.0-m3.jar
+* spring-webflow-2.0-m4.jar
 - Contents: The Spring Web Flow system
-- Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-web, spring-binding, OGNL
-                [Log4J, Xerces, XML APIs, spring-webmvc, spring-mock, JUnit, Servlet API, Portlet API, JMX, Struts]
+- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc
+                [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Servlet API, Portlet API, Struts, JUnit]
               
-* spring-binding-2.0-m3.jar
+* spring-binding-2.0-m4.jar
 - Contents: The Spring Data Binding framework, an internal library used by SWF
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context
                 [Log4J]
 
-* spring-faces-2.0-m3.jar
+* spring-faces-2.0-m4.jar
 - Contents: The Spring Faces module, containing Spring Web Flow's integration with Java Server Faces (JSF) and additional JSF functionality.
-- Dependencies: spring-webflow, JSF, Unified EL
-                [Shale Remoting]
+- Dependencies: spring-webflow, JSF API
                                 
 For an exact list of Spring Web Flow project dependencies see "projects/spring-webflow/ivy.xml".
 
 4. WHERE TO START
 
-This distribution contains extensive documentation and sample applications illustrating the
-features of Spring Web Flow.
+This distribution contains extensive documentation and sample applications illustrating the features of Spring Web Flow.
 
-*** A great way to get started is to review and run the sample applications, supplimenting with
+*** A great way to get started is to review and run the sample applications, supplementing with
 reference manual material as needed.  To build deployable .war files for all samples, simply 
 access the projects/spring-webflow/build-spring-webflow directory and execute the "dist" target.
-See the readme.txt in that directory for more additional information.  ***
-
-More information on deploying SWF sample applications can be found at:
-	projects/spring-webflow/spring-webflow-samples/readme.txt
+Also, all projects are directly importable into Eclipse as "Dynamic Web Projects".
 	
 5. ADDITIONAL RESOURCES
 
@@ -86,8 +80,7 @@ The Spring Web Flow homepage is located at:
 
 	http://www.springframework.org/webflow
 
-There you will find resources such as a 'Quick Start' guide and a 'Frequently Asked Questions'
-section.
+There you will find resources such as a 'Quick Start' guide and a 'Frequently Asked Questions' section.
 
 The Spring Web Flow support forums are located at:
 
@@ -95,7 +88,7 @@ The Spring Web Flow support forums are located at:
 	
 There you will find an active community supporting the use of the product.
 
-The Spring Framework portal is located at:
+The Spring Community portal is located at:
 
 	http://www.springframework.org
 
