@@ -56,8 +56,7 @@ public class Message implements Serializable {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("source", source).append("severity", severity).append("text", text)
-				.toString();
+		return new ToStringCreator(this).append("severity", severity).append("text", text).toString();
 	}
 
 }
