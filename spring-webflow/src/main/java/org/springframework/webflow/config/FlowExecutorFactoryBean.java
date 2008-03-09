@@ -37,7 +37,6 @@ import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
-import org.springframework.webflow.execution.repository.impl.ClientFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.impl.DefaultFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 import org.springframework.webflow.executor.FlowExecutor;
@@ -262,13 +261,8 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	protected FlowExecutionRepository createFlowExecutionRepository(FlowExecutionRepositoryType repositoryType,
 			FlowExecutionStateRestorer executionStateRestorer, ConversationManager conversationManager) {
 		if (repositoryType == FlowExecutionRepositoryType.CLIENT) {
-			if (conversationManager == null) {
-				// use the default no-op conversation manager
-				return new ClientFlowExecutionRepository(executionStateRestorer);
-			} else {
-				// use the conversation manager specified by the user
-				return new ClientFlowExecutionRepository(conversationManager, executionStateRestorer);
-			}
+			throw new UnsupportedOperationException(
+					"The 'client' flow execution repository is not supported in this 2.0 Milestone; support is planned for a future release");
 		} else {
 			// determine the conversation manager to use
 			ConversationManager conversationManagerToUse = conversationManager;
