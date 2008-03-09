@@ -99,7 +99,7 @@
 		</div>
 		<div class="field">
 			<div class="label">
-				<label for="creditCardExpiryMonth">Credit Card Expirty:</label>
+				<label for="creditCardExpiryMonth">Expiration Date:</label>
 			</div>
 			<div class="input">
 				<form:select id="creditCardExpiryMonth" path="creditCardExpiryMonth">
@@ -117,9 +117,11 @@
 					<form:option label="Dec" value="12"/>
 				</form:select>
 				<form:select path="creditCardExpiryYear">
-					<form:option label="2007" value="1"/>
-					<form:option label="2008" value="2"/>
-					<form:option label="2009" value="3"/>
+					<form:option label="2008" value="1"/>
+					<form:option label="2009" value="2"/>
+					<form:option label="2010" value="3"/>
+					<form:option label="2011" value="4"/>
+					<form:option label="2012" value="5"/>
 				</form:select>
 			</div>
 		</div>
