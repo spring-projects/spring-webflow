@@ -5,6 +5,55 @@ http://www.springframework.org/webflow
 Changes in version 2.0 M4 (06.03.2008)
 -------------------------------------
 
+General
+* Stabilized the Web Flow 2 architectural model.  This includes Web Flow's role and relationship with Spring MVC, JSF, and Ajax,
+  as well as the definition of new Web Flow 2 extension points.
+  Notes:
+  - Web Flow 2 will continue to play the role of a stateful controller framework complimenting stateless web controller implementations like @Controller.
+  - In this role, Web Flow continues to plug into Spring MVC via Controller and HandlerAdapter hooks and treats Spring MVC
+    as the base web MVC platform for request dispatch. 
+  - Web Flow can now manage the JSF UI component lifecycle fully within its ViewState lifecycle.  This work resides in the Spring Faces project.
+  - Spring MVC can also now execute the JSF rendering lifecycle directly, allowing rendering of JSF views by @Controllers as well.
+    This work also resides in the Spring Faces project.
+  - The SWF ViewFactory API is an extension point for other UI framework providers to integrate their view rendering and postback lifecycles
+    into the Web Flow Execution Engine.  SWF 2 ships integration with Spring MVC and JSF, and we expect additional UI frameworks to integrate over time.
+  - The SWF FlowExecutor API can be used to embed the Web Flow engine in any web controller environment. For example, Grails uses this API as does IceFaces.
+  - Web Flow 2 defines a general model for handling asynchronous events from within a page and requesting partial rendering of page fragments after
+    handling those events.  Spring Javascript Ajax integration ships with SWF 2.x, and hooks exist for other Ajax framework providers to plug in.
+
+Major New Features
+* Introduced a much simplified XML-based flow definition syntax.  See the "Spring Travel" reference applications (booking-faces and booking-mvc projects) for an
+  illustration of the new syntax.  Use of the version 2 syntax can reduce the size of a version 1 flow definition by up to 50%.  This is achieved
+  primarily by stronger Expression Language (EL) integration and simpler tags for action execution and data mapping.
+
+* Added Spring Security integration.  Full support for securing flows, states, and transitions is provided.  A new "currentUser" EL variable
+  provides easy-reference to the current Authenticated user from a flow definition or view template.
+
+* Added full support for flow exception handling, including support for automatically restarting a flow that has ended or expired.
+
+* Added support for view "event handlers", transitions that process Ajax events that should not change the current page.
+  A new "render" element allows you to request fragment(s) of a page that should re-render after handling an Ajax event.
+  This element is not tied to any particular Ajax framework.
+
+* Added support for "view variables" (view scope or page scope).
+  A view variable is allocated when its containing view-state enters and destroyed when that state exits.
+  These variables provide a page context and are particularly useful for updating a model over a series of Ajax requests.
+
+* Added support for @Autowired flow variables.  Flow and view variables can now have their dependencies @Autowired by Spring, enabling flow-scoped beans
+  to hold references to Spring-managed beans such as @Services.  If a dependency is not serializable and therefore transient, those references will
+  be re-wired for you automatically between requests.
+  
+* Added support for "popup" view-states.  Mark a view-state as popup=true and it will render in a popup dialog when Javascript is enabled.
+  
+* Introduced a Javascript abstraction framework called "Spring Javascript", currently providing Dojo and Ext based implementations.
+  This abstraction framework provides the following:
+  - A common interface for Ajax, regardless of which toolkit is being used under the covers
+  - An unique aspect-oriented configuration API for decorating HTML DOM nodes with rich web behaviors, including client-side validation behaviors.
+
+* Added a lightweight JSF component library that uses Spring Javascript underneath to employ progressive enhancement techniques,
+  degrading nicely if Javascript is not available for use on the client.  See the Spring Travel example for an illustration;
+  turn Javascript off and compare the application to when Javascript is turned on.
+ 
 Changes in version 2.0 M3 (20.12.2007)
 -------------------------------------
 Package org.springframework.webflow.faces
