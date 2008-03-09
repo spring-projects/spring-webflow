@@ -53,7 +53,12 @@ Major New Features
 * Added a lightweight JSF component library that uses Spring Javascript underneath to employ progressive enhancement techniques,
   degrading nicely if Javascript is not available for use on the client.  See the Spring Travel example for an illustration;
   turn Javascript off and compare the application to when Javascript is turned on.
- 
+
+* Added support for registering "Flow Handlers", as an alternative or supplement to the traditional Spring MVC FlowController.
+  A FlowHandler is a gatekeeper that brokers access to a single flow definition.
+  Such handlers are useful when you need the to handle flow input mapping, flow outcomes, or flow exceptions in a custom manner.
+  See the FlowHandlerAdapter and FlowHandler Javadoc API for more information.
+
 Changes in version 2.0 M3 (20.12.2007)
 -------------------------------------
 Package org.springframework.webflow.faces
