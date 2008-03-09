@@ -82,12 +82,21 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 	}
 
 	/**
-	 * Sets the maximum number of continuations allowed per conversation in this repository. Use -1 for unlimited. The
+	 * Returns the max number of continuations allowed per conversation by this repository.
+	 */
+	public int getMaxContinuations() {
+		return maxContinuations;
+	}
+
+	/**
+	 * Sets the maximum number of continuations allowed per conversation by this repository. Use -1 for unlimited. The
 	 * default is 30.
 	 */
 	public void setMaxContinuations(int maxContinuations) {
 		this.maxContinuations = maxContinuations;
 	}
+
+	// implementing flow execution repository
 
 	public FlowExecution getFlowExecution(FlowExecutionKey key) {
 		if (logger.isDebugEnabled()) {
@@ -117,27 +126,13 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		putConversationScope(flowExecution);
 	}
 
-	// internal helpers
+	// hooks for subclassing
 
-	/**
-	 * Returns the continuation group associated with the governing conversation. TODO: memento persistence?
-	 * @param key the flow execution key
-	 * @return the continuation group
-	 */
-	private FlowExecutionContinuationGroup getContinuationGroup(FlowExecutionKey key) {
-		Conversation conversation = getConversation(key);
-		FlowExecutionContinuationGroup group = (FlowExecutionContinuationGroup) conversation
-				.getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
-		if (group == null) {
-			// setup a new continuation group for the conversation
-			// no need to synchronize here since this code will only be executed
-			// during the launch of a new flow execution, at which time the
-			// key has not yet been communicated to any other threads
-			group = new FlowExecutionContinuationGroup(maxContinuations);
-			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, group);
-		}
-		return group;
+	protected FlowExecutionContinuationGroup createFlowExecutionContinuationGroup() {
+		return new FlowExecutionContinuationGroup(maxContinuations);
 	}
+
+	// internal helpers
 
 	/**
 	 * Returns the continuation in the group with the specified key.
@@ -151,5 +146,21 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		} catch (ContinuationNotFoundException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
+	}
+
+	/**
+	 * Returns the continuation group associated with the governing conversation.
+	 * @param key the flow execution key
+	 * @return the continuation group
+	 */
+	private FlowExecutionContinuationGroup getContinuationGroup(FlowExecutionKey key) {
+		Conversation conversation = getConversation(key);
+		FlowExecutionContinuationGroup group = (FlowExecutionContinuationGroup) conversation
+				.getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
+		if (group == null) {
+			group = createFlowExecutionContinuationGroup();
+			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, group);
+		}
+		return group;
 	}
 }

@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.conversation.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -24,8 +22,6 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
-import org.springframework.webflow.util.RandomGuidUidGenerator;
-import org.springframework.webflow.util.UidGenerator;
 
 /**
  * Simple implementation of a conversation manager that stores conversations in the session attribute map.
@@ -40,8 +36,6 @@ import org.springframework.webflow.util.UidGenerator;
  */
 public class SessionBindingConversationManager implements ConversationManager {
 
-	private static final Log logger = LogFactory.getLog(SessionBindingConversationManager.class);
-
 	/**
 	 * The name of the session attribute that will hold the conversation container used by this conversation manager.
 	 * 
@@ -50,32 +44,13 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * value to something unique.
 	 * @see #setSessionKey(String)
 	 */
-	private String sessionKey = "webflow.conversationContainer";
-
-	/**
-	 * The conversation uid generation strategy to use.
-	 */
-	private UidGenerator conversationIdGenerator = new RandomGuidUidGenerator();
+	private String sessionKey = "webflowConversationContainer";
 
 	/**
 	 * The maximum number of active conversations allowed in a session. The default is 5. This is high enough for most
 	 * practical situations and low enough to avoid excessive resource usage or easy denial of service attacks.
 	 */
 	private int maxConversations = 5;
-
-	/**
-	 * Returns the used generator for conversation ids. Defaults to {@link RandomGuidUidGenerator}.
-	 */
-	public UidGenerator getConversationIdGenerator() {
-		return conversationIdGenerator;
-	}
-
-	/**
-	 * Sets the configured generator for conversation ids.
-	 */
-	public void setConversationIdGenerator(UidGenerator uidGenerator) {
-		this.conversationIdGenerator = uidGenerator;
-	}
 
 	/**
 	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
@@ -110,12 +85,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
-		ConversationId conversationId = new SimpleConversationId(conversationIdGenerator.generateUid());
-		if (logger.isDebugEnabled()) {
-			logger.debug("Beginning conversation " + conversationParameters + "; unique conversation id = "
-					+ conversationId);
-		}
-		return getConversationContainer().createAndAddConversation(conversationId, conversationParameters);
+		return getConversationContainer().createConversation(conversationParameters);
 	}
 
 	public Conversation getConversation(ConversationId id) throws ConversationException {
@@ -123,7 +93,17 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	public ConversationId parseConversationId(String encodedId) throws ConversationException {
-		return new SimpleConversationId(conversationIdGenerator.parseUid(encodedId));
+		try {
+			return new SimpleConversationId(Integer.valueOf(encodedId));
+		} catch (NumberFormatException e) {
+			throw new ConversationException("Unable to parse string-encoded conversationId + '" + encodedId + "'", e);
+		}
+	}
+
+	// hooks for subclassing
+
+	protected ConversationContainer createConversationContainer() {
+		return new ConversationContainer(maxConversations, sessionKey);
 	}
 
 	// internal helpers
@@ -137,7 +117,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 		synchronized (sessionMap.getMutex()) {
 			ConversationContainer container = (ConversationContainer) sessionMap.get(sessionKey);
 			if (container == null) {
-				container = new ConversationContainer(maxConversations, sessionKey);
+				container = createConversationContainer();
 				sessionMap.put(sessionKey, container);
 			}
 			return container;

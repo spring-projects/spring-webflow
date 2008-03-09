@@ -51,6 +51,11 @@ class ConversationContainer implements Serializable {
 	private List conversations;
 
 	/**
+	 * The sequence for unique conversation identifiers within this container.
+	 */
+	private int conversationIdSequence;
+
+	/**
 	 * Create a new conversation container.
 	 * @param maxConversations the maximum number of allowed concurrent conversations, -1 for unlimited
 	 * @param sessionKey the key of this conversation container in the session
@@ -77,18 +82,21 @@ class ConversationContainer implements Serializable {
 
 	/**
 	 * Create a new conversation based on given parameters and add it to the container.
-	 * @param id the unique id of the conversation
 	 * @param parameters descriptive parameters
 	 * @return the created conversation
 	 */
-	public synchronized Conversation createAndAddConversation(ConversationId id, ConversationParameters parameters) {
-		ContainedConversation conversation = new ContainedConversation(this, id);
+	public synchronized Conversation createConversation(ConversationParameters parameters) {
+		ContainedConversation conversation = new ContainedConversation(this, nextId());
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			// end oldest conversation
 			((Conversation) conversations.get(0)).end();
 		}
 		return conversation;
+	}
+
+	private ConversationId nextId() {
+		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
 	}
 
 	/**

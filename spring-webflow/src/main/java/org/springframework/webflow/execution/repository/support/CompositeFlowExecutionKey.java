@@ -42,14 +42,14 @@ import org.springframework.webflow.execution.repository.continuation.FlowExecuti
 class CompositeFlowExecutionKey extends FlowExecutionKey {
 
 	/**
-	 * The default conversation id prefix delimiter ("_c").
+	 * The default conversation id prefix delimiter.
 	 */
-	private static final String CONVERSATION_ID_PREFIX = "_c";
+	private static final String CONVERSATION_ID_PREFIX = "c";
 
 	/**
-	 * The default continuation id prefix delimiter ("_k").
+	 * The default continuation id prefix delimiter.
 	 */
-	private static final String CONTINUATION_ID_PREFIX = "_k";
+	private static final String CONTINUATION_ID_PREFIX = "v";
 
 	/**
 	 * The format of the default string-encoded form, as returned by toString().
@@ -111,6 +111,13 @@ class CompositeFlowExecutionKey extends FlowExecutionKey {
 	}
 
 	// static helpers
+
+	/**
+	 * Returns a string description of the format of this key.
+	 */
+	public static String getFormat() {
+		return FORMAT;
+	}
 
 	/**
 	 * Helper that splits the string-form of an instance of this class into its "parts" so the parts can be easily

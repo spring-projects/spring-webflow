@@ -22,8 +22,8 @@ import org.springframework.webflow.conversation.impl.SimpleConversationId;
 public class CompositeFlowExecutionKeyTests extends TestCase {
 
 	public void testToString() {
-		CompositeFlowExecutionKey key = new CompositeFlowExecutionKey(new SimpleConversationId("foo"), "bar");
-		assertEquals("_cfoo_kbar", key.toString());
+		CompositeFlowExecutionKey key = new CompositeFlowExecutionKey(new SimpleConversationId("1"), "1");
+		assertEquals("c1v1", key.toString());
 	}
 
 	public void testEquals() {

@@ -38,8 +38,6 @@ import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
-import org.springframework.webflow.util.RandomGuidUidGenerator;
-import org.springframework.webflow.util.UidGenerator;
 
 /**
  * Abstract base class for flow execution repository implementations. Does not make any assumptions about the storage
@@ -69,11 +67,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	private FlowExecutionStateRestorer executionStateRestorer;
 
 	/**
-	 * The uid generation strategy to use.
-	 */
-	private UidGenerator continuationIdGenerator = new RandomGuidUidGenerator();
-
-	/**
 	 * Flag to indicate whether or not a new flow execution key should always be generated before each put call. Default
 	 * is true.
 	 */
@@ -92,15 +85,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	}
 
 	/**
-	 * Sets the uid generation strategy used to generate unique continuation identifiers for
-	 * {@link FlowExecutionKey flow execution keys}.
-	 */
-	public void setContinuationIdGenerator(UidGenerator continuationIdGenerator) {
-		Assert.notNull(continuationIdGenerator, "The continuation id generator is required");
-		this.continuationIdGenerator = continuationIdGenerator;
-	}
-
-	/**
 	 * Sets a flag indicating if a new {@link FlowExecutionKey} should always be generated before each put call. By
 	 * setting this to false a FlowExecution can remain identified by the same key throughout its life.
 	 */
@@ -111,7 +95,7 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	public FlowExecutionKey getKey(FlowExecution execution) {
 		if (execution.getKey() == null) {
 			Conversation conversation = beginConversation(execution);
-			return new CompositeFlowExecutionKey(conversation.getId(), continuationIdGenerator.generateUid());
+			return new CompositeFlowExecutionKey(conversation.getId(), Integer.valueOf(1));
 		} else {
 			return getNextKey(execution);
 		}
@@ -120,25 +104,16 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	public FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException {
 		if (!StringUtils.hasText(encodedKey)) {
 			throw new BadlyFormattedFlowExecutionKeyException(encodedKey,
-					"The string encoded flow execution key is required");
+					"The string-encoded flow execution key is required");
 		}
 		String[] keyParts = CompositeFlowExecutionKey.keyParts(encodedKey);
-		// parse out the conversation id
 		ConversationId conversationId;
 		try {
 			conversationId = conversationManager.parseConversationId(keyParts[0]);
 		} catch (ConversationException e) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, "The conversation id '" + keyParts[0]
-					+ "' contained in the composite flow execution key '" + encodedKey + "' is invalid", e);
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, CompositeFlowExecutionKey.getFormat(), e);
 		}
-		// parse out the continuation id
-		Serializable continuationId;
-		try {
-			continuationId = continuationIdGenerator.parseUid(keyParts[1]);
-		} catch (FlowExecutionRepositoryException e) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, "The continuation id '" + keyParts[1]
-					+ "' contained in the composite flow execution key '" + encodedKey + "' is invalid", e);
-		}
+		Serializable continuationId = parseContinuationId(keyParts[1], encodedKey);
 		return new CompositeFlowExecutionKey(conversationId, continuationId);
 	}
 
@@ -160,7 +135,7 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		endConversation(flowExecution);
 	}
 
-	// overridable hooks for use in subclasses
+	// hooks for use in subclasses
 
 	/**
 	 * Factory method that maps a new flow execution to a descriptive
@@ -181,7 +156,9 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	protected FlowExecutionKey getNextKey(FlowExecution execution) {
 		if (alwaysGenerateNewNextKey) {
 			CompositeFlowExecutionKey key = (CompositeFlowExecutionKey) execution.getKey();
-			return new CompositeFlowExecutionKey(key.getConversationId(), continuationIdGenerator.generateUid());
+			Integer continuationId = (Integer) key.getContinuationId();
+			Integer nextId = Integer.valueOf(continuationId.intValue() + 1);
+			return new CompositeFlowExecutionKey(key.getConversationId(), nextId);
 		} else {
 			return execution.getKey();
 		}
@@ -201,26 +178,48 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		}
 	}
 
+	/**
+	 * Returns the conversationId portion of the flow execution key.
+	 * @param key the execution key
+	 */
 	protected ConversationId getConversationId(FlowExecutionKey key) {
 		return ((CompositeFlowExecutionKey) key).getConversationId();
 	}
 
+	/**
+	 * Returns the continuationId portion of the flow execution key.
+	 * @param key the execution key
+	 */
 	protected Serializable getContinuationId(FlowExecutionKey key) {
 		return ((CompositeFlowExecutionKey) key).getContinuationId();
 	}
 
+	/**
+	 * Returns the transient state of the flow execution after potential deserialization.
+	 * @param execution the flow execution
+	 * @param key the flow execution key
+	 */
 	protected FlowExecution restoreTransientState(FlowExecution execution, FlowExecutionKey key) {
 		return executionStateRestorer.restoreState(execution, key, getConversationScope(key), this);
 	}
 
+	/**
+	 * Puts the value of conversation scope in the conversation object.
+	 * @param flowExecution the flow execution holding a reference to conversation scope
+	 */
 	protected void putConversationScope(FlowExecution flowExecution) {
 		getConversation(flowExecution.getKey()).putAttribute("scope", flowExecution.getConversationScope());
 	}
 
+	/**
+	 * Assert that a flow execution key has been assigned to the execution.
+	 * @param execution the flow execution
+	 * @throws IllegalStateException if a key has not yet been assigned as expected
+	 */
 	protected void assertKeySet(FlowExecution execution) throws IllegalStateException {
 		if (execution.getKey() == null) {
 			throw new IllegalStateException(
-					"Key for the flow execution is null; make sure the key is assigned first.  Execution = "
+					"The key for the flow execution is null; make sure the key is assigned first.  Execution Details = "
 							+ execution);
 		}
 	}
@@ -233,8 +232,15 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		return conversation;
 	}
 
+	private Serializable parseContinuationId(String encodedId, String encodedKey) {
+		try {
+			return Integer.valueOf(encodedId);
+		} catch (NumberFormatException e) {
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, CompositeFlowExecutionKey.getFormat(), e);
+		}
+	}
+
 	private Conversation endConversation(FlowExecution flowExecution) {
-		// end the governing conversation
 		Conversation conversation = getConversation(flowExecution.getKey());
 		conversation.end();
 		return conversation;

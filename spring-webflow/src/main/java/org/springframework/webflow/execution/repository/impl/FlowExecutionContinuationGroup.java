@@ -92,7 +92,7 @@ class FlowExecutionContinuationGroup implements Serializable {
 			continuationIds.remove(continuationId);
 		}
 		continuationIds.add(continuationId);
-		// remove the oldest continuation if them maximium number of
+		// remove the oldest continuation if the maximium number of
 		// continuations has been exceeded
 		if (maxExceeded()) {
 			removeOldestContinuation();

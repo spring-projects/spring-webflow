@@ -22,7 +22,7 @@ import org.springframework.webflow.core.FlowException;
  * 
  * @author Keith Donald
  */
-public abstract class ConversationException extends FlowException {
+public class ConversationException extends FlowException {
 
 	/**
 	 * Creates a conversation service exception.

@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
@@ -29,31 +28,13 @@ import org.springframework.webflow.executor.FlowExecutor;
  */
 public class FlowController extends AbstractController {
 
-	/**
-	 * The response header to be set on an Ajax redirect
-	 */
-	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
-
-	/**
-	 * The response header to be set on an redirect that should be issued from a popup window.
-	 */
-	private static final String POPUP_VIEW_HEADER = "Flow-Modal-View";
-
-	/**
-	 * The accept header value that signifies an Ajax request.
-	 */
-	private static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
-
-	/**
-	 * Alternate request parameter to indicate an Ajax request for cases when control of the header is not available.
-	 */
-	private static final String AJAX_SOURCE_PARAM = "ajaxSource";
-
 	private static final Log logger = LogFactory.getLog(FlowController.class);
 
 	private FlowExecutor flowExecutor;
 
 	private FlowUrlHandler urlHandler;
+
+	private AjaxHandler ajaxHandler;
 
 	private Map flowHandlers = new HashMap();
 
@@ -63,6 +44,7 @@ public class FlowController extends AbstractController {
 	public FlowController(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
 		this.urlHandler = new DefaultFlowUrlHandler();
+		this.ajaxHandler = new SpringJavascriptAjaxHandler();
 		// set the cache seconds property to 0 so no pages are cached by default for flows
 		setCacheSeconds(0);
 	}
@@ -108,18 +90,8 @@ public class FlowController extends AbstractController {
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
 		ServletExternalContext context = new ServletExternalContext(getServletContext(), request, response, urlHandler);
-		context.setAjaxRequest(isAjaxRequest(request));
+		context.setAjaxRequest(ajaxHandler.isAjaxRequest(request));
 		return context;
-	}
-
-	protected boolean isAjaxRequest(HttpServletRequest request) {
-		String acceptHeader = request.getHeader("Accept");
-		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
-		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	protected MutableAttributeMap defaultFlowExecutionInputMap(HttpServletRequest request) {
@@ -200,10 +172,7 @@ public class FlowController extends AbstractController {
 	private void sendRedirect(ServletExternalContext context, HttpServletResponse response, String targetUrl)
 			throws IOException {
 		if (context.isAjaxRequest()) {
-			if (context.redirectInPopup()) {
-				response.setHeader(POPUP_VIEW_HEADER, "true");
-			}
-			response.setHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+			ajaxHandler.sendAjaxRedirect(response, targetUrl, context.redirectInPopup());
 		} else {
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}

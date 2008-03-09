@@ -53,31 +53,42 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 	}
 
 	public void testParseFlowExecutionKey() {
-		String key = "_c12345_k54321";
+		String key = "c12345v54321";
 		FlowExecutionKey k = repository.parseFlowExecutionKey(key);
 		assertEquals(key, k.toString());
 	}
 
 	public void testParseBadlyFormattedFlowExecutionKey() {
-		String key = "_c12345";
+		String key = "c12345";
 		try {
 			repository.parseFlowExecutionKey(key);
 			fail("Should have failed");
 		} catch (BadlyFormattedFlowExecutionKeyException e) {
-			assertEquals("_c12345", e.getInvalidKey());
+			assertEquals("c12345", e.getInvalidKey());
+			assertNotNull(e.getFormat());
+		}
+	}
+
+	public void testParseBadlyFormattedFlowExecutionKeyBadContinuationId() {
+		String key = "c12345vaaaa";
+		try {
+			repository.parseFlowExecutionKey(key);
+			fail("Should have failed");
+		} catch (BadlyFormattedFlowExecutionKeyException e) {
+			assertEquals("c12345vaaaa", e.getInvalidKey());
 			assertNotNull(e.getFormat());
 		}
 	}
 
 	public void testGetLock() {
-		FlowExecutionKey key = repository.parseFlowExecutionKey("_c12345_k54321");
+		FlowExecutionKey key = repository.parseFlowExecutionKey("c12345v54321");
 		FlowExecutionLock lock = repository.getLock(key);
 		assertNotNull(lock);
 		lock.unlock();
 	}
 
 	public void testGetLockNoSuchFlowExecution() {
-		FlowExecutionKey key = repository.parseFlowExecutionKey("_cbogus_k54321");
+		FlowExecutionKey key = repository.parseFlowExecutionKey("cbogusv54321");
 		try {
 			repository.getLock(key);
 			fail("should have failed");
@@ -93,7 +104,9 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		execution.start(null, new MockExternalContext());
 		assertNotNull(execution.getKey());
 		repository.putFlowExecution(execution);
-		FlowExecution execution2 = repository.getFlowExecution(execution.getKey());
+		String key = execution.getKey().toString();
+		FlowExecutionKey parsedKey = repository.parseFlowExecutionKey(key);
+		FlowExecution execution2 = repository.getFlowExecution(parsedKey);
 		assertSame(execution.getDefinition(), execution2.getDefinition());
 		assertEquals(execution.getActiveSession().getState().getId(), execution2.getActiveSession().getState().getId());
 	}
