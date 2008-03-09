@@ -16,8 +16,8 @@
 	<bookinfo>
 		<title>Spring Web Flow</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 2.0-m3</releaseinfo>
-		<pubdate>December 2007</pubdate>
+		<releaseinfo>Version 2.0-m4</releaseinfo>
+		<pubdate>March 2008</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>
@@ -28,12 +28,16 @@
 				<surname>Vervaet</surname>
 			</author>
 			<author>
-				<firstname>Rossen</firstname>
-				<surname>Stoyanchev</surname>
-			</author>
-			<author>
 				<firstname>Jeremy</firstname>
 				<surname>Grelle</surname>
+			</author>
+			<author>
+				<firstname>Scott</firstname>
+				<surname>Andrews</surname>
+			</author>
+			<author>
+				<firstname>Rossen</firstname>
+				<surname>Stoyanchev</surname>
 			</author>
 		</authorgroup>
 		<legalnotice>
