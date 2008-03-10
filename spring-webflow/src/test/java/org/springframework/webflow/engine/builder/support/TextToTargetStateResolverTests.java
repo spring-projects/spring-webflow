@@ -39,7 +39,7 @@ public class TextToTargetStateResolverTests extends TestCase {
 	}
 
 	public void testDynamic() {
-		String expression = "#{flowScope.lastState}";
+		String expression = "${flowScope.lastState}";
 		TargetStateResolver resolver = (TargetStateResolver) converter.convert(expression);
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("lastState", "mockState");

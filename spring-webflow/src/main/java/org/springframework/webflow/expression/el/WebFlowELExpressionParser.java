@@ -25,6 +25,9 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class WebFlowELExpressionParser extends ELExpressionParser {
 
+	private static boolean securityPresent = ClassUtils
+			.isPresent("org.springframework.security.context.SecurityContextHolder");
+
 	public WebFlowELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
 		putContextFactory(RequestContext.class, new RequestContextELContextFactory());
@@ -36,13 +39,13 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			RequestContext context = (RequestContext) target;
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver(context));
-			customResolvers.add(new ImplicitFlowVariableELResolver(context));
-			customResolvers.add(new ScopeSearchingELResolver(context));
-			customResolvers.add(new ActionMethodELResolver());
-			if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
+			if (securityPresent) {
 				customResolvers.add(new SpringSecurityELResolver());
 			}
+			customResolvers.add(new ImplicitFlowVariableELResolver(context));
+			customResolvers.add(new ScopeSearchingELResolver(context));
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
+			customResolvers.add(new ActionMethodELResolver());
 			ELResolver resolver = new DefaultELResolver(null, customResolvers);
 			return new WebFlowELContext(resolver);
 		}
