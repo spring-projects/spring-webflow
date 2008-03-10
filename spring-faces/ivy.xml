@@ -46,7 +46,7 @@
 		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
 		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default" />
 		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
-		<dependency org="jboss" name="jboss-el" rev="1.0" conf="test->default"/>
+		<dependency org="org.jboss.seam" name="jboss-el" rev="2.0.0.GA" conf="test->default"/>
 		<dependency org="org.apache.shale" name="shale-test" rev="1.0.4" conf="test->default" />
 		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default" />
 		

@@ -5,7 +5,7 @@
 	<artifactId>spring-faces</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Faces</name>
-	<version>2.0-m4-SNAPSHOT</version>
+	<version>2.0-m4</version>
 	<description>Spring Faces Framework</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
@@ -90,9 +90,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>jboss</groupId>
+			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-el</artifactId>
-			<version>1.0</version>
+			<version>2.0.0.GA</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
