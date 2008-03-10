@@ -191,7 +191,7 @@
 &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" result-type="dataModel"/&gt;		
 		</programlisting>
 	</sect1>
-	<sect1 id="checkpoint-essential-flow-elements">
+	<sect1 id="checkpoint-actions">
 		<title>Checkpoint - flow actions</title>
 		<para>		
 			Now review the sample booking flow with actions added:
