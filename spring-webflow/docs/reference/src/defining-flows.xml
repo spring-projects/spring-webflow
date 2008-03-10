@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="defining-flows">
+	<title>Defining Flows</title>
+	<sect1 id="introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter begins the Users Section of this guide.
+			It shows how to implement flows using the flow definition language.
+			By the end of this chapter, you should have a good understanding of language constructs and capable of authoring a flow definition.
+		</para>
+	</sect1>
+	<sect1 id="flow-overview">
+		<title>What is a Flow?</title>
+		<para>
+			A flow encapsulates a reusable sequence of steps that can execute in different contexts.
+			Below is a <ulink url="http://www.jjg.net/ia/visvocab/">Garrett Information Architecture</ulink> diagram illustrating a reference to a flow that encapsulates the steps of a hotel booking process:
+		</para>
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/hotels-site.png" format="PNG" align="center"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/hotels-site.png" format="PNG" align="center"/>
+			</imageobject>
+			<caption>
+				<para>A BookHotel Flow Definition</para>
+			</caption>
+		</mediaobject>
+	</sect1>
+	<sect1 id="flow-makeup">
+		<title>What is the makeup of a typical Flow?</title>
+		<para>
+			In Spring Web Flow, a flow consists of a series of steps called "states".
+			Entering a state typically results in a page being displayed to the user.
+			On the page, user events occur that are handled by that state.
+			These events can trigger transitions to other states which result in page navigations.
+		</para>
+		<para>
+			The example below shows the structure of the book hotel flow referenced in the previous diagram:
+		</para>
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/hotels-site-bookhotel-flow.png" format="PNG" align="center"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/hotels-site-bookhotel-flow.png" format="PNG" align="center"/>
+			</imageobject>
+			<caption>
+				<para>Hotels Site Diagram that references a "Book Hotel" flow</para>
+			</caption>
+		</mediaobject>		
+	</sect1>
+	<sect1 id="flow-definition">
+		<title>How are Flows authored?</title>
+		<para>
+			Flows are authored by web application developers using a XML-based flow definition language.
+			The next steps of this guide will walk you through the elements of this language.
+		</para>
+	</sect1>
+</chapter>

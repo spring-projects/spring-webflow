@@ -3,20 +3,14 @@
                       "../lib/docbook-dtd/docbookx.dtd"
 [
 <!ENTITY overview SYSTEM "overview.xml">
-<!ENTITY flow-definition SYSTEM "flow-definition.xml">
-<!ENTITY flow-execution SYSTEM "flow-execution.xml">
-<!ENTITY flow-execution-repository SYSTEM "flow-execution-repository.xml">
-<!ENTITY flow-executor SYSTEM "flow-executor.xml">
-<!ENTITY spring-faces SYSTEM "spring-faces.xml">
-<!ENTITY practical SYSTEM "practical.xml">
+<!ENTITY defining-flows SYSTEM "defining-flows.xml">
 ]>
 
 <book>
-
 	<bookinfo>
 		<title>Spring Web Flow</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 2.0-m4</releaseinfo>
+		<releaseinfo>Version 2.0 M4</releaseinfo>
 		<pubdate>March 2008</pubdate>
 		<authorgroup>
 			<author>
@@ -54,11 +48,6 @@
 	<toc />
 	
 	&overview;
-	&flow-definition;
-	&flow-execution;
-	&flow-execution-repository;
-	&flow-executor;
-	&spring-faces;
-	&practical;
+	&defining-flows;
 	
 </book>
