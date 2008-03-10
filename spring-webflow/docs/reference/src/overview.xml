@@ -11,7 +11,7 @@
 		User registration, login, and cart checkout are all examples of flows that can be invoked from several places in this type of application.
 	</para>
 	<para>
-		Spring Web Flow (SWF) is the module of Spring that focuses on being the definitive solution for implementing flows.
+		Spring Web Flow is the module of Spring that focuses on being the definitive solution for implementing flows.
 		The Web Flow engine plugs into the Spring Web MVC platform and provides declarative flow definition language.
 		This reference guide shows you how to use and extend Spring Web Flow.
 	</para>
@@ -41,11 +41,11 @@
 		<title>Where to get additional support</title>
 		<para>
 			Professional "from the source" support on Spring Web Flow is available from
-			SpringSource, the company behind Spring, and
-			Ervacon, operated by Web Flow project co-founder Erwin Vervaet
+			<ulink url="http://www.springsource.com">SpringSource</ulink>, the company behind Spring, and
+			<ulink url="http://www.ervacon.com">Ervacon</ulink>, operated by Web Flow project co-founder Erwin Vervaet
 		</para>
 		<para>
-			Spring Community support is available at www.springframework.org
+			Spring Community support is available at <ulink url="http://www.springframework.org">www.springframework.org</ulink>
 		</para>
 	</sect1>
 </chapter>
