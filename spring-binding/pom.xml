@@ -5,7 +5,7 @@
 	<artifactId>spring-binding</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Binding</name>
-	<version>2.0-m4</version>
+	<version>2.0-rc1-SNAPSHOT</version>
 	<description>Spring Data Binding Framework - An internal module used by Spring Web Flow</description>
 	<url>http://www.springframework.org</url>
 	<licenses>

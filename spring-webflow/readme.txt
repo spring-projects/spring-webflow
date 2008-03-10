@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0-M4 (March 2008)
+SPRING WEB FLOW 2.0 RC1 (March 2008)
 ----------------------------------
 http://www.springframework.org/webflow
 http://forum.springframework.org
