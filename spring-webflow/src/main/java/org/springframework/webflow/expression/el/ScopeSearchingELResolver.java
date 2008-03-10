@@ -5,6 +5,8 @@ import java.util.Iterator;
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -18,6 +20,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @author Jeremy Grelle
  */
 public class ScopeSearchingELResolver extends ELResolver {
+
+	private static final Log logger = LogFactory.getLog(ScopeSearchingELResolver.class);
 
 	private RequestContext requestContext;
 
@@ -66,15 +70,27 @@ public class ScopeSearchingELResolver extends ELResolver {
 		}
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved request scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			return requestContext.getRequestScope().get(attributeName);
 		} else if (requestContext.getFlashScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved flash scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			return requestContext.getFlashScope().get(attributeName);
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved flow scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			return requestContext.getFlowScope().get(attributeName);
 		} else if (requestContext.getConversationScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved conversation scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			return requestContext.getConversationScope().get(attributeName);
 		} else {
@@ -112,15 +128,27 @@ public class ScopeSearchingELResolver extends ELResolver {
 		}
 		String attributeName = property.toString();
 		if (requestContext.getRequestScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved request scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			requestContext.getRequestScope().put(attributeName, value);
 		} else if (requestContext.getFlashScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved flash scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			requestContext.getFlashScope().put(attributeName, value);
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved flow scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			requestContext.getFlowScope().put(attributeName, value);
 		} else if (requestContext.getConversationScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved conversation scoped variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			requestContext.getConversationScope().put(attributeName, value);
 		}

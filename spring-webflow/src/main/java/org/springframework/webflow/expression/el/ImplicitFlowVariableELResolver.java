@@ -9,10 +9,14 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 public class ImplicitFlowVariableELResolver extends ELResolver {
+
+	private static final Log logger = LogFactory.getLog(ImplicitFlowVariableELResolver.class);
 
 	private RequestContext requestContext;
 
@@ -50,6 +54,9 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 			return null;
 		}
 		if (ImplicitVariables.matches(property)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved implicit flow variable '" + property + "'");
+			}
 			context.setPropertyResolved(true);
 			return ImplicitVariables.value(context, requestContext, property);
 		} else {

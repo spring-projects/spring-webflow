@@ -6,6 +6,8 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.Authentication;
 import org.springframework.security.context.SecurityContextHolder;
 
@@ -16,6 +18,8 @@ import org.springframework.security.context.SecurityContextHolder;
  * @author Scott Andrews
  */
 public class SpringSecurityELResolver extends ELResolver {
+
+	private static final Log logger = LogFactory.getLog(SpringSecurityELResolver.class);
 
 	/**
 	 * Name of the security principal variable.
@@ -41,6 +45,9 @@ public class SpringSecurityELResolver extends ELResolver {
 
 	public Object getValue(ELContext elContext, Object base, Object property) {
 		if (base == null && SECURITY_PRINCIPAL_VARIABLE_NAME.equals(property)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved implicit flow variable '" + property + "'");
+			}
 			elContext.setPropertyResolved(true);
 			if (SecurityContextHolder.getContext() != null) {
 				return SecurityContextHolder.getContext().getAuthentication();
