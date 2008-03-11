@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.webflow.mvc;
 
 import java.io.IOException;
@@ -23,22 +38,40 @@ import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
 /**
- * Adapter between the Spring MVC Controller layer and the Spring Web Flow engine. This controller allows Spring Web
- * Flow to run in "embedded" mode as a Controller within a DispatcherServlet.
+ * The adapter between the Spring MVC Controller layer and the Spring Web Flow engine. This controller allows Spring Web
+ * Flow to run embedded as a Controller within a DispatcherServlet, the key piece of the Spring Web MVC platform. It is
+ * expected a DispatcherServlet HandlerMapping will care for mapping all requests for flows to this controller for
+ * handling.
+ * 
+ * @author Keith Donald
  */
 public class FlowController extends AbstractController {
 
 	private static final Log logger = LogFactory.getLog(FlowController.class);
 
+	/**
+	 * The entry point into Spring Web Flow.
+	 */
 	private FlowExecutor flowExecutor;
 
+	/**
+	 * A strategy for extracting flow arguments and generating flow urls.
+	 */
 	private FlowUrlHandler urlHandler;
 
+	/**
+	 * The representation of an Ajax client service capable of interacting with web flow.
+	 */
 	private AjaxHandler ajaxHandler;
 
+	/**
+	 * Specific handlers this controller should delegate to, for customizing the control logic associated with managing
+	 * the execution of a specific flow.
+	 */
 	private Map flowHandlers = new HashMap();
 
 	/**
+	 * Creates a new flow controller.
 	 * @param flowExecutor the web flow executor service
 	 */
 	public FlowController(FlowExecutor flowExecutor) {
@@ -49,14 +82,40 @@ public class FlowController extends AbstractController {
 		setCacheSeconds(0);
 	}
 
+	/**
+	 * Returns the configured flow url handler.
+	 */
 	public FlowUrlHandler getFlowUrlHandler() {
 		return urlHandler;
 	}
 
+	/**
+	 * Sets the configured flow url handler.
+	 * @param urlHandler the flow url handler.
+	 */
 	public void setFlowRequestUrlHandler(FlowUrlHandler urlHandler) {
 		this.urlHandler = urlHandler;
 	}
 
+	/**
+	 * Returns the configured Ajax handler.
+	 */
+	public AjaxHandler getAjaxHandler() {
+		return ajaxHandler;
+	}
+
+	/**
+	 * Sets the configured Ajax handler.
+	 * @param ajaxHandler the ajax handler
+	 */
+	public void setAjaxHandler(AjaxHandler ajaxHandler) {
+		this.ajaxHandler = ajaxHandler;
+	}
+
+	/**
+	 * Registers a handler for managing access to a specific flow definition.
+	 * @param handler the flow handler
+	 */
 	public void registerFlowHandler(FlowHandler handler) {
 		flowHandlers.put(handler.getFlowId(), handler);
 	}

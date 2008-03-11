@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.webflow.mvc;
 
 import java.io.IOException;
@@ -22,8 +37,8 @@ import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
 /**
- * A Spring MVC handler adapter that encapsulates the generic workflow associated with executing flows. Delegates to
- * mapped flow handlers to manage the specific execution semantics required for particular registered flow definition.
+ * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows. Delegates to
+ * mapped {@link FlowHandler flow handlers} to manage the interaction with executions of specific flow definitions.
  * 
  * @author Keith Donald
  */
@@ -31,10 +46,19 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
+	/**
+	 * The entry point into Spring Web Flow.
+	 */
 	private FlowExecutor flowExecutor;
 
+	/**
+	 * A strategy for extracting flow arguments and generating flow urls.
+	 */
 	private FlowUrlHandler urlHandler;
 
+	/**
+	 * The representation of an Ajax client service capable of interacting with web flow.
+	 */
 	private AjaxHandler ajaxHandler;
 
 	/**
@@ -60,6 +84,21 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 */
 	public void setFlowUrlHandler(FlowUrlHandler urlHandler) {
 		this.urlHandler = urlHandler;
+	}
+
+	/**
+	 * Returns the configured Ajax handler.
+	 */
+	public AjaxHandler getAjaxHandler() {
+		return ajaxHandler;
+	}
+
+	/**
+	 * Sets the configured Ajax handler.
+	 * @param ajaxHandler the ajax handler
+	 */
+	public void setAjaxHandler(AjaxHandler ajaxHandler) {
+		this.ajaxHandler = ajaxHandler;
 	}
 
 	public boolean supports(Object handler) {
