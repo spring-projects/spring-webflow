@@ -81,7 +81,7 @@ public class JsfViewTests extends TestCase {
 		jsfMock.tearDown();
 	}
 
-	public final void testRender() {
+	public final void testRender() throws IOException {
 
 		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
@@ -99,7 +99,7 @@ public class JsfViewTests extends TestCase {
 		assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 	}
 
-	public final void testRenderException() {
+	public final void testRenderException() throws IOException {
 
 		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);

@@ -73,7 +73,7 @@ public class JsfView implements View {
 	/**
 	 * This implementation performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
-	public void render() {
+	public void render() throws IOException {
 		FacesContext facesContext = createFlowFacesContext();
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();

@@ -45,25 +45,44 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	public void testCriteriaSubmitSuccess() {
 		startFlow(new MockExternalContext());
-		MockParameterMap input = new MockParameterMap();
-		input.put("firstName", "Keith");
-		input.put("lastName", "Donald");
-		signalEvent("search", input);
+		MockExternalContext context = new MockExternalContext();
+		context.putRequestParameter("firstName", "Keith");
+		context.putRequestParameter("lastName", "Donald");
+		context.setEventId("search");
+		resumeFlow(context);
 		assertCurrentStateEquals("displayResults");
+		assertResponseWrittenEquals("searchResults", context);
 	}
 
 	public void testNewSearch() {
 		startFlow(new MockExternalContext());
-		signalEvent("search");
-		signalEvent("newSearch");
+		MockExternalContext context = new MockExternalContext();
+		context.putRequestParameter("firstName", "Keith");
+		context.putRequestParameter("lastName", "Donald");
+		context.setEventId("search");
+		resumeFlow(context);
+
+		context = new MockExternalContext();
+		context.setEventId("newSearch");
+		resumeFlow(context);
 		assertCurrentStateEquals("enterCriteria");
+		assertResponseWrittenEquals("searchCriteria", context);
 	}
 
 	public void testSelectValidResult() {
 		startFlow(new MockExternalContext());
-		signalEvent("search");
-		signalEvent("select", "id", "1");
+		MockExternalContext context = new MockExternalContext();
+		context.putRequestParameter("firstName", "Keith");
+		context.putRequestParameter("lastName", "Donald");
+		context.setEventId("search");
+		resumeFlow(context);
+
+		context = new MockExternalContext();
+		context.setEventId("select");
+		context.putRequestParameter("id", "1");
+		resumeFlow(context);
 		assertCurrentStateEquals("displayResults");
+		assertResponseWrittenEquals("searchResults", context);
 	}
 
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {

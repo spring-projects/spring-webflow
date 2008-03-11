@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -214,14 +215,18 @@ public class ViewState extends TransitionableState {
 		}
 	}
 
-	private void render(RequestControlContext context, View view) {
+	private void render(RequestControlContext context, View view) throws ViewRenderingException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rendering + " + view);
 			logger.debug("  Flash scope = " + context.getFlashScope());
 			logger.debug("  Messages = " + context.getMessageContext());
 		}
 		renderActionList.execute(context);
-		view.render();
+		try {
+			view.render();
+		} catch (IOException e) {
+			throw new ViewRenderingException(getOwner().getId(), getId(), view, e);
+		}
 		context.getMessageContext().clearMessages();
 		context.getFlashScope().clear();
 	}

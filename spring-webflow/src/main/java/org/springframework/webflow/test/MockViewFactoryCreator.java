@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.test;
 
+import java.io.IOException;
+
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.action.ViewFactoryActionAdapter;
@@ -102,8 +104,8 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return new Event(this, context.getRequestParameters().get("_eventId"));
 		}
 
-		public void render() {
-			// nothing to do
+		public void render() throws IOException {
+			context.getExternalContext().getResponseWriter().append(viewId);
 		}
 	}
 }

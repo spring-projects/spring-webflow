@@ -38,7 +38,7 @@ public class MvcViewFactoryTests extends TestCase {
 		context = new StaticApplicationContext();
 	}
 
-	public void testNoResolversGetResource() {
+	public void testNoResolversGetResource() throws Exception {
 		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {
@@ -65,7 +65,7 @@ public class MvcViewFactoryTests extends TestCase {
 		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
 	}
 
-	public void testViewResolversGetResource() {
+	public void testViewResolversGetResource() throws Exception {
 		MockViewResolver viewResolver = new MockViewResolver("myview");
 		creator.setApplicationContext(context);
 		creator.setViewResolvers(Collections.singletonList(viewResolver));
@@ -85,7 +85,7 @@ public class MvcViewFactoryTests extends TestCase {
 		assertEquals("myview", response.getForwardedUrl());
 	}
 
-	public void testRestoreView() {
+	public void testRestoreView() throws Exception {
 		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {
@@ -116,7 +116,7 @@ public class MvcViewFactoryTests extends TestCase {
 		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
 	}
 
-	public void testRestoreViewButtonEventIdFormat() {
+	public void testRestoreViewButtonEventIdFormat() throws Exception {
 		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {

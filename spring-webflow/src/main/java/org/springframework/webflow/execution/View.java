@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution;
 
+import java.io.IOException;
+
 /**
  * Allows the client to participate in flow execution. Encapsulates behavior to send the client an appropriate response
  * and handle the resulting event once the client responds.
@@ -31,8 +33,9 @@ public interface View {
 
 	/**
 	 * Render this view's content.
+	 * @throws IOException if an IO Exception occured rendering the view
 	 */
-	public void render();
+	public void render() throws IOException;
 
 	/**
 	 * Was a user event signaled on this view in this request?

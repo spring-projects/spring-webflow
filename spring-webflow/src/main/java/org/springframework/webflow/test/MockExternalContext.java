@@ -257,11 +257,28 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	/**
+	 * Sets the id of the event that should be signaled by this context. For use when resuming a flow. This method
+	 * depends on a MockViewFactory being configured for parsing the event id on a resume operation.
+	 * @param eventId the id of the event to signal
+	 */
+	public void setEventId(String eventId) {
+		putRequestParameter("_eventId", eventId);
+	}
+
+	/**
 	 * Set whether this request is an ajax request.
 	 * @param ajaxRequest true or false
 	 */
 	public void setAjaxRequest(boolean ajaxRequest) {
 		this.ajaxRequest = ajaxRequest;
+	}
+
+	/**
+	 * Returns the implementation of this mock context's response writer.
+	 * @return the underlying string writer to use for asserting a specific response was written
+	 */
+	public StringWriter getMockResponseWriter() {
+		return responseWriter;
 	}
 
 	/**
