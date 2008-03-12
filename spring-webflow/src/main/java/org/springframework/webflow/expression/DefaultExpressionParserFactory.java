@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,15 @@ import org.springframework.util.ClassUtils;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 
 /**
- * Static factory that returns the default {@link ExpressionParser} for use by Spring Web Flow. Marked final with a
- * private constructor to prevent subclassing.
+ * Static factory that returns the default {@link ExpressionParser} used by Spring Web Flow. Marked final with a private
+ * constructor to prevent subclassing.
  * <p>
  * This factory employs the following algorithm when the returned ExpressionParser instance is used for the first time:
  * <ul>
- * <li>If a Unified EL implementation is configured for the VM, make the ELExpressionParser the default.
- * <li>If no Unified EL implementation is configured and OGNL is configured, make the OgnlExpressionParser the default.
- * <li>If neither Unified EL or OGNL are configured, throw an IllegalStateException.
+ * <li>If a Unified EL implementation is configured for the VM, make a {@link WebFlowELExpressionParser} the default.
+ * <li>If no Unified EL implementation is configured and OGNL is configured, make a {@link WebFlowOgnlExpressionParser}
+ * the default.
+ * <li>If neither Unified EL or OGNL are configured, throw an IllegalStateException with a nice error message.
  * </ul>
  * 
  * @author Keith Donald

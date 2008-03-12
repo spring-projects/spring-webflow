@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * An extension of {@link OgnlExpressionParser} that registers web flow specific property accessors.
+ * An extension of {@link OgnlExpressionParser} that registers Web Flow-specific PropertyAccessors.
  * 
  * @author Keith Donald
  */
@@ -46,7 +46,7 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	private static final Log logger = LogFactory.getLog(WebFlowOgnlExpressionParser.class);
 
 	/**
-	 * Creates a webflow-specific ognl expression parser.
+	 * Creates a Web Flow OGNL Expression Parser.
 	 */
 	public WebFlowOgnlExpressionParser() {
 		addPropertyAccessor(MapAdaptable.class, new MapAdaptablePropertyAccessor());
@@ -55,6 +55,9 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 		addPropertyAccessor(Action.class, new ActionPropertyAccessor());
 	}
 
+	/**
+	 * Resolves Map Adaptable properties.
+	 */
 	private static class MapAdaptablePropertyAccessor implements PropertyAccessor {
 		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
 			return ((MapAdaptable) target).asMap().get(name);
@@ -66,12 +69,18 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 		}
 	}
 
+	/**
+	 * Resolves Mutable Attribute Map properties, also capable of setting properties.
+	 */
 	private static class MutableAttributeMapPropertyAccessor extends MapAdaptablePropertyAccessor {
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			((MutableAttributeMap) target).put((String) name, value);
 		}
 	}
 
+	/**
+	 * Resolves RequestContext properties. Supports several implicit variables and scope searching routines.
+	 */
 	private static class RequestContextPropertyAccessor implements PropertyAccessor {
 
 		private static boolean securityPresent = ClassUtils
@@ -179,6 +188,9 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 		}
 	}
 
+	/**
+	 * Resolves multi action methods.
+	 */
 	private static class ActionPropertyAccessor implements PropertyAccessor {
 		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
 			Action action = (Action) target;
