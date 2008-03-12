@@ -173,8 +173,8 @@ public class ViewState extends TransitionableState {
 	}
 
 	public void resume(RequestControlContext context) {
-		View view = viewFactory.getView(context);
 		restoreVariables(context);
+		View view = viewFactory.getView(context);
 		if (view.eventSignaled()) {
 			Event event = view.getEvent();
 			if (logger.isDebugEnabled()) {
