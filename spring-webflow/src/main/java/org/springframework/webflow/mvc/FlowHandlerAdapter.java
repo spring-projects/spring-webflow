@@ -134,7 +134,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
 		ServletExternalContext context = new ServletExternalContext(getServletContext(), request, response, urlHandler);
-		context.setAjaxRequest(ajaxHandler.isAjaxRequest(request));
+		context.setAjaxRequest(ajaxHandler.isAjaxRequest(getServletContext(), request, response));
 		return context;
 	}
 
@@ -176,13 +176,13 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow execution redirect to " + url);
 				}
-				sendRedirect(context, response, url);
+				sendRedirect(context, request, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				sendRedirect(context, response, context.getExternalRedirectUrl());
+				sendRedirect(context, request, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				return null;
@@ -195,13 +195,13 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow definition to " + url);
 				}
-				sendRedirect(context, response, url);
+				sendRedirect(context, request, response, url);
 				return null;
 			} else if (context.externalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
-				sendRedirect(context, response, context.getExternalRedirectUrl());
+				sendRedirect(context, request, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
 				ModelAndView mv = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
@@ -214,10 +214,10 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		}
 	}
 
-	private void sendRedirect(ServletExternalContext context, HttpServletResponse response, String targetUrl)
-			throws IOException {
+	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,
+			String targetUrl) throws IOException {
 		if (context.isAjaxRequest()) {
-			ajaxHandler.sendAjaxRedirect(response, targetUrl, context.redirectInPopup());
+			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context.isAjaxRequest());
 		} else {
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}

@@ -18,10 +18,8 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
@@ -51,8 +49,11 @@ public class JsfView implements View {
 
 	private RequestContext context;
 
+	private String viewId;
+
 	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle, RequestContext context) {
 		this.viewRoot = viewRoot;
+		this.viewId = viewRoot.getViewId();
 		this.facesLifecycle = facesLifecycle;
 		this.context = context;
 	}
@@ -74,7 +75,7 @@ public class JsfView implements View {
 	 * This implementation performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() throws IOException {
-		FacesContext facesContext = createFlowFacesContext();
+		FacesContext facesContext = FlowFacesContext.newInstance(context, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
 		try {
@@ -91,16 +92,7 @@ public class JsfView implements View {
 		}
 	}
 
-	private FacesContext createFlowFacesContext() {
-		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
-				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
-				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
-				.getNativeResponse(), facesLifecycle);
-		return new FlowFacesContext(context, defaultFacesContext);
-	}
-
 	public String toString() {
-		return "[JSFView = '" + viewRoot.getViewId() + "']";
+		return "[JSFView = '" + viewId + "']";
 	}
 }

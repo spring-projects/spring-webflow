@@ -16,10 +16,12 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,13 +35,21 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Jeremy Grelle
  */
-class FlowLifecycle extends Lifecycle {
+public class FlowLifecycle extends Lifecycle {
 
 	private static final Log logger = LogFactory.getLog(FlowLifecycle.class);
 
 	private final Lifecycle delegate;
 
-	public FlowLifecycle(Lifecycle delegate) {
+	public static Lifecycle newInstance() {
+		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+		return new FlowLifecycle(defaultLifecycle);
+
+	}
+
+	FlowLifecycle(Lifecycle delegate) {
 		this.delegate = delegate;
 	}
 

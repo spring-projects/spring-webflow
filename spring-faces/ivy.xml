@@ -21,6 +21,7 @@
 		<!-- build time only dependencies -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default" />
 		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default" />
+		<dependency org="org.richfaces.framework" name="richfaces-api" rev="3.1.4.GA" conf="buildtime->default" />
 		
 		<!-- JSF 1.2 dependencies -->
 		<!-- note that at this time we depend on MyFaces, not JSF-RI -->

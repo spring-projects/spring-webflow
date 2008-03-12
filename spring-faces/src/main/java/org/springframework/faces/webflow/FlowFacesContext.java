@@ -19,13 +19,16 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import javax.el.ELContext;
+import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
+import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 
 import org.springframework.binding.message.Message;
@@ -47,12 +50,12 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * The key for storing the responseComplete flag
 	 */
-	static final String RESPONSE_COMPLETE_KEY = "responseComplete";
+	static final String RESPONSE_COMPLETE_KEY = "webFlowResponseComplete";
 
 	/**
 	 * The key for storing the renderResponse flag
 	 */
-	static final String RENDER_RESPONSE_KEY = "renderResponse";
+	static final String RENDER_RESPONSE_KEY = "webFlowRenderResponse";
 
 	/**
 	 * The key for storing the renderResponse flag
@@ -63,6 +66,21 @@ public class FlowFacesContext extends FacesContext {
 	 * The base FacesContext delegate
 	 */
 	private FacesContext delegate;
+
+	public static FlowFacesContext newInstance(RequestContext context, Lifecycle lifecycle) {
+		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
+				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
+				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
+				.getNativeResponse(), lifecycle);
+		FlowFacesContext instance = new FlowFacesContext(context, defaultFacesContext);
+
+		// Ensure that FlowViewStateManager is first in the chain
+		FlowViewStateManager sm = new FlowViewStateManager(instance.getApplication().getStateManager());
+		instance.getApplication().setStateManager(sm);
+
+		return instance;
+	}
 
 	public FlowFacesContext(RequestContext context, FacesContext delegate) {
 		this.context = context;

@@ -20,6 +20,9 @@ import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
@@ -54,10 +57,19 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private MockExternalContext extContext = new MockExternalContext();
 
+	private MockServletContext servletContext = new MockServletContext();
+
+	private MockHttpServletRequest request = new MockHttpServletRequest();
+
+	private MockHttpServletResponse response = new MockHttpServletResponse();
+
 	private String event = "foo";
 
 	protected void setUp() throws Exception {
 		configureJsf();
+		extContext.setNativeContext(servletContext);
+		extContext.setNativeRequest(request);
+		extContext.setNativeResponse(response);
 		RequestContextHolder.setRequestContext(context);
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flashMap);
 		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
@@ -138,7 +150,7 @@ public class JsfViewFactoryTests extends TestCase {
 		existingRoot.setViewId(VIEW_ID);
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
-		extContext.setAjaxRequest(true);
+		request.addHeader("Accept", "text/html;type=ajax");
 
 		EasyMock.expect(context.getCurrentState()).andReturn(new ModalViewState());
 

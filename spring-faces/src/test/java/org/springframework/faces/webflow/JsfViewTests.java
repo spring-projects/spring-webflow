@@ -88,8 +88,12 @@ public class JsfViewTests extends TestCase {
 		EasyMock.expect(requestContext.getFlowScope()).andStubReturn(flowMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
 		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
-		EasyMock.expect(flashMap.put(EasyMock.matches("renderResponse"), EasyMock.anyObject())).andStubReturn(null);
-		EasyMock.expect(flashMap.put(EasyMock.matches("responseComplete"), EasyMock.anyObject())).andStubReturn(null);
+		EasyMock.expect(
+				flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock
+						.anyObject())).andStubReturn(null);
+		EasyMock.expect(
+				flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock
+						.anyObject())).andStubReturn(null);
 
 		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
 
@@ -103,8 +107,12 @@ public class JsfViewTests extends TestCase {
 
 		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
 		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
-		EasyMock.expect(flashMap.put(EasyMock.matches("renderResponse"), EasyMock.anyObject())).andStubReturn(null);
-		EasyMock.expect(flashMap.put(EasyMock.matches("responseComplete"), EasyMock.anyObject())).andStubReturn(null);
+		EasyMock.expect(
+				flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock
+						.anyObject())).andStubReturn(null);
+		EasyMock.expect(
+				flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock
+						.anyObject())).andStubReturn(null);
 
 		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flashMap });
 

@@ -85,7 +85,7 @@ public class JsfView extends AbstractUrlBasedView {
 	private void populateRequestMap(FacesContext facesContext, Map model) {
 		Iterator i = model.keySet().iterator();
 		while (i.hasNext()) {
-			Object key = i.next();
+			String key = i.next().toString();
 			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
 		}
 	}

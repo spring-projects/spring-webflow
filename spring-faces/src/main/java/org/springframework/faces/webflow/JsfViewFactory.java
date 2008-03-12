@@ -17,15 +17,16 @@ package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,9 +34,12 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.mvc.AjaxHandler;
+import org.springframework.webflow.mvc.SpringJavascriptAjaxHandler;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.
@@ -64,7 +68,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	public View getView(RequestContext context) {
 
-		FacesContext facesContext = createFlowFacesContext(context, lifecycle);
+		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {
 			boolean restored = false;
 
@@ -118,20 +122,21 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		if (context.getExternalContext().isAjaxRequest()) {
+		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
 			return new JsfView(new AjaxViewRoot(root), lifecycle, context);
 		} else {
 			return new JsfView(root, lifecycle, context);
 		}
 	}
 
-	private FacesContext createFlowFacesContext(RequestContext context, Lifecycle lifecycle) {
-		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
-				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
-				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
-				.getNativeResponse(), lifecycle);
-		return new FlowFacesContext(context, defaultFacesContext);
+	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {
+		if (context.getNativeContext() instanceof ServletContext) {
+			AjaxHandler handler = new SpringJavascriptAjaxHandler();
+			return handler.isAjaxRequest((ServletContext) context.getNativeContext(), (HttpServletRequest) context
+					.getNativeRequest(), (HttpServletResponse) context.getNativeResponse());
+		} else {
+			return false;
+		}
 	}
 
 	private String resolveViewName(RequestContext context) {
