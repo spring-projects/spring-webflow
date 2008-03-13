@@ -5,26 +5,27 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-beanutils.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-collections.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-digester.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/myfaces-api.jar" sourcepath="/Users/jgrelle/Desktop/myfaces-api-1.2.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/myfaces-impl.jar" sourcepath="/Users/jgrelle/Desktop/myfaces-impl-1.2.0-sources.jar"/>
-	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/richfaces-api.jar"/>
 	<classpathentry kind="lib" path="lib/test/shale-test.jar"/>
 	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-web.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-test.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
