@@ -23,7 +23,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
-import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
 import org.springframework.webflow.expression.el.SpringSecurityELResolver;
 
 /**
@@ -42,7 +41,6 @@ public class FlowVariableResolver extends ELDelegatingVariableResolver {
 		if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
 			composite.add(new SpringSecurityELResolver());
 		}
-		composite.add(new SpringBeanWebFlowELResolver());
 	}
 
 	public FlowVariableResolver(VariableResolver nextResolver) {
