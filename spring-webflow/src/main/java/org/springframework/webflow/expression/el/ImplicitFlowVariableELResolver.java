@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.expression.el;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 import javax.el.BeanELResolver;
 import javax.el.ELContext;
@@ -26,6 +26,7 @@ import javax.el.PropertyNotWritableException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.expression.el.DefaultELContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -42,9 +43,12 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * messageContext
  * flowExecutionContext
  * flowExecutionUrl
+ * currentUser
+ * currentEvent
  * </pre>
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class ImplicitFlowVariableELResolver extends ELResolver {
 
@@ -123,27 +127,58 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	private static final class ImplicitVariables {
-		private static final Set vars = new HashSet();
+		private static final Map vars = new HashMap();
+
+		private static final PropertyResolver requestContextResolver = new PropertyResolver() {
+			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {
+				return elContext.getELResolver().getValue(elContext, requestContext, property);
+			}
+		};
+
+		private static final PropertyResolver externalContextResolver = new PropertyResolver() {
+			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {
+				return elContext.getELResolver().getValue(elContext, requestContext.getExternalContext(), property);
+			}
+		};
+
+		private static final PropertyResolver currentEventResolver = new PropertyResolver() {
+			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {
+				return requestContext.getLastEvent();
+			}
+		};
 
 		static {
-			vars.add("requestParameters");
-			vars.add("requestScope");
-			vars.add("flashScope");
-			vars.add("flowScope");
-			vars.add("conversationScope");
-			vars.add("messageContext");
-			vars.add("flowExecutionContext");
-			vars.add("flowExecutionUrl");
+			vars.put("requestParameters", requestContextResolver);
+			vars.put("requestScope", requestContextResolver);
+			vars.put("flashScope", requestContextResolver);
+			vars.put("flowScope", requestContextResolver);
+			vars.put("conversationScope", requestContextResolver);
+			vars.put("messageContext", requestContextResolver);
+			vars.put("flowExecutionContext", requestContextResolver);
+			vars.put("flowExecutionUrl", requestContextResolver);
+			vars.put("currentUser", externalContextResolver);
+			vars.put("currentEvent", currentEventResolver);
 		}
 
-		private static final BeanELResolver internalResolver = new BeanELResolver();
-
 		public static boolean matches(Object property) {
-			return vars.contains(property);
+			return vars.containsKey(property);
 		}
 
 		public static Object value(ELContext elContext, RequestContext requestContext, Object property) {
-			return internalResolver.getValue(elContext, requestContext, property);
+			PropertyResolver resolver = (PropertyResolver) vars.get(property);
+			return resolver.resolve(requestContext, property);
 		}
+	}
+
+	private static abstract class PropertyResolver {
+
+		private static final BeanELResolver elPropertyResolver = new BeanELResolver();
+
+		public Object resolve(RequestContext context, Object property) {
+			ELContext elContext = new DefaultELContext(elPropertyResolver, null, null);
+			return doResolve(elContext, context, property);
+		}
+
+		protected abstract Object doResolve(ELContext elContext, RequestContext requestContext, Object property);
 	}
 }
