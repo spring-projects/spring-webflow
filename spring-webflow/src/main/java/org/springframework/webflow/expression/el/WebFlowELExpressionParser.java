@@ -27,7 +27,6 @@ import javax.el.VariableMapper;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
-import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -35,12 +34,8 @@ import org.springframework.webflow.execution.RequestContext;
  * Allows for Unified EL expressions in a FlowDefinition.
  * 
  * @author Jeremy Grelle
- * @author Scott Andrews
  */
 public class WebFlowELExpressionParser extends ELExpressionParser {
-
-	private static boolean securityPresent = ClassUtils
-			.isPresent("org.springframework.security.context.SecurityContextHolder");
 
 	/**
 	 * Creates a new Web Flow EL expression parser.
@@ -61,9 +56,6 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			RequestContext context = (RequestContext) target;
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver(context));
-			if (securityPresent) {
-				customResolvers.add(new SpringSecurityELResolver());
-			}
 			customResolvers.add(new ImplicitFlowVariableELResolver(context));
 			customResolvers.add(new ScopeSearchingELResolver(context));
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));

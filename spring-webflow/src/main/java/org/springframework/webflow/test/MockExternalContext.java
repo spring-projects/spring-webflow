@@ -17,9 +17,12 @@ package org.springframework.webflow.test;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.security.Principal;
 import java.util.HashMap;
 
 import org.springframework.binding.collection.SharedMapDecorator;
+import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -108,6 +111,13 @@ public class MockExternalContext implements ExternalContext {
 
 	public SharedAttributeMap getApplicationMap() {
 		return applicationMap;
+	}
+
+	public Principal getCurrentUser() {
+		if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder"))
+			return SecurityContextHolder.getContext().getAuthentication();
+		else
+			return null;
 	}
 
 	public Object getNativeContext() {

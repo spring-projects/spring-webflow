@@ -29,7 +29,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.expression.ognl.OgnlExpressionParser;
-import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
@@ -103,15 +102,11 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 				}
 				return requestContext;
 			}
-			if (securityPresent && property.equals("currentUser")) {
+			if (property.equals("currentUser")) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Successfully resolved implicit flow variable '" + property + "'");
 				}
-				if (SecurityContextHolder.getContext() != null) {
-					return SecurityContextHolder.getContext().getAuthentication();
-				} else {
-					return null;
-				}
+				return requestContext.getExternalContext().getCurrentUser();
 			}
 			if (requestContext.getRequestScope().contains(property)) {
 				if (logger.isDebugEnabled()) {

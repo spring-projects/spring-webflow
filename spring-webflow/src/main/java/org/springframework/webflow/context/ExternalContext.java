@@ -16,6 +16,7 @@
 package org.springframework.webflow.context;
 
 import java.io.Writer;
+import java.security.Principal;
 
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -36,6 +37,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 public interface ExternalContext {
 
@@ -98,6 +100,12 @@ public interface ExternalContext {
 	 * @return the flow execution URL
 	 */
 	public String getFlowExecutionUri(String flowId, String flowExecutionKey);
+
+	/**
+	 * Provides access to the user's principal security object.
+	 * @return the user principal
+	 */
+	public Principal getCurrentUser();
 
 	/**
 	 * Provides access to the context object for the current environment.
