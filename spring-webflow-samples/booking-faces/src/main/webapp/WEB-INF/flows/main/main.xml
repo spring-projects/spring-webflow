@@ -41,7 +41,7 @@
 	</view-state>
 
 	<subflow-state id="bookHotel" subflow="booking">
-		<input name="id" value="hotels.selectedRow.id" />
+		<input name="hotelId" value="hotels.selectedRow.id" />
 		<transition on="bookingConfirmed" to="finish" />
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>

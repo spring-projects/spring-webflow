@@ -135,11 +135,11 @@ public class GenericConversionService implements ConversionService {
 		if (this.sourceClassConverters == null || this.sourceClassConverters.isEmpty()) {
 			throw new IllegalStateException("No converters have been added to this service's registry");
 		}
+		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
+		targetClass = convertToWrapperClassIfNecessary(targetClass);
 		if (targetClass.isAssignableFrom(sourceClass)) {
 			return new ConversionExecutorImpl(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
-		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
-		targetClass = convertToWrapperClassIfNecessary(targetClass);
 		Map sourceTargetConverters = findConvertersForSource(sourceClass);
 		Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
 		if (converter != null) {

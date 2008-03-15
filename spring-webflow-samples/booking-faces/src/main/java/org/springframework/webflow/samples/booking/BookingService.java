@@ -30,15 +30,17 @@ public interface BookingService {
     public Hotel findHotelById(Long id);
 
     /**
+     * Create a new, transient hotel booking instance for the given user.
+     * @param hotelId the hotelId
+     * @param userName the user name
+     * @return the new transient booking instance
+     */
+    public Booking createBooking(Long hotelId, String userName);
+
+    /**
      * Cancel an existing booking.
      * @param id the booking id
      */
     public void cancelBooking(Booking booking);
 
-    /**
-     * Lookup a user based on their username
-     * @param username the user's username
-     * @return the user
-     */
-    public User findUser(String username);
 }

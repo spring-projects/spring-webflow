@@ -61,16 +61,6 @@ public class Mapping {
 	 * @param sourceExpression the source expression
 	 * @param targetExpression the target expression
 	 * @param typeConverter a type converter
-	 */
-	public Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter) {
-		this(sourceExpression, targetExpression, typeConverter, false);
-	}
-
-	/**
-	 * Creates a new mapping.
-	 * @param sourceExpression the source expression
-	 * @param targetExpression the target expression
-	 * @param typeConverter a type converter
 	 * @param required whether or not this mapping is required
 	 */
 	public Mapping(Expression sourceExpression, Expression targetExpression, ConversionExecutor typeConverter,
@@ -94,7 +84,7 @@ public class Mapping {
 		Assert.notNull(target, "The target to map to is required");
 		Assert.notNull(context, "The mapping context is required");
 		Object sourceValue = sourceExpression.getValue(source);
-		if (required && sourceValue == null || isEmptyString(sourceValue)) {
+		if (required && (sourceValue == null || isEmptyString(sourceValue))) {
 			String defaultText = "'" + targetExpression.getExpressionString() + "' is required";
 			MessageResolver message = new MessageBuilder().error().source(targetExpression.getExpressionString())
 					.codes(createMessageCodes("required", target, targetExpression)).defaultText(defaultText).build();
@@ -106,6 +96,7 @@ public class Mapping {
 			try {
 				targetValue = typeConverter.execute(sourceValue);
 			} catch (ConversionException e) {
+				e.printStackTrace();
 				String defaultText = "The '" + targetExpression.getExpressionString() + "' value is the wrong type";
 				MessageResolver message = new MessageBuilder().error().source(targetExpression.getExpressionString())
 						.codes(createMessageCodes("typeMismatch", target, targetExpression)).defaultText(defaultText)

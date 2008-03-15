@@ -16,28 +16,28 @@
 	<fieldset>
 		<div class="field">
 			<div class="label">Name:</div>
-			<div class="output">${hotel.name}</div>
+			<div class="output">${booking.hotel.name}</div>
 		</div>
 		<div class="field">
 			<div class="label">Address:</div>
-			<div class="output">${hotel.address}</div>
+			<div class="output">${booking.hotel.address}</div>
 		</div>
 		<div class="field">
 			<div class="label">City, State:</div>
-			<div class="output">${hotel.city}, ${hotel.state}</div>
+			<div class="output">${booking.hotel.city}, ${booking.hotel.state}</div>
 		</div>
 		<div class="field">
 			<div class="label">Zip:</div>
-			<div class="output">${hotel.zip}</div>
+			<div class="output">${booking.hotel.zip}</div>
 		</div>
 		<div class="field">
 			<div class="label">Country:</div>
-			<div class="output">${hotel.country}</div>
+			<div class="output">${booking.hotel.country}</div>
 		</div>
         <div class="field">
             <div class="label">Nightly rate:</div>
             <div class="output">
-	        	<spring:bind path="hotel.price">${status.value}</spring:bind>
+	        	<spring:bind path="booking.hotel.price">${status.value}</spring:bind>
             </div>
         </div>
 		<div class="field">

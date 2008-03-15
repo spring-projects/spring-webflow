@@ -2,8 +2,11 @@ package org.springframework.webflow.action;
 
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.RuntimeBindingConversionExecutor;
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
@@ -16,6 +19,8 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 public class BindAction extends AbstractAction {
+
+	private static Log logger = LogFactory.getLog(BindAction.class);
 
 	private Expression target;
 
@@ -37,15 +42,26 @@ public class BindAction extends AbstractAction {
 		}
 		DefaultAttributeMapper mapper = new DefaultAttributeMapper();
 		AttributeMap eventAttributes = context.getLastEvent().getAttributes();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Binding event '" + context.getLastEvent().getId() + "' attributes " + eventAttributes
+					+ " to target " + target);
+		}
 		for (Iterator it = eventAttributes.asMap().keySet().iterator(); it.hasNext();) {
 			String name = (String) it.next();
 			Expression sourceAttribute = expressionParser.parseExpression(name, new ParserContextImpl()
 					.eval(AttributeMap.class));
 			Expression targetAttribute = expressionParser.parseExpression(name, new ParserContextImpl().eval(target
 					.getClass()));
-			Class targetType = targetAttribute.getValueType(target);
-			mapper.addMapping(new Mapping(sourceAttribute, targetAttribute, new RuntimeBindingConversionExecutor(
-					targetType, conversionService), false));
+			Class targetType;
+			try {
+				targetType = targetAttribute.getValueType(target);
+			} catch (EvaluationException e) {
+				targetType = null;
+			}
+			if (targetType != null) {
+				mapper.addMapping(new Mapping(sourceAttribute, targetAttribute, new RuntimeBindingConversionExecutor(
+						targetType, conversionService), false));
+			}
 		}
 		try {
 			mapper.map(context.getLastEvent().getAttributes(), target, new MappingContextImpl(context

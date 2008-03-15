@@ -39,10 +39,34 @@ public class BindActionTests extends TestCase {
 
 		BindBean bean = (BindBean) context.getFlowScope().get("bindTarget");
 		assertEquals("foo", bean.getStringProperty());
-		assertEquals(3, bean.getIntegerProperty());
+		assertEquals(new Integer(3), bean.getIntegerProperty());
 	}
 
-	public void testBindWithErrors() throws Exception {
+	public void testBindNonexistantProperties() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.getFlowScope().put("bindTarget", new BindBean());
+
+		Expression target = expressionParser.parseExpression("bindTarget", new ParserContextImpl()
+				.eval(RequestContext.class));
+		action = new BindAction(target, expressionParser, conversionService);
+
+		LocalAttributeMap eventData = new LocalAttributeMap();
+		eventData.put("stringProperty", "foo");
+		eventData.put("bogusProperty", "bar");
+		eventData.put("integerProperty", "3");
+		Event event = new Event(this, "submit", eventData);
+		context.setLastEvent(event);
+
+		Event result = action.execute(context);
+		assertEquals("success", result.getId());
+
+		BindBean bean = (BindBean) context.getFlowScope().get("bindTarget");
+		assertEquals("foo", bean.getStringProperty());
+		assertEquals(new Integer(3), bean.getIntegerProperty());
+		assertEquals(0, context.getMessageContext().getMessages().length);
+	}
+
+	public void testBindWithTypeConversionErrors() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("bindTarget", new BindBean());
 
@@ -61,7 +85,7 @@ public class BindActionTests extends TestCase {
 
 		BindBean bean = (BindBean) context.getFlowScope().get("bindTarget");
 		assertEquals("foo", bean.getStringProperty());
-		assertEquals(0, bean.getIntegerProperty());
+		assertEquals(new Integer(3), bean.getIntegerProperty());
 		assertEquals(1, context.getMessageContext().getMessages().length);
 		assertEquals("integerProperty", context.getMessageContext().getMessages()[0].getSource());
 		assertEquals(Severity.ERROR, context.getMessageContext().getMessages()[0].getSeverity());
@@ -69,9 +93,33 @@ public class BindActionTests extends TestCase {
 				.getText());
 	}
 
+	public void testBindWithEmptyAttributes() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.getFlowScope().put("bindTarget", new BindBean());
+
+		Expression target = expressionParser.parseExpression("bindTarget", new ParserContextImpl()
+				.eval(RequestContext.class));
+		action = new BindAction(target, expressionParser, conversionService);
+
+		LocalAttributeMap eventData = new LocalAttributeMap();
+		eventData.put("stringProperty", "");
+		eventData.put("integerProperty", null);
+		Event event = new Event(this, "submit", eventData);
+		context.setLastEvent(event);
+
+		Event result = action.execute(context);
+		System.out.println(context.getMessageContext());
+		assertEquals("success", result.getId());
+
+		BindBean bean = (BindBean) context.getFlowScope().get("bindTarget");
+		assertEquals("", bean.getStringProperty());
+		assertEquals(null, bean.getIntegerProperty());
+		assertEquals(0, context.getMessageContext().getMessages().length);
+	}
+
 	public static class BindBean {
 		private String stringProperty;
-		private int integerProperty;
+		private Integer integerProperty = new Integer(3);
 
 		public String getStringProperty() {
 			return stringProperty;
@@ -81,11 +129,11 @@ public class BindActionTests extends TestCase {
 			this.stringProperty = stringProperty;
 		}
 
-		public int getIntegerProperty() {
+		public Integer getIntegerProperty() {
 			return integerProperty;
 		}
 
-		public void setIntegerProperty(int integerProperty) {
+		public void setIntegerProperty(Integer integerProperty) {
 			this.integerProperty = integerProperty;
 		}
 	}

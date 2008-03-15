@@ -40,8 +40,7 @@ public class JpaBookingService implements BookingService {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotels(SearchCriteria criteria) {
-	String pattern = !StringUtils.hasText(criteria.getSearchString()) ? "'%'" : "'%"
-		+ criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	String pattern = getSearchPattern(criteria);
 	return em.createQuery(
 		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
 			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
@@ -54,9 +53,10 @@ public class JpaBookingService implements BookingService {
     }
 
     @Transactional(readOnly = true)
-    public User findUser(String username) {
-	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
-		username).getSingleResult();
+    public Booking createBooking(Long hotelId, String username) {
+	Hotel hotel = em.find(Hotel.class, hotelId);
+	User user = findUser(username);
+	return new Booking(hotel, user);
     }
 
     // read-write transactional methods
@@ -71,11 +71,16 @@ public class JpaBookingService implements BookingService {
     // helpers
 
     private String getSearchPattern(SearchCriteria criteria) {
-	if (criteria.getSearchString().length() > 0) {
-	    return "'%'" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	if (StringUtils.hasText(criteria.getSearchString())) {
+	    return "'%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
 	} else {
-	    return "'%";
+	    return "'%'";
 	}
+    }
+
+    private User findUser(String username) {
+	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
+		username).getSingleResult();
     }
 
 }

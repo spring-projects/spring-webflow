@@ -7,12 +7,10 @@
 
 	<persistence-context/>
 	
-	<input name="id" value="flowScope.id"/>
+	<input name="hotelId" value="flowScope.hotelId"/>
 
 	<on-start>
-		<evaluate expression="bookingService.findHotelById(id)" result="flowScope.hotel" />
-		<evaluate expression="hotel.createBooking(bookingService.findUser(currentUser.name))" result="flowScope.booking" />
-		<evaluate expression="entityManager.persist(booking)" />
+		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
 	</on-start>
 	
 	<view-state id="enterBookingDetails">
@@ -23,7 +21,9 @@
 	</view-state>
 	
 	<view-state id="reviewBooking">
-		<transition on="confirm" to="bookingConfirmed" />
+		<transition on="confirm" to="bookingConfirmed">
+			<evaluate expression="entityManager.persist(booking)" />
+		</transition>
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="bookingCancelled" />
 	</view-state>

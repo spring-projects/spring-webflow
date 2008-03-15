@@ -62,22 +62,6 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<!-- Handels form binding for the hotel search -->
-	<bean id="mainActions" class="org.springframework.webflow.action.FormAction">
-		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.SearchCriteria" />
-	</bean>
-	
-	<!-- Handels form binding and validation for the hotel booking process -->
-	<bean id="bookingActions" class="org.springframework.webflow.action.FormAction">
-		<property name="formObjectClass" value="org.springframework.webflow.samples.booking.Booking" />
-		<property name="propertyEditorRegistrar">
-			<bean class="org.springframework.webflow.samples.booking.PropertyEditors" />
-		</property>
-		<property name="validator">
-			<bean class="org.springframework.webflow.samples.booking.BookingValidator" />
-		</property>
-	</bean>
-	
 	<!-- The central service of this application that can query hotels and bookings, as well as cancel bookings -->
 	<bean id="bookingService" class="org.springframework.webflow.samples.booking.JpaBookingService" />
 
