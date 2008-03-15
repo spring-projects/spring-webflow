@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
  * against the backing repository. The EntityManager reference is provided by the managing container (Spring)
  * automatically.
  */
+@Service("bookingService")
 @Repository
 public class JpaBookingService implements BookingService {
 
@@ -37,14 +39,12 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Hotel> findHotels(SearchCriteria search) {
-	String pattern = !StringUtils.hasText(search.getSearchString()) ? "%" : "%"
-		+ search.getSearchString().toLowerCase().replace('*', '%') + "%";
+    public List<Hotel> findHotels(SearchCriteria criteria) {
+	String pattern = getSearchPattern(criteria);
 	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
-			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern").setParameter("pattern",
-		pattern).setMaxResults(search.getPageSize()).setFirstResult(search.getPage() * search.getPageSize())
-		.getResultList();
+		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
+			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
+		criteria.getPageSize()).setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -52,18 +52,35 @@ public class JpaBookingService implements BookingService {
 	return em.find(Hotel.class, id);
     }
 
-    // this one is a read/write transaction
+    @Transactional(readOnly = true)
+    public Booking createBooking(Long hotelId, String username) {
+	Hotel hotel = em.find(Hotel.class, hotelId);
+	User user = findUser(username);
+	return new Booking(hotel, user);
+    }
+
+    // read-write transactional methods
     @Transactional
-    public void cancelBooking(Long id) {
-	Booking booking = em.find(Booking.class, id);
+    public void cancelBooking(Booking booking) {
+	booking = em.find(Booking.class, booking.getId());
 	if (booking != null) {
 	    em.remove(booking);
 	}
     }
 
-    @Transactional(readOnly = true)
-    public User findUser(String username) {
+    // helpers
+
+    private String getSearchPattern(SearchCriteria criteria) {
+	if (StringUtils.hasText(criteria.getSearchString())) {
+	    return "'%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	} else {
+	    return "'%'";
+	}
+    }
+
+    private User findUser(String username) {
 	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
 		username).getSingleResult();
     }
+
 }
