@@ -42,7 +42,11 @@ public class SimpleFormatterFactory extends AbstractFormatterFactory {
 	}
 
 	public Formatter getNumberFormatter(Class numberClass) {
-		return new NumberFormatter(NumberFormat.getNumberInstance(getLocale()));
+		if (numberClass.equals(Integer.class) || numberClass.equals(int.class)) {
+			return new NumberFormatter(NumberFormat.getIntegerInstance(getLocale()));
+		} else {
+			return new NumberFormatter(NumberFormat.getNumberInstance(getLocale()));
+		}
 	}
 
 	public Formatter getCurrencyFormatter() {

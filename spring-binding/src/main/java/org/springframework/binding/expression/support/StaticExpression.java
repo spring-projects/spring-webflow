@@ -55,12 +55,20 @@ public final class StaticExpression implements Expression {
 		return ObjectUtils.nullSafeEquals(value, other.value);
 	}
 
-	public Object getValue(Object target) throws EvaluationException {
+	public Object getValue(Object context) throws EvaluationException {
 		return value;
 	}
 
-	public void setValue(Object target, Object value) throws EvaluationException {
+	public void setValue(Object context, Object value) throws EvaluationException {
 		this.value = value;
+	}
+
+	public Class getValueType(Object context) {
+		return Object.class;
+	}
+
+	public String getExpressionString() {
+		return null;
 	}
 
 	public String toString() {

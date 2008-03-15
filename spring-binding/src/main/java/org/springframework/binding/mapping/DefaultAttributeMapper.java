@@ -38,10 +38,10 @@ public class DefaultAttributeMapper implements AttributeMapper {
 
 	/**
 	 * Add a mapping to this mapper.
-	 * @param mapping the mapping to add (as an AttributeMapper)
+	 * @param mapping the mapping to add
 	 * @return this, to support convenient call chaining
 	 */
-	public DefaultAttributeMapper addMapping(AttributeMapper mapping) {
+	public DefaultAttributeMapper addMapping(Mapping mapping) {
 		mappings.add(mapping);
 		return this;
 	}
@@ -50,7 +50,7 @@ public class DefaultAttributeMapper implements AttributeMapper {
 	 * Add a set of mappings.
 	 * @param mappings the mappings
 	 */
-	public void addMappings(AttributeMapper[] mappings) {
+	public void addMappings(Mapping[] mappings) {
 		if (mappings == null) {
 			return;
 		}
@@ -61,17 +61,24 @@ public class DefaultAttributeMapper implements AttributeMapper {
 	 * Returns this mapper's list of mappings.
 	 * @return the list of mappings
 	 */
-	public AttributeMapper[] getMappings() {
-		return (AttributeMapper[]) mappings.toArray(new AttributeMapper[mappings.size()]);
+	public Mapping[] getMappings() {
+		return (Mapping[]) mappings.toArray(new Mapping[mappings.size()]);
 	}
 
-	public void map(Object source, Object target, MappingContext context) {
+	public void map(Object source, Object target, MappingContext context) throws AttributeMappingException {
+		boolean mappingFailure = false;
 		if (mappings != null) {
 			Iterator it = mappings.iterator();
 			while (it.hasNext()) {
-				AttributeMapper mapping = (AttributeMapper) it.next();
-				mapping.map(source, target, context);
+				Mapping mapping = (Mapping) it.next();
+				boolean result = mapping.map(source, target, context);
+				if (!result && !mappingFailure) {
+					mappingFailure = true;
+				}
 			}
+		}
+		if (mappingFailure) {
+			throw new AttributeMappingException();
 		}
 	}
 

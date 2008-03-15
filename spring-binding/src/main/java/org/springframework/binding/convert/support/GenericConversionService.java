@@ -117,6 +117,7 @@ public class GenericConversionService implements ConversionService {
 	 * Add an alias for given target type.
 	 */
 	public void addAlias(String alias, Class targetType) {
+		Assert.isTrue(!targetType.isPrimitive(), "Primitive types cannot be registered");
 		aliasMap.put(alias, targetType);
 	}
 
@@ -137,6 +138,8 @@ public class GenericConversionService implements ConversionService {
 		if (targetClass.isAssignableFrom(sourceClass)) {
 			return new ConversionExecutorImpl(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
+		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
+		targetClass = convertToWrapperClassIfNecessary(targetClass);
 		Map sourceTargetConverters = findConvertersForSource(sourceClass);
 		Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
 		if (converter != null) {
@@ -220,6 +223,25 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
+	// subclassing support
+
+	/**
+	 * Returns an indexed map of converters. Each entry key is a source class that can be converted from, and each entry
+	 * value is a map of target classes that can be convertered to, ultimately mapping to a specific converter that can
+	 * perform the source->target conversion.
+	 */
+	protected Map getSourceClassConverters() {
+		return sourceClassConverters;
+	}
+
+	/**
+	 * Returns a map of known aliases. Each entry key is a String alias and the associated value is either a target
+	 * class or a converter.
+	 */
+	protected Map getAliasMap() {
+		return aliasMap;
+	}
+
 	// internal helpers
 
 	private Map findConvertersForSource(Class sourceClass) {
@@ -264,22 +286,29 @@ public class GenericConversionService implements ConversionService {
 		return null;
 	}
 
-	// subclassing support
-
-	/**
-	 * Returns an indexed map of converters. Each entry key is a source class that can be converted from, and each entry
-	 * value is a map of target classes that can be convertered to, ultimately mapping to a specific converter that can
-	 * perform the source->target conversion.
-	 */
-	protected Map getSourceClassConverters() {
-		return sourceClassConverters;
-	}
-
-	/**
-	 * Returns a map of known aliases. Each entry key is a String alias and the associated value is either a target
-	 * class or a converter.
-	 */
-	protected Map getAliasMap() {
-		return aliasMap;
+	private Class convertToWrapperClassIfNecessary(Class targetType) {
+		if (targetType.isPrimitive()) {
+			if (targetType.equals(int.class)) {
+				return Integer.class;
+			} else if (targetType.equals(short.class)) {
+				return Short.class;
+			} else if (targetType.equals(long.class)) {
+				return Long.class;
+			} else if (targetType.equals(float.class)) {
+				return Float.class;
+			} else if (targetType.equals(double.class)) {
+				return Double.class;
+			} else if (targetType.equals(byte.class)) {
+				return Byte.class;
+			} else if (targetType.equals(boolean.class)) {
+				return Boolean.class;
+			} else if (targetType.equals(char.class)) {
+				return Character.class;
+			} else {
+				throw new IllegalStateException("Should never happen - primitive type is not a primitive?");
+			}
+		} else {
+			return targetType;
+		}
 	}
 }

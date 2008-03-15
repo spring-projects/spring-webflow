@@ -60,6 +60,14 @@ public class CollectionAddingExpression implements Expression {
 		}
 	}
 
+	public Class getValueType(Object context) {
+		return Object.class;
+	}
+
+	public String getExpressionString() {
+		return null;
+	}
+
 	public String toString() {
 		return new ToStringCreator(this).append("collectionExpression", collectionExpression).toString();
 	}

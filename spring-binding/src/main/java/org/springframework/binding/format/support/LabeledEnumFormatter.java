@@ -37,14 +37,6 @@ public class LabeledEnumFormatter extends AbstractFormatter {
 	}
 
 	/**
-	 * Create a new LabeledEnum formatter.
-	 * @param allowEmpty should this formatter allow empty input arguments?
-	 */
-	public LabeledEnumFormatter(boolean allowEmpty) {
-		super(allowEmpty);
-	}
-
-	/**
 	 * Set the LabeledEnumResolver used. Defaults to {@link StaticLabeledEnumResolver}.
 	 */
 	public void setLabeledEnumResolver(LabeledEnumResolver labeledEnumResolver) {
@@ -58,13 +50,7 @@ public class LabeledEnumFormatter extends AbstractFormatter {
 	}
 
 	protected Object doParseValue(String formattedString, Class targetClass) throws IllegalArgumentException {
-		LabeledEnum labeledEnum = labeledEnumResolver.getLabeledEnumByLabel(targetClass, formattedString);
-		if (!isAllowEmpty()) {
-			Assert.notNull(labeledEnum, "The label '" + formattedString
-					+ "' did not map to a valid enum instance for type " + targetClass);
-			Assert.isInstanceOf(targetClass, labeledEnum);
-		}
-		return labeledEnum;
+		return labeledEnumResolver.getLabeledEnumByLabel(targetClass, formattedString);
 	}
 
 	/**

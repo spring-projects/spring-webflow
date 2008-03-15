@@ -56,20 +56,21 @@ public class ELExpressionParser implements ExpressionParser {
 			context = NullParserContext.INSTANCE;
 		}
 		if (context.isTemplate()) {
-			return parseTemplate(expressionString, context);
+			return parseExpressionInternal(expressionString, context, true);
 		} else {
 			assertNotDelimited(expressionString);
 			assertHasText(expressionString);
-			return parseTemplate("#{" + expressionString + "}", context);
+			return parseExpressionInternal("#{" + expressionString + "}", context, false);
 		}
 	}
 
-	private Expression parseTemplate(String expressionString, ParserContext context) throws ParserException {
+	private Expression parseExpressionInternal(String expressionString, ParserContext context, boolean template)
+			throws ParserException {
 		Assert.notNull(expressionString, "The expression string to parse is required");
 		try {
 			ValueExpression expression = parseValueExpression(expressionString, context);
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
-			return new ELExpression(contextFactory, expression);
+			return new ELExpression(contextFactory, expression, template);
 		} catch (ELException e) {
 			throw new ParserException(expressionString, e);
 		}

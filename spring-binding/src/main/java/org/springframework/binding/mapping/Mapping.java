@@ -17,10 +17,14 @@ package org.springframework.binding.mapping;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
 /**
  * A single mapping definition, encapsulating the information necessary to map the result of evaluating an expression on
@@ -28,7 +32,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class Mapping implements AttributeMapper {
+public class Mapping {
 
 	private static final Log logger = LogFactory.getLog(Mapping.class);
 
@@ -85,29 +89,54 @@ public class Mapping implements AttributeMapper {
 	 * @param source The source data structure
 	 * @param target The target data structure
 	 */
-	public void map(Object source, Object target, MappingContext context) {
-		// get source value
+	public boolean map(Object source, Object target, MappingContext context) {
+		Assert.notNull(source, "The source to map from is required");
+		Assert.notNull(target, "The target to map to is required");
+		Assert.notNull(context, "The mapping context is required");
 		Object sourceValue = sourceExpression.getValue(source);
-		if (sourceValue == null) {
-			if (required) {
-				throw new RequiredMappingException("This mapping is required; evaluation of expression '"
-						+ sourceExpression + "' against source of type [" + source.getClass()
-						+ "] must return a non-null value");
-			} else {
-				// source expression returned no value, simply abort mapping
-				return;
+		if (required && sourceValue == null || isEmptyString(sourceValue)) {
+			String defaultText = "'" + targetExpression.getExpressionString() + "' is required";
+			MessageResolver message = new MessageBuilder().error().source(targetExpression.getExpressionString())
+					.codes(createMessageCodes("required", target, targetExpression)).defaultText(defaultText).build();
+			context.getMessageContext().addMessage(message);
+			return false;
+		}
+		Object targetValue;
+		if (sourceValue != null && typeConverter != null) {
+			try {
+				targetValue = typeConverter.execute(sourceValue);
+			} catch (ConversionException e) {
+				String defaultText = "The '" + targetExpression.getExpressionString() + "' value is the wrong type";
+				MessageResolver message = new MessageBuilder().error().source(targetExpression.getExpressionString())
+						.codes(createMessageCodes("typeMismatch", target, targetExpression)).defaultText(defaultText)
+						.build();
+				context.getMessageContext().addMessage(message);
+				return false;
 			}
+		} else {
+			targetValue = sourceValue;
 		}
-		Object targetValue = sourceValue;
-		if (typeConverter != null) {
-			targetValue = typeConverter.execute(sourceValue);
-		}
-		// set target value
 		if (logger.isDebugEnabled()) {
-			logger.debug("Mapping '" + sourceExpression + "' value [" + sourceValue + "] to target property '"
-					+ targetExpression + "'; setting property value to [" + targetValue + "]");
+			logger.debug("Mapping '" + sourceExpression + "' value [" + sourceValue + "] to target '"
+					+ targetExpression + "'; setting target value to [" + targetValue + "]");
 		}
 		targetExpression.setValue(target, targetValue);
+		return true;
+	}
+
+	private boolean isEmptyString(Object sourceValue) {
+		if (sourceValue instanceof CharSequence) {
+			return ((CharSequence) sourceValue).length() == 0;
+		} else {
+			return false;
+		}
+	}
+
+	private String[] createMessageCodes(String errorCode, Object target, Expression targetExpression) {
+		String[] codes = new String[2];
+		codes[0] = ClassUtils.getShortName(target.getClass()) + "." + targetExpression.getExpressionString();
+		codes[1] = errorCode;
+		return codes;
 	}
 
 	public boolean equals(Object o) {

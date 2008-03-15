@@ -41,7 +41,11 @@ public class DefaultELResolver extends CompositeELResolver {
 	}
 
 	public Class getType(ELContext context, Object base, Object property) {
-		return super.getType(context, base, property);
+		if (base == null) {
+			return super.getType(context, target, property);
+		} else {
+			return super.getType(context, base, property);
+		}
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {

@@ -18,14 +18,20 @@ package org.springframework.webflow.engine.support;
 import java.io.Serializable;
 
 import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.binding.mapping.MappingContextImpl;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.engine.SubflowAttributeMapper;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Simple flow attribute mapper that holds an input and output mapper strategy.
  * 
  * @author Keith Donald
  */
-public final class GenericSubflowAttributeMapper extends AbstractSubflowAttributeMapper implements Serializable {
+public final class GenericSubflowAttributeMapper implements SubflowAttributeMapper, Serializable {
 
 	private final AttributeMapper inputMapper;
 
@@ -41,12 +47,20 @@ public final class GenericSubflowAttributeMapper extends AbstractSubflowAttribut
 		this.outputMapper = outputMapper;
 	}
 
-	protected AttributeMapper getInputMapper() {
-		return inputMapper;
+	public MutableAttributeMap createFlowInput(RequestContext context) {
+		if (inputMapper != null) {
+			LocalAttributeMap input = new LocalAttributeMap();
+			inputMapper.map(context, input, new MappingContextImpl(context.getMessageContext()));
+			return input;
+		} else {
+			return new LocalAttributeMap();
+		}
 	}
 
-	protected AttributeMapper getOutputMapper() {
-		return outputMapper;
+	public void mapFlowOutput(AttributeMap subflowOutput, RequestContext context) {
+		if (outputMapper != null && subflowOutput != null) {
+			outputMapper.map(subflowOutput, context, new MappingContextImpl(context.getMessageContext()));
+		}
 	}
 
 	public String toString() {

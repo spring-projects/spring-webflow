@@ -38,16 +38,6 @@ public class DateFormatter extends AbstractFormatter {
 		this.dateFormat = dateFormat;
 	}
 
-	/**
-	 * Constructs a date formatter that will delegate to the specified date format.
-	 * @param dateFormat the date format to use
-	 * @param allowEmpty should this formatter allow empty input arguments?
-	 */
-	public DateFormatter(DateFormat dateFormat, boolean allowEmpty) {
-		super(allowEmpty);
-		this.dateFormat = dateFormat;
-	}
-
 	// convert from date to string
 	protected String doFormatValue(Object date) {
 		return dateFormat.format((Date) date);

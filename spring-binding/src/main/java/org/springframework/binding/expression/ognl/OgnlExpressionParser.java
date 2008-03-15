@@ -244,7 +244,7 @@ public class OgnlExpressionParser implements ExpressionParser {
 		}
 		try {
 			return new OgnlExpression(Ognl.parseExpression(expressionString), parseVariableExpressions(context
-					.getExpressionVariables()), context.getExpectedEvaluationResultType());
+					.getExpressionVariables()), context.getExpectedEvaluationResultType(), expressionString);
 		} catch (OgnlException e) {
 			throw new ParserException(expressionString, e);
 		}

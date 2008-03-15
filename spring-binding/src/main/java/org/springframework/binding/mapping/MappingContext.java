@@ -15,6 +15,8 @@
  */
 package org.springframework.binding.mapping;
 
+import org.springframework.binding.message.MessageContext;
+
 /**
  * A context object with two main responsibities:
  * <ol>
@@ -26,5 +28,11 @@ package org.springframework.binding.mapping;
  * @author Keith Donald
  */
 public interface MappingContext {
+
+	/**
+	 * Returns the message context to use to record errors during the mapping process.
+	 * @return the message context
+	 */
+	public MessageContext getMessageContext();
 
 }

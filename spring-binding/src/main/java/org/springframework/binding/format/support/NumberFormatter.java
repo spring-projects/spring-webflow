@@ -32,27 +32,10 @@ public class NumberFormatter extends AbstractFormatter {
 	private NumberFormat numberFormat;
 
 	/**
-	 * Default constructor. The formatter will use "toString" when formatting a value and "valueOf" when parsing a
-	 * value.
-	 */
-	public NumberFormatter() {
-	}
-
-	/**
 	 * Create a new number formatter.
 	 * @param numberFormat the number format to use
 	 */
 	public NumberFormatter(NumberFormat numberFormat) {
-		this.numberFormat = numberFormat;
-	}
-
-	/**
-	 * Create a new number formatter.
-	 * @param numberFormat the number format to use
-	 * @param allowEmpty should this formatter allow empty input arguments?
-	 */
-	public NumberFormatter(NumberFormat numberFormat, boolean allowEmpty) {
-		super(allowEmpty);
 		this.numberFormat = numberFormat;
 	}
 
@@ -67,12 +50,11 @@ public class NumberFormatter extends AbstractFormatter {
 	}
 
 	protected Object doParseValue(String text, Class targetClass) throws IllegalArgumentException {
-		// use given NumberFormat for parsing text
 		if (this.numberFormat != null) {
+			// use given NumberFormat for parsing text
 			return NumberUtils.parseNumber(text, targetClass, this.numberFormat);
-		}
-		// use default valueOf methods for parsing text
-		else {
+		} else {
+			// use default valueOf methods for parsing text
 			return NumberUtils.parseNumber(text, targetClass);
 		}
 	}

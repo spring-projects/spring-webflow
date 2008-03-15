@@ -21,16 +21,21 @@ public class ELExpression implements Expression {
 
 	private ValueExpression valueExpression;
 
+	private boolean template;
+
 	/**
 	 * Creates a new el expression
 	 * @param factory the el context factory for creating the EL context that will be used during expression evaluation
 	 * @param valueExpression the value expression to evaluate
+	 * @param template whether or not this expression is a template expression; if not it was parsed as an implict eval
+	 * expression (without delimiters)
 	 */
-	public ELExpression(ELContextFactory factory, ValueExpression valueExpression) {
+	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, boolean template) {
 		Assert.notNull(factory, "The ELContextFactory is required to evaluate EL expressions");
 		Assert.notNull(valueExpression, "The EL value expression is required for evaluation");
 		this.elContextFactory = factory;
 		this.valueExpression = valueExpression;
+		this.template = template;
 	}
 
 	public Object getValue(Object context) throws EvaluationException {
@@ -55,6 +60,24 @@ public class ELExpression implements Expression {
 			}
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
+		}
+	}
+
+	public Class getValueType(Object context) {
+		ELContext ctx = elContextFactory.getELContext(context);
+		try {
+			return valueExpression.getType(ctx);
+		} catch (ELException ex) {
+			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
+		}
+	}
+
+	public String getExpressionString() {
+		if (template) {
+			return valueExpression.getExpressionString();
+		} else {
+			String rawExpressionString = valueExpression.getExpressionString();
+			return rawExpressionString.substring("#{".length(), rawExpressionString.length() - 1);
 		}
 	}
 

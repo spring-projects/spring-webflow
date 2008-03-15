@@ -16,9 +16,8 @@
 package org.springframework.webflow.engine;
 
 import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContext;
+import org.springframework.binding.mapping.MappingContextImpl;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -49,12 +48,12 @@ public class EndState extends State {
 	/**
 	 * The renderer that will render the final response when a flow execution terminates.
 	 */
-	private Action finalResponseAction = new NullFinalResponseAction();
+	private Action finalResponseAction;
 
 	/**
 	 * The attribute mapper for mapping output attributes exposed by this end state when it is entered.
 	 */
-	private AttributeMapper outputMapper = new NoOutputMapper();
+	private AttributeMapper outputMapper;
 
 	/**
 	 * Create a new end state with no associated view.
@@ -73,7 +72,6 @@ public class EndState extends State {
 	 * Sets the renderer that will render the final flow execution response.
 	 */
 	public void setFinalResponseAction(Action finalResponseAction) {
-		Assert.notNull(finalResponseAction, "The final response action is required");
 		this.finalResponseAction = finalResponseAction;
 	}
 
@@ -81,7 +79,6 @@ public class EndState extends State {
 	 * Sets the attribute mapper to use for mapping output attributes exposed by this end state when it is entered.
 	 */
 	public void setOutputMapper(AttributeMapper outputMapper) {
-		Assert.notNull(outputMapper, "The flow session output mapper is required");
 		this.outputMapper = outputMapper;
 	}
 
@@ -99,7 +96,9 @@ public class EndState extends State {
 		FlowSession activeSession = context.getFlowExecutionContext().getActiveSession();
 		if (activeSession.isRoot()) {
 			// entire flow execution is ending; issue the final response
-			ActionExecutor.execute(finalResponseAction, context);
+			if (finalResponseAction != null) {
+				ActionExecutor.execute(finalResponseAction, context);
+			}
 			context.endActiveFlowSession(createSessionOutput(context));
 		} else {
 			// there is a parent flow that will resume (this flow is a subflow)
@@ -115,7 +114,9 @@ public class EndState extends State {
 	 */
 	protected LocalAttributeMap createSessionOutput(RequestContext context) {
 		LocalAttributeMap outputMap = new LocalAttributeMap();
-		outputMapper.map(context, outputMap, null);
+		if (outputMapper != null) {
+			outputMapper.map(context, outputMap, new MappingContextImpl(context.getMessageContext()));
+		}
 		return outputMap;
 	}
 
@@ -123,29 +124,4 @@ public class EndState extends State {
 		creator.append("finalResponseAction", finalResponseAction).append("outputMapper", outputMapper);
 	}
 
-	/**
-	 * Renders no response. The default implementation.
-	 */
-	private class NullFinalResponseAction implements Action {
-		public Event execute(RequestContext context) {
-			logger.debug("Not issuing a final response");
-			return new Event(this, "success");
-		}
-
-		public String toString() {
-			return "none";
-		}
-	}
-
-	/**
-	 * Maps no output attributes. The default implementation.
-	 */
-	private class NoOutputMapper implements AttributeMapper {
-		public void map(Object source, Object target, MappingContext context) {
-		}
-
-		public String toString() {
-			return "none";
-		}
-	}
 }

@@ -19,7 +19,6 @@ import java.text.ParseException;
 
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,37 +29,28 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractFormatter implements Formatter {
 
 	/**
-	 * Does this formatter allow empty values?
-	 */
-	private boolean allowEmpty = true;
-
-	/**
 	 * Constructs a formatter.
 	 */
 	protected AbstractFormatter() {
 	}
 
-	/**
-	 * Constructs a formatter.
-	 * @param allowEmpty allow formatting of empty (null or blank) values?
-	 */
-	protected AbstractFormatter(boolean allowEmpty) {
-		this.allowEmpty = allowEmpty;
-	}
-
-	/**
-	 * Allow formatting of empty (null or blank) values?
-	 */
-	public boolean isAllowEmpty() {
-		return allowEmpty;
-	}
-
 	public final String formatValue(Object value) {
-		if (allowEmpty && isEmpty(value)) {
+		if (isEmpty(value)) {
 			return getEmptyFormattedValue();
+		} else {
+			return doFormatValue(value);
 		}
-		Assert.isTrue(!isEmpty(value), "Object to format cannot be empty");
-		return doFormatValue(value);
+	}
+
+	public final Object parseValue(String formattedString, Class targetClass) throws InvalidFormatException {
+		try {
+			if (isEmpty(formattedString)) {
+				return getEmptyValue();
+			}
+			return doParseValue(formattedString, targetClass);
+		} catch (ParseException ex) {
+			throw new InvalidFormatException(formattedString, getExpectedFormat(targetClass), ex);
+		}
 	}
 
 	/**
@@ -77,22 +67,12 @@ public abstract class AbstractFormatter implements Formatter {
 		return "";
 	}
 
-	public final Object parseValue(String formattedString, Class targetClass) throws InvalidFormatException {
-		try {
-			if (allowEmpty && isEmpty(formattedString)) {
-				return getEmptyValue();
-			}
-			return doParseValue(formattedString, targetClass);
-		} catch (ParseException ex) {
-			throw new InvalidFormatException(formattedString, getExpectedFormat(targetClass), ex);
-		}
-	}
-
 	/**
 	 * Template method subclasses should override to encapsulate parsing logic.
 	 * @param formattedString the formatted string to parse
+	 * @param targetClass the target class to convert the formatted value to
 	 * @return the parsed value
-	 * @throws InvalidFormatException an exception occured parsing
+	 * @throws InvalidFormatException an exception occurred parsing
 	 * @throws ParseException when parse exceptions occur
 	 */
 	protected abstract Object doParseValue(String formattedString, Class targetClass) throws InvalidFormatException,

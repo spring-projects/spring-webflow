@@ -213,7 +213,8 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		LocalAttributeMap sessionInput = new LocalAttributeMap();
 		flow.start(context, sessionInput);
-		assertFalse(context.getFlowScope().contains("attr"));
+		assertTrue(context.getFlowScope().contains("attr"));
+		assertNull(context.getFlowScope().get("attr"));
 	}
 
 	public void testOnEventNullCurrentState() {

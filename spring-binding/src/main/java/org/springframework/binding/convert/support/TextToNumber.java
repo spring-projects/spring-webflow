@@ -50,7 +50,7 @@ public class TextToNumber extends AbstractFormattingConverter {
 	}
 
 	public Class[] getTargetClasses() {
-		return new Class[] { Integer.class, Short.class, Byte.class, Long.class, Float.class, Double.class,
+		return new Class[] { Integer.class, Short.class, Long.class, Float.class, Double.class, Byte.class,
 				BigInteger.class, BigDecimal.class };
 	}
 

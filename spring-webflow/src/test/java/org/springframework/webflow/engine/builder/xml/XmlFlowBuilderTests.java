@@ -3,7 +3,7 @@ package org.springframework.webflow.engine.builder.xml;
 import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.binding.mapping.RequiredMappingException;
+import org.springframework.binding.mapping.AttributeMappingException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
@@ -123,7 +123,7 @@ public class XmlFlowBuilderTests extends TestCase {
 			execution.start(input, context);
 			fail("Should have failed");
 		} catch (FlowExecutionException e) {
-			RequiredMappingException me = (RequiredMappingException) e.getRootCause();
+			AttributeMappingException me = (AttributeMappingException) e.getCause();
 		}
 	}
 
@@ -141,7 +141,7 @@ public class XmlFlowBuilderTests extends TestCase {
 			execution.start(input, context);
 			fail("Should have failed");
 		} catch (FlowExecutionException e) {
-			RequiredMappingException me = (RequiredMappingException) e.getRootCause();
+			AttributeMappingException me = (AttributeMappingException) e.getCause();
 		}
 	}
 

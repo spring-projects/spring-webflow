@@ -43,6 +43,14 @@ public class LiteralExpression implements Expression {
 						+ "If so, should the expression string be enclosed in eval delimiters?"));
 	}
 
+	public Class getValueType(Object context) {
+		return String.class;
+	}
+
+	public String getExpressionString() {
+		return null;
+	}
+
 	public String toString() {
 		return "literal('" + literal + "')";
 	}

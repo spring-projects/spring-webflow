@@ -983,6 +983,14 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 		public void setValue(Object context, Object value) throws EvaluationException {
 			throw new UnsupportedOperationException("Cannot set a subflow expression");
 		}
+
+		public Class getValueType(Object context) {
+			return null;
+		}
+
+		public String getExpressionString() {
+			return null;
+		}
 	}
 
 	public String toString() {

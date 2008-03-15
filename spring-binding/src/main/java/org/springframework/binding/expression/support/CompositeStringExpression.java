@@ -54,6 +54,14 @@ public class CompositeStringExpression implements Expression {
 				"Cannot set a composite string expression value"));
 	}
 
+	public Class getValueType(Object context) {
+		return String.class;
+	}
+
+	public String getExpressionString() {
+		return null;
+	}
+
 	public String toString() {
 		return new ToStringCreator(this).append("expressions", expressions).toString();
 	}

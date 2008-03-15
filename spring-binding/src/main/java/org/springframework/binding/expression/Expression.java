@@ -33,9 +33,24 @@ public interface Expression {
 
 	/**
 	 * Set this expression in the provided context to the value provided.
-	 * @param context the context to apply this value to
+	 * @param context the context to set this value to
 	 * @param value the new value to be set
 	 * @throws EvaluationException an exception occurred during evaluation
 	 */
 	public void setValue(Object context, Object value) throws EvaluationException;
+
+	/**
+	 * Returns the most general type that can be passed to the {@link #setValue(Object, Object)} method for the given
+	 * context.
+	 * @param context the context of expression evaluation
+	 * @return the most general type of value that can be set
+	 */
+	public Class getValueType(Object context);
+
+	/**
+	 * Returns the original string used to create this expression, unmodified.
+	 * @return the original expression string
+	 */
+	public String getExpressionString();
+
 }

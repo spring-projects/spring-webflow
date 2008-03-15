@@ -17,6 +17,7 @@ package org.springframework.webflow.action;
 
 import org.springframework.binding.mapping.AttributeMapper;
 import org.springframework.binding.mapping.MappingContext;
+import org.springframework.binding.mapping.MappingContextImpl;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -63,6 +64,6 @@ public class AttributeMapperAction extends AbstractAction {
 	 * returns null. Subclasses can override this if necessary.
 	 */
 	protected MappingContext getMappingContext(RequestContext context) {
-		return null;
+		return new MappingContextImpl(context.getMessageContext());
 	}
 }

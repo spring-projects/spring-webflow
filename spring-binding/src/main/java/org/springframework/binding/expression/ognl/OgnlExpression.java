@@ -52,13 +52,18 @@ class OgnlExpression implements Expression {
 	private Class expectedResultType;
 
 	/**
-	 * Creates a new OGNL expression.
-	 * @param expression the parsed expression
+	 * The original expression string.
 	 */
-	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType) {
+	private String expressionString;
+
+	/**
+	 * Creates a new OGNL expression.
+	 */
+	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType, String expressionString) {
 		this.expression = expression;
 		this.variableExpressions = variableExpressions;
 		this.expectedResultType = expectedResultType;
+		this.expressionString = expressionString;
 	}
 
 	public int hashCode() {
@@ -96,6 +101,23 @@ class OgnlExpression implements Expression {
 		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
 		}
+	}
+
+	public Class getValueType(Object context) {
+		try {
+			if (Ognl.isSimpleProperty(expression)) {
+				// TODO
+				throw new UnsupportedOperationException("Not yet implemented - in progress");
+			} else {
+				return null;
+			}
+		} catch (OgnlException e) {
+			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+		}
+	}
+
+	public String getExpressionString() {
+		return expressionString;
 	}
 
 	private Map getVariables(Object context) {

@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.engine.ActionList;
@@ -137,63 +135,24 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	 * Find the mapped target state resolver for given exception. Returns <code>null</code> if no mapping can be found
 	 * for given exception. Will try all exceptions in the exception cause chain.
 	 */
-	protected TargetStateResolver getTargetStateResolver(FlowExecutionException e) {
-		if (JdkVersion.getMajorJavaVersion() == JdkVersion.JAVA_13) {
-			return getTargetStateResolver13(e);
-		} else {
-			return getTargetStateResolver14(e);
-		}
-	}
-
-	/**
-	 * Internal getTargetStateResolver implementation for use with JDK 1.3.
-	 */
-	private TargetStateResolver getTargetStateResolver13(NestedRuntimeException e) {
+	protected TargetStateResolver getTargetStateResolver(Throwable e) {
 		TargetStateResolver targetStateResolver;
-		if (isRootCause13(e)) {
+		if (isRootCause(e)) {
 			return findTargetStateResolver(e.getClass());
 		} else {
 			targetStateResolver = (TargetStateResolver) exceptionTargetStateMappings.get(e.getClass());
 			if (targetStateResolver != null) {
 				return targetStateResolver;
 			} else {
-				if (e.getCause() instanceof NestedRuntimeException) {
-					return getTargetStateResolver13((NestedRuntimeException) e.getCause());
-				} else {
-					return null;
-				}
+				return getTargetStateResolver(e.getCause());
 			}
 		}
-	}
-
-	/**
-	 * Internal getTargetStateResolver implementation for use with JDK 1.4 or later.
-	 */
-	private TargetStateResolver getTargetStateResolver14(Throwable t) {
-		TargetStateResolver targetStateResolver;
-		if (isRootCause14(t)) {
-			return findTargetStateResolver(t.getClass());
-		} else {
-			targetStateResolver = (TargetStateResolver) exceptionTargetStateMappings.get(t.getClass());
-			if (targetStateResolver != null) {
-				return targetStateResolver;
-			} else {
-				return getTargetStateResolver14(t.getCause());
-			}
-		}
-	}
-
-	/**
-	 * Check if given exception is the root of the exception cause chain. For use with JDK 1.3.
-	 */
-	private boolean isRootCause13(NestedRuntimeException e) {
-		return e.getCause() == null;
 	}
 
 	/**
 	 * Check if given exception is the root of the exception cause chain. For use with JDK 1.4 or later.
 	 */
-	private boolean isRootCause14(Throwable t) {
+	private boolean isRootCause(Throwable t) {
 		return t.getCause() == null;
 	}
 
@@ -215,42 +174,14 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	}
 
 	/**
-	 * Find the root cause of given throwable.
-	 */
-	protected Throwable findRootCause(Throwable t) {
-		if (JdkVersion.getMajorJavaVersion() == JdkVersion.JAVA_13) {
-			return findRootCause13(t);
-		} else {
-			return findRootCause14(t);
-		}
-	}
-
-	/**
-	 * Find the root cause of given throwable. For use on JDK 1.3.
-	 */
-	private Throwable findRootCause13(Throwable t) {
-		if (t instanceof NestedRuntimeException) {
-			NestedRuntimeException nre = (NestedRuntimeException) t;
-			Throwable cause = nre.getCause();
-			if (cause == null) {
-				return nre;
-			} else {
-				return findRootCause13(cause);
-			}
-		} else {
-			return t;
-		}
-	}
-
-	/**
 	 * Find the root cause of given throwable. For use on JDK 1.4 or later.
 	 */
-	private Throwable findRootCause14(Throwable e) {
+	private Throwable findRootCause(Throwable e) {
 		Throwable cause = e.getCause();
 		if (cause == null) {
 			return e;
 		} else {
-			return findRootCause14(cause);
+			return findRootCause(cause);
 		}
 	}
 

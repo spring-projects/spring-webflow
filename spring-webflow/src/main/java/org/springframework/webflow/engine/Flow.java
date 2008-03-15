@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.binding.mapping.MappingContextImpl;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
@@ -511,7 +512,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		assertStartStateSet();
 		createVariables(context);
 		if (inputMapper != null) {
-			inputMapper.map(input, context, null);
+			inputMapper.map(input, context, new MappingContextImpl(context.getMessageContext()));
 		}
 		startActionList.execute(context);
 		startState.enter(context);
@@ -563,7 +564,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
 		endActionList.execute(context);
 		if (outputMapper != null) {
-			outputMapper.map(context, output, null);
+			outputMapper.map(context, output, new MappingContextImpl(context.getMessageContext()));
 		}
 	}
 

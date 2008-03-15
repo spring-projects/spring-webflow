@@ -30,6 +30,7 @@ public interface AttributeMapper {
 	 * @param source the source
 	 * @param target the target
 	 * @param context the mapping context
+	 * @throws AttributeMappingException if errors occurred during the mapping process
 	 */
-	public void map(Object source, Object target, MappingContext context);
+	public void map(Object source, Object target, MappingContext context) throws AttributeMappingException;
 }

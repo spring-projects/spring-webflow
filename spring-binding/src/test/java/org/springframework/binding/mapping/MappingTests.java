@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.core;
+package org.springframework.binding.mapping;
+
+import junit.framework.TestCase;
 
 /**
- * Root class for exceptions thrown by the Spring Web Flow system. All other exceptions within the system should be
- * assignable to this class.
- * 
- * @author Keith Donald
- * @author Erwin Vervaet
+ * Unit tests for the {@link org.springframework.binding.mapping.RequiredMapping}.
  */
-public abstract class FlowException extends RuntimeException {
+public class MappingTests extends TestCase {
 
-	/**
-	 * Creates a new flow exception.
-	 * @param msg the message
-	 * @param cause the cause
-	 */
-	public FlowException(String msg, Throwable cause) {
-		super(msg, cause);
+	public void testMapping() {
+
 	}
-
-	/**
-	 * Creates a new flow exception.
-	 * @param msg the message
-	 */
-	public FlowException(String msg) {
-		super(msg);
-	}
-
 }
