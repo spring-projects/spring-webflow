@@ -19,11 +19,16 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.mapping.DefaultAttributeMapper;
-import org.springframework.binding.mapping.MappingBuilder;
+import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.mapping.impl.DefaultMapper;
+import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.TestMultiAction;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
@@ -194,9 +199,11 @@ public class FlowTests extends TestCase {
 	}
 
 	public void testStartWithMapper() {
-		DefaultAttributeMapper attributeMapper = new DefaultAttributeMapper();
-		MappingBuilder mapping = new MappingBuilder(DefaultExpressionParserFactory.getExpressionParser());
-		attributeMapper.addMapping(mapping.source("attr").target("flowScope.attr").value());
+		DefaultMapper attributeMapper = new DefaultMapper();
+		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		Expression x = parser.parseExpression("attr", new ParserContextImpl().eval(AttributeMap.class));
+		Expression y = parser.parseExpression("flowScope.attr", new ParserContextImpl().eval(RequestContext.class));
+		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		LocalAttributeMap sessionInput = new LocalAttributeMap();
@@ -206,9 +213,11 @@ public class FlowTests extends TestCase {
 	}
 
 	public void testStartWithMapperButNoInput() {
-		DefaultAttributeMapper attributeMapper = new DefaultAttributeMapper();
-		MappingBuilder mapping = new MappingBuilder(DefaultExpressionParserFactory.getExpressionParser());
-		attributeMapper.addMapping(mapping.source("attr").target("flowScope.attr").value());
+		DefaultMapper attributeMapper = new DefaultMapper();
+		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		Expression x = parser.parseExpression("attr", new ParserContextImpl().eval(AttributeMap.class));
+		Expression y = parser.parseExpression("flowScope.attr", new ParserContextImpl().eval(RequestContext.class));
+		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		LocalAttributeMap sessionInput = new LocalAttributeMap();
@@ -293,9 +302,11 @@ public class FlowTests extends TestCase {
 	}
 
 	public void testEndWithOutputMapper() {
-		DefaultAttributeMapper attributeMapper = new DefaultAttributeMapper();
-		MappingBuilder mapping = new MappingBuilder(DefaultExpressionParserFactory.getExpressionParser());
-		attributeMapper.addMapping(mapping.source("flowScope.attr").target("attr").value());
+		DefaultMapper attributeMapper = new DefaultMapper();
+		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		Expression x = parser.parseExpression("flowScope.attr", new ParserContextImpl().eval(RequestContext.class));
+		Expression y = parser.parseExpression("attr", new ParserContextImpl().eval(MutableAttributeMap.class));
+		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setOutputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlowScope().put("attr", "foo");

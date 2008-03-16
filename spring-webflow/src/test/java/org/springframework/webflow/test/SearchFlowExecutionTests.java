@@ -18,8 +18,8 @@ package org.springframework.webflow.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContext;
+import org.springframework.binding.mapping.Mapper;
+import org.springframework.binding.mapping.MappingResults;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.context.ExternalContext;
@@ -87,10 +87,11 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 		Flow mockDetailFlow = new Flow("detail-flow");
-		mockDetailFlow.setInputMapper(new AttributeMapper() {
-			public void map(Object source, Object target, MappingContext context) {
+		mockDetailFlow.setInputMapper(new Mapper() {
+			public MappingResults map(Object source, Object target) {
 				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1),
 						((AttributeMap) source).get("id"));
+				return null;
 			}
 		});
 		// test responding to finish result

@@ -15,12 +15,12 @@ public interface SubflowAttributeMapper {
 	 * @param context the current request execution context
 	 * @return a map of attributes to pass as input
 	 */
-	public MutableAttributeMap createFlowInput(RequestContext context);
+	public MutableAttributeMap createSubflowInput(RequestContext context);
 
 	/**
 	 * Map output attributes of an ended subflow flow to the resuming parent flow.
-	 * @param flowOutput the output attributes returned by the ended subflow
+	 * @param output the output attributes returned by the ended subflow
 	 * @param context the current request execution context, which gives access to the parent flow scope
 	 */
-	public void mapFlowOutput(AttributeMap flowOutput, RequestContext context);
+	public void mapSubflowOutput(AttributeMap output, RequestContext context);
 }

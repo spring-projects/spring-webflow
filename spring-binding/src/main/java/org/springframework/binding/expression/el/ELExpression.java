@@ -7,6 +7,7 @@ import javax.el.ValueExpression;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
@@ -46,8 +47,10 @@ public class ELExpression implements Expression {
 				throw new EvaluationException(new EvaluationAttempt(this, context), null);
 			}
 			return result;
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
+		} catch (javax.el.PropertyNotFoundException e) {
+			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+		} catch (ELException e) {
+			throw new EvaluationException(new EvaluationAttempt(this, context), e);
 		}
 	}
 
@@ -58,6 +61,8 @@ public class ELExpression implements Expression {
 			if (!ctx.isPropertyResolved()) {
 				throw new EvaluationException(new SetValueAttempt(this, context, value), null);
 			}
+		} catch (javax.el.PropertyNotFoundException e) {
+			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}
@@ -67,6 +72,8 @@ public class ELExpression implements Expression {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
 			return valueExpression.getType(ctx);
+		} catch (javax.el.PropertyNotFoundException e) {
+			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
 		} catch (ELException ex) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
 		}

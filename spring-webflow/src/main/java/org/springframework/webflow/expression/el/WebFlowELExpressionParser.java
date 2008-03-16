@@ -27,7 +27,6 @@ import javax.el.VariableMapper;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -44,7 +43,6 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 	public WebFlowELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
 		putContextFactory(RequestContext.class, new RequestContextELContextFactory());
-		putContextFactory(MutableAttributeMap.class, new AttributeMapELContextFactory());
 	}
 
 	/**
@@ -61,17 +59,6 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
 			customResolvers.add(new ActionMethodELResolver());
 			ELResolver resolver = new DefaultELResolver(null, customResolvers);
-			return new WebFlowELContext(resolver);
-		}
-	}
-
-	/**
-	 * Configures EL context instances for evaluating against an AttributeMap.
-	 * @author Keith Donald
-	 */
-	private static class AttributeMapELContextFactory implements ELContextFactory {
-		public ELContext getELContext(Object target) {
-			ELResolver resolver = new DefaultELResolver(target, null);
 			return new WebFlowELContext(resolver);
 		}
 	}

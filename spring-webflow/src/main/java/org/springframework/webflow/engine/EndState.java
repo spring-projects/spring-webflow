@@ -15,8 +15,8 @@
  */
 package org.springframework.webflow.engine;
 
-import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContextImpl;
+import org.springframework.binding.mapping.Mapper;
+import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
@@ -53,7 +53,7 @@ public class EndState extends State {
 	/**
 	 * The attribute mapper for mapping output attributes exposed by this end state when it is entered.
 	 */
-	private AttributeMapper outputMapper;
+	private Mapper outputMapper;
 
 	/**
 	 * Create a new end state with no associated view.
@@ -62,7 +62,7 @@ public class EndState extends State {
 	 * @throws IllegalArgumentException when this state cannot be added to given flow, e.g. because the id is not unique
 	 * @see State#State(Flow, String)
 	 * @see #setFinalResponseAction(Action)
-	 * @see #setOutputMapper(AttributeMapper)
+	 * @see #setOutputMapper(Mapper)
 	 */
 	public EndState(Flow flow, String id) throws IllegalArgumentException {
 		super(flow, id);
@@ -78,7 +78,7 @@ public class EndState extends State {
 	/**
 	 * Sets the attribute mapper to use for mapping output attributes exposed by this end state when it is entered.
 	 */
-	public void setOutputMapper(AttributeMapper outputMapper) {
+	public void setOutputMapper(Mapper outputMapper) {
 		this.outputMapper = outputMapper;
 	}
 
@@ -113,11 +113,14 @@ public class EndState extends State {
 	 * execution request context into a newly created empty map.
 	 */
 	protected LocalAttributeMap createSessionOutput(RequestContext context) {
-		LocalAttributeMap outputMap = new LocalAttributeMap();
+		LocalAttributeMap output = new LocalAttributeMap();
 		if (outputMapper != null) {
-			outputMapper.map(context, outputMap, new MappingContextImpl(context.getMessageContext()));
+			MappingResults results = outputMapper.map(context, output);
+			if (results != null && results.hasErrorResults()) {
+				throw new FlowOutputMappingException(getOwner().getId(), getId(), results);
+			}
 		}
-		return outputMap;
+		return output;
 	}
 
 	protected void appendToString(ToStringCreator creator) {

@@ -15,12 +15,15 @@
  */
 package org.springframework.webflow.engine;
 
+import java.util.Collections;
+
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.support.AbstractGetValueExpression;
-import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContext;
+import org.springframework.binding.mapping.Mapper;
+import org.springframework.binding.mapping.MappingResults;
+import org.springframework.binding.mapping.impl.DefaultMappingResults;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -65,17 +68,18 @@ public class SubflowStateTests extends TestCase {
 
 	public void testEnterWithInput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
-			public MutableAttributeMap createFlowInput(RequestContext context) {
+			public MutableAttributeMap createSubflowInput(RequestContext context) {
 				return new LocalAttributeMap("foo", "bar");
 			}
 
-			public void mapFlowOutput(AttributeMap flowOutput, RequestContext context) {
+			public void mapSubflowOutput(AttributeMap flowOutput, RequestContext context) {
 			}
 		});
-		subflow.setInputMapper(new AttributeMapper() {
-			public void map(Object source, Object target, MappingContext context) {
+		subflow.setInputMapper(new Mapper() {
+			public MappingResults map(Object source, Object target) {
 				MutableAttributeMap map = (MutableAttributeMap) source;
 				assertEquals("bar", map.get("foo"));
+				return new DefaultMappingResults(source, target, Collections.EMPTY_LIST);
 			}
 		});
 		new State(subflow, "whatev") {
@@ -88,11 +92,11 @@ public class SubflowStateTests extends TestCase {
 
 	public void testReturnWithOutput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
-			public MutableAttributeMap createFlowInput(RequestContext context) {
+			public MutableAttributeMap createSubflowInput(RequestContext context) {
 				return new LocalAttributeMap();
 			}
 
-			public void mapFlowOutput(AttributeMap flowOutput, RequestContext context) {
+			public void mapSubflowOutput(AttributeMap flowOutput, RequestContext context) {
 				assertEquals("bar", flowOutput.get("foo"));
 			}
 		});
@@ -101,14 +105,13 @@ public class SubflowStateTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-
 		new EndState(subflow, "end");
-		subflow.setOutputMapper(new AttributeMapper() {
-			public void map(Object source, Object target, MappingContext context) {
+		subflow.setOutputMapper(new Mapper() {
+			public MappingResults map(Object source, Object target) {
 				MutableAttributeMap map = (MutableAttributeMap) target;
 				map.put("foo", "bar");
+				return new DefaultMappingResults(source, target, Collections.EMPTY_LIST);
 			}
-
 		});
 		subflowState.enter(context);
 		assertEquals("parent", context.getActiveFlow().getId());

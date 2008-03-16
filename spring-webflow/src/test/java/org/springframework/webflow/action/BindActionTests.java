@@ -7,7 +7,6 @@ import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
-import org.springframework.binding.message.Severity;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -86,11 +85,6 @@ public class BindActionTests extends TestCase {
 		BindBean bean = (BindBean) context.getFlowScope().get("bindTarget");
 		assertEquals("foo", bean.getStringProperty());
 		assertEquals(new Integer(3), bean.getIntegerProperty());
-		assertEquals(1, context.getMessageContext().getMessages().length);
-		assertEquals("integerProperty", context.getMessageContext().getMessages()[0].getSource());
-		assertEquals(Severity.ERROR, context.getMessageContext().getMessages()[0].getSeverity());
-		assertEquals("The 'integerProperty' value is the wrong type", context.getMessageContext().getMessages()[0]
-				.getText());
 	}
 
 	public void testBindWithEmptyAttributes() throws Exception {

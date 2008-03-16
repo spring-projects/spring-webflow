@@ -16,7 +16,7 @@
 package org.springframework.webflow.engine.builder;
 
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.binding.mapping.Mapper;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.engine.ActionState;
 import org.springframework.webflow.engine.DecisionState;
@@ -179,7 +179,7 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized subflow state instance
 	 */
 	public State createEndState(String id, Flow flow, Action[] entryActions, Action finalResponseAction,
-			AttributeMapper outputMapper, FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap attributes) {
+			Mapper outputMapper, FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap attributes) {
 		EndState endState = new EndState(flow, id);
 		if (finalResponseAction != null) {
 			endState.setFinalResponseAction(finalResponseAction);

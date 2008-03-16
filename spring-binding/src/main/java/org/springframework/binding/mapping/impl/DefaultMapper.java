@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.mapping;
+package org.springframework.binding.mapping.impl;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.mapping.Mapper;
+import org.springframework.binding.mapping.Mapping;
+import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -29,32 +32,31 @@ import org.springframework.core.style.ToStringCreator;
  * @author Keith Donald
  * @author Colin Sampaleanu
  */
-public class DefaultAttributeMapper implements AttributeMapper {
+public class DefaultMapper implements Mapper {
 
 	/**
 	 * The ordered list of mappings to apply.
 	 */
 	private List mappings = new LinkedList();
 
+	private ConversionService conversionService;
+
+	public ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
+
 	/**
 	 * Add a mapping to this mapper.
 	 * @param mapping the mapping to add
 	 * @return this, to support convenient call chaining
 	 */
-	public DefaultAttributeMapper addMapping(Mapping mapping) {
+	public DefaultMapper addMapping(DefaultMapping mapping) {
 		mappings.add(mapping);
 		return this;
-	}
-
-	/**
-	 * Add a set of mappings.
-	 * @param mappings the mappings
-	 */
-	public void addMappings(Mapping[] mappings) {
-		if (mappings == null) {
-			return;
-		}
-		this.mappings.addAll(Arrays.asList(mappings));
 	}
 
 	/**
@@ -65,21 +67,14 @@ public class DefaultAttributeMapper implements AttributeMapper {
 		return (Mapping[]) mappings.toArray(new Mapping[mappings.size()]);
 	}
 
-	public void map(Object source, Object target, MappingContext context) throws AttributeMappingException {
-		boolean mappingFailure = false;
-		if (mappings != null) {
-			Iterator it = mappings.iterator();
-			while (it.hasNext()) {
-				Mapping mapping = (Mapping) it.next();
-				boolean result = mapping.map(source, target, context);
-				if (!result && !mappingFailure) {
-					mappingFailure = true;
-				}
-			}
+	public MappingResults map(Object source, Object target) {
+		DefaultMappingContext context = new DefaultMappingContext(source, target, conversionService);
+		Iterator it = mappings.iterator();
+		while (it.hasNext()) {
+			DefaultMapping mapping = (DefaultMapping) it.next();
+			mapping.map(context);
 		}
-		if (mappingFailure) {
-			throw new AttributeMappingException();
-		}
+		return context.toResult();
 	}
 
 	public String toString() {

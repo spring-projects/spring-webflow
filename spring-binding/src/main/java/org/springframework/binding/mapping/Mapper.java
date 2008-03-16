@@ -16,21 +16,17 @@
 package org.springframework.binding.mapping;
 
 /**
- * A lightweight service interface for mapping between two attribute sources.
- * <p>
- * Implementations of this interface are expected to encapsulate the mapping configuration information as well as the
- * logic to act on it to perform mapping between a given source and target attribute source.
+ * Maps state between two objects.
  * 
  * @author Keith Donald
  */
-public interface AttributeMapper {
+public interface Mapper {
 
 	/**
-	 * Map data from a source object to a target object.
+	 * Map state from a source object to a target object.
 	 * @param source the source
 	 * @param target the target
-	 * @param context the mapping context
-	 * @throws AttributeMappingException if errors occurred during the mapping process
+	 * @return results of the mapping transaction
 	 */
-	public void map(Object source, Object target, MappingContext context) throws AttributeMappingException;
+	public MappingResults map(Object source, Object target);
 }

@@ -5,22 +5,24 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.RuntimeBindingConversionExecutor;
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
-import org.springframework.binding.mapping.AttributeMappingException;
-import org.springframework.binding.mapping.DefaultAttributeMapper;
-import org.springframework.binding.mapping.Mapping;
-import org.springframework.binding.mapping.MappingContextImpl;
+import org.springframework.binding.mapping.MappingResult;
+import org.springframework.binding.mapping.MappingResults;
+import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.impl.DefaultMapper;
+import org.springframework.binding.mapping.impl.DefaultMapping;
+import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 public class BindAction extends AbstractAction {
 
-	private static Log logger = LogFactory.getLog(BindAction.class);
+	private static final Log logger = LogFactory.getLog(BindAction.class);
+
+	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERRORS = new PropertyNotFoundErrors();
 
 	private Expression target;
 
@@ -40,7 +42,8 @@ public class BindAction extends AbstractAction {
 			throw new IllegalStateException(
 					"The bind target cannot be null - check your expression.  Bind target expression = " + target);
 		}
-		DefaultAttributeMapper mapper = new DefaultAttributeMapper();
+		DefaultMapper mapper = new DefaultMapper();
+		mapper.setConversionService(conversionService);
 		AttributeMap eventAttributes = context.getLastEvent().getAttributes();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Binding event '" + context.getLastEvent().getId() + "' attributes " + eventAttributes
@@ -52,23 +55,25 @@ public class BindAction extends AbstractAction {
 					.eval(AttributeMap.class));
 			Expression targetAttribute = expressionParser.parseExpression(name, new ParserContextImpl().eval(target
 					.getClass()));
-			Class targetType;
-			try {
-				targetType = targetAttribute.getValueType(target);
-			} catch (EvaluationException e) {
-				targetType = null;
-			}
-			if (targetType != null) {
-				mapper.addMapping(new Mapping(sourceAttribute, targetAttribute, new RuntimeBindingConversionExecutor(
-						targetType, conversionService), false));
+			mapper.addMapping(new DefaultMapping(sourceAttribute, targetAttribute));
+		}
+		MappingResults results = mapper.map(context.getLastEvent().getAttributes(), target);
+		if (!results.hasErrorResults()) {
+			return success();
+		} else {
+			if (results.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == results.getErrorResults().size()) {
+				// all errors are 'property not found' -- acceptable
+				return success();
+			} else {
+				return error();
 			}
 		}
-		try {
-			mapper.map(context.getLastEvent().getAttributes(), target, new MappingContextImpl(context
-					.getMessageContext()));
-			return success();
-		} catch (AttributeMappingException e) {
-			return error();
+	}
+
+	private static class PropertyNotFoundErrors implements MappingResultsCriteria {
+		public boolean test(MappingResult result) {
+			return result.getResult() instanceof TargetAccessError
+					&& result.getResult().getErrorCode().equals("propertyNotFound");
 		}
 	}
 }

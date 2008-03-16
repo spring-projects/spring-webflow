@@ -25,8 +25,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.binding.mapping.AttributeMapper;
-import org.springframework.binding.mapping.MappingContextImpl;
+import org.springframework.binding.mapping.Mapper;
+import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
@@ -137,7 +137,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The mapper to map flow input attributes.
 	 */
-	private AttributeMapper inputMapper;
+	private Mapper inputMapper;
 
 	/**
 	 * The list of actions to execute when this flow starts.
@@ -160,7 +160,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The mapper to map flow output attributes.
 	 */
-	private AttributeMapper outputMapper;
+	private Mapper outputMapper;
 
 	/**
 	 * The set of exception handlers for this flow.
@@ -388,7 +388,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Returns the configured flow input mapper, or null if none.
 	 * @return the input mapper
 	 */
-	public AttributeMapper getInputMapper() {
+	public Mapper getInputMapper() {
 		return inputMapper;
 	}
 
@@ -396,7 +396,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Sets the mapper to map flow input attributes.
 	 * @param inputMapper the input mapper
 	 */
-	public void setInputMapper(AttributeMapper inputMapper) {
+	public void setInputMapper(Mapper inputMapper) {
 		this.inputMapper = inputMapper;
 	}
 
@@ -422,7 +422,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Returns the configured flow output mapper, or null if none.
 	 * @return the output mapper
 	 */
-	public AttributeMapper getOutputMapper() {
+	public Mapper getOutputMapper() {
 		return outputMapper;
 	}
 
@@ -430,7 +430,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Sets the mapper to map flow output attributes.
 	 * @param outputMapper the output mapper
 	 */
-	public void setOutputMapper(AttributeMapper outputMapper) {
+	public void setOutputMapper(Mapper outputMapper) {
 		this.outputMapper = outputMapper;
 	}
 
@@ -500,7 +500,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * <ol>
 	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li>
 	 * <li>Map provided input data into the flow. Typically data will be mapped into flow scope using the registered
-	 * input mapper ({@link #setInputMapper(AttributeMapper)}).</li>
+	 * input mapper ({@link #setInputMapper(Mapper)}).</li>
 	 * <li>Execute all registered start actions ({@link #getStartActionList()}).</li>
 	 * <li>Enter the configured start state ({@link #setStartState(State)})</li>
 	 * </ol>
@@ -512,7 +512,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		assertStartStateSet();
 		createVariables(context);
 		if (inputMapper != null) {
-			inputMapper.map(input, context, new MappingContextImpl(context.getMessageContext()));
+			MappingResults results = inputMapper.map(input, context);
+			if (results != null && results.hasErrorResults()) {
+				throw new FlowInputMappingException(getId(), results);
+			}
 		}
 		startActionList.execute(context);
 		startState.enter(context);
@@ -555,7 +558,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * <ol>
 	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li>
 	 * <li>Map data available in the flow execution control context into provided output map using a registered output
-	 * mapper ({@link #setOutputMapper(AttributeMapper)}).</li>
+	 * mapper ({@link #setOutputMapper(Mapper)}).</li>
 	 * </ol>
 	 * @param context the flow execution control context
 	 * @param output initial output produced by the session that is eligible for modification by this method
@@ -564,7 +567,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
 		endActionList.execute(context);
 		if (outputMapper != null) {
-			outputMapper.map(context, output, new MappingContextImpl(context.getMessageContext()));
+			MappingResults results = outputMapper.map(context, output);
+			if (results != null && results.hasErrorResults()) {
+				throw new FlowOutputMappingException(getId(), results);
+			}
 		}
 	}
 

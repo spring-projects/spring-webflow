@@ -3,13 +3,14 @@ package org.springframework.webflow.engine.builder.xml;
 import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.binding.mapping.AttributeMappingException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.FlowInputMappingException;
+import org.springframework.webflow.engine.FlowOutputMappingException;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
@@ -17,7 +18,6 @@ import org.springframework.webflow.engine.builder.support.ActionExecutingViewFac
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
-import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.test.MockExternalContext;
@@ -122,8 +122,7 @@ public class XmlFlowBuilderTests extends TestCase {
 		try {
 			execution.start(input, context);
 			fail("Should have failed");
-		} catch (FlowExecutionException e) {
-			AttributeMappingException me = (AttributeMappingException) e.getCause();
+		} catch (FlowInputMappingException e) {
 		}
 	}
 
@@ -140,8 +139,7 @@ public class XmlFlowBuilderTests extends TestCase {
 		try {
 			execution.start(input, context);
 			fail("Should have failed");
-		} catch (FlowExecutionException e) {
-			AttributeMappingException me = (AttributeMappingException) e.getCause();
+		} catch (FlowOutputMappingException e) {
 		}
 	}
 
