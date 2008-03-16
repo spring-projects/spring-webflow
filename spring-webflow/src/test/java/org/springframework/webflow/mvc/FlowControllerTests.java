@@ -179,7 +179,9 @@ public class FlowControllerTests extends TestCase {
 		request.addParameter("ajaxSource", "this");
 		context.setAjaxRequest(true);
 		context.requestFlowExecutionRedirect();
-		executor.launchExecution("foo", new LocalAttributeMap(request.getParameterMap()), context);
+		LocalAttributeMap inputMap = new LocalAttributeMap();
+		inputMap.put("ajaxSource", "this");
+		executor.launchExecution("foo", inputMap, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });

@@ -17,6 +17,7 @@ package org.springframework.webflow.mvc;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -154,7 +155,20 @@ public class FlowController extends AbstractController {
 	}
 
 	protected MutableAttributeMap defaultFlowExecutionInputMap(HttpServletRequest request) {
-		return new LocalAttributeMap(request.getParameterMap());
+		LocalAttributeMap inputMap = new LocalAttributeMap();
+		Map parameterMap = request.getParameterMap();
+		Iterator it = parameterMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+			String name = (String) entry.getKey();
+			String[] values = (String[]) entry.getValue();
+			if (values.length == 1) {
+				inputMap.put(name, values[0]);
+			} else {
+				inputMap.put(name, values);
+			}
+		}
+		return inputMap;
 	}
 
 	protected ModelAndView defaultHandleFlowOutcome(String flowId, String outcome, AttributeMap endedOutput,
