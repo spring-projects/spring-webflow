@@ -14,6 +14,10 @@ import org.springframework.binding.mapping.results.Success;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.binding.mapping.results.TypeConversionError;
 
+/**
+ * Default mapping context implementation.
+ * @author Keith Donald
+ */
 class DefaultMappingContext implements MappingContext {
 
 	private Object source;
@@ -53,7 +57,7 @@ class DefaultMappingContext implements MappingContext {
 	}
 
 	public void setSuccessResult(Object originalValue, Object mappedValue) {
-		mappingResults.add(new MappingResult(currentMapping, new Success(originalValue, mappedValue)));
+		mappingResults.add(new MappingResult(currentMapping, new Success(mappedValue, originalValue)));
 		currentMapping = null;
 	}
 

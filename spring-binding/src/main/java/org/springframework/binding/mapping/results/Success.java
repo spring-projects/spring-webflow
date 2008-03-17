@@ -2,11 +2,21 @@ package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.mapping.Result;
 
+/**
+ * Indicates a successful mapping operation.
+ * @author Keith Donald
+ */
 public class Success extends Result {
 
-	private Object originalValue;
 	private Object mappedValue;
 
+	private Object originalValue;
+
+	/**
+	 * Creates a new success result.
+	 * @param mappedValue the successfully mapped value
+	 * @param originalValue the original value
+	 */
 	public Success(Object mappedValue, Object originalValue) {
 		this.mappedValue = mappedValue;
 		this.originalValue = originalValue;

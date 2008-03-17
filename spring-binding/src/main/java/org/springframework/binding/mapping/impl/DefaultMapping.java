@@ -84,14 +84,26 @@ public class DefaultMapping implements Mapping {
 
 	// optional impl getters/setters
 
+	/**
+	 * Returns the type conversion executor to use during mapping execution. May be null.
+	 */
 	public ConversionExecutor getTypeConverter() {
 		return typeConverter;
 	}
 
+	/**
+	 * Sets a specific type conversion executor to use during mapping execution.
+	 * @param typeConverter the type converter
+	 * @see #map(MappingContext)
+	 */
 	public void setTypeConverter(ConversionExecutor typeConverter) {
 		this.typeConverter = typeConverter;
 	}
 
+	/**
+	 * Indicates if this mapping is a required mapping. Default is false.
+	 * @param required required status
+	 */
 	public void setRequired(boolean required) {
 		this.required = required;
 	}

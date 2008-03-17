@@ -26,25 +26,26 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * Generic attributes mapper implementation that allows mappings to be configured programatically.
- * 
- * @author Erwin Vervaet
+ * Generic mapper implementation that allows mappings to be configured programatically.
  * @author Keith Donald
- * @author Colin Sampaleanu
  */
 public class DefaultMapper implements Mapper {
 
-	/**
-	 * The ordered list of mappings to apply.
-	 */
 	private List mappings = new LinkedList();
 
 	private ConversionService conversionService;
 
+	/**
+	 * Returns the conversion service to use to perform type conversions as needed by mapping operations. May be null.
+	 */
 	public ConversionService getConversionService() {
 		return conversionService;
 	}
 
+	/**
+	 * Sets the conversion service to use to perform type conversions as needed by mapping operations. Optional.
+	 * @param conversionService the conversion service;
+	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}

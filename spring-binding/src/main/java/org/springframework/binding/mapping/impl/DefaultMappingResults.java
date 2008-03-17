@@ -9,6 +9,10 @@ import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
 
+/**
+ * Default mapping results implementation.
+ * @author Keith Donald
+ */
 public class DefaultMappingResults implements MappingResults {
 
 	private Object source;
@@ -17,6 +21,12 @@ public class DefaultMappingResults implements MappingResults {
 
 	private List mappingResults;
 
+	/**
+	 * Creates a new mapping results object.
+	 * @param source the source
+	 * @param target the target
+	 * @param mappingResults the actual results produced by {@link DefaultMapper}
+	 */
 	public DefaultMappingResults(Object source, Object target, List mappingResults) {
 		this.source = source;
 		this.target = target;

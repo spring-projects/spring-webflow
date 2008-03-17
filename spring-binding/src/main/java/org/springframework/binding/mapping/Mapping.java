@@ -17,10 +17,25 @@ package org.springframework.binding.mapping;
 
 import org.springframework.binding.expression.Expression;
 
+/**
+ * Information about a single mapping.
+ * 
+ * @author Keith Donald
+ */
 public interface Mapping {
+
+	/**
+	 * The source of the mapping.
+	 */
 	public Expression getSourceExpression();
 
+	/**
+	 * The target of the mapping.
+	 */
 	public Expression getTargetExpression();
 
+	/**
+	 * Whether this is a required mapping.
+	 */
 	public boolean isRequired();
 }
