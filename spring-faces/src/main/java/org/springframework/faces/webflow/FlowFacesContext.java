@@ -73,13 +73,7 @@ public class FlowFacesContext extends FacesContext {
 		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
 				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
 				.getNativeResponse(), lifecycle);
-		FlowFacesContext instance = new FlowFacesContext(context, defaultFacesContext);
-
-		// Ensure that FlowViewStateManager is first in the chain
-		FlowViewStateManager sm = new FlowViewStateManager(instance.getApplication().getStateManager());
-		instance.getApplication().setStateManager(sm);
-
-		return instance;
+		return new FlowFacesContext(context, defaultFacesContext);
 	}
 
 	public FlowFacesContext(RequestContext context, FacesContext delegate) {
