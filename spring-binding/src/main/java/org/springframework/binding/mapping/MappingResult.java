@@ -1,5 +1,7 @@
 package org.springframework.binding.mapping;
 
+import org.springframework.core.style.ToStringCreator;
+
 /**
  * A single mapping result within a {@link MappingResults} transaction.
  */
@@ -31,6 +33,10 @@ public class MappingResult {
 	 */
 	public Result getResult() {
 		return result;
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("mapping", mapping).append("result", result).toString();
 	}
 
 }
