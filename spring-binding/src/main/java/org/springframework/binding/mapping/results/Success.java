@@ -39,7 +39,7 @@ public class Success extends Result {
 		return null;
 	}
 
-	protected String toStringCreator() {
+	public String toString() {
 		return new ToStringCreator(this).append("mappedValue", mappedValue).append("originalValue", originalValue)
 				.toString();
 	}

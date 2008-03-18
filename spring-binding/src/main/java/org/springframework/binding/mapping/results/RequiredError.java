@@ -36,7 +36,7 @@ public class RequiredError extends Result {
 		return "required";
 	}
 
-	protected String toStringCreator() {
+	public String toString() {
 		return new ToStringCreator(this).append("originalValue", originalValue).toString();
 	}
 }

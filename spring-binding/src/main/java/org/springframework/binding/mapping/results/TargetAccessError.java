@@ -53,7 +53,7 @@ public class TargetAccessError extends Result {
 		}
 	}
 
-	protected String toStringCreator() {
+	public String toString() {
 		return new ToStringCreator(this).append("error", error).toString();
 	}
 }

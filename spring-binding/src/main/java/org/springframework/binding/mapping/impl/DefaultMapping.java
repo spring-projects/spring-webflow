@@ -23,7 +23,6 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.Mapping;
-import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
@@ -190,6 +189,6 @@ public class DefaultMapping implements Mapping {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append(sourceExpression + " -> " + targetExpression).toString();
+		return sourceExpression + " -> " + targetExpression;
 	}
 }

@@ -83,7 +83,7 @@ public class DefaultMappingResults implements MappingResults {
 		return Collections.unmodifiableList(results);
 	}
 
-	protected String toStringCreator() {
+	public String toString() {
 		String sourceString = ClassUtils.getShortName(source.getClass()) + "@"
 				+ ObjectUtils.getIdentityHexString(source);
 		String targetString = ClassUtils.getShortName(target.getClass()) + "@"
