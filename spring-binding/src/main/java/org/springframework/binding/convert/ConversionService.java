@@ -19,6 +19,9 @@ package org.springframework.binding.convert;
  * A service interface for retrieving type conversion executors. The returned command objects are thread-safe and may be
  * safely cached for use by client code.
  * 
+ * Type converters convert from one type to another. They are more generic than formatters, which convert from string to
+ * object and back.
+ * 
  * @author Keith Donald
  */
 public interface ConversionService {

@@ -15,12 +15,18 @@
  */
 package org.springframework.binding.convert;
 
+import org.springframework.binding.format.Formatter;
+
 /**
- * A type converter converts objects from one type to another. They may support conversion of multiple source types to
- * multiple target types.
+ * Converts objects from one type to another. May support conversion of multiple source types to multiple target types.
  * <p>
- * Implementations of this interface are thread-safe.
- * 
+ * Implementations of this interface are thread-safe and can be shared.
+ * </p>
+ * <p>
+ * A converter is more generic than a formatter. A formatter only handles converting from String and back, while
+ * converters convert from an arbitrary Object type to another.
+ * </p>
+ * @see Formatter
  * @author Keith Donald
  */
 public interface Converter {
@@ -40,11 +46,11 @@ public interface Converter {
 	/**
 	 * Convert the provided source object argument to an instance of the specified target class.
 	 * @param source the source object to convert, its class must be one of the supported <code>sourceClasses</code>
-	 * @param targetClass the target class to convert the source to, must be one of the supported
+	 * @param targetClass the target class to convert the source to, it must be one of the supported
 	 * <code>targetClasses</code>
 	 * @param context an optional conversion context that may be used to influence the conversion process
 	 * @return the converted object, an instance of the target type
-	 * @throws ConversionException an exception occured during the conversion
+	 * @throws ConversionException an exception occurred during the type conversion
 	 */
 	public Object convert(Object source, Class targetClass, ConversionContext context) throws ConversionException;
 
