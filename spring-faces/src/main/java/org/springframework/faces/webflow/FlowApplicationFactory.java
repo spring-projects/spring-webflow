@@ -7,8 +7,6 @@ public class FlowApplicationFactory extends ApplicationFactory {
 
 	private ApplicationFactory delegate;
 
-	private boolean stateManagerConfigured = false;
-
 	public FlowApplicationFactory(ApplicationFactory delegate) {
 		this.delegate = delegate;
 	}
@@ -16,10 +14,9 @@ public class FlowApplicationFactory extends ApplicationFactory {
 	public Application getApplication() {
 		Application app = delegate.getApplication();
 		// Ensure that FlowViewStateManager is first in the chain
-		if (!stateManagerConfigured && app.getStateManager() != null) {
+		if (app.getStateManager() != null && !(app.getStateManager() instanceof FlowViewStateManager)) {
 			FlowViewStateManager sm = new FlowViewStateManager(app.getStateManager());
 			app.setStateManager(sm);
-			stateManagerConfigured = true;
 		}
 		return app;
 	}
