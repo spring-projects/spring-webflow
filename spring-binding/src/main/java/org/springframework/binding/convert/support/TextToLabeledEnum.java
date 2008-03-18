@@ -16,17 +16,18 @@
 package org.springframework.binding.convert.support;
 
 import org.springframework.binding.convert.ConversionContext;
-import org.springframework.binding.format.support.LabeledEnumFormatter;
 import org.springframework.core.enums.LabeledEnum;
+import org.springframework.core.enums.LabeledEnumResolver;
+import org.springframework.core.enums.StaticLabeledEnumResolver;
 
 /**
- * Converter that converts textual representations of enum instances to a specific instance of <code>LabeledEnum</code>.
+ * Converts from a textual representation to a {@link LabeledEnum}. The text should be the enum's label.
  * 
  * @author Keith Donald
  */
 public class TextToLabeledEnum extends AbstractConverter {
 
-	private LabeledEnumFormatter labeledEnumFormatter = new LabeledEnumFormatter();
+	private LabeledEnumResolver labeledEnumResolver = StaticLabeledEnumResolver.instance();
 
 	public Class[] getSourceClasses() {
 		return new Class[] { String.class };
@@ -37,6 +38,7 @@ public class TextToLabeledEnum extends AbstractConverter {
 	}
 
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
-		return labeledEnumFormatter.parseValue((String) source, targetClass);
+		String label = (String) source;
+		return labeledEnumResolver.getLabeledEnumByLabel(targetClass, label);
 	}
 }
