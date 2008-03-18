@@ -15,34 +15,37 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.format.FormatterFactory;
+import org.springframework.binding.convert.ConversionContext;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.util.Assert;
 
 /**
  * A converter that delegates to a formatter to perform the conversion. Formatters are typically not thread safe, so we
- * use a FormatterFactory that is expected to provide us with thread-safe instances as necessary.
+ * use a FormatterRegistry that is expected to provide us with instances local to the current thread.
  * 
  * @author Keith Donald
  */
 public abstract class AbstractFormattingConverter extends AbstractConverter {
 
 	/**
-	 * The formatter factory.
+	 * The formatter registry.
 	 */
-	private FormatterFactory formatterFactory;
+	private FormatterRegistry formatterRegistry;
 
 	/**
 	 * Creates a new converter that delegates to a formatter.
-	 * @param formatterFactory the factory to use
+	 * @param formatterRegistry the formatterRegistry to use
 	 */
-	protected AbstractFormattingConverter(FormatterFactory formatterFactory) {
-		setFormatterFactory(formatterFactory);
+	protected AbstractFormattingConverter(FormatterRegistry formatterRegistry) {
+		Assert.notNull(formatterRegistry, "The formatter registry is required");
+		this.formatterRegistry = formatterRegistry;
 	}
 
-	protected FormatterFactory getFormatterFactory() {
-		return formatterFactory;
+	public FormatterRegistry getFormatterRegistry() {
+		return formatterRegistry;
 	}
 
-	public void setFormatterFactory(FormatterFactory formatterSource) {
-		this.formatterFactory = formatterSource;
+	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+		return getFormatterRegistry().getFormatter(targetClass).parseValue((String) source);
 	}
 }

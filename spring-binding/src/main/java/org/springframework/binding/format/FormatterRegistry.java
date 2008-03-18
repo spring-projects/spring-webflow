@@ -16,29 +16,31 @@
 package org.springframework.binding.format;
 
 /**
- * A lightweight interface for formatting a value and parsing a value from its formatted form.
+ * Source for shared and commonly used <code>Formatters</code>.
  * <p>
  * Note: formatters are typically not thread safe as <code>Format</code> objects aren't thread safe. In general, you
  * should not attempt to share formatters between threads.
  * </p>
+ * @see java.text.Format
+ * 
  * @author Keith Donald
  */
-public interface Formatter {
+public interface FormatterRegistry {
 
 	/**
-	 * Format the value.
-	 * @param value the value to format
-	 * @return the formatted string, fit for display in a UI
-	 * @throws IllegalArgumentException the value could not be formatted
+	 * Returns the default formatter installed for the given class of object.
+	 * @param clazz the type of object that will be formatted
+	 * @return the formatter
 	 */
-	public String formatValue(Object value) throws IllegalArgumentException;
+	public Formatter getFormatter(Class clazz);
 
 	/**
-	 * Parse the formatted string representation of a value, restoring the value.
-	 * @param formattedString the formatted string representation
-	 * @return the parsed value
-	 * @throws InvalidFormatException the string was in an invalid form
+	 * Returns the formatter for the given class of object with the given id. Use this method to query a custom
+	 * formatter instance for a given class of object.
+	 * @param id the id of the custom formatter instance; typically descriptive like "localDate"
+	 * @param clazz the class being formatted e.g. Date.class.
+	 * @return the formatter
 	 */
-	public Object parseValue(String formattedString) throws InvalidFormatException;
+	public Formatter getFormatter(String id, Class clazz);
 
 }

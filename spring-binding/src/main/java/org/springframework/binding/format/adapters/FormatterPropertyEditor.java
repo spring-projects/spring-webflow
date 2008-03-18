@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.support;
+package org.springframework.binding.format.adapters;
 
 import java.beans.PropertyEditorSupport;
 
@@ -32,11 +32,6 @@ public class FormatterPropertyEditor extends PropertyEditorSupport {
 	private Formatter formatter;
 
 	/**
-	 * The target value class (may be null).
-	 */
-	private Class targetClass;
-
-	/**
 	 * Creates a formatter property editor.
 	 * @param formatter the formatter to adapt
 	 */
@@ -44,21 +39,11 @@ public class FormatterPropertyEditor extends PropertyEditorSupport {
 		this.formatter = formatter;
 	}
 
-	/**
-	 * Creates a formatter property editor.
-	 * @param formatter the formatter to adapt
-	 * @param targetClass the target class for "setAsText" conversions
-	 */
-	public FormatterPropertyEditor(Formatter formatter, Class targetClass) {
-		this.formatter = formatter;
-		this.targetClass = targetClass;
-	}
-
 	public String getAsText() {
 		return formatter.formatValue(getValue());
 	}
 
 	public void setAsText(String text) throws IllegalArgumentException {
-		setValue(formatter.parseValue(text, targetClass));
+		setValue(formatter.parseValue(text));
 	}
 }

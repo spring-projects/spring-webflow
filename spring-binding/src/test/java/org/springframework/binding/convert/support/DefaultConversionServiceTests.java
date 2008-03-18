@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.Converter;
-import org.springframework.core.enums.ShortCodedLabeledEnum;
 
 /**
  * Test case for the default conversion service.
@@ -85,32 +84,5 @@ public class DefaultConversionServiceTests extends TestCase {
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3");
 		assertEquals(3, three.intValue());
-	}
-
-	public void testLabeledEnumConversionNoSuchEnum() {
-		DefaultConversionService service = new DefaultConversionService();
-		ConversionExecutor executor = service.getConversionExecutor(String.class, MyEnum.class);
-		try {
-			executor.execute("My Invalid Label");
-			fail("Should have failed");
-		} catch (ConversionException e) {
-		}
-	}
-
-	public void testValidLabeledEnumConversion() {
-		DefaultConversionService service = new DefaultConversionService();
-		ConversionExecutor executor = service.getConversionExecutor(String.class, MyEnum.class);
-		MyEnum myEnum = (MyEnum) executor.execute("My Label 1");
-		assertEquals(MyEnum.ONE, myEnum);
-	}
-
-	public static class MyEnum extends ShortCodedLabeledEnum {
-		public static MyEnum ONE = new MyEnum(0, "My Label 1");
-
-		public static MyEnum TWO = new MyEnum(1, "My Label 2");
-
-		private MyEnum(int code, String label) {
-			super(code, label);
-		}
 	}
 }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.support;
+package org.springframework.binding.format.adapters;
 
 import java.beans.PropertyEditor;
 
+import org.springframework.binding.format.factories.AbstractFormatter;
 import org.springframework.util.Assert;
 
 /**
@@ -48,7 +49,7 @@ public class PropertyEditorFormatter extends AbstractFormatter {
 		return propertyEditor.getAsText();
 	}
 
-	protected Object doParseValue(String formattedValue, Class targetClass) {
+	protected Object doParseValue(String formattedValue) {
 		propertyEditor.setAsText(formattedValue);
 		return propertyEditor.getValue();
 	}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.support;
+package org.springframework.binding.format.factories;
 
 import java.text.ParseException;
 
@@ -42,14 +42,14 @@ public abstract class AbstractFormatter implements Formatter {
 		}
 	}
 
-	public final Object parseValue(String formattedString, Class targetClass) throws InvalidFormatException {
+	public final Object parseValue(String formattedString) throws InvalidFormatException {
 		try {
 			if (isEmpty(formattedString)) {
 				return getEmptyValue();
 			}
-			return doParseValue(formattedString, targetClass);
+			return doParseValue(formattedString);
 		} catch (ParseException ex) {
-			throw new InvalidFormatException(formattedString, getExpectedFormat(targetClass), ex);
+			throw new InvalidFormatException(formattedString, getExpectedFormat(), ex);
 		}
 	}
 
@@ -70,13 +70,11 @@ public abstract class AbstractFormatter implements Formatter {
 	/**
 	 * Template method subclasses should override to encapsulate parsing logic.
 	 * @param formattedString the formatted string to parse
-	 * @param targetClass the target class to convert the formatted value to
 	 * @return the parsed value
 	 * @throws InvalidFormatException an exception occurred parsing
 	 * @throws ParseException when parse exceptions occur
 	 */
-	protected abstract Object doParseValue(String formattedString, Class targetClass) throws InvalidFormatException,
-			ParseException;
+	protected abstract Object doParseValue(String formattedString) throws InvalidFormatException, ParseException;
 
 	/**
 	 * Returns the empty value (resulting from parsing an empty input string). This default implementation just returns
@@ -89,7 +87,7 @@ public abstract class AbstractFormatter implements Formatter {
 	/**
 	 * Returns the expected string format for the given target class. The default implementation just returns null.
 	 */
-	protected String getExpectedFormat(Class targetClass) {
+	protected String getExpectedFormat() {
 		return null;
 	}
 

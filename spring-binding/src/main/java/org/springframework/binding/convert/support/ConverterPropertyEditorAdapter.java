@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * supported. If you need this capability, use a Formatter with a FormatterPropertyEditor adapter.
  * 
  * @see org.springframework.binding.format.Formatter
- * @see org.springframework.binding.format.support.FormatterPropertyEditor
+ * @see org.springframework.binding.format.adapters.FormatterPropertyEditor
  * 
  * @author Keith Donald
  */

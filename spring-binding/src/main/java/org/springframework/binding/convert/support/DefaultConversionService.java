@@ -18,7 +18,10 @@ package org.springframework.binding.convert.support;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.springframework.binding.format.support.SimpleFormatterFactory;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.factories.DateFormatterFactory;
+import org.springframework.binding.format.factories.NumberFormatterFactory;
+import org.springframework.binding.format.impl.FormatterRegistryImpl;
 import org.springframework.core.enums.LabeledEnum;
 
 /**
@@ -30,9 +33,15 @@ import org.springframework.core.enums.LabeledEnum;
 public class DefaultConversionService extends GenericConversionService {
 
 	/**
+	 * Returns the formatter registry used by this conversion service
+	 */
+	private FormatterRegistry formatterRegistry;
+
+	/**
 	 * Creates a new default conversion service, installing the default converters.
 	 */
 	public DefaultConversionService() {
+		formatterRegistry = createDefaultFormatterRegistry();
 		addDefaultConverters();
 	}
 
@@ -41,11 +50,10 @@ public class DefaultConversionService extends GenericConversionService {
 	 */
 	protected void addDefaultConverters() {
 		addConverter(new TextToClass());
-		addConverter(new TextToNumber(new SimpleFormatterFactory()));
 		addConverter(new TextToBoolean());
 		addConverter(new TextToLabeledEnum());
-
-		// we're not using addDefaultAlias here for efficiency reasons
+		addConverter(new TextToNumber(formatterRegistry));
+		addConverter(new TextToDate(formatterRegistry));
 		addAlias("string", String.class);
 		addAlias("short", Short.class);
 		addAlias("integer", Integer.class);
@@ -59,5 +67,12 @@ public class DefaultConversionService extends GenericConversionService {
 		addAlias("boolean", Boolean.class);
 		addAlias("class", Class.class);
 		addAlias("labeledEnum", LabeledEnum.class);
+	}
+
+	protected FormatterRegistry createDefaultFormatterRegistry() {
+		FormatterRegistryImpl registry = new FormatterRegistryImpl();
+		registry.registerFormatter(new NumberFormatterFactory());
+		registry.registerFormatter(new DateFormatterFactory());
+		return registry;
 	}
 }
