@@ -1,6 +1,7 @@
 package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.mapping.Result;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * Indicates a type conversion occurred during a mapping operation.
@@ -48,4 +49,8 @@ public class TypeConversionError extends Result {
 		return targetType;
 	}
 
+	protected String toStringCreator() {
+		return new ToStringCreator(this).append("originalValue", originalValue).append("targetType", targetType)
+				.toString();
+	}
 }

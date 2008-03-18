@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterFactory;
 import org.springframework.binding.format.FormatterFactoryContext;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * Factory for date formatters.
@@ -52,6 +53,10 @@ public class DateFormatterFactory implements FormatterFactory {
 		// convert back from string to date
 		protected Object doParseValue(String formattedString) throws ParseException {
 			return dateFormat.parse(formattedString);
+		}
+
+		public String toString() {
+			return new ToStringCreator(this).append("format", dateFormat).toString();
 		}
 
 	}

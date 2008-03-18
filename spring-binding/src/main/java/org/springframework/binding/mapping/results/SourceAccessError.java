@@ -3,6 +3,7 @@ package org.springframework.binding.mapping.results;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.mapping.Result;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * Indicates an exception occurred accessing the source object to be mapped. Used to report source
@@ -46,6 +47,10 @@ public class SourceAccessError extends Result {
 		} else {
 			return "sourceAccess";
 		}
+	}
+
+	protected String toStringCreator() {
+		return new ToStringCreator(this).append("error", error).toString();
 	}
 
 }

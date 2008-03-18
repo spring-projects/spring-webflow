@@ -1,6 +1,7 @@
 package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.mapping.Result;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * The "required" error result--indicates a required mapping could not be performed because the source value to map was
@@ -33,5 +34,9 @@ public class RequiredError extends Result {
 
 	public String getErrorCode() {
 		return "required";
+	}
+
+	protected String toStringCreator() {
+		return new ToStringCreator(this).append("originalValue", originalValue).toString();
 	}
 }

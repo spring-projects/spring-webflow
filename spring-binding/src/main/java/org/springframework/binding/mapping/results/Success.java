@@ -1,6 +1,7 @@
 package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.mapping.Result;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * Indicates a successful mapping operation.
@@ -36,5 +37,10 @@ public class Success extends Result {
 
 	public String getErrorCode() {
 		return null;
+	}
+
+	protected String toStringCreator() {
+		return new ToStringCreator(this).append("mappedValue", mappedValue).append("originalValue", originalValue)
+				.toString();
 	}
 }

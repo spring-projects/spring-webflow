@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterFactory;
 import org.springframework.binding.format.FormatterFactoryContext;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.NumberUtils;
 
 /**
@@ -69,6 +70,11 @@ public class NumberFormatterFactory implements FormatterFactory {
 				// use default valueOf methods for parsing text
 				return NumberUtils.parseNumber(text, targetClass);
 			}
+		}
+
+		public String toString() {
+			return new ToStringCreator(this).append("format", numberFormat).append("targetClass", targetClass)
+					.toString();
 		}
 	}
 }
