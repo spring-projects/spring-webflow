@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/resources"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
-	<classpathentry kind="lib" path="lib/test/junit.jar"/>
-	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/el-api.jar"/>
-	<classpathentry kind="lib" path="lib/test/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/test/jboss-el.jar"/>
-	<classpathentry kind="lib" path="lib/buildtime/ognl.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="/spring"/>
-	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-logging/commons-logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.logging/log4j/log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.ognl/ognl/ognl-2.6.9.jar" sourcepath="IVY_CACHE/org.ognl/ognl/ognl-sources-2.6.9.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-beans/spring-beans-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-context/spring-context-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.easymock/easymock/easymock-2.3.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
