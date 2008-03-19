@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-top-level">
+
+	<target name="package">
+		<delete dir="${package.output.dir}" quiet="true"/>
+		<mkdir dir="${package.output.dir}"/>
+		<delete file="${package.output.file}" quiet="true"/>
+		<mkdir dir="${artifacts.dir}"/>
+
+		<all-bundles target="package">
+			<property name="package.output.dir" value="${package.output.dir}"/>
+		</all-bundles>
+
+		<ant target="javadoc-api" inheritAll="false">
+			<property name="target.dir" value="${package.docs.dir}"/>
+		</ant>
+
+		<ant dir="../spring-webflow-reference" target="doc" inheritAll="false">
+			<property name="package.output.dir" value="${package.output.dir}"/>
+			<propertyset>
+				<propertyref builtin="commandline"/>
+			</propertyset>
+			<property name="timestamp" value="${timestamp}"/>
+		</ant>
+
+		<subant target="package" verbose="true" buildpath="../spring-webflow-reference">
+			<property name="package.output.dir" value="${package.output.dir}"/>
+			<propertyset>
+				<propertyref builtin="commandline"/>
+			</propertyset>
+			<property name="timestamp" value="${timestamp}"/>
+		</subant>
+
+		<copy todir="${package.output.dir}">
+			<fileset dir="${basedir}/resources"/>
+		</copy>
+
+		<copy todir="${package.output.dir}/projects">
+			<fileset dir="${basedir}/..">
+				<exclude name="**/target/**"/>
+				<exclude name="ivy-cache/**"/>
+				<exclude name="integration-repo/**"/>
+				<exclude name="spring-build/lib/docbook/**" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${package.output.file}">
+			<zipfileset dir="${package.output.dir}" prefix="${natural.name}"/>
+		</zip>
+	</target>
+
+</project>

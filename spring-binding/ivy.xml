@@ -1,30 +1,40 @@
-<ivy-module version="1.3">
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://ivyrep.jayasoft.org/ivy-doc.xsl"?>
+<ivy-module
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd"
+		version="1.3">
 
-	<info organisation="org.springframework" module="spring-binding" />
+	<info organisation="org.springframework.webflow" module="${ant.project.name}">
+		<license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+		<ivyauthor name="Keith Donald"/>
+	</info>
 
 	<configurations>
-		<conf name="default" extends="global" />
-		<conf name="global" visibility="private" />
-		<conf name="buildtime" visibility="private" />
-		<conf name="test" visibility="private" />
+		<include file="${spring.build.dir}/common/default-ivy-configurations.xml"/>
 	</configurations>
 
-	<dependencies defaultconf="global->default">
+	<publications>
+		<artifact name="${ant.project.name}"/>
+		<artifact name="${ant.project.name}-sources" type="src" ext="jar"/>
+	</publications>
+
+	<dependencies>
 		<!-- global dependencies -->
-		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" />
-		<dependency org="org.springframework" name="spring-beans" rev="2.5.2" />
-		<dependency org="org.springframework" name="spring-context"	rev="2.5.2" />
-		<dependency org="org.springframework" name="spring-core" rev="2.5.2" />
+		<dependency org="org.apache" name="commons-logging" rev="1.1.1" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-beans" rev="2.5.2" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-context"	rev="2.5.2" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-core" rev="2.5.2" conf="compile->default"/>
 
 		<!-- build time only dependencies -->
-		<dependency org="ognl" name="ognl" rev="2.6.9" conf="buildtime->default"/>
-		<dependency org="javax.el" name="el-api" rev="1.0" conf="buildtime->default"/>
-		
-		<!-- test dependencies -->
+		<dependency org="org.ognl" name="ognl" rev="2.6.9" conf="compile->default"/>
+		<dependency org="javax.el" name="el-api" rev="1.0" conf="compile->default"/>
+
+		<!-- test-time only dependencies -->
 		<dependency org="org.jboss.seam" name="jboss-el" rev="2.0.0.GA" conf="test->default"/>
 		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
-		<dependency org="junit" name="junit" rev="3.8.2" conf="test->default" />
-		<dependency org="log4j" name="log4j" rev="1.2.14" conf="test->default"/>
+		<dependency org="org.junit" name="junit" rev="3.8.2" conf="test->default" />
+		<dependency org="org.apache.logging" name="log4j" rev="1.2.15" conf="test->default"/>
 	</dependencies>
 
 </ivy-module>
