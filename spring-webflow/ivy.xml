@@ -59,17 +59,7 @@
 		<dependency org="org.springframework" name="spring-jdbc" rev="2.5.2" conf="test->default" />
 		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default" />
 		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" conf="compile, test->default" />
-		<dependency org="org.apache.openjpa" name="openjpa" rev="1.0.2" conf="test->default">
-			<!-- Exclusions required because open jpa pom is poorly designed -->
-			<exclude module="openjpa-lib" />
-			<exclude module="openjpa-kernel" />
-			<exclude module="openjpa-kernel-5" />
-			<exclude module="openjpa-jdbc" />
-			<exclude module="openjpa-jdbc-5" />
-			<exclude module="openjpa-persistence" />
-			<exclude module="openjpa-persistence-jdbc" />
-			<exclude module="openjpa-xmlstore" />
-		</dependency>
+		<dependency org="org.apache.openjpa" name="openjpa" rev="1.0.2" conf="test->default"/>
 		<!-- lang and serp are required by open jpa -->
 		<dependency org="org.apache.commons" name="commons-lang" rev="2.1" conf="test->default" />
 		<dependency org="org.apache.commons" name="commons-collections" rev="3.2" conf="test->default" />
