@@ -35,7 +35,11 @@
 		<dependency org="org.springframework" name="spring-tx" rev="2.5.2" conf="compile->default"/>
 		<dependency org="org.jboss.seam" name="jboss-el" rev="2.0.0.GA" conf="compile->default"/>
 		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" conf="compile->default"/>
+		<dependency org="org.hibernate" name="hibernate-annotations" rev="3.3.0.ga" conf="compile->default"/>
 		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="3.3.1.ga" conf="compile->default"/>
+		<dependency org="org.jboss" name="jboss-common-core" rev="2.0.4.GA" conf="compile->default"/>
+		<dependency org="org.jboss" name="javassist" rev="3.3.ga" conf="compile->default"/>
+		<dependency org="org.antlr" name="antlr" rev="2.7.6" conf="compile->default"/>
 
 		<!-- Required by "jboss archive browsing" which is used by hibernate-entity manager but not noted in their docs -->
 		<dependency org="edu.oswego.cs" name="concurrent" rev="1.3.4" conf="compile->default"/>
