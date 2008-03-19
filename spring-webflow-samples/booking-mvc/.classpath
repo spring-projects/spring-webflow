@@ -3,9 +3,225 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="lib" path="lib/test/junit.jar"/>
+	<classpathentry kind="lib" path="/spring-webflow/target/artifacts/spring-webflow.jar" sourcepath="/spring-webflow/target/artifacts/spring-webflow-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/spring-binding/target/artifacts/spring-binding.jar" sourcepath="/spring-binding/target/artifacts/spring-binding-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/spring-faces/target/artifacts/spring-faces.jar" sourcepath="/spring-faces/target/artifacts/spring-faces-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/edu.oswego.cs/concurrent/concurrent-1.3.4.jar" sourcepath="IVY_CACHE/edu.oswego.cs/concurrent/concurrent-sources-1.3.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.persistence/persistence-api/persistence-api-1.0.0.jar" sourcepath="IVY_CACHE/javax.persistence/persistence-api/persistence-api-sources-1.0.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/jstl/jstl-1.1.2.jar" sourcepath="IVY_CACHE/javax.servlet/jstl/jstl-1.1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/servlet-api/servlet-api-2.4.jar" sourcepath="IVY_CACHE/javax.servlet/servlet-api/servlet-api-sources-2.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/javax.transaction/jta/jta-1.1.0.jar" sourcepath="IVY_CACHE/javax.transaction/jta/jta-sources-1.1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/net.sf.cglib/cglib_nodep/cglib_nodep-2.1.3.jar" sourcepath="IVY_CACHE/net.sf.cglib/cglib_nodep/cglib_nodep-sources-2.1.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.antlr/antlr/antlr-2.7.6.jar" sourcepath="IVY_CACHE/org.antlr/antlr/antlr-sources-2.7.6.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.aopalliance/aopalliance/aopalliance-1.0.jar" sourcepath="IVY_CACHE/org.aopalliance/aopalliance/aopalliance-sources-1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-codec/commons-codec-1.3.jar" sourcepath="/IVY_CACHE/org.apache/commons-codec/commons-codec-sources-1.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-logging/commons-logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-beanutils/commons-beanutils-1.7.0.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-beanutils/commons-beanutils-sources-1.7.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-collections/commons-collections-3.2.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-collections/commons-collections-sources-3.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-digester/commons-digester-1.8.0.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-digester/commons-digester-sources-1.8.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-discovery/commons-discovery-0.4.0.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-discovery/commons-discovery-sources-0.4.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.logging/log4j/log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.taglibs/standard/standard-1.1.2.jar" sourcepath="IVY_CACHE/org.apache.taglibs/standard/standard-sources-1.1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-api/tiles-api-2.0.5.jar" sourcepath="IVY_CACHE/org.apache.tiles/tiles-api/tiles-api-sources-2.0.5.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-core/tiles-core-2.0.5.jar" sourcepath="IVY_CACHE/org.apache.tiles/tiles-core/tiles-core-sources-2.0.5.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-jsp/tiles-jsp-2.0.5.jar" sourcepath="IVY_CACHE/org.apache.tiles/tiles-jsp/tiles-jsp-sources-2.0.5.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.dom4j/dom4j/dom4j-1.6.1.jar" sourcepath="IVY_CACHE/org.dom4j/dom4j/dom4j-sources-1.6.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/hibernate/hibernate-3.2.5.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate/hibernate-sources-3.2.5.ga.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/hibernate-commons-annotations/hibernate-commons-annotations-3.3.0.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate-commons-annotations/hibernate-commons-annotations-sources-3.3.0.ga.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/hibernate-annotations/hibernate-annotations-3.3.0.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate-annotations/hibernate-annotations-sources-3.3.0.ga.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/hibernate-entitymanager/hibernate-entitymanager-3.3.1.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate-entitymanager/hibernate-entitymanager-sources-3.3.1.ga.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.hsqldb/hsqldb/hsqldb-1.8.0.9.jar" sourcepath="IVY_CACHE/org.hsqldb/hsqldb/hsqldb-sources-1.8.0.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss/javassist/javassist-3.3.ga.jar" sourcepath="IVY_CACHE/org.jboss/javassist/javassist-sources-3.3.ga.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss/jboss-common-core/jboss-common-core-2.0.4.GA.jar" sourcepath="IVY_CACHE/org.jboss/jboss-common-core/jboss-common-core-sources-2.0.4.GA.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-aop/spring-aop-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-aop/spring-aop-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-beans/spring-beans-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-context/spring-context-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-jdbc/spring-jdbc-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-jdbc/spring-jdbc-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-orm/spring-orm-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-orm/spring-orm-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-test/spring-test-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-tx/spring-tx-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-tx/spring-tx-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-web/spring-web-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-web/spring-web-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-2.0.0.m2.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-sources-2.0.0.m2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/spring-security-taglibs/spring-security-taglibs-2.0.0.m2.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-taglibs/spring-security-taglibs-sources-2.0.0.m2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
