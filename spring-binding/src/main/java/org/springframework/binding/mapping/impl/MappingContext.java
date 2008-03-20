@@ -43,6 +43,12 @@ public interface MappingContext {
 	public ConversionService getConversionService();
 
 	/**
+	 * Returns the current mapping.
+	 * @return the current mapping
+	 */
+	public Mapping getCurrentMapping();
+
+	/**
 	 * Sets the current mapping. Called when a single mapping operation is about to begin. This updates progress of the
 	 * overall mapping transaction.
 	 * @param mapping the mapping to make the current mapping

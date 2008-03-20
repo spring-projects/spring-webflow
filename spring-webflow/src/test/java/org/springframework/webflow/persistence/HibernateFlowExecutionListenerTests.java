@@ -69,7 +69,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	public void testSameSession() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -105,7 +105,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -115,7 +115,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributeMap().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
 		hibernateListener.sessionEnded(context, flowSession, null);
@@ -128,7 +128,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -146,7 +146,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributeMap().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
 		hibernateListener.sessionEnded(context, flowSession, null);
@@ -162,7 +162,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -172,7 +172,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
-		endState.getAttributeMap().put("commit", Boolean.FALSE);
+		endState.getAttributes().put("commit", Boolean.FALSE);
 		flowSession.setState(endState);
 		hibernateListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
@@ -184,7 +184,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -204,7 +204,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -222,7 +222,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		assertSessionNotBound();
 		hibernateListener.exceptionThrown(context, new FlowExecutionException("foo", "bar", "test"));
 		assertSessionNotBound();
@@ -231,7 +231,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 	public void testLazyInitializedCollection() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		hibernateListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();

@@ -55,7 +55,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -65,7 +65,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributeMap().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
 		jpaListener.sessionEnded(context, flowSession, null);
@@ -78,7 +78,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -96,7 +96,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributeMap().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
 		jpaListener.sessionEnded(context, flowSession, null);
@@ -111,7 +111,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -121,7 +121,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
-		endState.getAttributeMap().put("commit", Boolean.FALSE);
+		endState.getAttributes().put("commit", Boolean.FALSE);
 		flowSession.setState(endState);
 		jpaListener.sessionEnded(context, flowSession, null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
@@ -133,7 +133,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -153,7 +153,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		jpaListener.sessionStarting(context, flowSession, null);
 		context.setActiveSession(flowSession);
 		assertSessionBound();
@@ -171,7 +171,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
-		flowSession.getDefinitionInternal().getAttributeMap().put("persistenceContext", "true");
+		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		assertSessionNotBound();
 		jpaListener.exceptionThrown(context, new FlowExecutionException("foo", "bar", "test"));
 		assertSessionNotBound();

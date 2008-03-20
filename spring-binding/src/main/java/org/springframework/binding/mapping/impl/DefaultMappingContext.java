@@ -49,6 +49,10 @@ class DefaultMappingContext implements MappingContext {
 		return conversionService;
 	}
 
+	public Mapping getCurrentMapping() {
+		return currentMapping;
+	}
+
 	public void setCurrentMapping(Mapping mapping) {
 		if (this.currentMapping != null) {
 			throw new IllegalStateException("The current mapping has not finished yet");

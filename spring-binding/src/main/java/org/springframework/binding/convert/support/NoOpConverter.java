@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 
 /**
  * Package private converter that is a "no op".
@@ -36,7 +35,7 @@ class NoOpConverter extends AbstractConverter {
 		this.targetClass = targetClass;
 	}
 
-	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 		return source;
 	}
 

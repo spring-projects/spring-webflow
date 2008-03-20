@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -71,7 +70,7 @@ public class TextToBoolean extends AbstractConverter {
 		return new Class[] { Boolean.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 		String text = (String) source;
 		if (!StringUtils.hasText(text)) {
 			return null;

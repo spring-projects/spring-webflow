@@ -19,7 +19,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.ConversionException;
 
 /**
@@ -65,7 +64,7 @@ public class ConversionExecutorImplTests extends TestCase {
 			return new Class[] { Date.class };
 		}
 
-		protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+		protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 			return source == null ? null : new Date();
 		}
 	}

@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 
@@ -80,7 +80,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 	private static class FooFlow implements FlowDefinition {
 		private String id = "foo";
 
-		public AttributeMap getAttributes() {
+		public MutableAttributeMap getAttributes() {
 			return null;
 		}
 
@@ -118,7 +118,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 	private static class BarFlow implements FlowDefinition {
 		private String id = "bar";
 
-		public AttributeMap getAttributes() {
+		public MutableAttributeMap getAttributes() {
 			return null;
 		}
 

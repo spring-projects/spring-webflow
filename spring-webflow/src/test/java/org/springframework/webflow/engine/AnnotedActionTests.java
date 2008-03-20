@@ -39,7 +39,7 @@ public class AnnotedActionTests extends TestCase {
 	}
 
 	public void testExecuteWithCustomAttribute() throws Exception {
-		action.getAttributeMap().put("attr", "value");
+		action.getAttributes().put("attr", "value");
 		action.setTargetAction(new AbstractAction() {
 			protected Event doExecute(RequestContext context) throws Exception {
 				assertEquals("value", context.getAttributes().getString("attr"));
@@ -50,7 +50,7 @@ public class AnnotedActionTests extends TestCase {
 	}
 
 	public void testExecuteWithName() throws Exception {
-		action.getAttributeMap().put("name", "foo");
+		action.getAttributes().put("name", "foo");
 		action.setTargetAction(new AbstractAction() {
 			protected Event doExecute(RequestContext context) throws Exception {
 				assertEquals("foo", context.getAttributes().getString("name"));

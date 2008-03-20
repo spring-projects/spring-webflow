@@ -1,6 +1,5 @@
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -52,7 +51,7 @@ public class RuntimeBindingConversionExecutor implements ConversionExecutor {
 		return execute(source, null);
 	}
 
-	public Object execute(Object source, ConversionContext context) throws ConversionException {
+	public Object execute(Object source, Object context) throws ConversionException {
 		return conversionService.getConversionExecutor(source.getClass(), targetClass).execute(source);
 	}
 

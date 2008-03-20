@@ -92,7 +92,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * @see #postProcessResult(Event)
 	 */
 	public String getName() {
-		return getAttributeMap().getString(NAME_ATTRIBUTE);
+		return getAttributes().getString(NAME_ATTRIBUTE);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * @param name the action name
 	 */
 	public void setName(String name) {
-		getAttributeMap().put(NAME_ATTRIBUTE, name);
+		getAttributes().put(NAME_ATTRIBUTE, name);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * Returns the name of the action method to invoke when the target action is executed.
 	 */
 	public String getMethod() {
-		return getAttributeMap().getString(METHOD_ATTRIBUTE);
+		return getAttributes().getString(METHOD_ATTRIBUTE);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * @param method the action method name
 	 */
 	public void setMethod(String method) {
-		getAttributeMap().put(METHOD_ATTRIBUTE, method);
+		getAttributes().put(METHOD_ATTRIBUTE, method);
 	}
 
 	/**
@@ -132,17 +132,16 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * @param attributeName the name of the attribute to set
 	 * @param attributeValue the value of the attribute
 	 * @return this object, to support call chaining
-	 * @since 1.0.4
 	 */
 	public AnnotatedAction putAttribute(String attributeName, Object attributeValue) {
-		getAttributeMap().put(attributeName, attributeValue);
+		getAttributes().put(attributeName, attributeValue);
 		return this;
 	}
 
 	public Event execute(RequestContext context) throws Exception {
-		AttributeMap originalAttributes = getAttributeMap();
+		AttributeMap originalAttributes = getAttributes();
 		try {
-			context.setAttributes(getAttributeMap());
+			context.setAttributes(getAttributes());
 			Event result = getTargetAction().execute(context);
 			return postProcessResult(result);
 		} finally {
@@ -171,7 +170,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("targetAction", getTargetAction()).append("attributes",
-				getAttributeMap()).toString();
+		return new ToStringCreator(this).append("targetAction", getTargetAction())
+				.append("attributes", getAttributes()).toString();
 	}
 }

@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.util.Assert;
 
@@ -45,7 +44,7 @@ public abstract class AbstractFormattingConverter extends AbstractConverter {
 		return formatterRegistry;
 	}
 
-	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 		return getFormatterRegistry().getFormatter(targetClass).parseValue((String) source);
 	}
 }

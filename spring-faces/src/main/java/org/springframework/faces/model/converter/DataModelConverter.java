@@ -20,13 +20,12 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.support.AbstractConverter;
 import org.springframework.util.ClassUtils;
 
 public class DataModelConverter extends AbstractConverter {
 
-	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 		Constructor emptyConstructor = ClassUtils.getConstructorIfAvailable(targetClass, new Class[] {});
 		DataModel model = (DataModel) emptyConstructor.newInstance(new Object[] {});
 		model.setWrappedData(source);

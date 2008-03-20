@@ -196,7 +196,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	public static Flow create(String id, AttributeMap attributes) {
 		Flow flow = new Flow(id);
-		flow.getAttributeMap().putAll(attributes);
+		flow.getAttributes().putAll(attributes);
 		return flow;
 	}
 

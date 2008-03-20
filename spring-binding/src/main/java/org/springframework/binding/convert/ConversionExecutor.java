@@ -47,6 +47,6 @@ public interface ConversionExecutor {
 	 * @param source the source object to convert
 	 * @param context the conversion context, useful for influencing the behavior of the converter
 	 */
-	public Object execute(Object source, ConversionContext context) throws ConversionException;
+	public Object execute(Object source, Object context) throws ConversionException;
 
 }

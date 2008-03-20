@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.Converter;
@@ -91,7 +90,7 @@ class ConversionExecutorImpl implements ConversionExecutor {
 		return execute(source, null);
 	}
 
-	public Object execute(Object source, ConversionContext context) throws ConversionException {
+	public Object execute(Object source, Object context) throws ConversionException {
 		if (targetClass.isInstance(source)) {
 			// source is already assignment compatible with target class
 			return source;

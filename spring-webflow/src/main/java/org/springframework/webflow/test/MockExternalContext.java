@@ -21,8 +21,6 @@ import java.security.Principal;
 import java.util.HashMap;
 
 import org.springframework.binding.collection.SharedMapDecorator;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.util.ClassUtils;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -55,6 +53,8 @@ public class MockExternalContext implements ExternalContext {
 	private Object nativeRequest = new Object();
 
 	private Object nativeResponse = new Object();
+
+	private Principal currentUser;
 
 	private StringWriter responseWriter = new StringWriter();
 
@@ -114,10 +114,7 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public Principal getCurrentUser() {
-		if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder"))
-			return SecurityContextHolder.getContext().getAuthentication();
-		else
-			return null;
+		return currentUser;
 	}
 
 	public Object getNativeContext() {
@@ -238,6 +235,14 @@ public class MockExternalContext implements ExternalContext {
 		this.nativeResponse = nativeResponse;
 	}
 
+	/**
+	 * Sets the current user principal as a string.
+	 * @param currentUser the current user name
+	 */
+	public void setCurrentUser(String currentUser) {
+		this.currentUser = new MockPrincipal(currentUser);
+	}
+
 	// convenience helpers
 
 	/**
@@ -340,6 +345,19 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public boolean redirectInPopup() {
 		return redirectInPopup;
+	}
+
+	private class MockPrincipal implements Principal {
+		private String name;
+
+		private MockPrincipal(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
 	}
 
 }

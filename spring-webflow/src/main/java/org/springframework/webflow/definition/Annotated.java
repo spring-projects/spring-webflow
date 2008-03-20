@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.definition;
 
-import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
  * An interface to be implemented by objects that are annotated with attributes they wish to expose to clients.
@@ -38,10 +38,10 @@ public interface Annotated {
 	public String getDescription();
 
 	/**
-	 * Returns an immutable attribute map containing the attributes annotating this object. These attributes provide
-	 * descriptive characteristics or properties that may affect object behavior.
+	 * Returns a attribute map containing the attributes annotating this object. These attributes provide descriptive
+	 * characteristics or properties that may affect object behavior.
 	 * @return the attribute map
 	 */
-	public AttributeMap getAttributes();
+	public MutableAttributeMap getAttributes();
 
 }

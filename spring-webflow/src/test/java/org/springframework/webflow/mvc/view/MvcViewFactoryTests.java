@@ -1,4 +1,4 @@
-package org.springframework.webflow.mvc;
+package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
 import java.io.InputStream;

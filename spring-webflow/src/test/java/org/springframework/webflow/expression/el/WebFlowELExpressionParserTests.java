@@ -1,15 +1,13 @@
 package org.springframework.webflow.expression.el;
 
+import java.security.Principal;
+
 import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.binding.expression.support.ParserContextImpl;
-import org.springframework.security.Authentication;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.action.FormAction;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -52,13 +50,10 @@ public class WebFlowELExpressionParserTests extends TestCase {
 	}
 
 	public void testResolveCurrentUser() {
-		SecurityContextImpl security = new SecurityContextImpl();
-		Authentication auth = new TestingAuthenticationToken("user", "password", null);
-		security.setAuthentication(auth);
-		SecurityContextHolder.setContext(security);
 		MockRequestContext context = new MockRequestContext();
+		context.getMockExternalContext().setCurrentUser("Keith");
 		Expression exp = parser.parseExpression("currentUser", new ParserContextImpl().eval(RequestContext.class));
-		assertSame(auth, exp.getValue(context));
+		assertEquals("Keith", ((Principal) exp.getValue(context)).getName());
 	}
 
 	public void testResolveRequestScope() {

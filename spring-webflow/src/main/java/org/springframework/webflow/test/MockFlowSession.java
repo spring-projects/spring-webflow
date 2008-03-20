@@ -23,6 +23,7 @@ import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
+import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowSession;
 
@@ -50,7 +51,7 @@ public class MockFlowSession implements FlowSession {
 	 */
 	public MockFlowSession() {
 		setDefinition(new Flow("mockFlow"));
-		State state = new State(definition, "mockState") {
+		State state = new TransitionableState(definition, "mockState") {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 				// nothing to do
 			}

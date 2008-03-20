@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.Annotated;
@@ -56,7 +55,7 @@ public abstract class AnnotatedObject implements Annotated {
 		return attributes.getString(DESCRIPTION_PROPERTY);
 	}
 
-	public AttributeMap getAttributes() {
+	public MutableAttributeMap getAttributes() {
 		return attributes;
 	}
 
@@ -78,10 +77,4 @@ public abstract class AnnotatedObject implements Annotated {
 		attributes.put(DESCRIPTION_PROPERTY, description);
 	}
 
-	/**
-	 * Returns the mutable attribute map for this annotated object. May be used to set attributes after construction.
-	 */
-	public MutableAttributeMap getAttributeMap() {
-		return attributes;
-	}
 }

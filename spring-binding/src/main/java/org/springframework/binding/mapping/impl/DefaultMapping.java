@@ -23,6 +23,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.Mapping;
+import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -128,7 +129,7 @@ public class DefaultMapping implements Mapping {
 		if (sourceValue != null) {
 			if (typeConverter != null) {
 				try {
-					targetValue = typeConverter.execute(targetValue);
+					targetValue = typeConverter.execute(targetValue, context);
 				} catch (ConversionException e) {
 					context.setTypeConversionErrorResult(sourceValue, e.getTargetClass());
 					return;
@@ -147,7 +148,7 @@ public class DefaultMapping implements Mapping {
 						try {
 							ConversionExecutor typeConverter = conversionService.getConversionExecutor(sourceValue
 									.getClass(), targetType);
-							targetValue = typeConverter.execute(sourceValue);
+							targetValue = typeConverter.execute(sourceValue, context);
 						} catch (ConversionException e) {
 							context.setTypeConversionErrorResult(sourceValue, e.getTargetClass());
 							return;
@@ -156,12 +157,15 @@ public class DefaultMapping implements Mapping {
 				}
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Mapping '" + sourceExpression + "' value [" + sourceValue + "] to target '"
-					+ targetExpression + "'; setting target value to [" + targetValue + "]");
-		}
 		try {
 			targetExpression.setValue(context.getTarget(), targetValue);
+			if (logger.isDebugEnabled()) {
+				String sourceType = sourceValue != null ? sourceValue.getClass().getName() : "null";
+				String targetType = targetValue != null ? targetValue.getClass().getName() : "null";
+				logger.debug("Mapped source [" + sourceType + "] " + sourceExpression + " value "
+						+ StylerUtils.style(sourceValue) + " to target [" + targetType + "] " + targetExpression
+						+ " value " + StylerUtils.style(targetValue));
+			}
 			context.setSuccessResult(sourceValue, targetValue);
 		} catch (EvaluationException e) {
 			context.setTargetAccessError(sourceValue, e);
@@ -191,4 +195,5 @@ public class DefaultMapping implements Mapping {
 	public String toString() {
 		return sourceExpression + " -> " + targetExpression;
 	}
+
 }

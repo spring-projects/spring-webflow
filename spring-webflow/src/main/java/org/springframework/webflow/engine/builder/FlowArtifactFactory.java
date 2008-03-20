@@ -211,7 +211,7 @@ public class FlowArtifactFactory {
 		if (executionCriteria != null) {
 			transition.setExecutionCriteria(executionCriteria);
 		}
-		transition.getAttributeMap().putAll(attributes);
+		transition.getAttributes().putAll(attributes);
 		return transition;
 	}
 
@@ -234,6 +234,6 @@ public class FlowArtifactFactory {
 			FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap attributes) {
 		state.getEntryActionList().addAll(entryActions);
 		state.getExceptionHandlerSet().addAll(exceptionHandlers);
-		state.getAttributeMap().putAll(attributes);
+		state.getAttributes().putAll(attributes);
 	}
 }

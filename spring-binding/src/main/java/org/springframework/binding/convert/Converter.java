@@ -52,6 +52,6 @@ public interface Converter {
 	 * @return the converted object, an instance of the target type
 	 * @throws ConversionException an exception occurred during the type conversion
 	 */
-	public Object convert(Object source, Class targetClass, ConversionContext context) throws ConversionException;
+	public Object convert(Object source, Class targetClass, Object context) throws ConversionException;
 
 }

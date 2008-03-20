@@ -24,7 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.binding.collection.MapAdaptable;
-import org.springframework.binding.convert.support.FormatterBackedConversionExecutor;
+import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
@@ -38,6 +40,7 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
+import org.springframework.binding.mapping.impl.MappingContext;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.validation.BindingResult;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -62,7 +65,7 @@ class MvcView implements View {
 
 	private MappingResults mappingResults;
 
-	private boolean postbackSuccess;
+	private boolean viewErrors;
 
 	private String eventId;
 
@@ -101,30 +104,29 @@ class MvcView implements View {
 	public void resume() {
 		determineEventId(context);
 		if (eventId == null) {
+			// nothing to do
 			return;
 		}
 		Object model = getModelObject();
 		if (model == null) {
-			postbackSuccess = true;
 			return;
 		}
 		if (shouldBind(model)) {
 			mappingResults = bind(model);
-			if (!mappingResults.hasErrorResults()) {
-				postbackSuccess = true;
-			} else {
-				if (onlyPropertyNotFoundErrorsPresent(mappingResults)) {
-					postbackSuccess = true;
-				}
+			if (mappingResults.hasErrorResults() && !onlyPropertyNotFoundErrorsPresent(mappingResults)) {
+				viewErrors = true;
 			}
 		}
 	}
 
 	public boolean eventSignaled() {
-		return postbackSuccess && eventId != null;
+		return eventId != null && !viewErrors;
 	}
 
 	public Event getEvent() {
+		if (!eventSignaled()) {
+			return null;
+		}
 		return new Event(this, eventId, context.getRequestParameters().asAttributeMap());
 	}
 
@@ -146,7 +148,7 @@ class MvcView implements View {
 			BindingModel bindingModel = new BindingModel(modelObject, expressionParser, formatterRegistry, context
 					.getMessageContext());
 			bindingModel.setMappingResults(mappingResults);
-			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), model);
+			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}
 	}
 
@@ -171,7 +173,7 @@ class MvcView implements View {
 				return transition.getAttributes().getBoolean("bind").booleanValue();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private MappingResults bind(Object model) {
@@ -187,9 +189,7 @@ class MvcView implements View {
 					.parseExpression(name, new ParserContextImpl().eval(MapAdaptable.class));
 			Expression target = expressionParser.parseExpression(name, new ParserContextImpl().eval(model.getClass()));
 			DefaultMapping mapping = new DefaultMapping(source, target);
-			Class targetClass = target.getValueType(model);
-			Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
-			mapping.setTypeConverter(new FormatterBackedConversionExecutor(formatter, targetClass));
+			mapping.setTypeConverter(new FormatterBackedMappingConversionExecutor(formatterRegistry));
 			mapper.addMapping(mapping);
 		}
 	}
@@ -250,6 +250,51 @@ class MvcView implements View {
 			return result.getResult() instanceof TargetAccessError
 					&& result.getResult().getErrorCode().equals("propertyNotFound");
 		}
+	}
+
+	private static class FormatterBackedMappingConversionExecutor implements ConversionExecutor {
+
+		private FormatterRegistry formatterRegistry;
+
+		public FormatterBackedMappingConversionExecutor(FormatterRegistry formatterRegistry) {
+			this.formatterRegistry = formatterRegistry;
+		}
+
+		public Object execute(Object source) throws ConversionException {
+			throw new UnsupportedOperationException("Should never be called");
+		}
+
+		public Object execute(Object source, Object context) throws ConversionException {
+			String formattedValue = (String) source;
+			MappingContext mappingContext = (MappingContext) context;
+			Expression target = mappingContext.getCurrentMapping().getTargetExpression();
+			Class targetClass = getTargetClass();
+			if (targetClass == null) {
+				try {
+					targetClass = target.getValueType(mappingContext.getTarget());
+				} catch (EvaluationException e) {
+					// ignore
+				}
+			}
+			if (targetClass == null) {
+				return formattedValue;
+			}
+			Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+			if (formatter != null) {
+				return formatter.parseValue(formattedValue);
+			} else {
+				return formattedValue;
+			}
+		}
+
+		public Class getSourceClass() {
+			return String.class;
+		}
+
+		public Class getTargetClass() {
+			return null;
+		}
+
 	}
 
 }

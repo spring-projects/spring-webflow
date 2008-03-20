@@ -32,8 +32,8 @@ public class AnnotatedObjectTests extends TestCase {
 	}
 
 	public void testPutCustomAttributes() {
-		object.getAttributeMap().put("foo", "bar");
-		assertEquals("bar", object.getAttributeMap().get("foo"));
+		object.getAttributes().put("foo", "bar");
+		assertEquals("bar", object.getAttributes().get("foo"));
 	}
 
 }

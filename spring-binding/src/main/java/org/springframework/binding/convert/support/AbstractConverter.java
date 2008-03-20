@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.support;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.Converter;
 
@@ -58,11 +57,11 @@ public abstract class AbstractConverter implements Converter {
 	 * @return the converted object
 	 * @throws ConversionException an exception occured converting the source value
 	 */
-	public Object convert(Object source, ConversionContext context) throws ConversionException {
+	public Object convert(Object source, Object context) throws ConversionException {
 		return convert(source, getTargetClasses()[0], context);
 	}
 
-	public Object convert(Object source, Class targetClass, ConversionContext context) throws ConversionException {
+	public Object convert(Object source, Class targetClass, Object context) throws ConversionException {
 		try {
 			return doConvert(source, targetClass, context);
 		} catch (ConversionException e) {
@@ -82,8 +81,8 @@ public abstract class AbstractConverter implements Converter {
 	 * @param targetClass the target type to convert to
 	 * @param context an optional conversion context that may be used to influence the conversion process, could be null
 	 * @return the converted source value
-	 * @throws Exception an exception occured, will be wrapped in a conversion exception if necessary
+	 * @throws Exception an exception occurred, will be wrapped in a conversion exception if necessary
 	 */
-	protected abstract Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception;
+	protected abstract Object doConvert(Object source, Class targetClass, Object context) throws Exception;
 
 }

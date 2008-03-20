@@ -26,10 +26,9 @@ import org.springframework.util.ObjectUtils;
  */
 public final class StaticExpression implements Expression {
 
-	/**
-	 * The value expression.
-	 */
 	private Object value;
+
+	private String expressionString;
 
 	/**
 	 * Create a static evaluator for the given value.
@@ -64,11 +63,19 @@ public final class StaticExpression implements Expression {
 	}
 
 	public Class getValueType(Object context) {
-		return Object.class;
+		return value.getClass();
 	}
 
 	public String getExpressionString() {
-		return null;
+		return expressionString;
+	}
+
+	/**
+	 * Sets the static expression string.
+	 * @param expressionString the static expression string
+	 */
+	public void setExpressionString(String expressionString) {
+		this.expressionString = expressionString;
 	}
 
 	public String toString() {

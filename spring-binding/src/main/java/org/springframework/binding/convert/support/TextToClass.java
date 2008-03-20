@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.binding.convert.ConversionContext;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -53,7 +52,7 @@ public class TextToClass extends AbstractConverter {
 		return new Class[] { Class.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
 		String text = (String) source;
 		if (StringUtils.hasText(text)) {
 			text = text.trim();
