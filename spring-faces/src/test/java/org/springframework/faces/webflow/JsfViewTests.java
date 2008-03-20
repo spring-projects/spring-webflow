@@ -18,7 +18,6 @@ import org.apache.shale.test.mock.MockResponseWriter;
 import org.apache.shale.test.mock.MockStateManager;
 import org.easymock.EasyMock;
 import org.springframework.faces.ui.AjaxViewRoot;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -264,7 +263,7 @@ public class JsfViewTests extends TestCase {
 
 	private class ModalViewState implements StateDefinition {
 
-		AttributeMap attrs = new LocalAttributeMap();
+		MutableAttributeMap attrs = new LocalAttributeMap();
 
 		public ModalViewState() {
 			attrs.asMap().put("modal", Boolean.TRUE);
@@ -278,7 +277,7 @@ public class JsfViewTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public AttributeMap getAttributes() {
+		public MutableAttributeMap getAttributes() {
 			return attrs;
 		}
 

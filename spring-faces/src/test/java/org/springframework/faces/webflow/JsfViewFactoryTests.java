@@ -26,6 +26,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.RequestContext;
@@ -235,7 +236,7 @@ public class JsfViewFactoryTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public AttributeMap getAttributes() {
+		public MutableAttributeMap getAttributes() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
