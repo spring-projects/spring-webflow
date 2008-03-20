@@ -1,4 +1,4 @@
-package org.springframework.webflow.mvc;
+package org.springframework.webflow.mvc.view;
 
 import java.util.Iterator;
 import java.util.List;

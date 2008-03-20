@@ -13,7 +13,7 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.MvcViewFactoryCreator;
+import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 

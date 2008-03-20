@@ -10,7 +10,7 @@ import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
-import org.springframework.webflow.mvc.MvcViewFactoryCreator;
+import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 import org.w3c.dom.Element;
 
 /**

@@ -1,4 +1,4 @@
-package org.springframework.webflow.mvc;
+package org.springframework.webflow.mvc.view;
 
 import java.util.Collections;
 import java.util.List;
