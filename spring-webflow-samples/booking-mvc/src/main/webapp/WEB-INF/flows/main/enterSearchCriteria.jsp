@@ -20,44 +20,10 @@
 			<form:option label="10" value="10"/>
 			<form:option label="20" value="20"/>
 		</form:select>
-		<input type="submit" class="button" name="_eventId_findHotels" value="Find Hotels" />
+		<input type="submit" class="button" name="_eventId_search" value="Find Hotels" />
     </fieldset>
 </div>
 </form:form>
-
-<c:if test="${not empty searchCriteria.searchString or not empty hotels}">
-<div class="section">
-	<table class="summary">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Address</th>
-				<th>City, State</th>
-				<th>Zip</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="hotel" items="${hotels}">
-			<tr>
-				<td>${hotel.name}</td>
-				<td>${hotel.address}</td>
-				<td>${hotel.city}, ${hotel.state}, ${hotel.country}</td>
-				<td>${hotel.zip}</td>
-				<td>
-					<a href="${flowExecutionUrl}&_eventId=selectHotel&hotelId=${hotel.id}">View Hotel</a>
-				</td>
-			</tr>
-			</c:forEach>
-			<c:if test="${empty hotels}">
-			<tr>
-				<td colspan="5">No hotels found</td>
-			</tr>
-			</c:if>
-		</tbody>
-	</table>
-</div>
-</c:if>
 
 <security:authorize ifAllGranted="ROLE_USER">
 	<div class="section">
@@ -98,7 +64,6 @@
 		</table>
 	</div>
 </security:authorize>
-
 
 </tiles:putAttribute>
 </tiles:insertTemplate>
