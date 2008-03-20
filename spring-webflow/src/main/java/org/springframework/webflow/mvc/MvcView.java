@@ -115,10 +115,6 @@ class MvcView implements View {
 		}
 	}
 
-	private boolean onlyPropertyNotFoundErrors() {
-		return mappingResults.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == mappingResults.getErrorResults().size();
-	}
-
 	public boolean eventSignaled() {
 		return postbackSuccess && eventId != null;
 	}
@@ -189,6 +185,10 @@ class MvcView implements View {
 			Expression target = expressionParser.parseExpression(name, new ParserContextImpl().eval(model.getClass()));
 			mapper.addMapping(new DefaultMapping(source, target));
 		}
+	}
+
+	private boolean onlyPropertyNotFoundErrors() {
+		return mappingResults.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == mappingResults.getErrorResults().size();
 	}
 
 	private void determineEventId(RequestContext context) {
