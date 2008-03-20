@@ -24,13 +24,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.mapping.MappingResults;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.util.ClassUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.JstlView;
@@ -57,8 +60,11 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 
 	private static final boolean jstlPresent = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
 
-	private static final boolean springSecurityPresent = ClassUtils
-			.isPresent("org.springframework.security.context.SecurityContextHolder");
+	// TODO
+	private ExpressionParser expressionParser;
+
+	// TODO
+	private FormatterRegistry formatterRegistry;
 
 	private List viewResolvers;
 
@@ -187,6 +193,27 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			this.context = context;
 		}
 
+		public void render() {
+			Map model = new HashMap();
+			model.putAll(context.getConversationScope().union(context.getFlowScope()).union(context.getFlashScope())
+					.union(context.getRequestScope()).asMap());
+			exposeBindingModel(model);
+			model.put("flowRequestContext", context);
+			model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
+			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
+			model.put("currentUser", context.getExternalContext().getCurrentUser());
+			try {
+				view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
+						(HttpServletResponse) context.getExternalContext().getNativeResponse());
+			} catch (Exception e) {
+				throw new IllegalStateException("Exception rendering view", e);
+			}
+		}
+
+		public void postback() {
+			// TODO implement me with real data binding behavior
+		}
+
 		public boolean eventSignaled() {
 			determineEventId(context);
 			return eventId != null;
@@ -196,21 +223,16 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			return new Event(this, eventId, context.getRequestParameters().asAttributeMap());
 		}
 
-		public void render() {
-			Map model = new HashMap();
-			model.putAll(context.getConversationScope().union(context.getFlowScope()).union(context.getFlashScope())
-					.union(context.getRequestScope()).asMap());
-			model.put("flowRequestContext", context);
-			model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
-			model.put("flowExecutionUrl", context.getFlowExecutionUrl());
-			if (springSecurityPresent && !model.containsKey("currentUser")) {
-				model.put("currentUser", SecurityContextHolder.getContext().getAuthentication());
-			}
-			try {
-				view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
-						(HttpServletResponse) context.getExternalContext().getNativeResponse());
-			} catch (Exception e) {
-				throw new IllegalStateException("Exception rendering view", e);
+		private void exposeBindingModel(Map model) {
+			Expression boundObjectExpr = (Expression) context.getCurrentState().getAttributes().get("model");
+			if (boundObjectExpr != null) {
+				Object boundObject = boundObjectExpr.getValue(context);
+				// TODO
+				BindingModel bindingModel = new BindingModel(boundObject, null, null, context.getMessageContext());
+				MappingResults bindResults = (MappingResults) context.getRequestScope().get(
+						boundObjectExpr.getExpressionString() + "MappingResults");
+				bindingModel.setMappingResults(bindResults);
+				model.put(BindingResult.MODEL_KEY_PREFIX + boundObjectExpr.getExpressionString(), model);
 			}
 		}
 

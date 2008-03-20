@@ -100,6 +100,10 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return context.getRequestParameters().contains("_eventId");
 		}
 
+		public void postback() {
+			// TODO - implement me as appropriate for a test environment
+		}
+
 		public Event getEvent() {
 			return new Event(this, context.getRequestParameters().get("_eventId"));
 		}

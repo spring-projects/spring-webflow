@@ -60,18 +60,22 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			this.context = context;
 		}
 
+		public void render() {
+			if (action != null) {
+				ActionExecutor.execute(action, context);
+			}
+		}
+
+		public void postback() {
+
+		}
+
 		public boolean eventSignaled() {
 			return context.getExternalContext().getRequestParameterMap().contains("_eventId");
 		}
 
 		public Event getEvent() {
 			return new Event(this, context.getExternalContext().getRequestParameterMap().get("_eventId"));
-		}
-
-		public void render() {
-			if (action != null) {
-				ActionExecutor.execute(action, context);
-			}
 		}
 
 	}

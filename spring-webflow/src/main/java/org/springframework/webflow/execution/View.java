@@ -38,14 +38,20 @@ public interface View {
 	public void render() throws IOException;
 
 	/**
-	 * Was a user event signaled on this view in this request?
+	 * Execute the view postback lifecycle. This typically results in a view model binding and validation.
+	 */
+	public void postback();
+
+	/**
+	 * Returns true if an event occurred the flow system should handle.
 	 * @return true if yes, false otherwise
 	 */
 	public boolean eventSignaled();
 
 	/**
-	 * Get the user event signaled on this view in this request.
-	 * @return the user event
+	 * Get the user event the flow should handle. Returns an event object when {@link #eventSignaled()} returns true.
+	 * Returns null otherwise
+	 * @return the event, or null if there is no event for the flow system to handle
 	 */
 	public Event getEvent();
 

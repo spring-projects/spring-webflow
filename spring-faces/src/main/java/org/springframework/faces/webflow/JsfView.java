@@ -58,19 +58,6 @@ public class JsfView implements View {
 		this.context = context;
 	}
 
-	public boolean eventSignaled() {
-		return context.getExternalContext().getRequestMap().contains(EVENT_KEY);
-	}
-
-	public Event getEvent() {
-		String eventId = (String) context.getExternalContext().getRequestMap().get(EVENT_KEY);
-		return new Event(this, eventId);
-	}
-
-	public UIViewRoot getViewRoot() {
-		return this.viewRoot;
-	}
-
 	/**
 	 * This implementation performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
@@ -90,6 +77,23 @@ public class JsfView implements View {
 			facesContext.responseComplete();
 			facesContext.release();
 		}
+	}
+
+	public void postback() {
+		// TODO - implement Postback JSF lifecycle
+	}
+
+	public boolean eventSignaled() {
+		return context.getExternalContext().getRequestMap().contains(EVENT_KEY);
+	}
+
+	public Event getEvent() {
+		String eventId = (String) context.getExternalContext().getRequestMap().get(EVENT_KEY);
+		return new Event(this, eventId);
+	}
+
+	public UIViewRoot getViewRoot() {
+		return this.viewRoot;
 	}
 
 	public String toString() {
