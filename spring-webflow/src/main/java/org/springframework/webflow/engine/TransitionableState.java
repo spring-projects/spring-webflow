@@ -61,6 +61,12 @@ public abstract class TransitionableState extends State implements Transitionabl
 		return getTransitionSet().toArray();
 	}
 
+	public TransitionDefinition getTransition(String eventId) {
+		return null;
+	}
+
+	// impl
+
 	/**
 	 * Returns the set of transitions. The returned set is mutable.
 	 */

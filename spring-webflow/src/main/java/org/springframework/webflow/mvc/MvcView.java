@@ -24,9 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.binding.collection.MapAdaptable;
+import org.springframework.binding.convert.support.FormatterBackedConversionExecutor;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.factories.DateFormatterFactory;
 import org.springframework.binding.format.factories.NumberFormatterFactory;
@@ -39,6 +41,8 @@ import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.validation.BindingResult;
 import org.springframework.webflow.core.collection.ParameterMap;
+import org.springframework.webflow.definition.TransitionDefinition;
+import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -159,15 +163,13 @@ class MvcView implements View {
 	}
 
 	private boolean shouldBind(Object model) {
-		// this downcast is not ideal
-		// TransitionableState currentState = (TransitionableState) context.getCurrentState();
-		// TODO this won't work because last event isn't set yet...
-		// Transition transition = currentState.getRequiredTransition(context);
-		// if (transition.getAttributes().contains("bind")) {
-		// return transition.getAttributes().getBoolean("bind").booleanValue();
-		// } else {
-		// return false;
-		// }
+		TransitionableStateDefinition currentState = (TransitionableStateDefinition) context.getCurrentState();
+		TransitionDefinition transition = currentState.getTransition(eventId);
+		if (transition != null) {
+			if (transition.getAttributes().contains("bind")) {
+				return transition.getAttributes().getBoolean("bind").booleanValue();
+			}
+		}
 		return false;
 	}
 
@@ -183,7 +185,11 @@ class MvcView implements View {
 			Expression source = expressionParser
 					.parseExpression(name, new ParserContextImpl().eval(MapAdaptable.class));
 			Expression target = expressionParser.parseExpression(name, new ParserContextImpl().eval(model.getClass()));
-			mapper.addMapping(new DefaultMapping(source, target));
+			DefaultMapping mapping = new DefaultMapping(source, target);
+			Class targetClass = target.getValueType(model);
+			Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+			mapping.setTypeConverter(new FormatterBackedConversionExecutor(formatter, targetClass));
+			mapper.addMapping(mapping);
 		}
 	}
 
