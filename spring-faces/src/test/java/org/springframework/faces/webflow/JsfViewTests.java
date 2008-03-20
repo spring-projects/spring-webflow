@@ -10,21 +10,30 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
+import javax.faces.lifecycle.Lifecycle;
 
 import junit.framework.TestCase;
 
 import org.apache.shale.test.mock.MockResponseWriter;
 import org.apache.shale.test.mock.MockStateManager;
 import org.easymock.EasyMock;
+import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfViewTests extends TestCase {
 
 	private static final String VIEW_ID = "testView.xhtml";
+
+	private MockExternalContext extContext = new MockExternalContext();
 
 	private JsfView view;
 
@@ -32,7 +41,9 @@ public class JsfViewTests extends TestCase {
 
 	private StringWriter output = new StringWriter();
 
-	private RequestContext requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
+	private String event = "foo";
+
+	private RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
 	private FlowExecutionContext flowExecutionContext = (FlowExecutionContext) EasyMock
 			.createMock(FlowExecutionContext.class);
 	private MutableAttributeMap flashMap = (MutableAttributeMap) EasyMock.createMock(MutableAttributeMap.class);
@@ -74,7 +85,14 @@ public class JsfViewTests extends TestCase {
 		form.getChildren().add(input);
 		viewToRender.getChildren().add(form);
 
-		view = new JsfView(viewToRender, jsfMock.lifecycle(), requestContext);
+		RequestContextHolder.setRequestContext(context);
+		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
+		EasyMock.expect(context.getFlashScope()).andStubReturn(flashMap);
+		EasyMock.expect(context.getFlowScope()).andStubReturn(flowMap);
+		EasyMock.expect(context.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
+		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
+
+		view = new JsfView(viewToRender, jsfMock.lifecycle(), context);
 	}
 
 	protected void tearDown() throws Exception {
@@ -83,38 +101,26 @@ public class JsfViewTests extends TestCase {
 
 	public final void testRender() throws IOException {
 
-		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
-		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
-		EasyMock.expect(requestContext.getFlowScope()).andStubReturn(flowMap);
-		EasyMock.expect(requestContext.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
-		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
-		EasyMock.expect(
-				flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock
-						.anyObject())).andStubReturn(null);
-		EasyMock.expect(
-				flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock
-						.anyObject())).andStubReturn(null);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashMap });
 
 		view.render();
 
-		EasyMock.verify(new Object[] { requestContext, flowExecutionContext, flowMap, flashMap });
 		assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 	}
 
 	public final void testRenderException() throws IOException {
 
-		EasyMock.expect(requestContext.getExternalContext()).andStubReturn(new MockExternalContext());
-		EasyMock.expect(requestContext.getFlashScope()).andStubReturn(flashMap);
-		EasyMock.expect(
-				flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock
-						.anyObject())).andStubReturn(null);
-		EasyMock.expect(
-				flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock
-						.anyObject())).andStubReturn(null);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { requestContext, flowExecutionContext, flashMap });
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashMap });
 
 		jsfMock.application().setViewHandler(new ExceptionalViewHandler());
 
@@ -123,7 +129,93 @@ public class JsfViewTests extends TestCase {
 		} catch (FacesException ex) {
 			assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 		}
+	}
 
+	/**
+	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 */
+	public final void testResume_Restored_NoEvent() {
+
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
+
+		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
+
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashMap });
+
+		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
+		restoredView.setRestored(true);
+
+		restoredView.resume();
+
+		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
+	}
+
+	/**
+	 * Ajax Request - View already exists in flash scope and must be restored and the lifecycle executed, no event
+	 * signaled
+	 */
+	public final void testGetView_Restore_Ajax_NoEvent() {
+
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
+
+		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
+
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+		AjaxViewRoot ajaxRoot = new AjaxViewRoot(existingRoot);
+
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashMap });
+
+		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, context);
+		restoredView.setRestored(true);
+
+		restoredView.resume();
+
+		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
+	}
+
+	/**
+	 * View already exists in flowscope and must be restored and the lifecycle executed, an event is signaled
+	 */
+	public final void testGetView_Restore_EventSignaled() {
+
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+				Boolean.FALSE);
+		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
+
+		Lifecycle lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
+
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashMap });
+
+		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
+		restoredView.setRestored(true);
+
+		restoredView.resume();
+
+		assertTrue("No event was signaled,", restoredView.eventSignaled());
+		assertEquals("Event should be " + event, event, restoredView.getEvent().getId());
+		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
 	}
 
 	private class ExceptionalViewHandler extends MockViewHandler {
@@ -136,6 +228,66 @@ public class JsfViewTests extends TestCase {
 		public SerializedView saveSerializedView(FacesContext context) {
 			SerializedView state = new SerializedView(new Object[] { "tree_state" }, new Object[] { "component_state" });
 			return state;
+		}
+	}
+
+	private class NoEventLifecycle extends FlowLifecycle {
+
+		boolean executed = false;
+
+		public NoEventLifecycle(Lifecycle delegate) {
+			super(delegate);
+		}
+
+		public void execute(FacesContext context) throws FacesException {
+			assertFalse("Lifecycle executed more than once", executed);
+			super.execute(context);
+			executed = true;
+		}
+
+	}
+
+	private class EventSignalingLifecycle extends FlowLifecycle {
+		boolean executed = false;
+
+		public EventSignalingLifecycle(Lifecycle delegate) {
+			super(delegate);
+		}
+
+		public void execute(FacesContext context) throws FacesException {
+			assertFalse("Lifecycle executed more than once", executed);
+			super.execute(context);
+			extContext.getRequestMap().put(JsfView.EVENT_KEY, event);
+			executed = true;
+		}
+	}
+
+	private class ModalViewState implements StateDefinition {
+
+		AttributeMap attrs = new LocalAttributeMap();
+
+		public ModalViewState() {
+			attrs.asMap().put("modal", Boolean.TRUE);
+		}
+
+		public String getId() {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public FlowDefinition getOwner() {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public AttributeMap getAttributes() {
+			return attrs;
+		}
+
+		public String getCaption() {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public String getDescription() {
+			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 	}
 }

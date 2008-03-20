@@ -19,6 +19,7 @@ import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -62,8 +63,6 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private MockHttpServletResponse response = new MockHttpServletResponse();
 
-	private String event = "foo";
-
 	protected void setUp() throws Exception {
 		configureJsf();
 		extContext.setNativeContext(servletContext);
@@ -92,7 +91,7 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_Create() {
 
-		lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
 				RequestContext.class).expect(String.class)), null, lifecycle);
 
@@ -108,37 +107,93 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("A JsfView was expected", newView instanceof JsfView);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", newView.eventSignaled());
-		assertFalse("The lifecycle should not have been invoked", ((NoEventLifecycle) lifecycle).executed);
 	}
 
-	private class NoEventLifecycle extends FlowLifecycle {
+	/**
+	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 */
+	public final void testGetView_Restore() {
 
-		boolean executed = false;
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
+				RequestContext.class).expect(String.class)), null, lifecycle);
 
-		public NoEventLifecycle(Lifecycle delegate) {
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+
+		EasyMock.replay(new Object[] { context });
+
+		View restoredView = factory.getView(context);
+
+		assertNotNull("A View was not restored", restoredView);
+		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
+		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
+		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+	}
+
+	/**
+	 * Ajax Request - View already exists in flash scope and must be restored and the lifecycle executed, no event
+	 * signaled
+	 */
+	public final void testGetView_Restore_Ajax() {
+
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
+				RequestContext.class).expect(String.class)), null, lifecycle);
+
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+
+		request.addHeader("Accept", "text/html;type=ajax");
+
+		EasyMock.expect(context.getCurrentState()).andReturn(new NormalViewState());
+
+		EasyMock.replay(new Object[] { context });
+
+		View restoredView = factory.getView(context);
+
+		assertNotNull("A View was not restored", restoredView);
+		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
+		assertTrue("An AjaxViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof AjaxViewRoot);
+		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
+		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+	}
+
+	/**
+	 * Third party sets the view root before RESTORE_VIEW
+	 */
+	public final void testGetView_ExternalViewRoot() {
+
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
+				RequestContext.class).expect(String.class)), null, lifecycle);
+
+		UIViewRoot newRoot = new UIViewRoot();
+		newRoot.setViewId(VIEW_ID);
+		jsfMock.facesContext().setViewRoot(newRoot);
+		jsfMock.facesContext().renderResponse();
+
+		EasyMock.replay(new Object[] { context });
+
+		View newView = factory.getView(context);
+
+		assertNotNull("A View was not created", newView);
+		assertTrue("A JsfView was expected", newView instanceof JsfView);
+		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
+		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
+		assertFalse("An unexpected event was signaled,", newView.eventSignaled());
+	}
+
+	private class NoExecutionLifecycle extends FlowLifecycle {
+
+		public NoExecutionLifecycle(Lifecycle delegate) {
 			super(delegate);
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", executed);
-			super.execute(context);
-			executed = true;
-		}
-
-	}
-
-	private class EventSignalingLifecycle extends FlowLifecycle {
-		boolean executed = false;
-
-		public EventSignalingLifecycle(Lifecycle delegate) {
-			super(delegate);
-		}
-
-		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", executed);
-			super.execute(context);
-			extContext.getRequestMap().put(JsfView.EVENT_KEY, event);
-			executed = true;
+			fail("The lifecycle should not be invoked from the ViewFactory");
 		}
 	}
 
@@ -170,36 +225,6 @@ public class JsfViewFactoryTests extends TestCase {
 
 	}
 
-	private class ModalViewState implements StateDefinition {
-
-		AttributeMap attrs = new LocalAttributeMap();
-
-		public ModalViewState() {
-			attrs.asMap().put("modal", Boolean.TRUE);
-		}
-
-		public String getId() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public FlowDefinition getOwner() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public AttributeMap getAttributes() {
-			return attrs;
-		}
-
-		public String getCaption() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public String getDescription() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-	}
-
 	private class NormalViewState implements StateDefinition {
 
 		public String getId() {
@@ -221,7 +246,5 @@ public class JsfViewFactoryTests extends TestCase {
 		public String getDescription() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
-
 	}
-
 }
