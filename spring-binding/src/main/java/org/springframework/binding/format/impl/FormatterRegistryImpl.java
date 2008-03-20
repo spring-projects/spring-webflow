@@ -22,7 +22,6 @@ import java.util.Map;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterFactory;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.binding.format.NoSuchFormatterException;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.i18n.SimpleLocaleContext;
@@ -70,7 +69,7 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 			context.setFormattedClass(clazz);
 			return factory.createFormatter(context);
 		} else {
-			throw new NoSuchFormatterException(clazz);
+			return null;
 		}
 	}
 
@@ -82,7 +81,7 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 			context.setFormattedClass(clazz);
 			return factory.createFormatter(context);
 		} else {
-			throw new NoSuchFormatterException(id, clazz);
+			return getFormatter(clazz);
 		}
 	}
 

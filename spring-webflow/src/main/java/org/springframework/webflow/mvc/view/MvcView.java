@@ -100,6 +100,9 @@ class MvcView implements View {
 
 	public void resume() {
 		determineEventId(context);
+		if (eventId == null) {
+			return;
+		}
 		Object model = getModelObject();
 		if (model == null) {
 			postbackSuccess = true;
@@ -110,10 +113,8 @@ class MvcView implements View {
 			if (!mappingResults.hasErrorResults()) {
 				postbackSuccess = true;
 			} else {
-				if (onlyPropertyNotFoundErrors()) {
+				if (onlyPropertyNotFoundErrorsPresent(mappingResults)) {
 					postbackSuccess = true;
-				} else {
-					postbackSuccess = false;
 				}
 			}
 		}
@@ -193,8 +194,8 @@ class MvcView implements View {
 		}
 	}
 
-	private boolean onlyPropertyNotFoundErrors() {
-		return mappingResults.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == mappingResults.getErrorResults().size();
+	private boolean onlyPropertyNotFoundErrorsPresent(MappingResults results) {
+		return results.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == mappingResults.getErrorResults().size();
 	}
 
 	private void determineEventId(RequestContext context) {
