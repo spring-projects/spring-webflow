@@ -51,6 +51,8 @@ public class JsfView implements View {
 
 	private String viewId;
 
+	private boolean restored = false;
+
 	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle, RequestContext context) {
 		this.viewRoot = viewRoot;
 		this.viewId = viewRoot.getViewId();
@@ -79,8 +81,17 @@ public class JsfView implements View {
 		}
 	}
 
-	public void postback() {
-		// TODO - implement Postback JSF lifecycle
+	public void resume() {
+		FacesContext facesContext = FlowFacesContext.newInstance(context, facesLifecycle);
+		try {
+			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
+				facesLifecycle.execute(facesContext);
+				facesContext.renderResponse();
+			}
+		} finally {
+			facesContext.release();
+		}
+
 	}
 
 	public boolean eventSignaled() {
@@ -98,5 +109,9 @@ public class JsfView implements View {
 
 	public String toString() {
 		return "[JSFView = '" + viewId + "']";
+	}
+
+	public void setRestored(boolean restored) {
+		this.restored = restored;
 	}
 }

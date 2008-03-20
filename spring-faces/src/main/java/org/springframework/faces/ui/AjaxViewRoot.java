@@ -177,8 +177,8 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		try {
 			String formId = findContainingFormId(context);
 			if (StringUtils.hasLength(formId)) {
-				String script = "dojo.byId('" + formId + "').action = "
-						+ context.getApplication().getViewHandler().getActionURL(context, getViewId());
+				String script = "dojo.byId('" + formId + "').action = '"
+						+ context.getApplication().getViewHandler().getActionURL(context, getViewId()) + "'";
 				writer.startElement("script", null);
 				writer.writeText(script, null);
 				writer.endElement("script");
