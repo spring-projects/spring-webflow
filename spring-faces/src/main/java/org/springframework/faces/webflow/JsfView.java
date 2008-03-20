@@ -83,6 +83,7 @@ public class JsfView implements View {
 
 	public void resume() {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, facesLifecycle);
+		facesContext.setViewRoot(viewRoot);
 		try {
 			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
 				facesLifecycle.execute(facesContext);
