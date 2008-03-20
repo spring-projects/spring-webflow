@@ -35,14 +35,17 @@ public class BindingModel extends ViewRenderingErrors {
 	}
 
 	public List getAllErrors() {
+		// TODO
 		return Collections.EMPTY_LIST;
 	}
 
 	public List getGlobalErrors() {
+		// TODO
 		return Collections.EMPTY_LIST;
 	}
 
 	public List getFieldErrors(String field) {
+		// TODO
 		return Collections.EMPTY_LIST;
 	}
 
