@@ -37,6 +37,11 @@
     	<component-class>org.springframework.faces.ui.AjaxEventInterceptor</component-class>
   	</component>
   	
+  	<component>
+  		<component-type>spring.faces.DojoIncludeStyles</component-type>
+  		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
+  	</component>
+  	
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>
     	<component-class>org.springframework.faces.ui.DojoClientTextValidator</component-class>
@@ -119,6 +124,12 @@
 			<component-family>spring.faces.Advisor</component-family>
 			<renderer-type>spring.faces.ValidateAll</renderer-type>
 			<renderer-class>org.springframework.faces.ui.ValidateAllRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.DynamicComponent</component-family>
+			<renderer-type>spring.faces.DojoStyleRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.DojoStyleRenderer</renderer-class>
 		</renderer>
 	</render-kit>
 
