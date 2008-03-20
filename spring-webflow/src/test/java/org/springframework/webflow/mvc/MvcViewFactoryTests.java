@@ -109,7 +109,7 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		view.postback();
+		view.resume();
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();
 		assertEquals(view, e.getSource());
@@ -141,7 +141,7 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		view.postback();
+		view.resume();
 		assertEquals(true, view.eventSignaled());
 		Event e = view.getEvent();
 		assertEquals(view, e.getSource());

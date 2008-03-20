@@ -38,9 +38,9 @@ public interface View {
 	public void render() throws IOException;
 
 	/**
-	 * Execute the view postback lifecycle. This typically results in a view model binding and validation.
+	 * Execute the view resume lifecycle. This typically results in a view model binding and validation.
 	 */
-	public void postback();
+	public void resume();
 
 	/**
 	 * Returns true if an event occurred the flow system should handle.

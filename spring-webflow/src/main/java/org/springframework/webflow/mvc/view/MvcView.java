@@ -98,7 +98,7 @@ class MvcView implements View {
 		}
 	}
 
-	public void postback() {
+	public void resume() {
 		determineEventId(context);
 		Object model = getModelObject();
 		if (model == null) {

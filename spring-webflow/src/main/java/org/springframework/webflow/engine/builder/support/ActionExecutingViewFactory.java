@@ -66,7 +66,7 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			}
 		}
 
-		public void postback() {
+		public void resume() {
 
 		}
 
