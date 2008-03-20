@@ -18,9 +18,9 @@ package org.springframework.webflow.engine.builder.xml;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -67,12 +67,11 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 		}
 	}
 
-	public BeanInvokingActionFactory getBeanInvokingActionFactory() {
-		if (localFlowContext.containsLocalBean("beanInvokingActionFactory")) {
-			return (BeanInvokingActionFactory) localFlowContext.getBean("beanInvokingActionFactory",
-					BeanInvokingActionFactory.class);
+	public ConversionService getConversionService() {
+		if (localFlowContext.containsLocalBean("conversionService")) {
+			return (ConversionService) localFlowContext.getBean("conversionService", ConversionService.class);
 		} else {
-			return parent.getBeanInvokingActionFactory();
+			return parent.getConversionService();
 		}
 	}
 
@@ -84,11 +83,11 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 		}
 	}
 
-	public ConversionService getConversionService() {
-		if (localFlowContext.containsLocalBean("conversionService")) {
-			return (ConversionService) localFlowContext.getBean("conversionService", ConversionService.class);
+	public FormatterRegistry getFormatterRegistry() {
+		if (localFlowContext.containsLocalBean("formatterRegistry")) {
+			return (FormatterRegistry) localFlowContext.getBean("formatterRegistry", FormatterRegistry.class);
 		} else {
-			return parent.getConversionService();
+			return parent.getFormatterRegistry();
 		}
 	}
 

@@ -1,6 +1,8 @@
 package org.springframework.webflow.mvc.view;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.ResourceLoader;
@@ -25,9 +27,15 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 
 	private ResourceLoader resourceLoader;
 
-	public InternalFlowResourceMvcViewFactory(Expression viewIdExpression, ApplicationContext context,
-			ResourceLoader resourceLoader) {
+	private ExpressionParser expressionParser;
+
+	private FormatterRegistry formatterRegistry;
+
+	public InternalFlowResourceMvcViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry, ApplicationContext context, ResourceLoader resourceLoader) {
 		this.viewIdExpression = viewIdExpression;
+		this.expressionParser = expressionParser;
+		this.formatterRegistry = formatterRegistry;
 		this.applicationContext = context;
 		this.resourceLoader = resourceLoader;
 	}
@@ -47,14 +55,22 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 			if (JSTL_PRESENT) {
 				JstlView view = new JstlView(viewPath);
 				view.setApplicationContext(applicationContext);
-				return new MvcView(view, context);
+				return createMvcView(view, context);
 			} else {
 				InternalResourceView view = new InternalResourceView(viewPath);
 				view.setApplicationContext(applicationContext);
-				return new MvcView(view, context);
+				return createMvcView(view, context);
 			}
 		} else {
 			throw new IllegalArgumentException("Unsupported view type " + viewPath + " only types supported are [.jsp]");
 		}
 	}
+
+	private MvcView createMvcView(org.springframework.web.servlet.View view, RequestContext context) {
+		MvcView mvcView = new MvcView(view, context);
+		mvcView.setExpressionParser(expressionParser);
+		mvcView.setFormatterRegistry(formatterRegistry);
+		return mvcView;
+	}
+
 }

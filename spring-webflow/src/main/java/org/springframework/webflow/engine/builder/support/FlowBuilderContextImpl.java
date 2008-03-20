@@ -4,9 +4,9 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
-import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -66,20 +66,20 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowBuilderServices.getFlowArtifactFactory();
 	}
 
-	public BeanInvokingActionFactory getBeanInvokingActionFactory() {
-		return flowBuilderServices.getBeanInvokingActionFactory();
+	public ConversionService getConversionService() {
+		return conversionService;
 	}
 
 	public ViewFactoryCreator getViewFactoryCreator() {
 		return flowBuilderServices.getViewFactoryCreator();
 	}
 
-	public ExpressionParser getExpressionParser() {
-		return flowBuilderServices.getExpressionParser();
+	public FormatterRegistry getFormatterRegistry() {
+		return flowBuilderServices.getFormatterRegistry();
 	}
 
-	public ConversionService getConversionService() {
-		return conversionService;
+	public ExpressionParser getExpressionParser() {
+		return flowBuilderServices.getExpressionParser();
 	}
 
 	public ResourceLoader getResourceLoader() {

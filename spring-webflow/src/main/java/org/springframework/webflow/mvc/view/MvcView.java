@@ -32,9 +32,6 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.binding.format.factories.DateFormatterFactory;
-import org.springframework.binding.format.factories.NumberFormatterFactory;
-import org.springframework.binding.format.impl.FormatterRegistryImpl;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
@@ -72,7 +69,6 @@ class MvcView implements View {
 	public MvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		this.view = view;
 		this.context = context;
-		this.formatterRegistry = createDefaultFormatterRegistry();
 	}
 
 	public void setExpressionParser(ExpressionParser expressionParser) {
@@ -128,13 +124,6 @@ class MvcView implements View {
 			return null;
 		}
 		return new Event(this, eventId, context.getRequestParameters().asAttributeMap());
-	}
-
-	protected FormatterRegistry createDefaultFormatterRegistry() {
-		FormatterRegistryImpl registry = new FormatterRegistryImpl();
-		registry.registerFormatter(new NumberFormatterFactory());
-		registry.registerFormatter(new DateFormatterFactory());
-		return registry;
 	}
 
 	private Map flowScopes() {
@@ -279,11 +268,19 @@ class MvcView implements View {
 			if (targetClass == null) {
 				return formattedValue;
 			}
-			Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+			Formatter formatter = getFormatter(target, targetClass);
 			if (formatter != null) {
 				return formatter.parseValue(formattedValue);
 			} else {
 				return formattedValue;
+			}
+		}
+
+		private Formatter getFormatter(Expression target, Class targetClass) {
+			if (formatterRegistry != null) {
+				return formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+			} else {
+				return null;
 			}
 		}
 

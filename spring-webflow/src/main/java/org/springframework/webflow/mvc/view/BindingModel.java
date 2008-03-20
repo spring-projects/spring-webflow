@@ -69,13 +69,21 @@ public class BindingModel extends ViewRenderingErrors {
 	}
 
 	private Object getFormattedValue(String field) {
-		Expression exp = parseFieldExpression(field);
-		Class valueType = exp.getValueType(boundObject);
-		Formatter formatter = formatterRegistry.getFormatter(valueType);
+		Expression fieldExpression = parseFieldExpression(field);
+		Formatter formatter = getFormatter(fieldExpression);
 		if (formatter != null) {
-			return formatter.formatValue(exp.getValue(boundObject));
+			return formatter.formatValue(fieldExpression.getValue(boundObject));
 		} else {
-			return exp.getValue(boundObject);
+			return fieldExpression.getValue(boundObject);
+		}
+	}
+
+	private Formatter getFormatter(Expression fieldExpression) {
+		if (formatterRegistry != null) {
+			Class valueType = fieldExpression.getValueType(boundObject);
+			return formatterRegistry.getFormatter(valueType);
+		} else {
+			return null;
 		}
 	}
 

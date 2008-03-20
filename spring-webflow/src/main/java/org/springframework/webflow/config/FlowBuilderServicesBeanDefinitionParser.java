@@ -7,6 +7,10 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.factories.DateFormatterFactory;
+import org.springframework.binding.format.factories.NumberFormatterFactory;
+import org.springframework.binding.format.impl.FormatterRegistryImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
@@ -20,11 +24,15 @@ import org.w3c.dom.Element;
  */
 class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
+	private static final String FORMATTER_REGISTRY_ATTRIBUTE = "formatter-registry";
+
 	private static final String CONVERSION_SERVICE_ATTRIBUTE = "conversion-service";
 
 	private static final String EXPRESSION_PARSER_ATTRIBUTE = "expression-parser";
 
 	private static final String VIEW_FACTORY_CREATOR_ATTRIBUTE = "view-factory-creator";
+
+	private static final String FORMATTER_REGISTRY_PROPERTY = "formatterRegistry";
 
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
 
@@ -37,9 +45,19 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	}
 
 	protected void doParse(Element element, ParserContext context, BeanDefinitionBuilder builder) {
+		parseFormatterRegistry(element, builder, context);
 		parseConversionService(element, builder, context);
 		parseExpressionParser(element, builder, context);
 		parseViewFactoryCreator(element, builder, context);
+	}
+
+	private void parseFormatterRegistry(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
+		String formatterRegistry = element.getAttribute(FORMATTER_REGISTRY_ATTRIBUTE);
+		if (StringUtils.hasText(formatterRegistry)) {
+			definitionBuilder.addPropertyReference(FORMATTER_REGISTRY_PROPERTY, formatterRegistry);
+		} else {
+			definitionBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, createDefaultFormatterRegistry());
+		}
 	}
 
 	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
@@ -82,6 +100,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	public static BeanDefinitionHolder registerDefaultFlowBuilderServicesBeanDefinition(ParserContext context) {
 		FlowBuilderServicesBeanDefinitionParser parser = new FlowBuilderServicesBeanDefinitionParser();
 		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
+		defaultBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, createDefaultFormatterRegistry());
 		defaultBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, new DefaultConversionService());
 		defaultBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
 				.getExpressionParser());
@@ -92,4 +111,12 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		parser.registerBeanDefinition(holder, context.getRegistry());
 		return holder;
 	}
+
+	private static FormatterRegistry createDefaultFormatterRegistry() {
+		FormatterRegistryImpl registry = new FormatterRegistryImpl();
+		registry.registerFormatter(new NumberFormatterFactory());
+		registry.registerFormatter(new DateFormatterFactory());
+		return registry;
+	}
+
 }

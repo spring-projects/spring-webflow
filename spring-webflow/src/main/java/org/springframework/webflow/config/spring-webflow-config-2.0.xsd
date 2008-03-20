@@ -208,17 +208,6 @@ The default value 'flowRegistry'.
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="enable-flow-scopes">
-		<xsd:annotation>
-			<xsd:documentation>
-				<![CDATA[
-Enables the Spring Web Flow bean scopes of 'request', 'flash', 'flow', and 'conversation'.
-With this tag, Spring bean can be placed in the Web Flow scopes.
-]]>
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	
 	<xsd:element name="flow-builder-services">
 		<xsd:annotation>
 			<xsd:documentation>

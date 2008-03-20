@@ -18,8 +18,8 @@ package org.springframework.webflow.engine.builder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 
@@ -54,10 +54,11 @@ public interface FlowBuilderContext {
 	public FlowArtifactFactory getFlowArtifactFactory();
 
 	/**
-	 * Returns the factory for bean invoking actions.
-	 * @return the bean invoking action factory
+	 * Returns a generic type conversion service for converting between types, typically from string to a rich value
+	 * object.
+	 * @return the generic conversion service
 	 */
-	public BeanInvokingActionFactory getBeanInvokingActionFactory();
+	public ConversionService getConversionService();
 
 	/**
 	 * Returns the view factory creator for configuring a ViewFactory per view state
@@ -72,11 +73,10 @@ public interface FlowBuilderContext {
 	public ExpressionParser getExpressionParser();
 
 	/**
-	 * Returns a generic type conversion service for converting between types, typically from string to a rich value
-	 * object.
-	 * @return the generic conversion service
+	 * Returns an application-wide registry of formatters for formatting view values.
+	 * @return the formatter registry
 	 */
-	public ConversionService getConversionService();
+	public FormatterRegistry getFormatterRegistry();
 
 	/**
 	 * Returns a generic resource loader for accessing file-based resources.
@@ -89,4 +89,5 @@ public interface FlowBuilderContext {
 	 * @return the bean factory
 	 */
 	public BeanFactory getBeanFactory();
+
 }

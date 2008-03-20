@@ -19,9 +19,13 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.factories.DateFormatterFactory;
+import org.springframework.binding.format.factories.NumberFormatterFactory;
+import org.springframework.binding.format.impl.FormatterRegistryImpl;
 import org.springframework.faces.model.converter.FacesConversionService;
-import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
+import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
@@ -47,6 +51,10 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
 
+	private static final String FORMATTER_REGISTRY_ATTRIBUTE = "formatter-registry";
+
+	private static final String FORMATTER_REGISTRY_PROPERTY = "formatterRegistry";
+
 	protected Class getBeanClass(Element element) {
 		return FlowBuilderServices.class;
 	}
@@ -59,8 +67,9 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		} else {
 			parseExpressionParser(element, definitionBuilder);
 		}
-		parseViewFactoryCreator(element, definitionBuilder);
+		parseFormatterRegistry(element, definitionBuilder);
 		parseConversionService(element, definitionBuilder);
+		parseViewFactoryCreator(element, definitionBuilder);
 	}
 
 	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
@@ -69,6 +78,15 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 			return Boolean.valueOf(enableManagedBeans).booleanValue();
 		} else {
 			return false;
+		}
+	}
+
+	private void parseFormatterRegistry(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String formatterRegistry = element.getAttribute(FORMATTER_REGISTRY_ATTRIBUTE);
+		if (StringUtils.hasText(formatterRegistry)) {
+			definitionBuilder.addPropertyReference(FORMATTER_REGISTRY_PROPERTY, formatterRegistry);
+		} else {
+			definitionBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, createDefaultFormatterRegistry());
 		}
 	}
 
@@ -99,4 +117,12 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 					DefaultExpressionFactoryUtils.createExpressionFactory()));
 		}
 	}
+
+	private static FormatterRegistry createDefaultFormatterRegistry() {
+		FormatterRegistryImpl registry = new FormatterRegistryImpl();
+		registry.registerFormatter(new NumberFormatterFactory());
+		registry.registerFormatter(new DateFormatterFactory());
+		return registry;
+	}
+
 }

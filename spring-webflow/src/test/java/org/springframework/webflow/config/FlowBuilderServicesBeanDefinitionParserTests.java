@@ -7,11 +7,12 @@ import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 
@@ -42,11 +43,8 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
-		public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader) {
+		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+				FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

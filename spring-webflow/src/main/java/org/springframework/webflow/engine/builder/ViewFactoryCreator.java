@@ -16,6 +16,8 @@
 package org.springframework.webflow.engine.builder;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -30,10 +32,12 @@ public interface ViewFactoryCreator {
 	 * Create a view factory capable of creating {@link View} objects that can render the view template with the
 	 * provided identifier.
 	 * @param viewIdExpression an expression that resolves the id of the view template
-	 * @param viewResourceLoader an optional resource loader to use to load the view template from an input stream
+	 * @param expressionParser an optional expression parser to use to resolve view expressions
+	 * @param formatterRegistry an optional formatter registry to use to format text values
 	 * @return the view factory
 	 */
-	public ViewFactory createViewFactory(Expression viewIdExpression, ResourceLoader viewResourceLoader);
+	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.

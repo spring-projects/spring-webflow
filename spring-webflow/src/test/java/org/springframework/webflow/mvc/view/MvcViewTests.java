@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.support.StaticExpression;
+import org.springframework.binding.format.factories.DateFormatterFactory;
+import org.springframework.binding.format.factories.NumberFormatterFactory;
+import org.springframework.binding.format.impl.FormatterRegistryImpl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -24,6 +27,13 @@ public class MvcViewTests extends TestCase {
 	private boolean renderCalled;
 
 	private Map model;
+
+	private FormatterRegistryImpl formatterRegistry = new FormatterRegistryImpl();
+
+	public void setUp() {
+		formatterRegistry.registerFormatter(new NumberFormatterFactory());
+		formatterRegistry.registerFormatter(new DateFormatterFactory());
+	}
 
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
@@ -39,6 +49,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));
@@ -65,6 +76,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
 		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
@@ -96,6 +108,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
 		view.resume();
 		assertTrue(view.eventSignaled());
 		assertEquals("submit", view.getEvent().getId());
@@ -118,6 +131,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
 		view.resume();
 		assertTrue(view.eventSignaled());
 		assertEquals("submit", view.getEvent().getId());

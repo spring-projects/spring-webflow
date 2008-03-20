@@ -40,10 +40,6 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
 
-	private ExpressionParser expressionParser;
-
-	private FormatterRegistry formatterRegistry;
-
 	private List viewResolvers;
 
 	private ApplicationContext applicationContext;
@@ -61,11 +57,13 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.applicationContext = context;
 	}
 
-	public ViewFactory createViewFactory(Expression viewIdExpression, ResourceLoader viewResourceLoader) {
+	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
 		if (viewResolvers != null) {
-			return new ViewResolvingMvcViewFactory(viewIdExpression, viewResolvers);
+			return new ViewResolvingMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry, viewResolvers);
 		} else {
-			return new InternalFlowResourceMvcViewFactory(viewIdExpression, applicationContext, viewResourceLoader);
+			return new InternalFlowResourceMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry,
+					applicationContext, resourceLoader);
 		}
 	}
 

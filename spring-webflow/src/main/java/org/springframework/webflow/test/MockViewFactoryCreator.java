@@ -18,10 +18,10 @@ package org.springframework.webflow.test;
 import java.io.IOException;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
-import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -34,12 +34,10 @@ import org.springframework.webflow.execution.ViewFactory;
  * @author Keith Donald
  */
 class MockViewFactoryCreator implements ViewFactoryCreator {
-	public Action createRenderViewAction(Expression viewId, ResourceLoader viewResourceLoader) {
-		return new ViewFactoryActionAdapter(createViewFactory(viewId, viewResourceLoader));
-	}
 
-	public ViewFactory createViewFactory(Expression viewId, ResourceLoader viewResourceLoader) {
-		return new MockViewFactory(viewId);
+	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
+		return new MockViewFactory(viewIdExpression);
 	}
 
 	public String getViewIdByConvention(String viewStateId) {

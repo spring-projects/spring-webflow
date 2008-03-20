@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockRequestContext;
@@ -51,7 +50,7 @@ public class MvcViewFactoryTests extends TestCase {
 			}
 		};
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
 		MockRequestContext context = new MockRequestContext();
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -71,7 +70,7 @@ public class MvcViewFactoryTests extends TestCase {
 		creator.setApplicationContext(context);
 		creator.setViewResolvers(Collections.singletonList(viewResolver));
 		Expression viewId = new StaticExpression("myview");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, null);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, null);
 		MockRequestContext context = new MockRequestContext();
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -98,7 +97,7 @@ public class MvcViewFactoryTests extends TestCase {
 			}
 		};
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
 		MockRequestContext context = new MockRequestContext();
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -130,7 +129,7 @@ public class MvcViewFactoryTests extends TestCase {
 			}
 		};
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
 		MockRequestContext context = new MockRequestContext();
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();

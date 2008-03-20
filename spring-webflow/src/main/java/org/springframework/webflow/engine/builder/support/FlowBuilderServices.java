@@ -6,6 +6,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
@@ -15,7 +16,6 @@ import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
-import org.springframework.webflow.execution.Action;
 
 /**
  * A simple holder for configuring the services used by flow builders. These services are exposed to a builder in a
@@ -38,12 +38,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	private FlowArtifactFactory flowArtifactFactory = new FlowArtifactFactory();
 
 	/**
-	 * The factory encapsulating the creation of bean invoking actions, actions that adapt methods on objects to the
-	 * {@link Action} interface.
-	 */
-	private BeanInvokingActionFactory beanInvokingActionFactory = new BeanInvokingActionFactory();
-
-	/**
 	 * The view factory creator for creating views to render during flow execution. The default is <code>null</code>
 	 * and this service must be configured externally.
 	 */
@@ -53,6 +47,11 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	 * The conversion service for converting from one object type to another.
 	 */
 	private ConversionService conversionService;
+
+	/**
+	 * The service for formatting string values for display in a UI.
+	 */
+	private FormatterRegistry formatterRegistry;
 
 	/**
 	 * The parser for parsing expression strings into expression objects. The default is Web Flow's default expression
@@ -78,14 +77,6 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 		this.flowArtifactFactory = flowArtifactFactory;
 	}
 
-	public BeanInvokingActionFactory getBeanInvokingActionFactory() {
-		return beanInvokingActionFactory;
-	}
-
-	public void setBeanInvokingActionFactory(BeanInvokingActionFactory beanInvokingActionFactory) {
-		this.beanInvokingActionFactory = beanInvokingActionFactory;
-	}
-
 	public ViewFactoryCreator getViewFactoryCreator() {
 		return viewFactoryCreator;
 	}
@@ -100,6 +91,14 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public FormatterRegistry getFormatterRegistry() {
+		return formatterRegistry;
+	}
+
+	public void setFormatterRegistry(FormatterRegistry formatterRegistry) {
+		this.formatterRegistry = formatterRegistry;
 	}
 
 	public ExpressionParser getExpressionParser() {
@@ -130,9 +129,9 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(flowArtifactFactory, "The flow artifact factory is required");
-		Assert.notNull(beanInvokingActionFactory, "The bean invoking action factory is required");
 		Assert.notNull(viewFactoryCreator, "The view factory creator is required");
 		Assert.notNull(conversionService, "The type conversion service is required");
+		Assert.notNull(formatterRegistry, "The formatter registry is required");
 		Assert.notNull(expressionParser, "The expression parser is required");
 		Assert.notNull(resourceLoader, "The resource loader is required");
 		Assert.notNull(beanFactory, "The bean factory is required");
