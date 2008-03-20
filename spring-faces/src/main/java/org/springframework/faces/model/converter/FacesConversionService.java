@@ -14,6 +14,7 @@ package org.springframework.faces.model.converter;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.support.TextToClass;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 
 /**
@@ -25,13 +26,12 @@ import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 public class FacesConversionService extends DefaultConversionService {
 
 	public FacesConversionService() {
-		super();
 		addFacesConverters();
 	}
 
 	protected void addFacesConverters() {
 		addConverter(new DataModelConverter());
-
-		addAlias("dataModel", OneSelectionTrackingListDataModel.class);
+		TextToClass classConverter = (TextToClass) getConverter(String.class, Class.class);
+		classConverter.addAlias("dataModel", OneSelectionTrackingListDataModel.class);
 	}
 }

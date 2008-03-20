@@ -177,7 +177,8 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	/**
-	 * Sets the conversion service for converting string-encoded flow execution attributes to typed values.
+	 * TODO never called. Sets the conversion service for converting string-encoded flow execution attributes to typed
+	 * values.
 	 * @param conversionService the conversion service
 	 */
 	public void setConversionService(ConversionService conversionService) {
@@ -351,11 +352,15 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
 		if (attribute.needsTypeConversion()) {
-			ConversionExecutor converter = conversionService.getConversionExecutorByTargetAlias(String.class, attribute
-					.getType());
+			Class targetType = fromStringToClass(attribute.getType());
+			ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetType);
 			return converter.execute(attribute.getValue());
 		} else {
 			return attribute.getValue();
 		}
+	}
+
+	private Class fromStringToClass(String type) {
+		return (Class) conversionService.getConversionExecutor(String.class, Class.class).execute(type);
 	}
 }

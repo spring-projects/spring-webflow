@@ -151,12 +151,18 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
 		if (attribute.needsTypeConversion()) {
-			ConversionExecutor converter = flowBuilderServices.getConversionService()
-					.getConversionExecutorByTargetAlias(String.class, attribute.getType());
+			Class targetType = fromStringToClass(attribute.getType());
+			ConversionExecutor converter = flowBuilderServices.getConversionService().getConversionExecutor(
+					String.class, targetType);
 			return converter.execute(attribute.getValue());
 		} else {
 			return attribute.getValue();
 		}
+	}
+
+	private Class fromStringToClass(String type) {
+		return (Class) flowBuilderServices.getConversionService().getConversionExecutor(String.class, Class.class)
+				.execute(type);
 	}
 
 	private FlowDefinition buildFlowDefinition(FlowBuilderInfo builderInfo) {

@@ -34,11 +34,9 @@ public class DefaultConversionServiceTests extends TestCase {
 
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
-		service.addAlias("list", List.class);
 
 		List lst = new ArrayList();
 		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
-		assertSame(lst, service.getConversionExecutorByTargetAlias(ArrayList.class, "list").execute(lst));
 
 		try {
 			service.getConversionExecutor(List.class, ArrayList.class);

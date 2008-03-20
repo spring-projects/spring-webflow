@@ -15,8 +15,13 @@
  */
 package org.springframework.binding.convert.support;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.binding.convert.ConversionContext;
-import org.springframework.util.Assert;
+import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -25,11 +30,20 @@ import org.springframework.util.StringUtils;
  * 
  * @author Keith Donald
  */
-public class TextToClass extends ConversionServiceAwareConverter {
+public class TextToClass extends AbstractConverter {
 
-	private static final String ALIAS_PREFIX = "type:";
+	private Map aliasMap = new HashMap();
 
-	private static final String CLASS_PREFIX = "class:";
+	public TextToClass() {
+		addDefaultAliases();
+	}
+
+	/**
+	 * Add an alias for given target type.
+	 */
+	public void addAlias(String alias, Class targetType) {
+		aliasMap.put(alias, targetType);
+	}
 
 	public Class[] getSourceClasses() {
 		return new Class[] { String.class };
@@ -42,27 +56,30 @@ public class TextToClass extends ConversionServiceAwareConverter {
 	protected Object doConvert(Object source, Class targetClass, ConversionContext context) throws Exception {
 		String text = (String) source;
 		if (StringUtils.hasText(text)) {
-			String classNameOrAlias = text.trim();
-			if (classNameOrAlias.startsWith(CLASS_PREFIX)) {
-				return ClassUtils.forName(text.substring(CLASS_PREFIX.length()));
-			} else if (classNameOrAlias.startsWith(ALIAS_PREFIX)) {
-				String alias = text.substring(ALIAS_PREFIX.length());
-				Class clazz = getConversionService().getClassByAlias(alias);
-				Assert.notNull(clazz, "No class found associated with type alias '" + alias + "'");
-				return clazz;
+			text = text.trim();
+			if (aliasMap.containsKey(text)) {
+				return aliasMap.get(text);
 			} else {
-				// try first an aliased based lookup
-				if (getConversionService() != null) {
-					Class aliasedClass = getConversionService().getClassByAlias(classNameOrAlias);
-					if (aliasedClass != null) {
-						return aliasedClass;
-					}
-				}
-				// treat as a class name
-				return ClassUtils.forName(classNameOrAlias);
+				return ClassUtils.forName(text);
 			}
 		} else {
 			return null;
 		}
+	}
+
+	protected void addDefaultAliases() {
+		addAlias("string", String.class);
+		addAlias("short", Short.class);
+		addAlias("integer", Integer.class);
+		addAlias("int", Integer.class);
+		addAlias("byte", Byte.class);
+		addAlias("long", Long.class);
+		addAlias("float", Float.class);
+		addAlias("double", Double.class);
+		addAlias("bigInteger", BigInteger.class);
+		addAlias("bigDecimal", BigDecimal.class);
+		addAlias("boolean", Boolean.class);
+		addAlias("class", Class.class);
+		addAlias("labeledEnum", LabeledEnum.class);
 	}
 }

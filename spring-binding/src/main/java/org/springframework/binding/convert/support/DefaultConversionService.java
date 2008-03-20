@@ -15,14 +15,10 @@
  */
 package org.springframework.binding.convert.support;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.factories.DateFormatterFactory;
 import org.springframework.binding.format.factories.NumberFormatterFactory;
 import org.springframework.binding.format.impl.FormatterRegistryImpl;
-import org.springframework.core.enums.LabeledEnum;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -54,19 +50,6 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new TextToLabeledEnum());
 		addConverter(new TextToNumber(formatterRegistry));
 		addConverter(new TextToDate(formatterRegistry));
-		addAlias("string", String.class);
-		addAlias("short", Short.class);
-		addAlias("integer", Integer.class);
-		addAlias("int", Integer.class);
-		addAlias("byte", Byte.class);
-		addAlias("long", Long.class);
-		addAlias("float", Float.class);
-		addAlias("double", Double.class);
-		addAlias("bigInteger", BigInteger.class);
-		addAlias("bigDecimal", BigDecimal.class);
-		addAlias("boolean", Boolean.class);
-		addAlias("class", Class.class);
-		addAlias("labeledEnum", LabeledEnum.class);
 	}
 
 	protected FormatterRegistry createDefaultFormatterRegistry() {
