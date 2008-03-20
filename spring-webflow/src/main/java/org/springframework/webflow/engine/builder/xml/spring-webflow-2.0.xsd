@@ -121,15 +121,6 @@ Goes out of scope when the governing conversation ends.
 
 	<xsd:group name="actionTypes">
 		<xsd:choice>
-			<xsd:element ref="bind">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Binds current event parameters to a target object associated with the flow.  Also capable of performing a validation post-binding.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
 			<xsd:element ref="evaluate">
 				<xsd:annotation>
 					<xsd:documentation>
@@ -659,20 +650,6 @@ Handles exceptions that occur within this state.
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="bind">
-		<xsd:complexType>
-			<xsd:attribute name="target" type="expression" use="required">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The bind target.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-		</xsd:complexType>
-	</xsd:element>
-	
 	<xsd:element name="evaluate">
 		<xsd:complexType>
 			<xsd:attribute name="expression" type="expression" use="required">

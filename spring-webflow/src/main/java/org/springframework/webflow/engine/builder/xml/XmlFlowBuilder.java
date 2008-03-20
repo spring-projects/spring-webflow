@@ -55,7 +55,6 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.webflow.action.ActionResultExposer;
-import org.springframework.webflow.action.BindAction;
 import org.springframework.webflow.action.EvaluateAction;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
@@ -676,9 +675,7 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			if (!(childNode instanceof Element)) {
 				continue;
 			}
-			if (DomUtils.nodeNameEquals(childNode, "bind")) {
-				actions.add(parseBindAction((Element) childNode));
-			} else if (DomUtils.nodeNameEquals(childNode, "evaluate")) {
+			if (DomUtils.nodeNameEquals(childNode, "evaluate")) {
 				actions.add(parseEvaluateAction((Element) childNode));
 			} else if (DomUtils.nodeNameEquals(childNode, "render")) {
 				actions.add(parseRenderAction((Element) childNode));
@@ -687,13 +684,6 @@ public class XmlFlowBuilder extends AbstractFlowBuilder implements ResourceHolde
 			}
 		}
 		return (Action[]) actions.toArray(new Action[actions.size()]);
-	}
-
-	private Action parseBindAction(Element element) {
-		String targetString = element.getAttribute("target");
-		ExpressionParser parser = getExpressionParser();
-		Expression target = parser.parseExpression(targetString, new ParserContextImpl().eval(RequestContext.class));
-		return new BindAction(target, parser, getConversionService());
 	}
 
 	private Action parseEvaluateAction(Element element) {
