@@ -39,8 +39,6 @@ import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.validation.BindingResult;
 import org.springframework.webflow.core.collection.ParameterMap;
-import org.springframework.webflow.engine.Transition;
-import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -166,14 +164,15 @@ class MvcView implements View {
 
 	private boolean shouldBind(Object model) {
 		// this downcast is not ideal
-		TransitionableState currentState = (TransitionableState) context.getCurrentState();
+		// TransitionableState currentState = (TransitionableState) context.getCurrentState();
 		// TODO this won't work because last event isn't set yet...
-		Transition transition = currentState.getRequiredTransition(context);
-		if (transition.getAttributes().contains("bind")) {
-			return transition.getAttributes().getBoolean("bind").booleanValue();
-		} else {
-			return false;
-		}
+		// Transition transition = currentState.getRequiredTransition(context);
+		// if (transition.getAttributes().contains("bind")) {
+		// return transition.getAttributes().getBoolean("bind").booleanValue();
+		// } else {
+		// return false;
+		// }
+		return false;
 	}
 
 	private MappingResults bind(Object model) {
