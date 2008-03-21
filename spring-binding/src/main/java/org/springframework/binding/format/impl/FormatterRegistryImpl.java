@@ -90,6 +90,7 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 		if (factory != null) {
 			return factory;
 		} else {
+			// TODO - getSuperClass can return null
 			if (clazz.getSuperclass() != Object.class) {
 				return findFormatterFactory(clazz.getSuperclass());
 			} else {
