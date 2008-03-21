@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -33,16 +34,16 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<a href="<c:url value="/" />"><img src="<c:url value="/images/header.jpg"/>"/></a>
+			<a href="<c:url value="/" />"><img src="<c:url value="/images/header.jpg"/>" alt="Spring Travel" /></a>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
 		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="<c:url value="/images/diplomat.jpg"/>"/>
+				<img src="<c:url value="/images/diplomat.jpg"/>" alt="generic hotel" />
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="<c:url value="/images/tse.gif"/>"/>
+				<img src="<c:url value="/images/tse.gif"/>" alt="The Spring Experience" />
 			</a>
 			<p>
 			</p>
@@ -53,7 +54,7 @@
 	</div>
 	<div id="footer" class="clearfix spring">
 		<a href="http://www.springframework.org">
-			<img src="<c:url value="/images/powered-by-spring.png"/>"/>
+			<img src="<c:url value="/images/powered-by-spring.png"/>" alt="Powered by Spring" />
 		</a>
 	</div>
 </div>

@@ -33,7 +33,7 @@
 	
 	<view-state id="reviewHotel">
 		<on-render>
-			<evaluate expression="bookingService.findHotel(hotelId)" result="requestScope.hotel" />
+			<evaluate expression="bookingService.findHotelById(hotelId)" result="requestScope.hotel" />
 		</on-render>
 		<transition on="book" to="bookHotel" />
 		<transition on="cancel" to="enterSearchCriteria" />
