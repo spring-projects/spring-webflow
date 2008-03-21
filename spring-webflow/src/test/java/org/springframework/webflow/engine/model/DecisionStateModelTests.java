@@ -15,9 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.DecisionStateModel;
-import org.springframework.webflow.engine.model.IfModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -25,34 +22,28 @@ import junit.framework.TestCase;
  */
 public class DecisionStateModelTests extends TestCase {
 
+	public void testMergeable() {
+		DecisionStateModel child = new DecisionStateModel("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		DecisionStateModel child = new DecisionStateModel("child");
+		DecisionStateModel parent = new DecisionStateModel("parent");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		DecisionStateModel child = new DecisionStateModel("child");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
 		DecisionStateModel child = new DecisionStateModel("child");
-		DecisionStateModel parent = new DecisionStateModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeNullParent() {
-		DecisionStateModel child = new DecisionStateModel("child");
-		DecisionStateModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeOverrideMatch() {
-		DecisionStateModel child = new DecisionStateModel("child");
 		DecisionStateModel parent = new DecisionStateModel("child");
-		parent.addIf(new IfModel("test", "then"));
+		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
-		assertEquals(1, child.getIfs().size());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		DecisionStateModel child = new DecisionStateModel("child");
-		DecisionStateModel parent = new DecisionStateModel("parent");
-		parent.addIf(new IfModel("test", "then"));
-		child.merge(parent);
-		assertEquals(null, child.getIfs());
+		assertNotNull(child.getSecured());
 	}
 
 }

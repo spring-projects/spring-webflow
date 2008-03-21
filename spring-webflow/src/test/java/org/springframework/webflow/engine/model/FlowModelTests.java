@@ -22,46 +22,28 @@ import junit.framework.TestCase;
  */
 public class FlowModelTests extends TestCase {
 
-	public void testMerge() {
-		FlowModel child = new FlowModel();
-		child.setStartStateId("child");
-		FlowModel parent = new FlowModel();
-		parent.setStartStateId("parent");
-		child.merge(parent);
-		assertEquals("child", child.getStartStateId());
-	}
-
-	public void testMergeNullParent() {
-		FlowModel child = new FlowModel();
-		child.setStartStateId("child");
-		FlowModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getStartStateId());
-	}
-
-	public void testMergeOverrideMatch() {
+	public void testMergeable() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
-		parent.addViewState(new ViewStateModel("view"));
-		child.merge(parent);
-		assertEquals(1, child.getStates().size());
+		assertTrue(child.isMergeableWith(parent));
 	}
 
-	public void testMergeOverrideMatchFailed() {
+	public void testNotMergeableWithNull() {
 		FlowModel child = new FlowModel();
-		FlowModel parent = new FlowModel();
-		parent.addViewState(new ViewStateModel("view"));
-		child.merge(parent);
-		// flows will always merge, regardless of likeness
-		assertEquals(1, child.getStates().size());
+		assertFalse(child.isMergeableWith(null));
 	}
 
-	public void testIntegrationAttributes() {
+	public void testMergeAttributes() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
+		AttributeModel attribute;
 		child.addAttribute(new AttributeModel("name", "value"));
-		parent.addAttribute(new AttributeModel("name", "value", "type"));
-		parent.addAttribute(new AttributeModel("name2", "value2", "type2"));
+		attribute = new AttributeModel("name", "value");
+		attribute.setType("type");
+		parent.addAttribute(attribute);
+		attribute = new AttributeModel("name2", "value2");
+		attribute.setType("type2");
+		parent.addAttribute(attribute);
 		child.merge(parent);
 		assertEquals(2, child.getAttributes().size());
 		assertEquals("name", ((AttributeModel) child.getAttributes().get(0)).getName());
@@ -70,16 +52,18 @@ public class FlowModelTests extends TestCase {
 		assertEquals("type2", ((AttributeModel) child.getAttributes().get(1)).getType());
 	}
 
-	public void testIntegrationSecured() {
+	public void testMergeSecured() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.setSecured(new SecuredModel("secured"));
-		parent.setSecured(new SecuredModel("secured", "all"));
+		SecuredModel secured = new SecuredModel("secured");
+		secured.setMatch("all");
+		parent.setSecured(secured);
 		child.merge(parent);
 		assertEquals("all", child.getSecured().getMatch());
 	}
 
-	public void testIntegrationPersistenceContext() {
+	public void testMergePersistenceContext() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		parent.setPersistenceContext(new PersistenceContextModel());
@@ -87,49 +71,70 @@ public class FlowModelTests extends TestCase {
 		assertNotNull(child.getPersistenceContext());
 	}
 
-	public void testIntegrationVars() {
+	public void testMergeVars() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
-		child.addVar(new VarModel("name", "value"));
-		parent.addVar(new VarModel("name", "", "scope"));
-		parent.addVar(new VarModel("name2", "value2"));
+		VarModel var = new VarModel("name", "value");
+		child.addVar(var);
+		parent.addVar(var);
+		var = new VarModel("name", "value");
+		var.setScope("scope");
+		parent.addVar(var);
 		child.merge(parent);
-		assertEquals(2, child.getVars().size());
+		assertEquals(3, child.getVars().size());
 		assertEquals("scope", ((VarModel) child.getVars().get(1)).getScope());
+		assertEquals("scope", ((VarModel) parent.getVars().get(1)).getScope());
 	}
 
-	public void testIntegrationMappings() {
+	public void testMergeMappings() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
+		InputModel input;
 		child.addInput(new InputModel("name", "value"));
-		child.addInput(new InputModel("name2", "value2", "type2", "required2"));
-		child.addInput(new InputModel("name3", "value3", "type3", "required3"));
-		parent.addInput(new InputModel("name", "value", "type", "required"));
-		parent.addInput(new InputModel("name3", "value3", "type3", "required3"));
+		input = new InputModel("name2", "value2");
+		input.setType("type2");
+		input.setRequired("required2");
+		child.addInput(input);
+		input = new InputModel("name3", "value3");
+		input.setType("type3");
+		input.setRequired("required3");
+		child.addInput(input);
+		input = new InputModel("name", "value");
+		input.setType("type");
+		input.setRequired("required");
+		parent.addInput(input);
+		input = new InputModel("name3", "value3");
+		input.setType("type3");
+		input.setRequired("required3");
+		parent.addInput(input);
 		child.merge(parent);
 		assertEquals(3, child.getInputs().size());
 	}
 
-	public void testIntegrationOnStart() {
+	public void testMergeOnStart() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.addOnStartAction(new EvaluateModel("expression"));
 		child.addOnStartAction(new RenderModel("expression"));
 		child.addOnStartAction(new SetModel("expression", "value"));
-		parent.addOnStartAction(new EvaluateModel("expression", "result"));
+		EvaluateModel eval = new EvaluateModel("expression");
+		eval.setResult("result");
+		parent.addOnStartAction(eval);
 		parent.addOnStartAction(new RenderModel("expression"));
 		parent.addOnStartAction(new SetModel("expression", "value"));
 		child.merge(parent);
-		assertEquals(3, child.getOnStartActions().size());
-		assertEquals("result", ((EvaluateModel) child.getOnStartActions().get(0)).getResult());
+		assertEquals(6, child.getOnStartActions().size());
+		assertNotNull(((EvaluateModel) child.getOnStartActions().get(0)).getResult());
 	}
 
-	public void testIntegrationStates() {
+	public void testMergeStates() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.addViewState(new ViewStateModel("view"));
 		child.addEndState(new EndStateModel("end"));
-		parent.addViewState(new ViewStateModel("view", "jsp"));
+		ViewStateModel view = new ViewStateModel("view");
+		view.setView("jsp");
+		parent.addViewState(view);
 		parent.addState(new DecisionStateModel("decider"));
 		parent.addActionState(new ActionStateModel("end"));
 		child.merge(parent);
@@ -137,33 +142,45 @@ public class FlowModelTests extends TestCase {
 		assertEquals("jsp", ((ViewStateModel) child.getStates().get(0)).getView());
 	}
 
-	public void testIntegrationGlobalTransitions() {
+	public void testMergeGlobalTransitions() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
-		child.addGlobalTransition(new TransitionModel("end"));
-		child.addGlobalTransition(new TransitionModel("start"));
-		parent.addGlobalTransition(new TransitionModel("search"));
-		parent.addGlobalTransition(new TransitionModel("end", "theend"));
+		TransitionModel transition;
+		transition = new TransitionModel();
+		transition.setOn("end");
+		child.addGlobalTransition(transition);
+		transition = new TransitionModel();
+		transition.setOn("start");
+		child.addGlobalTransition(transition);
+		transition = new TransitionModel();
+		transition.setOn("search");
+		parent.addGlobalTransition(transition);
+		transition = new TransitionModel();
+		transition.setOn("end");
+		transition.setTo("theend");
+		parent.addGlobalTransition(transition);
 		child.merge(parent);
 		assertEquals(3, child.getGlobalTransitions().size());
 		assertEquals("theend", ((TransitionModel) child.getGlobalTransitions().get(0)).getTo());
 	}
 
-	public void testIntegrationOnEnd() {
+	public void testMergeOnEnd() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.addOnEndAction(new EvaluateModel("expression"));
 		child.addOnEndAction(new RenderModel("expression"));
 		child.addOnEndAction(new SetModel("expression", "value"));
-		parent.addOnEndAction(new EvaluateModel("expression", "result"));
+		EvaluateModel eval = new EvaluateModel("expression");
+		eval.setResult("result");
+		parent.addOnEndAction(eval);
 		parent.addOnEndAction(new RenderModel("expression"));
 		parent.addOnEndAction(new SetModel("expression", "value"));
 		child.merge(parent);
-		assertEquals(3, child.getOnEndActions().size());
-		assertEquals("result", ((EvaluateModel) child.getOnEndActions().get(0)).getResult());
+		assertEquals(6, child.getOnEndActions().size());
+		assertNotNull(((EvaluateModel) child.getOnEndActions().get(0)).getResult());
 	}
 
-	public void testIntegrationExceptionHandlers() {
+	public void testMergeExceptionHandlers() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.addExceptionHandler(new ExceptionHandlerModel("bean1"));
@@ -171,10 +188,10 @@ public class FlowModelTests extends TestCase {
 		parent.addExceptionHandler(new ExceptionHandlerModel("bean2"));
 		parent.addExceptionHandler(new ExceptionHandlerModel("bean3"));
 		child.merge(parent);
-		assertEquals(3, child.getExceptionHandlers().size());
+		assertEquals(4, child.getExceptionHandlers().size());
 	}
 
-	public void testIntegrationBeanImports() {
+	public void testMergeBeanImports() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		child.addBeanImport(new BeanImportModel("path1"));
@@ -182,7 +199,7 @@ public class FlowModelTests extends TestCase {
 		parent.addBeanImport(new BeanImportModel("path2"));
 		parent.addBeanImport(new BeanImportModel("path3"));
 		child.merge(parent);
-		assertEquals(3, child.getBeanImports().size());
+		assertEquals(4, child.getBeanImports().size());
 	}
 
 }

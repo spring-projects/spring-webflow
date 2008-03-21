@@ -37,30 +37,14 @@ public class InputModel extends AbstractMappingModel {
 	}
 
 	/**
-	 * Create an input mapping model
-	 * @param name the name of the mapping variable
-	 * @param value the value to map
-	 * @param type the type of the value
-	 * @param required indicates if this mapping is required
-	 */
-	public InputModel(String name, String value, String type, String required) {
-		setName(name);
-		setValue(value);
-		setType(type);
-		setRequired(required);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the mapping to merge into this mapping
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			InputModel input = (InputModel) model;
-			setValue(merge(getValue(), input.getValue()));
-			setType(merge(getType(), input.getType()));
-			setRequired(merge(getRequired(), input.getRequired()));
-		}
+		InputModel input = (InputModel) model;
+		setValue(merge(getValue(), input.getValue()));
+		setType(merge(getType(), input.getType()));
+		setRequired(merge(getRequired(), input.getRequired()));
 	}
 
 	/**
@@ -68,41 +52,11 @@ public class InputModel extends AbstractMappingModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof InputModel)) {
 			return false;
 		}
 		InputModel input = (InputModel) model;
 		return ObjectUtils.nullSafeEquals(getName(), input.getName());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof InputModel)) {
-			return false;
-		}
-		InputModel input = (InputModel) obj;
-		if (input == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getName(), input.getName())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getValue(), input.getValue())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getType(), input.getType())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getRequired(), input.getRequired())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getName()) * 27 + ObjectUtils.nullSafeHashCode(getValue()) * 27
-				+ ObjectUtils.nullSafeHashCode(getType()) * 27 + ObjectUtils.nullSafeHashCode(getRequired()) * 27;
 	}
 
 }

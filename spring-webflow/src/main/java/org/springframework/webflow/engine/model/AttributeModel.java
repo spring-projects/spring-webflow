@@ -41,26 +41,12 @@ public class AttributeModel extends AbstractModel {
 	}
 
 	/**
-	 * Create an attribute model
-	 * @param name the name of the attribute
-	 * @param value the value of the attribute
-	 * @param type the type of the value
-	 */
-	public AttributeModel(String name, String value, String type) {
-		setName(name);
-		setValue(value);
-		setType(type);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the attribute to merge into this attribute
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			AttributeModel attribute = (AttributeModel) model;
-			setType(merge(getType(), attribute.getType()));
-		}
+		AttributeModel attribute = (AttributeModel) model;
+		setType(merge(getType(), attribute.getType()));
 	}
 
 	/**
@@ -68,40 +54,12 @@ public class AttributeModel extends AbstractModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof AttributeModel)) {
 			return false;
 		}
 		AttributeModel attribute = (AttributeModel) model;
 		return ObjectUtils.nullSafeEquals(getName(), attribute.getName())
 				&& ObjectUtils.nullSafeEquals(getValue(), attribute.getValue());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof AttributeModel)) {
-			return false;
-		}
-		AttributeModel attribute = (AttributeModel) obj;
-		if (attribute == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getName(), attribute.getName())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getType(), attribute.getType())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getValue(), attribute.getValue())) {
-			return false;
-		} else {
-			return super.equals(attribute);
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getName()) * 27 + ObjectUtils.nullSafeHashCode(getType()) * 27
-				+ ObjectUtils.nullSafeHashCode(getValue()) * 27 + super.hashCode() * 27;
 	}
 
 	/**

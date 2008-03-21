@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.PersistenceContextModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,8 +22,9 @@ import junit.framework.TestCase;
  */
 public class PersistenceContextModelTests extends TestCase {
 
-	public void test() {
-		// no op
+	public void testNotMergeable() {
+		PersistenceContextModel child = new PersistenceContextModel();
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

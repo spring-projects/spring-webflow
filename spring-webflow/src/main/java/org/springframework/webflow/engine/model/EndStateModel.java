@@ -47,43 +47,18 @@ public class EndStateModel extends AbstractStateModel {
 	}
 
 	/**
-	 * Create an end state model
-	 * @param id the state identifier
-	 * @param view the view to render
-	 * @param commit indicate if the persistence context should be committed
-	 * @param outputs output mappings
-	 * @param attributes meta attributes for the state
-	 * @param secured security settings for the state
-	 * @param onEntryActions actions to execute when entering the state
-	 * @param exceptionHandlers exception handlers for the state
-	 */
-	public EndStateModel(String id, String view, String commit, LinkedList outputs, LinkedList attributes,
-			SecuredModel secured, LinkedList onEntryActions, LinkedList exceptionHandlers) {
-		setId(id);
-		setView(view);
-		setCommit(commit);
-		setOutputs(outputs);
-		setAttributes(attributes);
-		setSecured(secured);
-		setOnEntryActions(onEntryActions);
-		setExceptionHandlers(exceptionHandlers);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the end state to merge into this state
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			EndStateModel state = (EndStateModel) model;
-			setAttributes(merge(getAttributes(), state.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
-			setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
-			setView(merge(getView(), state.getView()));
-			setCommit(merge(getCommit(), state.getCommit()));
-			setOutputs(merge(getOutputs(), state.getOutputs(), false));
-		}
+		EndStateModel state = (EndStateModel) model;
+		setAttributes(merge(getAttributes(), state.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
+		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
+		setView(merge(getView(), state.getView()));
+		setCommit(merge(getCommit(), state.getCommit()));
+		setOutputs(merge(getOutputs(), state.getOutputs(), false));
 	}
 
 	/**
@@ -91,52 +66,11 @@ public class EndStateModel extends AbstractStateModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof EndStateModel)) {
 			return false;
 		}
 		EndStateModel state = (EndStateModel) model;
 		return ObjectUtils.nullSafeEquals(getId(), state.getId());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof EndStateModel)) {
-			return false;
-		}
-		EndStateModel state = (EndStateModel) obj;
-		if (state == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getId(), state.getId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), state.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), state.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEntryActions(), state.getOnEntryActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), state.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getView(), state.getView())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getCommit(), state.getCommit())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOutputs(), state.getOutputs())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hasCode() {
-		return ObjectUtils.nullSafeHashCode(getId()) * 27 + ObjectUtils.nullSafeHashCode(getAttributes()) * 27
-				+ ObjectUtils.nullSafeHashCode(getSecured()) * 27 + ObjectUtils.nullSafeHashCode(getOnEntryActions())
-				* 27 + ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getView()) * 27 + ObjectUtils.nullSafeHashCode(getCommit()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOutputs()) * 27;
 	}
 
 	/**

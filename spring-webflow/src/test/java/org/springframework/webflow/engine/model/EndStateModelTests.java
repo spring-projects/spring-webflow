@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.EndStateModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,34 +22,28 @@ import junit.framework.TestCase;
  */
 public class EndStateModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testMergeable() {
+		EndStateModel child = new EndStateModel("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
 		EndStateModel child = new EndStateModel("child");
 		EndStateModel parent = new EndStateModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getId());
+		assertFalse(child.isMergeableWith(parent));
 	}
 
-	public void testMergeNullParent() {
+	public void testNotMergeableWithNull() {
 		EndStateModel child = new EndStateModel("child");
-		EndStateModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getId());
+		assertFalse(child.isMergeableWith(null));
 	}
 
-	public void testMergeOverrideMatch() {
+	public void testMerge() {
 		EndStateModel child = new EndStateModel("child");
 		EndStateModel parent = new EndStateModel("child");
 		parent.setCommit("true");
 		child.merge(parent);
 		assertEquals("true", child.getCommit());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		EndStateModel child = new EndStateModel("child");
-		EndStateModel parent = new EndStateModel("parent");
-		parent.setCommit("true");
-		child.merge(parent);
-		assertEquals(null, child.getCommit());
 	}
 
 }

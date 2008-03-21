@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.SecuredModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,28 @@ import junit.framework.TestCase;
  */
 public class SecuredModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testMergeable() {
+		SecuredModel child = new SecuredModel("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
 		SecuredModel child = new SecuredModel("child");
 		SecuredModel parent = new SecuredModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getAttributes());
+		assertFalse(child.isMergeableWith(parent));
 	}
 
-	public void testMergeNullParent() {
+	public void testNotMergeableWithNull() {
 		SecuredModel child = new SecuredModel("child");
-		SecuredModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getAttributes());
+		assertFalse(child.isMergeableWith(null));
 	}
 
-	public void testMergeOverrideMatch() {
+	public void testMerge() {
 		SecuredModel child = new SecuredModel("child");
-		SecuredModel parent = new SecuredModel("child", "all");
+		SecuredModel parent = new SecuredModel("child");
+		parent.setMatch("all");
 		child.merge(parent);
 		assertEquals("all", child.getMatch());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		SecuredModel child = new SecuredModel("child");
-		SecuredModel parent = new SecuredModel("parent", "all");
-		child.merge(parent);
-		assertEquals(null, child.getMatch());
 	}
 
 }

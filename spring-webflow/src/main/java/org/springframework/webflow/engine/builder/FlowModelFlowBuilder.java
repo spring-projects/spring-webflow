@@ -457,6 +457,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
 		}
 		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
+		if (state.getModel() != null) {
+			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
+					new ParserContextImpl().eval(RequestContext.class)));
+		}
 		convertSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
 				convertViewVariables(state.getVars()), convertActions(state.getOnEntryActions()), viewFactory,
@@ -677,6 +681,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		TransitionCriteria executionCriteria = TransitionCriteriaChain.criteriaChainFor(convertActions(transition
 				.getActions()));
 		MutableAttributeMap attributes = convertMetaAttributes(transition.getAttributes());
+		if (transition.getBind() != null) {
+			attributes.put("bind", transition.getBind());
+		}
 		convertSecured(transition.getSecured(), attributes);
 		return getLocalContext().getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria,
 				executionCriteria, attributes);

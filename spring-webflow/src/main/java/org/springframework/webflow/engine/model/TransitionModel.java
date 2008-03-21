@@ -40,41 +40,8 @@ public class TransitionModel extends AbstractModel {
 
 	/**
 	 * Create a transition model
-	 * @param on the matching criteria
 	 */
-	public TransitionModel(String on) {
-		setOn(on);
-	}
-
-	/**
-	 * Create a transition model
-	 * @param on the matching criteria
-	 * @param to the identifier of the state to target
-	 */
-	public TransitionModel(String on, String to) {
-		setOn(on);
-		setTo(to);
-	}
-
-	/**
-	 * Create a transition model
-	 * @param on the matching criteria
-	 * @param to the identifier of the state to target
-	 * @param onException class name of the exception to handle
-	 * @param bind if the transition should bind to the defined model. Valid only for view state transitions
-	 * @param attributes meta attributes for the transition
-	 * @param secured security settings for the transition
-	 * @param actions actions to be executed after matching the transition
-	 */
-	public TransitionModel(String on, String to, String onException, String bind, LinkedList attributes,
-			SecuredModel secured, LinkedList actions) {
-		setOn(on);
-		setTo(to);
-		setOnException(onException);
-		setBind(bind);
-		setAttributes(attributes);
-		setSecured(secured);
-		setActions(actions);
+	public TransitionModel() {
 	}
 
 	/**
@@ -82,15 +49,13 @@ public class TransitionModel extends AbstractModel {
 	 * @param model the transition to merge into this transition
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			TransitionModel transition = (TransitionModel) model;
-			setOnException(merge(getOnException(), transition.getOnException()));
-			setTo(merge(getTo(), transition.getTo()));
-			setBind(merge(getBind(), transition.getBind()));
-			setAttributes(merge(getAttributes(), transition.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
-			setActions(merge(getActions(), transition.getActions(), false));
-		}
+		TransitionModel transition = (TransitionModel) model;
+		setOnException(merge(getOnException(), transition.getOnException()));
+		setTo(merge(getTo(), transition.getTo()));
+		setBind(merge(getBind(), transition.getBind()));
+		setAttributes(merge(getAttributes(), transition.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
+		setActions(merge(getActions(), transition.getActions(), false));
 	}
 
 	/**
@@ -98,49 +63,11 @@ public class TransitionModel extends AbstractModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof TransitionModel)) {
 			return false;
 		}
 		TransitionModel transition = (TransitionModel) model;
 		return ObjectUtils.nullSafeEquals(getOn(), transition.getOn());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof TransitionModel)) {
-			return false;
-		}
-		TransitionModel transition = (TransitionModel) obj;
-		if (transition == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOn(), transition.getOn())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnException(), transition.getOnException())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getTo(), transition.getTo())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getBind(), transition.getBind())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), transition.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), transition.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getActions(), transition.getActions())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getOn()) * 27 + ObjectUtils.nullSafeHashCode(getOnException()) * 27
-				+ ObjectUtils.nullSafeHashCode(getTo()) * 27 + ObjectUtils.nullSafeHashCode(getBind()) * 27
-				+ ObjectUtils.nullSafeHashCode(getAttributes()) * 27 + ObjectUtils.nullSafeHashCode(getSecured()) * 27
-				+ ObjectUtils.nullSafeHashCode(getActions()) * 27;
 	}
 
 	/**

@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.ExceptionHandlerModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,26 +22,9 @@ import junit.framework.TestCase;
  */
 public class ExceptionHandlerModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testNotMergeable() {
 		ExceptionHandlerModel child = new ExceptionHandlerModel("child");
-		ExceptionHandlerModel parent = new ExceptionHandlerModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getBeanName());
-	}
-
-	public void testMergeNullParent() {
-		ExceptionHandlerModel child = new ExceptionHandlerModel("child");
-		ExceptionHandlerModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getBeanName());
-	}
-
-	public void testMergeOverrideMatch() {
-		// exception handler will never merge
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		// exception handler will never merge
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

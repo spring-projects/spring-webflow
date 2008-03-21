@@ -175,7 +175,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 				.hasNext();) {
 			attributes.add(parseAttribute((Element) attributeIt.next()));
 		}
-		return attributes;
+		return !attributes.isEmpty() ? attributes : null;
 	}
 
 	protected LinkedList parseVars(Element ele) {
@@ -183,7 +183,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		for (Iterator varIt = DomUtils.getChildElementsByTagName(ele, "var").iterator(); varIt.hasNext();) {
 			vars.add(parseVar((Element) varIt.next()));
 		}
-		return vars;
+		return !vars.isEmpty() ? vars : null;
 	}
 
 	protected LinkedList parseInputs(Element ele) {
@@ -191,7 +191,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		for (Iterator inputIt = DomUtils.getChildElementsByTagName(ele, "input").iterator(); inputIt.hasNext();) {
 			inputs.add(parseInput((Element) inputIt.next()));
 		}
-		return inputs;
+		return !inputs.isEmpty() ? inputs : null;
 	}
 
 	protected LinkedList parseOutputs(Element ele) {
@@ -199,16 +199,19 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		for (Iterator outputIt = DomUtils.getChildElementsByTagName(ele, "output").iterator(); outputIt.hasNext();) {
 			outputs.add(parseOutput((Element) outputIt.next()));
 		}
-		return outputs;
+		return !outputs.isEmpty() ? outputs : null;
 	}
 
 	protected LinkedList parseActions(Element ele) {
+		if (ele == null) {
+			return null;
+		}
 		LinkedList actions = new LinkedList();
 		for (Iterator actionIt = getChildElementsByTagNames(ele, new String[] { "evaluate", "render", "set" })
 				.iterator(); actionIt.hasNext();) {
 			actions.add(parseAction((Element) actionIt.next()));
 		}
-		return actions;
+		return !actions.isEmpty() ? actions : null;
 	}
 
 	protected LinkedList parseStates(Element ele) {
@@ -218,7 +221,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 				.iterator(); stateIt.hasNext();) {
 			states.add(parseState((Element) stateIt.next()));
 		}
-		return states;
+		return !states.isEmpty() ? states : null;
 	}
 
 	protected LinkedList parseTransitions(Element ele) {
@@ -227,8 +230,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 				.hasNext();) {
 			transitions.add(parseTransition((Element) transitionIt.next()));
 		}
-		return transitions;
-
+		return !transitions.isEmpty() ? transitions : null;
 	}
 
 	protected LinkedList parseExceptionHandlers(Element ele) {
@@ -237,7 +239,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 				.hasNext();) {
 			exceptionHandlers.add(parseExceptionHandler((Element) exceptionHandlerIt.next()));
 		}
-		return exceptionHandlers;
+		return !exceptionHandlers.isEmpty() ? exceptionHandlers : null;
 	}
 
 	protected LinkedList parseBeanImports(Element ele) {
@@ -246,7 +248,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 				.hasNext();) {
 			beanImports.add(parseBeanImport((Element) beanImportIt.next()));
 		}
-		return beanImports;
+		return !beanImports.isEmpty() ? beanImports : null;
 	}
 
 	protected LinkedList parseIfs(Element ele) {
@@ -254,7 +256,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		for (Iterator ifIt = DomUtils.getChildElementsByTagName(ele, "if").iterator(); ifIt.hasNext();) {
 			ifs.add(parseIf((Element) ifIt.next()));
 		}
-		return ifs;
+		return !ifs.isEmpty() ? ifs : null;
 	}
 
 	protected AbstractActionModel parseAction(Element ele) {
@@ -286,23 +288,18 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	}
 
 	protected LinkedList parseGlobalTransitions(Element ele) {
+		ele = DomUtils.getChildElementByTagName(ele, "global-transitions");
 		if (ele == null) {
 			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "global-transitions")) {
-			return parseGlobalTransitions(DomUtils.getChildElementByTagName(ele, "global-transitions"));
 		} else {
 			return parseTransitions(ele);
 		}
 	}
 
 	protected AttributeModel parseAttribute(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "attribute")) {
-			return parseAttribute(DomUtils.getChildElementByTagName(ele, "attribute"));
-		} else {
-			return new AttributeModel(ele.getAttribute("name"), parseValue(ele), ele.getAttribute("type"));
-		}
+		AttributeModel attribute = new AttributeModel(ele.getAttribute("name"), parseValue(ele));
+		attribute.setType(ele.getAttribute("type"));
+		return attribute;
 	}
 
 	protected String parseValue(Element ele) {
@@ -315,239 +312,172 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	}
 
 	protected SecuredModel parseSecured(Element ele) {
+		ele = DomUtils.getChildElementByTagName(ele, "secured");
 		if (ele == null) {
 			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "secured")) {
-			return parseSecured(DomUtils.getChildElementByTagName(ele, "secured"));
 		} else {
-			return new SecuredModel(ele.getAttribute("attributes"), ele.getAttribute("match"));
+			SecuredModel secured = new SecuredModel(ele.getAttribute("attributes"));
+			secured.setMatch(ele.getAttribute("match"));
+			return secured;
 		}
 	}
 
 	protected PersistenceContextModel parsePersistenceContext(Element ele) {
+		ele = DomUtils.getChildElementByTagName(ele, "persistence-context");
 		if (ele == null) {
 			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "persistence-context")) {
-			return parsePersistenceContext(DomUtils.getChildElementByTagName(ele, "persistence-context"));
 		} else {
 			return new PersistenceContextModel();
 		}
 	}
 
 	protected VarModel parseVar(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "var")) {
-			return parseVar(DomUtils.getChildElementByTagName(ele, "var"));
-		} else {
-			return new VarModel(ele.getAttribute("name"), ele.getAttribute("class"), ele.getAttribute("scope"));
-		}
+		VarModel var = new VarModel(ele.getAttribute("name"), ele.getAttribute("class"));
+		var.setScope(ele.getAttribute("scope"));
+		return var;
 	}
 
 	protected InputModel parseInput(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "input")) {
-			return parseInput(DomUtils.getChildElementByTagName(ele, "input"));
-		} else {
-			return new InputModel(ele.getAttribute("name"), ele.getAttribute("value"), ele.getAttribute("type"), ele
-					.getAttribute("required"));
-		}
+		InputModel input = new InputModel(ele.getAttribute("name"), ele.getAttribute("value"));
+		input.setType(ele.getAttribute("type"));
+		input.setRequired(ele.getAttribute("required"));
+		return input;
 	}
 
 	protected OutputModel parseOutput(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "output")) {
-			return parseOutput(DomUtils.getChildElementByTagName(ele, "output"));
-		} else {
-			return new OutputModel(ele.getAttribute("name"), ele.getAttribute("value"), ele.getAttribute("type"), ele
-					.getAttribute("required"));
-		}
+		OutputModel output = new OutputModel(ele.getAttribute("name"), ele.getAttribute("value"));
+		output.setType(ele.getAttribute("type"));
+		output.setRequired(ele.getAttribute("required"));
+		return output;
 	}
 
 	protected TransitionModel parseTransition(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "transition")) {
-			return parseTransition(DomUtils.getChildElementByTagName(ele, "transition"));
-		} else {
-			return new TransitionModel(ele.getAttribute("on"), ele.getAttribute("to"),
-					ele.getAttribute("on-exception"), ele.getAttribute("bind"), parseAttributes(ele),
-					parseSecured(ele), parseActions(ele));
-		}
+		TransitionModel transition = new TransitionModel();
+		transition.setOn(ele.getAttribute("on"));
+		transition.setTo(ele.getAttribute("to"));
+		transition.setOnException(ele.getAttribute("on-exception"));
+		transition.setBind(ele.getAttribute("bind"));
+		transition.setAttributes(parseAttributes(ele));
+		transition.setSecured(parseSecured(ele));
+		transition.setActions(parseActions(ele));
+		return transition;
 	}
 
 	protected ExceptionHandlerModel parseExceptionHandler(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "exception-handler")) {
-			return parseExceptionHandler(DomUtils.getChildElementByTagName(ele, "exception-handler"));
-		} else {
-			return new ExceptionHandlerModel(ele.getAttribute("bean-name"));
-		}
+		return new ExceptionHandlerModel(ele.getAttribute("bean-name"));
 	}
 
 	protected BeanImportModel parseBeanImport(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "bean-import")) {
-			return parseBeanImport(DomUtils.getChildElementByTagName(ele, "bean-import"));
-		} else {
-			return new BeanImportModel(ele.getAttribute("resource"));
-		}
+		return new BeanImportModel(ele.getAttribute("resource"));
 	}
 
 	protected IfModel parseIf(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "if")) {
-			return parseIf(DomUtils.getChildElementByTagName(ele, "if"));
-		} else {
-			return new IfModel(ele.getAttribute("test"), ele.getAttribute("then"), ele.getAttribute("else"));
-		}
+		IfModel conditional = new IfModel(ele.getAttribute("test"), ele.getAttribute("then"));
+		conditional.setElse(ele.getAttribute("else"));
+		return conditional;
 	}
 
 	protected LinkedList parseOnStartActions(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "on-start")) {
-			return parseOnStartActions(DomUtils.getChildElementByTagName(ele, "on-start"));
-		} else {
-			return parseActions(ele);
-		}
+		return parseActions(DomUtils.getChildElementByTagName(ele, "on-start"));
 	}
 
 	protected LinkedList parseOnEntryActions(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "on-entry")) {
-			return parseOnEntryActions(DomUtils.getChildElementByTagName(ele, "on-entry"));
-		} else {
-			return parseActions(ele);
-		}
-	}
-
-	protected LinkedList parseOnExitActions(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "on-exit")) {
-			return parseOnExitActions(DomUtils.getChildElementByTagName(ele, "on-exit"));
-		} else {
-			return parseActions(ele);
-		}
+		return parseActions(DomUtils.getChildElementByTagName(ele, "on-entry"));
 	}
 
 	protected LinkedList parseOnRenderActions(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "on-render")) {
-			return parseOnRenderActions(DomUtils.getChildElementByTagName(ele, "on-render"));
-		} else {
-			return parseActions(ele);
-		}
+		return parseActions(DomUtils.getChildElementByTagName(ele, "on-render"));
+	}
+
+	protected LinkedList parseOnExitActions(Element ele) {
+		return parseActions(DomUtils.getChildElementByTagName(ele, "on-exit"));
 	}
 
 	protected LinkedList parseOnEndActions(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "on-end")) {
-			return parseOnEndActions(DomUtils.getChildElementByTagName(ele, "on-end"));
-		} else {
-			return parseActions(ele);
-		}
+		return parseActions(DomUtils.getChildElementByTagName(ele, "on-end"));
 	}
 
 	protected EvaluateModel parseEvaluate(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "evaluate")) {
-			return parseEvaluate(DomUtils.getChildElementByTagName(ele, "evaluate"));
-		} else {
-			return new EvaluateModel(ele.getAttribute("expression"), ele.getAttribute("result"), ele
-					.getAttribute("result-type"));
-		}
+		EvaluateModel evaluate = new EvaluateModel(ele.getAttribute("expression"));
+		evaluate.setResult(ele.getAttribute("result"));
+		evaluate.setResultType(ele.getAttribute("result-type"));
+		return evaluate;
 	}
 
 	protected RenderModel parseRender(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "render")) {
-			return parseRender(DomUtils.getChildElementByTagName(ele, "render"));
-		} else {
-			return new RenderModel(ele.getAttribute("fragments"));
-		}
+		return new RenderModel(ele.getAttribute("fragments"));
 	}
 
 	protected SetModel parseSet(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "set")) {
-			return parseSet(DomUtils.getChildElementByTagName(ele, "set"));
-		} else {
-			return new SetModel(ele.getAttribute("name"), ele.getAttribute("value"), ele.getAttribute("type"));
-		}
+		SetModel set = new SetModel(ele.getAttribute("name"), ele.getAttribute("value"));
+		set.setType(ele.getAttribute("type"));
+		return set;
 	}
 
 	protected ActionStateModel parseActionState(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "action-state")) {
-			return parseActionState(DomUtils.getChildElementByTagName(ele, "action-state"));
-		} else {
-			return new ActionStateModel(ele.getAttribute("id"), parseAttributes(ele), parseSecured(ele),
-					parseOnEntryActions(ele), parseTransitions(ele), parseOnExitActions(ele), parseActions(ele),
-					parseExceptionHandlers(ele));
-		}
+		ActionStateModel state = new ActionStateModel(ele.getAttribute("id"));
+		state.setAttributes(parseAttributes(ele));
+		state.setSecured(parseSecured(ele));
+		state.setOnEntryActions(parseOnEntryActions(ele));
+		state.setTransitions(parseTransitions(ele));
+		state.setOnExitActions(parseOnExitActions(ele));
+		state.setActions(parseActions(ele));
+		state.setExceptionHandlers(parseExceptionHandlers(ele));
+		return state;
 	}
 
 	protected ViewStateModel parseViewState(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "view-state")) {
-			return parseViewState(DomUtils.getChildElementByTagName(ele, "view-state"));
-		} else {
-			return new ViewStateModel(ele.getAttribute("id"), ele.getAttribute("view"), ele.getAttribute("redirect"),
-					ele.getAttribute("popup"), ele.getAttribute("model"), parseVars(ele), parseOnRenderActions(ele),
-					parseAttributes(ele), parseSecured(ele), parseOnEntryActions(ele), parseExceptionHandlers(ele),
-					parseTransitions(ele), parseOnExitActions(ele));
-		}
+		ViewStateModel state = new ViewStateModel(ele.getAttribute("id"));
+		state.setView(ele.getAttribute("view"));
+		state.setRedirect(ele.getAttribute("redirect"));
+		state.setPopup(ele.getAttribute("popup"));
+		state.setModel(ele.getAttribute("model"));
+		state.setVars(parseVars(ele));
+		state.setOnRenderActions(parseOnRenderActions(ele));
+		state.setAttributes(parseAttributes(ele));
+		state.setSecured(parseSecured(ele));
+		state.setOnEntryActions(parseOnEntryActions(ele));
+		state.setExceptionHandlers(parseExceptionHandlers(ele));
+		state.setTransitions(parseTransitions(ele));
+		state.setOnExitActions(parseOnExitActions(ele));
+		return state;
 	}
 
 	protected DecisionStateModel parseDecisionState(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "decision-state")) {
-			return parseDecisionState(DomUtils.getChildElementByTagName(ele, "decision-state"));
-		} else {
-			return new DecisionStateModel(ele.getAttribute("id"), parseIfs(ele), parseOnExitActions(ele),
-					parseAttributes(ele), parseSecured(ele), parseOnEntryActions(ele), parseExceptionHandlers(ele));
-		}
+		DecisionStateModel state = new DecisionStateModel(ele.getAttribute("id"));
+		state.setIfs(parseIfs(ele));
+		state.setOnExitActions(parseOnExitActions(ele));
+		state.setAttributes(parseAttributes(ele));
+		state.setSecured(parseSecured(ele));
+		state.setOnEntryActions(parseOnEntryActions(ele));
+		state.setExceptionHandlers(parseExceptionHandlers(ele));
+		return state;
 	}
 
 	protected SubflowStateModel parseSubflowState(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "subflow-state")) {
-			return parseSubflowState(DomUtils.getChildElementByTagName(ele, "subflow-state"));
-		} else {
-			return new SubflowStateModel(ele.getAttribute("id"), ele.getAttribute("subflow"), ele
-					.getAttribute("subflow-attribute-mapper"), parseInputs(ele), parseOutputs(ele),
-					parseAttributes(ele), parseSecured(ele), parseOnEntryActions(ele), parseExceptionHandlers(ele),
-					parseTransitions(ele), parseOnExitActions(ele));
-		}
+		SubflowStateModel state = new SubflowStateModel(ele.getAttribute("id"), ele.getAttribute("subflow"));
+		state.setSubflowAttributeMapper(ele.getAttribute("subflow-attribute-mapper"));
+		state.setInputs(parseInputs(ele));
+		state.setOutputs(parseOutputs(ele));
+		state.setAttributes(parseAttributes(ele));
+		state.setSecured(parseSecured(ele));
+		state.setOnEntryActions(parseOnEntryActions(ele));
+		state.setExceptionHandlers(parseExceptionHandlers(ele));
+		state.setTransitions(parseTransitions(ele));
+		state.setOnExitActions(parseOnExitActions(ele));
+		return state;
 	}
 
 	protected EndStateModel parseEndState(Element ele) {
-		if (ele == null) {
-			return null;
-		} else if (!DomUtils.nodeNameEquals(ele, "end-state")) {
-			return parseEndState(DomUtils.getChildElementByTagName(ele, "end-state"));
-		} else {
-			return new EndStateModel(ele.getAttribute("id"), ele.getAttribute("view-factory"), ele
-					.getAttribute("commit"), parseOutputs(ele), parseAttributes(ele), parseSecured(ele),
-					parseOnEntryActions(ele), parseExceptionHandlers(ele));
-		}
+		EndStateModel state = new EndStateModel(ele.getAttribute("id"));
+		state.setView(ele.getAttribute("view"));
+		state.setCommit(ele.getAttribute("commit"));
+		state.setOutputs(parseOutputs(ele));
+		state.setAttributes(parseAttributes(ele));
+		state.setSecured(parseSecured(ele));
+		state.setOnEntryActions(parseOnEntryActions(ele));
+		state.setExceptionHandlers(parseExceptionHandlers(ele));
+		return state;
 	}
 
 	// TODO: submit this to DomUtils

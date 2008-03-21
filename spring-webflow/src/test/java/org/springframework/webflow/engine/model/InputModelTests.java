@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.InputModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,34 +22,28 @@ import junit.framework.TestCase;
  */
 public class InputModelTests extends TestCase {
 
+	public void testMergeable() {
+		InputModel child = new InputModel("child", "childvalue");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		InputModel child = new InputModel("child", "childvalue");
+		InputModel parent = new InputModel("parent", "parentvalue");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		InputModel child = new InputModel("child", "childvalue");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
 		InputModel child = new InputModel("child", "childvalue");
-		InputModel parent = new InputModel("parent", "parentvalue");
+		InputModel parent = new InputModel("child", "parentvalue");
+		parent.setType("parenttype");
 		child.merge(parent);
-		assertEquals("childvalue", child.getValue());
-	}
-
-	public void testMergeNullParent() {
-		InputModel child = new InputModel("child", "childvalue");
-		InputModel parent = null;
-		child.merge(parent);
-		assertEquals("childvalue", child.getValue());
-	}
-
-	public void testMergeOverrideMatch() {
-		InputModel child = new InputModel("child", "childvalue");
-		InputModel parent = new InputModel("child", "childvalue");
-		parent.setType("long");
-		child.merge(parent);
-		assertEquals("long", child.getType());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		InputModel child = new InputModel("child", "childvalue");
-		InputModel parent = new InputModel("parent", "parentvalue");
-		parent.setType("long");
-		child.merge(parent);
-		assertEquals(null, child.getType());
+		assertEquals("parenttype", child.getType());
 	}
 
 }

@@ -53,69 +53,23 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	}
 
 	/**
-	 * Create a view state model
-	 * @param id the identifier of the state
-	 * @param view the view to render
-	 */
-	public ViewStateModel(String id, String view) {
-		setId(id);
-		setView(view);
-	}
-
-	/**
-	 * Create a view state model
-	 * @param id the identifier of the state
-	 * @param view the view to render
-	 * @param redirect request a flow execution redirect before render
-	 * @param popup view should render in a popup dialog
-	 * @param model the model object to bind for this view
-	 * @param vars variables for this state
-	 * @param onRenderActions actions to be executed before rendering
-	 * @param attributes meta attributes for this state
-	 * @param secured the security settings for this state
-	 * @param onEntryActions actions to be executed on entry
-	 * @param exceptionHandlers exception handlers for this state
-	 * @param transitions transitions for this state
-	 * @param onExitActions actions to be executed before exiting
-	 */
-	public ViewStateModel(String id, String view, String redirect, String popup, String model, LinkedList vars,
-			LinkedList onRenderActions, LinkedList attributes, SecuredModel secured, LinkedList onEntryActions,
-			LinkedList exceptionHandlers, LinkedList transitions, LinkedList onExitActions) {
-		setId(id);
-		setView(view);
-		setRedirect(redirect);
-		setPopup(popup);
-		setModel(model);
-		setVars(vars);
-		setOnRenderActions(onRenderActions);
-		setAttributes(attributes);
-		setSecured(secured);
-		setOnEntryActions(onEntryActions);
-		setExceptionHandlers(exceptionHandlers);
-		setTransitions(transitions);
-		setOnExitActions(onExitActions);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the view state to merge into this state
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			ViewStateModel state = (ViewStateModel) model;
-			setAttributes(merge(getAttributes(), state.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
-			setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
-			setTransitions(merge(getTransitions(), state.getTransitions()));
-			setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
-			setView(merge(getView(), state.getView()));
-			setRedirect(merge(getRedirect(), state.getRedirect()));
-			setPopup(merge(getPopup(), state.getPopup()));
-			setModel(merge(getModel(), state.getModel()));
-			setVars(merge(getVars(), state.getVars(), false));
-			setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
-		}
+		ViewStateModel state = (ViewStateModel) model;
+		setAttributes(merge(getAttributes(), state.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
+		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
+		setTransitions(merge(getTransitions(), state.getTransitions()));
+		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
+		setView(merge(getView(), state.getView()));
+		setRedirect(merge(getRedirect(), state.getRedirect()));
+		setPopup(merge(getPopup(), state.getPopup()));
+		setModel(merge(getModel(), state.getModel()));
+		setVars(merge(getVars(), state.getVars(), false));
+		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
 	}
 
 	/**
@@ -123,65 +77,11 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof ViewStateModel)) {
 			return false;
 		}
 		ViewStateModel state = (ViewStateModel) model;
 		return ObjectUtils.nullSafeEquals(getId(), state.getId());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof ViewStateModel)) {
-			return false;
-		}
-		ViewStateModel state = (ViewStateModel) obj;
-		if (state == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getId(), state.getId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), state.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), state.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEntryActions(), state.getOnEntryActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), state.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getTransitions(), state.getTransitions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnExitActions(), state.getOnExitActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getView(), state.getView())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getRedirect(), state.getRedirect())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getPopup(), state.getPopup())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getModel(), state.getModel())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getVars(), state.getVars())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnRenderActions(), state.getOnRenderActions())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getId()) * 27 + ObjectUtils.nullSafeHashCode(getAttributes()) * 27
-				+ ObjectUtils.nullSafeHashCode(getSecured()) * 27 + ObjectUtils.nullSafeHashCode(getOnEntryActions())
-				* 27 + ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getTransitions()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnExitActions()) * 27 + ObjectUtils.nullSafeHashCode(getView()) * 27
-				+ ObjectUtils.nullSafeHashCode(getRedirect()) * 27 + ObjectUtils.nullSafeHashCode(getPopup()) * 27
-				+ ObjectUtils.nullSafeHashCode(getModel()) * 27 + ObjectUtils.nullSafeHashCode(getVars()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnRenderActions()) * 27;
 	}
 
 	/**

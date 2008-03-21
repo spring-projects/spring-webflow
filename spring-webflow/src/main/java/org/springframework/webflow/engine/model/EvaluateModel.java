@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -36,80 +35,6 @@ public class EvaluateModel extends AbstractActionModel {
 	 */
 	public EvaluateModel(String expression) {
 		setExpression(expression);
-	}
-
-	/**
-	 * Create an evaluate action model
-	 * @param expression the expression to evaluate
-	 * @param result where to store the result of the expressions
-	 */
-	public EvaluateModel(String expression, String result) {
-		setExpression(expression);
-		setResult(result);
-	}
-
-	/**
-	 * Create an evaluate action model
-	 * @param expression the expression to evaluate
-	 * @param result where to store the result of the expressions
-	 * @param resultType the type of the result
-	 */
-	public EvaluateModel(String expression, String result, String resultType) {
-		setExpression(expression);
-		setResult(result);
-		setResultType(resultType);
-	}
-
-	/**
-	 * Merge properties
-	 * @param model the evaluate action to merge into this evaluate
-	 */
-	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			EvaluateModel evaluate = (EvaluateModel) model;
-			setResult(merge(getResult(), evaluate.getResult()));
-			setResultType(merge(getResultType(), evaluate.getResultType()));
-		}
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this evaluate action
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
-		if (!(model instanceof EvaluateModel)) {
-			return false;
-		}
-		EvaluateModel evaluate = (EvaluateModel) model;
-		return ObjectUtils.nullSafeEquals(getExpression(), evaluate.getExpression());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof EvaluateModel)) {
-			return false;
-		}
-		EvaluateModel evaluate = (EvaluateModel) obj;
-		if (evaluate == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExpression(), evaluate.getExpression())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getResult(), evaluate.getResult())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getResultType(), evaluate.getResultType())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getExpression()) * 27 + ObjectUtils.nullSafeHashCode(getResult()) * 27
-				+ ObjectUtils.nullSafeHashCode(getResultType()) * 27;
 	}
 
 	/**

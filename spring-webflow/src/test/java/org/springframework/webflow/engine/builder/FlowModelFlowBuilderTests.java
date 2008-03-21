@@ -78,7 +78,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testCustomFlowAttribute() {
 		model.addAttribute(new AttributeModel("foo", "bar"));
-		model.addAttribute(new AttributeModel("number", "1", "integer"));
+		AttributeModel attribute = new AttributeModel("number", "1");
+		attribute.setType("integer");
+		model.addAttribute(attribute);
 		model.addEndState(new EndStateModel("end"));
 		Flow flow = getFlow(model);
 		assertEquals("bar", flow.getAttributes().get("foo"));
@@ -94,10 +96,16 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testFlowInputOutputMapping() {
+		InputModel input;
+		OutputModel output;
 		model.addInput(new InputModel("foo", "flowScope.foo"));
 		model.addInput(new InputModel("foo", "flowScope.bar"));
-		model.addInput(new InputModel("number", "flowScope.baz", "integer", null));
-		model.addInput(new InputModel("required", "flowScope.boop", null, "true"));
+		input = new InputModel("number", "flowScope.baz");
+		input.setType("integer");
+		model.addInput(input);
+		input = new InputModel("required", "flowScope.boop");
+		input.setRequired("true");
+		model.addInput(input);
 		EndStateModel end = new EndStateModel("end");
 		end.addOutput(new OutputModel("foo", "flowScope.foo"));
 		model.addEndState(end);
@@ -105,18 +113,23 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		notReached.addOutput(new OutputModel("notReached", "flowScope.foo"));
 		model.addEndState(notReached);
 		model.addOutput(new OutputModel("differentName", "flowScope.bar"));
-		model.addOutput(new OutputModel("number", "flowScope.baz", "integer", null));
-		model.addOutput(new OutputModel("required", "flowScope.baz", "integer", "true"));
+		output = new OutputModel("number", "flowScope.baz");
+		output.setType("integer");
+		model.addOutput(output);
+		output = new OutputModel("required", "flowScope.baz");
+		output.setType("integer");
+		output.setRequired("true");
+		model.addOutput(output);
 		model.addOutput(new OutputModel("literal", "'a literal'"));
 		Flow flow = getFlow(model);
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
 		MockExternalContext context = new MockExternalContext();
-		MutableAttributeMap input = new LocalAttributeMap();
-		input.put("foo", "bar");
-		input.put("number", "3");
-		input.put("required", "9");
-		execution.start(input, context);
+		MutableAttributeMap map = new LocalAttributeMap();
+		map.put("foo", "bar");
+		map.put("number", "3");
+		map.put("required", "9");
+		execution.start(map, context);
 		Event outcome = execution.getOutcome();
 		assertEquals("end", outcome.getId());
 		assertEquals("bar", outcome.getAttributes().get("foo"));
@@ -128,10 +141,16 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testFlowRequiredInputMapping() {
+		InputModel input;
+		OutputModel output;
 		model.addInput(new InputModel("foo", "flowScope.foo"));
 		model.addInput(new InputModel("foo", "flowScope.bar"));
-		model.addInput(new InputModel("number", "flowScope.baz", "integer", null));
-		model.addInput(new InputModel("required", "flowScope.boop", null, "true"));
+		input = new InputModel("number", "flowScope.baz");
+		input.setType("integer");
+		model.addInput(input);
+		input = new InputModel("required", "flowScope.boop");
+		input.setRequired("true");
+		model.addInput(input);
 		EndStateModel end = new EndStateModel("end");
 		end.addOutput(new OutputModel("foo", "flowScope.foo"));
 		model.addEndState(end);
@@ -139,26 +158,37 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		notReached.addOutput(new OutputModel("notReached", "flowScope.foo"));
 		model.addEndState(notReached);
 		model.addOutput(new OutputModel("differentName", "flowScope.bar"));
-		model.addOutput(new OutputModel("number", "flowScope.baz", "integer", null));
-		model.addOutput(new OutputModel("required", "flowScope.baz", "integer", "true"));
+		output = new OutputModel("number", "flowScope.baz");
+		output.setType("integer");
+		model.addOutput(output);
+		output = new OutputModel("required", "flowScope.baz");
+		output.setType("integer");
+		output.setRequired("true");
+		model.addOutput(output);
 		model.addOutput(new OutputModel("literal", "'a literal'"));
 		Flow flow = getFlow(model);
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
 		MockExternalContext context = new MockExternalContext();
-		MutableAttributeMap input = new LocalAttributeMap();
+		MutableAttributeMap map = new LocalAttributeMap();
 		try {
-			execution.start(input, context);
+			execution.start(map, context);
 			fail("Should have failed");
 		} catch (FlowInputMappingException e) {
 		}
 	}
 
 	public void testFlowRequiredOutputMapping() {
+		InputModel input;
+		OutputModel output;
 		model.addInput(new InputModel("foo", "flowScope.foo"));
 		model.addInput(new InputModel("foo", "flowScope.bar"));
-		model.addInput(new InputModel("number", "flowScope.baz", "integer", null));
-		model.addInput(new InputModel("required", "flowScope.boop", null, "true"));
+		input = new InputModel("number", "flowScope.baz");
+		input.setType("integer");
+		model.addInput(input);
+		input = new InputModel("required", "flowScope.boop");
+		input.setRequired("true");
+		model.addInput(input);
 		EndStateModel end = new EndStateModel("end");
 		end.addOutput(new OutputModel("foo", "flowScope.foo"));
 		model.addEndState(end);
@@ -166,17 +196,22 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		notReached.addOutput(new OutputModel("notReached", "flowScope.foo"));
 		model.addEndState(notReached);
 		model.addOutput(new OutputModel("differentName", "flowScope.bar"));
-		model.addOutput(new OutputModel("number", "flowScope.baz", "integer", null));
-		model.addOutput(new OutputModel("required", "flowScope.baz", "integer", "true"));
+		output = new OutputModel("number", "flowScope.baz");
+		output.setType("integer");
+		model.addOutput(output);
+		output = new OutputModel("required", "flowScope.baz");
+		output.setType("integer");
+		output.setRequired("true");
+		model.addOutput(output);
 		model.addOutput(new OutputModel("literal", "'a literal'"));
 		Flow flow = getFlow(model);
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
 		MockExternalContext context = new MockExternalContext();
-		MutableAttributeMap input = new LocalAttributeMap();
-		input.put("required", "yo");
+		MutableAttributeMap map = new LocalAttributeMap();
+		map.put("required", "yo");
 		try {
-			execution.start(input, context);
+			execution.start(map, context);
 			fail("Should have failed");
 		} catch (FlowOutputMappingException e) {
 		}
@@ -208,7 +243,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testFlowSecuredTransition() {
 		model.addEndState(new EndStateModel("end"));
-		TransitionModel transition = new TransitionModel(null, "end");
+		TransitionModel transition = new TransitionModel();
+		transition.setTo("end");
 		transition.setSecured(new SecuredModel("ROLE_USER"));
 		model.addGlobalTransition(transition);
 		Flow flow = getFlow(model);
@@ -222,7 +258,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testFlowVariable() {
 		model.addVar(new VarModel("flow-foo", "org.springframework.webflow.TestBean"));
-		model.addVar(new VarModel("conversation-foo", "org.springframework.webflow.TestBean", "conversation"));
+		VarModel var = new VarModel("conversation-foo", "org.springframework.webflow.TestBean");
+		var.setScope("conversation");
+		model.addVar(var);
 		model.addEndState(new EndStateModel("end"));
 		Flow flow = getFlow(model);
 		assertEquals("flow-foo", flow.getVariable("flow-foo").getName());
@@ -256,7 +294,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testViewStateFlowRedirect() {
-		model.addViewState(new ViewStateModel("view", "flowRedirect:myFlow?input=#{flowScope.foo}"));
+		ViewStateModel state = new ViewStateModel("view");
+		state.setView("flowRedirect:myFlow?input=#{flowScope.foo}");
+		model.addViewState(state);
 		Flow flow = getFlow(model);
 		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
 		assertTrue(vf instanceof ActionExecutingViewFactory);
@@ -265,8 +305,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testViewStateExternalRedirect() {
-		model.addViewState(new ViewStateModel("view",
-				"externalRedirect:http://www.paypal.com?_callbackUrl=#{flowExecutionUri}"));
+		ViewStateModel state = new ViewStateModel("view");
+		state.setView("externalRedirect:http://www.paypal.com?_callbackUrl=#{flowExecutionUri}");
+		model.addViewState(state);
 		Flow flow = getFlow(model);
 		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
 		assertTrue(vf instanceof ActionExecutingViewFactory);

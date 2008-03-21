@@ -39,43 +39,18 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 	}
 
 	/**
-	 * Create an action state model
-	 * @param id the state identifier
-	 * @param attributes meta attributes for the state
-	 * @param secured security settings for the state
-	 * @param onEntryActions actions to execute upon entry
-	 * @param transitions transitions for the state
-	 * @param onExitActions actions to execute before leaving the state
-	 * @param actions actions to execute during the state
-	 * @param exceptionHandlers exception handlers for the state
-	 */
-	public ActionStateModel(String id, LinkedList attributes, SecuredModel secured, LinkedList onEntryActions,
-			LinkedList transitions, LinkedList onExitActions, LinkedList actions, LinkedList exceptionHandlers) {
-		setId(id);
-		setAttributes(attributes);
-		setSecured(secured);
-		setOnEntryActions(onEntryActions);
-		setTransitions(transitions);
-		setOnExitActions(onExitActions);
-		setActions(actions);
-		setExceptionHandlers(exceptionHandlers);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the action state to merge into this state
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			ActionStateModel state = (ActionStateModel) model;
-			setAttributes(merge(getAttributes(), state.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
-			setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
-			setTransitions(merge(getTransitions(), state.getTransitions()));
-			setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
-			setActions(merge(getActions(), state.getActions(), false));
-		}
+		ActionStateModel state = (ActionStateModel) model;
+		setAttributes(merge(getAttributes(), state.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
+		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
+		setTransitions(merge(getTransitions(), state.getTransitions()));
+		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
+		setActions(merge(getActions(), state.getActions(), false));
 	}
 
 	/**
@@ -83,53 +58,11 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof ActionStateModel)) {
 			return false;
 		}
 		ActionStateModel state = (ActionStateModel) model;
 		return ObjectUtils.nullSafeEquals(getId(), state.getId());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof ActionStateModel)) {
-			return false;
-		}
-		ActionStateModel state = (ActionStateModel) obj;
-		if (state == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getId(), state.getId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), state.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), state.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEntryActions(), state.getOnEntryActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), state.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getTransitions(), state.getTransitions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnExitActions(), state.getOnExitActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getActions(), state.getActions())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getId()) * 27 + ObjectUtils.nullSafeHashCode(getAttributes()) * 27
-				+ ObjectUtils.nullSafeHashCode(getSecured()) * 27 + ObjectUtils.nullSafeHashCode(getOnEntryActions())
-				* 27 + ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getTransitions()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnExitActions()) * 27 + ObjectUtils.nullSafeHashCode(getActions())
-				* 27;
 	}
 
 	/**

@@ -15,9 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.ActionStateModel;
-import org.springframework.webflow.engine.model.EvaluateModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -25,34 +22,28 @@ import junit.framework.TestCase;
  */
 public class ActionStateModelTests extends TestCase {
 
+	public void testMergeable() {
+		ActionStateModel child = new ActionStateModel("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		ActionStateModel child = new ActionStateModel("child");
+		ActionStateModel parent = new ActionStateModel("parent");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		ActionStateModel child = new ActionStateModel("child");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
 		ActionStateModel child = new ActionStateModel("child");
-		ActionStateModel parent = new ActionStateModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeNullParent() {
-		ActionStateModel child = new ActionStateModel("child");
-		ActionStateModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeOverrideMatch() {
-		ActionStateModel child = new ActionStateModel("child");
 		ActionStateModel parent = new ActionStateModel("child");
-		parent.addAction(new EvaluateModel("eval1"));
+		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
-		assertEquals(1, child.getActions().size());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		ActionStateModel child = new ActionStateModel("child");
-		ActionStateModel parent = new ActionStateModel("parent");
-		parent.addAction(new EvaluateModel("eval1"));
-		child.merge(parent);
-		assertEquals(null, child.getActions());
+		assertNotNull(child.getSecured());
 	}
 
 }

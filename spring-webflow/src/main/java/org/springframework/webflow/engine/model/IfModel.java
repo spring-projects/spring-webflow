@@ -43,27 +43,13 @@ public class IfModel extends AbstractModel {
 	}
 
 	/**
-	 * Create an if model
-	 * @param test the boolean condition to test
-	 * @param then the state to transition to if the boolean expression evaluates to true
-	 * @param elze the state to transition to if the boolean expression evaluates to false
-	 */
-	public IfModel(String test, String then, String elze) {
-		setTest(test);
-		setThen(then);
-		setElse(elze);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the conditional to merge into this conditional
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			IfModel conditional = (IfModel) model;
-			setThen(merge(getThen(), conditional.getThen()));
-			setElse(merge(getElse(), conditional.getElse()));
-		}
+		IfModel conditional = (IfModel) model;
+		setThen(merge(getThen(), conditional.getThen()));
+		setElse(merge(getElse(), conditional.getElse()));
 	}
 
 	/**
@@ -71,39 +57,11 @@ public class IfModel extends AbstractModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof IfModel)) {
 			return false;
 		}
 		IfModel conditional = (IfModel) model;
 		return ObjectUtils.nullSafeEquals(getTest(), conditional.getTest());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof IfModel)) {
-			return false;
-		}
-		IfModel conditional = (IfModel) obj;
-		if (conditional == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getTest(), conditional.getTest())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getThen(), conditional.getThen())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getElse(), conditional.getElse())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getTest()) * 27 + ObjectUtils.nullSafeHashCode(getThen()) * 27
-				+ ObjectUtils.nullSafeHashCode(getElse()) * 27;
 	}
 
 	/**

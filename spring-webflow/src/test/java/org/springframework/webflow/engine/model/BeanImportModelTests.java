@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.BeanImportModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,26 +22,9 @@ import junit.framework.TestCase;
  */
 public class BeanImportModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testNotMergeable() {
 		BeanImportModel child = new BeanImportModel("child");
-		BeanImportModel parent = new BeanImportModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getResource());
-	}
-
-	public void testMergeNullParent() {
-		BeanImportModel child = new BeanImportModel("child");
-		BeanImportModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getResource());
-	}
-
-	public void testMergeOverrideMatch() {
-		// bean import will never merge
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		// bean import will never merge
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

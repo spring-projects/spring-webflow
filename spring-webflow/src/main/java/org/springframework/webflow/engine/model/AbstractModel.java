@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -88,33 +89,35 @@ public abstract class AbstractModel implements Model {
 	 * @return the merged list
 	 */
 	protected LinkedList merge(LinkedList child, LinkedList parent, boolean addAtEnd) {
-		if (parent == null) {
-			return child;
-		} else if (child == null) {
+		if (child == null) {
 			return parent;
+		} else if (parent == null) {
+			return child;
 		} else {
+			if (!addAtEnd) {
+				parent = new LinkedList(parent);
+				Collections.reverse(parent);
+			}
 			for (Iterator parentIt = parent.iterator(); parentIt.hasNext();) {
 				Model parentElement = (Model) parentIt.next();
-				if (!child.contains(parentElement)) {
-					boolean matchFound = false;
-					for (Iterator childIt = child.iterator(); !matchFound && childIt.hasNext();) {
-						Model childElement = (Model) childIt.next();
-						if (childElement.isMergeableWith(parentElement)) {
-							matchFound = true;
-							childElement.merge(parentElement);
-						}
+				boolean matchFound = false;
+				for (Iterator childIt = child.iterator(); !matchFound && childIt.hasNext();) {
+					Model childElement = (Model) childIt.next();
+					if (childElement.isMergeableWith(parentElement)) {
+						matchFound = true;
+						childElement.merge(parentElement);
 					}
-					if (!matchFound) {
-						if (addAtEnd) {
-							child.addLast(parentElement);
-						} else {
-							child.addFirst(parentElement);
-						}
+				}
+				if (!matchFound) {
+					if (addAtEnd) {
+						child.addLast(parentElement);
+					} else {
+						child.addFirst(parentElement);
 					}
 				}
 			}
+			return child;
 		}
-		return child;
 	}
 
 }

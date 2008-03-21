@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.ViewStateModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,28 @@ import junit.framework.TestCase;
  */
 public class ViewStateModelTests extends TestCase {
 
+	public void testMergeable() {
+		ViewStateModel child = new ViewStateModel("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		ViewStateModel child = new ViewStateModel("child");
+		ViewStateModel parent = new ViewStateModel("parent");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		ViewStateModel child = new ViewStateModel("child");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
-		ViewStateModel child = new ViewStateModel("child", "childview");
-		ViewStateModel parent = new ViewStateModel("parent", "parentview");
-		child.merge(parent);
-		assertEquals("childview", child.getView());
-	}
-
-	public void testMergeNullParent() {
-		ViewStateModel child = new ViewStateModel("child", "childview");
-		ViewStateModel parent = null;
-		child.merge(parent);
-		assertEquals("childview", child.getView());
-	}
-
-	public void testMergeOverrideMatch() {
 		ViewStateModel child = new ViewStateModel("child");
-		ViewStateModel parent = new ViewStateModel("child", "parentview");
+		ViewStateModel parent = new ViewStateModel("child");
+		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
-		assertEquals("parentview", child.getView());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		ViewStateModel child = new ViewStateModel("child");
-		ViewStateModel parent = new ViewStateModel("parent", "parentview");
-		child.merge(parent);
-		assertEquals(null, child.getView());
+		assertNotNull(child.getSecured());
 	}
 
 }

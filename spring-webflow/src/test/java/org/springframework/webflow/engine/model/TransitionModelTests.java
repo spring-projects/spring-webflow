@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.TransitionModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,33 @@ import junit.framework.TestCase;
  */
 public class TransitionModelTests extends TestCase {
 
+	public void testMergeable() {
+		TransitionModel child = new TransitionModel();
+		child.setOn("child");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		TransitionModel child = new TransitionModel();
+		child.setOn("child");
+		TransitionModel parent = new TransitionModel();
+		parent.setOn("parent");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		TransitionModel child = new TransitionModel();
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
-		TransitionModel child = new TransitionModel("child");
-		TransitionModel parent = new TransitionModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getOn());
-	}
-
-	public void testMergeNullParent() {
-		TransitionModel child = new TransitionModel("child");
-		TransitionModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getOn());
-	}
-
-	public void testMergeOverrideMatch() {
-		TransitionModel child = new TransitionModel("child");
-		TransitionModel parent = new TransitionModel("child", "end");
+		TransitionModel child = new TransitionModel();
+		child.setOn("child");
+		TransitionModel parent = new TransitionModel();
+		parent.setOn("child");
+		parent.setTo("end");
 		child.merge(parent);
 		assertEquals("end", child.getTo());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		TransitionModel child = new TransitionModel("child");
-		TransitionModel parent = new TransitionModel("parent", "end");
-		child.merge(parent);
-		assertEquals(null, child.getTo());
 	}
 
 }

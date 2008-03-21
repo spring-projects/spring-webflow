@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.IfModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,28 @@ import junit.framework.TestCase;
  */
 public class IfModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testMergeable() {
+		IfModel child = new IfModel("child", "childthen");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
 		IfModel child = new IfModel("child", "childthen");
 		IfModel parent = new IfModel("parent", "parentthen");
-		child.merge(parent);
-		assertEquals("childthen", child.getThen());
+		assertFalse(child.isMergeableWith(parent));
 	}
 
-	public void testMergeNullParent() {
+	public void testNotMergeableWithNull() {
 		IfModel child = new IfModel("child", "childthen");
-		IfModel parent = null;
-		child.merge(parent);
-		assertEquals("childthen", child.getThen());
+		assertFalse(child.isMergeableWith(null));
 	}
 
-	public void testMergeOverrideMatch() {
+	public void testMerge() {
 		IfModel child = new IfModel("child", "childthen");
-		IfModel parent = new IfModel("child", "childthen", "childelse");
+		IfModel parent = new IfModel("child", "parentthen");
+		parent.setElse("parentelse");
 		child.merge(parent);
-		assertEquals("childelse", child.getElse());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		IfModel child = new IfModel("child", "childthen");
-		IfModel parent = new IfModel("parent", "parentthen", "parentelse");
-		child.merge(parent);
-		assertEquals(null, child.getElse());
+		assertEquals("parentelse", child.getElse());
 	}
 
 }

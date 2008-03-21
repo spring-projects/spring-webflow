@@ -44,24 +44,12 @@ public class SecuredModel extends AbstractModel {
 	}
 
 	/**
-	 * Create a security settings model
-	 * @param attributes the security attributes
-	 * @param match the type of matching for the attributes
-	 */
-	public SecuredModel(String attributes, String match) {
-		setAttributes(attributes);
-		setMatch(match);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the secured to merge into this secured
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			SecuredModel secured = (SecuredModel) model;
-			setMatch(merge(getMatch(), secured.getMatch()));
-		}
+		SecuredModel secured = (SecuredModel) model;
+		setMatch(merge(getMatch(), secured.getMatch()));
 	}
 
 	/**
@@ -69,36 +57,11 @@ public class SecuredModel extends AbstractModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof SecuredModel)) {
 			return false;
 		}
 		SecuredModel secured = (SecuredModel) model;
 		return ObjectUtils.nullSafeEquals(getAttributes(), secured.getAttributes());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof SecuredModel)) {
-			return false;
-		}
-		SecuredModel secured = (SecuredModel) obj;
-		if (secured == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), secured.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getMatch(), secured.getMatch())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getAttributes()) * 27 + ObjectUtils.nullSafeHashCode(getMatch()) * 27;
 	}
 
 	/**

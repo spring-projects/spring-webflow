@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -38,71 +37,6 @@ public class SetModel extends AbstractActionModel {
 	public SetModel(String name, String value) {
 		setName(name);
 		setValue(value);
-	}
-
-	/**
-	 * Create a set action model
-	 * @param name the name of the property to set
-	 * @param value the value to set
-	 * @param type the type of the property
-	 */
-	public SetModel(String name, String value, String type) {
-		setName(name);
-		setValue(value);
-		setType(type);
-	}
-
-	/**
-	 * Merge properties
-	 * @param model the set action to merge into this set
-	 */
-	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			SetModel set = (SetModel) model;
-			setValue(merge(getValue(), set.getValue()));
-			setType(merge(getType(), set.getType()));
-		}
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this set action
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
-		if (!(model instanceof SetModel)) {
-			return false;
-		}
-		SetModel set = (SetModel) model;
-		return ObjectUtils.nullSafeEquals(getName(), set.getName());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof SetModel)) {
-			return false;
-		}
-		SetModel set = (SetModel) obj;
-		if (set == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getName(), set.getName())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getValue(), set.getValue())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getType(), set.getType())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getName()) * 27 + ObjectUtils.nullSafeHashCode(getValue()) * 27
-				+ ObjectUtils.nullSafeHashCode(getType()) * 27;
 	}
 
 	/**

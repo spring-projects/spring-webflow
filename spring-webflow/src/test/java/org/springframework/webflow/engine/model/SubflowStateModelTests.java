@@ -22,34 +22,28 @@ import junit.framework.TestCase;
  */
 public class SubflowStateModelTests extends TestCase {
 
+	public void testMergeable() {
+		SubflowStateModel child = new SubflowStateModel("child", "flow");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		SubflowStateModel child = new SubflowStateModel("child", "flow");
+		SubflowStateModel parent = new SubflowStateModel("parent", "flow");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		SubflowStateModel child = new SubflowStateModel("child", "flow");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
-		SubflowStateModel child = new SubflowStateModel("child", "childflow");
-		SubflowStateModel parent = new SubflowStateModel("parent", "parentflow");
+		SubflowStateModel child = new SubflowStateModel("child", "flow");
+		SubflowStateModel parent = new SubflowStateModel("child", "flow");
+		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeNullParent() {
-		SubflowStateModel child = new SubflowStateModel("child", "childflow");
-		SubflowStateModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getId());
-	}
-
-	public void testMergeOverrideMatch() {
-		SubflowStateModel child = new SubflowStateModel("child", "childflow");
-		SubflowStateModel parent = new SubflowStateModel("child", "parentflow");
-		parent.addInput(new InputModel("inname", "invalue"));
-		child.merge(parent);
-		assertEquals(1, child.getInputs().size());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		SubflowStateModel child = new SubflowStateModel("child", "childflow");
-		SubflowStateModel parent = new SubflowStateModel("parent", "parentflow");
-		parent.addInput(new InputModel("inname", "invalue"));
-		child.merge(parent);
-		assertEquals(null, child.getInputs());
+		assertNotNull(child.getSecured());
 	}
 
 }

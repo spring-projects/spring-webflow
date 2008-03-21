@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.RenderModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,26 +22,9 @@ import junit.framework.TestCase;
  */
 public class RenderModelTests extends TestCase {
 
-	public void testMerge() {
+	public void testNotMergeable() {
 		RenderModel child = new RenderModel("child");
-		RenderModel parent = new RenderModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getFragments());
-	}
-
-	public void testMergeNullParent() {
-		RenderModel child = new RenderModel("child");
-		RenderModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getFragments());
-	}
-
-	public void testMergeOverrideMatch() {
-		// render will never merge
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		// render will never merge
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

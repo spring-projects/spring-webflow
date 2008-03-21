@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -35,42 +34,6 @@ public class RenderModel extends AbstractActionModel {
 	 */
 	public RenderModel(String fragments) {
 		setFragments(fragments);
-	}
-
-	/**
-	 * Render action models are not mergeable
-	 * @param model the render action to merge into this render
-	 */
-	public void merge(Model model) {
-		// not mergeable
-	}
-
-	/**
-	 * Render action models are not mergeable
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		return false;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof RenderModel)) {
-			return false;
-		}
-		RenderModel render = (RenderModel) obj;
-		if (render == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getFragments(), render.getFragments())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getFragments()) * 27;
 	}
 
 	/**

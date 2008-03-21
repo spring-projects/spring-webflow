@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.SetModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,9 @@ import junit.framework.TestCase;
  */
 public class SetModelTests extends TestCase {
 
-	public void testMerge() {
-		SetModel child = new SetModel("child", "childvalue");
-		SetModel parent = new SetModel("parent", "parentvalue");
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeNullParent() {
-		SetModel child = new SetModel("child", "childvalue");
-		SetModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeOverrideMatch() {
-		SetModel child = new SetModel("child", "childvalue");
-		SetModel parent = new SetModel("child", "childvalue", "childtype");
-		child.merge(parent);
-		assertEquals("childtype", child.getType());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		SetModel child = new SetModel("child", "childvalue");
-		SetModel parent = new SetModel("parent", "parentvalue", "parenttype");
-		child.merge(parent);
-		assertEquals(null, child.getType());
+	public void testNotMergeable() {
+		SetModel child = new SetModel("name", "value");
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

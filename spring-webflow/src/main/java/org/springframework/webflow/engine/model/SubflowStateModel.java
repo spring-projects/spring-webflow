@@ -47,53 +47,21 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	}
 
 	/**
-	 * Create a subflow state model
-	 * @param id the identifier of the state
-	 * @param subflow the identifier of the flow to launch as a subflow
-	 * @param subflowAttributeMapper bean name of the attribute mapping
-	 * @param inputs input mappings
-	 * @param outputs output mappings
-	 * @param attributes meta attributes for the state
-	 * @param secured security settings for the state
-	 * @param onEntryActions actions to be executed when entering the state
-	 * @param exceptionHandlers exception handlers for the state
-	 * @param transitions transitions for the state
-	 * @param onExitActions actions to be executed before leaving the state.
-	 */
-	public SubflowStateModel(String id, String subflow, String subflowAttributeMapper, LinkedList inputs,
-			LinkedList outputs, LinkedList attributes, SecuredModel secured, LinkedList onEntryActions,
-			LinkedList exceptionHandlers, LinkedList transitions, LinkedList onExitActions) {
-		setId(id);
-		setSubflow(subflow);
-		setSubflowAttributeMapper(subflowAttributeMapper);
-		setInputs(inputs);
-		setOutputs(outputs);
-		setAttributes(attributes);
-		setSecured(secured);
-		setOnEntryActions(onEntryActions);
-		setExceptionHandlers(exceptionHandlers);
-		setTransitions(transitions);
-		setOnExitActions(onExitActions);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the subflow state to merge into this state
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			SubflowStateModel state = (SubflowStateModel) model;
-			setAttributes(merge(getAttributes(), state.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
-			setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
-			setTransitions(merge(getTransitions(), state.getTransitions()));
-			setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
-			setSubflow(merge(getSubflow(), state.getSubflow()));
-			setSubflowAttributeMapper(merge(getSubflowAttributeMapper(), state.getSubflowAttributeMapper()));
-			setInputs(merge(getInputs(), state.getInputs()));
-			setOutputs(merge(getOutputs(), state.getOutputs()));
-		}
+		SubflowStateModel state = (SubflowStateModel) model;
+		setAttributes(merge(getAttributes(), state.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
+		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
+		setTransitions(merge(getTransitions(), state.getTransitions()));
+		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
+		setSubflow(merge(getSubflow(), state.getSubflow()));
+		setSubflowAttributeMapper(merge(getSubflowAttributeMapper(), state.getSubflowAttributeMapper()));
+		setInputs(merge(getInputs(), state.getInputs()));
+		setOutputs(merge(getOutputs(), state.getOutputs()));
 	}
 
 	/**
@@ -101,60 +69,11 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof SubflowStateModel)) {
 			return false;
 		}
 		SubflowStateModel state = (SubflowStateModel) model;
 		return ObjectUtils.nullSafeEquals(getId(), state.getId());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof SubflowStateModel)) {
-			return false;
-		}
-		SubflowStateModel state = (SubflowStateModel) obj;
-		if (state == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getId(), state.getId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), state.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), state.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEntryActions(), state.getOnEntryActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), state.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getTransitions(), state.getTransitions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnExitActions(), state.getOnExitActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSubflow(), state.getSubflow())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSubflowAttributeMapper(), state.getSubflowAttributeMapper())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getInputs(), state.getInputs())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOutputs(), state.getOutputs())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getId()) * 27 + ObjectUtils.nullSafeHashCode(getAttributes()) * 27
-				+ ObjectUtils.nullSafeHashCode(getSecured()) * 27 + ObjectUtils.nullSafeHashCode(getOnEntryActions())
-				* 27 + ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getTransitions()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnExitActions()) * 27 + ObjectUtils.nullSafeHashCode(getSubflow())
-				* 27 + ObjectUtils.nullSafeHashCode(getSubflowAttributeMapper()) * 27
-				+ ObjectUtils.nullSafeHashCode(getInputs()) * 27 + ObjectUtils.nullSafeHashCode(getOutputs()) * 27;
 	}
 
 	/**

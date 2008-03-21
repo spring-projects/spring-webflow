@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.VarModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,9 @@ import junit.framework.TestCase;
  */
 public class VarModelTests extends TestCase {
 
-	public void testMerge() {
-		VarModel child = new VarModel("child", "childclass");
-		VarModel parent = new VarModel("parent", "parentclass");
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeNullParent() {
-		VarModel child = new VarModel("child", "childclass");
-		VarModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeOverrideMatch() {
-		VarModel child = new VarModel("child", "childclass");
-		VarModel parent = new VarModel("child", "childclass", "childscope");
-		child.merge(parent);
-		assertEquals("childscope", child.getScope());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		VarModel child = new VarModel("child", "childclass");
-		VarModel parent = new VarModel("parent", "parentclass", "parentscope");
-		child.merge(parent);
-		assertEquals(null, child.getScope());
+	public void testNotMergeable() {
+		VarModel child = new VarModel("name", "value");
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

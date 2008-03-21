@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,26 +44,6 @@ public class ExceptionHandlerModel extends AbstractModel {
 
 	public boolean isMergeableWith(Model model) {
 		return false;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof ExceptionHandlerModel)) {
-			return false;
-		}
-		ExceptionHandlerModel exceptionHandler = (ExceptionHandlerModel) obj;
-		if (exceptionHandler == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getBeanName(), exceptionHandler.getBeanName())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getBeanName()) * 27;
 	}
 
 	/**

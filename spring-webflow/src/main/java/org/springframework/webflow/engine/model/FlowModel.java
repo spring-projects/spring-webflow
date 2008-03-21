@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.model;
 
 import java.util.LinkedList;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -73,23 +72,21 @@ public class FlowModel extends AbstractModel {
 	 * @param model the flow to merge into this flow
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			FlowModel flow = (FlowModel) model;
-			setParent(null);
-			setStartStateId(merge(getStartStateId(), flow.getStartStateId()));
-			setAttributes(merge(getAttributes(), flow.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), flow.getSecured()));
-			setPersistenceContext((PersistenceContextModel) merge(getPersistenceContext(), flow.getPersistenceContext()));
-			setVars(merge(getVars(), flow.getVars(), false));
-			setInputs(merge(getInputs(), flow.getInputs()));
-			setOutputs(merge(getOutputs(), flow.getOutputs()));
-			setOnStartActions(merge(getOnStartActions(), flow.getOnStartActions(), false));
-			setStates(merge(getStates(), flow.getStates()));
-			setGlobalTransitions(merge(getGlobalTransitions(), flow.getGlobalTransitions()));
-			setOnEndActions(merge(getOnEndActions(), flow.getOnEndActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), flow.getExceptionHandlers()));
-			setBeanImports(merge(getBeanImports(), flow.getBeanImports()));
-		}
+		FlowModel flow = (FlowModel) model;
+		setParent(null);
+		setStartStateId(merge(getStartStateId(), flow.getStartStateId()));
+		setAttributes(merge(getAttributes(), flow.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), flow.getSecured()));
+		setPersistenceContext((PersistenceContextModel) merge(getPersistenceContext(), flow.getPersistenceContext()));
+		setVars(merge(getVars(), flow.getVars(), false));
+		setInputs(merge(getInputs(), flow.getInputs()));
+		setOutputs(merge(getOutputs(), flow.getOutputs()));
+		setOnStartActions(merge(getOnStartActions(), flow.getOnStartActions(), false));
+		setStates(merge(getStates(), flow.getStates()));
+		setGlobalTransitions(merge(getGlobalTransitions(), flow.getGlobalTransitions()));
+		setOnEndActions(merge(getOnEndActions(), flow.getOnEndActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), flow.getExceptionHandlers()));
+		setBeanImports(merge(getBeanImports(), flow.getBeanImports()));
 	}
 
 	/**
@@ -97,68 +94,11 @@ public class FlowModel extends AbstractModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if ((model instanceof FlowModel)) {
 			return true;
 		} else {
 			return false;
 		}
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof FlowModel)) {
-			return false;
-		}
-		FlowModel flow = (FlowModel) obj;
-		if (flow == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getParent(), flow.getParent())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getStartStateId(), flow.getStartStateId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), flow.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), flow.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getPersistenceContext(), flow.getPersistenceContext())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getVars(), flow.getVars())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getInputs(), flow.getInputs())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOutputs(), flow.getOutputs())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnStartActions(), flow.getOnStartActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getStates(), flow.getStates())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getGlobalTransitions(), flow.getGlobalTransitions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEndActions(), flow.getOnEndActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), flow.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getBeanImports(), flow.getBeanImports())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getParent()) * 27 + ObjectUtils.nullSafeHashCode(getStartStateId()) * 27
-				+ ObjectUtils.nullSafeHashCode(getAttributes()) * 27 + ObjectUtils.nullSafeHashCode(getSecured()) * 27
-				+ ObjectUtils.nullSafeHashCode(getPersistenceContext()) * 27 + ObjectUtils.nullSafeHashCode(getVars())
-				* 27 + ObjectUtils.nullSafeHashCode(getInputs()) * 27 + ObjectUtils.nullSafeHashCode(getOutputs()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnStartActions()) * 27 + ObjectUtils.nullSafeHashCode(getStates())
-				* 27 + ObjectUtils.nullSafeHashCode(getGlobalTransitions()) * 27
-				+ ObjectUtils.nullSafeHashCode(getOnEndActions()) * 27
-				+ ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getBeanImports()) * 27;
 	}
 
 	/**

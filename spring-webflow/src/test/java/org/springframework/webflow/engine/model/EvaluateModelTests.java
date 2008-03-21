@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.EvaluateModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,9 @@ import junit.framework.TestCase;
  */
 public class EvaluateModelTests extends TestCase {
 
-	public void testMerge() {
-		EvaluateModel child = new EvaluateModel("child");
-		EvaluateModel parent = new EvaluateModel("parent");
-		child.merge(parent);
-		assertEquals("child", child.getExpression());
-	}
-
-	public void testMergeNullParent() {
-		EvaluateModel child = new EvaluateModel("child");
-		EvaluateModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getExpression());
-	}
-
-	public void testMergeOverrideMatch() {
-		EvaluateModel child = new EvaluateModel("child");
-		EvaluateModel parent = new EvaluateModel("child", "end");
-		child.merge(parent);
-		assertEquals("end", child.getResult());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		EvaluateModel child = new EvaluateModel("child");
-		EvaluateModel parent = new EvaluateModel("parent", "end");
-		child.merge(parent);
-		assertEquals(null, child.getResult());
+	public void testNotMergeable() {
+		EvaluateModel child = new EvaluateModel("name");
+		assertFalse(child.isMergeableWith(child));
 	}
 
 }

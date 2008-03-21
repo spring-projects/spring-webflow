@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -49,26 +48,6 @@ public class BeanImportModel extends AbstractModel {
 	 */
 	public boolean isMergeableWith(Model model) {
 		return false;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof BeanImportModel)) {
-			return false;
-		}
-		BeanImportModel beanImport = (BeanImportModel) obj;
-		if (beanImport == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getResource(), beanImport.getResource())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getResource()) * 27;
 	}
 
 	/**

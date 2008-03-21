@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.webflow.engine.model.AttributeModel;
-
 import junit.framework.TestCase;
 
 /**
@@ -24,32 +22,28 @@ import junit.framework.TestCase;
  */
 public class AttributeModelTests extends TestCase {
 
+	public void testMergeable() {
+		AttributeModel child = new AttributeModel("child", "value");
+		assertTrue(child.isMergeableWith(child));
+	}
+
+	public void testNotMergeable() {
+		AttributeModel child = new AttributeModel("child", "value");
+		AttributeModel parent = new AttributeModel("parent", "value");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableWithNull() {
+		AttributeModel child = new AttributeModel("child", "value");
+		assertFalse(child.isMergeableWith(null));
+	}
+
 	public void testMerge() {
 		AttributeModel child = new AttributeModel("child", "childvalue");
-		AttributeModel parent = new AttributeModel("parent", "parentvalue");
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeNullParent() {
-		AttributeModel child = new AttributeModel("child", "childvalue");
-		AttributeModel parent = null;
-		child.merge(parent);
-		assertEquals("child", child.getName());
-	}
-
-	public void testMergeOverrideMatch() {
-		AttributeModel child = new AttributeModel("child", "childvalue");
-		AttributeModel parent = new AttributeModel("child", "childvalue", "string");
+		AttributeModel parent = new AttributeModel("child", "childvalue");
+		parent.setType("string");
 		child.merge(parent);
 		assertEquals("string", child.getType());
-	}
-
-	public void testMergeOverrideMatchFailed() {
-		AttributeModel child = new AttributeModel("child", "childvalue");
-		AttributeModel parent = new AttributeModel("parent", "parentvalue", "string");
-		child.merge(parent);
-		assertEquals(null, child.getType());
 	}
 
 }

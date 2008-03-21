@@ -43,40 +43,17 @@ public class DecisionStateModel extends AbstractStateModel {
 	}
 
 	/**
-	 * Create a decision state model
-	 * @param id the state identifier
-	 * @param ifs decision tests
-	 * @param onExitActions actions to execute before exiting this state
-	 * @param attributes meta attributes for this state
-	 * @param secured security settings for this state
-	 * @param onEntryActions actions to execute upon entering this state
-	 * @param exceptionHandlers exception handlers for this state
-	 */
-	public DecisionStateModel(String id, LinkedList ifs, LinkedList onExitActions, LinkedList attributes,
-			SecuredModel secured, LinkedList onEntryActions, LinkedList exceptionHandlers) {
-		setId(id);
-		setIfs(ifs);
-		setOnExitActions(onExitActions);
-		setAttributes(attributes);
-		setSecured(secured);
-		setOnEntryActions(onEntryActions);
-		setExceptionHandlers(exceptionHandlers);
-	}
-
-	/**
 	 * Merge properties
 	 * @param model the decision state to merge into this state
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			DecisionStateModel state = (DecisionStateModel) model;
-			setAttributes(merge(getAttributes(), state.getAttributes()));
-			setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
-			setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
-			setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
-			setIfs(merge(getIfs(), state.getIfs()));
-			setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
-		}
+		DecisionStateModel state = (DecisionStateModel) model;
+		setAttributes(merge(getAttributes(), state.getAttributes()));
+		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
+		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));
+		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
+		setIfs(merge(getIfs(), state.getIfs()));
+		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
 	}
 
 	/**
@@ -84,49 +61,11 @@ public class DecisionStateModel extends AbstractStateModel {
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
 		if (!(model instanceof DecisionStateModel)) {
 			return false;
 		}
 		DecisionStateModel state = (DecisionStateModel) model;
 		return ObjectUtils.nullSafeEquals(getId(), state.getId());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof DecisionStateModel)) {
-			return false;
-		}
-		DecisionStateModel state = (DecisionStateModel) obj;
-		if (state == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getId(), state.getId())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getAttributes(), state.getAttributes())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getSecured(), state.getSecured())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnEntryActions(), state.getOnEntryActions())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getExceptionHandlers(), state.getExceptionHandlers())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getIfs(), state.getIfs())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getOnExitActions(), state.getOnExitActions())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getId()) * 27 + ObjectUtils.nullSafeHashCode(getAttributes()) * 27
-				+ ObjectUtils.nullSafeHashCode(getSecured()) * 27 + ObjectUtils.nullSafeHashCode(getOnEntryActions())
-				* 27 + ObjectUtils.nullSafeHashCode(getExceptionHandlers()) * 27
-				+ ObjectUtils.nullSafeHashCode(getIfs()) * 27 + ObjectUtils.nullSafeHashCode(getOnExitActions()) * 27;
 	}
 
 	/**

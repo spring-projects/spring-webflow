@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -42,67 +41,19 @@ public class VarModel extends AbstractModel {
 	}
 
 	/**
-	 * Create a variable model
-	 * @param name the name of the variable
-	 * @param className the class type of the variable
-	 * @param scope the scope to store the variable
-	 */
-	public VarModel(String name, String className, String scope) {
-		setName(name);
-		setClassName(className);
-		setScope(scope);
-	}
-
-	/**
-	 * Merge properties
-	 * @param model the var to merge into this var
+	 * Vars are not mergeable
+	 * @param model the render action to merge into this render
 	 */
 	public void merge(Model model) {
-		if (isMergeableWith(model)) {
-			VarModel var = (VarModel) model;
-			setClassName(merge(getClassName(), var.getClassName()));
-			setScope(merge(getScope(), var.getScope()));
-		}
+		// not mergeable
 	}
 
 	/**
-	 * Tests if the model is able to be merged with this var
+	 * Vars are not mergeable
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
-		if (model == null) {
-			return false;
-		}
-		if (!(model instanceof VarModel)) {
-			return false;
-		}
-		VarModel var = (VarModel) model;
-		return ObjectUtils.nullSafeEquals(getName(), var.getName());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (!(obj instanceof VarModel)) {
-			return false;
-		}
-		VarModel var = (VarModel) obj;
-		if (var == null) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getName(), var.getName())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getClassName(), var.getClassName())) {
-			return false;
-		} else if (!ObjectUtils.nullSafeEquals(getScope(), var.getScope())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public int hashCode() {
-		return ObjectUtils.nullSafeHashCode(getName()) * 27 + ObjectUtils.nullSafeHashCode(getClassName()) * 27
-				+ ObjectUtils.nullSafeHashCode(getScope()) * 27;
+		return false;
 	}
 
 	/**
