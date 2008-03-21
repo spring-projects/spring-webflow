@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine.builder.xml;
+package org.springframework.webflow.engine.builder;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
@@ -23,9 +23,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
-import org.springframework.webflow.engine.builder.FlowArtifactFactory;
-import org.springframework.webflow.engine.builder.FlowBuilderContext;
-import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 
 /**
  * A builder context that delegates to a flow-local bean factory for builder services. Such builder services override

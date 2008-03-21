@@ -138,6 +138,9 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 	private void refreshIfChanged() {
 		long calculatedLastModified = calculateLastModified();
 		if (calculatedLastModified > lastModified) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Refreshing flow definition [" + flowDefinition.getId() + "]");
+			}
 			assembleFlow();
 			lastModified = calculatedLastModified;
 		}

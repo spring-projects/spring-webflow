@@ -19,10 +19,15 @@ import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImp
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
+import org.springframework.webflow.engine.builder.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.builder.RefreshableFlowDefinitionHolder;
 import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
+import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
+import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
+import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 
 /**
  * A factory for a flow definition registry. Is a Spring FactoryBean, for provision by the flow definition registry bean
@@ -38,6 +43,11 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	 * The definition registry produced by this factory bean.
 	 */
 	private FlowDefinitionRegistryImpl flowRegistry;
+
+	/**
+	 * The model registry produced by this factory bean.
+	 */
+	private FlowModelRegistryImpl flowModelRegistry;
 
 	/**
 	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
@@ -76,6 +86,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getResourceLoader());
 		flowRegistry = new FlowDefinitionRegistryImpl();
+		flowModelRegistry = new FlowModelRegistryImpl();
 		registerFlowLocations();
 		registerFlowBuilders();
 	}
@@ -137,8 +148,18 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	private FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
+		return new FlowModelFlowBuilder(createFlowModelHolder(resource), resource.getPath());
+	}
+
+	private FlowModelHolder createFlowModelHolder(FlowDefinitionResource resource) {
+		FlowModelHolder modelHolder = new DefaultFlowModelHolder(createFlowModelBuilder(resource), resource.getId());
+		flowModelRegistry.registerFlowModel(modelHolder);
+		return modelHolder;
+	}
+
+	private FlowModelBuilder createFlowModelBuilder(FlowDefinitionResource resource) {
 		if (isXml(resource.getPath())) {
-			return new XmlFlowBuilder(resource.getPath());
+			return new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
 		} else {
 			throw new IllegalArgumentException(resource
 					+ " is not a supported resource type; supported types are [.xml]");

@@ -23,11 +23,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.engine.model.registry.FlowModelConstructionException;
 
 /**
  * A generic registry implementation for housing one or more flow definitions.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
@@ -65,6 +67,8 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 				return parent.getFlowDefinition(id);
 			}
 			throw e;
+		} catch (FlowModelConstructionException e) {
+			throw new FlowDefinitionConstructionException(e.getMessage(), e);
 		}
 	}
 

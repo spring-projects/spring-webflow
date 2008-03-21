@@ -16,9 +16,15 @@
 package org.springframework.webflow.test.execution;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.engine.builder.FlowBuilder;
-import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
+import org.springframework.webflow.engine.builder.FlowModelFlowBuilder;
+import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
+import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
+import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 
 /**
  * Base class for flow integration tests that verify an XML flow definition executes as expected.
@@ -47,8 +53,11 @@ import org.springframework.webflow.engine.builder.xml.XmlFlowBuilder;
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
+ * @author Scott Andrews
  */
 public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalizedFlowExecutionTests {
+
+	private FlowModelRegistry flowModelRegistry;
 
 	/**
 	 * Constructs a default XML flow execution test.
@@ -56,6 +65,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	 */
 	public AbstractXmlFlowExecutionTests() {
 		super();
+		flowModelRegistry = new FlowModelRegistryImpl();
 	}
 
 	/**
@@ -64,10 +74,14 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	 */
 	public AbstractXmlFlowExecutionTests(String name) {
 		super(name);
+		flowModelRegistry = new FlowModelRegistryImpl();
 	}
 
-	protected FlowBuilder createFlowBuilder(Resource resource) {
-		return new XmlFlowBuilder(resource) {
+	protected FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
+		FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
+		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder, resource.getId());
+		flowModelRegistry.registerFlowModel(modelHolder);
+		return new FlowModelFlowBuilder(modelHolder, resource.getPath()) {
 			protected void registerFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 				registerMockFlowBeans(flowBeanFactory);
 			}

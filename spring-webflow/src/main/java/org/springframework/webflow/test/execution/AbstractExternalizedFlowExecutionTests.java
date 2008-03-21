@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.test.execution;
 
-import org.springframework.core.io.Resource;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -33,6 +32,7 @@ import org.springframework.webflow.test.MockFlowBuilderContext;
  * caching of the flow definition built from an externalized resource to speed up test execution.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlowExecutionTests {
 
@@ -145,7 +145,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 		FlowDefinitionResource resource = getResource(resourceFactory);
 		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
 		configureFlowBuilderContext(builderContext);
-		FlowBuilder builder = createFlowBuilder(resource.getPath());
+		FlowBuilder builder = createFlowBuilder(resource);
 		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 		return assembler.assembleFlow();
 	}
@@ -168,9 +168,9 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 
 	/**
 	 * Create the flow builder to build the flow at the specified resource location.
-	 * @param path the location of the flow definition
+	 * @param resource the resource location of the flow definition
 	 * @return the flow builder that can build the flow definition
 	 */
-	protected abstract FlowBuilder createFlowBuilder(Resource path);
+	protected abstract FlowBuilder createFlowBuilder(FlowDefinitionResource resource);
 
 }
