@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine.builder.support;
+package org.springframework.webflow.engine.support;
 
 import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.execution.Action;
