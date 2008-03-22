@@ -20,6 +20,7 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.factories.BooleanFormatterFactory;
 import org.springframework.binding.format.factories.DateFormatterFactory;
 import org.springframework.binding.format.factories.NumberFormatterFactory;
 import org.springframework.binding.format.impl.FormatterRegistryImpl;
@@ -122,6 +123,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		FormatterRegistryImpl registry = new FormatterRegistryImpl();
 		registry.registerFormatter(new NumberFormatterFactory());
 		registry.registerFormatter(new DateFormatterFactory());
+		registry.registerFormatter(new BooleanFormatterFactory());
 		return registry;
 	}
 

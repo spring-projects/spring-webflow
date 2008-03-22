@@ -8,6 +8,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.convert.support.DefaultConversionService;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.factories.BooleanFormatterFactory;
 import org.springframework.binding.format.factories.DateFormatterFactory;
 import org.springframework.binding.format.factories.NumberFormatterFactory;
 import org.springframework.binding.format.impl.FormatterRegistryImpl;
@@ -116,6 +117,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		FormatterRegistryImpl registry = new FormatterRegistryImpl();
 		registry.registerFormatter(new NumberFormatterFactory());
 		registry.registerFormatter(new DateFormatterFactory());
+		registry.registerFormatter(new BooleanFormatterFactory());
 		return registry;
 	}
 
