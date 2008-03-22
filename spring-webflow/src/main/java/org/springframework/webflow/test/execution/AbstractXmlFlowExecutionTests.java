@@ -18,7 +18,7 @@ package org.springframework.webflow.test.execution;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.engine.builder.FlowBuilder;
-import org.springframework.webflow.engine.builder.FlowModelFlowBuilder;
+import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
 import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;

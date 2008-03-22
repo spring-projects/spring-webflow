@@ -1,4 +1,4 @@
-package org.springframework.webflow.engine.builder;
+package org.springframework.webflow.engine.builder.model;
 
 import junit.framework.TestCase;
 
@@ -12,6 +12,8 @@ import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.FlowInputMappingException;
 import org.springframework.webflow.engine.FlowOutputMappingException;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.engine.builder.FlowAssembler;
+import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AttributeModel;

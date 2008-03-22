@@ -1,4 +1,4 @@
-package org.springframework.webflow.engine.builder;
+package org.springframework.webflow.engine.builder.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +50,8 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.engine.ViewVariable;
+import org.springframework.webflow.engine.builder.FlowBuilderContext;
+import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.builder.support.ActionExecutingViewFactory;
 import org.springframework.webflow.engine.model.AbstractActionModel;
