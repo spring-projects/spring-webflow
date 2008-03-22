@@ -16,8 +16,8 @@
 package org.springframework.binding.expression;
 
 /**
- * Evaluates a single parsed expression on the provided input object in the specified context. This provides a common
- * abstraction for expression evaluation independent of any language like OGNL or the Unified EL.
+ * Evaluates an expression against a context. Provides a common abstraction for expression evaluation independent of any
+ * language like OGNL or the Unified EL.
  * 
  * @author Keith Donald
  */
@@ -27,23 +27,23 @@ public interface Expression {
 	 * Evaluate this expression in the provided context and return the result of evaluation.
 	 * @param context the context to evaluate this expression in
 	 * @return the evaluation result
-	 * @throws EvaluationException an exception occured during evaluation
+	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
 	public Object getValue(Object context) throws EvaluationException;
 
 	/**
 	 * Set this expression in the provided context to the value provided.
-	 * @param context the context to set this value to
-	 * @param value the new value to be set
-	 * @throws EvaluationException an exception occurred during evaluation
+	 * @param context the context on which the new value should be set
+	 * @param value the new value to set
+	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
 	public void setValue(Object context, Object value) throws EvaluationException;
 
 	/**
 	 * Returns the most general type that can be passed to the {@link #setValue(Object, Object)} method for the given
 	 * context.
-	 * @param context the context of expression evaluation
-	 * @return the most general type of value that can be set
+	 * @param context the context to evaluate
+	 * @return the most general type of value that can be set on this context
 	 */
 	public Class getValueType(Object context);
 
