@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.Mapping;
@@ -30,6 +32,8 @@ import org.springframework.core.style.ToStringCreator;
  * @author Keith Donald
  */
 public class DefaultMapper implements Mapper {
+
+	private static final Log logger = LogFactory.getLog(DefaultMapper.class);
 
 	private List mappings = new LinkedList();
 
@@ -75,7 +79,11 @@ public class DefaultMapper implements Mapper {
 			DefaultMapping mapping = (DefaultMapping) it.next();
 			mapping.map(context);
 		}
-		return context.toResult();
+		MappingResults results = context.toResult();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Mapping operation completed; results = " + results);
+		}
+		return results;
 	}
 
 	public String toString() {
