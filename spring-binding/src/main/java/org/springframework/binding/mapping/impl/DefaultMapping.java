@@ -162,7 +162,7 @@ public class DefaultMapping implements Mapping {
 			if (logger.isDebugEnabled()) {
 				String sourceType = sourceValue != null ? sourceValue.getClass().getName() : "null";
 				String targetType = targetValue != null ? targetValue.getClass().getName() : "null";
-				logger.debug("Mapped source [" + sourceType + "] " + sourceExpression + " value "
+				logger.debug("Sucessfully mapped source [" + sourceType + "] " + sourceExpression + " value "
 						+ StylerUtils.style(sourceValue) + " to target [" + targetType + "] " + targetExpression
 						+ " value " + StylerUtils.style(targetValue));
 			}

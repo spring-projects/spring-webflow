@@ -14,6 +14,10 @@
 	<logger name="org.springframework.beans">
 		<level value="warn" />
 	</logger>
+
+	<logger name="org.springframework.binding">
+		<level value="debug" />
+	</logger>
 	
 	<logger name="org.springframework.jdbc">
 		<level value="warn" />
