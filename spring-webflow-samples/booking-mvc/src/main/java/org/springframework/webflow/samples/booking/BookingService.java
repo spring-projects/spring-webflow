@@ -41,6 +41,6 @@ public interface BookingService {
      * Cancel an existing booking.
      * @param id the booking id
      */
-    public void cancelBooking(Booking booking);
+    public void cancelBooking(Long id);
 
 }
