@@ -29,211 +29,6 @@ Events that occur within states drive state transitions.
 
 	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
 
-	<!-- Reusable types -->
-	<xsd:simpleType name="type">
-		<xsd:restriction base="xsd:string"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="expression">
-		<xsd:restriction base="xsd:string"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="template">
-		<xsd:restriction base="xsd:string"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="viewFactory">
-		<xsd:restriction base="template"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="transitionCriteria">
-		<xsd:restriction base="template"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="targetStateResolver">
-		<xsd:restriction base="template"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="flowId">
-		<xsd:restriction base="template"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="beanName">
-		<xsd:restriction base="xsd:string"/>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="resource">
-		<xsd:restriction base="xsd:string"/>
-	</xsd:simpleType>
-	
-	<xsd:simpleType name="scopeType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="request">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope when a single call into this flow completes.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="flash">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope after the next view is rendered by this flow.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="flow">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope when this flow ends.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="conversation">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope when the governing conversation ends.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-		</xsd:restriction>
-	</xsd:simpleType>
-	
-	<xsd:simpleType name="statefulScopeType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="flow">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope when this flow ends.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="conversation">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Goes out of scope when the governing conversation ends.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:group name="actionTypes">
-		<xsd:choice>
-			<xsd:element name="evaluate">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Evaluates an expression against the flow request context.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-				<xsd:complexType>
-					<xsd:attribute name="expression" type="expression" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The expression to evaluate.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="result" type="expression" use="optional">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-Where to assign the expression evaluation result.  If not specified, the result will not be assigned.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="result-type" type="type" use="optional">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The type of result expected to be returned from evaluating the expresion.
-If specified and the result is not compatible with the expected type, a type conversion will be attempted. 
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="render">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Requests that the next view render a fragment of content.
-Multiple fragments may be specified using a comma delimiter.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-				<xsd:complexType>
-					<xsd:attribute name="fragments" type="xsd:string" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The fragments of the next view to render.  Multiple fragments may be specified by using the comma delimiter.
-Each fragment is a template expression.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				</xsd:complexType>
-			</xsd:element>			
-			<xsd:element name="set">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-Sets an attribute value in a scope.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-				<xsd:complexType>
-					<xsd:attribute name="name" type="expression" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-Where to set the value.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="value" type="expression" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The value to be set.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="type" type="type">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The expected value type. If the actual value type does not match the expected, a type conversion will be attempted.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:choice>
-	</xsd:group>
-
 	<!-- Top level element -->
 	<xsd:element name="flow">
 		<xsd:annotation>
@@ -290,7 +85,7 @@ A meta attribute describing or otherwise annotating this flow definition.
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
-				<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+				<xsd:element name="secured" type="secured" minOccurs="0">
 					<xsd:annotation>
 						<xsd:documentation>
 							<![CDATA[
@@ -340,7 +135,7 @@ fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a conc
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:attribute>
-						<xsd:attribute name="scope" type="statefulScopeType">
+						<xsd:attribute name="scope">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
@@ -352,6 +147,28 @@ This scope of this variable.  The available scope types are:
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value="flow">
+										<xsd:annotation>
+											<xsd:documentation>
+												<![CDATA[
+Goes out of scope when this flow ends.
+						]]>
+											</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="conversation">
+										<xsd:annotation>
+											<xsd:documentation>
+												<![CDATA[
+Goes out of scope when the governing conversation ends.
+						]]>
+											</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
 						</xsd:attribute>
 					</xsd:complexType>
 				</xsd:element>
@@ -399,7 +216,7 @@ A meta attribute describing or otherwise annotating this state.
 										</xsd:documentation>
 									</xsd:annotation>
 								</xsd:element>
-								<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+								<xsd:element name="secured" type="secured" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -495,7 +312,7 @@ An attribute describing or otherwise annotating this state.
 										</xsd:documentation>
 									</xsd:annotation>
 								</xsd:element>
-								<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+								<xsd:element name="secured" type="secured" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -558,7 +375,7 @@ Actions to execute immediately before view rendering.
 										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 									</xsd:complexType>
 								</xsd:element>
-								<xsd:element name="transition" type="bindingTransition" minOccurs="0" maxOccurs="unbounded">
+								<xsd:element name="transition" minOccurs="0" maxOccurs="unbounded">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -568,6 +385,21 @@ If no transition target is specified, the transition acts as a simple event hand
 ]]>
 										</xsd:documentation>
 									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:complexContent>
+											<xsd:extension base="transition">
+												<xsd:attribute name="bind" type="xsd:boolean">
+													<xsd:annotation>
+														<xsd:documentation>
+															<![CDATA[
+Indicates whether model binding should occur before this transition executes. Defaults to true.
+								]]>
+														</xsd:documentation>
+													</xsd:annotation>
+												</xsd:attribute>
+											</xsd:extension>
+										</xsd:complexContent>
+									</xsd:complexType>
 								</xsd:element>
 								<xsd:element name="on-exit" minOccurs="0">
 									<xsd:annotation>
@@ -649,7 +481,7 @@ Displays the view in a popup dialog.  Default is false.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-The model object this view is bound to.  Typically used as the source of form field values or other input controlls.
+The model object this view is bound to.  Typically used as the source of form field values or other data input controls.
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -689,7 +521,7 @@ An attribute describing or otherwise annotating this state.
 										</xsd:documentation>
 									</xsd:annotation>
 								</xsd:element>
-								<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+								<xsd:element name="secured" type="secured" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -814,7 +646,7 @@ An attribute describing or otherwise annotating this state.
 										</xsd:documentation>
 									</xsd:annotation>
 								</xsd:element>
-								<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+								<xsd:element name="secured" type="secured" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -941,7 +773,7 @@ An attribute describing this state.
 										</xsd:documentation>
 									</xsd:annotation>
 								</xsd:element>
-								<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+								<xsd:element name="secured" type="secured" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -1141,6 +973,148 @@ A comma separated list of flow identifier for this flow to inherit from.
 		</xsd:complexType>
 	</xsd:element>
 
+	<!-- Reusable types -->
+	
+	<xsd:simpleType name="type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="expression">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="template">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="viewFactory">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="transitionCriteria">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="targetStateResolver">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="flowId">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="beanName">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="resource">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	
+	<xsd:group name="actionTypes">
+		<xsd:choice>
+			<xsd:element name="evaluate">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Evaluates an expression against the flow request context.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:attribute name="expression" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The expression to evaluate.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="result" type="expression" use="optional">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Where to assign the expression evaluation result.  If not specified, the result will not be assigned.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="result-type" type="type" use="optional">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The type of result expected to be returned from evaluating the expresion.
+If specified and the result is not compatible with the expected type, a type conversion will be attempted. 
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="render">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Requests that the next view render a fragment of content.
+Multiple fragments may be specified using a comma delimiter.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:attribute name="fragments" type="xsd:string" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The fragments of the next view to render.  Multiple fragments may be specified by using the comma delimiter.
+Each fragment is a template expression.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:element name="set">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Sets an attribute value in a scope.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:attribute name="name" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Where to set the value.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="value" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The value to be set.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="type">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The expected value type. If the actual value type does not match the expected, a type conversion will be attempted.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:group>
+
 	<xsd:complexType name="input">
 		<xsd:attribute name="name" type="expression" use="required">
 			<xsd:annotation>
@@ -1277,7 +1251,7 @@ An attribute describing this transition.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="secured" type="secured" minOccurs="0" maxOccurs="1">
+			<xsd:element name="secured" type="secured" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
@@ -1337,22 +1311,6 @@ If no value is specified, this transition acts as a simple event handler and wil
 		</xsd:attribute>
 	</xsd:complexType>
 	
-	<xsd:complexType name="bindingTransition">
-		<xsd:complexContent>
-			<xsd:extension base="transition">
-				<xsd:attribute name="bind" type="xsd:boolean">
-					<xsd:annotation>
-						<xsd:documentation>
-							<![CDATA[
-Used in conjunction with the <i>model</i> attribute. Indicates whether binding should occur during this transition. Defaults to true.
-]]>
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
 	<xsd:complexType name="exception-handler">
 		<xsd:attribute name="bean" type="beanName" use="required">
 			<xsd:annotation>
