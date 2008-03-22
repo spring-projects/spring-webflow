@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine;
 
+import java.util.Iterator;
+
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -62,6 +64,12 @@ public abstract class TransitionableState extends State implements Transitionabl
 	}
 
 	public TransitionDefinition getTransition(String eventId) {
+		for (Iterator it = transitions.iterator(); it.hasNext();) {
+			Transition transition = (Transition) it.next();
+			if (transition.getId().equals(eventId)) {
+				return transition;
+			}
+		}
 		return null;
 	}
 

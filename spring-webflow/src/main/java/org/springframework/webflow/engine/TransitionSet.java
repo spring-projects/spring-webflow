@@ -86,6 +86,14 @@ public class TransitionSet {
 	}
 
 	/**
+	 * Returns an iterator over this transition set.
+	 * @return an iterator
+	 */
+	public Iterator iterator() {
+		return transitions.iterator();
+	}
+
+	/**
 	 * Convert this set to a typed transition array.
 	 * @return the transition set as a typed array
 	 */
