@@ -31,10 +31,9 @@ public interface ExpressionParser {
 	 *     name.firstName
 	 * </pre>
 	 * 
-	 * @param expressionString the raw expression spring to parse; cannot be null; cannot be encased in any special
-	 * delimiters; cannot be a template
-	 * @param context a context used to set attributes that influence expression parsing routine (optional)
-	 * @return the evaluator for the parsed expression
+	 * @param expressionString the raw expression string to parse
+	 * @param context a context for influencing this expression parsing routine (optional)
+	 * @return an evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing
 	 */
 	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException;
