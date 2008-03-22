@@ -16,6 +16,7 @@
 package org.springframework.binding.format.impl;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.i18n.SimpleLocaleContext;
+import org.springframework.util.Assert;
 
 /**
  * Base class for formatter factories. Manages the locale used by the produced formatters using Spring's
@@ -62,6 +64,8 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 	}
 
 	public Formatter getFormatter(Class clazz) {
+		Assert.notNull(clazz, "The formatted class argument is required");
+		clazz = convertToWrapperClassIfNecessary(clazz);
 		FormatterFactory factory = findFormatterFactory(clazz);
 		if (factory != null) {
 			FormatterFactoryContextImpl context = new FormatterFactoryContextImpl();
@@ -74,6 +78,7 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 	}
 
 	public Formatter getFormatter(String id, Class clazz) {
+		Assert.hasText(id, "The id of the custom formatter is required");
 		FormatterFactory factory = (FormatterFactory) formattersById.get(id);
 		if (factory != null) {
 			FormatterFactoryContextImpl context = new FormatterFactoryContextImpl();
@@ -85,21 +90,9 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 		}
 	}
 
-	private FormatterFactory findFormatterFactory(Class clazz) {
-		FormatterFactory factory = (FormatterFactory) formattersByClass.get(clazz);
-		if (factory != null) {
-			return factory;
-		} else {
-			// TODO - getSuperClass can return null
-			if (clazz.getSuperclass() != Object.class) {
-				return findFormatterFactory(clazz.getSuperclass());
-			} else {
-				return null;
-			}
-		}
-	}
-
 	public void registerFormatter(String id, FormatterFactory factory) {
+		Assert.hasText(id, "The id of the custom formatter is required");
+		Assert.notNull(factory, "The formatter factory is required");
 		formattersById.put(id, factory);
 		Class formattedClass = factory.getFormattedClass();
 		if (!formattersByClass.containsKey(formattedClass)) {
@@ -108,6 +101,53 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 	}
 
 	public void registerFormatter(FormatterFactory factory) {
+		Assert.notNull(factory, "The formatter factory is required");
 		formattersByClass.put(factory.getFormattedClass(), factory);
+	}
+
+	private FormatterFactory findFormatterFactory(Class clazz) {
+		LinkedList classQueue = new LinkedList();
+		classQueue.addFirst(clazz);
+		while (!classQueue.isEmpty()) {
+			clazz = (Class) classQueue.removeLast();
+			FormatterFactory factory = (FormatterFactory) formattersByClass.get(clazz);
+			if (factory != null) {
+				return factory;
+			}
+			if (!clazz.isInterface() && clazz.getSuperclass() != null) {
+				classQueue.add(clazz.getSuperclass());
+			}
+			Class[] interfaces = clazz.getInterfaces();
+			for (int i = 0; i < interfaces.length; i++) {
+				classQueue.addFirst(interfaces[i]);
+			}
+		}
+		return null;
+	}
+
+	private Class convertToWrapperClassIfNecessary(Class targetType) {
+		if (targetType.isPrimitive()) {
+			if (targetType.equals(int.class)) {
+				return Integer.class;
+			} else if (targetType.equals(short.class)) {
+				return Short.class;
+			} else if (targetType.equals(long.class)) {
+				return Long.class;
+			} else if (targetType.equals(float.class)) {
+				return Float.class;
+			} else if (targetType.equals(double.class)) {
+				return Double.class;
+			} else if (targetType.equals(byte.class)) {
+				return Byte.class;
+			} else if (targetType.equals(boolean.class)) {
+				return Boolean.class;
+			} else if (targetType.equals(char.class)) {
+				return Character.class;
+			} else {
+				throw new IllegalStateException("Should never happen - primitive type is not a primitive?");
+			}
+		} else {
+			return targetType;
+		}
 	}
 }

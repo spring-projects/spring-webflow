@@ -33,7 +33,7 @@ public class DateFormatterFactory implements FormatterFactory {
 		return DateFormat.getDateInstance(DateFormat.SHORT, context.getLocale());
 	}
 
-	private class DateFormatter extends AbstractFormatter {
+	private static class DateFormatter extends AbstractFormatter {
 
 		private DateFormat dateFormat;
 
