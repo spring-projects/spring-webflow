@@ -682,7 +682,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 				.getActions()));
 		MutableAttributeMap attributes = convertMetaAttributes(transition.getAttributes());
 		if (transition.getBind() != null) {
-			attributes.put("bind", transition.getBind());
+			attributes.put("bind", fromStringTo(Boolean.class).execute(transition.getBind()));
 		}
 		convertSecured(transition.getSecured(), attributes);
 		return getLocalContext().getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria,
