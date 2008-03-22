@@ -12,11 +12,11 @@ public class SecurityRuleTests extends TestCase {
 		Collection attributes = new ArrayList();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_2");
-		Assert.assertEquals("ROLE_1, ROLE_2", SecurityRule.convertAttributesToCommaSeparatedString(attributes));
+		Assert.assertEquals("ROLE_1, ROLE_2", SecurityRule.securityAttributesToCommaDelimitedList(attributes));
 	}
 
 	public void testConvertAttributesFromCommaSeparatedString() {
-		Collection attributes = SecurityRule.convertAttributesFromCommaSeparatedString(" ,,ROLE_1, ROLE_2");
+		Collection attributes = SecurityRule.commaDelimitedListToSecurityAttributes(" ,,ROLE_1, ROLE_2");
 		Assert.assertEquals(2, attributes.size());
 		Assert.assertTrue(attributes.contains("ROLE_1"));
 		Assert.assertTrue(attributes.contains("ROLE_2"));

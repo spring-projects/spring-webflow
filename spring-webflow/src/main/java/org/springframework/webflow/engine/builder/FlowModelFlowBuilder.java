@@ -1,9 +1,9 @@
 package org.springframework.webflow.engine.builder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.BeanFactory;
@@ -24,9 +24,9 @@ import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
@@ -90,9 +90,12 @@ import org.springframework.webflow.util.ResourceHolder;
 public class FlowModelFlowBuilder extends AbstractFlowBuilder implements ResourceHolder {
 
 	private FlowModelHolder flowModelHolder;
+
 	private FlowModel flowModel;
-	private LocalFlowBuilderContext localFlowBuilderContext;
+
 	private Resource resource;
+
+	private LocalFlowBuilderContext localFlowBuilderContext;
 
 	public FlowModelFlowBuilder(FlowModelHolder flowModelHolder) {
 		this.flowModelHolder = flowModelHolder;
@@ -119,8 +122,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 */
 	public void buildVariables() throws FlowBuilderException {
 		if (flowModel.getVars() != null) {
-			for (Iterator varIt = flowModel.getVars().iterator(); varIt.hasNext();) {
-				getFlow().addVariable(convertFlowVariable((VarModel) varIt.next()));
+			for (Iterator it = flowModel.getVars().iterator(); it.hasNext();) {
+				getFlow().addVariable(parseFlowVariable((VarModel) it.next()));
 			}
 		}
 	}
@@ -130,9 +133,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
 	public void buildInputMapper() throws FlowBuilderException {
-		if (flowModel.getInputs() != null) {
-			getFlow().setInputMapper(convertFlowInputMapper(flowModel.getInputs()));
-		}
+		getFlow().setInputMapper(parseFlowInputMapper(flowModel.getInputs()));
 	}
 
 	/**
@@ -140,9 +141,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
 	public void buildStartActions() throws FlowBuilderException {
-		if (flowModel.getOnStartActions() != null) {
-			getFlow().getStartActionList().addAll(convertActions(flowModel.getOnStartActions()));
-		}
+		getFlow().getStartActionList().addAll(parseActions(flowModel.getOnStartActions()));
 	}
 
 	/**
@@ -153,25 +152,22 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		if (flowModel.getStates() == null) {
 			throw new FlowBuilderException("At least one state is required to build a flow definition");
 		}
-		for (Iterator stateIt = flowModel.getStates().iterator(); stateIt.hasNext();) {
-			AbstractStateModel state = (AbstractStateModel) stateIt.next();
+		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
+			AbstractStateModel state = (AbstractStateModel) it.next();
 			if (state instanceof ActionStateModel) {
-				convertActionState((ActionStateModel) state, getFlow());
+				parseAndAddActionState((ActionStateModel) state, getFlow());
 			} else if (state instanceof ViewStateModel) {
-				convertViewState((ViewStateModel) state, getFlow());
+				parseAndAddViewState((ViewStateModel) state, getFlow());
 			} else if (state instanceof DecisionStateModel) {
-				convertDecisionState((DecisionStateModel) state, getFlow());
+				parseAndAddDecisionState((DecisionStateModel) state, getFlow());
 			} else if (state instanceof SubflowStateModel) {
-				convertSubflowState((SubflowStateModel) state, getFlow());
+				parseAndAddSubflowState((SubflowStateModel) state, getFlow());
 			} else if (state instanceof EndStateModel) {
-				convertEndState((EndStateModel) state, getFlow());
+				parseAndAddEndState((EndStateModel) state, getFlow());
 			}
 		}
 		if (flowModel.getStartStateId() != null) {
 			getFlow().setStartState(flowModel.getStartStateId());
-		} else {
-			// default to the identifier of the first state in the flow model
-			getFlow().setStartState(((AbstractStateModel) flowModel.getStates().get(0)).getId());
 		}
 	}
 
@@ -180,9 +176,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
 	public void buildGlobalTransitions() throws FlowBuilderException {
-		if (flowModel.getGlobalTransitions() != null) {
-			getFlow().getGlobalTransitionSet().addAll(convertTransitions(flowModel.getGlobalTransitions()));
-		}
+		getFlow().getGlobalTransitionSet().addAll(parseTransitions(flowModel.getGlobalTransitions()));
 	}
 
 	/**
@@ -190,9 +184,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
 	public void buildEndActions() throws FlowBuilderException {
-		if (flowModel.getOnEndActions() != null) {
-			getFlow().getEndActionList().addAll(convertActions(flowModel.getOnEndActions()));
-		}
+		getFlow().getEndActionList().addAll(parseActions(flowModel.getOnEndActions()));
 	}
 
 	/**
@@ -201,7 +193,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 */
 	public void buildOutputMapper() throws FlowBuilderException {
 		if (flowModel.getOutputs() != null) {
-			getFlow().setOutputMapper(convertFlowOutputMapper(flowModel.getOutputs()));
+			getFlow().setOutputMapper(parseFlowOutputMapper(flowModel.getOutputs()));
 		}
 	}
 
@@ -211,7 +203,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 */
 	public void buildExceptionHandlers() throws FlowBuilderException {
 		getFlow().getExceptionHandlerSet().addAll(
-				convertExceptionHandlers(flowModel.getExceptionHandlers(), flowModel.getGlobalTransitions()));
+				parseExceptionHandlers(flowModel.getExceptionHandlers(), flowModel.getGlobalTransitions()));
 	}
 
 	/**
@@ -224,14 +216,60 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		setLocalContext(null);
 	}
 
+	// implementing resource holder
+
+	public Resource getResource() {
+		return resource;
+	}
+
+	// subclassing hooks
+
+	protected Flow createFlow() {
+		Flow flow = parseFlow(flowModel);
+		flow.setBeanFactory(getLocalContext().getBeanFactory());
+		flow.setResourceLoader(getLocalContext().getResourceLoader());
+		return flow;
+	}
+
+	protected FlowModel getFlowModel() {
+		return flowModel;
+	}
+
+	protected LocalFlowBuilderContext getLocalContext() {
+		return localFlowBuilderContext;
+	}
+
+	protected void setLocalContext(LocalFlowBuilderContext localFlowBuilderContext) {
+		this.localFlowBuilderContext = localFlowBuilderContext;
+	}
+
+	/**
+	 * Register beans in the bean factory local to the flow definition being built.
+	 * <p>
+	 * Subclasses may override this method to customize the population of the bean factory local to the flow definition
+	 * being built; for example, to register mock implementations of services in a test environment.
+	 * @param beanFactory the bean factory; register local beans with it using
+	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
+	 */
+	protected void registerFlowBeans(ConfigurableBeanFactory beanFactory) {
+	}
+
+	// internal helpers
+
 	private void initLocalFlowContext() {
-		List resources = new LinkedList();
-		if (getFlowModel().getBeanImports() != null) {
+		Resource[] contextResources = parseContextResources(getFlowModel().getBeanImports());
+		GenericApplicationContext flowContext = createFlowApplicationContext(contextResources);
+		setLocalContext(new LocalFlowBuilderContext(getContext(), flowContext));
+	}
+
+	private Resource[] parseContextResources(List beanImports) {
+		if (beanImports != null && !beanImports.isEmpty()) {
 			if (getResource() == null) {
 				throw new FlowBuilderException("A resource must be defined in order to load bean-imports");
 			}
-			for (Iterator beanImportIt = getFlowModel().getBeanImports().iterator(); beanImportIt.hasNext();) {
-				BeanImportModel beanImport = (BeanImportModel) beanImportIt.next();
+			List resources = new ArrayList(beanImports.size());
+			for (Iterator it = getFlowModel().getBeanImports().iterator(); it.hasNext();) {
+				BeanImportModel beanImport = (BeanImportModel) it.next();
 				try {
 					resources.add(getResource().createRelative(beanImport.getResource()));
 				} catch (IOException e) {
@@ -239,29 +277,13 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 							+ beanImport.getResource() + "'", e);
 				}
 			}
+			return (Resource[]) resources.toArray(new Resource[resources.size()]);
+		} else {
+			return new Resource[0];
 		}
-		setLocalContext(new LocalFlowBuilderContext(getContext(), createFlowApplicationContext((Resource[]) resources
-				.toArray(new Resource[resources.size()]))));
 	}
 
-	protected Flow createFlow() {
-		Flow flow = convertFlow(flowModel);
-		flow.setBeanFactory(getLocalContext().getBeanFactory());
-		flow.setResourceLoader(getLocalContext().getResourceLoader());
-		return flow;
-	}
-
-	private Flow convertFlow(FlowModel flow) {
-		String flowId = getLocalContext().getFlowId();
-		AttributeMap externallyAssignedAttributes = getLocalContext().getFlowAttributes();
-		MutableAttributeMap flowAttributes = convertMetaAttributes(flow.getAttributes());
-		convertPersistenceContext(flow.getPersistenceContext(), flowAttributes);
-		convertSecured(flow.getSecured(), flowAttributes);
-		return this.getLocalContext().getFlowArtifactFactory().createFlow(flowId,
-				flowAttributes.union(externallyAssignedAttributes));
-	}
-
-	protected GenericApplicationContext createFlowApplicationContext(Resource[] resources) {
+	private GenericApplicationContext createFlowApplicationContext(Resource[] resources) {
 		// see if this factory has a parent
 		BeanFactory parent = getContext().getBeanFactory();
 		// determine the context implementation based on the current environment
@@ -282,47 +304,46 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 			}
 		}
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(resource));
-		AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
+		if (JdkVersion.isAtLeastJava15()) {
+			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
+		}
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getDefaultListableBeanFactory());
 		flowContext.refresh();
 		return flowContext;
 	}
 
-	/**
-	 * Register beans in the bean factory local to the flow definition being built.
-	 * <p>
-	 * Subclasses may override this method to customize the population of the bean factory local to the flow definition
-	 * being built; for example, to register mock implementations of services in a test environment.
-	 * @param beanFactory the bean factory; register local beans with it using
-	 * {@link ConfigurableBeanFactory#registerSingleton(String, Object)}
-	 */
-	protected void registerFlowBeans(ConfigurableBeanFactory beanFactory) {
+	private Flow parseFlow(FlowModel flow) {
+		String flowId = getLocalContext().getFlowId();
+		AttributeMap externallyAssignedAttributes = getLocalContext().getFlowAttributes();
+		MutableAttributeMap flowAttributes = parseMetaAttributes(flow.getAttributes());
+		parseAndPutPersistenceContext(flow.getPersistenceContext(), flowAttributes);
+		parseAndPutSecured(flow.getSecured(), flowAttributes);
+		return this.getLocalContext().getFlowArtifactFactory().createFlow(flowId,
+				flowAttributes.union(externallyAssignedAttributes));
 	}
 
-	private FlowVariable convertFlowVariable(VarModel var) {
+	private FlowVariable parseFlowVariable(VarModel var) {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
 				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
-		ScopeType scope = convertScopeType(var.getScope(), ScopeType.FLOW);
-		if (!(scope == ScopeType.FLOW || scope == ScopeType.CONVERSATION)) {
-			throw new IllegalArgumentException("Only " + ScopeType.FLOW + " or " + ScopeType.CONVERSATION
-					+ " scope is allowed for flow variables");
-		}
+		ScopeType scope = parseScopeType(var.getScope(), ScopeType.FLOW);
 		return new FlowVariable(var.getName(), valueFactory, scope == ScopeType.FLOW ? true : false);
 	}
 
-	private Mapper convertFlowInputMapper(List inputs) {
-		DefaultMapper inputMapper = new DefaultMapper();
-		if (inputs != null) {
-			for (Iterator inputIt = inputs.iterator(); inputIt.hasNext();) {
-				inputMapper.addMapping(convertFlowInputMapping((InputModel) inputIt.next()));
+	private Mapper parseFlowInputMapper(List inputs) {
+		if (inputs != null && !inputs.isEmpty()) {
+			DefaultMapper inputMapper = new DefaultMapper();
+			for (Iterator it = inputs.iterator(); it.hasNext();) {
+				inputMapper.addMapping(parseFlowInputMapping((InputModel) it.next()));
 			}
+			return inputMapper;
+		} else {
+			return null;
 		}
-		return inputMapper;
 	}
 
-	private DefaultMapping convertFlowInputMapping(InputModel input) {
+	private DefaultMapping parseFlowInputMapping(InputModel input) {
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		String name = input.getName();
 		String value = null;
@@ -334,22 +355,24 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		convertMappingConversionExecutor(input, mapping);
-		convertMappingRequired(input, mapping);
+		parseAndSetMappingConversionExecutor(input, mapping);
+		parseAndSetMappingRequired(input, mapping);
 		return mapping;
 	}
 
-	private Mapper convertSubflowInputMapper(List inputs) {
-		DefaultMapper inputMapper = new DefaultMapper();
-		if (inputs != null) {
-			for (Iterator inputIt = inputs.iterator(); inputIt.hasNext();) {
-				inputMapper.addMapping(convertSubflowInputMapping((InputModel) inputIt.next()));
+	private Mapper parseSubflowInputMapper(List inputs) {
+		if (inputs != null && !inputs.isEmpty()) {
+			DefaultMapper inputMapper = new DefaultMapper();
+			for (Iterator it = inputs.iterator(); it.hasNext();) {
+				inputMapper.addMapping(parseSubflowInputMapping((InputModel) it.next()));
 			}
+			return inputMapper;
+		} else {
+			return null;
 		}
-		return inputMapper;
 	}
 
-	private DefaultMapping convertSubflowInputMapping(InputModel input) {
+	private DefaultMapping parseSubflowInputMapping(InputModel input) {
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		String name = input.getName();
 		String value = null;
@@ -361,22 +384,24 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
 		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		convertMappingConversionExecutor(input, mapping);
-		convertMappingRequired(input, mapping);
+		parseAndSetMappingConversionExecutor(input, mapping);
+		parseAndSetMappingRequired(input, mapping);
 		return mapping;
 	}
 
-	private Mapper convertFlowOutputMapper(List outputs) {
-		DefaultMapper outputMapper = new DefaultMapper();
-		if (outputs != null) {
-			for (Iterator outputIt = outputs.iterator(); outputIt.hasNext();) {
-				outputMapper.addMapping(convertFlowOutputMapping((OutputModel) outputIt.next()));
+	private Mapper parseFlowOutputMapper(List outputs) {
+		if (outputs != null && !outputs.isEmpty()) {
+			DefaultMapper outputMapper = new DefaultMapper();
+			for (Iterator it = outputs.iterator(); it.hasNext();) {
+				outputMapper.addMapping(parseFlowOutputMapping((OutputModel) it.next()));
 			}
+			return outputMapper;
+		} else {
+			return null;
 		}
-		return outputMapper;
 	}
 
-	private DefaultMapping convertFlowOutputMapping(OutputModel output) {
+	private DefaultMapping parseFlowOutputMapping(OutputModel output) {
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		String name = output.getName();
 		String value = null;
@@ -388,22 +413,24 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
 		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		convertMappingConversionExecutor(output, mapping);
-		convertMappingRequired(output, mapping);
+		parseAndSetMappingConversionExecutor(output, mapping);
+		parseAndSetMappingRequired(output, mapping);
 		return mapping;
 	}
 
-	private Mapper convertSubflowOutputMapper(List outputs) {
-		DefaultMapper outputMapper = new DefaultMapper();
-		if (outputs != null) {
-			for (Iterator outputIt = outputs.iterator(); outputIt.hasNext();) {
-				outputMapper.addMapping(convertSubflowOutputMapping((OutputModel) outputIt.next()));
+	private Mapper parseSubflowOutputMapper(List outputs) {
+		if (outputs != null && !outputs.isEmpty()) {
+			DefaultMapper outputMapper = new DefaultMapper();
+			for (Iterator it = outputs.iterator(); it.hasNext();) {
+				outputMapper.addMapping(parseSubflowOutputMapping((OutputModel) it.next()));
 			}
+			return outputMapper;
+		} else {
+			return null;
 		}
-		return outputMapper;
 	}
 
-	private DefaultMapping convertSubflowOutputMapping(OutputModel output) {
+	private DefaultMapping parseSubflowOutputMapping(OutputModel output) {
 		ExpressionParser parser = getLocalContext().getExpressionParser();
 		String name = output.getName();
 		String value = null;
@@ -415,39 +442,30 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		convertMappingConversionExecutor(output, mapping);
-		convertMappingRequired(output, mapping);
+		parseAndSetMappingConversionExecutor(output, mapping);
+		parseAndSetMappingRequired(output, mapping);
 		return mapping;
 	}
 
-	private void convertMappingConversionExecutor(AbstractMappingModel model, DefaultMapping mapping) {
-		if (StringUtils.hasText(model.getType())) {
-			Class type = (Class) fromStringTo(Class.class).execute(model.getType());
+	private void parseAndSetMappingConversionExecutor(AbstractMappingModel mappingModel, DefaultMapping mapping) {
+		if (StringUtils.hasText(mappingModel.getType())) {
+			Class type = (Class) fromStringTo(Class.class).execute(mappingModel.getType());
 			ConversionExecutor typeConverter = new RuntimeBindingConversionExecutor(type, getLocalContext()
 					.getConversionService());
 			mapping.setTypeConverter(typeConverter);
 		}
 	}
 
-	private void convertMappingRequired(AbstractMappingModel model, DefaultMapping mapping) {
-		if (StringUtils.hasText(model.getRequired())) {
-			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(model.getRequired())).booleanValue();
+	private void parseAndSetMappingRequired(AbstractMappingModel mappingModel, DefaultMapping mapping) {
+		if (StringUtils.hasText(mappingModel.getRequired())) {
+			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(mappingModel.getRequired()))
+					.booleanValue();
 			mapping.setRequired(required);
 		}
 	}
 
-	private void convertActionState(ActionStateModel state, Flow flow) {
-		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
-		convertSecured(state.getSecured(), attributes);
-		getLocalContext().getFlowArtifactFactory().createActionState(state.getId(), flow,
-				convertActions(state.getOnEntryActions()), convertActions(state.getActions()),
-				convertTransitions(state.getTransitions()),
-				convertExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
-				convertActions(state.getOnExitActions()), attributes);
-	}
-
-	private void convertViewState(ViewStateModel state, Flow flow) {
-		ViewFactory viewFactory = convertViewFactory(state.getView(), state.getId(), false);
+	private void parseAndAddViewState(ViewStateModel state, Flow flow) {
+		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), false);
 		Boolean redirect = null;
 		if (StringUtils.hasText(state.getRedirect())) {
 			redirect = (Boolean) fromStringTo(Boolean.class).execute(state.getRedirect());
@@ -456,71 +474,62 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		if (StringUtils.hasText(state.getPopup())) {
 			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
 		}
-		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
+		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
 			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
 					new ParserContextImpl().eval(RequestContext.class)));
 		}
-		convertSecured(state.getSecured(), attributes);
+		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
-				convertViewVariables(state.getVars()), convertActions(state.getOnEntryActions()), viewFactory,
-				redirect, popup, convertActions(state.getOnRenderActions()),
-				convertTransitions(state.getTransitions()),
-				convertExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
-				convertActions(state.getOnExitActions()), attributes);
+				parseViewVariables(state.getVars()), parseActions(state.getOnEntryActions()), viewFactory, redirect,
+				popup, parseActions(state.getOnRenderActions()), parseTransitions(state.getTransitions()),
+				parseExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
+				parseActions(state.getOnExitActions()), attributes);
 	}
 
-	private void convertDecisionState(DecisionStateModel state, Flow flow) {
-		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
-		convertSecured(state.getSecured(), attributes);
+	private void parseAndAddActionState(ActionStateModel state, Flow flow) {
+		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
+		parseAndPutSecured(state.getSecured(), attributes);
+		getLocalContext().getFlowArtifactFactory().createActionState(state.getId(), flow,
+				parseActions(state.getOnEntryActions()), parseActions(state.getActions()),
+				parseTransitions(state.getTransitions()),
+				parseExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
+				parseActions(state.getOnExitActions()), attributes);
+	}
+
+	private void parseAndAddDecisionState(DecisionStateModel state, Flow flow) {
+		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
+		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createDecisionState(state.getId(), flow,
-				convertActions(state.getOnEntryActions()), convertIfs(state.getIfs()),
-				convertExceptionHandlers(state.getExceptionHandlers(), null), convertActions(state.getOnExitActions()),
+				parseActions(state.getOnEntryActions()), parseIfs(state.getIfs()),
+				parseExceptionHandlers(state.getExceptionHandlers(), null), parseActions(state.getOnExitActions()),
 				attributes);
 	}
 
-	private void convertSubflowState(SubflowStateModel state, Flow flow) {
-		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
-		convertSecured(state.getSecured(), attributes);
+	private void parseAndAddSubflowState(SubflowStateModel state, Flow flow) {
+		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
+		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createSubflowState(state.getId(), flow,
-				convertActions(state.getOnEntryActions()), convertSubflowExpression(state.getSubflow()),
-				convertSubflowAttributeMapper(state), convertTransitions(state.getTransitions()),
-				convertExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
-				convertActions(state.getOnExitActions()), attributes);
+				parseActions(state.getOnEntryActions()), parseSubflowExpression(state.getSubflow()),
+				parseSubflowAttributeMapper(state), parseTransitions(state.getTransitions()),
+				parseExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
+				parseActions(state.getOnExitActions()), attributes);
 	}
 
-	private Expression convertSubflowExpression(String subflow) {
-		Expression subflowId = getLocalContext().getExpressionParser().parseExpression(subflow,
-				new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
-		return new SubflowExpression(subflowId, getLocalContext().getFlowDefinitionLocator());
-	}
-
-	private SubflowAttributeMapper convertSubflowAttributeMapper(SubflowStateModel state) {
-		if (StringUtils.hasText(state.getSubflowAttributeMapper())) {
-			String attributeMapperBeanId = state.getSubflowAttributeMapper();
-			return (SubflowAttributeMapper) getLocalContext().getBeanFactory().getBean(attributeMapperBeanId,
-					SubflowAttributeMapper.class);
-		} else {
-			Mapper inputMapper = convertSubflowInputMapper(state.getInputs());
-			Mapper outputMapper = convertSubflowOutputMapper(state.getOutputs());
-			return new GenericSubflowAttributeMapper(inputMapper, outputMapper);
-		}
-	}
-
-	private void convertEndState(EndStateModel state, Flow flow) {
-		MutableAttributeMap attributes = convertMetaAttributes(state.getAttributes());
+	private void parseAndAddEndState(EndStateModel state, Flow flow) {
+		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (StringUtils.hasText(state.getCommit())) {
 			attributes.put("commit", fromStringTo(Boolean.class).execute(state.getCommit()));
 		}
-		convertSecured(state.getSecured(), attributes);
+		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createEndState(state.getId(), flow,
-				convertActions(state.getOnEntryActions()),
-				new ViewFactoryActionAdapter(convertViewFactory(state.getView(), state.getId(), true)),
-				convertFlowOutputMapper(state.getOutputs()),
-				convertExceptionHandlers(state.getExceptionHandlers(), null), attributes);
+				parseActions(state.getOnEntryActions()),
+				new ViewFactoryActionAdapter(parseViewFactory(state.getView(), state.getId(), true)),
+				parseFlowOutputMapper(state.getOutputs()), parseExceptionHandlers(state.getExceptionHandlers(), null),
+				attributes);
 	}
 
-	private ViewFactory convertViewFactory(String view, String stateId, boolean endState) {
+	private ViewFactory parseViewFactory(String view, String stateId, boolean endState) {
 		if (!StringUtils.hasText(view)) {
 			if (endState) {
 				return null;
@@ -553,62 +562,84 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 				getLocalContext().getResourceLoader());
 	}
 
-	private ViewVariable[] convertViewVariables(List vars) {
-		List variables = new LinkedList();
-		if (vars != null) {
-			for (Iterator varIt = vars.iterator(); varIt.hasNext();) {
-				variables.add(convertViewVariable((VarModel) varIt.next()));
+	private ViewVariable[] parseViewVariables(List vars) {
+		if (vars != null && !vars.isEmpty()) {
+			List variables = new ArrayList(vars.size());
+			for (Iterator it = vars.iterator(); it.hasNext();) {
+				variables.add(parseViewVariable((VarModel) it.next()));
 			}
+			return (ViewVariable[]) variables.toArray(new ViewVariable[variables.size()]);
+		} else {
+			return new ViewVariable[0];
 		}
-		return (ViewVariable[]) variables.toArray(new ViewVariable[variables.size()]);
 	}
 
-	private ViewVariable convertViewVariable(VarModel var) {
+	private ViewVariable parseViewVariable(VarModel var) {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
 				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
 		return new ViewVariable(var.getName(), valueFactory);
 	}
 
-	private Transition[] convertIfs(List ifs) {
-		List transitions = new LinkedList();
-		if (ifs != null) {
-			for (Iterator ifIt = ifs.iterator(); ifIt.hasNext();) {
-				transitions.addAll(Arrays.asList(convertIf((IfModel) ifIt.next())));
+	private Transition[] parseIfs(List ifModels) {
+		if (ifModels != null && !ifModels.isEmpty()) {
+			List transitions = new ArrayList(ifModels.size());
+			for (Iterator it = ifModels.iterator(); it.hasNext();) {
+				transitions.addAll(Arrays.asList(parseIf((IfModel) it.next())));
 			}
+			return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
+		} else {
+			return new Transition[0];
 		}
-		return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
 	}
 
-	private Transition[] convertIf(IfModel conditional) {
-		Transition thenTransition = convertThen(conditional);
-		if (StringUtils.hasText(conditional.getElse())) {
-			Transition elseTransition = convertElse(conditional);
+	private Transition[] parseIf(IfModel ifModel) {
+		Transition thenTransition = parseThen(ifModel);
+		if (StringUtils.hasText(ifModel.getElse())) {
+			Transition elseTransition = parseElse(ifModel);
 			return new Transition[] { thenTransition, elseTransition };
 		} else {
 			return new Transition[] { thenTransition };
 		}
 	}
 
-	private Transition convertThen(IfModel conditional) {
-		Expression expression = getLocalContext().getExpressionParser().parseExpression(conditional.getTest(),
+	private Transition parseThen(IfModel ifModel) {
+		Expression test = getLocalContext().getExpressionParser().parseExpression(ifModel.getTest(),
 				new ParserContextImpl().eval(RequestContext.class).expect(Boolean.class));
-		TransitionCriteria matchingCriteria = new DefaultTransitionCriteria(expression);
+		TransitionCriteria matchingCriteria = new DefaultTransitionCriteria(test);
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
-				.execute(conditional.getThen());
+				.execute(ifModel.getThen());
 		return getLocalContext().getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria, null,
 				null);
 	}
 
-	private Transition convertElse(IfModel conditional) {
-		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
-				.execute(conditional.getElse());
-		return getLocalContext().getFlowArtifactFactory().createTransition(targetStateResolver, null, null, null);
+	private Transition parseElse(IfModel ifModel) {
+		TargetStateResolver stateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class).execute(
+				ifModel.getElse());
+		return getLocalContext().getFlowArtifactFactory().createTransition(stateResolver, null, null, null);
 	}
 
-	private FlowExecutionExceptionHandler[] convertExceptionHandlers(List modelExceptionHandlers, List modelTransitions) {
-		FlowExecutionExceptionHandler[] transitionExecutingHandlers = convertTransitionExecutingExceptionHandlers(modelTransitions);
-		FlowExecutionExceptionHandler[] customHandlers = convertCustomExceptionHandlers(modelExceptionHandlers);
+	private Expression parseSubflowExpression(String subflow) {
+		Expression subflowId = getLocalContext().getExpressionParser().parseExpression(subflow,
+				new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+		return new SubflowExpression(subflowId, getLocalContext().getFlowDefinitionLocator());
+	}
+
+	private SubflowAttributeMapper parseSubflowAttributeMapper(SubflowStateModel state) {
+		if (StringUtils.hasText(state.getSubflowAttributeMapper())) {
+			String beanId = state.getSubflowAttributeMapper();
+			return (SubflowAttributeMapper) getLocalContext().getBeanFactory().getBean(beanId,
+					SubflowAttributeMapper.class);
+		} else {
+			Mapper inputMapper = parseSubflowInputMapper(state.getInputs());
+			Mapper outputMapper = parseSubflowOutputMapper(state.getOutputs());
+			return new GenericSubflowAttributeMapper(inputMapper, outputMapper);
+		}
+	}
+
+	private FlowExecutionExceptionHandler[] parseExceptionHandlers(List modelExceptionHandlers, List modelTransitions) {
+		FlowExecutionExceptionHandler[] transitionExecutingHandlers = parseTransitionExecutingExceptionHandlers(modelTransitions);
+		FlowExecutionExceptionHandler[] customHandlers = parseCustomExceptionHandlers(modelExceptionHandlers);
 		FlowExecutionExceptionHandler[] exceptionHandlers = new FlowExecutionExceptionHandler[transitionExecutingHandlers.length
 				+ customHandlers.length];
 		System.arraycopy(transitionExecutingHandlers, 0, exceptionHandlers, 0, transitionExecutingHandlers.length);
@@ -617,103 +648,113 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		return exceptionHandlers;
 	}
 
-	private FlowExecutionExceptionHandler[] convertTransitionExecutingExceptionHandlers(List transitions) {
-		List exceptionHandlers = new LinkedList();
-		if (transitions != null) {
-			for (Iterator transitionIt = transitions.iterator(); transitionIt.hasNext();) {
-				TransitionModel transition = (TransitionModel) transitionIt.next();
-				if (StringUtils.hasText(transition.getOnException())) {
-					if (transition.getSecured() != null) {
+	private FlowExecutionExceptionHandler[] parseTransitionExecutingExceptionHandlers(List transitionModels) {
+		if (transitionModels != null && !transitionModels.isEmpty()) {
+			List exceptionHandlers = new ArrayList(transitionModels.size());
+			for (Iterator it = transitionModels.iterator(); it.hasNext();) {
+				TransitionModel model = (TransitionModel) it.next();
+				if (StringUtils.hasText(model.getOnException())) {
+					if (model.getSecured() != null) {
 						throw new FlowBuilderException("Exception based transitions cannot be secured");
 					}
-					exceptionHandlers.add(convertTransitionExecutingExceptionHandler(transition));
+					exceptionHandlers.add(parseTransitionExecutingExceptionHandler(model));
 				}
 			}
+			return (FlowExecutionExceptionHandler[]) exceptionHandlers
+					.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
+		} else {
+			return new FlowExecutionExceptionHandler[0];
 		}
-		return (FlowExecutionExceptionHandler[]) exceptionHandlers
-				.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
 	}
 
-	private FlowExecutionExceptionHandler convertTransitionExecutingExceptionHandler(TransitionModel transition) {
+	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(TransitionModel transition) {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		Class exceptionClass = (Class) fromStringTo(Class.class).execute(transition.getOnException());
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(transition.getTo());
 		handler.add(exceptionClass, targetStateResolver);
-		handler.getActionList().addAll(convertActions(transition.getActions()));
+		handler.getActionList().addAll(parseActions(transition.getActions()));
 		return handler;
 	}
 
-	private FlowExecutionExceptionHandler[] convertCustomExceptionHandlers(List modelExceptionHandlers) {
-		List exceptionHandlers = new LinkedList();
-		if (modelExceptionHandlers != null) {
-			for (Iterator exceptionHandlerIt = modelExceptionHandlers.iterator(); exceptionHandlerIt.hasNext();) {
-				exceptionHandlers.add(convertCustomExceptionHandler((ExceptionHandlerModel) exceptionHandlerIt.next()));
+	private FlowExecutionExceptionHandler[] parseCustomExceptionHandlers(List exceptionHandlerModels) {
+		if (exceptionHandlerModels != null && !exceptionHandlerModels.isEmpty()) {
+			List exceptionHandlers = new ArrayList(exceptionHandlerModels.size());
+			for (Iterator it = exceptionHandlerModels.iterator(); it.hasNext();) {
+				exceptionHandlers.add(parseCustomExceptionHandler((ExceptionHandlerModel) it.next()));
 			}
+			return (FlowExecutionExceptionHandler[]) exceptionHandlers
+					.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
+		} else {
+			return new FlowExecutionExceptionHandler[0];
 		}
-		return (FlowExecutionExceptionHandler[]) exceptionHandlers
-				.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
 	}
 
-	private FlowExecutionExceptionHandler convertCustomExceptionHandler(ExceptionHandlerModel exceptionHandler) {
+	private FlowExecutionExceptionHandler parseCustomExceptionHandler(ExceptionHandlerModel exceptionHandler) {
 		return (FlowExecutionExceptionHandler) getLocalContext().getBeanFactory().getBean(
 				exceptionHandler.getBeanName(), FlowExecutionExceptionHandler.class);
 	}
 
-	private Transition[] convertTransitions(List modelTransactions) {
-		List transitions = new LinkedList();
-		if (modelTransactions != null) {
-			for (Iterator modelTransactionIt = modelTransactions.iterator(); modelTransactionIt.hasNext();) {
-				TransitionModel transition = (TransitionModel) modelTransactionIt.next();
-				if (!StringUtils.hasText(transition.getOnException())) {
-					transitions.add(convertTransition(transition));
+	private Transition[] parseTransitions(List transitionModels) {
+		if (transitionModels != null && !transitionModels.isEmpty()) {
+			List transitions = new ArrayList(transitionModels.size());
+			if (transitionModels != null) {
+				for (Iterator it = transitionModels.iterator(); it.hasNext();) {
+					TransitionModel transition = (TransitionModel) it.next();
+					if (!StringUtils.hasText(transition.getOnException())) {
+						transitions.add(parseTransition(transition));
+					}
 				}
 			}
+			return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
+		} else {
+			return new Transition[0];
 		}
-		return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
 	}
 
-	private Transition convertTransition(TransitionModel transition) {
+	private Transition parseTransition(TransitionModel transition) {
 		TransitionCriteria matchingCriteria = (TransitionCriteria) fromStringTo(TransitionCriteria.class).execute(
 				transition.getOn());
-		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
-				.execute(transition.getTo());
-		TransitionCriteria executionCriteria = TransitionCriteriaChain.criteriaChainFor(convertActions(transition
+		TargetStateResolver stateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class).execute(
+				transition.getTo());
+		TransitionCriteria executionCriteria = TransitionCriteriaChain.criteriaChainFor(parseActions(transition
 				.getActions()));
-		MutableAttributeMap attributes = convertMetaAttributes(transition.getAttributes());
-		if (transition.getBind() != null) {
+		MutableAttributeMap attributes = parseMetaAttributes(transition.getAttributes());
+		if (StringUtils.hasText(transition.getBind())) {
 			attributes.put("bind", fromStringTo(Boolean.class).execute(transition.getBind()));
 		}
-		convertSecured(transition.getSecured(), attributes);
-		return getLocalContext().getFlowArtifactFactory().createTransition(targetStateResolver, matchingCriteria,
+		parseAndPutSecured(transition.getSecured(), attributes);
+		return getLocalContext().getFlowArtifactFactory().createTransition(stateResolver, matchingCriteria,
 				executionCriteria, attributes);
 	}
 
-	private Action[] convertActions(List modelActions) {
-		List actions = new LinkedList();
-		if (modelActions != null) {
-			for (Iterator modelActionIt = modelActions.iterator(); modelActionIt.hasNext();) {
-				AbstractActionModel action = (AbstractActionModel) modelActionIt.next();
+	private Action[] parseActions(List actionModels) {
+		if (actionModels != null && !actionModels.isEmpty()) {
+			List actions = new ArrayList(actionModels.size());
+			for (Iterator it = actionModels.iterator(); it.hasNext();) {
+				AbstractActionModel action = (AbstractActionModel) it.next();
 				if (action instanceof EvaluateModel) {
-					actions.add(convertEvaluateAction((EvaluateModel) action));
+					actions.add(parseEvaluateAction((EvaluateModel) action));
 				} else if (action instanceof RenderModel) {
-					actions.add(convertRenderAction((RenderModel) action));
+					actions.add(parseRenderAction((RenderModel) action));
 				} else if (action instanceof SetModel) {
-					actions.add(convertSetAction((SetModel) action));
+					actions.add(parseSetAction((SetModel) action));
 				}
 			}
+			return (Action[]) actions.toArray(new Action[actions.size()]);
+		} else {
+			return new Action[0];
 		}
-		return (Action[]) actions.toArray(new Action[actions.size()]);
 	}
 
-	private Action convertEvaluateAction(EvaluateModel evaluate) {
+	private Action parseEvaluateAction(EvaluateModel evaluate) {
 		String expressionString = evaluate.getExpression();
 		Expression expression = getLocalContext().getExpressionParser().parseExpression(expressionString,
 				new ParserContextImpl().eval(RequestContext.class));
-		return new EvaluateAction(expression, convertEvaluationActionResultExposer(evaluate));
+		return new EvaluateAction(expression, parseEvaluationActionResultExposer(evaluate));
 	}
 
-	private ActionResultExposer convertEvaluationActionResultExposer(EvaluateModel evaluate) {
+	private ActionResultExposer parseEvaluationActionResultExposer(EvaluateModel evaluate) {
 		if (StringUtils.hasText(evaluate.getResult())) {
 			Expression resultExpression = getLocalContext().getExpressionParser().parseExpression(evaluate.getResult(),
 					new ParserContextImpl().eval(RequestContext.class));
@@ -728,7 +769,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		}
 	}
 
-	private Action convertRenderAction(RenderModel render) {
+	private Action parseRenderAction(RenderModel render) {
 		String[] fragmentExpressionStrings = StringUtils.commaDelimitedListToStringArray(render.getFragments());
 		fragmentExpressionStrings = StringUtils.trimArrayElements(fragmentExpressionStrings);
 		ParserContext context = new ParserContextImpl().template().eval(RequestContext.class).expect(String.class);
@@ -740,7 +781,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		return new RenderAction(fragments);
 	}
 
-	private Action convertSetAction(SetModel set) {
+	private Action parseSetAction(SetModel set) {
 		Expression nameExpression = getLocalContext().getExpressionParser().parseExpression(set.getName(),
 				new ParserContextImpl().eval(RequestContext.class));
 		Expression valueExpression = getLocalContext().getExpressionParser().parseExpression(set.getValue(),
@@ -752,23 +793,25 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		return new SetAction(nameExpression, valueExpression, expectedType, getLocalContext().getConversionService());
 	}
 
-	private MutableAttributeMap convertMetaAttributes(List modelAttributes) {
-		LocalAttributeMap attributes = new LocalAttributeMap();
-		if (modelAttributes != null) {
-			for (Iterator modelAttributeIt = modelAttributes.iterator(); modelAttributeIt.hasNext();) {
-				convertMetaAttribute((AttributeModel) modelAttributeIt.next(), attributes);
+	private MutableAttributeMap parseMetaAttributes(List attributeModels) {
+		if (attributeModels != null && !attributeModels.isEmpty()) {
+			LocalAttributeMap attributes = new LocalAttributeMap();
+			for (Iterator it = attributeModels.iterator(); it.hasNext();) {
+				parseAndPutMetaAttribute((AttributeModel) it.next(), attributes);
 			}
+			return attributes;
+		} else {
+			return new LocalAttributeMap();
 		}
-		return attributes;
 	}
 
-	private void convertMetaAttribute(AttributeModel attribute, MutableAttributeMap attributes) {
+	private void parseAndPutMetaAttribute(AttributeModel attribute, MutableAttributeMap attributes) {
 		String name = attribute.getName();
 		String value = attribute.getValue();
-		attributes.put(name, convertAttributeValueIfNecessary(attribute, value));
+		attributes.put(name, parseAttributeValueIfNecessary(attribute, value));
 	}
 
-	private Object convertAttributeValueIfNecessary(AttributeModel attribute, String stringValue) {
+	private Object parseAttributeValueIfNecessary(AttributeModel attribute, String stringValue) {
 		if (StringUtils.hasText(attribute.getType())) {
 			Class targetClass = (Class) fromStringTo(Class.class).execute(attribute.getType());
 			return fromStringTo(targetClass).execute(stringValue);
@@ -777,16 +820,17 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		}
 	}
 
-	private void convertPersistenceContext(PersistenceContextModel persistenceContext, MutableAttributeMap attributes) {
+	private void parseAndPutPersistenceContext(PersistenceContextModel persistenceContext,
+			MutableAttributeMap attributes) {
 		if (persistenceContext != null) {
 			attributes.put("persistenceContext", Boolean.TRUE);
 		}
 	}
 
-	private void convertSecured(SecuredModel secured, MutableAttributeMap attributes) {
+	private void parseAndPutSecured(SecuredModel secured, MutableAttributeMap attributes) {
 		if (secured != null) {
 			SecurityRule rule = new SecurityRule();
-			rule.setAttributes(SecurityRule.convertAttributesFromCommaSeparatedString(secured.getAttributes()));
+			rule.setAttributes(SecurityRule.commaDelimitedListToSecurityAttributes(secured.getAttributes()));
 			String comparisonType = secured.getMatch();
 			if ("any".equals(comparisonType)) {
 				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
@@ -800,7 +844,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		}
 	}
 
-	private ScopeType convertScopeType(String scope, ScopeType defaultScope) {
+	private ScopeType parseScopeType(String scope, ScopeType defaultScope) {
 		if (StringUtils.hasText(scope)) {
 			return (ScopeType) fromStringTo(ScopeType.class).execute(scope);
 		} else {
@@ -810,22 +854,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 
 	private ConversionExecutor fromStringTo(Class targetType) throws ConversionException {
 		return getLocalContext().getConversionService().getConversionExecutor(String.class, targetType);
-	}
-
-	protected FlowModel getFlowModel() {
-		return flowModel;
-	}
-
-	protected LocalFlowBuilderContext getLocalContext() {
-		return localFlowBuilderContext;
-	}
-
-	public Resource getResource() {
-		return resource;
-	}
-
-	protected void setLocalContext(LocalFlowBuilderContext localFlowBuilderContext) {
-		this.localFlowBuilderContext = localFlowBuilderContext;
 	}
 
 	private static class FlowRelativeResourceLoader implements ResourceLoader {
@@ -875,10 +903,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		public String getExpressionString() {
 			return null;
 		}
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).toString();
 	}
 
 }

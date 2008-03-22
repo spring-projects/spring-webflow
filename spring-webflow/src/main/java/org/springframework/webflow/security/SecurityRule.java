@@ -28,6 +28,7 @@ public class SecurityRule {
 	public static final short COMPARISON_ALL = 2;
 
 	private Collection attributes;
+
 	private short comparisonType = COMPARISON_ANY;
 
 	/**
@@ -35,7 +36,7 @@ public class SecurityRule {
 	 * @param attributes the attributes to convert
 	 * @return comma separated String
 	 */
-	public static String convertAttributesToCommaSeparatedString(Collection attributes) {
+	public static String securityAttributesToCommaDelimitedList(Collection attributes) {
 		StringBuffer attrs = new StringBuffer();
 		Iterator attributeIt = attributes.iterator();
 		while (attributeIt.hasNext()) {
@@ -52,7 +53,7 @@ public class SecurityRule {
 	 * @param attributes the attributes to convert
 	 * @return comma parsed Collection
 	 */
-	public static Collection convertAttributesFromCommaSeparatedString(String attributes) {
+	public static Collection commaDelimitedListToSecurityAttributes(String attributes) {
 		Collection attrs = new HashSet();
 		Iterator attributeIt = Arrays.asList(attributes.split(",")).iterator();
 		while (attributeIt.hasNext()) {
