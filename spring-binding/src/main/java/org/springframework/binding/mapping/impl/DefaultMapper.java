@@ -81,7 +81,7 @@ public class DefaultMapper implements Mapper {
 		}
 		MappingResults results = context.toResult();
 		if (logger.isDebugEnabled()) {
-			logger.debug("Mapping operation completed; results = " + results);
+			logger.debug("Mapper completed; results = " + results);
 		}
 		return results;
 	}
