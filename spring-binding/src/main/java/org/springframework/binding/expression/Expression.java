@@ -17,7 +17,7 @@ package org.springframework.binding.expression;
 
 /**
  * Evaluates a single parsed expression on the provided input object in the specified context. This provides a common
- * abstraction for expression evaluation independent of any language like OGNL or Spring's BeanWrapper.
+ * abstraction for expression evaluation independent of any language like OGNL or the Unified EL.
  * 
  * @author Keith Donald
  */
