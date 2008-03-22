@@ -22,12 +22,6 @@ import org.springframework.util.StringUtils;
 
 /**
  * Model support for subflow states.
- * <p>
- * Starts another flow as a subflow when entered. When the subflow ends, this state is expected to respond to its result
- * by executing a transition.
- * <p>
- * A subflow state is a transitionable state. A transition is triggered by the subflow outcome that was reached.
- * 
  * @author Scott Andrews
  */
 public class SubflowStateModel extends AbstractTransitionableStateModel {
@@ -46,10 +40,14 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 		setSubflow(subflow);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the subflow state to merge into this state
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof SubflowStateModel)) {
+			return false;
+		}
+		SubflowStateModel state = (SubflowStateModel) model;
+		return ObjectUtils.nullSafeEquals(getId(), state.getId());
+	}
+
 	public void merge(Model model) {
 		SubflowStateModel state = (SubflowStateModel) model;
 		setAttributes(merge(getAttributes(), state.getAttributes()));
@@ -62,18 +60,6 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 		setSubflowAttributeMapper(merge(getSubflowAttributeMapper(), state.getSubflowAttributeMapper()));
 		setInputs(merge(getInputs(), state.getInputs()));
 		setOutputs(merge(getOutputs(), state.getOutputs()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this subflow state
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof SubflowStateModel)) {
-			return false;
-		}
-		SubflowStateModel state = (SubflowStateModel) model;
-		return ObjectUtils.nullSafeEquals(getId(), state.getId());
 	}
 
 	/**

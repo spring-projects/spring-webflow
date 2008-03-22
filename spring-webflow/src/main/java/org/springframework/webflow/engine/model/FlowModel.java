@@ -67,10 +67,14 @@ public class FlowModel extends AbstractModel {
 	public FlowModel() {
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the flow to merge into this flow
-	 */
+	public boolean isMergeableWith(Model model) {
+		if ((model instanceof FlowModel)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public void merge(Model model) {
 		FlowModel flow = (FlowModel) model;
 		setParent(null);
@@ -87,18 +91,6 @@ public class FlowModel extends AbstractModel {
 		setOnEndActions(merge(getOnEndActions(), flow.getOnEndActions(), false));
 		setExceptionHandlers(merge(getExceptionHandlers(), flow.getExceptionHandlers()));
 		setBeanImports(merge(getBeanImports(), flow.getBeanImports()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this flow
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if ((model instanceof FlowModel)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/**

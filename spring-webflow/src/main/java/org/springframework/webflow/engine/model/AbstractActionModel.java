@@ -24,18 +24,18 @@ public abstract class AbstractActionModel extends AbstractModel {
 
 	/**
 	 * Actions are not mergeable
-	 * @param model the render action to merge into this render
-	 */
-	public void merge(Model model) {
-		// not mergeable
-	}
-
-	/**
-	 * Actions are not mergeable
 	 * @param model the model to test
 	 */
 	public boolean isMergeableWith(Model model) {
 		return false;
+	}
+
+	/**
+	 * Actions are not mergeable
+	 * @param model the render action to merge into this render
+	 */
+	public void merge(Model model) {
+		// not mergeable
 	}
 
 }

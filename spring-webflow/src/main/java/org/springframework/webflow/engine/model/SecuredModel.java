@@ -43,25 +43,17 @@ public class SecuredModel extends AbstractModel {
 		setAttributes(attributes);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the secured to merge into this secured
-	 */
-	public void merge(Model model) {
-		SecuredModel secured = (SecuredModel) model;
-		setMatch(merge(getMatch(), secured.getMatch()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this secured attribute
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		if (!(model instanceof SecuredModel)) {
 			return false;
 		}
 		SecuredModel secured = (SecuredModel) model;
 		return ObjectUtils.nullSafeEquals(getAttributes(), secured.getAttributes());
+	}
+
+	public void merge(Model model) {
+		SecuredModel secured = (SecuredModel) model;
+		setMatch(merge(getMatch(), secured.getMatch()));
 	}
 
 	/**

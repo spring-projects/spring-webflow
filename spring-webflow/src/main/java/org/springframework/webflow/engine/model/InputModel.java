@@ -36,27 +36,19 @@ public class InputModel extends AbstractMappingModel {
 		setValue(value);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the mapping to merge into this mapping
-	 */
-	public void merge(Model model) {
-		InputModel input = (InputModel) model;
-		setValue(merge(getValue(), input.getValue()));
-		setType(merge(getType(), input.getType()));
-		setRequired(merge(getRequired(), input.getRequired()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this input mapping
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		if (!(model instanceof InputModel)) {
 			return false;
 		}
 		InputModel input = (InputModel) model;
 		return ObjectUtils.nullSafeEquals(getName(), input.getName());
+	}
+
+	public void merge(Model model) {
+		InputModel input = (InputModel) model;
+		setValue(merge(getValue(), input.getValue()));
+		setType(merge(getType(), input.getType()));
+		setRequired(merge(getRequired(), input.getRequired()));
 	}
 
 }

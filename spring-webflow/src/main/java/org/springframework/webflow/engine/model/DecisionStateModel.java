@@ -21,13 +21,6 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Model support for decision states.
- * <p>
- * Evaluates one or more expressions to decide what state to transition to next. Intended to be used as an idempotent
- * 'navigation' or 'routing' state.
- * <p>
- * A decision state is a transitionable state. A decision state transition can be triggered by evaluating a boolean
- * expression against the flow execution request context. To define transition expressions, use the 'if' element.
- * 
  * @author Scott Andrews
  */
 public class DecisionStateModel extends AbstractStateModel {
@@ -42,10 +35,14 @@ public class DecisionStateModel extends AbstractStateModel {
 		setId(id);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the decision state to merge into this state
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof DecisionStateModel)) {
+			return false;
+		}
+		DecisionStateModel state = (DecisionStateModel) model;
+		return ObjectUtils.nullSafeEquals(getId(), state.getId());
+	}
+
 	public void merge(Model model) {
 		DecisionStateModel state = (DecisionStateModel) model;
 		setAttributes(merge(getAttributes(), state.getAttributes()));
@@ -54,18 +51,6 @@ public class DecisionStateModel extends AbstractStateModel {
 		setExceptionHandlers(merge(getExceptionHandlers(), state.getExceptionHandlers()));
 		setIfs(merge(getIfs(), state.getIfs()));
 		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this decision state
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof DecisionStateModel)) {
-			return false;
-		}
-		DecisionStateModel state = (DecisionStateModel) model;
-		return ObjectUtils.nullSafeEquals(getId(), state.getId());
 	}
 
 	/**

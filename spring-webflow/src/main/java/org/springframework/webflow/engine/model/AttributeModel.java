@@ -40,19 +40,6 @@ public class AttributeModel extends AbstractModel {
 		setValue(value);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the attribute to merge into this attribute
-	 */
-	public void merge(Model model) {
-		AttributeModel attribute = (AttributeModel) model;
-		setType(merge(getType(), attribute.getType()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this attribute
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		if (!(model instanceof AttributeModel)) {
 			return false;
@@ -60,6 +47,11 @@ public class AttributeModel extends AbstractModel {
 		AttributeModel attribute = (AttributeModel) model;
 		return ObjectUtils.nullSafeEquals(getName(), attribute.getName())
 				&& ObjectUtils.nullSafeEquals(getValue(), attribute.getValue());
+	}
+
+	public void merge(Model model) {
+		AttributeModel attribute = (AttributeModel) model;
+		setType(merge(getType(), attribute.getType()));
 	}
 
 	/**

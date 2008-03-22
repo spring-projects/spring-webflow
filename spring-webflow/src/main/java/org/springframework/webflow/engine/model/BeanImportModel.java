@@ -36,18 +36,12 @@ public class BeanImportModel extends AbstractModel {
 		setResource(resource);
 	}
 
-	/**
-	 * Bean imports are not mergeable
-	 */
-	public void merge(Model model) {
-		// not mergeable
-	}
-
-	/**
-	 * Bean imports are not mergeable
-	 */
 	public boolean isMergeableWith(Model model) {
 		return false;
+	}
+
+	public void merge(Model model) {
+
 	}
 
 	/**

@@ -34,18 +34,12 @@ public class PersistenceContextModel extends AbstractModel {
 	public PersistenceContextModel() {
 	}
 
-	/**
-	 * Persistence contexts are not mergeable
-	 */
-	public void merge(Model model) {
-		// not mergeable
-	}
-
-	/**
-	 * Persistence contexts are not mergeable
-	 */
 	public boolean isMergeableWith(Model model) {
 		return false;
+	}
+
+	public void merge(Model model) {
+
 	}
 
 }

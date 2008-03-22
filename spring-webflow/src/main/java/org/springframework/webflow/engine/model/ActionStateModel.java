@@ -21,10 +21,6 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Model support for action states.
- * <p>
- * A state where one or more actions are executed. This state type is typically used to invoke application code. An
- * action state is a transitionable state. A transition out of this state is driven by the result of action execution.
- * 
  * @author Scott Andrews
  */
 public class ActionStateModel extends AbstractTransitionableStateModel {
@@ -38,10 +34,14 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 		setId(id);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the action state to merge into this state
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof ActionStateModel)) {
+			return false;
+		}
+		ActionStateModel state = (ActionStateModel) model;
+		return ObjectUtils.nullSafeEquals(getId(), state.getId());
+	}
+
 	public void merge(Model model) {
 		ActionStateModel state = (ActionStateModel) model;
 		setAttributes(merge(getAttributes(), state.getAttributes()));
@@ -51,18 +51,6 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 		setTransitions(merge(getTransitions(), state.getTransitions()));
 		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
 		setActions(merge(getActions(), state.getActions(), false));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this action state
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof ActionStateModel)) {
-			return false;
-		}
-		ActionStateModel state = (ActionStateModel) model;
-		return ObjectUtils.nullSafeEquals(getId(), state.getId());
 	}
 
 	/**

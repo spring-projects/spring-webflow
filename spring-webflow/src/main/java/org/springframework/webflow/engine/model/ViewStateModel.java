@@ -22,17 +22,6 @@ import org.springframework.util.StringUtils;
 
 /**
  * Model support for view states.
- * <p>
- * A state where the user participates. When a view state is entered, this flow pauses and control goes to the user.
- * After some think time, the user resumes this flow at the view-state by signaling an event.
- * <p>
- * Once paused, a view-state may be 'refreshed' by the user. A refresh causes the response to be reissued and then
- * returns control back to the user.
- * <p>
- * A view state may be configured with one or more render-actions using the 'on-render' element. Render actions are
- * executed immediately before the view is rendered.
- * <p>
- * A view state is a transitionable state. A view state transition is triggered by a user event.
  * 
  * @author Scott Andrews
  */
@@ -52,10 +41,14 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setId(id);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the view state to merge into this state
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof ViewStateModel)) {
+			return false;
+		}
+		ViewStateModel state = (ViewStateModel) model;
+		return ObjectUtils.nullSafeEquals(getId(), state.getId());
+	}
+
 	public void merge(Model model) {
 		ViewStateModel state = (ViewStateModel) model;
 		setAttributes(merge(getAttributes(), state.getAttributes()));
@@ -70,18 +63,6 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setModel(merge(getModel(), state.getModel()));
 		setVars(merge(getVars(), state.getVars(), false));
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this view state
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof ViewStateModel)) {
-			return false;
-		}
-		ViewStateModel state = (ViewStateModel) model;
-		return ObjectUtils.nullSafeEquals(getId(), state.getId());
 	}
 
 	/**

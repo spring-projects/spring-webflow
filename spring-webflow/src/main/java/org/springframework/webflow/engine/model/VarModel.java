@@ -40,20 +40,12 @@ public class VarModel extends AbstractModel {
 		setClassName(className);
 	}
 
-	/**
-	 * Vars are not mergeable
-	 * @param model the render action to merge into this render
-	 */
-	public void merge(Model model) {
-		// not mergeable
-	}
-
-	/**
-	 * Vars are not mergeable
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		return false;
+	}
+
+	public void merge(Model model) {
+
 	}
 
 	/**

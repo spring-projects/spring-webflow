@@ -35,15 +35,11 @@ public class ExceptionHandlerModel extends AbstractModel {
 		setBeanName(beanName);
 	}
 
-	/**
-	 * Exception handlers are not mergeable
-	 */
-	public void merge(Model model) {
-		// not mergable
-	}
-
 	public boolean isMergeableWith(Model model) {
 		return false;
+	}
+
+	public void merge(Model model) {
 	}
 
 	/**

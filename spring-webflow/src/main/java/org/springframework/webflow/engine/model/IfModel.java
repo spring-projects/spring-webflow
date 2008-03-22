@@ -42,26 +42,18 @@ public class IfModel extends AbstractModel {
 		setThen(then);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the conditional to merge into this conditional
-	 */
-	public void merge(Model model) {
-		IfModel conditional = (IfModel) model;
-		setThen(merge(getThen(), conditional.getThen()));
-		setElse(merge(getElse(), conditional.getElse()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this if action
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		if (!(model instanceof IfModel)) {
 			return false;
 		}
 		IfModel conditional = (IfModel) model;
 		return ObjectUtils.nullSafeEquals(getTest(), conditional.getTest());
+	}
+
+	public void merge(Model model) {
+		IfModel conditional = (IfModel) model;
+		setThen(merge(getThen(), conditional.getThen()));
+		setElse(merge(getElse(), conditional.getElse()));
 	}
 
 	/**

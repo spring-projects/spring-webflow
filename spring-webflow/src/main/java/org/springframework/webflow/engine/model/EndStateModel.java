@@ -22,15 +22,6 @@ import org.springframework.util.StringUtils;
 
 /**
  * Model support for end states.
- * <p>
- * A state that terminates this flow when entered. Defines a flow outcome.
- * <p>
- * An end state is not transitionable; there are never transitions out of an end state. When an end-state is entered, an
- * instance of this flow is terminated.
- * <p>
- * When this flow terminates, if it was the "root" flow the entire execution is terminated. If this flow was a subflow,
- * its parent flow resumes.
- * 
  * @author Scott Andrews
  */
 public class EndStateModel extends AbstractStateModel {
@@ -46,10 +37,14 @@ public class EndStateModel extends AbstractStateModel {
 		setId(id);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the end state to merge into this state
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof EndStateModel)) {
+			return false;
+		}
+		EndStateModel state = (EndStateModel) model;
+		return ObjectUtils.nullSafeEquals(getId(), state.getId());
+	}
+
 	public void merge(Model model) {
 		EndStateModel state = (EndStateModel) model;
 		setAttributes(merge(getAttributes(), state.getAttributes()));
@@ -59,18 +54,6 @@ public class EndStateModel extends AbstractStateModel {
 		setView(merge(getView(), state.getView()));
 		setCommit(merge(getCommit(), state.getCommit()));
 		setOutputs(merge(getOutputs(), state.getOutputs(), false));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this end state
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof EndStateModel)) {
-			return false;
-		}
-		EndStateModel state = (EndStateModel) model;
-		return ObjectUtils.nullSafeEquals(getId(), state.getId());
 	}
 
 	/**

@@ -36,27 +36,19 @@ public class OutputModel extends AbstractMappingModel {
 		setValue(value);
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the mapping to merge into this mapping
-	 */
-	public void merge(Model model) {
-		OutputModel output = (OutputModel) model;
-		setValue(merge(getValue(), output.getValue()));
-		setType(merge(getType(), output.getType()));
-		setRequired(merge(getRequired(), output.getRequired()));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this output mapping
-	 * @param model the model to test
-	 */
 	public boolean isMergeableWith(Model model) {
 		if (!(model instanceof OutputModel)) {
 			return false;
 		}
 		OutputModel output = (OutputModel) model;
 		return ObjectUtils.nullSafeEquals(getName(), output.getName());
+	}
+
+	public void merge(Model model) {
+		OutputModel output = (OutputModel) model;
+		setValue(merge(getValue(), output.getValue()));
+		setType(merge(getType(), output.getType()));
+		setRequired(merge(getRequired(), output.getRequired()));
 	}
 
 }

@@ -44,10 +44,14 @@ public class TransitionModel extends AbstractModel {
 	public TransitionModel() {
 	}
 
-	/**
-	 * Merge properties
-	 * @param model the transition to merge into this transition
-	 */
+	public boolean isMergeableWith(Model model) {
+		if (!(model instanceof TransitionModel)) {
+			return false;
+		}
+		TransitionModel transition = (TransitionModel) model;
+		return ObjectUtils.nullSafeEquals(getOn(), transition.getOn());
+	}
+
 	public void merge(Model model) {
 		TransitionModel transition = (TransitionModel) model;
 		setOnException(merge(getOnException(), transition.getOnException()));
@@ -56,18 +60,6 @@ public class TransitionModel extends AbstractModel {
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
 		setActions(merge(getActions(), transition.getActions(), false));
-	}
-
-	/**
-	 * Tests if the model is able to be merged with this transition
-	 * @param model the model to test
-	 */
-	public boolean isMergeableWith(Model model) {
-		if (!(model instanceof TransitionModel)) {
-			return false;
-		}
-		TransitionModel transition = (TransitionModel) model;
-		return ObjectUtils.nullSafeEquals(getOn(), transition.getOn());
 	}
 
 	/**
