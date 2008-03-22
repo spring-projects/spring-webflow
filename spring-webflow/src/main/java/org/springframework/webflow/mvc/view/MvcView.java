@@ -278,7 +278,12 @@ class MvcView implements View {
 
 		private Formatter getFormatter(Expression target, Class targetClass) {
 			if (formatterRegistry != null) {
-				return formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+				Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+				if (formatter != null) {
+					return formatter;
+				} else {
+					return formatterRegistry.getFormatter(targetClass);
+				}
 			} else {
 				return null;
 			}
