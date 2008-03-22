@@ -86,7 +86,7 @@ public class FormatterRegistryImpl implements FormatterRegistry {
 			context.setFormattedClass(clazz);
 			return factory.createFormatter(context);
 		} else {
-			return getFormatter(clazz);
+			return null;
 		}
 	}
 

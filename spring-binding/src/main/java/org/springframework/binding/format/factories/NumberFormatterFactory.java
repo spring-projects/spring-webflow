@@ -36,7 +36,7 @@ public class NumberFormatterFactory implements FormatterFactory {
 		}
 	}
 
-	private static class NumberFormatter extends AbstractFormatter {
+	public static class NumberFormatter extends AbstractFormatter {
 
 		private NumberFormat numberFormat;
 
