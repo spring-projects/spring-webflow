@@ -16,8 +16,9 @@
 package org.springframework.binding.expression;
 
 /**
- * Evaluates an expression against a context. Provides a common abstraction for expression evaluation independent of any
- * language like OGNL or the Unified EL.
+ * An expression capable of evaluating itself against context objects. Encapsulates the details of a previously parsed
+ * expression string. Provides a common abstraction for expression evaluation independent of any language like OGNL or
+ * the Unified EL.
  * 
  * @author Keith Donald
  */
