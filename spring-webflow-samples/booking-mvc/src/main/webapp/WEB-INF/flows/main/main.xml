@@ -10,9 +10,7 @@
 			<evaluate expression="bookingService.findBookings(currentUser.name)" result="requestScope.bookings" />
 		</on-render>
 		<transition on="search" to="reviewHotels" />
-		<transition on="cancelBooking" bind="false">
-			<evaluate expression="bookingService.cancelBooking(requestParameters.bookingId)" />	
-		</transition>
+		<transition on="cancelBooking" to="cancelBooking" bind="false" />
 	</view-state>
 
 	<view-state id="reviewHotels">
@@ -45,6 +43,11 @@
 		<transition on="cancel" to="enterSearchCriteria" />
 	</subflow-state>
 
+	<action-state id="cancelBooking">
+		<evaluate expression="bookingService.cancelBooking(requestParameters.bookingId)" />	
+		<transition on="success" to="enterSearchCriteria" />
+	</action-state>
+	
 	<end-state id="finish"/>
 
 </flow>
