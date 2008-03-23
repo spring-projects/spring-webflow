@@ -32,6 +32,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.ParserContextImpl;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
@@ -271,7 +272,11 @@ class MvcView implements View {
 			}
 			Formatter formatter = getFormatter(target, targetClass);
 			if (formatter != null) {
-				return formatter.parseValue(formattedValue);
+				try {
+					return formatter.parseValue(formattedValue);
+				} catch (InvalidFormatException e) {
+					throw new ConversionException(String.class, targetClass, e);
+				}
 			} else {
 				return formattedValue;
 			}
