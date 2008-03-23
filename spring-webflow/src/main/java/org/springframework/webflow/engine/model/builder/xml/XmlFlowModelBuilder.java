@@ -16,6 +16,7 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,7 +54,6 @@ import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 import org.springframework.webflow.engine.model.registry.FlowModelLocator;
 import org.springframework.webflow.engine.model.registry.NoSuchFlowModelException;
-import org.springframework.webflow.util.ResourceHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
+public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private Resource resource;
 
@@ -91,23 +91,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		this.modelLocator = modelLocator;
 	}
 
-	public Resource getFlowModelResource() {
-		return resource;
-	}
-
-	public boolean hasFlowModelChanged() {
-		try {
-			long lastModified = resource.getFile().lastModified();
-			if (lastModified > lastModifiedTimestamp) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			return false;
-		}
-	}
-
 	/**
 	 * Sets the loader that will load the XML-based flow definition document. Optional, defaults to
 	 * {@link DefaultDocumentLoader}.
@@ -118,14 +101,10 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		this.documentLoader = documentLoader;
 	}
 
-	public Resource getResource() {
-		return resource;
-	}
-
 	public void init() throws FlowModelBuilderException {
 		try {
 			document = documentLoader.loadDocument(resource);
-			lastModifiedTimestamp = getResource().getFile().lastModified();
+			lastModifiedTimestamp = resource.getFile().lastModified();
 		} catch (IOException e) {
 			throw new FlowModelBuilderException("Could not access the XML flow definition resource at " + resource, e);
 		} catch (ParserConfigurationException e) {
@@ -165,6 +144,23 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	public void dispose() throws FlowModelBuilderException {
 		document = null;
 		flowModel = null;
+	}
+
+	public Resource getFlowModelResource() {
+		return resource;
+	}
+
+	public boolean hasFlowModelChanged() {
+		try {
+			long lastModified = resource.getFile().lastModified();
+			if (lastModified > lastModifiedTimestamp) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	/**
@@ -575,7 +571,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	private static List getChildElementsByTagNames(Element element, String[] childElementNames) {
 		List names = Arrays.asList(childElementNames);
 		NodeList nodeList = element.getChildNodes();
-		List childElements = new LinkedList();
+		List childElements = new ArrayList();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			if (node instanceof Element && (names.contains(node.getLocalName()) || names.contains(node.getNodeName()))) {
