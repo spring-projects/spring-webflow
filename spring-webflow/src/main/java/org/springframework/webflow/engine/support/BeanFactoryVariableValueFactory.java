@@ -57,7 +57,7 @@ public class BeanFactoryVariableValueFactory implements VariableValueFactory {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("type").append(type).toString();
+		return new ToStringCreator(this).append("type", type).toString();
 	}
 
 }
