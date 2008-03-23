@@ -27,16 +27,6 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		registry = new FlowModelRegistryImpl();
 	}
 
-	// public void testBuildIncompleteFlow() {
-	// ClassPathResource resource = new ClassPathResource("flow-incomplete.xml", getClass());
-	// builder = new XmlModelBuilder(resource);
-	// try {
-	// builder.parse();
-	// fail("Should have failed");
-	// } catch (FlowBuilderException e) {
-	// }
-	// }
-
 	public void testBuildFlowWithEndState() {
 		ClassPathResource resource = new ClassPathResource("flow-endstate.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -84,67 +74,6 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowModel flow = builder.getFlowModel();
 		assertNotNull(flow.getPersistenceContext());
 	}
-
-	// public void testFlowInputOutputMapping() {
-	// ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
-	// FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
-	// builder.init();
-	// builder.build();
-	// FlowModel flow = builder.getFlowModel();
-	// FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
-	// FlowExecution execution = factory.createFlowExecution(flow);
-	// MockExternalContext context = new MockExternalContext();
-	// MutableAttributeMap input = new LocalAttributeMap();
-	// input.put("foo", "bar");
-	// input.put("number", "3");
-	// input.put("required", "9");
-	// execution.start(input, context);
-	// Event outcome = execution.getOutcome();
-	// assertEquals("end", outcome.getId());
-	// assertEquals("bar", outcome.getAttributes().get("foo"));
-	// assertEquals("bar", outcome.getAttributes().get("differentName"));
-	// assertEquals(new Integer(3), outcome.getAttributes().get("number"));
-	// assertEquals(new Integer(3), outcome.getAttributes().get("required"));
-	// assertEquals("a literal", outcome.getAttributes().get("literal"));
-	// assertNull(outcome.getAttributes().get("notReached"));
-	// }
-
-	// public void testFlowRequiredInputMapping() {
-	// ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
-	// FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
-	// builder.init();
-	// builder.build();
-	// FlowModel flow = builder.getFlowModel();
-	// FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
-	// FlowExecution execution = factory.createFlowExecution(flow);
-	// MockExternalContext context = new MockExternalContext();
-	// MutableAttributeMap input = new LocalAttributeMap();
-	// try {
-	// execution.start(input, context);
-	// fail("Should have failed");
-	// } catch (FlowExecutionException e) {
-	// RequiredMappingException me = (RequiredMappingException) e.getRootCause();
-	// }
-	// }
-
-	// public void testFlowRequiredOutputMapping() {
-	// ClassPathResource resource = new ClassPathResource("flow-inputoutput.xml", getClass());
-	// FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
-	// builder.init();
-	// builder.build();
-	// FlowModel flow = builder.getFlowModel();
-	// FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
-	// FlowExecution execution = factory.createFlowExecution(flow);
-	// MockExternalContext context = new MockExternalContext();
-	// MutableAttributeMap input = new LocalAttributeMap();
-	// input.put("required", "yo");
-	// try {
-	// execution.start(input, context);
-	// fail("Should have failed");
-	// } catch (FlowExecutionException e) {
-	// RequiredMappingException me = (RequiredMappingException) e.getRootCause();
-	// }
-	// }
 
 	public void testFlowSecured() {
 		ClassPathResource resource = new ClassPathResource("flow-secured.xml", getClass());
@@ -218,32 +147,6 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("true", ((ViewStateModel) flow.getStates().get(0)).getPopup());
 	}
 
-	// public void testViewStateFlowRedirect() {
-	// ClassPathResource resource = new ClassPathResource("flow-viewstate-flowredirect.xml",
-	// getClass());
-	// FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
-	// builder.init();
-	// builder.build();
-	// FlowModel flow = builder.getFlowModel();
-	// ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
-	// assertTrue(vf instanceof ActionExecutingViewFactory);
-	// ActionExecutingViewFactory avf = (ActionExecutingViewFactory) vf;
-	// assertTrue(avf.getAction() instanceof FlowDefinitionRedirectAction);
-	// }
-
-	// public void testViewStateExternalRedirect() {
-	// ClassPathResource resource = new ClassPathResource("flow-viewstate-externalredirect.xml",
-	// getClass());
-	// FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
-	// builder.init();
-	// builder.build();
-	// FlowModel flow = builder.getFlowModel();
-	// ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
-	// assertTrue(vf instanceof ActionExecutingViewFactory);
-	// ActionExecutingViewFactory avf = (ActionExecutingViewFactory) vf;
-	// assertTrue(avf.getAction() instanceof ExternalRedirectAction);
-	// }
-
 	public void testMerge() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-parent.xml", getClass());
@@ -270,6 +173,15 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		} catch (FlowModelConstructionException e) {
 			// we want this
 		}
+	}
+
+	public void testEvaluateAction() {
+		ClassPathResource resource = new ClassPathResource("flow-action-evaluate-action.xml", getClass());
+		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
+		builder.init();
+		builder.build();
+		FlowModel flow = builder.getFlowModel();
+		assertEquals(4, flow.getOnStartActions().size());
 	}
 
 }

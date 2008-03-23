@@ -186,11 +186,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		flow.setPersistenceContext(parsePersistenceContext(element));
 		flow.addVars(parseVars(element));
 		flow.addInputs(parseInputs(element));
-		flow.addOutputs(parseOutputs(element));
 		flow.addOnStartActions(parseOnStartActions(element));
 		flow.addStates(parseStates(element));
 		flow.addGlobalTransitions(parseGlobalTransitions(element));
 		flow.addOnEndActions(parseOnEndActions(element));
+		flow.addOutputs(parseOutputs(element));
 		flow.addExceptionHandlers(parseExceptionHandlers(element));
 		flow.addBeanImports(parseBeanImports(element));
 		return flow;
@@ -442,7 +442,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private LinkedList parseOnStartActions(Element element) {
 		Element onStartElement = DomUtils.getChildElementByTagName(element, "on-start");
 		if (onStartElement != null) {
-			return parseActions(element);
+			return parseActions(onStartElement);
 		} else {
 			return null;
 		}
@@ -451,7 +451,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private LinkedList parseOnEntryActions(Element element) {
 		Element onEntryElement = DomUtils.getChildElementByTagName(element, "on-entry");
 		if (onEntryElement != null) {
-			return parseActions(element);
+			return parseActions(onEntryElement);
 		} else {
 			return null;
 		}
@@ -460,7 +460,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private LinkedList parseOnRenderActions(Element element) {
 		Element onRenderElement = DomUtils.getChildElementByTagName(element, "on-render");
 		if (onRenderElement != null) {
-			return parseActions(element);
+			return parseActions(onRenderElement);
 		} else {
 			return null;
 		}
@@ -469,7 +469,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private LinkedList parseOnExitActions(Element element) {
 		Element onExitElement = DomUtils.getChildElementByTagName(element, "on-exit");
 		if (onExitElement != null) {
-			return parseActions(element);
+			return parseActions(onExitElement);
 		} else {
 			return null;
 		}
@@ -478,7 +478,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private LinkedList parseOnEndActions(Element element) {
 		Element onEndElement = DomUtils.getChildElementByTagName(element, "on-end");
 		if (onEndElement != null) {
-			return parseActions(element);
+			return parseActions(onEndElement);
 		} else {
 			return null;
 		}
