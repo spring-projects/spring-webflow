@@ -53,4 +53,9 @@ public class PropertyEditorFormatter extends AbstractFormatter {
 		propertyEditor.setAsText(formattedValue);
 		return propertyEditor.getValue();
 	}
+
+	protected String getExpectedFormat() {
+		return null;
+	}
+
 }
