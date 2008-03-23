@@ -447,11 +447,11 @@ Can also be an evaluatable expression:
 Use the externalRedirect: prefix to redirect to an external URL, typically to interface with an external system.
 External redirect query parameters may be specified using ${expressions} that evaluate against the request context:
 <pre>
-	externalRedirect:/http://someOtherSystem?orderId=${flowScope.order.id}&amp;callbackUrl=#{flowExecutionUrl}
+	externalRedirect:/http://someOtherSystem?orderId=${flowScope.order.id}&amp;callbackUrl=${flowExecutionUrl}
 </pre> 
 Use the flowRedirect: prefix to redirect to another flow:
 <pre>
-	flowRedirect:myOtherFlow?someData=#{flowScope.data}
+	flowRedirect:myOtherFlow?someData=${flowScope.data}
 </pre>
 When this attribute is not specified, the view to render will be determined by convention.
 The default convention is to treat the id of this view state as the view identifier.
@@ -504,7 +504,7 @@ Examples:
 A simple boolean expression test, using the convenient 'if' element:
 <pre>
     &lt;decision-state id="requiresShipping"&gt;
-	    &lt;if test="#{sale.requiresShipping}" then="enterShippingDetails" else="processSale"/&gt;
+	    &lt;if test="sale.requiresShipping" then="enterShippingDetails" else="processSale"/&gt;
     &lt;/decision-state&gt;
 </pre>
 ]]>
@@ -551,7 +551,7 @@ Optionally, this element may define an 'else' attribute to define a state to tra
 <br>
 The form is:
 <pre>
-	&lt;if test="#{criteria}" then="trueStateId" else="falseStateId"/&gt;
+	&lt;if test="criteriaExpression" then="trueStateId" else="falseStateId"/&gt;
 </pre>
 ]]>
 										</xsd:documentation>
@@ -564,7 +564,7 @@ The form is:
 The boolean expression to test.
 For example:
 <pre>
-	&lt;if test="#{sale.requiresShipping} then="enterShippingDetails"/&gt;
+	&lt;if test="sale.requiresShipping" then="enterShippingDetails"/&gt;
 </pre>
 ]]>
 												</xsd:documentation>
@@ -834,19 +834,19 @@ When specified, the value can be a flow-relative path to a view template:
 </pre>
 It can also be an evaluatable expression:
 <pre>
-	#{flowScope.myViewExpression}
+	${flowScope.myViewExpression}
 </pre>
 Use the externalRedirect: prefix to redirect to an external URL:
 <pre>
-	externalRedirect:/someController?orderId=#{order.id}
+	externalRedirect:/someController?orderId=${order.id}
 </pre> 
 Use the flowRedirect: prefix to redirect to another flow:
 <pre>
-	flowRedirect:myOtherFlow?someData=#{flowScope.data}
+	flowRedirect:myOtherFlow?someData=${flowScope.data}
 </pre>
 For exotic usages, you may plug in a custom ViewFactory bean you define:
 <pre>
-	#{myCustomViewFactory}
+	${myCustomViewFactory}
 </pre>
 <br>
 When this attribute is not specified, no final response will be issued.  In this case, 
@@ -1277,7 +1277,7 @@ The most basic value is a static event id:
 <br>
 Sophisticated transitional expressions are also supported when enclosed in a delimited expression:
 <pre>
-	&lt;transition on="#{event == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
+	&lt;transition on="${event == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
 </pre>
 ]]>
 				</xsd:documentation>
