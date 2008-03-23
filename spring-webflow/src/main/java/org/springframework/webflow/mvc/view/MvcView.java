@@ -87,6 +87,7 @@ class MvcView implements View {
 		model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
 		model.put("flowExecutionUrl", context.getFlowExecutionUrl());
 		model.put("currentUser", context.getExternalContext().getCurrentUser());
+		// TODO expose flow context to mvc view
 		try {
 			view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
 					(HttpServletResponse) context.getExternalContext().getNativeResponse());
