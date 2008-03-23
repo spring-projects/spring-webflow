@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.model.builder;
 
+import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
 
 /**
@@ -67,4 +68,17 @@ public interface FlowModelBuilder {
 	 * @throws FlowModelBuilderException an exception occurred disposing this flow
 	 */
 	public void dispose() throws FlowModelBuilderException;
+
+	/**
+	 * Returns true if the underlying flow model has changed since the last call to {@link #init()}.
+	 * @return true if the flow model has changed
+	 */
+	public boolean hasFlowModelChanged();
+
+	/**
+	 * Get the underlying flow model resource accessed to build this flow model. Returns null if this builder does not
+	 * construct the flow model from a resource.
+	 * @return the flow model resource
+	 */
+	public Resource getFlowModelResource();
 }

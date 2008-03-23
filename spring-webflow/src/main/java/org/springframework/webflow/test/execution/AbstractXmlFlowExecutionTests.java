@@ -81,7 +81,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 		FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
 		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder, resource.getId());
 		flowModelRegistry.registerFlowModel(modelHolder);
-		return new FlowModelFlowBuilder(modelHolder, resource.getPath()) {
+		return new FlowModelFlowBuilder(modelHolder) {
 			protected void registerFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 				registerMockFlowBeans(flowBeanFactory);
 			}

@@ -11,13 +11,13 @@ import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.util.ResourceHolder;
 
-public class RefreshableFlowDefinitionHolderTests extends TestCase {
-	private RefreshableFlowDefinitionHolder holder;
+public class DefaultFlowHolderTests extends TestCase {
+	private DefaultFlowHolder holder;
 	private FlowAssembler assembler;
 
 	protected void setUp() {
 		FlowAssembler assembler = new FlowAssembler(new SimpleFlowBuilder(), new MockFlowBuilderContext("flowId"));
-		holder = new RefreshableFlowDefinitionHolder(assembler);
+		holder = new DefaultFlowHolder(assembler);
 	}
 
 	public void testGetFlowDefinition() {
@@ -28,7 +28,7 @@ public class RefreshableFlowDefinitionHolderTests extends TestCase {
 
 	public void testGetFlowDefinitionWithChangesRefreshed() {
 		assembler = new FlowAssembler(new ChangeDetectableFlowBuilder(), new MockFlowBuilderContext("flowId"));
-		holder = new RefreshableFlowDefinitionHolder(assembler);
+		holder = new DefaultFlowHolder(assembler);
 		FlowDefinition flow = holder.getFlowDefinition();
 		flow = holder.getFlowDefinition();
 		assertEquals("flowId", flow.getId());

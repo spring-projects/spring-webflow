@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.model.registry;
 
+import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
 
 /**
@@ -43,9 +44,23 @@ public interface FlowModelHolder {
 	public FlowModel getFlowModel() throws FlowModelConstructionException;
 
 	/**
+	 * Has the underlying flow model changed since it was last accessed via a call to {@link #getFlowModel()}.
+	 * @return true if yes, false if not
+	 */
+	public boolean hasFlowModelChanged();
+
+	/**
+	 * Returns the underlying resource defining the flow model. Will return null if the flow model did not originate
+	 * from a file-based resource.
+	 * @return the flow model resource, or null
+	 */
+	public Resource getFlowModelResource();
+
+	/**
 	 * Refresh the flow model held by this holder. Calling this method typically triggers flow re-assembly, which may
 	 * include a refresh from an externalized resource such as a file.
 	 * @throws FlowModelConstructionException if there is a problem constructing the target flow model
 	 */
 	public void refresh() throws FlowModelConstructionException;
+
 }

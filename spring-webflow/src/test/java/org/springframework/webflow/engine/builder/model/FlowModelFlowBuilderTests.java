@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -28,6 +29,7 @@ import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilderTests;
 import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelConstructionException;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
@@ -325,7 +327,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	private Flow getFlow(FlowModel model) {
-		FlowModelHolder holder = new DefaultFlowModelHolder(model, "flow");
+		FlowModelHolder holder = new StaticFlowModelHolder(model);
 		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(holder);
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		return assembler.assembleFlow();
@@ -334,9 +336,37 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	private Flow getFlow(ClassPathResource resource) {
 		FlowModelHolder holder = new DefaultFlowModelHolder(new XmlFlowModelBuilder(resource,
 				new FlowModelRegistryImpl()), "flow");
-		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(holder, resource);
+		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(holder);
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		return assembler.assembleFlow();
 	}
 
+	private static class StaticFlowModelHolder implements FlowModelHolder {
+
+		private FlowModel model;
+
+		public StaticFlowModelHolder(FlowModel model) {
+			this.model = model;
+		}
+
+		public FlowModel getFlowModel() throws FlowModelConstructionException {
+			return model;
+		}
+
+		public String getFlowModelId() {
+			return "flow";
+		}
+
+		public Resource getFlowModelResource() {
+			return null;
+		}
+
+		public boolean hasFlowModelChanged() {
+			return false;
+		}
+
+		public void refresh() throws FlowModelConstructionException {
+		}
+
+	}
 }

@@ -78,6 +78,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 
 	private FlowModel flowModel;
 
+	private long lastModifiedTimestamp;
+
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
 	 * the provided locator to access parent flow models.
@@ -87,6 +89,23 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		Assert.notNull(modelLocator, "The model locator for accessing other flow models for merging is required");
 		this.resource = resource;
 		this.modelLocator = modelLocator;
+	}
+
+	public Resource getFlowModelResource() {
+		return resource;
+	}
+
+	public boolean hasFlowModelChanged() {
+		try {
+			long lastModified = resource.getFile().lastModified();
+			if (lastModified > lastModifiedTimestamp) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	/**
@@ -106,6 +125,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	public void init() throws FlowModelBuilderException {
 		try {
 			document = documentLoader.loadDocument(resource);
+			lastModifiedTimestamp = getResource().getFile().lastModified();
 		} catch (IOException e) {
 			throw new FlowModelBuilderException("Could not access the XML flow definition resource at " + resource, e);
 		} catch (ParserConfigurationException e) {

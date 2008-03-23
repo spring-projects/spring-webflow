@@ -15,15 +15,11 @@
  */
 package org.springframework.webflow.engine.builder;
 
-import java.io.IOException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
-import org.springframework.webflow.util.ResourceHolder;
 
 /**
  * A flow definition holder that can detect changes on an underlying flow definition resource and refresh that resource
@@ -39,9 +35,9 @@ import org.springframework.webflow.util.ResourceHolder;
  * 
  * @author Keith Donald
  */
-public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
+public class DefaultFlowHolder implements FlowDefinitionHolder {
 
-	private static final Log logger = LogFactory.getLog(RefreshableFlowDefinitionHolder.class);
+	private static final Log logger = LogFactory.getLog(DefaultFlowHolder.class);
 
 	/**
 	 * The flow definition assembled by this assembler.
@@ -54,12 +50,6 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 	private FlowAssembler assembler;
 
 	/**
-	 * A last modified date for the backing flow definition resource, used to support automatic reassembly on resource
-	 * change.
-	 */
-	private long lastModified;
-
-	/**
 	 * A flag indicating whether or not this holder is in the middle of the assembly process.
 	 */
 	private boolean assembling;
@@ -69,7 +59,7 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 	 * assembly, on initial use and on any resource change or refresh.
 	 * @param assembler the flow assembler to use
 	 */
-	public RefreshableFlowDefinitionHolder(FlowAssembler assembler) {
+	public DefaultFlowHolder(FlowAssembler assembler) {
 		this.assembler = assembler;
 	}
 
@@ -83,11 +73,13 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 			return getFlowBuilder().getFlow();
 		}
 		if (flowDefinition == null) {
-			lastModified = calculateLastModified();
-			logger.debug("Assembling the flow definition for the first time");
+			logger.debug("Assembling the flow for the first time");
 			assembleFlow();
 		} else {
-			refreshIfChanged();
+			if (getFlowBuilder().hasFlowChanged()) {
+				logger.debug("The flow has changed; reassembling...");
+				assembleFlow();
+			}
 		}
 		return flowDefinition;
 	}
@@ -98,29 +90,6 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 
 	// internal helpers
 
-	/**
-	 * Helper that retrieves the last modified date by querying the backing flow resource.
-	 * @return the last modified date, or 0L if it could not be retrieved
-	 */
-	private long calculateLastModified() {
-		if (getFlowBuilder() instanceof ResourceHolder) {
-			Resource resource = ((ResourceHolder) getFlowBuilder()).getResource();
-			try {
-				long lastModified = resource.getFile().lastModified();
-				if (logger.isDebugEnabled()) {
-					logger.debug("Flow definition [" + resource + "] was last modified on " + lastModified);
-				}
-				return lastModified;
-			} catch (IOException e) {
-				// ignore, last modified checks not supported
-			}
-		}
-		return 0L;
-	}
-
-	/**
-	 * Assemble the held flow definition, delegating to the configured FlowAssembler (director).
-	 */
 	private void assembleFlow() throws FlowDefinitionConstructionException {
 		try {
 			assembling = true;
@@ -132,23 +101,6 @@ public class RefreshableFlowDefinitionHolder implements FlowDefinitionHolder {
 		}
 	}
 
-	/**
-	 * Reassemble the flow if its underlying resource has changed.
-	 */
-	private void refreshIfChanged() {
-		long calculatedLastModified = calculateLastModified();
-		if (calculatedLastModified > lastModified) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Refreshing flow definition [" + flowDefinition.getId() + "]");
-			}
-			assembleFlow();
-			lastModified = calculatedLastModified;
-		}
-	}
-
-	/**
-	 * Returns the flow builder that actually builds the Flow definition.
-	 */
 	private FlowBuilder getFlowBuilder() {
 		return assembler.getFlowBuilder();
 	}

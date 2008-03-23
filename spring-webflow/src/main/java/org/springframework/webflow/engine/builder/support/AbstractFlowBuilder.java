@@ -105,6 +105,10 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 		doDispose();
 	}
 
+	public boolean hasFlowChanged() {
+		return false;
+	}
+
 	/**
 	 * Flow builder destruction hook. Does nothing by default. May be overridden by subclasses.
 	 */

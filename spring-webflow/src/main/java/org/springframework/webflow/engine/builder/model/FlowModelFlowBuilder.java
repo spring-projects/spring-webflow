@@ -87,15 +87,17 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
-import org.springframework.webflow.util.ResourceHolder;
 
-public class FlowModelFlowBuilder extends AbstractFlowBuilder implements ResourceHolder {
+/**
+ * Builds a runtime {@link Flow} definition object from a {@link FlowModel}.
+ * 
+ * @author Keith Donald
+ */
+public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private FlowModelHolder flowModelHolder;
 
 	private FlowModel flowModel;
-
-	private Resource resource;
 
 	private LocalFlowBuilderContext localFlowBuilderContext;
 
@@ -103,17 +105,12 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 		this.flowModelHolder = flowModelHolder;
 	}
 
-	public FlowModelFlowBuilder(FlowModelHolder flowModelHolder, Resource resource) {
-		this.flowModelHolder = flowModelHolder;
-		this.resource = resource;
-	}
-
 	/**
 	 * Initialize this builder. This could cause the builder to open a stream to an externalized resource representing
 	 * the flow definition, for example.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void doInit() throws FlowBuilderException {
+	protected void doInit() throws FlowBuilderException {
 		flowModel = flowModelHolder.getFlowModel();
 		initLocalFlowContext();
 	}
@@ -152,7 +149,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 	 */
 	public void buildStates() throws FlowBuilderException {
 		if (flowModel.getStates() == null) {
-			throw new FlowBuilderException("At least one state is required to build a flow definition");
+			throw new FlowBuilderException("At least one state is required to build a Flow");
 		}
 		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
 			AbstractStateModel state = (AbstractStateModel) it.next();
@@ -208,20 +205,18 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 				parseExceptionHandlers(flowModel.getExceptionHandlers(), flowModel.getGlobalTransitions()));
 	}
 
+	public boolean hasFlowChanged() {
+		return flowModelHolder.hasFlowModelChanged();
+	}
+
 	/**
 	 * Shutdown the builder, releasing any resources it holds. A new flow construction process should start with another
 	 * call to the {@link #init(FlowBuilderContext)} method.
 	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public void doDispose() throws FlowBuilderException {
+	protected void doDispose() throws FlowBuilderException {
 		flowModel = null;
 		setLocalContext(null);
-	}
-
-	// implementing resource holder
-
-	public Resource getResource() {
-		return resource;
 	}
 
 	// subclassing hooks
@@ -266,14 +261,15 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 
 	private Resource[] parseContextResources(List beanImports) {
 		if (beanImports != null && !beanImports.isEmpty()) {
-			if (getResource() == null) {
-				throw new FlowBuilderException("A resource must be defined in order to load bean-imports");
+			Resource flowResource = flowModelHolder.getFlowModelResource();
+			if (flowResource == null) {
+				throw new FlowBuilderException("The FlowModel must be Resource in order to load bean-imports");
 			}
 			List resources = new ArrayList(beanImports.size());
 			for (Iterator it = getFlowModel().getBeanImports().iterator(); it.hasNext();) {
 				BeanImportModel beanImport = (BeanImportModel) it.next();
 				try {
-					resources.add(getResource().createRelative(beanImport.getResource()));
+					resources.add(flowResource.createRelative(beanImport.getResource()));
 				} catch (IOException e) {
 					throw new FlowBuilderException("Could not access flow-relative artifact resource '"
 							+ beanImport.getResource() + "'", e);
@@ -305,7 +301,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder implements Resourc
 				flowContext.getBeanFactory().setParentBeanFactory(parent);
 			}
 		}
-		flowContext.setResourceLoader(new FlowRelativeResourceLoader(resource));
+		Resource flowResource = flowModelHolder.getFlowModelResource();
+		if (flowResource != null) {
+			flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
+		}
 		if (JdkVersion.isAtLeastJava15()) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		}

@@ -15,15 +15,12 @@
  */
 package org.springframework.webflow.engine.model.registry;
 
-import java.io.IOException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
-import org.springframework.webflow.util.ResourceHolder;
 
 /**
  * A flow model holder that can detect changes on an underlying flow model resource and refresh that resource
@@ -55,7 +52,7 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	/**
 	 * The flow model builder.
 	 */
-	private FlowModelBuilder builder;
+	private FlowModelBuilder flowModelBuilder;
 
 	/**
 	 * A last modified date for the backing flow definition resource, used to support automatic reassembly on resource
@@ -66,21 +63,11 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	/**
 	 * Creates a new refreshable flow model holder that uses the configured assembler (GOF director) to drive flow
 	 * assembly, on initial use and on any resource change or refresh.
-	 * @param builder the flow model builder to use
+	 * @param flowModelBuilder the flow model builder to use
 	 * @param flowModelId the identifier of the flow model
 	 */
-	public DefaultFlowModelHolder(FlowModelBuilder builder, String flowModelId) {
-		this.builder = builder;
-		this.flowModelId = flowModelId;
-	}
-
-	/**
-	 * Creates a new static flow model holder
-	 * @param flowModel the flow model to hold
-	 * @param flowModelId the identifier of the flow model
-	 */
-	public DefaultFlowModelHolder(FlowModel flowModel, String flowModelId) {
-		this.flowModel = flowModel;
+	public DefaultFlowModelHolder(FlowModelBuilder flowModelBuilder, String flowModelId) {
+		this.flowModelBuilder = flowModelBuilder;
 		this.flowModelId = flowModelId;
 	}
 
@@ -90,75 +77,39 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 
 	public synchronized FlowModel getFlowModel() throws FlowModelConstructionException {
 		if (flowModel == null) {
-			lastModified = calculateLastModified();
-			logger.debug("Assembling the flow model for the first time");
-			assembleFlow();
+			assembleFlowModel();
 		} else {
-			refreshIfChanged();
+			if (flowModelBuilder.hasFlowModelChanged()) {
+				assembleFlowModel();
+			}
 		}
 		return flowModel;
 	}
 
+	public Resource getFlowModelResource() {
+		return flowModelBuilder.getFlowModelResource();
+	}
+
+	public boolean hasFlowModelChanged() {
+		return flowModelBuilder.hasFlowModelChanged();
+	}
+
 	public synchronized void refresh() throws FlowModelConstructionException {
-		assembleFlow();
+		assembleFlowModel();
 	}
 
 	// internal helpers
 
-	/**
-	 * Helper that retrieves the last modified date by querying the backing flow resource.
-	 * @return the last modified date, or 0L if it could not be retrieved
-	 */
-	private long calculateLastModified() {
-		if (getFlowModelBuilder() instanceof ResourceHolder) {
-			Resource resource = ((ResourceHolder) getFlowModelBuilder()).getResource();
-			try {
-				long lastModified = resource.getFile().lastModified();
-				if (logger.isDebugEnabled()) {
-					logger.debug("Flow definition [" + resource + "] was last modified on " + lastModified);
-				}
-				return lastModified;
-			} catch (IOException e) {
-				// ignore, last modified checks not supported
-			}
-		}
-		return 0L;
-	}
-
-	/**
-	 * Assemble the held flow definition, delegating to the configured FlowAssembler (director).
-	 */
-	private void assembleFlow() throws FlowModelConstructionException {
+	private void assembleFlowModel() throws FlowModelConstructionException {
 		try {
-			builder.init();
-			builder.build();
-			flowModel = builder.getFlowModel();
+			flowModelBuilder.init();
+			flowModelBuilder.build();
+			flowModel = flowModelBuilder.getFlowModel();
 		} catch (FlowModelBuilderException e) {
 			throw new FlowModelConstructionException(flowModelId, e);
 		} finally {
-			builder.dispose();
+			flowModelBuilder.dispose();
 		}
-	}
-
-	/**
-	 * Reassemble the flow if its underlying resource has changed.
-	 */
-	private void refreshIfChanged() {
-		long calculatedLastModified = calculateLastModified();
-		if (calculatedLastModified > lastModified) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Refreshing flow definition [" + flowModelId + "]");
-			}
-			assembleFlow();
-			lastModified = calculatedLastModified;
-		}
-	}
-
-	/**
-	 * Returns the flow builder that actually builds the Flow definition.
-	 */
-	private FlowModelBuilder getFlowModelBuilder() {
-		return builder;
 	}
 
 	public String toString() {

@@ -58,6 +58,14 @@ public class DefaultFlowModelHolderTests extends TestCase {
 			// no-op
 		}
 
+		public Resource getFlowModelResource() {
+			return null;
+		}
+
+		public boolean hasFlowModelChanged() {
+			return false;
+		}
+
 	}
 
 	public class ChangeDetectableFlowBuilder extends SimpleFlowBuilder implements ResourceHolder {

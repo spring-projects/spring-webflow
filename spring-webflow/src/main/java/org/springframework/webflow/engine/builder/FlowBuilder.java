@@ -125,4 +125,11 @@ public interface FlowBuilder {
 	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
 	public void dispose() throws FlowBuilderException;
+
+	/**
+	 * As the underlying flow resource managed by this builder changed since the last build occurred?
+	 * @return true if changed, false if not
+	 */
+	public boolean hasFlowChanged();
+
 }

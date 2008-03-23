@@ -19,7 +19,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImp
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
-import org.springframework.webflow.engine.builder.RefreshableFlowDefinitionHolder;
+import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -127,7 +127,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 		FlowBuilderContext builderContext = new FlowBuilderContextImpl(flowResource.getId(), flowResource
 				.getAttributes(), flowRegistry, flowBuilderServices);
 		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
-		return new RefreshableFlowDefinitionHolder(assembler);
+		return new DefaultFlowHolder(assembler);
 	}
 
 	private FlowDefinitionResource createResource(FlowLocation location) {
@@ -148,7 +148,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	private FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
-		return new FlowModelFlowBuilder(createFlowModelHolder(resource), resource.getPath());
+		return new FlowModelFlowBuilder(createFlowModelHolder(resource));
 	}
 
 	private FlowModelHolder createFlowModelHolder(FlowDefinitionResource resource) {
