@@ -60,37 +60,27 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Builds a flow model from a XML-based flow definition resource.
+ * 
+ * @author Keith Donald
+ * @author Scott Andrews
+ */
 public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 
-	/**
-	 * The resource from which the document element being parsed was read. Used as a location for relative resource
-	 * lookup.
-	 */
 	private Resource resource;
 
-	/**
-	 * The flow model registry used to lookup other flows
-	 */
 	private FlowModelLocator modelLocator;
 
-	/**
-	 * The loader for loading the flow definition resource XML document.
-	 */
 	private DocumentLoader documentLoader = new DefaultDocumentLoader();
 
-	/**
-	 * The in-memory document object model (DOM) of the XML Document read from the flow definition resource.
-	 */
 	private Document document;
 
-	/**
-	 * The flow model.
-	 */
 	private FlowModel flowModel;
 
 	/**
-	 * Create a new XML flow builder parsing the document at the specified location, using the provided service locator
-	 * to access externally managed flow artifacts.
+	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
+	 * the provided locator to access parent flow models.
 	 */
 	public XmlFlowModelBuilder(Resource resource, FlowModelLocator modelLocator) {
 		Assert.notNull(resource, "The location of the XML-based flow definition is required");
