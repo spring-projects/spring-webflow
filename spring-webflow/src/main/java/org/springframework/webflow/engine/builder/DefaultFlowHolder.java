@@ -69,7 +69,7 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 
 	public synchronized FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException {
 		if (assembling) {
-			// must return early assembly result
+			// must return early assembly result for when a flow calls itself recursively
 			return getFlowBuilder().getFlow();
 		}
 		if (flowDefinition == null) {
