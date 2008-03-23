@@ -51,7 +51,7 @@ import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
-import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
+import org.springframework.webflow.engine.model.registry.FlowModelLocator;
 import org.springframework.webflow.engine.model.registry.NoSuchFlowModelException;
 import org.springframework.webflow.util.ResourceHolder;
 import org.w3c.dom.Document;
@@ -66,12 +66,12 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	 * The resource from which the document element being parsed was read. Used as a location for relative resource
 	 * lookup.
 	 */
-	protected Resource resource;
+	private Resource resource;
 
 	/**
 	 * The flow model registry used to lookup other flows
 	 */
-	protected FlowModelRegistry registry;
+	private FlowModelLocator modelLocator;
 
 	/**
 	 * The loader for loading the flow definition resource XML document.
@@ -92,9 +92,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	 * Create a new XML flow builder parsing the document at the specified location, using the provided service locator
 	 * to access externally managed flow artifacts.
 	 */
-	public XmlFlowModelBuilder(Resource resource, FlowModelRegistry registry) {
+	public XmlFlowModelBuilder(Resource resource, FlowModelLocator modelLocator) {
+		Assert.notNull(resource, "The location of the XML-based flow definition is required");
+		Assert.notNull(modelLocator, "The model locator for accessing other flow models for merging is required");
 		this.resource = resource;
-		this.registry = registry;
+		this.modelLocator = modelLocator;
 	}
 
 	/**
@@ -105,6 +107,10 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 	public void setDocumentLoader(DocumentLoader documentLoader) {
 		Assert.notNull(documentLoader, "The XML document loader is required");
 		this.documentLoader = documentLoader;
+	}
+
+	public Resource getResource() {
+		return resource;
 	}
 
 	public void init() throws FlowModelBuilderException {
@@ -122,16 +128,17 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 
 	public void build() throws FlowModelBuilderException {
 		if (getDocumentElement() == null) {
-			throw new FlowModelBuilderException("The FlowModelBuilder must be initialized first");
+			throw new FlowModelBuilderException(
+					"The FlowModelBuilder must be initialized first -- called init() before calling build()");
 		}
 		flowModel = parseFlow(getDocumentElement());
 		if (flowModel.getParent() != null) {
-			for (Iterator parentIt = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")))
-					.iterator(); parentIt.hasNext();) {
-				String parentFlowId = (String) parentIt.next();
+			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
+			for (Iterator it = parents.iterator(); it.hasNext();) {
+				String parentFlowId = (String) it.next();
 				if (StringUtils.hasText(parentFlowId)) {
 					try {
-						flowModel.merge(registry.getFlowModel(parentFlowId));
+						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
 					} catch (NoSuchFlowModelException e) {
 						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
 								+ "' to inherit from", e);
@@ -150,354 +157,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		flowModel = null;
 	}
 
-	protected FlowModel parseFlow(Element ele) {
-		FlowModel flow = new FlowModel();
-		flow.setParent(ele.getAttribute("parent"));
-		flow.setStartStateId(ele.getAttribute("start-state"));
-		flow.addAttributes(parseAttributes(ele));
-		flow.setSecured(parseSecured(ele));
-		flow.setPersistenceContext(parsePersistenceContext(ele));
-		flow.addVars(parseVars(ele));
-		flow.addInputs(parseInputs(ele));
-		flow.addOutputs(parseOutputs(ele));
-		flow.addOnStartActions(parseOnStartActions(ele));
-		flow.addStates(parseStates(ele));
-		flow.addGlobalTransitions(parseGlobalTransitions(ele));
-		flow.addOnEndActions(parseOnEndActions(ele));
-		flow.addExceptionHandlers(parseExceptionHandlers(ele));
-		flow.addBeanImports(parseBeanImports(ele));
-		return flow;
-	}
-
-	protected LinkedList parseAttributes(Element ele) {
-		LinkedList attributes = new LinkedList();
-		for (Iterator attributeIt = DomUtils.getChildElementsByTagName(ele, "attribute").iterator(); attributeIt
-				.hasNext();) {
-			attributes.add(parseAttribute((Element) attributeIt.next()));
-		}
-		return !attributes.isEmpty() ? attributes : null;
-	}
-
-	protected LinkedList parseVars(Element ele) {
-		LinkedList vars = new LinkedList();
-		for (Iterator varIt = DomUtils.getChildElementsByTagName(ele, "var").iterator(); varIt.hasNext();) {
-			vars.add(parseVar((Element) varIt.next()));
-		}
-		return !vars.isEmpty() ? vars : null;
-	}
-
-	protected LinkedList parseInputs(Element ele) {
-		LinkedList inputs = new LinkedList();
-		for (Iterator inputIt = DomUtils.getChildElementsByTagName(ele, "input").iterator(); inputIt.hasNext();) {
-			inputs.add(parseInput((Element) inputIt.next()));
-		}
-		return !inputs.isEmpty() ? inputs : null;
-	}
-
-	protected LinkedList parseOutputs(Element ele) {
-		LinkedList outputs = new LinkedList();
-		for (Iterator outputIt = DomUtils.getChildElementsByTagName(ele, "output").iterator(); outputIt.hasNext();) {
-			outputs.add(parseOutput((Element) outputIt.next()));
-		}
-		return !outputs.isEmpty() ? outputs : null;
-	}
-
-	protected LinkedList parseActions(Element ele) {
-		if (ele == null) {
-			return null;
-		}
-		LinkedList actions = new LinkedList();
-		for (Iterator actionIt = getChildElementsByTagNames(ele, new String[] { "evaluate", "render", "set" })
-				.iterator(); actionIt.hasNext();) {
-			actions.add(parseAction((Element) actionIt.next()));
-		}
-		return !actions.isEmpty() ? actions : null;
-	}
-
-	protected LinkedList parseStates(Element ele) {
-		LinkedList states = new LinkedList();
-		for (Iterator stateIt = getChildElementsByTagNames(ele,
-				new String[] { "action-state", "view-state", "decision-state", "subflow-state", "end-state" })
-				.iterator(); stateIt.hasNext();) {
-			states.add(parseState((Element) stateIt.next()));
-		}
-		return !states.isEmpty() ? states : null;
-	}
-
-	protected LinkedList parseTransitions(Element ele) {
-		LinkedList transitions = new LinkedList();
-		for (Iterator transitionIt = DomUtils.getChildElementsByTagName(ele, "transition").iterator(); transitionIt
-				.hasNext();) {
-			transitions.add(parseTransition((Element) transitionIt.next()));
-		}
-		return !transitions.isEmpty() ? transitions : null;
-	}
-
-	protected LinkedList parseExceptionHandlers(Element ele) {
-		LinkedList exceptionHandlers = new LinkedList();
-		for (Iterator exceptionHandlerIt = DomUtils.getChildElementsByTagName(ele, "exception-handler").iterator(); exceptionHandlerIt
-				.hasNext();) {
-			exceptionHandlers.add(parseExceptionHandler((Element) exceptionHandlerIt.next()));
-		}
-		return !exceptionHandlers.isEmpty() ? exceptionHandlers : null;
-	}
-
-	protected LinkedList parseBeanImports(Element ele) {
-		LinkedList beanImports = new LinkedList();
-		for (Iterator beanImportIt = DomUtils.getChildElementsByTagName(ele, "bean-import").iterator(); beanImportIt
-				.hasNext();) {
-			beanImports.add(parseBeanImport((Element) beanImportIt.next()));
-		}
-		return !beanImports.isEmpty() ? beanImports : null;
-	}
-
-	protected LinkedList parseIfs(Element ele) {
-		LinkedList ifs = new LinkedList();
-		for (Iterator ifIt = DomUtils.getChildElementsByTagName(ele, "if").iterator(); ifIt.hasNext();) {
-			ifs.add(parseIf((Element) ifIt.next()));
-		}
-		return !ifs.isEmpty() ? ifs : null;
-	}
-
-	protected AbstractActionModel parseAction(Element ele) {
-		if (DomUtils.nodeNameEquals(ele, "evaluate")) {
-			return parseEvaluate(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "render")) {
-			return parseRender(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "set")) {
-			return parseSet(ele);
-		} else {
-			throw new UnsupportedOperationException("Unknown action element encountered '" + ele.getLocalName() + "'");
-		}
-	}
-
-	protected AbstractStateModel parseState(Element ele) {
-		if (DomUtils.nodeNameEquals(ele, "action-state")) {
-			return parseActionState(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "view-state")) {
-			return parseViewState(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "decision-state")) {
-			return parseDecisionState(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "subflow-state")) {
-			return parseSubflowState(ele);
-		} else if (DomUtils.nodeNameEquals(ele, "end-state")) {
-			return parseEndState(ele);
-		} else {
-			throw new UnsupportedOperationException("Unknown state element encountered '" + ele.getLocalName() + "'");
-		}
-	}
-
-	protected LinkedList parseGlobalTransitions(Element ele) {
-		ele = DomUtils.getChildElementByTagName(ele, "global-transitions");
-		if (ele == null) {
-			return null;
-		} else {
-			return parseTransitions(ele);
-		}
-	}
-
-	protected AttributeModel parseAttribute(Element ele) {
-		AttributeModel attribute = new AttributeModel(ele.getAttribute("name"), parseValue(ele));
-		attribute.setType(ele.getAttribute("type"));
-		return attribute;
-	}
-
-	protected String parseValue(Element ele) {
-		if (ele.hasAttribute("value")) {
-			return ele.getAttribute("value");
-		} else {
-			Element valueEle = DomUtils.getChildElementByTagName(ele, "value");
-			return valueEle != null ? DomUtils.getTextValue(valueEle) : null;
-		}
-	}
-
-	protected SecuredModel parseSecured(Element ele) {
-		ele = DomUtils.getChildElementByTagName(ele, "secured");
-		if (ele == null) {
-			return null;
-		} else {
-			SecuredModel secured = new SecuredModel(ele.getAttribute("attributes"));
-			secured.setMatch(ele.getAttribute("match"));
-			return secured;
-		}
-	}
-
-	protected PersistenceContextModel parsePersistenceContext(Element ele) {
-		ele = DomUtils.getChildElementByTagName(ele, "persistence-context");
-		if (ele == null) {
-			return null;
-		} else {
-			return new PersistenceContextModel();
-		}
-	}
-
-	protected VarModel parseVar(Element ele) {
-		VarModel var = new VarModel(ele.getAttribute("name"), ele.getAttribute("class"));
-		var.setScope(ele.getAttribute("scope"));
-		return var;
-	}
-
-	protected InputModel parseInput(Element ele) {
-		InputModel input = new InputModel(ele.getAttribute("name"), ele.getAttribute("value"));
-		input.setType(ele.getAttribute("type"));
-		input.setRequired(ele.getAttribute("required"));
-		return input;
-	}
-
-	protected OutputModel parseOutput(Element ele) {
-		OutputModel output = new OutputModel(ele.getAttribute("name"), ele.getAttribute("value"));
-		output.setType(ele.getAttribute("type"));
-		output.setRequired(ele.getAttribute("required"));
-		return output;
-	}
-
-	protected TransitionModel parseTransition(Element ele) {
-		TransitionModel transition = new TransitionModel();
-		transition.setOn(ele.getAttribute("on"));
-		transition.setTo(ele.getAttribute("to"));
-		transition.setOnException(ele.getAttribute("on-exception"));
-		transition.setBind(ele.getAttribute("bind"));
-		transition.setAttributes(parseAttributes(ele));
-		transition.setSecured(parseSecured(ele));
-		transition.setActions(parseActions(ele));
-		return transition;
-	}
-
-	protected ExceptionHandlerModel parseExceptionHandler(Element ele) {
-		return new ExceptionHandlerModel(ele.getAttribute("bean-name"));
-	}
-
-	protected BeanImportModel parseBeanImport(Element ele) {
-		return new BeanImportModel(ele.getAttribute("resource"));
-	}
-
-	protected IfModel parseIf(Element ele) {
-		IfModel conditional = new IfModel(ele.getAttribute("test"), ele.getAttribute("then"));
-		conditional.setElse(ele.getAttribute("else"));
-		return conditional;
-	}
-
-	protected LinkedList parseOnStartActions(Element ele) {
-		return parseActions(DomUtils.getChildElementByTagName(ele, "on-start"));
-	}
-
-	protected LinkedList parseOnEntryActions(Element ele) {
-		return parseActions(DomUtils.getChildElementByTagName(ele, "on-entry"));
-	}
-
-	protected LinkedList parseOnRenderActions(Element ele) {
-		return parseActions(DomUtils.getChildElementByTagName(ele, "on-render"));
-	}
-
-	protected LinkedList parseOnExitActions(Element ele) {
-		return parseActions(DomUtils.getChildElementByTagName(ele, "on-exit"));
-	}
-
-	protected LinkedList parseOnEndActions(Element ele) {
-		return parseActions(DomUtils.getChildElementByTagName(ele, "on-end"));
-	}
-
-	protected EvaluateModel parseEvaluate(Element ele) {
-		EvaluateModel evaluate = new EvaluateModel(ele.getAttribute("expression"));
-		evaluate.setResult(ele.getAttribute("result"));
-		evaluate.setResultType(ele.getAttribute("result-type"));
-		return evaluate;
-	}
-
-	protected RenderModel parseRender(Element ele) {
-		return new RenderModel(ele.getAttribute("fragments"));
-	}
-
-	protected SetModel parseSet(Element ele) {
-		SetModel set = new SetModel(ele.getAttribute("name"), ele.getAttribute("value"));
-		set.setType(ele.getAttribute("type"));
-		return set;
-	}
-
-	protected ActionStateModel parseActionState(Element ele) {
-		ActionStateModel state = new ActionStateModel(ele.getAttribute("id"));
-		state.setAttributes(parseAttributes(ele));
-		state.setSecured(parseSecured(ele));
-		state.setOnEntryActions(parseOnEntryActions(ele));
-		state.setTransitions(parseTransitions(ele));
-		state.setOnExitActions(parseOnExitActions(ele));
-		state.setActions(parseActions(ele));
-		state.setExceptionHandlers(parseExceptionHandlers(ele));
-		return state;
-	}
-
-	protected ViewStateModel parseViewState(Element ele) {
-		ViewStateModel state = new ViewStateModel(ele.getAttribute("id"));
-		state.setView(ele.getAttribute("view"));
-		state.setRedirect(ele.getAttribute("redirect"));
-		state.setPopup(ele.getAttribute("popup"));
-		state.setModel(ele.getAttribute("model"));
-		state.setVars(parseVars(ele));
-		state.setOnRenderActions(parseOnRenderActions(ele));
-		state.setAttributes(parseAttributes(ele));
-		state.setSecured(parseSecured(ele));
-		state.setOnEntryActions(parseOnEntryActions(ele));
-		state.setExceptionHandlers(parseExceptionHandlers(ele));
-		state.setTransitions(parseTransitions(ele));
-		state.setOnExitActions(parseOnExitActions(ele));
-		return state;
-	}
-
-	protected DecisionStateModel parseDecisionState(Element ele) {
-		DecisionStateModel state = new DecisionStateModel(ele.getAttribute("id"));
-		state.setIfs(parseIfs(ele));
-		state.setOnExitActions(parseOnExitActions(ele));
-		state.setAttributes(parseAttributes(ele));
-		state.setSecured(parseSecured(ele));
-		state.setOnEntryActions(parseOnEntryActions(ele));
-		state.setExceptionHandlers(parseExceptionHandlers(ele));
-		return state;
-	}
-
-	protected SubflowStateModel parseSubflowState(Element ele) {
-		SubflowStateModel state = new SubflowStateModel(ele.getAttribute("id"), ele.getAttribute("subflow"));
-		state.setSubflowAttributeMapper(ele.getAttribute("subflow-attribute-mapper"));
-		state.setInputs(parseInputs(ele));
-		state.setOutputs(parseOutputs(ele));
-		state.setAttributes(parseAttributes(ele));
-		state.setSecured(parseSecured(ele));
-		state.setOnEntryActions(parseOnEntryActions(ele));
-		state.setExceptionHandlers(parseExceptionHandlers(ele));
-		state.setTransitions(parseTransitions(ele));
-		state.setOnExitActions(parseOnExitActions(ele));
-		return state;
-	}
-
-	protected EndStateModel parseEndState(Element ele) {
-		EndStateModel state = new EndStateModel(ele.getAttribute("id"));
-		state.setView(ele.getAttribute("view"));
-		state.setCommit(ele.getAttribute("commit"));
-		state.setOutputs(parseOutputs(ele));
-		state.setAttributes(parseAttributes(ele));
-		state.setSecured(parseSecured(ele));
-		state.setOnEntryActions(parseOnEntryActions(ele));
-		state.setExceptionHandlers(parseExceptionHandlers(ele));
-		return state;
-	}
-
-	// TODO: submit this to DomUtils
-	private static List getChildElementsByTagNames(Element ele, String[] childEleNames) {
-		List names = Arrays.asList(childEleNames);
-		NodeList nl = ele.getChildNodes();
-		List childEles = new LinkedList();
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element && (names.contains(node.getLocalName()) || names.contains(node.getNodeName()))) {
-				childEles.add(node);
-			}
-		}
-		return childEles;
-	}
-
-	public Resource getResource() {
-		return resource;
-	}
-
 	/**
 	 * Returns the DOM document parsed from the XML file.
 	 */
@@ -512,8 +171,412 @@ public class XmlFlowModelBuilder implements FlowModelBuilder, ResourceHolder {
 		return document != null ? document.getDocumentElement() : null;
 	}
 
+	private FlowModel parseFlow(Element element) {
+		FlowModel flow = new FlowModel();
+		flow.setParent(element.getAttribute("parent"));
+		flow.setStartStateId(element.getAttribute("start-state"));
+		flow.addAttributes(parseAttributes(element));
+		flow.setSecured(parseSecured(element));
+		flow.setPersistenceContext(parsePersistenceContext(element));
+		flow.addVars(parseVars(element));
+		flow.addInputs(parseInputs(element));
+		flow.addOutputs(parseOutputs(element));
+		flow.addOnStartActions(parseOnStartActions(element));
+		flow.addStates(parseStates(element));
+		flow.addGlobalTransitions(parseGlobalTransitions(element));
+		flow.addOnEndActions(parseOnEndActions(element));
+		flow.addExceptionHandlers(parseExceptionHandlers(element));
+		flow.addBeanImports(parseBeanImports(element));
+		return flow;
+	}
+
+	private LinkedList parseAttributes(Element element) {
+		List attributeElements = DomUtils.getChildElementsByTagName(element, "attribute");
+		if (attributeElements.isEmpty()) {
+			return null;
+		}
+		LinkedList attributes = new LinkedList();
+		for (Iterator it = attributeElements.iterator(); it.hasNext();) {
+			attributes.add(parseAttribute((Element) it.next()));
+		}
+		return attributes;
+	}
+
+	private LinkedList parseVars(Element element) {
+		List varElements = DomUtils.getChildElementsByTagName(element, "var");
+		if (varElements.isEmpty()) {
+			return null;
+		}
+		LinkedList vars = new LinkedList();
+		for (Iterator it = varElements.iterator(); it.hasNext();) {
+			vars.add(parseVar((Element) it.next()));
+		}
+		return vars;
+	}
+
+	private LinkedList parseInputs(Element element) {
+		List inputElements = DomUtils.getChildElementsByTagName(element, "input");
+		if (inputElements.isEmpty()) {
+			return null;
+		}
+		LinkedList inputs = new LinkedList();
+		for (Iterator it = inputElements.iterator(); it.hasNext();) {
+			inputs.add(parseInput((Element) it.next()));
+		}
+		return inputs;
+	}
+
+	private LinkedList parseOutputs(Element element) {
+		List outputElements = DomUtils.getChildElementsByTagName(element, "output");
+		if (outputElements.isEmpty()) {
+			return null;
+		}
+		LinkedList outputs = new LinkedList();
+		for (Iterator it = outputElements.iterator(); it.hasNext();) {
+			outputs.add(parseOutput((Element) it.next()));
+		}
+		return outputs;
+	}
+
+	private LinkedList parseActions(Element element) {
+		List actionElements = getChildElementsByTagNames(element, new String[] { "evaluate", "render", "set" });
+		if (actionElements.isEmpty()) {
+			return null;
+		}
+		LinkedList actions = new LinkedList();
+		for (Iterator it = actionElements.iterator(); it.hasNext();) {
+			actions.add(parseAction((Element) it.next()));
+		}
+		return actions;
+	}
+
+	private LinkedList parseStates(Element element) {
+		List stateElements = getChildElementsByTagNames(element, new String[] { "view-state", "action-state",
+				"decision-state", "subflow-state", "end-state" });
+		if (stateElements.isEmpty()) {
+			return null;
+		}
+		LinkedList states = new LinkedList();
+		for (Iterator it = stateElements.iterator(); it.hasNext();) {
+			states.add(parseState((Element) it.next()));
+		}
+		return states;
+	}
+
+	private LinkedList parseTransitions(Element element) {
+		List transitionElements = DomUtils.getChildElementsByTagName(element, "transition");
+		if (transitionElements.isEmpty()) {
+			return null;
+		}
+		LinkedList transitions = new LinkedList();
+		for (Iterator it = transitionElements.iterator(); it.hasNext();) {
+			transitions.add(parseTransition((Element) it.next()));
+		}
+		return transitions;
+	}
+
+	private LinkedList parseExceptionHandlers(Element element) {
+		List exceptionHandlerElements = DomUtils.getChildElementsByTagName(element, "exception-handler");
+		if (exceptionHandlerElements.isEmpty()) {
+			return null;
+		}
+		LinkedList exceptionHandlers = new LinkedList();
+		for (Iterator it = exceptionHandlerElements.iterator(); it.hasNext();) {
+			exceptionHandlers.add(parseExceptionHandler((Element) it.next()));
+		}
+		return exceptionHandlers;
+	}
+
+	private LinkedList parseBeanImports(Element element) {
+		List importElements = DomUtils.getChildElementsByTagName(element, "bean-import");
+		if (importElements.isEmpty()) {
+			return null;
+		}
+		LinkedList beanImports = new LinkedList();
+		for (Iterator it = importElements.iterator(); it.hasNext();) {
+			beanImports.add(parseBeanImport((Element) it.next()));
+		}
+		return beanImports;
+	}
+
+	private LinkedList parseIfs(Element element) {
+		List ifElements = DomUtils.getChildElementsByTagName(element, "if");
+		if (ifElements.isEmpty()) {
+			return null;
+		}
+		LinkedList ifs = new LinkedList();
+		for (Iterator it = ifElements.iterator(); it.hasNext();) {
+			ifs.add(parseIf((Element) it.next()));
+		}
+		return ifs;
+	}
+
+	private AbstractActionModel parseAction(Element element) {
+		if (DomUtils.nodeNameEquals(element, "evaluate")) {
+			return parseEvaluate(element);
+		} else if (DomUtils.nodeNameEquals(element, "render")) {
+			return parseRender(element);
+		} else if (DomUtils.nodeNameEquals(element, "set")) {
+			return parseSet(element);
+		} else {
+			throw new FlowModelBuilderException("Unknown action element encountered '" + element.getLocalName() + "'");
+		}
+	}
+
+	private AbstractStateModel parseState(Element element) {
+		if (DomUtils.nodeNameEquals(element, "view-state")) {
+			return parseViewState(element);
+		} else if (DomUtils.nodeNameEquals(element, "action-state")) {
+			return parseActionState(element);
+		} else if (DomUtils.nodeNameEquals(element, "decision-state")) {
+			return parseDecisionState(element);
+		} else if (DomUtils.nodeNameEquals(element, "subflow-state")) {
+			return parseSubflowState(element);
+		} else if (DomUtils.nodeNameEquals(element, "end-state")) {
+			return parseEndState(element);
+		} else {
+			throw new FlowModelBuilderException("Unknown state element encountered '" + element.getLocalName() + "'");
+		}
+	}
+
+	private LinkedList parseGlobalTransitions(Element element) {
+		element = DomUtils.getChildElementByTagName(element, "global-transitions");
+		if (element == null) {
+			return null;
+		} else {
+			return parseTransitions(element);
+		}
+	}
+
+	private AttributeModel parseAttribute(Element element) {
+		AttributeModel attribute = new AttributeModel(element.getAttribute("name"), parseAttributeValue(element));
+		attribute.setType(element.getAttribute("type"));
+		return attribute;
+	}
+
+	private String parseAttributeValue(Element element) {
+		if (element.hasAttribute("value")) {
+			return element.getAttribute("value");
+		} else {
+			Element valueElement = DomUtils.getChildElementByTagName(element, "value");
+			if (valueElement != null) {
+				return DomUtils.getTextValue(valueElement);
+			} else {
+				return null;
+			}
+		}
+	}
+
+	private SecuredModel parseSecured(Element element) {
+		element = DomUtils.getChildElementByTagName(element, "secured");
+		if (element == null) {
+			return null;
+		} else {
+			SecuredModel secured = new SecuredModel(element.getAttribute("attributes"));
+			secured.setMatch(element.getAttribute("match"));
+			return secured;
+		}
+	}
+
+	private PersistenceContextModel parsePersistenceContext(Element element) {
+		element = DomUtils.getChildElementByTagName(element, "persistence-context");
+		if (element == null) {
+			return null;
+		} else {
+			return new PersistenceContextModel();
+		}
+	}
+
+	private VarModel parseVar(Element element) {
+		VarModel var = new VarModel(element.getAttribute("name"), element.getAttribute("class"));
+		var.setScope(element.getAttribute("scope"));
+		return var;
+	}
+
+	private InputModel parseInput(Element element) {
+		InputModel input = new InputModel(element.getAttribute("name"), element.getAttribute("value"));
+		input.setType(element.getAttribute("type"));
+		input.setRequired(element.getAttribute("required"));
+		return input;
+	}
+
+	private OutputModel parseOutput(Element element) {
+		OutputModel output = new OutputModel(element.getAttribute("name"), element.getAttribute("value"));
+		output.setType(element.getAttribute("type"));
+		output.setRequired(element.getAttribute("required"));
+		return output;
+	}
+
+	private TransitionModel parseTransition(Element element) {
+		TransitionModel transition = new TransitionModel();
+		transition.setOn(element.getAttribute("on"));
+		transition.setTo(element.getAttribute("to"));
+		transition.setOnException(element.getAttribute("on-exception"));
+		transition.setBind(element.getAttribute("bind"));
+		transition.setAttributes(parseAttributes(element));
+		transition.setSecured(parseSecured(element));
+		transition.setActions(parseActions(element));
+		return transition;
+	}
+
+	private ExceptionHandlerModel parseExceptionHandler(Element element) {
+		return new ExceptionHandlerModel(element.getAttribute("bean-name"));
+	}
+
+	private BeanImportModel parseBeanImport(Element element) {
+		return new BeanImportModel(element.getAttribute("resource"));
+	}
+
+	private IfModel parseIf(Element element) {
+		IfModel ifModel = new IfModel(element.getAttribute("test"), element.getAttribute("then"));
+		ifModel.setElse(element.getAttribute("else"));
+		return ifModel;
+	}
+
+	private LinkedList parseOnStartActions(Element element) {
+		Element onStartElement = DomUtils.getChildElementByTagName(element, "on-start");
+		if (onStartElement != null) {
+			return parseActions(element);
+		} else {
+			return null;
+		}
+	}
+
+	private LinkedList parseOnEntryActions(Element element) {
+		Element onEntryElement = DomUtils.getChildElementByTagName(element, "on-entry");
+		if (onEntryElement != null) {
+			return parseActions(element);
+		} else {
+			return null;
+		}
+	}
+
+	private LinkedList parseOnRenderActions(Element element) {
+		Element onRenderElement = DomUtils.getChildElementByTagName(element, "on-render");
+		if (onRenderElement != null) {
+			return parseActions(element);
+		} else {
+			return null;
+		}
+	}
+
+	private LinkedList parseOnExitActions(Element element) {
+		Element onExitElement = DomUtils.getChildElementByTagName(element, "on-exit");
+		if (onExitElement != null) {
+			return parseActions(element);
+		} else {
+			return null;
+		}
+	}
+
+	private LinkedList parseOnEndActions(Element element) {
+		Element onEndElement = DomUtils.getChildElementByTagName(element, "on-end");
+		if (onEndElement != null) {
+			return parseActions(element);
+		} else {
+			return null;
+		}
+	}
+
+	private EvaluateModel parseEvaluate(Element element) {
+		EvaluateModel evaluate = new EvaluateModel(element.getAttribute("expression"));
+		evaluate.setResult(element.getAttribute("result"));
+		evaluate.setResultType(element.getAttribute("result-type"));
+		return evaluate;
+	}
+
+	private RenderModel parseRender(Element element) {
+		return new RenderModel(element.getAttribute("fragments"));
+	}
+
+	private SetModel parseSet(Element element) {
+		SetModel set = new SetModel(element.getAttribute("name"), element.getAttribute("value"));
+		set.setType(element.getAttribute("type"));
+		return set;
+	}
+
+	private ActionStateModel parseActionState(Element element) {
+		ActionStateModel state = new ActionStateModel(element.getAttribute("id"));
+		state.setAttributes(parseAttributes(element));
+		state.setSecured(parseSecured(element));
+		state.setOnEntryActions(parseOnEntryActions(element));
+		state.setTransitions(parseTransitions(element));
+		state.setOnExitActions(parseOnExitActions(element));
+		state.setActions(parseActions(element));
+		state.setExceptionHandlers(parseExceptionHandlers(element));
+		return state;
+	}
+
+	private ViewStateModel parseViewState(Element element) {
+		ViewStateModel state = new ViewStateModel(element.getAttribute("id"));
+		state.setView(element.getAttribute("view"));
+		state.setRedirect(element.getAttribute("redirect"));
+		state.setPopup(element.getAttribute("popup"));
+		state.setModel(element.getAttribute("model"));
+		state.setVars(parseVars(element));
+		state.setOnRenderActions(parseOnRenderActions(element));
+		state.setAttributes(parseAttributes(element));
+		state.setSecured(parseSecured(element));
+		state.setOnEntryActions(parseOnEntryActions(element));
+		state.setExceptionHandlers(parseExceptionHandlers(element));
+		state.setTransitions(parseTransitions(element));
+		state.setOnExitActions(parseOnExitActions(element));
+		return state;
+	}
+
+	private DecisionStateModel parseDecisionState(Element element) {
+		DecisionStateModel state = new DecisionStateModel(element.getAttribute("id"));
+		state.setIfs(parseIfs(element));
+		state.setOnExitActions(parseOnExitActions(element));
+		state.setAttributes(parseAttributes(element));
+		state.setSecured(parseSecured(element));
+		state.setOnEntryActions(parseOnEntryActions(element));
+		state.setExceptionHandlers(parseExceptionHandlers(element));
+		return state;
+	}
+
+	private SubflowStateModel parseSubflowState(Element element) {
+		SubflowStateModel state = new SubflowStateModel(element.getAttribute("id"), element.getAttribute("subflow"));
+		state.setSubflowAttributeMapper(element.getAttribute("subflow-attribute-mapper"));
+		state.setInputs(parseInputs(element));
+		state.setOutputs(parseOutputs(element));
+		state.setAttributes(parseAttributes(element));
+		state.setSecured(parseSecured(element));
+		state.setOnEntryActions(parseOnEntryActions(element));
+		state.setExceptionHandlers(parseExceptionHandlers(element));
+		state.setTransitions(parseTransitions(element));
+		state.setOnExitActions(parseOnExitActions(element));
+		return state;
+	}
+
+	private EndStateModel parseEndState(Element element) {
+		EndStateModel state = new EndStateModel(element.getAttribute("id"));
+		state.setView(element.getAttribute("view"));
+		state.setCommit(element.getAttribute("commit"));
+		state.setOutputs(parseOutputs(element));
+		state.setAttributes(parseAttributes(element));
+		state.setSecured(parseSecured(element));
+		state.setOnEntryActions(parseOnEntryActions(element));
+		state.setExceptionHandlers(parseExceptionHandlers(element));
+		return state;
+	}
+
+	// TODO: submit this to DomUtils in spring-core then remove here
+	private static List getChildElementsByTagNames(Element element, String[] childElementNames) {
+		List names = Arrays.asList(childElementNames);
+		NodeList nodeList = element.getChildNodes();
+		List childElements = new LinkedList();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			if (node instanceof Element && (names.contains(node.getLocalName()) || names.contains(node.getNodeName()))) {
+				childElements.add(node);
+			}
+		}
+		return childElements;
+	}
+
 	public String toString() {
-		return new ToStringCreator(this).append("location", resource).toString();
+		return new ToStringCreator(this).append("resource", resource).toString();
 	}
 
 }
