@@ -85,11 +85,9 @@ public abstract class AbstractFormatter implements Formatter {
 	}
 
 	/**
-	 * Returns the expected string format for the given target class. The default implementation just returns null.
+	 * Returns the expected string format for the given target class.
 	 */
-	protected String getExpectedFormat() {
-		return null;
-	}
+	protected abstract String getExpectedFormat();
 
 	/**
 	 * Is given object <i>empty</i> (null or empty string)?

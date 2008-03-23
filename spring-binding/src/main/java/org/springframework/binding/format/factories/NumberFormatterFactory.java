@@ -72,6 +72,10 @@ public class NumberFormatterFactory implements FormatterFactory {
 			}
 		}
 
+		protected String getExpectedFormat() {
+			return numberFormat.toString();
+		}
+
 		public String toString() {
 			return new ToStringCreator(this).append("format", numberFormat).append("targetClass", targetClass)
 					.toString();

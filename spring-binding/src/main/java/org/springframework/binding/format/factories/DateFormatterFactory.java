@@ -55,6 +55,10 @@ public class DateFormatterFactory implements FormatterFactory {
 			return dateFormat.parse(formattedString);
 		}
 
+		protected String getExpectedFormat() {
+			return dateFormat.toString();
+		}
+
 		public String toString() {
 			return new ToStringCreator(this).append("format", dateFormat).toString();
 		}
