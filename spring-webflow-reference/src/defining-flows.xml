@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="defining-flows">
 	<title>Defining Flows</title>
-	<sect1 id="introduction">
+	<sect1 id="defining-flows-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter begins the Users Section.
@@ -50,7 +50,7 @@
 			</caption>
 		</mediaobject>		
 	</sect1>
-	<sect1 id="flow-definition">
+	<sect1 id="flow-authoring">
 		<title>How are Flows authored?</title>
 		<para>
 			Flows are authored by web application developers using a simple XML-based flow definition language.
