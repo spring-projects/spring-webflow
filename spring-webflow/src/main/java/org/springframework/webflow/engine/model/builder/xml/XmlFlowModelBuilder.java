@@ -154,13 +154,12 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 				String flowId;
 				String stateId;
 				AbstractStateModel parentState = null;
-				if (parent.contains("#")) {
-					flowId = parent.substring(0, parent.indexOf("#")).trim();
-					stateId = parent.substring(parent.indexOf("#") + 1).trim();
-				} else {
-					flowId = parent.trim();
-					stateId = childState.getId();
+				if (!parent.contains("#")) {
+					throw new FlowModelBuilderException("Invalid parent syntax '" + parent
+							+ "', should take form 'flowId#stateId'");
 				}
+				flowId = parent.substring(0, parent.indexOf("#")).trim();
+				stateId = parent.substring(parent.indexOf("#") + 1).trim();
 				try {
 					parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
 					if (parentState == null) {

@@ -284,11 +284,9 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.  By default, the inherited flow's state identifer will match this state's identifier.
+Flow identifier to inherit from for this state only.
 <p>
-For example <pre>&lt;state id="state" parent="flow"&gt;</pre> defaults to <pre>&lt;state id="state" parent="flow#state"&gt;</pre>.
-To inherit from a different identifier <pre>&lt;state id="state" parent="flow#other"&gt;</pre>
-</ul>
+For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -449,11 +447,9 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.  By default, the inherited flow's state identifer will match this state's identifier.
+Flow identifier to inherit from for this state only.
 <p>
-For example <pre>&lt;state id="state" parent="flow"&gt;</pre> defaults to <pre>&lt;state id="state" parent="flow#state"&gt;</pre>.
-To inherit from a different identifier <pre>&lt;state id="state" parent="flow#other"&gt;</pre>
-</ul>
+For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -651,11 +647,9 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.  By default, the inherited flow's state identifer will match this state's identifier.
+Flow identifier to inherit from for this state only.
 <p>
-For example <pre>&lt;state id="state" parent="flow"&gt;</pre> defaults to <pre>&lt;state id="state" parent="flow#state"&gt;</pre>.
-To inherit from a different identifier <pre>&lt;state id="state" parent="flow#other"&gt;</pre>
-</ul>
+For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -770,11 +764,9 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.  By default, the inherited flow's state identifer will match this state's identifier.
+Flow identifier to inherit from for this state only.
 <p>
-For example <pre>&lt;state id="state" parent="flow"&gt;</pre> defaults to <pre>&lt;state id="state" parent="flow#state"&gt;</pre>.
-To inherit from a different identifier <pre>&lt;state id="state" parent="flow#other"&gt;</pre>
-</ul>
+For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -878,11 +870,9 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.  By default, the inherited flow's state identifer will match this state's identifier.
+Flow identifier to inherit from for this state only.
 <p>
-For example <pre>&lt;state id="state" parent="flow"&gt;</pre> defaults to <pre>&lt;state id="state" parent="flow#state"&gt;</pre>.
-To inherit from a different identifier <pre>&lt;state id="state" parent="flow#other"&gt;</pre>
-</ul>
+For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
