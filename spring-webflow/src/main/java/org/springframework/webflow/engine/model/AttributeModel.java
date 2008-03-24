@@ -45,12 +45,12 @@ public class AttributeModel extends AbstractModel {
 			return false;
 		}
 		AttributeModel attribute = (AttributeModel) model;
-		return ObjectUtils.nullSafeEquals(getName(), attribute.getName())
-				&& ObjectUtils.nullSafeEquals(getValue(), attribute.getValue());
+		return ObjectUtils.nullSafeEquals(getName(), attribute.getName());
 	}
 
 	public void merge(Model model) {
 		AttributeModel attribute = (AttributeModel) model;
+		setValue(merge(getValue(), attribute.getValue()));
 		setType(merge(getType(), attribute.getType()));
 	}
 

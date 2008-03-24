@@ -45,6 +45,7 @@ public class DecisionStateModel extends AbstractStateModel {
 
 	public void merge(Model model) {
 		DecisionStateModel state = (DecisionStateModel) model;
+		setParent(null);
 		setAttributes(merge(getAttributes(), state.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
 		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));

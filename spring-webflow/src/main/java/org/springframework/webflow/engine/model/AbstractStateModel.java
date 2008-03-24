@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractStateModel extends AbstractModel {
 	private String id;
+	private String parent;
 	private LinkedList attributes;
 	private SecuredModel secured;
 	private LinkedList onEntryActions;
@@ -46,6 +47,24 @@ public abstract class AbstractStateModel extends AbstractModel {
 			this.id = id;
 		} else {
 			this.id = null;
+		}
+	}
+
+	/**
+	 * @return the parent
+	 */
+	public String getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(String parent) {
+		if (StringUtils.hasText(parent)) {
+			this.parent = parent;
+		} else {
+			this.parent = null;
 		}
 	}
 

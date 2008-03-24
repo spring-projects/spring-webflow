@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.model.builder.xml;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -121,6 +122,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 					"The FlowModelBuilder must be initialized first -- called init() before calling build()");
 		}
 		flowModel = parseFlow(getDocumentElement());
+		mergeFlows();
+		mergeStates();
+	}
+
+	protected void mergeFlows() {
 		if (flowModel.getParent() != null) {
 			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
 			for (Iterator it = parents.iterator(); it.hasNext();) {
@@ -132,6 +138,42 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
 								+ "' to inherit from", e);
 					}
+				}
+			}
+		}
+	}
+
+	protected void mergeStates() {
+		if (flowModel.getStates() == null) {
+			return;
+		}
+		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
+			AbstractStateModel childState = (AbstractStateModel) it.next();
+			String parent = childState.getParent();
+			if (childState.getParent() != null) {
+				String flowId;
+				String stateId;
+				AbstractStateModel parentState = null;
+				if (parent.contains("#")) {
+					flowId = parent.substring(0, parent.indexOf("#")).trim();
+					stateId = parent.substring(parent.indexOf("#") + 1).trim();
+				} else {
+					flowId = parent.trim();
+					stateId = childState.getId();
+				}
+				try {
+					parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
+					if (parentState == null) {
+						throw new FlowModelBuilderException("Unable to find state '" + stateId + "' in flow '" + flowId
+								+ "'");
+					}
+					childState.merge(parentState);
+				} catch (NoSuchFlowModelException e) {
+					throw new FlowModelBuilderException("Unable to find flow '" + flowId + "' to inherit from", e);
+				} catch (ClassCastException e) {
+					throw new FlowModelBuilderException("Parent state type '" + parentState.getClass().getName()
+							+ "' cannot be merged with state type '" + childState.getClass().getName() + "'", e);
+
 				}
 			}
 		}
@@ -245,7 +287,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private LinkedList parseActions(Element element) {
-		List actionElements = getChildElementsByTagNames(element, new String[] { "evaluate", "render", "set" });
+		List actionElements = getChildElementsByTagNames(element, Arrays.asList(new String[] { "evaluate", "render",
+				"set" }));
 		if (actionElements.isEmpty()) {
 			return null;
 		}
@@ -257,8 +300,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private LinkedList parseStates(Element element) {
-		List stateElements = getChildElementsByTagNames(element, new String[] { "view-state", "action-state",
-				"decision-state", "subflow-state", "end-state" });
+		List stateElements = getChildElementsByTagNames(element, Arrays.asList(new String[] { "view-state",
+				"action-state", "decision-state", "subflow-state", "end-state" }));
 		if (stateElements.isEmpty()) {
 			return null;
 		}
@@ -503,6 +546,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private ActionStateModel parseActionState(Element element) {
 		ActionStateModel state = new ActionStateModel(element.getAttribute("id"));
+		state.setParent(element.getAttribute("parent"));
 		state.setAttributes(parseAttributes(element));
 		state.setSecured(parseSecured(element));
 		state.setOnEntryActions(parseOnEntryActions(element));
@@ -515,6 +559,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private ViewStateModel parseViewState(Element element) {
 		ViewStateModel state = new ViewStateModel(element.getAttribute("id"));
+		state.setParent(element.getAttribute("parent"));
 		state.setView(element.getAttribute("view"));
 		state.setRedirect(element.getAttribute("redirect"));
 		state.setPopup(element.getAttribute("popup"));
@@ -532,6 +577,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private DecisionStateModel parseDecisionState(Element element) {
 		DecisionStateModel state = new DecisionStateModel(element.getAttribute("id"));
+		state.setParent(element.getAttribute("parent"));
 		state.setIfs(parseIfs(element));
 		state.setOnExitActions(parseOnExitActions(element));
 		state.setAttributes(parseAttributes(element));
@@ -543,6 +589,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private SubflowStateModel parseSubflowState(Element element) {
 		SubflowStateModel state = new SubflowStateModel(element.getAttribute("id"), element.getAttribute("subflow"));
+		state.setParent(element.getAttribute("parent"));
 		state.setSubflowAttributeMapper(element.getAttribute("subflow-attribute-mapper"));
 		state.setInputs(parseInputs(element));
 		state.setOutputs(parseOutputs(element));
@@ -557,6 +604,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private EndStateModel parseEndState(Element element) {
 		EndStateModel state = new EndStateModel(element.getAttribute("id"));
+		state.setParent(element.getAttribute("parent"));
 		state.setView(element.getAttribute("view"));
 		state.setCommit(element.getAttribute("commit"));
 		state.setOutputs(parseOutputs(element));
@@ -567,18 +615,23 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		return state;
 	}
 
-	// TODO: submit this to DomUtils in spring-core then remove here
-	private static List getChildElementsByTagNames(Element element, String[] childElementNames) {
-		List names = Arrays.asList(childElementNames);
-		NodeList nodeList = element.getChildNodes();
-		List childElements = new ArrayList();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node node = nodeList.item(i);
-			if (node instanceof Element && (names.contains(node.getLocalName()) || names.contains(node.getNodeName()))) {
-				childElements.add(node);
+	// TODO: submited to DomUtils in spring-core will be available in 2.5.3
+	public static List getChildElementsByTagNames(Element ele, Collection childEleNames) {
+		Assert.notNull(ele, "Element must not be null");
+		Assert.notNull(childEleNames, "Element names collection must not be null");
+		NodeList nl = ele.getChildNodes();
+		List childEles = new ArrayList();
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node node = nl.item(i);
+			if (node instanceof Element && nodeNameMatch(node, childEleNames)) {
+				childEles.add(node);
 			}
 		}
-		return childElements;
+		return childEles;
+	}
+
+	private static boolean nodeNameMatch(Node node, Collection desiredNames) {
+		return (desiredNames.contains(node.getNodeName()) || desiredNames.contains(node.getLocalName()));
 	}
 
 	public String toString() {

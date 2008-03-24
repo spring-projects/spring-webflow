@@ -50,6 +50,7 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 
 	public void merge(Model model) {
 		SubflowStateModel state = (SubflowStateModel) model;
+		setParent(null);
 		setAttributes(merge(getAttributes(), state.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), state.getSecured()));
 		setOnEntryActions(merge(getOnEntryActions(), state.getOnEntryActions(), false));

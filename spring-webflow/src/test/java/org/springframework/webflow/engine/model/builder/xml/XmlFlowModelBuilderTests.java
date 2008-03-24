@@ -172,6 +172,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 			fail("A FlowModelConstructionException was expected");
 		} catch (FlowModelConstructionException e) {
 			// we want this
+			e.printStackTrace();
 		}
 	}
 
@@ -182,6 +183,75 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
 		assertEquals(4, flow.getOnStartActions().size());
+	}
+
+	public void testStateMerge() {
+		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
+		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
+		registry
+				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
+		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
+				"parent"));
+		FlowModel flow = registry.getFlowModel("child");
+		assertEquals(1, flow.getStates().size());
+		assertEquals("otherview", ((ViewStateModel) flow.getStates().get(0)).getView());
+	}
+
+	public void testStateMergeDefault() {
+		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child-default.xml", getClass());
+		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
+		registry
+				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
+		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
+				"parent"));
+		FlowModel flow = registry.getFlowModel("child");
+		assertEquals(1, flow.getStates().size());
+		assertEquals("mainview", ((ViewStateModel) flow.getStates().get(0)).getView());
+	}
+
+	public void testStateMergeParentFlowNotFound() {
+		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
+		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
+		registry
+				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
+		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
+				"parent-id-not-matching"));
+		try {
+			registry.getFlowModel("child");
+			fail("A FlowModelConstructionException was expected");
+		} catch (FlowModelConstructionException e) {
+			// we want this
+		}
+	}
+
+	public void testStateMergeParentStateNotFound() {
+		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
+		ClassPathResource resourceParent = new ClassPathResource("flow-empty.xml", getClass());
+		registry
+				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
+		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
+				"parent"));
+		try {
+			registry.getFlowModel("child");
+			fail("A FlowModelConstructionException was expected");
+		} catch (FlowModelConstructionException e) {
+			// we want this
+		}
+	}
+
+	public void testStateMergeParentStateIncompatable() {
+		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child-alt.xml", getClass());
+		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
+		registry
+				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
+		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
+				"parent"));
+		try {
+			registry.getFlowModel("child");
+			fail("A FlowModelConstructionException was expected");
+		} catch (FlowModelConstructionException e) {
+			// we want this
+		}
 	}
 
 }
