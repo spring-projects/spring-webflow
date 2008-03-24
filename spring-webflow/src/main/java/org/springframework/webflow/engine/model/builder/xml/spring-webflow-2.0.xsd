@@ -1016,6 +1016,15 @@ The starting point of this flow.  If not specified, the start state is the first
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="abstract" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Marks a flow model as abstract, preventing it from instantiating as a flow definition.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 			<xsd:attribute name="parent" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>

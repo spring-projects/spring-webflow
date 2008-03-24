@@ -47,6 +47,7 @@ import org.springframework.util.StringUtils;
  */
 public class FlowModel extends AbstractModel {
 	// private String id;
+	private String abztract;
 	private String parent;
 	private String startStateId;
 	private LinkedList attributes;
@@ -92,6 +93,24 @@ public class FlowModel extends AbstractModel {
 		setOnEndActions(merge(getOnEndActions(), flow.getOnEndActions(), false));
 		setExceptionHandlers(merge(getExceptionHandlers(), flow.getExceptionHandlers()));
 		setBeanImports(merge(getBeanImports(), flow.getBeanImports()));
+	}
+
+	/**
+	 * @return the abstract
+	 */
+	public String getAbstract() {
+		return abztract;
+	}
+
+	/**
+	 * @param abztract the abstract to set
+	 */
+	public void setAbstract(String abztract) {
+		if (StringUtils.hasText(abztract)) {
+			this.abztract = abztract;
+		} else {
+			this.abztract = null;
+		}
 	}
 
 	/**

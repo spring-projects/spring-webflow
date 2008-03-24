@@ -112,6 +112,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	 */
 	protected void doInit() throws FlowBuilderException {
 		flowModel = flowModelHolder.getFlowModel();
+		if ("true".equals(flowModel.getAbstract())) {
+			throw new FlowBuilderException("Abstract flow models cannot be instantiated.");
+		}
 		initLocalFlowContext();
 	}
 

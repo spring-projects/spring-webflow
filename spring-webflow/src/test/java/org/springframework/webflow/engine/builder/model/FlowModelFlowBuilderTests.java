@@ -326,6 +326,16 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		assertEquals("end", flow.getStartState().getId());
 	}
 
+	public void testAbstractFlow() {
+		model.setAbstract("true");
+		try {
+			getFlow(model);
+			fail("FlowBuilderException expected");
+		} catch (FlowBuilderException e) {
+			// we want this
+		}
+	}
+
 	private Flow getFlow(FlowModel model) {
 		FlowModelHolder holder = new StaticFlowModelHolder(model);
 		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(holder);

@@ -220,6 +220,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private FlowModel parseFlow(Element element) {
 		FlowModel flow = new FlowModel();
+		flow.setAbstract(element.getAttribute("abstract"));
 		flow.setParent(element.getAttribute("parent"));
 		flow.setStartStateId(element.getAttribute("start-state"));
 		flow.addAttributes(parseAttributes(element));
