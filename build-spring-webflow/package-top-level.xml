@@ -41,6 +41,7 @@
 				<exclude name="ivy-cache/**"/>
 				<exclude name="integration-repo/**"/>
 				<exclude name="spring-build/lib/docbook/**" />
+				<exclude name="**/*OLD*/**"/>
 			</fileset>
 		</copy>
 
