@@ -280,7 +280,7 @@ The unique identifier of this state; must be unique to this flow.
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
-							<xsd:attribute name="parent" type="xsd:string">
+							<xsd:attribute name="parent" type="stateParent">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -443,7 +443,7 @@ The unique identifier of this state; must be unique to this flow.
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
-							<xsd:attribute name="parent" type="xsd:string">
+							<xsd:attribute name="parent" type="stateParent">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -643,7 +643,7 @@ The unique identifier of this state; must be unique to this flow.
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
-							<xsd:attribute name="parent" type="xsd:string">
+							<xsd:attribute name="parent" type="stateParent">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -760,7 +760,7 @@ The unique identifier of this state; must be unique to this flow.
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
-							<xsd:attribute name="parent" type="xsd:string">
+							<xsd:attribute name="parent" type="stateParent">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -866,7 +866,7 @@ The unique identifier of this state; must be unique to this flow.
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
-							<xsd:attribute name="parent" type="xsd:string">
+							<xsd:attribute name="parent" type="stateParent">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -1064,6 +1064,12 @@ A comma separated list of flow identifier for this flow to inherit from.
 
 	<xsd:simpleType name="resource">
 		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="stateParent">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value=".*#.*"/>
+		</xsd:restriction>
 	</xsd:simpleType>
 	
 	<xsd:group name="actionTypes">
