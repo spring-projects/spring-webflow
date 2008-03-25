@@ -2,7 +2,7 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;

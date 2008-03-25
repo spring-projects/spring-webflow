@@ -16,7 +16,7 @@
 package org.springframework.webflow.engine.builder.support;
 
 import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.support.AbstractConverter;
+import org.springframework.binding.convert.converters.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;

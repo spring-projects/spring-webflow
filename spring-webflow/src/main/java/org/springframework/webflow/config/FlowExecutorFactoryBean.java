@@ -22,7 +22,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.util.Assert;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.impl.SessionBindingConversationManager;
@@ -101,7 +101,7 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	/**
 	 * The conversion service to use for type conversion of flow execution attribute values.
 	 */
-	private ConversionService conversionService = new DefaultConversionService();
+	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
 
 	/**
 	 * The flow executor this factory bean creates.

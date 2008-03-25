@@ -38,5 +38,4 @@ public class MappingResult {
 	public String toString() {
 		return new ToStringCreator(this).append("mapping", mapping).append("result", result).toString();
 	}
-
 }

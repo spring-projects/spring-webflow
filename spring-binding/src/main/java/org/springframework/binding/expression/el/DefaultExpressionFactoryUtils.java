@@ -2,8 +2,6 @@ package org.springframework.binding.expression.el;
 
 import javax.el.ExpressionFactory;
 
-import org.springframework.beans.BeanInstantiationException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -26,14 +24,12 @@ public class DefaultExpressionFactoryUtils {
 
 	/**
 	 * Creates a new instance of the expression factory configured for this VM.
-	 * @throws IllegalStateException if the ExpressionFactory class cannot be found
-	 * @throws RuntimeException if the ExpressionFactory cannot be instantiated
+	 * @throws IllegalStateException if the ExpressionFactory class cannot be instantiated
 	 */
-	public static ExpressionFactory createExpressionFactory() throws IllegalStateException, RuntimeException {
-		// Fallback in the case of using an older version of the EL API
+	public static ExpressionFactory createExpressionFactory() throws IllegalStateException {
+		Class expressionFactoryClass;
 		try {
-			Class expressionFactoryClass = ClassUtils.forName(getDefaultExpressionFactoryClassName());
-			return (ExpressionFactory) BeanUtils.instantiateClass(expressionFactoryClass);
+			expressionFactoryClass = ClassUtils.forName(getDefaultExpressionFactoryClassName());
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException(
 					"The default ExpressionFactory class '"
@@ -46,10 +42,15 @@ public class DefaultExpressionFactoryUtils {
 							+ getDefaultExpressionFactoryClassName()
 							+ "' could not be found in the classpath.  "
 							+ "Please add this to your classpath or set the default ExpressionFactory class name to something that is in the classpath.");
-		} catch (BeanInstantiationException e) {
-			throw new RuntimeException("An instance of the default ExpressionFactory '"
+		}
+		try {
+			return (ExpressionFactory) expressionFactoryClass.newInstance();
+		} catch (Exception e) {
+			IllegalStateException iae = new IllegalStateException("An instance of the default ExpressionFactory '"
 					+ getDefaultExpressionFactoryClassName()
-					+ "' could not be instantiated.  Check your EL implementation configuration.", e);
+					+ "' could not be instantiated.  Check your EL implementation configuration.");
+			iae.initCause(e);
+			throw iae;
 		}
 	}
 }

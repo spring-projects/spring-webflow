@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.service;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,13 +89,13 @@ public class GenericConversionService implements ConversionService {
 		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
 		targetClass = convertToWrapperClassIfNecessary(targetClass);
 		if (targetClass.isAssignableFrom(sourceClass)) {
-			return new ConversionExecutorImpl(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
+			return new StaticConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
 		Map sourceTargetConverters = findConvertersForSource(sourceClass);
 		Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
 		if (converter != null) {
 			// we found a converter
-			return new ConversionExecutorImpl(sourceClass, targetClass, converter);
+			return new StaticConversionExecutor(sourceClass, targetClass, converter);
 		} else {
 			if (parent != null) {
 				// try the parent

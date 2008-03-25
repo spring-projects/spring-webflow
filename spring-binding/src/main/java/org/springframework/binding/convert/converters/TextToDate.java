@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.converters;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.Date;
 
 import org.springframework.binding.format.FormatterRegistry;
 
@@ -26,13 +25,13 @@ import org.springframework.binding.format.FormatterRegistry;
  * 
  * @author Keith Donald
  */
-public class TextToNumber extends AbstractFormattingConverter {
+public class TextToDate extends AbstractFormattingConverter {
 
 	/**
 	 * Create a string to number converter using given formatter factory.
 	 * @param formatterRegistry the formatter registry to use
 	 */
-	public TextToNumber(FormatterRegistry formatterRegistry) {
+	public TextToDate(FormatterRegistry formatterRegistry) {
 		super(formatterRegistry);
 	}
 
@@ -41,7 +40,7 @@ public class TextToNumber extends AbstractFormattingConverter {
 	}
 
 	public Class[] getTargetClasses() {
-		return new Class[] { Integer.class, Short.class, Long.class, Float.class, Double.class, Byte.class,
-				BigInteger.class, BigDecimal.class };
+		return new Class[] { Date.class };
 	}
+
 }

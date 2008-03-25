@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.service;
 
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-class ConversionExecutorImpl implements ConversionExecutor {
+class StaticConversionExecutor implements ConversionExecutor {
 
 	/**
 	 * The source value type this executor will attempt to convert from.
@@ -53,7 +53,7 @@ class ConversionExecutorImpl implements ConversionExecutor {
 	 * @param targetClass the target type that the converter will convert to
 	 * @param converter the converter that will perform the conversion
 	 */
-	public ConversionExecutorImpl(Class sourceClass, Class targetClass, Converter converter) {
+	public StaticConversionExecutor(Class sourceClass, Class targetClass, Converter converter) {
 		Assert.notNull(sourceClass, "The source class is required");
 		Assert.notNull(targetClass, "The target class is required");
 		Assert.notNull(converter, "The converter is required");
@@ -103,10 +103,10 @@ class ConversionExecutorImpl implements ConversionExecutor {
 	}
 
 	public boolean equals(Object o) {
-		if (!(o instanceof ConversionExecutorImpl)) {
+		if (!(o instanceof StaticConversionExecutor)) {
 			return false;
 		}
-		ConversionExecutorImpl other = (ConversionExecutorImpl) o;
+		StaticConversionExecutor other = (StaticConversionExecutor) o;
 		return sourceClass.equals(other.sourceClass) && targetClass.equals(other.targetClass);
 	}
 

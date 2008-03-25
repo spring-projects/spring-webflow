@@ -15,15 +15,12 @@
  */
 package org.springframework.binding.mapping.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.Mapping;
-import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -33,8 +30,6 @@ import org.springframework.util.Assert;
  * @author Keith Donald
  */
 public class DefaultMapping implements Mapping {
-
-	private static final Log logger = LogFactory.getLog(DefaultMapping.class);
 
 	/**
 	 * The source expression to evaluate against a source object to map from.
@@ -94,7 +89,6 @@ public class DefaultMapping implements Mapping {
 	/**
 	 * Sets a specific type conversion executor to use during mapping execution.
 	 * @param typeConverter the type converter
-	 * @see #map(MappingContext)
 	 */
 	public void setTypeConverter(ConversionExecutor typeConverter) {
 		this.typeConverter = typeConverter;
@@ -112,7 +106,7 @@ public class DefaultMapping implements Mapping {
 	 * Execute this mapping.
 	 * @param context the mapping context
 	 */
-	public void map(MappingContext context) {
+	void map(MappingContext context) {
 		context.setCurrentMapping(this);
 		Object sourceValue;
 		try {
@@ -159,13 +153,6 @@ public class DefaultMapping implements Mapping {
 		}
 		try {
 			targetExpression.setValue(context.getTarget(), targetValue);
-			if (logger.isDebugEnabled()) {
-				String sourceType = sourceValue != null ? sourceValue.getClass().getName() : "null";
-				String targetType = targetValue != null ? targetValue.getClass().getName() : "null";
-				logger.debug("Sucessfully mapped source [" + sourceType + "] " + sourceExpression + " value "
-						+ StylerUtils.style(sourceValue) + " to target [" + targetType + "] " + targetExpression
-						+ " value " + StylerUtils.style(targetValue));
-			}
 			context.setSuccessResult(sourceValue, targetValue);
 		} catch (EvaluationException e) {
 			context.setTargetAccessError(sourceValue, e);
@@ -195,5 +182,4 @@ public class DefaultMapping implements Mapping {
 	public String toString() {
 		return sourceExpression + " -> " + targetExpression;
 	}
-
 }

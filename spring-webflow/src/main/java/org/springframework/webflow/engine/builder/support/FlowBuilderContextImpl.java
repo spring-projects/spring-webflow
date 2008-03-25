@@ -2,7 +2,7 @@ package org.springframework.webflow.engine.builder.support;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.GenericConversionService;
+import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.core.io.ResourceLoader;

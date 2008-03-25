@@ -29,7 +29,7 @@ import org.springframework.binding.collection.MapAccessor;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +65,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * @param parameters the contents of this parameter map
 	 */
 	public LocalParameterMap(Map parameters) {
-		this(parameters, new DefaultConversionService());
+		this(parameters, DefaultConversionService.getSharedInstance());
 	}
 
 	/**

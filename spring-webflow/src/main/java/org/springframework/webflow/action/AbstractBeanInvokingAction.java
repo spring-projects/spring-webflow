@@ -16,7 +16,7 @@
 package org.springframework.webflow.action;
 
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.method.MethodInvoker;
 import org.springframework.binding.method.MethodSignature;
 import org.springframework.util.Assert;

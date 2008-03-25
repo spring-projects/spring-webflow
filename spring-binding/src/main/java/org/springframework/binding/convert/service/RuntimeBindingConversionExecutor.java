@@ -1,4 +1,4 @@
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.service;
 
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;

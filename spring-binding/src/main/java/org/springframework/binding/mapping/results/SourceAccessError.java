@@ -45,12 +45,12 @@ public class SourceAccessError extends Result {
 		if (error instanceof PropertyNotFoundException) {
 			return "propertyNotFound";
 		} else {
-			return "sourceAccess";
+			return "evaluationException";
 		}
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("error", error).toString();
+		return new ToStringCreator(this).append("errorCode", getErrorCode()).append("details", error.getMessage())
+				.toString();
 	}
-
 }

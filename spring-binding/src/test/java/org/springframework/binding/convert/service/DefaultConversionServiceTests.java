@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +24,9 @@ import junit.framework.TestCase;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.TextToBoolean;
+import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.convert.service.StaticConversionExecutor;
 
 /**
  * Test case for the default conversion service.
@@ -51,7 +54,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		DefaultConversionService service = new DefaultConversionService();
 
-		ConversionExecutorImpl executor = (ConversionExecutorImpl) service.getConversionExecutor(String.class,
+		StaticConversionExecutor executor = (StaticConversionExecutor) service.getConversionExecutor(String.class,
 				Boolean.class);
 		assertNotSame(customConverter, executor.getConverter());
 		try {
@@ -63,7 +66,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		service.addConverter(customConverter);
 
-		executor = (ConversionExecutorImpl) service.getConversionExecutor(String.class, Boolean.class);
+		executor = (StaticConversionExecutor) service.getConversionExecutor(String.class, Boolean.class);
 		assertSame(customConverter, executor.getConverter());
 		assertTrue(((Boolean) executor.execute("ja")).booleanValue());
 	}

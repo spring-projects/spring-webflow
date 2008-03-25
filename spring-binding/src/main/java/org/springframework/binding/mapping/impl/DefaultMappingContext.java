@@ -3,6 +3,8 @@ package org.springframework.binding.mapping.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.mapping.Mapping;
@@ -19,6 +21,8 @@ import org.springframework.binding.mapping.results.TypeConversionError;
  * @author Keith Donald
  */
 class DefaultMappingContext implements MappingContext {
+
+	private static final Log logger = LogFactory.getLog(DefaultMapping.class);
 
 	private Object source;
 
@@ -61,27 +65,30 @@ class DefaultMappingContext implements MappingContext {
 	}
 
 	public void setSuccessResult(Object originalValue, Object mappedValue) {
-		mappingResults.add(new MappingResult(currentMapping, new Success(mappedValue, originalValue)));
-		currentMapping = null;
+		add(new MappingResult(currentMapping, new Success(mappedValue, originalValue)));
 	}
 
 	public void setRequiredErrorResult(Object originalValue) {
-		mappingResults.add(new MappingResult(currentMapping, new RequiredError(originalValue)));
-		this.currentMapping = null;
+		add(new MappingResult(currentMapping, new RequiredError(originalValue)));
 	}
 
 	public void setTypeConversionErrorResult(Object originalValue, Class targetType) {
-		mappingResults.add(new MappingResult(currentMapping, new TypeConversionError(originalValue, targetType)));
-		this.currentMapping = null;
+		add(new MappingResult(currentMapping, new TypeConversionError(originalValue, targetType)));
 	}
 
 	public void setSourceAccessError(EvaluationException error) {
-		mappingResults.add(new MappingResult(currentMapping, new SourceAccessError(error)));
-		this.currentMapping = null;
+		add(new MappingResult(currentMapping, new SourceAccessError(error)));
 	}
 
 	public void setTargetAccessError(Object originalValue, EvaluationException error) {
-		mappingResults.add(new MappingResult(currentMapping, new TargetAccessError(originalValue, error)));
+		add(new MappingResult(currentMapping, new TargetAccessError(originalValue, error)));
+	}
+
+	private void add(MappingResult result) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding " + result);
+		}
+		this.mappingResults.add(result);
 		this.currentMapping = null;
 	}
 

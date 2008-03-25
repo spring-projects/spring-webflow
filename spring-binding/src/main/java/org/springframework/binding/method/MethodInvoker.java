@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.util.CachingMapDecorator;
 
@@ -39,7 +39,7 @@ public class MethodInvoker {
 	/**
 	 * Conversion service for converting arguments to the necessary type if required.
 	 */
-	private ConversionService conversionService = new DefaultConversionService();
+	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
 
 	/**
 	 * A cache of invoked bean methods, keyed weakly.

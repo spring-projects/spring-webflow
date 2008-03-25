@@ -6,7 +6,7 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.binding.convert.support.DefaultConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.factories.BooleanFormatterFactory;
 import org.springframework.binding.format.factories.DateFormatterFactory;
@@ -66,7 +66,8 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		if (StringUtils.hasText(conversionService)) {
 			definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
 		} else {
-			definitionBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, new DefaultConversionService());
+			definitionBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, DefaultConversionService
+					.getSharedInstance());
 		}
 	}
 

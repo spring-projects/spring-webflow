@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import org.springframework.binding.convert.support.AbstractConverter;
+import org.springframework.binding.convert.converters.AbstractConverter;
 import org.springframework.util.ClassUtils;
 
 public class DataModelConverter extends AbstractConverter {

@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.convert.support;
+package org.springframework.binding.convert.service;
 
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.converters.TextToBoolean;
+import org.springframework.binding.convert.converters.TextToClass;
+import org.springframework.binding.convert.converters.TextToDate;
+import org.springframework.binding.convert.converters.TextToLabeledEnum;
+import org.springframework.binding.convert.converters.TextToNumber;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.factories.DateFormatterFactory;
 import org.springframework.binding.format.factories.NumberFormatterFactory;
@@ -27,6 +33,11 @@ import org.springframework.binding.format.impl.FormatterRegistryImpl;
  * @author Keith Donald
  */
 public class DefaultConversionService extends GenericConversionService {
+
+	/**
+	 * A singleton shared instance. Should never be modified.
+	 */
+	private static final DefaultConversionService SHARED_INSTANCE = new DefaultConversionService();
 
 	/**
 	 * Returns the formatter registry used by this conversion service
@@ -57,5 +68,12 @@ public class DefaultConversionService extends GenericConversionService {
 		registry.registerFormatter(new NumberFormatterFactory());
 		registry.registerFormatter(new DateFormatterFactory());
 		return registry;
+	}
+
+	/**
+	 * Returns the shared {@link DefaultConversionService} instance.
+	 */
+	public static ConversionService getSharedInstance() {
+		return SHARED_INSTANCE;
 	}
 }
