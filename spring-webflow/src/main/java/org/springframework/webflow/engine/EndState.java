@@ -96,7 +96,7 @@ public class EndState extends State {
 		FlowSession activeSession = context.getFlowExecutionContext().getActiveSession();
 		if (activeSession.isRoot()) {
 			// entire flow execution is ending; issue the final response
-			if (finalResponseAction != null) {
+			if (finalResponseAction != null && context.getExternalContext().isResponseAllowed()) {
 				ActionExecutor.execute(finalResponseAction, context);
 			}
 			context.endActiveFlowSession(createSessionOutput(context));

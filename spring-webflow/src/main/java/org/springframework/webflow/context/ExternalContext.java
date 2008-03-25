@@ -172,4 +172,10 @@ public interface ExternalContext {
 	 */
 	public boolean isResponseCommitted();
 
+	/**
+	 * Is a response allowed for this request
+	 * @return true if yes, false otherwise
+	 */
+	public boolean isResponseAllowed();
+
 }

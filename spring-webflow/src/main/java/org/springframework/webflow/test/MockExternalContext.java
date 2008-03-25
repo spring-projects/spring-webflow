@@ -145,6 +145,10 @@ public class MockExternalContext implements ExternalContext {
 		return flowExecutionRedirectRequested() || flowDefinitionRedirectRequested() || externalRedirectRequested();
 	}
 
+	public boolean isResponseAllowed() {
+		return true;
+	}
+
 	public void requestFlowExecutionRedirect() {
 		flowExecutionRedirectRequested = true;
 	}

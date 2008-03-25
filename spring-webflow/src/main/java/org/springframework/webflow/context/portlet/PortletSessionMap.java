@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.springframework.webflow.context.servlet;
+package org.springframework.webflow.context.portlet;
 
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 
 import org.springframework.binding.collection.SharedMap;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
@@ -28,35 +28,37 @@ import org.springframework.webflow.core.collection.AttributeMapBindingListener;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
- * A Shared Map backed by the Servlet HTTP session, for accessing session scoped attributes.
+ * A Shared Map backed by the Portlet session, for accessing session scoped attributes.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
-public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
+public class PortletSessionMap extends StringKeyedMapAdapter implements SharedMap {
 
 	/**
-	 * The wrapped HTTP request, providing access to the session.
+	 * The wrapped portlet request, providing access to the session.
 	 */
-	private HttpServletRequest request;
+	private PortletRequest request;
 
 	/**
 	 * Create a map wrapping the session of given request.
 	 */
-	public HttpSessionMap(HttpServletRequest request) {
+	public PortletSessionMap(PortletRequest request) {
 		this.request = request;
 	}
 
 	/**
-	 * Internal helper to get the HTTP session associated with the wrapped request, or null if there is no such session.
+	 * Internal helper to get the portlet session associated with the wrapped request, or null if there is no such
+	 * session.
 	 * <p>
 	 * Note that this method will not force session creation.
 	 */
-	private HttpSession getSession() {
-		return request.getSession(false);
+	private PortletSession getSession() {
+		return request.getPortletSession(false);
 	}
 
 	protected Object getAttribute(String key) {
-		HttpSession session = getSession();
+		PortletSession session = getSession();
 		if (session == null) {
 			return null;
 		}
@@ -71,7 +73,7 @@ public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
 
 	protected void setAttribute(String key, Object value) {
 		// force session creation
-		HttpSession session = request.getSession(true);
+		PortletSession session = request.getPortletSession(true);
 		if (value instanceof AttributeMapBindingListener) {
 			// wrap
 			session.setAttribute(key, new HttpSessionMapBindingListener((AttributeMapBindingListener) value, this));
@@ -81,21 +83,21 @@ public class HttpSessionMap extends StringKeyedMapAdapter implements SharedMap {
 	}
 
 	protected void removeAttribute(String key) {
-		HttpSession session = getSession();
+		PortletSession session = getSession();
 		if (session != null) {
 			session.removeAttribute(key);
 		}
 	}
 
 	protected Iterator getAttributeNames() {
-		HttpSession session = getSession();
+		PortletSession session = getSession();
 		return session == null ? CollectionUtils.EMPTY_ITERATOR : CollectionUtils.toIterator(session
 				.getAttributeNames());
 	}
 
 	public Object getMutex() {
 		// force session creation
-		HttpSession session = request.getSession(true);
+		PortletSession session = request.getPortletSession(true);
 		Object mutex = session.getAttribute(WebUtils.SESSION_MUTEX_ATTRIBUTE);
 		return mutex != null ? mutex : session;
 	}

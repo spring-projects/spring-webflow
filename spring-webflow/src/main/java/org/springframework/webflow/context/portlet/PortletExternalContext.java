@@ -1,27 +1,16 @@
-/*
- * Copyright 2004-2007 the original author or authors.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-package org.springframework.webflow.context.servlet;
+package org.springframework.webflow.context.portlet;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.security.Principal;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -33,28 +22,37 @@ import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 
 /**
- * Provides contextual information about an HTTP Servlet environment that has interacted with Spring Web Flow.
+ * Provides contextual information about an portlet environment that has interacted with Spring Web Flow.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Jeremy Grelle
+ * @author Scott Andrews
  */
-public class ServletExternalContext implements ExternalContext {
+public class PortletExternalContext implements ExternalContext {
+
+	protected static final short ACTION_PHASE = 1;
+	protected static final short RENDER_PHASE = 2;
 
 	/**
 	 * The context.
 	 */
-	private ServletContext context;
+	private PortletContext context;
 
 	/**
 	 * The request.
 	 */
-	private HttpServletRequest request;
+	private PortletRequest request;
 
 	/**
 	 * The response.
 	 */
-	private HttpServletResponse response;
+	private PortletResponse response;
+
+	/**
+	 * The portlet request phase: render or action
+	 */
+	private short requestPhase;
 
 	/**
 	 * An accessor for the HTTP request parameter map.
@@ -115,23 +113,23 @@ public class ServletExternalContext implements ExternalContext {
 	private boolean redirectInPopup;
 
 	/**
-	 * Create a new external context wrapping given servlet HTTP request and response and given servlet context.
-	 * @param context the servlet context
-	 * @param request the http servlet request
-	 * @param response the http servlet response
+	 * Create a new external context wrapping given portlet action request and response and given portlet context.
+	 * @param context the portal context
+	 * @param request the portlet request
+	 * @param response the portlet response
 	 */
-	public ServletExternalContext(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+	public PortletExternalContext(PortletContext context, PortletRequest request, PortletResponse response) {
 		init(context, request, response, new DefaultFlowUrlHandler());
 	}
 
 	/**
-	 * Create a new external context wrapping given servlet HTTP request and response and given servlet context.
-	 * @param context the servlet context
-	 * @param request the http servlet request
-	 * @param response the http servlet response
+	 * Create a new external context wrapping given portlet action request and response and given portlet context.
+	 * @param context the portal context
+	 * @param request the portlet request
+	 * @param response the portlet response
 	 * @param flowUrlHandler the flow url handler
 	 */
-	public ServletExternalContext(ServletContext context, HttpServletRequest request, HttpServletResponse response,
+	public PortletExternalContext(PortletContext context, PortletRequest request, PortletResponse response,
 			FlowUrlHandler flowUrlHandler) {
 		init(context, request, response, flowUrlHandler);
 	}
@@ -192,12 +190,20 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
-		return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, request);
+		if (this.isRenderPhase()) {
+			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
+		} else {
+			throw new IllegalStateException("Only a render request can obtain an flow execution uri");
+		}
 	}
 
 	public Writer getResponseWriter() {
 		try {
-			return response.getWriter();
+			if (isRenderPhase()) {
+				return ((RenderResponse) response).getWriter();
+			} else {
+				throw new IllegalStateException("Only render requests can obtain response writer");
+			}
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to obtain response writer", e);
 		}
@@ -208,7 +214,7 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseAllowed() {
-		return true;
+		return isRenderPhase();
 	}
 
 	public void requestFlowExecutionRedirect() {
@@ -281,18 +287,39 @@ public class ServletExternalContext implements ExternalContext {
 		return redirectInPopup;
 	}
 
+	/**
+	 * Returns true if the current request phase is the action phase
+	 */
+	public boolean isActionPhase() {
+		return requestPhase == ACTION_PHASE;
+	}
+
+	/**
+	 * Returns true if the current request phase is the render phase
+	 */
+	public boolean isRenderPhase() {
+		return requestPhase == RENDER_PHASE;
+	}
+
 	// private helpers
 
-	private void init(ServletContext context, HttpServletRequest request, HttpServletResponse response,
+	private void init(PortletContext context, PortletRequest request, PortletResponse response,
 			FlowUrlHandler flowUrlHandler) {
 		this.context = context;
 		this.request = request;
 		this.response = response;
-		this.requestParameterMap = new LocalParameterMap(new HttpServletRequestParameterMap(request));
-		this.requestMap = new LocalAttributeMap(new HttpServletRequestMap(request));
-		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(request));
-		this.applicationMap = new LocalSharedAttributeMap(new HttpServletContextMap(context));
+		this.requestParameterMap = new LocalParameterMap(new PortletRequestParameterMap(request));
+		this.requestMap = new LocalAttributeMap(new PortletRequestMap(request));
+		this.sessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request));
+		this.applicationMap = new LocalSharedAttributeMap(new PortletContextMap(context));
 		this.flowUrlHandler = flowUrlHandler;
+		if (request instanceof ActionRequest && response instanceof ActionResponse) {
+			requestPhase = ACTION_PHASE;
+		} else if (request instanceof RenderRequest && response instanceof RenderResponse) {
+			requestPhase = RENDER_PHASE;
+		} else {
+			throw new IllegalArgumentException("Unknown portlet phase, expected: action or render");
+		}
 	}
 
 }

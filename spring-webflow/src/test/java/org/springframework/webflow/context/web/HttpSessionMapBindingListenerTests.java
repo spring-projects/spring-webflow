@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.servlet;
+package org.springframework.webflow.context.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.webflow.context.servlet.HttpSessionMap;
 import org.springframework.webflow.core.collection.AttributeMapBindingEvent;
 import org.springframework.webflow.core.collection.AttributeMapBindingListener;
 

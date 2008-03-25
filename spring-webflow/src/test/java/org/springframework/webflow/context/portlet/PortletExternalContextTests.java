@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.context.servlet;
+package org.springframework.webflow.context.portlet;
 
 import junit.framework.TestCase;
 
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
+import org.springframework.mock.web.portlet.MockActionRequest;
+import org.springframework.mock.web.portlet.MockActionResponse;
+import org.springframework.mock.web.portlet.MockPortletContext;
+import org.springframework.mock.web.portlet.MockPortletRequest;
+import org.springframework.mock.web.portlet.MockPortletResponse;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Unit tests for {@link ServletExternalContext}.
  */
-public class ServletExternalContextTests extends TestCase {
+public class PortletExternalContextTests extends TestCase {
 
-	private MockServletContext servletContext;
+	private MockPortletContext portletContext;
 
-	private MockHttpServletRequest request;
+	private MockPortletRequest request;
 
-	private MockHttpServletResponse response;
+	private MockPortletResponse response;
 
-	private ServletExternalContext context;
+	private PortletExternalContext context;
 
 	protected void setUp() {
-		servletContext = new MockServletContext();
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
-		context = new ServletExternalContext(servletContext, request, response);
+		portletContext = new MockPortletContext();
+		request = new MockActionRequest();
+		response = new MockActionResponse();
+		context = new PortletExternalContext(portletContext, request, response);
 	}
 
 	public void testGetContextPath() {
@@ -51,7 +54,7 @@ public class ServletExternalContextTests extends TestCase {
 	}
 
 	public void testGetNativeObjects() {
-		assertEquals(servletContext, context.getNativeContext());
+		assertEquals(portletContext, context.getNativeContext());
 		assertEquals(request, context.getNativeRequest());
 		assertEquals(response, context.getNativeResponse());
 	}
@@ -116,7 +119,15 @@ public class ServletExternalContextTests extends TestCase {
 	}
 
 	public void testResponseAllowed() {
-		assertTrue(context.isResponseAllowed());
+		assertFalse(context.isResponseAllowed());
+	}
+
+	public void testIsActionPhase() {
+		assertTrue(context.isActionPhase());
+	}
+
+	public void testIsRenderPhase() {
+		assertFalse(context.isRenderPhase());
 	}
 
 }

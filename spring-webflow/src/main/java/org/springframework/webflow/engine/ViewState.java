@@ -161,14 +161,16 @@ public class ViewState extends TransitionableState {
 
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
-		if (shouldRedirect(context)) {
-			context.getExternalContext().requestFlowExecutionRedirect();
-			if (popup) {
-				context.getExternalContext().requestRedirectInPopup();
+		if (context.getExternalContext().isResponseAllowed()) {
+			if (shouldRedirect(context)) {
+				context.getExternalContext().requestFlowExecutionRedirect();
+				if (popup) {
+					context.getExternalContext().requestRedirectInPopup();
+				}
+			} else {
+				View view = viewFactory.getView(context);
+				render(context, view);
 			}
-		} else {
-			View view = viewFactory.getView(context);
-			render(context, view);
 		}
 	}
 
@@ -182,11 +184,13 @@ public class ViewState extends TransitionableState {
 				logger.debug("Event '" + event.getId() + "' signaled on view " + view);
 			}
 			boolean stateExited = context.handleEvent(event);
-			if (!stateExited) {
+			if (!stateExited && context.getExternalContext().isResponseAllowed()) {
 				render(context, view);
 			}
 		} else {
-			render(context, view);
+			if (context.getExternalContext().isResponseAllowed()) {
+				render(context, view);
+			}
 		}
 	}
 
