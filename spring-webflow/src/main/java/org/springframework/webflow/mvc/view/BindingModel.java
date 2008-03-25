@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.mapping.MappingResult;
@@ -65,7 +65,7 @@ public class BindingModel extends ViewRenderingErrors {
 	}
 
 	private Expression parseFieldExpression(String field) {
-		return expressionParser.parseExpression(field, new ParserContextImpl().eval(boundObject.getClass()));
+		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));
 	}
 
 	private Object getFormattedValue(String field) {

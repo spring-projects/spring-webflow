@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -93,8 +93,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Create() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
-				RequestContext.class).expect(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), null, lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -116,8 +116,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
-				RequestContext.class).expect(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), null, lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -140,8 +140,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_Ajax() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
-				RequestContext.class).expect(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), null, lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -168,8 +168,8 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_ExternalViewRoot() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new ParserContextImpl().template().eval(
-				RequestContext.class).expect(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), null, lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);

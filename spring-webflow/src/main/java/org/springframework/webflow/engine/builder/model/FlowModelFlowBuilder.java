@@ -17,7 +17,7 @@ import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
@@ -356,8 +356,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			value = name;
 		}
-		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
-		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		Expression source = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
+		Expression target = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		parseAndSetMappingConversionExecutor(input, mapping);
 		parseAndSetMappingRequired(input, mapping);
@@ -385,8 +385,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			value = name;
 		}
-		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
-		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression source = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
+		Expression target = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		parseAndSetMappingConversionExecutor(input, mapping);
 		parseAndSetMappingRequired(input, mapping);
@@ -414,8 +414,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			value = name;
 		}
-		Expression source = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
-		Expression target = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
+		Expression source = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
+		Expression target = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		parseAndSetMappingConversionExecutor(output, mapping);
 		parseAndSetMappingRequired(output, mapping);
@@ -443,8 +443,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			value = name;
 		}
-		Expression source = parser.parseExpression(name, new ParserContextImpl().eval(MutableAttributeMap.class));
-		Expression target = parser.parseExpression(value, new ParserContextImpl().eval(RequestContext.class));
+		Expression source = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
+		Expression target = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		parseAndSetMappingConversionExecutor(output, mapping);
 		parseAndSetMappingRequired(output, mapping);
@@ -481,7 +481,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
 			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
-					new ParserContextImpl().eval(RequestContext.class)));
+					new FluentParserContext().evaluate(RequestContext.class)));
 		}
 		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
@@ -540,22 +540,22 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			} else {
 				view = getLocalContext().getViewFactoryCreator().getViewIdByConvention(stateId);
 				Expression viewId = getLocalContext().getExpressionParser().parseExpression(view,
-						new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+						new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 				return createViewFactory(viewId);
 			}
 		} else if (view.startsWith("externalRedirect:")) {
 			String encodedUrl = view.substring("externalRedirect:".length());
 			Expression externalUrl = getLocalContext().getExpressionParser().parseExpression(encodedUrl,
-					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+					new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 			return new ActionExecutingViewFactory(new ExternalRedirectAction(externalUrl));
 		} else if (view.startsWith("flowRedirect:")) {
 			String flowRedirect = view.substring("flowRedirect:".length());
 			Expression expression = getLocalContext().getExpressionParser().parseExpression(flowRedirect,
-					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+					new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 			return new ActionExecutingViewFactory(new FlowDefinitionRedirectAction(expression));
 		} else {
 			Expression viewId = getLocalContext().getExpressionParser().parseExpression(view,
-					new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+					new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 			return createViewFactory(viewId);
 		}
 	}
@@ -609,7 +609,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Transition parseThen(IfModel ifModel) {
 		Expression test = getLocalContext().getExpressionParser().parseExpression(ifModel.getTest(),
-				new ParserContextImpl().eval(RequestContext.class).expect(Boolean.class));
+				new FluentParserContext().evaluate(RequestContext.class).expectResult(Boolean.class));
 		TransitionCriteria matchingCriteria = new DefaultTransitionCriteria(test);
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(ifModel.getThen());
@@ -625,7 +625,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Expression parseSubflowExpression(String subflow) {
 		Expression subflowId = getLocalContext().getExpressionParser().parseExpression(subflow,
-				new ParserContextImpl().template().eval(RequestContext.class).expect(String.class));
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 		return new SubflowExpression(subflowId, getLocalContext().getFlowDefinitionLocator());
 	}
 
@@ -754,14 +754,14 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Action parseEvaluateAction(EvaluateModel evaluate) {
 		String expressionString = evaluate.getExpression();
 		Expression expression = getLocalContext().getExpressionParser().parseExpression(expressionString,
-				new ParserContextImpl().eval(RequestContext.class));
+				new FluentParserContext().evaluate(RequestContext.class));
 		return new EvaluateAction(expression, parseEvaluationActionResultExposer(evaluate));
 	}
 
 	private ActionResultExposer parseEvaluationActionResultExposer(EvaluateModel evaluate) {
 		if (StringUtils.hasText(evaluate.getResult())) {
 			Expression resultExpression = getLocalContext().getExpressionParser().parseExpression(evaluate.getResult(),
-					new ParserContextImpl().eval(RequestContext.class));
+					new FluentParserContext().evaluate(RequestContext.class));
 			Class expectedResultType = null;
 			if (StringUtils.hasText(evaluate.getResultType())) {
 				expectedResultType = (Class) fromStringTo(Class.class).execute(evaluate.getResultType());
@@ -776,7 +776,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Action parseRenderAction(RenderModel render) {
 		String[] fragmentExpressionStrings = StringUtils.commaDelimitedListToStringArray(render.getFragments());
 		fragmentExpressionStrings = StringUtils.trimArrayElements(fragmentExpressionStrings);
-		ParserContext context = new ParserContextImpl().template().eval(RequestContext.class).expect(String.class);
+		ParserContext context = new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class);
 		Expression[] fragments = new Expression[fragmentExpressionStrings.length];
 		for (int i = 0; i < fragmentExpressionStrings.length; i++) {
 			String fragment = fragmentExpressionStrings[i];
@@ -787,9 +787,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Action parseSetAction(SetModel set) {
 		Expression nameExpression = getLocalContext().getExpressionParser().parseExpression(set.getName(),
-				new ParserContextImpl().eval(RequestContext.class));
+				new FluentParserContext().evaluate(RequestContext.class));
 		Expression valueExpression = getLocalContext().getExpressionParser().parseExpression(set.getValue(),
-				new ParserContextImpl().eval(RequestContext.class));
+				new FluentParserContext().evaluate(RequestContext.class));
 		Class expectedType = null;
 		if (StringUtils.hasText(set.getType())) {
 			expectedType = (Class) fromStringTo(Class.class).execute(set.getType());

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -70,8 +70,8 @@ public class JsfFinalResponseActionTests extends TestCase {
 		jsfMock.facesContext().setViewRoot(null);
 		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new ParserContextImpl().template()
-				.eval(RequestContext.class).expect(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext().template()
+				.evaluate(RequestContext.class).expectResult(String.class)), null, lifecycle);
 		RequestContextHolder.setRequestContext(context);
 		MockExternalContext ext = new MockExternalContext();
 		ext.setNativeContext(new MockServletContext());

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 
 public class OgnlExpressionParserTests extends TestCase {
 
@@ -56,20 +56,20 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testParseTemplateSimpleLiteral() {
 		String exp = "flag";
-		Expression e = parser.parseExpression(exp, new ParserContextImpl().template());
+		Expression e = parser.parseExpression(exp, new FluentParserContext().template());
 		assertNotNull(e);
 		assertEquals("flag", e.getValue(bean));
 	}
 
 	public void testParseTemplateEmpty() {
-		Expression e = parser.parseExpression("", new ParserContextImpl().template());
+		Expression e = parser.parseExpression("", new FluentParserContext().template());
 		assertNotNull(e);
 		assertEquals("", e.getValue(bean));
 	}
 
 	public void testParseTemplateComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
-		Expression e = parser.parseExpression(exp, new ParserContextImpl().template());
+		Expression e = parser.parseExpression(exp, new FluentParserContext().template());
 		assertNotNull(e);
 		String str = (String) e.getValue(bean);
 		assertEquals("hello false false false", str);
@@ -78,7 +78,7 @@ public class OgnlExpressionParserTests extends TestCase {
 	public void testTemplateEnclosedCompositeNotSupported() {
 		String exp = "${hello ${flag} ${flag} ${flag}}";
 		try {
-			parser.parseExpression(exp, new ParserContextImpl().template());
+			parser.parseExpression(exp, new FluentParserContext().template());
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -86,7 +86,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError1() {
 		try {
-			parser.parseExpression("${", new ParserContextImpl().template());
+			parser.parseExpression("${", new FluentParserContext().template());
 			fail();
 		} catch (ParserException e) {
 		}
@@ -100,7 +100,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testSyntaxError2() {
 		try {
-			parser.parseExpression("${}", new ParserContextImpl().template());
+			parser.parseExpression("${}", new FluentParserContext().template());
 			fail("Should've failed - not intended use");
 		} catch (ParserException e) {
 		}
@@ -115,40 +115,40 @@ public class OgnlExpressionParserTests extends TestCase {
 	public void testCollectionConstructionSyntax() {
 		// lists
 		parser.parseExpression("name in {null, \"Untitled\"}", null);
-		parser.parseExpression("${name in {null, \"Untitled\"}}", new ParserContextImpl().template());
+		parser.parseExpression("${name in {null, \"Untitled\"}}", new FluentParserContext().template());
 
 		// native arrays
 		parser.parseExpression("new int[] {1, 2, 3}", null);
-		parser.parseExpression("${new int[] {1, 2, 3}}", new ParserContextImpl().template());
+		parser.parseExpression("${new int[] {1, 2, 3}}", new FluentParserContext().template());
 
 		// maps
 		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
-		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new ParserContextImpl().template());
+		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new FluentParserContext().template());
 		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
 		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}",
-				new ParserContextImpl().template());
+				new FluentParserContext().template());
 
 		// complex examples
 		parser.parseExpression("b,#{1:2}", null);
-		parser.parseExpression("${b,#{1:2}}", new ParserContextImpl().template());
-		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k", new ParserContextImpl().template());
+		parser.parseExpression("${b,#{1:2}}", new FluentParserContext().template());
+		parser.parseExpression("a${b,#{1:2},e}f${g,#{3:4},j}k", new FluentParserContext().template());
 	}
 
 	public void testVariables() {
-		Expression exp = parser.parseExpression("#var", new ParserContextImpl().variable(new ExpressionVariable("var",
+		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable("var",
 				"flag")));
 		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
 
 	public void testVariablesWithCoersion() {
-		Expression exp = parser.parseExpression("#var", new ParserContextImpl().variable(new ExpressionVariable("var",
-				"number", new ParserContextImpl().expect(Long.class))));
+		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable("var",
+				"number", new FluentParserContext().expectResult(Long.class))));
 		assertEquals(new Long(0), exp.getValue(bean));
 	}
 
 	public void testNestedVariablesWithTemplates() {
-		Expression exp = parser.parseExpression("#var", new ParserContextImpl()
-				.variable(new ExpressionVariable("var", "${flag}${#var}", new ParserContextImpl().template().variable(
+		Expression exp = parser.parseExpression("#var", new FluentParserContext()
+				.variable(new ExpressionVariable("var", "${flag}${#var}", new FluentParserContext().template().variable(
 						new ExpressionVariable("var", "number")))));
 		assertEquals("false0", exp.getValue(bean));
 	}

@@ -18,7 +18,7 @@ package org.springframework.webflow.engine.builder.support;
 import org.springframework.binding.convert.converters.AbstractConverter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
@@ -69,8 +69,8 @@ class TextToTargetStateResolver extends AbstractConverter {
 			return null;
 		}
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
-		Expression expression = parser.parseExpression(targetStateId, new ParserContextImpl().template().eval(
-				RequestContext.class).expect(String.class));
+		Expression expression = parser.parseExpression(targetStateId, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class));
 		return new DefaultTargetStateResolver(expression);
 
 	}

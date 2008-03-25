@@ -15,7 +15,7 @@ import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 
 public class ELExpressionParserTests extends TestCase {
 
@@ -53,7 +53,8 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "3 + 4";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Integer.class));
+		Expression exp = parser
+				.parseExpression(expressionString, new FluentParserContext().expectResult(Integer.class));
 		assertEquals(new Integer(7), exp.getValue(null));
 	}
 
@@ -65,13 +66,13 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseEvalExpressionWithContextTypeCoersion() {
 		String expressionString = "maximum";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().expect(Long.class));
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
 		assertEquals(new Long(2), exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextCustomTestBeanResolver() {
 		String expressionString = "specialProperty";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().eval(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().evaluate(TestBean.class));
 		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
 	}
 
@@ -81,25 +82,32 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals("value", exp.getValue(null));
 	}
 
+	public void testParseTemplateExpression() {
+		String expressionString = "text text text #{value} text text text#{value}";
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template());
+		TestBean target = new TestBean();
+		assertEquals("text text text foo text text textfoo", exp.getValue(target));
+	}
+
 	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().template().variable(
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
 				new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target));
 	}
 
 	public void testVariablesWithCoersion() {
-		Expression exp = parser.parseExpression("max", new ParserContextImpl().variable(new ExpressionVariable("max",
-				"maximum", new ParserContextImpl().expect(Long.class))));
+		Expression exp = parser.parseExpression("max", new FluentParserContext().variable(new ExpressionVariable("max",
+				"maximum", new FluentParserContext().expectResult(Long.class))));
 		TestBean target = new TestBean();
 		assertEquals(new Long(2), exp.getValue(target));
 	}
 
 	public void testTemplateNestedVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new ParserContextImpl().template().variable(
-				new ExpressionVariable("max", "#{maximum}#{var}", new ParserContextImpl().template().variable(
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
+				new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template().variable(
 						new ExpressionVariable("var", "'bar'")))));
 		TestBean target = new TestBean();
 		assertEquals("foo2bar", exp.getValue(target));

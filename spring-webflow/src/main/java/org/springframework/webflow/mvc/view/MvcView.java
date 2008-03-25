@@ -29,7 +29,7 @@ import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.ParserContextImpl;
+import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.InvalidFormatException;
@@ -177,8 +177,8 @@ class MvcView implements View {
 		for (Iterator it = requestParameters.asMap().keySet().iterator(); it.hasNext();) {
 			String name = (String) it.next();
 			Expression source = expressionParser
-					.parseExpression(name, new ParserContextImpl().eval(MapAdaptable.class));
-			Expression target = expressionParser.parseExpression(name, new ParserContextImpl().eval(model.getClass()));
+					.parseExpression(name, new FluentParserContext().evaluate(MapAdaptable.class));
+			Expression target = expressionParser.parseExpression(name, new FluentParserContext().evaluate(model.getClass()));
 			DefaultMapping mapping = new DefaultMapping(source, target);
 			mapping.setTypeConverter(new FormatterBackedMappingConversionExecutor(formatterRegistry));
 			mapper.addMapping(mapping);
