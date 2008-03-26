@@ -7,11 +7,11 @@ import junit.framework.TestCase;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.binding.format.formatters.NumberFormatter;
-import org.springframework.binding.format.registry.FormatterRegistryImpl;
+import org.springframework.binding.format.registry.GenericFormatterRegistry;
 
 public class FormatterRegistryImplTests extends TestCase {
 
-	FormatterRegistryImpl registry = new FormatterRegistryImpl();
+	GenericFormatterRegistry registry = new GenericFormatterRegistry();
 
 	public void testRegisterAndGetFormatter() {
 		registry.registerFormatter(Integer.class, new NumberFormatter(Integer.class));

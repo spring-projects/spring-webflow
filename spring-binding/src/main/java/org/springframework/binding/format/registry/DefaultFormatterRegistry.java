@@ -10,7 +10,7 @@ import org.springframework.binding.format.formatters.BooleanFormatter;
 import org.springframework.binding.format.formatters.DateFormatter;
 import org.springframework.binding.format.formatters.NumberFormatter;
 
-public class DefaultFormatterRegistry extends FormatterRegistryImpl {
+public class DefaultFormatterRegistry extends GenericFormatterRegistry {
 
 	/**
 	 * A singleton shared instance. Should never be modified.

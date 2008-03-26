@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class FormatterRegistryImpl implements FormatterRegistry {
+public class GenericFormatterRegistry implements FormatterRegistry {
 
 	private Map formattersById = new HashMap();
 
