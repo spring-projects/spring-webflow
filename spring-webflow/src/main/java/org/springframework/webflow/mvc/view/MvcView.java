@@ -38,7 +38,7 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
-import org.springframework.binding.mapping.impl.MappingContext;
+import org.springframework.binding.mapping.impl.DefaultMappingContext;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.validation.BindingResult;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -258,7 +258,7 @@ class MvcView implements View {
 
 		public Object execute(Object source, Object context) throws ConversionException {
 			String formattedValue = (String) source;
-			MappingContext mappingContext = (MappingContext) context;
+			DefaultMappingContext mappingContext = (DefaultMappingContext) context;
 			Expression target = mappingContext.getCurrentMapping().getTargetExpression();
 			Class targetClass = getTargetClass();
 			if (targetClass == null) {

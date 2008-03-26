@@ -106,7 +106,7 @@ public class DefaultMapping implements Mapping {
 	 * Execute this mapping.
 	 * @param context the mapping context
 	 */
-	void map(MappingContext context) {
+	void map(DefaultMappingContext context) {
 		context.setCurrentMapping(this);
 		Object sourceValue;
 		try {
