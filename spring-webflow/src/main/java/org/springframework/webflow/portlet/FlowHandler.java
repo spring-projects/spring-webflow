@@ -20,6 +20,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
@@ -51,7 +52,26 @@ public interface FlowHandler {
 	 */
 	public MutableAttributeMap createExecutionInputMap(PortletRequest request);
 
-	public ModelAndView handleFlowOutcome(String endedOutcome, AttributeMap endedOutput, RenderRequest request,
+	/**
+	 * Handles a specific flow execution outcome. Used to select a new view to render after the flow ends.
+	 * @param outcome the outcome that was reached
+	 * @param output the output returned by the flow execution
+	 * @param request the current render request
+	 * @param response the current render response
+	 * @return the model and view to render on the occurrence of this outcome, or null if the outcome was not handled
+	 */
+	public ModelAndView handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
 			RenderResponse response);
+
+	/**
+	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific
+	 * type of exception dealing with this flow in a custom manner.
+	 * @param e the unhandled exception originating from Spring Web Flow. May be thrown by the flow execution itself or
+	 * the flow executor system if no execution could be restored.
+	 * @param request the current request
+	 * @param response the current response
+	 * @return the model and view to render on the occurrence of this exception, or null if the exception is not handled
+	 */
+	public ModelAndView handleException(FlowException e, RenderRequest request, RenderResponse response);
 
 }

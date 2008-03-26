@@ -66,7 +66,7 @@ public interface FlowHandler {
 	/**
 	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific
 	 * type of exception dealing with this flow in a custom manner.
-	 * @param e the unhandled exception orignating from Spring Web Flow. May be thrown by the flow execution itself or
+	 * @param e the unhandled exception originating from Spring Web Flow. May be thrown by the flow execution itself or
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
 	 * @param response the current response
