@@ -91,7 +91,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 			if (result.paused()) {
 				urlHandler.setFlowExecutionRenderParameter(flowExecutionKey, response);
 			} else {
-				setEndResult(result, request);
+				request.getPortletSession().setAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE, result);
 			}
 		} catch (FlowException e) {
 			request.getPortletSession().setAttribute(ACTION_FLOW_EXCEPTION_ATTRIBUTE, e);
@@ -99,6 +99,10 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	}
 
 	// subclassing hooks
+
+	protected PortletExternalContext createPortletExternalContext(PortletRequest request, PortletResponse response) {
+		return new PortletExternalContext(getPortletContext(), request, response);
+	}
 
 	protected MutableAttributeMap defaultFlowExecutionInputMap(PortletRequest request) {
 		LocalAttributeMap inputMap = new LocalAttributeMap();
@@ -161,13 +165,5 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 				throw e;
 			}
 		}
-	}
-
-	private void setEndResult(FlowExecutionResult result, ActionRequest request) {
-		request.getPortletSession().setAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE, result);
-	}
-
-	private PortletExternalContext createPortletExternalContext(PortletRequest request, PortletResponse response) {
-		return new PortletExternalContext(getPortletContext(), request, response);
 	}
 }
