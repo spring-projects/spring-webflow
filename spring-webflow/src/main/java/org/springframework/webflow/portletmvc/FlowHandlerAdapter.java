@@ -1,4 +1,4 @@
-package org.springframework.webflow.portlet;
+package org.springframework.webflow.portletmvc;
 
 import java.io.IOException;
 import java.util.Iterator;
