@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.impl;
+package org.springframework.binding.format.registry;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.binding.format.Formatter;
-import org.springframework.binding.format.FormatterFactory;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.context.i18n.LocaleContext;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.i18n.SimpleLocaleContext;
 import org.springframework.util.Assert;
 
 /**
@@ -36,81 +31,42 @@ import org.springframework.util.Assert;
  */
 public class FormatterRegistryImpl implements FormatterRegistry {
 
-	private LocaleContext localeContext = new SimpleLocaleContext(Locale.getDefault());
-
 	private Map formattersById = new HashMap();
 
 	private Map formattersByClass = new HashMap();
 
-	/**
-	 * Sets the locale context to use if no locale has been bound to the current thread. Optional. Defaults to a
-	 * {@link SimpleLocaleContext} holding the system default locale.
-	 * @param localeContext the locale context
-	 */
-	public void setLocaleContext(LocaleContext localeContext) {
-		this.localeContext = localeContext;
-	}
-
-	/**
-	 * Returns the locale in use.
-	 */
-	protected Locale getLocale() {
-		Locale currentLocale = LocaleContextHolder.getLocale();
-		if (currentLocale != null) {
-			return currentLocale;
-		} else {
-			return localeContext.getLocale();
-		}
-	}
-
 	public Formatter getFormatter(Class clazz) {
 		Assert.notNull(clazz, "The formatted class argument is required");
 		clazz = convertToWrapperClassIfNecessary(clazz);
-		FormatterFactory factory = findFormatterFactory(clazz);
-		if (factory != null) {
-			FormatterFactoryContextImpl context = new FormatterFactoryContextImpl();
-			context.setLocale(getLocale());
-			context.setFormattedClass(clazz);
-			return factory.createFormatter(context);
-		} else {
-			return null;
-		}
+		return findFormatter(clazz);
 	}
 
-	public Formatter getFormatter(String id, Class clazz) {
+	public Formatter getFormatter(String id) {
 		Assert.hasText(id, "The id of the custom formatter is required");
-		FormatterFactory factory = (FormatterFactory) formattersById.get(id);
-		if (factory != null) {
-			FormatterFactoryContextImpl context = new FormatterFactoryContextImpl();
-			context.setLocale(getLocale());
-			context.setFormattedClass(clazz);
-			return factory.createFormatter(context);
-		} else {
-			return null;
-		}
+		return (Formatter) formattersById.get(id);
 	}
 
-	public void registerFormatter(String id, FormatterFactory factory) {
+	// impl
+
+	public void registerFormatter(Class clazz, Formatter formatter) {
+		Assert.notNull(formatter, "The formatter to register is required");
+		formattersByClass.put(clazz, formatter);
+	}
+
+	public void registerFormatter(String id, Formatter formatter) {
 		Assert.hasText(id, "The id of the custom formatter is required");
-		Assert.notNull(factory, "The formatter factory is required");
-		formattersById.put(id, factory);
-		Class formattedClass = factory.getFormattedClass();
-		if (!formattersByClass.containsKey(formattedClass)) {
-			formattersByClass.put(formattedClass, factory);
-		}
+		Assert.notNull(formatter, "The formatter to register is required");
+		formattersById.put(id, formatter);
 	}
 
-	public void registerFormatter(FormatterFactory factory) {
-		Assert.notNull(factory, "The formatter factory is required");
-		formattersByClass.put(factory.getFormattedClass(), factory);
-	}
+	// helpers
 
-	private FormatterFactory findFormatterFactory(Class clazz) {
+	private Formatter findFormatter(Class clazz) {
 		LinkedList classQueue = new LinkedList();
 		classQueue.addFirst(clazz);
 		while (!classQueue.isEmpty()) {
 			clazz = (Class) classQueue.removeLast();
-			FormatterFactory factory = (FormatterFactory) formattersByClass.get(clazz);
+			Formatter factory = (Formatter) formattersByClass.get(clazz);
 			if (factory != null) {
 				return factory;
 			}

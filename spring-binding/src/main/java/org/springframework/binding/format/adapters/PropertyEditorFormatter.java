@@ -17,20 +17,19 @@ package org.springframework.binding.format.adapters;
 
 import java.beans.PropertyEditor;
 
-import org.springframework.binding.format.factories.AbstractFormatter;
+import org.springframework.binding.format.Formatter;
 import org.springframework.util.Assert;
 
 /**
  * Adapts a property editor to the formatter interface.
- * 
  * @author Keith Donald
  */
-public class PropertyEditorFormatter extends AbstractFormatter {
+public class PropertyEditorFormatter implements Formatter {
 
 	private PropertyEditor propertyEditor;
 
 	/**
-	 * Wrap given property editor in a formatter.
+	 * Wrap the given property editor in a formatter.
 	 */
 	public PropertyEditorFormatter(PropertyEditor propertyEditor) {
 		Assert.notNull(propertyEditor, "Property editor is required");
@@ -44,18 +43,13 @@ public class PropertyEditorFormatter extends AbstractFormatter {
 		return propertyEditor;
 	}
 
-	protected String doFormatValue(Object value) {
+	public String format(Object value) {
 		propertyEditor.setValue(value);
 		return propertyEditor.getAsText();
 	}
 
-	protected Object doParseValue(String formattedValue) {
+	public Object parse(String formattedValue) {
 		propertyEditor.setAsText(formattedValue);
 		return propertyEditor.getValue();
 	}
-
-	protected String getExpectedFormat() {
-		return null;
-	}
-
 }

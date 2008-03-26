@@ -305,7 +305,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		parameterAccessor = new MapAccessor(parameters);
-		conversionService = new DefaultConversionService();
+		conversionService = DefaultConversionService.getSharedInstance();
 	}
 
 	public String toString() {

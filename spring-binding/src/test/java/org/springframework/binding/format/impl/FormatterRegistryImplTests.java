@@ -1,78 +1,64 @@
 package org.springframework.binding.format.impl;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 
 import junit.framework.TestCase;
 
 import org.springframework.binding.format.Formatter;
-import org.springframework.binding.format.FormatterFactory;
-import org.springframework.binding.format.FormatterFactoryContext;
 import org.springframework.binding.format.InvalidFormatException;
-import org.springframework.binding.format.factories.NumberFormatterFactory;
+import org.springframework.binding.format.formatters.NumberFormatter;
+import org.springframework.binding.format.registry.FormatterRegistryImpl;
 
 public class FormatterRegistryImplTests extends TestCase {
 
 	FormatterRegistryImpl registry = new FormatterRegistryImpl();
 
 	public void testRegisterAndGetFormatter() {
-		registry.registerFormatter(new NumberFormatterFactory());
+		registry.registerFormatter(Integer.class, new NumberFormatter(Integer.class));
 		Formatter formatter = registry.getFormatter(Integer.class);
-		Integer value = (Integer) formatter.parseValue("3");
+		Integer value = (Integer) formatter.parse("3");
 		assertEquals(new Integer(3), value);
 	}
 
 	public void testRegisterAndGetFormatterAbstractClass() {
-		registry.registerFormatter(new NumberFormatterFactory());
-		Formatter formatter = registry.getFormatter(Number.class);
-		Long value = (Long) formatter.parseValue("3");
-		assertEquals(new Long(3), value);
+		registry.registerFormatter(Number.class, new NumberFormatter(Long.class));
+		Formatter formatter = registry.getFormatter(Long.class);
+		Number value = (Number) formatter.parse("3");
+		assertEquals(3L, value.longValue());
 	}
 
 	public void testRegisterAndGetFormatterPrimitive() {
-		registry.registerFormatter(new NumberFormatterFactory());
+		registry.registerFormatter(Integer.class, new NumberFormatter(Integer.class));
 		Formatter formatter = registry.getFormatter(int.class);
-		Integer value = (Integer) formatter.parseValue("3");
+		Integer value = (Integer) formatter.parse("3");
 		assertEquals(new Integer(3), value);
 	}
 
 	public void testRegisterAndGetFormatterInterface() {
-		registry.registerFormatter(new CustomTypeFormatterFactory());
+		registry.registerFormatter(CustomType.class, new CustomTypeFormatter());
 		Formatter formatter = registry.getFormatter(DefaultCustomType.class);
-		assertEquals("12345", formatter.formatValue(new DefaultCustomType("12345")));
-		assertEquals(new DefaultCustomType("12345"), formatter.parseValue("12345"));
+		assertEquals("12345", formatter.format(new DefaultCustomType("12345")));
+		assertEquals(new DefaultCustomType("12345"), formatter.parse("12345"));
 	}
 
 	public void testRegisterCustomFormatter() {
-		registry.registerFormatter(new NumberFormatterFactory());
-		registry.registerFormatter("percentNumberFormat", new PercentNumberFormatterFactory());
-		Formatter formatter = registry.getFormatter("percentNumberFormat", BigDecimal.class);
-		assertEquals("35%", formatter.formatValue(new BigDecimal(".35")));
-		BigDecimal value = (BigDecimal) formatter.parseValue("35%");
+		registry.registerFormatter(Integer.class, new NumberFormatter(Integer.class));
+		NumberFormatter percentFormatter = new NumberFormatter(BigDecimal.class);
+		percentFormatter.setPattern("00%");
+		registry.registerFormatter("percent", percentFormatter);
+		Formatter formatter = registry.getFormatter("percent");
+		assertEquals("35%", formatter.format(new BigDecimal(".35")));
+		BigDecimal value = (BigDecimal) formatter.parse("35%");
 		assertEquals(new BigDecimal(".35"), value);
 	}
 
 	public void testRegisterCustomFormatterBogusLookupId() {
-		registry.registerFormatter(new NumberFormatterFactory());
-		registry.registerFormatter("percentNumberFormat", new PercentNumberFormatterFactory());
-		Formatter formatter = registry.getFormatter("bogusFormat", BigDecimal.class);
+		registry.registerFormatter(Integer.class, new NumberFormatter(Integer.class));
+		registry.registerFormatter("double", new NumberFormatter(Double.class));
+		Formatter formatter = registry.getFormatter("bogusFormat");
 		assertNull(formatter);
-		formatter = registry.getFormatter(BigDecimal.class);
+		formatter = registry.getFormatter("double");
 		assertNotNull(formatter);
-		assertEquals("0.35", formatter.formatValue(new BigDecimal(".35")));
-		BigDecimal value = (BigDecimal) formatter.parseValue("0.35");
-		assertEquals(new BigDecimal(".35"), value);
-
-		formatter = registry.getFormatter("percentNumberFormat", BigDecimal.class);
-		assertEquals("35%", formatter.formatValue(new BigDecimal(".35")));
-		value = (BigDecimal) formatter.parseValue("35%");
-		assertEquals(new BigDecimal(".35"), value);
-	}
-
-	public class PercentNumberFormatterFactory extends NumberFormatterFactory implements FormatterFactory {
-		protected NumberFormat getNumberFormat(FormatterFactoryContext context) {
-			return NumberFormat.getPercentInstance();
-		}
 	}
 
 	public interface CustomType {
@@ -97,27 +83,15 @@ public class FormatterRegistryImplTests extends TestCase {
 		}
 	}
 
-	private class CustomTypeFormatterFactory implements FormatterFactory {
+	private class CustomTypeFormatter implements Formatter {
 
-		public Formatter createFormatter(FormatterFactoryContext context) {
-			return new CustomTypeFormatter();
+		public String format(Object value) throws IllegalArgumentException {
+			CustomType type = (CustomType) value;
+			return type.getText();
 		}
 
-		public Class getFormattedClass() {
-			return CustomType.class;
-		}
-
-		private class CustomTypeFormatter implements Formatter {
-
-			public String formatValue(Object value) throws IllegalArgumentException {
-				CustomType type = (CustomType) value;
-				return type.getText();
-			}
-
-			public Object parseValue(String formattedString) throws InvalidFormatException {
-				return new DefaultCustomType(formattedString);
-			}
-
+		public Object parse(String formattedString) throws InvalidFormatException {
+			return new DefaultCustomType(formattedString);
 		}
 
 	}

@@ -72,7 +72,7 @@ public class BindingModel extends ViewRenderingErrors {
 		Expression fieldExpression = parseFieldExpression(field);
 		Formatter formatter = getFormatter(fieldExpression);
 		if (formatter != null) {
-			return formatter.formatValue(fieldExpression.getValue(boundObject));
+			return formatter.format(fieldExpression.getValue(boundObject));
 		} else {
 			return fieldExpression.getValue(boundObject);
 		}

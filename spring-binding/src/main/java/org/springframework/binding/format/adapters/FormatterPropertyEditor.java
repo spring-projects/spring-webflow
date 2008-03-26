@@ -40,10 +40,10 @@ public class FormatterPropertyEditor extends PropertyEditorSupport {
 	}
 
 	public String getAsText() {
-		return formatter.formatValue(getValue());
+		return formatter.format(getValue());
 	}
 
 	public void setAsText(String text) throws IllegalArgumentException {
-		setValue(formatter.parseValue(text));
+		setValue(formatter.parse(text));
 	}
 }

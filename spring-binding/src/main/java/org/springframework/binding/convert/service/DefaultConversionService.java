@@ -18,13 +18,8 @@ package org.springframework.binding.convert.service;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.TextToBoolean;
 import org.springframework.binding.convert.converters.TextToClass;
-import org.springframework.binding.convert.converters.TextToDate;
 import org.springframework.binding.convert.converters.TextToLabeledEnum;
 import org.springframework.binding.convert.converters.TextToNumber;
-import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.binding.format.factories.DateFormatterFactory;
-import org.springframework.binding.format.factories.NumberFormatterFactory;
-import org.springframework.binding.format.impl.FormatterRegistryImpl;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -37,18 +32,12 @@ public class DefaultConversionService extends GenericConversionService {
 	/**
 	 * A singleton shared instance. Should never be modified.
 	 */
-	private static final DefaultConversionService SHARED_INSTANCE = new DefaultConversionService();
-
-	/**
-	 * Returns the formatter registry used by this conversion service
-	 */
-	private FormatterRegistry formatterRegistry;
+	private static DefaultConversionService SHARED_INSTANCE;
 
 	/**
 	 * Creates a new default conversion service, installing the default converters.
 	 */
 	public DefaultConversionService() {
-		formatterRegistry = createDefaultFormatterRegistry();
 		addDefaultConverters();
 	}
 
@@ -59,21 +48,16 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new TextToClass());
 		addConverter(new TextToBoolean());
 		addConverter(new TextToLabeledEnum());
-		addConverter(new TextToNumber(formatterRegistry));
-		addConverter(new TextToDate(formatterRegistry));
-	}
-
-	protected FormatterRegistry createDefaultFormatterRegistry() {
-		FormatterRegistryImpl registry = new FormatterRegistryImpl();
-		registry.registerFormatter(new NumberFormatterFactory());
-		registry.registerFormatter(new DateFormatterFactory());
-		return registry;
+		addConverter(new TextToNumber());
 	}
 
 	/**
 	 * Returns the shared {@link DefaultConversionService} instance.
 	 */
-	public static ConversionService getSharedInstance() {
+	public synchronized static ConversionService getSharedInstance() {
+		if (SHARED_INSTANCE == null) {
+			SHARED_INSTANCE = new DefaultConversionService();
+		}
 		return SHARED_INSTANCE;
 	}
 }

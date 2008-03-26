@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.support.StaticExpression;
-import org.springframework.binding.format.factories.DateFormatterFactory;
-import org.springframework.binding.format.factories.NumberFormatterFactory;
-import org.springframework.binding.format.impl.FormatterRegistryImpl;
+import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -28,12 +27,7 @@ public class MvcViewTests extends TestCase {
 
 	private Map model;
 
-	private FormatterRegistryImpl formatterRegistry = new FormatterRegistryImpl();
-
-	public void setUp() {
-		formatterRegistry.registerFormatter(new NumberFormatterFactory());
-		formatterRegistry.registerFormatter(new DateFormatterFactory());
-	}
+	private FormatterRegistry formatterRegistry = DefaultFormatterRegistry.getSharedInstance();
 
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
@@ -83,7 +77,7 @@ public class MvcViewTests extends TestCase {
 		assertNotNull(bm);
 		assertEquals(null, bm.getFieldValue("stringProperty"));
 		assertEquals("3", bm.getFieldValue("integerProperty"));
-		assertEquals("1/1/08", bm.getFieldValue("dateProperty"));
+		assertEquals("Jan 1, 2008", bm.getFieldValue("dateProperty"));
 	}
 
 	public void testResumeNoEvent() throws Exception {
@@ -119,7 +113,7 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
 		context.putRequestParameter("integerProperty", "5");
-		context.putRequestParameter("dateProperty", "1/1/07");
+		context.putRequestParameter("dateProperty", "Jan 1, 2007");
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");

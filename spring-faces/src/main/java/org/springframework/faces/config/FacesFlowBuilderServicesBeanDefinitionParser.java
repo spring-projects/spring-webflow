@@ -19,11 +19,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
-import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.binding.format.factories.BooleanFormatterFactory;
-import org.springframework.binding.format.factories.DateFormatterFactory;
-import org.springframework.binding.format.factories.NumberFormatterFactory;
-import org.springframework.binding.format.impl.FormatterRegistryImpl;
+import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
@@ -87,7 +83,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		if (StringUtils.hasText(formatterRegistry)) {
 			definitionBuilder.addPropertyReference(FORMATTER_REGISTRY_PROPERTY, formatterRegistry);
 		} else {
-			definitionBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, createDefaultFormatterRegistry());
+			definitionBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, DefaultFormatterRegistry
+					.getSharedInstance());
 		}
 	}
 
@@ -117,14 +114,6 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 			definitionBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, new WebFlowELExpressionParser(
 					DefaultExpressionFactoryUtils.createExpressionFactory()));
 		}
-	}
-
-	private static FormatterRegistry createDefaultFormatterRegistry() {
-		FormatterRegistryImpl registry = new FormatterRegistryImpl();
-		registry.registerFormatter(new NumberFormatterFactory());
-		registry.registerFormatter(new DateFormatterFactory());
-		registry.registerFormatter(new BooleanFormatterFactory());
-		return registry;
 	}
 
 }

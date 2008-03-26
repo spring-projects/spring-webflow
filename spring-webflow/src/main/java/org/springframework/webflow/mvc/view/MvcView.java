@@ -176,9 +176,10 @@ class MvcView implements View {
 	private void addDefaultMappings(DefaultMapper mapper, ParameterMap requestParameters, Object model) {
 		for (Iterator it = requestParameters.asMap().keySet().iterator(); it.hasNext();) {
 			String name = (String) it.next();
-			Expression source = expressionParser
-					.parseExpression(name, new FluentParserContext().evaluate(MapAdaptable.class));
-			Expression target = expressionParser.parseExpression(name, new FluentParserContext().evaluate(model.getClass()));
+			Expression source = expressionParser.parseExpression(name, new FluentParserContext()
+					.evaluate(MapAdaptable.class));
+			Expression target = expressionParser.parseExpression(name, new FluentParserContext().evaluate(model
+					.getClass()));
 			DefaultMapping mapping = new DefaultMapping(source, target);
 			mapping.setTypeConverter(new FormatterBackedMappingConversionExecutor(formatterRegistry));
 			mapper.addMapping(mapping);
@@ -273,7 +274,7 @@ class MvcView implements View {
 			Formatter formatter = getFormatter(target, targetClass);
 			if (formatter != null) {
 				try {
-					return formatter.parseValue(formattedValue);
+					return formatter.parse(formattedValue);
 				} catch (InvalidFormatException e) {
 					throw new ConversionException(String.class, targetClass, e);
 				}
@@ -284,7 +285,7 @@ class MvcView implements View {
 
 		private Formatter getFormatter(Expression target, Class targetClass) {
 			if (formatterRegistry != null) {
-				Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString(), targetClass);
+				Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString());
 				if (formatter != null) {
 					return formatter;
 				} else {

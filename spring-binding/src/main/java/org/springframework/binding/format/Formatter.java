@@ -16,29 +16,26 @@
 package org.springframework.binding.format;
 
 /**
- * A lightweight interface for formatting a value and parsing a value from its formatted form.
- * <p>
- * Note: formatters are typically not thread safe as <code>Format</code> objects aren't thread safe. In general, you
- * should not attempt to share formatters between threads.
- * </p>
+ * Formats objects for display.
+ * 
  * @author Keith Donald
  */
 public interface Formatter {
 
 	/**
-	 * Format the value.
-	 * @param value the value to format
+	 * Format the object for display.
+	 * @param object the object to format
 	 * @return the formatted string, fit for display in a UI
-	 * @throws IllegalArgumentException the value could not be formatted
+	 * @throws IllegalArgumentException if the object could not be formatted
 	 */
-	public String formatValue(Object value) throws IllegalArgumentException;
+	public String format(Object object) throws IllegalArgumentException;
 
 	/**
-	 * Parse the formatted string representation of a value, restoring the value.
+	 * Parse the formatted string representation of an object and return the object.
 	 * @param formattedString the formatted string representation
-	 * @return the parsed value
-	 * @throws InvalidFormatException the string was in an invalid form
+	 * @return the parsed object
+	 * @throws InvalidFormatException the formatted string was in an invalid form
 	 */
-	public Object parseValue(String formattedString) throws InvalidFormatException;
+	public Object parse(String formattedString) throws InvalidFormatException;
 
 }

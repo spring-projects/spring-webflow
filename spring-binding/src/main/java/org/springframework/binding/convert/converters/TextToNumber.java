@@ -18,7 +18,7 @@ package org.springframework.binding.convert.converters;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.util.NumberUtils;
 
 /**
  * Converts textual representations of numbers to a <code>Number</code> specialization. Delegates to a synchronized
@@ -26,15 +26,7 @@ import org.springframework.binding.format.FormatterRegistry;
  * 
  * @author Keith Donald
  */
-public class TextToNumber extends AbstractFormattingConverter {
-
-	/**
-	 * Create a string to number converter using given formatter factory.
-	 * @param formatterRegistry the formatter registry to use
-	 */
-	public TextToNumber(FormatterRegistry formatterRegistry) {
-		super(formatterRegistry);
-	}
+public class TextToNumber extends AbstractConverter {
 
 	public Class[] getSourceClasses() {
 		return new Class[] { String.class };
@@ -44,4 +36,9 @@ public class TextToNumber extends AbstractFormattingConverter {
 		return new Class[] { Integer.class, Short.class, Long.class, Float.class, Double.class, Byte.class,
 				BigInteger.class, BigDecimal.class };
 	}
+
+	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+		return NumberUtils.parseNumber((String) source, targetClass);
+	}
+
 }
