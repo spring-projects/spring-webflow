@@ -4,23 +4,31 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+
+	<application>
+		<variable-resolver>org.springframework.web.jsf.SpringBeanVariableResolver</variable-resolver>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
+	</application>
+	
 	<managed-bean>
 		<managed-bean-name>bookingController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.BookingController</managed-bean-class>
+		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.BookingController</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	
 	<managed-bean>
 		<managed-bean-name>searchController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.SearchController</managed-bean-class>
+		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.SearchController</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 		<managed-property>
 			<property-name>bookingService</property-name>
 			<value>#{bookingService}</value>
 		</managed-property>
 	</managed-bean>
+	
 	<managed-bean>
 		<managed-bean-name>hotelController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.HotelController</managed-bean-class>
+		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.HotelController</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 		<managed-property>
 			<property-name>bookingService</property-name>
@@ -31,9 +39,10 @@
 			<value>#{param.id}</value>
 		</managed-property>
 	</managed-bean>
+	
 	<managed-bean>
 		<managed-bean-name>bookingController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.BookingController</managed-bean-class>
+		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.BookingController</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 		<managed-property>
 			<property-name>bookingService</property-name>
@@ -48,12 +57,21 @@
 			<value>#{booking}</value>
 		</managed-property>
 	</managed-bean>
+	
 	<managed-bean>
 		<managed-bean-name>searchCriteria</managed-bean-name>
 		<managed-bean-class>org.springframework.webflow.samples.booking.SearchCriteria</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
-	
+
+	 <navigation-rule>
+		<from-view-id>/main/enterSearchCriteria.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>reviewHotels</from-outcome>
+			<to-view-id>/main/reviewHotels.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+		
 	<navigation-rule>
 		<from-view-id>/main/reviewHotels.xhtml</from-view-id>
 		<navigation-case>
@@ -66,24 +84,12 @@
 		</navigation-case>
 	 </navigation-rule>
 	 
-	 <navigation-rule>
-		
-		<from-view-id>/main/enterSearchCriteria.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>reviewHotels</from-outcome>
-			<to-view-id>/main/reviewHotels.xhtml</to-view-id>
-		</navigation-case>
-		
-	</navigation-rule>
-	
-	<navigation-rule>
-		
+	<navigation-rule>	
 		<from-view-id>/main/reviewHotel.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>book</from-outcome>
 			<to-view-id>/booking/enterBookingDetails.xhtml</to-view-id>
 		</navigation-case>
-		
 	</navigation-rule>
 	
 	<navigation-rule>
@@ -113,12 +119,8 @@
 		</navigation-case>
 	</navigation-rule>
 	
-	<application>
-		<variable-resolver>org.springframework.web.jsf.SpringBeanVariableResolver</variable-resolver>
-		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
-	</application>
-	
 	<lifecycle>
 		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
 	</lifecycle>
+	
 </faces-config>

@@ -1,4 +1,7 @@
-package org.springframework.webflow.samples.booking;
+package org.springframework.webflow.samples.booking.jsf;
+
+import org.springframework.webflow.samples.booking.BookingService;
+import org.springframework.webflow.samples.booking.Hotel;
 
 public class HotelController {
 
@@ -8,13 +11,6 @@ public class HotelController {
 
     private Hotel hotel;
 
-    public Hotel getHotel() {
-	if (hotel == null && hotelId != null) {
-	    hotel = bookingService.findHotelById(hotelId);
-	}
-	return hotel;
-    }
-
     public void setBookingService(BookingService bookingService) {
 	this.bookingService = bookingService;
     }
@@ -23,7 +19,15 @@ public class HotelController {
 	this.hotelId = hotelId;
     }
 
+    public Hotel getHotel() {
+	if (hotel == null && hotelId != null) {
+	    hotel = bookingService.findHotelById(hotelId);
+	}
+	return hotel;
+    }
+
     public Long getHotelId() {
 	return hotelId;
     }
+
 }
