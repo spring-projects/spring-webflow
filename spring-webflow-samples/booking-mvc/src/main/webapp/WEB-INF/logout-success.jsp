@@ -8,7 +8,7 @@
 <div class="section">
 	<h1>Logout</h1>
 	<p>You have successfully logged out.</p>
-	<p><a href="<c:url value="/spring/main" />">Continue</a></p>
+	<p><a href="<c:url value="/" />">Continue</a></p>
 </div>
 
 
