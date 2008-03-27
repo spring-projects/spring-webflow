@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
+import org.springframework.util.StringUtils;
 
 public class DateFormatter implements Formatter {
 
@@ -47,10 +48,16 @@ public class DateFormatter implements Formatter {
 	}
 
 	public String format(Object date) {
+		if (date == null) {
+			return "";
+		}
 		return getDateFormat().format((Date) date);
 	}
 
 	public Object parse(String formattedString) throws InvalidFormatException {
+		if (!StringUtils.hasText(formattedString)) {
+			return null;
+		}
 		DateFormat dateFormat = getDateFormat();
 		try {
 			return dateFormat.parse(formattedString);

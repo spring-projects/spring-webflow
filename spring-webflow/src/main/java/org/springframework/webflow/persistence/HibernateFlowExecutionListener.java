@@ -145,8 +145,10 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getHibernateSession(context));
+		if (context.getFlowExecutionContext().isActive()) {
+			if (isPersistenceContext(context.getActiveFlow())) {
+				unbind(getHibernateSession(context));
+			}
 		}
 	}
 

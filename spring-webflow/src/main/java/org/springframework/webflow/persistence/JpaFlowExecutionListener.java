@@ -121,12 +121,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 				// this is a commit end state - start a new transaction that quickly commits
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
-						// necessary for JTA to enlist the entity manager in the transaction
-						try {
-							em.joinTransaction();
-						} catch (IllegalStateException e) {
-							// won't be necessary once Spring 2.0.7 is released
-						}
+						em.joinTransaction();
 					}
 				});
 			}
@@ -136,8 +131,10 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
-		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getEntityManager(context));
+		if (context.getFlowExecutionContext().isActive()) {
+			if (isPersistenceContext(context.getActiveFlow())) {
+				unbind(getEntityManager(context));
+			}
 		}
 	}
 

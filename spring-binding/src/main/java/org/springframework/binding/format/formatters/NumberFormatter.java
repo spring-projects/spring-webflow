@@ -22,6 +22,7 @@ import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.Assert;
 import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 
 public class NumberFormatter implements Formatter {
 
@@ -39,6 +40,9 @@ public class NumberFormatter implements Formatter {
 	}
 
 	public String format(Object number) {
+		if (number == null) {
+			return "";
+		}
 		if (pattern != null) {
 			return getNumberFormat().format(number);
 		} else {
@@ -46,11 +50,14 @@ public class NumberFormatter implements Formatter {
 		}
 	}
 
-	public Object parse(String text) throws InvalidFormatException {
+	public Object parse(String formattedString) throws InvalidFormatException {
+		if (!StringUtils.hasText(formattedString)) {
+			return null;
+		}
 		if (pattern != null) {
-			return NumberUtils.parseNumber(text, numberClass, getNumberFormat());
+			return NumberUtils.parseNumber(formattedString, numberClass, getNumberFormat());
 		} else {
-			return NumberUtils.parseNumber(text, numberClass);
+			return NumberUtils.parseNumber(formattedString, numberClass);
 		}
 	}
 
