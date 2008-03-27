@@ -33,7 +33,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private MockHttpServletResponse response;
 	private ServletExternalContext context;
 	private FlowHandler flowHandler;
-	private LocalAttributeMap flowInput;
+	private LocalAttributeMap flowInput = new LocalAttributeMap();
 	private boolean handleException;
 	private boolean handleExecutionOutcome;
 
@@ -105,7 +105,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request.setMethod("GET");
 		Map parameters = new HashMap();
 		request.setParameters(parameters);
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		Event outcome = new Event(this, "finish", output);
@@ -167,7 +167,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		Map parameters = new HashMap();
 		request.setParameters(parameters);
 		context.requestFlowExecutionRedirect();
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -189,7 +189,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		LocalAttributeMap input = new LocalAttributeMap();
 		input.put("baz", "boop");
 		context.requestFlowDefinitionRedirect("bar", input);
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		Event outcome = new Event(this, "finish", output);
@@ -212,7 +212,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		Map parameters = new HashMap();
 		request.setParameters(parameters);
 		context.requestExternalRedirect("http://www.paypal.com");
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -231,7 +231,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request.setMethod("GET");
 		Map parameters = new HashMap();
 		request.setParameters(parameters);
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		FlowException flowException = new FlowException("Error") {
 		};
 		EasyMock.expectLastCall().andThrow(flowException);
@@ -290,7 +290,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		executor.launchExecution("foo", null, context);
+		executor.launchExecution("foo", flowInput, context);
 		EasyMock.expectLastCall().andThrow(flowException);
 		EasyMock.replay(new Object[] { executor });
 		ModelAndView mv = controller.handle(request, response, flowHandler);
