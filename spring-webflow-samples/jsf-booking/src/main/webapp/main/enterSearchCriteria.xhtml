@@ -36,7 +36,7 @@
 	<h:form id="bookingsForm">
 		<h2>Current Hotel Bookings</h2>				
 		<h:outputText value="No Bookings Found" rendered="#{searchController.bookings.rowCount == 0}"/>
-		<h:dataTable id="bookings" styleClass="summary" value="#{searchController.bookings}" var="booking" rendered="#{empty searchController.bookings or searchController.bookings.rowCount > 0}">
+		<h:dataTable id="bookings" styleClass="summary" value="#{searchController.bookings}" var="booking" rendered="#{searchController.bookings.rowCount > 0}">
 			<h:column>
 				<f:facet name="header">Name</f:facet>
 				#{booking.hotel.name}
