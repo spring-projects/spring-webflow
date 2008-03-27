@@ -18,8 +18,8 @@
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
-				/main=flowController
-				/booking=flowController
+				/hotels/booking=bookingFlowHandler
+			    /hotels/*=hotelsController
 			</value>
 		</property>
 		<property name="defaultHandler">
@@ -28,11 +28,21 @@
 		</property>
 	</bean>
 
-	<!-- Handles requests mapped to the Spring Web Flow system -->			
-	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
+	<!-- Handles requests to search hotels and display hotel details -->
+	<bean id="hotelsController" class="org.springframework.webflow.samples.booking.HotelsController">
+		<constructor-arg ref="bookingService"/>
+	</bean>
+
+	<!-- Controls access to the booking flow -->
+	<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
+	
+	<!-- Handles requests mapped to the Web Flow handlers -->
+	<bean class="org.springframework.webflow.mvc.FlowHandlerAdapter">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
 
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
 	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<web:flow-execution-listeners>

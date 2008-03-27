@@ -7,7 +7,7 @@
 
 	<persistence-context/>
 	
-	<input name="hotelId" value="flowScope.hotelId" />
+	<input name="hotelId" value="flowScope.hotelId" required="true"/>
 	
 	<on-start>
 		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
