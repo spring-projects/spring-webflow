@@ -23,25 +23,29 @@
 			</value>
 		</property>
 		<property name="defaultHandler">
-			<!-- Handles requests mapped directly to facelet .xhtml view templates -->	
+			<!-- Handles requests mapped directly to view templates -->	
 			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 		</property>
 	</bean>
 
-	<!-- Handles requests to search hotels and display hotel details -->
+	<!-- Handles requests to search hotels, display hotel details, and cancel hotel bookings -->
 	<bean id="hotelsController" class="org.springframework.webflow.samples.booking.HotelsController">
-		<constructor-arg ref="bookingService"/>
+		<constructor-arg ref="bookingService" />
 	</bean>
 
-	<!-- Controls access to the booking flow -->
+	<!-- Controls access to the hotel booking flow -->
 	<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
 	
-	<!-- Handles requests mapped to the Web Flow handlers -->
+	<!-- Enables annotated POJO @Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<!-- Enables plain Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+	<!-- Enables FlowHandlers -->
 	<bean class="org.springframework.webflow.mvc.FlowHandlerAdapter">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
-
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
 	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">

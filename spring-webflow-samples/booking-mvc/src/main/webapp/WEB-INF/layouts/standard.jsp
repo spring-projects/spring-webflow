@@ -23,8 +23,8 @@
 			<div class="left">Spring Travel: Spring MVC and Web Flow Reference Application</div>
 			<div class="right">
 				<security:authorize ifAllGranted="ROLE_USER">
-					<c:if test="${not empty currentUser}">
-						Welcome, ${currentUser.name} |
+					<c:if test="${pageContext.request.userPrincipal != null}">
+						Welcome, ${pageContext.request.userPrincipal.name} |
 					</c:if>
 					<a href="<c:url value="/spring/logout" />">Logout</a>
 				</security:authorize>
