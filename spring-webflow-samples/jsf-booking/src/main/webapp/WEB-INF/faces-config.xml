@@ -55,45 +55,61 @@
 	</managed-bean>
 	
 	<navigation-rule>
-	
+		<from-view-id>/main/reviewHotels.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>changeSearch</from-outcome>
 			<to-view-id>/main/enterSearchCriteria.xhtml</to-view-id>
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>select</from-outcome>
+			<to-view-id>/main/reviewHotel.xhtml</to-view-id>
+		</navigation-case>
+	 </navigation-rule>
+	 
+	 <navigation-rule>
 		
+		<from-view-id>/main/enterSearchCriteria.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>reviewHotels</from-outcome>
 			<to-view-id>/main/reviewHotels.xhtml</to-view-id>
 		</navigation-case>
 		
-		<navigation-case>
-			<from-outcome>select</from-outcome>
-			<to-view-id>/main/reviewHotel.xhtml</to-view-id>
-		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
 		
+		<from-view-id>/main/reviewHotel.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>book</from-outcome>
 			<to-view-id>/booking/enterBookingDetails.xhtml</to-view-id>
 		</navigation-case>
 		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/booking/enterBookingDetails.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>reviewBooking</from-outcome>
+			<to-view-id>/booking/reviewBooking.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/booking/reviewBooking.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>revise</from-outcome>
 			<to-view-id>/booking/enterBookingDetails.xhtml</to-view-id>
 		</navigation-case>
-		
-		<navigation-case>
-			<from-outcome>cancel</from-outcome>
-			<to-view-id>/main/enterSearchCriteria.xhtml</to-view-id>
-		</navigation-case>
-		
 		<navigation-case>
 			<from-outcome>confirm</from-outcome>
 			<to-view-id>/main/enterSearchCriteria.xhtml</to-view-id>
 		</navigation-case>
-		
+	</navigation-rule>
+	
+	<navigation-rule>
 		<navigation-case>
-			<from-outcome>reviewBooking</from-outcome>
-			<to-view-id>/booking/reviewBooking.xhtml</to-view-id>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/main/enterSearchCriteria.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	

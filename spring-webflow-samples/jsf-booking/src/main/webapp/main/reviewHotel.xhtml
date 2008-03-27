@@ -2,8 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
-	  			xmlns:f="http://java.sun.com/jsf/core"
-	  			xmlns:sf="http://www.springframework.org/tags/faces"	  			
+	  			xmlns:f="http://java.sun.com/jsf/core"	  			
 				template="/WEB-INF/layouts/standard.xhtml">
 
 <ui:define name="content">
@@ -47,8 +46,8 @@
 <div class="section">
 	<h:form id="hotel">
 	<fieldset class="buttonGroup">
-		<h:commandButton id="book" ajaxEnabled="false" action="book" value="Book Hotel"/>&#160;
-		<h:commandButton id="cancel" ajaxEnabled="false" action="cancel" value="Back to Search"/>
+		<h:commandButton id="book" action="book" value="Book Hotel"/>&#160;
+		<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
 	</fieldset>
 	<h:inputText id="hotelId" value="#{hotelController.hotelId}" style="visibility:hidden"/>
 	</h:form>
