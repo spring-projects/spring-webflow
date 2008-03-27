@@ -38,8 +38,8 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 public interface FlowHandler {
 
 	/**
-	 * Returns the id of the flow handled by this handler. Used by a Controller to load the flow definition.
-	 * @return the flow id
+	 * Returns the id of the flow handled by this handler. Used by a Controller to load the flow definition. Optional.
+	 * @return the flow id, or null if the flow id should be determined by the caller
 	 */
 	public String getFlowId();
 
@@ -47,7 +47,7 @@ public interface FlowHandler {
 	 * Creates the flow execution input map to pass to a new instance of the flow being started. Used by a Controller to
 	 * launch the flow execution with the correct input.
 	 * @param request the current request
-	 * @return the input map
+	 * @return the input map, or null if the contents of the input map should be determined by the caller
 	 */
 	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
 

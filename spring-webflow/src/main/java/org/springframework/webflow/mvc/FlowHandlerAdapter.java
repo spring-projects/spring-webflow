@@ -121,9 +121,10 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			}
 		} else {
 			try {
-				MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
+				String flowId = getFlowId(flowHandler, request);
+				MutableAttributeMap input = getInputMap(flowHandler, request);
 				ServletExternalContext context = createServletExternalContext(request, response);
-				FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
+				FlowExecutionResult result = flowExecutor.launchExecution(flowId, input, context);
 				return handleFlowExecutionResult(result, context, request, response, flowHandler);
 			} catch (FlowException e) {
 				return handleFlowException(e, request, response, flowHandler);
@@ -221,7 +222,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			} else {
 				ModelAndView mv = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
 						request, response);
-				return mv != null ? mv : defaultHandleFlowOutcome(handler.getFlowId(), result.getEndedOutcome(), result
+				return mv != null ? mv : defaultHandleFlowOutcome(result.getFlowId(), result.getEndedOutcome(), result
 						.getEndedOutput(), request, response);
 			}
 		} else {
@@ -241,11 +242,28 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
 			FlowHandler handler) throws IOException {
 		ModelAndView result = handler.handleException(e, request, response);
-		return result != null ? result : defaultHandleFlowException(handler.getFlowId(), e, request, response);
+		return result != null ? result : defaultHandleFlowException(getFlowId(handler, request), e, request, response);
 	}
 
 	public long getLastModified(HttpServletRequest request, Object handler) {
 		return -1;
 	}
 
+	private String getFlowId(FlowHandler handler, HttpServletRequest request) {
+		String flowId = handler.getFlowId();
+		if (flowId != null) {
+			return flowId;
+		} else {
+			return urlHandler.getFlowId(request);
+		}
+	}
+
+	private MutableAttributeMap getInputMap(FlowHandler handler, HttpServletRequest request) {
+		MutableAttributeMap input = handler.createExecutionInputMap(request);
+		if (input != null) {
+			return input;
+		} else {
+			return defaultFlowExecutionInputMap(request);
+		}
+	}
 }
