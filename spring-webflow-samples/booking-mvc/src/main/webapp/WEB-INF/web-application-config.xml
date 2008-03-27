@@ -53,8 +53,7 @@
 
 	<!-- The registry of executable flow definitions -->	
 	<web:flow-registry id="flowRegistry">
-		<web:flow-location path="WEB-INF/flows/main/main.xml" />
-		<web:flow-location path="WEB-INF/flows/booking/booking.xml" />
+		<web:flow-location path="WEB-INF/hotels/booking/booking.xml" />
 	</web:flow-registry>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
