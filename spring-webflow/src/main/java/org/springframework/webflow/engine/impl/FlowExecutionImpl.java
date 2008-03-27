@@ -529,7 +529,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			return new FlowExecutionException(flowId, stateId, "Exception thrown in state '" + stateId + "' of flow '"
 					+ flowId + "'", e);
 		} else {
-			return new FlowExecutionException(flowId, null, "Exception thrown within inactive flow '" + flowId + "'");
+			return new FlowExecutionException(flowId, null, "Exception thrown within inactive flow '" + flowId + "'", e);
 		}
 	}
 
