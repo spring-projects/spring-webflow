@@ -46,7 +46,6 @@
 	    <input type="hidden" name="hotelId" value="${hotel.id}" />
 		<div class="buttonGroup">
 			<input type="submit" value="Book Hotel"/>&#160;
-			<input type="submit" value="Back to Search"/>&#160;
 		</div>
 	</fieldset>
 	</form:form>
