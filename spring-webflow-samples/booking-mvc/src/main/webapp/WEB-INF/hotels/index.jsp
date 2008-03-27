@@ -6,7 +6,7 @@
 <tiles:insertTemplate template="/WEB-INF/layouts/standard.jsp">
 <tiles:putAttribute name="content">
 
-<form:form modelAttribute="searchCriteria" action="search">
+<form:form modelAttribute="searchCriteria" action="search" method="get">
 <div class="section">
     <span class="errors">
     	<form:errors path="*"/>

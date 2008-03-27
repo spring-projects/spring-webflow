@@ -25,7 +25,7 @@ public class HotelsController {
 	}
     }
 
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("hotels")
     public List<Hotel> search(SearchCriteria criteria) {
 	return bookingService.findHotels(criteria);
