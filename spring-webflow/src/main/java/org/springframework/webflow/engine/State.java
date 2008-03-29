@@ -98,6 +98,10 @@ public abstract class State extends AnnotatedObject implements StateDefinition {
 		return id;
 	}
 
+	public boolean isViewState() {
+		return false;
+	}
+
 	// implementation specific
 
 	/**

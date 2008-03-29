@@ -3,7 +3,7 @@ package org.springframework.webflow.engine;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.test.MockRequestControlContext;
 
 public class ViewVariableTests extends TestCase {
 
@@ -18,9 +18,12 @@ public class ViewVariableTests extends TestCase {
 			public void restoreReferences(Object value, RequestContext context) {
 			}
 		});
-		MockRequestContext context = new MockRequestContext();
+		Flow flow = new Flow("flow");
+		ViewState view = new ViewState(flow, "view", new StubViewFactory());
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		view.enter(context);
 		var.create(context);
-		assertEquals("bar", context.getFlowScope().get("foo"));
+		assertEquals("bar", context.getViewScope().get("foo"));
 	}
 
 	public void testDestroyVariable() {
@@ -32,11 +35,14 @@ public class ViewVariableTests extends TestCase {
 			public void restoreReferences(Object value, RequestContext context) {
 			}
 		});
-		MockRequestContext context = new MockRequestContext();
+		Flow flow = new Flow("flow");
+		ViewState view = new ViewState(flow, "view", new StubViewFactory());
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		view.enter(context);
 		var.create(context);
-		assertEquals("bar", context.getFlowScope().get("foo"));
+		assertEquals("bar", context.getViewScope().get("foo"));
 		var.destroy(context);
-		assertFalse(context.getFlowScope().contains("foo"));
+		assertFalse(context.getViewScope().contains("foo"));
 	}
 
 	public void testRestoreVariable() {
@@ -50,10 +56,13 @@ public class ViewVariableTests extends TestCase {
 				assertEquals("bar", value);
 			}
 		});
-		MockRequestContext context = new MockRequestContext();
+		Flow flow = new Flow("flow");
+		ViewState view = new ViewState(flow, "view", new StubViewFactory());
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		view.enter(context);
 		var.create(context);
 		var.restore(context);
-		assertEquals("bar", context.getFlowScope().get("foo"));
+		assertEquals("bar", context.getViewScope().get("foo"));
 		assertTrue(restoreCalled);
 	}
 

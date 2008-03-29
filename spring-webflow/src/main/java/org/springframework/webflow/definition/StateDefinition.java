@@ -37,4 +37,10 @@ public interface StateDefinition extends Annotated {
 	 * @return the state identifier
 	 */
 	public String getId();
+
+	/**
+	 * Returns true if this state is a view state.
+	 * @return true if a view state, false otherwise
+	 */
+	public boolean isViewState();
 }

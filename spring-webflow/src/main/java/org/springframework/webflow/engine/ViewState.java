@@ -77,6 +77,12 @@ public class ViewState extends TransitionableState {
 		this.viewFactory = viewFactory;
 	}
 
+	// implementing StateDefinition
+
+	public boolean isViewState() {
+		return true;
+	}
+
 	/**
 	 * Adds a view variable.
 	 * @param variable the variable
@@ -156,6 +162,7 @@ public class ViewState extends TransitionableState {
 	}
 
 	protected void doPreEntryActions(RequestControlContext context) throws FlowExecutionException {
+		context.initViewScope();
 		createVariables(context);
 	}
 
@@ -196,6 +203,7 @@ public class ViewState extends TransitionableState {
 
 	public void exit(RequestControlContext context) {
 		destroyVariables(context);
+		context.destroyViewScope();
 		super.exit(context);
 	}
 

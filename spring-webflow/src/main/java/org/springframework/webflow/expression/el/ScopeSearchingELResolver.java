@@ -67,6 +67,9 @@ public class ScopeSearchingELResolver extends ELResolver {
 		} else if (requestContext.getFlashScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
 			return requestContext.getFlashScope().get(attributeName).getClass();
+		} else if (requestContext.inViewState() && requestContext.getViewScope().contains(attributeName)) {
+			elContext.setPropertyResolved(true);
+			return requestContext.getViewScope().get(attributeName).getClass();
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
 			return requestContext.getFlowScope().get(attributeName).getClass();
@@ -96,6 +99,12 @@ public class ScopeSearchingELResolver extends ELResolver {
 			}
 			elContext.setPropertyResolved(true);
 			return requestContext.getFlashScope().get(attributeName);
+		} else if (requestContext.inViewState() && requestContext.getViewScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved view scoped variable '" + property + "'");
+			}
+			elContext.setPropertyResolved(true);
+			return requestContext.getViewScope().get(attributeName);
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Successfully resolved flow scoped variable '" + property + "'");
@@ -123,6 +132,9 @@ public class ScopeSearchingELResolver extends ELResolver {
 			elContext.setPropertyResolved(true);
 			return false;
 		} else if (requestContext.getFlashScope().contains(attributeName)) {
+			elContext.setPropertyResolved(true);
+			return false;
+		} else if (requestContext.inViewState() && requestContext.getViewScope().contains(attributeName)) {
 			elContext.setPropertyResolved(true);
 			return false;
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
@@ -154,6 +166,12 @@ public class ScopeSearchingELResolver extends ELResolver {
 			}
 			elContext.setPropertyResolved(true);
 			requestContext.getFlashScope().put(attributeName, value);
+		} else if (requestContext.inViewState() && requestContext.getViewScope().contains(attributeName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Successfully resolved view scoped variable '" + property + "'");
+			}
+			elContext.setPropertyResolved(true);
+			requestContext.getViewScope().put(attributeName, value);
 		} else if (requestContext.getFlowScope().contains(attributeName)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Successfully resolved flow scoped variable '" + property + "'");

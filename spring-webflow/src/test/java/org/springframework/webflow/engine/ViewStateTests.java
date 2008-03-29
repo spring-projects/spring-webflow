@@ -55,7 +55,7 @@ public class ViewStateTests extends TestCase {
 		}));
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		assertEquals("bar", context.getFlowScope().getString("foo"));
+		assertEquals("bar", context.getViewScope().getString("foo"));
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getFlowExecutionRedirectSent());
 	}
@@ -151,7 +151,7 @@ public class ViewStateTests extends TestCase {
 		state.resume(context);
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getFlowExecutionRedirectSent());
-		assertEquals("Restored", ((TestBean) context.getFlowScope().get("foo")).datum1);
+		assertEquals("Restored", ((TestBean) context.getViewScope().get("foo")).datum1);
 	}
 
 	public void testResumeViewStateForEvent() {
@@ -202,7 +202,7 @@ public class ViewStateTests extends TestCase {
 		new ViewState(flow, "next", viewFactory);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		assertTrue(context.getFlowScope().contains("foo"));
+		assertTrue(context.getViewScope().contains("foo"));
 		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.putRequestParameter("_eventId", "submit");
 		state.resume(context);

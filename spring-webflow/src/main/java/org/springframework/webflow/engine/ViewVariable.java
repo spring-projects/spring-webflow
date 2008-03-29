@@ -58,7 +58,7 @@ public class ViewVariable extends AnnotatedObject {
 	 */
 	public void create(RequestContext context) {
 		Object value = valueFactory.createInitialValue(context);
-		context.getFlowScope().put(name, value);
+		context.getViewScope().put(name, value);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ViewVariable extends AnnotatedObject {
 	 * @param context the executing flow
 	 */
 	public void restore(RequestContext context) {
-		Object value = context.getFlowScope().get(name);
+		Object value = context.getViewScope().get(name);
 		valueFactory.restoreReferences(value, context);
 	}
 
@@ -76,6 +76,6 @@ public class ViewVariable extends AnnotatedObject {
 	 * @param context the executing flow
 	 */
 	public Object destroy(RequestContext context) {
-		return context.getFlowScope().remove(name);
+		return context.getViewScope().remove(name);
 	}
 }

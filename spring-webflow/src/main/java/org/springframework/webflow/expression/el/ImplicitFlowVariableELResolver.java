@@ -151,6 +151,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 			vars.put("requestParameters", requestContextResolver);
 			vars.put("requestScope", requestContextResolver);
 			vars.put("flashScope", requestContextResolver);
+			vars.put("viewScope", requestContextResolver);
 			vars.put("flowScope", requestContextResolver);
 			vars.put("conversationScope", requestContextResolver);
 			vars.put("messageContext", requestContextResolver);

@@ -74,7 +74,7 @@ public class FlowViewStateManager extends StateManager {
 		}
 
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		SerializedView view = (SerializedView) requestContext.getFlowScope().get(SERIALIZED_VIEW_STATE);
+		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
 		viewRoot.processRestoreState(context, view.componentState);
 		logger.debug("UIViewRoot component state restored");
 	}
@@ -85,7 +85,7 @@ public class FlowViewStateManager extends StateManager {
 		}
 
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		SerializedView view = (SerializedView) requestContext.getFlowScope().get(SERIALIZED_VIEW_STATE);
+		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
 		if (view == null || !view.viewId.equals(viewId)) {
 			logger.debug("No matching view in flow scope;");
 			return null;
@@ -145,7 +145,7 @@ public class FlowViewStateManager extends StateManager {
 		}
 		SerializedView view = new SerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
 				getComponentStateToSave(context));
-		requestContext.getFlowScope().put(SERIALIZED_VIEW_STATE, view);
+		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
 		return view;
 	}
 

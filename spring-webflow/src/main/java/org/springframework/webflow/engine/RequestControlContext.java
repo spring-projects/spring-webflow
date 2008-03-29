@@ -117,4 +117,14 @@ public interface RequestControlContext extends RequestContext {
 	 */
 	public boolean getAlwaysRedirectOnPause();
 
+	/**
+	 * Initialize view scope. Called by view states when they enter.
+	 */
+	public void initViewScope();
+
+	/**
+	 * Destroy view-scope. Called by view-states when they exit.
+	 */
+	public void destroyViewScope();
+
 }

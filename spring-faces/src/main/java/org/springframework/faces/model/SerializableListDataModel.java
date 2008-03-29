@@ -97,4 +97,8 @@ public class SerializableListDataModel extends DataModel implements Serializable
 		setRowIndex(newRowIndex);
 	}
 
+	public String toString() {
+		return data.toString();
+	}
+
 }

@@ -7,7 +7,7 @@
 	
 	<view-state id="enterSearchCriteria">
 		<on-render>
-			<evaluate expression="bookingService.findBookings(currentUser.name)" result="flowScope.bookings" result-type="dataModel" />
+			<evaluate expression="bookingService.findBookings(currentUser.name)" result="viewScope.bookings" result-type="dataModel" />
 		</on-render>
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
@@ -18,7 +18,7 @@
 	 
 	<view-state id="reviewHotels">
 		<on-render>
-			<evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" result-type="dataModel" />
+			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
 		</on-render>
 		<transition on="previous">
 			<evaluate expression="searchCriteria.previousPage()" />
@@ -28,20 +28,19 @@
 			<evaluate expression="searchCriteria.nextPage()" />
 			<render fragments="hotels:searchResultsFragment" />
 		</transition>
-		<transition on="select" to="reviewHotel" />
+		<transition on="select" to="reviewHotel">
+			<set name="flowScope.hotel" value="hotels.selectedRow" />
+		</transition>
 		<transition on="changeSearch" to="changeSearchCriteria" />
 	</view-state>
 	
 	<view-state id="reviewHotel">
-		<on-render>
-			<set name="requestScope.hotel" value="hotels.selectedRow" />
-		</on-render>
 		<transition on="book" to="bookHotel" />
 		<transition on="cancel" to="enterSearchCriteria" />
 	</view-state>
 
 	<subflow-state id="bookHotel" subflow="booking">
-		<input name="hotelId" value="hotels.selectedRow.id" />
+		<input name="hotelId" value="hotel.id" />
 		<transition on="bookingConfirmed" to="finish" />
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>
@@ -56,5 +55,5 @@
 	</view-state>
 			
 	<end-state id="finish" />
-			
+	
 </flow>

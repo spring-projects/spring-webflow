@@ -90,6 +90,22 @@ public interface RequestContext {
 	public MutableAttributeMap getFlashScope();
 
 	/**
+	 * Returns true if the flow is currently active and in a view state. When in a view state {@link #getViewScope()},
+	 * can be safely called.
+	 * @see #getViewScope()
+	 * @return true if in a view state, false if not
+	 */
+	public boolean inViewState();
+
+	/**
+	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
+	 * the life of the current view state.</b>
+	 * @return the view scope
+	 * @throws IllegalStateException this flow is not in a view-state
+	 */
+	public MutableAttributeMap getViewScope() throws IllegalStateException;
+
+	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
 	 * the life of the active flow session.</b>
 	 * @return the flow scope
@@ -177,4 +193,5 @@ public interface RequestContext {
 	 * @return the flow execution URL
 	 */
 	public String getFlowExecutionUrl() throws IllegalStateException;
+
 }

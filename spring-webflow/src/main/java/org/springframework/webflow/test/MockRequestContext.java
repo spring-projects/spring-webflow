@@ -45,6 +45,8 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class MockRequestContext implements RequestContext {
 
+	protected static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
+
 	private FlowExecutionContext flowExecutionContext;
 
 	private ExternalContext externalContext;
@@ -124,6 +126,21 @@ public class MockRequestContext implements RequestContext {
 
 	public MutableAttributeMap getFlashScope() {
 		return getMockFlowExecutionContext().getFlashScope();
+	}
+
+	public boolean inViewState() {
+		return getFlowExecutionContext().isActive() && getCurrentState() != null && getCurrentState().isViewState();
+	}
+
+	public MutableAttributeMap getViewScope() throws IllegalStateException {
+		if (!getFlowExecutionContext().isActive()) {
+			throw new IllegalStateException("This flow is not active");
+		}
+		if (!getCurrentState().isViewState()) {
+			throw new IllegalStateException("The current state '" + getCurrentState().getId() + "' of this flow '"
+					+ getActiveFlow().getId() + "' is not a view state - view scope not accessible");
+		}
+		return (MutableAttributeMap) getFlowScope().get(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
 	public MutableAttributeMap getFlowScope() {

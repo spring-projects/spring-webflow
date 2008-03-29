@@ -228,6 +228,10 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private class NormalViewState implements StateDefinition {
 
+		public boolean isViewState() {
+			return true;
+		}
+
 		public String getId() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}

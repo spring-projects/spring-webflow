@@ -265,6 +265,10 @@ public class JsfViewTests extends TestCase {
 
 		MutableAttributeMap attrs = new LocalAttributeMap();
 
+		public boolean isViewState() {
+			return true;
+		}
+
 		public ModalViewState() {
 			attrs.asMap().put("modal", Boolean.TRUE);
 		}
