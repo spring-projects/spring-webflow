@@ -3,6 +3,7 @@ package org.springframework.webflow.mvc.view;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.support.StaticExpression;
-import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.binding.format.formatters.DateFormatter;
 import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -27,7 +28,13 @@ public class MvcViewTests extends TestCase {
 
 	private Map model;
 
-	private FormatterRegistry formatterRegistry = DefaultFormatterRegistry.getSharedInstance();
+	private DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
+
+	protected void setUp() {
+		DateFormatter dateFormatter = new DateFormatter();
+		dateFormatter.setLocale(Locale.ENGLISH);
+		formatterRegistry.registerFormatter(Date.class, dateFormatter);
+	}
 
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
