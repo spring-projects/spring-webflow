@@ -63,7 +63,6 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	/**
 	 * Constructs an externalized flow execution test with given name.
 	 * @param name the name of the test
-	 * @since 1.0.2
 	 */
 	public AbstractExternalizedFlowExecutionTests(String name) {
 		super(name);
@@ -122,6 +121,14 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
+	 * Returns the factory used to create pointers to externalized flow definition resources.
+	 * @return the resource factory
+	 */
+	protected FlowDefinitionResourceFactory getResourceFactory() {
+		return resourceFactory;
+	}
+
+	/**
 	 * Returns the flow definition being tested.
 	 */
 	protected final FlowDefinition getFlowDefinition() {
@@ -142,7 +149,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * @return the built flow definition, ready for execution
 	 */
 	protected final Flow buildFlow() {
-		FlowDefinitionResource resource = getResource(resourceFactory);
+		FlowDefinitionResource resource = getResource(getResourceFactory());
 		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
 		configureFlowBuilderContext(builderContext);
 		FlowBuilder builder = createFlowBuilder(resource);

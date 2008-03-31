@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.model.registry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
@@ -37,8 +35,6 @@ import org.springframework.webflow.engine.model.builder.FlowModelBuilderExceptio
  */
 public class DefaultFlowModelHolder implements FlowModelHolder {
 
-	private static final Log logger = LogFactory.getLog(DefaultFlowModelHolder.class);
-
 	/**
 	 * The flow model assembled by this assembler.
 	 */
@@ -53,12 +49,6 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	 * The flow model builder.
 	 */
 	private FlowModelBuilder flowModelBuilder;
-
-	/**
-	 * A last modified date for the backing flow definition resource, used to support automatic reassembly on resource
-	 * change.
-	 */
-	private long lastModified;
 
 	/**
 	 * Creates a new refreshable flow model holder that uses the configured assembler (GOF director) to drive flow

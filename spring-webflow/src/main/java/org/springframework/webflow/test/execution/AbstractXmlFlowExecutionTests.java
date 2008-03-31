@@ -17,6 +17,7 @@ package org.springframework.webflow.test.execution;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.webflow.config.FlowDefinitionResource;
+import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
@@ -57,7 +58,7 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
  */
 public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalizedFlowExecutionTests {
 
-	private FlowModelRegistry flowModelRegistry;
+	private FlowModelRegistry flowModelRegistry = new FlowModelRegistryImpl();
 
 	/**
 	 * Constructs a default XML flow execution test.
@@ -65,7 +66,6 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	 */
 	public AbstractXmlFlowExecutionTests() {
 		super();
-		flowModelRegistry = new FlowModelRegistryImpl();
 	}
 
 	/**
@@ -74,10 +74,10 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	 */
 	public AbstractXmlFlowExecutionTests(String name) {
 		super(name);
-		flowModelRegistry = new FlowModelRegistryImpl();
 	}
 
-	protected FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
+	protected final FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
+		registerDependentFlowModels();
 		FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
 		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder, resource.getId());
 		flowModelRegistry.registerFlowModel(modelHolder);
@@ -89,6 +89,17 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	}
 
 	/**
+	 * Template method subclasses may override to return pointers to "flow model resources" needed to build the
+	 * definition of the flow being tested. Typically overridden when the flow being tested extends from another flow.
+	 * Default returns null, assuming no inheritance.
+	 * @param resourceFactory the resource factory
+	 * @return the flow definition model resources
+	 */
+	protected FlowDefinitionResource[] getModelResources(FlowDefinitionResourceFactory resourceFactory) {
+		return null;
+	}
+
+	/**
 	 * Template method subclasses may override to register mock implementations of services used locally by the flow
 	 * being tested. By default, this method does nothing.
 	 * @param flowBeanFactory the local flow bean factory, you may register mock services with it using
@@ -96,4 +107,18 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	 */
 	protected void registerMockFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 	}
+
+	// internal helpers
+
+	private void registerDependentFlowModels() {
+		FlowDefinitionResource[] modelResources = getModelResources(getResourceFactory());
+		if (modelResources != null) {
+			for (int i = 0; i < modelResources.length; i++) {
+				FlowDefinitionResource modelResource = modelResources[i];
+				FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(modelResource.getPath(), flowModelRegistry);
+				flowModelRegistry.registerFlowModel(new DefaultFlowModelHolder(modelBuilder, modelResource.getId()));
+			}
+		}
+	}
+
 }
