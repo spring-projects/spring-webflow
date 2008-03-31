@@ -38,9 +38,9 @@
 		<dependency org="org.junit" name="junit" rev="3.8.2" conf="compile, test->default" />
 
 		<!-- build time only dependencies -->		
-		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="compile->default" />
-		<dependency org="javax.portlet" name="portlet-api" rev="1.0" conf="compile->default" />
-		<dependency org="javax.el" name="el-api" rev="1.0" conf="compile->default" />
+		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default" />
+		<dependency org="javax.portlet" name="portlet-api" rev="1.0" conf="provided->default" />
+		<dependency org="javax.el" name="el-api" rev="1.0" conf="provided->default" />
 		<dependency org="org.ognl" name="ognl" rev="2.6.9" conf="compile->default" />
 		<dependency org="org.springframework" name="spring-orm" rev="2.5.2" conf="compile->default" />
 		<dependency org="org.springframework" name="spring-webmvc-portlet" rev="2.5.2" conf="compile->default" />

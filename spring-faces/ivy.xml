@@ -27,9 +27,9 @@
 		<dependency org="org.springframework.webflow" name="spring-webflow" rev="latest.integration" conf="compile->compile"/>
 
 		<!-- build time only dependencies -->
-		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="compile->default" />
-		<dependency org="javax.el" name="el-api" rev="1.0" conf="compile->default" />
-		<dependency org="org.richfaces.framework" name="richfaces-api" rev="3.1.4.GA" conf="compile->default" />
+		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default" />
+		<dependency org="javax.el" name="el-api" rev="1.0" conf="provided->default" />
+		<dependency org="org.richfaces.framework" name="richfaces-api" rev="3.1.4.GA" conf="provided->default" />
 		
 		<!-- JSF 1.2 dependencies -->
 		<!-- note that at this time we depend on MyFaces, not JSF-RI -->
