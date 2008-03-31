@@ -1,6 +1,8 @@
 package org.springframework.webflow.engine.builder.support;
 
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
@@ -104,8 +106,18 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		GenericConversionService service = new GenericConversionService();
 		service.addConverter(new TextToTransitionCriteria(this));
 		service.addConverter(new TextToTargetStateResolver(this));
-		service.setParent(flowBuilderServices.getConversionService());
+		service.setParent(new ParentConversionServiceProxy());
 		return service;
+	}
+
+	/**
+	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
+	 */
+	private class ParentConversionServiceProxy implements ConversionService {
+		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+				throws ConversionException {
+			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
+		}
 	}
 
 }
