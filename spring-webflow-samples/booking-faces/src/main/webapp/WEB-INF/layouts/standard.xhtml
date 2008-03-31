@@ -8,15 +8,16 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
+	
 	<sf:includeStyles/>
-	<style type="text/css" media="screen">
-        @import url("${request.contextPath}/resources/css-framework/css/tools.css");
-        @import url("${request.contextPath}/resources/css-framework/css/typo.css");
-        @import url("${request.contextPath}/resources/css-framework/css/forms.css");
-        @import url("${request.contextPath}/resources/css-framework/css/layout-navtop-localleft.css");        
-        @import url("${request.contextPath}/resources/css-framework/css/layout.css");
-        @import url("${request.contextPath}/styles/booking.css");
-    </style>
+	<sf:resourceGroup>
+		<sf:resource resourcePath="/css-framework/css/tools.css"/>
+		<sf:resource resourcePath="/css-framework/css/typo.css"/>
+		<sf:resource resourcePath="/css-framework/css/forms.css"/>
+		<sf:resource resourcePath="/css-framework/css/layout-navtop-localleft.css"/>
+		<sf:resource resourcePath="/css-framework/css/layout.css"/>
+	</sf:resourceGroup>
+	<sf:resource resourcePath="/styles/booking.css"/>
 	<ui:insert name="headIncludes"/>
 </head>
 <body class="tundra spring">
@@ -31,16 +32,16 @@
 			</div>
 		</div>
 		<div id="branding" class="spring">
-			<a href="#{request.contextPath}"><img src="${request.contextPath}/images/header.jpg" alt="Spring Travel"/></a>
+			<a href="#{request.contextPath}"><img src="${request.contextPath}/resources/images/header.jpg" alt="Spring Travel"/></a>
 		</div>
 	</div>
 	<div id="content" class="clearfix spring">
 		<div id="local" class="spring">
 			<a href="http://www.thespringexperience.com">
-				<img src="${request.contextPath}/images/diplomat.jpg" />
+				<img src="${request.contextPath}/resources/images/diplomat.jpg" />
 			</a>
 			<a href="http://www.thespringexperience.com">
-				<img src="${request.contextPath}/images/tse.gif" />
+				<img src="${request.contextPath}/resources/images/tse.gif" />
 			</a>
 			<p>
 			</p>
@@ -50,7 +51,7 @@
 		</div>
 	</div>
 	<div id="footer" class="clearfix spring">
-		<a href="http://www.springframework.org"><img src="${request.contextPath}/images/powered-by-spring.png" /></a>
+		<a href="http://www.springframework.org"><img src="${request.contextPath}/resources/images/powered-by-spring.png" /></a>
 	</div>
 </div>
 
