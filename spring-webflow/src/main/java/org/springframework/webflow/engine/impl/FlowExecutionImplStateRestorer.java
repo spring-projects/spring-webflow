@@ -51,36 +51,35 @@ public class FlowExecutionImplStateRestorer extends FlowExecutionImplServicesCon
 
 	public FlowExecution restoreState(FlowExecution flowExecution, FlowExecutionKey key,
 			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory) {
-		FlowExecutionImpl impl = (FlowExecutionImpl) flowExecution;
-		if (impl.getFlowId() == null) {
+		FlowExecutionImpl execution = (FlowExecutionImpl) flowExecution;
+		if (execution.getFlowId() == null) {
 			throw new IllegalStateException("Cannot restore flow execution impl: the flow id is null");
 		}
-		if (impl.getFlowSessions() == null) {
+		if (execution.getFlowSessions() == null) {
 			throw new IllegalStateException("Cannot restore flow execution impl: the flowSessions list is null");
 		}
-		Flow flow = (Flow) definitionLocator.getFlowDefinition(impl.getFlowId());
-		impl.setFlow(flow);
-		if (impl.hasSessions()) {
-			FlowSessionImpl root = impl.getRootSession();
-			root.setFlow(flow);
-			root.setState(flow.getStateInstance(root.getStateId()));
-			if (impl.hasSubflowSessions()) {
-				for (ListIterator it = impl.getSubflowSessionIterator(); it.hasNext();) {
-					FlowSessionImpl subflow = (FlowSessionImpl) it.next();
-					// TODO subflows encapsulated by top-level flow
-					Flow definition = (Flow) definitionLocator.getFlowDefinition(subflow.getFlowId());
-					subflow.setFlow(definition);
-					subflow.setState(definition.getStateInstance(subflow.getStateId()));
+		Flow flow = (Flow) definitionLocator.getFlowDefinition(execution.getFlowId());
+		execution.setFlow(flow);
+		if (execution.hasSessions()) {
+			FlowSessionImpl rootSession = execution.getRootSession();
+			rootSession.setFlow(flow);
+			rootSession.setState(flow.getStateInstance(rootSession.getStateId()));
+			if (execution.hasSubflowSessions()) {
+				for (ListIterator it = execution.getSubflowSessionIterator(); it.hasNext();) {
+					FlowSessionImpl subflowSession = (FlowSessionImpl) it.next();
+					Flow definition = (Flow) definitionLocator.getFlowDefinition(subflowSession.getFlowId());
+					subflowSession.setFlow(definition);
+					subflowSession.setState(definition.getStateInstance(subflowSession.getStateId()));
 				}
 			}
 		}
-		impl.setKey(key);
+		execution.setKey(key);
 		if (conversationScope == null) {
 			conversationScope = new LocalAttributeMap();
 		}
-		impl.setConversationScope(conversationScope);
-		configureServices(impl);
-		impl.setKeyFactory(keyFactory);
-		return impl;
+		execution.setConversationScope(conversationScope);
+		configureServices(execution);
+		execution.setKeyFactory(keyFactory);
+		return execution;
 	}
 }

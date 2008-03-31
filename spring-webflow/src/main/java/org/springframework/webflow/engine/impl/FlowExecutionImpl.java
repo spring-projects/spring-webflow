@@ -140,6 +140,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	private Serializable messagesMemento;
 
+	/**
+	 * The flow execution outcome event.
+	 */
 	private transient Event outcome;
 
 	/**
@@ -154,20 +157,26 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * @param flow the root flow of this flow execution
 	 */
 	public FlowExecutionImpl(Flow flow) {
-		setFlow(flow);
+		Assert.notNull(flow, "The flow definition is required");
+		this.flow = flow;
 		this.listeners = new FlowExecutionListeners();
 		this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 		this.flowSessions = new LinkedList();
 		this.conversationScope = new LocalAttributeMap();
 	}
 
+	/**
+	 * Package private constructor only useful for testing restoration behavior for this object.
+	 * @param flowId the flow id
+	 * @param flowSessions the flow sessions
+	 */
 	FlowExecutionImpl(String flowId, LinkedList flowSessions) {
 		this.flowId = flowId;
 		this.flowSessions = flowSessions;
 	}
 
 	public String getCaption() {
-		return "execution of '" + flowId + "'";
+		return "execution of '" + flow.getId() + "'";
 	}
 
 	// implementing FlowExecutionContext
@@ -343,13 +352,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		listeners.fireStateEntering(context, newState);
 		FlowSessionImpl session = getActiveSessionInternal();
 		State previousState = (State) session.getState();
-		if (previousState != null && previousState.isViewState()) {
-			session.destroyViewScope();
-		}
-		session.setState(newState);
-		if (newState.isViewState()) {
-			session.initViewScope();
-		}
+		session.setCurrentState(newState);
 		listeners.fireStateEntered(context, previousState);
 	}
 
@@ -370,7 +373,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		flowSessions.removeLast();
 		listeners.fireSessionEnded(context, session, output);
 		if (hasEnded()) {
-			this.outcome = new Event(this, session.getState().getId(), output);
+			outcome = new Event(this, session.getState().getId(), output);
 		}
 		return session;
 	}
@@ -386,7 +389,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	// package private setters for restoring transient state used by FlowExecutionImplServicesConfigurer
 
 	FlowExecutionListener[] getListeners() {
-		return this.listeners.getArray();
+		return listeners.getArray();
 	}
 
 	void setListeners(FlowExecutionListener[] listeners) {
@@ -406,28 +409,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	// Used by FlowExecutionImplStateRestorer
-
-	/**
-	 * Restore the flow definition of this flow execution.
-	 */
-	void setFlow(Flow flow) {
-		this.flow = flow;
-		this.flowId = flow.getId();
-	}
-
-	/**
-	 * Restore conversation scope for this flow execution.
-	 */
-	void setConversationScope(MutableAttributeMap conversationScope) {
-		this.conversationScope = conversationScope;
-	}
-
-	/**
-	 * Restore the flow execution key.
-	 */
-	void setKey(FlowExecutionKey key) {
-		this.key = key;
-	}
 
 	/**
 	 * Returns the flow definition id of this flow execution.
@@ -471,6 +452,27 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return flowSessions.listIterator(1);
 	}
 
+	/**
+	 * Restore the flow definition of this flow execution.
+	 */
+	void setFlow(Flow flow) {
+		this.flow = flow;
+	}
+
+	/**
+	 * Restore conversation scope for this flow execution.
+	 */
+	void setConversationScope(MutableAttributeMap conversationScope) {
+		this.conversationScope = conversationScope;
+	}
+
+	/**
+	 * Restore the flow execution key.
+	 */
+	void setKey(FlowExecutionKey key) {
+		this.key = key;
+	}
+
 	// custom serialization (implementation of Externalizable for optimized storage)
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -483,7 +485,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeBoolean(started);
-		out.writeObject(flowId);
+		out.writeObject(flow.getId());
 		out.writeObject(flowSessions);
 		out.writeObject(flashScope);
 		out.writeObject(messagesMemento);
@@ -501,7 +503,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
 						.append("flashScope", flashScope).toString();
 			} else {
-				return "[Unhydrated " + getCaption() + "]";
+				return "[Unhydrated execution of '" + flowId + "']";
 			}
 		}
 	}
@@ -532,13 +534,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	private FlowExecutionException wrap(Exception e) {
 		if (isActive()) {
-			FlowSessionImpl session = getActiveSessionInternal();
-			String flowId = session.getFlowId();
-			String stateId = session.getStateId();
+			FlowSession session = getActiveSession();
+			String flowId = session.getDefinition().getId();
+			String stateId = session.getState() != null ? session.getState().getId() : null;
 			return new FlowExecutionException(flowId, stateId, "Exception thrown in state '" + stateId + "' of flow '"
 					+ flowId + "'", e);
 		} else {
-			return new FlowExecutionException(flowId, null, "Exception thrown within inactive flow '" + flowId + "'", e);
+			return new FlowExecutionException(flow.getId(), null, "Exception thrown within inactive flow '"
+					+ flow.getId() + "'", e);
 		}
 	}
 

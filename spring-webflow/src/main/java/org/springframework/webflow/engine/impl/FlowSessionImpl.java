@@ -88,7 +88,8 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * @param parent this session's parent (may be null)
 	 */
 	public FlowSessionImpl(Flow flow, FlowSessionImpl parent) {
-		setFlow(flow);
+		Assert.notNull(flow, "The flow is required");
+		this.flow = flow;
 		this.parent = parent;
 	}
 
@@ -126,6 +127,18 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return parent == null;
 	}
 
+	// public impl
+
+	public void setCurrentState(State state) {
+		if (this.state != null && this.state.isViewState()) {
+			destroyViewScope();
+		}
+		this.state = state;
+		if (this.state.isViewState()) {
+			initViewScope();
+		}
+	}
+
 	// custom serialization
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -136,8 +149,8 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeObject(flowId);
-		out.writeObject(stateId);
+		out.writeObject(flow.getId());
+		out.writeObject(state.getId());
 		out.writeObject(scope);
 		out.writeObject(parent);
 	}
@@ -148,8 +161,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return flow;
 	}
 
-	// package private setters for setting/updating internal state
-	// used by FlowExecutionImplStateRestorer
+	// package private setters used by FlowExecutionImplStateRestorer for setting/updating internal state
 
 	/**
 	 * Restores the definition of this flow session.
@@ -159,7 +171,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	void setFlow(Flow flow) {
 		Assert.notNull(flow, "The flow is required");
 		this.flow = flow;
-		this.flowId = flow.getId();
 	}
 
 	/**
@@ -173,39 +184,44 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		Assert.isTrue(flow == state.getOwner(),
 				"The state does not belong to the flow associated with this flow session");
 		this.state = state;
-		this.stateId = state.getId();
 	}
 
 	/**
-	 * Returns the id of the flow of this session.
+	 * Returns the de-serialized id indicating the flow id of this session.
 	 */
 	String getFlowId() {
 		return flowId;
 	}
 
 	/**
-	 * Returns the id of the current state of this session.
+	 * Returns the de-serialized id indicating the current state of this session.
 	 */
 	String getStateId() {
 		return stateId;
 	}
 
+	// internal helpers
+
 	/**
 	 * Initialize the view scope data structure.
 	 */
-	void initViewScope() {
+	private void initViewScope() {
 		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
 	}
 
 	/**
 	 * Destroy the view scope data structure.
 	 */
-	void destroyViewScope() {
+	private void destroyViewScope() {
 		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("flow", flowId).append("state", stateId).append("scope", scope)
-				.toString();
+		if (flow != null) {
+			return new ToStringCreator(this).append("flow", flow.getId()).append("state",
+					state != null ? state.getId() : null).append("scope", scope).toString();
+		} else {
+			return "[Unhydrated session '" + flowId + "' in state '" + stateId + "']";
+		}
 	}
 }
