@@ -16,6 +16,7 @@
 package org.springframework.webflow.conversation.impl;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,8 +33,21 @@ class JdkConcurrentConversationLock implements ConversationLock, Serializable {
 	 */
 	private Lock lock = new ReentrantLock();
 
+	private int timeoutSeconds = 30;
+
+	public void setTimeoutSeconds(int timeoutSeconds) {
+		this.timeoutSeconds = timeoutSeconds;
+	}
+
 	public void lock() {
-		lock.lock();
+		try {
+			boolean acquired = lock.tryLock(timeoutSeconds, TimeUnit.SECONDS);
+			if (!acquired) {
+				throw new LockException("Unable to acquire conversation lock after " + timeoutSeconds + " seconds");
+			}
+		} catch (InterruptedException e) {
+			throw new IllegalStateException("Unable to acquire conversation lock - thread interrupted", e);
+		}
 	}
 
 	public void unlock() {

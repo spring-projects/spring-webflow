@@ -34,15 +34,24 @@ class UtilConcurrentConversationLock implements ConversationLock {
 	 */
 	private final ReentrantLock lock = new ReentrantLock();
 
+	private int timeoutMills;
+
+	public void setTimeoutSeconds(int timeoutSeconds) {
+		this.timeoutMills = timeoutSeconds * 1000;
+	}
+
 	/**
 	 * Acquires the lock.
 	 * @throws SystemInterruptedException if the lock cannot be acquired due to interruption
 	 */
 	public void lock() {
 		try {
-			lock.acquire();
+			boolean acquired = lock.attempt(timeoutMills);
+			if (!acquired) {
+				throw new LockException("Unable to acquire conversation lock after " + timeoutMills / 1000 + " seconds");
+			}
 		} catch (InterruptedException e) {
-			throw new SystemInterruptedException("Unable to acquire lock.", e);
+			throw new SystemInterruptedException("Unable to acquire conversation lock - thread interrupted", e);
 		}
 	}
 

@@ -101,7 +101,6 @@ class ContainedConversation implements Conversation, Serializable {
 			logger.debug("Unlocking conversation " + id);
 		}
 		lock.unlock();
-
 		// re-bind the conversation container in the session
 		// this is required to make session replication work correctly in
 		// a clustered environment
