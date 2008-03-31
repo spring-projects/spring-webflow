@@ -207,7 +207,7 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 			if (logger.isDebugEnabled()) {
 				logger.debug("Executing " + this);
 			}
-			context.setLastTransition(this);
+			context.setCurrentTransition(this);
 			if (targetStateResolver != null) {
 				State targetState = targetStateResolver.resolveTargetState(this, sourceState, context);
 				if (targetState != null) {

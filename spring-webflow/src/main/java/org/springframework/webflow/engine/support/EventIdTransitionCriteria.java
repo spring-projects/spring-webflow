@@ -26,7 +26,7 @@ import org.springframework.webflow.execution.RequestContext;
  * Simple transition criteria that matches on an eventId and nothing else. Specifically, if the id of the last event
  * that occurred equals {@link #getEventId()} this criteria will return true.
  * 
- * @see RequestContext#getLastEvent()
+ * @see RequestContext#getCurrentEvent()
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
@@ -67,7 +67,7 @@ public class EventIdTransitionCriteria implements TransitionCriteria, Serializab
 	}
 
 	public boolean test(RequestContext context) {
-		Event lastEvent = context.getLastEvent();
+		Event lastEvent = context.getCurrentEvent();
 		if (lastEvent == null) {
 			return false;
 		}

@@ -54,12 +54,12 @@ public interface RequestControlContext extends RequestContext {
 	public void setCurrentState(State state);
 
 	/**
-	 * Record the last transition that executed in the executing flow. This method will be called as part of executing a
-	 * transition from one state to another.
-	 * @param lastTransition the last transition that executed
+	 * Record the transition executing in the flow. This method will be called as part of executing a transition from
+	 * one state to another.
+	 * @param transition the transition being executed
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
-	public void setLastTransition(Transition lastTransition);
+	public void setCurrentTransition(Transition transition);
 
 	/**
 	 * Assign the ongoing flow execution its flow execution key. This method will be called before a state is about to

@@ -143,7 +143,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 
 		private static final PropertyResolver currentEventResolver = new PropertyResolver() {
 			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {
-				return requestContext.getLastEvent();
+				return requestContext.getCurrentEvent();
 			}
 		};
 

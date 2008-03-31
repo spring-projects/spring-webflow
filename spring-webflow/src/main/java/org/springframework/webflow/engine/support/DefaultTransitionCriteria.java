@@ -52,7 +52,7 @@ public class DefaultTransitionCriteria implements TransitionCriteria {
 			return ((Boolean) result).booleanValue();
 		} else {
 			String eventId = String.valueOf(result);
-			return context.getLastEvent().getId().equals(eventId);
+			return context.getCurrentEvent().getId().equals(eventId);
 		}
 	}
 

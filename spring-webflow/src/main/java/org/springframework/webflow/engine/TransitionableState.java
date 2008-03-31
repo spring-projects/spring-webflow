@@ -90,8 +90,8 @@ public abstract class TransitionableState extends State implements Transitionabl
 	public Transition getRequiredTransition(RequestContext context) throws NoMatchingTransitionException {
 		Transition transition = getTransitionSet().getTransition(context);
 		if (transition == null) {
-			throw new NoMatchingTransitionException(getFlow().getId(), getId(), context.getLastEvent(),
-					"No transition found on occurence of event '" + context.getLastEvent() + "' in state '" + getId()
+			throw new NoMatchingTransitionException(getFlow().getId(), getId(), context.getCurrentEvent(),
+					"No transition found on occurence of event '" + context.getCurrentEvent() + "' in state '" + getId()
 							+ "' of flow '" + getFlow().getId() + "' -- valid transitional criteria are "
 							+ StylerUtils.style(getTransitionSet().getTransitionCriterias())
 							+ " -- likely programmer error, check the set of TransitionCriteria for this state");
@@ -111,7 +111,7 @@ public abstract class TransitionableState extends State implements Transitionabl
 
 	/**
 	 * Inform this state definition that an event was signaled in it. The signaled event is the last event available in
-	 * given request context ({@link RequestContext#getLastEvent()}).
+	 * given request context ({@link RequestContext#getCurrentEvent()}).
 	 * @param context the flow execution control context
 	 * @throws NoMatchingTransitionException when a matching transition cannot be found
 	 */

@@ -342,7 +342,7 @@ public class FormActionTests extends TestCase {
 		assertSame(formObject, errors.getTarget());
 
 		context = new MockRequestContext();
-		context.setLastEvent(new Event(this, "start"));
+		context.setCurrentEvent(new Event(this, "start"));
 
 		OtherTestBean freshBean = new OtherTestBean();
 		context.getFlowScope().put("test", freshBean);

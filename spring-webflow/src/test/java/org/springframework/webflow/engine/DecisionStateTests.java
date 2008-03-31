@@ -35,7 +35,7 @@ public class DecisionStateTests extends TestCase {
 		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("target")));
 		new EndState(flow, "target");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.setLastEvent(new Event(this, "foo"));
+		context.setCurrentEvent(new Event(this, "foo"));
 		state.enter(context);
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
@@ -47,7 +47,7 @@ public class DecisionStateTests extends TestCase {
 		state.getTransitionSet().add(new Transition(to("target")));
 		new EndState(flow, "target");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.setLastEvent(new Event(this, "bogus"));
+		context.setCurrentEvent(new Event(this, "bogus"));
 		state.enter(context);
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
@@ -58,7 +58,7 @@ public class DecisionStateTests extends TestCase {
 		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("invalid")));
 		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("bar"), to("invalid")));
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.setLastEvent(new Event(this, "bogus"));
+		context.setCurrentEvent(new Event(this, "bogus"));
 		try {
 			state.enter(context);
 			fail("Expected no matching");

@@ -76,6 +76,14 @@ public interface RequestContext {
 	public StateDefinition getCurrentState() throws IllegalStateException;
 
 	/**
+	 * Returns true if the flow is currently active and in a view state. When in a view state {@link #getViewScope()},
+	 * can be safely called.
+	 * @see #getViewScope()
+	 * @return true if in a view state, false if not
+	 */
+	public boolean inViewState();
+
+	/**
 	 * Returns a mutable map for accessing and/or setting attributes in request scope. <b>Request scoped attributes
 	 * exist for the duration of this request only.</b>
 	 * @return the request scope
@@ -90,17 +98,10 @@ public interface RequestContext {
 	public MutableAttributeMap getFlashScope();
 
 	/**
-	 * Returns true if the flow is currently active and in a view state. When in a view state {@link #getViewScope()},
-	 * can be safely called.
-	 * @see #getViewScope()
-	 * @return true if in a view state, false if not
-	 */
-	public boolean inViewState();
-
-	/**
 	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
 	 * the life of the current view state.</b>
 	 * @return the view scope
+	 * @see #inViewState()
 	 * @throws IllegalStateException this flow is not in a view-state
 	 */
 	public MutableAttributeMap getViewScope() throws IllegalStateException;
@@ -161,17 +162,17 @@ public interface RequestContext {
 	public FlowExecutionContext getFlowExecutionContext();
 
 	/**
-	 * Returns the last event signaled during this request. The event may or may not have caused a state transition to
-	 * happen.
-	 * @return the last signaled event, or null if no event has been signaled yet
+	 * Returns the current event being processed by this flow. The event may or may not have caused a state transition
+	 * to happen.
+	 * @return the current event, or null if no event has been signaled yet
 	 */
-	public Event getLastEvent();
+	public Event getCurrentEvent();
 
 	/**
 	 * Returns the last state transition that executed in this request.
 	 * @return the last transition, or <code>null</code> if no transition has occurred yet
 	 */
-	public TransitionDefinition getLastTransition();
+	public TransitionDefinition getCurrentTransition();
 
 	/**
 	 * Returns a context map for accessing arbitrary attributes about the state of the current request. These attributes

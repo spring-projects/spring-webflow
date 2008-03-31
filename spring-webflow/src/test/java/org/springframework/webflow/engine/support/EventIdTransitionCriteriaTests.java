@@ -24,18 +24,18 @@ public class EventIdTransitionCriteriaTests extends TestCase {
 	public void testTestCriteria() {
 		EventIdTransitionCriteria c = new EventIdTransitionCriteria("foo");
 		MockRequestContext context = new MockRequestContext();
-		context.setLastEvent(new Event(this, "foo"));
+		context.setCurrentEvent(new Event(this, "foo"));
 		assertEquals(true, c.test(context));
-		context.setLastEvent(new Event(this, "FOO"));
+		context.setCurrentEvent(new Event(this, "FOO"));
 		assertEquals(false, c.test(context)); // case sensitive
-		context.setLastEvent(new Event(this, "bar"));
+		context.setCurrentEvent(new Event(this, "bar"));
 		assertEquals(false, c.test(context));
 	}
 
 	public void testNullLastEventId() {
 		EventIdTransitionCriteria c = new EventIdTransitionCriteria("foo");
 		MockRequestContext context = new MockRequestContext();
-		context.setLastEvent(null);
+		context.setCurrentEvent(null);
 		assertEquals(false, c.test(context));
 	}
 

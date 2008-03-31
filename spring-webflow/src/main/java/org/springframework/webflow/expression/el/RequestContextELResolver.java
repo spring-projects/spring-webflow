@@ -28,7 +28,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Custom EL resolver that resolves the current RequestContext under the variable {@link #REQUEST_CONTEXT_VARIABLE_NAME}.
- * Allows for accessing any propert of the RequestContext instance. For example:
+ * Allows for accessing any property of the RequestContext instance. For example:
  * "#{flowRequestContext.conversationScope.myProperty}".
  * 
  * @author Jeremy Grelle

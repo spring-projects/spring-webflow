@@ -74,7 +74,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		String expression = "${3 + 4}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
 		MockRequestContext ctx = getRequestContext();
-		ctx.setLastEvent(new Event(this, "7"));
+		ctx.setCurrentEvent(new Event(this, "7"));
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
@@ -94,7 +94,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		MockRequestContext ctx = new MockRequestContext(flow);
 		RequestContextHolder.setRequestContext(ctx);
 		ctx.getFlowScope().put("foo", "bar");
-		ctx.setLastEvent(new Event(this, "sample"));
+		ctx.setCurrentEvent(new Event(this, "sample"));
 		return ctx;
 	}
 }

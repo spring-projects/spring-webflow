@@ -45,8 +45,6 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class MockRequestContext implements RequestContext {
 
-	protected static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
-
 	private FlowExecutionContext flowExecutionContext;
 
 	private ExternalContext externalContext;
@@ -57,9 +55,9 @@ public class MockRequestContext implements RequestContext {
 
 	private MutableAttributeMap attributes = new LocalAttributeMap();
 
-	private Event lastEvent;
+	private Event currentEvent;
 
-	private Transition lastTransition;
+	private Transition currentTransition;
 
 	/**
 	 * Convenience constructor that creates a new mock request context with the following defaults:
@@ -120,6 +118,10 @@ public class MockRequestContext implements RequestContext {
 		return getFlowExecutionContext().getActiveSession().getState();
 	}
 
+	public boolean inViewState() {
+		return getFlowExecutionContext().isActive() && getCurrentState() != null && getCurrentState().isViewState();
+	}
+
 	public MutableAttributeMap getRequestScope() {
 		return requestScope;
 	}
@@ -128,19 +130,8 @@ public class MockRequestContext implements RequestContext {
 		return getMockFlowExecutionContext().getFlashScope();
 	}
 
-	public boolean inViewState() {
-		return getFlowExecutionContext().isActive() && getCurrentState() != null && getCurrentState().isViewState();
-	}
-
 	public MutableAttributeMap getViewScope() throws IllegalStateException {
-		if (!getFlowExecutionContext().isActive()) {
-			throw new IllegalStateException("This flow is not active");
-		}
-		if (!getCurrentState().isViewState()) {
-			throw new IllegalStateException("The current state '" + getCurrentState().getId() + "' of this flow '"
-					+ getActiveFlow().getId() + "' is not a view state - view scope not accessible");
-		}
-		return (MutableAttributeMap) getFlowScope().get(FLOW_VIEW_MAP_ATTRIBUTE);
+		return getMockFlowExecutionContext().getActiveSession().getViewScope();
 	}
 
 	public MutableAttributeMap getFlowScope() {
@@ -167,12 +158,12 @@ public class MockRequestContext implements RequestContext {
 		return flowExecutionContext;
 	}
 
-	public Event getLastEvent() {
-		return lastEvent;
+	public Event getCurrentEvent() {
+		return currentEvent;
 	}
 
-	public TransitionDefinition getLastTransition() {
-		return lastTransition;
+	public TransitionDefinition getCurrentTransition() {
+		return currentTransition;
 	}
 
 	public AttributeMap getAttributes() {
@@ -228,19 +219,19 @@ public class MockRequestContext implements RequestContext {
 	}
 
 	/**
-	 * Set the last event that occured in this request context.
-	 * @param lastEvent the event to set
+	 * Set the current event being processed by this flow.
+	 * @param event the current event
 	 */
-	public void setLastEvent(Event lastEvent) {
-		this.lastEvent = lastEvent;
+	public void setCurrentEvent(Event event) {
+		this.currentEvent = event;
 	}
 
 	/**
-	 * Set the last transition that executed in this request context.
-	 * @param lastTransition the last transition to set
+	 * Set the current transition executing in this request context.
+	 * @param transition the current transition to set
 	 */
-	public void setLastTransition(Transition lastTransition) {
-		this.lastTransition = lastTransition;
+	public void setCurrentTransition(Transition transition) {
+		this.currentTransition = transition;
 	}
 
 	/**

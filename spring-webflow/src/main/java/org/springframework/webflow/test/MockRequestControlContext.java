@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.test;
 
-import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
@@ -74,16 +73,8 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		flow.start(this, input);
 	}
 
-	public void initViewScope() {
-		getFlowScope().put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
-	}
-
-	public void destroyViewScope() {
-		getFlowScope().remove(FLOW_VIEW_MAP_ATTRIBUTE);
-	}
-
 	public boolean handleEvent(Event event) {
-		setLastEvent(event);
+		setCurrentEvent(event);
 		return ((Flow) getActiveFlow()).handleEvent(this);
 	}
 
@@ -104,12 +95,12 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		return key;
 	}
 
-	public boolean getAlwaysRedirectOnPause() {
-		return alwaysRedirectOnPause;
-	}
-
 	public boolean getFlowExecutionRedirectSent() {
 		return this.flowExecutionRedirectSent;
+	}
+
+	public boolean getAlwaysRedirectOnPause() {
+		return alwaysRedirectOnPause;
 	}
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {

@@ -129,7 +129,7 @@ public class ActionState extends TransitionableState {
 	public Transition getRequiredTransition(RequestContext context) throws NoMatchingTransitionException {
 		Transition transition = getTransitionSet().getTransition(context);
 		if (transition == null) {
-			throw new NoMatchingActionResultTransitionException(this, context.getLastEvent());
+			throw new NoMatchingActionResultTransitionException(this, context.getCurrentEvent());
 		}
 		return transition;
 	}
@@ -182,7 +182,7 @@ public class ActionState extends TransitionableState {
 			executionCount++;
 		}
 		if (executionCount > 0) {
-			throw new NoMatchingTransitionException(getFlow().getId(), getId(), context.getLastEvent(),
+			throw new NoMatchingTransitionException(getFlow().getId(), getId(), context.getCurrentEvent(),
 					"No transition was matched on the event(s) signaled by the [" + executionCount
 							+ "] action(s) that executed in this action state '" + getId() + "' of flow '"
 							+ getFlow().getId() + "'; transitions must be defined to handle action result outcomes -- "

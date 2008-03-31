@@ -75,14 +75,14 @@ class RequestControlContextImpl implements RequestControlContext {
 	private AttributeMap attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 
 	/**
-	 * The last event that occurred in this request context; initially null.
+	 * The current event being processed by this flow; initially null.
 	 */
-	private Event lastEvent;
+	private Event currentEvent;
 
 	/**
 	 * The last transition that executed in this request context; initially null.
 	 */
-	private Transition lastTransition;
+	private Transition currentTransition;
 
 	/**
 	 * Create a new request context.
@@ -148,12 +148,12 @@ class RequestControlContextImpl implements RequestControlContext {
 		return flowExecution;
 	}
 
-	public Event getLastEvent() {
-		return lastEvent;
+	public Event getCurrentEvent() {
+		return currentEvent;
 	}
 
-	public TransitionDefinition getLastTransition() {
-		return lastTransition;
+	public TransitionDefinition getCurrentTransition() {
+		return currentTransition;
 	}
 
 	public AttributeMap getAttributes() {
@@ -187,8 +187,8 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.setCurrentState(state, this);
 	}
 
-	public void setLastTransition(Transition lastTransition) {
-		this.lastTransition = lastTransition;
+	public void setCurrentTransition(Transition transition) {
+		this.currentTransition = transition;
 	}
 
 	public FlowExecutionKey assignFlowExecutionKey() {
@@ -205,7 +205,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public boolean handleEvent(Event event) throws FlowExecutionException {
-		this.lastEvent = event;
+		this.currentEvent = event;
 		return flowExecution.handleEvent(event, this);
 	}
 

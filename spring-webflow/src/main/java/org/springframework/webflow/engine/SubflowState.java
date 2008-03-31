@@ -107,7 +107,7 @@ public class SubflowState extends TransitionableState {
 	 */
 	public boolean handleEvent(RequestControlContext context) {
 		if (subflowAttributeMapper != null) {
-			AttributeMap subflowOutput = context.getLastEvent().getAttributes();
+			AttributeMap subflowOutput = context.getCurrentEvent().getAttributes();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Mapping subflow output " + subflowOutput);
 			}

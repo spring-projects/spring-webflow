@@ -230,7 +230,7 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		Event event = new Event(this, "foo");
 		try {
-			context.setLastEvent(event);
+			context.setCurrentEvent(event);
 			flow.handleEvent(context);
 		} catch (IllegalStateException e) {
 
@@ -241,9 +241,9 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState2"));
 		Event event = new Event(this, "submit");
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		try {
-			context.setLastEvent(event);
+			context.setCurrentEvent(event);
 			flow.handleEvent(context);
 		} catch (IllegalStateException e) {
 
@@ -254,9 +254,9 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		Event event = new Event(this, "submit");
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		assertTrue(context.getFlowExecutionContext().isActive());
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		flow.handleEvent(context);
 		assertTrue(!context.getFlowExecutionContext().isActive());
 	}
@@ -265,9 +265,9 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		Event event = new Event(this, "globalEvent");
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		assertTrue(context.getFlowExecutionContext().isActive());
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		flow.handleEvent(context);
 		assertTrue(!context.getFlowExecutionContext().isActive());
 	}
@@ -276,9 +276,9 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		Event event = new Event(this, "bogus");
-		context.setLastEvent(event);
+		context.setCurrentEvent(event);
 		try {
-			context.setLastEvent(event);
+			context.setCurrentEvent(event);
 			flow.handleEvent(context);
 		} catch (NoMatchingTransitionException e) {
 
