@@ -208,7 +208,7 @@ public class ViewStateTests extends TestCase {
 		state.resume(context);
 		assertTrue(context.getFlowExecutionContext().isActive());
 		assertEquals("next", context.getCurrentState().getId());
-		assertFalse(context.getFlowScope().contains("foo"));
+		assertFalse(context.getViewScope().contains("foo"));
 	}
 
 	protected TransitionCriteria on(String event) {

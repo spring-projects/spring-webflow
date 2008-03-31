@@ -343,7 +343,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		listeners.fireStateEntering(context, newState);
 		FlowSessionImpl session = getActiveSessionInternal();
 		State previousState = (State) session.getState();
+		if (previousState != null && previousState.isViewState()) {
+			session.destroyViewScope();
+		}
 		session.setState(newState);
+		if (newState.isViewState()) {
+			session.initViewScope();
+		}
 		listeners.fireStateEntered(context, previousState);
 	}
 

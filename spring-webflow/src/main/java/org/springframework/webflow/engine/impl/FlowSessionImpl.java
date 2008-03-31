@@ -126,12 +126,6 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return parent == null;
 	}
 
-	// package-private
-
-	Flow getFlow() {
-		return flow;
-	}
-
 	// custom serialization
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -146,6 +140,12 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		out.writeObject(stateId);
 		out.writeObject(scope);
 		out.writeObject(parent);
+	}
+
+	// package-private
+
+	Flow getFlow() {
+		return flow;
 	}
 
 	// package private setters for setting/updating internal state
@@ -172,14 +172,8 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		Assert.notNull(state, "The state is required");
 		Assert.isTrue(flow == state.getOwner(),
 				"The state does not belong to the flow associated with this flow session");
-		if (this.state != null && this.state.isViewState()) {
-			destroyViewScope();
-		}
 		this.state = state;
 		this.stateId = state.getId();
-		if (this.state.isViewState()) {
-			initViewScope();
-		}
 	}
 
 	/**
@@ -196,13 +190,17 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return stateId;
 	}
 
-	// internal helpers
-
-	private void initViewScope() {
+	/**
+	 * Initialize the view scope data structure.
+	 */
+	void initViewScope() {
 		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
 	}
 
-	private void destroyViewScope() {
+	/**
+	 * Destroy the view scope data structure.
+	 */
+	void destroyViewScope() {
 		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
