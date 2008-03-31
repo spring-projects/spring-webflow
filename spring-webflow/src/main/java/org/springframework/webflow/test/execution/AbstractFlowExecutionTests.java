@@ -100,6 +100,17 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * execution during the start operation
 	 * @throws FlowExecutionException if an exception was thrown while starting the flow execution
 	 */
+	protected void startFlow(ExternalContext context) throws FlowExecutionException {
+		startFlow(null, context);
+	}
+
+	/**
+	 * Start the flow execution to be tested.
+	 * @param input input to pass the flow
+	 * @param context the external context providing information about the caller's environment, used by the flow
+	 * execution during the start operation
+	 * @throws FlowExecutionException if an exception was thrown while starting the flow execution
+	 */
 	protected void startFlow(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException {
 		flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
 		flowExecution.start(input, context);
