@@ -55,6 +55,7 @@
 
 		<!-- test-time only dependencies -->
 		<dependency org="org.junit" name="junit" rev="3.8.2" conf="test->default"/>
+		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />
 		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default"/>
 	</dependencies>
 
