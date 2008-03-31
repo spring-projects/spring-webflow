@@ -28,18 +28,15 @@ import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.FlowExecutionKey;
-import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
 
 /**
  * General flow execution tests.
@@ -350,12 +347,6 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.resume(context);
 		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
 
-	}
-
-	private static class MockFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
-		public FlowExecutionKey getKey(FlowExecution execution) {
-			return new GeneratedFlowExecutionKey();
-		}
 	}
 
 }
