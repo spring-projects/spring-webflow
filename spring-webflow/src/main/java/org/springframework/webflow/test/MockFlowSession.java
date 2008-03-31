@@ -36,13 +36,13 @@ import org.springframework.webflow.execution.FlowSession;
  */
 public class MockFlowSession implements FlowSession {
 
+	private static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
+
 	private Flow definition;
 
 	private State state;
 
 	private MutableAttributeMap scope = new LocalAttributeMap();
-
-	private MutableAttributeMap flashMap = new LocalAttributeMap();
 
 	private FlowSession parent;
 
@@ -90,8 +90,16 @@ public class MockFlowSession implements FlowSession {
 		return scope;
 	}
 
-	public MutableAttributeMap getFlashMap() {
-		return flashMap;
+	public MutableAttributeMap getViewScope() throws IllegalStateException {
+		if (state == null) {
+			throw new IllegalStateException("The current state of this flow '" + definition.getId()
+					+ "' is [null] - cannot access view scope");
+		}
+		if (!state.isViewState()) {
+			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '"
+					+ definition.getId() + "' is not a view state - view scope not accessible");
+		}
+		return (MutableAttributeMap) scope.get(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
 	public FlowSession getParent() {
@@ -115,7 +123,13 @@ public class MockFlowSession implements FlowSession {
 	 * Set the currently active state.
 	 */
 	public void setState(State state) {
+		if (this.state != null && this.state.isViewState()) {
+			destroyViewScope();
+		}
 		this.state = state;
+		if (this.state != null && this.state.isViewState()) {
+			initViewScope();
+		}
 	}
 
 	/**
@@ -133,7 +147,7 @@ public class MockFlowSession implements FlowSession {
 		this.parent = parent;
 	}
 
-	// conveniece accessors
+	// convenience accessors
 
 	/**
 	 * Returns the flow definition of this session.
@@ -147,5 +161,15 @@ public class MockFlowSession implements FlowSession {
 	 */
 	public State getStateInternal() {
 		return state;
+	}
+
+	// internal helpers
+
+	private void initViewScope() {
+		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+	}
+
+	private void destroyViewScope() {
+		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 }

@@ -100,8 +100,8 @@ public interface FlowExecutionContext {
 	public FlowSession getActiveSession() throws IllegalStateException;
 
 	/**
-	 * Returns a mutable map for data held in "flash scope". Attributes in this map are cleared out on the next event
-	 * signaled against this flow execution. Flash attributes survive flow execution refresh operations.
+	 * Returns a mutable map for data held in "flash scope". Attributes in this map are cleared out on the next view
+	 * rendering. Flash attributes survive flow execution refresh operations.
 	 * @return flash scope
 	 */
 	public MutableAttributeMap getFlashScope();

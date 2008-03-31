@@ -331,6 +331,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	void start(Flow flow, MutableAttributeMap input, RequestControlContext context) {
 		listeners.fireSessionCreating(context, flow);
 		FlowSession session = activateSession(flow);
+		if (input == null) {
+			input = new LocalAttributeMap();
+		}
 		listeners.fireSessionStarting(context, session, input);
 		flow.start(context, input);
 		listeners.fireSessionStarted(context, session);

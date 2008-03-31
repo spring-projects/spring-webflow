@@ -39,12 +39,12 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	public void testStartFlow() {
 		ExternalContext context = new MockExternalContext();
-		startFlow(context);
+		startFlow(null, context);
 		assertCurrentStateEquals("enterCriteria");
 	}
 
 	public void testCriteriaSubmitSuccess() {
-		startFlow(new MockExternalContext());
+		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
 		context.putRequestParameter("firstName", "Keith");
 		context.putRequestParameter("lastName", "Donald");
@@ -55,7 +55,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	}
 
 	public void testNewSearch() {
-		startFlow(new MockExternalContext());
+		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
 		context.putRequestParameter("firstName", "Keith");
 		context.putRequestParameter("lastName", "Donald");
@@ -70,7 +70,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	}
 
 	public void testSelectValidResult() {
-		startFlow(new MockExternalContext());
+		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
 		context.putRequestParameter("firstName", "Keith");
 		context.putRequestParameter("lastName", "Donald");

@@ -40,6 +40,8 @@ import org.springframework.webflow.execution.FlowSession;
  */
 class FlowSessionImpl implements FlowSession, Externalizable {
 
+	private static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
+
 	/**
 	 * The flow definition (a singleton).
 	 * <p>
@@ -104,6 +106,18 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return scope;
 	}
 
+	public MutableAttributeMap getViewScope() throws IllegalStateException {
+		if (state == null) {
+			throw new IllegalStateException("The current state of this flow '" + flow.getId()
+					+ "' is [null] - cannot access view scope");
+		}
+		if (!state.isViewState()) {
+			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '" + flow.getId()
+					+ "' is not a view state - view scope not accessible");
+		}
+		return (MutableAttributeMap) scope.get(FLOW_VIEW_MAP_ATTRIBUTE);
+	}
+
 	public FlowSession getParent() {
 		return parent;
 	}
@@ -158,8 +172,14 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		Assert.notNull(state, "The state is required");
 		Assert.isTrue(flow == state.getOwner(),
 				"The state does not belong to the flow associated with this flow session");
+		if (this.state != null && this.state.isViewState()) {
+			destroyViewScope();
+		}
 		this.state = state;
 		this.stateId = state.getId();
+		if (this.state.isViewState()) {
+			initViewScope();
+		}
 	}
 
 	/**
@@ -174,6 +194,16 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 */
 	String getStateId() {
 		return stateId;
+	}
+
+	// internal helpers
+
+	private void initViewScope() {
+		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+	}
+
+	private void destroyViewScope() {
+		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
 	public String toString() {

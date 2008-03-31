@@ -55,6 +55,14 @@ public interface FlowSession {
 	public MutableAttributeMap getScope();
 
 	/**
+	 * Returns a mutable map for data held in "view scope". Attributes in this map are cleared out when the current view
+	 * state exits.
+	 * @return view scope
+	 * @throws IllegalStateException if this flow session is not currently in a view state
+	 */
+	public MutableAttributeMap getViewScope() throws IllegalStateException;
+
+	/**
 	 * Returns the parent flow session in the current flow execution, or <code>null</code> if there is no parent flow
 	 * session.
 	 */

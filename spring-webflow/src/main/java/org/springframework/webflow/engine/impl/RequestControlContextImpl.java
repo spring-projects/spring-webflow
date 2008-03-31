@@ -48,8 +48,6 @@ import org.springframework.webflow.execution.FlowSession;
  */
 class RequestControlContextImpl implements RequestControlContext {
 
-	private static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
-
 	/**
 	 * The owning flow execution carrying out this request.
 	 */
@@ -123,14 +121,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public MutableAttributeMap getViewScope() throws IllegalStateException {
-		if (!flowExecution.isActive()) {
-			throw new IllegalStateException("This flow is not active");
-		}
-		if (!getCurrentState().isViewState()) {
-			throw new IllegalStateException("The current state '" + getCurrentState().getId() + "' of this flow '"
-					+ getActiveFlow().getId() + "' is not a view state - view scope not accessible");
-		}
-		return (MutableAttributeMap) getFlowScope().get(FLOW_VIEW_MAP_ATTRIBUTE);
+		return flowExecution.getActiveSession().getViewScope();
 	}
 
 	public MutableAttributeMap getFlowScope() {
@@ -211,14 +202,6 @@ class RequestControlContextImpl implements RequestControlContext {
 
 	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
 		flowExecution.start(flow, input, this);
-	}
-
-	public void initViewScope() {
-		getFlowScope().put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
-	}
-
-	public void destroyViewScope() {
-		getFlowScope().remove(FLOW_VIEW_MAP_ATTRIBUTE);
 	}
 
 	public boolean handleEvent(Event event) throws FlowExecutionException {

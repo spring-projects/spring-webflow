@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecution;
@@ -33,9 +34,8 @@ import org.springframework.webflow.test.MockExternalContext;
  * <p>
  * More specifically, a typical flow execution test case will test:
  * <ul>
- * <li>That the flow execution starts as expected given a request from an external context containing potential input
- * attributes (see the {@link #startFlow(ExternalContext)} variants).
- * <li>That given the set of supported state transition criteria a state executes the appropriate transition when a
+ * <li>That the flow execution starts as expected (see {@link #startFlow(MutableAttributeMap, ExternalContext)}).
+ * <li>That given the set of supported state transition criteria, a state executes the appropriate transition when a
  * matching event is signaled (with potential input request parameters, see the {@link #resumeFlow(ExternalContext)}
  * variants). A test case should be coded for each logical event that can occur, where an event drives a possible path
  * through the flow. The goal should be to exercise all possible paths of the flow. Use a test coverage tool like Clover
@@ -76,7 +76,6 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	/**
 	 * Constructs a flow execution test with given name.
 	 * @param name the name of the test
-	 * @since 1.0.2
 	 */
 	public AbstractFlowExecutionTests(String name) {
 		super(name);
@@ -101,9 +100,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * execution during the start operation
 	 * @throws FlowExecutionException if an exception was thrown while starting the flow execution
 	 */
-	protected void startFlow(ExternalContext context) throws FlowExecutionException {
+	protected void startFlow(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException {
 		flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
-		flowExecution.start(null, context);
+		flowExecution.start(input, context);
 	}
 
 	/**
@@ -114,7 +113,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 */
 	protected void resumeFlow(ExternalContext context) throws FlowExecutionException {
 		Assert.state(flowExecution != null, "The flow execution to test is [null]; "
-				+ "you must start the flow execution before you can signal an event against it!");
+				+ "you must start the flow execution before you can resume it!");
 		flowExecution.resume(context);
 	}
 
@@ -127,40 +126,71 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 */
 	protected FlowExecution getFlowExecution() throws IllegalStateException {
 		Assert.state(flowExecution != null,
-				"The flow execution to test is [null]; you must start the flow execution before you can query it!");
+				"The flow execution to test is [null]; you must start the flow execution before you can access it!");
 		return flowExecution;
 	}
 
 	/**
-	 * Returns the attribute in conversation scope. Conversation-scoped attributes are shared by all flow sessions.
+	 * Returns the attribute in flash scope. Flash-scoped attributes are cleared on the next view rendering.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 */
-	protected Object getConversationAttribute(String attributeName) {
-		return getFlowExecution().getConversationScope().get(attributeName);
+	protected Object getFlashAttribute(String attributeName) {
+		return getFlowExecution().getFlashScope().get(attributeName);
 	}
 
 	/**
-	 * Returns the required attribute in conversation scope; asserts the attribute is present. Conversation-scoped
-	 * attributes are shared by all flow sessions.
+	 * Returns the required attribute in flash scope; asserts the attribute is present. Flash-scoped attributes are
+	 * cleared on the next view rendering.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present
 	 */
-	protected Object getRequiredConversationAttribute(String attributeName) throws IllegalStateException {
-		return getFlowExecution().getConversationScope().getRequired(attributeName);
+	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
+		return getFlowExecution().getFlashScope().getRequired(attributeName);
 	}
 
 	/**
-	 * Returns the required attribute in conversation scope; asserts the attribute is present and of the required type.
-	 * Conversation-scoped attributes are shared by all flow sessions.
+	 * Returns the required attribute in flash scope; asserts the attribute is present and of the correct type.
+	 * Flash-scoped attributes are cleared on the next view rendering.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
-	 * @throws IllegalStateException if the attribute was not present or not of the required type
+	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
 	 */
-	protected Object getRequiredConversationAttribute(String attributeName, Class requiredType)
-			throws IllegalStateException {
-		return getFlowExecution().getConversationScope().getRequired(attributeName, requiredType);
+	protected Object getRequiredFlashAttribute(String attributeName, Class requiredType) throws IllegalStateException {
+		return getFlowExecution().getFlashScope().getRequired(attributeName, requiredType);
+	}
+
+	/**
+	 * Returns the attribute in view scope. View-scoped attributes are local to the current view state and are cleared
+	 * when the view state exits.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 */
+	protected Object getViewAttribute(String attributeName) {
+		return getFlowExecution().getActiveSession().getViewScope().get(attributeName);
+	}
+
+	/**
+	 * Returns the required attribute in view scope; asserts the attribute is present. View-scoped attributes are local
+	 * to the current view state and are cleared when the view state exits.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 * @throws IllegalStateException if the attribute was not present
+	 */
+	protected Object getRequiredViewAttribute(String attributeName) throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getViewScope().getRequired(attributeName);
+	}
+
+	/**
+	 * Returns the required attribute in view scope; asserts the attribute is present and of the correct type.
+	 * View-scoped attributes are local to the current view state and are cleared when the view state exits.
+	 * @param attributeName the name of the attribute
+	 * @return the attribute value
+	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
+	 */
+	protected Object getRequiredViewAttribute(String attributeName, Class requiredType) throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getViewScope().getRequired(attributeName, requiredType);
 	}
 
 	/**
@@ -195,35 +225,35 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	}
 
 	/**
-	 * Returns the attribute in flash scope. Flash-scoped attributes are local to the active flow session and cleared on
-	 * the next user event.
+	 * Returns the attribute in conversation scope. Conversation-scoped attributes are shared by all flow sessions.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 */
-	protected Object getFlashAttribute(String attributeName) {
-		return getFlowExecution().getFlashScope().get(attributeName);
+	protected Object getConversationAttribute(String attributeName) {
+		return getFlowExecution().getConversationScope().get(attributeName);
 	}
 
 	/**
-	 * Returns the required attribute in flash scope; asserts the attribute is present. Flash-scoped attributes are
-	 * local to the active flow session and cleared on the next user event.
+	 * Returns the required attribute in conversation scope; asserts the attribute is present. Conversation-scoped
+	 * attributes are shared by all flow sessions.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present
 	 */
-	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
-		return getFlowExecution().getFlashScope().getRequired(attributeName);
+	protected Object getRequiredConversationAttribute(String attributeName) throws IllegalStateException {
+		return getFlowExecution().getConversationScope().getRequired(attributeName);
 	}
 
 	/**
-	 * Returns the required attribute in flash scope; asserts the attribute is present and of the correct type.
-	 * Flash-scoped attributes are local to the active flow session and cleared on the next user event.
+	 * Returns the required attribute in conversation scope; asserts the attribute is present and of the required type.
+	 * Conversation-scoped attributes are shared by all flow sessions.
 	 * @param attributeName the name of the attribute
 	 * @return the attribute value
-	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
+	 * @throws IllegalStateException if the attribute was not present or not of the required type
 	 */
-	protected Object getRequiredFlashAttribute(String attributeName, Class requiredType) throws IllegalStateException {
-		return getFlowExecution().getFlashScope().getRequired(attributeName, requiredType);
+	protected Object getRequiredConversationAttribute(String attributeName, Class requiredType)
+			throws IllegalStateException {
+		return getFlowExecution().getConversationScope().getRequired(attributeName, requiredType);
 	}
 
 	// assert helpers

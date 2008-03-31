@@ -99,6 +99,29 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(1, mockListener.getPausedCount());
 	}
 
+	public void testStartWithNullInputMap() {
+		Flow flow = new Flow("flow");
+		new State(flow, "state") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				// no op
+			}
+		};
+		MockFlowExecutionListener mockListener = new MockFlowExecutionListener() {
+			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+				super.sessionStarting(context, session, input);
+				assertNotNull(input);
+			}
+		};
+		FlowExecutionListener[] listeners = new FlowExecutionListener[] { mockListener };
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		execution.setListeners(listeners);
+		execution.setMessageContextFactory(new DefaultMessageContextFactory(new StaticMessageSource()));
+		MockExternalContext context = new MockExternalContext();
+		execution.start(null, context);
+		assertTrue(execution.isActive());
+		assertEquals(1, mockListener.getPausedCount());
+	}
+
 	public void testStartExceptionThrownBeforeFirstSessionCreated() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
