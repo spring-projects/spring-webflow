@@ -169,8 +169,8 @@ public interface RequestContext {
 	public Event getCurrentEvent();
 
 	/**
-	 * Returns the last state transition that executed in this request.
-	 * @return the last transition, or <code>null</code> if no transition has occurred yet
+	 * Returns the current transition executing in this request.
+	 * @return the current transition, or <code>null</code> if no transition has occurred yet
 	 */
 	public TransitionDefinition getCurrentTransition();
 
