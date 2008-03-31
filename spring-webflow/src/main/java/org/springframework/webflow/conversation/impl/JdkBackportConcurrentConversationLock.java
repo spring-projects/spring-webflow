@@ -15,25 +15,25 @@
  */
 package org.springframework.webflow.conversation.impl;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.springframework.webflow.conversation.ConversationLockException;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import edu.emory.mathcs.backport.java.util.concurrent.locks.Lock;
+import edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock;
+
 /**
- * A conversation lock that relies on a {@link ReentrantLock} within Java 5's <code>util.concurrent.locks</code>
- * package.
+ * A conversation lock that relies on backport-concurrent. For use on JDK 1.4
  * 
  * @author Keith Donald
+ * @author Rob Harrop
  */
-class JdkConcurrentConversationLock implements ConversationLock {
+class JdkBackportConcurrentConversationLock implements ConversationLock {
 
 	private Lock lock = new ReentrantLock();
 
 	private int timeoutSeconds;
 
-	public JdkConcurrentConversationLock(int timeoutSeconds) {
+	public JdkBackportConcurrentConversationLock(int timeoutSeconds) {
 		this.timeoutSeconds = timeoutSeconds;
 	}
 
@@ -48,6 +48,9 @@ class JdkConcurrentConversationLock implements ConversationLock {
 		}
 	}
 
+	/**
+	 * Releases the lock.
+	 */
 	public void unlock() {
 		lock.unlock();
 	}

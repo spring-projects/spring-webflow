@@ -47,7 +47,7 @@
 		<dependency org="org.springframework" name="spring-tx" rev="2.5.2" conf="compile->default" />
 		<dependency org="org.springframework.security" name="spring-security-core" rev="2.0.0.m2" conf="compile->default" />
 		<dependency org="javax.persistence" name="persistence-api" rev="1.0.0" conf="compile->default" />
-		<dependency org="edu.oswego.cs" name="concurrent" rev="1.3.4" conf="compile->default" />
+		<dependency org="edu.emory.mathcs" name="backport-util-concurrent" rev="3.0.0" conf="compile->default" />
 	
 		<!-- test time only dependencies -->
 		<dependency org="org.hsqldb" name="hsqldb" rev="1.8.0.9" conf="test->default" />

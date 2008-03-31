@@ -53,18 +53,9 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private int maxConversations = 5;
 
 	/**
-	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
+	 * The factory for creating conversation lock objects.
 	 */
-	public int getMaxConversations() {
-		return maxConversations;
-	}
-
-	/**
-	 * Set the maximum number of allowed concurrent conversations. Set to -1 for no limit. The default is 5.
-	 */
-	public void setMaxConversations(int maxConversations) {
-		this.maxConversations = maxConversations;
-	}
+	private ConversationLockFactory conversationLockFactory = new ConversationLockFactory();
 
 	/**
 	 * Returns the key this conversation manager uses to store conversation data in the session.
@@ -84,8 +75,41 @@ public class SessionBindingConversationManager implements ConversationManager {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * Returns the maximum number of allowed concurrent conversations. The default is 5.
+	 */
+	public int getMaxConversations() {
+		return maxConversations;
+	}
+
+	/**
+	 * Set the maximum number of allowed concurrent conversations. Set to -1 for no limit. The default is 5.
+	 */
+	public void setMaxConversations(int maxConversations) {
+		this.maxConversations = maxConversations;
+	}
+
+	/**
+	 * Returns the time period that can elapse before a timeout occurs on an attempt to acquire a conversation lock. The
+	 * default is 30 seconds.
+	 */
+	public int getLockTimeoutSeconds() {
+		return conversationLockFactory.getTimeoutSeconds();
+	}
+
+	/**
+	 * Sets the time period that can elapse before a timeout occurs on an attempt to acquire a conversation lock. The
+	 * default is 30 seconds.
+	 * @param timeoutSeconds the timeout period in seconds
+	 */
+	public void setLockTimeoutSeconds(int timeoutSeconds) {
+		conversationLockFactory.setTimeoutSeconds(timeoutSeconds);
+	}
+
+	// implementing conversation manager
+
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
-		return getConversationContainer().createConversation(conversationParameters);
+		return getConversationContainer().createConversation(conversationParameters, conversationLockFactory);
 	}
 
 	public Conversation getConversation(ConversationId id) throws ConversationException {
@@ -96,7 +120,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 		try {
 			return new SimpleConversationId(Integer.valueOf(encodedId));
 		} catch (NumberFormatException e) {
-			throw new ConversationException("Unable to parse string-encoded conversationId + '" + encodedId + "'", e);
+			throw new BadlyFormattedConversationIdException(encodedId, e);
 		}
 	}
 

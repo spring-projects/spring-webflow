@@ -25,34 +25,52 @@ import org.springframework.core.JdkVersion;
  * @author Keith Donald
  * @author Rob Harrop
  */
-public class ConversationLockFactory {
+class ConversationLockFactory {
 
 	private static final Log logger = LogFactory.getLog(ConversationLockFactory.class);
 
-	private static boolean utilConcurrentPresent;
+	private static boolean backportConcurrentPresent;
 
 	static {
 		try {
-			Class.forName("EDU.oswego.cs.dl.util.concurrent.ReentrantLock");
-			utilConcurrentPresent = true;
+			Class.forName("edu.emory.mathcs.backport.java.util.concurrent.locks.ReentrantLock");
+			backportConcurrentPresent = true;
 		} catch (ClassNotFoundException ex) {
-			utilConcurrentPresent = false;
+			backportConcurrentPresent = false;
 		}
 	}
 
+	private int timeoutSeconds = 30;
+
 	/**
-	 * When running on Java 1.5+, returns a jdk5 concurrent lock. When running on older JDKs with the 'util.concurrent'
-	 * package available, returns a util concurrent lock. In all other cases a "no-op" lock is returned.
+	 * Returns the period of time that can elapse before a lock attempt times out for locks created by this factory.
 	 */
-	public static ConversationLock createLock() {
+	public int getTimeoutSeconds() {
+		return timeoutSeconds;
+	}
+
+	/**
+	 * Sets the period of time that can elapse before a lock attempt times out for locks created by this factory.
+	 * @param timeoutSeconds the timeout period in seconds
+	 */
+	public void setTimeoutSeconds(int timeoutSeconds) {
+		this.timeoutSeconds = timeoutSeconds;
+	}
+
+	/**
+	 * When running on Java 1.5+, returns a jdk5 concurrent lock. When running on older JDKs with the
+	 * 'backport-util-concurrent' package available, returns a backport concurrent lock. In all other cases a "no-op"
+	 * lock is returned.
+	 */
+	public ConversationLock createLock() {
 		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			return new JdkConcurrentConversationLock();
-		} else if (utilConcurrentPresent) {
-			return new UtilConcurrentConversationLock();
+			return new JdkConcurrentConversationLock(timeoutSeconds);
+		} else if (backportConcurrentPresent) {
+			return new JdkBackportConcurrentConversationLock(timeoutSeconds);
 		} else {
 			logger.warn("Unable to enable conversation locking. Switch to Java 5 or above, "
-					+ "or put the 'util.concurrent' package on the classpath "
-					+ "to enable locking in your environment.");
+					+ "or put the 'backport-util-concurrent' package on the classpath "
+					+ "to enable locking in your Java 1.4 environment.");
 			return NoOpConversationLock.INSTANCE;
 		}
 	}

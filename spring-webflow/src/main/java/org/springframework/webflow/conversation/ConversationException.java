@@ -15,14 +15,12 @@
  */
 package org.springframework.webflow.conversation;
 
-import org.springframework.webflow.core.FlowException;
-
 /**
  * The root of the conversation service exception hierarchy.
  * 
  * @author Keith Donald
  */
-public class ConversationException extends FlowException {
+public abstract class ConversationException extends RuntimeException {
 
 	/**
 	 * Creates a conversation service exception.

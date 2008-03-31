@@ -15,9 +15,6 @@
  */
 package org.springframework.webflow.conversation.impl;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +41,7 @@ class ContainedConversation implements Conversation, Serializable {
 
 	private ConversationId id;
 
-	private transient ConversationLock lock;
+	private ConversationLock lock;
 
 	private Map attributes;
 
@@ -52,11 +49,12 @@ class ContainedConversation implements Conversation, Serializable {
 	 * Create a new contained conversation.
 	 * @param container the container containing the conversation
 	 * @param id the unique id assigned to the conversation
+	 * @param lock the conversation lock
 	 */
-	public ContainedConversation(ConversationContainer container, ConversationId id) {
+	public ContainedConversation(ConversationContainer container, ConversationId id, ConversationLock lock) {
 		this.container = container;
 		this.id = id;
-		this.lock = ConversationLockFactory.createLock();
+		this.lock = lock;
 		this.attributes = new HashMap();
 	}
 
@@ -129,14 +127,4 @@ class ContainedConversation implements Conversation, Serializable {
 		return id.hashCode();
 	}
 
-	// custom serialization
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.defaultWriteObject();
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		in.defaultReadObject();
-		lock = ConversationLockFactory.createLock();
-	}
 }

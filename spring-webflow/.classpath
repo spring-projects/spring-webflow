@@ -6,7 +6,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/edu.oswego.cs/concurrent/concurrent-1.3.4.jar" sourcepath="IVY_CACHE/edu.oswego.cs/concurrent/concurrent-sources-1.3.4.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.persistence/persistence-api/persistence-api-1.0.0.jar" sourcepath="IVY_CACHE/javax.persistence/persistence-api/persistence-api-sources-1.0.0.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.portlet/portlet-api/portlet-api-1.0.jar" sourcepath="IVY_CACHE/javax.portlet/portlet-api/portlet-api-sources-1.0.jar"/>
@@ -39,5 +38,6 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-sources-2.5.2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-2.0.0.m2.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-sources-2.0.0.m2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/edu.emory.mathcs/backport-util-concurrent/backport-util-concurrent-3.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

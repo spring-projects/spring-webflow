@@ -82,11 +82,13 @@ class ConversationContainer implements Serializable {
 
 	/**
 	 * Create a new conversation based on given parameters and add it to the container.
-	 * @param parameters descriptive parameters
+	 * @param parameters descriptive conversation parameters
+	 * @param lockFactory the lock factory to use to create the conversation lock
 	 * @return the created conversation
 	 */
-	public synchronized Conversation createConversation(ConversationParameters parameters) {
-		ContainedConversation conversation = new ContainedConversation(this, nextId());
+	public synchronized Conversation createConversation(ConversationParameters parameters,
+			ConversationLockFactory lockFactory) {
+		ContainedConversation conversation = new ContainedConversation(this, nextId(), lockFactory.createLock());
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			// end oldest conversation

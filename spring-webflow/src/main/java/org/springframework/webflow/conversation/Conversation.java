@@ -57,8 +57,9 @@ public interface Conversation {
 
 	/**
 	 * Lock this conversation. May block until the lock is available, if someone else has acquired the lock.
+	 * @throws ConversationLockException if the lock could not be acquired
 	 */
-	public void lock();
+	public void lock() throws ConversationLockException;
 
 	/**
 	 * Returns the conversation attribute with the specified name. You need to aquire the lock on this conversation

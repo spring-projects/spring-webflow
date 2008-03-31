@@ -21,8 +21,7 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 
 /**
- * An id that uniquely identifies a conversation managed by a {@link ConversationManager}. This key consists of a
- * unique string that is typically a GUID.
+ * An id that uniquely identifies a conversation managed by a {@link ConversationManager}.
  * 
  * @author Ben Hale
  */
