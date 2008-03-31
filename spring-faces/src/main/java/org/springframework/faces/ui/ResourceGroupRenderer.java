@@ -8,16 +8,20 @@ import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 
-public class DojoStyleRenderer extends Renderer {
-
-	private static final String dijitThemePath = "/dijit/themes/";
-
-	private static final String dijitTheme = "tundra";
+public class ResourceGroupRenderer extends Renderer {
 
 	private static final ResourceHelper resourceHelper = new ResourceHelper();
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+		if (component.getChildCount() > 0) {
+			resourceHelper.beginCombineStyles(context);
+		}
+	}
+
+	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+		if (component.getChildCount() > 0) {
+			resourceHelper.endCombineStyles(context);
+		}
 	}
 }

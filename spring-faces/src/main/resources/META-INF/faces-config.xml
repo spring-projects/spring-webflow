@@ -41,6 +41,16 @@
   		<component-type>spring.faces.DojoIncludeStyles</component-type>
   		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
   	</component>
+	
+	<component>
+		<component-type>spring.faces.ResourceGroup</component-type>
+		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
+	</component>
+	
+	<component>
+  		<component-type>spring.faces.Resource</component-type>
+  		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
+  	</component>
   	
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>
@@ -130,6 +140,18 @@
 			<component-family>spring.faces.DynamicComponent</component-family>
 			<renderer-type>spring.faces.DojoStyleRenderer</renderer-type>
 			<renderer-class>org.springframework.faces.ui.DojoStyleRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.DynamicComponent</component-family>
+			<renderer-type>spring.faces.ResourceGroupRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ResourceGroupRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.DynamicComponent</component-family>
+			<renderer-type>spring.faces.ResourceRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.ResourceRenderer</renderer-class>
 		</renderer>
 	</render-kit>
 

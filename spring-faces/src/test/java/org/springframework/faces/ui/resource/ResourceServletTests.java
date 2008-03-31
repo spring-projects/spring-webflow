@@ -1,5 +1,8 @@
 package org.springframework.faces.ui.resource;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
@@ -31,6 +34,20 @@ public class ResourceServletTests extends TestCase {
 		String requestPath = "/dojo/dojo.js";
 		request.setPathInfo(requestPath);
 		servlet.doGet(request, response);
+
+		assertEquals(200, response.getStatus());
+	}
+
+	public final void testExecute_CombinedResources() throws Exception {
+
+		String requestPath = "/dojo/dojo.js";
+		request.setPathInfo(requestPath);
+		Map params = new HashMap();
+		params.put("appended", "/dijit/dijit.js,/dijit/Dialog.js");
+		request.setParameters(params);
+		servlet.doGet(request, response);
+
+		assertEquals(200, response.getStatus());
 	}
 
 	public final void testExecute_ResourceNotFound() throws Exception {

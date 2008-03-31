@@ -12,6 +12,20 @@
 		</component>
 	</tag>
 	<tag>
+		<tag-name>resourceGroup</tag-name>
+		<component>
+			<component-type>spring.faces.ResourceGroup</component-type>
+			<renderer-type>spring.faces.ResourceGroupRenderer</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>resource</tag-name>
+		<component>
+			<component-type>spring.faces.Resource</component-type>
+			<renderer-type>spring.faces.ResourceRenderer</renderer-type>
+		</component>
+	</tag>
+	<tag>
 		<tag-name>commandButton</tag-name>
 		<component>
 			<component-type>spring.faces.ProgressiveCommandButton</component-type>
