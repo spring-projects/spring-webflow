@@ -68,7 +68,11 @@ public class Booking implements Serializable {
 
     @Transient
     public int getNights() {
-	return (int) (checkoutDate.getTime() - checkinDate.getTime()) / 1000 / 60 / 60 / 24;
+	if (checkinDate == null || checkoutDate == null) {
+	    return 0;
+	} else {
+	    return (int) (checkoutDate.getTime() - checkinDate.getTime()) / 1000 / 60 / 60 / 24;
+	}
     }
 
     @Id
