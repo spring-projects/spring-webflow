@@ -68,5 +68,6 @@ public class FlowActionListener implements ActionListener {
 			logger.debug("No action event detected");
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
 		}
+		context.renderResponse();
 	}
 }

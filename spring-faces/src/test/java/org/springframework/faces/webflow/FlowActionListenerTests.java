@@ -52,6 +52,7 @@ public class FlowActionListenerTests extends TestCase {
 				JsfView.EVENT_KEY));
 		assertEquals("The event should be " + outcome, outcome, jsfMock.externalContext().getRequestMap().get(
 				JsfView.EVENT_KEY));
+		assertTrue("Render response flag should be set", jsfMock.facesContext().getRenderResponse());
 	}
 
 	public final void testProcessAction_NullOutcome() {
@@ -66,6 +67,7 @@ public class FlowActionListenerTests extends TestCase {
 
 		assertFalse("An unexpected event was signaled", jsfMock.externalContext().getRequestMap().containsKey(
 				JsfView.EVENT_KEY));
+		assertTrue("Render response flag should be set", jsfMock.facesContext().getRenderResponse());
 	}
 
 	private class MethodBindingStub extends MethodBinding {
