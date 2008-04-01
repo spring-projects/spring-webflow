@@ -206,7 +206,7 @@ class MvcView implements View {
 	private MessageResolver message(MappingResult error) {
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		String errorCode = error.getResult().getErrorCode();
-		return new MessageBuilder().error().source(field).code(errorCode).arg(field).defaultText(
+		return new MessageBuilder().error().source(field).code(errorCode).resolvableArg(field).defaultText(
 				errorCode + " on " + field).build();
 	}
 

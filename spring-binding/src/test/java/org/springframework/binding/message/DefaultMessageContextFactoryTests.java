@@ -62,8 +62,8 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 
 	public void testResolveMessageWithMultipleCodes() {
 		MessageContext context = factory.createMessageContext();
-		context.addMessage(new MessageBuilder().error().source(this).codes(new String[] { "bogus", "argmessage" })
-				.args(new Object[] { "Keith" }).defaultText("Hello world fallback!").build());
+		context.addMessage(new MessageBuilder().error().source(this).code("bogus").code("argmessage").arg("Keith")
+				.defaultText("Hello world fallback!").build());
 		Message[] messages = context.getMessagesBySource(this);
 		assertEquals(1, messages.length);
 		assertEquals("Hello world Keith!", messages[0].getText());
