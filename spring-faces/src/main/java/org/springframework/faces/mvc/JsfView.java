@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
@@ -58,7 +59,13 @@ public class JsfView extends AbstractUrlBasedView {
 
 		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
 
-		UIViewRoot viewRoot = facesContext.getApplication().getViewHandler().createView(facesContext, getUrl());
+		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+
+		if (JsfUtils.isAtLeastJsf12()) {
+			viewHandler.initView(facesContext);
+		}
+
+		UIViewRoot viewRoot = viewHandler.createView(facesContext, getUrl());
 
 		Assert.notNull(viewRoot, "A JSF view could not be created for " + getUrl());
 		viewRoot.setTransient(true);

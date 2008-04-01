@@ -78,6 +78,10 @@ public class JsfViewFactory implements ViewFactory {
 			String viewName = resolveViewName(context);
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
+			if (JsfUtils.isAtLeastJsf12()) {
+				viewHandler.initView(facesContext);
+			}
+
 			if (viewExists(facesContext, viewName)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Existing view root found for '" + viewName + "'");

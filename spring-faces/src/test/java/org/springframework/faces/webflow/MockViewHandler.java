@@ -40,6 +40,10 @@ public class MockViewHandler extends ViewHandler {
 		return createViewRoot;
 	}
 
+	public void initView(FacesContext context) throws FacesException {
+		// do nothing
+	}
+
 	/**
 	 * Set the view root that this mock is supposed to create
 	 * @param createViewRoot the view to set.

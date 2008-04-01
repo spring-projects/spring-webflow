@@ -33,8 +33,6 @@ public class FlowViewStateManager extends StateManager {
 
 	private static final String SERIALIZED_VIEW_STATE = "org.springframework.webflow.viewState";
 
-	private static final String ACTIVE_VIEW_ROOT = "org.springframework.webflow.viewRoot";
-
 	private StateManager delegate;
 
 	public FlowViewStateManager(StateManager original) {
@@ -91,7 +89,7 @@ public class FlowViewStateManager extends StateManager {
 			return null;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Restoring view root with id '" + viewId + "' from flow scope");
+			logger.debug("Restoring view root with id '" + viewId + "' from view scope");
 		}
 		if (view.treeStructure == null) {
 			logger.debug("Tree structure is null indicating transient UIViewRoot; returning null");
@@ -141,7 +139,7 @@ public class FlowViewStateManager extends StateManager {
 
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (logger.isDebugEnabled()) {
-			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in flow scope");
+			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
 		}
 		SerializedView view = new SerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
 				getComponentStateToSave(context));

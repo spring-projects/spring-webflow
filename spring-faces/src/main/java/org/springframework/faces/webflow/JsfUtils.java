@@ -21,6 +21,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
+import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
@@ -29,6 +30,18 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @author Jeremy Grelle
  */
 public class JsfUtils {
+
+	private static final boolean JSF_12;
+
+	private static final String JSF_12_METHOD = "getELContext";
+
+	static {
+		if (ReflectionUtils.findMethod(FacesContext.class, JSF_12_METHOD) != null) {
+			JSF_12 = true;
+		} else {
+			JSF_12 = false;
+		}
+	}
 
 	public static void notifyAfterListeners(PhaseId phaseId, Lifecycle lifecycle, FacesContext context) {
 		PhaseEvent afterPhaseEvent = new PhaseEvent(context, phaseId, lifecycle);
@@ -64,5 +77,9 @@ public class JsfUtils {
 		} else {
 			return false;
 		}
+	}
+
+	public static boolean isAtLeastJsf12() {
+		return JSF_12;
 	}
 }
