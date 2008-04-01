@@ -199,15 +199,17 @@ class MvcView implements View {
 		List errors = results.getResults(MAPPING_ERROR);
 		for (Iterator it = errors.iterator(); it.hasNext();) {
 			MappingResult error = (MappingResult) it.next();
-			context.getMessageContext().addMessage(message(error));
+			context.getMessageContext().addMessage(createMessageResolver(error));
 		}
 	}
 
-	private MessageResolver message(MappingResult error) {
+	private MessageResolver createMessageResolver(MappingResult error) {
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		String errorCode = error.getResult().getErrorCode();
-		return new MessageBuilder().error().source(field).code(errorCode).resolvableArg(field).defaultText(
-				errorCode + " on " + field).build();
+		String propertyErrorCode = new StringBuffer().append(getModelExpression().getExpressionString()).append('.')
+				.append(field).append('.').append(errorCode).toString();
+		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
+				.defaultText(errorCode + " on " + field).build();
 	}
 
 	private void determineEventId(RequestContext context) {
