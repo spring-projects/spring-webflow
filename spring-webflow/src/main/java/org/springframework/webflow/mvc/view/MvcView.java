@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.view;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,8 @@ import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.mapping.impl.DefaultMappingContext;
-import org.springframework.binding.mapping.results.TargetAccessError;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageResolver;
 import org.springframework.validation.BindingResult;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -51,7 +53,9 @@ import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 class MvcView implements View {
 
-	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERRORS = new PropertyNotFoundErrors();
+	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
+
+	private static final MappingResultsCriteria MAPPING_ERROR = new MappingError();
 
 	private org.springframework.web.servlet.View view;
 
@@ -113,6 +117,7 @@ class MvcView implements View {
 			mappingResults = bind(model);
 			if (mappingResults.hasErrorResults() && !onlyPropertyNotFoundErrorsPresent(mappingResults)) {
 				viewErrors = true;
+				addErrorMessages(mappingResults);
 			}
 		}
 	}
@@ -187,7 +192,22 @@ class MvcView implements View {
 	}
 
 	private boolean onlyPropertyNotFoundErrorsPresent(MappingResults results) {
-		return results.getResults(PROPERTY_NOT_FOUND_ERRORS).size() == mappingResults.getErrorResults().size();
+		return results.getResults(PROPERTY_NOT_FOUND_ERROR).size() == mappingResults.getErrorResults().size();
+	}
+
+	private void addErrorMessages(MappingResults results) {
+		List errors = results.getResults(MAPPING_ERROR);
+		for (Iterator it = errors.iterator(); it.hasNext();) {
+			MappingResult error = (MappingResult) it.next();
+			context.getMessageContext().addMessage(message(error));
+		}
+	}
+
+	private MessageResolver message(MappingResult error) {
+		String field = error.getMapping().getTargetExpression().getExpressionString();
+		String errorCode = error.getResult().getErrorCode();
+		return new MessageBuilder().error().source(field).code(errorCode).arg(field).defaultText(
+				errorCode + " on " + field).build();
 	}
 
 	private void determineEventId(RequestContext context) {
@@ -237,10 +257,15 @@ class MvcView implements View {
 		return null;
 	}
 
-	private static class PropertyNotFoundErrors implements MappingResultsCriteria {
+	private static class PropertyNotFoundError implements MappingResultsCriteria {
 		public boolean test(MappingResult result) {
-			return result.getResult() instanceof TargetAccessError
-					&& result.getResult().getErrorCode().equals("propertyNotFound");
+			return result.getResult().isError() && "propertyNotFound".equals(result.getResult().getErrorCode());
+		}
+	}
+
+	private static class MappingError implements MappingResultsCriteria {
+		public boolean test(MappingResult result) {
+			return result.getResult().isError() && !PROPERTY_NOT_FOUND_ERROR.test(result);
 		}
 	}
 

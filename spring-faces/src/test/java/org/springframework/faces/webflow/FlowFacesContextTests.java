@@ -1,7 +1,5 @@
 package org.springframework.faces.webflow;
 
-import org.easymock.EasyMock;
-
 import java.util.Iterator;
 
 import javax.faces.application.FacesMessage;
@@ -9,8 +7,10 @@ import javax.faces.context.FacesContext;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Severity;
 import org.springframework.webflow.execution.RequestContext;
@@ -106,17 +106,19 @@ public class FlowFacesContextTests extends TestCase {
 			messageCount++;
 		}
 
-		public Message[] getMessages() {
+		public Message[] getAllMessages() {
 			return null;
 		}
 
-		public Message[] getMessages(Object source) {
-			// TODO Auto-generated method stub
+		public Message[] getMessagesBySource(Object source) {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public Message[] getMessagesByCriteria(MessageCriteria criteria) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public void clearMessages() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 	}
@@ -136,16 +138,19 @@ public class FlowFacesContextTests extends TestCase {
 
 		}
 
-		public Message[] getMessages() {
+		public Message[] getAllMessages() {
 			return messages;
 		}
 
-		public Message[] getMessages(Object source) {
+		public Message[] getMessagesBySource(Object source) {
 			return new Message[] { messages[1] };
 		}
 
+		public Message[] getMessagesByCriteria(MessageCriteria criteria) {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
 		public void clearMessages() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

@@ -20,7 +20,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	public void testCreateMessageContext() {
 		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().defaultText("Hello world!").build());
-		Message[] messages = context.getMessages();
+		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
 		assertEquals("Hello world!", messages[0].getText());
 		assertEquals(Severity.INFO, messages[0].getSeverity());
@@ -30,7 +30,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	public void testResolveMessage() {
 		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
-		Message[] messages = context.getMessages(this);
+		Message[] messages = context.getMessagesBySource(this);
 		assertEquals(1, messages.length);
 		assertEquals("Hello world resolved!", messages[0].getText());
 		assertEquals(Severity.WARNING, messages[0].getSeverity());
@@ -40,7 +40,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	public void testResolveMessageDefaultText() {
 		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().code("bogus").defaultText("Hello world fallback!").build());
-		Message[] messages = context.getMessages(null);
+		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
 		assertEquals("Hello world fallback!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
@@ -52,7 +52,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().source(this).code("argmessage").arg("Keith").defaultText(
 				"Hello world fallback!").build());
-		Message[] messages = context.getMessages(this);
+		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
 		assertEquals("Hello world Keith!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
@@ -64,7 +64,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().source(this).codes(new String[] { "bogus", "argmessage" })
 				.args(new Object[] { "Keith" }).defaultText("Hello world fallback!").build());
-		Message[] messages = context.getMessages(this);
+		Message[] messages = context.getMessagesBySource(this);
 		assertEquals(1, messages.length);
 		assertEquals("Hello world Keith!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
@@ -77,16 +77,16 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 		context.addMessage(new MessageBuilder().defaultText("Info").build());
 		context.addMessage(new MessageBuilder().error().defaultText("Error").build());
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
-		assertEquals(2, context.getMessages(null).length);
-		assertEquals(1, context.getMessages(this).length);
+		assertEquals(2, context.getMessagesBySource(null).length);
+		assertEquals(1, context.getMessagesBySource(this).length);
 		assertTrue(context instanceof StateManageableMessageContext);
 		StateManageableMessageContext manageable = (StateManageableMessageContext) context;
 		Serializable messages = manageable.createMessagesMemento();
 		context = factory.createMessageContext();
-		assertEquals(0, context.getMessages().length);
+		assertEquals(0, context.getAllMessages().length);
 		manageable = (StateManageableMessageContext) context;
 		manageable.restoreMessages(messages);
-		assertEquals(2, context.getMessages(null).length);
-		assertEquals(1, context.getMessages(this).length);
+		assertEquals(2, context.getMessagesBySource(null).length);
+		assertEquals(1, context.getMessagesBySource(this).length);
 	}
 }

@@ -119,7 +119,7 @@ public class FlowFacesContext extends FacesContext {
 	 * associated with any specific UIComponent. If no such messages have been queued, return null.
 	 */
 	public FacesMessage.Severity getMaximumSeverity() {
-		if (context.getMessageContext().getMessages().length == 0) {
+		if (context.getMessageContext().getAllMessages().length == 0) {
 			return null;
 		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
@@ -241,11 +241,11 @@ public class FlowFacesContext extends FacesContext {
 		private int currentIndex = -1;
 
 		protected FacesMessageIterator() {
-			this.messages = context.getMessageContext().getMessages();
+			this.messages = context.getMessageContext().getAllMessages();
 		}
 
 		protected FacesMessageIterator(String clientId) {
-			this.messages = context.getMessageContext().getMessages(clientId);
+			this.messages = context.getMessageContext().getMessagesBySource(clientId);
 		}
 
 		public boolean hasNext() {
@@ -282,7 +282,7 @@ public class FlowFacesContext extends FacesContext {
 		int currentIndex = -1;
 
 		protected ClientIdIterator() {
-			this.messages = context.getMessageContext().getMessages();
+			this.messages = context.getMessageContext().getAllMessages();
 		}
 
 		public boolean hasNext() {

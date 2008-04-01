@@ -9,14 +9,20 @@ public interface MessageContext {
 	 * Get all messages in this context. The messages returned should be suitable for display as-is.
 	 * @return the messages
 	 */
-	public Message[] getMessages();
+	public Message[] getAllMessages();
 
 	/**
-	 * Get all messages in this context from the source provided.
-	 * @param source the source that recorded the message
+	 * Get all messages in this context for the source provided.
+	 * @param source the source associated with messages, or null for global messages
 	 * @return the source's messages
 	 */
-	public Message[] getMessages(Object source);
+	public Message[] getMessagesBySource(Object source);
+
+	/**
+	 * Get all messages that meet the given result criteria.
+	 * @param criteria the message criteria
+	 */
+	public Message[] getMessagesByCriteria(MessageCriteria criteria);
 
 	/**
 	 * Add a new message to this context.

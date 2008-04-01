@@ -1,5 +1,6 @@
 package org.springframework.webflow.mvc.view;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +12,12 @@ import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageCriteria;
+import org.springframework.binding.message.Severity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 public class BindingModel extends ViewRenderingErrors {
 
@@ -23,11 +29,14 @@ public class BindingModel extends ViewRenderingErrors {
 
 	private MappingResults mappingResults;
 
+	private MessageContext messageContext;
+
 	public BindingModel(Object boundObject, ExpressionParser expressionParser, FormatterRegistry formatterRegistry,
 			MessageContext messageContext) {
 		this.boundObject = boundObject;
 		this.expressionParser = expressionParser;
 		this.formatterRegistry = formatterRegistry;
+		this.messageContext = messageContext;
 	}
 
 	public void setMappingResults(MappingResults results) {
@@ -35,18 +44,15 @@ public class BindingModel extends ViewRenderingErrors {
 	}
 
 	public List getAllErrors() {
-		// TODO
-		return Collections.EMPTY_LIST;
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_ANY_SOURCE));
 	}
 
 	public List getGlobalErrors() {
-		// TODO
-		return Collections.EMPTY_LIST;
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_NULL_SOURCE));
 	}
 
 	public List getFieldErrors(String field) {
-		// TODO
-		return Collections.EMPTY_LIST;
+		return toErrors(messageContext.getMessagesByCriteria(new FieldErrorMessage(field)));
 	}
 
 	public Class getFieldType(String field) {
@@ -61,15 +67,14 @@ public class BindingModel extends ViewRenderingErrors {
 				return fieldError.getResult().getOriginalValue();
 			}
 		}
-		return getFormattedValue(field);
+		return getFormattedValue(parseFieldExpression(field));
 	}
 
 	private Expression parseFieldExpression(String field) {
 		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));
 	}
 
-	private Object getFormattedValue(String field) {
-		Expression fieldExpression = parseFieldExpression(field);
+	private Object getFormattedValue(Expression fieldExpression) {
 		Formatter formatter = getFormatter(fieldExpression);
 		if (formatter != null) {
 			return formatter.format(fieldExpression.getValue(boundObject));
@@ -87,6 +92,23 @@ public class BindingModel extends ViewRenderingErrors {
 		}
 	}
 
+	private List toErrors(Message[] messages) {
+		if (messages == null || messages.length == 0) {
+			return Collections.EMPTY_LIST;
+		}
+		ArrayList errors = new ArrayList(messages.length);
+		for (int i = 0; i < messages.length; i++) {
+			Message message = messages[i];
+			if (message.getSource() == null) {
+				errors.add(new ObjectError("boundObject", null, null, message.getText()));
+			} else {
+				errors.add(new FieldError("boundObject", (String) message.getSource(), null, false, null, null, message
+						.getText()));
+			}
+		}
+		return errors;
+	}
+
 	private static class FieldErrorResult implements MappingResultsCriteria {
 
 		private String field;
@@ -101,6 +123,30 @@ public class BindingModel extends ViewRenderingErrors {
 			} else {
 				return false;
 			}
+		}
+	}
+
+	private static final MessageCriteria ERRORS_ANY_SOURCE = new MessageCriteria() {
+		public boolean test(Message message) {
+			return message.getSeverity() == Severity.ERROR;
+		}
+	};
+
+	private static final MessageCriteria ERRORS_NULL_SOURCE = new MessageCriteria() {
+		public boolean test(Message message) {
+			return message.getSource() == null && message.getSeverity() == Severity.ERROR;
+		}
+	};
+
+	private static class FieldErrorMessage implements MessageCriteria {
+		private String field;
+
+		public FieldErrorMessage(String field) {
+			this.field = field;
+		}
+
+		public boolean test(Message message) {
+			return field.equals(message.getSource()) && message.getSeverity() == Severity.ERROR;
 		}
 	}
 
