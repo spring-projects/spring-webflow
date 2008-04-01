@@ -16,6 +16,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+
 /**
  * A Hotel Booking made by a User.
  */
@@ -171,6 +174,22 @@ public class Booking implements Serializable {
 
     public void setCreditCardExpiryYear(int creditCardExpiryYear) {
 	this.creditCardExpiryYear = creditCardExpiryYear;
+    }
+
+    public boolean validate(MessageContext context) {
+	Calendar calendar = Calendar.getInstance();
+	calendar.add(Calendar.DAY_OF_MONTH, -1);
+	boolean valid = true;
+	if (checkinDate.before(calendar.getTime())) {
+	    context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
+		    "Check in date must be a future date").build());
+	    valid = false;
+	} else if (!checkinDate.before(checkoutDate)) {
+	    context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
+		    "Check out date must be later than check in date").build());
+	    valid = false;
+	}
+	return valid;
     }
 
     @Override
