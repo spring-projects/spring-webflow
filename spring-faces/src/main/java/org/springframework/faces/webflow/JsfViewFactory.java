@@ -38,8 +38,8 @@ import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.AjaxHandler;
-import org.springframework.webflow.mvc.SpringJavascriptAjaxHandler;
+import org.springframework.webflow.mvc.servlet.AjaxHandler;
+import org.springframework.webflow.mvc.servlet.SpringJavascriptAjaxHandler;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.

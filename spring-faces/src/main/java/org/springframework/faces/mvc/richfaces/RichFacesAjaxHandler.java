@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ajax4jsf.context.AjaxContext;
 import org.springframework.faces.webflow.FlowLifecycle;
-import org.springframework.webflow.mvc.SpringJavascriptAjaxHandler;
+import org.springframework.webflow.mvc.servlet.SpringJavascriptAjaxHandler;
 
 public class RichFacesAjaxHandler extends SpringJavascriptAjaxHandler {
 
