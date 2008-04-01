@@ -1,4 +1,4 @@
-package org.springframework.webflow.mvc;
+package org.springframework.webflow.mvc.servlet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +23,8 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
+import org.springframework.webflow.mvc.servlet.FlowController;
+import org.springframework.webflow.mvc.servlet.FlowHandler;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowControllerTests extends TestCase {

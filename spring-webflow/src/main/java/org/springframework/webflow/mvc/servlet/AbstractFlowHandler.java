@@ -1,4 +1,4 @@
-package org.springframework.webflow.mvc;
+package org.springframework.webflow.mvc.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

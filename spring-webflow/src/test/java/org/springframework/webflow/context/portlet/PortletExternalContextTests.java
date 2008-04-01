@@ -64,8 +64,7 @@ public class PortletExternalContextTests extends TestCase {
 	}
 
 	public void testAjaxRequestAcceptHeader() {
-		context.setAjaxRequest(true);
-		assertTrue(context.isAjaxRequest());
+		assertFalse(context.isAjaxRequest());
 	}
 
 	public void testNotResponseCommitted() {

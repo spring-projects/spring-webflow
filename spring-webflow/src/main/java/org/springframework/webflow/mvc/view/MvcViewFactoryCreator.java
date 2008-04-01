@@ -60,7 +60,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
 		if (viewResolvers != null) {
-			return new ViewResolvingMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry, viewResolvers);
+			return new ViewResolvingMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry,
+					viewResolvers, applicationContext);
 		} else {
 			return new InternalFlowResourceMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry,
 					applicationContext, resourceLoader);

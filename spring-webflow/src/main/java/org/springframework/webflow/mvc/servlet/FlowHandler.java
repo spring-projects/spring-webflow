@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.portletmvc;
+package org.springframework.webflow.mvc.servlet;
 
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -39,8 +38,8 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 public interface FlowHandler {
 
 	/**
-	 * Returns the id of the flow handled by this handler. Used by a Controller to load the flow definition.
-	 * @return the flow id
+	 * Returns the id of the flow handled by this handler. Used by a Controller to load the flow definition. Optional.
+	 * @return the flow id, or null if the flow id should be determined by the caller
 	 */
 	public String getFlowId();
 
@@ -48,20 +47,21 @@ public interface FlowHandler {
 	 * Creates the flow execution input map to pass to a new instance of the flow being started. Used by a Controller to
 	 * launch the flow execution with the correct input.
 	 * @param request the current request
-	 * @return the input map
+	 * @return the input map, or null if the contents of the input map should be determined by the caller
 	 */
-	public MutableAttributeMap createExecutionInputMap(PortletRequest request);
+	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
 
 	/**
-	 * Handles a specific flow execution outcome. Used to select a new view to render after the flow ends.
+	 * Handles a specific flow execution outcome. Used by a Controller to select a new view to render after the flow
+	 * ends.
 	 * @param outcome the outcome that was reached
 	 * @param output the output returned by the flow execution
-	 * @param request the current render request
-	 * @param response the current render response
+	 * @param request the current request
+	 * @param response the current response
 	 * @return the model and view to render on the occurrence of this outcome, or null if the outcome was not handled
 	 */
-	public ModelAndView handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
-			RenderResponse response);
+	public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			HttpServletResponse response);
 
 	/**
 	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific
@@ -72,6 +72,5 @@ public interface FlowHandler {
 	 * @param response the current response
 	 * @return the model and view to render on the occurrence of this exception, or null if the exception is not handled
 	 */
-	public ModelAndView handleException(FlowException e, RenderRequest request, RenderResponse response);
-
+	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
 }

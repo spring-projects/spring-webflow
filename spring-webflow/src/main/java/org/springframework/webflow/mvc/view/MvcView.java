@@ -22,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.convert.ConversionException;
@@ -49,6 +46,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
@@ -57,7 +55,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
-class MvcView implements View {
+public abstract class MvcView implements View {
 
 	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
 
@@ -100,14 +98,15 @@ class MvcView implements View {
 		model.put("currentUser", context.getExternalContext().getCurrentUser());
 		// TODO expose flow context to mvc view
 		try {
-			view.render(model, (HttpServletRequest) context.getExternalContext().getNativeRequest(),
-					(HttpServletResponse) context.getExternalContext().getNativeResponse());
+			render(model, context.getExternalContext());
 		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException("Unexpected exception occurred rendering view " + view, e);
 		}
 	}
+
+	public abstract void render(Map model, ExternalContext context) throws Exception;
 
 	public void resume() {
 		determineEventId(context);
@@ -299,6 +298,10 @@ class MvcView implements View {
 		}
 		// we couldn't find the parameter value
 		return null;
+	}
+
+	protected org.springframework.web.servlet.View getView() {
+		return view;
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

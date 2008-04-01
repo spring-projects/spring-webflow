@@ -102,11 +102,6 @@ public class PortletExternalContext implements ExternalContext {
 	private FlowUrlHandler flowUrlHandler;
 
 	/**
-	 * Whether this external request context originated from an Ajax request or not.
-	 */
-	private boolean ajaxRequest;
-
-	/**
 	 * In the case where a redirect response is requested, this flag indicates if the redirect should be issued from a
 	 * popup dialog.
 	 */
@@ -132,15 +127,6 @@ public class PortletExternalContext implements ExternalContext {
 	public PortletExternalContext(PortletContext context, PortletRequest request, PortletResponse response,
 			FlowUrlHandler flowUrlHandler) {
 		init(context, request, response, flowUrlHandler);
-	}
-
-	/**
-	 * Indicates if the current request from this client is an ajax request. This flag may effect the handling of
-	 * response writing within Spring Web Flow.
-	 * @param ajaxRequest the ajax request flag
-	 */
-	public void setAjaxRequest(boolean ajaxRequest) {
-		this.ajaxRequest = ajaxRequest;
 	}
 
 	// implementing external context
@@ -186,7 +172,7 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public boolean isAjaxRequest() {
-		return ajaxRequest;
+		return false;
 	}
 
 	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {

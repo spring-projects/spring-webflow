@@ -19,6 +19,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
+import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.mvc.view.BindingModel;
+import org.springframework.webflow.mvc.view.MvcView;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -49,7 +53,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MvcView(mvcView, context);
+		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
@@ -76,7 +80,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MvcView(mvcView, context);
+		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
@@ -94,7 +98,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MvcView(mvcView, context);
+		MvcView view = new MockMvcView(mvcView, context);
 		view.resume();
 		assertFalse(view.eventSignaled());
 		assertNull(view.getEvent());
@@ -108,7 +112,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MvcView(mvcView, context);
+		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.resume();
 		assertTrue(view.eventSignaled());
@@ -131,7 +135,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MvcView(mvcView, context);
+		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.resume();
 		assertTrue(view.eventSignaled());
@@ -142,6 +146,19 @@ public class MvcViewTests extends TestCase {
 		cal.clear();
 		cal.set(Calendar.YEAR, 2007);
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
+	}
+
+	private class MockMvcView extends MvcView {
+
+		public MockMvcView(View view, RequestContext context) {
+			super(view, context);
+		}
+
+		public void render(Map model, ExternalContext context) throws Exception {
+			getView().render(model, (HttpServletRequest) context.getNativeRequest(),
+					(HttpServletResponse) context.getNativeResponse());
+		}
+
 	}
 
 	private class MockView implements View {

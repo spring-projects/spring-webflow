@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockRequestContext;

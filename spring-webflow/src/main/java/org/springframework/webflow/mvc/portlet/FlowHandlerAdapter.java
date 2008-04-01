@@ -1,4 +1,4 @@
-package org.springframework.webflow.portletmvc;
+package org.springframework.webflow.mvc.portlet;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -15,6 +15,7 @@ import javax.portlet.RenderResponse;
 import org.springframework.web.portlet.HandlerAdapter;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.context.PortletApplicationObjectSupport;
+import org.springframework.webflow.context.portlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.portlet.FlowUrlHandler;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.core.FlowException;
@@ -37,6 +38,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 
 	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
+		this.urlHandler = new DefaultFlowUrlHandler();
 	}
 
 	public boolean supports(Object handler) {
@@ -89,7 +91,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		try {
 			FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
 			if (result.paused()) {
-				urlHandler.setFlowExecutionRenderParameter(flowExecutionKey, response);
+				urlHandler.setFlowExecutionRenderParameter(result.getPausedKey(), response);
 			} else {
 				request.getPortletSession().setAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE, result);
 			}
@@ -151,11 +153,18 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 
 	// helpers
 
-	private ModelAndView startFlow(RenderRequest request, RenderResponse response, FlowHandler flowHandler) {
+	private ModelAndView startFlow(RenderRequest request, RenderResponse response, FlowHandler flowHandler)
+			throws Exception {
 		MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
+		if (input == null) {
+			input = defaultFlowExecutionInputMap(request);
+		}
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
-			flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
+			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
+			if (result.paused()) {
+				urlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
+			}
 			return null;
 		} catch (FlowException e) {
 			ModelAndView mv = flowHandler.handleException(e, request, response);

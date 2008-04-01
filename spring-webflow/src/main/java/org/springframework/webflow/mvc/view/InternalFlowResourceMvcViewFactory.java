@@ -9,9 +9,12 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.mvc.portlet.PortletMvcView;
+import org.springframework.webflow.mvc.servlet.ServletMvcView;
 
 /**
  * View factory implementation that creates a Spring-MVC Internal Resource view to render a flow-relative view resource
@@ -67,7 +70,12 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 	}
 
 	private MvcView createMvcView(org.springframework.web.servlet.View view, RequestContext context) {
-		MvcView mvcView = new MvcView(view, context);
+		MvcView mvcView;
+		if (context.getExternalContext() instanceof PortletExternalContext) {
+			mvcView = new PortletMvcView(view, context, applicationContext);
+		} else {
+			mvcView = new ServletMvcView(view, context);
+		}
 		mvcView.setExpressionParser(expressionParser);
 		mvcView.setFormatterRegistry(formatterRegistry);
 		return mvcView;

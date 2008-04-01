@@ -7,11 +7,15 @@ import java.util.Locale;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.mvc.portlet.PortletMvcView;
+import org.springframework.webflow.mvc.servlet.ServletMvcView;
 
 /**
  * View factory implementation that delegates to the Spring-configured view resolver chain to resolve the Spring MVC
@@ -28,15 +32,23 @@ class ViewResolvingMvcViewFactory implements ViewFactory {
 
 	private List viewResolvers;
 
+	private ApplicationContext applicationContext;
+
 	public ViewResolvingMvcViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, List viewResolvers) {
+			FormatterRegistry formatterRegistry, List viewResolvers, ApplicationContext context) {
 		this.viewIdExpression = viewIdExpression;
 		this.viewResolvers = viewResolvers;
+		this.applicationContext = context;
 	}
 
 	public View getView(RequestContext context) {
 		String viewName = (String) viewIdExpression.getValue(context);
-		MvcView view = new MvcView(resolveView(viewName), context);
+		MvcView view;
+		if (context.getExternalContext() instanceof PortletExternalContext) {
+			view = new PortletMvcView(resolveView(viewName), context, applicationContext);
+		} else {
+			view = new ServletMvcView(resolveView(viewName), context);
+		}
 		view.setExpressionParser(expressionParser);
 		view.setFormatterRegistry(formatterRegistry);
 		return view;
