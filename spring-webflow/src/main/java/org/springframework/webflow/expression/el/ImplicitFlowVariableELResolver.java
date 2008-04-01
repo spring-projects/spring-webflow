@@ -41,6 +41,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * flowScope
  * conversationScope
  * messageContext
+ * externalContext
  * flowExecutionContext
  * flowExecutionUrl
  * currentUser
@@ -155,6 +156,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 			vars.put("flowScope", requestContextResolver);
 			vars.put("conversationScope", requestContextResolver);
 			vars.put("messageContext", requestContextResolver);
+			vars.put("externalContext", requestContextResolver);
 			vars.put("flowExecutionContext", requestContextResolver);
 			vars.put("flowExecutionUrl", requestContextResolver);
 			vars.put("currentUser", externalContextResolver);
