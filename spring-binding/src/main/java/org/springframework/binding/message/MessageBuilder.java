@@ -1,6 +1,7 @@
 package org.springframework.binding.message;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -85,6 +86,18 @@ public class MessageBuilder {
 	}
 
 	/**
+	 * Records that the message being built should try and resolve its text using the codes provided. Adds the codes to
+	 * the codes list. Successive calls to this method add additional codes. Codes are applied in the order they are
+	 * added.
+	 * @param codes the message codes
+	 * @return this, for fluent API usage
+	 */
+	public MessageBuilder codes(String[] codes) {
+		this.codes.add(Arrays.asList(codes));
+		return this;
+	}
+
+	/**
 	 * Records that the message being built has a variable argument. Adds the arg to the args list. Successive calls to
 	 * this method add additional args. Args are applied in the order they are added.
 	 * @param arg the message argument value
@@ -92,6 +105,17 @@ public class MessageBuilder {
 	 */
 	public MessageBuilder arg(Object arg) {
 		args.add(arg);
+		return this;
+	}
+
+	/**
+	 * Records that the message being built has variable arguments. Adds the args to the args list. Successive calls to
+	 * this method add additional args. Args are applied in the order they are added.
+	 * @param arg the message argument value
+	 * @return this, for fluent API usage
+	 */
+	public MessageBuilder args(Object[] args) {
+		this.args.add(Arrays.asList(args));
 		return this;
 	}
 
@@ -104,6 +128,20 @@ public class MessageBuilder {
 	 */
 	public MessageBuilder resolvableArg(Object arg) {
 		args.add(new ResolvableArgument(arg));
+		return this;
+	}
+
+	/**
+	 * Records that the message being built has variable arguments, whose display values are also
+	 * {@link MessageSourceResolvable} instances. Adds the args to the args list. Successive calls to this method add
+	 * additional resolvable args. Args are applied in the order they are added.
+	 * @param args the resolvable message arguments
+	 * @return this, for fluent API usage
+	 */
+	public MessageBuilder resolvableArgs(Object[] args) {
+		for (int i = 0; i < args.length; i++) {
+			this.args.add(new ResolvableArgument(args[i]));
+		}
 		return this;
 	}
 

@@ -176,7 +176,7 @@ public class Booking implements Serializable {
 	this.creditCardExpiryYear = creditCardExpiryYear;
     }
 
-    public boolean validate(MessageContext context) {
+    public boolean validateEnterBookingDetails(MessageContext context) {
 	Calendar calendar = Calendar.getInstance();
 	calendar.add(Calendar.DAY_OF_MONTH, -1);
 	boolean valid = true;

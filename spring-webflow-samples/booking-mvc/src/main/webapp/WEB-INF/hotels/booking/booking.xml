@@ -14,9 +14,7 @@
 	</on-start>
 	
 	<view-state id="enterBookingDetails" model="booking">
-		<transition on="proceed" to="reviewBooking">
-			<evaluate expression="booking.validate(messageContext)"/>
-		</transition>
+		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />
 	</view-state>
 	

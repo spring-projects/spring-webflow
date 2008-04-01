@@ -16,6 +16,7 @@
 package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -41,8 +43,12 @@ import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.mapping.impl.DefaultMappingContext;
 import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
@@ -115,9 +121,14 @@ class MvcView implements View {
 		}
 		if (shouldBind(model)) {
 			mappingResults = bind(model);
-			if (mappingResults.hasErrorResults() && !onlyPropertyNotFoundErrorsPresent(mappingResults)) {
+			if (hasMappingErrors(mappingResults)) {
 				viewErrors = true;
 				addErrorMessages(mappingResults);
+			} else {
+				validate(model);
+				if (context.getMessageContext().hasErrorMessages()) {
+					viewErrors = true;
+				}
 			}
 		}
 	}
@@ -191,6 +202,10 @@ class MvcView implements View {
 		}
 	}
 
+	private boolean hasMappingErrors(MappingResults results) {
+		return results.hasErrorResults() && !onlyPropertyNotFoundErrorsPresent(results);
+	}
+
 	private boolean onlyPropertyNotFoundErrorsPresent(MappingResults results) {
 		return results.getResults(PROPERTY_NOT_FOUND_ERROR).size() == mappingResults.getErrorResults().size();
 	}
@@ -210,6 +225,33 @@ class MvcView implements View {
 				.append(field).append('.').append(errorCode).toString();
 		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
 				.defaultText(errorCode + " on " + field).build();
+	}
+
+	private void validate(Object model) {
+		String validateMethodName = "validate" + StringUtils.capitalize(context.getCurrentState().getId());
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
+				new Class[] { MessageContext.class });
+		if (validateMethod != null) {
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { context.getMessageContext() });
+		}
+		BeanFactory beanFactory = context.getActiveFlow().getBeanFactory();
+		String validatorName = getModelExpression().getExpressionString() + "Validator";
+		if (beanFactory.containsBean(validatorName)) {
+			Object validator = beanFactory.getBean(validatorName);
+			validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
+					model.getClass(), MessageContext.class });
+			if (validateMethod != null) {
+				ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+						context.getMessageContext() });
+			} else {
+				validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
+						model.getClass(), Errors.class });
+				if (validateMethod != null) {
+					ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+							new MessageContextErrors(context.getMessageContext()) });
+				}
+			}
+		}
 	}
 
 	private void determineEventId(RequestContext context) {

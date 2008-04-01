@@ -52,9 +52,8 @@ class DefaultMessageContext implements StateManageableMessageContext {
 
 	public Message[] getAllMessages() {
 		List messages = new ArrayList();
-		Iterator it = objectMessages.keySet().iterator();
-		while (it.hasNext()) {
-			messages.addAll((List) objectMessages.get(it.next()));
+		for (Iterator it = objectMessages.values().iterator(); it.hasNext();) {
+			messages.addAll((List) it.next());
 		}
 		return (Message[]) messages.toArray(new Message[messages.size()]);
 	}
@@ -78,6 +77,20 @@ class DefaultMessageContext implements StateManageableMessageContext {
 			}
 		}
 		return (Message[]) messages.toArray(new Message[messages.size()]);
+	}
+
+	public boolean hasErrorMessages() {
+		Iterator it = objectMessages.values().iterator();
+		while (it.hasNext()) {
+			List sourceMessages = (List) it.next();
+			for (Iterator it2 = sourceMessages.iterator(); it2.hasNext();) {
+				Message message = (Message) it2.next();
+				if (message.getSeverity() == Severity.ERROR) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void addMessage(MessageResolver messageResolver) {

@@ -118,6 +118,10 @@ public class FlowFacesContextTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
+		public boolean hasErrorMessages() {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
 		public void clearMessages() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
@@ -147,6 +151,10 @@ public class FlowFacesContextTests extends TestCase {
 		}
 
 		public Message[] getMessagesByCriteria(MessageCriteria criteria) {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public boolean hasErrorMessages() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

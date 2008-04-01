@@ -25,6 +25,12 @@ public interface MessageContext {
 	public Message[] getMessagesByCriteria(MessageCriteria criteria);
 
 	/**
+	 * Returns true if there are error messages in this context.
+	 * @return error messages
+	 */
+	public boolean hasErrorMessages();
+
+	/**
 	 * Add a new message to this context.
 	 * @param messageResolver the resolver that will resolve the message to be added
 	 */
