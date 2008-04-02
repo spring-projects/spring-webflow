@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="package-top-level">
 
-	<target name="package">
+	<target name="package" description="Creates the release package for this project">
 		<delete dir="${package.output.dir}" quiet="true"/>
 		<mkdir dir="${package.output.dir}"/>
 		<delete file="${package.output.file}" quiet="true"/>
