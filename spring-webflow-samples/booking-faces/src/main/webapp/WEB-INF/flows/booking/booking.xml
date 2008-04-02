@@ -15,7 +15,7 @@
 	
 	<view-state id="enterBookingDetails">
 		<transition on="proceed" to="reviewBooking">
-			<evaluate expression="booking.validate(messageContext)" />
+			<evaluate expression="booking.validateEnterBookingDetails(messageContext)" />
 		</transition>
 		<transition on="cancel" to="bookingCancelled" />
 	</view-state>

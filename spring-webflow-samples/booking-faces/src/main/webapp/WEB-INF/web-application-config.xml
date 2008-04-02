@@ -41,7 +41,7 @@
 	</bean>
 
 	<!-- Handles requests mapped to the Spring Web Flow system -->
-	<bean id="flowController" class="org.springframework.webflow.mvc.FlowController">
+	<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
 

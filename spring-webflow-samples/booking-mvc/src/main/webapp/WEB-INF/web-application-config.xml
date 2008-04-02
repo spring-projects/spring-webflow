@@ -43,7 +43,7 @@
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 
 	<!-- Enables FlowHandlers -->
-	<bean class="org.springframework.webflow.mvc.FlowHandlerAdapter">
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
 	
