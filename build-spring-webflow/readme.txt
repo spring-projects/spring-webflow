@@ -1,38 +1,27 @@
-This is where the master build that creates releases of Spring Web Flow resides.
+This is where the master build that creates releases of Spring Web Flow resides.  The build system is based on spring-build, which is linked in using an SVN external to https://src.springframework.org/svn/spring-build.
 
 USERS
-- To build all Spring Web Flow related projects:
+- To build all Spring Web Flow projects:
 
-	1. From this directory, run:
-		ant dist
+    1. From this directory, run:
+       ant
         
 Build Pre-requisites:
 - javac 1.5 or > must be in your system path
-- ant 1.6 or > must be in your system path
-- ivy 1.3 or > (Note: a version of Ivy is included and will be used automatically if you do not already have
-                Ivy installed in your ANT_HOME/lib directory.
-                If you have Ivy already installed in %ANT_HOME%/lib make sure it is 1.3 or >.  1.2 won't work.)
+- ant 1.7 or > must be in your system path
 
 DEVELOPERS
-- To build a new Spring Web Flow product release:
+- To build a new Spring Web Flow distribution for release:
 
   1. Update the files containing the version number to reflect the new release version, if necessary.
-		build-spring-webflow/project.properties
-		spring-binding/pom.xml
-		spring-binding/project.properties
-		spring-faces/pom.xml
-		spring-faces/project.properties
-		spring-webflow/changelog.txt
-		spring-webflow/pom.xml
-		spring-webflow/project.properties
-		spring-webflow/readme.txt
-		spring-webflow/docs/reference/src/index.xml
+	build.properties
+        build-spring-webflow/resources/readme.txt
+	spring-webflow-reference/src/spring-webflow-reference.xml
 
   2. From this directory, run:
-		ant release
+	ant jar package
 		
      The release archive will be created and placed in:
-     	target/release
-
-     	                	
-Questions? See http://forum.springframework.org.
+     	target/artifacts
+                	
+Questions? See http://forum.springframework.org
