@@ -3,51 +3,51 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div class="section">
-	<h1>View Hotel</h1>
-</div>
+<h2>View Hotel</h2>
 
-<div class="section">
-	<portlet:actionURL var="actionUrl">
-		<portlet:param name="execution" value="${flowExecutionKey}" />
-	</portlet:actionURL>
-	<form:form id="hotel" modelAttribute="hotel" action="${actionUrl}">
-		<input type="hidden" name="execution" value="${flowExecutionKey}" />
-		<fieldset>
-			<div class="field">
-				<div class="label">Name:</div>
-				<div class="output">${hotel.name}</div>
-			</div>
-			<div class="field">
-				<div class="label">Address:</div>
-				<div class="output">${hotel.address}</div>
-			</div>
-			<div class="field">
-				<div class="label">City:</div>
-				<div class="output">${hotel.city}</div>
-			</div>
-			<div class="field">
-				<div class="label">State:</div>
-				<div class="output">${hotel.state}</div>
-			</div>
-			<div class="field">
-				<div class="label">Zip:</div>
-				<div class="output">${hotel.zip}</div>
-			</div>
-			<div class="field">
-				<div class="label">Country:</div>
-				<div class="output">${hotel.country}</div>
-			</div>
-		    <div class="field">
-		        <div class="label">Nightly rate:</div>
-		        <div class="output">
+<portlet:actionURL var="actionUrl">
+	<portlet:param name="execution" value="${flowExecutionKey}" />
+</portlet:actionURL>
+<form:form id="hotel" modelAttribute="hotel" action="${actionUrl}">
+	<input type="hidden" name="execution" value="${flowExecutionKey}" />
+	<fieldset>
+		<table>
+			<tr class="field">
+				<td class="label">Name:</td>
+				<td class="output">${hotel.name}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Address:</td>
+				<td class="output">${hotel.address}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">City:</td>
+				<td class="output">${hotel.city}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">State:</td>
+				<td class="output">${hotel.state}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Zip:</td>
+				<td class="output">${hotel.zip}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Country:</td>
+				<td class="output">${hotel.country}</td>
+			</tr>
+		    <tr class="field">
+		        <td class="label">Nightly rate:</td>
+		        <td class="output">
 		        	<spring:bind path="price">${status.value}</spring:bind>
-		        </div>
-		    </div>
-			<div class="buttonGroup">
-				<input type="submit" name="_eventId_book" value="Book Hotel"/>&#160;
-				<input type="submit" name="_eventId_cancel" value="Back to Search"/>&#160;
-			</div>
-		</fieldset>
-	</form:form>
-</div>
+		        </td>
+		    </tr>
+			<tr class="field">
+				<td colspan="2" class="buttonGroup">
+					<input type="submit" name="_eventId_book" value="Book Hotel"/>&#160;
+					<input type="submit" name="_eventId_cancel" value="Back to Search"/>&#160;
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+</form:form>

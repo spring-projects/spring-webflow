@@ -2,24 +2,20 @@
 <%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div class="section">
-	<h1>Hotel Results</h1>
-</div>
+<h2>Hotel Results</h2>
 
-<c:if test="${not empty hotels}">
-<div class="section">
-	<table class="summary">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Address</th>
-				<th>City, State</th>
-				<th>Zip</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="hotel" items="${hotels}">
+<table class="summary">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Address</th>
+			<th>City, State</th>
+			<th>Zip</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach var="hotel" items="${hotels}">
 			<tr>
 				<td>${hotel.name}</td>
 				<td>${hotel.address}</td>
@@ -34,13 +30,11 @@
 					<a href="${actionUrl}">View Hotel</a>
 				</td>
 			</tr>
-			</c:forEach>
-			<c:if test="${empty hotels}">
-			<tr>
-				<td colspan="5">No hotels found</td>
-			</tr>
-			</c:if>
-		</tbody>
-	</table>
-</div>
-</c:if>
+		</c:forEach>
+		<c:if test="${empty hotels}">
+		<tr>
+			<td colspan="5">No hotels found</td>
+		</tr>
+		</c:if>
+	</tbody>
+</table>

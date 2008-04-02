@@ -3,105 +3,103 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div class="section">
-	<h1>Book Hotel</h1>
-</div>
+<h2>Book Hotel</h2>
 
-<div class="section">
-	<portlet:actionURL var="actionUrl">
-		<portlet:param name="execution" value="${flowExecutionKey}" />
-	</portlet:actionURL>
-	<form:form id="booking" modelAttribute="booking" action="${actionUrl}">
-		<form:errors path="*" cssClass="errors" />
-		<fieldset>
-			<div class="field">
-				<div class="label">Name:</div>
-				<div class="output">${booking.hotel.name}</div>
-			</div>
-			<div class="field">
-				<div class="label">Address:</div>
-				<div class="output">${booking.hotel.address}</div>
-			</div>
-			<div class="field">
-				<div class="label">City, State:</div>
-				<div class="output">${booking.hotel.city}, ${booking.hotel.state}</div>
-			</div>
-			<div class="field">
-				<div class="label">Zip:</div>
-				<div class="output">${booking.hotel.zip}</div>
-			</div>
-			<div class="field">
-				<div class="label">Country:</div>
-				<div class="output">${booking.hotel.country}</div>
-			</div>
-	        <div class="field">
-	            <div class="label">Nightly rate:</div>
-	            <div class="output">
+<portlet:actionURL var="actionUrl">
+	<portlet:param name="execution" value="${flowExecutionKey}" />
+</portlet:actionURL>
+<form:form id="booking" modelAttribute="booking" action="${actionUrl}">
+	<form:errors path="*" cssClass="errors" />
+	<fieldset>
+		<table>
+			<tr class="field">
+				<td class="label">Name:</td>
+				<td class="output">${booking.hotel.name}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Address:</td>
+				<td class="output">${booking.hotel.address}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">City, State:</td>
+				<td class="output">${booking.hotel.city}, ${booking.hotel.state}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Zip:</td>
+				<td class="output">${booking.hotel.zip}</td>
+			</tr>
+			<tr class="field">
+				<td class="label">Country:</td>
+				<td class="output">${booking.hotel.country}</td>
+			</tr>
+	        <tr class="field">
+	            <td class="label">Nightly rate:</td>
+	            <td class="output">
 		        	<spring:bind path="booking.hotel.price">${status.value}</spring:bind>
-	            </div>
-	        </div>
-			<div class="field">
-				<div class="label">
+	            </td>
+	        </tr>
+			<tr class="field">
+				<td class="label">
 					<label for="checkinDate">Check In Date:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:errors path="checkinDate" cssClass="errors"/>
 					<form:input path="checkinDate"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="checkoutDate">Check Out Date:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:errors path="checkoutDate" cssClass="errors"/>
 					<form:input path="checkoutDate"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="beds">Room Preference:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:select id="beds" path="beds">
 						<form:option label="One king-size bed" value="1"/>
 						<form:option label="Two double beds" value="2"/>
 						<form:option label="Three beds" value="3"/>
 					</form:select>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="smoking">Smoking Preference:</label>
-				</div>
-				<div id="radio" class="input">
+				</td>
+				<td class="input">
 					<form:radiobutton id="smoking" path="smoking" label="Smoking" value="true"/>
 					<form:radiobutton path="smoking" label="Non Smoking" value="false"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="creditCard">Credit Card #:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:errors path="creditCard" cssClass="errors"/>
 					<form:input id="creditCard" path="creditCard"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="creditCardName">Credit Card Name:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:errors path="creditCardName" cssClass="errors"/>
 					<form:input id="creditCardName" path="creditCardName"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">
+				</td>
+			</tr>
+			<tr class="field">
+				<td class="label">
 					<label for="creditCardExpiryMonth">Expiration Date:</label>
-				</div>
-				<div class="input">
+				</td>
+				<td class="input">
 					<form:select id="creditCardExpiryMonth" path="creditCardExpiryMonth">
 						<form:option label="Jan" value="1"/>
 						<form:option label="Feb" value="2"/>
@@ -123,12 +121,14 @@
 						<form:option label="2011" value="4"/>
 						<form:option label="2012" value="5"/>
 					</form:select>
-				</div>
-			</div>
-			<div class="buttonGroup">
-				<input type="submit" name="_eventId_proceed" value="Proceed"/>&#160;
-				<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
-			</div>
-		</fieldset>
-	</form:form>
-</div>
+				</td>
+			</tr>
+			<tr class="field">
+				<td colspan="2" class="buttonGroup"
+					<input type="submit" name="_eventId_proceed" value="Proceed"/>&#160;
+					<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+</form:form>

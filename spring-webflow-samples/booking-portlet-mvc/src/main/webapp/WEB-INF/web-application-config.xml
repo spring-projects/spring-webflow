@@ -25,18 +25,7 @@
 	</bean>
 
 	<!-- Handles requests mapped to the Spring Web Flow system -->
-	<bean id="flowHandlerAdapter" class="org.springframework.webflow.portletmvc.FlowHandlerAdapter">
-		<constructor-arg ref="flowExecutor" />
-	</bean>
-	
-	<!-- Enables annotated POJO @Controllers -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-
-	<!-- Enables plain Controllers -->
-	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-
-	<!-- Enables FlowHandlers -->
-	<bean class="org.springframework.webflow.mvc.FlowHandlerAdapter">
+	<bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.portlet.FlowHandlerAdapter">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
 	
