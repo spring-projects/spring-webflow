@@ -32,11 +32,8 @@
 		<dependency org="org.richfaces.framework" name="richfaces-api" rev="3.1.4.GA" conf="provided->default" />
 		
 		<!-- JSF 1.2 dependencies -->
-		<!-- note that at this time we depend on MyFaces, not JSF-RI -->
-		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.2" conf="compile, jsf12->default" />
-		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.2" conf="compile, jsf12->default" />
-    	<dependency org="org.apache" name="commons-codec" rev="1.3" conf="compile, jsf12->default" />
-    	<dependency org="org.apache.commons" name="commons-collections" rev="3.2" conf="compile, jsf12->default" />
+		<dependency org="javax.faces" name="jsf-api" rev="1.2.08" conf="compile, jsf12->default" />
+		<dependency org="javax.faces" name="jsf-impl" rev="1.2.08" conf="compile, jsf12->default" />
     	
     	<!-- JSF 1.1 dependencies -->
     	<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.5" conf="jsf11->default" />
