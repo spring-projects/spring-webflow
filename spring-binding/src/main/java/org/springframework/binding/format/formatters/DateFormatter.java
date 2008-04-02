@@ -70,7 +70,11 @@ public class DateFormatter implements Formatter {
 		if (pattern != null) {
 			return new SimpleDateFormat(pattern, locale);
 		} else {
-			return DateFormat.getDateInstance();
+			if (locale != null) {
+				return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			} else {
+				return DateFormat.getDateInstance(DateFormat.SHORT);
+			}
 		}
 	}
 
