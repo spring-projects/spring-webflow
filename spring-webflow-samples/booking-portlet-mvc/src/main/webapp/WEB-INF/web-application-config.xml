@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
            http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-
 	
+	<!-- Activates annotation-based bean configuration -->
+	<context:annotation-config />
+	
+	<!-- Scans for application @Components to deploy -->
+	<context:component-scan base-package="org.springframework.webflow.samples.booking" />
 	
 	<bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
 		<property name="portletModeMap">
@@ -30,21 +36,21 @@
 	</bean>
 	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
-	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<web:flow-execution-attributes>
-			<web:alwaysRedirectOnPause value="false"/>
-		</web:flow-execution-attributes>
-		<web:flow-execution-listeners>
-			<web:listener ref="jpaFlowExecutionListener" />
-		</web:flow-execution-listeners>
-	</web:flow-executor>
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-attributes>
+			<webflow:alwaysRedirectOnPause value="false"/>
+		</webflow:flow-execution-attributes>
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="jpaFlowExecutionListener" />
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
 
 	<!-- The registry of executable flow definitions -->
-	<web:flow-registry id="flowRegistry">
-		<web:flow-location path="/WEB-INF/flows/view/view.xml" />
-		<web:flow-location path="/WEB-INF/flows/main/main.xml" />
-		<web:flow-location path="/WEB-INF/flows/booking/booking.xml" />
-	</web:flow-registry>
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location path="/WEB-INF/flows/view/view.xml" />
+		<webflow:flow-location path="/WEB-INF/flows/main/main.xml" />
+		<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
+	</webflow:flow-registry>
 	
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
