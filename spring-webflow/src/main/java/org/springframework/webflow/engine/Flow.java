@@ -23,12 +23,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -168,14 +165,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	private FlowExecutionExceptionHandlerSet exceptionHandlerSet = new FlowExecutionExceptionHandlerSet();
 
 	/**
-	 * An optional bean factory hosting services needed by this flow.
+	 * An optional application context hosting services needed by this flow.
 	 */
-	private BeanFactory beanFactory = new StaticListableBeanFactory();
-
-	/**
-	 * An optional resource loader capable of loading resources relative to this flow.
-	 */
-	private ResourceLoader resourceLoader = new DefaultResourceLoader();
+	private ApplicationContext applicationContext;
 
 	/**
 	 * Construct a new flow definition with the given id. The id should be unique among all flows.
@@ -218,12 +210,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		return getStateInstance(stateId);
 	}
 
-	public BeanFactory getBeanFactory() {
-		return beanFactory;
-	}
-
-	public ResourceLoader getResourceLoader() {
-		return resourceLoader;
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
 	}
 
 	/**
@@ -455,19 +443,11 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Sets a reference to a bean factory hosting application objects needed by this flow.
-	 * @param beanFactory the bean factory
+	 * Sets a reference to the application context hosting application objects needed by this flow.
+	 * @param applicationContext the application context
 	 */
-	public void setBeanFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
-	}
-
-	/**
-	 * Sets a reference to a resource loader capable of loading resources relative to this flow.
-	 * @param resourceLoader the resource loader
-	 */
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 	}
 
 	// id based equality

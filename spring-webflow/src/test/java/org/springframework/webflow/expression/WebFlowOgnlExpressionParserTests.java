@@ -4,9 +4,9 @@ import java.security.Principal;
 
 import junit.framework.TestCase;
 
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.action.FormAction;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -33,7 +33,8 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 		LocalAttributeMap map = new LocalAttributeMap();
 		map.put("foo", "bar");
 		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(MutableAttributeMap.class));
-		Expression exp2 = parser.parseExpression("bogus", new FluentParserContext().evaluate(MutableAttributeMap.class));
+		Expression exp2 = parser
+				.parseExpression("bogus", new FluentParserContext().evaluate(MutableAttributeMap.class));
 		exp.setValue(map, "baz");
 		exp2.setValue(map, "new");
 		assertEquals("baz", exp.getValue(map));
@@ -50,7 +51,8 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 	public void testResolveCurrentUser() {
 		MockRequestContext context = new MockRequestContext();
 		context.getMockExternalContext().setCurrentUser("Keith");
-		Expression exp = parser.parseExpression("currentUser", new FluentParserContext().evaluate(RequestContext.class));
+		Expression exp = parser
+				.parseExpression("currentUser", new FluentParserContext().evaluate(RequestContext.class));
 		assertEquals("Keith", ((Principal) exp.getValue(context)).getName());
 	}
 
@@ -116,11 +118,11 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 
 	public void testResolveSpringBean() {
 		MockRequestContext context = new MockRequestContext();
-		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-		beanFactory.addBean("testBean", new TestBean());
-		beanFactory.addBean("action", new TestAction());
-		beanFactory.addBean("multiAction", new FormAction(TestBean.class));
-		context.getRootFlow().setBeanFactory(beanFactory);
+		StaticApplicationContext ac = new StaticApplicationContext();
+		ac.getBeanFactory().registerSingleton("testBean", new TestBean());
+		ac.getBeanFactory().registerSingleton("action", new TestAction());
+		ac.getBeanFactory().registerSingleton("multiAction", new FormAction(TestBean.class));
+		context.getRootFlow().setApplicationContext(ac);
 		context.getConversationScope().put("foo", "bar");
 		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
 		assertEquals("bar", exp.getValue(context));
@@ -128,22 +130,23 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 
 	public void testResolveAction() {
 		MockRequestContext context = new MockRequestContext();
-		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-		beanFactory.addBean("action", new TestAction());
-		context.getRootFlow().setBeanFactory(beanFactory);
+		StaticApplicationContext ac = new StaticApplicationContext();
+		ac.getBeanFactory().registerSingleton("testBean", new TestBean());
+		ac.getBeanFactory().registerSingleton("action", new TestAction());
+		context.getRootFlow().setApplicationContext(ac);
 		Expression exp = parser.parseExpression("action", new FluentParserContext().evaluate(RequestContext.class));
-		assertSame(beanFactory.getBean("action"), exp.getValue(context));
+		assertSame(ac.getBean("action"), exp.getValue(context));
 	}
 
 	public void testResolveMultiAction() {
 		MockRequestContext context = new MockRequestContext();
-		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-		beanFactory.addBean("multiAction", new FormAction());
-		context.getRootFlow().setBeanFactory(beanFactory);
+		StaticApplicationContext ac = new StaticApplicationContext();
+		ac.getBeanFactory().registerSingleton("multiAction", new FormAction());
+		context.getRootFlow().setApplicationContext(ac);
 		Expression exp = parser.parseExpression("multiAction.setupForm", new FluentParserContext()
 				.evaluate(RequestContext.class));
 		AnnotatedAction action = (AnnotatedAction) exp.getValue(context);
-		assertSame(beanFactory.getBean("multiAction"), action.getTargetAction());
+		assertSame(ac.getBean("multiAction"), action.getTargetAction());
 		assertEquals("setupForm", action.getMethod());
 	}
 

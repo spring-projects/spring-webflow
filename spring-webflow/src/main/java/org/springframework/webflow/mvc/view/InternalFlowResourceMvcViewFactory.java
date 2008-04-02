@@ -5,6 +5,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -22,6 +23,7 @@ import org.springframework.webflow.mvc.servlet.ServletMvcView;
  * @author Keith Donald
  */
 class InternalFlowResourceMvcViewFactory implements ViewFactory {
+
 	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
 
 	private Expression viewIdExpression;
@@ -48,8 +50,12 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 		if (viewId.startsWith("/")) {
 			return getViewInternal(viewId, context);
 		} else {
-			ContextResource viewResource = (ContextResource) resourceLoader.getResource(viewId);
-			return getViewInternal(viewResource.getPathWithinContext(), context);
+			Resource viewResource = resourceLoader.getResource(viewId);
+			if (!(viewResource instanceof ContextResource)) {
+				throw new IllegalStateException(
+						"A ContextResource is required to get relative view paths within this context");
+			}
+			return getViewInternal(((ContextResource) viewResource).getPathWithinContext(), context);
 		}
 	}
 
@@ -57,11 +63,10 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 		if (viewPath.endsWith(".jsp")) {
 			if (JSTL_PRESENT) {
 				JstlView view = new JstlView(viewPath);
-				view.setApplicationContext(applicationContext);
+				view.setApplicationContext(context.getActiveFlow().getApplicationContext());
 				return createMvcView(view, context);
 			} else {
 				InternalResourceView view = new InternalResourceView(viewPath);
-				view.setApplicationContext(applicationContext);
 				return createMvcView(view, context);
 			}
 		} else {
@@ -72,7 +77,7 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 	private MvcView createMvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		MvcView mvcView;
 		if (context.getExternalContext() instanceof PortletExternalContext) {
-			mvcView = new PortletMvcView(view, context, applicationContext);
+			mvcView = new PortletMvcView(view, context);
 		} else {
 			mvcView = new ServletMvcView(view, context);
 		}

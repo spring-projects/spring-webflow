@@ -15,11 +15,10 @@
  */
 package org.springframework.webflow.engine.builder;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 
@@ -79,15 +78,8 @@ public interface FlowBuilderContext {
 	public FormatterRegistry getFormatterRegistry();
 
 	/**
-	 * Returns a generic resource loader for accessing file-based resources.
-	 * @return the generic resource loader
+	 * Returns the application context hosting the flow system.
+	 * @return the application context
 	 */
-	public ResourceLoader getResourceLoader();
-
-	/**
-	 * Returns a generic bean factory for accessing arbitrary services by their id.
-	 * @return the bean factory
-	 */
-	public BeanFactory getBeanFactory();
-
+	public ApplicationContext getApplicationContext();
 }

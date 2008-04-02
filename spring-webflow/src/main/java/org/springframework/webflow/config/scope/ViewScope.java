@@ -19,11 +19,11 @@ import org.springframework.beans.factory.config.Scope;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
- * Flow {@link Scope scope} implementation.
- * @author Ben Hale
+ * View {@link Scope scope} implementation.
+ * @author Keith Donald
  */
-public class FlowScope extends AbstractWebFlowScope {
+public class ViewScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {
-		return getRequiredRequestContext().getFlowScope();
+		return getRequiredRequestContext().getViewScope();
 	}
 }

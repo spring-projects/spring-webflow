@@ -19,7 +19,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
-import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
@@ -152,10 +151,9 @@ public class MvcViewTests extends TestCase {
 			super(view, context);
 		}
 
-		protected void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context)
-				throws Exception {
-			view.render(model, (HttpServletRequest) context.getNativeRequest(), (HttpServletResponse) context
-					.getNativeResponse());
+		protected void doRender(Map model) throws Exception {
+			getView().render(model, (HttpServletRequest) getRequestContext().getExternalContext().getNativeRequest(),
+					(HttpServletResponse) getRequestContext().getExternalContext().getNativeResponse());
 		}
 
 	}

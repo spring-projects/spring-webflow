@@ -42,12 +42,11 @@ public class SpringBeanWebFlowELResolver extends SpringBeanELResolver {
 
 	protected BeanFactory getBeanFactory(ELContext elContext) {
 		RequestContext requestContext = getRequestContext();
-		if (requestContext != null && requestContext.getActiveFlow().getBeanFactory() != null) {
-			BeanFactory factory = requestContext.getActiveFlow().getBeanFactory();
-			return factory;
-		} else {
+		if (requestContext == null) {
 			return EMPTY_BEAN_FACTORY;
 		}
+		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
+		return beanFactory != null ? beanFactory : EMPTY_BEAN_FACTORY;
 	}
 
 	protected RequestContext getRequestContext() {

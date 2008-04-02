@@ -16,10 +16,10 @@ import org.springframework.webflow.definition.registry.FlowDefinitionConstructio
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
+import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
-import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -84,7 +84,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getResourceLoader());
+		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getApplicationContext());
 		flowRegistry = new FlowDefinitionRegistryImpl();
 		flowModelRegistry = new FlowModelRegistryImpl();
 		registerFlowLocations();

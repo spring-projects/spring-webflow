@@ -23,12 +23,11 @@ public class SpringBeanWebFlowVariableResolver extends SpringBeanVariableResolve
 
 	protected BeanFactory getBeanFactory(FacesContext facesContext) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		if (requestContext != null && requestContext.getActiveFlow().getBeanFactory() != null) {
-			BeanFactory factory = requestContext.getActiveFlow().getBeanFactory();
-			return factory;
-		} else {
+		if (requestContext == null) {
 			return EMPTY_BEAN_FACTORY;
 		}
+		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
+		return beanFactory != null ? beanFactory : EMPTY_BEAN_FACTORY;
 	}
 
 }

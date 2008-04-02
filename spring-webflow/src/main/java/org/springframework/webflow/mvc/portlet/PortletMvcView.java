@@ -21,8 +21,8 @@ import javax.portlet.PortletContext;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.portlet.DispatcherPortlet;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewRendererServlet;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -35,40 +35,35 @@ import org.springframework.webflow.mvc.view.MvcView;
  */
 public class PortletMvcView extends MvcView {
 
-	private ApplicationContext applicationContext;
-
 	/**
 	 * Creates a new portlet view.
 	 * @param view the view to render
 	 * @param context the current flow request context
 	 * @param applicationContext the application context
 	 */
-	public PortletMvcView(org.springframework.web.servlet.View view, RequestContext context,
-			ApplicationContext applicationContext) {
+	public PortletMvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		super(view, context);
-		this.applicationContext = applicationContext;
 	}
 
-	public void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context) throws Exception {
-		PortletContext portletContext = (PortletContext) context.getNativeContext();
-		RenderRequest request = (RenderRequest) context.getNativeRequest();
-		RenderResponse response = (RenderResponse) context.getNativeResponse();
-		// Set the content type on the response if needed and if possible.
-		// The Portlet spec requires the content type to be set on the RenderResponse;
-		// it's not sufficient to let the View set it on the ServletResponse.
+	public void doRender(Map model) throws Exception {
+		RequestContext context = getRequestContext();
+		ExternalContext externalContext = context.getExternalContext();
+		View view = getView();
+		PortletContext portletContext = (PortletContext) externalContext.getNativeContext();
+		RenderRequest request = (RenderRequest) externalContext.getNativeRequest();
+		RenderResponse response = (RenderResponse) externalContext.getNativeResponse();
 		if (response.getContentType() == null) {
 			// No Portlet content type specified yet -> use the view-determined type.
+			// (The Portlet spec requires the content type to be set on the RenderResponse)
 			String contentType = view.getContentType();
 			if (contentType != null) {
 				response.setContentType(contentType);
 			}
 		}
-		// Expose Portlet ApplicationContext to view objects.
-		request.setAttribute(ViewRendererServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
-		// These attributes are required by the ViewRendererServlet.
 		request.setAttribute(ViewRendererServlet.VIEW_ATTRIBUTE, view);
 		request.setAttribute(ViewRendererServlet.MODEL_ATTRIBUTE, model);
-		// Include the content of the view in the render response.
+		// request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+		// context.getActiveFlow().getBeanFactory());
 		portletContext.getRequestDispatcher(DispatcherPortlet.DEFAULT_VIEW_RENDERER_URL).include(request, response);
 	}
 

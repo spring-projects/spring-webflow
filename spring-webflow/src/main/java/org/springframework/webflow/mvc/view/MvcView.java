@@ -46,7 +46,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
@@ -68,7 +67,7 @@ public abstract class MvcView implements View {
 
 	private org.springframework.web.servlet.View view;
 
-	private RequestContext context;
+	private RequestContext requestContext;
 
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
 
@@ -83,11 +82,11 @@ public abstract class MvcView implements View {
 	/**
 	 * Creates a new MVC view.
 	 * @param view the Spring MVC view to render
-	 * @param context the current flow request context
+	 * @param requestContext the current flow request context
 	 */
-	public MvcView(org.springframework.web.servlet.View view, RequestContext context) {
+	public MvcView(org.springframework.web.servlet.View view, RequestContext requestContext) {
 		this.view = view;
-		this.context = context;
+		this.requestContext = requestContext;
 	}
 
 	/**
@@ -110,13 +109,12 @@ public abstract class MvcView implements View {
 		Map model = new HashMap();
 		model.putAll(flowScopes());
 		exposeBindingModel(model);
-		model.put("flowRequestContext", context);
-		model.put("flowExecutionKey", context.getFlowExecutionContext().getKey().toString());
-		model.put("flowExecutionUrl", context.getFlowExecutionUrl());
-		model.put("currentUser", context.getExternalContext().getCurrentUser());
-		// TODO expose flow context to mvc view
+		model.put("flowRequestContext", requestContext);
+		model.put("flowExecutionKey", requestContext.getFlowExecutionContext().getKey().toString());
+		model.put("flowExecutionUrl", requestContext.getFlowExecutionUrl());
+		model.put("currentUser", requestContext.getExternalContext().getCurrentUser());
 		try {
-			doRender(view, model, context.getExternalContext());
+			doRender(model);
 		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
@@ -124,18 +122,8 @@ public abstract class MvcView implements View {
 		}
 	}
 
-	/**
-	 * Template method subclasses should override to execute the view rendering logic.
-	 * @param view the MVC view to render
-	 * @param model the view model data
-	 * @param context the flow external context, providing access to the request and response
-	 * @throws Exception an exception occurred rendering the view
-	 */
-	protected abstract void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context)
-			throws Exception;
-
 	public void processUserEvent() {
-		determineEventId(context);
+		determineEventId(requestContext);
 		if (eventId == null) {
 			return;
 		}
@@ -150,7 +138,7 @@ public abstract class MvcView implements View {
 				addErrorMessages(mappingResults);
 			} else {
 				validate(model);
-				if (context.getMessageContext().hasErrorMessages()) {
+				if (requestContext.getMessageContext().hasErrorMessages()) {
 					viewErrors = true;
 				}
 			}
@@ -165,19 +153,46 @@ public abstract class MvcView implements View {
 		if (!hasFlowEvent()) {
 			return null;
 		}
-		return new Event(this, eventId, context.getRequestParameters().asAttributeMap());
+		return new Event(this, eventId, requestContext.getRequestParameters().asAttributeMap());
 	}
 
+	// subclassing hooks
+
+	/**
+	 * Returns the current flow request context.
+	 * @return the flow request context
+	 */
+	protected RequestContext getRequestContext() {
+		return requestContext;
+	}
+
+	/**
+	 * Returns the Spring MVC view to render
+	 * @return the view
+	 */
+	protected org.springframework.web.servlet.View getView() {
+		return view;
+	}
+
+	/**
+	 * Template method subclasses should override to execute the view rendering logic.
+	 * @param model the view model data
+	 * @throws Exception an exception occurred rendering the view
+	 */
+	protected abstract void doRender(Map model) throws Exception;
+
+	// internal helpers
+
 	private Map flowScopes() {
-		return context.getConversationScope().union(context.getFlowScope()).union(context.getFlashScope()).union(
-				context.getRequestScope()).asMap();
+		return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
+				requestContext.getFlashScope()).union(requestContext.getRequestScope()).asMap();
 	}
 
 	private void exposeBindingModel(Map model) {
 		Object modelObject = getModelObject();
 		if (modelObject != null) {
-			BindingModel bindingModel = new BindingModel(modelObject, expressionParser, formatterRegistry, context
-					.getMessageContext());
+			BindingModel bindingModel = new BindingModel(modelObject, expressionParser, formatterRegistry,
+					requestContext.getMessageContext());
 			bindingModel.setMappingResults(mappingResults);
 			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}
@@ -186,18 +201,18 @@ public abstract class MvcView implements View {
 	private Object getModelObject() {
 		Expression model = getModelExpression();
 		if (model != null) {
-			return model.getValue(context);
+			return model.getValue(requestContext);
 		} else {
 			return null;
 		}
 	}
 
 	private Expression getModelExpression() {
-		return (Expression) context.getCurrentState().getAttributes().get("model");
+		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
 	private boolean shouldBind(Object model) {
-		TransitionableStateDefinition currentState = (TransitionableStateDefinition) context.getCurrentState();
+		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
 		TransitionDefinition transition = currentState.getTransition(eventId);
 		if (transition != null) {
 			if (transition.getAttributes().contains("bind")) {
@@ -209,8 +224,8 @@ public abstract class MvcView implements View {
 
 	private MappingResults bind(Object model) {
 		DefaultMapper mapper = new DefaultMapper();
-		addDefaultMappings(mapper, context.getRequestParameters(), model);
-		return mapper.map(context.getRequestParameters(), model);
+		addDefaultMappings(mapper, requestContext.getRequestParameters(), model);
+		return mapper.map(requestContext.getRequestParameters(), model);
 	}
 
 	private void addDefaultMappings(DefaultMapper mapper, ParameterMap requestParameters, Object model) {
@@ -238,7 +253,7 @@ public abstract class MvcView implements View {
 		List errors = results.getResults(MAPPING_ERROR);
 		for (Iterator it = errors.iterator(); it.hasNext();) {
 			MappingResult error = (MappingResult) it.next();
-			context.getMessageContext().addMessage(createMessageResolver(error));
+			requestContext.getMessageContext().addMessage(createMessageResolver(error));
 		}
 	}
 
@@ -252,27 +267,29 @@ public abstract class MvcView implements View {
 	}
 
 	private void validate(Object model) {
-		String validateMethodName = "validate" + StringUtils.capitalize(context.getCurrentState().getId());
+		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
 		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
 				new Class[] { MessageContext.class });
 		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { context.getMessageContext() });
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
 		}
-		BeanFactory beanFactory = context.getActiveFlow().getBeanFactory();
-		String validatorName = getModelExpression().getExpressionString() + "Validator";
-		if (beanFactory.containsBean(validatorName)) {
-			Object validator = beanFactory.getBean(validatorName);
-			validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-					model.getClass(), MessageContext.class });
-			if (validateMethod != null) {
-				ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-						context.getMessageContext() });
-			} else {
+		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
+		if (beanFactory != null) {
+			String validatorName = getModelExpression().getExpressionString() + "Validator";
+			if (beanFactory.containsBean(validatorName)) {
+				Object validator = beanFactory.getBean(validatorName);
 				validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-						model.getClass(), Errors.class });
+						model.getClass(), MessageContext.class });
 				if (validateMethod != null) {
 					ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-							new MessageContextErrors(context.getMessageContext()) });
+							requestContext.getMessageContext() });
+				} else {
+					validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
+							model.getClass(), Errors.class });
+					if (validateMethod != null) {
+						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+								new MessageContextErrors(requestContext.getMessageContext()) });
+					}
 				}
 			}
 		}

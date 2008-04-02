@@ -1,13 +1,12 @@
 package org.springframework.webflow.engine.builder.support;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
@@ -68,6 +67,10 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowBuilderServices.getFlowArtifactFactory();
 	}
 
+	public FlowDefinitionLocator getFlowDefinitionLocator() {
+		return flowDefinitionLocator;
+	}
+
 	public ConversionService getConversionService() {
 		return conversionService;
 	}
@@ -84,16 +87,8 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowBuilderServices.getExpressionParser();
 	}
 
-	public ResourceLoader getResourceLoader() {
-		return flowBuilderServices.getResourceLoader();
-	}
-
-	public BeanFactory getBeanFactory() {
-		return flowBuilderServices.getBeanFactory();
-	}
-
-	public FlowDefinitionLocator getFlowDefinitionLocator() {
-		return flowDefinitionLocator;
+	public ApplicationContext getApplicationContext() {
+		return flowBuilderServices.getApplicationContext();
 	}
 
 	/**

@@ -16,7 +16,7 @@
 package org.springframework.webflow.test;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
@@ -69,7 +69,7 @@ public class MockFlowBuilderContext extends FlowBuilderContextImpl {
 	 * @param bean the singleton instance
 	 */
 	public void registerBean(String beanName, Object bean) {
-		((StaticListableBeanFactory) getBeanFactory()).addBean(beanName, bean);
+		((ConfigurableApplicationContext) getApplicationContext()).getBeanFactory().registerSingleton(beanName, bean);
 	}
 
 }

@@ -45,7 +45,7 @@ class ViewResolvingMvcViewFactory implements ViewFactory {
 		String viewName = (String) viewIdExpression.getValue(context);
 		MvcView view;
 		if (context.getExternalContext() instanceof PortletExternalContext) {
-			view = new PortletMvcView(resolveView(viewName), context, applicationContext);
+			view = new PortletMvcView(resolveView(viewName), context);
 		} else {
 			view = new ServletMvcView(resolveView(viewName), context);
 		}

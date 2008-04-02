@@ -39,9 +39,13 @@ public class ServletMvcView extends MvcView {
 		super(view, context);
 	}
 
-	public void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context) throws Exception {
-		view.render(model, (HttpServletRequest) context.getNativeRequest(), (HttpServletResponse) context
-				.getNativeResponse());
+	public void doRender(Map model) throws Exception {
+		RequestContext context = getRequestContext();
+		ExternalContext externalContext = context.getExternalContext();
+		HttpServletRequest request = (HttpServletRequest) externalContext.getNativeRequest();
+		HttpServletResponse response = (HttpServletResponse) externalContext.getNativeResponse();
+		// request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+		// context.getActiveFlow().getBeanFactory());
+		getView().render(model, request, response);
 	}
-
 }

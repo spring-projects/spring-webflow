@@ -15,12 +15,11 @@
  */
 package org.springframework.webflow.engine.builder.model;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -36,11 +35,15 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	private FlowBuilderContext parent;
 
-	private GenericApplicationContext localFlowContext;
+	private ApplicationContext localFlowContext;
 
 	public LocalFlowBuilderContext(FlowBuilderContext parent, GenericApplicationContext localFlowContext) {
 		this.parent = parent;
 		this.localFlowContext = localFlowContext;
+	}
+
+	public ApplicationContext getApplicationContext() {
+		return localFlowContext;
 	}
 
 	public String getFlowId() {
@@ -99,11 +102,4 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 		}
 	}
 
-	public ResourceLoader getResourceLoader() {
-		return localFlowContext;
-	}
-
-	public BeanFactory getBeanFactory() {
-		return localFlowContext.getBeanFactory();
-	}
 }

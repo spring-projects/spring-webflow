@@ -8,10 +8,20 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+/**
+ * Adapts a MessageContext object to the Spring Errors interface. Allows Spring Validators to record errors that are
+ * managed by a backing MessageContext.
+ * 
+ * @author Keith Donald
+ */
 public class MessageContextErrors implements Errors {
 
 	private MessageContext messageContext;
 
+	/**
+	 * Creates a new message context errors adapter.
+	 * @param messageContext the backing message context
+	 */
 	public MessageContextErrors(MessageContext messageContext) {
 		this.messageContext = messageContext;
 	}

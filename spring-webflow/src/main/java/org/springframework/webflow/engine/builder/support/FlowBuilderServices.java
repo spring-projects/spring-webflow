@@ -1,14 +1,12 @@
 package org.springframework.webflow.engine.builder.support;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.engine.Flow;
@@ -29,7 +27,7 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
  * 
  * @author Keith Donald
  */
-public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAware, InitializingBean {
+public class FlowBuilderServices implements ApplicationContextAware, InitializingBean {
 
 	/**
 	 * The factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and
@@ -60,14 +58,9 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 	private ExpressionParser expressionParser;
 
 	/**
-	 * A resource loader that can load resources.
+	 * The Spring application context that provides access to the services of the application.
 	 */
-	private ResourceLoader resourceLoader;
-
-	/**
-	 * The Spring bean factory that provides access to the services of the user application.
-	 */
-	private BeanFactory beanFactory;
+	private ApplicationContext applicationContext;
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
 		return flowArtifactFactory;
@@ -109,32 +102,24 @@ public class FlowBuilderServices implements ResourceLoaderAware, BeanFactoryAwar
 		this.expressionParser = expressionParser;
 	}
 
-	public ResourceLoader getResourceLoader() {
-		return resourceLoader;
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
 	}
 
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
+	// implementing ApplicationContextAware
 
-	public BeanFactory getBeanFactory() {
-		return beanFactory;
-	}
-
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = beanFactory;
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	// implementing InitializingBean
 
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(flowArtifactFactory, "The flow artifact factory is required");
-		Assert.notNull(viewFactoryCreator, "The view factory creator is required");
-		Assert.notNull(conversionService, "The type conversion service is required");
-		Assert.notNull(formatterRegistry, "The formatter registry is required");
-		Assert.notNull(expressionParser, "The expression parser is required");
-		Assert.notNull(resourceLoader, "The resource loader is required");
-		Assert.notNull(beanFactory, "The bean factory is required");
+		Assert.notNull(flowArtifactFactory, "The FlowArtifactFactory is required");
+		Assert.notNull(viewFactoryCreator, "The ViewFactoryCreator is required");
+		Assert.notNull(conversionService, "The type ConversionService is required");
+		Assert.notNull(formatterRegistry, "The FormatterRegistry is required");
+		Assert.notNull(expressionParser, "The expressionParser is required");
+		Assert.notNull(applicationContext, "The ApplicationContext is required");
 	}
-
 }

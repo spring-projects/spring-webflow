@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionException;
@@ -29,6 +27,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestScope;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.webflow.action.ActionResultExposer;
 import org.springframework.webflow.action.EvaluateAction;
@@ -37,6 +36,10 @@ import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.action.RenderAction;
 import org.springframework.webflow.action.SetAction;
 import org.springframework.webflow.action.ViewFactoryActionAdapter;
+import org.springframework.webflow.config.scope.ConversationScope;
+import org.springframework.webflow.config.scope.FlashScope;
+import org.springframework.webflow.config.scope.FlowScope;
+import org.springframework.webflow.config.scope.ViewScope;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -226,8 +229,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	protected Flow createFlow() {
 		Flow flow = parseFlow(flowModel);
-		flow.setBeanFactory(getLocalContext().getBeanFactory());
-		flow.setResourceLoader(getLocalContext().getResourceLoader());
+		flow.setApplicationContext(getLocalContext().getApplicationContext());
 		return flow;
 	}
 
@@ -285,9 +287,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private GenericApplicationContext createFlowApplicationContext(Resource[] resources) {
-		// see if this factory has a parent
-		BeanFactory parent = getContext().getBeanFactory();
-		// determine the context implementation based on the current environment
+		ApplicationContext parent = getContext().getApplicationContext();
 		GenericApplicationContext flowContext;
 		if (parent instanceof WebApplicationContext) {
 			GenericWebApplicationContext webContext = new GenericWebApplicationContext();
@@ -296,14 +296,12 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			flowContext = new GenericApplicationContext();
 		}
-		// set the parent if necessary
-		if (parent instanceof ApplicationContext) {
-			flowContext.setParent((ApplicationContext) parent);
-		} else {
-			if (parent != null) {
-				flowContext.getBeanFactory().setParentBeanFactory(parent);
-			}
-		}
+		flowContext.setParent(parent);
+		flowContext.getBeanFactory().registerScope("request", new RequestScope());
+		flowContext.getBeanFactory().registerScope("flash", new FlashScope());
+		flowContext.getBeanFactory().registerScope("view", new ViewScope());
+		flowContext.getBeanFactory().registerScope("flow", new FlowScope());
+		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
 		Resource flowResource = flowModelHolder.getFlowModelResource();
 		if (flowResource != null) {
 			flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
@@ -312,7 +310,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		}
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
-		registerFlowBeans(flowContext.getDefaultListableBeanFactory());
+		registerFlowBeans(flowContext.getBeanFactory());
 		flowContext.refresh();
 		return flowContext;
 	}
@@ -329,8 +327,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private FlowVariable parseFlowVariable(VarModel var) {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
-		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
-				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
+		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
+				.getApplicationContext().getAutowireCapableBeanFactory());
 		ScopeType scope = parseScopeType(var.getScope(), ScopeType.FLOW);
 		return new FlowVariable(var.getName(), valueFactory, scope == ScopeType.FLOW ? true : false);
 	}
@@ -563,7 +561,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private ViewFactory createViewFactory(Expression viewId) {
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
 				getLocalContext().getExpressionParser(), getLocalContext().getFormatterRegistry(),
-				getLocalContext().getResourceLoader());
+				getLocalContext().getApplicationContext());
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {
@@ -580,8 +578,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private ViewVariable parseViewVariable(VarModel var) {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
-		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz,
-				(AutowireCapableBeanFactory) getFlow().getBeanFactory());
+		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
+				.getApplicationContext().getAutowireCapableBeanFactory());
 		return new ViewVariable(var.getName(), valueFactory);
 	}
 
@@ -632,7 +630,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private SubflowAttributeMapper parseSubflowAttributeMapper(SubflowStateModel state) {
 		if (StringUtils.hasText(state.getSubflowAttributeMapper())) {
 			String beanId = state.getSubflowAttributeMapper();
-			return (SubflowAttributeMapper) getLocalContext().getBeanFactory().getBean(beanId,
+			return (SubflowAttributeMapper) getLocalContext().getApplicationContext().getBean(beanId,
 					SubflowAttributeMapper.class);
 		} else {
 			Mapper inputMapper = parseSubflowInputMapper(state.getInputs());
@@ -695,7 +693,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private FlowExecutionExceptionHandler parseCustomExceptionHandler(ExceptionHandlerModel exceptionHandler) {
-		return (FlowExecutionExceptionHandler) getLocalContext().getBeanFactory().getBean(
+		return (FlowExecutionExceptionHandler) getLocalContext().getApplicationContext().getBean(
 				exceptionHandler.getBeanName(), FlowExecutionExceptionHandler.class);
 	}
 
@@ -776,7 +774,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Action parseRenderAction(RenderModel render) {
 		String[] fragmentExpressionStrings = StringUtils.commaDelimitedListToStringArray(render.getFragments());
 		fragmentExpressionStrings = StringUtils.trimArrayElements(fragmentExpressionStrings);
-		ParserContext context = new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class);
+		ParserContext context = new FluentParserContext().template().evaluate(RequestContext.class).expectResult(
+				String.class);
 		Expression[] fragments = new Expression[fragmentExpressionStrings.length];
 		for (int i = 0; i < fragmentExpressionStrings.length; i++) {
 			String fragment = fragmentExpressionStrings[i];

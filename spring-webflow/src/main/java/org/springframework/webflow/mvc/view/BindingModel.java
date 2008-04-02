@@ -19,6 +19,16 @@ import org.springframework.binding.message.Severity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+/**
+ * Makes the properties of the "model" object available to Spring views during rendering. Also makes data binding (aka
+ * mapping) results available after a form postback attempt. Also makes error messages available to the view.
+ * 
+ * This class is a Spring Errors adapter, basically, for use with spring form and bind tags.
+ * 
+ * @see MvcView
+ * 
+ * @author Keith Donald
+ */
 public class BindingModel extends ViewRenderingErrors {
 
 	private Object boundObject;
@@ -31,6 +41,13 @@ public class BindingModel extends ViewRenderingErrors {
 
 	private MessageContext messageContext;
 
+	/**
+	 * Creates a new Spring Binding model.
+	 * @param boundObject the bound model object
+	 * @param expressionParser the expression parser used to access model object properties
+	 * @param formatterRegistry the formatter registry used to access formatters for formatting properties
+	 * @param messageContext the message context containing flow messages to display
+	 */
 	public BindingModel(Object boundObject, ExpressionParser expressionParser, FormatterRegistry formatterRegistry,
 			MessageContext messageContext) {
 		this.boundObject = boundObject;
@@ -39,9 +56,16 @@ public class BindingModel extends ViewRenderingErrors {
 		this.messageContext = messageContext;
 	}
 
+	/**
+	 * Sets the results of a data mapping attempt onto the bound model object from the view.
+	 * @see MvcView#processUserEvent()
+	 * @param results
+	 */
 	public void setMappingResults(MappingResults results) {
 		this.mappingResults = results;
 	}
+
+	// implementing Errors
 
 	public List getAllErrors() {
 		return toErrors(messageContext.getMessagesByCriteria(ERRORS_ANY_SOURCE));
@@ -69,6 +93,8 @@ public class BindingModel extends ViewRenderingErrors {
 		}
 		return getFormattedValue(parseFieldExpression(field));
 	}
+
+	// internal helpers
 
 	private Expression parseFieldExpression(String field) {
 		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));

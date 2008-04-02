@@ -22,7 +22,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
  * Conversation {@link Scope scope} implementation.
  * @author Ben Hale
  */
-class ConversationScope extends AbstractWebFlowScope {
+public class ConversationScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {
 		return getRequiredRequestContext().getConversationScope();
 	}

@@ -17,8 +17,7 @@ package org.springframework.webflow.definition.registry;
 
 import junit.framework.TestCase;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
@@ -104,15 +103,10 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 			return null;
 		}
 
-		public BeanFactory getBeanFactory() {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Auto-generated method stub");
+		public ApplicationContext getApplicationContext() {
+			return null;
 		}
 
-		public ResourceLoader getResourceLoader() {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
 	}
 
 	private static class BarFlow implements FlowDefinition {
@@ -142,14 +136,8 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 			return null;
 		}
 
-		public BeanFactory getBeanFactory() {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public ResourceLoader getResourceLoader() {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Auto-generated method stub");
+		public ApplicationContext getApplicationContext() {
+			return null;
 		}
 	}
 }
