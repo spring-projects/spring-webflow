@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	
+	
+	<bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+		<property name="portletModeMap">
+			<map>
+				<entry key="view">
+					<bean class="org.springframework.webflow.samples.booking.ViewFlowHandler" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- Handles requests mapped to the Spring Web Flow system -->
+	<bean id="flowHandlerAdapter" class="org.springframework.webflow.portletmvc.FlowHandlerAdapter">
+		<constructor-arg ref="flowExecutor" />
+	</bean>
+	
+	<!-- Enables annotated POJO @Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<!-- Enables plain Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+	<!-- Enables FlowHandlers -->
+	<bean class="org.springframework.webflow.mvc.FlowHandlerAdapter">
+		<constructor-arg ref="flowExecutor" />
+	</bean>
+	
+	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
+	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<web:flow-execution-attributes>
+			<web:alwaysRedirectOnPause value="false"/>
+		</web:flow-execution-attributes>
+		<web:flow-execution-listeners>
+			<web:listener ref="jpaFlowExecutionListener" />
+		</web:flow-execution-listeners>
+	</web:flow-executor>
+
+	<!-- The registry of executable flow definitions -->
+	<web:flow-registry id="flowRegistry">
+		<web:flow-location path="/WEB-INF/flows/view/view.xml" />
+		<web:flow-location path="/WEB-INF/flows/main/main.xml" />
+		<web:flow-location path="/WEB-INF/flows/booking/booking.xml" />
+	</web:flow-registry>
+	
+	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
+	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
+	</bean>
+	
+	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the /WEB-INF directory -->	
+	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- The central service of this application that can query hotels and bookings, as well as cancel bookings -->
+	<bean id="bookingService" class="org.springframework.webflow.samples.booking.JpaBookingService" />
+
+	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider and a simple in-memory data source populated with test data -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+	</bean>
+
+	<!-- Deploys a in-memory "booking" datasource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:booking" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+
+	<!-- Executes transactions around @Transactional methods -->
+	<tx:annotation-driven />
+
+	<!-- Drives transactions using local JPA APIs -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Automatically injects EntityManager references into data access objects that require one -->
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+	<!-- Maps JPA exceptions that occur to Spring's DataAccessException hierarchy -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+			
+</beans>
