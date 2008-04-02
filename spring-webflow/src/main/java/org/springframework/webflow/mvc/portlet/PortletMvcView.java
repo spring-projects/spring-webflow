@@ -23,28 +23,36 @@ import javax.portlet.RenderResponse;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.portlet.DispatcherPortlet;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewRendererServlet;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.MvcView;
 
+/**
+ * Spring Web Portlet MVC view implementation.
+ * @author Keith Donald
+ * @author Scott Andrews
+ */
 public class PortletMvcView extends MvcView {
 
 	private ApplicationContext applicationContext;
 
+	/**
+	 * Creates a new portlet view.
+	 * @param view the view to render
+	 * @param context the current flow request context
+	 * @param applicationContext the application context
+	 */
 	public PortletMvcView(org.springframework.web.servlet.View view, RequestContext context,
 			ApplicationContext applicationContext) {
 		super(view, context);
 		this.applicationContext = applicationContext;
 	}
 
-	public void render(Map model, ExternalContext context) throws Exception {
+	public void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context) throws Exception {
 		PortletContext portletContext = (PortletContext) context.getNativeContext();
 		RenderRequest request = (RenderRequest) context.getNativeRequest();
 		RenderResponse response = (RenderResponse) context.getNativeResponse();
-		View view = getView();
-
 		// Set the content type on the response if needed and if possible.
 		// The Portlet spec requires the content type to be set on the RenderResponse;
 		// it's not sufficient to let the View set it on the ServletResponse.
@@ -55,14 +63,11 @@ public class PortletMvcView extends MvcView {
 				response.setContentType(contentType);
 			}
 		}
-
 		// Expose Portlet ApplicationContext to view objects.
 		request.setAttribute(ViewRendererServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
-
 		// These attributes are required by the ViewRendererServlet.
 		request.setAttribute(ViewRendererServlet.VIEW_ATTRIBUTE, view);
 		request.setAttribute(ViewRendererServlet.MODEL_ATTRIBUTE, model);
-
 		// Include the content of the view in the render response.
 		portletContext.getRequestDispatcher(DispatcherPortlet.DEFAULT_VIEW_RENDERER_URL).include(request, response);
 	}

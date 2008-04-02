@@ -107,7 +107,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertNotNull("A View was not created", newView);
 		assertTrue("A JsfView was expected", newView instanceof JsfView);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", newView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
 		assertTrue("An AjaxViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof AjaxViewRoot);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("A JsfView was expected", newView instanceof JsfView);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
 		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
-		assertFalse("An unexpected event was signaled,", newView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
 	}
 
 	private class NoExecutionLifecycle extends FlowLifecycle {

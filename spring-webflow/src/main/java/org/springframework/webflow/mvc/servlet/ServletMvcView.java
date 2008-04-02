@@ -24,15 +24,24 @@ import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.MvcView;
 
+/**
+ * Creates a new Spring Web Servlet MVC view.
+ * @author Keith Donald
+ */
 public class ServletMvcView extends MvcView {
 
+	/**
+	 * Creates a new servlet view.
+	 * @param view the view to render
+	 * @param context the current flow request context.
+	 */
 	public ServletMvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		super(view, context);
 	}
 
-	public void render(Map model, ExternalContext context) throws Exception {
-		getView().render(model, (HttpServletRequest) context.getNativeRequest(),
-				(HttpServletResponse) context.getNativeResponse());
+	public void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context) throws Exception {
+		view.render(model, (HttpServletRequest) context.getNativeRequest(), (HttpServletResponse) context
+				.getNativeResponse());
 	}
 
 }

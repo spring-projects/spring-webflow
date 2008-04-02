@@ -183,11 +183,11 @@ public class ViewState extends TransitionableState {
 	public void resume(RequestControlContext context) {
 		restoreVariables(context);
 		View view = viewFactory.getView(context);
-		view.resume();
-		if (view.eventSignaled()) {
-			Event event = view.getEvent();
+		view.processUserEvent();
+		if (view.hasFlowEvent()) {
+			Event event = view.getFlowEvent();
 			if (logger.isDebugEnabled()) {
-				logger.debug("Event '" + event.getId() + "' signaled on view " + view);
+				logger.debug("Event '" + event.getId() + "' returned from view " + view);
 			}
 			boolean stateExited = context.handleEvent(event);
 			if (!stateExited && context.getExternalContext().isResponseAllowed()) {

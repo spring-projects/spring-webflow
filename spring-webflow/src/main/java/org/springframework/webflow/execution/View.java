@@ -40,19 +40,19 @@ public interface View {
 	/**
 	 * Execute the view resume lifecycle. This typically results in a view model binding and validation.
 	 */
-	public void resume();
+	public void processUserEvent();
 
 	/**
 	 * Returns true if an event occurred the flow system should handle.
 	 * @return true if yes, false otherwise
 	 */
-	public boolean eventSignaled();
+	public boolean hasFlowEvent();
 
 	/**
-	 * Get the user event the flow should handle. Returns an event object when {@link #eventSignaled()} returns true.
-	 * Returns null otherwise
+	 * Get the user event the flow should handle. Returns an event object when {@link #hasFlowEvent()} returns
+	 * true. Returns null otherwise
 	 * @return the event, or null if there is no event for the flow system to handle
 	 */
-	public Event getEvent();
+	public Event getFlowEvent();
 
 }

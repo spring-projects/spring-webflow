@@ -55,6 +55,11 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
+/**
+ * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
+ * 
+ * @author Keith Donald
+ */
 public abstract class MvcView implements View {
 
 	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
@@ -75,15 +80,28 @@ public abstract class MvcView implements View {
 
 	private String eventId;
 
+	/**
+	 * Creates a new MVC view.
+	 * @param view the Spring MVC view to render
+	 * @param context the current flow request context
+	 */
 	public MvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		this.view = view;
 		this.context = context;
 	}
 
+	/**
+	 * Sets the expression parser to use to parse model expressions.
+	 * @param expressionParser the expression parser
+	 */
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		this.expressionParser = expressionParser;
 	}
 
+	/**
+	 * Sets the formatter registry to use to expose formatters for field values.
+	 * @param formatterRegistry the formatter registry
+	 */
 	public void setFormatterRegistry(FormatterRegistry formatterRegistry) {
 		this.formatterRegistry = formatterRegistry;
 	}
@@ -98,20 +116,27 @@ public abstract class MvcView implements View {
 		model.put("currentUser", context.getExternalContext().getCurrentUser());
 		// TODO expose flow context to mvc view
 		try {
-			render(model, context.getExternalContext());
+			doRender(view, model, context.getExternalContext());
 		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException("Unexpected exception occurred rendering view " + view, e);
+			throw new IllegalStateException("Unexpected exception occurred rendering view " + view, e);
 		}
 	}
 
-	public abstract void render(Map model, ExternalContext context) throws Exception;
+	/**
+	 * Template method subclasses should override to execute the view rendering logic.
+	 * @param view the MVC view to render
+	 * @param model the view model data
+	 * @param context the flow external context, providing access to the request and response
+	 * @throws Exception an exception occurred rendering the view
+	 */
+	protected abstract void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context)
+			throws Exception;
 
-	public void resume() {
+	public void processUserEvent() {
 		determineEventId(context);
 		if (eventId == null) {
-			// nothing to do
 			return;
 		}
 		Object model = getModelObject();
@@ -132,12 +157,12 @@ public abstract class MvcView implements View {
 		}
 	}
 
-	public boolean eventSignaled() {
+	public boolean hasFlowEvent() {
 		return eventId != null && !viewErrors;
 	}
 
-	public Event getEvent() {
-		if (!eventSignaled()) {
+	public Event getFlowEvent() {
+		if (!hasFlowEvent()) {
 			return null;
 		}
 		return new Event(this, eventId, context.getRequestParameters().asAttributeMap());
@@ -298,10 +323,6 @@ public abstract class MvcView implements View {
 		}
 		// we couldn't find the parameter value
 		return null;
-	}
-
-	protected org.springframework.web.servlet.View getView() {
-		return view;
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

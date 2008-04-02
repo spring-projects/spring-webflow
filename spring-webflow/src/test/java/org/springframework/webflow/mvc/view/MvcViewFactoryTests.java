@@ -61,7 +61,7 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		assertEquals(false, view.eventSignaled());
+		assertEquals(false, view.hasFlowEvent());
 		view.render();
 		assertEquals("/parent/myview.jsp", response.getForwardedUrl());
 	}
@@ -81,7 +81,7 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		assertEquals(false, view.eventSignaled());
+		assertEquals(false, view.hasFlowEvent());
 		view.render();
 		assertEquals("myview", response.getForwardedUrl());
 	}
@@ -109,9 +109,9 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		view.resume();
-		assertEquals(true, view.eventSignaled());
-		Event e = view.getEvent();
+		view.processUserEvent();
+		assertEquals(true, view.hasFlowEvent());
+		Event e = view.getFlowEvent();
 		assertEquals(view, e.getSource());
 		assertEquals("foo", e.getId());
 		view.render();
@@ -141,9 +141,9 @@ public class MvcViewFactoryTests extends TestCase {
 		context.setExternalContext(externalContext);
 		context.getMockFlowExecutionContext().setKey(new GeneratedFlowExecutionKey());
 		View view = viewFactory.getView(context);
-		view.resume();
-		assertEquals(true, view.eventSignaled());
-		Event e = view.getEvent();
+		view.processUserEvent();
+		assertEquals(true, view.hasFlowEvent());
+		Event e = view.getFlowEvent();
 		assertEquals(view, e.getSource());
 		assertEquals("foo", e.getId());
 		view.render();

@@ -21,8 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.mvc.view.BindingModel;
-import org.springframework.webflow.mvc.view.MvcView;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -99,9 +97,9 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MockMvcView(mvcView, context);
-		view.resume();
-		assertFalse(view.eventSignaled());
-		assertNull(view.getEvent());
+		view.processUserEvent();
+		assertFalse(view.hasFlowEvent());
+		assertNull(view.getFlowEvent());
 	}
 
 	public void testResumeEventNoModelBinding() throws Exception {
@@ -114,9 +112,9 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
-		view.resume();
-		assertTrue(view.eventSignaled());
-		assertEquals("submit", view.getEvent().getId());
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
 	}
 
 	public void testResumeEventModelBinding() throws Exception {
@@ -137,9 +135,9 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		MvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
-		view.resume();
-		assertTrue(view.eventSignaled());
-		assertEquals("submit", view.getEvent().getId());
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
 		assertEquals("foo", bindBean.getStringProperty());
 		assertEquals(new Integer(5), bindBean.getIntegerProperty());
 		Calendar cal = Calendar.getInstance();
@@ -154,9 +152,10 @@ public class MvcViewTests extends TestCase {
 			super(view, context);
 		}
 
-		public void render(Map model, ExternalContext context) throws Exception {
-			getView().render(model, (HttpServletRequest) context.getNativeRequest(),
-					(HttpServletResponse) context.getNativeResponse());
+		protected void doRender(org.springframework.web.servlet.View view, Map model, ExternalContext context)
+				throws Exception {
+			view.render(model, (HttpServletRequest) context.getNativeRequest(), (HttpServletResponse) context
+					.getNativeResponse());
 		}
 
 	}

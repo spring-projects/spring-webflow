@@ -94,15 +94,15 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return viewId;
 		}
 
-		public void resume() {
+		public void processUserEvent() {
 			// TODO - implement me as appropriate for a test environment
 		}
 
-		public boolean eventSignaled() {
+		public boolean hasFlowEvent() {
 			return context.getRequestParameters().contains("_eventId");
 		}
 
-		public Event getEvent() {
+		public Event getFlowEvent() {
 			return new Event(this, context.getRequestParameters().get("_eventId"));
 		}
 

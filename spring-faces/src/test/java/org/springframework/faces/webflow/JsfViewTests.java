@@ -152,9 +152,9 @@ public class JsfViewTests extends TestCase {
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
 		restoredView.setRestored(true);
 
-		restoredView.resume();
+		restoredView.processUserEvent();
 
-		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
 	}
 
@@ -182,9 +182,9 @@ public class JsfViewTests extends TestCase {
 		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, context);
 		restoredView.setRestored(true);
 
-		restoredView.resume();
+		restoredView.processUserEvent();
 
-		assertFalse("An unexpected event was signaled,", restoredView.eventSignaled());
+		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
 	}
 
@@ -210,10 +210,10 @@ public class JsfViewTests extends TestCase {
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
 		restoredView.setRestored(true);
 
-		restoredView.resume();
+		restoredView.processUserEvent();
 
-		assertTrue("No event was signaled,", restoredView.eventSignaled());
-		assertEquals("Event should be " + event, event, restoredView.getEvent().getId());
+		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
+		assertEquals("Event should be " + event, event, restoredView.getFlowEvent().getId());
 		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
 	}
 

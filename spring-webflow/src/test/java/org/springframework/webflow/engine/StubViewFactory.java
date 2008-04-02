@@ -37,15 +37,15 @@ public class StubViewFactory implements ViewFactory {
 			context.getFlowScope().put("renderCalled", Boolean.TRUE);
 		}
 
-		public void resume() {
+		public void processUserEvent() {
 
 		}
 
-		public boolean eventSignaled() {
+		public boolean hasFlowEvent() {
 			return context.getExternalContext().getRequestParameterMap().contains("_eventId");
 		}
 
-		public Event getEvent() {
+		public Event getFlowEvent() {
 			return new Event(this, context.getExternalContext().getRequestParameterMap().get("_eventId"));
 		}
 	}

@@ -81,7 +81,7 @@ public class JsfView implements View {
 		}
 	}
 
-	public void resume() {
+	public void processUserEvent() {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		try {
@@ -95,11 +95,11 @@ public class JsfView implements View {
 
 	}
 
-	public boolean eventSignaled() {
+	public boolean hasFlowEvent() {
 		return context.getExternalContext().getRequestMap().contains(EVENT_KEY);
 	}
 
-	public Event getEvent() {
+	public Event getFlowEvent() {
 		String eventId = (String) context.getExternalContext().getRequestMap().get(EVENT_KEY);
 		return new Event(this, eventId);
 	}
