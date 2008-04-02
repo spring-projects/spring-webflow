@@ -82,4 +82,8 @@ public class JsfUtils {
 	public static boolean isAtLeastJsf12() {
 		return JSF_12;
 	}
+
+	public static boolean isPortlet(FacesContext context) {
+		return context.getExternalContext().getContext().getClass().getName().contains("Portlet");
+	}
 }

@@ -78,7 +78,7 @@ public class JsfViewFactory implements ViewFactory {
 			String viewName = resolveViewName(context);
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-			if (JsfUtils.isAtLeastJsf12()) {
+			if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
 				viewHandler.initView(facesContext);
 			}
 

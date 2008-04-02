@@ -61,7 +61,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-		if (JsfUtils.isAtLeastJsf12()) {
+		if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
 			viewHandler.initView(facesContext);
 		}
 
