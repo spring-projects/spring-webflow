@@ -4,6 +4,11 @@ import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
+import org.springframework.webflow.definition.TransitionDefinition;
+import org.springframework.webflow.engine.TransitionableState;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
+
 public class ProgressiveCommandButton extends UICommand {
 
 	private String type = "submit";
@@ -42,6 +47,19 @@ public class ProgressiveCommandButton extends UICommand {
 
 	public void setAjaxEnabled(Boolean ajaxEnabled) {
 		this.ajaxEnabled = ajaxEnabled;
+	}
+
+	public boolean isImmediate() {
+		RequestContext context = RequestContextHolder.getRequestContext();
+		if (context != null && getActionExpression().isLiteralText()
+				&& context.getCurrentState() instanceof TransitionableState) {
+			TransitionDefinition transition = ((TransitionableState) context.getCurrentState())
+					.getTransition(getActionExpression().getExpressionString());
+			if (transition.getAttributes().contains("bind")) {
+				return Boolean.FALSE.equals(transition.getAttributes().getBoolean("bind"));
+			}
+		}
+		return super.isImmediate();
 	}
 
 	public Object saveState(FacesContext context) {
