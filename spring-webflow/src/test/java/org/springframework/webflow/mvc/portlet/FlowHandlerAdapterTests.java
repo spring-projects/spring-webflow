@@ -27,8 +27,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.mvc.portlet.FlowHandler;
-import org.springframework.webflow.mvc.portlet.FlowHandlerAdapter;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowHandlerAdapterTests extends TestCase {
@@ -207,6 +205,12 @@ public class FlowHandlerAdapterTests extends TestCase {
 		session.setAttribute("actionFlowException", flowException);
 		ModelAndView mv = controller.handleRender(renderRequest, renderResponse, flowHandler);
 		assertEquals("error", mv.getViewName());
+	}
+
+	public void testPopulateConveniencePortletProperties() {
+		controller.populateConveniencePortletProperties(renderRequest);
+		assertEquals(renderRequest.getPortletMode().toString(), renderRequest.getAttribute("portletMode"));
+		assertEquals(renderRequest.getWindowState().toString(), renderRequest.getAttribute("portletWindowState"));
 	}
 
 }

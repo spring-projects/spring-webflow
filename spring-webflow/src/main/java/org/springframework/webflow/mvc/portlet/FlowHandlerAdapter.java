@@ -47,6 +47,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 
 	public ModelAndView handleRender(RenderRequest request, RenderResponse response, Object handler) throws Exception {
 		FlowHandler flowHandler = (FlowHandler) handler;
+		populateConveniencePortletProperties(request);
 		PortletSession session = request.getPortletSession(false);
 		if (session != null) {
 			FlowException e = (FlowException) session.getAttribute(ACTION_FLOW_EXCEPTION_ATTRIBUTE);
@@ -86,6 +87,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	}
 
 	public void handleAction(ActionRequest request, ActionResponse response, Object handler) throws Exception {
+		populateConveniencePortletProperties(request);
 		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
@@ -101,6 +103,11 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	}
 
 	// subclassing hooks
+
+	protected void populateConveniencePortletProperties(PortletRequest request) {
+		request.setAttribute("portletMode", request.getPortletMode().toString());
+		request.setAttribute("portletWindowState", request.getWindowState().toString());
+	}
 
 	protected PortletExternalContext createPortletExternalContext(PortletRequest request, PortletResponse response) {
 		return new PortletExternalContext(getPortletContext(), request, response);
