@@ -15,12 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 /**
  * Model support for actions.
  * 
  * @author Scott Andrews
  */
 public abstract class AbstractActionModel extends AbstractModel {
+
+	private LinkedList attributes;
 
 	/**
 	 * Actions are not mergeable
@@ -36,6 +40,46 @@ public abstract class AbstractActionModel extends AbstractModel {
 	 */
 	public void merge(Model model) {
 		// not mergeable
+	}
+
+	/**
+	 * @return the attributes
+	 */
+	public LinkedList getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * @param attributes the attributes to set
+	 */
+	public void setOutputs(LinkedList attributes) {
+		this.attributes = attributes;
+	}
+
+	/**
+	 * @param attribute the attribute to add
+	 */
+	public void addAttribute(AttributeModel attribute) {
+		if (attribute == null) {
+			return;
+		}
+		if (attributes == null) {
+			attributes = new LinkedList();
+		}
+		attributes.add(attribute);
+	}
+
+	/**
+	 * @param attributes the attributes to add
+	 */
+	public void addAttributes(LinkedList attributes) {
+		if (attributes == null || attributes.isEmpty()) {
+			return;
+		}
+		if (this.attributes == null) {
+			this.attributes = new LinkedList();
+		}
+		this.attributes.addAll(attributes);
 	}
 
 }

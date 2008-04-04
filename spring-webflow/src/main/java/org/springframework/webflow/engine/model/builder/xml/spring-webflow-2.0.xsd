@@ -508,6 +508,45 @@ The model object this view is bound to.  Typically used as the source of form fi
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
+							<xsd:attribute name="history">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The history of the view state should be preserved when the view state exits to support back-tracking.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="preserve">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="discard">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The history of the view state should be discarded when the view state exits to prevent back-tracking.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+										<xsd:enumeration value="invalidate">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The history of the view state and all previous view state should be invalidated to completely restrict back tracking.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:enumeration>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
 						</xsd:complexType>
 					</xsd:element>
 					<xsd:element name="decision-state">
@@ -1092,6 +1131,17 @@ Evaluates an expression against the flow request context.
 					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
 					<xsd:attribute name="expression" type="expression" use="required">
 						<xsd:annotation>
 							<xsd:documentation>
@@ -1132,6 +1182,17 @@ Multiple fragments may be specified using a comma delimiter.
 					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
 					<xsd:attribute name="fragments" type="xsd:string" use="required">
 						<xsd:annotation>
 							<xsd:documentation>
@@ -1153,6 +1214,17 @@ Sets an attribute value in a scope.
 					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
 					<xsd:attribute name="name" type="expression" use="required">
 						<xsd:annotation>
 							<xsd:documentation>

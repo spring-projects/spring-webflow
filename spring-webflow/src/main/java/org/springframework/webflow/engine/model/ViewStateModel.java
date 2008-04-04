@@ -30,6 +30,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	private String redirect;
 	private String popup;
 	private String model;
+	private String history;
 	private LinkedList vars;
 	private LinkedList onRenderActions;
 
@@ -62,6 +63,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setRedirect(merge(getRedirect(), state.getRedirect()));
 		setPopup(merge(getPopup(), state.getPopup()));
 		setModel(merge(getModel(), state.getModel()));
+		setHistory(merge(getHistory(), state.getHistory()));
 		setVars(merge(getVars(), state.getVars(), false));
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
 	}
@@ -135,6 +137,24 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 			this.model = model;
 		} else {
 			this.model = null;
+		}
+	}
+
+	/**
+	 * @return the history
+	 */
+	public String getHistory() {
+		return history;
+	}
+
+	/**
+	 * @param history the history to set
+	 */
+	public void setHistory(String history) {
+		if (StringUtils.hasText(history)) {
+			this.history = history;
+		} else {
+			this.history = null;
 		}
 	}
 

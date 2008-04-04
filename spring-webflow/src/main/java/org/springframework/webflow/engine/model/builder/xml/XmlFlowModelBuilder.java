@@ -531,16 +531,20 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		EvaluateModel evaluate = new EvaluateModel(element.getAttribute("expression"));
 		evaluate.setResult(element.getAttribute("result"));
 		evaluate.setResultType(element.getAttribute("result-type"));
+		evaluate.addAttributes(parseAttributes(element));
 		return evaluate;
 	}
 
 	private RenderModel parseRender(Element element) {
-		return new RenderModel(element.getAttribute("fragments"));
+		RenderModel render = new RenderModel(element.getAttribute("fragments"));
+		render.addAttributes(parseAttributes(element));
+		return render;
 	}
 
 	private SetModel parseSet(Element element) {
 		SetModel set = new SetModel(element.getAttribute("name"), element.getAttribute("value"));
 		set.setType(element.getAttribute("type"));
+		set.addAttributes(parseAttributes(element));
 		return set;
 	}
 
@@ -564,6 +568,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setRedirect(element.getAttribute("redirect"));
 		state.setPopup(element.getAttribute("popup"));
 		state.setModel(element.getAttribute("model"));
+		state.setHistory(element.getAttribute("history"));
 		state.setVars(parseVars(element));
 		state.setOnRenderActions(parseOnRenderActions(element));
 		state.setAttributes(parseAttributes(element));
