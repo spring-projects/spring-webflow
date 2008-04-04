@@ -115,9 +115,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
 		assertEquals("flow-foo", ((VarModel) flow.getVars().get(0)).getName());
-		assertEquals(null, ((VarModel) flow.getVars().get(0)).getScope());
 		assertEquals("conversation-foo", ((VarModel) flow.getVars().get(1)).getName());
-		assertEquals("conversation", ((VarModel) flow.getVars().get(1)).getScope());
 	}
 
 	public void testViewStateVariable() {

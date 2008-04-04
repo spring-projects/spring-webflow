@@ -3,7 +3,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<var name="flow-foo" class="org.springframework.webflow.TestBean"/>
-	<var name="conversation-foo" class="org.springframework.webflow.TestBean" scope="conversation"/>
+	<var name="conversation-foo" class="org.springframework.webflow.TestBean"/>
 	
 	<end-state id="end"/>
 

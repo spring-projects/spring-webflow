@@ -437,9 +437,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private VarModel parseVar(Element element) {
-		VarModel var = new VarModel(element.getAttribute("name"), element.getAttribute("class"));
-		var.setScope(element.getAttribute("scope"));
-		return var;
+		return new VarModel(element.getAttribute("name"), element.getAttribute("class"));
 	}
 
 	private InputModel parseInput(Element element) {

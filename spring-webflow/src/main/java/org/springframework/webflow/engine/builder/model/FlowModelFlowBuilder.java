@@ -329,7 +329,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
 				.getApplicationContext().getAutowireCapableBeanFactory());
-		ScopeType scope = parseScopeType(var.getScope(), ScopeType.FLOW);
+		ScopeType scope = ScopeType.CONVERSATION;
 		return new FlowVariable(var.getName(), valueFactory, scope == ScopeType.FLOW ? true : false);
 	}
 

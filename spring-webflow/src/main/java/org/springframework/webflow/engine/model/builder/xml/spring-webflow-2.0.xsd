@@ -135,41 +135,6 @@ fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a conc
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:attribute>
-						<xsd:attribute name="scope">
-							<xsd:annotation>
-								<xsd:documentation>
-									<![CDATA[
-This scope of this variable.  The available scope types are:
-<ol>
-<li>flow - The variable goes out of scope when this flow session ends.
-<li>conversation - The variable goes out of scope when the overall conversation governing this flow ends.
-</ol>
-]]>
-								</xsd:documentation>
-							</xsd:annotation>
-							<xsd:simpleType>
-								<xsd:restriction base="xsd:string">
-									<xsd:enumeration value="flow">
-										<xsd:annotation>
-											<xsd:documentation>
-												<![CDATA[
-Goes out of scope when this flow ends.
-						]]>
-											</xsd:documentation>
-										</xsd:annotation>
-									</xsd:enumeration>
-									<xsd:enumeration value="conversation">
-										<xsd:annotation>
-											<xsd:documentation>
-												<![CDATA[
-Goes out of scope when the governing conversation ends.
-						]]>
-											</xsd:documentation>
-										</xsd:annotation>
-									</xsd:enumeration>
-								</xsd:restriction>
-							</xsd:simpleType>
-						</xsd:attribute>
 					</xsd:complexType>
 				</xsd:element>
 				<xsd:element name="input" type="input" minOccurs="0" maxOccurs="unbounded">

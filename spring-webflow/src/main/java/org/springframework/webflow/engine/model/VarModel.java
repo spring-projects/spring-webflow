@@ -28,7 +28,6 @@ import org.springframework.util.StringUtils;
 public class VarModel extends AbstractModel {
 	private String name;
 	private String className;
-	private String scope;
 
 	/**
 	 * Create a variable model
@@ -84,21 +83,4 @@ public class VarModel extends AbstractModel {
 		}
 	}
 
-	/**
-	 * @return the scope
-	 */
-	public String getScope() {
-		return scope;
-	}
-
-	/**
-	 * @param scope the scope to set
-	 */
-	public void setScope(String scope) {
-		if (StringUtils.hasText(scope)) {
-			this.scope = scope;
-		} else {
-			this.scope = null;
-		}
-	}
 }

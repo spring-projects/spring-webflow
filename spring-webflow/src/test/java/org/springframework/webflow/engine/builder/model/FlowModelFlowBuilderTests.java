@@ -263,12 +263,11 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testFlowVariable() {
 		model.addVar(new VarModel("flow-foo", "org.springframework.webflow.TestBean"));
 		VarModel var = new VarModel("conversation-foo", "org.springframework.webflow.TestBean");
-		var.setScope("conversation");
 		model.addVar(var);
 		model.addEndState(new EndStateModel("end"));
 		Flow flow = getFlow(model);
 		assertEquals("flow-foo", flow.getVariable("flow-foo").getName());
-		assertEquals(true, flow.getVariable("flow-foo").isLocal());
+		assertEquals(false, flow.getVariable("flow-foo").isLocal());
 		assertEquals("conversation-foo", flow.getVariables()[1].getName());
 		assertEquals(false, flow.getVariables()[1].isLocal());
 	}
