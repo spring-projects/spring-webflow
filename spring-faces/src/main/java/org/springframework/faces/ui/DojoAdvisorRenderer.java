@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.StringUtils;
 
 public class DojoAdvisorRenderer extends DojoRenderer {
@@ -61,7 +62,13 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 		}
 		script.append(dojoAttrs);
 
-		script.append("  }\"}));  ");
+		script.append("  }\"})");
+
+		if (JsfUtils.isAsynchronousFlowRequest()) {
+			script.append(".apply()");
+		}
+
+		script.append(");  ");
 
 		writer.writeText(script, null);
 		writer.endElement(SCRIPT_ELEMENT);

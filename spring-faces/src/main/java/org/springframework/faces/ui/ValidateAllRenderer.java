@@ -41,20 +41,10 @@ public class ValidateAllRenderer extends SpringFacesRenderer {
 
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
-		String elementVar = advisedChild.getClientId(context).replaceAll(":", "_") + "_element";
-		String handlerVar = advisedChild.getClientId(context).replaceAll(":", "_") + "_handler";
-
 		writer.startElement(SCRIPT_ELEMENT, component);
 		StringBuffer script = new StringBuffer();
-		script
-				.append(" var " + elementVar + " = document.getElementById('" + advisedChild.getClientId(context)
-						+ "');");
-		script.append(" var " + handlerVar + " = " + elementVar + ".onclick;");
-		script.append(elementVar + ".onclick" + " = function(){");
-		script.append(" if(!Spring.validateAll()) return false; ");
-		script.append(handlerVar + "();");
-		script.append("};");
-
+		script.append("Spring.advisors.push(new Spring.ValidateAllAdvisor({" + "event : 'onclick', " + "targetId : '"
+				+ advisedChild.getClientId(context) + "'}));");
 		writer.writeText(script, null);
 		writer.endElement(SCRIPT_ELEMENT);
 	}

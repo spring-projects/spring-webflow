@@ -51,6 +51,21 @@ Spring.ValidatingFieldAdvisor.prototype = {
 	isRequired : function(){}
 };
 
+Spring.ValidateAllAdvisor = function(){};
+
+Spring.ValidateAllAdvisor.prototype = {
+	
+	event : "",
+	targetId : "",
+	connection : null,
+	
+	apply : function() {},
+	
+	cleanup : function(){},
+	
+	handleEvent : function(event){}
+};
+
 Spring.CommandLinkAdvisor = function(){};
 
 Spring.CommandLinkAdvisor.prototype = {

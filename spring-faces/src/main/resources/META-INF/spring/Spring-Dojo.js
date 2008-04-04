@@ -11,7 +11,9 @@ Spring.DojoValidatingFieldAdvisor.prototype = {
 	decoratorAttrs : "",
 			
 	apply : function(){
-	        	
+		if (dijit.byId(this.targetElId)) {
+			dijit.byId(this.targetElId).destroyRecursive(false);
+		}
        	this.decorator = eval("new "+ this.decoratorType + "(" + this.decoratorAttrs +", dojo.byId('"+this.targetElId+"'));" );
        	this.decorator.startup();
        	
@@ -47,7 +49,7 @@ Spring.DojoRemoteEventAdvisor.prototype = {
 	connection : null,
 	
 	apply : function() {
-		connection = dojo.connect(dojo.byId(this.targetId), this.event, this, "submit");
+		this.connection = dojo.connect(dojo.byId(this.targetId), this.event, this, "submit");
 		return this;	
 	},
 	
@@ -61,6 +63,45 @@ Spring.DojoRemoteEventAdvisor.prototype = {
 };
 
 Spring.RemoteEventAdvisor = Spring.DojoRemoteEventAdvisor;
+
+Spring.DojoValidateAllAdvisor = function(config){
+	dojo.mixin(this, config);
+};
+
+Spring.DojoValidateAllAdvisor.prototype = {
+	
+	event : "",
+	targetId : "",
+	originalHandler : null,
+	connection : null,
+	
+	apply : function() {
+		var targetEl = dojo.byId(this.targetId);
+		this.originalHandler = targetEl[this.event];
+		var context = this;
+		targetEl[this.event] = function(event){
+			context.handleEvent(event, context);
+		};
+		return this;
+	},
+	
+	cleanup : function(){
+		dojo.disconnect(this.connection);
+	},
+	
+	handleEvent : function(event, context){
+		if (!Spring.validateAll()) {
+			dojo.stopEvent(event);
+		} else {
+			var result = context.originalHandler(event);
+			if (result == false) {
+				dojo.stopEvent(event);
+			}
+		}
+	}
+};
+
+Spring.ValidateAllAdvisor = Spring.DojoValidateAllAdvisor;
 
 Spring.DojoRemotingHandler = function(){};
 
@@ -105,13 +146,32 @@ Spring.DojoRemotingHandler.prototype = {
 
 	},
 	
+	getLinkedResource: function(/*String */ linkId, /*boolean*/ modal) {
+		this.getResource(dojo.byId(linkId).href, modal);
+	},
+	
+	getResource: function(/*String */ resourceUri, /*boolean*/ modal) {
+		
+		dojo.xhrGet({
+			
+			url: resourceUri,
+			
+			handleAs: "text",
+			
+			load: this.handleResponse,
+			
+			error: this.handleError,
+			
+			modal: modal
+		});
+	},
+	
 	handleResponse: function(response, ioArgs) {
-		//alert("handling the response");
 		
 		//First check if this response should redirect
 		var redirectURL = ioArgs.xhr.getResponseHeader('Flow-Redirect-URL');
 		var modalViewHeader = ioArgs.xhr.getResponseHeader('Flow-Modal-View');
-		var modalView = dojo.isString(modalViewHeader) && modalViewHeader.length > 0;
+		var modalView = ((dojo.isString(modalViewHeader) && modalViewHeader.length > 0) || ioArgs.args.modal);
 		
 		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
 			if (modalView) {
@@ -155,16 +215,17 @@ Spring.DojoRemotingHandler.prototype = {
 		//For a modal view, just dump the new nodes into a modal dialog
 		if (modalView) {
 			Spring.RemotingHandler.renderNodeListToModalDialog(newNodes);
-			return response;
 		}
-	
-		//Insert the new DOM nodes and update the Form's action URL
-		newNodes.forEach(function(item) {
-			if (item.id != null && item.id != "") {
-			    var target = dojo.byId(item.id);
-				target.parentNode.replaceChild(item, target);
-			}
-		});
+		else {
+		
+			//Insert the new DOM nodes and update the Form's action URL
+			newNodes.forEach(function(item){
+				if (item.id != null && item.id != "") {
+					var target = dojo.byId(item.id);
+					target.parentNode.replaceChild(item, target);
+				}
+			});
+		}
 		
 		//Evaluate any script code
 		dojo.forEach(extractedScriptNodes, function(script){
@@ -175,19 +236,14 @@ Spring.DojoRemotingHandler.prototype = {
 	},
 	
 	handleError: function(response, ioArgs) {
-		//alert("handling an error");
 		console.error("HTTP status code: ", ioArgs.xhr.status);
 		return response;
 	},
 	
 	renderURLToModalDialog: function(url, ioArgs) {
-		dojo.require("dijit.Dialog");
-		
 		url = url + "&"+dojo.objectToQuery(ioArgs.args.content);
 		
-		var dialog = new dijit.Dialog({href: url});
-		dialog.show();
-		
+		Spring.RemotingHandler.getResource(url, true);
 	},
 	
 	renderNodeListToModalDialog: function(nodes) {
@@ -195,6 +251,9 @@ Spring.DojoRemotingHandler.prototype = {
 		
 		var dialog = new dijit.Dialog({});
 		dialog.setContent(nodes);
+		dojo.connect(dialog, "hide", dialog, function(){
+			this.destroyRecursive(false);
+		});
 		dialog.show();
 	}
 };
