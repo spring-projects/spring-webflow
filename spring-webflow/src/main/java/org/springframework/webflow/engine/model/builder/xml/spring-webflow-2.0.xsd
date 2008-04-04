@@ -477,7 +477,8 @@ The model object this view is bound to.  Typically used as the source of form fi
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-The history of the view state should be preserved when the view state exits to support back-tracking.
+Sets the history policy for this view state.  The default is 'preserve', which allows back-tracking to this state after it exits.
+'discard' prevents back-tracking to this state, and 'invalidate' prevents back-tracking to this state and any previously entered view-state.
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -487,6 +488,7 @@ The history of the view state should be preserved when the view state exits to s
 											<xsd:annotation>
 												<xsd:documentation>
 													<![CDATA[
+Upon exiting this view state, preserve state history to allow back-tracking to this point.
 ]]>
 												</xsd:documentation>
 											</xsd:annotation>
@@ -495,7 +497,7 @@ The history of the view state should be preserved when the view state exits to s
 											<xsd:annotation>
 												<xsd:documentation>
 													<![CDATA[
-The history of the view state should be discarded when the view state exits to prevent back-tracking.
+Upon exiting this view state, discard state history to prevent back-tracking to this point.
 ]]>
 												</xsd:documentation>
 											</xsd:annotation>
@@ -504,7 +506,7 @@ The history of the view state should be discarded when the view state exits to p
 											<xsd:annotation>
 												<xsd:documentation>
 													<![CDATA[
-The history of the view state and all previous view state should be invalidated to completely restrict back tracking.
+Upon exiting this view state, invalidate all view state history to prevent back-tracking to any previous point.
 ]]>
 												</xsd:documentation>
 											</xsd:annotation>
