@@ -23,9 +23,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Default flow URL handler for SWF 2.
  * 
@@ -33,18 +30,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
-	private static final Log logger = LogFactory.getLog(DefaultFlowUrlHandler.class);
-
 	private static final String EXECUTION_ATTRIBUTE = "execution";
 
 	public String getFlowExecutionKey(PortletRequest request) {
 		String flowExecutionKey = request.getParameter(EXECUTION_ATTRIBUTE);
-		logger.debug("flowExecutionKey '" + flowExecutionKey + "' found as request param");
 		PortletSession session = request.getPortletSession(false);
 		if (session != null) {
 			if (flowExecutionKey == null && request instanceof RenderRequest) {
 				flowExecutionKey = (String) session.getAttribute(EXECUTION_ATTRIBUTE);
-				logger.debug("flowExecutionKey '" + flowExecutionKey + "' found as session param");
 			} else if (flowExecutionKey != null && request instanceof ActionRequest) {
 				session.removeAttribute(EXECUTION_ATTRIBUTE);
 			}
@@ -53,12 +46,10 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public void setFlowExecutionRenderParameter(String flowExecutionKey, ActionResponse response) {
-		logger.debug("setting flowExecutionKey '" + flowExecutionKey + "' as render param");
 		response.setRenderParameter(EXECUTION_ATTRIBUTE, flowExecutionKey);
 	}
 
 	public void setFlowExecutionInSession(String flowExecutionKey, RenderRequest request) {
-		logger.debug("setting flowExecutionKey '" + flowExecutionKey + "' as session param");
 		PortletSession session = request.getPortletSession();
 		session.setAttribute(EXECUTION_ATTRIBUTE, flowExecutionKey);
 	}
