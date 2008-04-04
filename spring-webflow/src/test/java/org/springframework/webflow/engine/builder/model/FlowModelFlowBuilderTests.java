@@ -321,7 +321,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testResourceBackedFlowBuilderWithMessages() {
-		ClassPathResource resource = new ClassPathResource("resources/flow.xml", XmlFlowModelBuilderTests.class);
+		ClassPathResource resource = new ClassPathResource("resources/flow.xml", FlowModelFlowBuilderTests.class);
 		Flow flow = getFlow(resource);
 		assertNotNull(flow.getApplicationContext());
 		assertEquals("bar", flow.getApplicationContext().getMessage("foo", null, null));
