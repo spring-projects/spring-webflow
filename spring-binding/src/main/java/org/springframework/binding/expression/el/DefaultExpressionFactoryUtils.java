@@ -31,26 +31,30 @@ public class DefaultExpressionFactoryUtils {
 		try {
 			expressionFactoryClass = ClassUtils.forName(getDefaultExpressionFactoryClassName());
 		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException(
+			IllegalStateException ise = new IllegalStateException(
 					"The default ExpressionFactory class '"
 							+ getDefaultExpressionFactoryClassName()
 							+ "' could not be found in the classpath.  "
 							+ "Please add this to your classpath or set the default ExpressionFactory class name to something that is in the classpath.");
+			ise.initCause(e);
+			throw ise;
 		} catch (NoClassDefFoundError e) {
-			throw new IllegalStateException(
+			IllegalStateException ise = new IllegalStateException(
 					"The default ExpressionFactory class '"
 							+ getDefaultExpressionFactoryClassName()
 							+ "' could not be found in the classpath.  "
 							+ "Please add this to your classpath or set the default ExpressionFactory class name to something that is in the classpath.");
+			ise.initCause(e);
+			throw ise;
 		}
 		try {
 			return (ExpressionFactory) expressionFactoryClass.newInstance();
 		} catch (Exception e) {
-			IllegalStateException iae = new IllegalStateException("An instance of the default ExpressionFactory '"
+			IllegalStateException ise = new IllegalStateException("An instance of the default ExpressionFactory '"
 					+ getDefaultExpressionFactoryClassName()
 					+ "' could not be instantiated.  Check your EL implementation configuration.");
-			iae.initCause(e);
-			throw iae;
+			ise.initCause(e);
+			throw ise;
 		}
 	}
 }

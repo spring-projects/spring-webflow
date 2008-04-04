@@ -90,11 +90,15 @@ public final class DefaultExpressionParserFactory {
 				ClassUtils.forName("ognl.Ognl");
 				return new WebFlowOgnlExpressionParser();
 			} catch (ClassNotFoundException ex) {
-				throw new IllegalStateException(
+				IllegalStateException ise = new IllegalStateException(
 						"Unable to create the default expression parser for Spring Web Flow: Neither a Unified EL implementation or OGNL could be found.");
+				ise.initCause(ex);
+				throw ise;
 			} catch (NoClassDefFoundError ex) {
-				throw new IllegalStateException(
+				IllegalStateException ise = new IllegalStateException(
 						"Unable to create the default expression parser for Spring Web Flow: Neither a Unified EL implementation or OGNL could be found.");
+				ise.initCause(ex);
+				throw ise;
 			}
 		}
 	}

@@ -17,8 +17,6 @@ package org.springframework.webflow.expression;
 
 import java.util.Map;
 
-import javax.el.PropertyNotWritableException;
-
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
@@ -143,10 +141,10 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 			String property = name.toString();
 			RequestContext requestContext = (RequestContext) target;
 			if (property.equals("flowRequestContext")) {
-				throw new PropertyNotWritableException("The 'flowRequestContext' variable is not writeable");
+				throw new OgnlException("The 'flowRequestContext' variable is not writeable");
 			}
 			if (securityPresent && property.equals("currentUser")) {
-				throw new PropertyNotWritableException("The 'currentUser' variable is not writeable");
+				throw new OgnlException("The 'currentUser' variable is not writeable");
 			}
 			if (requestContext.getRequestScope().contains(property)) {
 				if (logger.isDebugEnabled()) {
