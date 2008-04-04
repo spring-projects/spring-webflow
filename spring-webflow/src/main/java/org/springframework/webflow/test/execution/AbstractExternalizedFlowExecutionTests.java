@@ -19,9 +19,11 @@ import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
+import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
@@ -39,7 +41,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	/**
 	 * The cached flow definition.
 	 */
-	private static FlowDefinition cachedFlowDefinition;
+	private static Flow cachedFlowDefinition;
 
 	/**
 	 * The flag indicating if the flow definition built from an externalized resource as part of this test should be
@@ -51,6 +53,11 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * A helper for constructing paths to flow definition resources in the filesystem, classpath, or other location.
 	 */
 	private FlowDefinitionResourceFactory resourceFactory = new FlowDefinitionResourceFactory();
+
+	/**
+	 * Private flow builder context object.
+	 */
+	private MockFlowBuilderContext flowBuilderContext;
 
 	/**
 	 * Constructs a default externalized flow execution test.
@@ -128,9 +135,6 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 		return resourceFactory;
 	}
 
-	/**
-	 * Returns the flow definition being tested.
-	 */
 	protected final FlowDefinition getFlowDefinition() {
 		if (isCacheFlowDefinition() && cachedFlowDefinition != null) {
 			return cachedFlowDefinition;
@@ -143,6 +147,14 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	}
 
 	/**
+	 * Returns the flow definition being tested as a {@link Flow} implementation. Useful if you need to do specific
+	 * assertions against the configuration of the implementation.
+	 */
+	protected final Flow getFlow() {
+		return (Flow) getFlowDefinition();
+	}
+
+	/**
 	 * Factory method to assemble a flow definition from a resource. Called by {@link #getFlowDefinition()} to create
 	 * the "main" flow to test. May also be called by subclasses to create subflow definitions whose executions should
 	 * also be exercised by this test.
@@ -150,20 +162,31 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 */
 	protected final Flow buildFlow() {
 		FlowDefinitionResource resource = getResource(getResourceFactory());
-		MockFlowBuilderContext builderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
-		configureFlowBuilderContext(builderContext);
+		flowBuilderContext = new MockFlowBuilderContext(resource.getId(), resource.getAttributes());
+		configureFlowBuilderContext(flowBuilderContext);
 		FlowBuilder builder = createFlowBuilder(resource);
-		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
+		FlowAssembler assembler = new FlowAssembler(builder, flowBuilderContext);
 		return assembler.assembleFlow();
 	}
 
 	/**
 	 * Subclasses may override this hook to customize the builder context for the flow being tested. Useful for
-	 * registering mock subflows or other builder services. By default, this method does nothing.
+	 * registering mock subflows or other {@link FlowBuilderServices flow builder services}. By default, this method
+	 * does nothing.
 	 * @param builderContext the mock flow builder context to configure
 	 */
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 
+	}
+
+	/**
+	 * Returns a reference to the flow definition registry used by the flow being tested to load subflows. Allows late
+	 * registration of dependent subflows on a per test-case basis. This is an alternative to registering such subflows
+	 * upfront in {@link #configureFlowBuilderContext(MockFlowBuilderContext)}.
+	 * @return the flow definition registry
+	 */
+	protected FlowDefinitionRegistry getFlowDefinitionRegistry() {
+		return (FlowDefinitionRegistry) flowBuilderContext.getFlowDefinitionLocator();
 	}
 
 	/**

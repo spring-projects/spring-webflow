@@ -32,6 +32,14 @@ public class ManySelectionTrackingListDataModel extends SerializableListDataMode
 
 	private List selections = new ArrayList();
 
+	public ManySelectionTrackingListDataModel() {
+		super();
+	}
+
+	public ManySelectionTrackingListDataModel(List list) {
+		super(list);
+	}
+
 	public List getSelections() {
 		return selections;
 	}

@@ -6,7 +6,6 @@ import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.JstlView;
@@ -28,45 +27,44 @@ class InternalFlowResourceMvcViewFactory implements ViewFactory {
 
 	private Expression viewIdExpression;
 
-	private ApplicationContext applicationContext;
-
-	private ResourceLoader resourceLoader;
-
 	private ExpressionParser expressionParser;
 
 	private FormatterRegistry formatterRegistry;
 
 	public InternalFlowResourceMvcViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, ApplicationContext context, ResourceLoader resourceLoader) {
+			FormatterRegistry formatterRegistry) {
 		this.viewIdExpression = viewIdExpression;
 		this.expressionParser = expressionParser;
 		this.formatterRegistry = formatterRegistry;
-		this.applicationContext = context;
-		this.resourceLoader = resourceLoader;
 	}
 
 	public View getView(RequestContext context) {
 		String viewId = (String) viewIdExpression.getValue(context);
 		if (viewId.startsWith("/")) {
-			return getViewInternal(viewId, context);
+			return getViewInternal(viewId, context, context.getActiveFlow().getApplicationContext());
 		} else {
-			Resource viewResource = resourceLoader.getResource(viewId);
+			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
+			if (flowContext == null) {
+				throw new IllegalStateException("A Flow ApplicationContext is required to resolve Flow View Resources");
+			}
+			Resource viewResource = flowContext.getResource(viewId);
 			if (!(viewResource instanceof ContextResource)) {
 				throw new IllegalStateException(
 						"A ContextResource is required to get relative view paths within this context");
 			}
-			return getViewInternal(((ContextResource) viewResource).getPathWithinContext(), context);
+			return getViewInternal(((ContextResource) viewResource).getPathWithinContext(), context, flowContext);
 		}
 	}
 
-	private View getViewInternal(String viewPath, RequestContext context) {
+	private View getViewInternal(String viewPath, RequestContext context, ApplicationContext flowContext) {
 		if (viewPath.endsWith(".jsp")) {
 			if (JSTL_PRESENT) {
 				JstlView view = new JstlView(viewPath);
-				view.setApplicationContext(context.getActiveFlow().getApplicationContext());
+				view.setApplicationContext(flowContext);
 				return createMvcView(view, context);
 			} else {
 				InternalResourceView view = new InternalResourceView(viewPath);
+				view.setApplicationContext(flowContext);
 				return createMvcView(view, context);
 			}
 		} else {

@@ -70,8 +70,8 @@ public class JsfFinalResponseActionTests extends TestCase {
 		jsfMock.facesContext().setViewRoot(null);
 		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
 		lifecycle = new TestLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext().template()
-				.evaluate(RequestContext.class).expectResult(String.class)), null, lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext()
+				.template().evaluate(RequestContext.class).expectResult(String.class)), lifecycle);
 		RequestContextHolder.setRequestContext(context);
 		MockExternalContext ext = new MockExternalContext();
 		ext.setNativeContext(new MockServletContext());

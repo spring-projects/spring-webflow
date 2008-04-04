@@ -44,8 +44,8 @@ public class ServletMvcView extends MvcView {
 		ExternalContext externalContext = context.getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) externalContext.getNativeRequest();
 		HttpServletResponse response = (HttpServletResponse) externalContext.getNativeResponse();
-		// request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-		// context.getActiveFlow().getBeanFactory());
+		request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+				context.getActiveFlow().getApplicationContext());
 		getView().render(model, request, response);
 	}
 }

@@ -20,7 +20,6 @@ import java.io.IOException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -36,7 +35,7 @@ import org.springframework.webflow.execution.ViewFactory;
 class MockViewFactoryCreator implements ViewFactoryCreator {
 
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
+			FormatterRegistry formatterRegistry) {
 		return new MockViewFactory(viewIdExpression);
 	}
 

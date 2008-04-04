@@ -25,22 +25,40 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
 import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class MvcViewFactoryTests extends TestCase {
 	private MvcViewFactoryCreator creator;
-	private StaticApplicationContext context;
+	private StaticApplicationContext applicationContext;
 
 	protected void setUp() {
 		creator = new MvcViewFactoryCreator();
-		context = new StaticApplicationContext();
+		applicationContext = new StaticApplicationContext();
+		applicationContext.refresh();
+	}
+
+	public void testGetViewNoFlowApplicationContext() {
+		Expression viewId = new StaticExpression("flowrelativeview.jsp");
+		InternalFlowResourceMvcViewFactory factory = new InternalFlowResourceMvcViewFactory(viewId, null, null);
+		MockRequestContext context = new MockRequestContext();
+		try {
+			factory.getView(context);
+			fail("Expected illegal state");
+		} catch (IllegalStateException e) {
+			// expected;
+		}
+	}
+
+	public void testGetViewNoFlowApplicationContextAbsolutePath() {
+		Expression viewId = new StaticExpression("/absoluteview.jsp");
+		InternalFlowResourceMvcViewFactory factory = new InternalFlowResourceMvcViewFactory(viewId, null, null);
+		MockRequestContext context = new MockRequestContext();
+		assertNotNull(factory.getView(context));
 	}
 
 	public void testNoResolversGetResource() throws Exception {
-		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {
 				return ClassUtils.getDefaultClassLoader();
@@ -50,9 +68,11 @@ public class MvcViewFactoryTests extends TestCase {
 				return new TestContextResource("/parent/" + name);
 			}
 		};
+		applicationContext.setResourceLoader(viewResourceLoader);
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null);
 		MockRequestContext context = new MockRequestContext();
+		context.getRootFlow().setApplicationContext(applicationContext);
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
@@ -68,10 +88,9 @@ public class MvcViewFactoryTests extends TestCase {
 
 	public void testViewResolversGetResource() throws Exception {
 		MockViewResolver viewResolver = new MockViewResolver("myview");
-		creator.setApplicationContext(context);
 		creator.setViewResolvers(Collections.singletonList(viewResolver));
 		Expression viewId = new StaticExpression("myview");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, null);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null);
 		MockRequestContext context = new MockRequestContext();
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -87,7 +106,6 @@ public class MvcViewFactoryTests extends TestCase {
 	}
 
 	public void testRestoreView() throws Exception {
-		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {
 				return ClassUtils.getDefaultClassLoader();
@@ -97,9 +115,11 @@ public class MvcViewFactoryTests extends TestCase {
 				return new TestContextResource("/parent/" + name);
 			}
 		};
+		applicationContext.setResourceLoader(viewResourceLoader);
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null);
 		MockRequestContext context = new MockRequestContext();
+		context.getRootFlow().setApplicationContext(applicationContext);
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
@@ -119,7 +139,6 @@ public class MvcViewFactoryTests extends TestCase {
 	}
 
 	public void testRestoreViewButtonEventIdFormat() throws Exception {
-		creator.setApplicationContext(context);
 		ResourceLoader viewResourceLoader = new ResourceLoader() {
 			public ClassLoader getClassLoader() {
 				return ClassUtils.getDefaultClassLoader();
@@ -129,9 +148,11 @@ public class MvcViewFactoryTests extends TestCase {
 				return new TestContextResource("/parent/" + name);
 			}
 		};
+		applicationContext.setResourceLoader(viewResourceLoader);
 		Expression viewId = new StaticExpression("myview.jsp");
-		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null, viewResourceLoader);
+		ViewFactory viewFactory = creator.createViewFactory(viewId, null, null);
 		MockRequestContext context = new MockRequestContext();
+		context.getRootFlow().setApplicationContext(applicationContext);
 		MockExternalContext externalContext = new MockExternalContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();

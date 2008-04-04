@@ -54,18 +54,53 @@ public interface RequestControlContext extends RequestContext {
 	public void setCurrentState(State state);
 
 	/**
+	 * Assign the ongoing flow execution its flow execution key. This method will be called before a state is about to
+	 * render a view and pause the flow execution.
+	 */
+	public FlowExecutionKey assignFlowExecutionKey();
+
+	/**
+	 * Update the current flow execution snapshot to save the current state.
+	 */
+	public void updateCurrentFlowExecutionSnapshot();
+
+	/**
+	 * Remove the current flow execution snapshot to invalidate the current state.
+	 */
+	public void removeCurrentFlowExecutionSnapshot();
+
+	/**
+	 * Remove all flow execution snapshots associated with the ongoing conversation. Invalidates previous states.
+	 */
+	public void removeAllFlowExecutionSnapshots();
+
+	/**
+	 * Signals the occurrence of an event in the current state of this flow execution request context. This method
+	 * should be called by clients that report internal event occurrences, such as action states. The
+	 * <code>onEvent()</code> method of the flow involved in the flow execution will be called.
+	 * @param event the event that occurred
+	 * @return a boolean indicating if handling this event caused the current state to exit and a new state to enter
+	 * @throws FlowExecutionException if an exception was thrown within a state of the flow during execution of this
+	 * signalEvent operation
+	 * @see Flow#handleEvent(RequestControlContext)
+	 */
+	public boolean handleEvent(Event event) throws FlowExecutionException;
+
+	/**
+	 * Execute this transition out of the current source state. Allows for privileged execution of an arbitrary
+	 * transition.
+	 * @param transition the transition
+	 * @see Transition#execute(State, RequestControlContext)
+	 */
+	public boolean execute(Transition transition);
+
+	/**
 	 * Record the transition executing in the flow. This method will be called as part of executing a transition from
 	 * one state to another.
 	 * @param transition the transition being executed
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
 	public void setCurrentTransition(Transition transition);
-
-	/**
-	 * Assign the ongoing flow execution its flow execution key. This method will be called before a state is about to
-	 * render a view and pause the flow execution.
-	 */
-	public FlowExecutionKey assignFlowExecutionKey();
 
 	/**
 	 * Spawn a new flow session and activate it in the currently executing flow. Also transitions the spawned flow to
@@ -81,18 +116,6 @@ public interface RequestControlContext extends RequestContext {
 	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException;
 
 	/**
-	 * Signals the occurrence of an event in the current state of this flow execution request context. This method
-	 * should be called by clients that report internal event occurrences, such as action states. The
-	 * <code>onEvent()</code> method of the flow involved in the flow execution will be called.
-	 * @param event the event that occurred
-	 * @return a boolean indicating if handling this event caused the current state to exit and a new state to enter
-	 * @throws FlowExecutionException if an exception was thrown within a state of the flow during execution of this
-	 * signalEvent operation
-	 * @see Flow#handleEvent(RequestControlContext)
-	 */
-	public boolean handleEvent(Event event) throws FlowExecutionException;
-
-	/**
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
 	 * flows, such as end states. The <code>end()</code> method of the flow involved in the flow execution will be
 	 * called.
@@ -102,14 +125,6 @@ public interface RequestControlContext extends RequestContext {
 	 * @see Flow#end(RequestControlContext, MutableAttributeMap)
 	 */
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException;
-
-	/**
-	 * Execute this transition out of the current source state. Allows for privileged execution of an arbitrary
-	 * transition.
-	 * @param transition the transition
-	 * @see Transition#execute(State, RequestControlContext)
-	 */
-	public boolean execute(Transition transition);
 
 	/**
 	 * Returns true if the 'always redirect pause' flow execution attribute is set to true, false otherwise.

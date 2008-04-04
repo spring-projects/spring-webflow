@@ -193,7 +193,7 @@ public class FlowTests extends TestCase {
 
 			public void restoreReferences(Object value, RequestContext context) {
 			}
-		}, true));
+		}));
 		flow.start(context, new LocalAttributeMap());
 		context.getFlowScope().getRequired("var1", ArrayList.class);
 	}
@@ -202,7 +202,8 @@ public class FlowTests extends TestCase {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
-		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext().evaluate(RequestContext.class));
+		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
+				.evaluate(RequestContext.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -216,7 +217,8 @@ public class FlowTests extends TestCase {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
-		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext().evaluate(RequestContext.class));
+		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
+				.evaluate(RequestContext.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -304,7 +306,8 @@ public class FlowTests extends TestCase {
 	public void testEndWithOutputMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
-		Expression x = parser.parseExpression("flowScope.attr", new FluentParserContext().evaluate(RequestContext.class));
+		Expression x = parser.parseExpression("flowScope.attr", new FluentParserContext()
+				.evaluate(RequestContext.class));
 		Expression y = parser.parseExpression("attr", new FluentParserContext().evaluate(MutableAttributeMap.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setOutputMapper(attributeMapper);

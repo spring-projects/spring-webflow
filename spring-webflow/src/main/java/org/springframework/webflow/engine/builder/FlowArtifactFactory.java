@@ -23,6 +23,7 @@ import org.springframework.webflow.engine.DecisionState;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
+import org.springframework.webflow.engine.History;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.SubflowAttributeMapper;
 import org.springframework.webflow.engine.SubflowState;
@@ -81,12 +82,14 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized view state instance
 	 */
 	public State createViewState(String id, Flow flow, ViewVariable[] variables, Action[] entryActions,
-			ViewFactory viewFactory, Boolean redirect, boolean popup, Action[] renderActions, Transition[] transitions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
+			ViewFactory viewFactory, Boolean redirect, boolean popup, History history, Action[] renderActions,
+			Transition[] transitions, FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions,
+			AttributeMap attributes) {
 		ViewState viewState = new ViewState(flow, id, viewFactory);
 		viewState.addVariables(variables);
 		viewState.setRedirect(redirect);
 		viewState.setPopup(popup);
+		viewState.setHistory(history);
 		viewState.getRenderActionList().addAll(renderActions);
 		configureCommonProperties(viewState, entryActions, transitions, exceptionHandlers, exitActions, attributes);
 		return viewState;

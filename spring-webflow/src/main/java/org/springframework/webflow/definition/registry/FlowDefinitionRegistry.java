@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.definition.registry;
 
+import org.springframework.webflow.definition.FlowDefinition;
+
 /**
  * A container of flow definitions. Extends {@link FlowDefinitionLocator} for accessing registered Flow definitions for
  * execution at runtime.
@@ -40,5 +42,11 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 * @param definitionHolder a holder holding the flow definition to register
 	 */
 	public void registerFlowDefinition(FlowDefinitionHolder definitionHolder);
+
+	/**
+	 * Register a flow definition in this registry.
+	 * @param definition the actual flow definition
+	 */
+	public void registerFlowDefinition(FlowDefinition definition);
 
 }

@@ -16,9 +16,7 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +55,6 @@ import org.springframework.webflow.engine.model.registry.FlowModelLocator;
 import org.springframework.webflow.engine.model.registry.NoSuchFlowModelException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -287,8 +283,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private LinkedList parseActions(Element element) {
-		List actionElements = getChildElementsByTagNames(element, Arrays.asList(new String[] { "evaluate", "render",
-				"set" }));
+		List actionElements = DomUtils.getChildElementsByTagName(element, new String[] { "evaluate", "render", "set" });
 		if (actionElements.isEmpty()) {
 			return null;
 		}
@@ -300,8 +295,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private LinkedList parseStates(Element element) {
-		List stateElements = getChildElementsByTagNames(element, Arrays.asList(new String[] { "view-state",
-				"action-state", "decision-state", "subflow-state", "end-state" }));
+		List stateElements = DomUtils.getChildElementsByTagName(element, new String[] { "view-state", "action-state",
+				"decision-state", "subflow-state", "end-state" });
 		if (stateElements.isEmpty()) {
 			return null;
 		}
@@ -616,25 +611,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setOnEntryActions(parseOnEntryActions(element));
 		state.setExceptionHandlers(parseExceptionHandlers(element));
 		return state;
-	}
-
-	// TODO: submited to DomUtils in spring-core will be available in 2.5.3
-	public static List getChildElementsByTagNames(Element ele, Collection childEleNames) {
-		Assert.notNull(ele, "Element must not be null");
-		Assert.notNull(childEleNames, "Element names collection must not be null");
-		NodeList nl = ele.getChildNodes();
-		List childEles = new ArrayList();
-		for (int i = 0; i < nl.getLength(); i++) {
-			Node node = nl.item(i);
-			if (node instanceof Element && nodeNameMatch(node, childEleNames)) {
-				childEles.add(node);
-			}
-		}
-		return childEles;
-	}
-
-	private static boolean nodeNameMatch(Node node, Collection desiredNames) {
-		return (desiredNames.contains(node.getNodeName()) || desiredNames.contains(node.getLocalName()));
 	}
 
 	public String toString() {

@@ -34,12 +34,6 @@ public class FlowVariable extends AnnotatedObject {
 	private String name;
 
 	/**
-	 * Is this flow variable local or global? Local variables go into flow scope. Global variables go into conversation
-	 * scope.
-	 */
-	private Boolean local;
-
-	/**
 	 * The value factory that provides this variable's value.
 	 */
 	private VariableValueFactory valueFactory;
@@ -47,14 +41,12 @@ public class FlowVariable extends AnnotatedObject {
 	/**
 	 * Creates a new flow variable.
 	 * @param name the variable name
-	 * @param local the local variable
 	 */
-	public FlowVariable(String name, VariableValueFactory valueFactory, boolean local) {
+	public FlowVariable(String name, VariableValueFactory valueFactory) {
 		Assert.hasText(name, "The variable name is required");
 		Assert.notNull(valueFactory, "The variable value factory is required");
 		this.name = name;
 		this.valueFactory = valueFactory;
-		this.local = Boolean.valueOf(local);
 	}
 
 	/**
@@ -64,13 +56,6 @@ public class FlowVariable extends AnnotatedObject {
 		return name;
 	}
 
-	/**
-	 * Is this a local flow variable or a conversation-scoped flow variable?
-	 */
-	public boolean isLocal() {
-		return local.booleanValue();
-	}
-
 	// name and scope based equality
 
 	public boolean equals(Object o) {
@@ -78,11 +63,11 @@ public class FlowVariable extends AnnotatedObject {
 			return false;
 		}
 		FlowVariable other = (FlowVariable) o;
-		return name.equals(other.name) && valueFactory.equals(other.valueFactory) && local.equals(other.local);
+		return name.equals(other.name) && valueFactory.equals(other.valueFactory);
 	}
 
 	public int hashCode() {
-		return name.hashCode() + valueFactory.hashCode() + local.hashCode();
+		return name.hashCode() + valueFactory.hashCode();
 	}
 
 	/**
@@ -91,11 +76,7 @@ public class FlowVariable extends AnnotatedObject {
 	 */
 	public void create(RequestContext context) {
 		Object value = valueFactory.createInitialValue(context);
-		if (local == Boolean.TRUE) {
-			context.getFlowScope().put(name, value);
-		} else {
-			context.getConversationScope().put(name, value);
-		}
+		context.getFlowScope().put(name, value);
 	}
 
 	/**
@@ -104,12 +85,7 @@ public class FlowVariable extends AnnotatedObject {
 	 * @param context the executing flow
 	 */
 	public void restore(RequestContext context) {
-		Object value;
-		if (local == Boolean.TRUE) {
-			value = context.getFlowScope().get(name);
-		} else {
-			value = context.getConversationScope().get(name);
-		}
+		Object value = context.getFlowScope().get(name);
 		valueFactory.restoreReferences(value, context);
 	}
 
@@ -118,15 +94,10 @@ public class FlowVariable extends AnnotatedObject {
 	 * @param context the executing flow
 	 */
 	public Object destroy(RequestContext context) {
-		if (local == Boolean.TRUE) {
-			return context.getFlowScope().remove(name);
-		} else {
-			return context.getConversationScope().remove(name);
-		}
+		return context.getFlowScope().remove(name);
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("name", name).append("valueFactory", valueFactory).append("local",
-				local).toString();
+		return new ToStringCreator(this).append("name", name).append("valueFactory", valueFactory).toString();
 	}
 }

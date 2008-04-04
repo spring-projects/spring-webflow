@@ -14,4 +14,14 @@ public class MockFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
 	public FlowExecutionKey getKey(FlowExecution execution) {
 		return new GeneratedFlowExecutionKey();
 	}
+
+	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+	}
+
+	public void removeFlowExecutionSnapshot(FlowExecution execution) {
+	}
+
+	public void updateFlowExecutionSnapshot(FlowExecution execution) {
+	}
+
 }

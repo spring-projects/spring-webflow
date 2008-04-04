@@ -262,14 +262,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testFlowVariable() {
 		model.addVar(new VarModel("flow-foo", "org.springframework.webflow.TestBean"));
-		VarModel var = new VarModel("conversation-foo", "org.springframework.webflow.TestBean");
-		model.addVar(var);
 		model.addEndState(new EndStateModel("end"));
 		Flow flow = getFlow(model);
 		assertEquals("flow-foo", flow.getVariable("flow-foo").getName());
-		assertEquals(false, flow.getVariable("flow-foo").isLocal());
-		assertEquals("conversation-foo", flow.getVariables()[1].getName());
-		assertEquals(false, flow.getVariables()[1].isLocal());
 	}
 
 	public void testViewStateVariable() {
@@ -323,6 +318,13 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		Flow flow = getFlow(resource);
 		assertEquals("flow", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
+	}
+
+	public void testResourceBackedFlowBuilderWithMessages() {
+		ClassPathResource resource = new ClassPathResource("resources/flow.xml", XmlFlowModelBuilderTests.class);
+		Flow flow = getFlow(resource);
+		assertNotNull(flow.getApplicationContext());
+		assertEquals("bar", flow.getApplicationContext().getMessage("foo", null, null));
 	}
 
 	public void testAbstractFlow() {

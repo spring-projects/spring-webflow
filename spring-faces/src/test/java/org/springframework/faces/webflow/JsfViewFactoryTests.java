@@ -94,7 +94,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), null, lifecycle);
+				RequestContext.class).expectResult(String.class)), lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -117,7 +117,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), null, lifecycle);
+				RequestContext.class).expectResult(String.class)), lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -141,7 +141,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), null, lifecycle);
+				RequestContext.class).expectResult(String.class)), lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -169,7 +169,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
 		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), null, lifecycle);
+				RequestContext.class).expectResult(String.class)), lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);

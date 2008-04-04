@@ -126,6 +126,22 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		putConversationScope(flowExecution);
 	}
 
+	// implementing flow execution key factory
+
+	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+		getContinuationGroup(execution.getKey()).removeAllContinuations();
+	}
+
+	public void removeFlowExecutionSnapshot(FlowExecution execution) {
+		FlowExecutionKey key = execution.getKey();
+		getContinuationGroup(key).removeContinuation(getContinuationId(key));
+	}
+
+	public void updateFlowExecutionSnapshot(FlowExecution execution) {
+		FlowExecutionKey key = execution.getKey();
+		getContinuationGroup(key).updateContinuation(getContinuationId(key), snapshot(execution));
+	}
+
 	// hooks for subclassing
 
 	protected FlowExecutionContinuationGroup createFlowExecutionContinuationGroup() {

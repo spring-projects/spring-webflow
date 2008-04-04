@@ -20,9 +20,6 @@ import java.util.List;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -38,11 +35,9 @@ import org.springframework.webflow.execution.ViewFactory;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
+public class MvcViewFactoryCreator implements ViewFactoryCreator {
 
 	private List viewResolvers;
-
-	private ApplicationContext applicationContext;
 
 	/**
 	 * Sets the view resolvers that will be used to resolve views selected by flows. If multiple resolvers are to be
@@ -53,18 +48,12 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.viewResolvers = viewResolvers;
 	}
 
-	public void setApplicationContext(ApplicationContext context) {
-		this.applicationContext = context;
-	}
-
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
+			FormatterRegistry formatterRegistry) {
 		if (viewResolvers != null) {
-			return new ViewResolvingMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry,
-					viewResolvers, applicationContext);
+			return new ViewResolvingMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry, viewResolvers);
 		} else {
-			return new InternalFlowResourceMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry,
-					applicationContext, resourceLoader);
+			return new InternalFlowResourceMvcViewFactory(viewIdExpression, expressionParser, formatterRegistry);
 		}
 	}
 

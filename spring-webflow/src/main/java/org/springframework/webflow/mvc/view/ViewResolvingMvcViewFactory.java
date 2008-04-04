@@ -7,7 +7,6 @@ import java.util.Locale;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
@@ -32,13 +31,12 @@ class ViewResolvingMvcViewFactory implements ViewFactory {
 
 	private List viewResolvers;
 
-	private ApplicationContext applicationContext;
-
 	public ViewResolvingMvcViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, List viewResolvers, ApplicationContext context) {
+			FormatterRegistry formatterRegistry, List viewResolvers) {
 		this.viewIdExpression = viewIdExpression;
+		this.expressionParser = expressionParser;
+		this.formatterRegistry = formatterRegistry;
 		this.viewResolvers = viewResolvers;
-		this.applicationContext = context;
 	}
 
 	public View getView(RequestContext context) {

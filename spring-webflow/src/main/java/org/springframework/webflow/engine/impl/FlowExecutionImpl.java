@@ -264,6 +264,18 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		}
 	}
 
+	public void setCurrentState(String stateId) {
+		State state = flow.getStateInstance(stateId);
+		FlowSessionImpl session;
+		if (started) {
+			session = getActiveSessionInternal();
+		} else {
+			session = activateSession(flow);
+			started = true;
+		}
+		session.setCurrentState(state);
+	}
+
 	public void resume(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
 		if (!isActive()) {
 			if (started) {
@@ -384,6 +396,18 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			logger.debug("Assigned key " + key);
 		}
 		return key;
+	}
+
+	void updateCurrentFlowExecutionSnapshot() {
+		keyFactory.updateFlowExecutionSnapshot(this);
+	}
+
+	void removeCurrentFlowExecutionSnapshot() {
+		keyFactory.removeFlowExecutionSnapshot(this);
+	}
+
+	void removeAllFlowExecutionSnapshots() {
+		keyFactory.removeAllFlowExecutionSnapshots(this);
 	}
 
 	// package private setters for restoring transient state used by FlowExecutionImplServicesConfigurer
@@ -516,7 +540,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * @param flow the flow definition
 	 * @return the new flow session
 	 */
-	private FlowSession activateSession(Flow flow) {
+	private FlowSessionImpl activateSession(Flow flow) {
 		FlowSessionImpl session;
 		if (!flowSessions.isEmpty()) {
 			FlowSessionImpl parent = getActiveSessionInternal();

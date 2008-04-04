@@ -64,6 +64,33 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		getMockFlowExecutionContext().getMockActiveSession().setState(state);
 	}
 
+	public FlowExecutionKey assignFlowExecutionKey() {
+		GeneratedFlowExecutionKey key = new GeneratedFlowExecutionKey();
+		getMockFlowExecutionContext().setKey(key);
+		return key;
+	}
+
+	public void removeAllFlowExecutionSnapshots() {
+
+	}
+
+	public void removeCurrentFlowExecutionSnapshot() {
+
+	}
+
+	public void updateCurrentFlowExecutionSnapshot() {
+
+	}
+
+	public boolean handleEvent(Event event) {
+		setCurrentEvent(event);
+		return ((Flow) getActiveFlow()).handleEvent(this);
+	}
+
+	public boolean execute(Transition transition) {
+		return transition.execute((TransitionableState) getCurrentState(), this);
+	}
+
 	public void start(Flow flow, MutableAttributeMap input) throws IllegalStateException {
 		MockFlowSession session = new MockFlowSession(flow, input);
 		if (getFlowExecutionContext().isActive()) {
@@ -73,11 +100,6 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		flow.start(this, input);
 	}
 
-	public boolean handleEvent(Event event) {
-		setCurrentEvent(event);
-		return ((Flow) getActiveFlow()).handleEvent(this);
-	}
-
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {
 		MockFlowSession endingSession = getMockFlowExecutionContext().getMockActiveSession();
 		endingSession.getDefinitionInternal().end(this, output);
@@ -85,22 +107,14 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		return endingSession;
 	}
 
-	public boolean execute(Transition transition) {
-		return transition.execute((TransitionableState) getCurrentState(), this);
+	public boolean getAlwaysRedirectOnPause() {
+		return alwaysRedirectOnPause;
 	}
 
-	public FlowExecutionKey assignFlowExecutionKey() {
-		GeneratedFlowExecutionKey key = new GeneratedFlowExecutionKey();
-		getMockFlowExecutionContext().setKey(key);
-		return key;
-	}
+	// implementation specific accessors for testing
 
 	public boolean getFlowExecutionRedirectSent() {
 		return this.flowExecutionRedirectSent;
-	}
-
-	public boolean getAlwaysRedirectOnPause() {
-		return alwaysRedirectOnPause;
 	}
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {

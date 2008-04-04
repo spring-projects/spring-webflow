@@ -1,8 +1,10 @@
 package org.springframework.binding.message;
 
+import java.text.MessageFormat;
+import java.util.Locale;
 
 import org.springframework.context.MessageSource;
-import org.springframework.util.Assert;
+import org.springframework.context.support.AbstractMessageSource;
 
 /**
  * Default message context factory that simply stores messages indexed in a map by their source. Suitable for use in
@@ -20,11 +22,19 @@ public class DefaultMessageContextFactory implements MessageContextFactory {
 	 * @param messageSource
 	 */
 	public DefaultMessageContextFactory(MessageSource messageSource) {
-		Assert.notNull(messageSource, "The message source is required");
+		if (messageSource == null) {
+			messageSource = new DefaultTextFallbackMessageSource();
+		}
 		this.messageSource = messageSource;
 	}
 
 	public StateManageableMessageContext createMessageContext() {
 		return new DefaultMessageContext(messageSource);
+	}
+
+	private class DefaultTextFallbackMessageSource extends AbstractMessageSource {
+		protected MessageFormat resolveCode(String code, Locale locale) {
+			return null;
+		}
 	}
 }

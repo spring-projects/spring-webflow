@@ -47,6 +47,12 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 
 	private boolean getKeyCalled;
 
+	private boolean updateSnapshotCalled;
+
+	private boolean removeSnapshotCalled;
+
+	private boolean removeAllSnapshotsCalled;
+
 	public void setUp() {
 		flowDefinition = new Flow("flow");
 		new EndState(flowDefinition, "end");
@@ -93,6 +99,9 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		State state = new State(flowDefinition, "state") {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 				context.assignFlowExecutionKey();
+				context.updateCurrentFlowExecutionSnapshot();
+				context.removeCurrentFlowExecutionSnapshot();
+				context.removeAllFlowExecutionSnapshots();
 			}
 		};
 		flowDefinition.setStartState(state);
@@ -101,10 +110,26 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 				getKeyCalled = true;
 				return null;
 			}
+
+			public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+				removeAllSnapshotsCalled = true;
+			}
+
+			public void removeFlowExecutionSnapshot(FlowExecution execution) {
+				removeSnapshotCalled = true;
+			}
+
+			public void updateFlowExecutionSnapshot(FlowExecution execution) {
+				updateSnapshotCalled = true;
+			}
+
 		});
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		execution.start(null, new MockExternalContext());
 		assertTrue(getKeyCalled);
+		assertTrue(removeAllSnapshotsCalled);
+		assertTrue(removeSnapshotCalled);
+		assertTrue(updateSnapshotCalled);
 		assertNull(execution.getKey());
 	}
 }

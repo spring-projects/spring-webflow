@@ -37,14 +37,9 @@ public class FlowExecutionRepositoryType extends StaticLabeledEnum {
 	public static final FlowExecutionRepositoryType CONTINUATION = new FlowExecutionRepositoryType(1, "Continuation");
 
 	/**
-	 * The 'client' (continuation) flow execution repository type.
-	 */
-	public static final FlowExecutionRepositoryType CLIENT = new FlowExecutionRepositoryType(2, "Client");
-
-	/**
 	 * The 'singleKey' flow execution repository type.
 	 */
-	public static final FlowExecutionRepositoryType SINGLEKEY = new FlowExecutionRepositoryType(3, "Single Key");
+	public static final FlowExecutionRepositoryType SINGLEKEY = new FlowExecutionRepositoryType(2, "Single Key");
 
 	/**
 	 * Private constructor because this is a typesafe enum!

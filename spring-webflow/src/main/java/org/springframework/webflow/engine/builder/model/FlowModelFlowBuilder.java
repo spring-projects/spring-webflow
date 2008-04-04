@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -21,7 +22,9 @@ import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -44,9 +47,11 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
+import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 import org.springframework.webflow.engine.FlowVariable;
+import org.springframework.webflow.engine.History;
 import org.springframework.webflow.engine.SubflowAttributeMapper;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
@@ -87,7 +92,6 @@ import org.springframework.webflow.engine.support.TransitionCriteriaChain;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 
@@ -104,6 +108,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private LocalFlowBuilderContext localFlowBuilderContext;
 
+	/**
+	 * Creates a flow builder that can build a {@link Flow} from a {@link FlowModel}.
+	 * @param flowModelHolder the flow model holder
+	 */
 	public FlowModelFlowBuilder(FlowModelHolder flowModelHolder) {
 		this.flowModelHolder = flowModelHolder;
 	}
@@ -311,8 +319,29 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getBeanFactory());
+		registerMessageSource(flowContext, flowResource);
 		flowContext.refresh();
 		return flowContext;
+	}
+
+	private void registerMessageSource(GenericApplicationContext flowContext, Resource flowResource) {
+		boolean localMessageSourcePresent = flowContext
+				.containsLocalBean(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME);
+		if (flowResource != null && !localMessageSourcePresent) {
+			Resource messageBundle;
+			try {
+				messageBundle = flowResource.createRelative("messages.properties");
+			} catch (IOException e) {
+				messageBundle = null;
+			}
+			if (messageBundle != null && messageBundle.exists()) {
+				BeanDefinitionBuilder builder = BeanDefinitionBuilder
+						.rootBeanDefinition(ReloadableResourceBundleMessageSource.class);
+				builder.addPropertyValue("basename", "messages");
+				flowContext.registerBeanDefinition(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME, builder
+						.getBeanDefinition());
+			}
+		}
 	}
 
 	private Flow parseFlow(FlowModel flow) {
@@ -329,8 +358,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
 				.getApplicationContext().getAutowireCapableBeanFactory());
-		ScopeType scope = ScopeType.CONVERSATION;
-		return new FlowVariable(var.getName(), valueFactory, scope == ScopeType.FLOW ? true : false);
+		return new FlowVariable(var.getName(), valueFactory);
 	}
 
 	private Mapper parseFlowInputMapper(List inputs) {
@@ -476,6 +504,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (StringUtils.hasText(state.getPopup())) {
 			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
 		}
+		History history = History.PRESERVE;
+		if (StringUtils.hasText(state.getHistory())) {
+			history = (History) fromStringTo(History.class).execute(state.getHistory());
+		}
 		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
 			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
@@ -484,7 +516,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
 				parseViewVariables(state.getVars()), parseActions(state.getOnEntryActions()), viewFactory, redirect,
-				popup, parseActions(state.getOnRenderActions()), parseTransitions(state.getTransitions()),
+				popup, history, parseActions(state.getOnRenderActions()), parseTransitions(state.getTransitions()),
 				parseExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
 				parseActions(state.getOnExitActions()), attributes);
 	}
@@ -560,8 +592,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private ViewFactory createViewFactory(Expression viewId) {
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
-				getLocalContext().getExpressionParser(), getLocalContext().getFormatterRegistry(),
-				getLocalContext().getApplicationContext());
+				getLocalContext().getExpressionParser(), getLocalContext().getFormatterRegistry());
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {
@@ -734,13 +765,21 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (actionModels != null && !actionModels.isEmpty()) {
 			List actions = new ArrayList(actionModels.size());
 			for (Iterator it = actionModels.iterator(); it.hasNext();) {
-				AbstractActionModel action = (AbstractActionModel) it.next();
-				if (action instanceof EvaluateModel) {
-					actions.add(parseEvaluateAction((EvaluateModel) action));
-				} else if (action instanceof RenderModel) {
-					actions.add(parseRenderAction((RenderModel) action));
-				} else if (action instanceof SetModel) {
-					actions.add(parseSetAction((SetModel) action));
+				AbstractActionModel actionModel = (AbstractActionModel) it.next();
+				Action action;
+				if (actionModel instanceof EvaluateModel) {
+					action = parseEvaluateAction((EvaluateModel) actionModel);
+				} else if (actionModel instanceof RenderModel) {
+					action = parseRenderAction((RenderModel) actionModel);
+				} else if (actionModel instanceof SetModel) {
+					action = parseSetAction((SetModel) actionModel);
+				} else {
+					action = null;
+				}
+				if (action != null) {
+					AnnotatedAction annotatedAction = new AnnotatedAction(action);
+					annotatedAction.getAttributes().putAll(parseMetaAttributes(actionModel.getAttributes()));
+					actions.add(annotatedAction);
 				}
 			}
 			return (Action[]) actions.toArray(new Action[actions.size()]);
@@ -844,14 +883,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				rule.setComparisonType(SecurityRule.COMPARISON_ANY);
 			}
 			attributes.put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
-		}
-	}
-
-	private ScopeType parseScopeType(String scope, ScopeType defaultScope) {
-		if (StringUtils.hasText(scope)) {
-			return (ScopeType) fromStringTo(ScopeType.class).execute(scope);
-		} else {
-			return defaultScope;
 		}
 	}
 

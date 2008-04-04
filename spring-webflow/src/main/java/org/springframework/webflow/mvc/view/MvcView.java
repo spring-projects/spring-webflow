@@ -191,8 +191,8 @@ public abstract class MvcView implements View {
 	private void exposeBindingModel(Map model) {
 		Object modelObject = getModelObject();
 		if (modelObject != null) {
-			BindingModel bindingModel = new BindingModel(modelObject, expressionParser, formatterRegistry,
-					requestContext.getMessageContext());
+			BindingModel bindingModel = new BindingModel(getModelExpression().getExpressionString(), modelObject,
+					expressionParser, formatterRegistry, requestContext.getMessageContext());
 			bindingModel.setMappingResults(mappingResults);
 			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}

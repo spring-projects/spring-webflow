@@ -16,8 +16,6 @@
 package org.springframework.webflow.engine.impl;
 
 import org.springframework.binding.message.DefaultMessageContextFactory;
-import org.springframework.binding.message.MessageContextFactory;
-import org.springframework.context.support.StaticMessageSource;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
@@ -36,11 +34,6 @@ abstract class FlowExecutionImplServicesConfigurer {
 	 * an empty static listener list.
 	 */
 	private FlowExecutionListenerLoader executionListenerLoader = StaticFlowExecutionListenerLoader.EMPTY_INSTANCE;
-
-	/**
-	 * The factory for message contexts for tracking flow execution messages.
-	 */
-	private MessageContextFactory messageContextFactory = new DefaultMessageContextFactory(new StaticMessageSource());
 
 	/**
 	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
@@ -62,19 +55,13 @@ abstract class FlowExecutionImplServicesConfigurer {
 	}
 
 	/**
-	 * Sets the strategy for creating message contexts that track flow execution messages.
-	 */
-	public void setMessageContextFactory(MessageContextFactory messageContextFactory) {
-		this.messageContextFactory = messageContextFactory;
-	}
-
-	/**
 	 * Called by subclasses to apply the configured set of standard services to the flow execution.
 	 * @param execution the flow execution
 	 */
 	protected void configureServices(FlowExecutionImpl execution) {
 		execution.setAttributes(executionAttributes);
 		execution.setListeners(executionListenerLoader.getListeners(execution.getDefinition()));
-		execution.setMessageContextFactory(messageContextFactory);
+		execution.setMessageContextFactory(new DefaultMessageContextFactory(execution.getDefinition()
+				.getApplicationContext()));
 	}
 }

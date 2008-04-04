@@ -30,6 +30,15 @@ public class FlowExecutionStateRestorerImplTests extends TestCase {
 		public FlowExecutionKey getKey(FlowExecution execution) {
 			return newKey;
 		}
+
+		public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+		}
+
+		public void removeFlowExecutionSnapshot(FlowExecution execution) {
+		}
+
+		public void updateFlowExecutionSnapshot(FlowExecution execution) {
+		}
 	};
 
 	protected void setUp() {

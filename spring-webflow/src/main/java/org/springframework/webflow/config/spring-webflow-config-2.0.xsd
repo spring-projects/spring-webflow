@@ -317,16 +317,6 @@ The simple repository type.  Use of this strategy incurs minimal storage overhea
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
-			<xsd:enumeration value="client">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The client continuation repository type.
-Use this to snapshot flow execution state client-side to support use of the browser back button in a stateless server environment.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
 			<xsd:enumeration value="singlekey">
 				<xsd:annotation>
 					<xsd:documentation>

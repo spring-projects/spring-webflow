@@ -195,13 +195,21 @@ class RequestControlContextImpl implements RequestControlContext {
 		return flowExecution.assignKey();
 	}
 
+	public void updateCurrentFlowExecutionSnapshot() {
+		flowExecution.updateCurrentFlowExecutionSnapshot();
+	}
+
+	public void removeCurrentFlowExecutionSnapshot() {
+		flowExecution.removeCurrentFlowExecutionSnapshot();
+	}
+
+	public void removeAllFlowExecutionSnapshots() {
+		flowExecution.removeAllFlowExecutionSnapshots();
+	}
+
 	public boolean getAlwaysRedirectOnPause() {
 		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
-	}
-
-	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
-		flowExecution.start(flow, input, this);
 	}
 
 	public boolean handleEvent(Event event) throws FlowExecutionException {
@@ -211,6 +219,10 @@ class RequestControlContextImpl implements RequestControlContext {
 
 	public boolean execute(Transition transition) {
 		return flowExecution.execute(transition, this);
+	}
+
+	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
+		flowExecution.start(flow, input, this);
 	}
 
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {

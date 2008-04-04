@@ -10,7 +10,6 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
@@ -44,7 +43,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
 		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-				FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
+				FormatterRegistry formatterRegistry) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

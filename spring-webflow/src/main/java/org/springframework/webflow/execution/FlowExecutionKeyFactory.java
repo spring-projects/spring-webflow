@@ -30,4 +30,11 @@ public interface FlowExecutionKeyFactory {
 	 * @return the key to assign to the flow execution
 	 */
 	public FlowExecutionKey getKey(FlowExecution execution);
+
+	public void updateFlowExecutionSnapshot(FlowExecution execution);
+
+	public void removeFlowExecutionSnapshot(FlowExecution execution);
+
+	public void removeAllFlowExecutionSnapshots(FlowExecution execution);
+
 }

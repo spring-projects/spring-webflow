@@ -261,36 +261,29 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 	 */
 	protected FlowExecutionRepository createFlowExecutionRepository(FlowExecutionRepositoryType repositoryType,
 			FlowExecutionStateRestorer executionStateRestorer, ConversationManager conversationManager) {
-		if (repositoryType == FlowExecutionRepositoryType.CLIENT) {
-			throw new UnsupportedOperationException(
-					"The 'client' flow execution repository is not supported in this 2.0 Milestone; support is planned for a future release");
+		if (conversationManager == null) {
+			conversationManager = createDefaultConversationManager();
+		}
+		if (repositoryType == FlowExecutionRepositoryType.CONTINUATION) {
+			DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
+					executionStateRestorer);
+			if (maxContinuations != null) {
+				repository.setMaxContinuations(maxContinuations.intValue());
+			}
+			return repository;
+		} else if (repositoryType == FlowExecutionRepositoryType.SIMPLE) {
+			DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
+					executionStateRestorer);
+			repository.setMaxContinuations(1);
+			return repository;
+		} else if (repositoryType == FlowExecutionRepositoryType.SINGLEKEY) {
+			DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
+					executionStateRestorer);
+			repository.setAlwaysGenerateNewNextKey(false);
+			return repository;
 		} else {
-			// determine the conversation manager to use
-			ConversationManager conversationManagerToUse = conversationManager;
-			if (conversationManagerToUse == null) {
-				conversationManagerToUse = createDefaultConversationManager();
-			}
-			if (repositoryType == FlowExecutionRepositoryType.SIMPLE) {
-				DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(
-						conversationManagerToUse, executionStateRestorer);
-				repository.setMaxContinuations(1);
-				return repository;
-			} else if (repositoryType == FlowExecutionRepositoryType.CONTINUATION) {
-				DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(
-						conversationManagerToUse, executionStateRestorer);
-				if (maxContinuations != null) {
-					repository.setMaxContinuations(maxContinuations.intValue());
-				}
-				return repository;
-			} else if (repositoryType == FlowExecutionRepositoryType.SINGLEKEY) {
-				DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(
-						conversationManagerToUse, executionStateRestorer);
-				repository.setAlwaysGenerateNewNextKey(false);
-				return repository;
-			} else {
-				throw new IllegalStateException("Cannot create execution repository - unsupported repository type "
-						+ repositoryType);
-			}
+			throw new IllegalStateException("Cannot create execution repository - unsupported repository type "
+					+ repositoryType);
 		}
 	}
 

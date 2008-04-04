@@ -62,8 +62,8 @@ public class PortletMvcView extends MvcView {
 		}
 		request.setAttribute(ViewRendererServlet.VIEW_ATTRIBUTE, view);
 		request.setAttribute(ViewRendererServlet.MODEL_ATTRIBUTE, model);
-		// request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-		// context.getActiveFlow().getBeanFactory());
+		request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+				context.getActiveFlow().getApplicationContext());
 		portletContext.getRequestDispatcher(DispatcherPortlet.DEFAULT_VIEW_RENDERER_URL).include(request, response);
 	}
 

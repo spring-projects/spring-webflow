@@ -20,7 +20,6 @@ import javax.faces.lifecycle.Lifecycle;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -36,8 +35,8 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 	private Lifecycle lifecycle;
 
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader) {
-		return new JsfViewFactory(viewIdExpression, resourceLoader, getLifecycle());
+			FormatterRegistry formatterRegistry) {
+		return new JsfViewFactory(viewIdExpression, getLifecycle());
 	}
 
 	public String getViewIdByConvention(String viewStateId) {

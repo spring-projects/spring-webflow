@@ -40,7 +40,7 @@ import org.springframework.webflow.execution.ViewFactory;
 public class ViewState extends TransitionableState {
 
 	/**
-	 * The list of actions to be executed when this state is entered.
+	 * The list of actions to be executed before the view is rendered.
 	 */
 	private ActionList renderActionList = new ActionList();
 
@@ -58,6 +58,12 @@ public class ViewState extends TransitionableState {
 	 * Whether or not a redirect should occur before the view is rendered.
 	 */
 	private Boolean redirect;
+
+	/**
+	 * An enum indicating the history behavior of this view-state. Used to configure back-tracking policies. Default is
+	 * {@link History#PRESERVE}.
+	 */
+	private History history = History.PRESERVE;
 
 	/**
 	 * Whether or not the view should render as a popup.
@@ -147,6 +153,24 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
+	 * Returns the history behavior of this view-state. Used to configure back-tracking policies. Default is
+	 * {@link History#PRESERVE}.
+	 * @return the history
+	 */
+	public History getHistory() {
+		return history;
+	}
+
+	/**
+	 * Sets the history behavior of this view state. Used to configure back-tracking policies. Default is
+	 * {@link History#PRESERVE}.
+	 * @param history the history
+	 */
+	public void setHistory(History history) {
+		this.history = history;
+	}
+
+	/**
 	 * Returns the view factory.
 	 */
 	public ViewFactory getViewFactory() {
@@ -201,8 +225,15 @@ public class ViewState extends TransitionableState {
 	}
 
 	public void exit(RequestControlContext context) {
-		destroyVariables(context);
 		super.exit(context);
+		destroyVariables(context);
+		if (history == History.PRESERVE) {
+			context.updateCurrentFlowExecutionSnapshot();
+		} else if (history == History.DISCARD) {
+			context.removeCurrentFlowExecutionSnapshot();
+		} else if (history == History.INVALIDATE) {
+			context.removeAllFlowExecutionSnapshots();
+		}
 	}
 
 	// internal helpers
@@ -269,7 +300,7 @@ public class ViewState extends TransitionableState {
 	protected void appendToString(ToStringCreator creator) {
 		super.appendToString(creator);
 		creator.append("viewFactory", viewFactory).append("variables", variables).append("redirect", redirect).append(
-				"popup", popup);
+				"popup", popup).append("history", history);
 	}
 
 }

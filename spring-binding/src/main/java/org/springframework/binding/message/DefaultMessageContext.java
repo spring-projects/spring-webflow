@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.style.ToStringCreator;
@@ -35,6 +37,8 @@ import org.springframework.util.CachingMapDecorator;
  * @author Keith Donald
  */
 class DefaultMessageContext implements StateManageableMessageContext {
+
+	private static final Log logger = LogFactory.getLog(DefaultMessageContext.class);
 
 	private MessageSource messageSource;
 
@@ -95,8 +99,14 @@ class DefaultMessageContext implements StateManageableMessageContext {
 
 	public void addMessage(MessageResolver messageResolver) {
 		Locale currentLocale = LocaleContextHolder.getLocale();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Resolving message using " + messageResolver);
+		}
 		Message message = messageResolver.resolveMessage(messageSource, currentLocale);
 		List messages = (List) objectMessages.get(message.getSource());
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding resolved message " + message);
+		}
 		messages.add(message);
 	}
 

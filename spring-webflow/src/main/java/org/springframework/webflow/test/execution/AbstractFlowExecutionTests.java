@@ -21,7 +21,9 @@ import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.engine.impl.FlowExecutionImpl;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionFactory;
@@ -64,6 +66,11 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * The flow execution running the flow when the test is active (runtime object).
 	 */
 	private FlowExecution flowExecution;
+
+	/**
+	 * The outcome that was reached when the flow ends; initially null.
+	 */
+	private Event flowExecutionOutcome;
 
 	/**
 	 * Constructs a default flow execution test.
@@ -114,6 +121,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	protected void startFlow(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException {
 		flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
 		flowExecution.start(input, context);
+		if (flowExecution.hasEnded()) {
+			flowExecutionOutcome = flowExecution.getOutcome();
+		}
 	}
 
 	/**
@@ -126,6 +136,21 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 		Assert.state(flowExecution != null, "The flow execution to test is [null]; "
 				+ "you must start the flow execution before you can resume it!");
 		flowExecution.resume(context);
+		if (flowExecution.hasEnded()) {
+			flowExecutionOutcome = flowExecution.getOutcome();
+		}
+	}
+
+	/**
+	 * Sets the current state of the flow execution being tested. If the execution has not been started, it will be
+	 * created and activated.
+	 * @param stateId the state id
+	 */
+	protected void setCurrentState(String stateId) {
+		if (flowExecution == null) {
+			flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
+		}
+		((FlowExecutionImpl) flowExecution).setCurrentState(stateId);
 	}
 
 	// convenience accessors
@@ -136,40 +161,39 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @throws IllegalStateException the execution has not been started
 	 */
 	protected FlowExecution getFlowExecution() throws IllegalStateException {
-		Assert.state(flowExecution != null,
-				"The flow execution to test is [null]; you must start the flow execution before you can access it!");
 		return flowExecution;
 	}
 
 	/**
-	 * Returns the attribute in flash scope. Flash-scoped attributes are cleared on the next view rendering.
-	 * @param attributeName the name of the attribute
-	 * @return the attribute value
+	 * Returns the flow execution outcome that was reached.
+	 * @return the flow execution outcome, or null if the flow execution has not ended
 	 */
-	protected Object getFlashAttribute(String attributeName) {
-		return getFlowExecution().getFlashScope().get(attributeName);
+	protected Event getFlowExecutionOutcome() {
+		return flowExecutionOutcome;
 	}
 
 	/**
-	 * Returns the required attribute in flash scope; asserts the attribute is present. Flash-scoped attributes are
-	 * cleared on the next view rendering.
-	 * @param attributeName the name of the attribute
-	 * @return the attribute value
-	 * @throws IllegalStateException if the attribute was not present
+	 * Returns view scope.
+	 * @return view scope
 	 */
-	protected Object getRequiredFlashAttribute(String attributeName) throws IllegalStateException {
-		return getFlowExecution().getFlashScope().getRequired(attributeName);
+	protected MutableAttributeMap getViewScope() throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getViewScope();
 	}
 
 	/**
-	 * Returns the required attribute in flash scope; asserts the attribute is present and of the correct type.
-	 * Flash-scoped attributes are cleared on the next view rendering.
-	 * @param attributeName the name of the attribute
-	 * @return the attribute value
-	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
+	 * Returns flow scope.
+	 * @return flow scope
 	 */
-	protected Object getRequiredFlashAttribute(String attributeName, Class requiredType) throws IllegalStateException {
-		return getFlowExecution().getFlashScope().getRequired(attributeName, requiredType);
+	protected MutableAttributeMap getFlowScope() throws IllegalStateException {
+		return getFlowExecution().getActiveSession().getScope();
+	}
+
+	/**
+	 * Returns conversation scope.
+	 * @return conversation scope
+	 */
+	protected MutableAttributeMap getConversationScope() throws IllegalStateException {
+		return getFlowExecution().getConversationScope();
 	}
 
 	/**
@@ -290,8 +314,15 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Assert that the entire flow execution has ended; that is, it is no longer active.
 	 */
 	protected void assertFlowExecutionEnded() {
-		assertTrue("The flow execution is still active but it should have ended", getFlowExecution().hasStarted()
-				&& !getFlowExecution().isActive());
+		assertTrue("The flow execution is still active but it should have ended", getFlowExecution().hasEnded());
+	}
+
+	/**
+	 * Assert that the entire flow execution has ended; that is, it is no longer active.
+	 */
+	protected void assertFlowExecutionOutcomeEquals(String outcome) {
+		assertNotNull("There has been no flow execution outcome", flowExecutionOutcome);
+		assertEquals("The flow execution outcome is wrong", flowExecutionOutcome.getId(), outcome);
 	}
 
 	/**

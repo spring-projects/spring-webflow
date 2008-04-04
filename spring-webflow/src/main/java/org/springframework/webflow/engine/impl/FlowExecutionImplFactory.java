@@ -69,6 +69,15 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 			return new SimpleFlowExecutionKey(idGenerator.generateUid());
 		}
 
+		public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+		}
+
+		public void removeFlowExecutionSnapshot(FlowExecution execution) {
+		}
+
+		public void updateFlowExecutionSnapshot(FlowExecution execution) {
+		}
+
 		private static class SimpleFlowExecutionKey extends FlowExecutionKey {
 			private Serializable value;
 

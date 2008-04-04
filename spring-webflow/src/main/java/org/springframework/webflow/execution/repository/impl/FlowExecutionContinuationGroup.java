@@ -66,23 +66,20 @@ class FlowExecutionContinuationGroup implements Serializable {
 	/**
 	 * Returns the continuation with the provided <code>id</code>, or <code>null</code> if no such continuation
 	 * exists with that id.
-	 * @param id the continuation id
+	 * @param continuationId the continuation id
 	 * @return the continuation
 	 * @throws ContinuationNotFoundException if the id does not match a continuation in this group
 	 */
-	public FlowExecutionContinuation get(Serializable id) throws ContinuationNotFoundException {
-		FlowExecutionContinuation continuation = (FlowExecutionContinuation) continuations.get(id);
+	public FlowExecutionContinuation get(Serializable continuationId) throws ContinuationNotFoundException {
+		FlowExecutionContinuation continuation = (FlowExecutionContinuation) continuations.get(continuationId);
 		if (continuation == null) {
-			throw new ContinuationNotFoundException(id);
+			throw new ContinuationNotFoundException(continuationId);
 		}
 		return continuation;
 	}
 
 	/**
 	 * Add a flow execution continuation with given id to this group.
-	 * 
-	 * TODO add listener methods 1. continuationAdded(ConversationId conversationId, FlowExecutionContinuation
-	 * continuation) 2. maxContinuationsReached(ConversationId conversationId)
 	 * @param continuationId the continuation id
 	 * @param continuation the continuation
 	 */
@@ -100,6 +97,37 @@ class FlowExecutionContinuationGroup implements Serializable {
 	}
 
 	/**
+	 * Update the continuation with the given id.
+	 * @param continuationId the continuation id
+	 * @param continuation thew new continuation
+	 * @throws ContinuationNotFoundException if there was no previous continuation to update
+	 */
+	public void updateContinuation(Serializable continuationId, FlowExecutionContinuation continuation)
+			throws ContinuationNotFoundException {
+		if (!continuations.containsKey(continuationId)) {
+			throw new ContinuationNotFoundException(continuationId);
+		}
+		continuations.put(continuationId, continuation);
+	}
+
+	/**
+	 * Remove the continuation with the given id.
+	 * @param continuationId the continuation id
+	 */
+	public void removeContinuation(Serializable continuationId) {
+		continuations.remove(continuationId);
+		continuationIds.remove(continuationId);
+	}
+
+	/**
+	 * Remove all continuations in this group.
+	 */
+	public void removeAllContinuations() {
+		continuations.clear();
+		continuationIds.clear();
+	}
+
+	/**
 	 * Has the maximum number of allowed continuations in this group been exceeded?
 	 */
 	private boolean maxExceeded() {
@@ -112,4 +140,5 @@ class FlowExecutionContinuationGroup implements Serializable {
 	private void removeOldestContinuation() {
 		continuations.remove(continuationIds.removeFirst());
 	}
+
 }

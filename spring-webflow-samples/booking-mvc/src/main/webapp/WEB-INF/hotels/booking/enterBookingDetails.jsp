@@ -45,7 +45,6 @@
 				<label for="checkinDate">Check In Date:</label>
 			</div>
 			<div class="input">
-				<form:errors path="checkinDate" cssClass="errors"/>
 				<form:input path="checkinDate"/>
 			</div>
 		</div>
@@ -54,7 +53,6 @@
 				<label for="checkoutDate">Check Out Date:</label>
 			</div>
 			<div class="input">
-				<form:errors path="checkoutDate" cssClass="errors"/>
 				<form:input path="checkoutDate"/>
 			</div>
 		</div>
@@ -84,7 +82,6 @@
 				<label for="creditCard">Credit Card #:</label>
 			</div>
 			<div class="input">
-				<form:errors path="creditCard" cssClass="errors"/>
 				<form:input id="creditCard" path="creditCard"/>
 			</div>
 		</div>
@@ -93,7 +90,6 @@
 				<label for="creditCardName">Credit Card Name:</label>
 			</div>
 			<div class="input">
-				<form:errors path="creditCardName" cssClass="errors"/>
 				<form:input id="creditCardName" path="creditCardName"/>
 			</div>
 		</div>

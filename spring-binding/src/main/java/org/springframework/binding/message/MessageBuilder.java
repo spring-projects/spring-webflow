@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.core.style.ToStringCreator;
 
 /**
  * A convenient builder for building {@link MessageResolver} objects programmatically. Often used by model code such as
@@ -170,41 +170,7 @@ public class MessageBuilder {
 		}
 		String[] codesArray = (String[]) codes.toArray(new String[codes.size()]);
 		Object[] argsArray = args.toArray(new Object[args.size()]);
-		return new BuiltMessageResolver(source, codesArray, severity, argsArray, defaultText);
-	}
-
-	private static class BuiltMessageResolver implements MessageResolver, MessageSourceResolvable {
-		private Object source;
-		private String[] codes;
-		private Severity severity;
-		private Object[] args;
-		private String defaultText;
-
-		public BuiltMessageResolver(Object source, String[] codes, Severity severity, Object[] args, String defaultText) {
-			this.source = source;
-			this.codes = codes;
-			this.severity = severity;
-			this.args = args;
-			this.defaultText = defaultText;
-		}
-
-		public Message resolveMessage(MessageSource messageSource, Locale locale) {
-			return new Message(source, messageSource.getMessage(this, locale), severity);
-		}
-
-		// implementing MessageSourceResolver
-
-		public String[] getCodes() {
-			return codes;
-		}
-
-		public Object[] getArguments() {
-			return args;
-		}
-
-		public String getDefaultMessage() {
-			return defaultText;
-		}
+		return new DefaultMessageResolver(source, codesArray, severity, argsArray, defaultText);
 	}
 
 	private static class ResolvableArgument implements MessageSourceResolvable {
@@ -225,6 +191,10 @@ public class MessageBuilder {
 
 		public String getDefaultMessage() {
 			return arg.toString();
+		}
+
+		public String toString() {
+			return new ToStringCreator(this).append("arg", arg).toString();
 		}
 
 	}

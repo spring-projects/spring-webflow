@@ -18,7 +18,6 @@ package org.springframework.webflow.engine.builder;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -37,7 +36,7 @@ public interface ViewFactoryCreator {
 	 * @return the view factory
 	 */
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, ResourceLoader resourceLoader);
+			FormatterRegistry formatterRegistry);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.

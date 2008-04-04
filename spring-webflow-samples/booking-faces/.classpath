@@ -7,5 +7,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.easymock/easymock/easymock-2.3.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

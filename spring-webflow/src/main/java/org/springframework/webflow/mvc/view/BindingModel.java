@@ -16,6 +16,9 @@ import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.Severity;
+import org.springframework.util.Assert;
+import org.springframework.validation.AbstractErrors;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
@@ -29,7 +32,9 @@ import org.springframework.validation.ObjectError;
  * 
  * @author Keith Donald
  */
-public class BindingModel extends ViewRenderingErrors {
+public class BindingModel extends AbstractErrors {
+
+	private String objectName;
 
 	private Object boundObject;
 
@@ -43,13 +48,17 @@ public class BindingModel extends ViewRenderingErrors {
 
 	/**
 	 * Creates a new Spring Binding model.
+	 * @param objectName the name of the bound model object
 	 * @param boundObject the bound model object
 	 * @param expressionParser the expression parser used to access model object properties
 	 * @param formatterRegistry the formatter registry used to access formatters for formatting properties
 	 * @param messageContext the message context containing flow messages to display
 	 */
-	public BindingModel(Object boundObject, ExpressionParser expressionParser, FormatterRegistry formatterRegistry,
-			MessageContext messageContext) {
+	public BindingModel(String objectName, Object boundObject, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry, MessageContext messageContext) {
+		Assert.hasText(objectName, "The object name is required");
+		Assert.notNull(boundObject, "The bound object instance is required");
+		this.objectName = objectName;
 		this.boundObject = boundObject;
 		this.expressionParser = expressionParser;
 		this.formatterRegistry = formatterRegistry;
@@ -94,6 +103,12 @@ public class BindingModel extends ViewRenderingErrors {
 		return getFormattedValue(parseFieldExpression(field));
 	}
 
+	// not typically used by mvc views, but implemented to be on the safe side
+
+	public List getFieldErrors() {
+		return toErrors(messageContext.getMessagesByCriteria(new FieldErrorMessage()));
+	}
+
 	// internal helpers
 
 	private Expression parseFieldExpression(String field) {
@@ -126,10 +141,9 @@ public class BindingModel extends ViewRenderingErrors {
 		for (int i = 0; i < messages.length; i++) {
 			Message message = messages[i];
 			if (message.getSource() == null) {
-				errors.add(new ObjectError("boundObject", null, null, message.getText()));
+				errors.add(new ObjectError(objectName, message.getText()));
 			} else {
-				errors.add(new FieldError("boundObject", (String) message.getSource(), null, false, null, null, message
-						.getText()));
+				errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
 			}
 		}
 		return errors;
@@ -167,13 +181,36 @@ public class BindingModel extends ViewRenderingErrors {
 	private static class FieldErrorMessage implements MessageCriteria {
 		private String field;
 
+		public FieldErrorMessage() {
+		}
+
 		public FieldErrorMessage(String field) {
 			this.field = field;
 		}
 
 		public boolean test(Message message) {
-			return field.equals(message.getSource()) && message.getSeverity() == Severity.ERROR;
+			if (field != null) {
+				return field.equals(message.getSource()) && message.getSeverity() == Severity.ERROR;
+			} else {
+				return message.getSource() != null && message.getSeverity() == Severity.ERROR;
+			}
 		}
+	}
+
+	public String getObjectName() {
+		return objectName;
+	}
+
+	public void addAllErrors(Errors errors) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
 }

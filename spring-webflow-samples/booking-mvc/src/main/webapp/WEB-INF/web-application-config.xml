@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:web="http://www.springframework.org/schema/webflow-config"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
@@ -48,18 +48,18 @@
 	</bean>
 	
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
-	<web:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<web:flow-execution-listeners>
-			<web:listener ref="jpaFlowExecutionListener" criteria="*" />
-			<web:listener ref="securityFlowExecutionListener" criteria="*" />
-		</web:flow-execution-listeners>
-	</web:flow-executor>
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="jpaFlowExecutionListener" criteria="*" />
+			<webflow:listener ref="securityFlowExecutionListener" criteria="*" />
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
 
 	<!-- The registry of executable flow definitions -->	
-	<web:flow-registry id="flowRegistry">
-		<web:flow-location path="WEB-INF/hotels/booking/booking.xml" />
-	</web:flow-registry>
-	
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location path="/WEB-INF/hotels/booking/booking.xml" />
+	</webflow:flow-registry>
+
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
 		<constructor-arg ref="entityManagerFactory" />

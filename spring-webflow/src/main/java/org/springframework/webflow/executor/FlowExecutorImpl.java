@@ -105,8 +105,8 @@ public class FlowExecutorImpl implements FlowExecutor {
 
 	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
 			throws FlowException {
-		ExternalContextHolder.setExternalContext(context);
 		try {
+			ExternalContextHolder.setExternalContext(context);
 			FlowDefinition flowDefinition = definitionLocator.getFlowDefinition(flowId);
 			FlowExecution flowExecution = executionFactory.createFlowExecution(flowDefinition);
 			flowExecution.start(input, context);
