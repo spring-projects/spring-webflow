@@ -52,7 +52,10 @@ public class RequestContextELResolver extends ELResolver {
 	}
 
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
-		return Object.class;
+		if (base == null) {
+			return RequestContext.class;
+		}
+		return null;
 	}
 
 	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {

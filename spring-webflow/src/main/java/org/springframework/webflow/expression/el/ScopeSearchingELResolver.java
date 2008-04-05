@@ -48,7 +48,11 @@ public class ScopeSearchingELResolver extends ELResolver {
 	}
 
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
-		return Object.class;
+		if (base == null) {
+			return Object.class;
+		} else {
+			return null;
+		}
 	}
 
 	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {

@@ -65,7 +65,11 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public Class getCommonPropertyType(ELContext context, Object base) {
-		return Object.class;
+		if (base == null) {
+			return Object.class;
+		} else {
+			return null;
+		}
 	}
 
 	public Iterator getFeatureDescriptors(ELContext context, Object base) {

@@ -21,8 +21,6 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
 
@@ -37,10 +35,12 @@ import org.springframework.webflow.execution.Action;
  */
 public class ActionMethodELResolver extends ELResolver {
 
-	private static final Log logger = LogFactory.getLog(ActionMethodELResolver.class);
-
 	public Class getCommonPropertyType(ELContext elContext, Object base) {
-		return Action.class;
+		if (base instanceof Action) {
+			return String.class;
+		} else {
+			return null;
+		}
 	}
 
 	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {
