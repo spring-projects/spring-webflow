@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -28,8 +29,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.expression.SetValueAttempt;
-import org.springframework.util.Assert;
 
 /**
  * Evaluates a parsed Ognl expression.
@@ -84,22 +85,19 @@ class OgnlExpression implements Expression {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
 			return Ognl.getValue(expression, evaluationContext, context, expectedResultType);
+		} catch (NoSuchPropertyException e) {
+			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
 		} catch (OgnlException e) {
-			if (e.getReason() != null && e.getReason() != e) {
-				// unwrap the OgnlException since the actual exception is wrapped inside it
-				// and there is not generic (getCause) way to get to it later on
-				throw new EvaluationException(new EvaluationAttempt(this, context), e.getReason());
-			} else {
-				throw new EvaluationException(new EvaluationAttempt(this, context), e);
-			}
+			throw new EvaluationException(new EvaluationAttempt(this, context), e);
 		}
 	}
 
 	public void setValue(Object context, Object value) {
-		Assert.notNull(context, "The context to set the provided value in is required");
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
 			Ognl.setValue(expression, evaluationContext, context, value);
+		} catch (NoSuchPropertyException e) {
+			throw new PropertyNotFoundException(new SetValueAttempt(this, context, value), e);
 		} catch (OgnlException e) {
 			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
 		}
@@ -107,6 +105,7 @@ class OgnlExpression implements Expression {
 
 	public Class getValueType(Object context) {
 		try {
+			// OGNL has no native way to get this information
 			return new BeanWrapperImpl(context).getPropertyDescriptor(expressionString).getPropertyType();
 		} catch (BeansException e) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), e);
