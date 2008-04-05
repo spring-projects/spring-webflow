@@ -42,10 +42,10 @@
 		<dependency org="org.jboss" name="jboss-common-core" rev="2.0.4.GA" conf="compile->default"/>
 		<dependency org="org.jboss" name="javassist" rev="3.3.ga" conf="compile->default"/>
 		<dependency org="org.ognl" name="ognl" rev="2.6.9" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-aop" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-jdbc" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-orm" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-tx" rev="2.5.2" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-aop" rev="2.5.3" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-jdbc" rev="2.5.3" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-orm" rev="2.5.3" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-tx" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.springframework.security" name="spring-security-core" rev="2.0.0.m2"/>
 		<dependency org="org.springframework.security" name="spring-security-taglibs" rev="2.0.0.m2"/>
  		<dependency org="org.springframework.webflow" name="spring-js" rev="latest.integration" conf="compile->compile"/>
@@ -61,7 +61,7 @@
 		<!-- test-time only dependencies -->
 		<dependency org="org.junit" name="junit" rev="3.8.2" conf="test->default"/>
 		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default" />	
-		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default"/>
+		<dependency org="org.springframework" name="spring-test" rev="2.5.3" conf="test->default"/>
 	</dependencies>
 
 </ivy-module>
