@@ -27,7 +27,6 @@
         width: 100%;
         margin: 10px 0 0 0;
         padding: 0 0 0 0;
-        text-align: none;
     }
     
     #welcome {
@@ -60,7 +59,9 @@
     	margin-bottom: 5px;
     }
     
-    #content.spring input[type="submit"], input[type="button"], button {
+    #content.spring input[type="submit"],
+    #content.spring input[type="button"], 
+    #content.spring button {
 		font-weight: bold;
 		color: #fff;
 		height: 20px;
@@ -134,7 +135,8 @@
 		text-align: right;
 	}
 	
-	#content .buttonGroup input[type="submit"], .buttonGroup input[type="button"] {
+	#content .buttonGroup input[type="submit"],
+	#content .buttonGroup input[type="button"] {
 		margin-right: 5px;
 	}
 	

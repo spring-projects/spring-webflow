@@ -33,7 +33,7 @@
 			<div class="field">
 				<div class="label">User:</div>
 				<div class="output">
-					<input type="text" name="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if>>
+					<input type="text" name="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 				</div>
 			</div>
 			<div class="field">
@@ -45,7 +45,7 @@
 			<div class="field">
 				<div class="label">Don't ask for my password for two weeks:</div>
 				<div class="output">
-					<input type="checkbox" name="_spring_security_remember_me"> 
+					<input type="checkbox" name="_spring_security_remember_me" /> 
 				</div>
 			</div>
 		</fieldset>
