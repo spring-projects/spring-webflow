@@ -1,7 +1,6 @@
 package org.springframework.webflow.samples.booking;
 
 import org.easymock.EasyMock;
-import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -28,7 +27,6 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
     @Override
     protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 	builderContext.registerBean("bookingService", bookingService);
-	builderContext.getFlowBuilderServices().setConversionService(new FacesConversionService());
     }
 
     public void testStartBookingFlow() {
