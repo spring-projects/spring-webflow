@@ -19,7 +19,7 @@
 		<li>Managed persistence contexts with the Java Persistence API (JPA)</li>
 		<li>Unified Expression Language (EL) integration</li>
 		<li>Spring Security integration</li>
-		<li>Declarative page authoring with JSP, JSTL, and Spring MVC's form tag library
+		<li>Declarative page authoring with JSP, JSTL, and Spring MVC's form tag library</li>
 		<li>Applying reusable page layouts with Tiles</li>
 		<li>Exception handling support across all layers of the application</li>
 		<li>Spring IDE tooling integration, with support for graphical flow modeling and visualization</li>
