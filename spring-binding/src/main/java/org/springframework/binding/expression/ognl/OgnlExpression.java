@@ -23,6 +23,8 @@ import java.util.Map;
 import ognl.Ognl;
 import ognl.OgnlException;
 
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.BeansException;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -105,13 +107,8 @@ class OgnlExpression implements Expression {
 
 	public Class getValueType(Object context) {
 		try {
-			if (Ognl.isSimpleProperty(expression)) {
-				// TODO
-				throw new UnsupportedOperationException("Not yet implemented - in progress");
-			} else {
-				return null;
-			}
-		} catch (OgnlException e) {
+			return new BeanWrapperImpl(context).getPropertyDescriptor(expressionString).getPropertyType();
+		} catch (BeansException e) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), e);
 		}
 	}

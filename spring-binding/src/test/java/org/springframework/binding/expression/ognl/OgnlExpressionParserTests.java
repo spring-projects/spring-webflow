@@ -123,7 +123,9 @@ public class OgnlExpressionParserTests extends TestCase {
 
 		// maps
 		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
-		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new FluentParserContext().template());
+		parser
+				.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new FluentParserContext()
+						.template());
 		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
 		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}",
 				new FluentParserContext().template());
@@ -135,22 +137,28 @@ public class OgnlExpressionParserTests extends TestCase {
 	}
 
 	public void testVariables() {
-		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable("var",
-				"flag")));
+		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable(
+				"var", "flag")));
 		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
 
 	public void testVariablesWithCoersion() {
-		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable("var",
-				"number", new FluentParserContext().expectResult(Long.class))));
+		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable(
+				"var", "number", new FluentParserContext().expectResult(Long.class))));
 		assertEquals(new Long(0), exp.getValue(bean));
 	}
 
 	public void testNestedVariablesWithTemplates() {
-		Expression exp = parser.parseExpression("#var", new FluentParserContext()
-				.variable(new ExpressionVariable("var", "${flag}${#var}", new FluentParserContext().template().variable(
+		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable(
+				"var", "${flag}${#var}", new FluentParserContext().template().variable(
 						new ExpressionVariable("var", "number")))));
 		assertEquals("false0", exp.getValue(bean));
+	}
+
+	public void testGetValueType() {
+		String exp = "flag";
+		Expression e = parser.parseExpression(exp, null);
+		assertEquals(boolean.class, e.getValueType(bean));
 	}
 
 }
