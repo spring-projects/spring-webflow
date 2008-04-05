@@ -160,22 +160,26 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	protected ModelAndView defaultHandleFlowOutcome(String flowId, String outcome, AttributeMap endedOutput,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// by default, just start the flow over passing the output as input
-		if (logger.isDebugEnabled()) {
-			logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+		if (!response.isCommitted()) {
+			// by default, just start the flow over passing the output as input
+			if (logger.isDebugEnabled()) {
+				logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+			}
+			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, endedOutput, request));
 		}
-		response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, endedOutput, request));
 		return null;
 	}
 
 	protected ModelAndView defaultHandleFlowException(String flowId, FlowException e, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+			if (!response.isCommitted()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+				}
+				// by default, attempt to restart the flow
+				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
 			}
-			// by default, attempt to restart the flow
-			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
 			return null;
 		} else {
 			throw e;
@@ -234,7 +238,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			String targetUrl) throws IOException {
 		if (context.isAjaxRequest()) {
 			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context.isAjaxRequest());
-		} else {
+		} else if (!response.isCommitted()) {
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
 	}
