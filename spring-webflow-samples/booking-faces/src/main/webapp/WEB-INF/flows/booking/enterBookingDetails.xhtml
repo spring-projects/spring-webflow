@@ -10,8 +10,12 @@
 
 <div class="section">
 	<h2>Book Hotel</h2>
+	<ui:fragment id="messagesFragment">
+		<div id="messages">
+			<h:messages errorClass="errors" />
+		</div>
+	</ui:fragment>
 	<h:form id="booking">
-	<h:messages errorClass="errors" />
 	<fieldset>
 		<div class="field">
 			<div class="label">Name:</div>
@@ -120,9 +124,9 @@
 		</div>
 		<div class="buttonGroup">
 			<sf:validateAllOnClick>
-				<h:commandButton id="proceed" action="proceed" value="Proceed"/>&#160;
+				<sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/>&#160;
 			</sf:validateAllOnClick>
-			<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
+			<sf:commandButton id="cancel" value="Cancel" action="cancel"/>
 		</div>		
 	</fieldset>
 	</h:form>

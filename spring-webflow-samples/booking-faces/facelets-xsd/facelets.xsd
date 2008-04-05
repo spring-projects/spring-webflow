@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Compiled by Mark A. Ziesemer, http://www.ziesemer.com + 2008-03-25 -->
+<!-- Compiled from https://facelets.dev.java.net/nonav/docs/dev/docbook.html (1.0.0) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://java.sun.com/jsf/facelets" elementFormDefault="qualified" version="1.0" xml:lang="en">
+	<xs:element name="component">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="id">
+				<xs:annotation>
+					<xs:documentation>A unique id may be provided, otherwise Facelets will automatically assign one under the same logic it uses for all UIComponents.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="binding">
+				<xs:annotation>
+					<xs:documentation><![CDATA[This binding attribute is used the same as with any other UIComponent such that it allows you to reference them as a property of a JavaBean. If that target property did not have a UIComponent instance assigned already, JavaServer Faces will lazily create an instance for you and set it on your JavaBean before continuing with building the tree.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="composition">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="template">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The resolvable URI of the template to use. The content within the composition tag will be used in populating the template specified.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="debug">
+		<xs:complexType>
+			<xs:attribute name="hotkey">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The hot key to use in combination with 'CTRL' + 'SHIFT' to launch the debug window. By default, when the debug tag is used, you may launch the debug window with 'CTRL' + 'SHIFT' + 'D'. This value cannot be an EL expression.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="decorate">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="template" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The resolvable URI of the template to use. The content within the decorate tag will be used in populating the template specified.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="define">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="name" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The literal name for this definition. This name will match up with a <ui:insert/> tag in a target template.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fragment">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="id">
+				<xs:annotation>
+					<xs:documentation><![CDATA[A unique id may be provided, otherwise Facelets will automatically assign one under the same logic it uses for all UIComponents.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="binding">
+				<xs:annotation>
+					<xs:documentation><![CDATA[This binding attribute is used the same as with any other UIComponent such that it allows you to reference them as a property of a JavaBean. If that target property did not have a UIComponent instance assigned already, JavaServer Faces will lazily create an instance for you and set it on your JavaBean before continuing with building the tree.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="include">
+		<xs:complexType>
+			<xs:attribute name="src" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[A literal or EL expression that specifies the target Facelet that you would like to include into your document.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="insert">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="name">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The optional name attribute matches the associated <ui:define/> tag in this template's client. If no name is specified, it's expected that the whole template client will be inserted.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:attribute name="name" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The name of the variable to pass to the included Facelet.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="value" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The literal or EL expression value to assign to the named variable.]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="remove">
+		<xs:annotation>
+			<xs:documentation><![CDATA[The remove tag does not have any attributes and is used to remove chunks of XML content from a Facelet at compilation time.]]></xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="repeat">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:any processContents="lax"/>
+			</xs:choice>
+			<xs:attribute name="value" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[Expression for the List of items to iterate over]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="var" use="required">
+				<xs:annotation>
+					<xs:documentation><![CDATA[The literal name of the variable to use while iterating]]></xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

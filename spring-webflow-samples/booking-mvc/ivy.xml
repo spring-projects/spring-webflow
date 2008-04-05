@@ -44,6 +44,7 @@
 		<dependency org="org.springframework.security" name="spring-security-taglibs" rev="2.0.0.m2"/>
 		<dependency org="org.springframework.webflow" name="spring-faces" rev="latest.integration" conf="compile->compile"/>
 		<dependency org="org.springframework.webflow" name="spring-webflow" rev="latest.integration" conf="compile->compile"/>
+		<dependency org="org.springframework.webflow" name="spring-js" rev="latest.integration" conf="compile->compile"/>
 
 		<!-- build-time only dependencies -->
 		<dependency	org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default"/>

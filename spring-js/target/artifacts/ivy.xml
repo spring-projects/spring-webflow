@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://ivyrep.jayasoft.org/ivy-doc.xsl"?>
+<ivy-module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd" version="1.3">
+
+	<info organisation="org.springframework.webflow" module="spring-js" revision="2.0.0.build-20080404235321" status="integration" publication="20080404235321">
+		<license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+		<ivyauthor name="Jeremy Grelle"/>
+	</info>
+
+	<configurations>
+		<conf name="compile" visibility="public" extends="aspects" description="Maven compile dependencies"/>
+		<conf name="optional" visibility="public" description="Maven optional dependencies"/>
+		<conf name="provided" visibility="public" description="Maven provided dependencies"/>
+		<conf name="runtime" visibility="public" description="Runtime dependencies"/>
+		<conf name="test" visibility="private" description="Test dependencies"/>
+		<conf name="aspects" visibility="private" description="Aspects to be woven"/>
+		<conf name="external" visibility="private" description="External candidates to be woven"/>
+	</configurations>
+
+	<publications>
+		<artifact name="spring-js"/>
+		<artifact name="spring-js-sources" type="src" ext="jar"/>
+	</publications>
+
+	<dependencies>
+		<!-- global dependencies -->
+		<dependency org="org.apache" name="commons-logging" rev="1.1.1" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-core" rev="2.5.2" conf="compile->default"/>
+
+		<!-- build time only dependencies -->
+		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default"/>
+    	
+		<!-- test dependencies -->
+		<dependency org="org.junit" name="junit" rev="3.8.2" conf="test->default"/>
+		<dependency org="org.apache.logging" name="log4j" rev="1.2.15" conf="test->default"/>
+		<dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>
+		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default"/>
+		
+	</dependencies>
+
+</ivy-module>
