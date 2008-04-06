@@ -10,7 +10,7 @@
 		</para>
 	</sect1>
 	<sect1 id="flow-overview">
-		<title>What is a Flow?</title>
+		<title>What is a flow?</title>
 		<para>
 			A flow encapsulates a reusable sequence of steps that can execute in different contexts.
 			Below is a <ulink url="http://www.jjg.net/ia/visvocab/">Garrett Information Architecture</ulink> diagram illustrating a reference to a flow that encapsulates the steps of a hotel booking process:
@@ -28,12 +28,12 @@
 		</mediaobject>
 	</sect1>
 	<sect1 id="flow-makeup">
-		<title>What is the makeup of a typical Flow?</title>
+		<title>What is the makeup of a typical flow?</title>
 		<para>
 			In Spring Web Flow, a flow consists of a series of steps called "states".
-			Entering a state typically results in a page being displayed to the user.
-			On the page, user events occur that are handled by that state.
-			These events can trigger transitions to other states which result in page navigations.
+			Entering a state typically results in a view being displayed to the user.
+			On that view, user events occur that are handled by the state.
+			These events can trigger transitions to other states which result in view navigations.
 		</para>
 		<para>
 			The example below shows the structure of the book hotel flow referenced in the previous diagram:
@@ -51,22 +51,23 @@
 		</mediaobject>		
 	</sect1>
 	<sect1 id="flow-authoring">
-		<title>How are Flows authored?</title>
+		<title>How are flows authored?</title>
 		<para>
 			Flows are authored by web application developers using a simple XML-based flow definition language.
 			The next steps of this guide will walk you through the elements of this language.
 		</para>
 	</sect1>
 	<sect1 id="flow-element">
-		<title>The root &lt;flow&gt; element</title>
+		<title>The root flow element</title>
 		<para>
 			Every flow begins with the following root element:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
 &lt;/flow&gt;
 		</programlisting>
@@ -76,41 +77,40 @@
 		</para>
 	</sect1>
 	<sect1 id="view-state-element">
-		<title>The &lt;view-state&gt; element</title>
+		<title>The view-state element</title>
 		<para>
-			Use the view-state element to define a step of the flow that renders a page:
+			Use the <code>view-state</code> element to define a step of the flow that renders a view:
 		</para>
-		<programlisting>
-    &lt;view-state id="enterBookingDetails" /&gt;
+		<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" /&gt;
 		</programlisting>
 		<para>
-			By convention, a view-state maps its id to a page template in the
-			directory where the flow is located.  For example, the state above might
-			render from /WEB-INF/booking/enterBookingDetails.xhtml.
+			By convention, a view-state maps its id to a view template in the directory where the flow is located.
+			For example, the state above might render from <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename>.
 		</para>
 	</sect1>
 	<sect1 id="transition-element">
-		<title>The &lt;transition&gt; element</title>
+		<title>The transition element</title>
 		<para>
-			Use the transition element to handle events that occur within a state:
+			Use the <code>transition</code> element to handle events that occur within a state:
 		</para>
-		<programlisting>
-    &lt;view-state id="enterBookingDetails"&gt;
-    	&lt;transition on="submit" to="reviewBooking" /&gt;
-    	&lt;transition on="cancel" to="bookingCancelled" /&gt;
-    &lt;/view-state&gt;
+		<programlisting language="xml">
+&lt;view-state id="enterBookingDetails"&gt;
+    &lt;transition on="submit" to="reviewBooking" /&gt;
+    &lt;transition on="cancel" to="bookingCancelled" /&gt;
+&lt;/view-state&gt;
 		</programlisting>
 		<para>
-			These transitions drive page navigations.
+			These transitions drive view navigations.
 		</para>
 	</sect1>
 	<sect1 id="end-state-element">
-		<title>The &lt;end-state&gt; element</title>
+		<title>The end-state element</title>
 		<para>
-			Use the end-state element to define a flow outcome.
+			Use the <code>end-state</code> element to define a flow outcome:
 		</para>
-		<programlisting>
-    &lt;end-state id="bookingAuthorized" /&gt;
+		<programlisting language="xml">
+&lt;end-state id="bookingConfirmed" /&gt;
 		</programlisting>
 		<para>
 			When a flow transitions to a end-state it terminates and the outcome is returned.
@@ -119,17 +119,18 @@
 	<sect1 id="checkpoint-essential-flow-elements">
 		<title>Checkpoint - Essential flow elements</title>
 		<para>		
-			With the three elements &lt;view-state&gt;, &lt;transition&gt;, and &lt;end-state&gt;, you can rapidly express your page navigation logic.
+			With the three elements <code>view-state</code>, <code>transitio</code>, and <code>end-state</code>, you can quickly express your view navigation logic.
 			Teams often do this before adding flow behaviors so they can focus on developing the user interface of the application with end users first.
-			Below is a sample flow that implements its page navigation logic using these elements and initially contains no additional behavior:
+			Below is a sample flow that implements its view navigation logic using these elements and initially contains no additional behavior:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
     &lt;view-state id="enterBookingDetails"&gt;
-        &lt;transition on="proceed" to="reviewBooking" /&gt;
+        &lt;transition on="submit" to="reviewBooking" /&gt;
         &lt;transition on="cancel" to="bookingCancelled" /&gt;
     &lt;/view-state&gt;
 	
@@ -149,7 +150,7 @@
 	<sect1 id="flow-actions">
 		<title>Flow actions</title>
 		<para>
-			Most flows need to express more than just page navigation logic.
+			Most flows need to express more than just view navigation logic.
 			Typically they also need to invoke business services of the application or other actions.
 		</para>
 		<para>
@@ -157,6 +158,7 @@
 			<itemizedlist>
 				<listitem><para>On flow start</para></listitem>
 				<listitem><para>On state entry</para></listitem>
+				<listitem><para>On view render</para></listitem>
 				<listitem><para>On transition execution</para></listitem>
 				<listitem><para>On state exit</para></listitem>
 				<listitem><para>On flow end</para></listitem>
@@ -168,26 +170,26 @@
 		</para>
 	</sect1>
 	<sect1 id="evaluate-element">
-		<title>The &lt;evaluate&gt; action element</title>
+		<title>The evaluate element</title>
 		<para>
-			The action element you will use the most often is the &lt;evaluate&gt; element.
-			Use the evaluate element to execute an action expression at a point within your flow.
+			The action element you will use the most often is the <code>evaluate</code> element.
+			Use the <code>evaluate</code> element to execute an action expression at a point within your flow.
 			With this single tag you can invoke methods on Spring beans or any other flow variable.
 			For example:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;evaluate expression="entityManager.persist(booking)" /&gt;		
 		</programlisting>
 		<para>
-			If the expression returns a value, that value can be saved in the flow's data model called "flow scope":
+			If the expression returns a value, that value can be saved in the flow's data model called <code>flowScope</code>:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" /&gt;		
 		</programlisting>
 		<para>
-			If the expression returns a value that may need to be converted, specify the expected type using the result-type attribute:
+			If the expression returns a value that may need to be converted, specify the desired type using the <code>result-type</code> attribute:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" result-type="dataModel"/&gt;		
 		</programlisting>
 	</sect1>
@@ -196,22 +198,20 @@
 		<para>		
 			Now review the sample booking flow with actions added:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
 
-    &lt;input name="hotelId" value="flowScope.hotelId" /&gt;
+    &lt;input name="hotelId" /&gt;
 
     &lt;on-start&gt;
-        &lt;evaluate expression="bookingService.findHotelById(hotelId)" result="flowScope.hotel" /&gt;
-        &lt;evaluate expression="hotel.createBooking(bookingService.findUser(currentUser.name))" result="flowScope.booking" /&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
     &lt;/on-start&gt;
 
     &lt;view-state id="enterBookingDetails"&gt;
-        &lt;transition on="submit" to="reviewBooking"&gt;
-            &lt;evaluate expression="booking.validate(messageContext)" /&gt;
-        &lt;/transition&gt;
+        &lt;transition on="submit" to="reviewBooking" /&gt;
         &lt;transition on="cancel" to="bookingCancelled" /&gt;
     &lt;/view-state&gt;
 	
@@ -227,25 +227,129 @@
 		
 &lt;/flow&gt;		
 		</programlisting>
+		<para>
+			This flow now creates Booking object in flow scope when it starts.
+			The id of the hotel to book is obtained from a flow input attribute.
+		</para>
 	</sect1>
+	<sect1 id="flow-inputoutput">
+		<title>The flow input/output contract</title>
+		<para>
+			Each flow has a well-defined input/output contract.
+			Flows can be passed input attributes when they start, and can return output attributes when they end.
+			In this respect, calling a flow is conceptually similar to calling a method with the following signature:
+		</para>
+		<programlisting language="java">
+FlowOutcome flowId(Map&lt;String, Object&gt; inputAttributes);
+		</programlisting>
+		<para>
+			... where a <code>FlowOutcome</code> has the following signature:
+		</para>
+		<programlisting language="java">
+public interface FlowOutcome {
+   public String getName();		        
+   public Map&lt;String, Object&gt; getOutputAttributes();
+}
+		</programlisting>
+	</sect1>
+	<sect1 id="input-mapping">
+		<title>The input element</title>
+		<para>
+			Use the input element to declare a flow input attribute:
+		</para>
+		<programlisting language="xml">
+&lt;input name="hotelId" /&gt;
+		</programlisting>
+		<para>
+			Input values are saved in flow scope under the name of the attribute.
+			For example, the input above would be saved under the name <code>hotelId</code>.
+		</para>
+		<para>
+			Use the <code>type</code> attribute to declare the input attribute's type:
+		</para>
+		<programlisting language="xml">
+&lt;input name="hotelId" type="long" /&gt;
+		</programlisting>
+		<para>
+			If an input value does not match the declared type, a type conversion will be attempted.
+		</para>
+		<para>
+			Use the <code>value</code> attribute to denote a specific expression to assign the input value to:
+		</para>
+		<programlisting language="xml">
+&lt;input name="hotelId" type="long" value="flowScope.hotelId" /&gt;
+		</programlisting>
+		<para>
+			If the expression's value type can be determined, that information will be used for type coersion
+			if no <code>type</code> attribute is specified.
+		</para>
+		<para>
+			Use the required attribute to enforce the input is not null or empty:
+		</para>
+		<programlisting language="xml">
+&lt;input name="hotelId" type="long" value="flowScope.hotelId" required="true" /&gt;
+		</programlisting>		
+	</sect1>
+	<sect1 id="output-mapping">
+		<title>The output element</title>
+		<para>
+			Use the <code>output</code> element to declare a flow output attribute.
+			Output attributes are declared with the end-state that creates the flow outcome.
+		</para>
+		<programlisting language="xml">
+&lt;end-state&gt;
+    &lt;output name="bookingId" /&gt;  
+&lt;/end-state&gt;
+		</programlisting>
+		<para>
+			Output values are obtained from flow scope under the name of the attribute.
+			For example, the output above would be assigned the value of the <code>bookingId</code> variable.
+		</para>
+		<para>
+			Use the <code>value</code> attribute to denote a specific output value expression:
+		</para>
+		<programlisting language="xml">
+&lt;output name="bookingId" value="booking.id" /&gt;  
+		</programlisting>
+	</sect1>
+	<sect1 id="calling-subflows">
+		<title>Calling subflows</title>
+		<para>
+			A flow may call another flow as a subflow.  The flow will wait until the subflow returns before responding to its outcome.
+		</para>
+	</sect1>
+	<sect1 id="subflow-state-element">
+		<title>The subflow-state element</title>
+		<para>
+			Use the <code>subflow-state</code> element to call another flow:
+		</para>
+		<programlisting language="xml">
+&lt;subflow-state id="addGuest"&gt;
+    &lt;transition on="guestAdded" to="reviewBooking" &gt;
+        &lt;evaluate expression="booking.guests.add(guest)"/>    
+    &lt;transition /&gt;
+    &lt;transition on="cancel" to="reviewBooking" /&gt;
+&lt;/subfow-state&gt;
+		</programlisting>		
+	</sect1>	
 	<sect1 id="simple-event-handlers">
 		<title>Transitions without target states</title>
 		<para>
 			Transitions without targets can also be defined:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;transition on="event"&gt;
     &lt;-- Handle event --&gt;
 &lt;/transition&gt;
 		</programlisting>
 		<para>
 			Such transitions are event handlers that do not change the state of the flow.
-			They simply execute their actions and re-render the current page or a subset of the current page.
+			They simply execute their actions and re-render the current view or a subset of the current view.
 		</para>
 		<para>
 			Below is a realistic example of two transitions that handle Ajax events to page through a search results list:
 		</para>
-		<programlisting>
+		<programlisting language="xml">
 &lt;view-state id="searchResults"&gt;
     &lt;transition on="next"&gt;
         &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
