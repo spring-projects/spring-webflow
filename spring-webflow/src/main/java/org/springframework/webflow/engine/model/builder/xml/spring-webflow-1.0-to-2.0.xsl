@@ -27,6 +27,7 @@
                     <xsl:value-of select="webflow:start-state/@idref"/>
                 </xsl:attribute>
             </xsl:if>
+            <xsl:text>&#xA;</xsl:text>
             <xsl:apply-templates select="*"/>
         </xsl:element>
     </xsl:template>
@@ -67,6 +68,7 @@
             </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:attribute">
@@ -153,12 +155,14 @@
             </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:end-actions">
         <xsl:element name="on-end" namespace="http://www.springframework.org/schema/webflow">
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:end-state">
@@ -175,6 +179,7 @@
             </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:entry-actions">
@@ -221,6 +226,7 @@
                 </xsl:attribute>
             </xsl:if>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:exit-actions">
@@ -233,6 +239,7 @@
         <xsl:element name="global-transitions" namespace="http://www.springframework.org/schema/webflow">
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:if">
@@ -266,6 +273,7 @@
                 <xsl:value-of select="@resource"/>
             </xsl:attribute>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:inline-flow">
@@ -274,6 +282,7 @@
             <!-- Convert the content of the inline-flow to make pulling it out easier.  This will not validate against the schema. -->
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:input-attribute">
@@ -306,6 +315,9 @@
             </xsl:element>
         </xsl:for-each>
         <xsl:apply-templates select="webflow:input-attribute"/>
+        <xsl:if test="local-name(..) = 'flow'">
+            <xsl:text>&#xA;</xsl:text>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="webflow:mapping">
@@ -390,6 +402,9 @@
             </xsl:element>
         </xsl:for-each>
         <xsl:apply-templates select="webflow:output-attribute"/>
+        <xsl:if test="local-name(..) = 'flow'">
+            <xsl:text>&#xA;</xsl:text>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="webflow:render-actions">
@@ -432,6 +447,7 @@
         <xsl:element name="on-start" namespace="http://www.springframework.org/schema/webflow">
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:subflow-state">
@@ -453,6 +469,7 @@
             </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:transition">
@@ -501,6 +518,9 @@
         <xsl:if test="@scope = 'conversation'">
             <xsl:comment> WARNING: variables are always set into flow scope </xsl:comment>
         </xsl:if>
+        <xsl:if test="local-name(..) = 'flow'">
+            <xsl:text>&#xA;</xsl:text>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="webflow:view-state">
@@ -517,6 +537,7 @@
             </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
+        <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
 </xsl:stylesheet>
