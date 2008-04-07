@@ -5,6 +5,7 @@
 <!ENTITY overview SYSTEM "overview.xml">
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
+<!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
 ]>
 
 <book>
@@ -51,5 +52,6 @@
 	&overview;
 	&defining-flows;
 	&flow-security;
+	&flow-inheritance;
 	
 </book>

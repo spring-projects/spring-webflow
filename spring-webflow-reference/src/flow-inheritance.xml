@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="flow-inheritance">
+	<title>Flow Inheritance</title>
+	<sect1 id="flow-inheritance-introduction">
+		<title>Introduction</title>
+		<para>
+			Flow inheritance allows one flow to inherit the configuration of another flow.
+			Inheritance can occur at both the flow and state levels.
+			A common use case is for a parent flow to define global transitions and exception handlers, then each child flow can inherit those settings.
+		</para>
+		<para>
+			In order for a parent flow to be found, it must be added to the <code>flow-registry</code> just like any other flow.
+		</para>
+	</sect1>
+	<sect1 id="flow-inheritance-java-comparison">
+		<title>Is flow inheritance like Java inheritance?</title>
+		<para>
+			Flow inheritance is similar to Java inheritance in that elements defined in a parent are exposed via the child, however, there are key differences.
+		</para>
+		<para>
+			A child flow cannot override an element from a parent flow.
+			Similar elements between the parent and child flows will be merged.
+			Unique elements in the parent flow will be added to the child.
+		</para>
+		<para>
+			A child flow can inherit from multiple parent flows.
+			Java inheritance is limited to a single class.
+		</para>
+	</sect1>
+	<sect1 id="flow-inheritance-levels">
+		<title>Types of Flow Inheritance</title>
+		<sect2 id="flow-inheritance-level-flow">
+			<title>Flow level inheritance</title>
+			<para>
+				Flow level inheritance is defined by the <code>parent</code> attribute on the <code>flow</code> element.
+				The attribute contains a comma separated list of flow identifiers to inherit from.
+				The child flow will inherit from each parent in the order it is listed adding elements and content to the resulting flow.
+				The resulting flow from the first merge will be considered the child in the second merge, and so on.
+			</para>
+			<programlisting language="xml">
+&lt;flow parent="common-transitions, common-states"&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-inheritance-level-state">
+			<title>State level inheritance</title>
+			<para>
+				State level inheritance is similar to flow level inheritance, except only one state inherits from the parent, instead of the entire flow.
+			</para>
+			<para>
+				Unlike flow inheritance, only a single parent is allowed.
+				Additionally, the identifier of the flow state to inherit from must also be defined.
+				The identifiers for the flow and the state within that flow are separated by a #. 
+			</para>
+			<para>
+				The parent and child states must be of the same type.
+				For instance a view-state cannot inherit from an end-state, only another view-state.
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="child-state" parent="parent-flow#parent-view-state"&gt;
+			</programlisting>
+		</sect2>
+	</sect1>
+	<sect1 id="flow-inheritance-abstract">
+		<title>Abstract flows</title>
+		<para>
+			Often parent flows are not designed to be executed directly.
+			In order to protect these flow from running, they can be marked as <code>abstract</code>.
+			If an abstract flow attempts to run, a <code>FlowBuilderException</code> will be thrown.
+		</para>
+		<programlisting language="xml">
+&lt;flow abstract="true"&gt;
+		</programlisting>
+	</sect1>
+	<sect1 id="flow-inheritance-algorithm">
+		<title>Inheritance Algorithm</title>
+		<para>
+			When a child flow inherits from it's parent, essentially what happens is that the parent and child are merged together to create a new flow.
+			There are rules for every element in the Web Flow definition language that govern how that particular element is merged.
+		</para>
+		<para>
+			There are two types of elements mergable and non-mergeable.
+			Mergeable elements will always attempt to merge together if the elements are similar.
+			Non-mergeable elements in a parent or child flow will always be contained in the resulting flow intact.
+			They will not be modified as part of the merge process.
+		</para>
+		<sect2 id="flow-inheritance-algorithm-mergeable">
+			<title>Mergeable Elements</title>
+			<para>
+				If the elements are of the same type and the keyed attribute are identical, the content of the parent element will be merged with the child element.
+				The merge algorithm will continue to merge each sub-element of the merging parent and child.
+				Otherwise the parent element is added as a new element to the child. 
+			</para>
+			<para>
+				In most cases, elements from a parent flow that are added will be added after elements in the child flow.
+				Exceptions to this rule include actions elements (evaluate, render and set) which will be added at the beginning.
+				This allows for the results of parent actions to be used by child actions.
+			</para>
+			<para>
+				Mergeable elements are:
+				<itemizedlist>
+					<listitem>
+						<para>action-state: id</para>
+					</listitem>
+					<listitem>
+						<para>attribute: name</para>
+					</listitem>
+					<listitem>
+						<para>decision-state: id</para>
+					</listitem>
+					<listitem>
+						<para>end-state: id</para>
+					</listitem>
+					<listitem>
+						<para>flow: always merges</para>
+					</listitem>
+					<listitem>
+						<para>if: test</para>
+					</listitem>
+					<listitem>
+						<para>on-end: always merges</para>
+					</listitem>
+					<listitem>
+						<para>on-entry: always merges</para>
+					</listitem>
+					<listitem>
+						<para>on-exit: always merges</para>
+					</listitem>
+					<listitem>
+						<para>on-render: always merges</para>
+					</listitem>
+					<listitem>
+						<para>on-start: always merges</para>
+					</listitem>
+					<listitem>
+						<para>input: name</para>
+					</listitem>
+					<listitem>
+						<para>output: name</para>
+					</listitem>
+					<listitem>
+						<para>secured: attributes</para>
+					</listitem>
+					<listitem>
+						<para>subflow-state: id</para>
+					</listitem>
+					<listitem>
+						<para>transition: on</para>
+					</listitem>
+					<listitem>
+						<para>view-state: id</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2 id="flow-inheritance-nonmergeable">
+			<title>Non-mergeable Elements</title>
+			<para>
+				Non-mergeable elements are:
+				<itemizedlist>
+					<listitem>
+						<para>bean-import</para>
+					</listitem>
+					<listitem>
+						<para>evaluate</para>
+					</listitem>
+					<listitem>
+						<para>exception-handler</para>
+					</listitem>
+					<listitem>
+						<para>persistence-context</para>
+					</listitem>
+					<listitem>
+						<para>render</para>
+					</listitem>
+					<listitem>
+						<para>set</para>
+					</listitem>
+					<listitem>
+						<para>var</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+	</sect1>
+</chapter>
