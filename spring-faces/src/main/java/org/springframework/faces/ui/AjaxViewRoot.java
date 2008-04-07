@@ -180,6 +180,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 				String script = "dojo.byId('" + formId + "').action = '"
 						+ context.getApplication().getViewHandler().getActionURL(context, getViewId()) + "'";
 				writer.startElement("script", null);
+				writer.writeAttribute("type", "text/javascript", null);
 				writer.writeText(script, null);
 				writer.endElement("script");
 			}

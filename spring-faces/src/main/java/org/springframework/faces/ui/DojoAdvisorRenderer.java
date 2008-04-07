@@ -46,6 +46,7 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 		resourceHelper.renderDojoInclude(context, ((DojoAdvisor) component).getDojoComponentType());
 
 		writer.startElement(SCRIPT_ELEMENT, component);
+		writer.writeAttribute("type", "text/javascript", null);
 		StringBuffer script = new StringBuffer();
 		script.append("  Spring.advisors.push(new Spring.ValidatingFieldAdvisor({  ");
 		script.append("  targetElId : '" + advisedChild.getClientId(context) + "',  ");

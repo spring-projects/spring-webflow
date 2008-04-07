@@ -16,8 +16,6 @@
 package org.springframework.faces.ui;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -42,9 +40,7 @@ public class DojoRenderer extends SpringFacesRenderer {
 
 		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-		Map dojoAttributes = new HashMap();
-		dojoAttributes.put("djConfig", "parseOnLoad: true");
-		resourceHelper.renderScriptLink(context, dojoJsResourceUri, dojoAttributes);
+		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
 
 		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
 	}

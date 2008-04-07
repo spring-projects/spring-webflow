@@ -74,6 +74,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			// Now render the link's HTML into a javascript variable
 			ResponseWriter writer = context.getResponseWriter();
 			writer.startElement("script", component);
+			writer.writeAttribute("type", "text/javascript", null);
 			String scriptVarStart = "var " + component.getClientId(context).replaceAll(":", "_") + "_link = \"";
 			writer.writeText(scriptVarStart, null);
 			writer = new DoubleQuoteEscapingWriter(writer);

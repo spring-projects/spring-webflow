@@ -42,6 +42,7 @@ public class ValidateAllRenderer extends SpringFacesRenderer {
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
 		writer.startElement(SCRIPT_ELEMENT, component);
+		writer.writeAttribute("type", "text/javascript", null);
 		StringBuffer script = new StringBuffer();
 		script.append("Spring.advisors.push(new Spring.ValidateAllAdvisor({" + "event : 'onclick', " + "targetId : '"
 				+ advisedChild.getClientId(context) + "'}));");

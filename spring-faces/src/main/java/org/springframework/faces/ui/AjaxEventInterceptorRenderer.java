@@ -20,6 +20,7 @@ public class AjaxEventInterceptorRenderer extends DojoRenderer {
 
 		ResponseWriter writer = context.getResponseWriter();
 		writer.startElement("script", component);
+		writer.writeAttribute("type", "text/javascript", null);
 
 		String processIds = (String) component.getAttributes().get("processIds");
 		String renderIds = (String) component.getAttributes().get("renderIds");
