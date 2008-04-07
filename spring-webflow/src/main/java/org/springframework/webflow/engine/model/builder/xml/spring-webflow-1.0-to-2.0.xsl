@@ -102,6 +102,7 @@
                     <xsl:value-of select="@type"/>
                 </xsl:attribute>
             </xsl:if>
+            <xsl:apply-templates select="*"/>
         </xsl:element>
     </xsl:template>
     
@@ -502,7 +503,9 @@
     </xsl:template>
     
     <xsl:template match="webflow:value">
-        <xsl:value-of select="."/>
+        <xsl:element name="value" namespace="http://www.springframework.org/schema/webflow">
+            <xsl:value-of select="."/>
+        </xsl:element>
     </xsl:template>
     
     <xsl:template match="webflow:var">
