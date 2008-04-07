@@ -99,7 +99,6 @@
 			<programlisting language="xml">
 &lt;view-state id="enterBookingDetails"&gt;
     &lt;transition on="submit" to="reviewBooking" /&gt;
-    &lt;transition on="cancel" to="bookingCancelled" /&gt;
 &lt;/view-state&gt;
 			</programlisting>
 			<para>
@@ -133,7 +132,6 @@
 
     &lt;view-state id="enterBookingDetails"&gt;
         &lt;transition on="submit" to="reviewBooking" /&gt;
-        &lt;transition on="cancel" to="bookingCancelled" /&gt;
     &lt;/view-state&gt;
 	
     &lt;view-state id="reviewBooking"&gt;
@@ -259,7 +257,6 @@
 
     &lt;view-state id="enterBookingDetails"&gt;
         &lt;transition on="submit" to="reviewBooking" /&gt;
-        &lt;transition on="cancel" to="bookingCancelled" /&gt;
     &lt;/view-state&gt;
 	
     &lt;view-state id="reviewBooking"&gt;
@@ -349,7 +346,7 @@ public interface FlowOutcome {
 				Output attributes are declared within end-states that represent specific flow outcomes.
 			</para>
 			<programlisting language="xml">
-&lt;end-state&gt; id="bookingConfirmed";
+&lt;end-state id="bookingConfirmed"&gt;
     &lt;output name="bookingId" /&gt;  
 &lt;/end-state&gt;
 			</programlisting>
@@ -365,27 +362,154 @@ public interface FlowOutcome {
 &lt;output name="confirmationNumber" value="booking.confirmationNumber" /&gt;  
 				</programlisting>
 			</sect3>
-		</sect2>		
+		</sect2>
+		<sect2 id="checkpoint-input-output">
+			<title>Checkpoint: input/output mapping</title>
+			<para>		
+				Now review the sample booking flow with input/output mapping:
+			</para>
+			<programlisting language="xml">
+&lt;flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
+
+    &lt;input name="hotelId" /&gt;
+
+    &lt;on-start&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
+    &lt;/on-start&gt;
+
+    &lt;view-state id="enterBookingDetails"&gt;
+        &lt;transition on="submit" to="reviewBooking" /&gt;
+    &lt;/view-state&gt;
+	
+    &lt;view-state id="reviewBooking"&gt;
+        &lt;transition on="confirm" to="bookingConfirmed" /&gt;
+        &lt;transition on="revise" to="enterBookingDetails" /&gt;
+        &lt;transition on="cancel" to="bookingCancelled" /&gt;
+    &lt;/view-state&gt;
+	
+    &lt;end-state id="bookingConfirmed" &gt;
+        &lt;output name="bookingId" value="booking.id"/>
+    &lt;/end-state&gt;
+
+    &lt;end-state id="bookingCancelled" /&gt;
+		
+&lt;/flow&gt;		
+			</programlisting>		
+		</sect2>
+	</sect1>
+	<sect1 id="flow-variables">
+		<title>Variables</title>
+		<para>
+			A flow may declare one or more instance variables.
+			These variables are allocated when the flow starts.
+			Any @Autowired transient references the variable holds are also rewired when the flow resumes.
+		</para>
+		<para>
+			Use the <code>var</code> element to declare a flow variable:
+		</para>
+		<programlisting language="xml">
+&lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/>
+		</programlisting>
+		<para>
+			Make sure your variable's class implements <code>java.io.Serializable</code>, as the instance state is saved between flow requests.
+		</para>
 	</sect1>
 	<sect1 id="calling-subflows">
 		<title>Calling subflows</title>
 		<para>
-			A flow may call another flow as a subflow.  The flow will wait until the subflow returns before responding to its outcome.
+			A flow may call another flow as a subflow.  The flow will wait until the subflow returns, then respond to the subflow outcome.
 		</para>
 		<sect2 id="subflow-state-element">
 			<title>The subflow-state element</title>
 			<para>
-				Use the <code>subflow-state</code> element to call another flow:
+				Use the <code>subflow-state</code> element to call another flow as a subflow:
 			</para>
 			<programlisting language="xml">
-&lt;subflow-state id="addGuest"&gt;
-    &lt;transition on="guestAdded" to="reviewBooking" &gt;
-        &lt;evaluate expression="booking.guests.add(guest)"/>    
+&lt;subflow-state id="addGuest" subflow="createGuest"&gt;
+    &lt;transition on="guestCreated" to="reviewBooking"&gt;
+        &lt;evaluate expression="booking.guests.add(guest)"/>  
     &lt;transition /&gt;
-    &lt;transition on="cancel" to="reviewBooking" /&gt;
+    &lt;transition on="creationCancelled" to="reviewBooking" /&gt;
 &lt;/subfow-state&gt;
-			</programlisting>		
+			</programlisting>
+			<para>
+				The above example calls the <code>createGuest</code> flow, then waits for it to return.
+				When the flow returns with a <code>guestCreated</code> outcome, the new guest is added to the booking's guest list.
+			</para>
+			<sect3 id="subflow-state-element-input">
+				<title>Passing a subflow input</title>
+				<para>
+					Use the input element to pass input to the subflow:
+				</para>
+				<programlisting language="xml">
+&lt;subflow-state id="addGuest" subflow="createGuest"&gt;
+    &lt;input name="booking" /&gt;
+    &lt;transition to="reviewBooking" /&gt;
+&lt;/subfow-state&gt;
+				</programlisting>
+			</sect3>
+			<sect3 id="subflow-state-element-input">
+				<title>Mapping subflow output</title>
+				<para>
+					Simply refer to a subflow output attribute by its name within a outcome transition:
+				</para>
+				<programlisting language="xml">
+&lt;transition on="guestCreated" to="reviewBooking"&gt;
+    &lt;evaluate expression="booking.guests.add(guest)"/>  
+&lt;transition /&gt;
+				</programlisting>
+				<para>
+					In the above example, <code>guest</code> is the name of an output attribute returned by the <code>guestCreated</code> outcome.
+				</para>
+			</sect3>			
 		</sect2>
+		<sect2 id="checkpoint-input-output">
+			<title>Checkpoint: calling subflows</title>
+			<para>		
+				Now review the sample booking flow calling a subflow:
+			</para>
+			<programlisting language="xml">
+&lt;flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;
+
+    &lt;input name="hotelId" /&gt;
+
+    &lt;on-start&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
+    &lt;/on-start&gt;
+
+    &lt;view-state id="enterBookingDetails"&gt;
+        &lt;transition on="submit" to="reviewBooking" /&gt;
+    &lt;/view-state&gt;
+
+    &lt;view-state id="reviewBooking"&gt;
+        &lt;transition on="addGuest" to="addGuest" /&gt;
+        &lt;transition on="confirm" to="bookingConfirmed" /&gt;
+        &lt;transition on="revise" to="enterBookingDetails" /&gt;
+        &lt;transition on="cancel" to="bookingCancelled" /&gt;
+    &lt;/view-state&gt;
+
+    &lt;subflow-state id="addGuest" subflow="createGuest"&gt;
+        &lt;transition on="guestCreated" to="reviewBooking"&gt;
+            &lt;evaluate expression="booking.guests.add(guest)"/>  
+        &lt;transition /&gt;
+        &lt;transition on="creationCancelled" to="reviewBooking" /&gt;
+    &lt;/subfow-state&gt;
+		
+    &lt;end-state id="bookingConfirmed" &gt;
+        &lt;output name="bookingId" value="booking.id"/>
+    &lt;/end-state&gt;
+
+    &lt;end-state id="bookingCancelled" /&gt;
+		
+&lt;/flow&gt;		
+			</programlisting>		
+		</sect2>		
 	</sect1>
 	<sect1 id="simple-event-handlers">
 		<title>Transitions without target states</title>
