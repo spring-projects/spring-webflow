@@ -219,7 +219,7 @@
 &lt;set name="flowScope.selectedHotel" value="null" /&gt;		
 				</programlisting>
 			</sect3>
-			<sect3 id="set-element-null">
+			<sect3 id="set-element-literal">
 				<title>Assigning a literal value</title>
 				<para>
 					Enclose a value within tick marks to assign a literal:
@@ -228,7 +228,7 @@
 &lt;set name="flowScope.status" value="'Processing Order'" /&gt;		
 				</programlisting>
 			</sect3>
-			<sect3 id="evaluate-element-result-type">
+			<sect3 id="set-element-result-type">
 				<title>Converting a value prior to variable assignment</title>
 				<para>
 					Use the <literal>type</literal> attribute to specify a desired value type:
@@ -451,7 +451,7 @@ public interface FlowOutcome {
 &lt;/subfow-state&gt;
 				</programlisting>
 			</sect3>
-			<sect3 id="subflow-state-element-input">
+			<sect3 id="subflow-state-element-output">
 				<title>Mapping subflow output</title>
 				<para>
 					Simply refer to a subflow output attribute by its name within a outcome transition:
@@ -466,7 +466,7 @@ public interface FlowOutcome {
 				</para>
 			</sect3>			
 		</sect2>
-		<sect2 id="checkpoint-input-output">
+		<sect2 id="checkpoint-subflow">
 			<title>Checkpoint: calling subflows</title>
 			<para>		
 				Now review the sample booking flow calling a subflow:
