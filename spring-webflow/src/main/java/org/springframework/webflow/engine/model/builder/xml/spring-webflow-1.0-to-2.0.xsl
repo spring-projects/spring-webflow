@@ -131,6 +131,11 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
+                    <xsl:if test="not(webflow:method-result/@scope)">
+                        <xsl:text>request</xsl:text>
+                        <xsl:value-of select="$scopeSuffix"/>
+                        <xsl:text>.</xsl:text>
+                    </xsl:if>
                     <xsl:value-of select="webflow:method-result/@name"/>
                 </xsl:attribute>
             </xsl:if>
@@ -200,6 +205,11 @@
                 <xsl:attribute name="result">
                     <xsl:if test="webflow:evaluation-result/@scope">
                         <xsl:value-of select="webflow:evaluation-result/@scope"/>
+                        <xsl:value-of select="$scopeSuffix"/>
+                        <xsl:text>.</xsl:text>
+                    </xsl:if>
+                    <xsl:if test="not(webflow:evaluation-result/@scope)">
+                        <xsl:text>request</xsl:text>
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
