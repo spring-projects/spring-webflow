@@ -54,22 +54,6 @@
                     </xsl:attribute>
                 </xsl:element>
             </xsl:if>
-            <xsl:if test="@method = 'setupForm'">
-                <xsl:comment>
-                    <xsl:text> NOTE: Explicit calls to formAction.setupForm are no longer required.  Consider using &lt;view-state model="modelName"&gt; instead. </xsl:text>
-                </xsl:comment>
-                <xsl:text> </xsl:text>
-            </xsl:if>
-            <xsl:if test="@method = 'bind'">
-                <xsl:comment>
-                    <xsl:text> NOTE: Explicit calls to formAction.bind are no longer required.  Consider using &lt;view-state model="modelName"&gt; instead. </xsl:text>
-                </xsl:comment>
-            </xsl:if>
-            <xsl:if test="@method = 'bindAndValidate'">
-                <xsl:comment>
-                    <xsl:text> NOTE: Explicit calls to formAction.bindAndValidate are no longer required.  Consider using &lt;view-state model="modelName"&gt; instead. </xsl:text>
-                </xsl:comment>
-            </xsl:if>
             <xsl:apply-templates select="*"/>
         </xsl:element>
     </xsl:template>
@@ -225,16 +209,6 @@
                         <xsl:value-of select="@name"/>
                     </xsl:attribute>
                 </xsl:element>
-            </xsl:if>
-            <xsl:if test="contains(@expression,'setupForm')">
-                <xsl:comment>
-                    <xsl:text> NOTE: Explicit calls to formAction.setupForm are no longer required.  Consider using &lt;view-state model="modelName"&gt; instead. </xsl:text>
-                </xsl:comment>
-            </xsl:if>
-            <xsl:if test="contains(@expression,'bindAndValidate')">
-                <xsl:comment>
-                    <xsl:text> NOTE: Explicit calls to formAction.bindAndValidate are no longer required.  Consider using &lt;view-state model="modelName"&gt; instead. </xsl:text>
-                </xsl:comment>
             </xsl:if>
         </xsl:element>
     </xsl:template>
