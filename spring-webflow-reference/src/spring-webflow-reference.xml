@@ -4,6 +4,7 @@
 [
 <!ENTITY overview SYSTEM "overview.xml">
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
+<!ENTITY flow-security SYSTEM "flow-security.xml">
 ]>
 
 <book>
@@ -49,5 +50,6 @@
 	
 	&overview;
 	&defining-flows;
+	&flow-security;
 	
 </book>
