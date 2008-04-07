@@ -27,15 +27,13 @@ import javax.el.VariableMapper;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
-import org.springframework.util.ClassUtils;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.binding.expression.el.NullELResolver;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.expression.el.ActionMethodELResolver;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
 import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
-import org.springframework.webflow.expression.el.SpringSecurityELResolver;
 
 /**
  * A JSF-specific ExpressionParser that allows beans managed by either JSF, Spring, or Web Flow referenced in
@@ -48,7 +46,6 @@ public class JsfManagedBeanAwareELExpressionParser extends ELExpressionParser {
 	public JsfManagedBeanAwareELExpressionParser(ExpressionFactory expressionFactory) {
 		super(expressionFactory);
 		putContextFactory(RequestContext.class, new RequestContextELContextFactory());
-		putContextFactory(MutableAttributeMap.class, new AttributeMapELContextFactory());
 	}
 
 	private static class RequestContextELContextFactory implements ELContextFactory {
@@ -56,22 +53,13 @@ public class JsfManagedBeanAwareELExpressionParser extends ELExpressionParser {
 			RequestContext context = (RequestContext) target;
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver(context));
+			customResolvers.add(new NullELResolver());
 			customResolvers.add(new ImplicitFlowVariableELResolver(context));
 			customResolvers.add(new ScopeSearchingELResolver(context));
-			customResolvers.add(new ActionMethodELResolver());
-			if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
-				customResolvers.add(new SpringSecurityELResolver());
-			}
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
+			customResolvers.add(new ActionMethodELResolver());
 			customResolvers.add(new JsfManagedBeanResolver());
-			ELResolver resolver = new DefaultELResolver(target, customResolvers);
-			return new WebFlowELContext(resolver);
-		}
-	}
-
-	private static class AttributeMapELContextFactory implements ELContextFactory {
-		public ELContext getELContext(Object target) {
-			ELResolver resolver = new DefaultELResolver(target, null);
+			ELResolver resolver = new DefaultELResolver(null, customResolvers);
 			return new WebFlowELContext(resolver);
 		}
 	}

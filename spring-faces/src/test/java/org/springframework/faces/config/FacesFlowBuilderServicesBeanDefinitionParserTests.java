@@ -5,8 +5,8 @@ import junit.framework.TestCase;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JSFMockHelper;
-import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
+import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 

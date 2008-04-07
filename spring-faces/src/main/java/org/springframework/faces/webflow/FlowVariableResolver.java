@@ -19,11 +19,9 @@ import javax.el.CompositeELResolver;
 import javax.faces.el.VariableResolver;
 
 import org.springframework.faces.expression.ELDelegatingVariableResolver;
-import org.springframework.util.ClassUtils;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
-import org.springframework.webflow.expression.el.SpringSecurityELResolver;
 
 /**
  * For resolving flow request context variables with JSF 1.1 or >.
@@ -38,9 +36,6 @@ public class FlowVariableResolver extends ELDelegatingVariableResolver {
 		composite.add(new RequestContextELResolver());
 		composite.add(new ImplicitFlowVariableELResolver());
 		composite.add(new ScopeSearchingELResolver());
-		if (ClassUtils.isPresent("org.springframework.security.context.SecurityContextHolder")) {
-			composite.add(new SpringSecurityELResolver());
-		}
 	}
 
 	public FlowVariableResolver(VariableResolver nextResolver) {

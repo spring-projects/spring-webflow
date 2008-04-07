@@ -12,7 +12,7 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.apache.logging/log4j/log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.easymock/easymock/easymock-2.3.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-test/spring-test-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.2.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-test/spring-test-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
