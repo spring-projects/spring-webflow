@@ -69,7 +69,9 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	public void decide(SecurityRule rule, Object object) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ConfigAttributeDefinition config = new ConfigAttributeDefinition(getConfigAttributes(rule));
-		if (accessDecisionManager == null) {
+		if (accessDecisionManager != null) {
+			accessDecisionManager.decide(authentication, object, config);
+		} else {
 			AbstractAccessDecisionManager abstractAccessDecisionManager;
 			List voters = new ArrayList();
 			voters.add(new RoleVoter());
@@ -81,9 +83,8 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 				throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
 			}
 			abstractAccessDecisionManager.setDecisionVoters(voters);
-			accessDecisionManager = abstractAccessDecisionManager;
+			abstractAccessDecisionManager.decide(authentication, object, config);
 		}
-		accessDecisionManager.decide(authentication, object, config);
 	}
 
 	/**
