@@ -98,6 +98,16 @@
     </xsl:template>
     
     <xsl:template match="webflow:bean-action">
+        <xsl:if test="webflow:method-arguments/webflow:argument/@parameter-type">
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:comment>
+                <xsl:text> WARNING: parameter-type is no longer supported.  Use &lt;set name="temp" value="</xsl:text>
+                <xsl:value-of select="webflow:method-arguments/webflow:argument/@expression"/>
+                <xsl:text>" type="</xsl:text>
+                <xsl:value-of select="webflow:method-arguments/webflow:argument/@parameter-type"/>
+                <xsl:text>" /&gt; to convert the type before the evaluate action. </xsl:text>
+            </xsl:comment>
+        </xsl:if>
         <xsl:element name="evaluate" namespace="http://www.springframework.org/schema/webflow">
             <xsl:attribute name="expression">
                 <xsl:value-of select="@bean"/>
@@ -133,15 +143,6 @@
                         <xsl:value-of select="@name"/>
                     </xsl:attribute>
                 </xsl:element>
-            </xsl:if>
-            <xsl:if test="webflow:method-arguments/webflow:argument/@parameter-type">
-                <xsl:comment>
-                    <xsl:text> WARNING: parameter-type is no longer supported.  Use &lt;set name="temp" value="</xsl:text>
-                    <xsl:value-of select="webflow:method-arguments/webflow:argument/@expression"/>
-                    <xsl:text>" type="</xsl:text>
-                    <xsl:value-of select="webflow:method-arguments/webflow:argument/@parameter-type"/>
-                    <xsl:text>" /&gt; to convert the type before the evaluate action. </xsl:text>
-                </xsl:comment>
             </xsl:if>
         </xsl:element>
     </xsl:template>
@@ -278,6 +279,7 @@
     
     <xsl:template match="webflow:inline-flow">
         <xsl:element name="inline-flow" namespace="http://www.springframework.org/schema/webflow">
+            <xsl:text>&#xA;</xsl:text>
             <xsl:comment> WARNING: inline-flow is no longer supported.  Create a new top level flow. </xsl:comment>
             <!-- Convert the content of the inline-flow to make pulling it out easier.  This will not validate against the schema. -->
             <xsl:apply-templates select="*"/>
@@ -366,6 +368,7 @@
             </xsl:attribute>
         </xsl:if>
         <xsl:if test="@target-collection">
+            <xsl:text>&#xA;</xsl:text>
             <xsl:comment>
                 <xsl:text> WARNING: target-collection is no longer supported.  This will overwrite the entire collection. </xsl:text>
             </xsl:comment>
@@ -512,10 +515,12 @@
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@bean">
+                <xsl:text>&#xA;</xsl:text>
                 <xsl:comment> WARNING: the bean attribute is no longer supported </xsl:comment>
             </xsl:if>
         </xsl:element>
         <xsl:if test="@scope = 'conversation'">
+            <xsl:text>&#xA;</xsl:text>
             <xsl:comment> WARNING: variables are always set into flow scope </xsl:comment>
         </xsl:if>
         <xsl:if test="local-name(..) = 'flow'">
