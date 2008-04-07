@@ -38,6 +38,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * requestParameters
  * requestScope
  * flashScope
+ * viewScope
  * flowScope
  * conversationScope
  * messageContext
