@@ -7,6 +7,8 @@
 <!ENTITY el SYSTEM "el.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
+<!ENTITY upgrade-guide SYSTEM "upgrade-guide.xml">
+<!ENTITY flow-definition-field-mappings SYSTEM "flow-definition-field-mappings.xml">
 ]>
 
 <book>
@@ -70,5 +72,7 @@
 	&el;
 	&flow-security;
 	&flow-inheritance;
+	&upgrade-guide;
+	&flow-definition-field-mappings;
 	
 </book>
