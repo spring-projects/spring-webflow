@@ -4,6 +4,7 @@
 [
 <!ENTITY overview SYSTEM "overview.xml">
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
+<!ENTITY el SYSTEM "el.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
 ]>
@@ -18,22 +19,37 @@
 			<author>
 				<firstname>Keith</firstname>
 				<surname>Donald</surname>
+				<affiliation>
+					<orgname>SpringSource</orgname>
+				</affiliation>
 			</author>
 			<author>
 				<firstname>Erwin</firstname>
 				<surname>Vervaet</surname>
+				<affiliation>
+					<orgname>Ervacon</orgname>
+				</affiliation>
 			</author>
 			<author>
 				<firstname>Jeremy</firstname>
 				<surname>Grelle</surname>
+				<affiliation>
+					<orgname>SpringSource</orgname>
+				</affiliation>
 			</author>
 			<author>
 				<firstname>Scott</firstname>
 				<surname>Andrews</surname>
+				<affiliation>
+					<orgname>SpringSource</orgname>
+				</affiliation>
 			</author>
 			<author>
 				<firstname>Rossen</firstname>
 				<surname>Stoyanchev</surname>
+				<affiliation>
+					<orgname>SpringSource</orgname>
+				</affiliation>
 			</author>
 		</authorgroup>
 		<legalnotice>
@@ -51,6 +67,7 @@
 	
 	&overview;
 	&defining-flows;
+	&el;
 	&flow-security;
 	&flow-inheritance;
 	

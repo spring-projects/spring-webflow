@@ -60,7 +60,7 @@
 	<sect1 id="essential-flow-elements">
 		<title>Essential language elements</title>
 		<sect2 id="flow-element">
-			<title>The root flow element</title>
+			<title>flow</title>
 			<para>
 				Every flow begins with the following root element:
 			</para>
@@ -75,11 +75,11 @@
 			</programlisting>
 			<para>
 				All states of the flow are defined within this element.
-				The first state defined becomes the flow's starting point by default.
+				The first state defined becomes the flow's starting point.
 			</para>
 		</sect2>
 		<sect2 id="view-state-element">
-			<title>The view-state element</title>
+			<title>view-state</title>
 			<para>
 				Use the <code>view-state</code> element to define a step of the flow that renders a view:
 			</para>
@@ -88,11 +88,12 @@
 			</programlisting>
 			<para>
 				By convention, a view-state maps its id to a view template in the directory where the flow is located.
-				For example, the state above might render from <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename>.
+				For example, the state above might render <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename> 
+				if the flow itself was located in the <filename>/WEB-INF/hotels/booking</filename> directory.
 			</para>
 		</sect2>
 		<sect2 id="transition-element">
-			<title>The transition element</title>
+			<title>transition</title>
 			<para>
 				Use the <code>transition</code> element to handle events that occur within a state:
 			</para>
@@ -106,7 +107,7 @@
 			</para>
 		</sect2>
 		<sect2 id="end-state-element">
-			<title>The end-state element</title>
+			<title>end-state</title>
 			<para>
 				Use the <code>end-state</code> element to define a flow outcome:
 			</para>
@@ -167,10 +168,10 @@
 		</para>
 		<para>
 			Actions are defined using a concise expression language.  Spring Web Flow uses the Unified EL by default.
-			The next few sections will cover the language elements for defining actions.
+			The next few sections will cover the essential language elements for defining actions.
 		</para>
 		<sect2 id="evaluate-element">
-			<title>The evaluate element</title>
+			<title>evaluate</title>
 			<para>
 				The action element you will use the most often is the <code>evaluate</code> element.
 				Use the <code>evaluate</code> element to evaluate an expression at a point within your flow.
@@ -199,45 +200,6 @@
 				</programlisting>
 			</sect3>
 		</sect2>
-		<sect2 id="set-element">
-			<title>The set element</title>
-			<para>
-				Use the set element when you need to assign a flow variable:
-			</para>
-			<programlisting language="xml">
-&lt;set name="flowScope.selectedHotel" value="hotels.selectedRow" /&gt;		
-			</programlisting>
-			<para>
-				Both the name and value attributes are EL expressions.
-			</para>
-			<sect3 id="set-element-null">
-				<title>Assigning a null value</title>
-				<para>
-					Use the special <code>null</code> keyword to assign a variable to null:
-				</para>
-				<programlisting language="xml">
-&lt;set name="flowScope.selectedHotel" value="null" /&gt;		
-				</programlisting>
-			</sect3>
-			<sect3 id="set-element-literal">
-				<title>Assigning a literal value</title>
-				<para>
-					Enclose a value within tick marks to assign a literal:
-				</para>
-				<programlisting language="xml">
-&lt;set name="flowScope.status" value="'Processing Order'" /&gt;		
-				</programlisting>
-			</sect3>
-			<sect3 id="set-element-result-type">
-				<title>Converting a value prior to variable assignment</title>
-				<para>
-					Use the <literal>type</literal> attribute to specify a desired value type:
-				</para>
-				<programlisting language="xml">
-&lt;set name="flowScope.id" value="requestParameters.id" type="long" /&gt;		
-				</programlisting>
-			</sect3>
-		</sect2>		
 		<sect2 id="checkpoint-actions">
 			<title>Checkpoint: flow actions</title>
 			<para>		
@@ -272,7 +234,7 @@
 &lt;/flow&gt;		
 			</programlisting>
 			<para>
-				This flow now creates Booking object in flow scope when it starts.
+				This flow now creates a Booking object in flow scope when it starts.
 				The id of the hotel to book is obtained from a flow input attribute.
 			</para>
 		</sect2>		
@@ -297,7 +259,7 @@ public interface FlowOutcome {
 }
 		</programlisting>
 		<sect2 id="input-element">
-			<title>The input element</title>
+			<title>input</title>
 			<para>
 				Use the input element to declare a flow input attribute:
 			</para>
@@ -321,7 +283,7 @@ public interface FlowOutcome {
 			</sect3>
 			<sect3 id="input-element-value">
 				<para>
-					Use the <code>value</code> attribute to denote a specific expression to assign the input value to:
+					Use the <code>value</code> attribute to specify an expression to assign the input value to:
 				</para>
 				<programlisting language="xml">
 &lt;input name="hotelId" value="flowScope.myParameterObject.hotelId" /&gt;
@@ -340,7 +302,7 @@ public interface FlowOutcome {
 			</sect3>
 		</sect2>
 		<sect2 id="output-element">
-			<title>The output element</title>
+			<title>output</title>
 			<para>
 				Use the <code>output</code> element to declare a flow output attribute.
 				Output attributes are declared within end-states that represent specific flow outcomes.
@@ -407,15 +369,18 @@ public interface FlowOutcome {
 			These variables are allocated when the flow starts.
 			Any @Autowired transient references the variable holds are also rewired when the flow resumes.
 		</para>
-		<para>
-			Use the <code>var</code> element to declare a flow variable:
-		</para>
-		<programlisting language="xml">
+		<sect2 id="var-element">
+			<title>var</title>
+			<para>
+				Use the <code>var</code> element to declare a flow variable:
+			</para>
+			<programlisting language="xml">
 &lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/>
-		</programlisting>
-		<para>
-			Make sure your variable's class implements <code>java.io.Serializable</code>, as the instance state is saved between flow requests.
-		</para>
+			</programlisting>
+			<para>
+				Make sure your variable's class implements <code>java.io.Serializable</code>, as the instance state is saved between flow requests.
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 id="calling-subflows">
 		<title>Calling subflows</title>
@@ -423,14 +388,14 @@ public interface FlowOutcome {
 			A flow may call another flow as a subflow.  The flow will wait until the subflow returns, then respond to the subflow outcome.
 		</para>
 		<sect2 id="subflow-state-element">
-			<title>The subflow-state element</title>
+			<title>subflow-state</title>
 			<para>
 				Use the <code>subflow-state</code> element to call another flow as a subflow:
 			</para>
 			<programlisting language="xml">
 &lt;subflow-state id="addGuest" subflow="createGuest"&gt;
     &lt;transition on="guestCreated" to="reviewBooking"&gt;
-        &lt;evaluate expression="booking.guests.add(guest)"/>  
+        &lt;evaluate expression="booking.guests.add(currentEvent.guest)" /&gt;  
     &lt;transition /&gt;
     &lt;transition on="creationCancelled" to="reviewBooking" /&gt;
 &lt;/subfow-state&gt;
@@ -510,38 +475,5 @@ public interface FlowOutcome {
 &lt;/flow&gt;		
 			</programlisting>		
 		</sect2>		
-	</sect1>
-	<sect1 id="simple-event-handlers">
-		<title>Transitions without target states</title>
-		<para>
-			Transitions without targets can also be defined:
-		</para>
-		<programlisting language="xml">
-&lt;transition on="event"&gt;
-    &lt;-- Handle event --&gt;
-&lt;/transition&gt;
-		</programlisting>
-		<para>
-			Such transitions are event handlers that do not change the state of the flow.
-			They simply execute their actions and re-render the current view or a subset of the current view.
-		</para>
-		<para>
-			Below is a realistic example of two transitions that handle Ajax events to page through a search results list:
-		</para>
-		<programlisting language="xml">
-&lt;view-state id="searchResults"&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-        &lt;render fragments="hotels:resultsTable" /&gt;            
-    &lt;/transition&gt;
-    &lt;transition on="previous"&gt;
-        &lt;evaluate expression="searchCriteria.previousPage()" /&gt;
-        &lt;render fragments="hotels:resultsTable" /&gt;          
-    &lt;/transition&gt;
-&lt;/view-state&gt;
-		</programlisting>
-		<para>
-			These transitions change the current data-page, then request re-rendering of the hotels table fragment.
-		</para>
 	</sect1>
 </chapter>
