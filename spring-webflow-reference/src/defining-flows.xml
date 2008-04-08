@@ -359,7 +359,11 @@ public interface FlowOutcome {
     &lt;end-state id="bookingCancelled" /&gt;
 		
 &lt;/flow&gt;		
-			</programlisting>		
+			</programlisting>	
+			<para>
+				The flow now accepts a <code>hotelId</code> input attribute and returns a <code>bookingId</code> output attribute
+				when a new booking is confirmed.
+			</para>	
 		</sect2>
 	</sect1>
 	<sect1 id="flow-variables">
@@ -473,7 +477,10 @@ public interface FlowOutcome {
     &lt;end-state id="bookingCancelled" /&gt;
 		
 &lt;/flow&gt;		
-			</programlisting>		
+			</programlisting>
+			<para>
+				The flow now calls a <code>createGuest</code> subflow to add a new guest to the guest list.
+			</para>				
 		</sect2>		
 	</sect1>
 </chapter>

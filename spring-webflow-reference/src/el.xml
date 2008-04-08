@@ -51,7 +51,7 @@
 			<listitem><para>Resolving constructs such as state transition criteria, subflow ids, and view names.</para></listitem>
 		</orderedlist>
 		<para>
-			Views rendered by flows often access flow data structures using EL as well.
+			Views rendered by flows typically access flow data structures using EL as well.
 		</para>
 		<sect2 id="el-types">
 			<title>Expression Types</title>
@@ -81,7 +81,7 @@
 				<para>
 					The second type of expression is a "template" expression.
 					Such expressions allow a mixing of literal text with one or more eval blocks.
-					Each evaluateable block is explictly delimited with the <code>${}</code> delimiters.
+					Each eval block is explictly delimited with the <code>${}</code> delimiters.
 					For example:
 				</para>
 				<programlisting type="xml">
@@ -89,7 +89,7 @@
 				</programlisting>
 				<para>
 					The expression above is a template expression.
-					The result of evaluation will be a string that combines the literal text <code>error-</code> with the result of evaluating <code>externalContext.locale</code>.
+					The result of evaluation will be a string that concatenates the literal text <code>error-</code> with the result of evaluating <code>externalContext.locale</code>.
 					As you can see, explicit delimiters are necessary here to demarcate eval blocks within the template.
 				</para>
 			</sect3>
