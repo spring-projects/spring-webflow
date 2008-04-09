@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="el">
+	<title>Rendering Views</title>
+	<sect1 id="views-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to use the view-state element to render views within a flow.
+		</para>
+	</sect1>
+	<sect1 id="view-convention">
+		<title>view-state</title>
+		<para>
+			Use the <code>view-state</code> element to define a step of the flow that renders a view and waits for a user event to resume:
+		</para>
+		<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" &gt;
+    &lt;transition on="submit" to="reviewBooking" /&gt;
+&lt;/view-state&gt;
+		</programlisting>
+		<para>
+			By convention, a view-state maps its id to a view template in the directory where the flow is located.
+			For example, the state above might render <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename>
+			if the flow itself was located in the <filename>/WEB-INF/hotels/booking</filename> directory.
+		</para>
+		<para>
+			Below is a sample directory structure showing views and other resources like message bundles co-located with their flow definition:
+		</para>
+	</sect1>
+	<sect1 id="view-explicit">
+		<title>Explicit view ids</title>
+		<para>
+			Use the <code>view</code> attribute to explictly specify the id of the view to render.
+		</para>
+		<sect2 id="view-explicit-flowrelative">
+			<title>Flow relative view ids</title>
+			<para>
+				The view id may be a relative path to view resource in the flow's working directory:
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" view="bookingDetails.xhtml"&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="view-explicit-absolute">
+			<title>Absolute view ids</title>
+			<para>
+				The view id may be a absolute path to a view resource in the webapp root directory:
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml"&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="view-explicit-absolute">
+			<title>Logical view ids</title>
+			<para>
+				With some view frameworks, such as Spring MVC's view framework, the view id may also be a logical identifier resolved by the framework:
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" view="bookingDetails"&gt;
+			</programlisting>
+			<para>
+				See the Spring MVC integration section for more information on how to integrate with the MVC <code>ViewResolver</code> infrastructure.
+			</para>
+		</sect2>
+		<para>
+			A sample directory structure showing views and other resources co-located with their flow is shown below:
+		</para>
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
+			</imageobject>
+			<caption>
+				<para>Flow Packaging</para>
+			</caption>
+		</mediaobject>		
+	</sect1>
+	<sect1 id="view-scope">
+		<title>viewScope</title>
+		<para>
+			A view-state allocates a new <code>viewScope</code> when it enters.
+			This scope may be referenced within the view-state to assign variables that should live for the duration of the state.
+			This scope is useful for manipulating objects over a series of requests from the same view, often Ajax requests.
+			A view-state destroys its viewScope when it exits.
+		</para>
+		<sect2 id="view-scope-actions">
+			<title>Assigning a viewScope variable using an Action</title>
+			<para>
+				Variables are often assigned before the view renders:
+			</para>
+			<programlisting language="xml">
+&lt;on-render&gt;
+	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+&lt;/on-render&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="view-scope-actions">
+			<title>Using the var tag to allocate view variables</title>
+			<para>
+				Use the <code>var</code> tag to declare a view variable.
+				Like a flow variable, any @Autowired references are automatically restored when the view state resumes.
+			</para>
+			<programlisting language="xml">
+&lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" /&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="view-scope-ajax">
+			<title>Manipulating objects view scope</title>
+			<para>
+				Objects in view scope are often manipulated over a series of requests from the same view.
+				The following example illustrates paginiation through a search results list. 
+				The list is updated in view scope before each render.
+				Asynchronous event handlers modify the current data page, then request re-rendering of the search results fragment.
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="searchResults"&gt;
+    &lt;on-render&gt;
+	    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+    &lt;/on-render&gt;
+    &lt;transition on="next"&gt;
+        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+        &lt;render fragments="searchResultsTFragment" /&gt;            
+    &lt;/transition&gt;
+    &lt;transition on="previous"&gt;
+        &lt;evaluate expression="searchCriteria.previousPage()" /&gt;
+        &lt;render fragments="searchResultsFragment" /&gt;          
+    &lt;/transition&gt;
+&lt;/view-state&gt;
+			</programlisting>			
+		</sect2>
+	</sect1>
+	<sect1 id="view-on-render">
+		<title>on-render</title>
+		<para>
+			Use the <code>on-render</code> element to execute one or more actions before view rendering
+			Render actions are executed on the initial render as well as any subsequent refreshes, including any partial re-renderings of the view.
+		</para>
+		<programlisting language="xml">
+&lt;on-render&gt;
+    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+&lt;/on-render&gt;
+	    </programlisting>
+	</sect1>
+	<sect1 id="view-model">
+		<title>Model binding</title>
+		<para>
+			Use the <code>model</code> attribute to declare the model object the view binds to.
+			The following example declares the <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
+		</para>
+		<programlisting language="xml">
+&lt;view-state id="enterBookingDetails" model="booking"&gt;
+	    </programlisting>
+	    <para>		
+			The model may be in any accessible scope, such as <code>flowScope</code> or <code>viewScope</code>.
+			Specifying a <code>model</code> triggers the following behavior when a view event occurs:
+		</para>
+		<orderedlist>
+			<listitem><para>View-to-model binding.  On view postback, form values are bound to model object properties for you.</para></listitem>
+			<listitem><para>Model validation.  After binding, if the model object requires validation, that validation logic will be invoked.</para></listitem>
+		</orderedlist>
+		<para>
+			For a flow event to be generated that can drive a view state transition, model binding must complete successfully.
+			If model binding fails, the view is re-rendered to allow the user to revise their edits.
+		</para>
+		<para>
+			The exact model binding and validation semantics are a function of the view technology in use.
+			See the Spring MVC and Faces section for more information on MVC and JSF semantics, respectively.
+			Regardless of the view technology used, the flow definition metadata should not change.
+		</para>
+	</sect1>
+	<sect1 id="view-bind">
+		<title>bind</title>
+		<para>
+			Use the <code>bind</code> attribute to suppress model binding and validation for particular view events.
+		</para>
+		<programlisting language="xml">
+&lt;view-state id="enterBookingDetails"&gt;
+	&lt;transition on="proceed" to="reviewBooking"&gt;
+	&lt;transition on="cancel" to="bookingCancelled" bind="false" /&gt;
+&lt;/view-state&gt;
+		</programlisting>
+	</sect1>
+	<sect1 id="view-validate">
+		<title>Validation</title>
+		<para>
+			Model validation is driven by constraints specified against the model object.
+			These constraints may be specified declaratively, or enforced using a programmatic validation routine or external <code>Validator</code>.
+		</para>
+		<sect2 id="view-validation-programmatic">
+			<title>Programmatic validation</title>
+			<para>
+				There are two ways to perform model validation programatically.
+			</para>
+			<sect3 id="view-validation=programmatic-validate-method">
+				<title>Implementing a model validate method</title>
+				<para>
+					The first way has you define a validate method on the model object class.
+					To do this, create a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
+					The method must declare a <code>MessageContext</code> parameter for recording validation error messages.
+					For example:
+				</para>
+				<programlisting language="java">
+public void validateEnterBookingDetails(MessageContext context) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -1);
+    if (checkinDate.before(calendar.getTime())) {
+        context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
+            "Check in date must be a future date").build());
+    } else if (!checkinDate.before(checkoutDate)) {
+        context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
+            "Check out date must be later than check in date").build());
+    }
+}				
+				</programlisting>
+			</sect3>
+			<sect3 id="view-validation=programmatic-validator">
+				<title>Implementing a Validator</title>
+				<para>
+					The second way has you define a separate object, called a Validator, which validates your model object.
+					To do this, create a class that defines a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
+					The method must declare a <code>Object</code> parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
+					For example:
+				</para>
+				<programlisting language="java">
+public class BookingValidator {
+    public void validateEnterBookingDetails(Object object, MessageContext context) {
+        Booking booking = (Booking) object;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        if (booking.getCheckinDate().before(calendar.getTime())) {
+            context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
+                "Check in date must be a future date").build());
+        } else if (!booking.getCheckinDate().before(checkoutDate)) {
+            context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
+                "Check out date must be later than check in date").build());
+        }
+    }
+}				
+				</programlisting>
+				<para>
+					A Validator can also accept a Spring MVC <code>Errors</code> object, useful for invoking existing Spring Validators.
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+	<sect1 id="simple-event-handlers">
+		<title>Event handlers</title>
+		<para>
+			From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
+		</para>
+		<programlisting language="xml">
+&lt;transition on="event"&gt;
+    &lt;-- Handle event --&gt;
+&lt;/transition&gt;
+		</programlisting>
+		<para>
+			These event handlers do not change the state of the flow.
+			They simply execute their actions and re-render the current view or one or more fragments of the current view.
+		</para>
+		<sect2 id="event-handlers-render">
+			<title>render</title>
+			<para>
+				Use the <code>render</code> element to request partial re-rendering of a view after handling an event:
+			</para>
+			<programlisting language="xml">
+&lt;transition on="next"&gt;
+    &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+    &lt;render fragments="searchResultsTFragment" /&gt;            
+&lt;/transition&gt;			
+			</programlisting>
+		</sect2>
+	</sect1>
+	<sect1 id="view-popup">
+		<title>popup</title>
+		<para>
+			Use the <code>popup</code> attribute to indicate the view should be rendered in a model popup dialog:
+		</para>
+		<programlisting language="java">
+&lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;
+		</programlisting>
+		<para>
+			When using Web Flow with the Spring Javascript, no client side code is necessary for the popup to display.
+			Web Flow will send a response to the client requesting a redirect to the view from a popup, and the client will honor the request.
+		</para>
+	</sect1>
+</chapter>

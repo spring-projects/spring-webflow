@@ -5,8 +5,10 @@
 <!ENTITY overview SYSTEM "overview.xml">
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
 <!ENTITY el SYSTEM "el.xml">
+<!ENTITY views SYSTEM "views.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
+<!ENTITY spring-faces SYSTEM "spring-faces.xml">
 <!ENTITY upgrade-guide SYSTEM "upgrade-guide.xml">
 <!ENTITY flow-definition-field-mappings SYSTEM "flow-definition-field-mappings.xml">
 ]>
@@ -70,8 +72,10 @@
 	&overview;
 	&defining-flows;
 	&el;
+	&views;
 	&flow-security;
 	&flow-inheritance;
+	&spring-faces;
 	&upgrade-guide;
 	&flow-definition-field-mappings;
 	

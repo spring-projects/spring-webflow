@@ -5,31 +5,20 @@
     <sect1 id="spring-faces-introduction">
         <title>Introduction</title>
         <para>
-            Spring Faces is Spring's JSF integration module that ships with the Spring Web Flow 2.0 distribution and
-            aims to simplify the programming model for using JSF with Spring. It provides support for using JSF in a
-            Spring-centric environment using Spring MVC and Spring Web Flow for control flow and event handling.
+            Spring Faces is Spring's JSF integration module that simplifies using JSF with Spring.
+            It lets you use the JSF UI Component Model with Spring MVC and Spring Web Flow controllers.
         </para>
         <para>
-            It includes a lightweight Facelets component library that focuses on providing rich client-side behavior and
-            Ajax support through the use of progressive enhancement. The client-side functionality of the component
-            library is provided by Spring JavaScript, an integration layer that aims to be agnostic to the underlying
-            client-side JavaScript toolkit. Spring Faces also aims to ensure that other JSF component libraries
-            integrate smoothly with Spring Web Flow, for the cases where a more desktop-like UI is desired as opposed to
-            the lightweight approach of the Spring Faces components.
+            Spring Faces also includes a small Facelets component library that provides Ajax and client-side validation capabilities.
+            This component library builds on Spring Javascript, a Javascript abstraction framework that integrates Dojo as the underlying UI toolkit.
         </para>
     </sect1>
 
     <sect1 id="spring-faces-integration">
         <title>Spring-centric Integration Approach</title>
         <para>
-            Spring Faces aims to emphasize the strengths of JSF (i.e, its component model and EL binding) while
-            providing an alternative controller model that addresses many of its traditional weaknesses. Spring Faces
-            requests are routed through the Spring MVC DispatcherServlet instead of the FacesServlet, and the JSF
-            lifecycle is executed within the context of the current flow execution. Whereas pure JSF requests are
-            essentially driven by the current JSF view in a pull-oriented fashion, routing through the Spring
-            infrastructure allows for more flexible request processing with many well-defined extension points for
-            initialization and manipulation of the model and event-handling mechanisms that enable a reduced dependence
-            on the JSF API.
+        	Spring Faces combines the strengths of JSF, its UI component model, with the strengths of Spring, its controller and configuration model.
+        	This brings you all the strengths of JSF without any of the weaknesses.
         </para>
         <para>
             Spring Faces provides a powerful supplement to a number of the standard JSF facilities, including:
@@ -45,13 +34,13 @@
                 <listitem>Ajax partial page updates and full navigation</listitem>
                 <listitem>progressive enhancement and graceful degradation</listitem>
             </orderedlist>
+            
             Using these features will significantly reduce the amount of configuration required in faces-config.xml
             while providing a cleaner separation between the view and controller layer and better modularization of your
             application's functional responsibilities. These use of these features are outlined in the sections to
             follow. As the majority of these features build on the flow definition language of Spring Web Flow, it is
             assumed that you have an understanding of the foundations presented in
-            <link linkend="defining-flows">Defining Flows</link>
-            .
+            <link linkend="defining-flows">Defining Flows</link>.
         </para>
     </sect1>
     <sect1 id="spring-faces-managed-beans">
