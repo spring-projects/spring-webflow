@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
-       xmlns:faces="http://www.springframework.org/schema/faces-config"
+       xmlns:faces="http://www.springframework.org/schema/faces"
        xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
@@ -15,8 +15,8 @@
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
-           http://www.springframework.org/schema/faces-config
-           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd
+           http://www.springframework.org/schema/faces
+           http://www.springframework.org/schema/faces/spring-faces-2.0.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
