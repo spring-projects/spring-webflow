@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE webflow-upgrader [
+<!ENTITY stripEl "<xsl:if test='starts-with($stripElParam,$elPrefix)'><xsl:value-of select='substring-after(substring-before($stripElParam,$elSuffix),$elPrefix)'/></xsl:if><xsl:if test='not(starts-with($stripElParam,$elPrefix))'><xsl:value-of select='$stripElParam'/></xsl:if>">
+]>
 <xsl:stylesheet xmlns:webflow="http://www.springframework.org/schema/webflow" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
@@ -15,9 +18,14 @@
         <xsl:text>}</xsl:text>
     </xsl:variable>
     
+    <xsl:template match="comment()">
+        <xsl:text>&#xA;</xsl:text>
+        <xsl:comment><xsl:value-of select="."/></xsl:comment>
+    </xsl:template>
+    
     <xsl:template match="webflow:flow">
         <xsl:element name="flow" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:attribute namespace="http://www.w3.org/2001/XMLSchema-instance" name="schemaLocation">
+            <xsl:attribute name="schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">
                 <xsl:text>http://www.springframework.org/schema/webflow</xsl:text>
                 <xsl:text> </xsl:text>
                 <xsl:text>http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd</xsl:text>
@@ -28,7 +36,7 @@
                 </xsl:attribute>
             </xsl:if>
             <xsl:text>&#xA;</xsl:text>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
@@ -55,7 +63,7 @@
                     </xsl:attribute>
                 </xsl:element>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
@@ -66,7 +74,7 @@
                     <xsl:value-of select="@id"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -88,13 +96,13 @@
                     <xsl:value-of select="@type"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
     <xsl:template match="webflow:attribute-mapper">
         <!-- bean attribute handled in subflow-state -->
-        <xsl:apply-templates select="*"/>
+        <xsl:apply-templates select="*|comment()"/>
     </xsl:template>
     
     <xsl:template match="webflow:bean-action">
@@ -136,7 +144,10 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
-                    <xsl:value-of select="webflow:method-result/@name"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="webflow:method-result/@name"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@name">
@@ -159,14 +170,14 @@
                     <xsl:value-of select="@id"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:end-actions">
         <xsl:element name="on-end" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -183,14 +194,14 @@
                     <xsl:value-of select="@view"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
     
     <xsl:template match="webflow:entry-actions">
         <xsl:element name="on-entry" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
@@ -198,7 +209,10 @@
         <xsl:element name="evaluate" namespace="http://www.springframework.org/schema/webflow">
             <xsl:if test="@expression">
                 <xsl:attribute name="expression">
-                    <xsl:value-of select="@expression"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@expression"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="webflow:evaluation-result">
@@ -213,7 +227,10 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
-                    <xsl:value-of select="webflow:evaluation-result/@name"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="webflow:evaluation-result/@name"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@name">
@@ -242,13 +259,13 @@
     
     <xsl:template match="webflow:exit-actions">
         <xsl:element name="on-exit" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
     <xsl:template match="webflow:global-transitions">
         <xsl:element name="global-transitions" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -257,12 +274,10 @@
         <xsl:element name="if" namespace="http://www.springframework.org/schema/webflow">
             <xsl:if test="@test">
                 <xsl:attribute name="test">
-                    <xsl:if test="starts-with(@test,$elPrefix)">
-                        <xsl:value-of select="substring-after(substring-before(@test,$elSuffix),$elPrefix)"/>
-                    </xsl:if>
-                    <xsl:if test="not(starts-with(@test,$elPrefix))">
+                    <xsl:variable name="stripElParam">
                         <xsl:value-of select="@test"/>
-                    </xsl:if>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@then">
@@ -292,7 +307,7 @@
             <xsl:text>&#xA;</xsl:text>
             <xsl:comment> WARNING: inline-flow is no longer supported.  Create a new top level flow. </xsl:comment>
             <!-- Convert the content of the inline-flow to make pulling it out easier.  This will not validate against the schema. -->
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -301,14 +316,20 @@
         <xsl:element name="input" namespace="http://www.springframework.org/schema/webflow">
             <xsl:if test="@name">
                 <xsl:attribute name="name">
-                    <xsl:value-of select="@name"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@name"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
                 <xsl:if test="@scope">
                     <xsl:attribute name="value">
                         <xsl:value-of select="@scope"/>
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
-                        <xsl:value-of select="@name"/>
+                        <xsl:variable name="stripElParam">
+                            <xsl:value-of select="@name"/>
+                        </xsl:variable>
+                        &stripEl;
                     </xsl:attribute>
                 </xsl:if>
             </xsl:if>
@@ -336,34 +357,52 @@
         <xsl:if test="local-name(../..) = 'flow'">
             <xsl:if test="@source">
                 <xsl:attribute name="name">
-                    <xsl:value-of select="@source"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@source"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@target">
                 <xsl:attribute name="value">
-                    <xsl:value-of select="@target"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@target"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@target-collection">
                 <xsl:attribute name="value">
-                    <xsl:value-of select="@target-collection"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@target-collection"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
         </xsl:if>
         <xsl:if test="local-name(../..) != 'flow'">
             <xsl:if test="@target">
                 <xsl:attribute name="name">
-                    <xsl:value-of select="@target"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@target"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@target-collection">
                 <xsl:attribute name="name">
-                    <xsl:value-of select="@target-collection"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@target-collection"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@source">
                 <xsl:attribute name="value">
-                    <xsl:value-of select="@source"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@source"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
         </xsl:if>
@@ -389,14 +428,20 @@
         <xsl:element name="output" namespace="http://www.springframework.org/schema/webflow">
             <xsl:if test="@name">
                 <xsl:attribute name="name">
-                    <xsl:value-of select="@name"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@name"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
                 <xsl:if test="@scope">
                     <xsl:attribute name="value">
                         <xsl:value-of select="@scope"/>
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
-                        <xsl:value-of select="@name"/>
+                        <xsl:variable name="stripElParam">
+                            <xsl:value-of select="@name"/>
+                        </xsl:variable>
+                        &stripEl;
                     </xsl:attribute>
                 </xsl:if>
             </xsl:if>
@@ -422,7 +467,7 @@
     
     <xsl:template match="webflow:render-actions">
         <xsl:element name="on-render" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
@@ -435,12 +480,18 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
-                    <xsl:value-of select="@attribute"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@attribute"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@value">
                 <xsl:attribute name="value">
-                    <xsl:value-of select="@value"/>
+                    <xsl:variable name="stripElParam">
+                        <xsl:value-of select="@value"/>
+                    </xsl:variable>
+                    &stripEl;
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@name">
@@ -458,7 +509,7 @@
     
     <xsl:template match="webflow:start-actions">
         <xsl:element name="on-start" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -480,7 +531,7 @@
                     <xsl:value-of select="webflow:subflow-state/@bean"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
@@ -502,7 +553,7 @@
                     <xsl:value-of select="@to"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
     </xsl:template>
     
@@ -550,7 +601,7 @@
                     <xsl:value-of select="@view"/>
                 </xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|comment()"/>
         </xsl:element>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
