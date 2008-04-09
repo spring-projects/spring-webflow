@@ -13,7 +13,7 @@
 			</para>
 			<para>
 				The conversion tool requires spring-webflow.jar, spring-core.jar and an XSLT 1.0 engine.
-				<ulink url="http://xalan.apache.org/">Xalan</ulink> 2.7.1 or later is strongly recommended.
+				<ulink url="http://saxon.sourceforge.net/">Saxon 6.5.5</ulink> is recommended.
 			</para>
 			<para>
 				The tool can be run from the command line with the following command.
