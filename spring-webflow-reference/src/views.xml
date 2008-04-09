@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="el">
+<chapter id="views">
 	<title>Rendering Views</title>
 	<sect1 id="views-introduction">
 		<title>Introduction</title>
@@ -49,7 +49,7 @@
 &lt;view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml"&gt;
 			</programlisting>
 		</sect2>
-		<sect2 id="view-explicit-absolute">
+		<sect2 id="view-explicit-logical">
 			<title>Logical view ids</title>
 			<para>
 				With some view frameworks, such as Spring MVC's view framework, the view id may also be a logical identifier resolved by the framework:
@@ -95,7 +95,7 @@
 &lt;/on-render&gt;
 			</programlisting>
 		</sect2>
-		<sect2 id="view-scope-actions">
+		<sect2 id="view-scope-actions-var">
 			<title>Using the var tag to allocate view variables</title>
 			<para>
 				Use the <code>var</code> tag to declare a view variable.
