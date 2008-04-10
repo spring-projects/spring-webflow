@@ -25,6 +25,17 @@
 		<para>
 			Below is a sample directory structure showing views and other resources like message bundles co-located with their flow definition:
 		</para>
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
+			</imageobject>
+			<caption>
+				<para>Flow Packaging</para>
+			</caption>
+		</mediaobject>				
 	</sect1>
 	<sect1 id="view-explicit">
 		<title>Explicit view ids</title>
@@ -61,20 +72,6 @@
 				See the Spring MVC integration section for more information on how to integrate with the MVC <code>ViewResolver</code> infrastructure.
 			</para>
 		</sect2>
-		<para>
-			A sample directory structure showing views and other resources co-located with their flow is shown below:
-		</para>
-		<mediaobject>
-			<imageobject role="fo">
-				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
-			</imageobject>
-			<imageobject role="html">
-				<imagedata fileref="images/flow-view-packaging.png" format="PNG" align="center"/>
-			</imageobject>
-			<caption>
-				<para>Flow Packaging</para>
-			</caption>
-		</mediaobject>		
 	</sect1>
 	<sect1 id="view-scope">
 		<title>viewScope</title>
@@ -145,7 +142,7 @@
 	<sect1 id="view-model">
 		<title>Model binding</title>
 		<para>
-			Use the <code>model</code> attribute to declare the model object the view binds to.
+			Use the <code>model</code> attribute to declare a model object the view binds to.
 			The following example declares the <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
 		</para>
 		<programlisting language="xml">
@@ -266,7 +263,7 @@ public class BookingValidator {
 			<programlisting language="xml">
 &lt;transition on="next"&gt;
     &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-    &lt;render fragments="searchResultsTFragment" /&gt;            
+    &lt;render fragments="searchResultsFragment" /&gt;            
 &lt;/transition&gt;			
 			</programlisting>
 		</sect2>
