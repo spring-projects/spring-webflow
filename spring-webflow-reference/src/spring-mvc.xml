@@ -5,6 +5,108 @@
 		<title>Introduction</title>
 		<para>
 			This chapter shows you how to integrate Web Flow into a Spring MVC web application.
+			The <code>booking-mvc</code> sample application is a good reference for Spring MVC with Web Flow.
+			This application is a simplified travel site that allows users to search for and book hotel rooms.
 		</para>
+	</sect1>
+	<sect1 id="spring-mvc-config-web.xml">
+		<title>Configuring web.xml</title>
+		<para>
+			The first step to using Spring MVC is to route requests to the <code>DispatcherServlet</code> in the <code>web.xml</code> file.
+			In this example, we map all URLs that begin with <code>/spring/</code> to the servlet.
+			The servlet needs to be configured.
+			An <code>init-param</code> is used in the servlet to pass the <code>contextConfigLocation</code>.
+			This is the location of the Spring configuration for your application.
+		</para>
+		<programlisting language="xml"><![CDATA[
+<servlet>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<init-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/web-application-config.xml</param-value>
+	</init-param>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+	
+<servlet-mapping>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<url-pattern>/spring/*</url-pattern>
+</servlet-mapping>
+		]]></programlisting>
+	</sect1>
+	<sect1 id="spring-mvc-config-spring">
+		<title>Configuring Spring</title>
+		<sect2 id="spring-mvc-config-spring-url-mapping">
+			<title>URL Mapping</title>
+			<para>
+				Inside the <code>DispatcherServlet</code> request need to be mapped with finer grain.
+				Using a <code>SimpleUrlHandlerMapping</code> request URLs are mapped to controllers and handlers.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="mappings">
+		<value>
+			/hotels/booking=bookingFlowHandler
+		    /hotels/*=hotelsController
+		</value>
+	</property>
+</bean>
+			]]></programlisting>
+			<para>
+				For this example both a standard MVC controller and a Web Flow handler are configured.
+				The controller supports the free navigation aspects of searching and viewing hotels.
+				The flow handler supports the controlled navigation aspect of booking a hotel room.
+			</para>
+		</sect2>
+		<sect2 id="spring-mvc-config-spring-flow-adapters">
+			<title>Flow Adapters</title>
+			<para>
+				The recommended way to bridge Spring MVC requests to Web Flow is via a flow adapter.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
+			]]></programlisting>
+			<para>
+				The flow adapter provides hooks into the flow execution that can:
+				<itemizedlist>
+					<listitem>
+						<para>select the flow to execute (by default the flow id is inferred from the URL)</para>
+					</listitem>
+					<listitem>
+						<para>pass input parameters to the flow on initialization</para>
+					</listitem>
+					<listitem>
+						<para>handle the flow execution outcome</para>
+					</listitem>
+					<listitem>
+						<para>handle any exceptions</para>
+					</listitem>
+				</itemizedlist>
+				The <code>AbstractFlowHandler</code> class is an implementation of <code>FlowHandler</code> that provides default implementations for these hooks.
+			</para>
+			<para>
+				A common pattern to handle a flow outcome is to redirect to a new page instead of rendering a view in the <code>end-state</code>.
+				This allows the URL to be refreshed without throwing an exception.
+			</para>
+			<programlisting language="java"><![CDATA[
+public class BookingFlowHandler extends AbstractFlowHandler {
+	public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView(new RedirectView("/spring/hotels/index", true));
+	}
+}
+			]]></programlisting>
+		</sect2>
+		<sect2 id="spring-mvc-config-spring-flow-controllers">
+			<title>Flow Controllers</title>
+			<para>
+				Flow controllers provide a direct hook from Spring MVC into Web Flow.
+				The <code>FlowController</code> class is an implementation of an MVC Controller.
+			</para>
+			<para>
+				Web Flow 1.0 used controllers as the only way to hook Web Flow into Spring MVC.
+				In Web Flow 2.0 flow handler adapters are recommended instead of controllers as they provide much richer hooks into the web flow engine.
+			</para>
+		</sect2>
 	</sect1>
 </chapter>

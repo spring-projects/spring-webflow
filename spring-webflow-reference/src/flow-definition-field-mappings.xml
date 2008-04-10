@@ -612,7 +612,7 @@
 						name or value
 					</entry>
 					<entry colname="comments">
-						name when in flow element, value when in subflow-state element
+						value when in flow element, name when in subflow-state element
 					</entry>
 				</row>
 				<row>

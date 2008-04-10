@@ -292,7 +292,7 @@ context.addMessage(builder.warn().source("smoking").defaultText("Smoking is bad 
 context.addMessage(builder.info().defaultText("We have processed your reservation - thank you and enjoy your stay").build());			
 			</programlisting>
 		</sect2>
-		<sect2 id="plain-text-message">
+		<sect2 id="plain-text-message-intl">
 			<title>Adding internationalized messages</title>
 			<programlisting type="java">
 MessageContext context = ...
