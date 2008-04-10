@@ -82,7 +82,7 @@
 			A view-state destroys its viewScope when it exits.
 		</para>
 		<sect2 id="view-scope-actions">
-			<title>Assigning a viewScope variable using an Action</title>
+			<title>Assigning a viewScope variable using an action</title>
 			<para>
 				Variables are often assigned before the view renders:
 			</para>
@@ -93,7 +93,7 @@
 			</programlisting>
 		</sect2>
 		<sect2 id="view-scope-actions-var">
-			<title>Using the var tag to allocate view variables</title>
+			<title>Using the var element to allocate view variables</title>
 			<para>
 				Use the <code>var</code> tag to declare a view variable.
 				Like a flow variable, any @Autowired references are automatically restored when the view state resumes.
@@ -130,7 +130,7 @@
 	<sect1 id="view-on-render">
 		<title>on-render</title>
 		<para>
-			Use the <code>on-render</code> element to execute one or more actions before view rendering
+			Use the <code>on-render</code> element to execute one or more actions before view rendering.
 			Render actions are executed on the initial render as well as any subsequent refreshes, including any partial re-renderings of the view.
 		</para>
 		<programlisting language="xml">
@@ -143,6 +143,7 @@
 		<title>Model binding</title>
 		<para>
 			Use the <code>model</code> attribute to declare a model object the view binds to.
+			This attribute is typically used with views that render data controls, such as forms.
 			The following example declares the <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
 		</para>
 		<programlisting language="xml">
@@ -163,7 +164,7 @@
 		<para>
 			The exact model binding and validation semantics are a function of the view technology in use.
 			See the Spring MVC and Faces section for more information on MVC and JSF semantics, respectively.
-			Regardless of the view technology used, the flow definition metadata should not change.
+			Regardless of the view technology used, your flow should not change.
 		</para>
 	</sect1>
 	<sect1 id="view-bind">
@@ -192,7 +193,7 @@
 			<sect3 id="view-validation=programmatic-validate-method">
 				<title>Implementing a model validate method</title>
 				<para>
-					The first way has you define a validate method on the model object class.
+					The first way is to define a validate method on the model object class.
 					To do this, create a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
 					The method must declare a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
@@ -200,8 +201,7 @@
 				<programlisting language="java">
 public void validateEnterBookingDetails(MessageContext context) {
     Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    if (checkinDate.before(calendar.getTime())) {
+    if (checkinDate.before(today())) {
         context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
             "Check in date must be a future date").build());
     } else if (!checkinDate.before(checkoutDate)) {
@@ -214,7 +214,7 @@ public void validateEnterBookingDetails(MessageContext context) {
 			<sect3 id="view-validation=programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
-					The second way has you define a separate object, called a Validator, which validates your model object.
+					The second way is to define a separate object, called a Validator, which validates your model object.
 					To do this, create a class that defines a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
 					The method must declare a <code>Object</code> parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
@@ -223,9 +223,7 @@ public void validateEnterBookingDetails(MessageContext context) {
 public class BookingValidator {
     public void validateEnterBookingDetails(Object object, MessageContext context) {
         Booking booking = (Booking) object;
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        if (booking.getCheckinDate().before(calendar.getTime())) {
+        if (booking.getCheckinDate().before(today())) {
             context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
                 "Check in date must be a future date").build());
         } else if (!booking.getCheckinDate().before(checkoutDate)) {
@@ -236,7 +234,7 @@ public class BookingValidator {
 }				
 				</programlisting>
 				<para>
-					A Validator can also accept a Spring MVC <code>Errors</code> object, useful for invoking existing Spring Validators.
+					A Validator can also accept a Spring MVC <code>Errors</code> object, which is required for invoking existing Spring Validators.
 				</para>
 			</sect3>
 		</sect2>
@@ -256,7 +254,7 @@ public class BookingValidator {
 			They simply execute their actions and re-render the current view or one or more fragments of the current view.
 		</para>
 		<sect2 id="event-handlers-render">
-			<title>render</title>
+			<title>Partial re-rendering</title>
 			<para>
 				Use the <code>render</code> element to request partial re-rendering of a view after handling an event:
 			</para>
@@ -266,12 +264,63 @@ public class BookingValidator {
     &lt;render fragments="searchResultsFragment" /&gt;            
 &lt;/transition&gt;			
 			</programlisting>
+			<para>
+				The fragments attribute should reference the ID(s) of the view element(s) you wish to re-render.
+				Specify multiple elements to re-render by separating them with a comma delimiter.
+			</para>
+			<para>
+				Such partial rendering is often used with events signaled by Ajax to update a specific zone of the view.
+			</para>
+		</sect2>
+	</sect1>
+	<sect1 id="view-messages">
+		<title>Messages</title>
+		<para>
+			Spring Web Flow's <code>MessageContext</code> is an API for recording messages during the course of flow executions.
+			Plain text messages can be added to the context, as well as internationalized messages resolved by a Spring <code>MessageSource</code>.
+			Messages are renderable by views and automatically survive flow execution redirects.
+			Three distinct message severities are provided: <code>info</code>, <code>warning</code>, and <code>error</code>.
+			In addition, a convenient <code>MessageBuilder</code> exists for fluently constructing messages.
+		</para>
+		<sect2 id="plain-text-message">
+			<title>Adding plain text messages</title>
+			<programlisting type="java">
+MessageContext context = ...
+MessageBuilder builder = new MessageBuilder();
+context.addMessage(builder.error().source("checkinDate").defaultText("Check in date must be a future date").build());			
+context.addMessage(builder.warn().source("smoking").defaultText("Smoking is bad for your health").build());			
+context.addMessage(builder.info().defaultText("We have processed your reservation - thank you and enjoy your stay").build());			
+			</programlisting>
+		</sect2>
+		<sect2 id="plain-text-message">
+			<title>Adding internationalized messages</title>
+			<programlisting type="java">
+MessageContext context = ...
+MessageBuilder builder = new MessageBuilder();
+context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());			
+context.addMessage(builder.warn().source("smoking").code("notHealthy").resolvableArg("smoking").build());			
+context.addMessage(builder.info().code("reservationConfirmation").build());			
+			</programlisting>
+		</sect2>
+		<sect2 id="message-bundles">
+			<title>Flow message bundles</title>
+			<para>
+				Internationalized messages are defined in message bundles accessed by a Spring <code>MessageSource</code>.
+				To create a flow-specific message bundle, simply define <code>messages.properties</code> file(s) in your flow's directory.
+				Create a default <code>messages.properties</code> file and a .properties file for each additional <code>Locale</code> you need to support.
+			</para>
+			<programlisting type="properties">
+#messages.properties
+checkinDate=Check in date must be a future date
+notHealthy={0} is bad for your health
+reservationConfirmation=We have processed your reservation - thank you and enjoy your stay
+			</programlisting>
 		</sect2>
 	</sect1>
 	<sect1 id="view-popup">
 		<title>popup</title>
 		<para>
-			Use the <code>popup</code> attribute to indicate the view should be rendered in a model popup dialog:
+			Use the <code>popup</code> attribute to render a view in a modal popup dialog:
 		</para>
 		<programlisting language="java">
 &lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;

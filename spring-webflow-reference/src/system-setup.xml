@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="system-setup">
+	<title>System Setup</title>
+	<sect1 id="system-setup-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to setup the Web Flow system for use in any web environment.
+		</para>
+	</sect1>
+</chapter>
