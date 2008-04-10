@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="views">
-	<title>Rendering Views</title>
+	<title>Rendering views</title>
 	<sect1 id="views-introduction">
 		<title>Introduction</title>
 		<para>
@@ -337,7 +337,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			These view state history policies are configurable on a per view-state basis by using the <code>history</code> attribute.
 		</para>
 		<sect2 id="history-discard">
-			<title>Discarding History</title>
+			<title>Discarding history</title>
 			<para>
 				Set the history attribute to <code>discard</code> to prevent backtracking to a view:
 			</para>
@@ -346,7 +346,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			</programlisting>
 		</sect2>
 		<sect2 id="history-invalidate">
-			<title>Invalidating History</title>
+			<title>Invalidating history</title>
 			<para>
 				Set the history attribute to <code>invalidate</code> to prevent backtracking to a view as well all previously displayed views:
 			</para>

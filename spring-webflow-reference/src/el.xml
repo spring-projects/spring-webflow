@@ -32,7 +32,7 @@
 		</sect2>
 	</sect1>
 	<sect1 id="el-portability">
-		<title>EL Portability</title>
+		<title>EL portability</title>
 		<para>
 			In general, you will find the Unified EL and OGNL have a very similar syntax.
 			For basic variable resolution, property access, and method invocation the syntax is identical.
@@ -40,7 +40,7 @@
 		</para>
 	</sect1>
 	<sect1 id="el-usage">
-		<title>EL Usage</title>
+		<title>EL usage</title>
 		<para>
 			EL is used for many things within a flow, including:
 		</para>
@@ -54,7 +54,7 @@
 			Views rendered by flows typically access flow data structures using EL as well.
 		</para>
 		<sect2 id="el-types">
-			<title>Expression Types</title>
+			<title>Expression types</title>
 			<para>
 				There are basically two types of expressions in Web Flow.
 			</para>
@@ -227,7 +227,7 @@
 		</sect2>
 	</sect1>
 	<sect1 id="el-scope-searching">
-		<title>Scope Searching Algorithm</title>
+		<title>Scope searching algorithm</title>
 		<para>
 			When assigning a variable in one of the flow scopes, referencing that scope is required.
 			For example:
