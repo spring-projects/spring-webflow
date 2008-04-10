@@ -76,14 +76,12 @@
 		</para>
 		<programlisting language="xml">
 &lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"&gt;
-	&lt;webflow:flow-execution-listeners&gt;
-		&lt;webflow:listener ref="securityFlowExecutionListener" /&gt;
-		...
-	&lt;/webflow:flow-execution-listeners&gt;
+    &lt;webflow:flow-execution-listeners&gt;
+        &lt;webflow:listener ref="securityFlowExecutionListener" /&gt;
+    &lt;/webflow:flow-execution-listeners&gt;
 &lt;/webflow:flow-executor&gt;
 
-&lt;bean id="securityFlowExecutionListener"
-      class="org.springframework.webflow.security.SecurityFlowExecutionListener" /&gt;
+&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" /&gt;
 		</programlisting>
 		<para>
 			If your application is using authorities that are not role based, you will need to configure a custom <code>AccessDecisionManager</code>.
@@ -91,9 +89,8 @@
 			Please consult the Spring Security documentation to learn more about decision managers.
 		</para>
 		<programlisting language="xml">
-&lt;bean id="securityFlowExecutionListener"
-      class="org.springframework.webflow.security.SecurityFlowExecutionListener"&gt;
-	&lt;property name="accessDecisionManager" ref="myCustomAccessDecisionManager" /&gt;
+&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener"&gt;
+    &lt;property name="accessDecisionManager" ref="myCustomAccessDecisionManager" /&gt;
 &lt;/bean&gt;
 		</programlisting>
 		<para>
@@ -120,42 +117,26 @@
 			</para>
 			<programlisting language="xml">
 &lt;security:http auto-config="true"&gt;
-	&lt;!-- restrict URLs based on role --&gt;
-	&lt;security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" /&gt;
-	&lt;security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" /&gt;
-	&lt;security:intercept-url pattern="/spring/logout*" access="ROLE_USER" /&gt;
-	
-	&lt;!-- override default login and logout pages --&gt;
-	&lt;security:form-login login-page="/spring/login" 
-	                     login-url="/spring/login-process" 
-	                     default-target-url="/spring/main" 
-	                     authentication-failure-url="/spring/login?login_error=1" /&gt;
-	&lt;security:logout logout-url="/spring/logout" 
-	                 logout-success-url="/spring/logout-success" /&gt;
+    &lt;security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" /&gt;
+    &lt;security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" /&gt;
+    &lt;security:intercept-url pattern="/spring/logout*" access="ROLE_USER" /&gt;
+
+    &lt;security:form-login login-page="/spring/login" 
+                             login-url="/spring/login-process" 
+                    default-target-url="/spring/main" 
+            authentication-failure-url="/spring/login?login_error=1" /&gt;
+   
+    &lt;security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" /&gt;
 &lt;/security:http&gt;
 
-&lt;!--
-	Define local authentication provider, a real app would use an  
-			external provider (JDBC, LDAP, CAS, etc)
-	
-	usernames/passwords are:
-		keith/melbourne
-		erwin/leuven
-		jeremy/atlanta
-		scott/rochester
---&gt;
 &lt;security:authentication-provider&gt;
-	&lt;security:password-encoder hash="md5" /&gt;
-	&lt;security:user-service&gt;
-		&lt;security:user name="keith" password="417c7382b16c395bc25b5da1398cf076" 
-		               authorities="ROLE_USER, ROLE_SUPERVISOR" /&gt;
-		&lt;security:user name="erwin" password="12430911a8af075c6f41c6976af22b09" 
-		               authorities="ROLE_USER, ROLE_SUPERVISOR" /&gt;
-		&lt;security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb" 
-		               authorities="ROLE_USER" /&gt;
-		&lt;security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" 
-		               authorities="ROLE_USER" /&gt;
-	&lt;/security:user-service&gt;
+    &lt;security:password-encoder hash="md5" /&gt;
+    &lt;security:user-service&gt;
+        &lt;security:user name="keith" password="417c7382b16c395bc25b5da1398cf076" authorities="ROLE_USER,ROLE_SUPERVISOR" /&gt;
+        &lt;security:user name="erwin" password="12430911a8af075c6f41c6976af22b09" authorities="ROLE_USER,ROLE_SUPERVISOR" /&gt;
+        &lt;security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb" authorities="ROLE_USER" /&gt;
+        &lt;security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" authorities="ROLE_USER" /&gt;
+    &lt;/security:user-service&gt;
 &lt;/security:authentication-provider&gt;
 			</programlisting>
 		</sect2>

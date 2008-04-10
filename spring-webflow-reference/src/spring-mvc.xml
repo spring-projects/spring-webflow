@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="spring-mvc">
+	<title>Spring MVC Integration</title>
+	<sect1 id="spring-mvc-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to integrate Web Flow into a Spring MVC web application.
+		</para>
+	</sect1>
+</chapter>

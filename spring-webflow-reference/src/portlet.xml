@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="portlet">
+	<title>Portlet Integration</title>
+	<sect1 id="portlet-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to use Web Flow in a Portlet environment.
+		</para>
+	</sect1>
+</chapter>

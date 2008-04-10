@@ -8,7 +8,7 @@
 		</para>
 	</sect1>
 	<sect1 id="view-convention">
-		<title>view-state</title>
+		<title>Defining view states</title>
 		<para>
 			Use the <code>view-state</code> element to define a step of the flow that renders a view and waits for a user event to resume:
 		</para>
@@ -38,7 +38,7 @@
 		</mediaobject>				
 	</sect1>
 	<sect1 id="view-explicit">
-		<title>Explicit view ids</title>
+		<title>Specifying view identifiers</title>
 		<para>
 			Use the <code>view</code> attribute to explictly specify the id of the view to render.
 		</para>
@@ -74,7 +74,7 @@
 		</sect2>
 	</sect1>
 	<sect1 id="view-scope">
-		<title>viewScope</title>
+		<title>View scope</title>
 		<para>
 			A view-state allocates a new <code>viewScope</code> when it enters.
 			This scope may be referenced within the view-state to assign variables that should live for the duration of the state.
@@ -103,7 +103,7 @@
 			</programlisting>
 		</sect2>
 		<sect2 id="view-scope-ajax">
-			<title>Manipulating objects view scope</title>
+			<title>Manipulating objects in view scope</title>
 			<para>
 				Objects in view scope are often manipulated over a series of requests from the same view.
 				The following example illustrates paginiation through a search results list. 
@@ -128,7 +128,7 @@
 		</sect2>
 	</sect1>
 	<sect1 id="view-on-render">
-		<title>on-render</title>
+		<title>Executing render actions</title>
 		<para>
 			Use the <code>on-render</code> element to execute one or more actions before view rendering.
 			Render actions are executed on the initial render as well as any subsequent refreshes, including any partial re-renderings of the view.
@@ -140,7 +140,7 @@
 	    </programlisting>
 	</sect1>
 	<sect1 id="view-model">
-		<title>Model binding</title>
+		<title>Binding to a model</title>
 		<para>
 			Use the <code>model</code> attribute to declare a model object the view binds to.
 			This attribute is typically used with views that render data controls, such as forms.
@@ -168,7 +168,7 @@
 		</para>
 	</sect1>
 	<sect1 id="view-bind">
-		<title>bind</title>
+		<title>Suppressing binding</title>
 		<para>
 			Use the <code>bind</code> attribute to suppress model binding and validation for particular view events.
 		</para>
@@ -180,7 +180,7 @@
 		</programlisting>
 	</sect1>
 	<sect1 id="view-validate">
-		<title>Validation</title>
+		<title>Validating a model</title>
 		<para>
 			Model validation is driven by constraints specified against the model object.
 			These constraints may be specified declaratively, or enforced using a programmatic validation routine or external <code>Validator</code>.
@@ -240,7 +240,7 @@ public class BookingValidator {
 		</sect2>
 	</sect1>
 	<sect1 id="simple-event-handlers">
-		<title>Event handlers</title>
+		<title>Handling events</title>
 		<para>
 			From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
 		</para>
@@ -254,7 +254,7 @@ public class BookingValidator {
 			They simply execute their actions and re-render the current view or one or more fragments of the current view.
 		</para>
 		<sect2 id="event-handlers-render">
-			<title>Partial re-rendering</title>
+			<title>Rendering partials</title>
 			<para>
 				Use the <code>render</code> element to request partial re-rendering of a view after handling an event:
 			</para>
@@ -274,7 +274,7 @@ public class BookingValidator {
 		</sect2>
 	</sect1>
 	<sect1 id="view-messages">
-		<title>Messages</title>
+		<title>Working with messages</title>
 		<para>
 			Spring Web Flow's <code>MessageContext</code> is an API for recording messages during the course of flow executions.
 			Plain text messages can be added to the context, as well as internationalized messages resolved by a Spring <code>MessageSource</code>.
@@ -303,7 +303,7 @@ context.addMessage(builder.info().code("reservationConfirmation").build());
 			</programlisting>
 		</sect2>
 		<sect2 id="message-bundles">
-			<title>Flow message bundles</title>
+			<title>Using message bundles</title>
 			<para>
 				Internationalized messages are defined in message bundles accessed by a Spring <code>MessageSource</code>.
 				To create a flow-specific message bundle, simply define <code>messages.properties</code> file(s) in your flow's directory.
@@ -318,7 +318,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 		</sect2>
 	</sect1>
 	<sect1 id="view-popup">
-		<title>popup</title>
+		<title>Displaying popups</title>
 		<para>
 			Use the <code>popup</code> attribute to render a view in a modal popup dialog:
 		</para>

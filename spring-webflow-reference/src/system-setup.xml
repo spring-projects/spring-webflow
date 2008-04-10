@@ -7,4 +7,217 @@
 			This chapter shows you how to setup the Web Flow system for use in any web environment.
 		</para>
 	</sect1>
+	<sect1 id="system-config-schema">
+		<title>webflow-config.xsd</title>
+		<para>
+			Web Flow provides a Spring schema that allows you to configure the system.
+			To use this schema, include it in one of your infrastructure-layer beans files:
+		</para>
+		<programlisting type="xml">
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd"&gt;		
+
+	&lt;!-- Setup Web Flow here --&gt;
+	
+&lt;/beans&gt;
+		</programlisting>
+	</sect1>
+	<sect1 id="system-config-basic">
+		<title>Basic system configuration</title>
+		<para>
+			The next section shows the minimal configuration required to set up the Web Flow system in your application.
+		</para>
+		<sect2 id="basic-setup-flow-registry">
+			<title>FlowRegistry</title>
+			<para>
+				Register your flows in a <code>FlowRegistry</code>:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-registry id="flowRegistry"&gt;
+    &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;
+&lt;/webflow:flow-registry&gt;	
+			</programlisting>
+		</sect2>
+		<sect2 id="basic-setup-flow-executor">
+			<title>FlowExecutor</title>
+			<para>
+				Deploy a FlowExecutor, the central service for executing flows:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" /&gt;
+			</programlisting>
+		</sect2>
+		<para>
+			See the Spring MVC and Spring Faces sections of this guide on how to integrate the Web Flow system with the MVC and JSF environment, respectively.
+		</para>
+	</sect1>
+	<sect1 id="flow-registry">
+		<title>flow-registry options</title>
+		<sect2 id="flow-registry-builder-services">
+			<title>Configuring custom FlowBuilder services</title>
+			<para>
+				Use the <code>flow-builder-services</code> attribute to customize the services used to build the flows in a registry.
+				If no flow-builder-services tag is specified, the default service implementations are used.
+				When the tag is defined, you only need to reference the services you want to customize.
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices"&gt;
+    &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;
+&lt;/webflow:flow-registry&gt;
+
+&lt;webflow:flow-builder-services id="flowBuilderServices" /&gt;
+			</programlisting>
+			<para>
+				The configurable services are the <code>conversion-service</code>, <code>formatter-registry</code>, <code>expression-parser</code>, and <code>view-factory-creator</code>.
+				These services are configured by referencing custom beans you define.  For example:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-builder-services id="flowBuilderServices"
+                  conversion-service="conversionService"
+                  formatter-registry="formatterRegistry"
+                   expression-parser="expressionParser"
+                view-factory-creator="viewFactoryCreator"/&gt;
+
+&lt;bean id="conversionService"  class="..." /&gt;
+&lt;bean id="formatterRegistry"  class="..." /&gt;
+&lt;bean id="expressionParser"   class="..." /&gt;
+&lt;bean id="viewFactoryCreator" class="..." /&gt;
+			</programlisting>
+			<sect3 id="builder-service-conversion">
+				<title>conversion-service</title>
+				<para>
+					Use the <code>conversion-service</code> attribute to customize the <code>ConversionService</code> used by the Web Flow system.
+					Converters are used to convert from one type to another when required during flow execution.
+					The default ConversionService registers converters for your basic object types such as numbers, classes, and enums.
+				</para>
+			</sect3>
+			<sect3 id="builder-service-formatter">
+				<title>formatter-registry</title>
+				<para>
+					Use the <code>formatter-registry</code> attribute to customize the <code>FormatterRegistry</code> used by the Web Flow system.
+					Formatters are used by Views to format model property values for display.
+					The default FormatterRegistry registers converters for your basic model object types such as numbers and dates.				
+				</para>
+			</sect3>
+			<sect3 id="builder-service-expression-parser">
+				<title>expression-parser</title>
+				<para>
+					Use the <code>expression-parser</code> attribute to customize the <code>ExpressionParser</code> used by the Web Flow system.
+					The default ExpressionParser uses the Unified EL if available on the classpath, otherwise OGNL is used.			
+				</para>
+			</sect3>
+			<sect3 id="builder-service-view-factory-creator">
+				<title>view-factory-creator</title>
+				<para>
+					Use the <code>view-factory-creator</code> attribute to customize the <code>ViewFactoryCreator</code> used by the Web Flow system.
+					The default ViewFactoryCreator produces Spring MVC ViewFactories capable of rendering JSP, Velocity, and Freemarker views.
+				</para>
+			</sect3>
+		</sect2>
+		<sect2 id="flow-registry-parent">
+			<title>Configuring FlowRegistry hierarchies</title>
+			<para>
+				Use the <code>parent</code> attribute to link two flow registries together in a hierarchy.
+				When the child registry is queried, if it cannot find the requested flow it will delegate to its parent.
+			</para>
+			<programlisting type="xml">
+&lt;!-- my-system-config.xml --&gt;
+&lt;webflow:flow-registry id="flowRegistry" parent="sharedFlowRegistry"&gt;
+    &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;
+&lt;/webflow:flow-registry&gt;
+
+&lt;!-- shared-config.xml --&gt;
+&lt;webflow:flow-registry id="sharedFlowRegistry"&gt;
+    &lt;-- Global flows shared by several applications --&lt;
+&lt;/webflow:flow-registry&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-registry-location">
+			<title>Specifying flow locations</title>
+			<para>
+				Use the <code>location</code> element to specify paths to flow definitions to register.
+				By default, flows will be assigned registry identifiers equal to their filenames minus the file extension.
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;
+			</programlisting>
+		</sect2>		
+		<sect2 id="flow-registry-location-id">
+			<title>Assigning custom flow identifiers</title>
+			<para>
+				Specify an id to assign a custom registry identifier to a flow:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" /&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-registry-location-attributes">
+			<title>Assigning flow meta-attributes</title>
+			<para>
+				Use the <code>flow-definition-attributes</code> element to assign custom meta-attributes to a registered flow:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml"&gt;
+    &lt;flow-definition-attributes&gt;
+        &lt;attribute name="caption" value="Books a hotel" /&gt;
+        &lt;attribute name="persistence-context" value="true" type="boolean" /&gt;
+    &lt;/flow-definition-attributes&gt;
+&lt;/webflow:flow-location&gt;
+			</programlisting>
+		</sect2>			
+	</sect1>
+	<sect1 id="flow-executor">
+		<title>flow-executor options</title>
+		<sect2 id="flow-executor-execution-listeners">
+			<title>Attaching flow execution listeners</title>
+			<para>
+				Use the <code>flow-execution-listeners</code> element to register listeners that observe the lifecycle of flow executions:
+			</para>
+			<programlisting type="xml">
+&lt;flow-execution-listeners&gt;
+    &lt;listener ref="securityListener"/&gt;
+    &lt;listener ref="persistenceListener"/&gt;
+&lt;/flow-execution-listeners&gt;
+			</programlisting>
+			<para>
+				You may also configure a listener to observe only certain flows:
+			</para>
+			<programlisting type="xml">
+&lt;listener ref="securityListener" criteria="securedFlow1,securedFlow2"/&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="tuning-flow-execution-repository">
+			<title>Tuning FlowExecution persistence</title>
+			<para>
+				Use the <code>flow-execution-repository</code> element to tune flow execution persistence settings:
+			</para>
+			<programlisting type="xml">
+&lt;flow-execution-repository max-conversations="5" max-snapshots="30" /&gt;
+			</programlisting>
+			<sect3 id="repository-max-conversations">
+				<title>max-conversations</title>
+				<para>
+					Tune the <code>max-conversations</code> attribute to place a cap on the number of conversations that can be created per user session.
+				</para>
+			</sect3>
+			<sect3 id="repository-max-snapshots">
+				<title>max-snapshots</title>
+				<para>
+					Tune the <code>max-snapshots</code> attribute to place a cap on the number of flow execution snapshots that can be taken per conversation.
+				</para>
+			</sect3>
+			<sect3 id="repository-conversation-manager">
+				<title>conversation-manager</title>
+				<para>
+					Set a custom <code>ConversationManager</code> to completely customize where conversational flow state is persisted.
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
 </chapter>

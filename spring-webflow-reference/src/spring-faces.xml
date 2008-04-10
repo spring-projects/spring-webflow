@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="spring-faces">
-    <title>Using Spring Faces</title>
-
+    <title>JSF Integration</title>
     <sect1 id="spring-faces-introduction">
         <title>Introduction</title>
         <para>
@@ -114,7 +113,7 @@
                 managed beans are typically allocated.
             </para>
         </sect2>
-        <sect2>
+        <sect2 id="faces-manipulating-model">
             <title>Manipulating The Model</title>
             <para>
                 The need to initialize the model before view rendering (such as by loading persistent entities from a

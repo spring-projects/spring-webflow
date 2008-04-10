@@ -6,9 +6,13 @@
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
 <!ENTITY el SYSTEM "el.xml">
 <!ENTITY views SYSTEM "views.xml">
+<!ENTITY flow-managed-persistence SYSTEM "flow-managed-persistence.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
+<!ENTITY system-setup SYSTEM "system-setup.xml">
+<!ENTITY spring-mvc SYSTEM "spring-mvc.xml">
 <!ENTITY spring-faces SYSTEM "spring-faces.xml">
+<!ENTITY portlet SYSTEM "portlet.xml">
 <!ENTITY upgrade-guide SYSTEM "upgrade-guide.xml">
 <!ENTITY flow-definition-field-mappings SYSTEM "flow-definition-field-mappings.xml">
 ]>
@@ -73,9 +77,13 @@
 	&defining-flows;
 	&el;
 	&views;
+	&flow-managed-persistence;
 	&flow-security;
 	&flow-inheritance;
+	&system-setup;
+	&spring-mvc;
 	&spring-faces;
+	&portlet;
 	&upgrade-guide;
 	&flow-definition-field-mappings;
 	

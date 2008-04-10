@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="flow-managed-persistence">
+	<title>Flow Managed Persistence</title>
+	<sect1 id="spring-mvc-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to use flows to manage web application persistence.
+		</para>
+	</sect1>
+</chapter>
