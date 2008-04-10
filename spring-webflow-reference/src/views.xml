@@ -81,19 +81,8 @@
 			This scope is useful for manipulating objects over a series of requests from the same view, often Ajax requests.
 			A view-state destroys its viewScope when it exits.
 		</para>
-		<sect2 id="view-scope-actions">
-			<title>Assigning a viewScope variable using an action</title>
-			<para>
-				Variables are often assigned before the view renders:
-			</para>
-			<programlisting language="xml">
-&lt;on-render&gt;
-	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
-&lt;/on-render&gt;
-			</programlisting>
-		</sect2>
-		<sect2 id="view-scope-actions-var">
-			<title>Using the var element to allocate view variables</title>
+		<sect2 id="view-scope-var">
+			<title>Allocating view variables</title>
 			<para>
 				Use the <code>var</code> tag to declare a view variable.
 				Like a flow variable, any @Autowired references are automatically restored when the view state resumes.
@@ -101,12 +90,23 @@
 			<programlisting language="xml">
 &lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" /&gt;
 			</programlisting>
+		</sect2>		
+		<sect2 id="view-scope-actions">
+			<title>Assigning a viewScope variable</title>
+			<para>
+				Use the <code>on-render</code> tag to assign a variable from an action result before the view renders:
+			</para>
+			<programlisting language="xml">
+&lt;on-render&gt;
+	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+&lt;/on-render&gt;
+			</programlisting>
 		</sect2>
 		<sect2 id="view-scope-ajax">
 			<title>Manipulating objects in view scope</title>
 			<para>
 				Objects in view scope are often manipulated over a series of requests from the same view.
-				The following example illustrates paginiation through a search results list. 
+				The following example pages through a search results list. 
 				The list is updated in view scope before each render.
 				Asynchronous event handlers modify the current data page, then request re-rendering of the search results fragment.
 			</para>
@@ -322,7 +322,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 		<para>
 			Use the <code>popup</code> attribute to render a view in a modal popup dialog:
 		</para>
-		<programlisting language="java">
+		<programlisting language="xml">
 &lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;
 		</programlisting>
 		<para>
@@ -330,4 +330,29 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			Web Flow will send a response to the client requesting a redirect to the view from a popup, and the client will honor the request.
 		</para>
 	</sect1>
+	<sect1 id="view-backtracking">
+		<title>View backtracking</title>
+		<para>
+			By default, when you exit a view state and transition to a new view state, you can go back to the previous state using the browser back button.
+			These view state history policies are configurable on a per view-state basis by using the <code>history</code> attribute.
+		</para>
+		<sect2 id="history-discard">
+			<title>Discarding History</title>
+			<para>
+				Set the history attribute to <code>discard</code> to prevent backtracking to a view:
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="changeSearchCriteria" history="discard"&gt;
+			</programlisting>
+		</sect2>
+		<sect2 id="history-invalidate">
+			<title>Invalidating History</title>
+			<para>
+				Set the history attribute to <code>invalidate</code> to prevent backtracking to a view as well all previously displayed views:
+			</para>
+			<programlisting language="xml">
+&lt;view-state id="changeSearchCriteria" history="invalidate"&gt;
+			</programlisting>
+		</sect2>
+	</sect1>	
 </chapter>
