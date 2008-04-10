@@ -113,7 +113,7 @@
 			<programlisting language="xml">
 &lt;view-state id="searchResults"&gt;
     &lt;on-render&gt;
-	    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
     &lt;/on-render&gt;
     &lt;transition on="next"&gt;
         &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
