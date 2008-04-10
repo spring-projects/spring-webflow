@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="testing">
+	<title>Testing flows</title>
+	<sect1 id="testing-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to test flows.
+		</para>
+	</sect1>
+</chapter>

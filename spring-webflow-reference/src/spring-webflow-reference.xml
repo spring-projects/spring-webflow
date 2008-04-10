@@ -13,6 +13,7 @@
 <!ENTITY spring-mvc SYSTEM "spring-mvc.xml">
 <!ENTITY spring-faces SYSTEM "spring-faces.xml">
 <!ENTITY portlet SYSTEM "portlet.xml">
+<!ENTITY testing SYSTEM "testing.xml">
 <!ENTITY upgrade-guide SYSTEM "upgrade-guide.xml">
 <!ENTITY flow-definition-field-mappings SYSTEM "flow-definition-field-mappings.xml">
 ]>
@@ -84,6 +85,7 @@
 	&spring-mvc;
 	&spring-faces;
 	&portlet;
+	&testing;
 	&upgrade-guide;
 	&flow-definition-field-mappings;
 	
