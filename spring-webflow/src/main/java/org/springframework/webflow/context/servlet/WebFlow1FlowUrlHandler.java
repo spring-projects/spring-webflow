@@ -29,7 +29,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * 
  * @author Keith Donald
  */
-public class ParameterBasedFlowUrlHandler implements FlowUrlHandler {
+public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 
 	private static final String DEFAULT_URL_ENCODING_SCHEME = "UTF-8";
 
@@ -45,11 +45,7 @@ public class ParameterBasedFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(request.getContextPath());
-		url.append(request.getServletPath());
-		if (request.getPathInfo() != null) {
-			url.append(request.getPathInfo());
-		}
+		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, "_flowId", flowId);
 		url.append('&');
@@ -59,11 +55,7 @@ public class ParameterBasedFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(request.getContextPath());
-		url.append(request.getServletPath());
-		if (request.getPathInfo() != null) {
-			url.append(request.getPathInfo());
-		}
+		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, "_flowId", flowId);
 		if (input != null && !input.isEmpty()) {
