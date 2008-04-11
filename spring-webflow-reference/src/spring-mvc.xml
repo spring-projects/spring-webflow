@@ -117,5 +117,29 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 }
 			]]></programlisting>
 		</sect2>
+		<sect2 id="spring-mvc-config-spring-view-resolution">
+			<title>View Resolution</title>
+			<para>
+				Views in Web Flow 2.0 attempt to automatically resolve unless explicitly specified.
+				In a Spring MVC environment, a <code>view-state</code> will try to find a JSP view based on the <code>id</code> of the state.
+				For example, <code>&lt;view-state id="intro"&gt;</code> will resolve to <code>intro.jsp</code> in the same directory as the flow definition.
+				By specifying the <code>view</code> attribute, a different file name can be selected, however, it must still be a JSP file.
+			</para>
+			<para>
+				A custom view resolver is required if different behavior is needed.
+				To create a custom view resolver the <code>flow-builder-services</code> attribute on <code>flow-registry</code> must define a new <code>webflow:flow-builder-services</code> element with a <code>view-factory-creator</code>.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+    ...
+</webflow:flow-registry>
+
+<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
+
+<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.MvcViewFactoryCreator">
+    <property name="viewResolvers" ref="customViewResolver"/>
+</bean>
+			]]></programlisting>
+		</sect2>
 	</sect1>
 </chapter>
