@@ -4,20 +4,21 @@
     <sect1 id="spring-faces-introduction">
         <title>Introduction</title>
         <para>
-            Spring Faces is Spring's JSF integration module that simplifies using JSF with Spring.
-            It lets you use the JSF UI Component Model with Spring MVC and Spring Web Flow controllers.
+            Spring Faces is Spring's JSF integration module that simplifies using JSF with Spring. It lets you use the
+            JSF UI Component Model with Spring MVC and Spring Web Flow controllers.
         </para>
         <para>
-            Spring Faces also includes a small Facelets component library that provides Ajax and client-side validation capabilities.
-            This component library builds on Spring Javascript, a Javascript abstraction framework that integrates Dojo as the underlying UI toolkit.
+            Spring Faces also includes a small Facelets component library that provides Ajax and client-side validation
+            capabilities. This component library builds on Spring Javascript, a Javascript abstraction framework that
+            integrates Dojo as the underlying UI toolkit.
         </para>
     </sect1>
 
     <sect1 id="spring-faces-integration">
         <title>Spring-centric Integration Approach</title>
         <para>
-        	Spring Faces combines the strengths of JSF, its UI component model, with the strengths of Spring, its controller and configuration model.
-        	This brings you all the strengths of JSF without any of the weaknesses.
+            Spring Faces combines the strengths of JSF, its UI component model, with the strengths of Spring, its
+            controller and configuration model. This brings you all the strengths of JSF without any of the weaknesses.
         </para>
         <para>
             Spring Faces provides a powerful supplement to a number of the standard JSF facilities, including:
@@ -33,14 +34,118 @@
                 <listitem>Ajax partial page updates and full navigation</listitem>
                 <listitem>progressive enhancement and graceful degradation</listitem>
             </orderedlist>
-            
+
             Using these features will significantly reduce the amount of configuration required in faces-config.xml
             while providing a cleaner separation between the view and controller layer and better modularization of your
             application's functional responsibilities. These use of these features are outlined in the sections to
             follow. As the majority of these features build on the flow definition language of Spring Web Flow, it is
             assumed that you have an understanding of the foundations presented in
-            <link linkend="defining-flows">Defining Flows</link>.
+            <link linkend="defining-flows">Defining Flows</link>
+            .
         </para>
+    </sect1>
+    <sect1 id="spring-faces-config-web.xml">
+        <title>Configuring web.xml</title>
+        <para>
+            The first step to using Spring Faces is to route requests to the
+            <code>DispatcherServlet</code>
+            in the
+            <code>web.xml</code>
+            file. In this example, we map all URLs that begin with
+            <code>/spring/</code>
+            to the servlet. The servlet needs to be configured. An
+            <code>init-param</code>
+            is used in the servlet to pass the
+            <code>contextConfigLocation</code>
+            . This is the location of the Spring configuration for your application.
+        </para>
+        <programlisting language="xml"><![CDATA[
+<servlet>
+    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/web-application-config.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+    
+<servlet-mapping>
+    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <url-pattern>/spring/*</url-pattern>
+</servlet-mapping>]]>
+        </programlisting>
+        <para>
+            In order for JSF to bootstrap correctly, the
+            <code>FacesServlet</code>
+            must be configured in
+            <code>web.xml</code>
+            as it normally would even though you generally will not need to route requests through it at all when using
+            Spring Faces.
+        </para>
+        <programlisting language="xml"><![CDATA[
+<!-- Just here so the JSF implementation can initialize, *not* used at runtime -->
+<servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+    
+<!-- Just here so the JSF implementation can initialize -->
+<servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.faces</url-pattern>
+</servlet-mapping>]]>
+        </programlisting>
+        <para>
+            When using the Spring Faces components, you also need to configure the Spring JavaScript
+            <code>ResourceServlet</code>
+            so that CSS and JavaScript resources may be output correctly by the components. This servlet must be mapped
+            to /resources/* in order for the URL's rendered by the components to function correctly.
+        </para>
+        <programlisting><![CDATA[
+<!-- Serves static resource content from .jar files such as spring-faces.jar -->
+<servlet>
+    <servlet-name>Resources Servlet</servlet-name>
+    <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+</servlet>
+        
+<!-- Map all /resources requests to the Resource Servlet for handling -->
+<servlet-mapping>
+    <servlet-name>Resources Servlet</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+</servlet-mapping>]]>
+        </programlisting>
+        <para>
+            The Spring Faces components require the use of Facelets instead of JSP, so the typical Facelets
+            configuration must be added as well when using these components.
+        </para>
+        <programlisting><![CDATA[
+!-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
+<context-param>
+    <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+    <param-value>.xhtml</param-value>
+</context-param>]]>
+        </programlisting>
+    </sect1>
+    <sect1 id="spring-faces-config">
+        <title>Configuring faces-config.xml</title>
+        <para>
+            The only configuration needed in
+            <code>faces-config.xml</code>
+            is specific to the use of Facelets. If you are using JSP and not using the Spring Faces components, you do
+            not need to add anything specific to Spring Faces to your
+            <code>faces-config.xml</code>
+        </para>
+        <programlisting><![CDATA[
+<faces-config>
+    <application>
+        <!-- Enables Facelets -->
+        <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
+    </application>
+</faces-config>]]>
+        </programlisting>
     </sect1>
     <sect1 id="spring-faces-managed-beans">
         <title>Replacing the JSF Managed Bean Facility</title>
@@ -381,6 +486,98 @@
                 <code>ajaxEvent</code>
                 component that will raise a JSF action even in response to any client-side DOM event. See the Spring
                 Faces tag library docs for full details.
+            </para>
+            <para>
+                An additional built-in feature when using the Spring Faces Ajax components is the ability to have the
+                response rendered inside a rich modal popup widget by setting
+                <code>popup="true"</code>
+                on a
+                <code>view-state</code>
+                .
+            </para>
+            <programlisting><![CDATA[
+<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
+    <on-entry>
+        <render fragments="hotelSearchFragment" />
+    </on-entry>
+    <transition on="search" to="reviewHotels">
+        <evaluate expression="searchCriteria.resetPage()"/>
+    </transition>
+</view-state>]]>
+            </programlisting>
+            <para>
+                If the "changeSearchCriteria"
+                <code>view-state</code>
+                is reached as the result of an Ajax-request, the result will be rendered into a rich popup. If
+                JavaScript is unavailable, the request will be processed with a full browser refresh, and the
+                "changeSearchCriteria" view will be rendered as normal.
+            </para>
+        </sect2>
+    </sect1>
+    <sect1 id="spring-faces-ui-controls">
+        <title>Enhancing The User Experience With Rich Web Forms</title>
+        <para>
+            JSF and Web Flow combine to provide and extensive server-side validation model for your web application, but
+            excessive roundtrips to the server to execute this validation and return error messages can be a tedious
+            experience for your users. Spring Faces provides a number of client-side rich validation controls that can
+            enhance the user experience by applying simple validations that give immediate feedback.  Some simple 
+            examples are illustrated below.  See the Spring Faces taglib docs for a complete tag reference.
+        </para>
+        <sect2 id="spring-faces-text-validation">
+            <title>Validating a Text Field</title>
+            <para>
+                Simple client-side text validation can be applied with the
+                <code>clientTextValidator</code>
+                component:
+            </para>
+            <programlisting><![CDATA[ 
+<sf:clientTextValidator required="true">
+    <h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
+</sf:clientTextValidator>]]>
+            </programlisting>
+            <para>
+                This will apply client-side required validation to the child
+                <code>inputText</code>
+                component, giving the user a clear indicator if the field is left blank.
+            </para>
+        </sect2>
+        <sect2 id="spring-faces-number-validation">
+            <title>Validating a Numeric Field</title>
+            <para>
+                Simple client-side numeric validation can be applied with the
+                <code>clientNumberValidator</code>
+                component:
+            </para>
+            <programlisting><![CDATA[ 
+<sf:clientTextValidator required="true" regExp="[0-9]{16}" invalidMessage="A 16-digit credit card number is required.">
+    <h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
+</sf:clientTextValidator>]]>
+            </programlisting>
+            <para>
+                This will apply client-side validation to the child
+                <code>inputText</code>
+                component, giving the user a clear indicator if the field is left blank, is not numeric, or does not
+                match the given regular expression.
+            </para>
+        </sect2>
+        <sect2 id="spring-faces-date-validation">
+            <title>Validating a Date Field</title>
+            <para>
+                Simple client-side date validation with a rich calendar popup can be applied with the
+                <code>clientDateValidator</code>
+                component:
+            </para>
+            <programlisting><![CDATA[ 
+<sf:clientDateValidator required="true" >
+    <h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
+	   	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
+	</h:inputText>
+</sf:clientDateValidator>]]>
+            </programlisting>
+            <para>
+                This will apply client-side validation to the child
+                <code>inputText</code>
+                component, giving the user a clear indicator if the field is left blank or is not a valid date.
             </para>
         </sect2>
     </sect1>
