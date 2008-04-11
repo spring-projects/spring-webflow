@@ -20,18 +20,18 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>
-	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	<init-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/web-application-config.xml</param-value>
-	</init-param>
-	<load-on-startup>1</load-on-startup>
+    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/web-application-config.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
 </servlet>
 	
 <servlet-mapping>
-	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-	<url-pattern>/spring/*</url-pattern>
+    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <url-pattern>/spring/*</url-pattern>
 </servlet-mapping>
 		]]></programlisting>
 	</sect1>
@@ -45,12 +45,12 @@
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-	<property name="mappings">
-		<value>
-			/hotels/booking=bookingFlowHandler
-		    /hotels/*=hotelsController
-		</value>
-	</property>
+    <property name="mappings">
+        <value>
+            /hotels/*=hotelsController
+            /hotels/booking=bookingFlowHandler
+        </value>
+    </property>
 </bean>
 			]]></programlisting>
 			<para>

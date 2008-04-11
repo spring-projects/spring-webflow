@@ -21,18 +21,18 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>
-	<servlet-name>swf-booking-mvc</servlet-name>
-	<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-	<init-param>
-		<param-name>portlet-name</param-name>
-		<param-value>swf-booking-mvc</param-value>
-	</init-param>
-	<load-on-startup>1</load-on-startup>
+    <servlet-name>swf-booking-mvc</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+        <param-name>portlet-name</param-name>
+        <param-value>swf-booking-mvc</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
 </servlet>
 
 <servlet-mapping>
-	<servlet-name>swf-booking-mvc</servlet-name>
-	<url-pattern>/PlutoInvoker/swf-booking-mvc</url-pattern>
+    <servlet-name>swf-booking-mvc</servlet-name>
+    <url-pattern>/PlutoInvoker/swf-booking-mvc</url-pattern>
 </servlet-mapping>
 		]]></programlisting>
 		<para>
@@ -42,22 +42,18 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <portlet>
-	...
-	<portlet-class>
-		org.springframework.web.portlet.DispatcherPortlet
-	</portlet-class>
-	<init-param>
-		<name>contextConfigLocation</name>
-		<value>
-			/WEB-INF/web-application-config.xml
-		</value>
-	</init-param>
-	<init-param>
-		<name>viewRendererUrl</name>
-		<value>/WEB-INF/servlet/view</value>
-	</init-param>
-	<expiration-cache>0</expiration-cache>
-	...
+    ...
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+        <name>contextConfigLocation</name>
+        <value>/WEB-INF/web-application-config.xml</value>
+    </init-param>
+    <init-param>
+        <name>viewRendererUrl</name>
+        <value>/WEB-INF/servlet/view</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    ...
 </portlet>
 		]]></programlisting>
 	</sect1>
@@ -93,7 +89,7 @@
 			<programlisting language="java"><![CDATA[
 public class ViewFlowHandler extends AbstractFlowHandler {
     public String getFlowId() {
-		return "view";
+        return "view";
     }
 }
 			]]></programlisting>
@@ -111,13 +107,13 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
-	<property name="portletModeMap">
-		<map>
-			<entry key="view">
-				<bean class="org.springframework.webflow.samples.booking.ViewFlowHandler" />
-			</entry>
-		</map>
-	</property>
+    <property name="portletModeMap">
+        <map>
+            <entry key="view">
+                <bean class="org.springframework.webflow.samples.booking.ViewFlowHandler" />
+            </entry>
+        </map>
+    </property>
 </bean>
 			]]></programlisting>
 		</sect2>
@@ -129,7 +125,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.portlet.FlowHandlerAdapter">
-	<constructor-arg ref="flowExecutor" />
+    <constructor-arg ref="flowExecutor" />
 </bean>
 			]]></programlisting>
 		</sect2>
@@ -141,9 +137,9 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-	<webflow:flow-execution-attributes>
-		<webflow:alwaysRedirectOnPause value="false"/>
-	</webflow:flow-execution-attributes>
+    <webflow:flow-execution-attributes>
+        <webflow:alwaysRedirectOnPause value="false"/>
+    </webflow:flow-execution-attributes>
 </webflow:flow-executor>
 			]]></programlisting>
 		</sect2>
@@ -156,13 +152,13 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>
-	<servlet-name>ViewRendererServlet</servlet-name>
-	<servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
+    <servlet-name>ViewRendererServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
 </servlet>
 
 <servlet-mapping>
-	<servlet-name>ViewRendererServlet</servlet-name>
-	<url-pattern>/WEB-INF/servlet/view</url-pattern>
+    <servlet-name>ViewRendererServlet</servlet-name>
+    <url-pattern>/WEB-INF/servlet/view</url-pattern>
 </servlet-mapping>
 		]]></programlisting>
 	</sect1>
@@ -176,7 +172,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 				Web Flow exposes the string value of the window state under <code>portletWindowState</code> via the request map on the external context.
 			</para>
 			<programlisting language="java"><![CDATA[
-ExternalContextHolder.getExternalContext().getRequestMap().get("portletWindowState");
+requestContext.getExternalContext().getRequestMap().get("portletWindowState");
 			]]></programlisting>
 			<programlisting language="el"><![CDATA[
 ${externalContext.requestMap.portletWindowState}
@@ -190,7 +186,7 @@ ${externalContext.requestMap.portletWindowState}
 				Web Flow exposes the string value of the portlet mode under <code>portletMode</code> via the request map on the external context.
 			</para>
 			<programlisting language="java"><![CDATA[
-ExternalContextHolder.getExternalContext().getRequestMap().get("portletMode");
+requestContext.getExternalContext().getRequestMap().get("portletMode");
 			]]></programlisting>
 			<programlisting language="el"><![CDATA[
 ${externalContext.requestMap.portletMode}
