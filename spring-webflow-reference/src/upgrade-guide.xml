@@ -173,12 +173,12 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<para>
 				The default URL handler has changed in Web Flow 2.0.
 				The flow identifier is now inferred from the URL rather then passed explicitly.
-				In order to maintain comparability with existing views and URL structures using Web Flow 1.0 a <code>ParameterBasedFlowUrlHandler</code> is available.
+				In order to maintain comparability with existing views and URL structures using Web Flow 1.0 a <code>WebFlow1FlowUrlHandler</code> is available.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
 	<constructor-arg ref="flowExecutor"/>
-	<property name="flowRequestUrlHandler"><bean class="org.springframework.webflow.context.servlet.ParameterBasedFlowUrlHandler"/></property>
+	<property name="flowRequestUrlHandler"><bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/></property>
 </bean>
 			]]></programlisting>
 		</sect2>
