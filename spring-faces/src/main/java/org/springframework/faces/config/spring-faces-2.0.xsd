@@ -13,8 +13,9 @@
 		<xsd:annotation>
 			<xsd:documentation>
 				<![CDATA[
-Deploys the flow builder services, including the ViewFactoryCreator, ExpressionParser, and ConversionService to
-be used by a flow definition registry.
+Registers custom implementations of services needed to build flow definitions in a JSF environment.
+With this tag, you may configure a custom ConversionService, FormatterFactory, ExpressionParser, and ViewFactoryCreator implementation.
+This tag is only needed when you wish to plugin custom implementations.
 ]]>	
 			</xsd:documentation>
 		</xsd:annotation>
@@ -25,7 +26,16 @@ be used by a flow definition registry.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The idref of the conversion service that should be used.  If not provided, the default conversion service will be used.
+The custom ConversionService implementation to use to convert from one type to another.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="formatter-registry">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The custom FormatterRegistry implementation to use to format model properties for display in a View.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -34,8 +44,7 @@ The idref of the conversion service that should be used.  If not provided, the d
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The idref of the expression parser instance that should be used.  If not provided, the default OGNL expression parser 
-will be used.
+The custom ExpressionParser implementation to use to compile expression strings into Expressions.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -44,8 +53,7 @@ will be used.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The idref of the view factory creator that should be used.  The view factory creator is specific to the view technology
-being used.  If not provided, the default Spring MVC view factory creator  will be used.
+The custom ViewFactoryCreator implementation to use produce ViewFactories capable of rendering Views.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

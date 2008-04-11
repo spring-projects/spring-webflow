@@ -8,6 +8,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
@@ -38,6 +39,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertNotNull(builderServices.getExpressionParser());
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getFormatterRegistry() instanceof TestFormatterRegistry);
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
@@ -70,6 +72,18 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		}
 
 		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass) throws ConversionException {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+	}
+
+	public static class TestFormatterRegistry implements FormatterRegistry {
+
+		public Formatter getFormatter(Class clazz) {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public Formatter getFormatter(String id) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

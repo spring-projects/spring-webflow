@@ -69,8 +69,8 @@ Registers a custom FlowBuilder implementation in this registry.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-A refernence to a FlowBuilderServices implementation defining custom services needed to build the flows registered in this registry.
-Optional.  For use when custom builder services are required.
+A reference to a FlowBuilderServices implementation defining custom services needed to build the flows registered in this registry.
+Optional.  For use when one or more custom builder services are required.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -213,7 +213,7 @@ The default value 'flowRegistry'.
 			<xsd:documentation>
 				<![CDATA[
 Registers custom implementations of services needed to build flow definitions.
-With this tag, you may configure a custom ConversionService, ExpressionParser, ViewFactoryCreator, and FlowArtifactFactory implementation.
+With this tag, you may configure a custom ConversionService, FormatterFactory, ExpressionParser, and ViewFactoryCreator implementation.
 This tag is only needed when you wish to plugin custom implementations.
 ]]>	
 			</xsd:documentation>
@@ -221,29 +221,38 @@ This tag is only needed when you wish to plugin custom implementations.
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-					<xsd:attribute name="expression-parser" use="optional">
+					<xsd:attribute name="conversion-service">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The custom ExpressionParser implementation to use.
+The custom ConversionService implementation to use to convert from one type to another.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="view-factory-creator" use="optional">
+					<xsd:attribute name="formatter-registry">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The custom ViewFactoryCreator implementation to use.
+The custom FormatterRegistry implementation to use to format model properties for display in a View.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="conversion-service" use="optional">
+					<xsd:attribute name="expression-parser">
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The custom ConversionService implementation to use.
+The custom ExpressionParser implementation to use to compile expression strings into Expressions.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="view-factory-creator">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The custom ViewFactoryCreator implementation to use produce ViewFactories capable of rendering Views.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
@@ -254,7 +263,7 @@ The custom ConversionService implementation to use.
 	</xsd:element>
 	
 	<xsd:complexType name="flowExecutionRepositoryType">
-		<xsd:attribute name="type" type="flowExecutionRepositoryTypeAttribute" use="required">
+		<xsd:attribute name="type" type="flowExecutionRepositoryTypeAttribute">
 			<xsd:annotation>
 				<xsd:documentation>
 					<![CDATA[
