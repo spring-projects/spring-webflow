@@ -7,4 +7,68 @@
 			This chapter shows you how to test flows.
 		</para>
 	</sect1>
+	<sect1 id="extending-abstractflowexecutiontest">
+		<para>
+			To test the execution of a XML-based flow definition, extend <code>AbstractXmlFlowExecutionTests</code>:
+		</para>
+		<programlisting language="java">
+public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
+}		
+		</programlisting>
+		<para>
+			At a minimum, you must override <code>getResource(FlowDefinitionResourceFactory)</code> to return the path to your flow:
+		</para>
+		<programlisting language="java">
+@Override
+protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
+    return resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/booking/booking.xml");
+}
+		</programlisting>
+		<para>
+			If your flow has dependencies on externally managed services, also override <code>configureFlowBuilderContext(MockFlowBuilderContext)</code> to register stubs or mocks of those services:
+		</para>
+		<programlisting language="java">
+@Override
+protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
+    builderContext.registerBean("bookingService", new StubBookingService());
+}
+        </programlisting>
+        <para>
+        	Have your first test exercise the startup of your flow:
+        </para>
+		<programlisting language="java">
+public void testStartBookingFlow() {
+	Booking booking = createTestBooking();
+
+    MutableAttributeMap input = new LocalAttributeMap();
+    input.put("hotelId", "1");
+    MockExternalContext context = new MockExternalContext();
+    context.setCurrentUser("keith");
+    startFlow(input, context);
+
+    assertCurrentStateEquals("enterBookingDetails");
+    assertTrue(getRequiredFlowAttribute("booking") instanceof Booking);
+}
+        </programlisting>
+        <para>
+        	Assertions generally verify the flow is in the correct state you expect.
+        </para>
+        <para>
+        	Define additional tests to exercise event handling behavior.
+        	You goal should be to exercise all paths through the flow.
+        	You can use the convenient <code>setCurrentState(String)</code> method to jump to the flow state where you wish to begin your test.
+        </para>
+        <programlisting>
+public void testEnterBookingDetails_Proceed() {
+    setCurrentState("enterBookingDetails");
+    getFlowScope().put("booking", createTestBooking());
+
+    MockExternalContext context = new MockExternalContext();
+    context.setEventId("proceed");
+    resumeFlow(context);
+
+    assertCurrentStateEquals("reviewBooking");
+}
+		</programlisting>
+	</sect1>
 </chapter>
