@@ -38,7 +38,7 @@
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->	
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
 		<webflow:flow-execution-attributes>
-			<webflow:alwaysRedirectOnPause value="false"/>
+			<webflow:always-redirect-on-pause value="false"/>
 		</webflow:flow-execution-attributes>
 		<webflow:flow-execution-listeners>
 			<webflow:listener ref="jpaFlowExecutionListener" />
