@@ -19,9 +19,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
+import org.springframework.webflow.engine.StubViewFactory;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.test.MockRequestControlContext;
 
 public class MvcViewTests extends TestCase {
 
@@ -38,7 +41,8 @@ public class MvcViewTests extends TestCase {
 	}
 
 	public void testRender() throws Exception {
-		MockRequestContext context = new MockRequestContext();
+		MockRequestControlContext context = new MockRequestControlContext();
+		context.setCurrentState(new ViewState(context.getRootFlow(), "test", new StubViewFactory()));
 		context.getRequestScope().put("foo", "bar");
 		context.getFlowScope().put("bar", "baz");
 		context.getFlowScope().put("bindBean", new BindBean());
@@ -66,7 +70,8 @@ public class MvcViewTests extends TestCase {
 	}
 
 	public void testRenderWithBindingModel() throws Exception {
-		MockRequestContext context = new MockRequestContext();
+		MockRequestControlContext context = new MockRequestControlContext();
+		context.setCurrentState(new ViewState(context.getRootFlow(), "test", new StubViewFactory()));
 		Object bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");

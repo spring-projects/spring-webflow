@@ -43,6 +43,12 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	private boolean alwaysRedirectOnPause;
 
 	/**
+	 * Creates a new mock request control context.
+	 */
+	public MockRequestControlContext() {
+	}
+
+	/**
 	 * Creates a new mock request control context for controlling a mock execution of the provided flow definition.
 	 * @param flow the flow definition
 	 */
