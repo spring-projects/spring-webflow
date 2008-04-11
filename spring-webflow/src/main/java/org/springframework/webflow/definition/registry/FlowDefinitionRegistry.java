@@ -29,6 +29,12 @@ import org.springframework.webflow.definition.FlowDefinition;
 public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 
 	/**
+	 * Returns the number of flow definitions registered in this registry.
+	 * @return the flow definition count
+	 */
+	public int getFlowDefinitionCount();
+
+	/**
 	 * Sets this registry's parent registry. When asked by a client to locate a flow definition this registry will query
 	 * it's parent if it cannot fulfill the lookup request itself.
 	 * @param parent the parent flow definition registry, may be null

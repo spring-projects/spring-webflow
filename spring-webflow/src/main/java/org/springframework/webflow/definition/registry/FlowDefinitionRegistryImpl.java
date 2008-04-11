@@ -74,6 +74,10 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
 	// implementing FlowDefinitionRegistry
 
+	public int getFlowDefinitionCount() {
+		return flowDefinitions.size();
+	}
+
 	public void setParent(FlowDefinitionRegistry parent) {
 		this.parent = parent;
 	}
