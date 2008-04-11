@@ -25,6 +25,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
+import org.springframework.webflow.execution.View;
 
 /**
  * Mock implementation of the {@link RequestControlContext} interface to facilitate standalone Flow and State unit
@@ -76,6 +77,21 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		return key;
 	}
 
+	public void viewRendering(View view) {
+	}
+
+	public void viewRendered(View view) {
+	}
+
+	public boolean handleEvent(Event event) {
+		setCurrentEvent(event);
+		return ((Flow) getActiveFlow()).handleEvent(this);
+	}
+
+	public boolean execute(Transition transition) {
+		return transition.execute((TransitionableState) getCurrentState(), this);
+	}
+
 	public void removeAllFlowExecutionSnapshots() {
 
 	}
@@ -86,15 +102,6 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 
 	public void updateCurrentFlowExecutionSnapshot() {
 
-	}
-
-	public boolean handleEvent(Event event) {
-		setCurrentEvent(event);
-		return ((Flow) getActiveFlow()).handleEvent(this);
-	}
-
-	public boolean execute(Transition transition) {
-		return transition.execute((TransitionableState) getCurrentState(), this);
 	}
 
 	public void start(Flow flow, MutableAttributeMap input) throws IllegalStateException {

@@ -35,6 +35,7 @@ import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
+import org.springframework.webflow.execution.View;
 
 /**
  * Default request control context implementation used internally by the web flow system. This class is closely coupled
@@ -187,12 +188,29 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.setCurrentState(state, this);
 	}
 
-	public void setCurrentTransition(Transition transition) {
-		this.currentTransition = transition;
-	}
-
 	public FlowExecutionKey assignFlowExecutionKey() {
 		return flowExecution.assignKey();
+	}
+
+	public void viewRendering(View view) {
+		flowExecution.viewRendering(view, this);
+	}
+
+	public void viewRendered(View view) {
+		flowExecution.viewRendered(view, this);
+	}
+
+	public boolean handleEvent(Event event) throws FlowExecutionException {
+		this.currentEvent = event;
+		return flowExecution.handleEvent(event, this);
+	}
+
+	public boolean execute(Transition transition) {
+		return flowExecution.execute(transition, this);
+	}
+
+	public void setCurrentTransition(Transition transition) {
+		this.currentTransition = transition;
 	}
 
 	public void updateCurrentFlowExecutionSnapshot() {
@@ -207,26 +225,17 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.removeAllFlowExecutionSnapshots();
 	}
 
-	public boolean getAlwaysRedirectOnPause() {
-		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
-		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
-	}
-
-	public boolean handleEvent(Event event) throws FlowExecutionException {
-		this.currentEvent = event;
-		return flowExecution.handleEvent(event, this);
-	}
-
-	public boolean execute(Transition transition) {
-		return flowExecution.execute(transition, this);
-	}
-
 	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
 		flowExecution.start(flow, input, this);
 	}
 
 	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {
 		return flowExecution.endActiveFlowSession(output, this);
+	}
+
+	public boolean getAlwaysRedirectOnPause() {
+		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
+		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
 
 	public String toString() {

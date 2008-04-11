@@ -25,6 +25,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.View;
 
 /**
  * A helper that aids in publishing events to an array of <code>FlowExecutionListener</code> objects.
@@ -150,6 +151,24 @@ class FlowExecutionListeners {
 	public void fireStateEntered(RequestContext context, StateDefinition previousState) {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].stateEntered(context, previousState, context.getCurrentState());
+		}
+	}
+
+	/**
+	 * Notify all interested listeners that a flow execution view is rendering.
+	 */
+	public void fireViewRendering(RequestContext context, View view) {
+		for (int i = 0; i < listeners.length; i++) {
+			listeners[i].viewRendering(context, view, context.getCurrentState());
+		}
+	}
+
+	/**
+	 * Notify all interested listeners that a flow execution has rendered.
+	 */
+	public void fireViewRendered(RequestContext context, View view) {
+		for (int i = 0; i < listeners.length; i++) {
+			listeners[i].viewRendered(context, view, context.getCurrentState());
 		}
 	}
 

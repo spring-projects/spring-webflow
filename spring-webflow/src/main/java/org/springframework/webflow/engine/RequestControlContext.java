@@ -22,6 +22,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.View;
 
 /**
  * Mutable control interface used to manipulate an ongoing flow execution in the context of one client request.
@@ -60,19 +61,16 @@ public interface RequestControlContext extends RequestContext {
 	public FlowExecutionKey assignFlowExecutionKey();
 
 	/**
-	 * Update the current flow execution snapshot to save the current state.
+	 * Called when a view is about to be rendered in the current view state.
+	 * @param view the view to be rendered
 	 */
-	public void updateCurrentFlowExecutionSnapshot();
+	public void viewRendering(View view);
 
 	/**
-	 * Remove the current flow execution snapshot to invalidate the current state.
+	 * Called when a view has completed rendering in the current view state.
+	 * @param view the view that rendered
 	 */
-	public void removeCurrentFlowExecutionSnapshot();
-
-	/**
-	 * Remove all flow execution snapshots associated with the ongoing conversation. Invalidates previous states.
-	 */
-	public void removeAllFlowExecutionSnapshots();
+	public void viewRendered(View view);
 
 	/**
 	 * Signals the occurrence of an event in the current state of this flow execution request context. This method
@@ -101,6 +99,21 @@ public interface RequestControlContext extends RequestContext {
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
 	public void setCurrentTransition(Transition transition);
+
+	/**
+	 * Update the current flow execution snapshot to save the current state.
+	 */
+	public void updateCurrentFlowExecutionSnapshot();
+
+	/**
+	 * Remove the current flow execution snapshot to invalidate the current state.
+	 */
+	public void removeCurrentFlowExecutionSnapshot();
+
+	/**
+	 * Remove all flow execution snapshots associated with the ongoing conversation. Invalidates previous states.
+	 */
+	public void removeAllFlowExecutionSnapshots();
 
 	/**
 	 * Spawn a new flow session and activate it in the currently executing flow. Also transitions the spawned flow to

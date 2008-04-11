@@ -263,6 +263,7 @@ public class ViewState extends TransitionableState {
 			logger.debug("  Flash scope = " + context.getFlashScope());
 			logger.debug("  Messages = " + context.getMessageContext());
 		}
+		context.viewRendering(view);
 		renderActionList.execute(context);
 		try {
 			view.render();
@@ -271,6 +272,7 @@ public class ViewState extends TransitionableState {
 		}
 		context.getMessageContext().clearMessages();
 		context.getFlashScope().clear();
+		context.viewRendered(view);
 	}
 
 	private void restoreVariables(RequestContext context) {

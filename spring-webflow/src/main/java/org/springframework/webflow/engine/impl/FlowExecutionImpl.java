@@ -49,6 +49,7 @@ import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
 
 /**
  * Default implementation of FlowExecution that uses a stack-based data structure to manage spawned flow sessions. This
@@ -368,6 +369,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		listeners.fireStateEntered(context, previousState);
 	}
 
+	public void viewRendering(View view, RequestContext context) {
+		listeners.fireViewRendering(context, view);
+	}
+
+	public void viewRendered(View view, RequestContext context) {
+		listeners.fireViewRendered(context, view);
+	}
+
 	boolean handleEvent(Event event, RequestControlContext context) {
 		listeners.fireEventSignaled(context, event);
 		return getActiveSessionInternal().getFlow().handleEvent(context);
@@ -637,4 +646,5 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		State currentState = (State) session.getState();
 		return currentState;
 	}
+
 }

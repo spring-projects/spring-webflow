@@ -278,9 +278,19 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(new FlowExecutionListenerAdapter() {
 			public void viewRendering(RequestContext context, View view, StateDefinition viewState) {
-				BindingResult result = (BindingResult) context.getFlashScope().get(
-						"org.springframework.validation.BindingResult.formBean");
-				assertEquals(1, result.getErrorCount());
+				if (context.getCurrentEvent() != null && context.getCurrentEvent().getId().equals("submit")) {
+					BindingResult result = (BindingResult) context.getFlashScope().get(
+							"org.springframework.validation.BindingResult.formBean");
+					assertEquals(1, result.getErrorCount());
+				}
+			}
+
+			public void viewRendered(RequestContext context, View view, StateDefinition viewState) {
+				if (context.getCurrentEvent() != null && context.getCurrentEvent().getId().equals("submit")) {
+					BindingResult result = (BindingResult) context.getFlashScope().get(
+							"org.springframework.validation.BindingResult.formBean");
+					assertNull(result);
+				}
 			}
 		}));
 		FlowExecution execution = factory.createFlowExecution(flow);
