@@ -9,6 +9,6 @@ import org.springframework.webflow.mvc.servlet.AbstractFlowHandler;
 public class BookingFlowHandler extends AbstractFlowHandler {
     public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 	    HttpServletResponse response) {
-	return "/spring/hotels/index";
+	return "hotels/index";
     }
 }

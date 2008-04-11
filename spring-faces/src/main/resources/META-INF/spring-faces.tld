@@ -11,7 +11,6 @@
     <tag>
         <description>
             <![CDATA[<p>Renders the necessary CSS stylesheet includes for the Spring Faces components.</p>  
-            
             <p>Use of this tag in the head section of a page that contains the Spring Faces components is recommended 
             as a browser performance optimization in keeping with the <a href="http://developer.yahoo.com/performance/">
             Yahoo performance guidelines</a>.  If this tag is not included, the stylesheet includes will be rendered 
@@ -25,7 +24,6 @@
     <tag>
         <description>
             <![CDATA[<p>Renders a resource include that will route through the <code>ResourceServlet</code>.</p>
-        
         <p>The included resource can be either CSS or JavaScript.  The type of include to render will be determined
         from the resource's file extension.  The ResourceServlet will set the proper response headers for aggressive
         caching of the resource by the browser and will gzip the resource if the client browser supports it.  These
@@ -104,16 +102,16 @@
         </attribute>
         <attribute>
             <description><![CDATA[JavaScript regular expression string used to validate the input.]]></description>
-            <name></name>
-            <required>regExp</required>
+            <name>regExp</name>
+            <required>false</required>
             <deferred-value>
                 <type>java.lang.String</type>
             </deferred-value>
         </attribute>
         <attribute>
             <description><![CDATA[If true, the field must be non-empty to pass client-side validation.]]></description>
-            <name></name>
-            <required>required</required>
+            <name>required</name>
+            <required>false</required>
             <deferred-value>
                 <type>boolean</type>
             </deferred-value>
@@ -177,16 +175,16 @@
         </attribute>
         <attribute>
             <description><![CDATA[JavaScript regular expression string used to validate the input.]]></description>
-            <name></name>
-            <required>regExp</required>
+            <name>regExp</name>
+            <required>false</required>
             <deferred-value>
                 <type>java.lang.String</type>
             </deferred-value>
         </attribute>
         <attribute>
             <description><![CDATA[If true, the field must be non-empty to pass client-side validation.]]></description>
-            <name></name>
-            <required>required</required>
+            <name>required</name>
+            <required>false</required>
             <deferred-value>
                 <type>boolean</type>
             </deferred-value>
@@ -250,16 +248,16 @@
         </attribute>
         <attribute>
             <description><![CDATA[JavaScript regular expression string used to validate the input.]]></description>
-            <name></name>
-            <required>regExp</required>
+            <name>regExp</name>
+            <required>false</required>
             <deferred-value>
                 <type>java.lang.String</type>
             </deferred-value>
         </attribute>
         <attribute>
             <description><![CDATA[If true, the field must be non-empty to pass client-side validation.]]></description>
-            <name></name>
-            <required>required</required>
+            <name>required</name>
+            <required>false</required>
             <deferred-value>
                 <type>boolean</type>
             </deferred-value>
@@ -1661,7 +1659,6 @@
             </deferred-value>
         </attribute>
     </tag>
-    </tag>
 
     <tag>
         <description>
@@ -1697,12 +1694,8 @@
                 a literal String and handle any custom processing  of the event in the 
                 flow definition.]]>
             </description>
-            <name>
-                action
-            </name>
-            <required>
-                false
-            </required>
+            <name>action</name>
+            <required>false</required>
             <deferred-method>
                 <method-signature>
                     java.lang.Object action()
@@ -1710,8 +1703,8 @@
             </deferred-method>
         </attribute>
         <attribute>
-            <description>The event to listen to on the child component that will trigger the Ajax request.  For example,
-                <code>event="onchange"</code> will fire an Ajax event when the child component's value changes.
+            <description><![CDATA[The event to listen to on the child component that will trigger the Ajax request.  For example,
+                <code>event="onchange"</code> will fire an Ajax event when the child component's value changes.]]>
             </description>
             <name>event</name>
         </attribute>
@@ -1729,5 +1722,5 @@
             </deferred-value>
         </attribute>
     </tag>
-
+        
 </taglib>

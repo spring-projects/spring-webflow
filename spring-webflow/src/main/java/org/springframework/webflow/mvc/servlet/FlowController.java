@@ -270,15 +270,22 @@ public class FlowController extends AbstractController {
 		FlowHandler handler = getFlowHandler(flowId);
 		if (handler != null) {
 			String location = handler.handleExecutionOutcome(outcome, endedOutput, request, response);
-			return location != null ? createRedirectView(location) : defaultHandleFlowOutcome(flowId, outcome,
+			return location != null ? createRedirectView(location, request) : defaultHandleFlowOutcome(flowId, outcome,
 					endedOutput, request, response);
 		} else {
 			return defaultHandleFlowOutcome(flowId, outcome, endedOutput, request, response);
 		}
 	}
 
-	private ModelAndView createRedirectView(String location) {
-		return new ModelAndView(new RedirectView(location, true));
+	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
+		if (location.startsWith("/")) {
+			return new ModelAndView(new RedirectView(location, true));
+		} else {
+			StringBuffer url = new StringBuffer(request.getServletPath());
+			url.append('/');
+			url.append(location);
+			return new ModelAndView(new RedirectView(url.toString(), true));
+		}
 	}
 
 	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response)

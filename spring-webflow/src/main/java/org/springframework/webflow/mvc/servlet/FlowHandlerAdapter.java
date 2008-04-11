@@ -227,16 +227,23 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			} else {
 				String location = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
 						request, response);
-				return location != null ? createRedirectView(location) : defaultHandleFlowOutcome(result.getFlowId(),
-						result.getEndedOutcome(), result.getEndedOutput(), request, response);
+				return location != null ? createRedirectView(location, request) : defaultHandleFlowOutcome(result
+						.getFlowId(), result.getEndedOutcome(), result.getEndedOutput(), request, response);
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
 		}
 	}
 
-	private ModelAndView createRedirectView(String location) {
-		return new ModelAndView(new RedirectView(location, true));
+	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
+		if (location.startsWith("/")) {
+			return new ModelAndView(new RedirectView(location, true));
+		} else {
+			StringBuffer url = new StringBuffer(request.getServletPath());
+			url.append('/');
+			url.append(location);
+			return new ModelAndView(new RedirectView(url.toString(), true));
+		}
 	}
 
 	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,

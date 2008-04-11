@@ -54,6 +54,11 @@ public interface FlowHandler {
 	/**
 	 * Handles a specific flow execution outcome. Used by a Controller to get the location of the resource to redirect
 	 * to after the outcome is handled.
+	 * <p>
+	 * If the location string returned begins with a forward-slash, the location is treated as relative to the web
+	 * application context path. If the location string does not begin with a slash, the location is treated as relative
+	 * to the current servlet path.
+	 * 
 	 * @param outcome the outcome that was reached
 	 * @param output the output returned by the flow execution
 	 * @param request the current request
