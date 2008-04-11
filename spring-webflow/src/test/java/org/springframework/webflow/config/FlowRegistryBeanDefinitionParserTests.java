@@ -56,4 +56,9 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 
 		}
 	}
+
+	public void testParent() {
+		assertNotNull(registry.getParent());
+		assertEquals("parentFlow", registry.getParent().getFlowDefinition("parentFlow").getId());
+	}
 }

@@ -39,6 +39,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private static final String FLOW_BUILDER_SERVICES_ATTRIBUTE = "flow-builder-services";
 
+	private static final String PARENT_ATTRIBUTE = "parent";
+
 	private static final String FLOW_LOCATION_ELEMENT = "flow-location";
 
 	private static final String FLOW_BUILDER_ELEMENT = "flow-builder";
@@ -65,6 +67,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private static final String FLOW_BUILDER_SERVICES_PROPERTY = "flowBuilderServices";
 
+	private static final String PARENT_PROPERTY = "parent";
+
 	protected Class getBeanClass(Element element) {
 		return FlowRegistryFactoryBean.class;
 	}
@@ -77,6 +81,10 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY,
 					FlowBuilderServicesBeanDefinitionParser.registerDefaultFlowBuilderServicesBeanDefinition(
 							parserContext).getBeanName());
+		}
+		String parent = getParentAttribute(element);
+		if (StringUtils.hasText(parent)) {
+			definitionBuilder.addPropertyReference(PARENT_PROPERTY, parent);
 		}
 		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, parseLocations(element));
 		definitionBuilder.addPropertyValue(FLOW_BUILDERS_PROPERTY, parseFlowBuilders(element));
@@ -133,4 +141,9 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	private String getFlowBuilderServicesAttribute(Element element) {
 		return element.getAttribute(FLOW_BUILDER_SERVICES_ATTRIBUTE);
 	}
+
+	private String getParentAttribute(Element element) {
+		return element.getAttribute(PARENT_ATTRIBUTE);
+	}
+
 }

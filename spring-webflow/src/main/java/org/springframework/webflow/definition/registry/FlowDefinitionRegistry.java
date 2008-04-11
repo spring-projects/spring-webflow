@@ -35,6 +35,12 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	public int getFlowDefinitionCount();
 
 	/**
+	 * Returns this registry'es parent registry.
+	 * @return the parent flow definition registry, or null if no parent is set
+	 */
+	public FlowDefinitionRegistry getParent();
+
+	/**
 	 * Sets this registry's parent registry. When asked by a client to locate a flow definition this registry will query
 	 * it's parent if it cannot fulfill the lookup request itself.
 	 * @param parent the parent flow definition registry, may be null

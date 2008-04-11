@@ -75,6 +75,16 @@ Optional.  For use when one or more custom builder services are required.
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
+					<xsd:attribute name="parent" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+A reference to this registry's parent.  Registries can be organized in a hierarchy.  If a child registry does not contain a flow,
+its parent registry will be queried.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

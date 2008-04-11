@@ -39,53 +39,63 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
  */
 class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 
+	private FlowLocation[] flowLocations;
+
+	private FlowBuilderInfo[] flowBuilders;
+
+	private FlowBuilderServices flowBuilderServices;
+
+	private FlowDefinitionRegistry parent;
+
 	/**
 	 * The definition registry produced by this factory bean.
 	 */
 	private FlowDefinitionRegistryImpl flowRegistry;
 
 	/**
-	 * The model registry produced by this factory bean.
+	 * The model registry used to build flow models that can be assembled into registerable Flows.
 	 */
 	private FlowModelRegistryImpl flowModelRegistry;
-
-	/**
-	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
-	 * bean.
-	 */
-	private FlowLocation[] flowLocations;
-
-	/**
-	 * Java {@link FlowBuilder flow builder} classes that should be registered in the registry produced by this factory
-	 * bean.
-	 */
-	private FlowBuilderInfo[] flowBuilders;
-
-	/**
-	 * The holder for services needed to build flow definitions registered in this registry.
-	 */
-	private FlowBuilderServices flowBuilderServices;
 
 	/**
 	 * A helper for creating abstract representation of externalized flow definition resources.
 	 */
 	private FlowDefinitionResourceFactory flowResourceFactory;
 
+	/**
+	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
+	 * bean.
+	 */
 	public void setFlowLocations(FlowLocation[] flowLocations) {
 		this.flowLocations = flowLocations;
 	}
 
+	/**
+	 * Java {@link FlowBuilder flow builder} classes that should be registered in the registry produced by this factory
+	 * bean.
+	 */
 	public void setFlowBuilders(FlowBuilderInfo[] flowBuilders) {
 		this.flowBuilders = flowBuilders;
 	}
 
+	/**
+	 * The holder for services needed to build flow definitions registered in this registry.
+	 */
 	public void setFlowBuilderServices(FlowBuilderServices flowBuilderServices) {
 		this.flowBuilderServices = flowBuilderServices;
+	}
+
+	/**
+	 * The parent of the registry created by this factory bean.
+	 */
+	public void setParent(FlowDefinitionRegistry parent) {
+		this.parent = parent;
 	}
 
 	public void afterPropertiesSet() throws Exception {
 		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getApplicationContext());
 		flowRegistry = new FlowDefinitionRegistryImpl();
+		flowRegistry.setParent(parent);
 		flowModelRegistry = new FlowModelRegistryImpl();
 		registerFlowLocations();
 		registerFlowBuilders();

@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<webflow:flow-registry id="flowRegistry">
+	<webflow:flow-registry id="flowRegistry" parent="parentRegistry">
 		<webflow:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
 			<webflow:flow-definition-attributes>
 				<webflow:attribute name="foo" value="bar" />
@@ -24,6 +24,10 @@
 				<webflow:attribute name="bar" value="2" type="integer" />
 			</webflow:flow-definition-attributes>
 		</webflow:flow-builder>
+	</webflow:flow-registry>
+	
+	<webflow:flow-registry id="parentRegistry">
+		<webflow:flow-location id="parentFlow" path="org/springframework/webflow/config/flow.xml" />
 	</webflow:flow-registry>
 	
 </beans>
