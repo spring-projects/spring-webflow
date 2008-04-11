@@ -178,7 +178,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		PortletSession session = renderRequest.getPortletSession();
 		session.setAttribute("flowExecutionResult", result);
-		executor.launchExecution("home", flowInput, renderContext);
+		executor.launchExecution("home", output, renderContext);
 		EasyMock.expectLastCall().andReturn(FlowExecutionResult.createEndedResult("bar", outcome));
 		EasyMock.replay(new Object[] { executor });
 		ModelAndView mv = controller.handleRender(renderRequest, renderResponse, flowHandler);

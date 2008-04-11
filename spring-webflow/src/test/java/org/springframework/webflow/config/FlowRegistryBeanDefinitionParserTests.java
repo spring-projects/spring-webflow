@@ -52,8 +52,8 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 	public void testBogusPath() {
 		try {
 			registry.getFlowDefinition("bogus");
+			fail("Should have failed");
 		} catch (FlowDefinitionConstructionException e) {
-			e.printStackTrace();
 		}
 	}
 
