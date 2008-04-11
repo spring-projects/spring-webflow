@@ -27,7 +27,6 @@ import javax.el.VariableMapper;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;
 import org.springframework.binding.expression.el.ELExpressionParser;
-import org.springframework.binding.expression.el.NullELResolver;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -55,7 +54,6 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			RequestContext context = (RequestContext) target;
 			List customResolvers = new ArrayList();
 			customResolvers.add(new RequestContextELResolver(context));
-			customResolvers.add(new NullELResolver());
 			customResolvers.add(new ImplicitFlowVariableELResolver(context));
 			customResolvers.add(new ScopeSearchingELResolver(context));
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));

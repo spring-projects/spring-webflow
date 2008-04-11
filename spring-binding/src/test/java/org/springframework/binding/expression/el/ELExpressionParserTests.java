@@ -42,6 +42,11 @@ public class ELExpressionParserTests extends TestCase {
 		}
 	}
 
+	public void testParseNull() {
+		Expression exp = parser.parseExpression("null", null);
+		assertEquals(null, exp.getValue(null));
+	}
+
 	public void testParseEmptyExpressionString() {
 		String expressionString = "";
 		try {
