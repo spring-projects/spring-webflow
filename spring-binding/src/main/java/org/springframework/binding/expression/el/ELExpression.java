@@ -44,7 +44,9 @@ public class ELExpression implements Expression {
 		try {
 			Object result = valueExpression.getValue(ctx);
 			if (result == null && !ctx.isPropertyResolved()) {
-				throw new EvaluationException(new EvaluationAttempt(this, context), null);
+				EvaluationAttempt attempt = new EvaluationAttempt(this, context);
+				throw new EvaluationException(attempt, attempt
+						+ " failed: the expression path did not resolve--is the base variable incorrect?", null);
 			}
 			return result;
 		} catch (javax.el.PropertyNotFoundException e) {
@@ -59,7 +61,9 @@ public class ELExpression implements Expression {
 		try {
 			valueExpression.setValue(ctx, value);
 			if (!ctx.isPropertyResolved()) {
-				throw new EvaluationException(new SetValueAttempt(this, context, value), null);
+				SetValueAttempt attempt = new SetValueAttempt(this, context, value);
+				throw new EvaluationException(attempt, attempt
+						+ " failed: the expression path did not resolve--is the base variable incorrect?", null);
 			}
 		} catch (javax.el.PropertyNotFoundException e) {
 			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);

@@ -12,6 +12,7 @@ import javax.el.VariableMapper;
 import junit.framework.TestCase;
 
 import org.jboss.el.ExpressionFactoryImpl;
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
@@ -70,10 +71,22 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals(new Long(2), exp.getValue(new TestBean()));
 	}
 
-	public void testParseEvalExpressionWithContextCustomTestBeanResolver() {
+	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
 		String expressionString = "specialProperty";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().evaluate(TestBean.class));
 		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
+	}
+
+	public void testParseBeanEvalExpressionInvalidELVariable() {
+		try {
+			String expressionString = "bogus";
+			Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
+					.evaluate(TestBean.class));
+			exp.getValue(new TestBean());
+			fail("Should have failed");
+		} catch (EvaluationException e) {
+
+		}
 	}
 
 	public void testParseLiteralExpression() {
@@ -181,9 +194,10 @@ public class ELExpressionParserTests extends TestCase {
 
 						public Object getValue(ELContext arg0, Object arg1, Object arg2) {
 							if (arg1 == null && arg2.equals("specialProperty")) {
+								arg0.setPropertyResolved(true);
 								return "Custom resolver resolved this special property!";
 							} else {
-								throw new IllegalStateException();
+								return null;
 							}
 						}
 

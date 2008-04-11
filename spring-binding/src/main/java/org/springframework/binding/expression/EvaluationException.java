@@ -15,19 +15,17 @@
  */
 package org.springframework.binding.expression;
 
-import org.springframework.core.NestedRuntimeException;
-
 /**
  * Indicates an expression evaluation failed.
  * 
  * @author Keith Donald
  */
-public class EvaluationException extends NestedRuntimeException {
+public class EvaluationException extends RuntimeException {
 
 	/**
 	 * The evaluation attempt that failed. Transient because an EvaluationAttempt is not serializable.
 	 */
-	private transient EvaluationAttempt evaluationAttempt;
+	private EvaluationAttempt evaluationAttempt;
 
 	/**
 	 * Creates a new evaluation exception.
@@ -35,7 +33,17 @@ public class EvaluationException extends NestedRuntimeException {
 	 * @param cause the underlying cause of this exception
 	 */
 	public EvaluationException(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		super(evaluationAttempt + " failed - make sure the expression is evaluatable in the context provided", cause);
+		this(evaluationAttempt, evaluationAttempt
+				+ " failed - make sure the expression is evaluatable in the context provided", cause);
+	}
+
+	/**
+	 * Creates a new evaluation exception.
+	 * @param evaluationAttempt the evaluation attempt that failed
+	 * @param cause the underlying cause of this exception
+	 */
+	public EvaluationException(EvaluationAttempt evaluationAttempt, String message, Throwable cause) {
+		super(message, cause);
 		this.evaluationAttempt = evaluationAttempt;
 	}
 

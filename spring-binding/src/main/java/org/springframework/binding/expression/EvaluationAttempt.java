@@ -25,6 +25,7 @@ import org.springframework.core.style.ToStringCreator;
 public class EvaluationAttempt {
 
 	private Expression expression;
+
 	private Object context;
 
 	/**
