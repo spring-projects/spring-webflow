@@ -5,8 +5,8 @@
 		<title>Introduction</title>
 		<para>
 			Security is an important concept for any application.
-			End users should not be able to access any portion of your site simply by guessing the URL.
-			Areas of a site that are sensitive should insure that only authorized requested are processed.
+			End users should not be able to access any portion of a site simply by guessing the URL.
+			Areas of a site that are sensitive must insure that only authorized requested are processed.
 			Spring Security is a proven security platform that can integrate with your application at multiple levels.
 			This section will focus on securing flow execution.
 		</para>
@@ -16,7 +16,7 @@
 		<para>
 			Securing flow execution is a three step process:
 			<itemizedlist>
-				<listitem><para>Configure Spring Security with allowed users and roles</para></listitem>
+				<listitem><para>Configure Spring Security with authentication and authorization rules</para></listitem>
 				<listitem><para>Annotate the flow definition with the secured element to define the security rules</para></listitem>
 				<listitem><para>Add the SecurityFlowExecutionListener to process the security rules.</para></listitem>
 			</itemizedlist>
@@ -28,25 +28,25 @@
 	<sect1 id="flow-security-secured-element">
 		<title>The secured element</title>
 		<para>
-			The secured element designates that its containing element should apply the authorization checks before fully entering.
-			This element is optional and should occur only once per stage of the flow execution that is secured.
+			The secured element designates that its containing element should apply the authorization check before fully entering.
+			This may not occur more then once per stage of the flow execution that is secured.
 		</para>
 		<para>
-			There are three phases of flow execution that can be secured: flows, states and transitions.
+			Three phases of flow execution can be secured: flows, states and transitions.
 			In each case the syntax for the secured element is identical.
 		</para>
 		<sect2 id="flow-security-secured-element-attributes">
 			<title>Security attributes</title>
 			<para>
-				The <code>attributes</code> attribute is a comma separated list of Spring Security attributes.
-				Often these are specific security roles.
-				These attributes will be compared against the user's granted attributes by a Spring Security access decision manager.
+				The <code>attributes</code> attribute is a comma separated list of Spring Security authorization attributes.
+				Often, these are specific security roles.
+				The attributes are compared against the user's granted attributes by a Spring Security access decision manager.
 			</para>
 			<programlisting language="xml">
 &lt;secured attributes="ROLE_USER" /&gt;
 			</programlisting>
 			<para>
-				By default a role based access decision manager is used to determine if the user is allowed access.
+				By default, a role based access decision manager is used to determine if the user is allowed access.
 				This will need to be overridden if your application is not using authorization roles.
 			</para>
 		</sect2>
@@ -54,14 +54,15 @@
 			<title>Matching type</title>
 			<para>
 				There are two types of matching available: <code>any</code> and <code>all</code>.
-				Any will allow access if at least one of the required security attributes is granted to the user.
-				All allows access only if each of the required security attributes are granted to the user.
+				Any, allows access if at least one of the required security attributes is granted to the user.
+				All, allows access only if each of the required security attributes are granted to the user.
 			</para>
 			<programlisting language="xml">
 &lt;secured attributes="ROLE_USER, ROLE_ANONYMOUS" match="any" /&gt;
 			</programlisting>
 			<para>
-				The default value is <code>any</code>.
+				This attribute is optional.
+				If not defined, the default value is <code>any</code>.
 			</para>
 			<para>
 				The <code>match</code> attribute will only be respected if the default access decision manager is used.
@@ -71,43 +72,48 @@
 	<sect1 id="flow-security-listener">
 		<title>The SecurityFlowExecutionListener</title>
 		<para>
-			Defining security rules in your flow by itself will not protect the flow execution.
+			Defining security rules in the flow by themself will not protect the flow execution.
 			A <code>SecurityFlowExecutionListener</code> must also be defined in the webflow configuration and applied to the flow executor.
 		</para>
-		<programlisting language="xml">
-&lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"&gt;
-    &lt;webflow:flow-execution-listeners&gt;
-        &lt;webflow:listener ref="securityFlowExecutionListener" /&gt;
-    &lt;/webflow:flow-execution-listeners&gt;
-&lt;/webflow:flow-executor&gt;
+		<programlisting language="xml"><![CDATA[
+<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+    <webflow:flow-execution-listeners>
+        <webflow:listener ref="securityFlowExecutionListener" />
+    </webflow:flow-execution-listeners>
+</webflow:flow-executor>
 
-&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" /&gt;
-		</programlisting>
-		<para>
-			If your application is using authorities that are not role based, you will need to configure a custom <code>AccessDecisionManager</code>.
-			You can override the default decision manager by setting the <code>accessDecisionManager</code> property on the security listener.
-			Please consult the Spring Security documentation to learn more about decision managers.
-		</para>
-		<programlisting language="xml">
-&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener"&gt;
-    &lt;property name="accessDecisionManager" ref="myCustomAccessDecisionManager" /&gt;
-&lt;/bean&gt;
-		</programlisting>
+<bean id="securityFlowExecutionListener" 
+      class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
+		]]></programlisting>
 		<para>
 			If access is denied to a portion of the application an <code>AccessDeniedException</code> will be thrown.
 			This exception will later be caught by Spring Security and used to prompt the user to authenticate.
 			It is important that this exception be allowed to travel up the execution stack uninhibited, otherwise the end user may not be prompted to authenticate.
 		</para>
+		<sect2 id="flow-security-listener-adm">
+			<title>Custom Access Decision Managers</title>
+			<para>
+				If your application is using authorities that are not role based, you will need to configure a custom <code>AccessDecisionManager</code>.
+				You can override the default decision manager by setting the <code>accessDecisionManager</code> property on the security listener.
+				Please consult the <ulink url="http://static.springframework.org/spring-security/site/reference.html">Spring Security reference documentation</ulink> to learn more about decision managers.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<bean id="securityFlowExecutionListener"
+      class="org.springframework.webflow.security.SecurityFlowExecutionListener">
+    <property name="accessDecisionManager" ref="myCustomAccessDecisionManager" />
+</bean>
+			]]></programlisting>
+		</sect2>
 	</sect1>
 	<sect1 id="flow-security-configuration">
 		<title>Configuring Spring Security</title>
 		<para>
 			Spring Security has robust configuration options available.
-			As every application and environment has its own security requirements, the Spring Security reference guide is the best place to learn about all of the available options.
+			As every application and environment has its own security requirements, the <ulink url="http://static.springframework.org/spring-security/site/reference.html">Spring Security reference documentation</ulink> is the best place to learn the available options.
 		</para>
 		<para>
 			Both the <code>booking-faces</code> and <code>booking-mvc</code> sample applications are configured to use Spring Security.
-			Spring Security needs to be configured for both the Spring configuration and the web.xml level.
+			Configuration is needed at both the Spring and web.xml levels.
 		</para>
 		<sect2 id="flow-security-configuration-spring">
 			<title>Spring configuration</title>
@@ -149,15 +155,16 @@
 			</para>
 			<programlisting language="xml">
 &lt;filter&gt;
-	&lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
-	&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;
+    &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;
 &lt;/filter&gt;
 
 &lt;filter-mapping&gt;
-	&lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
-	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
 &lt;/filter-mapping&gt;
 			</programlisting>
 		</sect2>
 	</sect1>
 </chapter>
+s

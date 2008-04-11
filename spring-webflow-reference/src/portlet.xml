@@ -4,7 +4,7 @@
 	<sect1 id="portlet-introduction">
 		<title>Introduction</title>
 		<para>
-			This chapter shows you how to use Web Flow in a Portlet environment.
+			This chapter shows how to use Web Flow in a Portlet environment.
 			Web Flow has full support for JSR-168 portlets.
 			The <code>booking-portlet-mvc</code> sample application is a good reference for using Web Flow within a portlet.
 			This application is a simplified travel site that allows users to search for and book hotel rooms.
@@ -14,10 +14,10 @@
 		<title>Configuring web.xml &amp; portlet.xml</title>
 		<para>
 			The configuration for a portlet depends on the portlet container used.
-			The <code>booking-portlet-mvc</code> and <code>booking-portlet-faces</code> sample application are both configured to use <ulink url="http://portals.apache.org/pluto/">Apache Pluto</ulink>, the JSR-168 reference implementation.
+			The sample applications, included with Web Flow, are both configured to use <ulink url="http://portals.apache.org/pluto/">Apache Pluto</ulink>, the JSR-168 reference implementation.
 		</para>
 		<para>
-			In general the configuration requires adding a servlet mapping in the <code>web.xml</code> file to dispatch request to the portlet container.
+			In general, the configuration requires adding a servlet mapping in the <code>web.xml</code> file to dispatch request to the portlet container.
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>
@@ -62,7 +62,7 @@
 		<sect2 id="portlet-config-spring-handler">
 			<title>Flow Handlers</title>
 			<para>
-				The only supported mechanism for bridging a portlet request to Web Flow is via a <code>FlowHandler</code>.
+				The only supported mechanism for bridging a portlet request to Web Flow is a <code>FlowHandler</code>.
 				The <code>PortletFlowController</code> used in Web Flow 1.0 is no longer supported.
 			</para>
 			<para>
@@ -78,9 +78,11 @@
 						<para>handle the flow execution outcome</para>
 					</listitem>
 					<listitem>
-						<para>handle any exceptions</para>
+						<para>handle exceptions</para>
 					</listitem>
 				</itemizedlist>
+			</para>
+			<para>
 				The <code>AbstractFlowHandler</code> class is an implementation of <code>FlowHandler</code> that provides default implementations for these hooks.
 			</para>
 			<para>
@@ -98,7 +100,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			<title>Adapter Mappings</title>
 			<para>
 				Spring Portlet MVC provides a rich set of methods to map portlet requests.
-				Complete documentation of the available methods is available in the <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</ulink>.
+				Complete documentation  is available in the <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</ulink>.
 			</para>
 			<para>
 				The <code>booking-portlet-mvc</code> sample application uses a <code>PortletModeHandlerMapping</code> to map portlet requests.
@@ -132,13 +134,13 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 		<sect2 id="portlet-config-spring-redirectonpause">
 			<title>Redirect on Pause</title>
 			<para>
-				In a portlet environemnt, <code>alwaysRedirectOnPause</code> must be set to <code>false</code>.
+				In a portlet environemnt, <code>always-redirect-on-pause</code> must be set to <code>false</code>.
 				If not turned off, the initial view will fail to render.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
     <webflow:flow-execution-attributes>
-        <webflow:alwaysRedirectOnPause value="false"/>
+        <webflow:always-redirect-on-pause value="false"/>
     </webflow:flow-execution-attributes>
 </webflow:flow-executor>
 			]]></programlisting>
@@ -209,7 +211,7 @@ ${externalContext.requestMap.portletMode}
 				Even if the mode is mapped to a different <code>FlowHandler</code> the flow execution will resume the previous execution.
 			</para>
 			<para>
-				One way to start the new flow is to create a URL targeting the mode without the execution key.
+				One way to start a new flow is to create a URL targeting the mode without the execution key.
 			</para>
 		</sect2>
 		<sect2 id="portlet-issues-jsf">
@@ -218,7 +220,7 @@ ${externalContext.requestMap.portletMode}
 				Web Flow supports JSF as the view technology for a portlet.
 				However, a jsf-portlet bridge (JSR-301) must be provided.
 				At the time of this writing, no feature complete jsf-portlet bridge exists.
-				Some of the existing bridge implementations may appear to work, however, strange side effect may occur.
+				Some of the existing bridge implementations may appear to work, however, side effect may occur.
 			</para>
 			<para>
 				JSF portlets are considered experimental at this time.

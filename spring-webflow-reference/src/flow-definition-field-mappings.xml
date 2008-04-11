@@ -3,7 +3,7 @@
 	<title>Flow Definition Language 1.0 to 2.0 Mappings</title>
 	<para>
 		The flow definition language has changed since the 1.0 release.
-		This is a listing of the language elements in the 1.0 release, and how they convert to element in the 2.0 release.
+		This is a listing of the language elements in the 1.0 release, and how they map to elements in the 2.0 release.
 		While most of the changes are semantic, there are a few structural changes.
 		Please see the upgrade guide for more details about changes between Web Flow 1.0 and 2.0. 
 	</para>
@@ -39,7 +39,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use evaluate
+						use &lt;evaluate /&gt;
 					</entry>
 				</row>
 				<row>
@@ -102,7 +102,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						arguments can be used in evaluate
+						use &lt;evaluate expression="func(arg1, arg2, ...)"/&gt;
 					</entry>
 				</row>
 				<row>
@@ -159,7 +159,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						input/output can be in flow/subflow directly
+						input and output elements can be in flows or subflows directly
 					</entry>
 				</row>
 				<row>
@@ -170,7 +170,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						now subflow-state subflow-attribute-mapper
+						now subflow-attribute-mapper attribute on subflow-state
 					</entry>
 				</row>
 			</tbody>
@@ -183,7 +183,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use evaluate
+						use &lt;evaluate /&gt;
 					</entry>
 				</row>
 				<row>
@@ -324,7 +324,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						use attribute name=”name”
+						use &lt;evaluate ...&gt; &lt;attribute name=”name” value="..." /&gt; &lt;/evaluate&gt;
 					</entry>
 				</row>
 				<row>
@@ -353,7 +353,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use result attribute on evaluate
+						use &lt;evaluate result="..." /&gt; 
 					</entry>
 				</row>
 				<row>
@@ -506,7 +506,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						convert to top level flow
+						convert to new top-level flow
 					</entry>
 				</row>
 				<row>
@@ -543,7 +543,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						prefix name with scope, ie flowScope.foo
+						prefix name with scope &lt;input name="flowScope.foo" /&gt;
 					</entry>
 				</row>
 				<row>
@@ -580,7 +580,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						input can be in flow/subflow directly
+						inputs can be in flows and subflows directly
 					</entry>
 				</row>
 			</tbody>
@@ -663,7 +663,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use evaluate
+						use &lt;evaluate expression="func(arg1, arg2, ...)"/&gt;
 					</entry>
 				</row>
 			</tbody>
@@ -676,7 +676,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use evaluate
+						use &lt;evaluate result="..." /&gt;
 					</entry>
 				</row>
 				<row>
@@ -721,7 +721,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						prefix name with scope, ie flowScope.foo
+						prefix name with scope &lt;output name="flowScope.foo" /&gt;
 					</entry>
 				</row>
 				<row>
@@ -758,7 +758,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						output can be in flow/subflow directly
+						output can be in flows and subflows directly
 					</entry>
 				</row>
 			</tbody>
@@ -797,7 +797,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						prefix name with scope, ie flowScope.foo
+						prefix name with scope &lt;set name="flowScope.foo" /&gt;
 					</entry>
 				</row>
 				<row>
@@ -816,7 +816,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						use attribute name=”name”
+						use &lt;set ...&gt; &lt;attribute name=”name” value="..." /&gt; &lt;/set&gt;
 					</entry>
 				</row>
 				<row>
@@ -847,7 +847,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						now attribute on flow, or implicit
+						now &lt;flow start-state="..."&gt;, or defaults to the first state in the flow
 					</entry>
 				</row>
 				<row>
@@ -997,7 +997,7 @@
 						*
 					</entry>
 					<entry colname="comments">
-						no longer supported
+						all Spring beans can be resolved with EL
 					</entry>
 				</row>
 			</tbody>
