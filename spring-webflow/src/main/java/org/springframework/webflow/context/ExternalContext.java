@@ -99,7 +99,7 @@ public interface ExternalContext {
 	 * @param flowExecutionKey the flow execution key
 	 * @return the flow execution URL
 	 */
-	public String getFlowExecutionUri(String flowId, String flowExecutionKey);
+	public String getFlowExecutionUrl(String flowId, String flowExecutionKey);
 
 	/**
 	 * Provides access to the user's principal security object.

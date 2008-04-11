@@ -174,7 +174,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	public String getFlowExecutionUrl() {
 		String key = flowExecution.getKey() != null ? flowExecution.getKey().toString() : null;
 		if (key != null) {
-			return externalContext.getFlowExecutionUri(flowExecution.getDefinition().getId(), key);
+			return externalContext.getFlowExecutionUrl(flowExecution.getDefinition().getId(), key);
 		} else {
 			return null;
 		}

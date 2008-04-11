@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -268,11 +269,16 @@ public class FlowController extends AbstractController {
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		FlowHandler handler = getFlowHandler(flowId);
 		if (handler != null) {
-			ModelAndView result = handler.handleExecutionOutcome(outcome, endedOutput, request, response);
-			return result != null ? result : defaultHandleFlowOutcome(flowId, outcome, endedOutput, request, response);
+			String location = handler.handleExecutionOutcome(outcome, endedOutput, request, response);
+			return location != null ? createRedirectView(location) : defaultHandleFlowOutcome(flowId, outcome,
+					endedOutput, request, response);
 		} else {
 			return defaultHandleFlowOutcome(flowId, outcome, endedOutput, request, response);
 		}
+	}
+
+	private ModelAndView createRedirectView(String location) {
+		return new ModelAndView(new RedirectView(location, true));
 	}
 
 	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response)

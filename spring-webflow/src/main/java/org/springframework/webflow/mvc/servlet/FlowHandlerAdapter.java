@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -224,14 +225,18 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				sendRedirect(context, request, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
-				ModelAndView mv = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
+				String location = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
 						request, response);
-				return mv != null ? mv : defaultHandleFlowOutcome(result.getFlowId(), result.getEndedOutcome(), result
-						.getEndedOutput(), request, response);
+				return location != null ? createRedirectView(location) : defaultHandleFlowOutcome(result.getFlowId(),
+						result.getEndedOutcome(), result.getEndedOutput(), request, response);
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
 		}
+	}
+
+	private ModelAndView createRedirectView(String location) {
+		return new ModelAndView(new RedirectView(location, true));
 	}
 
 	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,

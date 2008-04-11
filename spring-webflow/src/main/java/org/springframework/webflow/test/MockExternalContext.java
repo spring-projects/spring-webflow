@@ -133,7 +133,7 @@ public class MockExternalContext implements ExternalContext {
 		return ajaxRequest;
 	}
 
-	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
+	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
 		return "/" + flowId + "?execution=" + flowExecutionKey;
 	}
 

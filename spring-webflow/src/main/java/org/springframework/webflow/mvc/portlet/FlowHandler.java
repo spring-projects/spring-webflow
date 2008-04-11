@@ -58,10 +58,10 @@ public interface FlowHandler {
 	 * @param output the output returned by the flow execution
 	 * @param request the current render request
 	 * @param response the current render response
-	 * @return the model and view to render on the occurrence of this outcome, or null if the outcome was not handled
+	 * @return the id of the flow to start after handling the outcome, or null if the outcome should be handled by the
+	 * caller
 	 */
-	public ModelAndView handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
-			RenderResponse response);
+	public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request, RenderResponse response);
 
 	/**
 	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific

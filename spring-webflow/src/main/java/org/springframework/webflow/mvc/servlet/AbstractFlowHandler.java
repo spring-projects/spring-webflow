@@ -24,12 +24,12 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
+	public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			HttpServletResponse response) {
 		return null;
 	}
 
-	public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 		return null;
 	}
 

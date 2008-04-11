@@ -23,8 +23,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.mvc.servlet.FlowHandler;
-import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowHandlerAdapterTests extends TestCase {
@@ -72,10 +70,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 				}
 			}
 
-			public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 					HttpServletResponse response) {
 				if (handleExecutionOutcome) {
-					return new ModelAndView("redirect:/home");
+					return "/home";
 				} else {
 					return null;
 				}

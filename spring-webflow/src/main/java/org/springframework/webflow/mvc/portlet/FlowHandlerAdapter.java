@@ -75,8 +75,8 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 					session.removeAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE);
 					String outcome = result.getEndedOutcome();
 					AttributeMap output = result.getEndedOutput();
-					ModelAndView mv = flowHandler.handleFlowOutcome(outcome, output, request, response);
-					return mv != null ? mv : defaultHandleFlowOutcome(flowHandler, outcome, output, request, response);
+					String flowId = flowHandler.handleFlowOutcome(outcome, output, request, response);
+					return defaultHandleFlowOutcome(flowHandler, outcome, output, flowId, request, response);
 				} else {
 					return startFlow(request, response, flowHandler);
 				}
@@ -131,14 +131,15 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	}
 
 	protected ModelAndView defaultHandleFlowOutcome(FlowHandler flowHandler, String outcome, AttributeMap output,
-			RenderRequest request, RenderResponse response) throws IOException {
-		// by default, just start the flow over passing the output as input
-		String flowId = flowHandler.getFlowId();
+			String nextFlowId, RenderRequest request, RenderResponse response) throws IOException {
+		if (nextFlowId == null) {
+			nextFlowId = flowHandler.getFlowId();
+		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+			logger.debug("Starting a new execution of flow '" + nextFlowId + "'");
 		}
 		PortletExternalContext context = createPortletExternalContext(request, response);
-		flowExecutor.launchExecution(flowId, new LocalAttributeMap(output.asMap()), context);
+		flowExecutor.launchExecution(nextFlowId, new LocalAttributeMap(output.asMap()), context);
 		return null;
 	}
 

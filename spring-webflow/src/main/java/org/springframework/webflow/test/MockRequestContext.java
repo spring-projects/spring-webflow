@@ -180,7 +180,7 @@ public class MockRequestContext implements RequestContext {
 					"Flow execution key not yet assigned; unable to build the flow execution url");
 		} else {
 			String flowDefinitionId = flowExecutionContext.getDefinition().getId();
-			return externalContext.getFlowExecutionUri(flowDefinitionId, flowExecutionContext.getKey().toString());
+			return externalContext.getFlowExecutionUrl(flowDefinitionId, flowExecutionContext.getKey().toString());
 		}
 	}
 

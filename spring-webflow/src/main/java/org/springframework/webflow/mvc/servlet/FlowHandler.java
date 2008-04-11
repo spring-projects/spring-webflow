@@ -52,15 +52,16 @@ public interface FlowHandler {
 	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
 
 	/**
-	 * Handles a specific flow execution outcome. Used by a Controller to select a new view to render after the flow
-	 * ends.
+	 * Handles a specific flow execution outcome. Used by a Controller to get the location of the resource to redirect
+	 * to after the outcome is handled.
 	 * @param outcome the outcome that was reached
 	 * @param output the output returned by the flow execution
 	 * @param request the current request
 	 * @param response the current response
-	 * @return the model and view to render on the occurrence of this outcome, or null if the outcome was not handled
+	 * @return the location of the new resource to redirect to, or null if the execution outcome was not handled and
+	 * should be handled by the caller
 	 */
-	public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+	public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 			HttpServletResponse response);
 
 	/**
@@ -70,7 +71,8 @@ public interface FlowHandler {
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
 	 * @param response the current response
-	 * @return the model and view to render on the occurrence of this exception, or null if the exception is not handled
+	 * @return the model and view to render on the occurrence of this exception, or null if the exception was not
+	 * handled and should be handled by the caller
 	 */
 	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
 }

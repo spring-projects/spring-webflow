@@ -85,10 +85,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 				}
 			}
 
-			public ModelAndView handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
+			public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
 					RenderResponse response) {
 				if (handleExecutionOutcome) {
-					return new ModelAndView("redirect:/home");
+					return "home";
 				} else {
 					return null;
 				}
@@ -172,16 +172,19 @@ public class FlowHandlerAdapterTests extends TestCase {
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
 		handleExecutionOutcome = true;
 		renderRequest.setContextPath("/springtravel");
-		executor.launchExecution("foo", flowInput, renderContext);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		Event outcome = new Event(this, "finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		PortletSession session = renderRequest.getPortletSession();
 		session.setAttribute("flowExecutionResult", result);
+		executor.launchExecution("home", flowInput, renderContext);
+		EasyMock.expectLastCall().andReturn(FlowExecutionResult.createEndedResult("bar", outcome));
+		EasyMock.replay(new Object[] { executor });
 		ModelAndView mv = controller.handleRender(renderRequest, renderResponse, flowHandler);
-		assertNotNull(mv);
-		assertEquals("redirect:/home", mv.getViewName());
+		assertNull(mv);
+		EasyMock.verify(new Object[] { executor });
+
 	}
 
 	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {

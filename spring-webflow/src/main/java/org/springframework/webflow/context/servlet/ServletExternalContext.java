@@ -191,7 +191,7 @@ public class ServletExternalContext implements ExternalContext {
 		return ajaxRequest;
 	}
 
-	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
+	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
 		return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, request);
 	}
 

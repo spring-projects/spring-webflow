@@ -175,7 +175,7 @@ public class PortletExternalContext implements ExternalContext {
 		return false;
 	}
 
-	public String getFlowExecutionUri(String flowId, String flowExecutionKey) {
+	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
 		if (this.isRenderPhase()) {
 			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
 		} else {

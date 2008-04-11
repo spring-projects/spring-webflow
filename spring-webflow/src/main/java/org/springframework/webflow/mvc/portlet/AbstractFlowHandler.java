@@ -29,8 +29,7 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public ModelAndView handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
-			RenderResponse response) {
+	public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request, RenderResponse response) {
 		return null;
 	}
 

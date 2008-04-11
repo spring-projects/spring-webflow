@@ -50,6 +50,13 @@ public interface FlowUrlHandler {
 	 */
 	public void setFlowExecutionInSession(String flowExecutionKey, RenderRequest request);
 
+	/**
+	 * Creates a flow execution URL suitable for use as an action URL.
+	 * @param flowId the flow id
+	 * @param flowExecutionKey the flow execution key
+	 * @param response the render response
+	 * @return the execution url
+	 */
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, RenderResponse response);
 
 }

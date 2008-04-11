@@ -23,8 +23,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.mvc.servlet.FlowController;
-import org.springframework.webflow.mvc.servlet.FlowHandler;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowControllerTests extends TestCase {
@@ -291,7 +289,7 @@ public class FlowControllerTests extends TestCase {
 				return input;
 			}
 
-			public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 					HttpServletResponse response) {
 				return null;
 			}
@@ -327,7 +325,7 @@ public class FlowControllerTests extends TestCase {
 				return input;
 			}
 
-			public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 					HttpServletResponse response) {
 				assertEquals("finish", outcome);
 				assertEquals("baz", output.get("bar"));
@@ -372,7 +370,7 @@ public class FlowControllerTests extends TestCase {
 				return null;
 			}
 
-			public ModelAndView handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 					HttpServletResponse response) {
 				return null;
 			}
