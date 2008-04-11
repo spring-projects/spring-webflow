@@ -184,9 +184,14 @@ public abstract class MvcView implements View {
 	// internal helpers
 
 	private Map flowScopes() {
-		return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
-				requestContext.getViewScope()).union(requestContext.getFlashScope()).union(
-				requestContext.getRequestScope()).asMap();
+		if (requestContext.getCurrentState().isViewState()) {
+			return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
+					requestContext.getViewScope()).union(requestContext.getFlashScope()).union(
+					requestContext.getRequestScope()).asMap();
+		} else {
+			return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
+					requestContext.getFlashScope()).union(requestContext.getRequestScope()).asMap();
+		}
 	}
 
 	private void exposeBindingModel(Map model) {
