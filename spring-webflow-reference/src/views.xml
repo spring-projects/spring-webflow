@@ -272,6 +272,19 @@ public class BookingValidator {
 				Such partial rendering is often used with events signaled by Ajax to update a specific zone of the view.
 			</para>
 		</sect2>
+		<sect2 id="event-handlers-global">
+			<title>Handling global events</title>
+			<para>
+				Use the flow's <code>global-transitions</code> element to create event handlers that apply across all views.
+				Global-transitions are often used to handle global menu links that are part of the layout.
+			</para>
+			<programlisting language="xml">
+&lt;global-transitions&gt;
+    &lt;transition on="login"&gt; to="login"&gt;>
+    &lt;transition on="logout"&gt; to="logout"&gt;>
+&lt;/global-transitions&gt;		
+			</programlisting>
+		</sect2>		
 	</sect1>
 	<sect1 id="view-messages">
 		<title>Working with messages</title>

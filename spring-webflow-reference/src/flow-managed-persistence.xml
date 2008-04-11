@@ -4,7 +4,104 @@
 	<sect1 id="flow-managed-persistence-introduction">
 		<title>Introduction</title>
 		<para>
-			This chapter shows you how to use flows to manage web application persistence.
+			Most applications access data in some way.
+			Many modify data shared by multiple users and therefore require transactional data access properties.
+			This chapter shows you how to use flows to manage data access in a web application.
+		</para>
+	</sect1>
+	<sect1 id="flow-managed-data-access-patterns">
+		<title>Data access patterns</title>
+		<para>
+			There are essentially three flow-managed data access patterns:
+		</para>
+		<orderedlist>
+			<listitem><para>The FlowScoped PersistenceContext</para></listitem>
+			<listitem><para>The ConversationScoped PersistenceContext</para></listitem>
+			<listitem><para>The ViewState PersistenceContext</para></listitem>
+		</orderedlist>
+		<para>
+			Apart from these three patterns, there is the pattern of fully encapsulating PersistenceContext management within the service layer of your application.
+			In that case, the web layer does not get involved with persistence, instead it works entirely with detached objects that are passed to and returned by your service layer.
+			This chapter will focus on the flow-managed persistence patterns, exploring how and when to use them.
+		</para>
+	</sect1>
+	<sect1 id="flowScopedPersistenceContext">
+		<title>FlowScoped PersistenceContext</title>
+		<para>
+			This pattern creates a <code>PersistenceContext</code> in <code>flowScope</code> on flow startup,
+			uses that context for data access during the course of flow execution, and commits changes made to persistent entities at the end.
+			This pattern provides isolation of intermediate edits by only committing changes to the database at the end of flow execution.
+			This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
+			To support saving and restarting the progress of a flow over an extended period of time, a durable store for conversational state must be used.
+			If a save and restart capability is not required, standard HTTP session-based storage of conversational state is sufficient.
+			In that case, session expiration or termination before commit could potentially result in changes being lost.
+		</para>
+		<para>
+			To use the FlowScoped PersistenceContext pattern, first mark your flow as a <code>persistence-context</code>:
+		</para>
+<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <persistence-context>
+    
+</flow>
+]]></programlisting>
+		<para>
+			Then configure the correct <code>FlowExecutionListener</code> to apply this pattern to your flow.
+			If using Hibernate, register the <code>HibernateFlowExecutionListener</code>.  If using JPA, register the <code>JpaFlowExecutionListener</code>.		
+		</para>
+<programlisting language="xml"><![CDATA[
+<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+    <webflow:flow-execution-listeners>
+        <webflow:listener ref="jpaFlowExecutionListener" />
+    </webflow:flow-execution-listeners>
+</webflow:flow-executor>
+	
+<bean id="jpaFlowExecutionListener" class="com.bah.tdc.webflow.persistence.JpaFlowExecutionListener">
+    <constructor-arg ref="entityManagerFactory" />
+    <constructor-arg ref="transactionManager" />
+</bean>
+]]></programlisting>
+		<para>
+			To trigger a commit at the end, annotate your end-state with the commit attribute:
+		</para>
+		<para>
+<programlisting language="xml"><![CDATA[
+<end-state id="bookingConfirmed" commit="true" />
+]]></programlisting>		
+		</para>
+		<para>
+			That is it.  When your flow starts, the listener will handle allocating a new <code>EntityManager</code> in <code>flowScope</code>.
+			Reference this EntityManager at anytime from within your flow by using the special <code>entityManager</code> variable.
+			In addition, any data access that occurs using a Spring managed data access object will use this EntityManager automatically.
+			Such data access operations should always execute non transactionally or in read-only transactions to maintain isolation of intermediate edits.
+		</para>
+	</sect1>
+	<sect1 id="conversationScopedPersistenceContext">
+		<title>ConversationScoped PersistenceContext</title>
+		<para>
+			This pattern creates a <code>PersistenceContext</code> in <code>conversationScope</code> on flow startup,
+			and uses that context for data access until the conversation ends.
+			This pattern generally employs a manual flush mode; that is, the application decides when to flush changes to the database.
+			A convention for flow-managed flushing may be employed, such as always flushing after a transition one from one view-state to another.
+			This pattern provides no flow-level isolation of intermediate edits since flushing synchronizes persistent object state with the database.
+			With this pattern, all data access generally occurs non-transactionally.
+		</para>
+	</sect1>
+	<sect1 id="viewScopedPersistenceContext">
+		<title>ViewState PersistenceContext</title>
+		<para>
+			This pattern creates a <code>PersistenceContext</code> with a read-only transaction before view rendering.
+			The context is used to load the model for the view.  It stays open through view rendering and commits after rendering completes.
+			Then on the occurrence of an event, this pattern creates a fresh <code>PersistenceContext</code> with a read-write transaction.
+			The model is merged with the new context and any changes are committed after event handling completes.
+			Therefore, this pattern results in edits being saved to the DB after each event.  Any rollback of intermediate flow steps requires compensating transactions.
+			This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
+			This pattern stores much less flow state, but generally increases the amount of data access since persistent entities are fetched and flushed more often.
 		</para>
 	</sect1>
 </chapter>
