@@ -140,9 +140,9 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				</para>
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-	<webflow:flow-execution-listeners>
-		<webflow:listener ref="securityFlowExecutionListener"/>
-	</webflow:flow-execution-listeners>
+    <webflow:flow-execution-listeners>
+        <webflow:listener ref="securityFlowExecutionListener"/>
+    </webflow:flow-execution-listeners>
 </webflow:flow-executor>
 
 <bean id="securityFlowExecutionListener"
@@ -158,7 +158,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				</para>
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry">
-	<webflow:flow-location path="/WEB-INF/hotels/booking/booking.xml" />
+    <webflow:flow-location path="/WEB-INF/hotels/booking/booking.xml" />
 </webflow:flow-registry>
 				]]></programlisting>
 			</sect3>
@@ -168,7 +168,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<para>
 				The package name for flow controllers has changed from <code>org.springframework.webflow.executor.mvc.FlowController</code> and is now <code>org.springframework.webflow.mvc.servlet.FlowController</code> for Servlet MVC requests.
 				The portlet flow controller <code>org.springframework.webflow.executor.mvc.PortletFlowController</code> has been replaced by a flow handler adapter available at <code>org.springframework.webflow.mvc.portlet.FlowHandlerAdapter</code>.
-				It will need to be updated in the bean definitions.
+				They will need to be updated in the bean definitions.
 			</para>
 			<para>
 				The flowExecutor can no longer be set via a mutator.
@@ -176,7 +176,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
-	<constructor-arg ref="flowExecutor"/>
+    <constructor-arg ref="flowExecutor"/>
 </bean>
 			]]></programlisting>
 		</sect2>
@@ -185,12 +185,14 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<para>
 				The default URL handler has changed in Web Flow 2.0.
 				The flow identifier is now inferred from the URL rather then passed explicitly.
-				In order to maintain comparability with existing views and URL structures using Web Flow 1.0 a <code>WebFlow1FlowUrlHandler</code> is available.
+				In order to maintain comparability with existing views and URL structures a <code>WebFlow1FlowUrlHandler</code> is available.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
-	<constructor-arg ref="flowExecutor"/>
-	<property name="flowRequestUrlHandler"><bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/></property>
+    <constructor-arg ref="flowExecutor"/>
+    <property name="flowRequestUrlHandler">
+        <bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/>
+    </property>
 </bean>
 			]]></programlisting>
 		</sect2>
@@ -198,7 +200,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<title>View Resolution</title>
 			<para>
 				Web Flow 2.0 by default will both select and render views.
-				View were previously selected by Web Flow 1.0 and then rendered by a view resolver.
+				View were previously selected by Web Flow 1.0 and then rendered by an external view resolver.
 			</para>
 			<para>
 				In order for 1.0 based flows to work in Web Flow 2.0 the default view resolver must be overridden.
@@ -208,6 +210,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			</para>
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+	<web:flow-location path="..." />
     ...
 </webflow:flow-registry>
 
@@ -232,7 +235,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 		<sect2 id="upgrade-guide-webflow-concepts-binding">
 			<title>Automatic Model Binding</title>
 			<para>
-				Web Flow 1.0 required Spring MVC based flows to manually calls  to <code>FormAction</code> methods, mainly: <code>setupForm</code>, <code>bind</code> and <code>bindAndValidate</code>.
+				Web Flow 1.0 required Spring MVC based flows to manually call <code>FormAction</code> methods, mainly: <code>setupForm</code>, <code>bind</code> and <code>bindAndValidate</code>.
 				Web Flow 2.0 now supports automatic setup, binding and validation via the <code>model</code> attribute for <code>view-state</code>s.
 				Please see the <link linkend="view-model">Binding to a Model</link> section for details.
 			</para>
