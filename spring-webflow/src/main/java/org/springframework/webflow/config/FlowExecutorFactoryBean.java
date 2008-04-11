@@ -264,7 +264,7 @@ class FlowExecutorFactoryBean implements FactoryBean, InitializingBean {
 		if (conversationManager == null) {
 			conversationManager = createDefaultConversationManager();
 		}
-		if (repositoryType == FlowExecutionRepositoryType.CONTINUATION) {
+		if (repositoryType == null || repositoryType == FlowExecutionRepositoryType.CONTINUATION) {
 			DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
 					executionStateRestorer);
 			if (maxContinuations != null) {

@@ -41,7 +41,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private static final String EXECUTION_ATTRIBUTES_ELEMENT = "flow-execution-attributes";
 
-	private static final String ALWAYS_REDIRECT_ON_PAUSE_ELEMENT = "alwaysRedirectOnPause";
+	private static final String ALWAYS_REDIRECT_ON_PAUSE_ELEMENT = "always-redirect-on-pause";
 
 	private static final String ATTRIBUTE_ELEMENT = "attribute";
 
@@ -57,7 +57,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private static final String MAX_CONVERSATIONS_ATTRIBUTE = "max-conversations";
 
-	private static final String REGISTRY_REF_ATTRIBUTE = "flow-registry";
+	private static final String REGISTRY_ATTRIBUTE = "flow-registry";
 
 	private static final String REPOSITORY_ELEMENT = "flow-execution-repository";
 
@@ -82,7 +82,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	}
 
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
-		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistryRef(element, parserContext));
+		definitionBuilder.addPropertyReference(DEFINITION_LOCATOR_PROPERTY, getRegistry(element, parserContext));
 		definitionBuilder.addPropertyValue(EXECUTION_ATTRIBUTES_PROPERTY, parseAttributes(element));
 		addExecutionListenerLoader(element, parserContext, definitionBuilder);
 		configureRepository(element, definitionBuilder, parserContext);
@@ -98,7 +98,10 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			ParserContext parserContext) {
 		Element repositoryElement = DomUtils.getChildElementByTagName(element, REPOSITORY_ELEMENT);
 		if (repositoryElement != null) {
-			definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, getType(repositoryElement));
+			String type = getType(element);
+			if (StringUtils.hasText(type)) {
+				definitionBuilder.addPropertyValue(REPOSITORY_TYPE_PROPERTY, type);
+			}
 			configureContinuations(repositoryElement, definitionBuilder, parserContext);
 			configureConversationManager(repositoryElement, definitionBuilder, parserContext);
 		}
@@ -114,9 +117,10 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			ParserContext parserContext) {
 		String maxContinuations = getMaxContinuations(repositoryElement);
 		if (StringUtils.hasText(maxContinuations)) {
-			if (!getType(repositoryElement).equals("CONTINUATION")) {
+			String type = getType(repositoryElement);
+			if (StringUtils.hasText(type) && !type.toLowerCase().equals("CONTINUATION")) {
 				parserContext.getReaderContext().error(
-						"The 'max-continuations' attribute of the 'repository' element must not "
+						"The 'max-continuations' attribute of the 'flow-execution-repository' element must not "
 								+ "have a value if the 'type' attribute is not 'continuation'", repositoryElement);
 			}
 			definitionBuilder.addPropertyValue(MAX_CONTINUATIONS_PROPERTY, maxContinuations);
@@ -136,8 +140,8 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (StringUtils.hasText(conversationManagerRef)) {
 			if (StringUtils.hasText(maxConversations)) {
 				parserContext.getReaderContext().error(
-						"The 'max-conversations' attribute of the 'repository' element must not "
-								+ "have a value if there is a value for the 'conversation-manager-ref' attribute",
+						"The 'max-conversations' attribute of the 'flow-execution-repository' element must not "
+								+ "have a value if there is a value for the 'conversation-manager' attribute",
 						repositoryElement);
 			}
 			definitionBuilder.addPropertyReference(CONVERSATION_MANAGER_PROPERTY, conversationManagerRef);
@@ -152,13 +156,13 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	 * @return the name of the registry
 	 * @param parserContext the parserContext
 	 */
-	private String getRegistryRef(Element element, ParserContext parserContext) {
-		String registryRef = element.getAttribute(REGISTRY_REF_ATTRIBUTE);
-		if (!StringUtils.hasText(registryRef)) {
-			parserContext.getReaderContext().error(
-					"The 'registry-ref' attribute of the 'flow-executor' element must have a value", element);
+	private String getRegistry(Element element, ParserContext parserContext) {
+		String registry = element.getAttribute(REGISTRY_ATTRIBUTE);
+		if (!StringUtils.hasText(registry)) {
+			return "flowRegistry";
+		} else {
+			return registry;
 		}
-		return registryRef;
 	}
 
 	/**
@@ -167,7 +171,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	 * @return the type of the repository
 	 */
 	private String getType(Element element) {
-		return element.getAttribute(TYPE_ATTRIBUTE).toUpperCase();
+		return element.getAttribute(TYPE_ATTRIBUTE);
 	}
 
 	/**

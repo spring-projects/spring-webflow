@@ -7,6 +7,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.executor.FlowExecutor;
+import org.springframework.webflow.test.MockExternalContext;
 
 public class FlowExecutorBeanDefinitionParserTests extends TestCase {
 	private ClassPathXmlApplicationContext context;
@@ -16,7 +17,8 @@ public class FlowExecutorBeanDefinitionParserTests extends TestCase {
 	}
 
 	public void testConfigOk() {
-		context.getBean("flowExecutor", FlowExecutor.class);
+		FlowExecutor executor = (FlowExecutor) context.getBean("flowExecutor", FlowExecutor.class);
+		executor.launchExecution("flow", null, new MockExternalContext());
 	}
 
 	public static class ConfigurationListener extends FlowExecutionListenerAdapter {

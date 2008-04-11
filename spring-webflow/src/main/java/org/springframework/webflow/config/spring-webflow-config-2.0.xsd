@@ -388,7 +388,7 @@ Example: 'flow1,flow2,flow3'.
 
 	<xsd:complexType name="flowExecutionAttributesType">
 		<xsd:sequence>
-			<xsd:element name="alwaysRedirectOnPause" type="alwaysRedirectOnPauseType" minOccurs="0">
+			<xsd:element name="always-redirect-on-pause" type="alwaysRedirectOnPauseType" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
