@@ -280,8 +280,8 @@ public class BookingValidator {
 			</para>
 			<programlisting language="xml">
 &lt;global-transitions&gt;
-    &lt;transition on="login"&gt; to="login"&gt;>
-    &lt;transition on="logout"&gt; to="logout"&gt;>
+    &lt;transition on="login"&gt; to="login"&gt;
+    &lt;transition on="logout"&gt; to="logout"&gt;
 &lt;/global-transitions&gt;		
 			</programlisting>
 		</sect2>		
