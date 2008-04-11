@@ -14,12 +14,11 @@ public class ResourceRenderer extends Renderer {
 	private static final ResourceHelper resourceHelper = new ResourceHelper();
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		String resourcePath = (String) component.getAttributes().get("resourcePath");
-		Assert.hasText(resourcePath, "Resource component " + component.getClientId(context)
-				+ " is missing a resourcePath.");
+		String resourcePath = (String) component.getAttributes().get("path");
+		Assert.hasText(resourcePath, "Resource component " + component.getClientId(context) + " is missing a path.");
 		if (!resourcePath.startsWith("/")) {
 			resourcePath = "/" + resourcePath;
-			component.getAttributes().put("resourcePath", resourcePath);
+			component.getAttributes().put("path", resourcePath);
 		}
 		resourceHelper.renderResource(context, resourcePath);
 	}
