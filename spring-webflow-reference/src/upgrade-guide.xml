@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="upgrade-guide">
 	<title>Upgrading from 1.0</title>
+	<sect1 id="upgrade-guide-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to upgrade existing Web Flow 1.0 application to Web Flow 2.0.
+		</para>
+	</sect1>
 	<sect1 id="upgrade-guide-definition-language">
 		<title>Flow Definition Language</title>
+		<para>
+			The core concepts behind the flow definition language have not changed between Web Flow 1.0 and 2.0.
+			However, many of the element and attribute names have changed.
+			These changes allow for the language to be both more concise and expressive.
+			A <link linkend="field-mappings">complete mapping of changes</link> is available as an appendix.
+		</para>
 		<sect2 id="upgrade-guide-definition-language-tool">
 			<title>Flow Definition Updater Tool</title>
 			<para>
-				An automated tool is available to aid in the conversion of existing 1.0 flows to the new 2.0 syntax.
-				The tool will convert all the old tag names into their new equivalents, if needed.
+				An automated tool is available to aid in the conversion of existing 1.0 flows to the new 2.0 style.
+				The tool will convert all the old tag names to their new equivalents, if needed.
 				While the tool will make a best effort attempt at conversion, there is not a one-to-one mapping for all 1.0 concepts.
 				If the tool was unable to convert a portion of the flow, it will be marked with a <code>WARNING</code> comment in the resulting flow.
 			</para>
@@ -37,7 +49,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				<sect4 id="upgrade-guide-definition-language-tool-warnings-inline-flow">
 					<title>inline-flow is no longer supported</title>
 					<para>
-						Inline flow are no longer supported.
+						Inline flows are no longer supported.
 						The contents of the inline flow must be moved into a new top-level flow.
 						The inline flow's content has been converted for your convenience.
 					</para>
@@ -52,14 +64,14 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				<sect4 id="upgrade-guide-definition-language-tool-warnings-var-bean">
 					<title>var bean is no longer supported</title>
 					<para>
-						The var bean attribute is no longer needed to allow the flow access to a spring bean.
+						The var bean attribute is no longer needed.
 						All spring beans can be resolved via EL. 
 					</para>
 				</sect4>
 				<sect4 id="upgrade-guide-definition-language-tool-warnings-var=scope">
 					<title>var scope is no longer supported</title>
 					<para>
-						The var element will automatically place all variable into flow scope.
+						The var element will place all variable into flow scope.
 						Conversation scope was previously allowed.
 					</para>
 				</sect4>
@@ -73,16 +85,16 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				The standard EL delimiters (either ${} or #{}) are not necessary and will often cause an exception if they are included. 
 			</para>
 			<para>
-				EL delimiters may need to be removed manually from the converted flow.
+				EL delimiters should be removed where necessary by the updater tool.
 			</para>
 		</sect2>
 	</sect1>
 	<sect1 id="upgrade-guide-webflow-config">
 		<title>Web Flow Configuration</title>
 		<para>
-			In Web Flow 1.0 there were two options available for configuring Web Flow, with standard spring bean or with the webflow config schema.
-			The schema configuration option simplifies the configuration process keeping long internal class name hidden and contextual auto-complete.
-			The schema configuration option is the standard way to configure Web Flow 2.0
+			In Web Flow 1.0 there were two options available for configuring Web Flow, with standard spring bean XML or with the <code>webflow-config</code> schema.
+			The schema configuration option simplifies the configuration process keeping long internal class name hidden and provides contextual auto-complete.
+			The schema configuration option is the standard way to configure Web Flow 2.0.
 		</para>
 		<sect2 id="upgrade-guide-webflow-config-beans">
 			<title>Web Flow Bean Configuration</title>
@@ -97,8 +109,8 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<title>Web Flow Schema Configuration</title>
 			<para>
 				The configuration schema has change slightly in 2.0.
-				The simplest way to update your application is modify the version of the schema to 2.0 then fix any errors.
-				The most common change is add 'flow-' to the name of elements defined by the schema.
+				The simplest way to update your application is modify the version of the schema to 2.0 then fix any errors in a schema aware XML editor.
+				The most common change is add 'flow-' to the beginning of elements defined by the schema.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans"
