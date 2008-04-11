@@ -580,5 +580,20 @@
                 component, giving the user a clear indicator if the field is left blank or is not a valid date.
             </para>
         </sect2>
+        <sect2 id="spring-faces-validate-all">
+        <title>Preventing an Invalid Form Submission</title>
+        <para>The <code>validateAllOnClick</code> component can be used to intercept the "onclick" event of a child 
+        component and suppress the event if all client-side validations do not pass.</para>
+        <programlisting><![CDATA[ 
+<sf:validateAllOnClick>
+    <sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/>&#160;
+</sf:validateAllOnClick>]]>
+            </programlisting>
+            <para>
+                This will prevent the form from being submitted when the user clicks the "proceed" button if the form
+                is invalid.  When the validations are executed, the user is given clear and immediate indicators of the
+                problems that need to be corrected.
+            </para>
+        </sect2>
     </sect1>
 </chapter>
