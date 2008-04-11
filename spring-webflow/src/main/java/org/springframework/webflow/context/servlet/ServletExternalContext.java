@@ -18,6 +18,7 @@ package org.springframework.webflow.context.servlet;
 import java.io.IOException;
 import java.io.Writer;
 import java.security.Principal;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -173,6 +174,10 @@ public class ServletExternalContext implements ExternalContext {
 
 	public Principal getCurrentUser() {
 		return request.getUserPrincipal();
+	}
+
+	public Locale getLocale() {
+		return request.getLocale();
 	}
 
 	public Object getNativeContext() {

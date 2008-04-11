@@ -17,6 +17,7 @@ package org.springframework.webflow.context;
 
 import java.io.Writer;
 import java.security.Principal;
+import java.util.Locale;
 
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -106,6 +107,12 @@ public interface ExternalContext {
 	 * @return the user principal
 	 */
 	public Principal getCurrentUser();
+
+	/**
+	 * Returns the client locale.
+	 * @return the locale
+	 */
+	public Locale getLocale();
 
 	/**
 	 * Provides access to the context object for the current environment.

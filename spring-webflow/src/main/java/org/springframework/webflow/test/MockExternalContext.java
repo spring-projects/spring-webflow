@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
@@ -55,6 +56,8 @@ public class MockExternalContext implements ExternalContext {
 	private Object nativeResponse = new Object();
 
 	private Principal currentUser;
+
+	private Locale locale;
 
 	private StringWriter responseWriter = new StringWriter();
 
@@ -115,6 +118,10 @@ public class MockExternalContext implements ExternalContext {
 
 	public Principal getCurrentUser() {
 		return currentUser;
+	}
+
+	public Locale getLocale() {
+		return locale;
 	}
 
 	public Object getNativeContext() {
@@ -245,6 +252,14 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public void setCurrentUser(String currentUser) {
 		this.currentUser = new MockPrincipal(currentUser);
+	}
+
+	/**
+	 * Sets the client locale.
+	 * @param locale the locale
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 	// convenience helpers
