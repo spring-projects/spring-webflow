@@ -28,8 +28,18 @@ public class DefaultELResolver extends CompositeELResolver {
 	private Object target;
 
 	/**
+	 * Creates a new default EL resolver for resolving properties of the root object. Assumes a null target and expect
+	 * that the base object has already been resolved by the time this resolver runs.
+	 * @customResolvers the custom resolvers to apply before this resolver
+	 */
+	public DefaultELResolver(List customResolvers) {
+		this(null, customResolvers);
+	}
+
+	/**
 	 * Creates a new default EL resolver for resolving properties of the root object.
 	 * @param target the target, or "root", object of the expression
+	 * @customResolvers the custom resolvers to apply before this resolver
 	 */
 	public DefaultELResolver(Object target, List customResolvers) {
 		this.target = target;

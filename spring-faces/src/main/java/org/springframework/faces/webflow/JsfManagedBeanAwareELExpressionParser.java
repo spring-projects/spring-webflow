@@ -59,7 +59,7 @@ public class JsfManagedBeanAwareELExpressionParser extends ELExpressionParser {
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
 			customResolvers.add(new ActionMethodELResolver());
 			customResolvers.add(new JsfManagedBeanResolver());
-			ELResolver resolver = new DefaultELResolver(null, customResolvers);
+			ELResolver resolver = new DefaultELResolver(customResolvers);
 			return new WebFlowELContext(resolver);
 		}
 	}

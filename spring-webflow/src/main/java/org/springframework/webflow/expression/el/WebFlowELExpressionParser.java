@@ -60,7 +60,7 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 			customResolvers.add(new ScopeSearchingELResolver(context));
 			customResolvers.add(new SpringBeanWebFlowELResolver(context));
 			customResolvers.add(new ActionMethodELResolver());
-			ELResolver resolver = new DefaultELResolver(null, customResolvers);
+			ELResolver resolver = new DefaultELResolver(customResolvers);
 			return new WebFlowELContext(resolver);
 		}
 	}
