@@ -162,8 +162,8 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	private FlowModelHolder createFlowModelHolder(FlowDefinitionResource resource) {
-		FlowModelHolder modelHolder = new DefaultFlowModelHolder(createFlowModelBuilder(resource), resource.getId());
-		flowModelRegistry.registerFlowModel(modelHolder);
+		FlowModelHolder modelHolder = new DefaultFlowModelHolder(createFlowModelBuilder(resource));
+		flowModelRegistry.registerFlowModel(resource.getId(), modelHolder);
 		return modelHolder;
 	}
 

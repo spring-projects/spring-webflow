@@ -4,6 +4,12 @@ import junit.framework.TestCase;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.validation.BindingResult;
+import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.builder.FlowAssembler;
+import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
+import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.FlowModel;
@@ -12,10 +18,17 @@ import org.springframework.webflow.engine.model.TransitionModel;
 import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
+import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
-import org.springframework.webflow.engine.model.registry.FlowModelConstructionException;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
+import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
+import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockFlowBuilderContext;
 
 public class XmlFlowModelBuilderTests extends TestCase {
 
@@ -148,10 +161,10 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testMerge() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent", new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent,
+				registry)));
 		FlowModel flow = registry.getFlowModel("child");
 		assertEquals(1, flow.getGlobalTransitions().size());
 		assertEquals(2, flow.getStates().size());
@@ -161,14 +174,14 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testMergeParentNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent-id-not-matching"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent-id-not-matching", new DefaultFlowModelHolder(new XmlFlowModelBuilder(
+				resourceParent, registry)));
 		try {
 			registry.getFlowModel("child");
-			fail("A FlowModelConstructionException was expected");
-		} catch (FlowModelConstructionException e) {
+			fail("A FlowModelBuilderException was expected");
+		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
 	}
@@ -185,10 +198,10 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testStateMerge() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent", new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent,
+				registry)));
 		FlowModel flow = registry.getFlowModel("child");
 		assertEquals(1, flow.getStates().size());
 		assertEquals("otherview", ((ViewStateModel) flow.getStates().get(0)).getView());
@@ -198,14 +211,14 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-invalid-parent-syntax.xml",
 				getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent", new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent,
+				registry)));
 		try {
 			registry.getFlowModel("child");
 			fail("A FlowModelConstructionException was expected");
-		} catch (FlowModelConstructionException e) {
+		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
 	}
@@ -213,14 +226,14 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testStateMergeParentFlowNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent-id-not-matching"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent-id-not-matching", new DefaultFlowModelHolder(new XmlFlowModelBuilder(
+				resourceParent, registry)));
 		try {
 			registry.getFlowModel("child");
-			fail("A FlowModelConstructionException was expected");
-		} catch (FlowModelConstructionException e) {
+			fail("A FlowModelBuilderException was expected");
+		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
 	}
@@ -228,14 +241,14 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testStateMergeParentStateNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-empty.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent", new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent,
+				registry)));
 		try {
 			registry.getFlowModel("child");
-			fail("A FlowModelConstructionException was expected");
-		} catch (FlowModelConstructionException e) {
+			fail("A FlowModelBuilderException was expected");
+		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
 	}
@@ -243,16 +256,37 @@ public class XmlFlowModelBuilderTests extends TestCase {
 	public void testStateMergeParentStateIncompatable() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child-alt.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
-		registry
-				.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry), "child"));
-		registry.registerFlowModel(new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent, registry),
-				"parent"));
+		registry.registerFlowModel("child",
+				new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceChild, registry)));
+		registry.registerFlowModel("parent", new DefaultFlowModelHolder(new XmlFlowModelBuilder(resourceParent,
+				registry)));
 		try {
 			registry.getFlowModel("child");
-			fail("A FlowModelConstructionException was expected");
-		} catch (FlowModelConstructionException e) {
+			fail("A FlowModelBuilderException was expected");
+		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
 	}
 
+	public void testFormActionValidatorMethod() {
+		ClassPathResource resource = new ClassPathResource("flow-formaction-validatormethod.xml", getClass());
+		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
+		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(builder);
+		FlowModelFlowBuilder flowBuilder = new FlowModelFlowBuilder(holder);
+		FlowAssembler assembler = new FlowAssembler(flowBuilder, new MockFlowBuilderContext("flow"));
+		Flow flow = assembler.assembleFlow();
+		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
+		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(new FlowExecutionListenerAdapter() {
+			public void viewRendering(RequestContext context, View view, StateDefinition viewState) {
+				BindingResult result = (BindingResult) context.getFlashScope().get(
+						"org.springframework.validation.BindingResult.formBean");
+				assertEquals(1, result.getErrorCount());
+			}
+		}));
+		FlowExecution execution = factory.createFlowExecution(flow);
+		execution.start(null, new MockExternalContext());
+		MockExternalContext context = new MockExternalContext();
+		context.setEventId("submit");
+		execution.resume(context);
+	}
 }

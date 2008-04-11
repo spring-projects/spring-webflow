@@ -83,6 +83,7 @@ import org.springframework.webflow.engine.model.SubflowStateModel;
 import org.springframework.webflow.engine.model.TransitionModel;
 import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
+import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
 import org.springframework.webflow.engine.support.BeanFactoryVariableValueFactory;
@@ -122,7 +123,11 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
 	protected void doInit() throws FlowBuilderException {
-		flowModel = flowModelHolder.getFlowModel();
+		try {
+			flowModel = flowModelHolder.getFlowModel();
+		} catch (FlowModelBuilderException e) {
+			throw new FlowBuilderException("Unable to get the model for this flow", e);
+		}
 		if ("true".equals(flowModel.getAbstract())) {
 			throw new FlowBuilderException("Abstract flow models cannot be instantiated.");
 		}

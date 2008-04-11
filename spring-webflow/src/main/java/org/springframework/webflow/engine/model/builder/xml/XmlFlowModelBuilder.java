@@ -103,7 +103,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			document = documentLoader.loadDocument(resource);
 			lastModifiedTimestamp = resource.getFile().lastModified();
 		} catch (IOException e) {
-			throw new FlowModelBuilderException("Could not access the XML flow definition resource at " + resource, e);
+			throw new FlowModelBuilderException("Could not access the XML flow definition at " + resource, e);
 		} catch (ParserConfigurationException e) {
 			throw new FlowModelBuilderException("Could not configure the parser to parse the XML flow definition at "
 					+ resource, e);

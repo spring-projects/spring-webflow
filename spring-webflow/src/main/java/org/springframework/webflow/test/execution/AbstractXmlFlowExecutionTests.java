@@ -79,8 +79,8 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	protected final FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
 		registerDependentFlowModels();
 		FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
-		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder, resource.getId());
-		flowModelRegistry.registerFlowModel(modelHolder);
+		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder);
+		flowModelRegistry.registerFlowModel(resource.getId(), modelHolder);
 		return new FlowModelFlowBuilder(modelHolder) {
 			protected void registerFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 				registerMockFlowBeans(flowBeanFactory);
@@ -116,7 +116,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 			for (int i = 0; i < modelResources.length; i++) {
 				FlowDefinitionResource modelResource = modelResources[i];
 				FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(modelResource.getPath(), flowModelRegistry);
-				flowModelRegistry.registerFlowModel(new DefaultFlowModelHolder(modelBuilder, modelResource.getId()));
+				flowModelRegistry.registerFlowModel(modelResource.getId(), new DefaultFlowModelHolder(modelBuilder));
 			}
 		}
 	}

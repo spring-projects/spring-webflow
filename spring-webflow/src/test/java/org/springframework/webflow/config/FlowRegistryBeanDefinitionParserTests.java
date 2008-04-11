@@ -53,7 +53,7 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 		try {
 			registry.getFlowDefinition("bogus");
 		} catch (FlowDefinitionConstructionException e) {
-
+			e.printStackTrace();
 		}
 	}
 

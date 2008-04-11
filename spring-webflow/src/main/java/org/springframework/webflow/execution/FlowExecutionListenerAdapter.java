@@ -55,6 +55,12 @@ public abstract class FlowExecutionListenerAdapter implements FlowExecutionListe
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
 	}
 
+	public void viewRendered(RequestContext context, View view, StateDefinition viewState) {
+	}
+
+	public void viewRendering(RequestContext context, View view, StateDefinition viewState) {
+	}
+
 	public void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition newState) {
 	}
 

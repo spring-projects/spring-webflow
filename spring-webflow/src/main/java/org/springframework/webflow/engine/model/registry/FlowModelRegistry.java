@@ -38,8 +38,9 @@ public interface FlowModelRegistry extends FlowModelLocator {
 	 * Register a flow model in this registry. Registers a "holder", not the Flow model itself. This allows the actual
 	 * Flow model to be loaded lazily only when needed, and also rebuilt at runtime when its underlying resource changes
 	 * without re-deploy.
+	 * @param id the id to register the flow model under
 	 * @param modelHolder a holder holding the flow model to register
 	 */
-	public void registerFlowModel(FlowModelHolder modelHolder);
+	public void registerFlowModel(String id, FlowModelHolder modelHolder);
 
 }

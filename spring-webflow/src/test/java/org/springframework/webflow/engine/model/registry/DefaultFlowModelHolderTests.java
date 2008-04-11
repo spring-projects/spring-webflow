@@ -17,7 +17,7 @@ public class DefaultFlowModelHolderTests extends TestCase {
 
 	protected void setUp() {
 		builder = new SimpleFlowBuilder();
-		holder = new DefaultFlowModelHolder(builder, "flowId");
+		holder = new DefaultFlowModelHolder(builder);
 	}
 
 	public void testGetFlowDefinition() {

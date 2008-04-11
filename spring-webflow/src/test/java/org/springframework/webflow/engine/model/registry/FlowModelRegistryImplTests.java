@@ -28,20 +28,20 @@ public class FlowModelRegistryImplTests extends TestCase {
 	}
 
 	public void testRegisterFlow() {
-		registry.registerFlowModel(new StaticFlowModelHolder(fooFlow, "foo"));
+		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		assertEquals(fooFlow, registry.getFlowModel("foo"));
 	}
 
 	public void testRegisterFlowSameIds() {
-		registry.registerFlowModel(new StaticFlowModelHolder(fooFlow, "foo"));
+		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		FlowModel newFlow = new FlowModel();
-		registry.registerFlowModel(new StaticFlowModelHolder(newFlow, "foo"));
+		registry.registerFlowModel("foo", new StaticFlowModelHolder(newFlow));
 		assertSame(newFlow, registry.getFlowModel("foo"));
 	}
 
 	public void testRegisterMultipleFlows() {
-		registry.registerFlowModel(new StaticFlowModelHolder(fooFlow, "foo"));
-		registry.registerFlowModel(new StaticFlowModelHolder(barFlow, "bar"));
+		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
+		registry.registerFlowModel("bar", new StaticFlowModelHolder(barFlow));
 		assertEquals(fooFlow, registry.getFlowModel("foo"));
 		assertEquals(barFlow, registry.getFlowModel("bar"));
 	}
@@ -51,7 +51,7 @@ public class FlowModelRegistryImplTests extends TestCase {
 		FlowModelRegistryImpl child = new FlowModelRegistryImpl();
 		child.setParent(registry);
 		FlowModel fooFlow = new FlowModel();
-		child.registerFlowModel(new StaticFlowModelHolder(fooFlow, "foo"));
+		child.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		assertSame(fooFlow, child.getFlowModel("foo"));
 		assertEquals(barFlow, child.getFlowModel("bar"));
 	}
@@ -59,19 +59,13 @@ public class FlowModelRegistryImplTests extends TestCase {
 	private static class StaticFlowModelHolder implements FlowModelHolder {
 
 		private FlowModel model;
-		private String id;
 
-		public StaticFlowModelHolder(FlowModel model, String id) {
+		public StaticFlowModelHolder(FlowModel model) {
 			this.model = model;
-			this.id = id;
 		}
 
-		public FlowModel getFlowModel() throws FlowModelConstructionException {
+		public FlowModel getFlowModel() {
 			return model;
-		}
-
-		public String getFlowModelId() {
-			return id;
 		}
 
 		public Resource getFlowModelResource() {
@@ -82,7 +76,7 @@ public class FlowModelRegistryImplTests extends TestCase {
 			return false;
 		}
 
-		public void refresh() throws FlowModelConstructionException {
+		public void refresh() {
 		}
 
 	}

@@ -114,6 +114,22 @@ public interface FlowExecutionListener {
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException;
 
 	/**
+	 * Called when a view is about to render in a view-state, before any render actions are executed.
+	 * @param context the current request context
+	 * @param view the view that is about to render
+	 * @param viewState the current view state
+	 */
+	public void viewRendering(RequestContext context, View view, StateDefinition viewState);
+
+	/**
+	 * Called after a view has completed rendering.
+	 * @param context the current request context
+	 * @param view the view that rendered
+	 * @param viewState the current view state
+	 */
+	public void viewRendered(RequestContext context, View view, StateDefinition viewState);
+
+	/**
 	 * Called when a state transitions, after the transition occurred.
 	 * @param context the source of the event
 	 * @param previousState <i>from</i> state of the transition

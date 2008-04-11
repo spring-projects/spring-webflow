@@ -32,7 +32,6 @@ public interface FlowModelLocator {
 	 * @param id the flow model identifier
 	 * @return the flow mode
 	 * @throws NoSuchFlowModelException when the flow model with the specified id does not exist
-	 * @throws FlowModelConstructionException if there is a problem constructing the identified flow model
 	 */
-	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException, FlowModelConstructionException;
+	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException;
 }

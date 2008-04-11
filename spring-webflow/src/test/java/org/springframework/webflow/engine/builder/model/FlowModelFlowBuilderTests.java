@@ -29,7 +29,6 @@ import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilderTests;
 import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
-import org.springframework.webflow.engine.model.registry.FlowModelConstructionException;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
@@ -346,7 +345,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	private Flow getFlow(ClassPathResource resource) {
 		FlowModelHolder holder = new DefaultFlowModelHolder(new XmlFlowModelBuilder(resource,
-				new FlowModelRegistryImpl()), "flow");
+				new FlowModelRegistryImpl()));
 		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(holder);
 		FlowAssembler assembler = new FlowAssembler(builder, new MockFlowBuilderContext("flow"));
 		return assembler.assembleFlow();
@@ -360,7 +359,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 			this.model = model;
 		}
 
-		public FlowModel getFlowModel() throws FlowModelConstructionException {
+		public FlowModel getFlowModel() {
 			return model;
 		}
 
@@ -376,7 +375,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 			return false;
 		}
 
-		public void refresh() throws FlowModelConstructionException {
+		public void refresh() {
 		}
 
 	}

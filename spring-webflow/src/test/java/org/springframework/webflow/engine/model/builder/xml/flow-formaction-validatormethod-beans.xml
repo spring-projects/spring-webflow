@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="formAction" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectName" value="formBean"/>
+		<property name="validator">
+			<bean class="org.springframework.webflow.action.FormActionTests$TestBeanValidator"/>
+		</property>
+	</bean>
+</beans>

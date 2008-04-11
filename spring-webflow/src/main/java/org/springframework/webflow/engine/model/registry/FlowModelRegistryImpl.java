@@ -50,13 +50,10 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 
 	// implementing FlowModelLocator
 
-	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException, FlowModelConstructionException {
+	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException {
 		try {
-			if (id == null) {
-				throw new IllegalArgumentException("The id of the flow to lookup is required");
-			}
 			if (logger.isDebugEnabled()) {
-				logger.debug("Getting flow model with id '" + id + "'");
+				logger.debug("Getting FlowModel with id '" + id + "'");
 			}
 			return getFlowModelHolder(id).getFlowModel();
 
@@ -75,12 +72,12 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 		this.parent = parent;
 	}
 
-	public void registerFlowModel(FlowModelHolder modelHolder) {
+	public void registerFlowModel(String id, FlowModelHolder modelHolder) {
 		Assert.notNull(modelHolder, "The holder of the flow model to register is required");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Registering flow model " + modelHolder);
 		}
-		flowModels.put(modelHolder.getFlowModelId(), modelHolder);
+		flowModels.put(id, modelHolder);
 	}
 
 	// internal helpers

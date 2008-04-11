@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.engine.model.registry.FlowModelConstructionException;
 
 /**
  * A generic registry implementation for housing one or more flow definitions.
@@ -54,11 +53,8 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
 			FlowDefinitionConstructionException {
 		try {
-			if (id == null) {
-				throw new IllegalArgumentException("The id of the flow to lookup is required");
-			}
 			if (logger.isDebugEnabled()) {
-				logger.debug("Getting flow definition with id '" + id + "'");
+				logger.debug("Getting FlowDefinition with id '" + id + "'");
 			}
 			return getFlowDefinitionHolder(id).getFlowDefinition();
 		} catch (NoSuchFlowDefinitionException e) {
@@ -67,8 +63,6 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 				return parent.getFlowDefinition(id);
 			}
 			throw e;
-		} catch (FlowModelConstructionException e) {
-			throw new FlowDefinitionConstructionException(e.getMessage(), e);
 		}
 	}
 

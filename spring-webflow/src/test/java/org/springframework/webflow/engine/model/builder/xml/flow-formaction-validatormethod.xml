@@ -1,0 +1,22 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="formBean" class="org.springframework.webflow.action.FormActionTests$TestBean"/>
+	
+	<view-state id="view">
+		<on-entry>
+			<evaluate expression="formAction.setupForm"/>
+		</on-entry>
+		<transition on="submit" to="finish">
+			<evaluate expression="formAction.bindAndValidate">
+				<attribute name="validatorMethod" value="validateTestBean"/>
+			</evaluate>
+		</transition>
+	</view-state>
+	
+	<view-state id="finish"/>
+	
+	<bean-import resource="flow-formaction-validatormethod-beans.xml"/>
+	
+</flow>

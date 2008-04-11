@@ -16,6 +16,8 @@
 package org.springframework.webflow.engine.model.registry;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
@@ -41,11 +43,6 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	private FlowModel flowModel;
 
 	/**
-	 * The flow mode identifier
-	 */
-	private String flowModelId;
-
-	/**
 	 * The flow model builder.
 	 */
 	private FlowModelBuilder flowModelBuilder;
@@ -54,18 +51,13 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	 * Creates a new refreshable flow model holder that uses the configured assembler (GOF director) to drive flow
 	 * assembly, on initial use and on any resource change or refresh.
 	 * @param flowModelBuilder the flow model builder to use
-	 * @param flowModelId the identifier of the flow model
 	 */
-	public DefaultFlowModelHolder(FlowModelBuilder flowModelBuilder, String flowModelId) {
+	public DefaultFlowModelHolder(FlowModelBuilder flowModelBuilder) {
+		Assert.notNull(flowModelBuilder, "The flow model builder is required");
 		this.flowModelBuilder = flowModelBuilder;
-		this.flowModelId = flowModelId;
 	}
 
-	public String getFlowModelId() {
-		return flowModelId;
-	}
-
-	public synchronized FlowModel getFlowModel() throws FlowModelConstructionException {
+	public synchronized FlowModel getFlowModel() {
 		if (flowModel == null) {
 			assembleFlowModel();
 		} else {
@@ -84,26 +76,23 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 		return flowModelBuilder.hasFlowModelChanged();
 	}
 
-	public synchronized void refresh() throws FlowModelConstructionException {
+	public synchronized void refresh() {
 		assembleFlowModel();
 	}
 
 	// internal helpers
 
-	private void assembleFlowModel() throws FlowModelConstructionException {
+	private void assembleFlowModel() throws FlowModelBuilderException {
 		try {
 			flowModelBuilder.init();
 			flowModelBuilder.build();
 			flowModel = flowModelBuilder.getFlowModel();
-		} catch (FlowModelBuilderException e) {
-			throw new FlowModelConstructionException(flowModelId, e);
 		} finally {
 			flowModelBuilder.dispose();
 		}
 	}
 
 	public String toString() {
-		return "'" + getFlowModelId() + "'";
+		return new ToStringCreator(this).append("flowModelBuilder", flowModelBuilder).toString();
 	}
-
 }
