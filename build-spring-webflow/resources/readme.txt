@@ -48,21 +48,21 @@ The following distinct jar files are included in the distribution.
 This list specifies the respective contents and third-party dependencies.
 Libraries in [brackets] are optional, i.e. just necessary for certain functionality.
 
-* spring-webflow-2.0.0-rc1.jar
+* spring-webflow-2.0.0.RC1.jar
 - Contents: The Spring Web Flow system
 - Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc
                 [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Servlet API, Portlet API, Struts, JUnit]
               
-* spring-binding-2.0.0-rc1.jar
+* spring-binding-2.0.0.RC1.jar
 - Contents: The Spring Data Binding framework, an internal library used by SWF
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context
                 [Log4J]
 
-* spring-javascript-2.0.0-rc1.jar
+* spring-js-2.0.0.RC1.jar
 - Contents: The Spring JavaScript module, containing Spring Web Flow's integration with Dojo and additional JavaScript functionality.
 - Dependencies: Dojo Toolkit 1.1
 
-* spring-faces-2.0.0-rc1.jar
+* spring-faces-2.0.0.RC1.jar
 - Contents: The Spring Faces module, containing Spring Web Flow's integration with Java Server Faces (JSF) and additional JSF functionality.
 - Dependencies: spring-webflow, spring-javascript, JSF API
                                 

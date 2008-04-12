@@ -2,8 +2,60 @@ SPRING WEB FLOW (SWF) CHANGELOG
 ===============================
 http://www.springframework.org/webflow
 
-Changes in version 2.0 RC1 (04.04.2008)
+Changes in version 2.0 RC1 (11.04.2008)
 -------------------------------------
+Major New Features
+* Introduced a new Web Flow 2 reference guide, available in PDF and HTML format.  The new guide is written in "quick reference" style with complete code examples.
+
+* Added support for migrating from Web Flow 1 to 2.  Included in this distribution is a WebFlowUpgrader tool capable of converting flows from the version 1 syntax to the version 2 syntax.
+  See the reference guide for instructions on how to use this tool.
+
+* Added support for flow definition inheritance.  With this feature, A flow may extend one or more flows.  A flow state can also extend another state.
+  This feature is used to facilitate reuse between flows and states that share a common structure.
+
+* Added Portlet support.  See the Portlet section of the reference guide and the booking-mvc-portlet and booking-faces-portlet sample applications for examples.
+
+* Introduced the spring-js module called "Spring Javascript".
+  This module provides a Javascript abstraction framework for applying client-side behaviors such as form validation and Ajax in a consistent manner.
+  The default UI toolkit this framework builds upon is Dojo 1.
+  Spring's JSF integration module called "Spring Faces" builds on spring-js to provide simple declarative JSF components for validation and Ajax.
+
+* Added integration with the RichFaces JSF component library.  Rich Faces can be used with the Spring Faces component library or used standalone.
+
+* Added a "jsf-booking" reference application that offers a comparsion between a traditional "JSF-centric" web application and a Spring web application that uses JSF as the UI component model.
+  Compare jsf-booking with booking-faces to see the differences in the architectural approach and implementation.  Particularly insightful for seasoned JSF developers interested in Spring.
+
+* Introduced support for automatic model binding and validation with Spring MVC.  This support provides a concise alternative to manual setupForm and bindAndValidate calls using FormAction.
+  This support also allows registration of data input Formatters application wide, reducing the need to manually register PropertyEditors on a view-by-view basis in many cases.
+  Support for suppressing data binding for a event such as a cancel button click is also provided.
+
+* Introduced view scope.  View scope is allocated when a view-state enters and destroyed when a view-state exits.  The scope is particularly useful for updating a model over a series of Ajax requests.
+
+* Added support for flow message bundles.  Create a messages.properties file in your flow's working directory for the Locales you need to support and off you go.
+
+* Introduced configurable view-state history polices.  A view state can preserve its history to support backtracking, discard its history to prevent backtracking, and invalidate all previous history
+  to disallow backtracking after a point of no return.  See the new 'history' attribute on the view-state element.
+
+* Refined the flow execution snapshotting process.  These refinements capture view-state form values on postback to support restoring those values when backtracking.
+
+* Simplified flow execution testing by allowing you to "jump" to any state to begin a test case.  See the booking-mvc and booking-faces for examples of flow test cases.
+
+Minor Improvements
+* Added "before view rendering" and "after view rendering" FlowExecutionListener callbacks.
+* Upgraded to Dojo 1.1 from 1.0.
+* Attempts to lock a Conversation will now throw an Exception after a configurable timeout period (default is 30).
+* Changed the faces-config schema to simply 'faces' in-line with Spring conventions.
+* Added automatic registration of all Spring 2 Flow scopes in the flow-local application context, removing the need for a custom enable-flow-scopes tag.
+* Added a flow-registry 'parent' attribute, allowing registries to be linked together in a hierarchy.
+* Made the JSF 1.2 RI the default JSF implementation used by the JSF samples.
+* Updated the distribution structure to use the new "Spring Build" system.
+* Made backport-util-concurrent the fallback concurrency framework in a Java 1.4 environment, instead of oswego-concurrent.
+* Added a dynamic subflow resolution capability.
+* Simplified the FlowHandler interface and added examples of implementing FlowHandlers to manage access to a flow in a custom manner.
+* Upgraded the booking-mvc sample to show a mixing Spring MVC @Controllers with web flows, which is typical in a real-world application.
+* Added ExternalContext.getLocale() to get the client locale from the flow in a portable manner.
+* Added ExternalContext.getCurrentUser() to get the current user principal from the flow in a portable manner.
+* Restored support for setting action execution attributes such as validatorMethod.  See the <attribute> sub-element of <evaluate>, <set>, and <render>.
 
 Changes in version 2.0 M4 (06.03.2008)
 -------------------------------------
