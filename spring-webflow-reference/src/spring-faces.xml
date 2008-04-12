@@ -241,7 +241,8 @@
                 component:
             </para>
             <programlisting language="xhtml"><![CDATA[ 
-<h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" rendered="#{bookings.rowCount > 0}">
+<h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" 
+             rendered="#{bookings.rowCount > 0}">
     <h:column>
         <f:facet name="header">Name</f:facet>
         #{booking.hotel.name}
@@ -549,7 +550,8 @@
                 component:
             </para>
             <programlisting><![CDATA[ 
-<sf:clientTextValidator required="true" regExp="[0-9]{16}" invalidMessage="A 16-digit credit card number is required.">
+<sf:clientTextValidator required="true" regExp="[0-9]{16}" 
+                        invalidMessage="A 16-digit credit card number is required.">
     <h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
 </sf:clientTextValidator>]]>
             </programlisting>

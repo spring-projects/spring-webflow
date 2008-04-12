@@ -108,7 +108,8 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 				Other modes can be added and point to the same flow as <code>view</code> mode, or any other flow. 
 			</para>
 			<programlisting language="xml"><![CDATA[
-<bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+<bean id="portletModeHandlerMapping" 
+      class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
     <property name="portletModeMap">
         <map>
             <entry key="view">
@@ -126,7 +127,8 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 				The flow executor is required as a constructor argument.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.portlet.FlowHandlerAdapter">
+<bean id="flowHandlerAdapter" 
+      class="org.springframework.webflow.mvc.portlet.FlowHandlerAdapter">
     <constructor-arg ref="flowExecutor" />
 </bean>
 			]]></programlisting>

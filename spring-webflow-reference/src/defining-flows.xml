@@ -196,7 +196,8 @@
 					If the expression returns a value that may need to be converted, specify the desired type using the <code>result-type</code> attribute:
 				</para>
 				<programlisting language="xml">
-&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" result-type="dataModel"/&gt;		
+&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" 
+          result-type="dataModel"/&gt;		
 				</programlisting>
 			</sect3>
 		</sect2>
@@ -214,7 +215,8 @@
     &lt;input name="hotelId" /&gt;
 
     &lt;on-start&gt;
-        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+                  result="flowScope.booking" /&gt;
     &lt;/on-start&gt;
 
     &lt;view-state id="enterBookingDetails"&gt;
@@ -339,7 +341,8 @@ public interface FlowOutcome {
     &lt;input name="hotelId" /&gt;
 
     &lt;on-start&gt;
-        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+                  result="flowScope.booking" /&gt;
     &lt;/on-start&gt;
 
     &lt;view-state id="enterBookingDetails"&gt;
@@ -449,7 +452,8 @@ public interface FlowOutcome {
     &lt;input name="hotelId" /&gt;
 
     &lt;on-start&gt;
-        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" /&gt;
+        &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+                  result="flowScope.booking" /&gt;
     &lt;/on-start&gt;
 
     &lt;view-state id="enterBookingDetails"&gt;

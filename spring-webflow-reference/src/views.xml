@@ -98,7 +98,8 @@
 			</para>
 			<programlisting language="xml">
 &lt;on-render&gt;
-	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
+	          result="viewScope.hotels" result-type="dataModel" /&gt;
 &lt;/on-render&gt;
 			</programlisting>
 		</sect2>
@@ -113,7 +114,8 @@
 			<programlisting language="xml">
 &lt;view-state id="searchResults"&gt;
     &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
+                  result="viewScope.hotels" result-type="dataModel" /&gt;
     &lt;/on-render&gt;
     &lt;transition on="next"&gt;
         &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
@@ -135,7 +137,8 @@
 		</para>
 		<programlisting language="xml">
 &lt;on-render&gt;
-    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" /&gt;
+    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
+              result="viewScope.hotels" result-type="dataModel" /&gt;
 &lt;/on-render&gt;
 	    </programlisting>
 	</sect1>
@@ -300,9 +303,13 @@ public class BookingValidator {
 			<programlisting type="java">
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
-context.addMessage(builder.error().source("checkinDate").defaultText("Check in date must be a future date").build());			
-context.addMessage(builder.warn().source("smoking").defaultText("Smoking is bad for your health").build());			
-context.addMessage(builder.info().defaultText("We have processed your reservation - thank you and enjoy your stay").build());			
+context.addMessage(builder.error().source("checkinDate")
+       .defaultText("Check in date must be a future date").build());
+context.addMessage(builder.warn().source("smoking")
+       .defaultText("Smoking is bad for your health").build());
+context.addMessage(builder.info()
+       .defaultText("We have processed your reservation - thank you and enjoy your stay")
+       .build());
 			</programlisting>
 		</sect2>
 		<sect2 id="plain-text-message-intl">
@@ -310,9 +317,11 @@ context.addMessage(builder.info().defaultText("We have processed your reservatio
 			<programlisting type="java">
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
-context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());			
-context.addMessage(builder.warn().source("smoking").code("notHealthy").resolvableArg("smoking").build());			
-context.addMessage(builder.info().code("reservationConfirmation").build());			
+context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture")
+       .build());
+context.addMessage(builder.warn().source("smoking").code("notHealthy")
+       .resolvableArg("smoking").build());			
+context.addMessage(builder.info().code("reservationConfirmation").build());
 			</programlisting>
 		</sect2>
 		<sect2 id="message-bundles">
