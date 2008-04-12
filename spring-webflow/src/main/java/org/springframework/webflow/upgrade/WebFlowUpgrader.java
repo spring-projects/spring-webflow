@@ -1,4 +1,4 @@
-package org.springframework.webflow.engine.model.builder.xml;
+package org.springframework.webflow.upgrade;
 
 import java.io.IOException;
 import java.io.StringWriter;
