@@ -52,7 +52,7 @@ public class FlowController extends AbstractController {
 	private static final Log logger = LogFactory.getLog(FlowController.class);
 
 	/**
-	 * The entry point into Spring Web Flow.
+	 * The central service for executing flows and the entry point into the Web Flow system.
 	 */
 	private FlowExecutor flowExecutor;
 
@@ -72,16 +72,31 @@ public class FlowController extends AbstractController {
 	 */
 	private Map flowHandlers = new HashMap();
 
+	public FlowController() {
+		initDefaults();
+	}
+
 	/**
 	 * Creates a new flow controller.
 	 * @param flowExecutor the web flow executor service
 	 */
 	public FlowController(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
-		this.urlHandler = new DefaultFlowUrlHandler();
-		this.ajaxHandler = new SpringJavascriptAjaxHandler();
-		// set the cache seconds property to 0 so no pages are cached by default for flows
-		setCacheSeconds(0);
+		initDefaults();
+	}
+
+	/**
+	 * Returns the central service for executing flows and the entry point into the Web Flow system.
+	 */
+	public FlowExecutor getFlowExecutor() {
+		return flowExecutor;
+	}
+
+	/**
+	 * Sets the central service for executing flows and the entry point into the Web Flow system.
+	 */
+	public void setFlowExecutor(FlowExecutor flowExecutor) {
+		this.flowExecutor = flowExecutor;
 	}
 
 	/**
@@ -95,7 +110,7 @@ public class FlowController extends AbstractController {
 	 * Sets the configured flow url handler.
 	 * @param urlHandler the flow url handler.
 	 */
-	public void setFlowRequestUrlHandler(FlowUrlHandler urlHandler) {
+	public void setFlowUrlHandler(FlowUrlHandler urlHandler) {
 		this.urlHandler = urlHandler;
 	}
 
@@ -112,6 +127,14 @@ public class FlowController extends AbstractController {
 	 */
 	public void setAjaxHandler(AjaxHandler ajaxHandler) {
 		this.ajaxHandler = ajaxHandler;
+	}
+
+	/**
+	 * Sets the custom flow handles for managing access to specific flows in a custom manner.
+	 * @param flowHandlers the flow handler map
+	 */
+	public void setFlowHandlers(Map flowHandlers) {
+		this.flowHandlers = flowHandlers;
 	}
 
 	/**
@@ -201,6 +224,13 @@ public class FlowController extends AbstractController {
 	}
 
 	// internal helpers
+
+	private void initDefaults() {
+		urlHandler = new DefaultFlowUrlHandler();
+		ajaxHandler = new SpringJavascriptAjaxHandler();
+		// set the cache seconds property to 0 so no pages are cached by default for flows
+		setCacheSeconds(0);
+	}
 
 	private ModelAndView handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {

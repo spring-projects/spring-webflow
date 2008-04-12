@@ -73,17 +73,17 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 public class FlowExecutorImpl implements FlowExecutor {
 
 	/**
-	 * A locator to access flow definitions registered in a central registry.
+	 * The locator to access flow definitions registered in a central registry.
 	 */
 	private FlowDefinitionLocator definitionLocator;
 
 	/**
-	 * An abstract factory for creating a new execution of a flow definition.
+	 * The abstract factory for creating a new execution of a flow definition.
 	 */
 	private FlowExecutionFactory executionFactory;
 
 	/**
-	 * An repository used to save, update, and load existing flow executions to/from a persistent store.
+	 * The repository used to save, update, and load existing flow executions to/from a persistent store.
 	 */
 	private FlowExecutionRepository executionRepository;
 
@@ -101,6 +101,27 @@ public class FlowExecutorImpl implements FlowExecutor {
 		this.definitionLocator = definitionLocator;
 		this.executionFactory = executionFactory;
 		this.executionRepository = executionRepository;
+	}
+
+	/**
+	 * Returns the locator to load flow definitions to execute.
+	 */
+	public FlowDefinitionLocator getDefinitionLocator() {
+		return definitionLocator;
+	}
+
+	/**
+	 * Returns the abstract factory used to create new executions of a flow.
+	 */
+	public FlowExecutionFactory getExecutionFactory() {
+		return executionFactory;
+	}
+
+	/**
+	 * Returns the repository used to save, update, and load existing flow executions to/from a persistent store.
+	 */
+	public FlowExecutionRepository getExecutionRepository() {
+		return executionRepository;
 	}
 
 	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
