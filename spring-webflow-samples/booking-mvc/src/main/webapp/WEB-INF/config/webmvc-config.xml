@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- URL to flow mapping rules -->			
+	<bean id="flowMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+				/hotels/booking=bookingFlowHandler
+			</value>
+		</property>
+		<property name="order" value="0"/>
+	</bean>
+
+	<!-- Controls access to the hotel booking flow -->
+	<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
+
+	<!-- Enables convention-based request URL mapping to @Controllers e.g. /hotels/* maps to HotelsController -->
+	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+		<property name="order" value="1"/>
+	</bean>	
+
+	<!-- Maps all other request URLs to views -->			
+	<bean id="viewMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="defaultHandler">
+			<!-- Selects view names to render based on the request URI: e.g. /index selects "index" -->	
+			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+		</property>
+		<property name="order" value="2"/>
+	</bean>
+
+	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the /WEB-INF directory -->	
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Enables annotated POJO @Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<!-- Enables plain Controllers -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+	<!-- Enables FlowHandlers -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<constructor-arg ref="flowExecutor" />
+	</bean>
+	
+	<!-- Initializes Tiles, the layout engine used in this sample -->
+	<bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer" />
+	
+</beans>
