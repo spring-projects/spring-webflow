@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.0.4.v200802202100]]></pluginVersion>
+	<pluginVersion><![CDATA[2.0.5.v200803132004]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>src/main/webapp/WEB-INF/web-application-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/web-application-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/data-access-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/security-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/webflow-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/webmvc-config.xml</config>
 	</configs>
 	<configSets>
+		<configSet>
+			<name><![CDATA[webapp]]></name>
+			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/config/data-access-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/security-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/web-application-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/webflow-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/webmvc-config.xml</config>
+			</configs>
+		</configSet>
 	</configSets>
 </beansProjectDescription>

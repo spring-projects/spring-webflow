@@ -7,7 +7,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/web-application-config.xml
+			/WEB-INF/config/web-application-config.xml
 		</param-value>
 	</context-param>
 	
@@ -62,7 +62,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/web-application-config.xml</param-value>
+			<param-value>/WEB-INF/config/web-application-config.xml</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
