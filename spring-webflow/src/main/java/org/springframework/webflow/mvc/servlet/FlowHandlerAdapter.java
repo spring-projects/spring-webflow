@@ -257,8 +257,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
 			FlowHandler handler) throws IOException {
-		ModelAndView result = handler.handleException(e, request, response);
-		return result != null ? result : defaultHandleFlowException(getFlowId(handler, request), e, request, response);
+		String location = handler.handleException(e, request, response);
+		return location != null ? createRedirectView(location, request) : defaultHandleFlowException(getFlowId(handler,
+				request), e, request, response);
 	}
 
 	public long getLastModified(HttpServletRequest request, Object handler) {

@@ -589,7 +589,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			throws FlowExecutionException {
 		listeners.fireExceptionThrown(context, exception);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Attempting to handle [" + exception + "]");
+			if (exception.getCause() != null) {
+				logger.debug("Attempting to handle [" + exception + "] with root cause [" + getRootCause(exception)
+						+ "]");
+			} else {
+				logger.debug("Attempting to handle [" + exception + "]");
+			}
 		}
 		boolean handled = false;
 		try {
@@ -606,6 +611,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 			throw exception;
 		}
+	}
+
+	/**
+	 * Get the root cause of the given throwable.
+	 */
+	private Throwable getRootCause(Throwable e) {
+		Throwable cause = e.getCause();
+		return cause == null ? e : getRootCause(cause);
 	}
 
 	/**

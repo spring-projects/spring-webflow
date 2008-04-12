@@ -61,19 +61,18 @@ public class FlowHandlerAdapterTests extends TestCase {
 				return "foo";
 			}
 
-			public ModelAndView handleException(FlowException e, HttpServletRequest request,
+			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
 					HttpServletResponse response) {
-				if (handleException) {
-					return new ModelAndView("error");
+				if (handleExecutionOutcome) {
+					return "/home";
 				} else {
 					return null;
 				}
 			}
 
-			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
-					HttpServletResponse response) {
-				if (handleExecutionOutcome) {
-					return "/home";
+			public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
+				if (handleException) {
+					return "error";
 				} else {
 					return null;
 				}

@@ -324,8 +324,9 @@ public class FlowController extends AbstractController {
 		if (flowId != null) {
 			FlowHandler handler = getFlowHandler(flowId);
 			if (handler != null) {
-				ModelAndView result = handler.handleException(e, request, response);
-				return result != null ? result : defaultHandleFlowException(flowId, e, request, response);
+				String location = handler.handleException(e, request, response);
+				return location != null ? createRedirectView(location, request) : defaultHandleFlowException(flowId, e,
+						request, response);
 			} else {
 				return defaultHandleFlowException(flowId, e, request, response);
 			}

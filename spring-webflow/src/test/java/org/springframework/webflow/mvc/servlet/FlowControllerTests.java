@@ -294,8 +294,7 @@ public class FlowControllerTests extends TestCase {
 				return null;
 			}
 
-			public ModelAndView handleException(FlowException e, HttpServletRequest request,
-					HttpServletResponse response) {
+			public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 				return null;
 			}
 		});
@@ -334,8 +333,7 @@ public class FlowControllerTests extends TestCase {
 				return null;
 			}
 
-			public ModelAndView handleException(FlowException e, HttpServletRequest request,
-					HttpServletResponse response) {
+			public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 				return null;
 			}
 		});
@@ -375,8 +373,7 @@ public class FlowControllerTests extends TestCase {
 				return null;
 			}
 
-			public ModelAndView handleException(FlowException e, HttpServletRequest request,
-					HttpServletResponse response) {
+			public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 				assertEquals(flowException, e);
 				return null;
 			}

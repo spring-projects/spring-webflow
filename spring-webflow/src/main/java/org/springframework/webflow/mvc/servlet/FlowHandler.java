@@ -18,7 +18,6 @@ package org.springframework.webflow.mvc.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -76,8 +75,8 @@ public interface FlowHandler {
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
 	 * @param response the current response
-	 * @return the model and view to render on the occurrence of this exception, or null if the exception was not
-	 * handled and should be handled by the caller
+	 * @return the location of the error resource to redirect to, or null if the execution outcome was not handled and
+	 * should be handled by the caller
 	 */
-	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
+	public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
 }

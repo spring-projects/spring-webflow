@@ -3,7 +3,6 @@ package org.springframework.webflow.mvc.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -29,7 +28,7 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public ModelAndView handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
+	public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 		return null;
 	}
 
