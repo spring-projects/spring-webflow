@@ -215,7 +215,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 </webflow:flow-registry>
 
 <webflow:flow-builder-services id="flowBuilderServices" 
-        view-factory-creator="mvcViewFactoryCreator"/>
+                               view-factory-creator="mvcViewFactoryCreator"/>
 
 <bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.MvcViewFactoryCreator">
     <property name="viewResolvers" ref="tilesViewResolver"/>
