@@ -16,6 +16,7 @@
 			</webflow:flow-definition-attributes>
 		</webflow:flow-location>
 		<webflow:flow-location path="/some/path/that/is/bogus.xml" />
+		<webflow:flow-location-pattern value="org/springframework/webflow/config/flows/*.xml"/>
 		<webflow:flow-builder class="org.springframework.webflow.config.FooFlowBuilder" />
 		<webflow:flow-builder id="foo2" class="org.springframework.webflow.config.FooFlowBuilder" />
 		<webflow:flow-builder id="foo3" class="org.springframework.webflow.config.FooFlowBuilder">

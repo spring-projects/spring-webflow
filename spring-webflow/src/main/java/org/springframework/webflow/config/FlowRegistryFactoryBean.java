@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.config;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -56,6 +57,8 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 
 	private FlowLocation[] flowLocations;
 
+	private String[] flowLocationPatterns;
+
 	private FlowBuilderInfo[] flowBuilders;
 
 	private FlowBuilderServices flowBuilderServices;
@@ -86,6 +89,13 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	/**
+	 * Resolvable path patterns to flows to register in the registry produced by this factory bean.
+	 */
+	public void setFlowLocationPatterns(String[] flowLocationPatterns) {
+		this.flowLocationPatterns = flowLocationPatterns;
+	}
+
+	/**
 	 * Java {@link FlowBuilder flow builder} classes that should be registered in the registry produced by this factory
 	 * bean.
 	 */
@@ -113,6 +123,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 		flowRegistry.setParent(parent);
 		flowModelRegistry = new FlowModelRegistryImpl();
 		registerFlowLocations();
+		registerFlowLocationPatterns();
 		registerFlowBuilders();
 	}
 
@@ -132,7 +143,27 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 		if (flowLocations != null) {
 			for (int i = 0; i < flowLocations.length; i++) {
 				FlowLocation location = flowLocations[i];
-				flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(location));
+				flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(createResource(location)));
+			}
+		}
+	}
+
+	private void registerFlowLocationPatterns() {
+		if (flowLocationPatterns != null) {
+			for (int i = 0; i < flowLocationPatterns.length; i++) {
+				String pattern = flowLocationPatterns[i];
+				FlowDefinitionResource[] resources;
+				try {
+					resources = flowResourceFactory.createResources(pattern);
+				} catch (IOException e) {
+					IllegalStateException ise = new IllegalStateException(
+							"An I/O Exception occurred resolving the flow location pattern '" + pattern + "'");
+					ise.initCause(e);
+					throw ise;
+				}
+				for (int j = 0; j < resources.length; j++) {
+					flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(resources[j]));
+				}
 			}
 		}
 	}
@@ -146,8 +177,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 		}
 	}
 
-	private FlowDefinitionHolder createFlowDefinitionHolder(FlowLocation location) {
-		FlowDefinitionResource flowResource = createResource(location);
+	private FlowDefinitionHolder createFlowDefinitionHolder(FlowDefinitionResource flowResource) {
 		FlowBuilder builder = createFlowBuilder(flowResource);
 		FlowBuilderContext builderContext = new FlowBuilderContextImpl(flowResource.getId(), flowResource
 				.getAttributes(), flowRegistry, flowBuilderServices);

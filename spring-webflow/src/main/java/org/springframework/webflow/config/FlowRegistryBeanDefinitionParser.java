@@ -43,6 +43,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private static final String FLOW_LOCATION_ELEMENT = "flow-location";
 
+	private static final String FLOW_LOCATION_PATTERN_ELEMENT = "flow-location-pattern";
+
 	private static final String FLOW_BUILDER_ELEMENT = "flow-builder";
 
 	private static final String ID_ATTRIBUTE = "id";
@@ -62,6 +64,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	private static final String TYPE_ATTRIBUTE = "type";
 
 	private static final String FLOW_LOCATIONS_PROPERTY = "flowLocations";
+
+	private static final String FLOW_LOCATION_PATTERNS_PROPERTY = "flowLocationPatterns";
 
 	private static final String FLOW_BUILDERS_PROPERTY = "flowBuilders";
 
@@ -87,6 +91,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			definitionBuilder.addPropertyReference(PARENT_PROPERTY, parent);
 		}
 		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, parseLocations(element));
+		definitionBuilder.addPropertyValue(FLOW_LOCATION_PATTERNS_PROPERTY, parseLocationPatterns(element));
 		definitionBuilder.addPropertyValue(FLOW_BUILDERS_PROPERTY, parseFlowBuilders(element));
 	}
 
@@ -103,6 +108,20 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			locations.add(new FlowLocation(id, path, parseAttributes(locationElement)));
 		}
 		return locations;
+	}
+
+	private List parseLocationPatterns(Element element) {
+		List locationPatternElements = DomUtils.getChildElementsByTagName(element, FLOW_LOCATION_PATTERN_ELEMENT);
+		if (locationPatternElements.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
+		List locationPatterns = new ArrayList(locationPatternElements.size());
+		for (Iterator it = locationPatternElements.iterator(); it.hasNext();) {
+			Element locationPatternElement = (Element) it.next();
+			String value = locationPatternElement.getAttribute(VALUE_ATTRIBUTE);
+			locationPatterns.add(value);
+		}
+		return locationPatterns;
 	}
 
 	private Set parseAttributes(Element element) {

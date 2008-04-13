@@ -36,26 +36,46 @@ would index those definitions by "orderitem-flow" and "shipping-flow" by default
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-					<xsd:sequence>		
-						<xsd:element name="flow-location" type="flowLocationType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:choice maxOccurs="unbounded">		
+						<xsd:element name="flow-location" type="flowLocationType">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Registers a flow defined in an external resource such as a .xml file in this registry.
+Registers a flow defined at an external resource such as a .xml file.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>
-						<xsd:element name="flow-builder" type="flowBuilderType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="flow-location-pattern">
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Registers a custom FlowBuilder implementation in this registry.
+Registers a set of flows resolved from a resource location pattern (e.g. /WEB-INF/flows/**/*-flow.xml).
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>						
+								<xsd:attribute name="value" type="xsd:string" use="required">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+The location pattern to resolve (e.g. /WEB-INF/flows/**/*-flow.xml)
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:attribute>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="flow-builder" type="flowBuilderType">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Registers a custom FlowBuilder implementation.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
 						</xsd:element>												
-					</xsd:sequence>
+					</xsd:choice>
 					<xsd:attribute name="flow-builder-services" type="xsd:string">
 						<xsd:annotation>
 							<xsd:documentation>
@@ -379,7 +399,7 @@ Example: 'flow1,flow2,flow3'.
 
 	<xsd:complexType name="flowExecutionAttributesType">
 		<xsd:sequence>
-			<xsd:element name="always-redirect-on-pause" type="alwaysRedirectOnPauseType" minOccurs="0">
+			<xsd:element name="always-redirect-on-pause" type="alwaysRedirectOnPauseType" minOccurs="0" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[

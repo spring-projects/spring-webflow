@@ -13,7 +13,7 @@
 		<webflow:flow-execution-attributes>
 			<webflow:always-redirect-on-pause value="false"/>
 			<webflow:attribute name="foo" value="bar"/>		
-			<webflow:attribute name="bar" value="2" type="integer"/>		
+			<webflow:attribute name="bar" value="2" type="integer"/>
 		</webflow:flow-execution-attributes>
 		<webflow:flow-execution-listeners>
 			<webflow:listener ref="listener" criteria="*"/>

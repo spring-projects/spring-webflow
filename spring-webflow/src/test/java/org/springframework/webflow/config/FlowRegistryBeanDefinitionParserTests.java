@@ -24,6 +24,13 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 		assertEquals(new Integer(2), flow.getAttributes().get("bar"));
 	}
 
+	public void testRegistryFlowLocationPatternsPopulated() {
+		FlowDefinition flow1 = registry.getFlowDefinition("flow1");
+		assertEquals("flow1", flow1.getId());
+		FlowDefinition flow2 = registry.getFlowDefinition("flow2");
+		assertEquals("flow2", flow2.getId());
+	}
+
 	public void testRegistryFlowBuildersPopulated() {
 		FlowDefinition foo = registry.getFlowDefinition("foo");
 		assertEquals("foo", foo.getId());
