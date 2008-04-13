@@ -33,7 +33,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
-import org.springframework.webflow.util.DispatchMethodInvoker;
 
 /**
  * Multi-action that implements common logic dealing with input forms. This class leverages the Spring Web data binding

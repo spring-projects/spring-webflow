@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.util;
+package org.springframework.webflow.action;
+
+import org.springframework.webflow.action.DispatchMethodInvoker;
 
 import junit.framework.TestCase;
 

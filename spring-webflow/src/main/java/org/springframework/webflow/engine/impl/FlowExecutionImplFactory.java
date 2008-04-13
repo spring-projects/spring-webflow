@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import java.io.Serializable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -26,7 +24,6 @@ import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
-import org.springframework.webflow.util.RandomGuidUidGenerator;
 
 /**
  * A factory for instances of the {@link FlowExecutionImpl default flow execution} implementation.
@@ -39,7 +36,7 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 	/**
 	 * The factory used to assign keys to flow executions that need to be persisted.
 	 */
-	private FlowExecutionKeyFactory executionKeyFactory = new RandomFlowExecutionKeyFactory();
+	private FlowExecutionKeyFactory executionKeyFactory = new SimpleFlowExecutionKeyFactory();
 
 	/**
 	 * Sets the strategy for generating flow execution keys for persistent flow executions.
@@ -60,13 +57,19 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 	}
 
 	/**
-	 * Generates random flow execution keys.
+	 * Simple key factory suitable for standalone usage and testing. Not expected to be used in a web environment.
 	 */
-	private static class RandomFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
-		private RandomGuidUidGenerator idGenerator = new RandomGuidUidGenerator();
+	private static class SimpleFlowExecutionKeyFactory implements FlowExecutionKeyFactory {
+
+		private int sequence;
 
 		public FlowExecutionKey getKey(FlowExecution execution) {
-			return new SimpleFlowExecutionKey(idGenerator.generateUid());
+			if (execution.getKey() == null) {
+				return new SimpleFlowExecutionKey(nextSequence());
+			} else {
+				// keep the same key
+				return execution.getKey();
+			}
 		}
 
 		public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
@@ -78,27 +81,32 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 		public void updateFlowExecutionSnapshot(FlowExecution execution) {
 		}
 
-		private static class SimpleFlowExecutionKey extends FlowExecutionKey {
-			private Serializable value;
+		private synchronized int nextSequence() {
+			return ++sequence;
+		}
 
-			public SimpleFlowExecutionKey(Serializable value) {
+		private static class SimpleFlowExecutionKey extends FlowExecutionKey {
+
+			private int value;
+
+			public SimpleFlowExecutionKey(int value) {
 				this.value = value;
 			}
 
 			public boolean equals(Object o) {
 				if (!(o instanceof SimpleFlowExecutionKey)) {
 					SimpleFlowExecutionKey key = (SimpleFlowExecutionKey) o;
-					return this.value.equals(key.value);
+					return value == key.value;
 				}
 				return false;
 			}
 
 			public int hashCode() {
-				return this.value.hashCode();
+				return value * 29;
 			}
 
 			public String toString() {
-				return value.toString();
+				return String.valueOf(value);
 			}
 		}
 	}

@@ -2,14 +2,12 @@ package org.springframework.webflow.engine.model.registry;
 
 import junit.framework.TestCase;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
-import org.springframework.webflow.util.ResourceHolder;
 
 public class DefaultFlowModelHolderTests extends TestCase {
 	private DefaultFlowModelHolder holder;
@@ -67,13 +65,4 @@ public class DefaultFlowModelHolderTests extends TestCase {
 		}
 
 	}
-
-	public class ChangeDetectableFlowBuilder extends SimpleFlowBuilder implements ResourceHolder {
-		private FileSystemResource resource = new FileSystemResource("file.txt");
-
-		public Resource getResource() {
-			return resource;
-		}
-	}
-
 }

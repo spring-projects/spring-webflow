@@ -9,7 +9,6 @@ import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.test.MockFlowBuilderContext;
-import org.springframework.webflow.util.ResourceHolder;
 
 public class DefaultFlowHolderTests extends TestCase {
 	private DefaultFlowHolder holder;
@@ -47,7 +46,7 @@ public class DefaultFlowHolderTests extends TestCase {
 
 	}
 
-	public class ChangeDetectableFlowBuilder extends SimpleFlowBuilder implements ResourceHolder {
+	public class ChangeDetectableFlowBuilder extends SimpleFlowBuilder {
 		private FileSystemResource resource = new FileSystemResource("file.txt");
 
 		public Resource getResource() {

@@ -18,7 +18,6 @@ package org.springframework.webflow.action;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.util.DispatchMethodInvoker;
 
 /**
  * Action implementation that bundles two or more action execution methods into a single class. Action execution methods

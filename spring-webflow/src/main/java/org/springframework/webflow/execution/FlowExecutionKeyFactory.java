@@ -31,10 +31,22 @@ public interface FlowExecutionKeyFactory {
 	 */
 	public FlowExecutionKey getKey(FlowExecution execution);
 
+	/**
+	 * Update the snapshot indexed by key of the provided execution to capture the execution's current state.
+	 * @param execution the flow execution
+	 */
 	public void updateFlowExecutionSnapshot(FlowExecution execution);
 
+	/**
+	 * Remove the snapshot indexed by the key of the provided flow execution from storage.
+	 * @param execution the flow execution
+	 */
 	public void removeFlowExecutionSnapshot(FlowExecution execution);
 
+	/**
+	 * Remove all snapshots associated with the flow execution from storage.
+	 * @param execution the flow execution
+	 */
 	public void removeAllFlowExecutionSnapshots(FlowExecution execution);
 
 }

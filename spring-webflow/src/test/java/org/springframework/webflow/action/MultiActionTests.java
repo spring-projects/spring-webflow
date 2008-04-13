@@ -17,6 +17,7 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
+import org.springframework.webflow.action.DispatchMethodInvoker.MethodLookupException;
 import org.springframework.webflow.action.MultiAction.MethodResolver;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -24,7 +25,6 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
-import org.springframework.webflow.util.DispatchMethodInvoker.MethodLookupException;
 
 /**
  * Unit tests for {@link MultiAction}.

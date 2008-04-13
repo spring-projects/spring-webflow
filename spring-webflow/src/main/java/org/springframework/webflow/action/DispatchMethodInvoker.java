@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.util;
+package org.springframework.webflow.action;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,7 +32,7 @@ import org.springframework.util.CachingMapDecorator;
  * @author Keith Donald
  * @author Ben Hale
  */
-public class DispatchMethodInvoker {
+class DispatchMethodInvoker {
 
 	/**
 	 * The target object to dispatch to.
