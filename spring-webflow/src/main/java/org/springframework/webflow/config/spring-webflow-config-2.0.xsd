@@ -36,7 +36,7 @@ would index those definitions by "orderitem-flow" and "shipping-flow" by default
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-					<xsd:choice maxOccurs="unbounded">		
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">		
 						<xsd:element name="flow-location" type="flowLocationType">
 							<xsd:annotation>
 								<xsd:documentation>
