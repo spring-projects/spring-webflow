@@ -4,23 +4,23 @@
 	<sect1 id="upgrade-guide-introduction">
 		<title>Introduction</title>
 		<para>
-			This chapter shows you how to upgrade existing Web Flow 1.0 application to Web Flow 2.0.
+			This chapter shows you how to upgrade existing Web Flow 1 application to Web Flow 2.
 		</para>
 	</sect1>
 	<sect1 id="upgrade-guide-definition-language">
 		<title>Flow Definition Language</title>
 		<para>
-			The core concepts behind the flow definition language have not changed between Web Flow 1.0 and 2.0.
-			However, many of the element and attribute names have changed.
+			The core concepts behind the flow definition language have not changed between Web Flow 1 and 2.
+			However, some of the element and attribute names have changed.
 			These changes allow for the language to be both more concise and expressive.
-			A <link linkend="field-mappings">complete mapping of changes</link> is available as an appendix.
+			A complete list of <link linkend="field-mappings">mapping changes</link> is available as an appendix.
 		</para>
 		<sect2 id="upgrade-guide-definition-language-tool">
 			<title>Flow Definition Updater Tool</title>
 			<para>
-				An automated tool is available to aid in the conversion of existing 1.0 flows to the new 2.0 style.
+				An automated tool is available to aid in the conversion of existing 1.x flows to the new 2.x style.
 				The tool will convert all the old tag names to their new equivalents, if needed.
-				While the tool will make a best effort attempt at conversion, there is not a one-to-one mapping for all 1.0 concepts.
+				While the tool will make a best effort attempt at conversion, there is not a one-to-one mapping for all version 1 concepts.
 				If the tool was unable to convert a portion of the flow, it will be marked with a <code>WARNING</code> comment in the resulting flow.
 			</para>
 			<para>
@@ -34,7 +34,7 @@
 				The resulting converted flow will be sent to standard output.
 			</para>
 			<programlisting language="shell">
-java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowToUpgrade.xml
+java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</programlisting>
 			<sect3 id="upgrade-guide-definition-language-tool-warnings">
 				<title>Flow Definition Updater Tool Warnings</title>
@@ -92,14 +92,14 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 	<sect1 id="upgrade-guide-webflow-config">
 		<title>Web Flow Configuration</title>
 		<para>
-			In Web Flow 1.0 there were two options available for configuring Web Flow, with standard spring bean XML or with the <code>webflow-config</code> schema.
-			The schema configuration option simplifies the configuration process keeping long internal class name hidden and provides contextual auto-complete.
-			The schema configuration option is the standard way to configure Web Flow 2.0.
+			In Web Flow 1 there were two options available for configuring Web Flow, one using standard spring bean XML and the other using the <code>webflow-config-1.0</code> schema.
+			The schema configuration option simplifies the configuration process by keeping long internal class names hidden and enabling contextual auto-complete.
+			The schema configuration option is the only way to configure Web Flow 2.
 		</para>
 		<sect2 id="upgrade-guide-webflow-config-beans">
 			<title>Web Flow Bean Configuration</title>
 			<para>
-				The bean configuration method used in Web Flow 1.0 is no longer supported.
+				The <code>FactoryBean</code> bean XML configuration method used in Web Flow 1 is no longer supported.
 				The schema configuration method should be used instead.
 				In particular beans defining <code>FlowExecutorFactoryBean</code> and <code>XmlFlowRegistryFactoryBean</code> should be updated.
 				Continue reading Web Flow Schema Configuration for details.
@@ -108,9 +108,9 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 		<sect2 id="upgrade-guide-webflow-config-schema">
 			<title>Web Flow Schema Configuration</title>
 			<para>
-				The configuration schema has change slightly in 2.0.
+				The <code>webflow-config</code> configuration schema has also changed slightly from version 1 to 2.
 				The simplest way to update your application is modify the version of the schema to 2.0 then fix any errors in a schema aware XML editor.
-				The most common change is add 'flow-' to the beginning of elements defined by the schema.
+				The most common change is add 'flow-' to the beginning of the elements defined by the schema.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -125,8 +125,8 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 			<sect3 id="upgrade-guide-webflow-config-schema-executor">
 				<title>flow-executor</title>
 				<para>
-					The flow executor is the core of Web Flow.
-					This element replaces previous bean definitions for <code>FlowExecutorFactoryBean</code>.
+					The flow executor is the core Web Flow configuration element.
+					This element replaces previous <code>FlowExecutorFactoryBean</code> bean definitions.
 				</para>
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"/>
@@ -154,7 +154,7 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				<para>
 					The <code>flow-registry</code> contains a set of <code>flow-location</code>s.
 					Every flow definition used by Web Flow must be added to the registry.
-					This element replaces previous bean definitions for <code>XmlFlowRegistryFactoryBean</code>.
+					This element replaces previous <code>XmlFlowRegistryFactoryBean</code> bean definitions.
 				</para>
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry">
@@ -170,21 +170,12 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 				The portlet flow controller <code>org.springframework.webflow.executor.mvc.PortletFlowController</code> has been replaced by a flow handler adapter available at <code>org.springframework.webflow.mvc.portlet.FlowHandlerAdapter</code>.
 				They will need to be updated in the bean definitions.
 			</para>
-			<para>
-				The flowExecutor can no longer be set via a mutator.
-				It must be set as a constructor argument.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
-    <constructor-arg ref="flowExecutor"/>
-</bean>
-			]]></programlisting>
 		</sect2>
 		<sect2 id="upgrade-guide-java-url-handler">
 			<title>Flow Request URL Handler</title>
 			<para>
-				The default URL handler has changed in Web Flow 2.0.
-				The flow identifier is now inferred from the URL rather then passed explicitly.
+				The default URL handler has changed in Web Flow 2.
+				The flow identifier is now derived from the URL rather then passed explicitly.
 				In order to maintain comparability with existing views and URL structures a <code>WebFlow1FlowUrlHandler</code> is available.
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -199,11 +190,11 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 		<sect2 id="upgrade-guide-webflow-config-view-resolver">
 			<title>View Resolution</title>
 			<para>
-				Web Flow 2.0 by default will both select and render views.
-				View were previously selected by Web Flow 1.0 and then rendered by an external view resolver.
+				Web Flow 2 by default will both select and render views.
+				View were previously selected by Web Flow 1 and then rendered by an external view resolver.
 			</para>
 			<para>
-				In order for 1.0 based flows to work in Web Flow 2.0 the default view resolver must be overridden.
+				In order for version 1 flows to work in Web Flow 2 the default view resolver must be overridden.
 				A common use case is to use <ulink url="http://tiles.apache.org/">Apache Tiles</ulink> for view resolution.
 				The following configuration will replace the default view resolver with a Tiles view resolver.
 				The <code>tilesViewResolver</code> in this example can be replaced with any other view resolver.
@@ -236,16 +227,17 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 		<sect2 id="upgrade-guide-webflow-concepts-binding">
 			<title>Automatic Model Binding</title>
 			<para>
-				Web Flow 1.0 required Spring MVC based flows to manually call <code>FormAction</code> methods, mainly: <code>setupForm</code>, <code>bind</code> and <code>bindAndValidate</code>.
-				Web Flow 2.0 now supports automatic setup, binding and validation via the <code>model</code> attribute for <code>view-state</code>s.
+				Web Flow 1 required Spring MVC based flows to manually call <code>FormAction</code> methods, notably:
+				<code>setupForm</code>, <code>bindAndValidate</code> to process form views.
+				Web Flow 2 now provides automatic model setup and binding using the <code>model</code> attribute for <code>view-state</code>s.
 				Please see the <link linkend="view-model">Binding to a Model</link> section for details.
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-el-v-ognl">
 			<title>OGNL vs EL</title>
 			<para>
-				Web Flow 1.0 used OGNL exclusively for expressions within the flow definitions.
-				Web Flow 2.0 adds support for Unified EL.
+				Web Flow 1 used OGNL exclusively for expressions within the flow definitions.
+				Web Flow 2 adds support for Unified EL.
 				United EL is used when it is available, OGNL will continue to be used when a Unified EL implementation is not available.
 				Please see the <link linkend="el">Expression Language</link> chapter for details.
 			</para>
@@ -253,23 +245,24 @@ java org.springframework.webflow.engine.model.builder.xml.WebFlowUpgrader flowTo
 		<sect2 id="upgrade-guide-webflow-concepts-flash-scope">
 			<title>Flash Scope</title>
 			<para>
-				Flash scope in Web Flow 1.0 persisted across the current request and into the next request.
-				In Web Flow 2.0 flash scope is cleared after every view render.
-				This allows objects to persist across the POST-REDIRECT-GET pattern, while being independent of the next request.
+				Flash scope in Web Flow 1 lived across the current request and into the next request.
+				This was conceptually similar to Web Flow 2's view scope concept, but the semantics were not as well defined.
+				In Web Flow 2, flash scope is cleared after every view render.
+				This makes flashScope semantics in Web Flow consistent with other web frameworks.
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-jsf">
 			<title>Spring Faces</title>
 			<para>
-				Web Flow 2.0 provides significant support for JavaServer Faces.
+				Web Flow 2 offers significantly improved integration with JavaServerFaces.
 				Please see the <link linkend="spring-faces">JSF Integration</link> chapter for details.
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-redirects">
 			<title>External Redirects</title>
 			<para>
-				External redirects in Web Flow 1.0 were always considered context relative.
-				In Web Flow 2.0, if the redirect URL begins with a slash, it is considered absolute to the server root instead of the application context.
+				External redirects in Web Flow 1 were always considered context relative.
+				In Web Flow 2, if the redirect URL begins with a slash, it is considered servlet-relative instead of context-relative.
 				URLs without a leading slash are still context relative.
 			</para>
 		</sect2>
