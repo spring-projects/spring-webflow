@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * {@link BeanDefinitionParser} for the flow <code>&lt;registry&gt;</code> tag.
+ * {@link BeanDefinitionParser} for the flow <code>&lt;flow-registry&gt;</code> tag.
  * 
  * @author Keith Donald
  */
