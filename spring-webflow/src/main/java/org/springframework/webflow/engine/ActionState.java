@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,62 +34,8 @@ import org.springframework.webflow.execution.RequestContext;
  * The result of an action's execution is typically the criteria for a transition out of this state. Additional
  * information in the current {@link RequestContext} may also be tested as part of custom transitional criteria,
  * allowing for sophisticated transition expressions that reason on contextual state.
- * <p>
- * Each action executed by this action state may be provisioned with a set of arbitrary execution properties. These
- * properties are made available to the action at execution time and may be used to influence action execution behavior.
- * <p>
- * Common action execution properties include:
- * <p>
- * <table border="1">
- * <th>Property</th>
- * <th>Description</th>
- * <tr>
- * <td valign="top">name</td>
- * <td>The 'name' property is used as a qualifier for an action's result event, and is typically used to allow the flow
- * to respond to a specific action's outcome within a larger action chain. For example, if an action named
- * <code>myAction</code> returns a <code>success</code> result, a transition that matches on event
- * <code>myAction.success</code> will be searched, and if found, executed. If this action is not assigned a name a
- * transition for the base <code>success</code> event will be searched and if found, executed.<br>
- * This is useful in situations where you want to execute actions in an ordered chain as part of one action state, and
- * wish to transition on the result of the last one in the chain. For example:
- * 
- * <pre>
- *     &lt;action-state id=&quot;setupForm&quot;&gt; 
- *         &lt;action name=&quot;setup&quot; bean=&quot;myAction&quot; method=&quot;setupForm&quot;/&gt; 
- *         &lt;action name=&quot;referenceData&quot; bean=&quot;myAction&quot; method=&quot;setupReferenceData&quot;/&gt; 
- *         &lt;transition on=&quot;referenceData.success&quot; to=&quot;displayForm&quot;/&gt; 
- *     &lt;/action-state&gt;
- * </pre>
- * 
- * When the 'setupForm' state above is entered, the 'setup' action will execute, followed by the 'referenceData' action.
- * After 'referenceData' execution, the flow will then respond to the 'referenceData.success' event by transitioning to
- * the 'displayForm' state. The 'setup.success' event that was signaled by the 'setup' action will effectively be
- * ignored.</td>
- * <tr>
- * <td valign="top">method</td>
- * <td>The 'method' property is the name of a target method on a
- * <code>{@link org.springframework.webflow.action.MultiAction}</code> to execute. In the MultiAction scenario the
- * named method must have the signature <code>public Event ${method}(RequestContext) throws Exception</code>. As an
- * example of this scenario, a method property with value <code>setupForm</code> would bind to a method on a
- * MultiAction instance with the signature: <code>public Event setupForm(RequestContext context)</code>. <br>
- * As an alternative to a MultiAction method binding, this action state may excute a
- * {@link org.springframework.webflow.action.AbstractBeanInvokingAction bean invoking action} that invokes a method on a
- * POJO (Plain Old Java Object). If the method signature accepts arguments those arguments may be specified by using the
- * format:
- * 
- * <pre>
- *      methodName(${arg1}, ${arg2}, ...)
- * </pre>
- * 
- * Argument ${expressions} are evaluated against the current <code>RequestContext</code>, allowing for data stored in
- * flow scope or request scope to be passed as arguments to the POJO. In addition, POJO return values may be exposed to
- * the flow automatically. See the bean invoking action type hierarchy for more information. </td>
- * </tr>
- * </table>
  * 
  * @see org.springframework.webflow.execution.Action
- * @see org.springframework.webflow.action.MultiAction
- * @see org.springframework.webflow.action.AbstractBeanInvokingAction
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
