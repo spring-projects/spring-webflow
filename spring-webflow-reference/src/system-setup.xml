@@ -23,7 +23,7 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd"&gt;		
 
-	&lt;!-- Setup Web Flow here --&gt;
+    &lt;!-- Setup Web Flow here --&gt;
 	
 &lt;/beans&gt;
 		</programlisting>
@@ -170,7 +170,16 @@
     &lt;/flow-definition-attributes&gt;
 &lt;/webflow:flow-location&gt;
 			</programlisting>
-		</sect2>			
+		</sect2>
+		<sect2 id="flow-registry-patterns">
+			<title>Registering flows using a location pattern</title>
+			<para>
+				Use the <code>flow-location-patterns</code> element to register flows that match a specific resource location pattern:
+			</para>
+			<programlisting type="xml">
+&lt;webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" /&gt;
+			</programlisting>
+		</sect2>					
 	</sect1>
 	<sect1 id="flow-executor">
 		<title>flow-executor options</title>
