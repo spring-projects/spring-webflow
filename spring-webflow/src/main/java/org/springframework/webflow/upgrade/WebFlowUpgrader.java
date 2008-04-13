@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.webflow.upgrade;
 
 import java.io.IOException;
@@ -18,14 +33,25 @@ import org.springframework.core.io.Resource;
 
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
+/**
+ * Converts Web Flow 1 flow definitions to the version 2 syntax. To use, invoke as a Java application, passing the
+ * file-system path to the flow definition you wish to convert as a program argument. The converted flow definition is
+ * printed to standard out.
+ * 
+ * This class requires a XSLT transformer to run. Saxon is recommended to preserve flow definition formatting and line
+ * breaks.
+ * 
+ * @author Scott Andrews
+ */
 public class WebFlowUpgrader {
 
 	private static final String XSL_NAME = "spring-webflow-1.0-to-2.0.xsl";
+
 	private Transformer transformer;
 
 	public static void main(String[] args) {
 		if (args.length < 1) {
-			System.err.println("The name of the file to convert is required");
+			System.err.println("The file path to the flow to convert is required");
 			System.exit(-1);
 		}
 		WebFlowUpgrader converter = new WebFlowUpgrader();
