@@ -7,7 +7,7 @@
 
 Sample pre-requisites:
 ----------------------
-* JDK 1.5 or > must be installed with the JAVA_HOME variable set
+* JDK 1.5 or > must be installed and in your system path.
 
 * Ant 1.7 or > must be installed and in your system path
 
@@ -22,4 +22,4 @@ To build an individual sample:
 ---------------------
 1. cd to the sample root directory
 
-2. run 'ant dist' to produce a deployable .war file within target/artifacts
+2. run 'ant jar' to produce a deployable .war file within target/artifacts
