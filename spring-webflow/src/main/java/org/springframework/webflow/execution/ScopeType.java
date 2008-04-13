@@ -43,11 +43,9 @@ public abstract class ScopeType extends StaticLabeledEnum {
 
 	/**
 	 * The "flash" scope type. Attributes placed in flash scope exist through the life of the current request <i>and
-	 * until the next user event is signaled in a subsequent request</i>. When the next external user event is signaled
-	 * flash scope is cleared.
+	 * until the next view rendering</i>. After the view renders, flash scope is cleared.
 	 * <p>
-	 * Flash scope is typically used to store messages that should be preserved across refreshes of the next view state
-	 * (for example, on a redirect and any browser refreshes).
+	 * Flash scope is typically used to store messages that should be preserved until after the next view renders.
 	 */
 	public static final ScopeType FLASH = new ScopeType(1, "Flash") {
 		public MutableAttributeMap getScope(RequestContext context) {
@@ -55,6 +53,17 @@ public abstract class ScopeType extends StaticLabeledEnum {
 		}
 	};
 
+	/**
+	 * The "view" scope type. Attributes placed in view scope exist through the life of the current view state <i>and
+	 * until the view state exits in a subsequent request</i>.
+	 * <p>
+	 * View scope is typically used to store view model objects manipulated over a series of Ajax requests.
+	 */
+	public static final ScopeType VIEW = new ScopeType(1, "View") {
+		public MutableAttributeMap getScope(RequestContext context) {
+			return context.getViewScope();
+		}
+	};
 	/**
 	 * The "flow" scope type. Attributes placed in flow scope exist through the life of an executing flow session,
 	 * representing an instance a single {@link FlowDefinition flow definition}. When the flow session ends any data in

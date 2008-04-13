@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ public class ScopeRegistrar implements BeanFactoryPostProcessor, Ordered {
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		beanFactory.registerScope(ScopeType.REQUEST.getLabel().toLowerCase(), new RequestScope());
 		beanFactory.registerScope(ScopeType.FLASH.getLabel().toLowerCase(), new FlashScope());
+		beanFactory.registerScope(ScopeType.VIEW.getLabel().toLowerCase(), new ViewScope());
 		beanFactory.registerScope(ScopeType.FLOW.getLabel().toLowerCase(), new FlowScope());
 		beanFactory.registerScope(ScopeType.CONVERSATION.getLabel().toLowerCase(), new ConversationScope());
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,7 +180,7 @@ public interface ExternalContext {
 	public boolean isResponseCommitted();
 
 	/**
-	 * Is a response allowed for this request
+	 * Is a response allowed to be written for this request?
 	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseAllowed();
