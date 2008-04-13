@@ -8,7 +8,6 @@ import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
-import org.springframework.webflow.action.BeanInvokingActionFactory;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -19,9 +18,9 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
  * A simple holder for configuring the services used by flow builders. These services are exposed to a builder in a
  * {@link FlowBuilderContext}.
  * 
- * Note this class does not attempt to default any service implementations other than the {@link FlowArtifactFactory}
- * and {@link BeanInvokingActionFactory}, which are more like builder helper objects than services. It is expected
- * clients inject non-null references to concrete service implementations appropriate for their environment.
+ * Note this class does not attempt to default any service implementations other than the {@link FlowArtifactFactory},
+ * which is more like builder helper objects than a service. It is expected clients inject non-null references to
+ * concrete service implementations appropriate for their environment.
  * 
  * @see FlowBuilderContextImpl
  * 

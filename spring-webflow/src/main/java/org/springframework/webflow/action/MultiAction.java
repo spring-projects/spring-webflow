@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * <pre>
  *     &lt;action-state id=&quot;search&quot;&gt;
- *         &lt;action bean=&quot;searchAction&quot;/&gt;
+ *         &lt;evaluate expression=&quot;searchAction.executeSearch&quot;/&gt;
  *         &lt;transition on=&quot;success&quot; to=&quot;results&quot;/&gt;
  *     &lt;/action-state&gt;
  * </pre>
@@ -46,19 +46,10 @@ import org.springframework.webflow.execution.RequestContext;
  * public Event search(RequestContext context) throws Exception;
  * </pre>
  * 
- * Alternatively (and typically recommended), you may explictly specify the method name:
- * 
- * <pre>
- *     &lt;action-state id=&quot;search&quot;&gt;
- *         &lt;action bean=&quot;searchAction&quot; method=&quot;executeSearch&quot;/&gt;
- *         &lt;transition on=&quot;success&quot; to=&quot;results&quot;/&gt;
- *     &lt;/action-state&gt;
- * </pre>
- * 
  * <p>
- * A typical use of the MultiAction is to centralize all command logic for a flow in one place. Another common use is to
- * centralize form setup and submit logic in one place, or CRUD (create/read/update/delete) operations for a single
- * domain object in one place.
+ * One use of the MultiAction is to centralize all command logic for a flow in one place. Another use is to centralize
+ * form setup and submit logic in one place, or CRUD (create/read/update/delete) operations for a single domain object
+ * in one place.
  * 
  * @see MultiAction.MethodResolver
  * @see org.springframework.webflow.action.DefaultMultiActionMethodResolver

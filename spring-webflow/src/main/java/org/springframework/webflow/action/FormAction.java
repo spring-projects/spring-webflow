@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2007 the original author or authors.
+ * Copyright 2004-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * Multi-action that implements common logic dealing with input forms. This class leverages the Spring Web data binding
- * code to do binding and validation.
+ * Multi-action that implements common logic dealing with input forms. This class uses the Spring Web data binding code
+ * to do binding and validation.
  * <p>
  * Several action execution methods are provided:
  * <ul>
@@ -79,22 +79,17 @@ import org.springframework.webflow.execution.ScopeType;
  * <li> If business processing is ok, continue to a view state to display the success view. </li>
  * </ol>
  * <p>
- * Here is an example implementation of such a compact form flow:
+ * Here is an example implementation of such a form flow:
  * 
  * <pre>
- *     &lt;view-state id=&quot;displayCriteria&quot; view=&quot;searchCriteria&quot;&gt;
- *         &lt;render-actions&gt;
- *             &lt;action bean=&quot;formAction&quot; method=&quot;setupForm&quot;/&gt;
- *         &lt;/render-actions&gt;
+ *     &lt;view-state id=&quot;displayCriteria&quot;&gt;
+ *         &lt;on-render&gt;
+ *             &lt;evaluate expression=&quot;formAction.setupForm&quot;/&gt;
+ *         &lt;/on-render&gt;
  *         &lt;transition on=&quot;search&quot; to=&quot;executeSearch&quot;&gt;
- *             &lt;action bean=&quot;formAction&quot; method=&quot;bindAndValidate&quot;/&gt;
+ *             &lt;evaluate expression=&quot;formAction.bindAndValidate&quot;/&gt;
  *         &lt;/transition&gt;
  *     &lt;/view-state&gt;
- *                                                                                
- *     &lt;action-state id=&quot;executeSearch&quot;&gt;
- *         &lt;action bean=&quot;formAction&quot; method=&quot;executeSearch&quot;/&gt;
- *         &lt;transition on=&quot;success&quot; to=&quot;displayResults&quot;/&gt;
- *     &lt;/action-state&gt;
  * </pre>
  * 
  * <p>
@@ -137,11 +132,11 @@ import org.springframework.webflow.execution.ScopeType;
  * ... and then invoke it like this:
  * 
  * <pre>
- *     &lt;view-state id=&quot;displayCriteria&quot; view=&quot;searchCriteria&quot;&gt;
- *         &lt;render-actions&gt;
- *             &lt;action bean=&quot;searchFormAction&quot; method=&quot;setupForm&quot;/&gt;
- *             &lt;action bean=&quot;searchFormAction&quot; method=&quot;setupReferenceData&quot;/&gt;
- *         &lt;/render-actions&gt;
+ *     &lt;view-state id=&quot;displayCriteria&quot;&gt;
+ *         &lt;on-render&gt;
+ *             &lt;evaluate expression=&quot;formAction.setupForm&quot;/&gt;
+ *             &lt;evaluate expression=&quot;formAction.setupRefernenceData&quot;/&gt;
+ *         &lt;/on-render&gt;
  *         ...
  *     &lt;/view-state&gt;
  * </pre>
@@ -166,9 +161,9 @@ import org.springframework.webflow.execution.ScopeType;
  * For instance, having a action definition like this:
  * 
  * <pre>
- *     &lt;action bean=&quot;searchFormAction&quot; method=&quot;bindAndValidate&quot;&gt;
+ *     &lt;evaluate expression=&quot;formAction.bindAndValidate&quot;&gt;
  *         &lt;attribute name=&quot;validatorMethod&quot; value=&quot;validateSearchCriteria&quot;/&gt;
- *     &lt;/action&gt;
+ *     &lt;/evaluate&gt;
  * </pre>
  * 
  * Would result in the <tt>public void validateSearchCriteria(SearchCriteria, Errors)</tt> method of the registered
