@@ -65,8 +65,8 @@
 					Such expressions are dynamically evaluated by the EL and should not be enclosed in delimiters like <code>${}</code> or <code>#{}</code>.
 					For example:
 				</para>
-				<programlisting type="xml">
-&lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+				<programlisting type="xml"><![CDATA[
+<evaluate expression="searchCriteria.nextPage()" />]]>
 				</programlisting>
 				<para>
 					The expression above is a standard expression that invokes the <code>nextPage</code> method on the <code>searchCriteria</code> variable when evaluated.
@@ -84,8 +84,8 @@
 					Each eval block is explictly delimited with the <code>${}</code> delimiters.
 					For example:
 				</para>
-				<programlisting type="xml">
-&lt;view-state id="error" view="error-${externalContext.locale}.xhtml" /&gt;
+				<programlisting type="xml"><![CDATA[
+<view-state id="error" view="error-${externalContext.locale}.xhtml" />]]>
 				</programlisting>
 				<para>
 					The expression above is a template expression.
@@ -110,8 +110,8 @@
 				Use <code>flowScope</code> to assign a flow variable.
 				Flow scope gets allocated when a flow starts and destroyed when the flow ends.
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-viewScope">
@@ -121,11 +121,11 @@
 				View scope gets allocated when a <code>view-state</code> enters and destroyed when the state exits.
 				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.
 			</para>
-			<programlisting type="xml">
-&lt;on-render&gt;
-    &lt;evaluate expression="searchService.findHotels(searchCriteria)" result="viewScope.hotels" 
-              type="dataModel" /&gt;
-&lt;/on-render&gt;
+			<programlisting type="xml"><![CDATA[
+<on-render>
+    <evaluate expression="searchService.findHotels(searchCriteria)" result="viewScope.hotels"
+              result-type="dataModel" />
+</on-render>]]>
 			</programlisting>
 		</sect2>			
 		<sect2 id="el-variable-requestScope">
@@ -134,8 +134,8 @@
 				Use <code>requestScope</code> to assign a request variable.
 				Request scope gets allocated when a flow is called and destroyed when the flow returns.
 			</para>
-			<programlisting type="xml">
-&lt;set name="requestScope.hotelId" value="requestParameters.id" type="long" /&gt;
+			<programlisting type="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-flashScope">
@@ -144,8 +144,8 @@
 				Use <code>flashScope</code> to assign a flash variable.
 				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the flow ends.
 			</para>
-			<programlisting type="xml">
-&lt;set name="flashScope.statusMessage" value="'Booking confirmed'" /&gt;				
+			<programlisting type="xml"><![CDATA[
+<set name="flashScope.statusMessage" value="'Booking confirmed'" />]]>				
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-conversationScope">
@@ -155,8 +155,8 @@
 				Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
 				Conversation scope is shared by a top-level flow and all of its subflows.
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-requestParameters">
@@ -164,8 +164,8 @@
 			<para>
 				Use <code>requestParameters</code> to access a client request parameter:
 			</para>
-			<programlisting type="xml">
-&lt;set name="requestScope.hotelId" value="requestParameters.id" type="long" /&gt;
+			<programlisting type="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-currentEvent">
@@ -173,8 +173,8 @@
 			<para>
 				Use <code>currentEvent</code> to access attributes of the current <code>Event</code>:
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="booking.guests.add(currentEvent.guest)" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="booking.guests.add(currentEvent.guest)" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-currentUser">
@@ -182,9 +182,9 @@
 			<para>
 				Use <code>currentUser</code> to access the authenticated <code>Principal</code>:
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
-          result="flowScope.booking" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+          result="flowScope.booking" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-messageContext">
@@ -193,8 +193,8 @@
 				Use <code>messageContext</code> to access a context for retrieving and creating flow execution messages, including error and success messages.
 				See the <code>MessageContext</code> Javadocs for more information.
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="bookingValidator.validate(booking, messageContext)" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="bookingValidator.validate(booking, messageContext)" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-requestContext">
@@ -223,9 +223,9 @@
 				Use <code>externalContext</code> to access the client environment, including user session attributes.
 				See the <code>ExternalContext</code> API JavaDocs for more information.
 			</para>
-			<programlisting type="xml">
-&lt;evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)" 
-          result="viewScope.hotels" /&gt;
+			<programlisting type="xml"><![CDATA[
+<evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)" 
+          result="viewScope.hotels" />]]>
 			</programlisting>
 		</sect2>
 	</sect1>
@@ -235,15 +235,15 @@
 			When assigning a variable in one of the flow scopes, referencing that scope is required.
 			For example:
 		</para>
-		<programlisting type="xml">
-&lt;set name="requestScope.hotelId" value="requestParameters.id" type="long" /&gt;
+		<programlisting type="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
 		</programlisting>
 		<para>
 			When simply accessing a variable in one of the scopes, referencing the scope is optional.
 			For example:
 		</para>
-		<programlisting type="xml">
-&lt;evaluate expression="entityManager.persist(booking)" /&gt;
+		<programlisting type="xml"><![CDATA[
+<evaluate expression="entityManager.persist(booking)" />]]>
 		</programlisting>
 		<para>
 			If no scope is specified, like in the use of <code>booking</code> above, a scope searching algorithm will be employed.

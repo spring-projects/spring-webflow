@@ -12,10 +12,10 @@
 		<para>
 			Use the <code>view-state</code> element to define a step of the flow that renders a view and waits for a user event to resume:
 		</para>
-		<programlisting language="xml">
-&lt;view-state id="enterBookingDetails" &gt;
-    &lt;transition on="submit" to="reviewBooking" /&gt;
-&lt;/view-state&gt;
+		<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails">
+    <transition on="submit" to="reviewBooking" />
+</view-state>]]>
 		</programlisting>
 		<para>
 			By convention, a view-state maps its id to a view template in the directory where the flow is located.
@@ -47,8 +47,8 @@
 			<para>
 				The view id may be a relative path to view resource in the flow's working directory:
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="enterBookingDetails" view="bookingDetails.xhtml"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" view="bookingDetails.xhtml">]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="view-explicit-absolute">
@@ -56,8 +56,8 @@
 			<para>
 				The view id may be a absolute path to a view resource in the webapp root directory:
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml">]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="view-explicit-logical">
@@ -65,8 +65,8 @@
 			<para>
 				With some view frameworks, such as Spring MVC's view framework, the view id may also be a logical identifier resolved by the framework:
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="enterBookingDetails" view="bookingDetails"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" view="bookingDetails">]]>
 			</programlisting>
 			<para>
 				See the Spring MVC integration section for more information on how to integrate with the MVC <code>ViewResolver</code> infrastructure.
@@ -87,8 +87,8 @@
 				Use the <code>var</code> tag to declare a view variable.
 				Like a flow variable, any @Autowired references are automatically restored when the view state resumes.
 			</para>
-			<programlisting language="xml">
-&lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" /&gt;
+			<programlisting language="xml"><![CDATA[
+<var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" />]]>
 			</programlisting>
 		</sect2>		
 		<sect2 id="view-scope-actions">
@@ -96,11 +96,10 @@
 			<para>
 				Use the <code>on-render</code> tag to assign a variable from an action result before the view renders:
 			</para>
-			<programlisting language="xml">
-&lt;on-render&gt;
-	&lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-	          result="viewScope.hotels" result-type="dataModel" /&gt;
-&lt;/on-render&gt;
+			<programlisting language="xml"><![CDATA[
+<on-render>
+    <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+</on-render>]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="view-scope-ajax">
@@ -111,21 +110,20 @@
 				The list is updated in view scope before each render.
 				Asynchronous event handlers modify the current data page, then request re-rendering of the search results fragment.
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="searchResults"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-                  result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-        &lt;render fragments="searchResultsTFragment" /&gt;            
-    &lt;/transition&gt;
-    &lt;transition on="previous"&gt;
-        &lt;evaluate expression="searchCriteria.previousPage()" /&gt;
-        &lt;render fragments="searchResultsFragment" /&gt;          
-    &lt;/transition&gt;
-&lt;/view-state&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="searchResults">
+    <on-render>
+        <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+    </on-render>
+    <transition on="next">
+        <evaluate expression="searchCriteria.nextPage()" />
+        <render fragments="searchResultsFragment" />            
+    </transition>
+    <transition on="previous">
+        <evaluate expression="searchCriteria.previousPage()" />
+        <render fragments="searchResultsFragment" />          
+    </transition>
+</view-state>]]>
 			</programlisting>			
 		</sect2>
 	</sect1>
@@ -135,11 +133,10 @@
 			Use the <code>on-render</code> element to execute one or more actions before view rendering.
 			Render actions are executed on the initial render as well as any subsequent refreshes, including any partial re-renderings of the view.
 		</para>
-		<programlisting language="xml">
-&lt;on-render&gt;
-    &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-              result="viewScope.hotels" result-type="dataModel" /&gt;
-&lt;/on-render&gt;
+		<programlisting language="xml"><![CDATA[
+<on-render>
+    <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+</on-render>]]>
 	    </programlisting>
 	</sect1>
 	<sect1 id="view-model">
@@ -149,8 +146,8 @@
 			This attribute is typically used with views that render data controls, such as forms.
 			The following example declares the <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
 		</para>
-		<programlisting language="xml">
-&lt;view-state id="enterBookingDetails" model="booking"&gt;
+		<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" model="booking">]]>
 	    </programlisting>
 	    <para>		
 			The model may be in any accessible scope, such as <code>flowScope</code> or <code>viewScope</code>.
@@ -175,11 +172,11 @@
 		<para>
 			Use the <code>bind</code> attribute to suppress model binding and validation for particular view events.
 		</para>
-		<programlisting language="xml">
-&lt;view-state id="enterBookingDetails"&gt;
-	&lt;transition on="proceed" to="reviewBooking"&gt;
-	&lt;transition on="cancel" to="bookingCancelled" bind="false" /&gt;
-&lt;/view-state&gt;
+		<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails">
+    <transition on="proceed" to="reviewBooking">
+    <transition on="cancel" to="bookingCancelled" bind="false" />
+</view-state>]]>
 		</programlisting>
 	</sect1>
 	<sect1 id="view-validate">
@@ -197,11 +194,11 @@
 				<title>Implementing a model validate method</title>
 				<para>
 					The first way is to define a validate method on the model object class.
-					To do this, create a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
+					To do this, create a public method with the name <code>validate</code>, where <code>state</code> is the id of the view-state.
 					The method must declare a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
-				<programlisting language="java">
+				<programlisting language="java"><![CDATA[
 public void validateEnterBookingDetails(MessageContext context) {
     Calendar calendar = Calendar.getInstance();
     if (checkinDate.before(today())) {
@@ -211,18 +208,18 @@ public void validateEnterBookingDetails(MessageContext context) {
         context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
             "Check out date must be later than check in date").build());
     }
-}				
+}]]>
 				</programlisting>
 			</sect3>
 			<sect3 id="view-validation=programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
 					The second way is to define a separate object, called a Validator, which validates your model object.
-					To do this, create a class that defines a public method with the name <code>validate&lt;state&gt;</code>, where <code>state</code> is the id of the view-state.
+					To do this, create a class that defines a public method with the name <code>validate</code>, where <code>state</code> is the id of the view-state.
 					The method must declare a <code>Object</code> parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
-				<programlisting language="java">
+				<programlisting language="java"><![CDATA[
 public class BookingValidator {
     public void validateEnterBookingDetails(Object object, MessageContext context) {
         Booking booking = (Booking) object;
@@ -234,7 +231,7 @@ public class BookingValidator {
                 "Check out date must be later than check in date").build());
         }
     }
-}				
+}]]>
 				</programlisting>
 				<para>
 					A Validator can also accept a Spring MVC <code>Errors</code> object, which is required for invoking existing Spring Validators.
@@ -247,10 +244,10 @@ public class BookingValidator {
 		<para>
 			From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
 		</para>
-		<programlisting language="xml">
-&lt;transition on="event"&gt;
-    &lt;-- Handle event --&gt;
-&lt;/transition&gt;
+		<programlisting language="xml"><![CDATA[
+<transition on="event">
+    <-- Handle event -->
+</transition>]]>
 		</programlisting>
 		<para>
 			These event handlers do not change the state of the flow.
@@ -261,11 +258,11 @@ public class BookingValidator {
 			<para>
 				Use the <code>render</code> element to request partial re-rendering of a view after handling an event:
 			</para>
-			<programlisting language="xml">
-&lt;transition on="next"&gt;
-    &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-    &lt;render fragments="searchResultsFragment" /&gt;            
-&lt;/transition&gt;			
+			<programlisting language="xml"><![CDATA[
+<transition on="next">
+    <evaluate expression="searchCriteria.nextPage()" />
+    <render fragments="searchResultsFragment" />            
+</transition>]]>
 			</programlisting>
 			<para>
 				The fragments attribute should reference the ID(s) of the view element(s) you wish to re-render.
@@ -281,11 +278,11 @@ public class BookingValidator {
 				Use the flow's <code>global-transitions</code> element to create event handlers that apply across all views.
 				Global-transitions are often used to handle global menu links that are part of the layout.
 			</para>
-			<programlisting language="xml">
-&lt;global-transitions&gt;
-    &lt;transition on="login"&gt; to="login"&gt;
-    &lt;transition on="logout"&gt; to="logout"&gt;
-&lt;/global-transitions&gt;		
+			<programlisting language="xml"><![CDATA[
+<global-transitions>
+    <transition on="login"> to="login">
+    <transition on="logout"> to="logout">
+</global-transitions>]]>
 			</programlisting>
 		</sect2>		
 	</sect1>
@@ -300,7 +297,7 @@ public class BookingValidator {
 		</para>
 		<sect2 id="plain-text-message">
 			<title>Adding plain text messages</title>
-			<programlisting type="java">
+			<programlisting type="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate")
@@ -309,19 +306,19 @@ context.addMessage(builder.warn().source("smoking")
        .defaultText("Smoking is bad for your health").build());
 context.addMessage(builder.info()
        .defaultText("We have processed your reservation - thank you and enjoy your stay")
-       .build());
+       .build());]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="plain-text-message-intl">
 			<title>Adding internationalized messages</title>
-			<programlisting type="java">
+			<programlisting type="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture")
        .build());
 context.addMessage(builder.warn().source("smoking").code("notHealthy")
        .resolvableArg("smoking").build());			
-context.addMessage(builder.info().code("reservationConfirmation").build());
+context.addMessage(builder.info().code("reservationConfirmation").build());]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="message-bundles">
@@ -331,11 +328,11 @@ context.addMessage(builder.info().code("reservationConfirmation").build());
 				To create a flow-specific message bundle, simply define <code>messages.properties</code> file(s) in your flow's directory.
 				Create a default <code>messages.properties</code> file and a .properties file for each additional <code>Locale</code> you need to support.
 			</para>
-			<programlisting type="properties">
+			<programlisting type="properties"><![CDATA[
 #messages.properties
 checkinDate=Check in date must be a future date
 notHealthy={0} is bad for your health
-reservationConfirmation=We have processed your reservation - thank you and enjoy your stay
+reservationConfirmation=We have processed your reservation - thank you and enjoy your stay]]>
 			</programlisting>
 		</sect2>
 	</sect1>
@@ -344,8 +341,8 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 		<para>
 			Use the <code>popup</code> attribute to render a view in a modal popup dialog:
 		</para>
-		<programlisting language="xml">
-&lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;
+		<programlisting language="xml"><![CDATA[
+<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">]]>
 		</programlisting>
 		<para>
 			When using Web Flow with the Spring Javascript, no client side code is necessary for the popup to display.
@@ -363,8 +360,8 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			<para>
 				Set the history attribute to <code>discard</code> to prevent backtracking to a view:
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="changeSearchCriteria" history="discard"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="changeSearchCriteria" history="discard">]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="history-invalidate">
@@ -372,8 +369,8 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			<para>
 				Set the history attribute to <code>invalidate</code> to prevent backtracking to a view as well all previously displayed views:
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="changeSearchCriteria" history="invalidate"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="changeSearchCriteria" history="invalidate">]]>
 			</programlisting>
 		</sect2>
 	</sect1>	

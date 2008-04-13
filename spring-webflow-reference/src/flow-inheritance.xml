@@ -37,8 +37,8 @@
 				The child flow will inherit from each parent in the order it is listed adding elements and content to the resulting flow.
 				The resulting flow from the first merge will be considered the child in the second merge, and so on.
 			</para>
-			<programlisting language="xml">
-&lt;flow parent="common-transitions, common-states"&gt;
+			<programlisting language="xml"><![CDATA[
+<flow parent="common-transitions, common-states">]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="flow-inheritance-level-state">
@@ -55,8 +55,8 @@
 				The parent and child states must be of the same type.
 				For instance a view-state cannot inherit from an end-state, only another view-state.
 			</para>
-			<programlisting language="xml">
-&lt;view-state id="child-state" parent="parent-flow#parent-view-state"&gt;
+			<programlisting language="xml"><![CDATA[
+<view-state id="child-state" parent="parent-flow#parent-view-state">]]>
 			</programlisting>
 		</sect2>
 	</sect1>
@@ -67,8 +67,8 @@
 			In order to protect these flow from running, they can be marked as <code>abstract</code>.
 			If an abstract flow attempts to run, a <code>FlowBuilderException</code> will be thrown.
 		</para>
-		<programlisting language="xml">
-&lt;flow abstract="true"&gt;
+		<programlisting language="xml"><![CDATA[
+<flow abstract="true">]]>
 		</programlisting>
 	</sect1>
 	<sect1 id="flow-inheritance-algorithm">

@@ -197,7 +197,7 @@
 				</para>
 				<programlisting language="xml"><![CDATA[
 <evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels"
-         result-type="dataModel"/>]]>
+          result-type="dataModel"/>]]>
 				</programlisting>
 			</sect3>
 		</sect2>
@@ -216,7 +216,7 @@
 
     <on-start>
         <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
-                      result="flowScope.booking" />
+                  result="flowScope.booking" />
     </on-start>
 
     <view-state id="enterBookingDetails">
@@ -342,7 +342,7 @@ public interface FlowOutcome {
 
     <on-start>
         <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
-                      result="flowScope.booking" />
+                  result="flowScope.booking" />
     </on-start>
 
     <view-state id="enterBookingDetails">
@@ -453,7 +453,7 @@ public interface FlowOutcome {
 
     <on-start>
         <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
-                      result="flowScope.booking" />
+                  result="flowScope.booking" />
     </on-start>
 
     <view-state id="enterBookingDetails">

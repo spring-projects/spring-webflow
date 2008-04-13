@@ -7,7 +7,7 @@
 		While most of the changes are semantic, there are a few structural changes.
 		Please see the upgrade guide for more details about changes between Web Flow 1.0 and 2.0. 
 	</para>
-	<table>
+	<table id="field-mappings-table">
 		<title>Mappings</title>
 		<tgroup cols="5">
 			<colspec colname="1.0-element" colwidth="*"/>

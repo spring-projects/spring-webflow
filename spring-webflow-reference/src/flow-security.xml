@@ -42,8 +42,8 @@
 				Often, these are specific security roles.
 				The attributes are compared against the user's granted attributes by a Spring Security access decision manager.
 			</para>
-			<programlisting language="xml">
-&lt;secured attributes="ROLE_USER" /&gt;
+			<programlisting language="xml"><![CDATA[
+<secured attributes="ROLE_USER" />]]>
 			</programlisting>
 			<para>
 				By default, a role based access decision manager is used to determine if the user is allowed access.
@@ -57,8 +57,8 @@
 				Any, allows access if at least one of the required security attributes is granted to the user.
 				All, allows access only if each of the required security attributes are granted to the user.
 			</para>
-			<programlisting language="xml">
-&lt;secured attributes="ROLE_USER, ROLE_ANONYMOUS" match="any" /&gt;
+			<programlisting language="xml"><![CDATA[
+<secured attributes="ROLE_USER, ROLE_ANONYMOUS" match="any" />]]>
 			</programlisting>
 			<para>
 				This attribute is optional.
@@ -121,33 +121,33 @@
 				The Spring configuration defines <code>http</code> specifics (such as protected URLs and login/logout mechanics) and the <code>authentication-provider</code>.
 				For the sample applications, a local authentication provider is configured.
 			</para>
-			<programlisting language="xml">
-&lt;security:http auto-config="true"&gt;
-    &lt;security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" /&gt;
-    &lt;security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" /&gt;
-    &lt;security:intercept-url pattern="/spring/logout*" access="ROLE_USER" /&gt;
+			<programlisting language="xml"><![CDATA[
+<security:http auto-config="true">
+    <security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
+    <security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" />
+    <security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
 
-    &lt;security:form-login login-page="/spring/login" 
+    <security:form-login login-page="/spring/login" 
                              login-url="/spring/login-process" 
                     default-target-url="/spring/main" 
-            authentication-failure-url="/spring/login?login_error=1" /&gt;
+            authentication-failure-url="/spring/login?login_error=1" />
    
-    &lt;security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" /&gt;
-&lt;/security:http&gt;
+    <security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" />
+</security:http>
 
-&lt;security:authentication-provider&gt;
-    &lt;security:password-encoder hash="md5" /&gt;
-    &lt;security:user-service&gt;
-        &lt;security:user name="keith" password="417c7382b16c395bc25b5da1398cf076" 
-                       authorities="ROLE_USER,ROLE_SUPERVISOR" /&gt;
-        &lt;security:user name="erwin" password="12430911a8af075c6f41c6976af22b09" 
-                       authorities="ROLE_USER,ROLE_SUPERVISOR" /&gt;
-        &lt;security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb" 
-                       authorities="ROLE_USER" /&gt;
-        &lt;security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" 
-                       authorities="ROLE_USER" /&gt;
-    &lt;/security:user-service&gt;
-&lt;/security:authentication-provider&gt;
+<security:authentication-provider>
+    <security:password-encoder hash="md5" />
+    <security:user-service>
+        <security:user name="keith" password="417c7382b16c395bc25b5da1398cf076" 
+                       authorities="ROLE_USER,ROLE_SUPERVISOR" />
+        <security:user name="erwin" password="12430911a8af075c6f41c6976af22b09" 
+                       authorities="ROLE_USER,ROLE_SUPERVISOR" />
+        <security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb" 
+                       authorities="ROLE_USER" />
+        <security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" 
+                       authorities="ROLE_USER" />
+    </security:user-service>
+</security:authentication-provider>]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="flow-security-configuration-web">
@@ -157,16 +157,16 @@
 				This filter will listen for login/logout requests and process them accordingly.
 				It will also catch <code>AccesDeniedException</code>s and redirect the user to the login page.
 			</para>
-			<programlisting language="xml">
-&lt;filter&gt;
-    &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;
-&lt;/filter&gt;
+			<programlisting language="xml"><![CDATA[
+<filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
 
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>]]>
 			</programlisting>
 		</sect2>
 	</sect1>
