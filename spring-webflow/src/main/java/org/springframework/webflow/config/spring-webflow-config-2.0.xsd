@@ -42,15 +42,6 @@ would index those definitions by "orderitem-flow" and "shipping-flow" by default
 								<xsd:documentation>
 									<![CDATA[
 Registers a flow defined in an external resource such as a .xml file in this registry.
-<br>
-Supports individual resource paths such as:
-<pre>
-	/WEB-INF/flows/booking/booking.xml
-</pre>
-... as well as wildcard resource paths such as:
-<pre>
-	/WEB-INF/flows/*/*.xml
-</pre>
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
