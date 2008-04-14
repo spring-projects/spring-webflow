@@ -351,7 +351,7 @@ Actions to execute immediately before view rendering.
 										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 									</xsd:complexType>
 								</xsd:element>
-								<xsd:element name="transition" minOccurs="0" maxOccurs="unbounded">
+								<xsd:element name="transition" type="bindableTransition" minOccurs="0" maxOccurs="unbounded">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -361,21 +361,6 @@ If no transition target is specified, the transition acts as a simple event hand
 ]]>
 										</xsd:documentation>
 									</xsd:annotation>
-									<xsd:complexType>
-										<xsd:complexContent>
-											<xsd:extension base="transition">
-												<xsd:attribute name="bind" type="xsd:boolean">
-													<xsd:annotation>
-														<xsd:documentation>
-															<![CDATA[
-Indicates whether model binding should occur before this transition executes. Defaults to true.
-								]]>
-														</xsd:documentation>
-													</xsd:annotation>
-												</xsd:attribute>
-											</xsd:extension>
-										</xsd:complexContent>
-									</xsd:complexType>
 								</xsd:element>
 								<xsd:element name="on-exit" minOccurs="0">
 									<xsd:annotation>
@@ -940,7 +925,7 @@ Transitions shared by all states and eligible for execution if no transition ass
 					</xsd:annotation>
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="transition" type="transition" maxOccurs="unbounded">
+							<xsd:element name="transition" type="bindableTransition" maxOccurs="unbounded">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -1418,6 +1403,22 @@ If no value is specified, this transition acts as a simple event handler and wil
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="bindableTransition">
+		<xsd:complexContent>
+			<xsd:extension base="transition">
+				<xsd:attribute name="bind" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates whether model binding should occur before this transition executes. Defaults to true.
+							]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="exception-handler">
