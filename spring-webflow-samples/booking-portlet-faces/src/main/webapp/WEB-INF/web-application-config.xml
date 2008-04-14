@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
-       xmlns:faces="http://www.springframework.org/schema/faces-config"
+       xmlns:faces="http://www.springframework.org/schema/faces"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
@@ -14,8 +14,8 @@
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
-           http://www.springframework.org/schema/faces-config
-           http://www.springframework.org/schema/faces-config/spring-faces-config-2.0.xsd">
+           http://www.springframework.org/schema/faces
+           http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
 	<!-- Activates annotation-based bean configuration -->
 	<context:annotation-config />
