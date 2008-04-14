@@ -173,7 +173,7 @@
 			Use the <code>bind</code> attribute to suppress model binding and validation for particular view events.
 		</para>
 		<programlisting language="xml"><![CDATA[
-<view-state id="enterBookingDetails">
+<view-state id="enterBookingDetails" model="booking">
     <transition on="proceed" to="reviewBooking">
     <transition on="cancel" to="bookingCancelled" bind="false" />
 </view-state>]]>

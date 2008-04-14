@@ -18,7 +18,7 @@ A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" />
 
 	<xsd:element name="flow-registry">
 		<xsd:annotation>
