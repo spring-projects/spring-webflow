@@ -469,7 +469,7 @@ public interface FlowOutcome {
 
     <subflow-state id="addGuest" subflow="createGuest">
         <transition on="guestCreated" to="reviewBooking">
-            <evaluate expression="booking.guests.add(guest)"/>  
+            <evaluate expression="booking.guests.add(currentEvent.guest)"/>  
         </transition>
         <transition on="creationCancelled" to="reviewBooking" />
     </subfow-state>
