@@ -62,7 +62,7 @@
 </webflow:flow-executor>
 	
 <bean id="jpaFlowExecutionListener" 
-      class="com.bah.tdc.webflow.persistence.JpaFlowExecutionListener">
+      class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
     <constructor-arg ref="entityManagerFactory" />
     <constructor-arg ref="transactionManager" />
 </bean>
