@@ -42,8 +42,8 @@
     	float: right;
     }
     
-    #content.spring form div, 
-    #content.spring form p {
+    form div, 
+    form p {
     	padding: 0px;
 		margin: 0 0 .5em 0;
     }
