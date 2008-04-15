@@ -58,6 +58,8 @@ public class ResourceServlet extends HttpServlet {
 
 	private static final Log log = LogFactory.getLog(ResourceServlet.class);
 
+	private final String protectedPath = "/?WEB-INF/.*";
+
 	private boolean gzipEnabled = true;
 
 	private Map defaultMimeTypes = new HashMap();
@@ -213,6 +215,12 @@ public class ResourceServlet extends HttpServlet {
 		URL[] resources = new URL[localResourcePaths.length];
 		for (int i = 0; i < localResourcePaths.length; i++) {
 			String localResourcePath = localResourcePaths[i];
+			if (localResourcePath.matches(protectedPath)) {
+				if (log.isWarnEnabled()) {
+					log.warn("An attempt to access a protected resource at " + localResourcePath + " was disallowed.");
+				}
+				return null;
+			}
 			URL resource = getServletContext().getResource(localResourcePath);
 			if (resource == null) {
 				String jarResourcePath = "META-INF" + localResourcePath;
