@@ -90,7 +90,7 @@ public class MvcViewTests extends TestCase {
 		assertNotNull(bm);
 		assertEquals(null, bm.getFieldValue("stringProperty"));
 		assertEquals("3", bm.getFieldValue("integerProperty"));
-		assertEquals("1/1/08", bm.getFieldValue("dateProperty"));
+		assertEquals("2008-01-01", bm.getFieldValue("dateProperty"));
 	}
 
 	public void testResumeNoEvent() throws Exception {
@@ -126,7 +126,7 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
 		context.putRequestParameter("integerProperty", "5");
-		context.putRequestParameter("dateProperty", "1/1/2007");
+		context.putRequestParameter("dateProperty", "2007-01-01");
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");

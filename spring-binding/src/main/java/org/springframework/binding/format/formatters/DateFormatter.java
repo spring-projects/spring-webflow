@@ -27,6 +27,8 @@ import org.springframework.util.StringUtils;
 
 public class DateFormatter implements Formatter {
 
+	public static final String DEFAULT_PATTERN = "yyyy-MM-dd";
+
 	private String pattern;
 
 	private Locale locale;
@@ -68,12 +70,16 @@ public class DateFormatter implements Formatter {
 
 	protected DateFormat getDateFormat() {
 		if (pattern != null) {
-			return new SimpleDateFormat(pattern, locale);
+			if (locale != null) {
+				return new SimpleDateFormat(pattern, locale);
+			} else {
+				return new SimpleDateFormat(pattern);
+			}
 		} else {
 			if (locale != null) {
-				return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+				return new SimpleDateFormat(DEFAULT_PATTERN, locale);
 			} else {
-				return DateFormat.getDateInstance(DateFormat.SHORT);
+				return new SimpleDateFormat(DEFAULT_PATTERN);
 			}
 		}
 	}
