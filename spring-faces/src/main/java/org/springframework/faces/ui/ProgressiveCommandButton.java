@@ -70,7 +70,7 @@ public class ProgressiveCommandButton extends UICommand {
 				&& context.getCurrentState() instanceof TransitionableState) {
 			TransitionDefinition transition = ((TransitionableState) context.getCurrentState())
 					.getTransition(getActionExpression().getExpressionString());
-			if (transition.getAttributes().contains("bind")) {
+			if (transition != null && transition.getAttributes().contains("bind")) {
 				return Boolean.FALSE.equals(transition.getAttributes().getBoolean("bind"));
 			}
 		}
