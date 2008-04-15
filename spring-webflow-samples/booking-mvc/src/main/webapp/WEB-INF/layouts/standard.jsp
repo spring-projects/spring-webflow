@@ -13,7 +13,7 @@
         @import url("<c:url value="/resources/css-framework/css/forms.css" />");
         @import url("<c:url value="/resources/css-framework/css/layout-navtop-localleft.css" />");
         @import url("<c:url value="/resources/css-framework/css/layout.css" />");
-        @import url("<c:url value="/resources/css/booking.css" />");
+        @import url("<c:url value="/resources/styles/booking.css" />");
     </style>
 </head>
 <body class="tundra spring">
