@@ -78,11 +78,16 @@
 			There are rules for every element in the Web Flow definition language that govern how that particular element is merged.
 		</para>
 		<para>
-			There are two types of elements mergable and non-mergeable.
+			There are two types of elements mergeable and non-mergeable.
 			Mergeable elements will always attempt to merge together if the elements are similar.
 			Non-mergeable elements in a parent or child flow will always be contained in the resulting flow intact.
 			They will not be modified as part of the merge process.
 		</para>
+		<note>
+			Paths to external resources in the parent flow should be absolute.
+			Relative paths will break when the two flows are merged unless the parent and child flow are in the same directory.
+			Once merged, all relative paths in the parent flow will become relative to the child flow.
+		</note>
 		<sect2 id="flow-inheritance-algorithm-mergeable">
 			<title>Mergeable Elements</title>
 			<para>
