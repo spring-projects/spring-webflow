@@ -1,10 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-
-<tiles:insertTemplate template="/WEB-INF/layouts/standard.jsp">
-<tiles:putAttribute name="content">
 
 <form:form modelAttribute="searchCriteria" action="search" method="get">
 <div class="section">
@@ -12,8 +8,15 @@
     	<form:errors path="*"/>
     </span>
 	<h1>Search Hotels</h1>
-	<fieldset> 
+	<fieldset>
 		<form:input path="searchString"/>
+		<script type="text/javascript">
+			dojo.require('dijit.form.ValidationTextBox');
+			Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
+				targetElId : 'searchString',
+				decoratorType : dijit.form.ValidationTextBox,
+				decoratorAttrs : { promptMessage : 'Search hotels by name, address, city, or zip.' }}));
+		</script>
 		<label for="pageSize">Maximum results:</label>
 		<form:select path="pageSize">
 			<form:option label="5" value="5"/>
@@ -64,6 +67,3 @@
 		</table>
 	</div>
 </security:authorize>
-
-</tiles:putAttribute>
-</tiles:insertTemplate>

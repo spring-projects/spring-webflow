@@ -15,6 +15,10 @@
         @import url("<c:url value="/resources/css-framework/css/layout.css" />");
         @import url("<c:url value="/resources/styles/booking.css" />");
     </style>
+    <script type="text/javascript" src="<c:url value="/resources/spring/Spring.js" />"></script>
+    <script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js" />"></script>
+    <script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js" />"></script>
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />
 </head>
 <body class="tundra spring">
 <div id="page">
@@ -49,7 +53,7 @@
 			</p>
 		</div>
 		<div id="main">
-			<tiles:insertAttribute name="content" />
+			<tiles:insertAttribute name="body" />
 		</div>
 	</div>
 	<div id="footer" class="clearfix spring">

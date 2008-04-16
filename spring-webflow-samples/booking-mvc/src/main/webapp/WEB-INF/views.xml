@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	
+	<!-- Pages -->
+	<definition name="intro" extends="standard-layout">
+		<put-attribute name="body" value="/WEB-INF/intro.jsp" />
+	</definition>
+	
+	<definition name="login" extends="standard-layout">
+		<put-attribute name="body" value="/WEB-INF/login.jsp" />
+	</definition>
+	
+	<definition name="logout-success" extends="standard-layout">
+		<put-attribute name="body" value="/WEB-INF/logout-success.jsp" />
+	</definition>
+	
+</tiles-definitions>

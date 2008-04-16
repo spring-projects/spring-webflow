@@ -1,9 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-<tiles:insertTemplate template="/WEB-INF/layouts/standard.jsp">
-<tiles:putAttribute name="content">
 
 <div class="section">
 	<h1>Hotel Results</h1>
@@ -42,6 +38,3 @@
 	</table>
 </div>
 </c:if>
-
-</tiles:putAttribute>
-</tiles:insertTemplate>

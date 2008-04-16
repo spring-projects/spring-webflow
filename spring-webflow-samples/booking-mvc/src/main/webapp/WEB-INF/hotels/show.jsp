@@ -1,10 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-<tiles:insertTemplate template="/WEB-INF/layouts/standard.jsp">
-<tiles:putAttribute name="content">
 
 <div class="section">
 	<h1>View Hotel</h1>
@@ -50,6 +46,3 @@
 	</fieldset>
 	</form:form>
 </div>
-
-</tiles:putAttribute>
-</tiles:insertTemplate>

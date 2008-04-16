@@ -32,10 +32,21 @@
 		<property name="order" value="2"/>
 	</bean>
 
-	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the /WEB-INF directory -->	
-	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/" />
-		<property name="suffix" value=".jsp" />
+	<!-- Configure Apache Tiles for the view -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/layouts/layouts.xml</value>
+				<value>/WEB-INF/views.xml</value>
+				<value>/WEB-INF/hotels/views.xml</value>
+				<value>/WEB-INF/hotels/booking/views.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="requestContextAttribute" value="requestContext"/>
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
 	</bean>
 
 	<!-- Enables annotated POJO @Controllers -->
@@ -48,8 +59,5 @@
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<constructor-arg ref="flowExecutor" />
 	</bean>
-	
-	<!-- Initializes Tiles, the layout engine used in this sample -->
-	<bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer" />
 	
 </beans>
