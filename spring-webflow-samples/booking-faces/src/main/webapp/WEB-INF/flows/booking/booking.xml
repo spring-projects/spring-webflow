@@ -13,11 +13,8 @@
 		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
 	</on-start>
 	
-	<view-state id="enterBookingDetails">
-		<transition on="proceed" to="reviewBooking">
-			<render fragments="messagesFragment"/>
-			<evaluate expression="booking.validateEnterBookingDetails(messageContext)" />
-		</transition>
+	<view-state id="enterBookingDetails" model="booking">
+		<transition on="proceed" to="reviewBooking"/>
 		<transition on="cancel" to="bookingCancelled" bind="false"/>
 	</view-state>
 	

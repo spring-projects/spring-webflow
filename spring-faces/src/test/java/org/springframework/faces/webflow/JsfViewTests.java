@@ -22,10 +22,14 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class JsfViewTests extends TestCase {
@@ -141,6 +145,7 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
+		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 
 		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
 
@@ -170,6 +175,7 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
+		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 
 		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
 
@@ -199,6 +205,7 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashMap.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
+		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 
 		Lifecycle lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
 
@@ -291,6 +298,19 @@ public class JsfViewTests extends TestCase {
 
 		public String getDescription() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+	}
+
+	private class MockViewState extends ViewState {
+
+		public MockViewState() {
+			super(new Flow("mockFlow"), VIEW_ID, new ViewFactory() {
+
+				public View getView(RequestContext context) {
+					// TODO Auto-generated method stub
+					throw new UnsupportedOperationException("Auto-generated method stub");
+				}
+			});
 		}
 	}
 }
