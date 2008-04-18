@@ -745,7 +745,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private FlowExecutionExceptionHandler parseCustomExceptionHandler(ExceptionHandlerModel exceptionHandler) {
 		return (FlowExecutionExceptionHandler) getLocalContext().getApplicationContext().getBean(
-				exceptionHandler.getBeanName(), FlowExecutionExceptionHandler.class);
+				exceptionHandler.getBean(), FlowExecutionExceptionHandler.class);
 	}
 
 	private Transition[] parseTransitions(List transitionModels) {

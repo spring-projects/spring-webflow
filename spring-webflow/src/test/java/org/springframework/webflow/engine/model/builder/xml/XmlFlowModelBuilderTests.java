@@ -12,6 +12,7 @@ import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
+import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.SecuredModel;
 import org.springframework.webflow.engine.model.TransitionModel;
@@ -266,6 +267,24 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		} catch (FlowModelBuilderException e) {
 			// we want this
 		}
+	}
+
+	public void testParseFlowExceptionHandler() {
+		ClassPathResource res = new ClassPathResource("flow-exception-handler.xml", getClass());
+		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(res);
+		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(builder);
+		FlowModel model = holder.getFlowModel();
+		assertEquals("foo1", ((ExceptionHandlerModel) model.getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo2", ((ExceptionHandlerModel) model.getStateById("state1").getExceptionHandlers().get(0))
+				.getBean());
+		assertEquals("foo3", ((ExceptionHandlerModel) model.getStateById("state2").getExceptionHandlers().get(0))
+				.getBean());
+		assertEquals("foo4", ((ExceptionHandlerModel) model.getStateById("state3").getExceptionHandlers().get(0))
+				.getBean());
+		assertEquals("foo5", ((ExceptionHandlerModel) model.getStateById("state4").getExceptionHandlers().get(0))
+				.getBean());
+		assertEquals("foo6", ((ExceptionHandlerModel) model.getStateById("state5").getExceptionHandlers().get(0))
+				.getBean());
 	}
 
 	public void testFormActionValidatorMethod() {

@@ -25,14 +25,15 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class ExceptionHandlerModel extends AbstractModel {
-	private String beanName;
+
+	private String bean;
 
 	/**
 	 * Create an exception handler model
-	 * @param beanName the name of the bean to handle exceptions
+	 * @param bean the name of the bean to handle exceptions
 	 */
-	public ExceptionHandlerModel(String beanName) {
-		setBeanName(beanName);
+	public ExceptionHandlerModel(String bean) {
+		setBean(bean);
 	}
 
 	public boolean isMergeableWith(Model model) {
@@ -42,21 +43,15 @@ public class ExceptionHandlerModel extends AbstractModel {
 	public void merge(Model model) {
 	}
 
-	/**
-	 * @return the bean name
-	 */
-	public String getBeanName() {
-		return beanName;
+	public String getBean() {
+		return bean;
 	}
 
-	/**
-	 * @param beanName the bean name to set
-	 */
-	public void setBeanName(String beanName) {
-		if (StringUtils.hasText(beanName)) {
-			this.beanName = beanName;
+	public void setBean(String bean) {
+		if (StringUtils.hasText(bean)) {
+			this.bean = bean;
 		} else {
-			this.beanName = null;
+			this.bean = null;
 		}
 	}
 }

@@ -10,14 +10,17 @@ import org.springframework.webflow.action.FlowDefinitionRedirectAction;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 import org.springframework.webflow.engine.FlowInputMappingException;
 import org.springframework.webflow.engine.FlowOutputMappingException;
+import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.EndStateModel;
+import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.InputModel;
 import org.springframework.webflow.engine.model.OutputModel;
@@ -34,6 +37,7 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.test.MockExternalContext;
@@ -334,6 +338,26 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		} catch (FlowBuilderException e) {
 			// we want this
 		}
+	}
+
+	public void testExceptionHandlers() {
+		FlowModel model = new FlowModel();
+		model.addState(new EndStateModel("state"));
+		model.addExceptionHandler(new ExceptionHandlerModel("exceptionHandler"));
+		FlowExecutionExceptionHandler handler = new FlowExecutionExceptionHandler() {
+			public boolean canHandle(FlowExecutionException exception) {
+				return true;
+			}
+
+			public void handle(FlowExecutionException exception, RequestControlContext context) {
+			}
+		};
+		FlowModelFlowBuilder builder = new FlowModelFlowBuilder(new StaticFlowModelHolder(model));
+		MockFlowBuilderContext context = new MockFlowBuilderContext("foo");
+		context.registerBean("exceptionHandler", handler);
+		FlowAssembler assembler = new FlowAssembler(builder, context);
+		Flow flow = assembler.assembleFlow();
+		assertEquals(1, flow.getExceptionHandlerSet().size());
 	}
 
 	private Flow getFlow(FlowModel model) {

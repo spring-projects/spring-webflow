@@ -202,7 +202,7 @@ Actions to execute when this state is entered.
 										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 									</xsd:complexType>
 								</xsd:element>
-								<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+								<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
 								<xsd:element name="transition" type="transition" minOccurs="0" maxOccurs="unbounded">
 									<xsd:annotation>
 										<xsd:documentation>
@@ -1438,20 +1438,10 @@ The bean id of the custom exception handler.
 			<xsd:documentation>
 				<![CDATA[
 Secures this flow definition element.
-The user invoking this element must meet the required attributes otherwise access to the element will be denied.
+The current user invoking this element must have the required security attributes otherwise access to the element will be denied.
 <br>
-WARNING: This element will only configure a security attribute in the definition.  The flow execution must also be secured with a SecurityFlowExecutionListener.
-<br>
-For example:
-<pre>
-	&lt;web:flow-executor id="flowExecutor" flow-registry="flowRegistry"&gt;
-		&lt;web:flow-execution-listeners&gt;
-			&lt;web:listener ref="securityFlowExecutionListener" /&gt;
-		&lt;/web:flow-execution-listeners&gt;
-	&lt;/web:flow-executor&gt;
-	
-	&lt;bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" /&gt;
-</pre>
+Note: This element configures a meta-attribute.
+For the attribute to be enforced, the flow execution must be observed by a SecurityFlowExecutionListener.
 ]]>
 			</xsd:documentation>
 		</xsd:annotation>

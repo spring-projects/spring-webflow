@@ -80,12 +80,20 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
 	 * the provided locator to access parent flow models.
+	 * @param resource the path to the XML flow definition (required)
+	 */
+	public XmlFlowModelBuilder(Resource resource) {
+		init(resource, null);
+	}
+
+	/**
+	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
+	 * the provided locator to access parent flow models.
+	 * @param resource the path to the XML flow definition (required)
+	 * @param modelLocator a locator for parent flow models to support flow inheritance
 	 */
 	public XmlFlowModelBuilder(Resource resource, FlowModelLocator modelLocator) {
-		Assert.notNull(resource, "The location of the XML-based flow definition is required");
-		Assert.notNull(modelLocator, "The model locator for accessing other flow models for merging is required");
-		this.resource = resource;
-		this.modelLocator = modelLocator;
+		init(resource, modelLocator);
 	}
 
 	/**
@@ -212,6 +220,12 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	 */
 	protected Element getDocumentElement() {
 		return document != null ? document.getDocumentElement() : null;
+	}
+
+	private void init(Resource resource, FlowModelLocator modelLocator) {
+		Assert.notNull(resource, "The location of the XML-based flow definition is required");
+		this.resource = resource;
+		this.modelLocator = modelLocator;
 	}
 
 	private FlowModel parseFlow(Element element) {
@@ -462,7 +476,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private ExceptionHandlerModel parseExceptionHandler(Element element) {
-		return new ExceptionHandlerModel(element.getAttribute("bean-name"));
+		return new ExceptionHandlerModel(element.getAttribute("bean"));
 	}
 
 	private BeanImportModel parseBeanImport(Element element) {
