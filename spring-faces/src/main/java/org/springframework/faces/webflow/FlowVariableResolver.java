@@ -35,7 +35,7 @@ public class FlowVariableResolver extends ELDelegatingVariableResolver {
 	static {
 		composite.add(new RequestContextELResolver());
 		composite.add(new ImplicitFlowVariableELResolver());
-		composite.add(new FlowMessageSourceResolver());
+		composite.add(new FlowResourceELResolver());
 		composite.add(new ScopeSearchingELResolver());
 	}
 

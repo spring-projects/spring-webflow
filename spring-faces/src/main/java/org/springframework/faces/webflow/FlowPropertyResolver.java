@@ -31,7 +31,7 @@ public class FlowPropertyResolver extends ELDelegatingPropertyResolver {
 	private static final CompositeELResolver composite = new CompositeELResolver();
 
 	static {
-		composite.add(new FlowMessageSourceResolver());
+		composite.add(new FlowResourceELResolver());
 		composite.add(new MapAdaptableELResolver());
 	}
 

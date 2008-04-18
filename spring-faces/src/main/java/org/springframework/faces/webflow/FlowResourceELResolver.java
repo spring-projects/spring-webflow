@@ -5,13 +5,12 @@ import java.util.Iterator;
 import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
-import javax.faces.context.FacesContext;
 
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-public class FlowMessageSourceResolver extends ELResolver {
+public class FlowResourceELResolver extends ELResolver {
 
 	private String MESSAGE_SOURCE_KEY = "resourceBundle";
 
@@ -29,8 +28,8 @@ public class FlowMessageSourceResolver extends ELResolver {
 			return MessageSource.class;
 		} else if (base != null && base instanceof MessageSource) {
 			MessageSource messageSource = (MessageSource) base;
-			String message = messageSource.getMessage(property.toString(), null, FacesContext.getCurrentInstance()
-					.getViewRoot().getLocale());
+			String message = messageSource.getMessage(property.toString(), null, RequestContextHolder
+					.getRequestContext().getExternalContext().getLocale());
 			if (StringUtils.hasText(message)) {
 				context.setPropertyResolved(true);
 				return String.class;
@@ -45,8 +44,8 @@ public class FlowMessageSourceResolver extends ELResolver {
 			return RequestContextHolder.getRequestContext().getActiveFlow().getApplicationContext();
 		} else if (base != null && base instanceof MessageSource) {
 			MessageSource messageSource = (MessageSource) base;
-			String message = messageSource.getMessage(property.toString(), null, FacesContext.getCurrentInstance()
-					.getViewRoot().getLocale());
+			String message = messageSource.getMessage(property.toString(), null, RequestContextHolder
+					.getRequestContext().getExternalContext().getLocale());
 			if (StringUtils.hasText(message)) {
 				context.setPropertyResolved(true);
 				return message;
