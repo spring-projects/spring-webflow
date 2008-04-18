@@ -286,6 +286,36 @@ public class ServletExternalContext implements ExternalContext {
 		return redirectInPopup;
 	}
 
+	// hooks for subclasses
+
+	/**
+	 * Returns the servlet context.
+	 */
+	protected ServletContext getContext() {
+		return context;
+	}
+
+	/**
+	 * Returns the underlying HttpServletRequest.
+	 */
+	protected HttpServletRequest getRequest() {
+		return request;
+	}
+
+	/**
+	 * Returns the underlying HttpServletResponse.
+	 */
+	protected HttpServletResponse getResponse() {
+		return response;
+	}
+
+	/**
+	 * Returns the configured flow url handler.
+	 */
+	protected FlowUrlHandler getFlowUrlHandler() {
+		return flowUrlHandler;
+	}
+
 	// private helpers
 
 	private void init(ServletContext context, HttpServletRequest request, HttpServletResponse response,

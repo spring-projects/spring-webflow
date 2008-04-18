@@ -137,7 +137,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
-		ServletExternalContext context = new ServletExternalContext(getServletContext(), request, response, urlHandler);
+		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, urlHandler);
 		context.setAjaxRequest(ajaxHandler.isAjaxRequest(getServletContext(), request, response));
 		return context;
 	}
