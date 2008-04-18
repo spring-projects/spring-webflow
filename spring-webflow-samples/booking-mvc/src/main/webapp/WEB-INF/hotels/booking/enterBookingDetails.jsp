@@ -44,10 +44,10 @@
 				<form:input path="checkinDate"/>
 				<script type="text/javascript">
 					dojo.require('dijit.form.DateTextBox');
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'checkinDate',
-						decoratorType : dijit.form.DateTextBox,
-						decoratorAttrs : { value : dojo.date.locale.parse(dojo.byId('checkinDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'checkinDate',
+						widgetType : dijit.form.DateTextBox,
+						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId('checkinDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -59,10 +59,10 @@
 				<form:input path="checkoutDate"/>
 				<script type="text/javascript">
 					dojo.require('dijit.form.DateTextBox');
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'checkoutDate',
-						decoratorType : dijit.form.DateTextBox,
-						decoratorAttrs : { value : dojo.date.locale.parse(dojo.byId('checkoutDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'checkoutDate',
+						widgetType : dijit.form.DateTextBox,
+						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId('checkoutDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -87,14 +87,14 @@
 				<form:radiobutton id="non-smoking" path="smoking" label="Non Smoking" value="false"/>
 				<script type="text/javascript">
 					dojo.require('dijit.form.CheckBox');
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'smoking',
-						decoratorType : dijit.form.RadioButton,
-						decoratorAttrs : { promptMessage : 'Smoking room' }}));
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'non-smoking',
-						decoratorType : dijit.form.RadioButton,
-						decoratorAttrs : { promptMessage : 'Non-smoking room' }}));
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'smoking',
+						widgetType : dijit.form.RadioButton,
+						widgetAttrs : { promptMessage : 'Smoking room' }}));
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'non-smoking',
+						widgetType : dijit.form.RadioButton,
+						widgetAttrs : { promptMessage : 'Non-smoking room' }}));
 				</script>
 				
 			</div>
@@ -107,10 +107,10 @@
 				<form:input path="creditCard"/>
 				<script type="text/javascript">
 					dojo.require('dijit.form.ValidationTextBox');
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'creditCard',
-						decoratorType : dijit.form.ValidationTextBox,
-						decoratorAttrs : { required : true, invalidMessage : 'A 16-digit credit card number is required.', regExp : '[0-9]{16}'  }}));
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'creditCard',
+						widgetType : dijit.form.ValidationTextBox,
+						widgetAttrs : { required : true, invalidMessage : 'A 16-digit credit card number is required.', regExp : '[0-9]{16}'  }}));
 				</script>
 			</div>
 		</div>
@@ -119,13 +119,13 @@
 				<label for="creditCardName">Credit Card Name:</label>
 			</div>
 			<div class="input">
-				<form:input path="creditCardName" maxlength="4"/>
+				<form:input path="creditCardName" maxlength="40"/>
 				<script type="text/javascript">
 					dojo.require('dijit.form.ValidationTextBox');
-					Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-						targetElId : 'creditCardName',
-						decoratorType : dijit.form.ValidationTextBox,
-						decoratorAttrs : { required : true }}));
+					Spring.decorations.push(new Spring.ElementDecoration({
+						elementId : 'creditCardName',
+						widgetType : dijit.form.ValidationTextBox,
+						widgetAttrs : { required : true }}));
 				</script>
 			</div>
 		</div>
@@ -161,7 +161,7 @@
 			<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed"/>&#160;
 			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 			<script type="text/javascript">
-				Spring.advisors.push(new Spring.ValidateAllAdvisor({event : 'onclick', targetId : 'proceed'}));
+				Spring.decorations.push(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'proceed'}));
 			</script>
 		</div>
 	</fieldset>

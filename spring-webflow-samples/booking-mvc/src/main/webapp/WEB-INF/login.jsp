@@ -32,10 +32,10 @@
 					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 					<script type="text/javascript">
 						dojo.require('dijit.form.ValidationTextBox');
-						Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-							targetElId : 'j_username',
-							decoratorType : dijit.form.ValidationTextBox,
-							decoratorAttrs : { promptMessage : 'Your username', required : true }}));
+						Spring.decorations.push(new Spring.ElementDecoration({
+							elementId : 'j_username',
+							widgetType : dijit.form.ValidationTextBox,
+							widgetAttrs : { promptMessage : 'Your username', required : true }}));
 					</script>
 				</div>
 			</div>
@@ -45,10 +45,10 @@
 					<input type="password" name="j_password" id="j_password" />
 					<script type="text/javascript">
 						dojo.require('dijit.form.ValidationTextBox');
-						Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-							targetElId : 'j_password',
-							decoratorType : dijit.form.ValidationTextBox,
-							decoratorAttrs : { promptMessage : 'Your password', required : true, type : 'password' }}));
+						Spring.decorations.push(new Spring.ElementDecoration({
+							elementId : 'j_password',
+							widgetType : dijit.form.ValidationTextBox,
+							widgetAttrs : { promptMessage : 'Your password', required : true}}));
 					</script>
 				</div>
 			</div>
@@ -58,10 +58,9 @@
 					<input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
 					<script type="text/javascript">
 						dojo.require('dijit.form.CheckBox');
-						Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-							targetElId : 'remember_me',
-							decoratorType : dijit.form.CheckBox,
-							decoratorAttrs : { promptMessage : 'Remember me for 2 weeks' }}));
+						Spring.decorations.push(new Spring.ElementDecoration({
+							elementId : 'remember_me',
+							widgetType : dijit.form.CheckBox}));
 					</script>
 				</div>
 			</div>
@@ -69,7 +68,7 @@
 		<div class="buttonGroup">
 			<input name="submit" id="submit" type="submit" value="Login" />
 			<script type="text/javascript">
-				Spring.advisors.push(new Spring.ValidateAllAdvisor({event : 'onclick', targetId : 'submit'}));
+				Spring.decorations.push(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'submit'}));
 			</script>
 		</div>
 	</form>

@@ -13,69 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Spring.DojoValidatingFieldAdvisor = function(config){
-			
-	dojo.mixin(this, config);
-};
-		
-Spring.DojoValidatingFieldAdvisor.prototype = {
-			
-	targetElId : "",
-	decoratorType : null,
-	decorator : null,
-	decoratorAttrs : null,
-	copyFields : new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength'),
-			
+
+dojo.declare("Spring.ElementDecoration", Spring.AbstractElementDecoration, {
+	constructor : function(config) {
+		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength');
+		dojo.mixin(this, config);
+	},
+	
 	apply : function(){
-		if (dijit.byId(this.targetElId)) {
-			dijit.byId(this.targetElId).destroyRecursive(false);
+		if (dijit.byId(this.elementId)) {
+			dijit.byId(this.elementId).destroyRecursive(false);
 		}
-		var targetEl = dojo.byId(this.targetElId);
+		var element = dojo.byId(this.elementId);
 		for (var copyField in this.copyFields) {
 			copyField = this.copyFields[copyField];
-			if (!this.decoratorAttrs[copyField] && targetEl[copyField] && (typeof targetEl[copyField] != 'number' || (typeof targetEl[copyField] == 'number' && targetEl[copyField] >= 0))) {
-				this.decoratorAttrs[copyField] = targetEl[copyField];
+			if (!this.widgetAttrs[copyField] && element[copyField] && (typeof element[copyField] != 'number' || 
+				(typeof element[copyField] == 'number' && element[copyField] >= 0))) {
+				this.widgetAttrs[copyField] = element[copyField];
 			}
 		}
-		this.decorator = new this.decoratorType(this.decoratorAttrs, targetEl);
-		this.decorator.startup();
+		this.widget = new this.widgetType(this.widgetAttrs, element);
+		this.widget.startup();
    		//return this to support method chaining
    		return this;
 	},
 	
 	validate : function(){
-		if (!this.decorator.isValid) {
-			// some decorators cannot be validated
+		if (!this.widget.isValid) {
+			// some widgets cannot be validated
 			return true;
 		}
-		var isValid = this.decorator.isValid(false);
+		var isValid = this.widget.isValid(false);
 		if (!isValid) {
-			this.decorator.state = "Error";
-			this.decorator._setStateClass();
+			this.widget.state = "Error";
+			this.widget._setStateClass();
 		}
 		return isValid;
 	}			
-};
+});
 
-Spring.ValidatingFieldAdvisor = Spring.DojoValidatingFieldAdvisor;
-
-Spring.DojoRemoteEventAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoRemoteEventAdvisor.prototype = {
-	
-	event : "",
-	targetId : "",
-	sourceId : "",
-	formId : "",
-	processIds : "",
-	renderIds : "",
-	params : [],
-	connection : null,
+dojo.declare("Spring.RemoteEventDecoration", Spring.AbstractRemoteEventDecoration, {
+	constructor : function(config){
+		this.connection = null;
+		dojo.mixin(this, config);
+	},
 	
 	apply : function() {
-		this.connection = dojo.connect(dojo.byId(this.targetId), this.event, this, "submit");
+		this.connection = dojo.connect(dojo.byId(this.elementId), this.event, this, "submit");
 		return this;	
 	},
 	
@@ -86,26 +70,20 @@ Spring.DojoRemoteEventAdvisor.prototype = {
 	submit : function(){
 		Spring.RemotingHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
 	}
-};
+});
 
-Spring.RemoteEventAdvisor = Spring.DojoRemoteEventAdvisor;
-
-Spring.DojoValidateAllAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoValidateAllAdvisor.prototype = {
-	
-	event : "",
-	targetId : "",
-	originalHandler : null,
-	connection : null,
+dojo.declare("Spring.ValidateAllDecoration", Spring.AbstractValidateAllDecoration, {
+	constructor : function(config) {
+		this.originalHandler = null;
+		this.connection = null;
+		dojo.mixin(this, config);
+	},
 	
 	apply : function() {
-		var targetEl = dojo.byId(this.targetId);
-		this.originalHandler = targetEl[this.event];
+		var element = dojo.byId(this.elementId);
+		this.originalHandler = element[this.event];
 		var context = this;
-		targetEl[this.event] = function(event){
+		element[this.event] = function(event){
 			context.handleEvent(event, context);
 		};
 		return this;
@@ -118,20 +96,17 @@ Spring.DojoValidateAllAdvisor.prototype = {
 	handleEvent : function(event, context){
 		if (!Spring.validateAll()) {
 			dojo.stopEvent(event);
-		} else {
+		} else if(dojo.isFunction(context.originalHandler)) {
 			var result = context.originalHandler(event);
 			if (result == false) {
 				dojo.stopEvent(event);
 			}
 		}
 	}
-};
+});
 
-Spring.ValidateAllAdvisor = Spring.DojoValidateAllAdvisor;
-
-Spring.DojoRemotingHandler = function(){};
-
-Spring.DojoRemotingHandler.prototype = {
+dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
+	constructor : function(){},
 	
 	submitForm : function(/*String */ sourceId, /*String*/formId, /*String*/ processIds, /*String*/renderIds, /*Array*/ params) {
 		var content = new Object();
@@ -282,28 +257,21 @@ Spring.DojoRemotingHandler.prototype = {
 		});
 		dialog.show();
 	}
-};
+});
 
-Spring.RemotingHandler = new Spring.DojoRemotingHandler();
-
-Spring.DojoCommandLinkAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoCommandLinkAdvisor.prototype = {
-	
-	targetElId : "",
-	
-	linkHtml : "",
+dojo.declare("Spring.CommandLinkDecoration", Spring.AbstractCommandLinkDecoration, {
+	constructor : function(config){
+		dojo.mixin(this, config);
+	},
 	
 	apply : function(){
-		var advisedNode = dojo.byId(this.targetElId);
+		var advisedNode = dojo.byId(this.elementId);
 		if (!dojo.hasClass(advisedNode, "progressiveLink")) {
 			//Node must be replaced
 			var nodeToReplace = new dojo.NodeList(advisedNode);
 			nodeToReplace.addContent(this.linkHtml, "after").orphan("*");
 			//Get the new node
-			advisedNode = dojo.byId(this.targetElId);
+			advisedNode = dojo.byId(this.elementId);
 		}
 		advisedNode.submitFormFromLink = this.submitFormFromLink;
 		//return this to support method chaining
@@ -336,8 +304,6 @@ Spring.DojoCommandLinkAdvisor.prototype = {
 			});
 		}
 	}
-};
+});
 
-Spring.CommandLinkAdvisor = Spring.DojoCommandLinkAdvisor;
-
-dojo.addOnLoad(Spring.applyAdvisors);
+dojo.addOnLoad(Spring.applyDecorations);

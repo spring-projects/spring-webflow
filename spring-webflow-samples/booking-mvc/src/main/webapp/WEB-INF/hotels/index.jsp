@@ -12,10 +12,10 @@
 		<form:input path="searchString"/>
 		<script type="text/javascript">
 			dojo.require('dijit.form.ValidationTextBox');
-			Spring.advisors.push(new Spring.ValidatingFieldAdvisor({
-				targetElId : 'searchString',
-				decoratorType : dijit.form.ValidationTextBox,
-				decoratorAttrs : { promptMessage : 'Search hotels by name, address, city, or zip.' }}));
+			Spring.decorations.push(new Spring.ElementDecoration({
+				elementId : 'searchString',
+				widgetType : dijit.form.ValidationTextBox,
+				widgetAttrs : { promptMessage : 'Search hotels by name, address, city, or zip.' }}));
 		</script>
 		<label for="pageSize">Maximum results:</label>
 		<form:select path="pageSize">
