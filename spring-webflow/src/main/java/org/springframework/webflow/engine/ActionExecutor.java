@@ -30,7 +30,7 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class ActionExecutor {
 
-	private static final Log logger = LogFactory.getLog(AnnotatedAction.class);
+	private static final Log logger = LogFactory.getLog(ActionExecutor.class);
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -49,11 +49,11 @@ public class ActionExecutor {
 	public static Event execute(Action action, RequestContext context) throws ActionExecutionException {
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Executing action " + getTargetAction(action));
+				logger.debug("Executing " + getTargetAction(action));
 			}
 			Event event = action.execute(context);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Action execution completed; result = " + event);
+				logger.debug("Finished executing " + getTargetAction(action) + "; result = " + event);
 			}
 			return event;
 		} catch (ActionExecutionException e) {
