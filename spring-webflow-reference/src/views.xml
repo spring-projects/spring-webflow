@@ -194,7 +194,7 @@
 				<title>Implementing a model validate method</title>
 				<para>
 					The first way is to define a validate method on the model object class.
-					To do this, create a public method with the name <code>validate</code>, where <code>state</code> is the id of the view-state.
+					To do this, create a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
 					The method must declare a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
@@ -215,7 +215,7 @@ public void validateEnterBookingDetails(MessageContext context) {
 				<title>Implementing a Validator</title>
 				<para>
 					The second way is to define a separate object, called a Validator, which validates your model object.
-					To do this, create a class that defines a public method with the name <code>validate</code>, where <code>state</code> is the id of the view-state.
+					To do this, create a class that defines a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
 					The method must declare a <code>Object</code> parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
