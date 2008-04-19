@@ -94,13 +94,13 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
-		if (isPersistenceContext(session.getDefinition())) {
-			if (!session.isRoot()) {
-				FlowSession parent = session.getParent();
-				if (isPersistenceContext(parent.getDefinition())) {
-					unbind(getEntityManager(parent));
-				}
+		if (!session.isRoot()) {
+			FlowSession parent = session.getParent();
+			if (isPersistenceContext(parent.getDefinition())) {
+				unbind(getEntityManager(parent));
 			}
+		}
+		if (isPersistenceContext(session.getDefinition())) {
 			EntityManager em = entityManagerFactory.createEntityManager();
 			session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
 			bind(em);

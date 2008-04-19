@@ -104,13 +104,13 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
-		if (isPersistenceContext(session.getDefinition())) {
-			if (!session.isRoot()) {
-				FlowSession parent = session.getParent();
-				if (isPersistenceContext(parent.getDefinition())) {
-					unbind(getHibernateSession(parent));
-				}
+		if (!session.isRoot()) {
+			FlowSession parent = session.getParent();
+			if (isPersistenceContext(parent.getDefinition())) {
+				unbind(getHibernateSession(parent));
 			}
+		}
+		if (isPersistenceContext(session.getDefinition())) {
 			Session hibernateSession = createSession(context);
 			session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
 			bind(hibernateSession);

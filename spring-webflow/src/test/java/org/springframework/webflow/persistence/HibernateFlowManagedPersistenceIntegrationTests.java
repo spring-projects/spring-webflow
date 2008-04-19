@@ -11,12 +11,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
@@ -35,8 +35,6 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 
 	private SessionFactory sessionFactory;
 
-	private JdbcTemplate jdbcTemplate;
-
 	private HibernateTemplate hibernateTemplate;
 
 	private HibernateFlowExecutionListener hibernateListener;
@@ -46,7 +44,6 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 	protected void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);
-		jdbcTemplate = new JdbcTemplate(dataSource);
 		sessionFactory = getSessionFactory(dataSource);
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
 		hibernateTemplate.setCheckWriteOperations(false);
@@ -60,6 +57,9 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(builder, context);
 		Flow flow = assembler.assembleFlow();
 		context.registerSubflow(flow);
+		Flow notManaged = new Flow("notmanaged");
+		new EndState(notManaged, "finish");
+		context.registerSubflow(notManaged);
 		context.registerBean("loadTestBean", new Action() {
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
@@ -81,6 +81,13 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 		context.setEventId("subflow");
 		flowExecution.resume(context);
 		context.setEventId("finish");
+		flowExecution.resume(context);
+	}
+
+	public void testManagedFlowWithUnmanagedSubflow() {
+		MockExternalContext context = new MockExternalContext();
+		flowExecution.start(null, context);
+		context.setEventId("notmanaged");
 		flowExecution.resume(context);
 	}
 
@@ -130,10 +137,6 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
 		factory.afterPropertiesSet();
 		return (SessionFactory) factory.getObject();
-	}
-
-	private void assertSessionNotBound() {
-		assertNull(TransactionSynchronizationManager.getResource(sessionFactory));
 	}
 
 	private void assertSessionBound() {

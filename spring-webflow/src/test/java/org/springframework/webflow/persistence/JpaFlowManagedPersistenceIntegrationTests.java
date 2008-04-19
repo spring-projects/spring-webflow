@@ -10,13 +10,12 @@ import javax.sql.DataSource;
 import junit.framework.TestCase;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
@@ -37,20 +36,14 @@ public class JpaFlowManagedPersistenceIntegrationTests extends TestCase {
 
 	private JpaFlowExecutionListener jpaListener;
 
-	private JdbcTemplate jdbcTemplate;
-
-	private JpaTemplate jpaTemplate;
-
 	private FlowExecution flowExecution;
 
 	protected void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);
-		jdbcTemplate = new JdbcTemplate(dataSource);
 		entityManagerFactory = getEntityManagerFactory(dataSource);
 		JpaTransactionManager tm = new JpaTransactionManager(entityManagerFactory);
 		jpaListener = new JpaFlowExecutionListener(entityManagerFactory, tm);
-		jpaTemplate = new JpaTemplate(entityManagerFactory);
 
 		ClassPathResource res = new ClassPathResource("flow-managed-persistence.xml", getClass());
 		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(new XmlFlowModelBuilder(res));
@@ -59,6 +52,9 @@ public class JpaFlowManagedPersistenceIntegrationTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(builder, context);
 		Flow flow = assembler.assembleFlow();
 		context.registerSubflow(flow);
+		Flow notManaged = new Flow("notmanaged");
+		new EndState(notManaged, "finish");
+		context.registerSubflow(notManaged);
 		context.registerBean("loadTestBean", new Action() {
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
@@ -74,12 +70,19 @@ public class JpaFlowManagedPersistenceIntegrationTests extends TestCase {
 		flowExecution = factory.createFlowExecution(flow);
 	}
 
-	public void testFlowWithSubflow() {
+	public void testManagedFlowWithManagedSubflow() {
 		MockExternalContext context = new MockExternalContext();
 		flowExecution.start(null, context);
 		context.setEventId("subflow");
 		flowExecution.resume(context);
 		context.setEventId("finish");
+		flowExecution.resume(context);
+	}
+
+	public void testManagedFlowWithUnmanagedSubflow() {
+		MockExternalContext context = new MockExternalContext();
+		flowExecution.start(null, context);
+		context.setEventId("notmanaged");
 		flowExecution.resume(context);
 	}
 
@@ -129,10 +132,6 @@ public class JpaFlowManagedPersistenceIntegrationTests extends TestCase {
 		factory.setJpaVendorAdapter(openJpa);
 		factory.afterPropertiesSet();
 		return factory.getObject();
-	}
-
-	private void assertSessionNotBound() {
-		assertNull(TransactionSynchronizationManager.getResource(entityManagerFactory));
 	}
 
 	private void assertSessionBound() {
