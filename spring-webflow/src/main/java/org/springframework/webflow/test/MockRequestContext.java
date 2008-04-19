@@ -166,12 +166,8 @@ public class MockRequestContext implements RequestContext {
 		return currentTransition;
 	}
 
-	public AttributeMap getAttributes() {
+	public MutableAttributeMap getAttributes() {
 		return attributes;
-	}
-
-	public void setAttributes(AttributeMap attributes) {
-		this.attributes.replaceWith(attributes);
 	}
 
 	public String getFlowExecutionUrl() {

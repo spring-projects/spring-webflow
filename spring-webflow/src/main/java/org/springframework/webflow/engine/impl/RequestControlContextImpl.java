@@ -18,8 +18,6 @@ package org.springframework.webflow.engine.impl;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -70,10 +68,9 @@ class RequestControlContextImpl implements RequestControlContext {
 	private LocalAttributeMap requestScope = new LocalAttributeMap();
 
 	/**
-	 * Holder for contextual properties describing the currently executing request; never null, initially empty and
-	 * immutable.
+	 * Holder for contextual properties describing the currently executing request; never null, initially empty.
 	 */
-	private AttributeMap attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+	private LocalAttributeMap attributes = new LocalAttributeMap();
 
 	/**
 	 * The current event being processed by this flow; initially null.
@@ -157,16 +154,8 @@ class RequestControlContextImpl implements RequestControlContext {
 		return currentTransition;
 	}
 
-	public AttributeMap getAttributes() {
+	public MutableAttributeMap getAttributes() {
 		return attributes;
-	}
-
-	public void setAttributes(AttributeMap attributes) {
-		if (attributes == null) {
-			this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-		} else {
-			this.attributes = attributes;
-		}
 	}
 
 	// implementing RequestControlContext

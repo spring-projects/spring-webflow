@@ -17,7 +17,6 @@ package org.springframework.webflow.execution;
 
 import org.springframework.binding.message.MessageContext;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -175,17 +174,11 @@ public interface RequestContext {
 	public TransitionDefinition getCurrentTransition();
 
 	/**
-	 * Returns a context map for accessing arbitrary attributes about the state of the current request. These attributes
-	 * may be used to influence flow execution behavior.
-	 * @return the current attributes of this request, or empty if not set
+	 * Returns a context map for accessing attributes about the state of the current request. These attributes may be
+	 * used to influence flow execution behavior.
+	 * @return the current attributes of this request, or empty if none are set
 	 */
-	public AttributeMap getAttributes();
-
-	/**
-	 * Set the contextual attributes describing the state of this request. Overwrites any pre-existing collection.
-	 * @param attributes the attributes
-	 */
-	public void setAttributes(AttributeMap attributes);
+	public MutableAttributeMap getAttributes();
 
 	/**
 	 * Returns the context-relative URL of this flow execution. Needed by response writers that write out the URL of

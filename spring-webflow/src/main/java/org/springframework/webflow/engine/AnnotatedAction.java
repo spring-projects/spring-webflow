@@ -18,7 +18,7 @@ package org.springframework.webflow.engine;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -43,7 +43,6 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * <p>
 	 * The name attribute is often used as a qualifier for an action's result event, and is typically used to allow the
 	 * flow to respond to a specific action's outcome within a larger action execution chain.
-	 * @see ActionState
 	 */
 	public static final String NAME_ATTRIBUTE = "name";
 
@@ -51,8 +50,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	 * The action execution method attribute ("method").
 	 * <p>
 	 * The method property is a hint about what method should be invoked; for example, the name of a specific target
-	 * method on a {@link org.springframework.webflow.action.MultiAction multi action}.
-	 * @see ActionState
+	 * method on a {@link MultiAction multi-action}.
 	 */
 	public static final String METHOD_ATTRIBUTE = "method";
 
@@ -139,14 +137,12 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	}
 
 	public Event execute(RequestContext context) throws Exception {
-		AttributeMap originalAttributes = getAttributes();
 		try {
-			context.setAttributes(getAttributes());
+			context.getAttributes().putAll(getAttributes());
 			Event result = getTargetAction().execute(context);
 			return postProcessResult(result);
 		} finally {
-			// restore original attributes
-			context.setAttributes(originalAttributes);
+			context.getAttributes().removeAll(getAttributes());
 		}
 	}
 

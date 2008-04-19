@@ -46,6 +46,13 @@ public interface MutableAttributeMap extends AttributeMap {
 	public MutableAttributeMap putAll(AttributeMap attributes);
 
 	/**
+	 * Remove all attributes in the map provided from this map.
+	 * @param attributes the attributes to remove from this map
+	 * @return this, to support call chaining
+	 */
+	public MutableAttributeMap removeAll(MutableAttributeMap attributes);
+
+	/**
 	 * Remove an attribute from this map.
 	 * @param attributeName the name of the attribute to remove
 	 * @return previous value associated with specified attribute name, or <tt>null</tt> if there was no mapping for
