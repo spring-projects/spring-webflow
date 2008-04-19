@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -27,6 +29,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Erwin Vervaet
  */
 public class ActionExecutor {
+
+	private static final Log logger = LogFactory.getLog(AnnotatedAction.class);
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -44,7 +48,14 @@ public class ActionExecutor {
 	 */
 	public static Event execute(Action action, RequestContext context) throws ActionExecutionException {
 		try {
-			return action.execute(context);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Executing action " + getTargetAction(action));
+			}
+			Event event = action.execute(context);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Action execution completed; result = " + event);
+			}
+			return event;
 		} catch (ActionExecutionException e) {
 			throw e;
 		} catch (Exception e) {
@@ -52,6 +63,14 @@ public class ActionExecutor {
 			throw new ActionExecutionException(context.getActiveFlow().getId(),
 					context.getCurrentState() != null ? context.getCurrentState().getId() : null, action, context
 							.getAttributes(), e);
+		}
+	}
+
+	private static Action getTargetAction(Action action) {
+		if (action instanceof AnnotatedAction) {
+			return getTargetAction(((AnnotatedAction) action).getTargetAction());
+		} else {
+			return action;
 		}
 	}
 }

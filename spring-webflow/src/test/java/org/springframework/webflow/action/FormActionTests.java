@@ -73,6 +73,10 @@ public class FormActionTests extends TestCase {
 	public static class TestBeanValidator implements Validator {
 		private boolean invoked;
 
+		public boolean getInvoked() {
+			return invoked;
+		}
+
 		public boolean supports(Class clazz) {
 			return TestBean.class.equals(clazz);
 		}

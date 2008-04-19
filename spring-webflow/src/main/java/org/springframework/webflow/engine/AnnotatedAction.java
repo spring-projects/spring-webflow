@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -35,6 +37,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Erwin Vervaet
  */
 public class AnnotatedAction extends AnnotatedObject implements Action {
+
+	private static final Log logger = LogFactory.getLog(AnnotatedAction.class);
 
 	// well known attributes
 
@@ -138,10 +142,16 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 
 	public Event execute(RequestContext context) throws Exception {
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Putting action execution attributes " + getAttributes());
+			}
 			context.getAttributes().putAll(getAttributes());
 			Event result = getTargetAction().execute(context);
 			return postProcessResult(result);
 		} finally {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Clearing action execution attributes " + getAttributes());
+			}
 			context.getAttributes().removeAll(getAttributes());
 		}
 	}
@@ -160,6 +170,10 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 		if (isNamed()) {
 			// qualify result event id with action name for a named action
 			String qualifiedId = getName() + "." + resultEvent.getId();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Qualifying action result '" + resultEvent.getId() + "'; qualified result = '"
+						+ qualifiedId + "'");
+			}
 			resultEvent = new Event(resultEvent.getSource(), qualifiedId, resultEvent.getAttributes());
 		}
 		return resultEvent;

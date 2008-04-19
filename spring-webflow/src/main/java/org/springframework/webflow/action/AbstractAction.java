@@ -186,14 +186,6 @@ public abstract class AbstractAction implements Action, InitializingBean {
 		Event result = doPreExecute(context);
 		if (result == null) {
 			result = doExecute(context);
-			if (logger.isDebugEnabled()) {
-				if (result != null) {
-					logger.debug("Action '" + getActionNameForLogging() + "' completed execution; result is '"
-							+ result.getId() + "'");
-				} else {
-					logger.debug("Action '" + getActionNameForLogging() + "' completed execution; result is [null]");
-				}
-			}
 			doPostExecute(context);
 		} else {
 			if (logger.isInfoEnabled()) {

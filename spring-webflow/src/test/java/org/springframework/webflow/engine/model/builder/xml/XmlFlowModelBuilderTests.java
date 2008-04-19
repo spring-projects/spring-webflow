@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.BindingResult;
+import org.springframework.webflow.action.FormAction;
+import org.springframework.webflow.action.FormActionTests.TestBeanValidator;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
@@ -313,9 +315,12 @@ public class XmlFlowModelBuilderTests extends TestCase {
 			}
 		}));
 		FlowExecution execution = factory.createFlowExecution(flow);
+		FormAction action = (FormAction) flow.getApplicationContext().getBean("formAction");
+		assertFalse(((TestBeanValidator) action.getValidator()).getInvoked());
 		execution.start(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
 		context.setEventId("submit");
 		execution.resume(context);
+		assertTrue(((TestBeanValidator) action.getValidator()).getInvoked());
 	}
 }
