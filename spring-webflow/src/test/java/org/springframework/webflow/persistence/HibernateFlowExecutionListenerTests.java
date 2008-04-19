@@ -84,12 +84,12 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.resuming(context);
 		assertSessionBound();
 
-		hibernateTemplate.execute(new HibernateCallback() {
+		hibernateTemplate.executeWithNativeSession(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				assertSame("Should have been original instance", hibSession, session);
 				return null;
 			}
-		}, true);
+		});
 		hibernateListener.paused(context);
 		assertSessionNotBound();
 	}

@@ -95,6 +95,12 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
 		if (isPersistenceContext(session.getDefinition())) {
+			if (!session.isRoot()) {
+				FlowSession parent = session.getParent();
+				if (isPersistenceContext(parent.getDefinition())) {
+					unbind(getEntityManager(parent));
+				}
+			}
 			EntityManager em = entityManagerFactory.createEntityManager();
 			session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
 			bind(em);
@@ -103,13 +109,13 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	public void paused(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			unbind(getEntityManager(context));
+			unbind(getEntityManager(context.getFlowExecutionContext().getActiveSession()));
 		}
 	}
 
 	public void resuming(RequestContext context) {
 		if (isPersistenceContext(context.getActiveFlow())) {
-			bind(getEntityManager(context));
+			bind(getEntityManager(context.getFlowExecutionContext().getActiveSession()));
 		}
 	}
 
@@ -118,7 +124,6 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 			final EntityManager em = (EntityManager) session.getScope().remove(ENTITY_MANAGER_ATTRIBUTE);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
 			if (Boolean.TRUE.equals(commitStatus)) {
-				// this is a commit end state - start a new transaction that quickly commits
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
 						em.joinTransaction();
@@ -128,12 +133,18 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 			unbind(em);
 			em.close();
 		}
+		if (!session.isRoot()) {
+			FlowSession parent = session.getParent();
+			if (isPersistenceContext(parent.getDefinition())) {
+				bind(getEntityManager(parent));
+			}
+		}
 	}
 
 	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
 		if (context.getFlowExecutionContext().isActive()) {
 			if (isPersistenceContext(context.getActiveFlow())) {
-				unbind(getEntityManager(context));
+				unbind(getEntityManager(context.getFlowExecutionContext().getActiveSession()));
 			}
 		}
 	}
@@ -144,8 +155,8 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
 
-	private EntityManager getEntityManager(RequestContext context) {
-		return (EntityManager) context.getFlowScope().get(ENTITY_MANAGER_ATTRIBUTE);
+	private EntityManager getEntityManager(FlowSession session) {
+		return (EntityManager) session.getScope().get(ENTITY_MANAGER_ATTRIBUTE);
 	}
 
 	private void bind(EntityManager em) {
