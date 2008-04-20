@@ -89,4 +89,15 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 		assertEquals(2, context.getMessagesBySource(null).length);
 		assertEquals(1, context.getMessagesBySource(this).length);
 	}
+
+	public void testMessageSequencing() {
+		MessageContext context = factory.createMessageContext();
+		context.addMessage(new MessageBuilder().defaultText("Info").build());
+		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
+		context.addMessage(new MessageBuilder().error().defaultText("Error").build());
+		Message[] messages = context.getAllMessages();
+		assertEquals("Info", messages[0].getText());
+		assertEquals("Error", messages[1].getText());
+		assertEquals("Hello world resolved!", messages[2].getText());
+	}
 }
