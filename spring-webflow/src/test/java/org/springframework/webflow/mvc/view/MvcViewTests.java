@@ -127,6 +127,7 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("stringProperty", "foo");
 		context.putRequestParameter("integerProperty", "5");
 		context.putRequestParameter("dateProperty", "2007-01-01");
+		context.putRequestParameter("beanProperty.name", "foo");
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
@@ -148,6 +149,7 @@ public class MvcViewTests extends TestCase {
 		cal.clear();
 		cal.set(Calendar.YEAR, 2007);
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
+		assertEquals("foo", bindBean.getBeanProperty().getName());
 	}
 
 	private class MockMvcView extends MvcView {
@@ -180,12 +182,14 @@ public class MvcViewTests extends TestCase {
 		private String stringProperty;
 		private Integer integerProperty = new Integer(3);
 		private Date dateProperty;
+		private NestedBean beanProperty;
 
 		public BindBean() {
 			Calendar cal = Calendar.getInstance();
 			cal.clear();
 			cal.set(Calendar.YEAR, 2008);
 			dateProperty = cal.getTime();
+			beanProperty = new NestedBean();
 		}
 
 		public String getStringProperty() {
@@ -212,6 +216,21 @@ public class MvcViewTests extends TestCase {
 			this.dateProperty = dateProperty;
 		}
 
+		public NestedBean getBeanProperty() {
+			return beanProperty;
+		}
+	}
+
+	public static class NestedBean {
+		private String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 
 }

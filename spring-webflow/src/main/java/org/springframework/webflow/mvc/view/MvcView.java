@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
@@ -237,8 +236,7 @@ public abstract class MvcView implements View {
 	private void addDefaultMappings(DefaultMapper mapper, ParameterMap requestParameters, Object model) {
 		for (Iterator it = requestParameters.asMap().keySet().iterator(); it.hasNext();) {
 			String name = (String) it.next();
-			Expression source = expressionParser.parseExpression(name, new FluentParserContext()
-					.evaluate(MapAdaptable.class));
+			Expression source = new RequestParameterExpression(name);
 			Expression target = expressionParser.parseExpression(name, new FluentParserContext().evaluate(model
 					.getClass()));
 			DefaultMapping mapping = new DefaultMapping(source, target);
@@ -358,6 +356,33 @@ public abstract class MvcView implements View {
 		public boolean test(MappingResult result) {
 			return result.getResult().isError() && !PROPERTY_NOT_FOUND_ERROR.test(result);
 		}
+	}
+
+	private static class RequestParameterExpression implements Expression {
+
+		private String parameterName;
+
+		public RequestParameterExpression(String parameterName) {
+			this.parameterName = parameterName;
+		}
+
+		public String getExpressionString() {
+			return parameterName;
+		}
+
+		public Object getValue(Object context) throws EvaluationException {
+			ParameterMap map = (ParameterMap) context;
+			return map.get(parameterName);
+		}
+
+		public Class getValueType(Object context) {
+			return String.class;
+		}
+
+		public void setValue(Object context, Object value) throws EvaluationException {
+			throw new UnsupportedOperationException("Not supported");
+		}
+
 	}
 
 	private static class FormatterBackedMappingConversionExecutor implements ConversionExecutor {
