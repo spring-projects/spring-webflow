@@ -400,7 +400,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (StringUtils.hasText(input.getValue())) {
 			value = input.getValue();
 		} else {
-			value = name;
+			value = "flowScope." + name;
 		}
 		Expression source = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
@@ -487,7 +487,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (StringUtils.hasText(output.getValue())) {
 			value = output.getValue();
 		} else {
-			value = name;
+			value = "flowScope." + name;
 		}
 		Expression source = parser.parseExpression(name, new FluentParserContext().evaluate(MutableAttributeMap.class));
 		Expression target = parser.parseExpression(value, new FluentParserContext().evaluate(RequestContext.class));
