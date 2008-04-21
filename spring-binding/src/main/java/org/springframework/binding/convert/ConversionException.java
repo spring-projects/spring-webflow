@@ -41,18 +41,6 @@ public class ConversionException extends RuntimeException {
 	 * Creates a new conversion exception.
 	 * @param value the value we tried to convert
 	 * @param targetClass the target type
-	 */
-	public ConversionException(Object value, Class targetClass) {
-		super("Unable to convert value '" + value + "' of type '" + (value != null ? value.getClass().getName() : null)
-				+ "' to class '" + targetClass.getName() + "'");
-		this.value = value;
-		this.targetClass = targetClass;
-	}
-
-	/**
-	 * Creates a new conversion exception.
-	 * @param value the value we tried to convert
-	 * @param targetClass the target type
 	 * @param cause underlying cause of this exception
 	 */
 	public ConversionException(Object value, Class targetClass, Throwable cause) {
@@ -64,13 +52,14 @@ public class ConversionException extends RuntimeException {
 
 	/**
 	 * Creates a new conversion exception.
+	 * @param sourceClass the source type
 	 * @param value the value we tried to convert
 	 * @param targetClass the target type
 	 * @param message a descriptive message
-	 * @param cause underlying cause of this exception
 	 */
-	public ConversionException(Object value, Class targetClass, String message, Throwable cause) {
+	public ConversionException(Class sourceClass, Object value, Class targetClass, String message, Throwable cause) {
 		super(message, cause);
+		this.sourceClass = sourceClass;
 		this.value = value;
 		this.targetClass = targetClass;
 	}
@@ -84,33 +73,6 @@ public class ConversionException extends RuntimeException {
 	public ConversionException(Class sourceClass, Class targetClass, String message) {
 		super(message);
 		this.sourceClass = sourceClass;
-		this.value = null; // not available
-		this.targetClass = targetClass;
-	}
-
-	/**
-	 * Creates a new conversion exception.
-	 * @param sourceClass the source type
-	 * @param message a descriptive message
-	 */
-	public ConversionException(Class sourceClass, String message) {
-		super(message);
-		this.sourceClass = sourceClass;
-		this.value = null; // not available
-		this.targetClass = null; // not available
-	}
-
-	/**
-	 * Creates a new conversion exception.
-	 * @param sourceClass the source type
-	 * @param value the value we tried to convert
-	 * @param targetClass the target type
-	 * @param message a descriptive message
-	 */
-	public ConversionException(Class sourceClass, Object value, Class targetClass, String message) {
-		super(message);
-		this.sourceClass = sourceClass;
-		this.value = value;
 		this.targetClass = targetClass;
 	}
 
@@ -122,16 +84,17 @@ public class ConversionException extends RuntimeException {
 	}
 
 	/**
+	 * Returns the target type.
+	 */
+	public Class getTargetClass() {
+		return targetClass;
+	}
+
+	/**
 	 * Returns the value we tried to convert.
 	 */
 	public Object getValue() {
 		return value;
 	}
 
-	/**
-	 * Returns the target type.
-	 */
-	public Class getTargetClass() {
-		return targetClass;
-	}
 }
