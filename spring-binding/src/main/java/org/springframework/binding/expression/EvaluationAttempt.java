@@ -28,7 +28,7 @@ public class EvaluationAttempt implements Serializable {
 
 	private Expression expression;
 
-	private Object context;
+	private transient Object context;
 
 	/**
 	 * Create an evaluation attempt.

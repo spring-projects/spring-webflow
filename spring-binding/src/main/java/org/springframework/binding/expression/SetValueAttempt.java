@@ -27,7 +27,7 @@ public class SetValueAttempt extends EvaluationAttempt {
 	/**
 	 * The new value.
 	 */
-	private Object value;
+	private transient Object value;
 
 	/**
 	 * Creates a new set attempt.
