@@ -24,6 +24,7 @@ import org.springframework.webflow.execution.repository.continuation.AbstractFlo
 import org.springframework.webflow.execution.repository.continuation.ContinuationNotFoundException;
 import org.springframework.webflow.execution.repository.continuation.ContinuationUnmarshalException;
 import org.springframework.webflow.execution.repository.continuation.FlowExecutionContinuation;
+import org.springframework.webflow.execution.repository.continuation.FlowExecutionContinuationFactory;
 import org.springframework.webflow.execution.repository.continuation.SerializedFlowExecutionContinuationFactory;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
@@ -72,13 +73,26 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 	private int maxContinuations = 30;
 
 	/**
-	 * Create a new continuation based flow execution repository using given state restorer and conversation manager.
+	 * Create a new continuation based flow execution repository using the given state restorer and conversation
+	 * manager. Defaults to a {@link SerializedFlowExecutionContinuationFactory}.
 	 * @param conversationManager the conversation manager to use
 	 * @param executionStateRestorer the state restoration strategy to use
 	 */
 	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
 			FlowExecutionStateRestorer executionStateRestorer) {
 		super(conversationManager, executionStateRestorer, new SerializedFlowExecutionContinuationFactory());
+	}
+
+	/**
+	 * Create a new continuation based flow execution repository using the given state restorer, conversation manager,
+	 * and continuation factory.
+	 * @param conversationManager the conversation manager to use
+	 * @param executionStateRestorer the state restoration strategy to use
+	 * @param continuationFactory the continuation factory to use
+	 */
+	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
+			FlowExecutionStateRestorer executionStateRestorer, FlowExecutionContinuationFactory continuationFactory) {
+		super(conversationManager, executionStateRestorer, continuationFactory);
 	}
 
 	/**
