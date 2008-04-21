@@ -69,16 +69,16 @@ class OgnlExpression implements Expression {
 		this.expressionString = expressionString;
 	}
 
-	public int hashCode() {
-		return expression.hashCode();
-	}
-
 	public boolean equals(Object o) {
 		if (!(o instanceof OgnlExpression)) {
 			return false;
 		}
 		OgnlExpression other = (OgnlExpression) o;
-		return expression.equals(other.expression);
+		return expressionString.equals(other.expressionString);
+	}
+
+	public int hashCode() {
+		return expressionString.hashCode();
 	}
 
 	public Object getValue(Object context) throws EvaluationException {

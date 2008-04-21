@@ -1,5 +1,10 @@
 package org.springframework.binding.expression.el;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -227,4 +232,25 @@ public class ELExpressionParserTests extends TestCase {
 		}
 	}
 
+	public void testSerializeExpression() throws IOException, ClassNotFoundException {
+		String exp = "value";
+		Expression e = parser.parseExpression(exp, null);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		byte[] bytes = null;
+		try {
+			oos.writeObject(e);
+			oos.flush();
+			bytes = baos.toByteArray();
+		} finally {
+			oos.close();
+		}
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+		try {
+			Expression e2 = (Expression) ois.readObject();
+			assertEquals(e, e2);
+		} finally {
+			ois.close();
+		}
+	}
 }

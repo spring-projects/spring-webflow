@@ -15,6 +15,12 @@
  */
 package org.springframework.binding.expression.ognl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.Expression;
@@ -159,6 +165,28 @@ public class OgnlExpressionParserTests extends TestCase {
 		String exp = "flag";
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(boolean.class, e.getValueType(bean));
+	}
+
+	public void testSerializeExpression() throws IOException, ClassNotFoundException {
+		String exp = "flag";
+		Expression e = parser.parseExpression(exp, null);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		byte[] bytes = null;
+		try {
+			oos.writeObject(e);
+			oos.flush();
+			bytes = baos.toByteArray();
+		} finally {
+			oos.close();
+		}
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+		try {
+			Expression e2 = (Expression) ois.readObject();
+			assertEquals(e, e2);
+		} finally {
+			ois.close();
+		}
 	}
 
 }
