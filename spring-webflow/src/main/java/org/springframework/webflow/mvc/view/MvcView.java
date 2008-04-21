@@ -380,7 +380,7 @@ public abstract class MvcView implements View {
 		}
 
 		public void setValue(Object context, Object value) throws EvaluationException {
-			throw new UnsupportedOperationException("Not supported");
+			throw new UnsupportedOperationException("Setting request parameters is not allowed");
 		}
 
 	}
