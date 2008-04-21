@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.conversation.Conversation;
@@ -157,7 +158,7 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		if (alwaysGenerateNewNextKey) {
 			CompositeFlowExecutionKey key = (CompositeFlowExecutionKey) execution.getKey();
 			Integer continuationId = (Integer) key.getContinuationId();
-			Integer nextId = Integer.valueOf(continuationId.intValue() + 1);
+			Integer nextId = nextContinuationId(continuationId);
 			return new CompositeFlowExecutionKey(key.getConversationId(), nextId);
 		} else {
 			return execution.getKey();
@@ -230,6 +231,14 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		ConversationParameters parameters = createConversationParameters(execution);
 		Conversation conversation = conversationManager.beginConversation(parameters);
 		return conversation;
+	}
+
+	private Integer nextContinuationId(Integer continuationId) {
+		if (JdkVersion.isAtLeastJava15()) {
+			return Integer.valueOf(continuationId.intValue() + 1);
+		} else {
+			return new Integer(continuationId.intValue() + 1);
+		}
 	}
 
 	private Serializable parseContinuationId(String encodedId, String encodedKey) {

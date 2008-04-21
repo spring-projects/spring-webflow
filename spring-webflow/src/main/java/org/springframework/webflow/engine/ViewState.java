@@ -226,7 +226,6 @@ public class ViewState extends TransitionableState {
 
 	public void exit(RequestControlContext context) {
 		super.exit(context);
-		destroyVariables(context);
 		if (history == History.PRESERVE) {
 			context.updateCurrentFlowExecutionSnapshot();
 		} else if (history == History.DISCARD) {
@@ -234,6 +233,7 @@ public class ViewState extends TransitionableState {
 		} else if (history == History.INVALIDATE) {
 			context.removeAllFlowExecutionSnapshots();
 		}
+		destroyVariables(context);
 	}
 
 	// internal helpers

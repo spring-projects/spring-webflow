@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.core.JdkVersion;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationParameters;
@@ -98,7 +99,11 @@ class ConversationContainer implements Serializable {
 	}
 
 	private ConversationId nextId() {
-		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
+		if (JdkVersion.isAtLeastJava15()) {
+			return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
+		} else {
+			return new SimpleConversationId(new Integer(++conversationIdSequence));
+		}
 	}
 
 	/**
