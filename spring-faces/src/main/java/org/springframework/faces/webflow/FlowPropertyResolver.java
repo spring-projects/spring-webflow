@@ -20,6 +20,7 @@ import javax.faces.el.PropertyResolver;
 
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
 import org.springframework.faces.expression.ELDelegatingPropertyResolver;
+import org.springframework.webflow.expression.el.FlowResourceELResolver;
 
 /**
  * For resolving MapAdaptable properties with JSF 1.1 or >.

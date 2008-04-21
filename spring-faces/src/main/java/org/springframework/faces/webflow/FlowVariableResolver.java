@@ -19,6 +19,7 @@ import javax.el.CompositeELResolver;
 import javax.faces.el.VariableResolver;
 
 import org.springframework.faces.expression.ELDelegatingVariableResolver;
+import org.springframework.webflow.expression.el.FlowResourceELResolver;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
