@@ -15,14 +15,12 @@
  */
 package org.springframework.binding.format;
 
-import org.springframework.core.NestedRuntimeException;
-
 /**
  * Thrown when a formatted value is of the wrong form.
  * 
  * @author Keith Donald
  */
-public class InvalidFormatException extends NestedRuntimeException {
+public class InvalidFormatException extends RuntimeException {
 
 	private String invalidValue;
 

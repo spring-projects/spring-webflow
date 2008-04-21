@@ -17,7 +17,6 @@ package org.springframework.binding.method;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.style.StylerUtils;
 
 /**
@@ -25,7 +24,7 @@ import org.springframework.core.style.StylerUtils;
  * 
  * @author Keith Donald
  */
-public class MethodInvocationException extends NestedRuntimeException {
+public class MethodInvocationException extends RuntimeException {
 
 	/**
 	 * The method signature. Transient because a MethodSignature is not Serializable.

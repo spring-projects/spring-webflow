@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.springframework.binding.method.InvalidMethodKeyException;
 import org.springframework.binding.method.MethodKey;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.util.Assert;
 import org.springframework.util.CachingMapDecorator;
 
@@ -122,7 +121,7 @@ class DispatchMethodInvoker {
 	/**
 	 * Thrown when a dispatch method could not be resolved.
 	 */
-	public static class MethodLookupException extends NestedRuntimeException {
+	public static class MethodLookupException extends RuntimeException {
 
 		/**
 		 * Create a new method lookup exception.

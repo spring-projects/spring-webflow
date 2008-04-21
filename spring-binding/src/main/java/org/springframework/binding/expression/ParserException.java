@@ -15,14 +15,12 @@
  */
 package org.springframework.binding.expression;
 
-import org.springframework.core.NestedRuntimeException;
-
 /**
  * Base class for exceptions thrown during expression parsing.
  * 
  * @author Keith Donald
  */
-public class ParserException extends NestedRuntimeException {
+public class ParserException extends RuntimeException {
 
 	/**
 	 * The expression string that could not be parsed.

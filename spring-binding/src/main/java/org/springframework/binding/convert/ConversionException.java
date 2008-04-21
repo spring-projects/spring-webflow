@@ -15,14 +15,12 @@
  */
 package org.springframework.binding.convert;
 
-import org.springframework.core.NestedRuntimeException;
-
 /**
  * Base class for exceptions thrown by the type conversion system.
  * 
  * @author Keith Donald
  */
-public class ConversionException extends NestedRuntimeException {
+public class ConversionException extends RuntimeException {
 
 	/**
 	 * The source type we tried to convert from
@@ -30,14 +28,14 @@ public class ConversionException extends NestedRuntimeException {
 	private Class sourceClass;
 
 	/**
-	 * The value we tried to convert. Transient because we cannot guarantee that the value is Serializable.
-	 */
-	private transient Object value;
-
-	/**
 	 * The target type we tried to convert to.
 	 */
 	private Class targetClass;
+
+	/**
+	 * The value we tried to convert. Transient because we cannot guarantee that the value is Serializable.
+	 */
+	private transient Object value;
 
 	/**
 	 * Creates a new conversion exception.
