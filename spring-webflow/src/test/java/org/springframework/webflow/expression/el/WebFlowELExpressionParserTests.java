@@ -1,6 +1,7 @@
 package org.springframework.webflow.expression.el;
 
 import java.security.Principal;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -14,10 +15,13 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
+import org.springframework.webflow.engine.StubViewFactory;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.test.MockRequestControlContext;
 
 public class WebFlowELExpressionParserTests extends TestCase {
 	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(DefaultExpressionFactoryUtils
@@ -84,6 +88,25 @@ public class WebFlowELExpressionParserTests extends TestCase {
 	public void testSetFlashScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlashScope().put("foo", "bar");
+		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
+		exp.setValue(context, "baz");
+		assertEquals("baz", exp.getValue(context));
+	}
+
+	public void testResolveViewScope() {
+		MockRequestControlContext context = new MockRequestControlContext();
+		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
+		context.setCurrentState(state);
+		context.getViewScope().put("foo", "bar");
+		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
+		assertEquals("bar", exp.getValue(context));
+	}
+
+	public void testSetViewScope() {
+		MockRequestControlContext context = new MockRequestControlContext();
+		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
+		context.setCurrentState(state);
+		context.getViewScope().put("foo", "bar");
 		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
 		exp.setValue(context, "baz");
 		assertEquals("baz", exp.getValue(context));
@@ -165,4 +188,15 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals(null, exp.getValue(context));
 	}
 
+	public void testResolveMessage() {
+		MockRequestContext context = new MockRequestContext();
+		StaticApplicationContext ac = new StaticApplicationContext();
+		ac.getStaticMessageSource().addMessage("foo", Locale.FRANCE, "bar");
+		ac.refresh();
+		context.getRootFlow().setApplicationContext(ac);
+		context.getMockExternalContext().setLocale(Locale.FRANCE);
+		Expression exp = parser.parseExpression("resourceBundle.foo", new FluentParserContext()
+				.evaluate(RequestContext.class));
+		assertEquals("bar", exp.getValue(context));
+	}
 }

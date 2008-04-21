@@ -1,6 +1,7 @@
 package org.springframework.webflow.expression;
 
 import java.security.Principal;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -13,9 +14,12 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
+import org.springframework.webflow.engine.StubViewFactory;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.test.MockRequestControlContext;
 
 public class WebFlowOgnlExpressionParserTests extends TestCase {
 	private WebFlowOgnlExpressionParser parser = new WebFlowOgnlExpressionParser();
@@ -86,6 +90,25 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	public void testResolveViewScope() {
+		MockRequestControlContext context = new MockRequestControlContext();
+		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
+		context.setCurrentState(state);
+		context.getViewScope().put("foo", "bar");
+		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
+		assertEquals("bar", exp.getValue(context));
+	}
+
+	public void testSetViewScope() {
+		MockRequestControlContext context = new MockRequestControlContext();
+		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
+		context.setCurrentState(state);
+		context.getViewScope().put("foo", "bar");
+		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(RequestContext.class));
+		exp.setValue(context, "baz");
+		assertEquals("baz", exp.getValue(context));
+	}
+
 	public void testResolveFlowScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("foo", "bar");
@@ -148,6 +171,18 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 		AnnotatedAction action = (AnnotatedAction) exp.getValue(context);
 		assertSame(ac.getBean("multiAction"), action.getTargetAction());
 		assertEquals("setupForm", action.getMethod());
+	}
+
+	public void testResolveMessage() {
+		MockRequestContext context = new MockRequestContext();
+		StaticApplicationContext ac = new StaticApplicationContext();
+		ac.getStaticMessageSource().addMessage("foo", Locale.FRANCE, "bar");
+		ac.refresh();
+		context.getRootFlow().setApplicationContext(ac);
+		context.getMockExternalContext().setLocale(Locale.FRANCE);
+		Expression exp = parser.parseExpression("resourceBundle.foo", new FluentParserContext()
+				.evaluate(RequestContext.class));
+		assertEquals("bar", exp.getValue(context));
 	}
 
 }

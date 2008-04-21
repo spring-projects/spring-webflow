@@ -18,6 +18,7 @@ package org.springframework.webflow.expression;
 import java.util.Map;
 
 import ognl.ObjectPropertyAccessor;
+import ognl.Ognl;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
@@ -27,7 +28,9 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.expression.ognl.OgnlExpressionParser;
-import org.springframework.util.ClassUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
@@ -49,6 +52,7 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	public WebFlowOgnlExpressionParser() {
 		addPropertyAccessor(MapAdaptable.class, new MapAdaptablePropertyAccessor());
 		addPropertyAccessor(MutableAttributeMap.class, new MutableAttributeMapPropertyAccessor());
+		addPropertyAccessor(MessageSource.class, new MessageSourcePropertyAccessor());
 		addPropertyAccessor(RequestContext.class, new RequestContextPropertyAccessor(new ObjectPropertyAccessor()));
 		addPropertyAccessor(Action.class, new ActionPropertyAccessor());
 		addPropertyAccessor(Event.class, new EventPropertyAccessor());
@@ -82,9 +86,6 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	 */
 	private static class RequestContextPropertyAccessor implements PropertyAccessor {
 
-		private static boolean securityPresent = ClassUtils
-				.isPresent("org.springframework.security.context.SecurityContextHolder");
-
 		private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
 
 		private PropertyAccessor delegate;
@@ -108,6 +109,12 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 				}
 				return requestContext.getExternalContext().getCurrentUser();
 			}
+			if (property.equals("resourceBundle")) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Successfully resolved implicit flow variable '" + property + "'");
+				}
+				return requestContext.getActiveFlow().getApplicationContext();
+			}
 			if (requestContext.getRequestScope().contains(property)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Successfully resolved request scoped variable '" + property + "'");
@@ -118,6 +125,11 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 					logger.debug("Successfully resolved flash scoped variable '" + property + "'");
 				}
 				return requestContext.getFlashScope().get(property);
+			} else if (requestContext.inViewState() && requestContext.getViewScope().contains(property)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Successfully resolved view scoped variable '" + property + "'");
+				}
+				return requestContext.getViewScope().get(property);
 			} else if (requestContext.getFlowScope().contains(property)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Successfully resolved flow scoped variable '" + property + "'");
@@ -145,8 +157,11 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 			if (property.equals("flowRequestContext")) {
 				throw new OgnlException("The 'flowRequestContext' variable is not writeable");
 			}
-			if (securityPresent && property.equals("currentUser")) {
+			if (property.equals("currentUser")) {
 				throw new OgnlException("The 'currentUser' variable is not writeable");
+			}
+			if (property.equals("resourceBundle")) {
+				throw new OgnlException("The 'resourceBundle' variable is not writeable");
 			}
 			if (requestContext.getRequestScope().contains(property)) {
 				if (logger.isDebugEnabled()) {
@@ -158,6 +173,11 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 					logger.debug("Successfully resolved flash scoped variable '" + property + "'");
 				}
 				requestContext.getFlashScope().put(property, value);
+			} else if (requestContext.inViewState() && requestContext.getViewScope().contains(property)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Successfully resolved view scoped variable '" + property + "'");
+				}
+				requestContext.getViewScope().put(property, value);
 			} else if (requestContext.getFlowScope().contains(property)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Successfully resolved flow scoped variable '" + property + "'");
@@ -206,6 +226,31 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			throw new OgnlException("Cannot set attributes on an Event instance - operation not allowed");
+		}
+	}
+
+	/**
+	 * Resolves messages.
+	 */
+	private static class MessageSourcePropertyAccessor implements PropertyAccessor {
+		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+			MessageSource messageSource = (MessageSource) target;
+			ExternalContext externalContext;
+			Object root = Ognl.getRoot(context);
+			if (root instanceof RequestContext) {
+				externalContext = ((RequestContext) root).getExternalContext();
+			} else {
+				externalContext = ExternalContextHolder.getExternalContext();
+			}
+			if (externalContext != null) {
+				return messageSource.getMessage(name.toString(), null, null, externalContext.getLocale());
+			} else {
+				return messageSource.getMessage(name.toString(), null, null, null);
+			}
+		}
+
+		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+			throw new OgnlException("Cannot set properties on a MessageSource instance - operation not allowed");
 		}
 	}
 

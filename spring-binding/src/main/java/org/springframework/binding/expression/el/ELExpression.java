@@ -65,7 +65,8 @@ public class ELExpression implements Expression {
 				} else {
 					EvaluationAttempt attempt = new EvaluationAttempt(this, context);
 					throw new EvaluationException(attempt, attempt
-							+ " failed: the expression path did not resolve--is the base variable incorrect?", null);
+							+ " failed: the expression path did not resolve--is the base variable spelled correctly?",
+							null);
 				}
 			}
 			return result;
