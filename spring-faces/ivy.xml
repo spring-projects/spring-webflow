@@ -29,11 +29,12 @@
 		<!-- build time only dependencies -->
 		<dependency org="javax.el" name="el-api" rev="1.0" conf="provided->default" />		
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default" />
+		<dependency org="com.sun.facelets" name="jsf-facelets" rev="1.1.14" conf="optional->default"/>	
 		<dependency org="org.richfaces.framework" name="richfaces-api" rev="3.1.4.GA" conf="optional->default" />
 		
 		<!-- JSF 1.2 dependencies -->
-		<dependency org="javax.faces" name="jsf-api" rev="1.2.08" conf="compile, jsf12->default" />
-		<dependency org="javax.faces" name="jsf-impl" rev="1.2.08" conf="compile, jsf12->default" />
+		<dependency org="javax.faces" name="jsf-api" rev="1.2.08" conf="provided, jsf12->default" />
+		<dependency org="javax.faces" name="jsf-impl" rev="1.2.08" conf="provided, jsf12->default" />
     	
     	<!-- JSF 1.1 dependencies -->
     	<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.5" conf="jsf11->default" />
