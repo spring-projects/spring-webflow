@@ -67,6 +67,6 @@ public class LiteralExpression implements Expression {
 	}
 
 	public String toString() {
-		return "literal('" + literal + "')";
+		return literal;
 	}
 }
