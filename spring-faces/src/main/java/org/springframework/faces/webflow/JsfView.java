@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.FacesException;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
@@ -101,8 +100,6 @@ public class JsfView implements View {
 			logger.debug("Asking view handler to render view");
 			facesContext.getApplication().getViewHandler().renderView(facesContext, viewRoot);
 			JsfUtils.notifyAfterListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
-		} catch (IOException e) {
-			throw new FacesException("An I/O error occurred during view rendering", e);
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
