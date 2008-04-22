@@ -324,4 +324,9 @@ public class LocalAttributeMapTests extends TestCase {
 		assertEquals(map, map2);
 	}
 
+	public void testExtract() {
+		assertEquals("A string", attributeMap.extract("string"));
+		assertFalse(attributeMap.contains("string"));
+	}
+
 }
