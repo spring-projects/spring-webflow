@@ -15,24 +15,36 @@
  */
 Spring = {};
 		
-Spring.advisors = [];
+Spring.decorations = [];
 
-Spring.advisors.applied = false;
+Spring.decorations.applied = false;
+
+Spring.initialize = function(){
+	Spring.applyDecorations();
+	Spring.remoting = new Spring.RemotingHandler();
+};
+
+Spring.addDecoration = function(/*Object*/decoration){
+	Spring.decorations.push(decoration);
+	if(Spring.decorations.applied) {
+		decoration.apply();
+	}
+};
 		
-Spring.applyAdvisors = function(){
-	if (!Spring.advisors.applied) {		
-		for (var x=0; x<Spring.advisors.length; x++) {
-			Spring.advisors[x].apply();
+Spring.applyDecorations = function(){
+	if (!Spring.decorations.applied) {		
+		for (var x=0; x<Spring.decorations.length; x++) {
+			Spring.decorations[x].apply();
 		}
-		Spring.advisors.applied = true;
+		Spring.decorations.applied = true;
 	}
 };
 
 Spring.validateAll = function(){
 	var valid = true;
-	for(x in Spring.advisors) {
-		if (Spring.advisors[x].decorator &&
-			!Spring.advisors[x].validate()) {
+	for(x in Spring.decorations) {
+		if (Spring.decorations[x].widget &&
+			!Spring.decorations[x].validate()) {
 			valid = false;
 		}
 	}
@@ -41,23 +53,24 @@ Spring.validateAll = function(){
 
 Spring.validateRequired = function(){
 	var valid = true;
-	for(x in Spring.advisors) {
-		if(Spring.advisors[x].decorator &&
-			Spring.advisors[x].isRequired() &&
-			!Spring.advisors[x].validate())
+	for(x in Spring.decorations) {
+		if(Spring.decorations[x].decorator &&
+			Spring.decorations[x].isRequired() &&
+			!Spring.decorations[x].validate())
 			valid = false;
 	}
 	return valid;
 };
 
-Spring.ValidatingFieldAdvisor = function(){};
+Spring.AbstractElementDecoration = function(){};
 
-Spring.ValidatingFieldAdvisor.prototype = {
+Spring.AbstractElementDecoration.prototype = {
 	
-	targetElId : "",
-	decoratorType : "",
-	decorator : null,
-	decoratorAttrs : "",
+	elementId : "",
+	widgetType : "",
+	widgetModule : "",
+	widget : null,
+	widgetAttrs : {},
 	
 	apply : function(){},
 	
@@ -66,13 +79,12 @@ Spring.ValidatingFieldAdvisor.prototype = {
 	isRequired : function(){}
 };
 
-Spring.ValidateAllAdvisor = function(){};
+Spring.AbstractValidateAllDecoration = function(){};
 
-Spring.ValidateAllAdvisor.prototype = {
+Spring.AbstractValidateAllDecoration.prototype = {
 	
 	event : "",
-	targetId : "",
-	connection : null,
+	elementId : "",
 	
 	apply : function() {},
 	
@@ -81,11 +93,11 @@ Spring.ValidateAllAdvisor.prototype = {
 	handleEvent : function(event){}
 };
 
-Spring.CommandLinkAdvisor = function(){};
+Spring.AbstractCommandLinkDecoration = function(){};
 
-Spring.CommandLinkAdvisor.prototype = {
+Spring.AbstractCommandLinkDecoration.prototype = {
 	
-	targetElId : "",
+	elementId : "",
 	linkHtml : "",
 	
 	apply : function(){},
@@ -93,18 +105,15 @@ Spring.CommandLinkAdvisor.prototype = {
 	submitFormFromLink : function(/*String*/ formId, /*String*/ sourceId, /*Array of name,value params*/ params){}
 };
 
-Spring.RemoteEventAdvisor = function(){};
+Spring.AbstractAjaxEventDecoration = function(){};
 
-Spring.RemoteEventAdvisor.prototype = {
+Spring.AbstractAjaxEventDecoration.prototype = {
 	
 	event : "",
-	targetId : "",
+	elementId : "",
 	sourceId : "",
 	formId : "",
-	processIds : "",
-	renderIds : "",
-	params : [],
-	connection : null,
+	params : {},
 	
 	apply : function(){},
 	
@@ -113,13 +122,15 @@ Spring.RemoteEventAdvisor.prototype = {
 	submit : function(event){}
 };
 
-Spring.RemotingHandler = function(){};
+Spring.AbstractRemotingHandler = function(){};
 
-Spring.RemotingHandler.prototype = {
+Spring.AbstractRemotingHandler.prototype = {
 
-	submitForm : function(/*String */ sourceId, /*String*/formId, /*String*/ processIds, /*String*/renderIds, /*Array*/ params){}, 
+	submitForm : function(/*String */ sourceId, /*String*/formId, /*Object*/ params){}, 
 	
-	getResource : function(/*String */ sourceId, /*String*/ processIds, /*String*/renderIds) {},
+	getLinkedResource: function(/*String */ linkId, /*Object*/params, /*boolean*/ modal) {},
+	
+	getResource : function(/*String */ resourceUri, /*Object*/params, /*boolean*/ modal) {},
 	
 	handleResponse : function() {},
 	

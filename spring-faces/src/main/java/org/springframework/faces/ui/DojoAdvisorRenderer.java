@@ -25,7 +25,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
-import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.StringUtils;
 
 public class DojoAdvisorRenderer extends DojoRenderer {
@@ -48,11 +47,10 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 		writer.startElement(SCRIPT_ELEMENT, component);
 		writer.writeAttribute("type", "text/javascript", null);
 		StringBuffer script = new StringBuffer();
-		script.append("  Spring.advisors.push(new Spring.ValidatingFieldAdvisor({  ");
-		script.append("  targetElId : '" + advisedChild.getClientId(context) + "',  ");
-		script.append("  msgElId : '" + advisedChild.getClientId(context) + ":msg',  ");
-		script.append("  decoratorType : '" + ((DojoAdvisor) component).getDojoComponentType() + "',  ");
-		script.append("  decoratorAttrs : \"{ ");
+		script.append("  Spring.addDecoration(new Spring.ElementDecoration({  ");
+		script.append("  elementId : '" + advisedChild.getClientId(context) + "',  ");
+		script.append("  widgetType : '" + ((DojoAdvisor) component).getDojoComponentType() + "',  ");
+		script.append("  widgetAttrs : { ");
 
 		String nodeAttrs = getNodeAttributesAsString(context, advisedChild);
 		String dojoAttrs = getDojoAttributesAsString(context, component);
@@ -63,13 +61,7 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 		}
 		script.append(dojoAttrs);
 
-		script.append("  }\"})");
-
-		if (JsfUtils.isAsynchronousFlowRequest()) {
-			script.append(".apply()");
-		}
-
-		script.append(");  ");
+		script.append("  }}));");
 
 		writer.writeText(script, null);
 		writer.endElement(SCRIPT_ELEMENT);

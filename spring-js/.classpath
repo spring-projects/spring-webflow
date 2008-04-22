@@ -5,7 +5,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/servlet-api/servlet-api-2.4.jar" sourcepath="IVY_CACHE/javax.servlet/servlet-api/servlet-api-sources-2.4.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-logging/commons-logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
@@ -14,5 +13,12 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-test/spring-test-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.3.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-context/spring-context-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-core/tiles-core-2.0.5.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-beans/spring-beans-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-web/spring-web-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-web/spring-web-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-api/tiles-api-2.0.5.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.tiles/tiles-jsp/tiles-jsp-2.0.5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

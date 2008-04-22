@@ -13,88 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Spring.DojoValidatingFieldAdvisor = function(config){
-			
-	dojo.mixin(this, config);
-};
-		
-Spring.DojoValidatingFieldAdvisor.prototype = {
-			
-	targetElId : "",
-	decoratorType : "",
-	decorator : null,
-	decoratorAttrs : "",
-			
-	apply : function(){
-		if (dijit.byId(this.targetElId)) {
-			dijit.byId(this.targetElId).destroyRecursive(false);
+
+dojo.declare("Spring.ElementDecoration", Spring.AbstractElementDecoration, {
+	constructor : function(config) {
+		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength');
+		dojo.mixin(this, config);
+		if(this.widgetModule == "") {
+			this.widgetModule = this.widgetType;
 		}
-       	this.decorator = eval("new "+ this.decoratorType + "(" + this.decoratorAttrs +", dojo.byId('"+this.targetElId+"'));" );
-       	this.decorator.startup();
-       	
+	},
+	
+	apply : function(){
+		if (dijit.byId(this.elementId)) {
+			dijit.byId(this.elementId).destroyRecursive(false);
+		}
+		var element = dojo.byId(this.elementId);
+		for (var copyField in this.copyFields) {
+			copyField = this.copyFields[copyField];
+			if (!this.widgetAttrs[copyField] && element[copyField] && (typeof element[copyField] != 'number' || 
+				(typeof element[copyField] == 'number' && element[copyField] >= 0))) {
+				this.widgetAttrs[copyField] = element[copyField];
+			}
+		}
+		dojo.require(this.widgetModule);
+		var widgetConstructor = dojo.eval(this.widgetType);
+		this.widget = new widgetConstructor(this.widgetAttrs, element);
+		this.widget.startup();
    		//return this to support method chaining
    		return this;
 	},
 	
 	validate : function(){
-		var isValid = this.decorator.isValid(false);
+		if (!this.widget.isValid) {
+			// some widgets cannot be validated
+			return true;
+		}
+		var isValid = this.widget.isValid(false);
 		if (!isValid) {
-			this.decorator.state = "Error";
-			this.decorator._setStateClass();
+			this.widget.state = "Error";
+			this.widget._setStateClass();
 		}
 		return isValid;
 	}			
-};
+});
 
-Spring.ValidatingFieldAdvisor = Spring.DojoValidatingFieldAdvisor;
-
-Spring.DojoRemoteEventAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoRemoteEventAdvisor.prototype = {
-	
-	event : "",
-	targetId : "",
-	sourceId : "",
-	formId : "",
-	processIds : "",
-	renderIds : "",
-	params : [],
-	connection : null,
-	
-	apply : function() {
-		this.connection = dojo.connect(dojo.byId(this.targetId), this.event, this, "submit");
-		return this;	
+dojo.declare("Spring.ValidateAllDecoration", Spring.AbstractValidateAllDecoration, {
+	constructor : function(config) {
+		this.originalHandler = null;
+		this.connection = null;
+		dojo.mixin(this, config);
 	},
 	
-	cleanup : function(){
-		dojo.disconnect(this.connection);
-	},
-	
-	submit : function(){
-		Spring.RemotingHandler.submitForm(this.sourceId, this.formId, this.processIds, this.renderIds, this.params);
-	}
-};
-
-Spring.RemoteEventAdvisor = Spring.DojoRemoteEventAdvisor;
-
-Spring.DojoValidateAllAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoValidateAllAdvisor.prototype = {
-	
-	event : "",
-	targetId : "",
-	originalHandler : null,
-	connection : null,
-	
 	apply : function() {
-		var targetEl = dojo.byId(this.targetId);
-		this.originalHandler = targetEl[this.event];
+		var element = dojo.byId(this.elementId);
+		this.originalHandler = element[this.event];
 		var context = this;
-		targetEl[this.event] = function(event){
+		element[this.event] = function(event){
 			context.handleEvent(event, context);
 		};
 		return this;
@@ -107,40 +81,65 @@ Spring.DojoValidateAllAdvisor.prototype = {
 	handleEvent : function(event, context){
 		if (!Spring.validateAll()) {
 			dojo.stopEvent(event);
-		} else {
+		} else if(dojo.isFunction(context.originalHandler)) {
 			var result = context.originalHandler(event);
 			if (result == false) {
 				dojo.stopEvent(event);
 			}
 		}
 	}
-};
+});
 
-Spring.ValidateAllAdvisor = Spring.DojoValidateAllAdvisor;
-
-Spring.DojoRemotingHandler = function(){};
-
-Spring.DojoRemotingHandler.prototype = {
+dojo.declare("Spring.AjaxEventDecoration", Spring.AbstractAjaxEventDecoration, {
+	constructor : function(config){
+		this.connection = null;
+		dojo.mixin(this, config);
+	},
 	
-	submitForm : function(/*String */ sourceId, /*String*/formId, /*String*/ processIds, /*String*/renderIds, /*Array*/ params) {
+	apply : function() {
+		this.connection = dojo.connect(dojo.byId(this.elementId), this.event, this, "submit");
+		return this;	
+	},
+	
+	cleanup : function(){
+		dojo.disconnect(this.connection);
+	},
+	
+	submit : function(event){
+		if (this.sourceId == ""){
+			this.sourceId = this.elementId;
+		}
+		if(this.formId == ""){
+			Spring.remoting.getLinkedResource(this.sourceId, this.params, false);
+		} else {
+			Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
+		}
+		dojo.stopEvent(event);
+	}
+});
+
+dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
+	constructor : function(){},
+	
+	submitForm : function(/*String */ sourceId, /*String*/formId, /*Object*/ params) {
 		var content = new Object();
+		for (var key in params) {
+			content[key] = params[key];
+		}
+		
 		var sourceComponent = dojo.byId(sourceId);
-		content['processIds'] = processIds; 
-		content['renderIds'] = renderIds;
 	
 	    if (sourceComponent != null){
-	    	if(sourceComponent.value) {
+	    	if(sourceComponent.value != undefined) {
 	    		content[sourceId] = sourceComponent.value;
 	    	} else {
 	    		content[sourceId] = sourceId;
 	    	}
 	    }
 	    
-	    dojo.forEach(params, function(param){
-	    	content[param.name] = param.value;
-	    });
-	    
-	    content['ajaxSource'] = sourceId;
+		if (!content['ajaxSource']) {
+			content['ajaxSource'] = sourceId;
+		}
 	    
 		dojo.xhrPost({
 			
@@ -161,17 +160,21 @@ Spring.DojoRemotingHandler.prototype = {
 
 	},
 	
-	getLinkedResource: function(/*String */ linkId, /*boolean*/ modal) {
-		this.getResource(dojo.byId(linkId).href, modal);
+	getLinkedResource: function(/*String */ linkId, /*Object*/params, /*boolean*/ modal) {
+		this.getResource(dojo.byId(linkId).href, params, modal);
 	},
 	
-	getResource: function(/*String */ resourceUri, /*boolean*/ modal) {
+	getResource: function(/*String */ resourceUri, /*Object*/params, /*boolean*/ modal) {
 		
 		dojo.xhrGet({
 			
 			url: resourceUri,
 			
+			content: params,
+			
 			handleAs: "text",
+			
+			headers: {"Accept" : "text/html;type=ajax"},
 			
 			load: this.handleResponse,
 			
@@ -184,14 +187,14 @@ Spring.DojoRemotingHandler.prototype = {
 	handleResponse: function(response, ioArgs) {
 		
 		//First check if this response should redirect
-		var redirectURL = ioArgs.xhr.getResponseHeader('Flow-Redirect-URL');
-		var modalViewHeader = ioArgs.xhr.getResponseHeader('Flow-Modal-View');
+		var redirectURL = ioArgs.xhr.getResponseHeader('Spring-Redirect-URL');
+		var modalViewHeader = ioArgs.xhr.getResponseHeader('Spring-Modal-View');
 		var modalView = ((dojo.isString(modalViewHeader) && modalViewHeader.length > 0) || ioArgs.args.modal);
 		
 		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
 			if (modalView) {
 				//render a popup with the new URL
-				Spring.RemotingHandler.renderURLToModalDialog(redirectURL, ioArgs);
+				Spring.remoting.renderURLToModalDialog(redirectURL, ioArgs);
 				return response;
 			}
 			else {
@@ -229,7 +232,7 @@ Spring.DojoRemotingHandler.prototype = {
 	
 		//For a modal view, just dump the new nodes into a modal dialog
 		if (modalView) {
-			Spring.RemotingHandler.renderNodeListToModalDialog(newNodes);
+			Spring.remoting.renderNodeListToModalDialog(newNodes);
 		}
 		else {
 		
@@ -258,7 +261,7 @@ Spring.DojoRemotingHandler.prototype = {
 	renderURLToModalDialog: function(url, ioArgs) {
 		url = url + "&"+dojo.objectToQuery(ioArgs.args.content);
 		
-		Spring.RemotingHandler.getResource(url, true);
+		Spring.remoting.getResource(url, {}, true);
 	},
 	
 	renderNodeListToModalDialog: function(nodes) {
@@ -271,28 +274,21 @@ Spring.DojoRemotingHandler.prototype = {
 		});
 		dialog.show();
 	}
-};
+});
 
-Spring.RemotingHandler = new Spring.DojoRemotingHandler();
-
-Spring.DojoCommandLinkAdvisor = function(config){
-	dojo.mixin(this, config);
-};
-
-Spring.DojoCommandLinkAdvisor.prototype = {
-	
-	targetElId : "",
-	
-	linkHtml : "",
+dojo.declare("Spring.CommandLinkDecoration", Spring.AbstractCommandLinkDecoration, {
+	constructor : function(config){
+		dojo.mixin(this, config);
+	},
 	
 	apply : function(){
-		var advisedNode = dojo.byId(this.targetElId);
+		var advisedNode = dojo.byId(this.elementId);
 		if (!dojo.hasClass(advisedNode, "progressiveLink")) {
 			//Node must be replaced
 			var nodeToReplace = new dojo.NodeList(advisedNode);
 			nodeToReplace.addContent(this.linkHtml, "after").orphan("*");
 			//Get the new node
-			advisedNode = dojo.byId(this.targetElId);
+			advisedNode = dojo.byId(this.elementId);
 		}
 		advisedNode.submitFormFromLink = this.submitFormFromLink;
 		//return this to support method chaining
@@ -325,8 +321,6 @@ Spring.DojoCommandLinkAdvisor.prototype = {
 			});
 		}
 	}
-};
+});
 
-Spring.CommandLinkAdvisor = Spring.DojoCommandLinkAdvisor;
-
-dojo.addOnLoad(Spring.applyAdvisors);
+dojo.addOnLoad(Spring.initialize);

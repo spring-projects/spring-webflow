@@ -69,20 +69,16 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoParentComponentRen
 
 			Boolean ajaxEnabled = (Boolean) component.getAttributes().get("ajaxEnabled");
 			String processIds = (String) component.getAttributes().get("processIds");
-			String renderIds = (String) component.getAttributes().get("renderIds");
 			if (Boolean.TRUE.equals(ajaxEnabled)) {
 				if (StringUtils.hasText(processIds) && !processIds.contains(component.getClientId(context))) {
 					processIds = component.getClientId(context) + ", " + processIds;
 				} else if (!StringUtils.hasText(processIds)) {
 					processIds = component.getClientId(context);
 				}
-				if (!StringUtils.hasText(renderIds)) {
-					renderIds = processIds;
-				}
-				onclick.append("Spring.RemotingHandler.submitForm('" + component.getClientId(context) + "', ");
+				onclick.append("Spring.remoting.submitForm('" + component.getClientId(context) + "', ");
 				onclick.append("'" + RendererUtils.getFormId(context, component) + "', ");
-				onclick.append("'" + processIds + "', '" + renderIds + "', " + encodeParams(context, component)
-						+ "); return false;");
+				onclick.append("{processIds: '" + processIds + "'" + encodeParams(context, component)
+						+ "}); return false;");
 			} else {
 				onclick.append(getOnClickNoAjax(context, component));
 			}
@@ -142,20 +138,15 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoParentComponentRen
 
 	protected String encodeParams(FacesContext context, UIComponent component) {
 		StringBuffer paramArray = new StringBuffer();
-		paramArray.append("[");
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {
 				UIParameter param = (UIParameter) component.getChildren().get(i);
 				Assert.hasText(param.getName(),
 						"UIParameter requires a name when used as a child of a UICommand component");
-				if (paramArray.length() > 1) {
-					paramArray.append(", ");
-				}
-				paramArray.append("{name : '" + param.getName() + "'");
-				paramArray.append(", value : '" + param.getValue() + "'}");
+
+				paramArray.append(", " + param.getName() + ": '" + param.getValue() + "'");
 			}
 		}
-		paramArray.append("]");
 		return paramArray.toString();
 	}
 

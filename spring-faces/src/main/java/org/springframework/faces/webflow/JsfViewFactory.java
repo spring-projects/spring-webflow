@@ -35,12 +35,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
 import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.js.mvc.servlet.AjaxHandler;
+import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.servlet.AjaxHandler;
-import org.springframework.webflow.mvc.servlet.SpringJavascriptAjaxHandler;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.

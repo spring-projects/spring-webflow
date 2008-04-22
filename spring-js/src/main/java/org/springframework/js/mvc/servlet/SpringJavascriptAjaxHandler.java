@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.mvc.servlet;
+package org.springframework.js.mvc.servlet;
 
 import java.io.IOException;
 
@@ -34,22 +34,22 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 	/**
 	 * The response header to be set on an Ajax redirect
 	 */
-	private static final String FLOW_REDIRECT_URL_HEADER = "Flow-Redirect-URL";
+	public static final String REDIRECT_URL_HEADER = "Spring-Redirect-URL";
 
 	/**
 	 * The response header to be set on an redirect that should be issued from a popup window.
 	 */
-	private static final String POPUP_VIEW_HEADER = "Flow-Modal-View";
+	public static final String POPUP_VIEW_HEADER = "Spring-Modal-View";
 
 	/**
 	 * The accept header value that signifies an Ajax request.
 	 */
-	private static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
+	public static final String AJAX_ACCEPT_CONTENT_TYPE = "text/html;type=ajax";
 
 	/**
 	 * Alternate request parameter to indicate an Ajax request for cases when control of the header is not available.
 	 */
-	private static final String AJAX_SOURCE_PARAM = "ajaxSource";
+	public static final String AJAX_SOURCE_PARAM = "ajaxSource";
 
 	public boolean isAjaxRequest(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
 		String acceptHeader = request.getHeader("Accept");
@@ -66,7 +66,7 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 		if (popup) {
 			response.setHeader(POPUP_VIEW_HEADER, "true");
 		}
-		response.setHeader(FLOW_REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
+		response.setHeader(REDIRECT_URL_HEADER, response.encodeRedirectURL(targetUrl));
 	}
 
 }

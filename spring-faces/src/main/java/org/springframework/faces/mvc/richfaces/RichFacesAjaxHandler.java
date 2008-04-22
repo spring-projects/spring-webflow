@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ajax4jsf.context.AjaxContext;
 import org.springframework.faces.webflow.FlowLifecycle;
-import org.springframework.webflow.mvc.servlet.SpringJavascriptAjaxHandler;
+import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
 
 /**
  * Ajax handler that works with Rich Faces, allowing support for Web Flow ajax features with the Rich Faces toolkit.

@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
 
-import org.springframework.js.resource.ResourceServlet;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -54,6 +53,14 @@ public class ResourceServletTests extends TestCase {
 	public final void testExecute_ResourceNotFound() throws Exception {
 
 		String requestPath = "/xxx/xxx.js";
+		request.setPathInfo(requestPath);
+		servlet.doGet(request, response);
+
+		assertEquals(404, response.getStatus());
+	}
+
+	public final void testExecute_ProtectedPath() throws Exception {
+		String requestPath = "/WEB-INF/web.xml";
 		request.setPathInfo(requestPath);
 		servlet.doGet(request, response);
 

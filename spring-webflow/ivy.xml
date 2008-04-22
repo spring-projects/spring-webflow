@@ -28,6 +28,7 @@
 		<dependency org="org.springframework" name="spring-web" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.springframework.webflow" name="spring-binding" rev="latest.integration" conf="compile->compile"/>
+        <dependency org="org.springframework.webflow" name="spring-js" rev="latest.integration" conf="compile->compile"/>
 
 		<!-- testing support only dependencies -->
 		<dependency org="org.junit" name="junit" rev="3.8.2" conf="compile, test->default" />

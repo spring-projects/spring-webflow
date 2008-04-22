@@ -27,5 +27,6 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.3.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-api/jsf-api-1.2.08.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-impl/jsf-impl-1.2.08.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

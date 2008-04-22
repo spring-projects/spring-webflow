@@ -44,8 +44,8 @@ public class ValidateAllRenderer extends SpringFacesRenderer {
 		writer.startElement(SCRIPT_ELEMENT, component);
 		writer.writeAttribute("type", "text/javascript", null);
 		StringBuffer script = new StringBuffer();
-		script.append("Spring.advisors.push(new Spring.ValidateAllAdvisor({" + "event : 'onclick', " + "targetId : '"
-				+ advisedChild.getClientId(context) + "'}));");
+		script.append("Spring.addDecoration(new Spring.ValidateAllDecoration({" + "event : 'onclick', "
+				+ "elementId : '" + advisedChild.getClientId(context) + "'}));");
 		writer.writeText(script, null);
 		writer.endElement(SCRIPT_ELEMENT);
 	}

@@ -17,12 +17,12 @@ package org.springframework.faces.ui;
 
 import java.io.IOException;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
 
-import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -38,30 +38,35 @@ public class AjaxEventInterceptorRenderer extends DojoRenderer {
 		writer.writeAttribute("type", "text/javascript", null);
 
 		String processIds = (String) component.getAttributes().get("processIds");
-		String renderIds = (String) component.getAttributes().get("renderIds");
 		if (StringUtils.hasText(processIds) && !processIds.contains(component.getClientId(context))) {
 			processIds = component.getClientId(context) + ", " + processIds;
 		} else if (!StringUtils.hasText(processIds)) {
 			processIds = component.getClientId(context);
 		}
-		if (!StringUtils.hasText(renderIds)) {
-			renderIds = processIds;
-		}
+		String childId = getElementId(context, component);
 		StringBuffer script = new StringBuffer();
-		script.append("Spring.advisors.push(new Spring.RemoteEventAdvisor({");
+		script.append("Spring.addDecoration(new Spring.AjaxEventDecoration({");
 		script.append("event:'" + event + "'");
-		script.append(", targetId: '" + ((UIComponent) component.getChildren().get(0)).getClientId(context) + "'");
-		script.append(", sourceId : '" + component.getClientId(context) + "'");
+		script.append(", elementId: '" + childId + "'");
 		script.append(", formId : '" + RendererUtils.getFormId(context, component) + "'");
-		script.append(", processIds : '" + processIds + "'");
-		script.append(", renderIds : '" + renderIds + "'})");
-		if (JsfUtils.isAsynchronousFlowRequest()) {
-			script.append(".apply()");
-		}
-		script.append(");");
+		script.append(", params: {processIds : '" + processIds + "'");
+		script.append(", ajaxSource : '" + component.getClientId(context) + "'} }));");
 
 		writer.writeText(script.toString(), null);
 		writer.endElement("script");
+	}
+
+	private String getElementId(FacesContext context, UIComponent component) {
+		if (component.getChildCount() > 0) {
+			UIComponent child = (UIComponent) component.getChildren().get(0);
+			if (!(child instanceof DojoAdvisor)) {
+				return child.getClientId(context);
+			} else {
+				return getElementId(context, child);
+			}
+		} else {
+			throw new FacesException("Could not locate a proper child element to trigger the ajax event.");
+		}
 	}
 
 	public void decode(FacesContext context, UIComponent component) {

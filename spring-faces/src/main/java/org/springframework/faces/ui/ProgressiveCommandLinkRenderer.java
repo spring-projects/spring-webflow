@@ -101,9 +101,9 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		super.encodeEnd(context, component);
 
-		StringBuffer advisorParams = new StringBuffer();
-		advisorParams.append("{");
-		advisorParams.append("targetElId : '" + component.getClientId(context) + "'");
+		StringBuffer decorationParams = new StringBuffer();
+		decorationParams.append("{");
+		decorationParams.append("elementId : '" + component.getClientId(context) + "'");
 
 		ResponseWriter writer = context.getResponseWriter();
 		// Close the script variable started in encodeBegin if this is not an AJAX request
@@ -117,18 +117,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			String scriptVarEnd = "\";\n";
 			writer.writeText(scriptVarEnd, null);
 
-			advisorParams.append(", linkHtml : " + component.getClientId(context).replaceAll(":", "_") + "_link");
+			decorationParams.append(", linkHtml : " + component.getClientId(context).replaceAll(":", "_") + "_link");
 			writer.endElement("script");
 		}
 
-		advisorParams.append("}");
+		decorationParams.append("}");
 		StringBuffer advisorScript = new StringBuffer();
-		advisorScript.append("Spring.advisors.push(new Spring.CommandLinkAdvisor(" + advisorParams.toString() + ")");
-		// Apply the advisor immediately if this is an AJAX request
-		if (JsfUtils.isAsynchronousFlowRequest()) {
-			advisorScript.append(".apply()");
-		}
-		advisorScript.append(");");
+		advisorScript.append("Spring.addDecoration(new Spring.CommandLinkDecoration(" + decorationParams.toString()
+				+ "));");
 		writer.startElement("script", component);
 		writer.writeText(advisorScript, null);
 		writer.endElement("script");

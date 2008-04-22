@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;

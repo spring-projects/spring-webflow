@@ -39,5 +39,6 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-sources-2.5.3.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-2.0.0.m2.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-sources-2.0.0.m2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/edu.emory.mathcs/backport-util-concurrent/backport-util-concurrent-3.0.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
