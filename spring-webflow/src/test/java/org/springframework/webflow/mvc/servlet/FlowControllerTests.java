@@ -165,8 +165,9 @@ public class FlowControllerTests extends TestCase {
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
-		assertEquals("true", response.getHeader("Flow-Modal-View"));
-		assertEquals("/springtravel/app/foo?execution=12345", response.getHeader("Flow-Redirect-URL"));
+		assertEquals("true", response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
+		assertEquals("/springtravel/app/foo?execution=12345", response
+				.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 
@@ -188,8 +189,9 @@ public class FlowControllerTests extends TestCase {
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
-		assertEquals(null, response.getHeader("Flow-Modal-View"));
-		assertEquals("/springtravel/app/foo?execution=12345", response.getHeader("Flow-Redirect-URL"));
+		assertEquals(null, response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
+		assertEquals("/springtravel/app/foo?execution=12345", response
+				.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 
