@@ -151,7 +151,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public boolean getRenderResponse() {
-		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
+		Boolean renderResponse = context.getRequestScope().getBoolean(RENDER_RESPONSE_KEY);
 		if (renderResponse == null) {
 			return false;
 		}
@@ -159,7 +159,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public boolean getResponseComplete() {
-		Boolean responseComplete = context.getFlashScope().getBoolean(RESPONSE_COMPLETE_KEY);
+		Boolean responseComplete = context.getRequestScope().getBoolean(RESPONSE_COMPLETE_KEY);
 		if (responseComplete == null) {
 			return false;
 		}
@@ -167,11 +167,11 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void renderResponse() {
-		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
+		context.getRequestScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
 	}
 
 	public void responseComplete() {
-		context.getFlashScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
+		context.getRequestScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
 	}
 
 	// ------------------ Pass-through delegate methods ----------------------//

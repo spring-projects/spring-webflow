@@ -65,51 +65,33 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	public View getView(RequestContext context) {
-
 		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {
-			if (!facesContext.getRenderResponse()) {
-				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
-			}
-
-			JsfView view;
-			String viewName = resolveViewName(context);
+			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-
 			if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
 				viewHandler.initView(facesContext);
 			}
-
-			if (viewExists(facesContext, viewName)) {
+			JsfView view;
+			String viewName = resolveViewName(context);
+			UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+			if (viewRoot != null) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Existing view root found for '" + viewName + "'");
+					logger.debug("View root restored for '" + viewName + "'");
 				}
-				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
+				view = createJsfView(viewRoot, lifecycle, context);
+				facesContext.setViewRoot(view.getViewRoot());
+				processComponentBinding(facesContext, view.getViewRoot());
 				view.setRestored(true);
 			} else {
-				UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
-				if (viewRoot != null) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("View root restored for '" + viewName + "'");
-					}
-					view = createJsfView(viewRoot, lifecycle, context);
-					facesContext.setViewRoot(view.getViewRoot());
-					processComponentBinding(facesContext, view.getViewRoot());
-					view.setRestored(true);
-				} else {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Creating view root for '" + viewName + "'");
-					}
-					view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
-					facesContext.setViewRoot(view.getViewRoot());
-					view.setRestored(true);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Creating view root for '" + viewName + "'");
 				}
+				view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
+				facesContext.setViewRoot(view.getViewRoot());
+				view.setRestored(true);
 			}
-
-			if (!facesContext.getRenderResponse()) {
-				JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
-			}
-
+			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			return view;
 		} finally {
 			facesContext.release();
@@ -125,6 +107,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {
+		// this is not that clean
 		if (context.getNativeContext() instanceof ServletContext) {
 			AjaxHandler handler = new SpringJavascriptAjaxHandler();
 			return handler.isAjaxRequest((ServletContext) context.getNativeContext(), (HttpServletRequest) context
@@ -152,22 +135,14 @@ public class JsfViewFactory implements ViewFactory {
 		}
 	}
 
-	private boolean viewExists(FacesContext facesContext, String viewId) {
-		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewId)) {
-			return true;
-		}
-		return false;
-	}
-
 	private void processComponentBinding(FacesContext context, UIComponent component) {
 		ValueBinding binding = component.getValueBinding("binding");
 		if (binding != null) {
 			binding.setValue(context, component);
 		}
-
-		Iterator i = component.getChildren().iterator();
-		while (i.hasNext()) {
-			UIComponent child = (UIComponent) i.next();
+		Iterator it = component.getChildren().iterator();
+		while (it.hasNext()) {
+			UIComponent child = (UIComponent) it.next();
 			processComponentBinding(context, child);
 		}
 	}

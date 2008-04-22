@@ -47,10 +47,15 @@ public class FlowViewHandler extends ViewHandler {
 		}
 	}
 
-	// ------------------- Pass-through delegate methods ------------------//
 	public Locale calculateLocale(FacesContext context) {
-		return delegate.calculateLocale(context);
+		if (JsfUtils.isFlowRequest()) {
+			return RequestContextHolder.getRequestContext().getExternalContext().getLocale();
+		} else {
+			return delegate.calculateLocale(context);
+		}
 	}
+
+	// ------------------- Pass-through delegate methods ------------------//
 
 	public String calculateRenderKitId(FacesContext context) {
 		return delegate.calculateRenderKitId(context);

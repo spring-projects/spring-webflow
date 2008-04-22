@@ -78,8 +78,8 @@ public class JsfFinalResponseActionTests extends TestCase {
 		ext.setNativeRequest(new MockHttpServletRequest());
 		ext.setNativeResponse(new MockHttpServletResponse());
 		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);
-		AttributeMap flash = new LocalAttributeMap();
-		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
+		AttributeMap requestMap = new LocalAttributeMap();
+		EasyMock.expect(context.getRequestScope()).andStubReturn(requestMap);
 		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
 	}
 

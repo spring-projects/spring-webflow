@@ -104,7 +104,6 @@ public class JsfView implements View {
 			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
 				facesLifecycle.execute(facesContext);
 				validateModel(facesContext);
-				facesContext.renderResponse();
 			}
 		} finally {
 			facesContext.release();

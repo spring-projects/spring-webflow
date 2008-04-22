@@ -49,7 +49,6 @@ public class FlowActionListener implements ActionListener {
 			delegate.processAction(actionEvent);
 			return;
 		}
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		ActionSource source = (ActionSource) actionEvent.getSource();
 		String result = null;
@@ -68,6 +67,5 @@ public class FlowActionListener implements ActionListener {
 			logger.debug("No action event detected");
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
 		}
-		context.renderResponse();
 	}
 }

@@ -1,7 +1,5 @@
 package org.springframework.faces.webflow;
 
-import org.easymock.EasyMock;
-
 import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
@@ -11,6 +9,7 @@ import javax.faces.event.ActionEvent;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
@@ -52,7 +51,6 @@ public class FlowActionListenerTests extends TestCase {
 				JsfView.EVENT_KEY));
 		assertEquals("The event should be " + outcome, outcome, jsfMock.externalContext().getRequestMap().get(
 				JsfView.EVENT_KEY));
-		assertTrue("Render response flag should be set", jsfMock.facesContext().getRenderResponse());
 	}
 
 	public final void testProcessAction_NullOutcome() {
@@ -67,7 +65,6 @@ public class FlowActionListenerTests extends TestCase {
 
 		assertFalse("An unexpected event was signaled", jsfMock.externalContext().getRequestMap().containsKey(
 				JsfView.EVENT_KEY));
-		assertTrue("Render response flag should be set", jsfMock.facesContext().getRenderResponse());
 	}
 
 	private class MethodBindingStub extends MethodBinding {
