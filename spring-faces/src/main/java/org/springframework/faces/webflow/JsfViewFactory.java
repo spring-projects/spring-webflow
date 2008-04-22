@@ -103,7 +103,7 @@ public class JsfViewFactory implements ViewFactory {
 					}
 					view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
 					facesContext.setViewRoot(view.getViewRoot());
-					view.setRestored(true);
+					view.setRestored(false);
 				}
 			}
 			if (!facesContext.getRenderResponse()) {

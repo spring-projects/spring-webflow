@@ -101,7 +101,7 @@ public class JsfView implements View {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		try {
-			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
+			if (restored && !facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 				facesLifecycle.execute(facesContext);
 				// TODO move this and renderResponse behavior into lifecycle
 				validateModel(facesContext);
