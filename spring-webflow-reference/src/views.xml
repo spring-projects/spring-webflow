@@ -220,9 +220,9 @@ public void validateEnterBookingDetails(MessageContext context) {
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
+@Component
 public class BookingValidator {
-    public void validateEnterBookingDetails(Object object, MessageContext context) {
-        Booking booking = (Booking) object;
+    public void validateEnterBookingDetails(Booking booking, MessageContext context) {
         if (booking.getCheckinDate().before(today())) {
             context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
                 "Check in date must be a future date").build());
@@ -280,8 +280,8 @@ public class BookingValidator {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <global-transitions>
-    <transition on="login"> to="login">
-    <transition on="logout"> to="logout">
+    <transition on="login" to="login">
+    <transition on="logout" to="logout">
 </global-transitions>]]>
 			</programlisting>
 		</sect2>		
@@ -301,12 +301,11 @@ public class BookingValidator {
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate")
-       .defaultText("Check in date must be a future date").build());
+    .defaultText("Check in date must be a future date").build());
 context.addMessage(builder.warn().source("smoking")
-       .defaultText("Smoking is bad for your health").build());
+    .defaultText("Smoking is bad for your health").build());
 context.addMessage(builder.info()
-       .defaultText("We have processed your reservation - thank you and enjoy your stay")
-       .build());]]>
+    .defaultText("We have processed your reservation - thank you and enjoy your stay").build());]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="plain-text-message-intl">
@@ -314,10 +313,9 @@ context.addMessage(builder.info()
 			<programlisting type="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
-context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture")
-       .build());
+context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());
 context.addMessage(builder.warn().source("smoking").code("notHealthy")
-       .resolvableArg("smoking").build());			
+    .resolvableArg("smoking").build());			
 context.addMessage(builder.info().code("reservationConfirmation").build());]]>
 			</programlisting>
 		</sect2>
