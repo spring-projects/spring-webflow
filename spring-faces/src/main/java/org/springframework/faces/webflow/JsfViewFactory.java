@@ -74,9 +74,9 @@ public class JsfViewFactory implements ViewFactory {
 			}
 			JsfView view;
 			String viewName = resolveViewName(context);
-			if (viewAlreadySet(facesContext, viewName)) {
+			if (viewAlreadySet(facesContext)) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Existing view root found for '" + viewName + "'");
+					logger.debug("Existing view root found with id '" + facesContext.getViewRoot().getId() + "'");
 				}
 				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
 				view.setRestored(true);
@@ -106,9 +106,9 @@ public class JsfViewFactory implements ViewFactory {
 		}
 	}
 
-	private boolean viewAlreadySet(FacesContext facesContext, String viewId) {
-		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewId)) {
-			// the corner case where a BEFORE_VIEW PhaseListener has handled setting the UIViewRoot
+	private boolean viewAlreadySet(FacesContext facesContext) {
+		if (facesContext.getViewRoot() != null && facesContext.getViewRoot() != null) {
+			// the corner case where a before RESTORE_VIEW PhaseListener has handled setting the UIViewRoot
 			return true;
 		} else {
 			return false;
