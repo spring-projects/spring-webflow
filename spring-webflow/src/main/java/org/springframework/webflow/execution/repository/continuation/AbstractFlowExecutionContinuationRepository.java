@@ -47,6 +47,14 @@ public abstract class AbstractFlowExecutionContinuationRepository extends Abstra
 	}
 
 	/**
+	 * Returns the configured flow execution snapshot factory.
+	 * @return the snapshot factory
+	 */
+	public FlowExecutionContinuationFactory getContinuationFactory() {
+		return continuationFactory;
+	}
+
+	/**
 	 * Take a new continuation snapshot.
 	 * @param flowExecution the execution to snapshot
 	 * @return the continuation snapshot

@@ -58,20 +58,10 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/**
-	 * The conversation service to delegate to for managing conversations initiated by this repository.
-	 */
 	private ConversationManager conversationManager;
 
-	/**
-	 * The flow execution state restorer for restoring transient execution state.
-	 */
 	private FlowExecutionStateRestorer executionStateRestorer;
 
-	/**
-	 * Flag to indicate whether or not a new flow execution key should always be generated before each put call. Default
-	 * is true.
-	 */
 	private boolean alwaysGenerateNewNextKey = true;
 
 	/**
@@ -87,7 +77,28 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	}
 
 	/**
-	 * Sets a flag indicating if a new {@link FlowExecutionKey} should always be generated before each put call. By
+	 * The conversation service to delegate to for managing conversations initiated by this repository.
+	 */
+	public ConversationManager getConversationManager() {
+		return conversationManager;
+	}
+
+	/**
+	 * The flow execution state restorer for restoring transient execution state.
+	 */
+	public FlowExecutionStateRestorer getExecutionStateRestorer() {
+		return executionStateRestorer;
+	}
+
+	/**
+	 * The flag indicating if a new {@link FlowExecutionKey} should always be generated before each put call.
+	 */
+	public boolean getAlwaysGenerateNewNextKey() {
+		return alwaysGenerateNewNextKey;
+	}
+
+	/**
+	 * Sets the flag indicating if a new {@link FlowExecutionKey} should always be generated before each put call. By
 	 * setting this to false a FlowExecution can remain identified by the same key throughout its life.
 	 */
 	public void setAlwaysGenerateNewNextKey(boolean alwaysGenerateNewNextKey) {
