@@ -311,7 +311,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	private MessageContext createMessageContext() {
 		StateManageableMessageContext messageContext = messageContextFactory.createMessageContext();
-		Serializable messagesMemento = (Serializable) getFlashScope().get("messagesMemento");
+		Serializable messagesMemento = (Serializable) getFlashScope().extract("messagesMemento");
 		if (messagesMemento != null) {
 			messageContext.restoreMessages(messagesMemento);
 		}
