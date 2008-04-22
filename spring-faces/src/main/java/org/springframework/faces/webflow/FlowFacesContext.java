@@ -50,12 +50,12 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * The key for storing the responseComplete flag
 	 */
-	static final String RESPONSE_COMPLETE_KEY = "webFlowResponseComplete";
+	static final String RESPONSE_COMPLETE_KEY = "flowResponseComplete";
 
 	/**
 	 * The key for storing the renderResponse flag
 	 */
-	static final String RENDER_RESPONSE_KEY = "webFlowRenderResponse";
+	static final String RENDER_RESPONSE_KEY = "flowRenderResponse";
 
 	/**
 	 * The key for storing the renderResponse flag
@@ -151,7 +151,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public boolean getRenderResponse() {
-		Boolean renderResponse = context.getRequestScope().getBoolean(RENDER_RESPONSE_KEY);
+		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
 		if (renderResponse == null) {
 			return false;
 		}
@@ -159,7 +159,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public boolean getResponseComplete() {
-		Boolean responseComplete = context.getRequestScope().getBoolean(RESPONSE_COMPLETE_KEY);
+		Boolean responseComplete = context.getFlashScope().getBoolean(RESPONSE_COMPLETE_KEY);
 		if (responseComplete == null) {
 			return false;
 		}
@@ -167,11 +167,11 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void renderResponse() {
-		context.getRequestScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
+		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
 	}
 
 	public void responseComplete() {
-		context.getRequestScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
+		context.getFlashScope().put(RESPONSE_COMPLETE_KEY, Boolean.TRUE);
 	}
 
 	// ------------------ Pass-through delegate methods ----------------------//

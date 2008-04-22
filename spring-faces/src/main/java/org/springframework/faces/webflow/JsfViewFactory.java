@@ -67,7 +67,9 @@ public class JsfViewFactory implements ViewFactory {
 	public View getView(RequestContext context) {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {
-			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			if (!facesContext.getRenderResponse()) {
+				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			}
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 			if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
 				viewHandler.initView(facesContext);
@@ -78,6 +80,9 @@ public class JsfViewFactory implements ViewFactory {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Existing view root found with id '" + facesContext.getViewRoot().getId() + "'");
 				}
+				UIViewRoot viewRoot = facesContext.getViewRoot();
+				viewRoot.setLocale(context.getExternalContext().getLocale());
+				processComponentBinding(facesContext, viewRoot);
 				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
 				view.setRestored(true);
 			} else {
@@ -99,7 +104,9 @@ public class JsfViewFactory implements ViewFactory {
 					view.setRestored(true);
 				}
 			}
-			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			if (!facesContext.getRenderResponse()) {
+				JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			}
 			return view;
 		} finally {
 			facesContext.release();
