@@ -35,6 +35,12 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	public int getFlowDefinitionCount();
 
 	/**
+	 * Returns the ids of the flows registered in this registry.
+	 * @return the flow definition ids
+	 */
+	public String[] getFlowDefinitionIds();
+
+	/**
 	 * Returns this registry'es parent registry.
 	 * @return the parent flow definition registry, or null if no parent is set
 	 */

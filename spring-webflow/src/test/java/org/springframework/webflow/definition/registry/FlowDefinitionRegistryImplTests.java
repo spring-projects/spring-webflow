@@ -52,6 +52,13 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		assertEquals(fooFlow, registry.getFlowDefinition("foo"));
 	}
 
+	public void testGetFlowIds() {
+		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
+		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(barFlow));
+		assertEquals("bar", registry.getFlowDefinitionIds()[0]);
+		assertEquals("foo", registry.getFlowDefinitionIds()[1]);
+	}
+
 	public void testRegisterFlowSameIds() {
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
 		FooFlow newFlow = new FooFlow();

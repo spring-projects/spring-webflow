@@ -72,6 +72,10 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 		return flowDefinitions.size();
 	}
 
+	public String[] getFlowDefinitionIds() {
+		return (String[]) flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
+	}
+
 	public FlowDefinitionRegistry getParent() {
 		return parent;
 	}
