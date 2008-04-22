@@ -21,6 +21,7 @@ import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.core.style.StylerUtils;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -955,5 +956,10 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 */
 	protected boolean validationEnabled(RequestContext context) {
 		return true;
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("formObjectName", formObjectName).append("formObjectClass",
+				formObjectClass).append("formObjectScope", formObjectScope).toString();
 	}
 }

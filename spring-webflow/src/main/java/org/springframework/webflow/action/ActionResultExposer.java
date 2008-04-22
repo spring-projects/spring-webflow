@@ -100,7 +100,7 @@ public class ActionResultExposer implements Serializable {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("resultExpression", resultExpression).append("expectedResultType",
-				expectedResultType).toString();
+		return new ToStringCreator(this).append("result", resultExpression).append("resultType", expectedResultType)
+				.toString();
 	}
 }

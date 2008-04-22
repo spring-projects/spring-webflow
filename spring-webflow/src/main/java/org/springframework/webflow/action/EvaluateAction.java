@@ -16,6 +16,7 @@
 package org.springframework.webflow.action;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.execution.Action;
@@ -81,5 +82,10 @@ public class EvaluateAction extends AbstractAction {
 			}
 			return resultEventFactorySelector.forResult(result).createResultEvent(this, result, context);
 		}
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("expression", expression).append("resultExposer",
+				evaluationResultExposer).toString();
 	}
 }

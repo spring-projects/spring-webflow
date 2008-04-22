@@ -17,6 +17,7 @@ package org.springframework.webflow.action;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -86,6 +87,11 @@ public class SetAction extends AbstractAction {
 		} else {
 			return conversionService.getConversionExecutor(value.getClass(), expectedType).execute(value);
 		}
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("name", nameExpression).append("value", valueExpression).append("type",
+				expectedType).toString();
 	}
 
 }

@@ -16,6 +16,7 @@
 package org.springframework.webflow.action;
 
 import org.springframework.binding.expression.Expression;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -55,4 +56,7 @@ public class RenderAction extends AbstractAction {
 		return success();
 	}
 
+	public String toString() {
+		return new ToStringCreator(this).append("fragments", fragmentExpressions).toString();
+	}
 }
