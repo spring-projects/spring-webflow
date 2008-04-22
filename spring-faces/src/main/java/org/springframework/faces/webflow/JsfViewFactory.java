@@ -74,27 +74,44 @@ public class JsfViewFactory implements ViewFactory {
 			}
 			JsfView view;
 			String viewName = resolveViewName(context);
-			UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
-			if (viewRoot != null) {
+			if (viewAlreadySet(facesContext, viewName)) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("View root restored for '" + viewName + "'");
+					logger.debug("Existing view root found for '" + viewName + "'");
 				}
-				view = createJsfView(viewRoot, lifecycle, context);
-				facesContext.setViewRoot(view.getViewRoot());
-				processComponentBinding(facesContext, view.getViewRoot());
+				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
 				view.setRestored(true);
 			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Creating view root for '" + viewName + "'");
+				UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+				if (viewRoot != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("View root restored for '" + viewName + "'");
+					}
+					view = createJsfView(viewRoot, lifecycle, context);
+					facesContext.setViewRoot(view.getViewRoot());
+					processComponentBinding(facesContext, view.getViewRoot());
+					view.setRestored(true);
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Creating view root for '" + viewName + "'");
+					}
+					view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
+					facesContext.setViewRoot(view.getViewRoot());
+					view.setRestored(true);
 				}
-				view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
-				facesContext.setViewRoot(view.getViewRoot());
-				view.setRestored(true);
 			}
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			return view;
 		} finally {
 			facesContext.release();
+		}
+	}
+
+	private boolean viewAlreadySet(FacesContext facesContext, String viewId) {
+		if (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewId)) {
+			// the corner case where a BEFORE_VIEW PhaseListener has handled setting the UIViewRoot
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -107,7 +124,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {
-		// this is not that clean
+		// this is not very clean
 		if (context.getNativeContext() instanceof ServletContext) {
 			AjaxHandler handler = new SpringJavascriptAjaxHandler();
 			return handler.isAjaxRequest((ServletContext) context.getNativeContext(), (HttpServletRequest) context

@@ -165,27 +165,27 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * Third party sets the view root before RESTORE_VIEW
 	 */
-	// public final void testGetView_ExternalViewRoot() {
-	//
-	// lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-	// factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-	// RequestContext.class).expectResult(String.class)), lifecycle);
-	//
-	// UIViewRoot newRoot = new UIViewRoot();
-	// newRoot.setViewId(VIEW_ID);
-	// jsfMock.facesContext().setViewRoot(newRoot);
-	// jsfMock.facesContext().renderResponse();
-	//
-	// EasyMock.replay(new Object[] { context });
-	//
-	// View newView = factory.getView(context);
-	//
-	// assertNotNull("A View was not created", newView);
-	// assertTrue("A JsfView was expected", newView instanceof JsfView);
-	// assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
-	// assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
-	// assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
-	// }
+	public final void testGetView_ExternalViewRoot() {
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), lifecycle);
+
+		UIViewRoot newRoot = new UIViewRoot();
+		newRoot.setViewId(VIEW_ID);
+		jsfMock.facesContext().setViewRoot(newRoot);
+		jsfMock.facesContext().renderResponse();
+
+		EasyMock.replay(new Object[] { context });
+
+		View newView = factory.getView(context);
+
+		assertNotNull("A View was not created", newView);
+		assertTrue("A JsfView was expected", newView instanceof JsfView);
+		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
+		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
+		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
+	}
+
 	private class NoExecutionLifecycle extends FlowLifecycle {
 
 		public NoExecutionLifecycle(Lifecycle delegate) {
