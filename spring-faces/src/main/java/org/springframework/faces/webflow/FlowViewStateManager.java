@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -31,19 +32,18 @@ public class FlowViewStateManager extends StateManager {
 
 	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);
 
-	private static final String SERIALIZED_VIEW_STATE = "org.springframework.webflow.viewState";
+	private static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
 
 	private StateManager delegate;
 
-	public FlowViewStateManager(StateManager original) {
-		this.delegate = original;
+	public FlowViewStateManager(StateManager delegate) {
+		this.delegate = delegate;
 	}
 
 	protected Object getComponentStateToSave(FacesContext context) {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.getComponentStateToSave(context);
 		}
-
 		UIViewRoot viewRoot = context.getViewRoot();
 		if (viewRoot.isTransient()) {
 			return null;
@@ -56,7 +56,6 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.getTreeStructureToSave(context);
 		}
-
 		UIViewRoot viewRoot = context.getViewRoot();
 		if (viewRoot.isTransient()) {
 			return null;
@@ -70,7 +69,6 @@ public class FlowViewStateManager extends StateManager {
 			super.restoreComponentState(context, viewRoot, renderKitId);
 			return;
 		}
-
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
 		viewRoot.processRestoreState(context, view.componentState);
@@ -81,11 +79,10 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.restoreTreeStructure(context, viewId, renderKitId);
 		}
-
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
 		if (view == null || !view.viewId.equals(viewId)) {
-			logger.debug("No matching view in flow scope;");
+			logger.debug("No matching view in view scope");
 			return null;
 		}
 		if (logger.isDebugEnabled()) {
@@ -96,7 +93,7 @@ public class FlowViewStateManager extends StateManager {
 			return null;
 		}
 		UIViewRoot viewRoot = new TreeStructureManager().restoreTreeStructure(view.treeStructure);
-		logger.debug("UIViewRoot structure restored.");
+		logger.debug("UIViewRoot structure restored");
 		return viewRoot;
 	}
 
@@ -105,7 +102,6 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			delegate.writeState(context, state);
 		}
-
 		// nothing to do, as saving state to client always returns false
 	}
 
@@ -124,7 +120,6 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveSerializedView(context);
 		}
-
 		SerializedView view = (SerializedView) saveView(context);
 		return new javax.faces.application.StateManager.SerializedView(view.treeStructure, view.componentState);
 	}
@@ -136,7 +131,6 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveView(context);
 		}
-
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
@@ -151,7 +145,6 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.restoreView(context, viewId, renderKitId);
 		}
-
 		UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
 		if (viewRoot != null) {
 			restoreComponentState(context, viewRoot, renderKitId);
@@ -160,8 +153,6 @@ public class FlowViewStateManager extends StateManager {
 	}
 
 	private static class SerializedView implements Serializable {
-		private static final Log logger = LogFactory.getLog(SerializedView.class);
-
 		private Object treeStructure;
 
 		private Object componentState;
@@ -172,6 +163,10 @@ public class FlowViewStateManager extends StateManager {
 			this.viewId = viewId;
 			this.treeStructure = treeStructure;
 			this.componentState = componentState;
+		}
+
+		public String toStringCreator() {
+			return new ToStringCreator(this).append("viewId", viewId).toString();
 		}
 	}
 
