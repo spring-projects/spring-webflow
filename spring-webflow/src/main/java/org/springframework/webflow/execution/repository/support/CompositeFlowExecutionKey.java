@@ -39,7 +39,7 @@ import org.springframework.webflow.execution.repository.continuation.FlowExecuti
  * 
  * @author Keith Donald
  */
-class CompositeFlowExecutionKey extends FlowExecutionKey {
+public class CompositeFlowExecutionKey extends FlowExecutionKey {
 
 	/**
 	 * The default conversation id prefix delimiter.
