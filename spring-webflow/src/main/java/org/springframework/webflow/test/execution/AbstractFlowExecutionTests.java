@@ -23,10 +23,10 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.impl.FlowExecutionImpl;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionFactory;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.test.MockExternalContext;
 
 /**
@@ -70,7 +70,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	/**
 	 * The outcome that was reached when the flow ends; initially null.
 	 */
-	private Event flowExecutionOutcome;
+	private FlowExecutionOutcome flowExecutionOutcome;
 
 	/**
 	 * Constructs a default flow execution test.
@@ -168,7 +168,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Returns the flow execution outcome that was reached.
 	 * @return the flow execution outcome, or null if the flow execution has not ended
 	 */
-	protected Event getFlowExecutionOutcome() {
+	protected FlowExecutionOutcome getFlowExecutionOutcome() {
 		return flowExecutionOutcome;
 	}
 

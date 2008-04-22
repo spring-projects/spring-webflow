@@ -20,7 +20,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
-import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 
@@ -132,12 +131,12 @@ public interface RequestControlContext extends RequestContext {
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
 	 * flows, such as end states. The <code>end()</code> method of the flow involved in the flow execution will be
 	 * called.
-	 * @param output output produced by the session that is eligible for mapping by a resuming parent flow
-	 * @return the ended session
+	 * @param outcome the logical outcome the ending session should return
+	 * @param output output the ending session should return
 	 * @throws IllegalStateException when the flow execution is not active
-	 * @see Flow#end(RequestControlContext, MutableAttributeMap)
+	 * @see Flow#end(RequestControlContext, String, MutableAttributeMap)
 	 */
-	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException;
+	public void endActiveFlowSession(String outcome, MutableAttributeMap output) throws IllegalStateException;
 
 	/**
 	 * Returns true if the 'always redirect pause' flow execution attribute is set to true, false otherwise.

@@ -84,10 +84,10 @@ public interface FlowExecutionContext {
 	public boolean hasEnded();
 
 	/**
-	 * Returns the ending outcome event of this execution, or null if this execution has not yet ended.
-	 * @return the outcome event
+	 * Returns the outcome reached by this execution, or null if this execution has not yet ended.
+	 * @return the outcome, or <code>null</code> if this execution has not yet ended
 	 */
-	public Event getOutcome();
+	public FlowExecutionOutcome getOutcome();
 
 	/**
 	 * Returns the active flow session of this flow execution. The active flow session is the currently executing

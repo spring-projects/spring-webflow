@@ -20,9 +20,9 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.FlowSession;
 
 /**
@@ -33,6 +33,8 @@ import org.springframework.webflow.execution.FlowSession;
  * @author Keith Donald
  */
 public class MockFlowExecutionContext implements FlowExecutionContext {
+
+	private boolean started;
 
 	private FlowExecutionKey key;
 
@@ -46,14 +48,14 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 
 	private MutableAttributeMap attributes = new LocalAttributeMap();
 
-	private Event outcome;
+	private FlowExecutionOutcome outcome;
 
 	/**
 	 * Creates a new mock flow execution context -- automatically installs a root flow definition and active flow
 	 * session.
 	 */
 	public MockFlowExecutionContext() {
-		activeSession = new MockFlowSession();
+		setActiveSession(new MockFlowSession());
 		this.flow = activeSession.getDefinition();
 	}
 
@@ -68,8 +70,8 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	 * Creates a new mock flow execution context for the specified active flow session.
 	 */
 	public MockFlowExecutionContext(FlowSession flowSession) {
+		setActiveSession(flowSession);
 		this.flow = flowSession.getDefinition();
-		this.activeSession = flowSession;
 	}
 
 	public FlowExecutionKey getKey() {
@@ -87,7 +89,7 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	}
 
 	public boolean hasStarted() {
-		return isActive();
+		return started;
 	}
 
 	public boolean isActive() {
@@ -117,7 +119,7 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 		return attributes;
 	}
 
-	public Event getOutcome() {
+	public FlowExecutionOutcome getOutcome() {
 		return outcome;
 	}
 
@@ -148,6 +150,9 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	 */
 	public void setActiveSession(FlowSession activeSession) {
 		this.activeSession = activeSession;
+		if (!started && activeSession != null) {
+			started = true;
+		}
 	}
 
 	/**
@@ -166,9 +171,9 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 
 	/**
 	 * Sets the result of this flow ending.
-	 * @param outcome the ending outcome event.
+	 * @param outcome the ended outcome
 	 */
-	public void setOutcome(Event outcome) {
+	public void setOutcome(FlowExecutionOutcome outcome) {
 		this.outcome = outcome;
 	}
 

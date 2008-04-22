@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
  * Trivial flow handler base class that simply returns null for all operations. Subclasses should extend and override
@@ -38,7 +38,7 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+	public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 			HttpServletResponse response) {
 		return null;
 	}

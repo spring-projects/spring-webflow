@@ -131,7 +131,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		}
 	}
 
-	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
 		if (isPersistenceContext(session.getDefinition())) {
 			final Session hibernateSession = (Session) session.getScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");

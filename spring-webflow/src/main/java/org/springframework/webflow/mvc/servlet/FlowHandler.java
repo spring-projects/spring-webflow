@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
  * A controller helper used for customizing access to a <i>single</i> flow definition. This helper is used to:
@@ -59,13 +59,12 @@ public interface FlowHandler {
 	 * to the current servlet path.
 	 * 
 	 * @param outcome the outcome that was reached
-	 * @param output the output returned by the flow execution
 	 * @param request the current request
 	 * @param response the current response
 	 * @return the location of the new resource to redirect to, or null if the execution outcome was not handled and
 	 * should be handled by the caller
 	 */
-	public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+	public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 			HttpServletResponse response);
 
 	/**

@@ -46,6 +46,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -134,9 +135,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	private String flowId;
 
 	/**
-	 * The flow execution outcome event.
+	 * The outcome reached by this flow execution when it ends.
 	 */
-	private transient Event outcome;
+	private transient FlowExecutionOutcome outcome;
 
 	/**
 	 * Default constructor required for externalizable serialization. Should NOT be called programmatically.
@@ -195,7 +196,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return hasStarted() && !isActive();
 	}
 
-	public Event getOutcome() {
+	public FlowExecutionOutcome getOutcome() {
 		return outcome;
 	}
 
@@ -383,16 +384,23 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return transition.execute(getCurrentState(), context);
 	}
 
-	FlowSession endActiveFlowSession(MutableAttributeMap output, RequestControlContext context) {
+	void endActiveFlowSession(String outcome, MutableAttributeMap output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
-		listeners.fireSessionEnding(context, session, output);
-		session.getFlow().end(context, output);
+		listeners.fireSessionEnding(context, session, outcome, output);
+		session.getFlow().end(context, outcome, output);
 		flowSessions.removeLast();
-		listeners.fireSessionEnded(context, session, output);
-		if (hasEnded()) {
-			outcome = new Event(this, session.getState().getId(), output);
+		boolean executionEnded = hasEnded();
+		if (executionEnded) {
+			// set the root flow execution outcome for external clients to use
+			this.outcome = new FlowExecutionOutcome(outcome, output);
 		}
-		return session;
+		listeners.fireSessionEnded(context, session, outcome, output);
+		if (!executionEnded) {
+			// restore any variables that may have transient references
+			getActiveSessionInternal().getFlow().restoreVariables(context);
+			// treat the outcome as an event against the current state of the new active flow
+			context.handleEvent(new Event(session.getState(), outcome, output));
+		}
 	}
 
 	FlowExecutionKey assignKey() {

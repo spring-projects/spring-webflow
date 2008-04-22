@@ -35,9 +35,9 @@ import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.test.MockExternalContext;
@@ -137,14 +137,14 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		map.put("number", "3");
 		map.put("required", "9");
 		execution.start(map, context);
-		Event outcome = execution.getOutcome();
+		FlowExecutionOutcome outcome = execution.getOutcome();
 		assertEquals("end", outcome.getId());
-		assertEquals("bar", outcome.getAttributes().get("foo"));
-		assertEquals("bar", outcome.getAttributes().get("differentName"));
-		assertEquals(new Integer(3), outcome.getAttributes().get("number"));
-		assertEquals(new Integer(3), outcome.getAttributes().get("required"));
-		assertEquals("a literal", outcome.getAttributes().get("literal"));
-		assertNull(outcome.getAttributes().get("notReached"));
+		assertEquals("bar", outcome.getOutput().get("foo"));
+		assertEquals("bar", outcome.getOutput().get("differentName"));
+		assertEquals(new Integer(3), outcome.getOutput().get("number"));
+		assertEquals(new Integer(3), outcome.getOutput().get("required"));
+		assertEquals("a literal", outcome.getOutput().get("literal"));
+		assertNull(outcome.getOutput().get("notReached"));
 	}
 
 	public void testFlowRequiredInputMapping() {

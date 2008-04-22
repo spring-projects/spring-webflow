@@ -20,10 +20,9 @@ import org.springframework.web.portlet.ModelAndView;
 import org.springframework.webflow.context.portlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
@@ -85,8 +84,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 				}
 			}
 
-			public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request,
-					RenderResponse response) {
+			public String handleFlowOutcome(FlowExecutionOutcome outcome, RenderRequest request, RenderResponse response) {
 				if (handleExecutionOutcome) {
 					return "home";
 				} else {
@@ -174,7 +172,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		renderRequest.setContextPath("/springtravel");
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		Event outcome = new Event(this, "finish", output);
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		PortletSession session = renderRequest.getPortletSession();
 		session.setAttribute("flowExecutionResult", result);

@@ -24,7 +24,6 @@ import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
-import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.View;
 
 /**
@@ -113,11 +112,13 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		flow.start(this, input);
 	}
 
-	public FlowSession endActiveFlowSession(MutableAttributeMap output) throws IllegalStateException {
+	public void endActiveFlowSession(String outcome, MutableAttributeMap output) throws IllegalStateException {
 		MockFlowSession endingSession = getMockFlowExecutionContext().getMockActiveSession();
-		endingSession.getDefinitionInternal().end(this, output);
+		endingSession.getDefinitionInternal().end(this, outcome, output);
 		getMockFlowExecutionContext().setActiveSession(endingSession.getParent());
-		return endingSession;
+		if (!getMockFlowExecutionContext().hasEnded()) {
+			handleEvent(new Event(endingSession.getState(), outcome, output));
+		}
 	}
 
 	public boolean getAlwaysRedirectOnPause() {

@@ -8,10 +8,10 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.test.GeneratedFlowExecutionKey;
@@ -65,8 +65,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertTrue(result.paused());
 		assertEquals("12345", result.getPausedKey());
 		assertFalse(result.ended());
-		assertNull(result.getEndedOutcome());
-		assertNull(result.getEndedOutput());
+		assertNull(result.getOutcome());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 	}
@@ -86,14 +85,14 @@ public class FlowExecutorImplTests extends TestCase {
 
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");
-		EasyMock.expect(execution.getOutcome()).andReturn(new Event(execution, "finish", null));
+		EasyMock.expect(execution.getOutcome()).andReturn(new FlowExecutionOutcome("finish", null));
 
 		replayMocks();
 
 		FlowExecutionResult result = flowExecutor.launchExecution("foo", null, context);
 		assertTrue(result.ended());
-		assertEquals("finish", result.getEndedOutcome());
-		assertTrue(result.getEndedOutput().isEmpty());
+		assertEquals("finish", result.getOutcome().getId());
+		assertTrue(result.getOutcome().getOutput().isEmpty());
 		assertFalse(result.paused());
 		assertNull(result.getPausedKey());
 		assertNull(ExternalContextHolder.getExternalContext());
@@ -131,8 +130,7 @@ public class FlowExecutorImplTests extends TestCase {
 		assertTrue(result.paused());
 		assertEquals("12345", result.getPausedKey());
 		assertFalse(result.ended());
-		assertNull(result.getEndedOutcome());
-		assertNull(result.getEndedOutput());
+		assertNull(result.getOutcome());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
 
@@ -159,7 +157,7 @@ public class FlowExecutorImplTests extends TestCase {
 
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("foo", "bar");
-		EasyMock.expect(execution.getOutcome()).andReturn(new Event(execution, "finish", output));
+		EasyMock.expect(execution.getOutcome()).andReturn(new FlowExecutionOutcome("finish", output));
 
 		repository.removeFlowExecution(execution);
 
@@ -169,8 +167,8 @@ public class FlowExecutorImplTests extends TestCase {
 
 		FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
 		assertTrue(result.ended());
-		assertEquals("finish", result.getEndedOutcome());
-		assertEquals(output, result.getEndedOutput());
+		assertEquals("finish", result.getOutcome().getId());
+		assertEquals(output, result.getOutcome().getOutput());
 		assertFalse(result.paused());
 		assertNull(result.getPausedKey());
 		assertNull(ExternalContextHolder.getExternalContext());

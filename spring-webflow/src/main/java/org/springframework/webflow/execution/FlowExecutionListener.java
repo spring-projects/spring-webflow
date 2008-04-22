@@ -153,19 +153,21 @@ public interface FlowExecutionListener {
 	 * Called when the active flow execution session has been asked to end but before it has ended.
 	 * @param context the current flow request context
 	 * @param session the current active session that is ending
+	 * @param outcome the outcome reached by the ending session, generally the id of the terminating end-state
 	 * @param output the flow output produced by the ending session, this map may be modified by this listener to affect
 	 * the output returned
 	 */
-	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output);
+	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output);
 
 	/**
 	 * Called when a flow execution session ends. If the ended session was the root session of the flow execution, the
 	 * entire flow execution also ends.
 	 * @param context the current flow request context
 	 * @param session ending flow session
-	 * @param output final, unmodifiable output returned by the ended session
+	 * @param outcome the outcome reached by the ended session, generally the id of the terminating end-state
+	 * @param output the flow output returned by the ending session
 	 */
-	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output);
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output);
 
 	/**
 	 * Called when an exception is thrown during a flow execution, before the exception is handled by any registered

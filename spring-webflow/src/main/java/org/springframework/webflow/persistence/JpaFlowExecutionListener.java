@@ -119,7 +119,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 	}
 
-	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
 		if (isPersistenceContext(session.getDefinition())) {
 			final EntityManager em = (EntityManager) session.getScope().remove(ENTITY_MANAGER_ATTRIBUTE);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");

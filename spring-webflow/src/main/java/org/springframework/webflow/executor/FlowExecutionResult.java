@@ -15,8 +15,7 @@
  */
 package org.springframework.webflow.executor;
 
-import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
  * A value object providing information about the result of a flow execution request.
@@ -29,15 +28,12 @@ public class FlowExecutionResult {
 
 	private String flowExecutionKey;
 
-	private String outcome;
+	private FlowExecutionOutcome outcome;
 
-	private AttributeMap output;
-
-	private FlowExecutionResult(String flowId, String flowExecutionKey, String outcome, AttributeMap output) {
+	private FlowExecutionResult(String flowId, String flowExecutionKey, FlowExecutionOutcome outcome) {
 		this.flowId = flowId;
 		this.flowExecutionKey = flowExecutionKey;
 		this.outcome = outcome;
-		this.output = output;
 	}
 
 	/**
@@ -48,7 +44,7 @@ public class FlowExecutionResult {
 	 * @return the result
 	 */
 	public static FlowExecutionResult createPausedResult(String flowId, String flowExecutionKey) {
-		return new FlowExecutionResult(flowId, flowExecutionKey, null, null);
+		return new FlowExecutionResult(flowId, flowExecutionKey, null);
 	}
 
 	/**
@@ -57,8 +53,8 @@ public class FlowExecutionResult {
 	 * @param outcome the ending execution outcome
 	 * @return the result
 	 */
-	public static FlowExecutionResult createEndedResult(String flowId, Event outcome) {
-		return new FlowExecutionResult(flowId, null, outcome.getId(), outcome.getAttributes());
+	public static FlowExecutionResult createEndedResult(String flowId, FlowExecutionOutcome outcome) {
+		return new FlowExecutionResult(flowId, null, outcome);
 	}
 
 	/**
@@ -95,21 +91,12 @@ public class FlowExecutionResult {
 	}
 
 	/**
-	 * Returns the flow execution outcome when ab ended result.
+	 * Returns the flow execution outcome when an ended result.
 	 * @see #ended()
-	 * @return the ended outcome
+	 * @return the ended outcome, or <code>null</code> if this is not an ended result
 	 */
-	public String getEndedOutcome() {
+	public FlowExecutionOutcome getOutcome() {
 		return outcome;
-	}
-
-	/**
-	 * Returns the output returned from the flow execution when an ended result.
-	 * @see #ended()
-	 * @return the ended output
-	 */
-	public AttributeMap getEndedOutput() {
-		return output;
 	}
 
 }

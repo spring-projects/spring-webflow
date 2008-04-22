@@ -35,6 +35,7 @@ import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
@@ -159,14 +160,14 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		return inputMap;
 	}
 
-	protected ModelAndView defaultHandleFlowOutcome(String flowId, String outcome, AttributeMap endedOutput,
+	protected ModelAndView defaultHandleFlowOutcome(String flowId, FlowExecutionOutcome outcome,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (!response.isCommitted()) {
 			// by default, just start the flow over passing the output as input
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
 			}
-			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, endedOutput, request));
+			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
 		}
 		return null;
 	}
@@ -225,10 +226,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				sendRedirect(context, request, response, context.getExternalRedirectUrl());
 				return null;
 			} else {
-				String location = handler.handleExecutionOutcome(result.getEndedOutcome(), result.getEndedOutput(),
-						request, response);
+				String location = handler.handleExecutionOutcome(result.getOutcome(), request, response);
 				return location != null ? createRedirectView(location, request) : defaultHandleFlowOutcome(result
-						.getFlowId(), result.getEndedOutcome(), result.getEndedOutput(), request, response);
+						.getFlowId(), result.getOutcome(), request, response);
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");

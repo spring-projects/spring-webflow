@@ -16,10 +16,9 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
@@ -77,7 +76,7 @@ public class FlowControllerTests extends TestCase {
 		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		Event outcome = new Event(this, "finish", output);
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -117,7 +116,7 @@ public class FlowControllerTests extends TestCase {
 		executor.resumeExecution("12345", context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		Event outcome = new Event(this, "finish", output);
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -207,7 +206,7 @@ public class FlowControllerTests extends TestCase {
 		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		Event outcome = new Event(this, "finish", output);
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -289,7 +288,7 @@ public class FlowControllerTests extends TestCase {
 				return input;
 			}
 
-			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 					HttpServletResponse response) {
 				return null;
 			}
@@ -324,10 +323,10 @@ public class FlowControllerTests extends TestCase {
 				return input;
 			}
 
-			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 					HttpServletResponse response) {
-				assertEquals("finish", outcome);
-				assertEquals("baz", output.get("bar"));
+				assertEquals("finish", outcome.getId());
+				assertEquals("baz", outcome.getOutput().get("bar"));
 				assertEquals(FlowControllerTests.this.request, request);
 				assertEquals(FlowControllerTests.this.response, response);
 				return null;
@@ -345,7 +344,7 @@ public class FlowControllerTests extends TestCase {
 		executor.launchExecution("foo", input, context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		Event outcome = new Event(this, "finish", output);
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -368,7 +367,7 @@ public class FlowControllerTests extends TestCase {
 				return null;
 			}
 
-			public String handleExecutionOutcome(String outcome, AttributeMap output, HttpServletRequest request,
+			public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 					HttpServletResponse response) {
 				return null;
 			}

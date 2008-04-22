@@ -34,9 +34,9 @@ import org.springframework.webflow.context.portlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.portlet.FlowUrlHandler;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
@@ -88,10 +88,8 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 						.getAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE);
 				if (result != null) {
 					session.removeAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE);
-					String outcome = result.getEndedOutcome();
-					AttributeMap output = result.getEndedOutput();
-					String flowId = flowHandler.handleFlowOutcome(outcome, output, request, response);
-					return defaultHandleFlowOutcome(flowHandler, outcome, output, flowId, request, response);
+					String flowId = flowHandler.handleFlowOutcome(result.getOutcome(), request, response);
+					return defaultHandleFlowOutcome(flowHandler, result.getOutcome(), flowId, request, response);
 				} else {
 					return startFlow(request, response, flowHandler);
 				}
@@ -145,7 +143,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		return inputMap;
 	}
 
-	protected ModelAndView defaultHandleFlowOutcome(FlowHandler flowHandler, String outcome, AttributeMap output,
+	protected ModelAndView defaultHandleFlowOutcome(FlowHandler flowHandler, FlowExecutionOutcome outcome,
 			String nextFlowId, RenderRequest request, RenderResponse response) throws IOException {
 		if (nextFlowId == null) {
 			nextFlowId = flowHandler.getFlowId();
@@ -154,7 +152,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 			logger.debug("Starting a new execution of flow '" + nextFlowId + "'");
 		}
 		PortletExternalContext context = createPortletExternalContext(request, response);
-		flowExecutor.launchExecution(nextFlowId, new LocalAttributeMap(output.asMap()), context);
+		flowExecutor.launchExecution(nextFlowId, new LocalAttributeMap(outcome.getOutput().asMap()), context);
 		return null;
 	}
 

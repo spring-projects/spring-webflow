@@ -21,8 +21,8 @@ import javax.portlet.RenderResponse;
 
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
  * Trivial flow handler base class that simply returns null for all operations. Subclasses should extend and override
@@ -44,7 +44,7 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request, RenderResponse response) {
+	public String handleFlowOutcome(FlowExecutionOutcome outcome, RenderRequest request, RenderResponse response) {
 		return null;
 	}
 

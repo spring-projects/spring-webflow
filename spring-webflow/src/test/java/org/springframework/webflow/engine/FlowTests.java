@@ -144,6 +144,14 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	public void testGetPossibleOutcomes() {
+		Flow flow = new Flow("myFlow");
+		new EndState(flow, "myState1");
+		new EndState(flow, "myState2");
+		assertEquals("myState1", flow.getPossibleOutcomes()[0]);
+		assertEquals("myState2", flow.getPossibleOutcomes()[1]);
+	}
+
 	public void testAddActions() {
 		flow.getStartActionList().add(new TestMultiAction());
 		flow.getStartActionList().add(new TestMultiAction());
@@ -299,7 +307,7 @@ public class FlowTests extends TestCase {
 		flow.getEndActionList().add(action);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		LocalAttributeMap sessionOutput = new LocalAttributeMap();
-		flow.end(context, sessionOutput);
+		flow.end(context, "finish", sessionOutput);
 		assertEquals(1, action.getExecutionCount());
 	}
 
@@ -314,7 +322,7 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlowScope().put("attr", "foo");
 		LocalAttributeMap sessionOutput = new LocalAttributeMap();
-		flow.end(context, sessionOutput);
+		flow.end(context, "finish", sessionOutput);
 		assertEquals("foo", sessionOutput.get("attr"));
 	}
 

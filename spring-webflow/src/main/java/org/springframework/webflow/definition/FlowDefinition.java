@@ -64,6 +64,12 @@ public interface FlowDefinition extends Annotated {
 	public StateDefinition getState(String id) throws IllegalArgumentException;
 
 	/**
+	 * Returns the outcomes that are possible for this flow to reach.
+	 * @return the possible outcomes
+	 */
+	public String[] getPossibleOutcomes();
+
+	/**
 	 * Returns a reference to application context hosting application objects and services needed by this flow
 	 * definition.
 	 */

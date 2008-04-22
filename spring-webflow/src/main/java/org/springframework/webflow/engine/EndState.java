@@ -20,7 +20,6 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
@@ -99,12 +98,11 @@ public class EndState extends State {
 			if (finalResponseAction != null && context.getExternalContext().isResponseAllowed()) {
 				ActionExecutor.execute(finalResponseAction, context);
 			}
-			context.endActiveFlowSession(createSessionOutput(context));
+			context.endActiveFlowSession(getId(), createSessionOutput(context));
 		} else {
 			// there is a parent flow that will resume (this flow is a subflow)
 			LocalAttributeMap sessionOutput = createSessionOutput(context);
-			context.endActiveFlowSession(sessionOutput);
-			context.handleEvent(new Event(this, getId(), sessionOutput));
+			context.endActiveFlowSession(getId(), sessionOutput);
 		}
 	}
 

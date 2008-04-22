@@ -21,8 +21,8 @@ import javax.portlet.RenderResponse;
 
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
  * A controller helper used for customizing access to a <i>single</i> flow definition. This helper is used to:
@@ -55,13 +55,12 @@ public interface FlowHandler {
 	/**
 	 * Handles a specific flow execution outcome. Used to select a new view to render after the flow ends.
 	 * @param outcome the outcome that was reached
-	 * @param output the output returned by the flow execution
 	 * @param request the current render request
 	 * @param response the current render response
 	 * @return the id of the flow to start after handling the outcome, or null if the outcome should be handled by the
 	 * caller
 	 */
-	public String handleFlowOutcome(String outcome, AttributeMap output, RenderRequest request, RenderResponse response);
+	public String handleFlowOutcome(FlowExecutionOutcome outcome, RenderRequest request, RenderResponse response);
 
 	/**
 	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific

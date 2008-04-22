@@ -15,9 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,16 +78,17 @@ import org.springframework.webflow.execution.RequestContext;
  * implementations but may also be directly instantiated.
  * <p>
  * This class and the rest of the Spring Web Flow (SWF) engine have been designed with minimal dependencies on other
- * libraries. Spring Web Flow is usable in a standalone fashion (as well as in the context of other frameworks like
- * Spring MVC, Struts, or JSF, for example). The engine system is fully usable outside an HTTP servlet environment, for
- * example in portlets, tests, or standalone applications. One of the major architectural benefits of Spring Web Flow is
- * the ability to design reusable, high-level controller modules that may be executed in <i>any</i> environment.
+ * libraries. Spring Web Flow is usable in a standalone fashion. The engine system is fully usable outside an HTTP
+ * servlet environment, for example in portlets, tests, or standalone applications. One of the major architectural
+ * benefits of Spring Web Flow is the ability to design reusable, high-level controller modules that may be executed in
+ * <i>any</i> environment.
  * <p>
  * Note: flows are singleton definition objects so they should be thread-safe. You can think a flow definition as
  * analogous to a Java class, defining all the behavior of an application module. The core behaviors
  * {@link #start(RequestControlContext, MutableAttributeMap) start}, {@link #resume(RequestControlContext)},
- * {@link #handleEvent(RequestControlContext) on event}, {@link #end(RequestControlContext, MutableAttributeMap) end},
- * and {@link #handleException(FlowExecutionException, RequestControlContext)}. Each method accepts a
+ * {@link #handleEvent(RequestControlContext) on event},
+ * {@link #end(RequestControlContext, String, MutableAttributeMap) end}, and
+ * {@link #handleException(FlowExecutionException, RequestControlContext)}. Each method accepts a
  * {@link RequestContext request context} that allows for this flow to access execution state in a thread safe manner. A
  * flow execution is what models a running instance of this flow definition, somewhat analogous to a java object that is
  * an instance of a class.
@@ -208,6 +211,17 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 
 	public StateDefinition getState(String stateId) {
 		return getStateInstance(stateId);
+	}
+
+	public String[] getPossibleOutcomes() {
+		List possibleOutcomes = new ArrayList();
+		for (Iterator it = states.iterator(); it.hasNext();) {
+			State state = (State) it.next();
+			if (state instanceof EndState) {
+				possibleOutcomes.add(state.getId());
+			}
+		}
+		return (String[]) possibleOutcomes.toArray(new String[possibleOutcomes.size()]);
 	}
 
 	public ApplicationContext getApplicationContext() {
@@ -541,10 +555,13 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * mapper ({@link #setOutputMapper(Mapper)}).</li>
 	 * </ol>
 	 * @param context the flow execution control context
+	 * @param outcome the logical flow outcome that will be returned by the session, generally the id of the terminating
+	 * end state
 	 * @param output initial output produced by the session that is eligible for modification by this method
 	 * @throws FlowExecutionException when an exception occurs ending this flow
 	 */
-	public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
+	public void end(RequestControlContext context, String outcome, MutableAttributeMap output)
+			throws FlowExecutionException {
 		endActionList.execute(context);
 		if (outputMapper != null) {
 			MappingResults results = outputMapper.map(context, output);
@@ -584,7 +601,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		}
 	}
 
-	private void restoreVariables(RequestContext context) {
+	public void restoreVariables(RequestContext context) {
 		Iterator it = variables.values().iterator();
 		while (it.hasNext()) {
 			FlowVariable variable = (FlowVariable) it.next();

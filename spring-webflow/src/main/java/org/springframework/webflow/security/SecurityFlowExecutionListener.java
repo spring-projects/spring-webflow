@@ -42,11 +42,24 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-	AccessDecisionManager accessDecisionManager;
+	private AccessDecisionManager accessDecisionManager;
 
 	/**
-	 * Check security authorization when flow session starts
+	 * Get the access decision manager that makes flow authorization decisions.
+	 * @return the decision manager
 	 */
+	public AccessDecisionManager getAccessDecisionManager() {
+		return accessDecisionManager;
+	}
+
+	/**
+	 * Set the access decision manager that makes flow authorization decisions.
+	 * @param accessDecisionManager the decision manager to user
+	 */
+	public void setAccessDecisionManager(AccessDecisionManager accessDecisionManager) {
+		this.accessDecisionManager = accessDecisionManager;
+	}
+
 	public void sessionCreating(RequestContext context, FlowDefinition definition) {
 		SecurityRule rule = (SecurityRule) definition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
@@ -54,9 +67,6 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 		}
 	}
 
-	/**
-	 * Check security authorization when entering state
-	 */
 	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
 		SecurityRule rule = (SecurityRule) state.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
@@ -64,9 +74,6 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 		}
 	}
 
-	/**
-	 * Check security authorization on transition
-	 */
 	public void transitionExecuting(RequestContext context, TransitionDefinition transition) {
 		SecurityRule rule = (SecurityRule) transition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		if (rule != null) {
@@ -81,7 +88,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * @param rule the rule to base the decision
 	 * @param object the execution listener phase
 	 */
-	public void decide(SecurityRule rule, Object object) {
+	protected void decide(SecurityRule rule, Object object) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ConfigAttributeDefinition config = new ConfigAttributeDefinition(getConfigAttributes(rule));
 		if (accessDecisionManager != null) {
@@ -115,21 +122,4 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 		}
 		return configAttributes;
 	}
-
-	/**
-	 * Get decision manager
-	 * @return the decision manager
-	 */
-	public AccessDecisionManager getAccessDecisionManager() {
-		return accessDecisionManager;
-	}
-
-	/**
-	 * Set decision manager
-	 * @param accessDecisionManager the decision manager to user
-	 */
-	public void setAccessDecisionManager(AccessDecisionManager accessDecisionManager) {
-		this.accessDecisionManager = accessDecisionManager;
-	}
-
 }
