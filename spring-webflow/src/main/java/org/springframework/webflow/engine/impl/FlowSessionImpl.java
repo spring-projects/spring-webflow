@@ -40,7 +40,7 @@ import org.springframework.webflow.execution.FlowSession;
  */
 class FlowSessionImpl implements FlowSession, Externalizable {
 
-	private static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
+	private static final String VIEW_SCOPE_ATTRIBUTE = "viewScope";
 
 	/**
 	 * The flow definition (a singleton).
@@ -116,7 +116,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '" + flow.getId()
 					+ "' is not a view state - view scope not accessible");
 		}
-		return (MutableAttributeMap) scope.get(FLOW_VIEW_MAP_ATTRIBUTE);
+		return (MutableAttributeMap) scope.get(VIEW_SCOPE_ATTRIBUTE);
 	}
 
 	public FlowSession getParent() {
@@ -206,14 +206,14 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Initialize the view scope data structure.
 	 */
 	private void initViewScope() {
-		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+		scope.put(VIEW_SCOPE_ATTRIBUTE, new LocalAttributeMap());
 	}
 
 	/**
 	 * Destroy the view scope data structure.
 	 */
 	private void destroyViewScope() {
-		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
+		scope.remove(VIEW_SCOPE_ATTRIBUTE);
 	}
 
 	public String toString() {

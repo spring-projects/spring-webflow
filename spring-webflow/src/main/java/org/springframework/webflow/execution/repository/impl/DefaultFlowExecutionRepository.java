@@ -116,10 +116,16 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		if (logger.isDebugEnabled()) {
 			logger.debug("Getting flow execution with key '" + key + "'");
 		}
-		FlowExecutionContinuation continuation = getContinuation(key);
+		Conversation conversation = getConversation(key);
+		FlowExecutionContinuation snapshot;
 		try {
-			FlowExecution execution = continuation.unmarshal();
-			return restoreTransientState(execution, key);
+			snapshot = getContinuationGroup(conversation).get(getContinuationId(key));
+		} catch (ContinuationNotFoundException e) {
+			throw new FlowExecutionRestorationFailureException(key, e);
+		}
+		try {
+			FlowExecution execution = snapshot.unmarshal();
+			return restoreTransientState(execution, key, conversation);
 		} catch (ContinuationUnmarshalException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
@@ -131,29 +137,33 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 			logger.debug("Putting flow execution '" + flowExecution + "' into repository");
 		}
 		FlowExecutionKey key = flowExecution.getKey();
-		FlowExecutionContinuationGroup continuationGroup = getContinuationGroup(key);
-		FlowExecutionContinuation continuation = snapshot(flowExecution);
+		Conversation conversation = getConversation(key);
+		FlowExecutionContinuationGroup continuationGroup = getContinuationGroup(conversation);
+		FlowExecutionContinuation snapshot = snapshot(flowExecution);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding new continuation to group with id " + getContinuationId(key));
+			logger.debug("Adding new snapshot to group with id " + getContinuationId(key));
 		}
-		continuationGroup.add(getContinuationId(key), continuation);
-		putConversationScope(flowExecution);
+		continuationGroup.add(getContinuationId(key), snapshot);
+		putConversationScope(flowExecution, conversation);
 	}
 
 	// implementing flow execution key factory
 
 	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
-		getContinuationGroup(execution.getKey()).removeAllContinuations();
+		Conversation conversation = getConversation(execution.getKey());
+		getContinuationGroup(conversation).removeAllContinuations();
 	}
 
 	public void removeFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
-		getContinuationGroup(key).removeContinuation(getContinuationId(key));
+		Conversation conversation = getConversation(key);
+		getContinuationGroup(conversation).removeContinuation(getContinuationId(key));
 	}
 
 	public void updateFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
-		getContinuationGroup(key).updateContinuation(getContinuationId(key), snapshot(execution));
+		Conversation conversation = getConversation(key);
+		getContinuationGroup(conversation).updateContinuation(getContinuationId(key), snapshot(execution));
 	}
 
 	// hooks for subclassing
@@ -162,29 +172,12 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		return new FlowExecutionContinuationGroup(maxContinuations);
 	}
 
-	// internal helpers
-
-	/**
-	 * Returns the continuation in the group with the specified key.
-	 * @param key the flow execution key
-	 * @return the continuation.
-	 */
-	private FlowExecutionContinuation getContinuation(FlowExecutionKey key)
-			throws FlowExecutionRestorationFailureException {
-		try {
-			return getContinuationGroup(key).get(getContinuationId(key));
-		} catch (ContinuationNotFoundException e) {
-			throw new FlowExecutionRestorationFailureException(key, e);
-		}
-	}
-
 	/**
 	 * Returns the continuation group associated with the governing conversation.
-	 * @param key the flow execution key
+	 * @param conversation the conversation where the continuation group is stored
 	 * @return the continuation group
 	 */
-	private FlowExecutionContinuationGroup getContinuationGroup(FlowExecutionKey key) {
-		Conversation conversation = getConversation(key);
+	protected FlowExecutionContinuationGroup getContinuationGroup(Conversation conversation) {
 		FlowExecutionContinuationGroup group = (FlowExecutionContinuationGroup) conversation
 				.getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
 		if (group == null) {

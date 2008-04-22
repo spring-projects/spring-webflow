@@ -249,6 +249,17 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return getMapInternal().remove(attributeName);
 	}
 
+	public Object extract(String attributeName) {
+		Map map = getMapInternal();
+		if (map.containsKey(attributeName)) {
+			Object value = map.get(attributeName);
+			map.remove(attributeName);
+			return value;
+		} else {
+			return null;
+		}
+	}
+
 	public MutableAttributeMap clear() throws UnsupportedOperationException {
 		getMapInternal().clear();
 		return this;

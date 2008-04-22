@@ -270,7 +270,6 @@ public class ViewState extends TransitionableState {
 		} catch (IOException e) {
 			throw new ViewRenderingException(getOwner().getId(), getId(), view, e);
 		}
-		context.getMessageContext().clearMessages();
 		context.getFlashScope().clear();
 		context.viewRendered(view);
 	}

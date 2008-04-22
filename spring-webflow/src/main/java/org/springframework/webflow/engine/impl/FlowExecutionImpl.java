@@ -72,6 +72,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	private static final Log logger = LogFactory.getLog(FlowExecutionImpl.class);
 
+	private static final String FLASH_SCOPE_ATTRIBUTE = "flashScope";
+
 	/**
 	 * The execution's root flow; the top level flow that acts as the starting point for this flow execution.
 	 * <p>
@@ -113,11 +115,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	private transient FlowExecutionKey key;
 
 	/**
-	 * The flash map ("flash scope").
-	 */
-	private MutableAttributeMap flashScope = new LocalAttributeMap();
-
-	/**
 	 * A data structure for attributes shared by all flow sessions.
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
@@ -135,11 +132,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplStateRestorer}.
 	 */
 	private String flowId;
-
-	/**
-	 * Serializable snapshot of this flow execution's messages.
-	 */
-	private Serializable messagesMemento;
 
 	/**
 	 * The flow execution outcome event.
@@ -164,6 +156,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 		this.flowSessions = new LinkedList();
 		this.conversationScope = new LocalAttributeMap();
+		this.conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap());
 	}
 
 	/**
@@ -218,7 +211,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public MutableAttributeMap getFlashScope() {
-		return flashScope;
+		return (MutableAttributeMap) conversationScope.get(FLASH_SCOPE_ATTRIBUTE);
 	}
 
 	public MutableAttributeMap getConversationScope() {
@@ -318,6 +311,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	private MessageContext createMessageContext() {
 		StateManageableMessageContext messageContext = messageContextFactory.createMessageContext();
+		Serializable messagesMemento = (Serializable) getFlashScope().get("messagesMemento");
 		if (messagesMemento != null) {
 			messageContext.restoreMessages(messagesMemento);
 		}
@@ -325,7 +319,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	private void saveMessages(RequestContext context) {
-		messagesMemento = ((StateManageableMessageContext) context.getMessageContext()).createMessagesMemento();
+		Serializable messagesMemento = ((StateManageableMessageContext) context.getMessageContext())
+				.createMessagesMemento();
+		getFlashScope().put("messagesMemento", messagesMemento);
 	}
 
 	// subclassing hooks
@@ -512,16 +508,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		started = in.readBoolean();
 		flowId = (String) in.readObject();
 		flowSessions = (LinkedList) in.readObject();
-		flashScope = (MutableAttributeMap) in.readObject();
-		messagesMemento = (Serializable) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeBoolean(started);
 		out.writeObject(flow.getId());
 		out.writeObject(flowSessions);
-		out.writeObject(flashScope);
-		out.writeObject(messagesMemento);
 	}
 
 	public String toString() {
@@ -534,7 +526,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} else {
 			if (flow != null) {
 				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
-						.append("flashScope", flashScope).toString();
+						.toString();
 			} else {
 				return "[Unhydrated execution of '" + flowId + "']";
 			}

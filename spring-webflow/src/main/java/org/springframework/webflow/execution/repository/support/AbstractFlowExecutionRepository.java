@@ -48,6 +48,7 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
  * The configured {@link FlowExecutionStateRestorer} should be compatible with the chosen {@link FlowExecution}
  * implementation and is configuration as done by a {@link FlowExecutionFactory} (listeners, execution attributes, ...).
  * 
+ * @author Keith Donald
  * @author Erwin Vervaet
  */
 public abstract class AbstractFlowExecutionRepository implements FlowExecutionRepository, FlowExecutionKeyFactory {
@@ -146,7 +147,7 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	protected ConversationParameters createConversationParameters(FlowExecution flowExecution) {
 		FlowDefinition flow = flowExecution.getDefinition();
-		return new ConversationParameters(flow.getId().toString(), flow.getCaption(), flow.getDescription());
+		return new ConversationParameters(flow.getId(), flow.getCaption(), flow.getDescription());
 	}
 
 	/**
@@ -199,17 +200,21 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 * Returns the transient state of the flow execution after potential deserialization.
 	 * @param execution the flow execution
 	 * @param key the flow execution key
+	 * @param conversation the governing conversation where the execution is stored
 	 */
-	protected FlowExecution restoreTransientState(FlowExecution execution, FlowExecutionKey key) {
-		return executionStateRestorer.restoreState(execution, key, getConversationScope(key), this);
+	protected FlowExecution restoreTransientState(FlowExecution execution, FlowExecutionKey key,
+			Conversation conversation) {
+		MutableAttributeMap conversationScope = (MutableAttributeMap) conversation.getAttribute("scope");
+		return executionStateRestorer.restoreState(execution, key, conversationScope, this);
 	}
 
 	/**
 	 * Puts the value of conversation scope in the conversation object.
 	 * @param flowExecution the flow execution holding a reference to conversation scope
+	 * @param conversation the conversation where conversation scope is stored
 	 */
-	protected void putConversationScope(FlowExecution flowExecution) {
-		getConversation(flowExecution.getKey()).putAttribute("scope", flowExecution.getConversationScope());
+	protected void putConversationScope(FlowExecution flowExecution, Conversation conversation) {
+		conversation.putAttribute("scope", flowExecution.getConversationScope());
 	}
 
 	/**
@@ -253,10 +258,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		Conversation conversation = getConversation(flowExecution.getKey());
 		conversation.end();
 		return conversation;
-	}
-
-	private MutableAttributeMap getConversationScope(FlowExecutionKey key) {
-		return (MutableAttributeMap) getConversation(key).getAttribute("scope");
 	}
 
 }

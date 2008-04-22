@@ -34,7 +34,7 @@ public interface MutableAttributeMap extends AttributeMap {
 	 * <b>Note</b>: not all <code>MutableAttributeMap</code> implementations support this.
 	 * @param attributeName the attribute name
 	 * @param attributeValue the attribute value
-	 * @return the previous value of the attribute, or <tt>null</tt> of there was no previous value
+	 * @return the previous value of the attribute, or <code>null</code> of there was no previous value
 	 */
 	public Object put(String attributeName, Object attributeValue);
 
@@ -59,6 +59,13 @@ public interface MutableAttributeMap extends AttributeMap {
 	 * the name
 	 */
 	public Object remove(String attributeName);
+
+	/**
+	 * Extract an attribute from this map, getting it and removing it in a single operation.
+	 * @param attributeName the attribute name
+	 * @return the value of the attribute, or <code>null</code> of there was no value
+	 */
+	public Object extract(String attributeName);
 
 	/**
 	 * Remove all attributes in this map.
