@@ -54,9 +54,6 @@ public class JsfView implements View {
 
 	private static final String MESSAGES_ID = "messages";
 
-	/**
-	 * The root of the JSF component tree managed by this view
-	 */
 	private UIViewRoot viewRoot;
 
 	private Lifecycle facesLifecycle;
@@ -65,15 +62,31 @@ public class JsfView implements View {
 
 	private String viewId;
 
-	private boolean restored = false;
+	private boolean restored;
 
-	private boolean viewErrors = false;
+	private boolean viewErrors;
 
 	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle, RequestContext context) {
 		this.viewRoot = viewRoot;
 		this.viewId = viewRoot.getViewId();
 		this.facesLifecycle = facesLifecycle;
 		this.requestContext = context;
+	}
+
+	/**
+	 * Returns the underlying view root.
+	 * @return the view root
+	 */
+	public UIViewRoot getViewRoot() {
+		return this.viewRoot;
+	}
+
+	/**
+	 * Sets whether or not the view root for this view was restored from storage or is new.
+	 * @param restored true or false
+	 */
+	public void setRestored(boolean restored) {
+		this.restored = restored;
 	}
 
 	/**
@@ -119,17 +132,11 @@ public class JsfView implements View {
 		return new Event(this, getEventId());
 	}
 
-	public UIViewRoot getViewRoot() {
-		return this.viewRoot;
-	}
-
 	public String toString() {
 		return "[JSFView = '" + viewId + "']";
 	}
 
-	public void setRestored(boolean restored) {
-		this.restored = restored;
-	}
+	// internal helpers
 
 	private void validateModel(FacesContext facesContext) {
 		Object model = getModelObject();
