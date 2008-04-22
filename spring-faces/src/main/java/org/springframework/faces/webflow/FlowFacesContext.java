@@ -167,6 +167,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public void renderResponse() {
+		// stored in flash scope to survive a redirect when transitioning from one view to another
 		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
 	}
 

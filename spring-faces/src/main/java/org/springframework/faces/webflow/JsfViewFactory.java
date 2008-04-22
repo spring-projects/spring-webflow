@@ -68,6 +68,8 @@ public class JsfViewFactory implements ViewFactory {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {
 			if (!facesContext.getRenderResponse()) {
+				// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
+				// this won't be true when this method is called after a transition from one view-state to another
 				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			}
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();

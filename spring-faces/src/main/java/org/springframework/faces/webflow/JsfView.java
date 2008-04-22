@@ -103,6 +103,7 @@ public class JsfView implements View {
 		try {
 			if (restored && !facesContext.getResponseComplete() && !facesContext.getRenderResponse()) {
 				facesLifecycle.execute(facesContext);
+				// TODO move this and renderResponse behavior into lifecycle
 				validateModel(facesContext);
 			}
 		} finally {

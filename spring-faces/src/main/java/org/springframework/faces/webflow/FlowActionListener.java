@@ -67,6 +67,8 @@ public class FlowActionListener implements ActionListener {
 			logger.debug("No action event detected");
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
 		}
+		// tells JSF lifecycle that rendering should now happen and any subsequent phases should be skipped
+		// required in the case of this action listener firing immediately (immediate=true) before validation
 		context.renderResponse();
 	}
 }
