@@ -165,7 +165,7 @@ public class FlowViewStateManager extends StateManager {
 			this.componentState = componentState;
 		}
 
-		public String toStringCreator() {
+		public String toString() {
 			return new ToStringCreator(this).append("viewId", viewId).toString();
 		}
 	}
