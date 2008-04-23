@@ -59,7 +59,10 @@
                         <xsl:text>name</xsl:text>
                     </xsl:attribute>
                     <xsl:attribute name="value">
-                        <xsl:value-of select="@name"/>
+                        <xsl:variable name="stripElParam">
+                            <xsl:value-of select="@name"/>
+                        </xsl:variable>
+                        &stripEl;
                     </xsl:attribute>
                 </xsl:element>
             </xsl:if>
@@ -124,7 +127,10 @@
                 <xsl:if test="webflow:method-arguments">
                     <xsl:text>(</xsl:text>
                     <xsl:for-each select="webflow:method-arguments/webflow:argument">
-                        <xsl:value-of select="@expression"/>
+                        <xsl:variable name="stripElParam">
+                            <xsl:value-of select="@expression"/>
+                        </xsl:variable>
+                        &stripEl;
                         <xsl:if test="position() != count(../webflow:argument)">
                             <xsl:text>, </xsl:text>
                         </xsl:if>
@@ -144,10 +150,7 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
-                    <xsl:variable name="stripElParam">
-                        <xsl:value-of select="webflow:method-result/@name"/>
-                    </xsl:variable>
-                    &stripEl;
+                    <xsl:value-of select="webflow:method-result/@name"/>
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@name">
@@ -227,10 +230,7 @@
                         <xsl:value-of select="$scopeSuffix"/>
                         <xsl:text>.</xsl:text>
                     </xsl:if>
-                    <xsl:variable name="stripElParam">
-                        <xsl:value-of select="webflow:evaluation-result/@name"/>
-                    </xsl:variable>
-                    &stripEl;
+                    <xsl:value-of select="webflow:evaluation-result/@name"/>
                 </xsl:attribute>
             </xsl:if>
             <xsl:if test="@name">
@@ -354,7 +354,7 @@
     </xsl:template>
     
     <xsl:template match="webflow:mapping">
-        <xsl:if test="local-name(../..) = 'flow'">
+        <xsl:if test="(local-name(../..) = 'flow' and local-name(..) = 'input-mapper') or (local-name(../../..) = 'subflow-state' and local-name(..) = 'output-mapper')">
             <xsl:if test="@source">
                 <xsl:attribute name="name">
                     <xsl:variable name="stripElParam">
@@ -380,7 +380,7 @@
                 </xsl:attribute>
             </xsl:if>
         </xsl:if>
-        <xsl:if test="local-name(../..) != 'flow'">
+        <xsl:if test="(local-name(../..) = 'flow' and local-name(..) = 'output-mapper') or (local-name(../../..) = 'subflow-state' and local-name(..) = 'input-mapper') or (local-name(../../..) = 'end-state' and local-name(..) = 'output-mapper')">
             <xsl:if test="@target">
                 <xsl:attribute name="name">
                     <xsl:variable name="stripElParam">
@@ -424,7 +424,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="webflow:output-attribtue">
+    <xsl:template match="webflow:output-attribute">
         <xsl:element name="output" namespace="http://www.springframework.org/schema/webflow">
             <xsl:if test="@name">
                 <xsl:attribute name="name">
