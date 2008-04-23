@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.mvc.servlet.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -35,7 +36,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  */
-public class FlowController extends AbstractController {
+public class FlowController extends AbstractController implements InitializingBean {
 
 	private FlowHandlerAdapter flowHandlerAdapter;
 
