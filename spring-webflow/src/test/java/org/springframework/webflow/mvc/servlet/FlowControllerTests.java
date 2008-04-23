@@ -28,25 +28,33 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 public class FlowControllerTests extends TestCase {
 	private FlowController controller;
 	private FlowExecutor executor;
-	private MockServletContext servletContext;
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
 	private ServletExternalContext context;
 
-	protected void setUp() {
+	protected void setUp() throws Exception {
 		executor = (FlowExecutor) EasyMock.createMock(FlowExecutor.class);
-		controller = new FlowController(executor) {
+		controller = new FlowController();
+		FlowHandlerAdapter handlerAdapter = new FlowHandlerAdapter() {
 			protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 					HttpServletResponse response) {
 				return context;
 			}
 		};
-		servletContext = new MockServletContext();
+		handlerAdapter.setFlowExecutor(executor);
+		StaticWebApplicationContext applicationContext = new StaticWebApplicationContext();
+		MockServletContext servletContext = new MockServletContext();
+		applicationContext.setServletContext(servletContext);
+		handlerAdapter.setApplicationContext(applicationContext);
+		handlerAdapter.afterPropertiesSet();
+
+		controller.setFlowHandlerAdapter(handlerAdapter);
+		controller.setApplicationContext(new StaticWebApplicationContext());
+		controller.afterPropertiesSet();
+
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 		context = new ServletExternalContext(servletContext, request, response, controller.getFlowUrlHandler());
-		controller.setApplicationContext(new StaticWebApplicationContext());
-		controller.setServletContext(servletContext);
 	}
 
 	public void testLaunchFlowRequest() throws Exception {
@@ -55,9 +63,7 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -72,9 +78,7 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
@@ -133,10 +137,8 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
 		context.requestFlowExecutionRedirect();
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -153,12 +155,10 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
 		request.addHeader("Accept", "text/html;type=ajax");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
 		context.setAjaxRequest(true);
 		context.requestFlowExecutionRedirect();
 		context.requestRedirectInPopup();
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -201,12 +201,10 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
 		LocalAttributeMap input = new LocalAttributeMap();
 		input.put("baz", "boop");
 		context.requestFlowDefinitionRedirect("bar", input);
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
@@ -226,10 +224,8 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
 		context.requestExternalRedirect("http://www.paypal.com");
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { executor });
@@ -246,9 +242,7 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		Map parameters = new HashMap();
-		request.setParameters(parameters);
-		executor.launchExecution("foo", new LocalAttributeMap(parameters), context);
+		executor.launchExecution("foo", null, context);
 		FlowException flowException = new FlowException("Error") {
 		};
 		EasyMock.expectLastCall().andThrow(flowException);

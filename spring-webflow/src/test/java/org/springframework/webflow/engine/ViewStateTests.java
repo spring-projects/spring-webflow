@@ -68,7 +68,7 @@ public class ViewStateTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
 	public void testEnterViewStateWithNoLocalRedirect() {
@@ -79,7 +79,7 @@ public class ViewStateTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		assertTrue("Render called", context.getFlowScope().contains("renderCalled"));
-		assertFalse(context.getMockExternalContext().flowExecutionRedirectRequested());
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
 	public void testEnterViewStateRedirectInPopup() {
@@ -91,8 +91,8 @@ public class ViewStateTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
-		assertTrue(context.getMockExternalContext().redirectInPopup());
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+		assertTrue(context.getMockExternalContext().getRedirectInPopup());
 	}
 
 	public void testEnterViewStateWithAlwaysRedirectOnPause() {
@@ -103,7 +103,7 @@ public class ViewStateTests extends TestCase {
 		context.setAlwaysRedirectOnPause(true);
 		state.enter(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
 	public void testEnterViewStateWithPopup() {
@@ -115,7 +115,7 @@ public class ViewStateTests extends TestCase {
 		context.setAlwaysRedirectOnPause(true);
 		state.enter(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().flowExecutionRedirectRequested());
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
 	public void testResumeViewStateForRefresh() {

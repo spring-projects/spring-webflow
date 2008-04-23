@@ -48,6 +48,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
 public class PortletExternalContext implements ExternalContext {
 
 	protected static final short ACTION_PHASE = 1;
+
 	protected static final short RENDER_PHASE = 2;
 
 	/**
@@ -216,7 +217,8 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseCommitted() {
-		return flowExecutionRedirectRequested() || flowDefinitionRedirectRequested() || externalRedirectRequested();
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 	public boolean isResponseAllowed() {
@@ -245,19 +247,19 @@ public class PortletExternalContext implements ExternalContext {
 	/**
 	 * Returns the flag indicating if a flow execution redirect response has been requested by the flow.
 	 */
-	public boolean flowExecutionRedirectRequested() {
+	public boolean getFlowExecutionRedirectRequested() {
 		return flowExecutionRedirectRequested;
 	}
 
 	/**
 	 * Returns the flag indicating if a flow definition redirect response has been requested by the flow.
 	 */
-	public boolean flowDefinitionRedirectRequested() {
+	public boolean getFlowDefinitionRedirectRequested() {
 		return flowDefinitionRedirectFlowId != null;
 	}
 
 	/**
-	 * Returns the id of the flow definition to redirect to. Only set when {@link #flowDefinitionRedirectRequested()}
+	 * Returns the id of the flow definition to redirect to. Only set when {@link #getFlowDefinitionRedirectRequested()}
 	 * returns true.
 	 */
 	public String getFlowRedirectFlowId() {
@@ -266,7 +268,7 @@ public class PortletExternalContext implements ExternalContext {
 
 	/**
 	 * Returns the input to pass the flow definition through the redirect. Only set when
-	 * {@link #flowDefinitionRedirectRequested()} returns true.
+	 * {@link #getFlowDefinitionRedirectRequested()} returns true.
 	 */
 	public AttributeMap getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
@@ -275,12 +277,12 @@ public class PortletExternalContext implements ExternalContext {
 	/**
 	 * Returns the flag indicating if an external redirect response has been requested by the flow.
 	 */
-	public boolean externalRedirectRequested() {
+	public boolean getExternalRedirectRequested() {
 		return externalRedirectUrl != null;
 	}
 
 	/**
-	 * Returns the URL to redirect to. Only set if {@link #externalRedirectRequested()} returns true.
+	 * Returns the URL to redirect to. Only set if {@link #getExternalRedirectRequested()} returns true.
 	 */
 	public String getExternalRedirectUrl() {
 		return externalRedirectUrl;
@@ -289,7 +291,7 @@ public class PortletExternalContext implements ExternalContext {
 	/**
 	 * If a redirect response has been requested, indicates if the redirect should be issued from a popup dialog.
 	 */
-	public boolean redirectInPopup() {
+	public boolean getRedirectInPopup() {
 		return redirectInPopup;
 	}
 

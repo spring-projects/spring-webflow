@@ -24,8 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.mvc.servlet.AjaxHandler;
 import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
+import org.springframework.util.Assert;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,7 +50,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  */
-public class FlowHandlerAdapter extends WebApplicationObjectSupport implements HandlerAdapter {
+public class FlowHandlerAdapter extends WebApplicationObjectSupport implements HandlerAdapter, InitializingBean {
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
@@ -68,13 +70,28 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	private AjaxHandler ajaxHandler;
 
 	/**
-	 * Creates a new flow handler adapter
-	 * @param flowExecutor the flow executor
+	 * Creates a new flow handler adapter.
+	 * @see #setFlowExecutor(FlowExecutor)
+	 * @see #setFlowUrlHandler(FlowUrlHandler)
+	 * @see #setAjaxHandler(AjaxHandler)
+	 * @see #afterPropertiesSet()
 	 */
-	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
+	public FlowHandlerAdapter() {
+	}
+
+	/**
+	 * Returns the central service for executing flows. Required.
+	 */
+	public FlowExecutor getFlowExecutor() {
+		return flowExecutor;
+	}
+
+	/**
+	 * Sets the central service for executing flows. Required.
+	 * @param flowExecutor
+	 */
+	public void setFlowExecutor(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
-		this.urlHandler = new DefaultFlowUrlHandler();
-		this.ajaxHandler = new SpringJavascriptAjaxHandler();
 	}
 
 	/**
@@ -105,6 +122,16 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 */
 	public void setAjaxHandler(AjaxHandler ajaxHandler) {
 		this.ajaxHandler = ajaxHandler;
+	}
+
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(flowExecutor, "The FlowExecutor to execute flows is required");
+		if (urlHandler == null) {
+			this.urlHandler = new DefaultFlowUrlHandler();
+		}
+		if (ajaxHandler == null) {
+			this.ajaxHandler = new SpringJavascriptAjaxHandler();
+		}
 	}
 
 	public boolean supports(Object handler) {
@@ -138,6 +165,11 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	// subclassing hooks
 
+	/**
+	 * Creates the servlet external context for the current HTTP servlet request.
+	 * @param request the current request
+	 * @param response the current response
+	 */
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
 		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, urlHandler);
@@ -145,9 +177,28 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		return context;
 	}
 
-	protected MutableAttributeMap defaultFlowExecutionInputMap(HttpServletRequest request) {
-		LocalAttributeMap inputMap = new LocalAttributeMap();
+	/**
+	 * The default algorithm to determine the id of the flow to launch from the current request. Only called if
+	 * {@link FlowHandler#getFlowId()} returns null. This implementation delegates to the configured
+	 * {@link FlowUrlHandler#getFlowId(HttpServletRequest)}.
+	 * @param request the current request
+	 */
+	protected String defaultGetFlowId(HttpServletRequest request) {
+		return urlHandler.getFlowId(request);
+	}
+
+	/**
+	 * The default algorithm to create the flow execution input map. Only called if
+	 * {@link FlowHandler#createExecutionInputMap(HttpServletRequest)} returns null. This implementation exposes all
+	 * current request parameters as flow execution input attributes.
+	 * @param request the current request
+	 */
+	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
 		Map parameterMap = request.getParameterMap();
+		if (parameterMap.size() == 0) {
+			return null;
+		}
+		LocalAttributeMap inputMap = new LocalAttributeMap(parameterMap.size(), 1);
 		Iterator it = parameterMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry entry = (Map.Entry) it.next();
@@ -162,7 +213,17 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		return inputMap;
 	}
 
-	protected ModelAndView defaultHandleFlowOutcome(String flowId, FlowExecutionOutcome outcome,
+	/**
+	 * The default algorithm for handling a flow execution outcome. Only called if
+	 * {@link FlowHandler#handleExecutionOutcome(FlowExecutionOutcome, HttpServletRequest, HttpServletResponse)} returns
+	 * null. This implementation attempts to start a new execution of the ended flow. Any flow execution output is
+	 * passed as input to the new execution.
+	 * @param flowId the id of the ended flow
+	 * @param outcome the flow execution outcome
+	 * @param request the current request
+	 * @param response the current response
+	 */
+	protected ModelAndView defaultHandleExecutionOutcome(String flowId, FlowExecutionOutcome outcome,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (!response.isCommitted()) {
 			// by default, just start the flow over passing the output as input
@@ -174,7 +235,17 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		return null;
 	}
 
-	protected ModelAndView defaultHandleFlowException(String flowId, FlowException e, HttpServletRequest request,
+	/**
+	 * The default algorithm for handling a {@link FlowException} now handled by the Web Flow system. Only called if
+	 * {@link FlowHandler#handleException(FlowException, HttpServletRequest, HttpServletResponse)} returns null. This
+	 * implementation rethrows the exception unless it is a {@link NoSuchFlowExecutionException}. If the exception is a
+	 * NoSuchFlowExecutionException, this implementation attempts to start a new execution of the ended or expired flow.
+	 * @param flowId the id of the ended flow
+	 * @param e the flow exception
+	 * @param request the current request
+	 * @param response the current response
+	 */
+	protected ModelAndView defaultHandleException(String flowId, FlowException e, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
 			if (!response.isCommitted()) {
@@ -194,15 +265,15 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private ModelAndView handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
 			HttpServletRequest request, HttpServletResponse response, FlowHandler handler) throws IOException {
-		if (result.paused()) {
-			if (context.flowExecutionRedirectRequested()) {
+		if (result.isPaused()) {
+			if (context.getFlowExecutionRedirectRequested()) {
 				String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending flow execution redirect to " + url);
 				}
 				sendRedirect(context, request, response, url);
 				return null;
-			} else if (context.externalRedirectRequested()) {
+			} else if (context.getExternalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
@@ -211,8 +282,8 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			} else {
 				return null;
 			}
-		} else if (result.ended()) {
-			if (context.flowDefinitionRedirectRequested()) {
+		} else if (result.isEnded()) {
+			if (context.getFlowDefinitionRedirectRequested()) {
 				String flowId = context.getFlowRedirectFlowId();
 				AttributeMap input = context.getFlowRedirectFlowInput();
 				String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
@@ -221,7 +292,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				}
 				sendRedirect(context, request, response, url);
 				return null;
-			} else if (context.externalRedirectRequested()) {
+			} else if (context.getExternalRedirectRequested()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
 				}
@@ -229,7 +300,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				return null;
 			} else {
 				String location = handler.handleExecutionOutcome(result.getOutcome(), request, response);
-				return location != null ? createRedirectView(location, request) : defaultHandleFlowOutcome(result
+				return location != null ? createRedirectView(location, request) : defaultHandleExecutionOutcome(result
 						.getFlowId(), result.getOutcome(), request, response);
 			}
 		} else {
@@ -238,20 +309,35 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	}
 
 	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
-		if (location.startsWith("/")) {
-			return new ModelAndView(new RedirectView(location, true));
+		if (location.startsWith("servletPath:")) {
+			return createServletRelativeRedirect(location.substring("servletPath:".length()), request);
+		} else if (location.startsWith("contextPath:")) {
+			String contextUrl = location.substring("contextPath:".length());
+			if (!contextUrl.startsWith("/")) {
+				contextUrl = "/" + contextUrl;
+			}
+			return new ModelAndView(new RedirectView(contextUrl, true));
+		} else if (location.startsWith("redirectUrl:")) {
+			return new ModelAndView(new RedirectView(location.substring("redirectUrl:".length())));
 		} else {
-			StringBuffer url = new StringBuffer(request.getServletPath());
-			url.append('/');
-			url.append(location);
-			return new ModelAndView(new RedirectView(url.toString(), true));
+			return createServletRelativeRedirect(location, request);
 		}
+	}
+
+	private ModelAndView createServletRelativeRedirect(String location, HttpServletRequest request) {
+		StringBuffer url = new StringBuffer(request.getServletPath());
+		if (!location.startsWith("/")) {
+			url.append('/');
+		}
+		url.append(location);
+		return new ModelAndView(new RedirectView(url.toString(), true));
 	}
 
 	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,
 			String targetUrl) throws IOException {
 		if (context.isAjaxRequest()) {
-			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context.isAjaxRequest());
+			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context
+					.getRedirectInPopup());
 		} else if (!response.isCommitted()) {
 			response.sendRedirect(response.encodeRedirectURL(targetUrl));
 		}
@@ -260,7 +346,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
 			FlowHandler handler) throws IOException {
 		String location = handler.handleException(e, request, response);
-		return location != null ? createRedirectView(location, request) : defaultHandleFlowException(getFlowId(handler,
+		return location != null ? createRedirectView(location, request) : defaultHandleException(getFlowId(handler,
 				request), e, request, response);
 	}
 
@@ -273,7 +359,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		if (flowId != null) {
 			return flowId;
 		} else {
-			return urlHandler.getFlowId(request);
+			return defaultGetFlowId(request);
 		}
 	}
 
@@ -282,7 +368,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		if (input != null) {
 			return input;
 		} else {
-			return defaultFlowExecutionInputMap(request);
+			return defaultCreateFlowExecutionInputMap(request);
 		}
 	}
 }

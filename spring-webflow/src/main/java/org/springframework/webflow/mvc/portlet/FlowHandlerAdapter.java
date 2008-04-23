@@ -105,7 +105,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
-			if (result.paused()) {
+			if (result.isPaused()) {
 				urlHandler.setFlowExecutionRenderParameter(result.getPausedKey(), response);
 			} else {
 				request.getPortletSession().setAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE, result);
@@ -183,7 +183,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
-			if (result.paused()) {
+			if (result.isPaused()) {
 				urlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
 			}
 			return null;

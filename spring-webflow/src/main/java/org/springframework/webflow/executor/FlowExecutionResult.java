@@ -69,13 +69,13 @@ public class FlowExecutionResult {
 	 * Returns true if the flow execution paused and is now in a wait state.
 	 * @return true if paused, false if not
 	 */
-	public boolean paused() {
+	public boolean isPaused() {
 		return flowExecutionKey != null;
 	}
 
 	/**
 	 * Returns the key needed to resume the flow execution when a paused result.
-	 * @see #paused()
+	 * @see #isPaused()
 	 * @return the key of the paused flow execution
 	 */
 	public String getPausedKey() {
@@ -86,13 +86,13 @@ public class FlowExecutionResult {
 	 * Returns true if the flow execution ended.
 	 * @return true if ended, false if not
 	 */
-	public boolean ended() {
+	public boolean isEnded() {
 		return flowExecutionKey == null;
 	}
 
 	/**
 	 * Returns the flow execution outcome when an ended result.
-	 * @see #ended()
+	 * @see #isEnded()
 	 * @return the ended outcome, or <code>null</code> if this is not an ended result
 	 */
 	public FlowExecutionOutcome getOutcome() {

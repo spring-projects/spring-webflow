@@ -21,7 +21,7 @@
 
 	<!-- Handles requests mapped to the Spring Web Flow system -->
 	<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
-		<constructor-arg ref="flowExecutor" />
+		<property name="flowExecutor" ref="flowExecutor"/>
 	</bean>
 
 	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml' -->

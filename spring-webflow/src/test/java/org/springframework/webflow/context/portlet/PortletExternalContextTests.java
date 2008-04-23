@@ -74,20 +74,20 @@ public class PortletExternalContextTests extends TestCase {
 	public void testCommitExecutionRedirect() {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.flowExecutionRedirectRequested());
+		assertTrue(context.getFlowExecutionRedirectRequested());
 	}
 
 	public void testCommitFlowRedirect() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.flowDefinitionRedirectRequested());
+		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 	}
 
 	public void testCommitExternalRedirect() {
 		context.requestExternalRedirect("foo");
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.externalRedirectRequested());
+		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
 	}
 
@@ -95,26 +95,26 @@ public class PortletExternalContextTests extends TestCase {
 		context.requestFlowExecutionRedirect();
 		context.requestRedirectInPopup();
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.flowExecutionRedirectRequested());
-		assertTrue(context.redirectInPopup());
+		assertTrue(context.getFlowExecutionRedirectRequested());
+		assertTrue(context.getRedirectInPopup());
 	}
 
 	public void testCommitFlowRedirectPopup() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		context.requestRedirectInPopup();
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.flowDefinitionRedirectRequested());
+		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
-		assertTrue(context.redirectInPopup());
+		assertTrue(context.getRedirectInPopup());
 	}
 
 	public void testCommitExternalRedirectPopup() {
 		context.requestExternalRedirect("foo");
 		context.requestRedirectInPopup();
 		assertTrue(context.isResponseCommitted());
-		assertTrue(context.externalRedirectRequested());
+		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
-		assertTrue(context.redirectInPopup());
+		assertTrue(context.getRedirectInPopup());
 	}
 
 	public void testResponseAllowed() {

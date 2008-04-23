@@ -57,7 +57,7 @@
 
 	<!-- Enables FlowHandlers -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-		<constructor-arg ref="flowExecutor" />
+		<property name="flowExecutor" ref="flowExecutor"/>
 	</bean>
 	
 </beans>

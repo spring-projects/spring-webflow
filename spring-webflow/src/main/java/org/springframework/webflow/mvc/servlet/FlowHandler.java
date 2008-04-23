@@ -58,11 +58,13 @@ public interface FlowHandler {
 	 * <ul>
 	 * <li>servletPath: - the location is relative to the current servlet
 	 * <li>contextPath: - the location is relative to the current web application</li>
-	 * <li>serverPath: - the location is relative to the current server, which may host several applications
-	 * <li>url: - the location is an absolute URI beginning with a scheme like "http://" If the location string
+	 * <li>redirectUrl: - the location is an URL to pass in unchanged to
+	 * {@link HttpServletResponse#sendRedirect(String)}.
 	 * </ul>
 	 * Also, if the returned location no prefix, for example "/hotels/index", the location is treated as relative to the
-	 * current servlet by default.
+	 * current servlet by default
+	 * <p>
+	 * For servlet-relative and context-relative URLs, a leading slash is optional.
 	 * 
 	 * @param outcome the outcome that was reached
 	 * @param request the current request

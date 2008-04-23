@@ -15,31 +15,16 @@
  */
 package org.springframework.webflow.mvc.servlet;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.js.mvc.servlet.AjaxHandler;
-import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
-import org.springframework.webflow.context.servlet.ServletExternalContext;
-import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.execution.FlowExecutionOutcome;
-import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
-import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
 /**
@@ -52,61 +37,42 @@ import org.springframework.webflow.executor.FlowExecutor;
  */
 public class FlowController extends AbstractController {
 
-	private static final Log logger = LogFactory.getLog(FlowController.class);
+	private FlowHandlerAdapter flowHandlerAdapter;
 
-	/**
-	 * The central service for executing flows and the entry point into the Web Flow system.
-	 */
-	private FlowExecutor flowExecutor;
-
-	/**
-	 * A strategy for extracting flow arguments and generating flow urls.
-	 */
-	private FlowUrlHandler urlHandler;
-
-	/**
-	 * The representation of an Ajax client service capable of interacting with web flow.
-	 */
-	private AjaxHandler ajaxHandler;
-
-	/**
-	 * Specific handlers this controller should delegate to, for customizing the control logic associated with managing
-	 * the execution of a specific flow.
-	 */
 	private Map flowHandlers = new HashMap();
-
-	public FlowController() {
-		initDefaults();
-	}
 
 	/**
 	 * Creates a new flow controller.
-	 * @param flowExecutor the web flow executor service
+	 * @see #setFlowExecutor(FlowExecutor)
+	 * @see #setFlowUrlHandler(FlowUrlHandler)
+	 * @see #setAjaxHandler(AjaxHandler)
+	 * @see #afterPropertiesSet()
 	 */
-	public FlowController(FlowExecutor flowExecutor) {
-		this.flowExecutor = flowExecutor;
-		initDefaults();
+	public FlowController() {
+		// turn caching off for flows by default
+		setCacheSeconds(0);
 	}
 
 	/**
-	 * Returns the central service for executing flows and the entry point into the Web Flow system.
+	 * Returns the central service for executing flows. Required.
 	 */
 	public FlowExecutor getFlowExecutor() {
-		return flowExecutor;
+		return flowHandlerAdapter.getFlowExecutor();
 	}
 
 	/**
-	 * Sets the central service for executing flows and the entry point into the Web Flow system.
+	 * Sets the central service for executing flows. Required.
+	 * @param flowExecutor
 	 */
 	public void setFlowExecutor(FlowExecutor flowExecutor) {
-		this.flowExecutor = flowExecutor;
+		flowHandlerAdapter.setFlowExecutor(flowExecutor);
 	}
 
 	/**
 	 * Returns the configured flow url handler.
 	 */
 	public FlowUrlHandler getFlowUrlHandler() {
-		return urlHandler;
+		return flowHandlerAdapter.getFlowUrlHandler();
 	}
 
 	/**
@@ -114,14 +80,14 @@ public class FlowController extends AbstractController {
 	 * @param urlHandler the flow url handler.
 	 */
 	public void setFlowUrlHandler(FlowUrlHandler urlHandler) {
-		this.urlHandler = urlHandler;
+		flowHandlerAdapter.setFlowUrlHandler(urlHandler);
 	}
 
 	/**
 	 * Returns the configured Ajax handler.
 	 */
 	public AjaxHandler getAjaxHandler() {
-		return ajaxHandler;
+		return flowHandlerAdapter.getAjaxHandler();
 	}
 
 	/**
@@ -129,11 +95,11 @@ public class FlowController extends AbstractController {
 	 * @param ajaxHandler the ajax handler
 	 */
 	public void setAjaxHandler(AjaxHandler ajaxHandler) {
-		this.ajaxHandler = ajaxHandler;
+		flowHandlerAdapter.setAjaxHandler(ajaxHandler);
 	}
 
 	/**
-	 * Sets the custom flow handles for managing access to specific flows in a custom manner.
+	 * Sets the custom flow handles for managing the access to flows in a custom manner.
 	 * @param flowHandlers the flow handler map
 	 */
 	public void setFlowHandlers(Map flowHandlers) {
@@ -141,203 +107,72 @@ public class FlowController extends AbstractController {
 	}
 
 	/**
-	 * Registers a handler for managing access to a specific flow definition.
-	 * @param handler the flow handler
+	 * Registers a flow handler this controller should delegate to to customize the control logic associated with
+	 * managing the execution of a specific flow.
+	 * @param flowHandler the handler
 	 */
-	public void registerFlowHandler(FlowHandler handler) {
-		flowHandlers.put(handler.getFlowId(), handler);
+	public void registerFlowHandler(FlowHandler flowHandler) {
+		flowHandlers.put(flowHandler.getFlowId(), flowHandler);
+	}
+
+	/**
+	 * Returns the flow handler adapter which this Controller uses internally to carry out handler workflow.
+	 */
+	public FlowHandlerAdapter getFlowHandlerAdapter() {
+		return flowHandlerAdapter;
+	}
+
+	/**
+	 * Sets the flow handler adapter which this Controller uses internally to carry out handler workflow. Call this
+	 * instead of the convenience accesors to completely customize flow controller workflow.
+	 * @param flowHandlerAdapter the flow handler adapter
+	 */
+	public void setFlowHandlerAdapter(FlowHandlerAdapter flowHandlerAdapter) {
+		this.flowHandlerAdapter = flowHandlerAdapter;
+	}
+
+	public void afterPropertiesSet() throws Exception {
+		if (flowHandlerAdapter == null) {
+			flowHandlerAdapter = new FlowHandlerAdapter();
+			flowHandlerAdapter.setApplicationContext(getApplicationContext());
+			flowHandlerAdapter.afterPropertiesSet();
+		}
 	}
 
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
-		if (flowExecutionKey != null) {
-			try {
-				ServletExternalContext context = createServletExternalContext(request, response);
-				FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
-				return handleFlowExecutionResult(result, context, request, response);
-			} catch (FlowException e) {
-				return handleFlowException(e, request, response);
-			}
-		} else {
-			try {
-				String flowId = urlHandler.getFlowId(request);
-				MutableAttributeMap input = getFlowInput(flowId, request);
-				ServletExternalContext context = createServletExternalContext(request, response);
-				FlowExecutionResult result = flowExecutor.launchExecution(flowId, input, context);
-				return handleFlowExecutionResult(result, context, request, response);
-			} catch (FlowException e) {
-				return handleFlowException(e, request, response);
-			}
-		}
+		FlowHandler handler = getFlowHandler(request);
+		return flowHandlerAdapter.handle(request, response, handler);
 	}
 
 	// subclassing hooks
 
-	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
-			HttpServletResponse response) {
-		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, urlHandler);
-		context.setAjaxRequest(ajaxHandler.isAjaxRequest(getServletContext(), request, response));
-		return context;
-	}
-
-	protected MutableAttributeMap defaultFlowExecutionInputMap(HttpServletRequest request) {
-		LocalAttributeMap inputMap = new LocalAttributeMap();
-		Map parameterMap = request.getParameterMap();
-		Iterator it = parameterMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String name = (String) entry.getKey();
-			String[] values = (String[]) entry.getValue();
-			if (values.length == 1) {
-				inputMap.put(name, values[0]);
-			} else {
-				inputMap.put(name, values);
-			}
-		}
-		return inputMap;
-	}
-
-	protected ModelAndView defaultHandleFlowOutcome(String flowId, FlowExecutionOutcome outcome,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (!response.isCommitted()) {
-			// by default, just start the flow over passing the output as input
-			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
-			}
-			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
-		}
-		return null;
-	}
-
-	protected ModelAndView defaultHandleFlowException(String flowId, FlowException e, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
-			if (!response.isCommitted()) {
-				// by default, attempt to restart the flow
-				if (logger.isDebugEnabled()) {
-					logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
-				}
-				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
-			}
-			return null;
-		} else {
-			throw e;
-		}
-	}
-
 	// internal helpers
 
-	private void initDefaults() {
-		urlHandler = new DefaultFlowUrlHandler();
-		ajaxHandler = new SpringJavascriptAjaxHandler();
-		// set the cache seconds property to 0 so no pages are cached by default for flows
-		setCacheSeconds(0);
-	}
-
-	private ModelAndView handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (result.paused()) {
-			if (context.flowExecutionRedirectRequested()) {
-				String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending flow execution redirect to " + url);
-				}
-				sendRedirect(context, request, response, url);
-				return null;
-			} else if (context.externalRedirectRequested()) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
-				}
-				sendRedirect(context, request, response, context.getExternalRedirectUrl());
-				return null;
-			} else {
-				// nothing to do: flow has handled the response
-				return null;
-			}
-		} else if (result.ended()) {
-			if (context.flowDefinitionRedirectRequested()) {
-				String flowId = context.getFlowRedirectFlowId();
-				AttributeMap input = context.getFlowRedirectFlowInput();
-				String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending flow definition to " + url);
-				}
-				sendRedirect(context, request, response, url);
-				return null;
-			} else if (context.externalRedirectRequested()) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
-				}
-				sendRedirect(context, request, response, context.getExternalRedirectUrl());
-				return null;
-			} else {
-				return handleFlowOutcome(result.getFlowId(), result.getOutcome(), request, response);
-			}
-		} else {
-			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
-		}
-	}
-
-	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,
-			String targetUrl) throws IOException {
-		if (context.isAjaxRequest()) {
-			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context.redirectInPopup());
-		} else if (!response.isCommitted()) {
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
-		}
-	}
-
-	private MutableAttributeMap getFlowInput(String flowId, HttpServletRequest request) {
-		FlowHandler handler = getFlowHandler(flowId);
-		if (handler != null) {
-			return handler.createExecutionInputMap(request);
-		} else {
-			return defaultFlowExecutionInputMap(request);
-		}
-	}
-
-	private ModelAndView handleFlowOutcome(String flowId, FlowExecutionOutcome outcome, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		FlowHandler handler = getFlowHandler(flowId);
-		if (handler != null) {
-			String location = handler.handleExecutionOutcome(outcome, request, response);
-			return location != null ? createRedirectView(location, request) : defaultHandleFlowOutcome(flowId, outcome,
-					request, response);
-		} else {
-			return defaultHandleFlowOutcome(flowId, outcome, request, response);
-		}
-	}
-
-	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
-		if (location.startsWith("/")) {
-			return new ModelAndView(new RedirectView(location, true));
-		} else {
-			StringBuffer url = new StringBuffer(request.getServletPath());
-			url.append('/');
-			url.append(location);
-			return new ModelAndView(new RedirectView(url.toString(), true));
-		}
-	}
-
-	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private FlowHandler getFlowHandler(HttpServletRequest request) {
+		FlowUrlHandler urlHandler = flowHandlerAdapter.getFlowUrlHandler();
 		String flowId = urlHandler.getFlowId(request);
-		if (flowId != null) {
-			FlowHandler handler = getFlowHandler(flowId);
-			if (handler != null) {
-				String location = handler.handleException(e, request, response);
-				return location != null ? createRedirectView(location, request) : defaultHandleFlowException(flowId, e,
-						request, response);
-			} else {
-				return defaultHandleFlowException(flowId, e, request, response);
-			}
-		} else {
-			return defaultHandleFlowException(null, e, request, response);
-		}
+		return getFlowHandler(flowId);
 	}
 
 	private FlowHandler getFlowHandler(String flowId) {
-		return (FlowHandler) flowHandlers.get(flowId);
+		FlowHandler handler = (FlowHandler) flowHandlers.get(flowId);
+		if (handler == null) {
+			handler = new DefaultFlowHandler(flowId);
+		}
+		return handler;
 	}
+
+	private static class DefaultFlowHandler extends AbstractFlowHandler {
+		private String flowId;
+
+		public DefaultFlowHandler(String flowId) {
+			this.flowId = flowId;
+		}
+
+		public String getFlowId() {
+			return flowId;
+		}
+	}
+
 }

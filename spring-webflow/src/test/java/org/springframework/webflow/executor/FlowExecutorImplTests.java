@@ -62,9 +62,9 @@ public class FlowExecutorImplTests extends TestCase {
 		replayMocks();
 
 		FlowExecutionResult result = flowExecutor.launchExecution("foo", null, context);
-		assertTrue(result.paused());
+		assertTrue(result.isPaused());
 		assertEquals("12345", result.getPausedKey());
-		assertFalse(result.ended());
+		assertFalse(result.isEnded());
 		assertNull(result.getOutcome());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
@@ -90,10 +90,10 @@ public class FlowExecutorImplTests extends TestCase {
 		replayMocks();
 
 		FlowExecutionResult result = flowExecutor.launchExecution("foo", null, context);
-		assertTrue(result.ended());
+		assertTrue(result.isEnded());
 		assertEquals("finish", result.getOutcome().getId());
 		assertTrue(result.getOutcome().getOutput().isEmpty());
-		assertFalse(result.paused());
+		assertFalse(result.isPaused());
 		assertNull(result.getPausedKey());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
@@ -127,9 +127,9 @@ public class FlowExecutorImplTests extends TestCase {
 		FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
 		verifyMocks();
 
-		assertTrue(result.paused());
+		assertTrue(result.isPaused());
 		assertEquals("12345", result.getPausedKey());
-		assertFalse(result.ended());
+		assertFalse(result.isEnded());
 		assertNull(result.getOutcome());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();
@@ -166,10 +166,10 @@ public class FlowExecutorImplTests extends TestCase {
 		replayMocks();
 
 		FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
-		assertTrue(result.ended());
+		assertTrue(result.isEnded());
 		assertEquals("finish", result.getOutcome().getId());
 		assertEquals(output, result.getOutcome().getOutput());
-		assertFalse(result.paused());
+		assertFalse(result.isPaused());
 		assertNull(result.getPausedKey());
 		assertNull(ExternalContextHolder.getExternalContext());
 		verifyMocks();

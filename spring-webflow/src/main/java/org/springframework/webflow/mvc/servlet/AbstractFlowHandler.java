@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -45,6 +46,10 @@ public class AbstractFlowHandler implements FlowHandler {
 
 	public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
 		return null;
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("flowId", getFlowId()).toString();
 	}
 
 }
