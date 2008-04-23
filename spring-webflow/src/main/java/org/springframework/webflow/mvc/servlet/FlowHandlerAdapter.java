@@ -54,6 +54,12 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
+	private static final String SERVLET_PATH_LOCATION_PREFIX = "servletPath:";
+
+	private static final String CONTEXT_PATH_LOCATION_PREFIX = "contextPath:";
+
+	private static final String REDIRECT_URL_LOCATION_PREFIX = "redirectUrl:";
+
 	/**
 	 * The entry point into Spring Web Flow.
 	 */
@@ -309,16 +315,16 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	}
 
 	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
-		if (location.startsWith("servletPath:")) {
-			return createServletRelativeRedirect(location.substring("servletPath:".length()), request);
-		} else if (location.startsWith("contextPath:")) {
-			String contextUrl = location.substring("contextPath:".length());
+		if (location.startsWith(SERVLET_PATH_LOCATION_PREFIX)) {
+			return createServletRelativeRedirect(location.substring(SERVLET_PATH_LOCATION_PREFIX.length()), request);
+		} else if (location.startsWith(CONTEXT_PATH_LOCATION_PREFIX)) {
+			String contextUrl = location.substring(CONTEXT_PATH_LOCATION_PREFIX.length());
 			if (!contextUrl.startsWith("/")) {
 				contextUrl = "/" + contextUrl;
 			}
 			return new ModelAndView(new RedirectView(contextUrl, true));
-		} else if (location.startsWith("redirectUrl:")) {
-			return new ModelAndView(new RedirectView(location.substring("redirectUrl:".length())));
+		} else if (location.startsWith(REDIRECT_URL_LOCATION_PREFIX)) {
+			return new ModelAndView(new RedirectView(location.substring(REDIRECT_URL_LOCATION_PREFIX.length())));
 		} else {
 			return createServletRelativeRedirect(location, request);
 		}
