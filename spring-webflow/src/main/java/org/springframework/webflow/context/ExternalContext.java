@@ -19,7 +19,6 @@ import java.io.Writer;
 import java.security.Principal;
 import java.util.Locale;
 
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
@@ -154,21 +153,21 @@ public interface ExternalContext {
 	 * @param flowId the id of the flow definition to redirect to
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
 	 */
-	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input);
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input);
 
 	/**
-	 * Request a redirect to an arbitrary resource URI. May not be supported in some environments. Calling this method
-	 * commits the response.
+	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
+	 * method commits the response.
 	 * @see #isResponseCommitted()
-	 * @param uri the URI to redirect to
+	 * @param location the location of the resource to redirect to
 	 */
-	public void requestExternalRedirect(String uri);
+	public void requestExternalRedirect(String location);
 
 	/**
 	 * Request that the redirect response requested be sent to the client in a manner that causes the client to issue
 	 * the redirect from a popup dialog. Calling this method only has an effect when a redirect has been requested.
 	 * @see #requestFlowExecutionRedirect()
-	 * @see #requestFlowDefinitionRedirect(String, AttributeMap)
+	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
 	 * @see #requestExternalRedirect(String)
 	 */
 	public void requestRedirectInPopup();

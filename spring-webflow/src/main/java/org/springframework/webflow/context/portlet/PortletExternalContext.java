@@ -29,7 +29,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
@@ -106,7 +105,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * Input to pass the flow definition upon redirecting. May be null. Never set unless
 	 * {@link #flowDefinitionRedirectFlowId} has been set.
 	 */
-	private AttributeMap flowDefinitionRedirectFlowInput;
+	private MutableAttributeMap flowDefinitionRedirectFlowInput;
 
 	/**
 	 * A string specifying an arbitrary
@@ -233,7 +232,7 @@ public class PortletExternalContext implements ExternalContext {
 		externalRedirectUrl = uri;
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input) {
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
@@ -270,7 +269,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * Returns the input to pass the flow definition through the redirect. Only set when
 	 * {@link #getFlowDefinitionRedirectRequested()} returns true.
 	 */
-	public AttributeMap getFlowRedirectFlowInput() {
+	public MutableAttributeMap getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 

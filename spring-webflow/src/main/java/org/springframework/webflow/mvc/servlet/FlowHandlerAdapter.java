@@ -16,6 +16,8 @@
 package org.springframework.webflow.mvc.servlet;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -31,12 +33,10 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.core.FlowException;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -54,11 +54,13 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
-	private static final String SERVLET_PATH_LOCATION_PREFIX = "servletPath:";
+	private static final String SERVLET_RELATIVE_LOCATION_PREFIX = "servletRelative:";
 
-	private static final String CONTEXT_PATH_LOCATION_PREFIX = "contextPath:";
+	private static final String CONTEXT_RELATIVE_LOCATION_PREFIX = "contextRelative:";
 
-	private static final String REDIRECT_URL_LOCATION_PREFIX = "redirectUrl:";
+	private static final String SERVER_RELATIVE_LOCATION_PREFIX = "serverRelative:";
+
+	private static final String URL_LOCATION_PREFIX = "url:";
 
 	/**
 	 * The entry point into Spring Web Flow.
@@ -152,9 +154,9 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			try {
 				ServletExternalContext context = createServletExternalContext(request, response);
 				FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
-				return handleFlowExecutionResult(result, context, request, response, flowHandler);
+				handleFlowExecutionResult(result, context, request, response, flowHandler);
 			} catch (FlowException e) {
-				return handleFlowException(e, request, response, flowHandler);
+				handleFlowException(e, request, response, flowHandler);
 			}
 		} else {
 			try {
@@ -162,11 +164,12 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				MutableAttributeMap input = getInputMap(flowHandler, request);
 				ServletExternalContext context = createServletExternalContext(request, response);
 				FlowExecutionResult result = flowExecutor.launchExecution(flowId, input, context);
-				return handleFlowExecutionResult(result, context, request, response, flowHandler);
+				handleFlowExecutionResult(result, context, request, response, flowHandler);
 			} catch (FlowException e) {
-				return handleFlowException(e, request, response, flowHandler);
+				handleFlowException(e, request, response, flowHandler);
 			}
 		}
+		return null;
 	}
 
 	// subclassing hooks
@@ -229,7 +232,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 * @param request the current request
 	 * @param response the current response
 	 */
-	protected ModelAndView defaultHandleExecutionOutcome(String flowId, FlowExecutionOutcome outcome,
+	protected void defaultHandleExecutionOutcome(String flowId, FlowExecutionOutcome outcome,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (!response.isCommitted()) {
 			// by default, just start the flow over passing the output as input
@@ -238,7 +241,6 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			}
 			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
 		}
-		return null;
 	}
 
 	/**
@@ -251,7 +253,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 * @param request the current request
 	 * @param response the current response
 	 */
-	protected ModelAndView defaultHandleException(String flowId, FlowException e, HttpServletRequest request,
+	protected void defaultHandleException(String flowId, FlowException e, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
 			if (!response.isCommitted()) {
@@ -261,7 +263,6 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				// by default, attempt to restart the flow
 				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
 			}
-			return null;
 		} else {
 			throw e;
 		}
@@ -269,91 +270,122 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	// internal helpers
 
-	private ModelAndView handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
+	private void handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
 			HttpServletRequest request, HttpServletResponse response, FlowHandler handler) throws IOException {
 		if (result.isPaused()) {
 			if (context.getFlowExecutionRedirectRequested()) {
-				String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending flow execution redirect to " + url);
-				}
-				sendRedirect(context, request, response, url);
-				return null;
+				sendFlowExecutionRedirect(result, context, request, response);
+			} else if (context.getFlowDefinitionRedirectRequested()) {
+				sendFlowDefinitionRedirect(result, context, request, response);
 			} else if (context.getExternalRedirectRequested()) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
-				}
-				sendRedirect(context, request, response, context.getExternalRedirectUrl());
-				return null;
-			} else {
-				return null;
+				sendExternalRedirect(context.getExternalRedirectUrl(), request, response);
 			}
 		} else if (result.isEnded()) {
 			if (context.getFlowDefinitionRedirectRequested()) {
-				String flowId = context.getFlowRedirectFlowId();
-				AttributeMap input = context.getFlowRedirectFlowInput();
-				String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending flow definition to " + url);
-				}
-				sendRedirect(context, request, response, url);
-				return null;
+				sendFlowDefinitionRedirect(result, context, request, response);
 			} else if (context.getExternalRedirectRequested()) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Sending external redirect to " + context.getExternalRedirectUrl());
-				}
-				sendRedirect(context, request, response, context.getExternalRedirectUrl());
-				return null;
+				sendExternalRedirect(context.getExternalRedirectUrl(), request, response);
 			} else {
 				String location = handler.handleExecutionOutcome(result.getOutcome(), request, response);
-				return location != null ? createRedirectView(location, request) : defaultHandleExecutionOutcome(result
-						.getFlowId(), result.getOutcome(), request, response);
+				if (location != null) {
+					sendExternalRedirect(location, request, response);
+				} else {
+					defaultHandleExecutionOutcome(result.getFlowId(), result.getOutcome(), request, response);
+				}
 			}
 		} else {
 			throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
 		}
 	}
 
-	private ModelAndView createRedirectView(String location, HttpServletRequest request) {
-		if (location.startsWith(SERVLET_PATH_LOCATION_PREFIX)) {
-			return createServletRelativeRedirect(location.substring(SERVLET_PATH_LOCATION_PREFIX.length()), request);
-		} else if (location.startsWith(CONTEXT_PATH_LOCATION_PREFIX)) {
-			String contextUrl = location.substring(CONTEXT_PATH_LOCATION_PREFIX.length());
-			if (!contextUrl.startsWith("/")) {
-				contextUrl = "/" + contextUrl;
-			}
-			return new ModelAndView(new RedirectView(contextUrl, true));
-		} else if (location.startsWith(REDIRECT_URL_LOCATION_PREFIX)) {
-			return new ModelAndView(new RedirectView(location.substring(REDIRECT_URL_LOCATION_PREFIX.length())));
+	private void sendFlowExecutionRedirect(FlowExecutionResult result, ServletExternalContext context,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Sending flow execution redirect to '" + url + "'");
+		}
+		if (context.isAjaxRequest()) {
+			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, url, context.getRedirectInPopup());
 		} else {
-			return createServletRelativeRedirect(location, request);
+			sendRedirect(url, response);
 		}
 	}
 
-	private ModelAndView createServletRelativeRedirect(String location, HttpServletRequest request) {
+	private void sendFlowDefinitionRedirect(FlowExecutionResult result, ServletExternalContext context,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String flowId = context.getFlowRedirectFlowId();
+		MutableAttributeMap input = context.getFlowRedirectFlowInput();
+		if (result.isPaused()) {
+			input.put("refererExecution", result.getPausedKey());
+		}
+		String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Sending flow definition redirect to '" + url + "'");
+		}
+		sendRedirect(url, response);
+	}
+
+	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Sending external redirect to '" + location + "'");
+		}
+		if (location.startsWith(SERVLET_RELATIVE_LOCATION_PREFIX)) {
+			sendServletRelativeRedirect(location.substring(SERVLET_RELATIVE_LOCATION_PREFIX.length()), request,
+					response);
+		} else if (location.startsWith(CONTEXT_RELATIVE_LOCATION_PREFIX)) {
+			StringBuffer url = new StringBuffer(request.getContextPath());
+			String contextRelativeUrl = location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length());
+			if (!contextRelativeUrl.startsWith("/")) {
+				url.append('/');
+			}
+			url.append(contextRelativeUrl);
+			sendRedirect(url.toString(), response);
+		} else if (location.startsWith(SERVER_RELATIVE_LOCATION_PREFIX)) {
+			String url = location.substring(SERVER_RELATIVE_LOCATION_PREFIX.length());
+			if (!url.startsWith("/")) {
+				url = "/" + url;
+			}
+			sendRedirect(url, response);
+		} else if (location.startsWith(URL_LOCATION_PREFIX)) {
+			String url = location.substring(URL_LOCATION_PREFIX.length());
+			try {
+				new URL(url);
+				sendRedirect(url, response);
+			} catch (MalformedURLException e) {
+				IllegalArgumentException iae = new IllegalArgumentException("The redirect url '" + url
+						+ "' is invalid; specify a fully qualified URL when using the '" + URL_LOCATION_PREFIX
+						+ "' location prefix");
+				e.initCause(e);
+				throw iae;
+			}
+		} else {
+			sendServletRelativeRedirect(location, request, response);
+		}
+	}
+
+	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		StringBuffer url = new StringBuffer(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
 		url.append(location);
-		return new ModelAndView(new RedirectView(url.toString(), true));
+		sendRedirect(url.toString(), response);
 	}
 
-	private void sendRedirect(ServletExternalContext context, HttpServletRequest request, HttpServletResponse response,
-			String targetUrl) throws IOException {
-		if (context.isAjaxRequest()) {
-			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, targetUrl, context
-					.getRedirectInPopup());
-		} else if (!response.isCommitted()) {
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
-		}
+	private void sendRedirect(String url, HttpServletResponse response) throws IOException {
+		response.sendRedirect(response.encodeRedirectURL(url));
 	}
 
-	private ModelAndView handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
+	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
 			FlowHandler handler) throws IOException {
 		String location = handler.handleException(e, request, response);
-		return location != null ? createRedirectView(location, request) : defaultHandleException(getFlowId(handler,
-				request), e, request, response);
+		if (location != null) {
+			sendExternalRedirect(location, request, response);
+		} else {
+			defaultHandleException(getFlowId(handler, request), e, request, response);
+		}
 	}
 
 	public long getLastModified(HttpServletRequest request, Object handler) {

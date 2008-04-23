@@ -56,15 +56,15 @@ public interface FlowHandler {
 	 * <p>
 	 * The following prefixes are supported for qualifying the returned location string:
 	 * <ul>
-	 * <li>servletPath: - the location is relative to the current servlet
-	 * <li>contextPath: - the location is relative to the current web application</li>
-	 * <li>redirectUrl: - the location is an URL to pass in unchanged to
-	 * {@link HttpServletResponse#sendRedirect(String)}.
+	 * <li>servletRelative: - the location is relative to the current servlet</li>
+	 * <li>contextRelative: - the location is relative to the current web application</li>
+	 * <li>serverRelative: - the location is relative to the server root</li>
+	 * <li>url: - the location is a fully qualified URL to an external resource</li>
 	 * </ul>
 	 * Also, if the returned location no prefix, for example "/hotels/index", the location is treated as relative to the
-	 * current servlet by default
+	 * current servlet by default.
 	 * <p>
-	 * For servlet-relative and context-relative URLs, a leading slash is optional.
+	 * For servlet-relative, context-relative, and server-relative URLs, a leading slash is optional.
 	 * 
 	 * @param outcome the outcome that was reached
 	 * @param request the current request

@@ -93,8 +93,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
@@ -113,8 +112,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		assertEquals("/springtravel/app/foo?bar=baz", response.getRedirectedUrl());
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
@@ -130,8 +128,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
@@ -168,8 +165,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 		assertEquals("/springtravel/app/foo?execution=12345", response.getRedirectedUrl());
 		EasyMock.verify(new Object[] { flowExecutor });
@@ -206,13 +202,12 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		context.requestExternalRedirect("http://www.paypal.com");
+		context.requestExternalRedirect("url:http://www.paypal.com");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 		assertEquals("http://www.paypal.com", response.getRedirectedUrl());
 		EasyMock.verify(new Object[] { flowExecutor });
@@ -251,8 +246,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowException flowException = new NoSuchFlowExecutionException(new MockFlowExecutionKey("12345"), null);
 		EasyMock.expectLastCall().andThrow(flowException);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		assertEquals("/springtravel/app/foo", response.getRedirectedUrl());
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
@@ -271,8 +265,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNotNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
@@ -288,8 +281,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		flowExecutor.launchExecution("foo", flowInput, context);
 		EasyMock.expectLastCall().andThrow(flowException);
 		EasyMock.replay(new Object[] { flowExecutor });
-		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
-		assertNotNull(mv);
+		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 }

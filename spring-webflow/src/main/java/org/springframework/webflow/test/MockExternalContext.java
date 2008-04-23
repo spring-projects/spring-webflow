@@ -23,7 +23,6 @@ import java.util.Locale;
 
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -67,7 +66,7 @@ public class MockExternalContext implements ExternalContext {
 
 	private String flowDefinitionRedirectFlowId;
 
-	private AttributeMap flowDefinitionRedirectFlowInput;
+	private MutableAttributeMap flowDefinitionRedirectFlowInput;
 
 	private String externalRedirectUrl;
 
@@ -161,7 +160,7 @@ public class MockExternalContext implements ExternalContext {
 		flowExecutionRedirectRequested = true;
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, AttributeMap input) {
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
@@ -342,7 +341,7 @@ public class MockExternalContext implements ExternalContext {
 	 * Returns the input to pass the flow definition through the redirect. Only set when
 	 * {@link #getFlowDefinitionRedirectRequested()} returns true.
 	 */
-	public AttributeMap getFlowRedirectFlowInput() {
+	public MutableAttributeMap getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 
