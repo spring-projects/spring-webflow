@@ -416,14 +416,27 @@ Can also be an evaluatable expression:
 <pre>
 	${flowScope.myViewExpression}
 </pre>
-Use the externalRedirect: prefix to redirect to an external URL, typically to interface with an external system.
-External redirect query parameters may be specified using ${expressions} that evaluate against the request context:
+The externalRedirect: prefix may be used to redirect to an external location, typically to interface with an external system or controller.
+External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+The supported formats for an encoded externalRedirect expression are:
 <pre>
-	externalRedirect:/http://someOtherSystem?orderId=${flowScope.order.id}&amp;callbackUrl=${flowExecutionUrl}
-</pre> 
-Use the flowRedirect: prefix to redirect to another flow:
+	externalRedirect:<servlet relative path>
+	externalRedirect:contextRelative:<context relative path>
+	externalRedirect:serverRelative:<server relative path>
+	externalRedirect:url:<fully qualified URL>
+</pre>
+For example:
+<pre>
+	externalRedirect:/hotels/index
+	externalRedirect:url:http://someOtherSystem?orderId=${order.id}&callbackUrl=${flowExecutionUrl}
+</pre>
+The flowRedirect: prefix may be used to redirect to another flow:
 <pre>
 	flowRedirect:myOtherFlow?someData=${flowScope.data}
+</pre>
+For exotic usages, you may plug in a custom ViewFactory bean you define:
+<pre>
+	${myCustomViewFactory}
 </pre>
 When this attribute is not specified, the view to render will be determined by convention.
 The default convention is to treat the id of this view state as the view identifier.
@@ -882,11 +895,21 @@ It can also be an evaluatable expression:
 <pre>
 	${flowScope.myViewExpression}
 </pre>
-Use the externalRedirect: prefix to redirect to an external URL:
+The externalRedirect: prefix may be used to request a redirect to an external location, typically to interface with an external system or controller.
+External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+The supported formats for an encoded externalRedirect expression are:
 <pre>
-	externalRedirect:/someController?orderId=${order.id}
-</pre> 
-Use the flowRedirect: prefix to redirect to another flow:
+	externalRedirect:<servlet relative path>
+	externalRedirect:contextRelative:<context relative path>
+	externalRedirect:serverRelative:<server relative path>
+	externalRedirect:url:<fully qualified URL>
+</pre>
+For example:
+<pre>
+	externalRedirect:/hotels/index
+	externalRedirect:url:http://someOtherSystem?orderId=${order.id}
+</pre>
+The flowRedirect: prefix may be used to redirect to another flow:
 <pre>
 	flowRedirect:myOtherFlow?someData=${flowScope.data}
 </pre>
@@ -895,8 +918,8 @@ For exotic usages, you may plug in a custom ViewFactory bean you define:
 	${myCustomViewFactory}
 </pre>
 <br>
-When this attribute is not specified, no final response will be issued.  In this case, 
-the caller is expected to handle this flow outcome.
+When this attribute is not specified, no final response will be issued.
+In this case, the caller is expected to handle this flow outcome.
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
