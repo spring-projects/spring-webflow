@@ -38,9 +38,11 @@ import org.springframework.webflow.executor.FlowExecutor;
  */
 public class FlowController extends AbstractController implements InitializingBean {
 
-	private FlowHandlerAdapter flowHandlerAdapter;
+	private FlowHandlerAdapter flowHandlerAdapter = new FlowHandlerAdapter();
 
 	private Map flowHandlers = new HashMap();
+
+	private boolean customFlowHandlerAdapter;
 
 	/**
 	 * Creates a new flow controller.
@@ -130,23 +132,23 @@ public class FlowController extends AbstractController implements InitializingBe
 	 */
 	public void setFlowHandlerAdapter(FlowHandlerAdapter flowHandlerAdapter) {
 		this.flowHandlerAdapter = flowHandlerAdapter;
+		customFlowHandlerAdapter = true;
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		if (flowHandlerAdapter == null) {
-			flowHandlerAdapter = new FlowHandlerAdapter();
+		if (!customFlowHandlerAdapter) {
 			flowHandlerAdapter.setApplicationContext(getApplicationContext());
 			flowHandlerAdapter.afterPropertiesSet();
 		}
 	}
+
+	// subclassing hooks
 
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		FlowHandler handler = getFlowHandler(request);
 		return flowHandlerAdapter.handle(request, response, handler);
 	}
-
-	// subclassing hooks
 
 	// internal helpers
 
