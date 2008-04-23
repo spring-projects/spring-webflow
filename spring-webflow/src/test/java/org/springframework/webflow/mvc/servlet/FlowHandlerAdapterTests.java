@@ -213,6 +213,130 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
+	public void testLaunchFlowWithExternalRedirectServletRelative() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("servletRelative:bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/springtravel/app/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectServletRelativeWithSlash() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("servletRelative:/bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/springtravel/app/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectContextRelative() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("contextRelative:bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/springtravel/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectContextRelativeWithSlash() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("contextRelative:/bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/springtravel/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectServerRelative() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("serverRelative:bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectServerRelativeWithSlash() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("serverRelative:/bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals("/bar", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowWithExternalRedirectMalformedUrl() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("url:/bogus");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		try {
+			flowHandlerAdapter.handle(request, response, flowHandler);
+			fail("Should have failed iae");
+		} catch (IllegalArgumentException e) {
+
+		}
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals(null, response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
 	public void testDefaultHandleFlowException() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");

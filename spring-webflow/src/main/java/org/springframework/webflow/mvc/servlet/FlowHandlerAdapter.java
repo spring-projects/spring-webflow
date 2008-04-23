@@ -356,7 +356,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 				IllegalArgumentException iae = new IllegalArgumentException("The redirect url '" + url
 						+ "' is invalid; specify a fully qualified URL when using the '" + URL_LOCATION_PREFIX
 						+ "' location prefix");
-				e.initCause(e);
+				iae.initCause(e);
 				throw iae;
 			}
 		} else {
@@ -366,7 +366,8 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		StringBuffer url = new StringBuffer(request.getServletPath());
+		StringBuffer url = new StringBuffer(request.getContextPath());
+		url.append(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
