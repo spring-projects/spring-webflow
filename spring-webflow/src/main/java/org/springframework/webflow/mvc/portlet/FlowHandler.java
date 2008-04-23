@@ -26,11 +26,12 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
 
 /**
- * A controller helper used for customizing access to a <i>single</i> flow definition. This helper is used to:
+ * A controller helper used for customizing access to a <i>single</i> flow definition in a Portlet environment. This
+ * helper is used to:
  * <ol>
  * <li>Launch executions of that flow with data in the execution input map
- * <li>Handle outcomes reached by that flow in a custom manner.
- * <li>Handle un-handled exceptions dealing with that flow in a custom manner.
+ * <li>Handle outcomes reached by that flow in a custom manner
+ * <li>Handle un-handled exceptions dealing with that flow in a custom manner
  * </ol>
  * Such a handler can be visually thought of as a "flow reference" on a Garrett IA diagram. It holds a reference to the
  * flow id to launch, how to provision its input, how to process its outcomes, and how to handle uncaught exceptions.
@@ -56,8 +57,8 @@ public interface FlowHandler {
 	/**
 	 * Handles a specific flow execution outcome. Used to change portlet modes after the flow ends.
 	 * @param outcome the outcome that was reached
-	 * @param request the current render request
-	 * @param response the current render response
+	 * @param request the current action request
+	 * @param response the current action response
 	 * @return whether this outcome was handled, or whether the caller should handle it
 	 * @throws PortletModeException if this handler tries to change the portlet mode to something invalid
 	 */
@@ -71,7 +72,8 @@ public interface FlowHandler {
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
 	 * @param response the current response
-	 * @return the name of a specific error view to render, or null if the exception should be handled by the caller
+	 * @return the name of a specific error view to render, or <code>null</code> if the exception should be handled by
+	 * the caller
 	 */
 	public String handleException(FlowException e, RenderRequest request, RenderResponse response);
 
