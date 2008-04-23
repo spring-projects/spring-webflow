@@ -44,6 +44,14 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
+/**
+ * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows in a Portlet
+ * environment. Delegates to mapped {@link FlowHandler flow handlers} to manage the interaction with executions of
+ * specific flow definitions.
+ * 
+ * @author Keith Donald
+ * @author Scott Andrews
+ */
 public class FlowHandlerAdapter extends PortletApplicationObjectSupport implements HandlerAdapter, InitializingBean {
 
 	private static final String ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE = "actionRequestFlowException";
@@ -152,8 +160,11 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	}
 
 	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(PortletRequest request) {
-		LocalAttributeMap inputMap = new LocalAttributeMap();
 		Map parameterMap = request.getParameterMap();
+		if (parameterMap.size() == 0) {
+			return null;
+		}
+		LocalAttributeMap inputMap = new LocalAttributeMap();
 		Iterator it = parameterMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry entry = (Map.Entry) it.next();

@@ -40,7 +40,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private PortletExternalContext actionContext;
 	private PortletExternalContext renderContext;
 	private FlowHandler flowHandler;
-	private LocalAttributeMap flowInput = new LocalAttributeMap();
+	private LocalAttributeMap flowInput = null;
 	private boolean handleException;
 	private boolean handleExecutionOutcome;
 	private boolean handleExecutionOutcomeCalled;

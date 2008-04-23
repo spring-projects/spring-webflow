@@ -45,8 +45,9 @@ import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
 /**
- * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows. Delegates to
- * mapped {@link FlowHandler flow handlers} to manage the interaction with executions of specific flow definitions.
+ * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows in a Servlet
+ * environment. Delegates to mapped {@link FlowHandler flow handlers} to manage the interaction with executions of
+ * specific flow definitions.
  * 
  * @author Keith Donald
  */
