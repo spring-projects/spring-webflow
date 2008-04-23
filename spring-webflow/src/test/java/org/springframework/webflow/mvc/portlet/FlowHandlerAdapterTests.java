@@ -18,7 +18,6 @@ import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.web.portlet.ModelAndView;
-import org.springframework.webflow.context.portlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -32,7 +31,7 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 public class FlowHandlerAdapterTests extends TestCase {
 
 	private FlowHandlerAdapter controller;
-	private FlowExecutor executor;
+	private FlowExecutor flowExecutor;
 	private MockPortletContext portletContext;
 	private MockActionRequest actionRequest;
 	private MockActionResponse actionResponse;
@@ -46,9 +45,9 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private boolean handleExecutionOutcome;
 	private boolean handleExecutionOutcomeCalled;
 
-	protected void setUp() {
-		executor = (FlowExecutor) EasyMock.createMock(FlowExecutor.class);
-		controller = new FlowHandlerAdapter(executor) {
+	protected void setUp() throws Exception {
+		flowExecutor = (FlowExecutor) EasyMock.createMock(FlowExecutor.class);
+		controller = new FlowHandlerAdapter() {
 			protected PortletExternalContext createPortletExternalContext(PortletRequest request,
 					PortletResponse response) {
 				if (request instanceof ActionRequest) {
@@ -58,17 +57,21 @@ public class FlowHandlerAdapterTests extends TestCase {
 				}
 			}
 		};
+		controller.setFlowExecutor(flowExecutor);
+		controller.setApplicationContext(new StaticWebApplicationContext());
 		portletContext = new MockPortletContext();
+		controller.setPortletContext(portletContext);
+		controller.afterPropertiesSet();
+
 		actionRequest = new MockActionRequest();
 		actionResponse = new MockActionResponse();
 		renderRequest = new MockRenderRequest();
 		renderResponse = new MockRenderResponse();
-		actionContext = new PortletExternalContext(portletContext, actionRequest, actionResponse,
-				new DefaultFlowUrlHandler());
-		renderContext = new PortletExternalContext(portletContext, renderRequest, renderResponse,
-				new DefaultFlowUrlHandler());
-		controller.setApplicationContext(new StaticWebApplicationContext());
-		controller.setPortletContext(portletContext);
+		actionContext = new PortletExternalContext(portletContext, actionRequest, actionResponse, controller
+				.getFlowUrlHandler());
+		renderContext = new PortletExternalContext(portletContext, renderRequest, renderResponse, controller
+				.getFlowUrlHandler());
+
 		flowHandler = new FlowHandler() {
 			public String getFlowId() {
 				return "foo";
@@ -101,47 +104,47 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowRequest() throws Exception {
 		renderRequest.setContextPath("/springtravel");
-		executor.launchExecution("foo", flowInput, renderContext);
+		flowExecutor.launchExecution("foo", flowInput, renderContext);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		ModelAndView mv = controller.handleRender(renderRequest, renderResponse, flowHandler);
 		assertNull(mv);
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testResumeFlowActionRequest() throws Exception {
 		actionRequest.setContextPath("/springtravel");
 		actionRequest.addParameter("execution", "12345");
-		executor.resumeExecution("12345", actionContext);
+		flowExecutor.resumeExecution("12345", actionContext);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
 		EasyMock.expectLastCall().andReturn(result);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		controller.handleAction(actionRequest, actionResponse, flowHandler);
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testResumeFlowRenderRequest() throws Exception {
 		renderRequest.setContextPath("/springtravel");
 		renderRequest.addParameter("execution", "12345");
-		executor.resumeExecution("12345", renderContext);
+		flowExecutor.resumeExecution("12345", renderContext);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
 		EasyMock.expectLastCall().andReturn(result);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		controller.handleRender(renderRequest, renderResponse, flowHandler);
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testResumeFlowRenderRequestFromSession() throws Exception {
 		renderRequest.setContextPath("/springtravel");
 		PortletSession session = renderRequest.getPortletSession();
 		session.setAttribute("execution", "12345");
-		executor.resumeExecution("12345", renderContext);
+		flowExecutor.resumeExecution("12345", renderContext);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
 		EasyMock.expectLastCall().andReturn(result);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		controller.handleRender(renderRequest, renderResponse, flowHandler);
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testDefaultHandleFlowException() throws Exception {
@@ -160,13 +163,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 	public void testDefaultHandleNoSuchFlowExecutionException() throws Exception {
 		actionRequest.setContextPath("/springtravel");
 		actionRequest.addParameter("execution", "12345");
-		executor.resumeExecution("12345", actionContext);
+		flowExecutor.resumeExecution("12345", actionContext);
 		FlowException flowException = new NoSuchFlowExecutionException(new MockFlowExecutionKey("12345"), null);
 		EasyMock.expectLastCall().andThrow(flowException);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		controller.handleAction(actionRequest, actionResponse, flowHandler);
 		assertNotNull(actionRequest.getPortletSession().getAttribute("actionRequestFlowException"));
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 		Exception e = (Exception) actionRequest.getPortletSession().getAttribute("actionRequestFlowException");
 		assertTrue(e instanceof NoSuchFlowExecutionException);
 	}
@@ -178,12 +181,12 @@ public class FlowHandlerAdapterTests extends TestCase {
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
-		executor.resumeExecution("12345", actionContext);
+		flowExecutor.resumeExecution("12345", actionContext);
 		EasyMock.expectLastCall().andReturn(FlowExecutionResult.createEndedResult("bar", outcome));
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		controller.handleAction(actionRequest, actionResponse, flowHandler);
 		assertTrue(handleExecutionOutcomeCalled);
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {
@@ -191,13 +194,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 		final FlowException flowException = new FlowException("Error") {
 		};
 		renderRequest.setContextPath("/springtravel");
-		executor.launchExecution("foo", flowInput, renderContext);
+		flowExecutor.launchExecution("foo", flowInput, renderContext);
 		EasyMock.expectLastCall().andThrow(flowException);
-		EasyMock.replay(new Object[] { executor });
+		EasyMock.replay(new Object[] { flowExecutor });
 		ModelAndView mv = controller.handleRender(renderRequest, renderResponse, flowHandler);
 		assertNotNull(mv);
 		assertEquals("error", mv.getViewName());
-		EasyMock.verify(new Object[] { executor });
+		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
 	public void testHandleFlowExceptionFromSession() throws Exception {

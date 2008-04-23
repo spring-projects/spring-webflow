@@ -70,7 +70,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	/**
 	 * A strategy for extracting flow arguments and generating flow urls.
 	 */
-	private FlowUrlHandler urlHandler;
+	private FlowUrlHandler flowUrlHandler;
 
 	/**
 	 * The representation of an Ajax client service capable of interacting with web flow.
@@ -106,15 +106,15 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 * Returns the flow url handler.
 	 */
 	public FlowUrlHandler getFlowUrlHandler() {
-		return urlHandler;
+		return flowUrlHandler;
 	}
 
 	/**
 	 * Sets the flow url handler
-	 * @param urlHandler the flow url handler
+	 * @param flowUrlHandler the flow url handler
 	 */
-	public void setFlowUrlHandler(FlowUrlHandler urlHandler) {
-		this.urlHandler = urlHandler;
+	public void setFlowUrlHandler(FlowUrlHandler flowUrlHandler) {
+		this.flowUrlHandler = flowUrlHandler;
 	}
 
 	/**
@@ -134,11 +134,11 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(flowExecutor, "The FlowExecutor to execute flows is required");
-		if (urlHandler == null) {
-			this.urlHandler = new DefaultFlowUrlHandler();
+		if (flowUrlHandler == null) {
+			flowUrlHandler = new DefaultFlowUrlHandler();
 		}
 		if (ajaxHandler == null) {
-			this.ajaxHandler = new SpringJavascriptAjaxHandler();
+			ajaxHandler = new SpringJavascriptAjaxHandler();
 		}
 	}
 
@@ -149,7 +149,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		FlowHandler flowHandler = (FlowHandler) handler;
-		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
+		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
 			try {
 				ServletExternalContext context = createServletExternalContext(request, response);
@@ -181,7 +181,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 */
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
-		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, urlHandler);
+		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, flowUrlHandler);
 		context.setAjaxRequest(ajaxHandler.isAjaxRequest(getServletContext(), request, response));
 		return context;
 	}
@@ -193,7 +193,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 * @param request the current request
 	 */
 	protected String defaultGetFlowId(HttpServletRequest request) {
-		return urlHandler.getFlowId(request);
+		return flowUrlHandler.getFlowId(request);
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
 			}
-			response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
+			response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
 		}
 	}
 
@@ -261,7 +261,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 					logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
 				}
 				// by default, attempt to restart the flow
-				response.sendRedirect(urlHandler.createFlowDefinitionUrl(flowId, null, request));
+				response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, null, request));
 			}
 		} else {
 			throw e;
@@ -300,7 +300,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	private void sendFlowExecutionRedirect(FlowExecutionResult result, ServletExternalContext context,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String url = urlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
+		String url = flowUrlHandler.createFlowExecutionUrl(result.getFlowId(), result.getPausedKey(), request);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sending flow execution redirect to '" + url + "'");
 		}
@@ -318,7 +318,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 		if (result.isPaused()) {
 			input.put("refererExecution", result.getPausedKey());
 		}
-		String url = urlHandler.createFlowDefinitionUrl(flowId, input, request);
+		String url = flowUrlHandler.createFlowDefinitionUrl(flowId, input, request);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sending flow definition redirect to '" + url + "'");
 		}

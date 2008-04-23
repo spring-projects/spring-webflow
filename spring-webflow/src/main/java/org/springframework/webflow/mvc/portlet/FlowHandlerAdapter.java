@@ -28,6 +28,8 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 import org.springframework.web.portlet.HandlerAdapter;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.context.PortletApplicationObjectSupport;
@@ -42,17 +44,58 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 
-public class FlowHandlerAdapter extends PortletApplicationObjectSupport implements HandlerAdapter {
+public class FlowHandlerAdapter extends PortletApplicationObjectSupport implements HandlerAdapter, InitializingBean {
 
 	private static final String ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE = "actionRequestFlowException";
 
 	private FlowExecutor flowExecutor;
 
-	private FlowUrlHandler urlHandler;
+	private FlowUrlHandler flowUrlHandler;
 
-	public FlowHandlerAdapter(FlowExecutor flowExecutor) {
+	/**
+	 * Creates a new flow handler adapter.
+	 * @see #setFlowExecutor(FlowExecutor)
+	 * @see #setFlowUrlHandler(FlowUrlHandler)
+	 * @see #afterPropertiesSet()
+	 */
+	public FlowHandlerAdapter() {
+	}
+
+	/**
+	 * Returns the central service for executing flows. Required.
+	 */
+	public FlowExecutor getFlowExecutor() {
+		return flowExecutor;
+	}
+
+	/**
+	 * Sets the central service for executing flows. Required.
+	 * @param flowExecutor
+	 */
+	public void setFlowExecutor(FlowExecutor flowExecutor) {
 		this.flowExecutor = flowExecutor;
-		this.urlHandler = new DefaultFlowUrlHandler();
+	}
+
+	/**
+	 * Returns the flow url handler.
+	 */
+	public FlowUrlHandler getFlowUrlHandler() {
+		return flowUrlHandler;
+	}
+
+	/**
+	 * Sets the flow url handler
+	 * @param urlHandler the flow url handler
+	 */
+	public void setFlowUrlHandler(FlowUrlHandler urlHandler) {
+		this.flowUrlHandler = urlHandler;
+	}
+
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(flowExecutor, "The FlowExecutor to execute flows is required");
+		if (flowUrlHandler == null) {
+			flowUrlHandler = new DefaultFlowUrlHandler();
+		}
 	}
 
 	public boolean supports(Object handler) {
@@ -70,7 +113,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 				return handleException(e, flowHandler, request, response);
 			}
 		}
-		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
+		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
 			return resumeFlow(flowExecutionKey, flowHandler, request, response);
 		} else {
@@ -81,12 +124,12 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	public void handleAction(ActionRequest request, ActionResponse response, Object handler) throws Exception {
 		FlowHandler flowHandler = (FlowHandler) handler;
 		populateConveniencePortletProperties(request);
-		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
+		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
 			if (result.isPaused()) {
-				urlHandler.setFlowExecutionRenderParameter(result.getPausedKey(), response);
+				flowUrlHandler.setFlowExecutionRenderParameter(result.getPausedKey(), response);
 			} else if (result.isEnded()) {
 				handleFlowExecutionOutcome(result.getOutcome(), flowHandler, request, response);
 			} else {
@@ -178,7 +221,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		try {
 			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
 			if (result.isPaused()) {
-				urlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
+				flowUrlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
 			}
 			return null;
 		} catch (FlowException e) {
