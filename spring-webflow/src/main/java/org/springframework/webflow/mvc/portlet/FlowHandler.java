@@ -31,7 +31,7 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
  * <ol>
  * <li>Launch executions of that flow with data in the execution input map
  * <li>Handle outcomes reached by that flow in a custom manner
- * <li>Handle un-handled exceptions dealing with that flow in a custom manner
+ * <li>Handle unhandled exceptions dealing with that flow in a custom manner
  * </ol>
  * Such a handler can be visually thought of as a "flow reference" on a Garrett IA diagram. It holds a reference to the
  * flow id to launch, how to provision its input, how to process its outcomes, and how to handle uncaught exceptions.
