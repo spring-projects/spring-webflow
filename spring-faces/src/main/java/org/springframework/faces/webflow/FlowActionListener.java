@@ -15,6 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.NavigationHandler;
 import javax.faces.component.ActionSource;
 import javax.faces.context.FacesContext;
@@ -24,19 +28,35 @@ import javax.faces.event.ActionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.binding.expression.Expression;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.webflow.definition.TransitionDefinition;
+import org.springframework.webflow.definition.TransitionableStateDefinition;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.mvc.view.MessageContextErrors;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
  * <p>
  * This implementation bypasses the JSF {@link NavigationHandler} mechanism to instead let the event be handled directly
  * by Web Flow.
+ * <p>
+ * Web Flow's model-level validation will be invoked here after an event has been detected if the event is not an
+ * immediate event.
  * 
  * @author Jeremy Grelle
  */
 public class FlowActionListener implements ActionListener {
 
 	private static final Log logger = LogFactory.getLog(FlowActionListener.class);
+
+	private static final String MESSAGES_ID = "messages";
 
 	private ActionListener delegate;
 
@@ -51,18 +71,20 @@ public class FlowActionListener implements ActionListener {
 		}
 		FacesContext context = FacesContext.getCurrentInstance();
 		ActionSource source = (ActionSource) actionEvent.getSource();
-		String result = null;
+		String eventId = null;
 		if (source.getAction() != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking action " + source.getAction());
 			}
-			result = (String) source.getAction().invoke(context, null);
+			eventId = (String) source.getAction().invoke(context, null);
 		}
-		if (StringUtils.hasText(result)) {
+		if (StringUtils.hasText(eventId)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Event '" + result + "' detected");
+				logger.debug("Event '" + eventId + "' detected");
 			}
-			context.getExternalContext().getRequestMap().put(JsfView.EVENT_KEY, result);
+			if (source.isImmediate() || validateModel(context, eventId)) {
+				context.getExternalContext().getRequestMap().put(JsfView.EVENT_KEY, eventId);
+			}
 		} else {
 			logger.debug("No action event detected");
 			context.getExternalContext().getRequestMap().remove(JsfView.EVENT_KEY);
@@ -70,5 +92,93 @@ public class FlowActionListener implements ActionListener {
 		// tells JSF lifecycle that rendering should now happen and any subsequent phases should be skipped
 		// required in the case of this action listener firing immediately (immediate=true) before validation
 		context.renderResponse();
+	}
+
+	// internal helpers
+
+	private boolean validateModel(FacesContext facesContext, String eventId) {
+		boolean isValid = true;
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		Object model = getModelObject(requestContext);
+		if (shouldValidate(requestContext, model, eventId)) {
+			validate(requestContext, model);
+			if (requestContext.getMessageContext().hasErrorMessages()) {
+				isValid = false;
+				if (requestContext.getExternalContext().isAjaxRequest()) {
+					List fragments = new ArrayList();
+					String formId = getModelExpression(requestContext).getExpressionString();
+					if (facesContext.getViewRoot().findComponent(formId) != null) {
+						fragments.add(formId);
+					}
+					if (facesContext.getViewRoot().findComponent(MESSAGES_ID) != null) {
+						fragments.add(MESSAGES_ID);
+					}
+					if (fragments.size() > 0) {
+						String[] fragmentsArray = new String[fragments.size()];
+						for (int i = 0; i < fragments.size(); i++) {
+							fragmentsArray[i] = (String) fragments.get(i);
+						}
+						requestContext.getFlashScope().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragmentsArray);
+					}
+				}
+			}
+		}
+		return isValid;
+	}
+
+	private Object getModelObject(RequestContext requestContext) {
+		Expression model = getModelExpression(requestContext);
+		if (model != null) {
+			return model.getValue(requestContext);
+		} else {
+			return null;
+		}
+	}
+
+	private Expression getModelExpression(RequestContext requestContext) {
+		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
+	}
+
+	private boolean shouldValidate(RequestContext requestContext, Object model, String eventId) {
+		if (model == null) {
+			return false;
+		}
+		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
+		TransitionDefinition transition = currentState.getTransition(eventId);
+		if (transition != null) {
+			if (transition.getAttributes().contains("bind")) {
+				return transition.getAttributes().getBoolean("bind").booleanValue();
+			}
+		}
+		return true;
+	}
+
+	private void validate(RequestContext requestContext, Object model) {
+		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
+				new Class[] { MessageContext.class });
+		if (validateMethod != null) {
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
+		}
+		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
+		if (beanFactory != null) {
+			String validatorName = getModelExpression(requestContext).getExpressionString() + "Validator";
+			if (beanFactory.containsBean(validatorName)) {
+				Object validator = beanFactory.getBean(validatorName);
+				validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
+						model.getClass(), MessageContext.class });
+				if (validateMethod != null) {
+					ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+							requestContext.getMessageContext() });
+				} else {
+					validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
+							model.getClass(), Errors.class });
+					if (validateMethod != null) {
+						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+								new MessageContextErrors(requestContext.getMessageContext()) });
+					}
+				}
+			}
+		}
 	}
 }

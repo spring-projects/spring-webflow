@@ -12,8 +12,12 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.execution.ViewFactory;
 
 public class FlowActionListenerTests extends TestCase {
 
@@ -30,6 +34,7 @@ public class FlowActionListenerTests extends TestCase {
 		RequestContextHolder.setRequestContext(context);
 		AttributeMap flash = new LocalAttributeMap();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
+		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 		EasyMock.replay(new Object[] { context });
 	}
 
@@ -83,5 +88,18 @@ public class FlowActionListenerTests extends TestCase {
 			return this.result;
 		}
 
+	}
+
+	private class MockViewState extends ViewState {
+
+		public MockViewState() {
+			super(new Flow("mockFlow"), "mockView", new ViewFactory() {
+
+				public View getView(RequestContext context) {
+					// TODO Auto-generated method stub
+					throw new UnsupportedOperationException("Auto-generated method stub");
+				}
+			});
+		}
 	}
 }
