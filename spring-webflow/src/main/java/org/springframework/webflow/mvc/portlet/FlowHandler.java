@@ -15,11 +15,12 @@
  */
 package org.springframework.webflow.mvc.portlet;
 
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletModeException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.web.portlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -50,17 +51,18 @@ public interface FlowHandler {
 	 * @param request the current request
 	 * @return the input map
 	 */
-	public MutableAttributeMap createExecutionInputMap(PortletRequest request);
+	public MutableAttributeMap createExecutionInputMap(RenderRequest request);
 
 	/**
-	 * Handles a specific flow execution outcome. Used to select a new view to render after the flow ends.
+	 * Handles a specific flow execution outcome. Used to change portlet modes after the flow ends.
 	 * @param outcome the outcome that was reached
 	 * @param request the current render request
 	 * @param response the current render response
-	 * @return the id of the flow to start after handling the outcome, or null if the outcome should be handled by the
-	 * caller
+	 * @return whether this outcome was handled, or whether the caller should handle it
+	 * @throws PortletModeException if this handler tries to change the portlet mode to something invalid
 	 */
-	public String handleFlowOutcome(FlowExecutionOutcome outcome, RenderRequest request, RenderResponse response);
+	public boolean handleExecutionOutcome(FlowExecutionOutcome outcome, ActionRequest request, ActionResponse response)
+			throws PortletModeException;
 
 	/**
 	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific
@@ -69,8 +71,8 @@ public interface FlowHandler {
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
 	 * @param response the current response
-	 * @return the model and view to render on the occurrence of this exception, or null if the exception is not handled
+	 * @return the name of a specific error view to render, or null if the exception should be handled by the caller
 	 */
-	public ModelAndView handleException(FlowException e, RenderRequest request, RenderResponse response);
+	public String handleException(FlowException e, RenderRequest request, RenderResponse response);
 
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
@@ -43,9 +44,7 @@ import org.springframework.webflow.executor.FlowExecutor;
 
 public class FlowHandlerAdapter extends PortletApplicationObjectSupport implements HandlerAdapter {
 
-	private static final String ACTION_FLOW_EXCEPTION_ATTRIBUTE = "actionFlowException";
-
-	private static final String FLOW_EXECUTION_RESULT_ATTRIBUTE = "flowExecutionResult";
+	private static final String ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE = "actionRequestFlowException";
 
 	private FlowExecutor flowExecutor;
 
@@ -65,41 +64,22 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		populateConveniencePortletProperties(request);
 		PortletSession session = request.getPortletSession(false);
 		if (session != null) {
-			FlowException e = (FlowException) session.getAttribute(ACTION_FLOW_EXCEPTION_ATTRIBUTE);
+			FlowException e = (FlowException) session.getAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
 			if (e != null) {
-				session.removeAttribute(ACTION_FLOW_EXCEPTION_ATTRIBUTE);
-				ModelAndView mv = flowHandler.handleException(e, request, response);
-				return mv != null ? mv : defaultHandleResumeFlowException(flowHandler, e, request, response);
+				session.removeAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
+				return handleException(e, flowHandler, request, response);
 			}
 		}
 		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
-			PortletExternalContext context = createPortletExternalContext(request, response);
-			try {
-				flowExecutor.resumeExecution(flowExecutionKey, context);
-				return null;
-			} catch (FlowException e) {
-				ModelAndView mv = flowHandler.handleException(e, request, response);
-				return mv != null ? mv : defaultHandleResumeFlowException(flowHandler, e, request, response);
-			}
+			return resumeFlow(flowExecutionKey, flowHandler, request, response);
 		} else {
-			if (session != null) {
-				FlowExecutionResult result = (FlowExecutionResult) session
-						.getAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE);
-				if (result != null) {
-					session.removeAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE);
-					String flowId = flowHandler.handleFlowOutcome(result.getOutcome(), request, response);
-					return defaultHandleFlowOutcome(flowHandler, result.getOutcome(), flowId, request, response);
-				} else {
-					return startFlow(request, response, flowHandler);
-				}
-			} else {
-				return startFlow(request, response, flowHandler);
-			}
+			return startFlow(flowHandler, request, response);
 		}
 	}
 
 	public void handleAction(ActionRequest request, ActionResponse response, Object handler) throws Exception {
+		FlowHandler flowHandler = (FlowHandler) handler;
 		populateConveniencePortletProperties(request);
 		String flowExecutionKey = urlHandler.getFlowExecutionKey(request);
 		PortletExternalContext context = createPortletExternalContext(request, response);
@@ -107,11 +87,13 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 			FlowExecutionResult result = flowExecutor.resumeExecution(flowExecutionKey, context);
 			if (result.isPaused()) {
 				urlHandler.setFlowExecutionRenderParameter(result.getPausedKey(), response);
+			} else if (result.isEnded()) {
+				handleFlowExecutionOutcome(result.getOutcome(), flowHandler, request, response);
 			} else {
-				request.getPortletSession().setAttribute(FLOW_EXECUTION_RESULT_ATTRIBUTE, result);
+				throw new IllegalStateException("Execution result should have been one of [paused] or [ended]");
 			}
 		} catch (FlowException e) {
-			request.getPortletSession().setAttribute(ACTION_FLOW_EXCEPTION_ATTRIBUTE, e);
+			request.getPortletSession().setAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE, e);
 		}
 	}
 
@@ -126,7 +108,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		return new PortletExternalContext(getPortletContext(), request, response);
 	}
 
-	protected MutableAttributeMap defaultFlowExecutionInputMap(PortletRequest request) {
+	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(PortletRequest request) {
 		LocalAttributeMap inputMap = new LocalAttributeMap();
 		Map parameterMap = request.getParameterMap();
 		Iterator it = parameterMap.entrySet().iterator();
@@ -143,29 +125,19 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 		return inputMap;
 	}
 
-	protected ModelAndView defaultHandleFlowOutcome(FlowHandler flowHandler, FlowExecutionOutcome outcome,
-			String nextFlowId, RenderRequest request, RenderResponse response) throws IOException {
-		if (nextFlowId == null) {
-			nextFlowId = flowHandler.getFlowId();
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Starting a new execution of flow '" + nextFlowId + "'");
-		}
-		PortletExternalContext context = createPortletExternalContext(request, response);
-		flowExecutor.launchExecution(nextFlowId, new LocalAttributeMap(outcome.getOutput().asMap()), context);
-		return null;
+	protected void defaultHandleExecutionOutcome(FlowExecutionOutcome outcome, FlowHandler flowHandler,
+			ActionRequest request, ActionResponse response) throws PortletModeException {
 	}
 
-	protected ModelAndView defaultHandleResumeFlowException(FlowHandler flowHandler, FlowException e,
-			RenderRequest request, RenderResponse response) throws IOException {
+	protected ModelAndView defaultHandleException(FlowHandler flowHandler, FlowException e, RenderRequest request,
+			RenderResponse response) {
 		if (e instanceof NoSuchFlowExecutionException) {
-			String flowId = flowHandler.getFlowId();
 			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowHandler.getFlowId()
+						+ "'");
 			}
 			// by default, attempt to restart the flow
-			PortletExternalContext context = createPortletExternalContext(request, response);
-			flowExecutor.launchExecution(flowId, null, context);
+			startFlow(flowHandler, null, request, response);
 			return null;
 		} else {
 			throw e;
@@ -174,12 +146,34 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 
 	// helpers
 
-	private ModelAndView startFlow(RenderRequest request, RenderResponse response, FlowHandler flowHandler)
-			throws Exception {
+	private ModelAndView handleException(FlowException e, FlowHandler flowHandler, RenderRequest request,
+			RenderResponse response) {
+		String viewName = flowHandler.handleException(e, request, response);
+		if (viewName != null) {
+			return new ModelAndView(viewName);
+		} else {
+			return defaultHandleException(flowHandler, e, request, response);
+		}
+	}
+
+	private void handleFlowExecutionOutcome(FlowExecutionOutcome outcome, FlowHandler flowHandler,
+			ActionRequest request, ActionResponse response) throws PortletModeException {
+		boolean handled = flowHandler.handleExecutionOutcome(outcome, request, response);
+		if (!handled) {
+			defaultHandleExecutionOutcome(outcome, flowHandler, request, response);
+		}
+	}
+
+	private ModelAndView startFlow(FlowHandler flowHandler, RenderRequest request, RenderResponse response) {
 		MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
 		if (input == null) {
-			input = defaultFlowExecutionInputMap(request);
+			input = defaultCreateFlowExecutionInputMap(request);
 		}
+		return startFlow(flowHandler, input, request, response);
+	}
+
+	private ModelAndView startFlow(FlowHandler flowHandler, MutableAttributeMap input, RenderRequest request,
+			RenderResponse response) {
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);
@@ -188,12 +182,19 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 			}
 			return null;
 		} catch (FlowException e) {
-			ModelAndView mv = flowHandler.handleException(e, request, response);
-			if (mv != null) {
-				return mv;
-			} else {
-				throw e;
-			}
+			return handleException(e, flowHandler, request, response);
 		}
 	}
+
+	private ModelAndView resumeFlow(String flowExecutionKey, FlowHandler flowHandler, RenderRequest request,
+			RenderResponse response) throws IOException {
+		PortletExternalContext context = createPortletExternalContext(request, response);
+		try {
+			flowExecutor.resumeExecution(flowExecutionKey, context);
+			return null;
+		} catch (FlowException e) {
+			return handleException(e, flowHandler, request, response);
+		}
+	}
+
 }

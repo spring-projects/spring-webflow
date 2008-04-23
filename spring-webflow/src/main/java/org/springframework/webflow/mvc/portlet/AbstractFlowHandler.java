@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.mvc.portlet;
 
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.web.portlet.ModelAndView;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -32,19 +32,19 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
  */
 public class AbstractFlowHandler implements FlowHandler {
 
-	public MutableAttributeMap createExecutionInputMap(PortletRequest request) {
-		return null;
-	}
-
 	public String getFlowId() {
 		return null;
 	}
 
-	public ModelAndView handleException(FlowException e, RenderRequest request, RenderResponse response) {
+	public MutableAttributeMap createExecutionInputMap(RenderRequest request) {
 		return null;
 	}
 
-	public String handleFlowOutcome(FlowExecutionOutcome outcome, RenderRequest request, RenderResponse response) {
+	public boolean handleExecutionOutcome(FlowExecutionOutcome outcome, ActionRequest request, ActionResponse response) {
+		return false;
+	}
+
+	public String handleException(FlowException e, RenderRequest request, RenderResponse response) {
 		return null;
 	}
 
