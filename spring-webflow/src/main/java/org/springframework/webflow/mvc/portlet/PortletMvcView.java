@@ -39,7 +39,6 @@ public class PortletMvcView extends MvcView {
 	 * Creates a new portlet view.
 	 * @param view the view to render
 	 * @param context the current flow request context
-	 * @param applicationContext the application context
 	 */
 	public PortletMvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		super(view, context);
