@@ -47,6 +47,24 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		}
 	}
 
+	public void testNullFlowDefinitionId() {
+		try {
+			registry.getFlowDefinition(null);
+			fail("Should have bombed with illegal argument");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
+	public void testBlankFlowDefinitionId() {
+		try {
+			registry.getFlowDefinition("");
+			fail("Should have bombed with illegal argument");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
 	public void testRegisterFlow() {
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
 		assertEquals(fooFlow, registry.getFlowDefinition("foo"));

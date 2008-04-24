@@ -52,6 +52,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
 	public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
 			FlowDefinitionConstructionException {
+		Assert.hasText(id, "An id is required to lookup a FlowDefinition");
 		try {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Getting FlowDefinition with id '" + id + "'");
@@ -87,7 +88,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	public void registerFlowDefinition(FlowDefinitionHolder definitionHolder) {
 		Assert.notNull(definitionHolder, "The holder of the flow definition to register is required");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Registering flow definition " + definitionHolder);
+			logger.debug("Registering flow definition held by " + definitionHolder);
 		}
 		flowDefinitions.put(definitionHolder.getFlowDefinitionId(), definitionHolder);
 	}
