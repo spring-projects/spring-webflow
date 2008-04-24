@@ -13,7 +13,7 @@
 		<put-attribute name="body" value="/WEB-INF/login.jsp" />
 	</definition>
 	
-	<definition name="logout-success" extends="standardLayout">
+	<definition name="logoutSuccess" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/logoutSuccess.jsp" />
 	</definition>
 	

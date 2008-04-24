@@ -24,7 +24,7 @@
 </div>
 
 <div class="section">
-	<form name="f" action="<c:url value="/spring/login-process" />" method="post">
+	<form name="f" action="<c:url value="/spring/loginProcess" />" method="post">
 		<fieldset>
 			<div class="field">
 				<div class="label"><label for="j_username">User:</label></div>
