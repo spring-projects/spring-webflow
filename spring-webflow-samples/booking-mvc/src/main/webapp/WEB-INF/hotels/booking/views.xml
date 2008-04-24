@@ -2,14 +2,14 @@
 <!DOCTYPE tiles-definitions PUBLIC
 	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
 	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+	
 <tiles-definitions>
 	
-	<!-- Pages -->
-	<definition name="enterBookingDetails.jsp" extends="standard-layout">
+	<definition name="enterBookingDetails" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/booking/enterBookingDetails.jsp" />
 	</definition>
 	
-	<definition name="reviewBooking.jsp" extends="standard-layout">
+	<definition name="reviewBooking" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/booking/reviewBooking.jsp" />
 	</definition>
 	

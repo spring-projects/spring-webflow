@@ -2,14 +2,14 @@
 <!DOCTYPE tiles-definitions PUBLIC
 	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
 	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+	
 <tiles-definitions>
 	
-	<!-- Pages -->
-	<definition name="hotels/index" extends="standard-layout">
+	<definition name="hotels/index" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/index.jsp" />
 	</definition>
 	
-	<definition name="hotels/search" extends="standard-layout">
+	<definition name="hotels/search" extends="standardLayout">
 		<put-attribute name="body" value="search.body" />
 	</definition>
 	
@@ -17,7 +17,7 @@
         <put-attribute name="hotelResults" value="/WEB-INF/hotels/hotelResults.jsp" />
     </definition>
 	
-	<definition name="hotels/show" extends="standard-layout">
+	<definition name="hotels/show" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/show.jsp" />
 	</definition>
 	

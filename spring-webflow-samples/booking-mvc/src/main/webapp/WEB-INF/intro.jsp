@@ -21,6 +21,6 @@
 		<li>Spring IDE tooling integration, with support for graphical flow modeling and visualization</li>
 	</ul>
 	<p align="right">
-		<a href="main">Start your Spring Travel experience</a>
+		<a href="hotels/index">Start your Spring Travel experience</a>
 	</p>
 </div>
