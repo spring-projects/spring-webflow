@@ -28,19 +28,7 @@
 			</c:if>
 		</tbody>
 	</table>
-	<div class="next">
-		<c:if test="${not empty hotels}">
-			<a id="moreResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&page=${searchCriteria.page + 1}">More Results</a>
-			<script>
-				Spring.addDecoration(new Spring.AjaxEventDecoration({
-					elementId: "moreResultsLink",
-					event: "onclick",
-					params: {fragments: "hotelResults"}		
-				}));
-			</script>
-		</c:if>
-	</div>
-	<div class="prev">
+	<div class="buttonGroup">
 		<c:if test="${searchCriteria.page > 0}">
 			<a id="prevResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&page=${searchCriteria.page - 1}">Previous Results</a>
 			<script>
@@ -51,6 +39,16 @@
 				}));
 			</script>
 		</c:if>
+		<c:if test="${not empty hotels}">
+			<a id="moreResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&page=${searchCriteria.page + 1}">More Results</a>
+			<script>
+				Spring.addDecoration(new Spring.AjaxEventDecoration({
+					elementId: "moreResultsLink",
+					event: "onclick",
+					params: {fragments: "hotelResults"}		
+				}));
+			</script>
+		</c:if>		
 	</div>
 </c:if>
 </div>

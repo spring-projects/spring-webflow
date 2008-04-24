@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div class="section">
-	<h1>Confirm Hotel Booking</h1>
+	<h2>Confirm Hotel Booking</h2>
 </div>
 
 <div class="section">
