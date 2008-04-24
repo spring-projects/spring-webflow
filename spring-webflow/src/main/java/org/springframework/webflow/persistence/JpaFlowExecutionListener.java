@@ -39,7 +39,8 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * This implementation uses standard JPA APIs. The general pattern is as follows:
  * <ul>
- * <li>When a flow execution starts, create a new JPA persistence context and bind it to flow scope.
+ * <li>When a flow execution starts, create a new JPA persistence context and bind it to flow scope under the name
+ * {@link #PERSISTENCE_CONTEXT_ATTRIBUTE}.
  * <li>Before processing a flow execution request, expose the flow-scoped persistence context as the "current"
  * persistence context for the current thread.
  * <li>When an existing flow pauses, unbind the persistence context from the current thread.
@@ -71,13 +72,13 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  * @author Juergen Hoeller
- * @since 1.1
  */
 public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-	private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
-
-	private static final String ENTITY_MANAGER_ATTRIBUTE = "entityManager";
+	/**
+	 * The name of the attribute the flow {@link EntityManager persistence context} is indexed under.
+	 */
+	public static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
 	private EntityManagerFactory entityManagerFactory;
 
@@ -102,7 +103,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 		if (isPersistenceContext(session.getDefinition())) {
 			EntityManager em = entityManagerFactory.createEntityManager();
-			session.getScope().put(ENTITY_MANAGER_ATTRIBUTE, em);
+			session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, em);
 			bind(em);
 		}
 	}
@@ -121,7 +122,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 
 	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
 		if (isPersistenceContext(session.getDefinition())) {
-			final EntityManager em = (EntityManager) session.getScope().remove(ENTITY_MANAGER_ATTRIBUTE);
+			final EntityManager em = (EntityManager) session.getScope().remove(PERSISTENCE_CONTEXT_ATTRIBUTE);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
 			if (Boolean.TRUE.equals(commitStatus)) {
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -156,7 +157,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	private EntityManager getEntityManager(FlowSession session) {
-		return (EntityManager) session.getScope().get(ENTITY_MANAGER_ATTRIBUTE);
+		return (EntityManager) session.getScope().get(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
 
 	private void bind(EntityManager em) {

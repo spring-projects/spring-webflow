@@ -58,7 +58,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends TestCase {
 		context.registerBean("loadTestBean", new Action() {
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
-				EntityManager em = (EntityManager) context.getFlowScope().get("entityManager");
+				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
 				TestBean bean = (TestBean) em.getReference(TestBean.class, new Integer(0));
 				assertNotNull(bean);
 				context.getFlowScope().put("testBean", bean);

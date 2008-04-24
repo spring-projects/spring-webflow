@@ -40,7 +40,8 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * The general pattern is as follows:
  * <ul>
- * <li>When a flow execution starts, create a new Hibernate Session and bind it to flow scope.
+ * <li>When a flow execution starts, create a new Hibernate Session and bind it to flow scope under the name
+ * {@link #PERSISTENCE_CONTEXT_ATTRIBUTE}.
  * <li>Before processing a flow execution request, expose the conversationally-bound session as the "current session"
  * for the current thread.
  * <li>When an existing flow pauses, unbind the session from the current thread.
@@ -68,16 +69,16 @@ import org.springframework.webflow.execution.RequestContext;
  * canceled before it ends. Generally, the only time a read-write transaction should be started is upon successful
  * completion of the conversation, triggered by reaching a 'commit' end state.
  * 
- * @author Ben Hale
  * @author Keith Donald
  * @author Juergen Hoeller
- * @since 1.1
+ * @author Ben Hale
  */
 public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
 
-	private static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
-
-	private static final String HIBERNATE_SESSION_ATTRIBUTE = "session";
+	/**
+	 * The name of the attribute the flow {@link Session persistence context} is indexed under.
+	 */
+	public static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
 	private SessionFactory sessionFactory;
 
@@ -112,7 +113,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		}
 		if (isPersistenceContext(session.getDefinition())) {
 			Session hibernateSession = createSession(context);
-			session.getScope().put(HIBERNATE_SESSION_ATTRIBUTE, hibernateSession);
+			session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, hibernateSession);
 			bind(hibernateSession);
 		}
 	}
@@ -133,7 +134,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 
 	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
 		if (isPersistenceContext(session.getDefinition())) {
-			final Session hibernateSession = (Session) session.getScope().remove(HIBERNATE_SESSION_ATTRIBUTE);
+			final Session hibernateSession = (Session) session.getScope().remove(PERSISTENCE_CONTEXT_ATTRIBUTE);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
 			if (Boolean.TRUE.equals(commitStatus)) {
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -177,7 +178,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	private Session getHibernateSession(FlowSession session) {
-		return (Session) session.getScope().get(HIBERNATE_SESSION_ATTRIBUTE);
+		return (Session) session.getScope().get(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
 
 	private void bind(Session session) {

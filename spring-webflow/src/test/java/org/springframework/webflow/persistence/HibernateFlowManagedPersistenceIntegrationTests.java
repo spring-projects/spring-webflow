@@ -63,7 +63,7 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends TestCase {
 		context.registerBean("loadTestBean", new Action() {
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
-				Session session = (Session) context.getFlowScope().get("session");
+				Session session = (Session) context.getFlowScope().get("persistenceContext");
 				TestBean bean = (TestBean) session.get(TestBean.class, new Long(0));
 				assertNotNull(bean);
 				context.getFlowScope().put("testBean", bean);

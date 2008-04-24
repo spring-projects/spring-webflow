@@ -75,7 +75,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		// Session created and bound to conversation
-		final Session hibSession = (Session) flowSession.getScope().get("session");
+		final Session hibSession = (Session) flowSession.getScope().get("persistenceContext");
 		assertNotNull("Should have been populated", hibSession);
 		hibernateListener.paused(context);
 		assertSessionNotBound();
