@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <div id="hotelResults" class="section">
 <c:if test="${not empty hotels}">
 	<table class="summary">
@@ -39,7 +41,7 @@
 				}));
 			</script>
 		</c:if>
-		<c:if test="${not empty hotels}">
+		<c:if test="${not empty hotels && fn:length(hotels) == searchCriteria.pageSize}">
 			<a id="moreResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&page=${searchCriteria.page + 1}">More Results</a>
 			<script>
 				Spring.addDecoration(new Spring.AjaxEventDecoration({
