@@ -127,17 +127,12 @@
 	
 	#content .searchGroup {
 		width: 35%;
-		text-align: right;
 	}
 	
 	#content .buttonGroup {
 		clear: both;
+		margin-top: 5px;
 		text-align: right;
-	}
-	
-	#content .buttonGroup input[type="submit"],
-	#content .buttonGroup input[type="button"] {
-		margin-right: 5px;
 	}
 	
 	#content .previous {
