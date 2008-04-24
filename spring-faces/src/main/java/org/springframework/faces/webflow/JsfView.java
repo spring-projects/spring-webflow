@@ -51,6 +51,12 @@ public class JsfView implements View {
 
 	private boolean viewErrors;
 
+	/**
+	 * Creates a new JSF view.
+	 * @param viewRoot the view root
+	 * @param facesLifecycle the flow faces lifecycle
+	 * @param context the current flow request
+	 */
 	public JsfView(UIViewRoot viewRoot, Lifecycle facesLifecycle, RequestContext context) {
 		this.viewRoot = viewRoot;
 		this.viewId = viewRoot.getViewId();
@@ -74,13 +80,12 @@ public class JsfView implements View {
 		this.restored = restored;
 	}
 
-	/**
+	/*
 	 * Performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() throws IOException {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
-		// TODO move renderResponse behavior into lifecycle???
 		try {
 			JsfUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
 			logger.debug("Asking view handler to render view");
@@ -93,7 +98,7 @@ public class JsfView implements View {
 		}
 	}
 
-	/**
+	/*
 	 * Executes postback-processing portions of the standard JSF lifecyle including APPLY_REQUEST_VALUES through
 	 * INVOKE_APPLICATION.
 	 */
