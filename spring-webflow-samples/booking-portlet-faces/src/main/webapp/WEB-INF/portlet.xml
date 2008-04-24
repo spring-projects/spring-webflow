@@ -15,7 +15,7 @@
 		<init-param>
 			<name>contextConfigLocation</name>
 			<value>
-				/WEB-INF/web-application-config.xml
+				/WEB-INF/config/hotelbooking-portlet-config.xml
 			</value>
 		</init-param>
 
