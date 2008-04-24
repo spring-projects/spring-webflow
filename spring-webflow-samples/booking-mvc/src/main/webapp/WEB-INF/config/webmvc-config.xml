@@ -26,13 +26,13 @@
 	<!-- Maps all other request URLs to views -->			
 	<bean id="viewMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="defaultHandler">
-			<!-- Selects view names to render based on the request URI: e.g. /index selects "index" -->	
+			<!-- Selects view names to render based on the request URI: e.g. the "/intro" URL would map to the view named "intro" -->	
 			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 		</property>
 		<property name="order" value="2"/>
 	</bean>
 
-	<!-- Configure Apache Tiles for the view -->
+	<!-- Configures the Tiles layout system -->
 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
 		<property name="definitions">
 			<list>
@@ -44,8 +44,8 @@
 		</property>
 	</bean>
 	
+	<!-- Resolves views by delegating to the Tiles layout system; a view name to resolve is treated as the name of a tiles definition -->
 	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<property name="requestContextAttribute" value="requestContext"/>
 		<property name="viewClass" value="org.springframework.js.ajax.view.TilesAjaxView"/>
 	</bean>
 

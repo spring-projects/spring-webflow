@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
-	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
+	<!-- Executes flows: the entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor">
 		<webflow:flow-execution-listeners>
 			<webflow:listener ref="jpaFlowExecutionListener" />
@@ -21,8 +21,10 @@
 		<webflow:flow-location path="/WEB-INF/hotels/booking/booking.xml" />
 	</webflow:flow-registry>
 	
+	<!-- Plugs in a custom creator for Web Flow views -->
 	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
 	
+	<!-- Configures Web Flow to use Tiles to create views for rendering; Tiles allows for applying consistent layouts to your views -->
 	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.view.MvcViewFactoryCreator"> 
 		<property name="viewResolvers" ref="tilesViewResolver"/> 
 	</bean>
