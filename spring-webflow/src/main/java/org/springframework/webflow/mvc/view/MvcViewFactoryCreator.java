@@ -58,8 +58,11 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator {
 	}
 
 	public String getViewIdByConvention(String viewStateId) {
-		// TODO - make configurable
-		return viewStateId + ".jsp";
+		if (viewResolvers != null) {
+			return viewStateId;
+		} else {
+			return viewStateId + ".jsp";
+		}
 	}
 
 }
