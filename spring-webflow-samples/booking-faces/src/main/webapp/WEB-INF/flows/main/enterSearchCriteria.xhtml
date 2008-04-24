@@ -22,7 +22,7 @@
 						</div>
 						<div class="input">
 							<sf:clientTextValidator promptMessage="Search hotels by name, address, city, or zip.">
-								<h:inputText id="searchString" value="#{searchCriteria.searchString}" style="width: 165px; height: 15px;" />
+								<h:inputText id="searchString" value="#{searchCriteria.searchString}" />
 							</sf:clientTextValidator>
 						</div>
 					</div>
@@ -37,7 +37,7 @@
 				   		</div>
 					</div>
 					<div class="buttonGroup">
-						<sf:commandButton id="findHotels" value="Find Hotels" action="search" />
+						<sf:commandButton id="findHotels" value="Find Hotels" processIds="*" action="search" />
 					</div>
 			    </fieldset>
 			</h:form>			  
