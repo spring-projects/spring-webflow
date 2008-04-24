@@ -31,7 +31,7 @@
 				<div class="output">
 					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 					<script type="text/javascript">
-						Spring.addDecoratio(new Spring.ElementDecoration({
+						Spring.addDecoration(new Spring.ElementDecoration({
 							elementId : "j_username",
 							widgetType : "dijit.form.ValidationTextBox",
 							widgetAttrs : { promptMessage : "Your username", required : true }}));
@@ -55,7 +55,7 @@
 				<div class="output">
 					<input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
 					<script type="text/javascript">
-						Spring.decorations.push(new Spring.ElementDecoration({
+						Spring.addDecoration(new Spring.ElementDecoration({
 							elementId : "remember_me",
 							widgetType : "dijit.form.CheckBox"}));
 					</script>
