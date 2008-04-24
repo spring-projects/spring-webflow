@@ -151,8 +151,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		checkAndPrepare(request, response, false);
 		FlowHandler flowHandler = (FlowHandler) handler;
+		checkAndPrepare(request, response, false);
 		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
 			try {

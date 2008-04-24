@@ -32,7 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.web.portlet.HandlerAdapter;
 import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.context.PortletApplicationObjectSupport;
+import org.springframework.web.portlet.handler.PortletContentGenerator;
 import org.springframework.webflow.context.portlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.portlet.FlowUrlHandler;
 import org.springframework.webflow.context.portlet.PortletExternalContext;
@@ -52,7 +52,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class FlowHandlerAdapter extends PortletApplicationObjectSupport implements HandlerAdapter, InitializingBean {
+public class FlowHandlerAdapter extends PortletContentGenerator implements HandlerAdapter, InitializingBean {
 
 	private static final String ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE = "actionRequestFlowException";
 
@@ -67,6 +67,8 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 	 * @see #afterPropertiesSet()
 	 */
 	public FlowHandlerAdapter() {
+		// prevent caching of flow pages by default
+		setCacheSeconds(0);
 	}
 
 	/**
@@ -112,6 +114,7 @@ public class FlowHandlerAdapter extends PortletApplicationObjectSupport implemen
 
 	public ModelAndView handleRender(RenderRequest request, RenderResponse response, Object handler) throws Exception {
 		FlowHandler flowHandler = (FlowHandler) handler;
+		checkAndPrepare(request, response);
 		populateConveniencePortletProperties(request);
 		PortletSession session = request.getPortletSession(false);
 		if (session != null) {
