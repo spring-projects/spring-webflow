@@ -68,7 +68,15 @@
     	float: right;
     	padding-right: 20px;
     }
-    
+
+    #content.spring input[type="submit"], input[type="button"], button {
+		font-size: 1em;
+    	font-weight: bold;
+    	color: #fff;
+		background: #fff url(../images/btn.bg.gif) 0 0 repeat-x;
+		border-style: none;
+	}
+	
 	.errors {
 		font-weight: bold;
 		text-align: left;
