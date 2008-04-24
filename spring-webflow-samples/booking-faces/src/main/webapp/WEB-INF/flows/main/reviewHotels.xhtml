@@ -39,11 +39,9 @@
 						<sf:commandLink id="viewHotelLink" value="View Hotel" action="select"/>
 					</h:column>
 				</h:dataTable>
-				<div class="next">
-					<sf:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
-				</div>
-				<div class="previous">
+				<div class="buttonGroup">
 					<sf:commandLink id="previousPageLink" value="Previous results" action="previous" rendered="#{searchCriteria.page > 0}"/>
+					<sf:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
 				</div>
 			</div>
 		</ui:fragment>

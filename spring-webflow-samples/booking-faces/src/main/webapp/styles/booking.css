@@ -11,11 +11,17 @@
 		text-decoration: none;		
 		font-weight: bold;
 	}
-	
+
 	body.spring {
 		background-color: #9cac7c;
 	}
-	
+
+    form div, 
+    form p {
+    	padding: 0px;
+		margin: 0 0 .5em 0;
+    }
+    
 	#header.spring { 
 		margin: 0 0 1em 0;
         padding: 0px 0px;
@@ -41,136 +47,13 @@
     #welcome div.right {
     	float: right;
     }
-    
-    form div, 
-    form p {
-    	padding: 0px;
-		margin: 0 0 .5em 0;
-    }
-    
+        
     #content.spring {
     	width: 740px;
     	background: #fff url(../images/bg.gif) 0 0 repeat;
     	margin-bottom: 0px;
     }
-    
-    #content .section {
-    	width: 505px;
-    	float: left;
-    	margin-bottom: 5px;
-    }
-    
-    #content.spring input[type="submit"], input[type="button"], button {
-		font-weight: bold;
-		color: #fff;
-		height: 20px;
-		background: #fff url(../images/btn.bg.gif) 0 0 repeat-x;
-		border-style: none;
-		vertical-align: middle;
-	}
-	
-	#content.spring button
-	{
-		font-size: 1em;
-		font-family: arial,helvetica,verdana,sans-serif;
-		margin-top: 0pt;
-		margin-right: 0pt;
-		margin-bottom: 0pt;
-		margin-left: 0pt;
-		padding-top: 2px;
-		padding-right: 2px;
-		padding-bottom: 2px;
-		padding-left: 2px;
-	}
-	
-	#content.spring button
-	{
-		vertical-align: middle;
-	}
-	
-	.errors {
-		font-weight: bold;
-		text-align: left;
-		color: #600;
-	}
-	
-	.errors ul {
-		list-style: none;
-	}
-	
-	#content .field {
-		float:left;
-	}
-	
-	#content .field .label {
-		float: left;
-		padding-top: 5px;
-		padding-right: 5px;
-		font-weight: bold;
-		width: 150px;
-		text-align: right;
-	}
-	
-	#content .field .output {
-		float: left;
-		width: 250px;
-		padding-top: 5px;
-		text-align: left;
-	}
-	
-	#content .field .input {
-		float: left;
-		width: 250px;
-		text-align: left;
-	}
-	
-	#content .searchGroup {
-		width: 35%;
-	}
-	
-	#content .buttonGroup {
-		clear: both;
-		text-align: right;
-	}
-	
-	#content .buttonGroup input[type="submit"], .buttonGroup input[type="button"] {
-		margin-right: 5px;
-	}
-	
-	#content .previous {
-		float: right;
-	}
-	
-	#content .next {
-		float: right;	
-	}
-	
-	#content .next a {
-		margin-left: 20px;
-	}
-	
-	#content .summary {
-		width: 100%;
-		border: 1px solid #414f23;
-		border-collapse: collapse;
-	}
-	
-	#content .summary thead th {
-		border-left: 1px solid #414f23;
-		background: #fff url(../images/th.bg.gif) 0 100% repeat-x;
-		border-bottom: 1px solid #414f23;
-		padding: 6px;
-		text-align: left;
-		font-size: small;
-	}
-    
-    #content .summary tbody td {
-		border-left: 1px solid #9cac7c;
-		padding: 4px;
-		border-bottom: 1px solid #9cac7c;
-		font-size: 8pt;
-	}
-    
+
     #local.spring{
         width: 215px;
     }
@@ -185,3 +68,76 @@
     	float: right;
     	padding-right: 20px;
     }
+    
+	.errors {
+		font-weight: bold;
+		text-align: left;
+		color: #600;
+	}
+	
+	.errors ul {
+		list-style: none;
+	}
+
+  	.section {
+    	width: 505px;
+    	float: left;
+    	margin-bottom: 5px;
+    }
+    
+	.field {
+		float:left;
+	}
+	
+	.field .label {
+		float: left;
+		padding-top: 5px;
+		padding-right: 5px;
+		font-weight: bold;
+		width: 150px;
+		text-align: right;
+	}
+	
+	.field .input {
+		float: left;
+		width: 250px;
+		text-align: left;
+	}
+
+	.field .output {
+		float: left;
+		width: 250px;
+		padding-top: 5px;
+		text-align: left;
+	}
+	
+	.buttonGroup {
+		clear: both;
+		text-align: right;
+	}
+	
+	.buttonGroup input[type="submit"], .buttonGroup input[type="button"], .buttonGroup a {
+		margin-right: 5px;
+	}
+	
+	.summary {
+		width: 100%;
+		border: 1px solid #414f23;
+		border-collapse: collapse;
+	}
+	
+	.summary thead th {
+		border-left: 1px solid #414f23;
+		background: #fff url(../images/th.bg.gif) 0 100% repeat-x;
+		border-bottom: 1px solid #414f23;
+		padding: 6px;
+		text-align: left;
+		font-size: small;
+	}
+    
+    .summary tbody td {
+		border-left: 1px solid #9cac7c;
+		padding: 4px;
+		border-bottom: 1px solid #9cac7c;
+		font-size: 8pt;
+	}
