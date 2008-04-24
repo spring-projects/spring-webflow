@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.mvc.richfaces;
+package org.springframework.faces.richfaces;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ajax4jsf.context.AjaxContext;
 import org.springframework.faces.webflow.FlowLifecycle;
-import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
+import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 
 /**
  * Ajax handler that works with Rich Faces, allowing support for Web Flow ajax features with the Rich Faces toolkit.

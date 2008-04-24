@@ -1,4 +1,4 @@
-package org.springframework.js.ajax.view;
+package org.springframework.js.ajax.tiles2;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,13 +15,13 @@ import org.apache.tiles.Attribute.AttributeType;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.impl.BasicTilesContainer;
-import org.springframework.js.mvc.servlet.AjaxHandler;
-import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
+import org.springframework.js.ajax.AjaxHandler;
+import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.view.tiles2.TilesView;
 
-public class TilesAjaxView extends TilesView {
+public class AjaxTilesView extends TilesView {
 
 	public static final String FRAGMENTS_PARAM = "fragments";
 
