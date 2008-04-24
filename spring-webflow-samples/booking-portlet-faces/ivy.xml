@@ -32,6 +32,7 @@
 		<dependency org="org.springframework" name="spring-orm" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.springframework" name="spring-jdbc" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.springframework" name="spring-tx" rev="2.5.3" conf="compile->default"/>
+		<dependency org="org.springframework" name="spring-webmvc-portlet" rev="2.5.3" conf="compile->default"/>
 		<dependency org="org.jboss.seam" name="jboss-el" rev="2.0.0.GA" conf="compile->default"/>
 		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" conf="compile->default"/>
 		<dependency org="org.hibernate" name="hibernate-annotations" rev="3.3.0.ga" conf="compile->default"/>
