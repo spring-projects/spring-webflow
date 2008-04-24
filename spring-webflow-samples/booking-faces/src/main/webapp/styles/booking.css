@@ -117,10 +117,6 @@
 		text-align: right;
 	}
 	
-	.buttonGroup input[type="submit"], .buttonGroup input[type="button"], .buttonGroup a {
-		margin-right: 5px;
-	}
-	
 	.summary {
 		width: 100%;
 		border: 1px solid #414f23;
