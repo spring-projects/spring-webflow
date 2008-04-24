@@ -17,6 +17,5 @@
 	<!-- Imports the configurations of the different infrastructure systems of the application -->
 	<import resource="webmvc-config.xml" />
 	<import resource="webflow-config.xml" />
-	<import resource="data-access-config.xml" />
 
 </beans>
