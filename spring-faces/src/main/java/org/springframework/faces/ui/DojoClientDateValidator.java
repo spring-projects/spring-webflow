@@ -15,12 +15,19 @@
  */
 package org.springframework.faces.ui;
 
-public class DojoClientDateValidator extends DojoAdvisor {
+/**
+ * Component that uses the Dojo implementation of Spring JavaScript to decorate a child input component with client-side
+ * date validation behavior.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class DojoClientDateValidator extends DojoDecoration {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.DateTextBox";
 
 	protected String[] getDojoAttributes() {
-		return DojoAdvisor.DOJO_ATTRS;
+		return DojoDecoration.DOJO_ATTRS;
 	}
 
 	public String getDojoComponentType() {

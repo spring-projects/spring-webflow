@@ -22,15 +22,15 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 
-public class DojoRenderer extends SpringFacesRenderer {
+/**
+ * Base {@link Renderer} for components that require the Spring JavaScript library on the client.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public abstract class BaseSpringJavascriptComponentRenderer extends BaseComponentRenderer {
 
-	private String dojoJsResourceUri = "/dojo/dojo.js";
-
-	private String dijitThemePath = "/dijit/themes/";
-
-	private String dijitTheme = "tundra";
-
-	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
+	private String springJsResourceUri = "/spring/Spring.js";
 
 	private ResourceHelper resourceHelper = new ResourceHelper();
 
@@ -38,10 +38,6 @@ public class DojoRenderer extends SpringFacesRenderer {
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
-
-		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
-
-		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+		resourceHelper.renderScriptLink(context, springJsResourceUri);
 	}
 }

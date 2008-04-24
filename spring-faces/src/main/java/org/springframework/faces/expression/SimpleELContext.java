@@ -20,6 +20,11 @@ import javax.el.ELResolver;
 import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
 
+/**
+ * A minimal {@link ELContext} implementation.
+ * 
+ * @author Jeremy Grelle
+ */
 class SimpleELContext extends ELContext {
 
 	private ELResolver resolver;

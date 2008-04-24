@@ -15,12 +15,19 @@
  */
 package org.springframework.faces.ui;
 
-public class DojoClientNumberValidator extends DojoAdvisor {
+/**
+ * Component that uses the Dojo implementation of Spring JavaScript to decorate a child input component with client-side
+ * numeric validation behavior.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class DojoClientNumberValidator extends DojoDecoration {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.NumberTextBox";
 
 	protected String[] getDojoAttributes() {
-		return DojoAdvisor.DOJO_ATTRS;
+		return DojoDecoration.DOJO_ATTRS;
 	}
 
 	public String getDojoComponentType() {

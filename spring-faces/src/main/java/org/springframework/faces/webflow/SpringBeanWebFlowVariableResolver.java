@@ -26,6 +26,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * JSF 1.1 variable resolver for Spring Beans accessible to the flow's local bean factory.
+ * 
  * @author Jeremy Grelle
  */
 public class SpringBeanWebFlowVariableResolver extends SpringBeanVariableResolver {

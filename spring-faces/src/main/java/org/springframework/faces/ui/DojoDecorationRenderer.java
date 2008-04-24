@@ -27,11 +27,37 @@ import javax.faces.context.ResponseWriter;
 import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.util.StringUtils;
 
-public class DojoAdvisorRenderer extends DojoRenderer {
+/**
+ * Generic renderer for components that use the Dojo implementation of Spring JavaScript to decorate a child component
+ * with enhanced client-side behavior.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRenderer {
 
 	private static final String SCRIPT_ELEMENT = "script";
 
+	private String dojoJsResourceUri = "/dojo/dojo.js";
+
+	private String dijitThemePath = "/dijit/themes/";
+
+	private String dijitTheme = "tundra";
+
+	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
+
 	private ResourceHelper resourceHelper = new ResourceHelper();
+
+	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
+
+		super.encodeBegin(context, component);
+
+		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+
+		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
+
+		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+	}
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 
@@ -42,14 +68,14 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
-		resourceHelper.renderDojoInclude(context, ((DojoAdvisor) component).getDojoComponentType());
+		resourceHelper.renderDojoInclude(context, ((DojoDecoration) component).getDojoComponentType());
 
 		writer.startElement(SCRIPT_ELEMENT, component);
 		writer.writeAttribute("type", "text/javascript", null);
 		StringBuffer script = new StringBuffer();
 		script.append("  Spring.addDecoration(new Spring.ElementDecoration({  ");
 		script.append("  elementId : '" + advisedChild.getClientId(context) + "',  ");
-		script.append("  widgetType : '" + ((DojoAdvisor) component).getDojoComponentType() + "',  ");
+		script.append("  widgetType : '" + ((DojoDecoration) component).getDojoComponentType() + "',  ");
 		script.append("  widgetAttrs : { ");
 
 		String nodeAttrs = getNodeAttributesAsString(context, advisedChild);
@@ -96,7 +122,7 @@ public class DojoAdvisorRenderer extends DojoRenderer {
 
 	protected String getDojoAttributesAsString(FacesContext context, UIComponent component) {
 
-		DojoAdvisor advisor = (DojoAdvisor) component;
+		DojoDecoration advisor = (DojoDecoration) component;
 		StringBuffer attrs = new StringBuffer();
 
 		for (int i = 0; i < advisor.getDojoAttributes().length; i++) {

@@ -35,7 +35,7 @@ public class AjaxViewRootTests extends TestCase {
 		UIPanel panel = new UIPanel();
 		panel.setId("bar");
 		form.getChildren().add(panel);
-		ProgressiveCommandButton command = new ProgressiveCommandButton();
+		ProgressiveUICommand command = new ProgressiveUICommand();
 		command.setId("baz");
 		panel.getChildren().add(command);
 

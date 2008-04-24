@@ -26,7 +26,13 @@ import javax.faces.event.ActionEvent;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-public class AjaxEventInterceptorRenderer extends DojoRenderer {
+/**
+ * {@link Renderer} for the {@code <sf:ajaxEvent>} tag.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		String event = (String) component.getAttributes().get("event");
@@ -59,7 +65,7 @@ public class AjaxEventInterceptorRenderer extends DojoRenderer {
 	private String getElementId(FacesContext context, UIComponent component) {
 		if (component.getChildCount() > 0) {
 			UIComponent child = (UIComponent) component.getChildren().get(0);
-			if (!(child instanceof DojoAdvisor)) {
+			if (!(child instanceof DojoDecoration)) {
 				return child.getClientId(context);
 			} else {
 				return getElementId(context, child);

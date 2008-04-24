@@ -21,6 +21,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
+/**
+ * A JSF 1.1 {@link VariableResolver} that delegates to a wrapped Unified EL resolver chain for variable resolution.
+ * 
+ * @author Jeremy Grelle
+ */
 public abstract class ELDelegatingVariableResolver extends VariableResolver {
 
 	private VariableResolver nextResolver;

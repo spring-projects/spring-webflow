@@ -22,8 +22,19 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.js.resource.ResourceServlet;
 import org.springframework.util.Assert;
 
+/**
+ * {@link Renderer} for the {@code <sf:resource>} tag.
+ * 
+ * <p>
+ * Renders a Javascript or CSS include with a URL properly formatted to map to the {@link ResourceServlet}.
+ * </p>
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
 public class ResourceRenderer extends Renderer {
 
 	private static final ResourceHelper resourceHelper = new ResourceHelper();

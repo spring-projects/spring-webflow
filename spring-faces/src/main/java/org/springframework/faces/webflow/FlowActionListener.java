@@ -43,12 +43,16 @@ import org.springframework.webflow.mvc.view.MessageContextErrors;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
+ * 
  * <p>
  * This implementation bypasses the JSF {@link NavigationHandler} mechanism to instead let the event be handled directly
  * by Web Flow.
+ * </p>
+ * 
  * <p>
  * Web Flow's model-level validation will be invoked here after an event has been detected if the event is not an
  * immediate event.
+ * </p>
  * 
  * @author Jeremy Grelle
  */

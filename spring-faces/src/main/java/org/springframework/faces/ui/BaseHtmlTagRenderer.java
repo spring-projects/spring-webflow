@@ -27,9 +27,19 @@ import javax.faces.render.Renderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-abstract class BaseHtmlParentTagRenderer extends Renderer {
+/**
+ * Abstract base {@link Renderer} for a component that renders a standard HTML element.
+ * 
+ * <p>
+ * Uses a callback mechanism for customizing the rendering of tag attributes when logic is required beyond a simple
+ * pass-through of the component attribute to the HTML attribute of the rendered element.
+ * </p>
+ * 
+ * @author Jeremy Grelle
+ */
+abstract class BaseHtmlTagRenderer extends Renderer {
 
-	protected Log log = LogFactory.getLog(BaseHtmlParentTagRenderer.class);
+	protected Log log = LogFactory.getLog(BaseHtmlTagRenderer.class);
 
 	/**
 	 * Default {@link RenderAttributeCallback} that just renders the tag attribute as a pass-through value if the value

@@ -27,6 +27,8 @@ import org.springframework.util.Assert;
 
 /**
  * A simple List-to-JSF-DataModel adapter that is also serializable.
+ * 
+ * @author Jeremy Grelle
  */
 public class SerializableListDataModel extends DataModel implements Serializable {
 

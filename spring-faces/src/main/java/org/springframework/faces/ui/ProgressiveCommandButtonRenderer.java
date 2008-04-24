@@ -32,7 +32,13 @@ import javax.faces.event.ActionEvent;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-public class ProgressiveCommandButtonRenderer extends BaseDojoParentComponentRenderer {
+/**
+ * {@link Renderer} for the {@code <sf:commandButton>} tag.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer {
 
 	private static String[] ATTRIBUTES_TO_RENDER;
 
@@ -101,7 +107,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoParentComponentRen
 
 	/**
 	 * This is a hook for subclasses to provide special onclick behavior in the non-ajax case
-	 * @return
+	 * @return the onclick value to use when Ajax is disabled.
 	 */
 	protected String getOnClickNoAjax(FacesContext context, UIComponent component) {
 		// No special behavior necessary for CommandButton

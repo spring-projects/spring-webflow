@@ -16,6 +16,7 @@
 package org.springframework.faces.ui;
 
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -24,13 +25,17 @@ import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-public class ProgressiveCommandButton extends UICommand {
+/**
+ * {@link UIComponent} implementation that backs the {@code <sf:commandButton>} tag. Relies mainly on the use of
+ * {@link UIComponent#getAttributes()} as opposed to JavaBean getters and setters, except for attribute that require
+ * type conversion.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class ProgressiveUICommand extends UICommand {
 
 	private String type = "submit";
-
-	public String getRendererType() {
-		return "spring.faces.ProgressiveCommandButton";
-	}
 
 	private Boolean disabled;
 

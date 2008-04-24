@@ -20,9 +20,16 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
+import org.springframework.binding.convert.Converter;
 import org.springframework.binding.convert.converters.AbstractConverter;
 import org.springframework.util.ClassUtils;
 
+/**
+ * A {@link Converter} implementation that converts an Object, Object array, or {@link List} into a JSF
+ * {@link DataModel}.
+ * 
+ * @author Jeremy Grelle
+ */
 public class DataModelConverter extends AbstractConverter {
 
 	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {

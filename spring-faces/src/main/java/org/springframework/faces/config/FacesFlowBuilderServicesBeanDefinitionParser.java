@@ -30,6 +30,8 @@ import org.w3c.dom.Element;
 
 /**
  * Parser for the flow-builder-services tag.
+ * 
+ * @author Jeremy Grelle
  */
 public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser implements
 		BeanDefinitionParser {

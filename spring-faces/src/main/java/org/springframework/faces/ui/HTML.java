@@ -18,6 +18,11 @@ package org.springframework.faces.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Helper class that provides common attributes for standard HTML elements.
+ * 
+ * @author Jeremy Grelle
+ */
 final class HTML {
 
 	/**

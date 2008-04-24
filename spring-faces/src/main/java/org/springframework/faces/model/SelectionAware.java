@@ -26,15 +26,38 @@ import javax.faces.model.DataModel;
  */
 public interface SelectionAware {
 
+	/**
+	 * Checks whether the row pointed to by the model's current index is selected.
+	 * @return true if the current row data object is selected
+	 */
 	public boolean isCurrentRowSelected();
 
+	/**
+	 * Sets whether the row pointed to by the model's current index is selected
+	 * @param rowSelected true to select the current row
+	 */
 	public void setSelected(boolean rowSelected);
 
+	/**
+	 * Sets the list of selected row data objects for the model.
+	 * @param selections the list of selected row data objects
+	 */
 	public void setSelections(List selections);
 
+	/**
+	 * Returns the list of selected row data objects for the model.
+	 * @return the list of selected row data objects
+	 */
 	public List getSelections();
 
+	/**
+	 * Selects all row data objects in the model.
+	 */
 	public void selectAll();
 
+	/**
+	 * Selects the given row data object in the model.
+	 * @param rowData the row data object to select.
+	 */
 	public void select(Object rowData);
 }

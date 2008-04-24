@@ -29,6 +29,9 @@ import org.springframework.util.Assert;
  */
 public class OneSelectionTrackingListDataModel extends SerializableListDataModel implements SelectionAware {
 
+	/**
+	 * The list of currently selected row data objects.
+	 */
 	private List selections = new ArrayList();
 
 	public OneSelectionTrackingListDataModel() {

@@ -23,7 +23,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-public abstract class BaseParentComponentRenderer extends BaseHtmlParentTagRenderer {
+/**
+ * Base {@link Renderer} for typical faces components, handling the rendering for common {@link UIComponent} attributes.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 
 	private Map attributeCallbacks;
 

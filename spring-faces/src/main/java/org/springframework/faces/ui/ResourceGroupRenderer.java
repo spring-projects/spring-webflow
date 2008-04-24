@@ -23,6 +23,18 @@ import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 
+/**
+ * {@link Renderer} for the {@code <sf:resourceGroup>} tag.
+ * 
+ * <p>
+ * This render outputs a specially formatted Javascript or CSS include that requests multiple resources with one HTTP
+ * request.
+ * </p>
+ * 
+ * @author Jeremy Grelle
+ * 
+ * TODO - Make this work with Javacript resources
+ */
 public class ResourceGroupRenderer extends Renderer {
 
 	private static final ResourceHelper resourceHelper = new ResourceHelper();

@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * This Lifecycle does not execute the RESTORE_VIEW phase since view creation and restoration are now handled by the
  * {@link JsfViewFactory}.
+ * </p>
  * 
  * @author Jeremy Grelle
  */

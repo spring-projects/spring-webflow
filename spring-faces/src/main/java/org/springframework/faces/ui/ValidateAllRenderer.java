@@ -23,7 +23,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-public class ValidateAllRenderer extends SpringFacesRenderer {
+/**
+ * {@link Renderer} for the {@code <sf:validateAllOnClick>} tag.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class ValidateAllRenderer extends BaseSpringJavascriptDecorationRenderer {
 
 	private static final String SCRIPT_ELEMENT = "script";
 

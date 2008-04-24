@@ -32,6 +32,17 @@ import javax.faces.context.ResponseWriter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.faces.webflow.JsfUtils;
 
+/**
+ * {@link Renderer} for the {@code <sf:commandLink>} tag.
+ * 
+ * <p>
+ * This renderer is unique in that it first renders a button that will still work if JavaScript is disabled on the
+ * client, then progressively enhances the button and transforms it into a link if JavaScript is available.
+ * </p>
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
 public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRenderer {
 
 	private static String[] ATTRIBUTES_TO_RENDER;
@@ -78,9 +89,10 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		// No need to be progressive if this is an AJAX request since it can be assumed JavaScript is enabled
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
 			// Render a plain submit button first if this is not an ajax request
-			ProgressiveCommandButton button = new ProgressiveCommandButton();
+			ProgressiveUICommand button = new ProgressiveUICommand();
 			button.getAttributes().putAll(component.getAttributes());
 			BeanUtils.copyProperties(component, button);
+			button.setRendererType("spring.faces.ProgressiveCommandButtonRenderer");
 			button.setAjaxEnabled(Boolean.FALSE);
 			button.encodeBegin(context);
 			button.encodeChildren(context);

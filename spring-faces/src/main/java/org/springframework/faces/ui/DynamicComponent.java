@@ -15,8 +15,16 @@
  */
 package org.springframework.faces.ui;
 
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 
+/**
+ * A completely dynamic component that is used to back simple Facelets tags. Relies solely on the use of
+ * {@link UIComponent#getAttributes()} instead of JavaBean style getters and setters.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
 public class DynamicComponent extends UIComponentBase {
 
 	public String getFamily() {

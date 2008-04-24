@@ -25,7 +25,8 @@ import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
 
 /**
- * For resolving flow request context variables with JSF 1.1 or >.
+ * Custom variabe resolver for resolving properties on web flow specific variables with JSF 1.1 or > by delegating to
+ * web flow's EL resolvers.
  * 
  * @author Jeremy Grelle
  */

@@ -28,5 +28,6 @@
 	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-api/jsf-api-1.2.08.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-impl/jsf-impl-1.2.08.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
+	<classpathentry kind="var" path="IVY_CACHE/com.sun.facelets/jsf-facelets/jsf-facelets-1.1.14.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

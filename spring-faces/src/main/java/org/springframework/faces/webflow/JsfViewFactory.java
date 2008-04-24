@@ -45,9 +45,8 @@ import org.springframework.webflow.execution.ViewFactory;
 /**
  * JSF-specific {@link ViewFactory} implementation.
  * <p>
- * This factory is responsible for performing the duties of the RESTORE_VIEW phase of the JSF lifecycle. If the current
- * request is a post-back, then the rest of the standard JSF lifecyle through INVOKE_APPLICATION will be executed as
- * well when an existing {@link JsfView} is found and restored.
+ * This factory is responsible for performing the duties of the RESTORE_VIEW phase of the JSF lifecycle.
+ * </p>
  * 
  * @author Jeremy Grelle
  */
@@ -64,6 +63,10 @@ public class JsfViewFactory implements ViewFactory {
 		this.lifecycle = lifecycle;
 	}
 
+	/**
+	 * Executes the RESTORE_VIEW phase of the JSF lifecycle at the beginning of a request, and creates the next view to
+	 * be rendered in the case of an executing transition.
+	 */
 	public View getView(RequestContext context) {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {

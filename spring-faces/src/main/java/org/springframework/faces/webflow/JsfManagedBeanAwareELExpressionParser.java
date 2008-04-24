@@ -36,7 +36,7 @@ import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
 import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
 
 /**
- * A JSF-specific ExpressionParser that allows beans managed by either JSF, Spring, or Web Flow referenced in
+ * A JSF-specific ExpressionParser that allows beans managed by either JSF, Spring, or Web Flow to be referenced in
  * expressions in the FlowDefinition.
  * 
  * @author Jeremy Grelle

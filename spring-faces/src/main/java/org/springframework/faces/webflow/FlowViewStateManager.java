@@ -28,6 +28,11 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
+/**
+ * Custom {@link StateManager} that manages the JSF component state in web flow's view scope.
+ * 
+ * @author Jeremy Grelle
+ */
 public class FlowViewStateManager extends StateManager {
 
 	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);

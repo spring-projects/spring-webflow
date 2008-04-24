@@ -17,7 +17,15 @@ package org.springframework.faces.webflow;
 
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.application.StateManager;
 
+/**
+ * Custom {@link ApplicationFactory} that ensures the FlowViewStateManager is the first {@link StateManager} in the
+ * chain so that Web Flow may manage JSF component state when a flow is active.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
 public class FlowApplicationFactory extends ApplicationFactory {
 
 	private ApplicationFactory delegate;

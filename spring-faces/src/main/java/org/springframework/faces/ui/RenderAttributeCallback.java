@@ -21,7 +21,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-public interface RenderAttributeCallback {
+/**
+ * Callback interface used to provide custom behavior for the rendering of a particular component attribute.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+interface RenderAttributeCallback {
 
 	public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 			Object attributeValue, String property) throws IOException;

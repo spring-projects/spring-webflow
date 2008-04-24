@@ -21,7 +21,13 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-public class RendererUtils {
+/**
+ * Helper class for common renderer functionality.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+class RendererUtils {
 
 	public static String getFormId(FacesContext context, UIComponent component) {
 		if (component.getParent() instanceof UIForm) {

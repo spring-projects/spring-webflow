@@ -32,6 +32,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.lifecycle.Lifecycle;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -39,6 +40,12 @@ import org.springframework.webflow.execution.View;
 
 /**
  * Customizes the behavior of an existing UIViewRoot with Ajax-aware processing.
+ * 
+ * <p>
+ * This component is the key to rendering partial subtrees of the JSF component tree. It makes use of JSF 1.2's
+ * {@link UIComponent#invokeOnComponent(FacesContext, String, ContextCallback)} method to execute the various phases of
+ * the {@link Lifecycle} on each subtree.
+ * </p>
  * 
  * @author Jeremy Grelle
  */

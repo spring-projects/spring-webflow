@@ -27,11 +27,13 @@ import java.util.Set;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import org.springframework.js.resource.ResourceServlet;
+
 /**
  * Helper used by Spring Faces component renderers to add links to javascript and css resources. The resource links will
- * be rendered in the correct format for the requests to be handled by Web Flow and routed to a special "resources" flow
- * that is engineered at runtime. The resource paths are cached so that a particular resource link is only rendered once
- * per request.
+ * be rendered in the correct format for the requests to be handled by the Spring JavaScript {@link ResourceServlet}.
+ * The resource paths are cached so that a particular resource link is only rendered once per request.
+ * 
  * @author Jeremy Grelle
  * 
  */

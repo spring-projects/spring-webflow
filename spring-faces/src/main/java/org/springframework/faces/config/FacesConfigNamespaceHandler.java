@@ -19,6 +19,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Namespace handler for the faces namespace.
+ * 
  * @author Jeremy Grelle
  */
 public class FacesConfigNamespaceHandler extends NamespaceHandlerSupport {

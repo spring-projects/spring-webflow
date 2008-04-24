@@ -41,7 +41,9 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Custom {@link FacesContext} implementation that delegates all standard FacesContext messaging functionality to a
- * Spring {@link MessageSource} made accessible as part of the current Web Flow request.
+ * Spring {@link MessageSource} made accessible as part of the current Web Flow request. Additionally, it manages the
+ * {@code responseComplete} and {@code renderResponse} flags in flash scope so that the execution of the JSF
+ * {@link Lifecycle} may span multiple requests in the case of the POST+REDIRECT+GET pattern being enabled.
  * 
  * @author Jeremy Grelle
  */

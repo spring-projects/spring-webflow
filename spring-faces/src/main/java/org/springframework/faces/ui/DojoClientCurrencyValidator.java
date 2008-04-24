@@ -18,7 +18,14 @@ package org.springframework.faces.ui;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-public class DojoClientCurrencyValidator extends DojoAdvisor {
+/**
+ * Component that uses the Dojo implementation of Spring JavaScript to decorate a child input component with client-side
+ * currency validation behavior.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public class DojoClientCurrencyValidator extends DojoDecoration {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.CurrencyTextBox";
 
@@ -27,9 +34,9 @@ public class DojoClientCurrencyValidator extends DojoAdvisor {
 	private static final String[] DOJO_ATTRS;
 
 	static {
-		DOJO_ATTRS = new String[DojoAdvisor.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
-		System.arraycopy(DojoAdvisor.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoAdvisor.DOJO_ATTRS.length);
-		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoAdvisor.DOJO_ATTRS.length, DOJO_ATTRS_INTERNAL.length);
+		DOJO_ATTRS = new String[DojoDecoration.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
+		System.arraycopy(DojoDecoration.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoDecoration.DOJO_ATTRS.length);
+		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoDecoration.DOJO_ATTRS.length, DOJO_ATTRS_INTERNAL.length);
 	}
 
 	private String currency;

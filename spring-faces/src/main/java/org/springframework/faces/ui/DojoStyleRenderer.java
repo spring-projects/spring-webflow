@@ -23,6 +23,12 @@ import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 
+/**
+ * {@link Renderer} implementation that renders the CSS resources required by Dojo's widget system.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
 public class DojoStyleRenderer extends Renderer {
 
 	private static final String dijitThemePath = "/dijit/themes/";

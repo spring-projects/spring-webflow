@@ -21,6 +21,11 @@ import org.springframework.faces.model.OneSelectionTrackingListDataModel;
  * Convenient {@link ConversionService} implementation for JSF that composes JSF-specific converters with the standard
  * Web Flow converters.
  * 
+ * <p>
+ * In addition to the standard Web Flow conversion, this service provide conversion from a {@link List} into a
+ * {@link OneSelectionTrackingListDataModel} using a "dataModel" alias for the type.
+ * </p>
+ * 
  * @author Jeremy Grelle
  */
 public class FacesConversionService extends DefaultConversionService {

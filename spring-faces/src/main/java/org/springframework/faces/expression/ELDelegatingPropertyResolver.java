@@ -21,6 +21,11 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.PropertyResolver;
 
+/**
+ * A JSF 1.1 {@link PropertyResolver} that delegates to a wrapped Unified EL resolver chain for property resolution.
+ * 
+ * @author Jeremy Grelle
+ */
 public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 
 	private PropertyResolver nextResolver;

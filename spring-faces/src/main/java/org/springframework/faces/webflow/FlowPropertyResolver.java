@@ -18,13 +18,20 @@ package org.springframework.faces.webflow;
 import javax.el.CompositeELResolver;
 import javax.faces.el.PropertyResolver;
 
+import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
+import org.springframework.context.MessageSource;
 import org.springframework.faces.expression.ELDelegatingPropertyResolver;
 import org.springframework.webflow.expression.el.FlowResourceELResolver;
 
 /**
- * For resolving MapAdaptable properties with JSF 1.1 or >.
+ * Custom property resolver for resolving properties on web flow specific structures with JSF 1.1 or > by delegating to
+ * web flow's EL resolvers.
  * 
+ * <p>
+ * This resolver handles resolving properties on a {@link MapAdaptable} collection and a flow-local
+ * {@link MessageSource}
+ * </p>
  * @author Jeremy Grelle
  */
 public class FlowPropertyResolver extends ELDelegatingPropertyResolver {

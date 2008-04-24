@@ -75,7 +75,7 @@ public class JsfView implements View {
 	}
 
 	/**
-	 * This implementation performs the standard duties of the JSF RENDER_RESPONSE phase.
+	 * Performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() throws IOException {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
@@ -93,6 +93,10 @@ public class JsfView implements View {
 		}
 	}
 
+	/**
+	 * Executes postback-processing portions of the standard JSF lifecyle including APPLY_REQUEST_VALUES through
+	 * INVOKE_APPLICATION.
+	 */
 	public void processUserEvent() {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);

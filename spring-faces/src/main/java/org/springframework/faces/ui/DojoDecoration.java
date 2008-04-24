@@ -15,11 +15,19 @@
  */
 package org.springframework.faces.ui;
 
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-public abstract class DojoAdvisor extends UIComponentBase {
+/**
+ * Base {@link UIComponent} for a component that uses the Dojo implementation of Spring JavaScript to decorate a child
+ * component with enhanced client-side behavior.
+ * 
+ * @author Jeremy Grelle
+ * 
+ */
+public abstract class DojoDecoration extends UIComponentBase {
 
 	protected static final String[] DOJO_ATTRS = new String[] { "disabled", "intermediateChanges", "tabIndex",
 			"required", "promptMessage", "invalidMessage", "constraints", "regExp", "regExpGen" };
@@ -161,7 +169,7 @@ public abstract class DojoAdvisor extends UIComponentBase {
 
 	public String getFamily() {
 
-		return "spring.faces.Advisor";
+		return "spring.faces.Decoration";
 	}
 
 }
