@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HotelsController {
+
     private BookingService bookingService;
 
     @Autowired
@@ -36,14 +37,12 @@ public class HotelsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Hotel show(@RequestParam("id")
-    Long id) {
+    public Hotel show(@RequestParam("id") Long id) {
 	return bookingService.findHotelById(id);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String deleteBooking(@RequestParam("id")
-    Long id) {
+    public String deleteBooking(@RequestParam("id") Long id) {
 	bookingService.cancelBooking(id);
 	return "redirect:index";
     }
