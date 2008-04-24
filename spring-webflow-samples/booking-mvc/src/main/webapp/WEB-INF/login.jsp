@@ -31,7 +31,7 @@
 				<div class="output">
 					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 					<script type="text/javascript">
-						Spring.decorations.push(new Spring.ElementDecoration({
+						Spring.addDecoratio(new Spring.ElementDecoration({
 							elementId : "j_username",
 							widgetType : "dijit.form.ValidationTextBox",
 							widgetAttrs : { promptMessage : "Your username", required : true }}));
@@ -43,7 +43,7 @@
 				<div class="output">
 					<input type="password" name="j_password" id="j_password" />
 					<script type="text/javascript">
-						Spring.decorations.push(new Spring.ElementDecoration({
+						Spring.addDecoration(new Spring.ElementDecoration({
 							elementId : "j_password",
 							widgetType : "dijit.form.ValidationTextBox",
 							widgetAttrs : { promptMessage : "Your password", required : true}}));
@@ -65,7 +65,7 @@
 		<div class="buttonGroup">
 			<input name="submit" id="submit" type="submit" value="Login" />
 			<script type="text/javascript">
-				Spring.decorations.push(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'submit'}));
+				Spring.addDecoration(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'submit'}));
 			</script>
 		</div>
 	</form>

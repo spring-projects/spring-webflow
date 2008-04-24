@@ -11,7 +11,7 @@
 	<fieldset>
 		<form:input path="searchString"/>
 		<script type="text/javascript">
-			Spring.decorations.push(new Spring.ElementDecoration({
+			Spring.addDecoration(new Spring.ElementDecoration({
 				elementId : "searchString",
 				widgetType : "dijit.form.ValidationTextBox",
 				widgetAttrs : { promptMessage : "Search hotels by name, address, city, or zip." }}));

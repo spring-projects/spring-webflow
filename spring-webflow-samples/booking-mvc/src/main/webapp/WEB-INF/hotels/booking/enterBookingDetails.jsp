@@ -43,7 +43,7 @@
 			<div class="input">
 				<form:input path="checkinDate"/>
 				<script type="text/javascript">
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "checkinDate",
 						widgetType : "dijit.form.DateTextBox",
 						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkinDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
@@ -57,7 +57,7 @@
 			<div class="input">
 				<form:input path="checkoutDate"/>
 				<script type="text/javascript">
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "checkoutDate",
 						widgetType : "dijit.form.DateTextBox",
 						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkoutDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
@@ -84,11 +84,11 @@
 				<form:radiobutton id="smoking" path="smoking" label="Smoking" value="true"/>
 				<form:radiobutton id="non-smoking" path="smoking" label="Non Smoking" value="false"/>
 				<script type="text/javascript">
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : 'smoking',
 						widgetType : "dijit.form.RadioButton",
 						widgetModule : "dijit.form.CheckBox" }));
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : 'non-smoking',
 						widgetType : "dijit.form.RadioButton",
 						widgetModule : "dijit.form.CheckBox" }));
@@ -103,7 +103,7 @@
 			<div class="input">
 				<form:input path="creditCard"/>
 				<script type="text/javascript">
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "creditCard",
 						widgetType : "dijit.form.ValidationTextBox",
 						widgetAttrs : { required : true, invalidMessage : "A 16-digit credit card number is required.", 
@@ -118,7 +118,7 @@
 			<div class="input">
 				<form:input path="creditCardName" maxlength="40"/>
 				<script type="text/javascript">
-					Spring.decorations.push(new Spring.ElementDecoration({
+					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "creditCardName",
 						widgetType : "dijit.form.ValidationTextBox",
 						widgetAttrs : { required : true }}));
@@ -157,7 +157,7 @@
 			<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed"/>&#160;
 			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 			<script type="text/javascript">
-				Spring.decorations.push(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'proceed'}));
+				Spring.addDecoration(new Spring.ValidateAllDecoration({event : 'onclick', elementId : 'proceed'}));
 			</script>
 		</div>
 	</fieldset>
