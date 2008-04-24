@@ -107,7 +107,7 @@
 						elementId : "creditCard",
 						widgetType : "dijit.form.ValidationTextBox",
 						widgetAttrs : { required : true, invalidMessage : "A 16-digit credit card number is required.", 
-							regExp : "[0-9]{16}"  }}));
+						regExp : "[0-9]{16}"  }}));
 				</script>
 			</div>
 		</div>
