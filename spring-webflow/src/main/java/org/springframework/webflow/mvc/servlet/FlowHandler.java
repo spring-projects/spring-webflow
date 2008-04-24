@@ -60,10 +60,9 @@ public interface FlowHandler {
 	 * <li>servletRelative: - the location is relative to the current servlet</li>
 	 * <li>contextRelative: - the location is relative to the current web application</li>
 	 * <li>serverRelative: - the location is relative to the server root</li>
-	 * <li>url: - the location is a fully qualified URL to an external resource</li>
 	 * </ul>
-	 * Also, if the returned location no prefix, for example "/hotels/index", the location is treated as relative to the
-	 * current servlet by default.
+	 * If the returned location is a path with no prefix, for example "/hotels/index", it is treated as relative to the
+	 * current servlet by default. Fully qualified URLs beginning with http:// or https:// may also be returned.
 	 * <p>
 	 * For servlet-relative, context-relative, and server-relative URLs, a leading slash is optional.
 	 * 

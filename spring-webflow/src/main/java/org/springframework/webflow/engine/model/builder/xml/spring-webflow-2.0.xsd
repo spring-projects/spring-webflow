@@ -423,12 +423,12 @@ The supported formats for an encoded externalRedirect expression are:
 	externalRedirect:<servlet relative path>
 	externalRedirect:contextRelative:<context relative path>
 	externalRedirect:serverRelative:<server relative path>
-	externalRedirect:url:<fully qualified URL>
+	externalRedirect:<fully qualified http:// or https:// URL>
 </pre>
 For example:
 <pre>
 	externalRedirect:/hotels/index
-	externalRedirect:url:http://someOtherSystem?orderId=${order.id}&callbackUrl=${flowExecutionUrl}
+	externalRedirect:http://someOtherSystem?orderId=${order.id}&callbackUrl=${flowExecutionUrl}
 </pre>
 The flowRedirect: prefix may be used to redirect to another flow:
 <pre>
@@ -902,12 +902,12 @@ The supported formats for an encoded externalRedirect expression are:
 	externalRedirect:<servlet relative path>
 	externalRedirect:contextRelative:<context relative path>
 	externalRedirect:serverRelative:<server relative path>
-	externalRedirect:url:<fully qualified URL>
+	externalRedirect:<fully qualified http:// or https:// URL>
 </pre>
 For example:
 <pre>
 	externalRedirect:/hotels/index
-	externalRedirect:url:http://someOtherSystem?orderId=${order.id}
+	externalRedirect:http://someOtherSystem?orderId=${order.id}
 </pre>
 The flowRedirect: prefix may be used to redirect to another flow:
 <pre>

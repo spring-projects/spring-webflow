@@ -16,8 +16,6 @@
 package org.springframework.webflow.mvc.servlet;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -60,8 +58,6 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private static final String CONTEXT_RELATIVE_LOCATION_PREFIX = "contextRelative:";
 
 	private static final String SERVER_RELATIVE_LOCATION_PREFIX = "serverRelative:";
-
-	private static final String URL_LOCATION_PREFIX = "url:";
 
 	/**
 	 * The entry point into Spring Web Flow.
@@ -351,18 +347,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				url = "/" + url;
 			}
 			sendRedirect(url, response);
-		} else if (location.startsWith(URL_LOCATION_PREFIX)) {
-			String url = location.substring(URL_LOCATION_PREFIX.length());
-			try {
-				new URL(url);
-				sendRedirect(url, response);
-			} catch (MalformedURLException e) {
-				IllegalArgumentException iae = new IllegalArgumentException("The redirect url '" + url
-						+ "' is invalid; specify a fully qualified URL when using the '" + URL_LOCATION_PREFIX
-						+ "' location prefix");
-				iae.initCause(e);
-				throw iae;
-			}
+		} else if (location.startsWith("http://") || location.startsWith("https://")) {
+			sendRedirect(location, response);
 		} else {
 			sendServletRelativeRedirect(location, request, response);
 		}
