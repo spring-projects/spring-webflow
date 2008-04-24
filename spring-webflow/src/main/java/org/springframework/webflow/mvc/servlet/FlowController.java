@@ -21,10 +21,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.js.mvc.servlet.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.executor.FlowExecutor;
 
@@ -36,24 +39,24 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  */
-public class FlowController extends AbstractController implements InitializingBean {
+public class FlowController implements Controller, ApplicationContextAware, InitializingBean {
 
 	private FlowHandlerAdapter flowHandlerAdapter = new FlowHandlerAdapter();
 
 	private Map flowHandlers = new HashMap();
 
-	private boolean customFlowHandlerAdapter;
+	private boolean customFlowHandlerAdapterSet;
 
 	/**
 	 * Creates a new flow controller.
 	 * @see #setFlowExecutor(FlowExecutor)
 	 * @see #setFlowUrlHandler(FlowUrlHandler)
 	 * @see #setAjaxHandler(AjaxHandler)
+	 * @see #setFlowHandlerAdapter(FlowHandlerAdapter)
 	 * @see #afterPropertiesSet()
 	 */
 	public FlowController() {
-		// turn caching off for flows by default
-		setCacheSeconds(0);
+
 	}
 
 	/**
@@ -132,20 +135,24 @@ public class FlowController extends AbstractController implements InitializingBe
 	 */
 	public void setFlowHandlerAdapter(FlowHandlerAdapter flowHandlerAdapter) {
 		this.flowHandlerAdapter = flowHandlerAdapter;
-		customFlowHandlerAdapter = true;
+		customFlowHandlerAdapterSet = true;
+	}
+
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		if (!customFlowHandlerAdapterSet) {
+			flowHandlerAdapter.setApplicationContext(applicationContext);
+		}
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		if (!customFlowHandlerAdapter) {
-			flowHandlerAdapter.setApplicationContext(getApplicationContext());
+		if (!customFlowHandlerAdapterSet) {
 			flowHandlerAdapter.afterPropertiesSet();
 		}
 	}
 
 	// subclassing hooks
 
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		FlowHandler handler = getFlowHandler(request);
 		return flowHandlerAdapter.handle(request, response, handler);
 	}

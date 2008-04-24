@@ -30,9 +30,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.mvc.servlet.AjaxHandler;
 import org.springframework.js.mvc.servlet.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
-import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.WebContentGenerator;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -51,7 +51,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  */
-public class FlowHandlerAdapter extends WebApplicationObjectSupport implements HandlerAdapter, InitializingBean {
+public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAdapter, InitializingBean {
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
@@ -86,6 +86,8 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 	 * @see #afterPropertiesSet()
 	 */
 	public FlowHandlerAdapter() {
+		// prevent caching of flow pages by default
+		setCacheSeconds(0);
 	}
 
 	/**
@@ -149,6 +151,7 @@ public class FlowHandlerAdapter extends WebApplicationObjectSupport implements H
 
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		checkAndPrepare(request, response, false);
 		FlowHandler flowHandler = (FlowHandler) handler;
 		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
