@@ -31,11 +31,10 @@
 				<div class="output">
 					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 					<script type="text/javascript">
-						dojo.require('dijit.form.ValidationTextBox');
 						Spring.decorations.push(new Spring.ElementDecoration({
-							elementId : 'j_username',
-							widgetType : dijit.form.ValidationTextBox,
-							widgetAttrs : { promptMessage : 'Your username', required : true }}));
+							elementId : "j_username",
+							widgetType : "dijit.form.ValidationTextBox",
+							widgetAttrs : { promptMessage : "Your username", required : true }}));
 					</script>
 				</div>
 			</div>
@@ -44,11 +43,10 @@
 				<div class="output">
 					<input type="password" name="j_password" id="j_password" />
 					<script type="text/javascript">
-						dojo.require('dijit.form.ValidationTextBox');
 						Spring.decorations.push(new Spring.ElementDecoration({
-							elementId : 'j_password',
-							widgetType : dijit.form.ValidationTextBox,
-							widgetAttrs : { promptMessage : 'Your password', required : true}}));
+							elementId : "j_password",
+							widgetType : "dijit.form.ValidationTextBox",
+							widgetAttrs : { promptMessage : "Your password", required : true}}));
 					</script>
 				</div>
 			</div>
@@ -57,10 +55,9 @@
 				<div class="output">
 					<input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
 					<script type="text/javascript">
-						dojo.require('dijit.form.CheckBox');
 						Spring.decorations.push(new Spring.ElementDecoration({
-							elementId : 'remember_me',
-							widgetType : dijit.form.CheckBox}));
+							elementId : "remember_me",
+							widgetType : "dijit.form.CheckBox"}));
 					</script>
 				</div>
 			</div>

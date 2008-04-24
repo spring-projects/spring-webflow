@@ -43,11 +43,10 @@
 			<div class="input">
 				<form:input path="checkinDate"/>
 				<script type="text/javascript">
-					dojo.require('dijit.form.DateTextBox');
 					Spring.decorations.push(new Spring.ElementDecoration({
-						elementId : 'checkinDate',
-						widgetType : dijit.form.DateTextBox,
-						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId('checkinDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
+						elementId : "checkinDate",
+						widgetType : "dijit.form.DateTextBox",
+						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkinDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -58,11 +57,10 @@
 			<div class="input">
 				<form:input path="checkoutDate"/>
 				<script type="text/javascript">
-					dojo.require('dijit.form.DateTextBox');
 					Spring.decorations.push(new Spring.ElementDecoration({
-						elementId : 'checkoutDate',
-						widgetType : dijit.form.DateTextBox,
-						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId('checkoutDate').value, {selector : 'date', datePattern : 'yyyy-MM-dd'}), required : true }}));  
+						elementId : "checkoutDate",
+						widgetType : "dijit.form.DateTextBox",
+						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkoutDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -86,15 +84,14 @@
 				<form:radiobutton id="smoking" path="smoking" label="Smoking" value="true"/>
 				<form:radiobutton id="non-smoking" path="smoking" label="Non Smoking" value="false"/>
 				<script type="text/javascript">
-					dojo.require('dijit.form.CheckBox');
 					Spring.decorations.push(new Spring.ElementDecoration({
 						elementId : 'smoking',
-						widgetType : dijit.form.RadioButton,
-						widgetAttrs : { promptMessage : 'Smoking room' }}));
+						widgetType : "dijit.form.RadioButton",
+						widgetModule : "dijit.form.CheckBox" }));
 					Spring.decorations.push(new Spring.ElementDecoration({
 						elementId : 'non-smoking',
-						widgetType : dijit.form.RadioButton,
-						widgetAttrs : { promptMessage : 'Non-smoking room' }}));
+						widgetType : "dijit.form.RadioButton",
+						widgetModule : "dijit.form.CheckBox" }));
 				</script>
 				
 			</div>
@@ -106,11 +103,11 @@
 			<div class="input">
 				<form:input path="creditCard"/>
 				<script type="text/javascript">
-					dojo.require('dijit.form.ValidationTextBox');
 					Spring.decorations.push(new Spring.ElementDecoration({
-						elementId : 'creditCard',
-						widgetType : dijit.form.ValidationTextBox,
-						widgetAttrs : { required : true, invalidMessage : 'A 16-digit credit card number is required.', regExp : '[0-9]{16}'  }}));
+						elementId : "creditCard",
+						widgetType : "dijit.form.ValidationTextBox",
+						widgetAttrs : { required : true, invalidMessage : "A 16-digit credit card number is required.", 
+							regExp : "[0-9]{16}"  }}));
 				</script>
 			</div>
 		</div>
@@ -121,10 +118,9 @@
 			<div class="input">
 				<form:input path="creditCardName" maxlength="40"/>
 				<script type="text/javascript">
-					dojo.require('dijit.form.ValidationTextBox');
 					Spring.decorations.push(new Spring.ElementDecoration({
-						elementId : 'creditCardName',
-						widgetType : dijit.form.ValidationTextBox,
+						elementId : "creditCardName",
+						widgetType : "dijit.form.ValidationTextBox",
 						widgetAttrs : { required : true }}));
 				</script>
 			</div>

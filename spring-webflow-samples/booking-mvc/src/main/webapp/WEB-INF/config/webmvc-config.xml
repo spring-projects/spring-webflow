@@ -46,7 +46,7 @@
 	
 	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="requestContextAttribute" value="requestContext"/>
-		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
+		<property name="viewClass" value="org.springframework.js.ajax.view.TilesAjaxView"/>
 	</bean>
 
 	<!-- Enables annotated POJO @Controllers -->

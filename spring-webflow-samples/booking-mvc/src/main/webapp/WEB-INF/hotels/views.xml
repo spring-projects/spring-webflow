@@ -10,8 +10,11 @@
 	</definition>
 	
 	<definition name="hotels/search" extends="standard-layout">
-		<put-attribute name="body" value="/WEB-INF/hotels/search.jsp" />
+		<put-attribute name="body" value="search.body" />
 	</definition>
+    <definition name="search.body" template="/WEB-INF/hotels/search.jsp">
+        <put-attribute name="hotelResults" value="/WEB-INF/hotels/hotelResults.jsp" />
+    </definition>
 	
 	<definition name="hotels/show" extends="standard-layout">
 		<put-attribute name="body" value="/WEB-INF/hotels/show.jsp" />

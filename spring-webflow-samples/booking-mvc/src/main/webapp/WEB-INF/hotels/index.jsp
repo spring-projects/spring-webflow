@@ -11,11 +11,10 @@
 	<fieldset>
 		<form:input path="searchString"/>
 		<script type="text/javascript">
-			dojo.require('dijit.form.ValidationTextBox');
 			Spring.decorations.push(new Spring.ElementDecoration({
-				elementId : 'searchString',
-				widgetType : dijit.form.ValidationTextBox,
-				widgetAttrs : { promptMessage : 'Search hotels by name, address, city, or zip.' }}));
+				elementId : "searchString",
+				widgetType : "dijit.form.ValidationTextBox",
+				widgetAttrs : { promptMessage : "Search hotels by name, address, city, or zip." }}));
 		</script>
 		<label for="pageSize">Maximum results:</label>
 		<form:select path="pageSize">
@@ -23,6 +22,7 @@
 			<form:option label="10" value="10"/>
 			<form:option label="20" value="20"/>
 		</form:select>
+		<form:hidden path="page"/>
 		<input type="submit" class="button" value="Find Hotels" />
     </fieldset>
 </div>
