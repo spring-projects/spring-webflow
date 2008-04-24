@@ -4,26 +4,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
-    <!--
-	  - Location of the XML file that defines the root application context
-	  - Applied by ContextLoaderListener.
-	  -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			/WEB-INF/config/web-application-config.xml
-		</param-value>
-	</context-param>
-
-	<!--
-	  - Loads the root application context of this web app at startup.
-	  - The application context is then available via
-	  - WebApplicationContextUtils.getWebApplicationContext(servletContext).
-    -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-  	
   	<!-- Serves static resource content from .jar files such as spring-js.jar -->
 	<servlet>
 		<servlet-name>Resources Servlet</servlet-name>

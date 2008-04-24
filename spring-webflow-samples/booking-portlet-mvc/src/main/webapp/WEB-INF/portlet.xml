@@ -15,7 +15,7 @@
 		<init-param>
 			<name>contextConfigLocation</name>
 			<value>
-				/WEB-INF/config/dispatcher-portlet-config.xml
+				/WEB-INF/config/web-application-config.xml
 			</value>
 		</init-param>
 
