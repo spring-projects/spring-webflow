@@ -11,7 +11,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/config/data-access-config.xml
+			/WEB-INF/config/application-config.xml
 		</param-value>
 	</context-param>
 
