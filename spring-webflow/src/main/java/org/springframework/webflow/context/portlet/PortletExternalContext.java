@@ -199,19 +199,20 @@ public class PortletExternalContext implements ExternalContext {
 		if (this.isRenderPhase()) {
 			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
 		} else {
-			throw new IllegalStateException("Only a render request can obtain an flow execution uri");
+			throw new IllegalStateException("You can only obtain a flow execution URL in a RenderRequest");
 		}
 	}
 
 	public Writer getResponseWriter() {
+		if (!isRenderPhase()) {
+			throw new IllegalStateException("You can only access a response Writer in a RenderRequest");
+		}
 		try {
-			if (isRenderPhase()) {
-				return ((RenderResponse) response).getWriter();
-			} else {
-				throw new IllegalStateException("Only render requests can obtain response writer");
-			}
+			return ((RenderResponse) response).getWriter();
 		} catch (IOException e) {
-			throw new IllegalStateException("Unable to obtain response writer", e);
+			IllegalStateException ise = new IllegalStateException("Unable to access the response Writer");
+			ise.initCause(e);
+			throw ise;
 		}
 	}
 

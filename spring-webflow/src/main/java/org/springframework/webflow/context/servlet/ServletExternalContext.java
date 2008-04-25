@@ -203,7 +203,9 @@ public class ServletExternalContext implements ExternalContext {
 		try {
 			return response.getWriter();
 		} catch (IOException e) {
-			throw new IllegalStateException("Unable to obtain response writer", e);
+			IllegalStateException ise = new IllegalStateException("Unable to access the response Writer");
+			ise.initCause(e);
+			throw ise;
 		}
 	}
 
