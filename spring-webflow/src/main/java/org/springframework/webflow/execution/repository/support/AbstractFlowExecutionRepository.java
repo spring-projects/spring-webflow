@@ -58,6 +58,8 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	private static final Integer ONE = new Integer(1);
+
 	private ConversationManager conversationManager;
 
 	private FlowExecutionStateRestorer executionStateRestorer;
@@ -108,7 +110,7 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	public FlowExecutionKey getKey(FlowExecution execution) {
 		if (execution.getKey() == null) {
 			Conversation conversation = beginConversation(execution);
-			return new CompositeFlowExecutionKey(conversation.getId(), Integer.valueOf(1));
+			return new CompositeFlowExecutionKey(conversation.getId(), ONE);
 		} else {
 			return getNextKey(execution);
 		}
