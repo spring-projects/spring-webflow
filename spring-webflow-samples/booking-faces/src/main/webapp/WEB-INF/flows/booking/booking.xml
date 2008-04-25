@@ -20,7 +20,7 @@
 	
 	<view-state id="reviewBooking">
 		<transition on="confirm" to="bookingConfirmed">
-			<evaluate expression="entityManager.persist(booking)" />
+			<evaluate expression="persistenceContext.persist(booking)" />
 		</transition>
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="bookingCancelled" />
