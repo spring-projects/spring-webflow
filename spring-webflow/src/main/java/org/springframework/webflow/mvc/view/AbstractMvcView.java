@@ -40,6 +40,7 @@ import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.mapping.impl.DefaultMappingContext;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageContextErrors;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;

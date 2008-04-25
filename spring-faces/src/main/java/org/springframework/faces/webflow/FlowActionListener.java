@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageContextErrors;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -39,7 +40,6 @@ import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
-import org.springframework.webflow.mvc.view.MessageContextErrors;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.

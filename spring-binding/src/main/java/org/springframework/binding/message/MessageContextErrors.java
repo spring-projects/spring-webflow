@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.mvc.view;
+package org.springframework.binding.message;
 
 import java.util.List;
 
-import org.springframework.binding.message.MessageBuilder;
-import org.springframework.binding.message.MessageContext;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 
