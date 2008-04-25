@@ -20,7 +20,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A Web Flow version of the View Resolver interface. Used to resolve a MVC view from flow state.
+ * A Web Flow flavor of the familiar Spring MVC View Resolver interface. Allows resolving a Spring MVC {@link View view}
+ * from the state of an executing flow.
  * 
  * @author Keith Donald
  * @see ViewResolver
@@ -30,7 +31,7 @@ public interface FlowViewResolver {
 	/**
 	 * Resolve the Spring MVC view with the provided id.
 	 * @param viewId the view id, typically treated as a Spring MVC view name
-	 * @param context the currently executing flow
+	 * @param context the current flow request
 	 * @return the resolved Spring MVC view
 	 */
 	public View resolveView(String viewId, RequestContext context);
