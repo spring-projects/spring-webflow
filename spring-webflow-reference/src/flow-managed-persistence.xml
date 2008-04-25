@@ -77,7 +77,7 @@
 		</para>
 		<para>
 			That is it.  When your flow starts, the listener will handle allocating a new <code>EntityManager</code> in <code>flowScope</code>.
-			Reference this EntityManager at anytime from within your flow by using the special <code>entityManager</code> variable.
+			Reference this EntityManager at anytime from within your flow by using the special <code>persistenceContext</code> variable.
 			In addition, any data access that occurs using a Spring managed data access object will use this EntityManager automatically.
 			Such data access operations should always execute non transactionally or in read-only transactions to maintain isolation of intermediate edits.
 		</para>
