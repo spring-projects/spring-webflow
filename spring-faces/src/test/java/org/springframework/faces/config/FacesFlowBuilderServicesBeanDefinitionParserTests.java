@@ -66,7 +66,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public String getViewIdByConvention(String viewStateId) {
+		public String getViewNameByConvention(String viewStateId) {
 			return viewStateId;
 		}
 
