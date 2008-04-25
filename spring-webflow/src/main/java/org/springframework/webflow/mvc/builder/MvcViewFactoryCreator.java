@@ -33,13 +33,20 @@ import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
 
 /**
- * View factory creator implementation that produces View Factories that create native Spring MVC-based views.
+ * Returns {@link ViewFactory view factories} that create native Spring MVC-based views. Used by a FlowBuilder to
+ * configure a flow's view states with Spring MVC-based view factories.
+ * <p>
+ * This implementation detects whether it is running in a Servlet or Portlet MVC environment, and returns instances of
+ * the default view factory implementation for that environment.
+ * <p>
+ * By default, this implementation creates view factories that resolve their views by loading flow-relative resources,
+ * such as .jsp templates located in a flow working directory. This class also supports rendering views resolved by
+ * pre-existing Spring MVC {@link ViewResolver view resolvers}.
  * 
- * This class is used by a flow builder in a Spring MVC environment to configure view factories on flows that render
- * Spring MVC-based views.
- * 
- * This class supports rendering views resolved by existing Spring MVC-based resolver infrastructure, or, if no such
- * infrastructure is configured, JSP resources relative to the flow definition being built.
+ * @see ServletMvcViewFactory
+ * @see PortletMvcViewFactory
+ * @see FlowResourceFlowViewResolver
+ * @see DelegatingFlowViewResolver
  * 
  * @author Keith Donald
  * @author Scott Andrews
@@ -54,6 +61,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	 * Create a new Spring MVC View Factory Creator.
 	 * @see #setDefaultViewSuffix(String)
 	 * @see #setViewResolvers(List)
+	 * @see #setFlowViewResolver(FlowViewResolver)
 	 */
 	public MvcViewFactoryCreator() {
 
@@ -76,8 +84,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	/**
-	 * Configure an {@link FlowResourceFlowViewResolver} capable of resolving view resources by applying the
-	 * specified default resource suffix. Default is .jsp.
+	 * Configure an {@link FlowResourceFlowViewResolver} capable of resolving view resources by applying the specified
+	 * default resource suffix. Default is .jsp.
 	 * @param defaultViewSuffix the default view suffix
 	 */
 	public void setDefaultViewSuffix(String defaultViewSuffix) {
@@ -87,8 +95,9 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	/**
-	 * Sets the Spring MVC {@link ViewResolver view resolvers} to delegate to resolve views selected by flows. If
-	 * multiple resolvers are to be used, the resolvers should be ordered in the manner they should be applied.
+	 * Sets the chain of Spring MVC {@link ViewResolver view resolvers} to delegate to resolve views selected by flows.
+	 * Allows for reuse of existing View Resolvers configured in a Spring application context. If multiple resolvers are
+	 * to be used, the resolvers should be ordered in the manner they should be applied.
 	 * @param viewResolvers the view resolver list
 	 */
 	public void setViewResolvers(List viewResolvers) {

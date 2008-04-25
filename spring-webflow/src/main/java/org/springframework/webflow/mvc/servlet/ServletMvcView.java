@@ -32,7 +32,7 @@ import org.springframework.webflow.mvc.view.AbstractMvcView;
 public class ServletMvcView extends AbstractMvcView {
 
 	/**
-	 * Creates a new servlet view.
+	 * Creates a new Servlet MVC view.
 	 * @param view the view to render
 	 * @param context the current flow request context.
 	 */

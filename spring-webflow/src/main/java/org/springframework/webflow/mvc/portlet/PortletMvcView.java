@@ -37,7 +37,7 @@ import org.springframework.webflow.mvc.view.AbstractMvcView;
 public class PortletMvcView extends AbstractMvcView {
 
 	/**
-	 * Creates a new portlet view.
+	 * Creates a new Portlet MVC view.
 	 * @param view the view to render
 	 * @param context the current flow request context
 	 */
