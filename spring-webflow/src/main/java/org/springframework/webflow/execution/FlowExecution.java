@@ -30,7 +30,7 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * Start this flow execution. This method should only be called once.
 	 * <p>
 	 * When this method returns, execution status is either "paused" or "ended". If ended, the flow execution cannot be
-	 * used again. If "paused", the flow execution may be {@link #resume(ExternalContext)}.
+	 * used again. If "paused", the flow execution may be {@link #resume(ExternalContext) resumed}.
 	 * @param input flow execution input
 	 * @param context the external context representing the calling environment
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow execution during request
