@@ -925,7 +925,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			try {
 				return resource.createRelative(location);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				IllegalArgumentException iae = new IllegalArgumentException(
+						"Unable to access a flow relative resource at location '" + location + "'");
+				iae.initCause(e);
+				throw iae;
 			}
 		}
 	}

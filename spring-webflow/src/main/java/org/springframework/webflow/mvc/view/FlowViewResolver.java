@@ -26,5 +26,12 @@ import org.springframework.webflow.execution.RequestContext;
  * @see ViewResolver
  */
 public interface FlowViewResolver {
+
+	/**
+	 * Resolve the Spring MVC view with the provided id.
+	 * @param viewId the view id, typically treated as a Spring MVC view name
+	 * @param context the currently executing flow
+	 * @return the resolved Spring MVC view
+	 */
 	public View resolveView(String viewId, RequestContext context);
 }
