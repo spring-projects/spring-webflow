@@ -19,7 +19,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.mvc.servlet.ServletMvcView;
-import org.springframework.webflow.mvc.view.MvcView;
+import org.springframework.webflow.mvc.view.AbstractMvcView;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -50,7 +50,7 @@ public class ServletMvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new ServletMvcView(mvcView, context);
+		AbstractMvcView view = new ServletMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);

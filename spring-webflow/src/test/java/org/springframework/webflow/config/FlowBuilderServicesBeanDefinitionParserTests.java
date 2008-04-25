@@ -14,7 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.view.MvcViewFactoryCreator;
+import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
@@ -49,7 +49,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public String getViewIdByConvention(String viewStateId) {
+		public String getViewNameByConvention(String viewStateId) {
 			return viewStateId;
 		}
 

@@ -22,13 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.mvc.view.MvcView;
+import org.springframework.webflow.mvc.view.AbstractMvcView;
 
 /**
  * Creates a new Spring Web Servlet MVC view.
  * @author Keith Donald
  */
-public class ServletMvcView extends MvcView {
+public class ServletMvcView extends AbstractMvcView {
 
 	/**
 	 * Creates a new servlet view.
@@ -39,7 +39,7 @@ public class ServletMvcView extends MvcView {
 		super(view, context);
 	}
 
-	public void doRender(Map model) throws Exception {
+	protected void doRender(Map model) throws Exception {
 		RequestContext context = getRequestContext();
 		ExternalContext externalContext = context.getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) externalContext.getNativeRequest();

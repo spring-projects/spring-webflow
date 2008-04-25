@@ -58,7 +58,7 @@ import org.springframework.webflow.expression.DefaultExpressionParserFactory;
  * 
  * @author Keith Donald
  */
-public abstract class MvcView implements View {
+public abstract class AbstractMvcView implements View {
 
 	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
 
@@ -83,7 +83,7 @@ public abstract class MvcView implements View {
 	 * @param view the Spring MVC view to render
 	 * @param requestContext the current flow request context
 	 */
-	public MvcView(org.springframework.web.servlet.View view, RequestContext requestContext) {
+	public AbstractMvcView(org.springframework.web.servlet.View view, RequestContext requestContext) {
 		this.view = view;
 		this.requestContext = requestContext;
 	}

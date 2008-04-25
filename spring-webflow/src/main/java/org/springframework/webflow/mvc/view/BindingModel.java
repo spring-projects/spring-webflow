@@ -43,7 +43,7 @@ import org.springframework.validation.ObjectError;
  * 
  * This class is a Spring Errors adapter, basically, for use with spring form and bind tags.
  * 
- * @see MvcView
+ * @see AbstractMvcView
  * 
  * @author Keith Donald
  */
@@ -82,7 +82,7 @@ public class BindingModel extends AbstractErrors {
 
 	/**
 	 * Sets the results of a data mapping attempt onto the bound model object from the view.
-	 * @see MvcView#processUserEvent()
+	 * @see AbstractMvcView#processUserEvent()
 	 * @param results
 	 */
 	public void setMappingResults(MappingResults results) {

@@ -30,12 +30,12 @@ public interface ViewFactoryCreator {
 	/**
 	 * Create a view factory capable of creating {@link View} objects that can render the view template with the
 	 * provided identifier.
-	 * @param viewIdExpression an expression that resolves the id of the view template
+	 * @param viewName an expression that resolves the name of the view template
 	 * @param expressionParser an optional expression parser to use to resolve view expressions
 	 * @param formatterRegistry an optional formatter registry to use to format text values
 	 * @return the view factory
 	 */
-	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+	public ViewFactory createViewFactory(Expression viewName, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry);
 
 	/**
@@ -43,5 +43,5 @@ public interface ViewFactoryCreator {
 	 * @param viewStateId the view state id
 	 * @return the default view id
 	 */
-	public String getViewIdByConvention(String viewStateId);
+	public String getViewNameByConvention(String viewStateId);
 }

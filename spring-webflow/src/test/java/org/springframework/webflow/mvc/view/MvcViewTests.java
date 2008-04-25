@@ -54,7 +54,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MockMvcView(mvcView, context);
+		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
@@ -82,7 +82,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MockMvcView(mvcView, context);
+		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
@@ -100,7 +100,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MockMvcView(mvcView, context);
+		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.processUserEvent();
 		assertFalse(view.hasFlowEvent());
 		assertNull(view.getFlowEvent());
@@ -114,7 +114,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MockMvcView(mvcView, context);
+		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
@@ -138,7 +138,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
-		MvcView view = new MockMvcView(mvcView, context);
+		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setFormatterRegistry(formatterRegistry);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
@@ -152,7 +152,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals("foo", bindBean.getBeanProperty().getName());
 	}
 
-	private class MockMvcView extends MvcView {
+	private class MockMvcView extends AbstractMvcView {
 
 		public MockMvcView(View view, RequestContext context) {
 			super(view, context);

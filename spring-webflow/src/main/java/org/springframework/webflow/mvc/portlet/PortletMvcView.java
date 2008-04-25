@@ -26,14 +26,15 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewRendererServlet;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.mvc.view.MvcView;
+import org.springframework.webflow.mvc.view.AbstractMvcView;
 
 /**
  * Spring Web Portlet MVC view implementation.
+ * 
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletMvcView extends MvcView {
+public class PortletMvcView extends AbstractMvcView {
 
 	/**
 	 * Creates a new portlet view.
@@ -44,7 +45,7 @@ public class PortletMvcView extends MvcView {
 		super(view, context);
 	}
 
-	public void doRender(Map model) throws Exception {
+	protected void doRender(Map model) throws Exception {
 		RequestContext context = getRequestContext();
 		ExternalContext externalContext = context.getExternalContext();
 		View view = getView();
