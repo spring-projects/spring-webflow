@@ -22,6 +22,9 @@
 	<dependencies>
 		<!-- global dependencies -->
 		<dependency org="org.apache" name="commons-logging" rev="1.1.1" conf="compile->default"/>
+        <dependency org="org.apache.tiles" name="tiles-api" rev="2.0.5" conf="optional->default"/>
+		<dependency org="org.apache.tiles" name="tiles-core" rev="2.0.5" conf="optional->default"/>
+		<dependency org="org.apache.tiles" name="tiles-jsp" rev="2.0.5" conf="optional->default"/>
 		<dependency org="org.springframework" name="spring-core" rev="2.5.3" conf="compile->default"/>
         <dependency org="org.springframework" name="spring-beans" rev="2.5.3" conf="compile->default"/>
         <dependency org="org.springframework" name="spring-web" rev="2.5.3" conf="compile->default"/>
@@ -29,9 +32,6 @@
 
 		<!-- build time only dependencies -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default" />
-        <dependency org="org.apache.tiles" name="tiles-api" rev="2.0.5" conf="provided->default"/>
-		<dependency org="org.apache.tiles" name="tiles-core" rev="2.0.5" conf="provided->default"/>
-		<dependency org="org.apache.tiles" name="tiles-jsp" rev="2.0.5" conf="provided->default"/>
     	
 		<!-- test dependencies -->
 		<dependency org="org.apache.logging" name="log4j" rev="1.2.15" conf="test->default" />
