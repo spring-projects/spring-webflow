@@ -588,7 +588,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			if (endState) {
 				return null;
 			} else {
-				view = getLocalContext().getViewFactoryCreator().getViewNameByConvention(stateId);
+				view = getLocalContext().getViewFactoryCreator().getViewIdByConvention(stateId);
 				Expression viewId = getLocalContext().getExpressionParser().parseExpression(view,
 						new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 				return createViewFactory(viewId);

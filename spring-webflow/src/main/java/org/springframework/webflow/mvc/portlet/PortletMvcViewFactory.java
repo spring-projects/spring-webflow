@@ -31,9 +31,9 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 
-	public PortletMvcViewFactory(Expression viewName, FlowViewResolver viewResolver, ExpressionParser expressionParser,
+	public PortletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry) {
-		super(viewName, viewResolver, expressionParser, formatterRegistry);
+		super(viewId, viewResolver, expressionParser, formatterRegistry);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {

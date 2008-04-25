@@ -96,18 +96,18 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator {
 		this.flowViewResolver = flowViewResolver;
 	}
 
-	public ViewFactory createViewFactory(Expression viewName, ExpressionParser expressionParser,
+	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry) {
 		if (environment == null || environment == MvcEnvironment.SERVLET) {
-			return new ServletMvcViewFactory(viewName, flowViewResolver, expressionParser, formatterRegistry);
+			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
 		} else if (environment == MvcEnvironment.PORTLET) {
-			return new PortletMvcViewFactory(viewName, flowViewResolver, expressionParser, formatterRegistry);
+			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
 		} else {
 			throw new IllegalStateException("Environment not supported " + environment);
 		}
 	}
 
-	public String getViewNameByConvention(String viewStateId) {
+	public String getViewIdByConvention(String viewStateId) {
 		if (flowViewResolver instanceof DelegatingFlowViewResolver) {
 			return viewStateId;
 		} else {

@@ -41,16 +41,16 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 		this.viewResolvers = viewResolvers;
 	}
 
-	public View resolveView(String viewName, RequestContext context) {
+	public View resolveView(String viewId, RequestContext context) {
 		for (Iterator it = viewResolvers.iterator(); it.hasNext();) {
 			ViewResolver viewResolver = (ViewResolver) it.next();
 			try {
-				View view = viewResolver.resolveViewName(viewName, context.getExternalContext().getLocale());
+				View view = viewResolver.resolveViewName(viewId, context.getExternalContext().getLocale());
 				if (view != null) {
 					return view;
 				}
 			} catch (Exception e) {
-				throw new IllegalStateException("Exception resolving view with name '" + viewName + "'", e);
+				throw new IllegalStateException("Exception resolving view with name '" + viewId + "'", e);
 			}
 		}
 		return null;

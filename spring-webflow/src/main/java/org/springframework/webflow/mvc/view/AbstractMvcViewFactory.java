@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 public abstract class AbstractMvcViewFactory implements ViewFactory {
 
-	private Expression viewName;
+	private Expression viewId;
 
 	private FlowViewResolver viewResolver;
 
@@ -37,9 +37,9 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private FormatterRegistry formatterRegistry;
 
-	public AbstractMvcViewFactory(Expression viewName, FlowViewResolver viewResolver,
-			ExpressionParser expressionParser, FormatterRegistry formatterRegistry) {
-		this.viewName = viewName;
+	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
+			FormatterRegistry formatterRegistry) {
+		this.viewId = viewId;
 		this.viewResolver = viewResolver;
 		this.expressionParser = expressionParser;
 		this.formatterRegistry = formatterRegistry;
@@ -54,8 +54,8 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 	}
 
 	public View getView(RequestContext context) {
-		String viewName = (String) this.viewName.getValue(context);
-		org.springframework.web.servlet.View view = viewResolver.resolveView(viewName, context);
+		String viewId = (String) this.viewId.getValue(context);
+		org.springframework.web.servlet.View view = viewResolver.resolveView(viewId, context);
 		return createMvcView(view, context);
 	}
 

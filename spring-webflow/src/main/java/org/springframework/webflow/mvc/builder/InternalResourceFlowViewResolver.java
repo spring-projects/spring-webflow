@@ -34,15 +34,15 @@ public class InternalResourceFlowViewResolver implements FlowViewResolver {
 
 	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
 
-	public View resolveView(String viewName, RequestContext context) {
-		if (viewName.startsWith("/")) {
-			return getViewInternal(viewName, context, context.getActiveFlow().getApplicationContext());
+	public View resolveView(String viewId, RequestContext context) {
+		if (viewId.startsWith("/")) {
+			return getViewInternal(viewId, context, context.getActiveFlow().getApplicationContext());
 		} else {
 			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
 			if (flowContext == null) {
 				throw new IllegalStateException("A Flow ApplicationContext is required to resolve Flow View Resources");
 			}
-			Resource viewResource = flowContext.getResource(viewName);
+			Resource viewResource = flowContext.getResource(viewId);
 			if (!(viewResource instanceof ContextResource)) {
 				throw new IllegalStateException(
 						"A ContextResource is required to get relative view paths within this context");

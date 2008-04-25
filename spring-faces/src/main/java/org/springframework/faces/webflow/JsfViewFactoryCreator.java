@@ -39,7 +39,7 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 		return new JsfViewFactory(viewIdExpression, getLifecycle());
 	}
 
-	public String getViewNameByConvention(String viewStateId) {
+	public String getViewIdByConvention(String viewStateId) {
 		return viewStateId + FACELETS_EXTENSION;
 	}
 

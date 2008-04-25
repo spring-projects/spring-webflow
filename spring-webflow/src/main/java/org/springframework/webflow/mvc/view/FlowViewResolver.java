@@ -26,5 +26,5 @@ import org.springframework.webflow.execution.RequestContext;
  * @see ViewResolver
  */
 public interface FlowViewResolver {
-	public View resolveView(String viewName, RequestContext context);
+	public View resolveView(String viewId, RequestContext context);
 }

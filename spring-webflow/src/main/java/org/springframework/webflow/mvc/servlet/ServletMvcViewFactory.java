@@ -31,9 +31,9 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class ServletMvcViewFactory extends AbstractMvcViewFactory {
 
-	public ServletMvcViewFactory(Expression viewName, FlowViewResolver viewResolver, ExpressionParser expressionParser,
+	public ServletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry) {
-		super(viewName, viewResolver, expressionParser, formatterRegistry);
+		super(viewId, viewResolver, expressionParser, formatterRegistry);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {

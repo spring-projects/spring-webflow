@@ -49,7 +49,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public String getViewNameByConvention(String viewStateId) {
+		public String getViewIdByConvention(String viewStateId) {
 			return viewStateId;
 		}
 
