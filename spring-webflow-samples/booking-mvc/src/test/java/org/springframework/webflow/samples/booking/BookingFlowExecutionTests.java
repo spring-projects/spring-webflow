@@ -64,7 +64,7 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
     public void testReviewBooking_Confirm() {
 	setCurrentState("reviewBooking");
 	getFlowScope().put("booking", createTestBooking());
-	getFlowScope().put("entityManager", new Object() {
+	getFlowScope().put("persistenceContext", new Object() {
 	    public void persist(Booking booking) {
 		persistCalled = true;
 	    }
