@@ -34,9 +34,9 @@ import org.springframework.webflow.execution.ViewFactory;
  */
 class MockViewFactoryCreator implements ViewFactoryCreator {
 
-	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
+	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry) {
-		return new MockViewFactory(viewIdExpression);
+		return new MockViewFactory(viewId);
 	}
 
 	public String getViewIdByConvention(String viewStateId) {
