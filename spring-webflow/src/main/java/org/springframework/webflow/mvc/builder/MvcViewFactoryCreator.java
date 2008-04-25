@@ -20,7 +20,12 @@ import java.util.List;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.ClassUtils;
+import org.springframework.web.portlet.context.ConfigurablePortletApplicationContext;
 import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
@@ -39,13 +44,20 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class MvcViewFactoryCreator implements ViewFactoryCreator {
+public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
 
 	private MvcEnvironment environment;
 
-	private String defaultViewSuffix = ".jsp";
+	private FlowViewResolver flowViewResolver = new FlowResourceFlowViewResolver();
 
-	private FlowViewResolver flowViewResolver = new InternalResourceFlowViewResolver();
+	/**
+	 * Create a new Spring MVC View Factory Creator.
+	 * @see #setDefaultViewSuffix(String)
+	 * @see #setViewResolvers(List)
+	 */
+	public MvcViewFactoryCreator() {
+
+	}
 
 	/**
 	 * Returns the configured mvc environment.
@@ -64,24 +76,19 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator {
 	}
 
 	/**
-	 * Returns the default view suffix when selecting views by convention. Default is .jsp.
-	 * @return the default view suffix
-	 */
-	public String getDefaultViewSuffix() {
-		return defaultViewSuffix;
-	}
-
-	/**
-	 * Sets the default suffix for view names when selecting views by convention. Default is .jsp.
+	 * Configure an {@link FlowResourceFlowViewResolver} capable of resolving view resources by applying the
+	 * specified default resource suffix. Default is .jsp.
 	 * @param defaultViewSuffix the default view suffix
 	 */
 	public void setDefaultViewSuffix(String defaultViewSuffix) {
-		this.defaultViewSuffix = defaultViewSuffix;
+		FlowResourceFlowViewResolver internalResourceResolver = new FlowResourceFlowViewResolver();
+		internalResourceResolver.setDefaultViewSuffix(defaultViewSuffix);
+		this.flowViewResolver = internalResourceResolver;
 	}
 
 	/**
-	 * Sets the view resolvers that will be used to resolve views selected by flows. If multiple resolvers are to be
-	 * used, the resolvers should be ordered in the manner they should be applied.
+	 * Sets the Spring MVC {@link ViewResolver view resolvers} to delegate to resolve views selected by flows. If
+	 * multiple resolvers are to be used, the resolvers should be ordered in the manner they should be applied.
 	 * @param viewResolvers the view resolver list
 	 */
 	public void setViewResolvers(List viewResolvers) {
@@ -96,9 +103,18 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator {
 		this.flowViewResolver = flowViewResolver;
 	}
 
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		if (ClassUtils.isPresent("javax.portlet.PortletContext")
+				&& applicationContext instanceof ConfigurablePortletApplicationContext) {
+			environment = MvcEnvironment.PORTLET;
+		} else {
+			environment = MvcEnvironment.SERVLET;
+		}
+	}
+
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			FormatterRegistry formatterRegistry) {
-		if (environment == null || environment == MvcEnvironment.SERVLET) {
+		if (environment == MvcEnvironment.SERVLET) {
 			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
 		} else if (environment == MvcEnvironment.PORTLET) {
 			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
@@ -108,11 +124,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator {
 	}
 
 	public String getViewIdByConvention(String viewStateId) {
-		if (flowViewResolver instanceof DelegatingFlowViewResolver) {
-			return viewStateId;
-		} else {
-			return viewStateId + defaultViewSuffix;
-		}
+		return flowViewResolver.getViewIdByConvention(viewStateId);
 	}
 
 }

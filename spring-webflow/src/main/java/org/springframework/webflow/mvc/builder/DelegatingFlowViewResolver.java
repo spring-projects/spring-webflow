@@ -24,8 +24,9 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
 
 /**
- * View factory implementation that delegates to the Spring-configured view resolver chain to resolve the Spring MVC
- * view implementation to render.
+ * Delegates to a configured view resolver chain to resolve the Spring MVC view implementation to render.
+ * 
+ * @see ViewResolver
  * 
  * @author Keith Donald
  */
@@ -34,8 +35,8 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 	private List viewResolvers;
 
 	/**
-	 * Creates a new flow view resolver that delegates to
-	 * @param viewResolvers
+	 * Creates a new flow view resolver.
+	 * @param viewResolvers the Spring MVC view resolver chain to delegate to
 	 */
 	public DelegatingFlowViewResolver(List viewResolvers) {
 		this.viewResolvers = viewResolvers;
@@ -56,4 +57,7 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 		return null;
 	}
 
+	public String getViewIdByConvention(String viewStateId) {
+		return viewStateId;
+	}
 }

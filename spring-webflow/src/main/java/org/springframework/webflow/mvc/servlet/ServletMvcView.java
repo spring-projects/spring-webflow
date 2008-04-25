@@ -25,7 +25,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 
 /**
- * Creates a new Spring Web Servlet MVC view.
+ * The Spring Web Servlet MVC view implementation.
+ * 
  * @author Keith Donald
  */
 public class ServletMvcView extends AbstractMvcView {

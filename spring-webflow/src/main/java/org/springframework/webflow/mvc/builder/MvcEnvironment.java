@@ -25,14 +25,14 @@ import org.springframework.core.enums.StaticLabeledEnum;
 public class MvcEnvironment extends StaticLabeledEnum {
 
 	/**
-	 * Servlet MVC.
+	 * Spring Web Servlet MVC.
 	 */
 	public static final MvcEnvironment SERVLET = new MvcEnvironment(0, "servlet");
 
 	/**
-	 * Portlet MVC.
+	 * Spring Web Portlet MVC.
 	 */
-	public static final MvcEnvironment PORTLET = new MvcEnvironment(0, "portlet");
+	public static final MvcEnvironment PORTLET = new MvcEnvironment(1, "portlet");
 
 	private MvcEnvironment(int code, String label) {
 		super(code, label);

@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 
 /**
- * Spring Web Portlet MVC view implementation.
+ * The Spring Web Portlet MVC view implementation.
  * 
  * @author Keith Donald
  * @author Scott Andrews

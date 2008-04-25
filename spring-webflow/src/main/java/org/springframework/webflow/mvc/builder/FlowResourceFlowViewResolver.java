@@ -26,13 +26,35 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
 
 /**
- * View factory implementation that creates a Spring-MVC Internal Resource view to render a flow-relative view resource
- * such as a JSP or Velocity template.
+ * Creates Spring-MVC Internal Resource view to render a flow-relative view resource such as a JSP template.
+ * 
+ * @see JstlView
+ * @see InternalResourceView
+ * 
  * @author Keith Donald
  */
-public class InternalResourceFlowViewResolver implements FlowViewResolver {
+public class FlowResourceFlowViewResolver implements FlowViewResolver {
 
 	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
+
+	private String defaultViewSuffix = ".jsp";
+
+	/**
+	 * Returns the default view suffix when selecting views by convention. Default is .jsp.
+	 * @return the default view suffix
+	 */
+	public String getDefaultViewSuffix() {
+		return defaultViewSuffix;
+	}
+
+	/**
+	 * Sets the default suffix for view templates when selecting views by convention. Default is .jsp. Respected when a
+	 * {@link FlowResourceFlowViewResolver} is configured.
+	 * @param defaultViewSuffix the default view suffix
+	 */
+	public void setDefaultViewSuffix(String defaultViewSuffix) {
+		this.defaultViewSuffix = defaultViewSuffix;
+	}
 
 	public View resolveView(String viewId, RequestContext context) {
 		if (viewId.startsWith("/")) {
@@ -50,6 +72,12 @@ public class InternalResourceFlowViewResolver implements FlowViewResolver {
 			return getViewInternal(((ContextResource) viewResource).getPathWithinContext(), context, flowContext);
 		}
 	}
+
+	public String getViewIdByConvention(String viewStateId) {
+		return viewStateId + defaultViewSuffix;
+	}
+
+	// internal helpers
 
 	private View getViewInternal(String viewPath, RequestContext context, ApplicationContext flowContext) {
 		if (viewPath.endsWith(".jsp")) {
