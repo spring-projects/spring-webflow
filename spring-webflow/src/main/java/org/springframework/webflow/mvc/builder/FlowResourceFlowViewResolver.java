@@ -91,7 +91,8 @@ public class FlowResourceFlowViewResolver implements FlowViewResolver {
 				return view;
 			}
 		} else {
-			throw new IllegalArgumentException("Unsupported view type " + viewPath + " only types supported are [.jsp]");
+			throw new IllegalArgumentException("Unsupported view type " + viewPath
+					+ " only types supported by this FlowViewResolver implementation are [.jsp]");
 		}
 	}
 }
