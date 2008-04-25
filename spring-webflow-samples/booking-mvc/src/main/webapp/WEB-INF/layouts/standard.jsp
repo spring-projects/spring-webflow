@@ -7,6 +7,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Travel: Spring MVC and Web Flow Reference Application</title>
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />
 	<style type="text/css" media="screen">
         @import url("<c:url value="/resources/css-framework/css/tools.css" />");
         @import url("<c:url value="/resources/css-framework/css/typo.css" />");
@@ -15,10 +16,9 @@
         @import url("<c:url value="/resources/css-framework/css/layout.css" />");
         @import url("<c:url value="/resources/styles/booking.css" />");
     </style>
-    <script type="text/javascript" src="<c:url value="/resources/spring/Spring.js" />"></script>
     <script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js" />"></script>
+    <script type="text/javascript" src="<c:url value="/resources/spring/Spring.js" />"></script>
     <script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js" />"></script>
-    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />
 </head>
 <body class="tundra spring">
 <div id="page">

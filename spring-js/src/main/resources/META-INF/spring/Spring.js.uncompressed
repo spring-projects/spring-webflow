@@ -15,7 +15,7 @@
  */
 Spring = {};
 		
-Spring.decorations = [];
+Spring.decorations = {};
 
 Spring.decorations.applied = false;
 
@@ -25,16 +25,40 @@ Spring.initialize = function(){
 };
 
 Spring.addDecoration = function(/*Object*/decoration){
-	Spring.decorations.push(decoration);
+	//Spring.decorations.push(decoration);
+	
+	if (!Spring.decorations[decoration.elementId]) {
+		Spring.decorations[decoration.elementId] = [];
+		Spring.decorations[decoration.elementId].push(decoration);
+	} else {
+		var replaced = false;
+		for(var i = 0; i<Spring.decorations[decoration.elementId].length; i++) {
+			var existingDecoration = Spring.decorations[decoration.elementId][i];
+			if(existingDecoration.equals(decoration)) {
+				if (existingDecoration.cleanup != undefined) {
+					existingDecoration.cleanup();
+				}
+				Spring.decorations[decoration.elementId][i] = decoration;
+				replaced=true;
+				break;
+			}
+		}
+		if (!replaced) {
+			Spring.decorations[decoration.elementId].push(decoration);
+		}
+	}
+	
 	if(Spring.decorations.applied) {
 		decoration.apply();
 	}
 };
 		
 Spring.applyDecorations = function(){
-	if (!Spring.decorations.applied) {		
-		for (var x=0; x<Spring.decorations.length; x++) {
-			Spring.decorations[x].apply();
+	if (!Spring.decorations.applied) {
+		for (var elementId in Spring.decorations) {
+			for (var x = 0; x < Spring.decorations[elementId].length; x++) {
+				Spring.decorations[elementId][x].apply();
+			}
 		}
 		Spring.decorations.applied = true;
 	}
@@ -42,10 +66,11 @@ Spring.applyDecorations = function(){
 
 Spring.validateAll = function(){
 	var valid = true;
-	for(x in Spring.decorations) {
-		if (Spring.decorations[x].widget &&
-			!Spring.decorations[x].validate()) {
-			valid = false;
+	for (var elementId in Spring.decorations) {
+		for (var x = 0; x < Spring.decorations[elementId].length; x++) {
+			if (Spring.decorations[elementId][x].widget && !Spring.decorations[elementId][x].validate()) {
+				valid = false;
+			}
 		}
 	}
 	return valid;
@@ -53,11 +78,13 @@ Spring.validateAll = function(){
 
 Spring.validateRequired = function(){
 	var valid = true;
-	for(x in Spring.decorations) {
-		if(Spring.decorations[x].decorator &&
-			Spring.decorations[x].isRequired() &&
-			!Spring.decorations[x].validate())
-			valid = false;
+	for (var elementId in Spring.decorations) {
+		for (var x = 0; x < Spring.decorations[elementId].length; x++) {
+			if (Spring.decorations[elementId][x].widget && Spring.decorations[elementId][x].isRequired() && 
+			!Spring.decorations[elementId][x].validate()) {
+				valid = false;
+			}
+		}
 	}
 	return valid;
 };
@@ -76,7 +103,9 @@ Spring.AbstractElementDecoration.prototype = {
 	
 	validate : function(){},
 	
-	isRequired : function(){}
+	isRequired : function(){},
+	
+	equals : function(/*Object*/other){}
 };
 
 Spring.AbstractValidateAllDecoration = function(){};
@@ -90,7 +119,9 @@ Spring.AbstractValidateAllDecoration.prototype = {
 	
 	cleanup : function(){},
 	
-	handleEvent : function(event){}
+	handleEvent : function(event){},
+	
+	equals : function(/*Object*/other){}
 };
 
 Spring.AbstractCommandLinkDecoration = function(){};
@@ -102,7 +133,9 @@ Spring.AbstractCommandLinkDecoration.prototype = {
 	
 	apply : function(){},
 	
-	submitFormFromLink : function(/*String*/ formId, /*String*/ sourceId, /*Array of name,value params*/ params){}
+	submitFormFromLink : function(/*String*/ formId, /*String*/ sourceId, /*Array of name,value params*/ params){},
+	
+	equals : function(/*Object*/other){}
 };
 
 Spring.AbstractAjaxEventDecoration = function(){};
@@ -113,13 +146,16 @@ Spring.AbstractAjaxEventDecoration.prototype = {
 	elementId : "",
 	sourceId : "",
 	formId : "",
+	popup : false,
 	params : {},
 	
 	apply : function(){},
 	
 	cleanup : function(){},
 	
-	submit : function(event){}
+	submit : function(event){},
+	
+	equals : function(/*Object*/other){}
 };
 
 Spring.AbstractRemotingHandler = function(){};

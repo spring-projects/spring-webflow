@@ -17,13 +17,14 @@ import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.view.tiles2.TilesView;
 
 public class AjaxTilesView extends TilesView {
 
-	public static final String FRAGMENTS_PARAM = "fragments";
+	private static final String FRAGMENTS_PARAM = "fragments";
 
 	private AjaxHandler ajaxHandler = new SpringJavascriptAjaxHandler();
 
@@ -48,14 +49,20 @@ public class AjaxTilesView extends TilesView {
 			Map flattenedAttributeMap = new HashMap();
 			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition);
 
-			String attrName = request.getParameter(FRAGMENTS_PARAM);
-
-			Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(attrName);
-
-			container.render(attributeToRender, response.getWriter(), new Object[] { request, response });
+			String[] attrNames = getRenderFragments(model, request, response);
+			response.flushBuffer();
+			for (int i = 0; i < attrNames.length; i++) {
+				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(attrNames[i]);
+				container.render(attributeToRender, response.getWriter(), new Object[] { request, response });
+			}
 		} else {
 			super.renderMergedOutputModel(model, request, response);
 		}
+	}
+
+	protected String[] getRenderFragments(Map model, HttpServletRequest request, HttpServletResponse response) {
+		String attrName = request.getParameter(FRAGMENTS_PARAM);
+		return StringUtils.commaDelimitedListToStringArray(attrName);
 	}
 
 	private void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext, Map resultMap,

@@ -6,16 +6,16 @@
 <tiles-definitions>
 	
 	<definition name="hotels/index" extends="standardLayout">
-		<put-attribute name="body" value="/WEB-INF/hotels/index.jsp" />
+		<put-attribute name="body" value="index.body" />
 	</definition>
+    <definition name="index.body" template="/WEB-INF/hotels/index.jsp">
+        <put-attribute name="hotelSearchForm" value="/WEB-INF/hotels/hotelSearchForm.jsp" />
+        <put-attribute name="bookingsTable" value="/WEB-INF/hotels/bookingsTable.jsp" />
+    </definition>
 	
 	<definition name="hotels/search" extends="standardLayout">
-		<put-attribute name="body" value="search.body" />
+		<put-attribute name="body" value="/WEB-INF/hotels/search.jsp" />
 	</definition>
-	
-    <definition name="search.body" template="/WEB-INF/hotels/search.jsp">
-        <put-attribute name="hotelResults" value="/WEB-INF/hotels/hotelResults.jsp" />
-    </definition>
 	
 	<definition name="hotels/show" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/show.jsp" />

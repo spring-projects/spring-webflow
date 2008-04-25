@@ -45,8 +45,8 @@
 	</bean>
 	
 	<!-- Resolves views by delegating to the Tiles layout system; a view name to resolve is treated as the name of a tiles definition -->
-	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<property name="viewClass" value="org.springframework.js.ajax.tiles2.AjaxTilesView"/>
+	<bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
 	</bean>
 
 	<!-- Enables annotated POJO @Controllers -->
