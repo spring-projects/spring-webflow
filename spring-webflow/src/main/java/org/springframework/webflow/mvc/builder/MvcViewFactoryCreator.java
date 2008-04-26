@@ -121,7 +121,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		} else if (environment == MvcEnvironment.PORTLET) {
 			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
 		} else {
-			throw new IllegalStateException("Web Environment " + environment + " not supported ");
+			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
 		}
 	}
 
