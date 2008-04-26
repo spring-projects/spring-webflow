@@ -351,7 +351,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 		<title>View backtracking</title>
 		<para>
 			By default, when you exit a view state and transition to a new view state, you can go back to the previous state using the browser back button.
-			These view state history policies are configurable on a per view-state basis by using the <code>history</code> attribute.
+			These view state history policies are configurable on a per-transition basis by using the <code>history</code> attribute.
 		</para>
 		<sect2 id="history-discard">
 			<title>Discarding history</title>
@@ -359,7 +359,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 				Set the history attribute to <code>discard</code> to prevent backtracking to a view:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<view-state id="changeSearchCriteria" history="discard">]]>
+<transition on="cancel" to="bookingCancelled" history="discard">]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="history-invalidate">
@@ -368,7 +368,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 				Set the history attribute to <code>invalidate</code> to prevent backtracking to a view as well all previously displayed views:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<view-state id="changeSearchCriteria" history="invalidate">]]>
+<transition on="confirm" to="bookingConfirmed" history="invalidate">]]>
 			</programlisting>
 		</sect2>
 	</sect1>	
