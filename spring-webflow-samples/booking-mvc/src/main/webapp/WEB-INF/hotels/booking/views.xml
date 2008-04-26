@@ -8,6 +8,7 @@
 	<definition name="enterBookingDetails" extends="standardLayout">
 		<put-attribute name="body" value="details.body" />
 	</definition>
+	
 	<definition name="details.body" template="/WEB-INF/hotels/booking/enterBookingDetails.jsp">
 		<put-attribute name="messages" value="/WEB-INF/hotels/booking/messages.jsp" />
         <put-attribute name="bookingForm" value="/WEB-INF/hotels/booking/bookingForm.jsp" />
