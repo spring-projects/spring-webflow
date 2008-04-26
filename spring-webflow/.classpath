@@ -6,39 +6,45 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.persistence/persistence-api/persistence-api-1.0.0.jar" sourcepath="IVY_CACHE/javax.persistence/persistence-api/persistence-api-sources-1.0.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.portlet/portlet-api/portlet-api-1.0.jar" sourcepath="IVY_CACHE/javax.portlet/portlet-api/portlet-api-sources-1.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/servlet-api/servlet-api-2.4.jar" sourcepath="IVY_CACHE/javax.servlet/servlet-api/servlet-api-sources-2.4.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.transaction/jta/jta-1.1.0.jar" sourcepath="IVY_CACHE/javax.transaction/jta/jta-sources-1.1.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/net.sf.cglib/cglib_nodep/cglib_nodep-2.1.3.jar" sourcepath="IVY_CACHE/net.sf.cglib/cglib_nodep/cglib_nodep-sources-2.1.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/net.sourceforge.serp/serp/serp-1.13.1.jar" sourcepath="IVY_CACHE/net.sourceforge.serp/serp/serp-sources-1.13.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.aopalliance/aopalliance/aopalliance-1.0.jar" sourcepath="IVY_CACHE/org.aopalliance/aopalliance/aopalliance-sources-1.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-collections/commons-collections-3.2.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-collections/commons-collections-sources-3.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/commons-lang/commons-lang-2.1.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-lang/commons-lang-sources-2.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-logging/commons-logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.logging/log4j/log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/openjpa/openjpa-1.0.2.jar" sourcepath="IVY_CACHE/org.apache.openjpa/openjpa/openjpa-sources-1.0.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.dom4j/dom4j/dom4j-1.6.1.jar" sourcepath="IVY_CACHE/org.dom4j/dom4j/dom4j-sources-1.6.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.easymock/easymock/easymock-2.3.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/hibernate/hibernate-3.2.5.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate/hibernate-sources-3.2.5.ga.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.hsqldb/hsqldb/hsqldb-1.8.0.9.jar" sourcepath="IVY_CACHE/org.hsqldb/hsqldb/hsqldb-sources-1.8.0.9.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.ognl/ognl/ognl-2.6.9.jar" sourcepath="IVY_CACHE/org.ognl/ognl/ognl-sources-2.6.9.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-aop/spring-aop-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-aop/spring-aop-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-beans/spring-beans-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-context/spring-context-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-jdbc/spring-jdbc-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-jdbc/spring-jdbc-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-orm/spring-orm-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-orm/spring-orm-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-test/spring-test-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-tx/spring-tx-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-tx/spring-tx-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-web/spring-web-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-web/spring-web-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-2.0.0.m2.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-sources-2.0.0.m2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/edu.emory.mathcs/backport-util-concurrent/backport-util-concurrent-3.0.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/2.1.0/com.springsource.javax.el-2.1.0.jar" sourcepath="IVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.persistence/com.springsource.javax.persistence/1.0.0/com.springsource.javax.persistence-1.0.0.jar" sourcepath="IVY_CACHE/javax.persistence/persistence-api/persistence-api-sources-1.0.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.portlet/com.springsource.javax.portlet/1.0.0/com.springsource.javax.portlet-1.0.0.jar" sourcepath="IVY_CACHE/javax.portlet/portlet-api/portlet-api-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/com.springsource.javax.servlet/2.4.0/com.springsource.javax.servlet-2.4.0.jar" sourcepath="IVY_CACHE/javax.servlet/servlet-api/servlet-api-sources-2.4.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.transaction/com.springsource.javax.transaction/1.1.0/com.springsource.javax.transaction-1.1.0.jar" sourcepath="IVY_CACHE/javax.transaction/jta/jta-sources-1.1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/net.sourceforge.cglib/com.springsource.net.sf.cglib/2.1.3/com.springsource.net.sf.cglib-2.1.3.jar" sourcepath="IVY_CACHE/net.sf.cglib/cglib_nodep/cglib_nodep-sources-2.1.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/net.sourceforge.serp/com.springsource.serp/1.13.1/com.springsource.serp-1.13.1.jar" sourcepath="IVY_CACHE/net.sourceforge.serp/serp/serp-sources-1.13.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.aopalliance/com.springsource.org.aopalliance/1.0.0/com.springsource.org.aopalliance-1.0.0.jar" sourcepath="IVY_CACHE/org.aopalliance/aopalliance/aopalliance-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.collections/3.2.0/com.springsource.org.apache.commons.collections-3.2.0.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-collections/commons-collections-sources-3.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.lang/2.1.0/com.springsource.org.apache.commons.lang-2.1.0.jar" sourcepath="/IVY_CACHE/org.apache.commons/commons-lang/commons-lang-sources-2.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.log4j/com.springsource.org.apache.log4j/1.2.15/com.springsource.org.apache.log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa/1.0.2/com.springsource.org.apache.openjpa-1.0.2.jar" sourcepath="IVY_CACHE/org.apache.openjpa/openjpa/openjpa-sources-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.dom4j/com.springsource.org.dom4j/1.6.1/com.springsource.org.dom4j-1.6.1.jar" sourcepath="IVY_CACHE/org.dom4j/dom4j/dom4j-sources-1.6.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.easymock/com.springsource.org.easymock/2.3.0/com.springsource.org.easymock-2.3.0.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.hibernate/com.springsource.org.hibernate/3.2.6.ga/com.springsource.org.hibernate-3.2.6.ga.jar" sourcepath="IVY_CACHE/org.hibernate/hibernate/hibernate-sources-3.2.5.ga.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.hsqldb/com.springsource.org.hsqldb/1.8.0.9/com.springsource.org.hsqldb-1.8.0.9.jar" sourcepath="IVY_CACHE/org.hsqldb/hsqldb/hsqldb-sources-1.8.0.9.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss.el/com.springsource.org.jboss.el/2.0.0.GA/com.springsource.org.jboss.el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.junit/com.springsource.junit/3.8.2/com.springsource.junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.ognl/com.springsource.org.ognl/2.6.9/com.springsource.org.ognl-2.6.9.jar" sourcepath="IVY_CACHE/org.ognl/ognl/ognl-sources-2.6.9.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.aop/2.5.3.A/org.springframework.aop-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-aop/spring-aop-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.beans/2.5.3.A/org.springframework.beans-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.context/2.5.3.A/org.springframework.context-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.core/2.5.3.A/org.springframework.core-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.jdbc/2.5.3.A/org.springframework.jdbc-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-jdbc/spring-jdbc-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.orm/2.5.3.A/org.springframework.orm-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-orm/spring-orm-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.test/2.5.3.A/org.springframework.test-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-test/spring-test-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.transaction/2.5.3.A/org.springframework.transaction-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-tx/spring-tx-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web/2.5.3.A/org.springframework.web-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-web/spring-web-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web.servlet/2.5.3.A/org.springframework.web.servlet-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc/spring-webmvc-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web.portlet/2.5.3.A/org.springframework.web.portlet-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-webmvc-portlet/spring-webmvc-portlet-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security/2.0.0.A/org.springframework.security-2.0.0.A.jar" sourcepath="IVY_CACHE/org.springframework.security/spring-security-core/spring-security-core-sources-2.0.0.m2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/edu.emory.mathcs.backport/com.springsource.edu.emory.mathcs.backport/3.0.0/com.springsource.edu.emory.mathcs.backport-3.0.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.java5/1.0.2/com.springsource.org.apache.openjpa.java5-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.jdbc/1.0.2/com.springsource.org.apache.openjpa.jdbc-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.lib/1.0.2/com.springsource.org.apache.openjpa.lib-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.lib.java5/1.0.2/com.springsource.org.apache.openjpa.lib.java5-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.persistence/1.0.2/com.springsource.org.apache.openjpa.persistence-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.persistence.jdbc/1.0.2/com.springsource.org.apache.openjpa.persistence.jdbc-1.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

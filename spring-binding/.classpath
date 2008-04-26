@@ -5,15 +5,15 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.el/el-api/el-api-1.0.jar" sourcepath="IVVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache/commons-logging/commons-logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.logging/log4j/log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.ognl/ognl/ognl-2.6.9.jar" sourcepath="IVY_CACHE/org.ognl/ognl/ognl-sources-2.6.9.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-beans/spring-beans-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-context/spring-context-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/spring-core/spring-core-2.5.3.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.easymock/easymock/easymock-2.3.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.junit/junit/junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/2.1.0/com.springsource.javax.el-2.1.0.jar" sourcepath="IVVY_CACHE/javax.el/el-api/el-api-sources-1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-1.1.1.jar" sourcepath="/IVY_CACHE/org.apache/commons-logging/commons-logging-sources-1.1.1.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.log4j/com.springsource.org.apache.log4j/1.2.15/com.springsource.org.apache.log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.logging/log4j/log4j-sources-1.2.15.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.jboss.el/com.springsource.org.jboss.el/2.0.0.GA/com.springsource.org.jboss.el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.seam/jboss-el/jboss-el-sources-2.0.0.GA.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.ognl/com.springsource.org.ognl/2.6.9/com.springsource.org.ognl-2.6.9.jar" sourcepath="IVY_CACHE/org.ognl/ognl/ognl-sources-2.6.9.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.beans/2.5.3.A/org.springframework.beans-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-beans/spring-beans-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.context/2.5.3.A/org.springframework.context-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-context/spring-context-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.core/2.5.3.A/org.springframework.core-2.5.3.A.jar" sourcepath="IVY_CACHE/org.springframework/spring-core/spring-core-sources-2.5.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.easymock/com.springsource.org.easymock/2.3.0/com.springsource.org.easymock-2.3.0.jar" sourcepath="/IVY_CACHE/org.easymock/easymock/easymock-sources-2.3.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.junit/com.springsource.junit/3.8.2/com.springsource.junit-3.8.2.jar" sourcepath="/IVY_CACHE/org.junit/junit/junit-sources-3.8.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

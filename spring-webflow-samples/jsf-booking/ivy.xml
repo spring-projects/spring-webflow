@@ -21,40 +21,45 @@
 
 	<dependencies>
 		<!-- global dependencies -->
-		<dependency org="org.apache.logging" name="log4j" rev="1.2.15" conf="compile->default"/>
-		<dependency org="org.apache.taglibs" name="standard" rev="1.1.2" conf="compile->default"/>
-		<dependency org="javax.servlet" name="jstl" rev="1.1.2" conf="compile->default"/>
-		<dependency org="com.sun.facelets" name="jsf-facelets" rev="1.1.14" conf="compile->default"/>
-		<dependency org="org.aopalliance" name="aopalliance" rev="1.0" conf="compile->default"/>
+		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="compile->compile"/>
+		<dependency org="org.apache.taglibs" name="com.springsource.org.apache.taglibs.standard" rev="1.1.2" conf="compile->compile"/>
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.1.2" conf="compile->compile"/>
+		<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="compile->compile"/>
+		<dependency org="org.aopalliance" name="com.springsource.org.aopalliance" rev="1.0.0" conf="compile->compile"/>
 		<dependency org="org.springframework.webflow" name="spring-faces" rev="latest.integration" conf="compile->jsf12"/>
 		<dependency org="org.springframework.webflow" name="spring-webflow" rev="latest.integration" conf="compile->compile"/>
-		<dependency org="org.springframework" name="spring-aop" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-orm" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-jdbc" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.springframework.security" name="spring-security-core" rev="2.0.0.m2" conf="compile->default"/>
-		<dependency org="org.springframework" name="spring-tx" rev="2.5.2" conf="compile->default"/>
-		<dependency org="org.jboss.seam" name="jboss-el" rev="2.0.0.GA" conf="compile->default"/>
-		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga" conf="compile->default"/>
-		<dependency org="org.hibernate" name="hibernate-annotations" rev="3.3.0.ga" conf="compile->default"/>
-		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="3.3.1.ga" conf="compile->default"/>
-		<dependency org="net.sf.cglib" name="cglib_nodep" rev="2.1.3" conf="compile->default"/>
-		<dependency org="org.jboss" name="jboss-common-core" rev="2.0.4.GA" conf="compile->default"/>
-		<dependency org="org.jboss" name="javassist" rev="3.3.ga" conf="compile->default"/>
-		<dependency org="org.antlr" name="antlr" rev="2.7.6" conf="compile->default"/>
+		<dependency org="org.springframework" name="org.springframework.aop" rev="2.5.3.A" conf="compile->compile"/>
+		<dependency org="org.springframework" name="org.springframework.jdbc" rev="2.5.3.A" conf="compile->compile"/>
+		<dependency org="org.springframework" name="org.springframework.orm" rev="2.5.3.A" conf="compile->compile"/>
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.3.A" conf="compile->compile"/>
+		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.0.A" conf="compile->compile"/>
+		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="compile->compile"/>
+		<dependency org="org.hibernate" name="com.springsource.org.hibernate" rev="3.2.6.ga" conf="compile->compile"/>
+		<dependency org="org.hibernate" name="com.springsource.org.hibernate.annotations" rev="3.3.0.ga" conf="compile->compile"/>
+		<dependency org="org.hibernate" name="com.springsource.org.hibernate.annotations.common" rev="3.3.0.ga" conf="compile->compile"/>
+		<dependency org="org.hibernate" name="com.springsource.org.hibernate.ejb" rev="3.3.1.ga" conf="compile->compile"/>
+		<dependency org="net.sourceforge.cglib" name="com.springsource.net.sf.cglib" rev="2.1.3" conf="compile->compile"/>
+		<dependency org="org.jboss.util" name="com.springsource.org.jboss.util" rev="2.0.4.GA" conf="compile->compile"/>
+		<dependency org="org.jboss.javassist" name="com.springsource.javassist" rev="3.3.0.ga" conf="compile->compile"/>
+		<dependency org="org.antlr" name="com.springsource.antlr" rev="2.7.6" conf="compile, compile->compile" />
 
 		<!-- Required by "jboss archive browsing" which is used by hibernate-entity manager but not noted in their docs -->
-		<dependency org="edu.oswego.cs" name="concurrent" rev="1.3.4" conf="compile->default"/>
-		<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga" conf="compile->default"/>
-		<dependency org="javax.persistence" name="persistence-api" rev="1.0.0" conf="compile->default"/>
-		<dependency org="org.hsqldb" name="hsqldb" rev="1.8.0.9" conf="compile->default"/>
+		<dependency org="edu.oswego.cs.concurrent" name="com.springsource.edu.oswego.cs.dl.util.concurrent" rev="1.3.4" conf="compile->compile"/>
+		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="compile->compile"/>
+		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="compile->compile"/>
 
 		<!-- build-time only dependencies -->
-		<dependency	org="javax.servlet" name="servlet-api" rev="2.4" conf="provided->default"/>
-		<dependency	org="javax.el" name="el-api" rev="1.0" conf="provided->default"/>
+		<dependency	org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->compile"/>
+		<dependency	org="javax.el" name="com.springsource.javax.el" rev="2.1.0" conf="provided->compile"/>
 
 		<!-- test-time only dependencies -->
-		<dependency org="org.junit" name="junit" rev="3.8.2" conf="test->default"/>
-		<dependency org="org.springframework" name="spring-test" rev="2.5.2" conf="test->default"/>
+		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->compile"/>
+		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.3.A" conf="test->compile"/>
+		
+		<exclude org="javax.el" conf="compile" />
+		<exclude org="javax.portlet" conf="compile" />
+		<exclude org="javax.servlet" module="com.springsource.javax.servlet" conf="compile" />
+		<exclude org="javax.servlet" module="com.springsource.javax.servlet.jsp" conf="compile" />
 	</dependencies>
 
 </ivy-module>
