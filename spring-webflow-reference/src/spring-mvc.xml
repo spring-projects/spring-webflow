@@ -84,10 +84,10 @@ public interface FlowHandler {
 
     public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
 
-    public String handleExecutionOutcome(String outcome, AttributeMap output,
+    public String handleExecutionOutcome(FlowExecutionOutcome outcome,
         HttpServletRequest request, HttpServletResponse response);
 
-    public ModelAndView handleException(FlowException e,
+    public String handleException(FlowException e,
         HttpServletRequest request, HttpServletResponse response);
 }				
 		</programlisting>
@@ -132,12 +132,12 @@ public interface FlowHandler {
 			</para>
 			<programlisting language="java"><![CDATA[
 public class BookingFlowHandler extends AbstractFlowHandler {
-    public String handleExecutionOutcome(String outcome, AttributeMap output,
+    public String handleExecutionOutcome(FlowExecutionOutcome outcome,
                                          HttpServletRequest request, HttpServletResponse response) {
-        if (outcome.equals("bookingConfirmed")) {
-            return "booking/show?bookingId=" + output.get("bookingId");
+        if (outcome.getId().equals("bookingConfirmed")) {
+            return "/booking/show?bookingId=" + outcome.getOutput().get("bookingId");
         } else {
-            return "hotels/index";
+            return "/hotels/index";
         }
     }
 }]]>
@@ -233,7 +233,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 
 <webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
 
-<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.view.MvcViewFactoryCreator">
+<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
     <property name="viewResolvers" ref="myExistingViewResolverToUseForFlows"/>
 </bean>]]>
 		</programlisting>

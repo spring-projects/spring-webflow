@@ -50,7 +50,7 @@
 				Deploy a FlowExecutor, the central service for executing flows:
 			</para>
 			<programlisting type="xml"><![CDATA[
-<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" />]]>
+<webflow:flow-executor id="flowExecutor" />]]>
 			</programlisting>
 		</sect2>
 		<para>
@@ -209,8 +209,8 @@
 			<programlisting type="xml"><![CDATA[
 <flow-execution-repository max-executions="5" max-execution-snapshots="30" />]]>
 			</programlisting>
-			<sect3 id="repository-max-conversations">
-				<title>max-conversations</title>
+			<sect3 id="repository-max-executions">
+				<title>max-executions</title>
 				<para>
 					Tune the <code>max-executions</code> attribute to place a cap on the number of flow executions that can be created per user session.
 				</para>
