@@ -242,8 +242,8 @@ Paused flow executions are stored between requests in a FlowExecutionRepository.
 							<xsd:annotation>
 								<xsd:documentation>
 									<![CDATA[
-Configures the default FlowExecutionRepository by this executor.  Optional.
-Specify when you want to customize attributes of the default repository implementation.
+Configures the FlowExecutionRepository used by this executor to persist flow executions.
+Specify when you want to tune the attributes of the default repository implementation.
 ]]>
 								</xsd:documentation>
 							</xsd:annotation>
