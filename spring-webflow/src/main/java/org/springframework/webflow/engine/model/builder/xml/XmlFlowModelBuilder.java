@@ -469,6 +469,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		transition.setTo(element.getAttribute("to"));
 		transition.setOnException(element.getAttribute("on-exception"));
 		transition.setBind(element.getAttribute("bind"));
+		transition.setHistory(element.getAttribute("history"));
 		transition.setAttributes(parseAttributes(element));
 		transition.setSecured(parseSecured(element));
 		transition.setActions(parseActions(element));
@@ -575,7 +576,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setRedirect(element.getAttribute("redirect"));
 		state.setPopup(element.getAttribute("popup"));
 		state.setModel(element.getAttribute("model"));
-		state.setHistory(element.getAttribute("history"));
 		state.setVars(parseVars(element));
 		state.setOnRenderActions(parseOnRenderActions(element));
 		state.setAttributes(parseAttributes(element));

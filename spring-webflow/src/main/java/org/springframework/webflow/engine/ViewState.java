@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
@@ -58,12 +59,6 @@ public class ViewState extends TransitionableState {
 	 * Whether or not a redirect should occur before the view is rendered.
 	 */
 	private Boolean redirect;
-
-	/**
-	 * An enum indicating the history behavior of this view-state. Used to configure back-tracking policies. Default is
-	 * {@link History#PRESERVE}.
-	 */
-	private History history = History.PRESERVE;
 
 	/**
 	 * Whether or not the view should render as a popup.
@@ -153,24 +148,6 @@ public class ViewState extends TransitionableState {
 	}
 
 	/**
-	 * Returns the history behavior of this view-state. Used to configure back-tracking policies. Default is
-	 * {@link History#PRESERVE}.
-	 * @return the history
-	 */
-	public History getHistory() {
-		return history;
-	}
-
-	/**
-	 * Sets the history behavior of this view state. Used to configure back-tracking policies. Default is
-	 * {@link History#PRESERVE}.
-	 * @param history the history
-	 */
-	public void setHistory(History history) {
-		this.history = history;
-	}
-
-	/**
 	 * Returns the view factory.
 	 */
 	public ViewFactory getViewFactory() {
@@ -226,13 +203,7 @@ public class ViewState extends TransitionableState {
 
 	public void exit(RequestControlContext context) {
 		super.exit(context);
-		if (history == History.PRESERVE) {
-			context.updateCurrentFlowExecutionSnapshot();
-		} else if (history == History.DISCARD) {
-			context.removeCurrentFlowExecutionSnapshot();
-		} else if (history == History.INVALIDATE) {
-			context.removeAllFlowExecutionSnapshots();
-		}
+		updateHistory(context);
 		destroyVariables(context);
 	}
 
@@ -287,6 +258,18 @@ public class ViewState extends TransitionableState {
 		}
 	}
 
+	private void updateHistory(RequestControlContext context) {
+		TransitionDefinition t = context.getCurrentTransition();
+		History history = (History) t.getAttributes().get("history");
+		if (history == null || history == History.PRESERVE) {
+			context.updateCurrentFlowExecutionSnapshot();
+		} else if (history == History.DISCARD) {
+			context.removeCurrentFlowExecutionSnapshot();
+		} else if (history == History.INVALIDATE) {
+			context.removeAllFlowExecutionSnapshots();
+		}
+	}
+
 	private void destroyVariables(RequestContext context) {
 		Iterator it = variables.values().iterator();
 		while (it.hasNext()) {
@@ -302,7 +285,7 @@ public class ViewState extends TransitionableState {
 	protected void appendToString(ToStringCreator creator) {
 		super.appendToString(creator);
 		creator.append("viewFactory", viewFactory).append("variables", variables).append("redirect", redirect).append(
-				"popup", popup).append("history", history);
+				"popup", popup);
 	}
 
 }

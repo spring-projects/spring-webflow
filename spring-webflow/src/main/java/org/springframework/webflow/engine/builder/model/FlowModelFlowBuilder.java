@@ -524,10 +524,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (StringUtils.hasText(state.getPopup())) {
 			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
 		}
-		History history = History.PRESERVE;
-		if (StringUtils.hasText(state.getHistory())) {
-			history = (History) fromStringTo(History.class).execute(state.getHistory());
-		}
 		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
 			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
@@ -536,7 +532,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
 				parseViewVariables(state.getVars()), parseActions(state.getOnEntryActions()), viewFactory, redirect,
-				popup, history, parseActions(state.getOnRenderActions()), parseTransitions(state.getTransitions()),
+				popup, parseActions(state.getOnRenderActions()), parseTransitions(state.getTransitions()),
 				parseExceptionHandlers(state.getExceptionHandlers(), state.getTransitions()),
 				parseActions(state.getOnExitActions()), attributes);
 	}
@@ -775,6 +771,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		MutableAttributeMap attributes = parseMetaAttributes(transition.getAttributes());
 		if (StringUtils.hasText(transition.getBind())) {
 			attributes.put("bind", fromStringTo(Boolean.class).execute(transition.getBind()));
+		}
+		if (StringUtils.hasText(transition.getHistory())) {
+			attributes.put("history", fromStringTo(History.class).execute(transition.getHistory()));
 		}
 		parseAndPutSecured(transition.getSecured(), attributes);
 		return getLocalContext().getFlowArtifactFactory().createTransition(stateResolver, matchingCriteria,

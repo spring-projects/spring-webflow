@@ -351,7 +351,7 @@ Actions to execute immediately before view rendering.
 										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
 									</xsd:complexType>
 								</xsd:element>
-								<xsd:element name="transition" type="bindableTransition" minOccurs="0" maxOccurs="unbounded">
+								<xsd:element name="transition" type="viewTransition" minOccurs="0" maxOccurs="unbounded">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
@@ -470,47 +470,6 @@ The model object this view is bound to.  Typically used as the source of form fi
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
-							</xsd:attribute>
-							<xsd:attribute name="history">
-								<xsd:annotation>
-									<xsd:documentation>
-										<![CDATA[
-Sets the history policy for this view state.  The default is 'preserve', which allows back-tracking to this state after it exits.
-'discard' prevents back-tracking to this state, and 'invalidate' prevents back-tracking to this state and any previously entered view-state.
-]]>
-									</xsd:documentation>
-								</xsd:annotation>
-								<xsd:simpleType>
-									<xsd:restriction base="xsd:string">
-										<xsd:enumeration value="preserve">
-											<xsd:annotation>
-												<xsd:documentation>
-													<![CDATA[
-Upon exiting this view state, preserve state history to allow back-tracking to this point.
-]]>
-												</xsd:documentation>
-											</xsd:annotation>
-										</xsd:enumeration>
-										<xsd:enumeration value="discard">
-											<xsd:annotation>
-												<xsd:documentation>
-													<![CDATA[
-Upon exiting this view state, discard state history to prevent back-tracking to this point.
-]]>
-												</xsd:documentation>
-											</xsd:annotation>
-										</xsd:enumeration>
-										<xsd:enumeration value="invalidate">
-											<xsd:annotation>
-												<xsd:documentation>
-													<![CDATA[
-Upon exiting this view state, invalidate all view state history to prevent back-tracking to any previous point.
-]]>
-												</xsd:documentation>
-											</xsd:annotation>
-										</xsd:enumeration>
-									</xsd:restriction>
-								</xsd:simpleType>
 							</xsd:attribute>
 						</xsd:complexType>
 					</xsd:element>
@@ -948,7 +907,7 @@ Transitions shared by all states and eligible for execution if no transition ass
 					</xsd:annotation>
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="transition" type="bindableTransition" maxOccurs="unbounded">
+							<xsd:element name="transition" type="viewTransition" maxOccurs="unbounded">
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
@@ -1428,7 +1387,7 @@ If no value is specified, this transition acts as a simple event handler and wil
 		</xsd:attribute>
 	</xsd:complexType>
 	
-	<xsd:complexType name="bindableTransition">
+	<xsd:complexType name="viewTransition">
 		<xsd:complexContent>
 			<xsd:extension base="transition">
 				<xsd:attribute name="bind" type="xsd:boolean">
@@ -1440,6 +1399,47 @@ Indicates whether model binding should occur before this transition executes. De
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:attribute name="history">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Sets the state history policy for this transition.  The default is 'preserve', which allows back-tracking to the current state after this transition executes.
+'discard' prevents back-tracking to the state, and 'invalidate' prevents back-tracking to the state as well as any previously entered view-state.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="preserve">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, preserve state history to allow back-tracking to the current view-state.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+							<xsd:enumeration value="discard">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, discard state history to prevent back-tracking to the current view-state.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+							<xsd:enumeration value="invalidate">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, invalidate all state history to prevent back-tracking to previously entered view-states.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>				
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>

@@ -34,6 +34,7 @@ public class TransitionModel extends AbstractModel {
 	private String onException;
 	private String to;
 	private String bind;
+	private String history;
 	private LinkedList attributes;
 	private SecuredModel secured;
 	private LinkedList actions;
@@ -57,6 +58,7 @@ public class TransitionModel extends AbstractModel {
 		setOnException(merge(getOnException(), transition.getOnException()));
 		setTo(merge(getTo(), transition.getTo()));
 		setBind(merge(getBind(), transition.getBind()));
+		setHistory(merge(getHistory(), transition.getHistory()));
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
 		setActions(merge(getActions(), transition.getActions(), false));
@@ -131,6 +133,24 @@ public class TransitionModel extends AbstractModel {
 			this.bind = bind;
 		} else {
 			this.bind = null;
+		}
+	}
+
+	/**
+	 * @return the history
+	 */
+	public String getHistory() {
+		return history;
+	}
+
+	/**
+	 * @param history the history to set
+	 */
+	public void setHistory(String history) {
+		if (StringUtils.hasText(history)) {
+			this.history = history;
+		} else {
+			this.history = null;
 		}
 	}
 
