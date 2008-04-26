@@ -9,7 +9,7 @@
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<webflow:flow-execution-repository max-conversations="1" max-continuations="2"/>
+		<webflow:flow-execution-repository max-executions="1" max-execution-snapshots="2"/>
 		<webflow:flow-execution-attributes>
 			<webflow:always-redirect-on-pause value="false"/>
 			<webflow:attribute name="foo" value="bar"/>		

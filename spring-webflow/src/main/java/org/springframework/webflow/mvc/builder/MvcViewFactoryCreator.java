@@ -22,8 +22,6 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.ClassUtils;
-import org.springframework.web.portlet.context.ConfigurablePortletApplicationContext;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
@@ -113,12 +111,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public void setApplicationContext(ApplicationContext applicationContext) {
-		if (ClassUtils.isPresent("javax.portlet.PortletContext")
-				&& applicationContext instanceof ConfigurablePortletApplicationContext) {
-			environment = MvcEnvironment.PORTLET;
-		} else {
-			environment = MvcEnvironment.SERVLET;
-		}
+		environment = MvcEnvironment.environmentFor(applicationContext);
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
@@ -128,7 +121,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		} else if (environment == MvcEnvironment.PORTLET) {
 			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
 		} else {
-			throw new IllegalStateException("Environment not supported " + environment);
+			throw new IllegalStateException("Web Environment " + environment + " not supported ");
 		}
 	}
 

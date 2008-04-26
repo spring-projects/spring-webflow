@@ -22,12 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
+import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 import org.w3c.dom.Element;
 
 /**
@@ -37,103 +43,65 @@ import org.w3c.dom.Element;
  */
 class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String FLOW_BUILDER_SERVICES_ATTRIBUTE = "flow-builder-services";
-
-	private static final String PARENT_ATTRIBUTE = "parent";
-
-	private static final String FLOW_LOCATION_ELEMENT = "flow-location";
-
-	private static final String FLOW_LOCATION_PATTERN_ELEMENT = "flow-location-pattern";
-
-	private static final String FLOW_BUILDER_ELEMENT = "flow-builder";
-
-	private static final String ID_ATTRIBUTE = "id";
-
-	private static final String PATH_ATTRIBUTE = "path";
-
-	private static final String CLASS_ATTRIBUTE = "class";
-
-	private static final String DEFINITION_ATTRIBUTES_ELEMENT = "flow-definition-attributes";
-
-	private static final String ATTRIBUTE_ELEMENT = "attribute";
-
-	private static final String NAME_ATTRIBUTE = "name";
-
-	private static final String VALUE_ATTRIBUTE = "value";
-
-	private static final String TYPE_ATTRIBUTE = "type";
-
-	private static final String FLOW_LOCATIONS_PROPERTY = "flowLocations";
-
-	private static final String FLOW_LOCATION_PATTERNS_PROPERTY = "flowLocationPatterns";
-
-	private static final String FLOW_BUILDERS_PROPERTY = "flowBuilders";
-
-	private static final String FLOW_BUILDER_SERVICES_PROPERTY = "flowBuilderServices";
-
-	private static final String PARENT_PROPERTY = "parent";
-
 	protected Class getBeanClass(Element element) {
 		return FlowRegistryFactoryBean.class;
 	}
 
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
-		String flowBuilderServices = getFlowBuilderServicesAttribute(element);
+		String flowBuilderServices = element.getAttribute("flow-builder-services");
 		if (StringUtils.hasText(flowBuilderServices)) {
-			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY, flowBuilderServices);
+			definitionBuilder.addPropertyReference("flowBuilderServices", flowBuilderServices);
 		} else {
-			definitionBuilder.addPropertyReference(FLOW_BUILDER_SERVICES_PROPERTY,
-					FlowBuilderServicesBeanDefinitionParser.registerDefaultFlowBuilderServicesBeanDefinition(
-							parserContext).getBeanName());
+			definitionBuilder.addPropertyValue("flowBuilderServices", createDefaultFlowBuilderServices(parserContext));
 		}
-		String parent = getParentAttribute(element);
+		String parent = element.getAttribute("parent");
 		if (StringUtils.hasText(parent)) {
-			definitionBuilder.addPropertyReference(PARENT_PROPERTY, parent);
+			definitionBuilder.addPropertyReference("parent", parent);
 		}
-		definitionBuilder.addPropertyValue(FLOW_LOCATIONS_PROPERTY, parseLocations(element));
-		definitionBuilder.addPropertyValue(FLOW_LOCATION_PATTERNS_PROPERTY, parseLocationPatterns(element));
-		definitionBuilder.addPropertyValue(FLOW_BUILDERS_PROPERTY, parseFlowBuilders(element));
+		definitionBuilder.addPropertyValue("flowLocations", parseLocations(element));
+		definitionBuilder.addPropertyValue("flowLocationPatterns", parseLocationPatterns(element));
+		definitionBuilder.addPropertyValue("flowBuilders", parseFlowBuilders(element));
 	}
 
 	private List parseLocations(Element element) {
-		List locationElements = DomUtils.getChildElementsByTagName(element, FLOW_LOCATION_ELEMENT);
+		List locationElements = DomUtils.getChildElementsByTagName(element, "flow-location");
 		if (locationElements.isEmpty()) {
 			return Collections.EMPTY_LIST;
 		}
 		List locations = new ArrayList(locationElements.size());
 		for (Iterator it = locationElements.iterator(); it.hasNext();) {
 			Element locationElement = (Element) it.next();
-			String id = locationElement.getAttribute(ID_ATTRIBUTE);
-			String path = locationElement.getAttribute(PATH_ATTRIBUTE);
+			String id = locationElement.getAttribute("id");
+			String path = locationElement.getAttribute("path");
 			locations.add(new FlowLocation(id, path, parseAttributes(locationElement)));
 		}
 		return locations;
 	}
 
 	private List parseLocationPatterns(Element element) {
-		List locationPatternElements = DomUtils.getChildElementsByTagName(element, FLOW_LOCATION_PATTERN_ELEMENT);
+		List locationPatternElements = DomUtils.getChildElementsByTagName(element, "flow-location-pattern");
 		if (locationPatternElements.isEmpty()) {
 			return Collections.EMPTY_LIST;
 		}
 		List locationPatterns = new ArrayList(locationPatternElements.size());
 		for (Iterator it = locationPatternElements.iterator(); it.hasNext();) {
 			Element locationPatternElement = (Element) it.next();
-			String value = locationPatternElement.getAttribute(VALUE_ATTRIBUTE);
+			String value = locationPatternElement.getAttribute("value");
 			locationPatterns.add(value);
 		}
 		return locationPatterns;
 	}
 
 	private Set parseAttributes(Element element) {
-		Element definitionAttributesElement = DomUtils.getChildElementByTagName(element, DEFINITION_ATTRIBUTES_ELEMENT);
+		Element definitionAttributesElement = DomUtils.getChildElementByTagName(element, "flow-definition-attributes");
 		if (definitionAttributesElement != null) {
-			List attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement, ATTRIBUTE_ELEMENT);
+			List attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement, "attribute");
 			HashSet attributes = new HashSet(attributeElements.size());
 			for (Iterator it = attributeElements.iterator(); it.hasNext();) {
 				Element attributeElement = (Element) it.next();
-				String name = attributeElement.getAttribute(NAME_ATTRIBUTE);
-				String value = attributeElement.getAttribute(VALUE_ATTRIBUTE);
-				String type = attributeElement.getAttribute(TYPE_ATTRIBUTE);
+				String name = attributeElement.getAttribute("name");
+				String value = attributeElement.getAttribute("value");
+				String type = attributeElement.getAttribute("type");
 				attributes.add(new FlowElementAttribute(name, value, type));
 			}
 			return attributes;
@@ -143,26 +111,28 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	}
 
 	private List parseFlowBuilders(Element element) {
-		List builderElements = DomUtils.getChildElementsByTagName(element, FLOW_BUILDER_ELEMENT);
+		List builderElements = DomUtils.getChildElementsByTagName(element, "flow-builder");
 		if (builderElements.isEmpty()) {
 			return Collections.EMPTY_LIST;
 		}
 		List builders = new ArrayList(builderElements.size());
 		for (Iterator it = builderElements.iterator(); it.hasNext();) {
 			Element builderElement = (Element) it.next();
-			String id = builderElement.getAttribute(ID_ATTRIBUTE);
-			String className = builderElement.getAttribute(CLASS_ATTRIBUTE);
+			String id = builderElement.getAttribute("id");
+			String className = builderElement.getAttribute("class");
 			builders.add(new FlowBuilderInfo(id, className, parseAttributes(builderElement)));
 		}
 		return builders;
 	}
 
-	private String getFlowBuilderServicesAttribute(Element element) {
-		return element.getAttribute(FLOW_BUILDER_SERVICES_ATTRIBUTE);
-	}
-
-	private String getParentAttribute(Element element) {
-		return element.getAttribute(PARENT_ATTRIBUTE);
+	private BeanDefinition createDefaultFlowBuilderServices(ParserContext context) {
+		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
+		defaultBuilder.addPropertyValue("formatterRegistry", DefaultFormatterRegistry.getSharedInstance());
+		defaultBuilder.addPropertyValue("conversionService", DefaultConversionService.getSharedInstance());
+		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
+		defaultBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(
+				MvcViewFactoryCreator.class).getBeanDefinition());
+		return defaultBuilder.getBeanDefinition();
 	}
 
 }

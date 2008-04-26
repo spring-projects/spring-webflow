@@ -28,31 +28,19 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * {@link BeanDefinitionParser} for the <code>&lt;execution-listeners&gt;</code> tag.
+ * {@link BeanDefinitionParser} for the <code>&lt;flow-execution-listeners&gt;</code> tag.
  * 
  * @author Ben Hale
  */
 class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-
-	// elements and attributes
-
-	private static final String LISTENER_ELEMENT = "listener";
-
-	private static final String CRITERIA_ATTRIBUTE = "criteria";
-
-	private static final String REF_ATTRIBUTE = "ref";
-
-	// properties
-
-	private static final String LISTENERS_PROPERTY = "listeners";
 
 	protected Class getBeanClass(Element element) {
 		return FlowExecutionListenerLoaderFactoryBean.class;
 	}
 
 	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
-		List listenerElements = DomUtils.getChildElementsByTagName(element, LISTENER_ELEMENT);
-		definitionBuilder.addPropertyValue(LISTENERS_PROPERTY, getListenersWithCriteria(listenerElements));
+		List listenerElements = DomUtils.getChildElementsByTagName(element, "listener");
+		definitionBuilder.addPropertyValue("listeners", parseListenersWithCriteria(listenerElements));
 	}
 
 	/**
@@ -61,12 +49,12 @@ class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBean
 	 * @return a map containing keys that are references to given listeners and values of string that represent the
 	 * criteria
 	 */
-	private Map getListenersWithCriteria(List listeners) {
+	private Map parseListenersWithCriteria(List listeners) {
 		Map listenersWithCriteria = new ManagedMap(listeners.size());
 		for (Iterator i = listeners.iterator(); i.hasNext();) {
 			Element listenerElement = (Element) i.next();
-			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute(REF_ATTRIBUTE));
-			String criteria = listenerElement.getAttribute(CRITERIA_ATTRIBUTE);
+			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute("ref"));
+			String criteria = listenerElement.getAttribute("criteria");
 			listenersWithCriteria.put(ref, criteria);
 		}
 		return listenersWithCriteria;

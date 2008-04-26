@@ -207,24 +207,18 @@
 				Use the <code>flow-execution-repository</code> element to tune flow execution persistence settings:
 			</para>
 			<programlisting type="xml"><![CDATA[
-<flow-execution-repository max-conversations="5" max-snapshots="30" />]]>
+<flow-execution-repository max-executions="5" max-execution-snapshots="30" />]]>
 			</programlisting>
 			<sect3 id="repository-max-conversations">
 				<title>max-conversations</title>
 				<para>
-					Tune the <code>max-conversations</code> attribute to place a cap on the number of conversations that can be created per user session.
+					Tune the <code>max-executions</code> attribute to place a cap on the number of flow executions that can be created per user session.
 				</para>
 			</sect3>
 			<sect3 id="repository-max-snapshots">
 				<title>max-snapshots</title>
 				<para>
-					Tune the <code>max-snapshots</code> attribute to place a cap on the number of flow execution snapshots that can be taken per conversation.
-				</para>
-			</sect3>
-			<sect3 id="repository-conversation-manager">
-				<title>conversation-manager</title>
-				<para>
-					Set a custom <code>ConversationManager</code> to completely customize where conversational flow state is persisted.
+					Tune the <code>max-execution-snapshots</code> attribute to place a cap on the number of history snapshots that can be taken per flow execution.
 				</para>
 			</sect3>
 		</sect2>

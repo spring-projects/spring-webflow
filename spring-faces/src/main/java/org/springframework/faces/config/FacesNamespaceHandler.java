@@ -22,7 +22,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * 
  * @author Jeremy Grelle
  */
-public class FacesConfigNamespaceHandler extends NamespaceHandlerSupport {
+public class FacesNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		registerBeanDefinitionParser("flow-builder-services", new FacesFlowBuilderServicesBeanDefinitionParser());
 	}

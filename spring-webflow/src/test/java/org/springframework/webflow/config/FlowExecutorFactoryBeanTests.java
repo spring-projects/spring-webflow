@@ -66,13 +66,12 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 		Set attributes = new HashSet();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		factoryBean.setFlowExecutionAttributes(attributes);
-		factoryBean.setFlowExecutionRepositoryType(FlowExecutionRepositoryType.CONTINUATION);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
 
 		};
 		factoryBean.setFlowExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
-		factoryBean.setMaxContinuations(2);
-		factoryBean.setMaxConversations(1);
+		factoryBean.setMaxFlowExecutionSnapshots(2);
+		factoryBean.setMaxFlowExecutions(1);
 		factoryBean.afterPropertiesSet();
 		FlowExecutor executor = (FlowExecutor) factoryBean.getObject();
 		MockExternalContext context = new MockExternalContext();

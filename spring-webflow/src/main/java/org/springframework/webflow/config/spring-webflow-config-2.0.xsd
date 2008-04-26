@@ -169,66 +169,7 @@ The fully qualified class name of the FlowBuilder implementation.
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>
-		
-	<xsd:element name="flow-executor">
-		<xsd:annotation>
-			<xsd:documentation>
-				<![CDATA[
-Deploys a flow executor.  A FlowExecutor executes flow definitions and acts as the entry-point into the Web Flow system.
-A flow executor launches new flow executions and resumes paused flow executions.
-Paused flow executions are stored between requests in a FlowExecutionRepository.
-]]>
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="beans:identifiedType">
-					<xsd:sequence>
-						<xsd:element name="flow-execution-repository" type="flowExecutionRepositoryType" minOccurs="0">
-							<xsd:annotation>
-								<xsd:documentation>
-									<![CDATA[
-Configures the type of FlowExecutionRepository that should be used by this executor.  Optional.
-Specify when you want to override the default repository implementation.
-]]>
-								</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="flow-execution-attributes" type="flowExecutionAttributesType" minOccurs="0">
-							<xsd:annotation>
-								<xsd:documentation>
-									<![CDATA[
-Meta attributes to assign new flow executions launched by this executor.  These attributes will be associated with all flow executions, 
-regardless of their underlying flow definition. Such attributes may influence flow execution behavior at runtime.
-]]>
-								</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-						<xsd:element name="flow-execution-listeners" type="flowExecutionListenersType" minOccurs="0">
-							<xsd:annotation>
-								<xsd:documentation>
-									<![CDATA[
-Registers listeners that observe the lifecycle of flow executions launched by this executor.
-]]>
-								</xsd:documentation>
-							</xsd:annotation>
-						</xsd:element>
-					</xsd:sequence>
-					<xsd:attribute name="flow-registry" type="xsd:string" default="flowRegistry">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-A reference to the FlowRegistry bean containing the flows eligible for execution by this executor.
-The default value 'flowRegistry'.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-	
+
 	<xsd:element name="flow-builder-services">
 		<xsd:annotation>
 			<xsd:documentation>
@@ -282,84 +223,87 @@ The custom ViewFactoryCreator implementation to use produce ViewFactories capabl
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
+			
+	<xsd:element name="flow-executor">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Deploys a flow executor.  A FlowExecutor executes flow definitions and acts as the entry-point into the Web Flow system.
+A flow executor launches new flow executions and resumes paused flow executions.
+Paused flow executions are stored between requests in a FlowExecutionRepository.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:choice maxOccurs="unbounded">
+						<xsd:element name="flow-execution-repository" type="flowExecutionRepositoryType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Configures the default FlowExecutionRepository by this executor.  Optional.
+Specify when you want to customize attributes of the default repository implementation.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="flow-execution-attributes" type="flowExecutionAttributesType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Meta attributes to assign new flow executions launched by this executor.  These attributes will be associated with all flow executions, 
+regardless of their underlying flow definition. Such attributes may influence flow execution behavior at runtime.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="flow-execution-listeners" type="flowExecutionListenersType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Registers listeners that observe the lifecycle of flow executions launched by this executor.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:attribute name="flow-registry" type="xsd:string" default="flowRegistry">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+A reference to the FlowRegistry bean containing the flows eligible for execution by this executor.
+The default value 'flowRegistry'.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 	
 	<xsd:complexType name="flowExecutionRepositoryType">
-		<xsd:attribute name="type" type="flowExecutionRepositoryTypeAttribute">
-			<xsd:annotation>
-				<xsd:documentation>
-					<![CDATA[
-The type of flow execution repository to use.
-A FlowExecutionRepository manages flow execution persistence between requests.
-]]>
-				</xsd:documentation>
-			</xsd:annotation>			
-		</xsd:attribute>
-		<xsd:attribute name="max-conversations" type="xsd:integer">
+		<xsd:attribute name="max-executions" type="xsd:integer">
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The maximum number of concurrent conversations allowed by this repository.  The default is 5.
-Do not set this attribute if you are also setting the 'conversation-manager' attribute.
+The maximum number of persistent flow executions allowed per user session.  The default is 5.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="max-continuations" type="xsd:integer">
+		<xsd:attribute name="max-execution-snapshots" type="xsd:integer">
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The maximum number of flow execution continuations (snapshots) allowed by this repository per conversation.  The default is 30.
-]]>
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="conversation-manager" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>
-				<![CDATA[
-The custom ConversationManager implementation to use with the FlowExecutionRepository.
-Setting this attribute allows full control over the conversation manager implementation and configuration.
-When used, any value for the 'max-conversations' attribute is ignored.
+The maximum number of history snapshots allowed per flow execution.  The default is 30.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:simpleType name="flowExecutionRepositoryTypeAttribute">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="continuation">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The continuation repository type.  Use this to snapshot flow execution state server-side to support use 
-of the browser back button.  This is the default if not specified.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="simple">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The simple repository type.  Use of this strategy incurs minimal storage overhead but explicitly prevents resubmits using the browser back button.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="singlekey">
-				<xsd:annotation>
-					<xsd:documentation>
-						<![CDATA[
-The "single key" repository type.
-Use of this strategy assigns a single key per flow execution that remains constant throughout the life of the execution.
-]]>
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-		</xsd:restriction>
-	</xsd:simpleType>
-	
 	<xsd:complexType name="flowExecutionListenersType">
 		<xsd:sequence>
 			<xsd:element name="listener" type="flowExecutionListenerType" maxOccurs="unbounded">

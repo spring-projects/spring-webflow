@@ -15,9 +15,7 @@
  */
 package org.springframework.webflow.config;
 
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -36,22 +34,6 @@ import org.w3c.dom.Element;
  */
 class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String FORMATTER_REGISTRY_ATTRIBUTE = "formatter-registry";
-
-	private static final String CONVERSION_SERVICE_ATTRIBUTE = "conversion-service";
-
-	private static final String EXPRESSION_PARSER_ATTRIBUTE = "expression-parser";
-
-	private static final String VIEW_FACTORY_CREATOR_ATTRIBUTE = "view-factory-creator";
-
-	private static final String FORMATTER_REGISTRY_PROPERTY = "formatterRegistry";
-
-	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
-
-	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
-
-	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
-
 	protected Class getBeanClass(Element element) {
 		return FlowBuilderServices.class;
 	}
@@ -64,66 +46,41 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	}
 
 	private void parseFormatterRegistry(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String formatterRegistry = element.getAttribute(FORMATTER_REGISTRY_ATTRIBUTE);
+		String formatterRegistry = element.getAttribute("formatter-registry");
 		if (StringUtils.hasText(formatterRegistry)) {
-			definitionBuilder.addPropertyReference(FORMATTER_REGISTRY_PROPERTY, formatterRegistry);
+			definitionBuilder.addPropertyReference("formatterRegistry", formatterRegistry);
 		} else {
-			definitionBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, DefaultFormatterRegistry
-					.getSharedInstance());
+			definitionBuilder.addPropertyValue("formatterRegistry", DefaultFormatterRegistry.getSharedInstance());
 		}
 	}
 
 	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String conversionService = element.getAttribute(CONVERSION_SERVICE_ATTRIBUTE);
+		String conversionService = element.getAttribute("conversion-service");
 		if (StringUtils.hasText(conversionService)) {
-			definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
+			definitionBuilder.addPropertyReference("conversionService", conversionService);
 		} else {
-			definitionBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, DefaultConversionService
-					.getSharedInstance());
+			definitionBuilder.addPropertyValue("conversionService", DefaultConversionService.getSharedInstance());
 		}
 	}
 
 	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String expressionParser = element.getAttribute(EXPRESSION_PARSER_ATTRIBUTE);
+		String expressionParser = element.getAttribute("expression-parser");
 		if (StringUtils.hasText(expressionParser)) {
-			definitionBuilder.addPropertyReference(EXPRESSION_PARSER_PROPERTY, expressionParser);
+			definitionBuilder.addPropertyReference("expressionParser", expressionParser);
 		} else {
-			definitionBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
-					.getExpressionParser());
+			definitionBuilder
+					.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
 		}
 	}
 
 	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String viewFactoryCreator = element.getAttribute(VIEW_FACTORY_CREATOR_ATTRIBUTE);
+		String viewFactoryCreator = element.getAttribute("view-factory-creator");
 		if (StringUtils.hasText(viewFactoryCreator)) {
-			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
+			definitionBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
 		} else {
-			definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, createBeanDefinitionForClass(
-					MvcViewFactoryCreator.class, context).getBeanName());
+			definitionBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(
+					MvcViewFactoryCreator.class).getBeanDefinition());
 		}
-	}
-
-	private BeanDefinitionHolder createBeanDefinitionForClass(Class clazz, ParserContext context) {
-		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(builder.getBeanDefinition(), BeanDefinitionReaderUtils
-				.generateBeanName(builder.getBeanDefinition(), context.getRegistry()));
-		registerBeanDefinition(holder, context.getRegistry());
-		return holder;
-	}
-
-	public static BeanDefinitionHolder registerDefaultFlowBuilderServicesBeanDefinition(ParserContext context) {
-		FlowBuilderServicesBeanDefinitionParser parser = new FlowBuilderServicesBeanDefinitionParser();
-		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		defaultBuilder.addPropertyValue(FORMATTER_REGISTRY_PROPERTY, DefaultFormatterRegistry.getSharedInstance());
-		defaultBuilder.addPropertyValue(CONVERSION_SERVICE_PROPERTY, DefaultConversionService.getSharedInstance());
-		defaultBuilder.addPropertyValue(EXPRESSION_PARSER_PROPERTY, DefaultExpressionParserFactory
-				.getExpressionParser());
-		defaultBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, parser.createBeanDefinitionForClass(
-				MvcViewFactoryCreator.class, context).getBeanName());
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(defaultBuilder.getBeanDefinition(),
-				BeanDefinitionReaderUtils.generateBeanName(defaultBuilder.getBeanDefinition(), context.getRegistry()));
-		parser.registerBeanDefinition(holder, context.getRegistry());
-		return holder;
 	}
 
 }
