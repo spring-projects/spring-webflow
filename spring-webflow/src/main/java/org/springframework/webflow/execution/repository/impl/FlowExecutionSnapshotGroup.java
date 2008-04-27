@@ -2,8 +2,8 @@ package org.springframework.webflow.execution.repository.impl;
 
 import java.io.Serializable;
 
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionSnapshot;
-import org.springframework.webflow.execution.repository.continuation.SnapshotNotFoundException;
+import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
+import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
 /**
  * A group of flow execution snapshots.

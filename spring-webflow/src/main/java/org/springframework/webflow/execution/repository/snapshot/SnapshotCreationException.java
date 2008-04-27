@@ -13,27 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.execution.repository.continuation;
+package org.springframework.webflow.execution.repository.snapshot;
 
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 
 /**
- * Thrown when a FlowExecutionContinuation could not be deserialized into a FlowExecution.
- * 
- * @see FlowExecutionSnapshot
- * @see FlowExecution
+ * Thrown when a continuation snapshot could not be taken of flow execution state.
  * 
  * @author Keith Donald
  */
-public class SnapshotUnmarshalException extends FlowExecutionRepositoryException {
+public class SnapshotCreationException extends FlowExecutionRepositoryException {
 
 	/**
-	 * Creates a new flow execution unmarshalling exception.
-	 * @param message the exception message
+	 * The flow execution that could not be snapshotted.
+	 */
+	private FlowExecution flowExecution;
+
+	/**
+	 * Creates a new snapshot creation exception.
+	 * @param flowExecution the flow execution
+	 * @param message a descriptive message
 	 * @param cause the cause
 	 */
-	public SnapshotUnmarshalException(String message, Throwable cause) {
+	public SnapshotCreationException(FlowExecution flowExecution, String message, Throwable cause) {
 		super(message, cause);
+		this.flowExecution = flowExecution;
+	}
+
+	/**
+	 * Returns the flow execution that could not be snapshotted.
+	 */
+	public FlowExecution getFlowExecution() {
+		return flowExecution;
 	}
 }

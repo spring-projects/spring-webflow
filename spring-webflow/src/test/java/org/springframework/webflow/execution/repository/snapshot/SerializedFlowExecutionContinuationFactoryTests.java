@@ -1,4 +1,4 @@
-package org.springframework.webflow.execution.repository.continuation;
+package org.springframework.webflow.execution.repository.snapshot;
 
 import junit.framework.TestCase;
 
@@ -15,6 +15,8 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
+import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
+import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowExecutionKeyFactory;

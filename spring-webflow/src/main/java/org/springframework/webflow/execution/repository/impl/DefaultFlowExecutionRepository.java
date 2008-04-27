@@ -20,12 +20,12 @@ import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
-import org.springframework.webflow.execution.repository.continuation.AbstractSnapshottingFlowExecutionRepository;
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionSnapshot;
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionSnapshotFactory;
-import org.springframework.webflow.execution.repository.continuation.SerializedFlowExecutionSnapshotFactory;
-import org.springframework.webflow.execution.repository.continuation.SnapshotNotFoundException;
-import org.springframework.webflow.execution.repository.continuation.SnapshotUnmarshalException;
+import org.springframework.webflow.execution.repository.snapshot.AbstractSnapshottingFlowExecutionRepository;
+import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
+import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
+import org.springframework.webflow.execution.repository.snapshot.SnapshotUnmarshalException;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
 /**

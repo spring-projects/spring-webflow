@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.execution.repository.continuation;
+package org.springframework.webflow.execution.repository.snapshot;
 
 import org.springframework.webflow.execution.FlowExecution;
 
