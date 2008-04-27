@@ -21,7 +21,7 @@ import org.springframework.webflow.execution.repository.support.FlowExecutionSta
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
 
-public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
+public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 	private Flow flow;
 	private SerializedFlowExecutionSnapshotFactory factory;
 	private FlowExecutionStateRestorer stateRestorer;
