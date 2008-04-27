@@ -6,7 +6,8 @@ import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSn
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
 /**
- * A group of flow execution snapshots.
+ * A group of flow execution snapshots. A SPI interface that encapsulates the storage management for a group of flow
+ * execution snapshots.
  * 
  * @author Keith Donald
  */
