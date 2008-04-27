@@ -15,8 +15,6 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
-import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
-import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
@@ -43,12 +41,12 @@ public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 		executionKeyFactory = new MockFlowExecutionKeyFactory();
 	}
 
-	public void testCreateContinuation() {
+	public void testCreateSnapshot() {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
-		FlowExecutionSnapshot continuation = factory.createSnapshot(flowExecution);
-		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) continuation.unmarshal();
+		FlowExecutionSnapshot snapshot = factory.createSnapshot(flowExecution);
+		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) snapshot.unmarshal();
 		assertNotSame(flowExecution, flowExecution2);
 		stateRestorer.restoreState(flowExecution2, null, flowExecution.getConversationScope(), executionKeyFactory);
 		assertEquals(flowExecution.getDefinition().getId(), flowExecution2.getDefinition().getId());
@@ -58,14 +56,14 @@ public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 				.getId());
 	}
 
-	public void testRestoreContinuation() {
+	public void testRestoreSnapshot() {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
-		FlowExecutionSnapshot continuation = factory.createSnapshot(flowExecution);
-		byte[] bytes = continuation.toByteArray();
+		FlowExecutionSnapshot snapshot = factory.createSnapshot(flowExecution);
+		byte[] bytes = snapshot.toByteArray();
 		FlowExecutionSnapshot continuation2 = factory.restoreSnapshot(bytes);
-		assertEquals(continuation, continuation2);
+		assertEquals(snapshot, continuation2);
 		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) continuation2.unmarshal();
 		assertNotSame(flowExecution, flowExecution2);
 		stateRestorer.restoreState(flowExecution2, null, flowExecution.getConversationScope(), executionKeyFactory);
