@@ -124,7 +124,7 @@
 				</td>
 			</tr>
 			<tr class="field">
-				<td colspan="2" class="buttonGroup"
+				<td colspan="2" class="buttonGroup">
 					<input type="submit" name="_eventId_proceed" value="Proceed"/>&#160;
 					<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 				</td>

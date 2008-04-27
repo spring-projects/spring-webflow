@@ -44,7 +44,7 @@
 				</td>
 			</tr>
 			<tr class="field">
-				<td class="label">Check Out Date:</div>
+				<td class="label">Check Out Date:</td>
 				<td class="output">
 					<spring:bind path="checkoutDate">${status.value}</spring:bind>
 				</td>
