@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link Renderer} for the {@code <sf:ajaxEvent>} tag.
+ * Renderer for the {@code <sf:ajaxEvent>} tag.
  * 
  * @author Jeremy Grelle
  * 

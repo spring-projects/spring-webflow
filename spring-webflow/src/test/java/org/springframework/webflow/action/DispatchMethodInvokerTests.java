@@ -15,36 +15,9 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.webflow.action.DispatchMethodInvoker;
-
 import junit.framework.TestCase;
 
-/**
- * Unit tests for {@link DispatchMethodInvoker}.
- * 
- * @author Ben Hale
- */
 public class DispatchMethodInvokerTests extends TestCase {
-
-	private class MockClass {
-		private boolean methodCalled = false;
-
-		public boolean getMethodCalled() {
-			return methodCalled;
-		}
-
-		public void argumentMethod(Object o) {
-			methodCalled = true;
-		}
-
-		public void noArgumentMethod() {
-			methodCalled = true;
-		}
-
-		public void exceptionMethod(Object o) throws Exception {
-			throw new Exception("expected exception");
-		}
-	}
 
 	private MockClass mockClass;
 
@@ -76,6 +49,26 @@ public class DispatchMethodInvokerTests extends TestCase {
 			invoker.invoke("exceptionMethod", new Object[] { "testValue" });
 			fail("Should have thrown an exception");
 		} catch (Exception e) {
+		}
+	}
+
+	private class MockClass {
+		private boolean methodCalled = false;
+
+		public boolean getMethodCalled() {
+			return methodCalled;
+		}
+
+		public void argumentMethod(Object o) {
+			methodCalled = true;
+		}
+
+		public void noArgumentMethod() {
+			methodCalled = true;
+		}
+
+		public void exceptionMethod(Object o) throws Exception {
+			throw new Exception("expected exception");
 		}
 	}
 

@@ -18,10 +18,7 @@ import org.apache.shale.test.mock.MockResponseWriter;
 import org.apache.shale.test.mock.MockStateManager;
 import org.easymock.EasyMock;
 import org.springframework.faces.ui.AjaxViewRoot;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
@@ -258,39 +255,6 @@ public class JsfViewTests extends TestCase {
 			super.execute(context);
 			extContext.getRequestMap().put(JsfView.EVENT_KEY, event);
 			executed = true;
-		}
-	}
-
-	private class ModalViewState implements StateDefinition {
-
-		MutableAttributeMap attrs = new LocalAttributeMap();
-
-		public boolean isViewState() {
-			return true;
-		}
-
-		public ModalViewState() {
-			attrs.asMap().put("modal", Boolean.TRUE);
-		}
-
-		public String getId() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public FlowDefinition getOwner() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public MutableAttributeMap getAttributes() {
-			return attrs;
-		}
-
-		public String getCaption() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public String getDescription() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 	}
 }

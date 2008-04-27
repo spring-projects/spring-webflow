@@ -1,7 +1,6 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +47,6 @@ public class JsfFinalResponseActionTests extends TestCase {
 	private TestLifecycle lifecycle;
 
 	private PhaseListener trackingListener;
-
-	private StringWriter output = new StringWriter();
 
 	ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 

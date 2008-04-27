@@ -21,12 +21,8 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.converters.AbstractConverter;
-import org.springframework.binding.convert.service.StaticConversionExecutor;
 
-/**
- * Test case for {@link StaticConversionExecutor}.
- */
-public class ConversionExecutorImplTests extends TestCase {
+public class StaticConversionExecutorImplTests extends TestCase {
 
 	private StaticConversionExecutor conversionExecutor;
 

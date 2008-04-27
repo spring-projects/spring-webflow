@@ -68,7 +68,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#createUniqueId()
 	 */
 	public String createUniqueId() {
@@ -121,7 +120,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param expr
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#findComponent(java.lang.String)
 	 */
 	public UIComponent findComponent(String expr) {
@@ -129,7 +127,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getAfterPhaseListener()
 	 */
 	public MethodExpression getAfterPhaseListener() {
@@ -137,7 +134,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getAttributes()
 	 */
 	public Map getAttributes() {
@@ -145,7 +141,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getBeforePhaseListener()
 	 */
 	public MethodExpression getBeforePhaseListener() {
@@ -153,7 +148,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getChildCount()
 	 */
 	public int getChildCount() {
@@ -161,7 +155,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getChildren()
 	 */
 	public List getChildren() {
@@ -170,7 +163,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param context
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getClientId(javax.faces.context.FacesContext)
 	 */
 	public String getClientId(FacesContext context) {
@@ -179,7 +171,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param ctx
-	 * @return
 	 * @see javax.faces.component.UIComponent#getContainerClientId(javax.faces.context.FacesContext)
 	 */
 	public String getContainerClientId(FacesContext ctx) {
@@ -188,7 +179,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param name
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getFacet(java.lang.String)
 	 */
 	public UIComponent getFacet(String name) {
@@ -196,7 +186,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getFacetCount()
 	 */
 	public int getFacetCount() {
@@ -204,7 +193,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getFacets()
 	 */
 	public Map getFacets() {
@@ -212,7 +200,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getFacetsAndChildren()
 	 */
 	public Iterator getFacetsAndChildren() {
@@ -220,7 +207,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getFamily()
 	 */
 	public String getFamily() {
@@ -228,7 +214,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getId()
 	 */
 	public String getId() {
@@ -236,7 +221,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getLocale()
 	 */
 	public Locale getLocale() {
@@ -244,7 +228,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getParent()
 	 */
 	public UIComponent getParent() {
@@ -252,7 +235,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getRendererType()
 	 */
 	public String getRendererType() {
@@ -260,7 +242,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getRenderKitId()
 	 */
 	public String getRenderKitId() {
@@ -268,7 +249,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#getRendersChildren()
 	 */
 	public boolean getRendersChildren() {
@@ -277,7 +257,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param name
-	 * @return
 	 * @deprecated
 	 * @see javax.faces.component.UIComponentBase#getValueBinding(java.lang.String)
 	 */
@@ -287,7 +266,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param name
-	 * @return
 	 * @see javax.faces.component.UIComponent#getValueExpression(java.lang.String)
 	 */
 	public ValueExpression getValueExpression(String name) {
@@ -295,7 +273,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#getViewId()
 	 */
 	public String getViewId() {
@@ -306,7 +283,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @param context
 	 * @param clientId
 	 * @param callback
-	 * @return
 	 * @throws FacesException
 	 * @see javax.faces.component.UIComponentBase#invokeOnComponent(javax.faces.context.FacesContext, java.lang.String,
 	 * javax.faces.component.ContextCallback)
@@ -317,7 +293,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#isRendered()
 	 */
 	public boolean isRendered() {
@@ -325,7 +300,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#isTransient()
 	 */
 	public boolean isTransient() {
@@ -333,7 +307,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	}
 
 	/**
-	 * @param context
 	 * @see javax.faces.component.UIViewRoot#processApplication(javax.faces.context.FacesContext)
 	 */
 	public void processApplication(FacesContext context) {
@@ -360,7 +333,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param context
-	 * @return
 	 * @see javax.faces.component.UIComponentBase#processSaveState(javax.faces.context.FacesContext)
 	 */
 	public Object processSaveState(FacesContext context) {
@@ -410,7 +382,6 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 
 	/**
 	 * @param facesContext
-	 * @return
 	 * @see javax.faces.component.UIViewRoot#saveState(javax.faces.context.FacesContext)
 	 */
 	public Object saveState(FacesContext facesContext) {

@@ -48,8 +48,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 			}
 		});
 		factoryBean.afterPropertiesSet();
-		FlowExecutor executor = (FlowExecutor) factoryBean.getObject();
-		MockExternalContext context = new MockExternalContext();
+		factoryBean.getObject();
 	}
 
 	public void testGetFlowExecutorOptionsSpecified() throws Exception {

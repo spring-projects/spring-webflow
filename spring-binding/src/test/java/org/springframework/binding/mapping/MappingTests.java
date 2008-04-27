@@ -17,9 +17,6 @@ package org.springframework.binding.mapping;
 
 import junit.framework.TestCase;
 
-/**
- * Unit tests for the {@link org.springframework.binding.mapping.RequiredMapping}.
- */
 public class MappingTests extends TestCase {
 
 	public void testMapping() {

@@ -22,7 +22,7 @@ import org.springframework.faces.model.OneSelectionTrackingListDataModel;
  * Web Flow converters.
  * 
  * <p>
- * In addition to the standard Web Flow conversion, this service provide conversion from a {@link List} into a
+ * In addition to the standard Web Flow conversion, this service provide conversion from a list into a
  * {@link OneSelectionTrackingListDataModel} using a "dataModel" alias for the type.
  * </p>
  * 

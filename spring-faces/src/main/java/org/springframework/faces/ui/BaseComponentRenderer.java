@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 
 /**
  * Base {@link Renderer} for typical faces components, handling the rendering for common {@link UIComponent} attributes.

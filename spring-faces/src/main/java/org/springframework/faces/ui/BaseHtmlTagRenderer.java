@@ -105,13 +105,11 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	protected abstract String getRenderedTagName(UIComponent component);
 
 	/**
-	 * @param component TODO
 	 * @return an array of the tag attributes to be rendered
 	 */
 	protected abstract String[] getAttributesToRender(UIComponent component);
 
 	/**
-	 * @param component TODO
 	 * @return a map that returns the bean property name for any attribute that doesn't map directly (i.e., the 'class'
 	 * attribute maps to the 'styleClass' bean property)
 	 */
@@ -120,8 +118,7 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	};
 
 	/**
-	 * @param component TODO
-	 * @return a map of registered {@link RenderAttributeCallback}s for attributes that require special rendering logic
+	 * @return a map of registered RenderAttributeCallbacks for attributes that require special rendering logic
 	 */
 	protected Map getAttributeCallbacks(UIComponent component) {
 		return Collections.EMPTY_MAP;

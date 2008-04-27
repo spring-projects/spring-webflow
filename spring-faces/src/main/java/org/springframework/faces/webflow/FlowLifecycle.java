@@ -15,8 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import java.io.IOException;
-
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
@@ -71,7 +69,7 @@ public class FlowLifecycle extends Lifecycle {
 
 	/**
 	 * Delegates to the wrapped {@link Lifecycle}.
-	 * @throws IOException
+	 * @throws FacesException
 	 */
 	public void render(FacesContext context) throws FacesException {
 		delegate.render(context);
