@@ -22,22 +22,22 @@ import org.springframework.webflow.execution.FlowExecution;
 /**
  * A snapshot of a flow execution that can be restored from and serialized to a byte array.
  * 
- * @see FlowExecutionContinuationFactory
+ * @see FlowExecutionSnapshotFactory
  * 
  * @author Erwin Vervaet
  * @author Keith Donald
  */
-public abstract class FlowExecutionContinuation implements Serializable {
+public abstract class FlowExecutionSnapshot implements Serializable {
 
 	/**
-	 * Restores the flow execution wrapped in this continuation.
+	 * Returns underlying flow execution object.
 	 * @return the unmarshalled flow execution
-	 * @throws ContinuationUnmarshalException when there is a problem unmarshalling this continuation
+	 * @throws SnapshotUnmarshalException when there is a problem unmarshalling the execution
 	 */
-	public abstract FlowExecution unmarshal() throws ContinuationUnmarshalException;
+	public abstract FlowExecution unmarshal() throws SnapshotUnmarshalException;
 
 	/**
-	 * Converts this continuation to a byte array for convenient serialization.
+	 * Converts this snapshot to a byte array for convenient serialization.
 	 * @return this as a byte array
 	 */
 	public abstract byte[] toByteArray();

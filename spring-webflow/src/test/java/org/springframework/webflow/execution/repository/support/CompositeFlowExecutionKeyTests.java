@@ -23,7 +23,7 @@ public class CompositeFlowExecutionKeyTests extends TestCase {
 
 	public void testToString() {
 		CompositeFlowExecutionKey key = new CompositeFlowExecutionKey(new SimpleConversationId("1"), "1");
-		assertEquals("c1v1", key.toString());
+		assertEquals("e1s1", key.toString());
 	}
 
 	public void testEquals() {

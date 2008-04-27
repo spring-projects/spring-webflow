@@ -20,94 +20,87 @@ import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
-import org.springframework.webflow.execution.repository.continuation.AbstractFlowExecutionContinuationRepository;
-import org.springframework.webflow.execution.repository.continuation.ContinuationNotFoundException;
-import org.springframework.webflow.execution.repository.continuation.ContinuationUnmarshalException;
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionContinuation;
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionContinuationFactory;
-import org.springframework.webflow.execution.repository.continuation.SerializedFlowExecutionContinuationFactory;
+import org.springframework.webflow.execution.repository.continuation.AbstractSnapshottingFlowExecutionRepository;
+import org.springframework.webflow.execution.repository.continuation.FlowExecutionSnapshot;
+import org.springframework.webflow.execution.repository.continuation.FlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.continuation.SerializedFlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.continuation.SnapshotNotFoundException;
+import org.springframework.webflow.execution.repository.continuation.SnapshotUnmarshalException;
 import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
 /**
- * Stores <i>one to many</i> flow execution continuations (snapshots) per conversation, where each continuation
- * represents a paused, restorable view-state of a flow execution snapshotted at a point in time.
+ * The default flow execution repository implementation. Takes <i>one to {@link #getMaxSnapshots() max}</i> flow
+ * execution snapshots, where each snapshot represents a copy of a {@link FlowExecution} taken at a point in time.
  * <p>
- * The set of active user conversations are managed by a {@link ConversationManager} implementation, which this
- * repository delegates to.
+ * The set of active flow executions are managed by a {@link ConversationManager} implementation, which this repository
+ * delegates to.
  * <p>
  * This repository is responsible for:
  * <ul>
- * <li>Beginning a new conversation when a new flow execution is made persistent. Each conversation is assigned a
- * unique conversation id which forms one part of the flow execution key.
- * <li>Associating a flow execution with that conversation by adding a {@link FlowExecutionContinuation} to a
- * continuation group.<br>
- * When a flow execution is placed in this repository a new continuation snapshot is created, assigned an id, and added
- * to the group. Each continuation logically represents a state of the conversation at a point in time <i>that can be
- * restored and continued</i>. These continuations can be restored to support users going back in their browser to
- * continue a conversation from a previous point.
- * <li>Ending existing conversations when persistent flow executions end, as part of a repository removal operation.
+ * <li>Beginning a new {@link Conversation} when a {@link FlowExecution} is assigned a persistent key. Each
+ * conversation is assigned a unique conversation id which forms one part of the flow execution key.
+ * <li>Taking {@link FlowExecutionSnapshot execution snapshots} to persist flow execution state. A snapshot is a copy
+ * of the execution created at a point in time <i>that can be restored and continued</i>. Snapshotting supports users
+ * going back in their browser to continue their flow execution from a previoius point.
+ * <li>Ending conversations when flow executions end.
  * </ul>
  * <p>
- * This repository implementation also provides support for <i>conversation invalidation after completion</i>, where
- * once a logical conversation completes (by one of its FlowExecution's reaching an end state), the entire conversation
- * (including all continuations) is invalidated. This prevents the possibility of duplicate submission after completion.
- * <p>
- * This repository implementation should be considered when you do have to support browser navigational button use, e.g.
- * you cannot lock down the browser and require that all navigational events to be routed explicitly through Spring Web
- * Flow.
+ * This repository implementation also provides support for <i>execution invalidation after completion</i>, where once
+ * a logical flow execution completes, it and all of its snapshots are removed. This cleans up memory and prevents the
+ * possibility of duplicate submission after completion.
  * 
  * @author Keith Donald
  */
-public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinuationRepository {
+public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExecutionRepository {
 
 	/**
-	 * The conversation attribute that stores the "continuation group".
+	 * The conversation attribute that stores the group of flow execution snapshots.
 	 */
-	private static final String CONTINUATION_GROUP_ATTRIBUTE = "continuationGroup";
+	private static final String SNAPSHOT_GROUP_ATTRIBUTE = "flowExecutionSnapshotGroup";
 
 	/**
-	 * The maximum number of continuations that can be active per conversation. The default is 30, which is high enough
-	 * not to interfere with the user experience of normal users using the back button, but low enough to avoid
-	 * excessive resource usage or easy denial of service attacks.
+	 * The maximum number of snapshots that can be taken per execution. The default is 30, which is generally high
+	 * enough not to interfere with the user experience of normal users using the back button, but low enough to avoid
+	 * excessive resource usage or denial of service attacks.
 	 */
-	private int maxContinuations = 30;
+	private int maxSnapshots = 30;
 
 	/**
-	 * Create a new continuation based flow execution repository using the given state restorer and conversation
-	 * manager. Defaults to a {@link SerializedFlowExecutionContinuationFactory}.
+	 * Create a new default flow execution repository using the given state restorer and conversation manager. Defaults
+	 * to a {@link SerializedFlowExecutionSnapshotFactory}.
 	 * @param conversationManager the conversation manager to use
 	 * @param executionStateRestorer the state restoration strategy to use
 	 */
 	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
 			FlowExecutionStateRestorer executionStateRestorer) {
-		super(conversationManager, executionStateRestorer, new SerializedFlowExecutionContinuationFactory());
+		super(conversationManager, executionStateRestorer, new SerializedFlowExecutionSnapshotFactory());
 	}
 
 	/**
-	 * Create a new continuation based flow execution repository using the given state restorer, conversation manager,
-	 * and continuation factory.
+	 * Create a new default flow execution repository using the given state restorer, conversation manager, and snapshot
+	 * factory.
 	 * @param conversationManager the conversation manager to use
 	 * @param executionStateRestorer the state restoration strategy to use
-	 * @param continuationFactory the continuation factory to use
+	 * @param executionSnapshotFactory the flow execution snapshot factory to use
 	 */
 	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
-			FlowExecutionStateRestorer executionStateRestorer, FlowExecutionContinuationFactory continuationFactory) {
-		super(conversationManager, executionStateRestorer, continuationFactory);
+			FlowExecutionStateRestorer executionStateRestorer, FlowExecutionSnapshotFactory executionSnapshotFactory) {
+		super(conversationManager, executionStateRestorer, executionSnapshotFactory);
 	}
 
 	/**
-	 * Returns the max number of continuations allowed per conversation by this repository.
+	 * Returns the max number of snapshots allowed per flow execution by this repository.
 	 */
-	public int getMaxContinuations() {
-		return maxContinuations;
+	public int getMaxSnapshots() {
+		return maxSnapshots;
 	}
 
 	/**
-	 * Sets the maximum number of continuations allowed per conversation by this repository. Use -1 for unlimited. The
+	 * Sets the maximum number of snapshots allowed per flow execution by this repository. Use -1 for unlimited. The
 	 * default is 30.
 	 */
-	public void setMaxContinuations(int maxContinuations) {
-		this.maxContinuations = maxContinuations;
+	public void setMaxSnapshots(int maxSnapshots) {
+		this.maxSnapshots = maxSnapshots;
 	}
 
 	// implementing flow execution repository
@@ -117,16 +110,16 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 			logger.debug("Getting flow execution with key '" + key + "'");
 		}
 		Conversation conversation = getConversation(key);
-		FlowExecutionContinuation snapshot;
+		FlowExecutionSnapshot snapshot;
 		try {
-			snapshot = getContinuationGroup(conversation).get(getContinuationId(key));
-		} catch (ContinuationNotFoundException e) {
+			snapshot = getSnapshotGroup(conversation).getSnapshot(getSnapshotId(key));
+		} catch (SnapshotNotFoundException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
 		try {
 			FlowExecution execution = snapshot.unmarshal();
 			return restoreTransientState(execution, key, conversation);
-		} catch (ContinuationUnmarshalException e) {
+		} catch (SnapshotUnmarshalException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
 	}
@@ -138,12 +131,12 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 		}
 		FlowExecutionKey key = flowExecution.getKey();
 		Conversation conversation = getConversation(key);
-		FlowExecutionContinuationGroup continuationGroup = getContinuationGroup(conversation);
-		FlowExecutionContinuation snapshot = snapshot(flowExecution);
+		FlowExecutionSnapshotGroup snapshotGroup = getSnapshotGroup(conversation);
+		FlowExecutionSnapshot snapshot = snapshot(flowExecution);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding new snapshot to group with id " + getContinuationId(key));
+			logger.debug("Adding new snapshot to group with id " + getSnapshotId(key));
 		}
-		continuationGroup.add(getContinuationId(key), snapshot);
+		snapshotGroup.addSnapshot(getSnapshotId(key), snapshot);
 		putConversationScope(flowExecution, conversation);
 	}
 
@@ -151,38 +144,40 @@ public class DefaultFlowExecutionRepository extends AbstractFlowExecutionContinu
 
 	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
 		Conversation conversation = getConversation(execution.getKey());
-		getContinuationGroup(conversation).removeAllContinuations();
+		getSnapshotGroup(conversation).removeAllSnapshots();
 	}
 
 	public void removeFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
 		Conversation conversation = getConversation(key);
-		getContinuationGroup(conversation).removeContinuation(getContinuationId(key));
+		getSnapshotGroup(conversation).removeSnapshot(getSnapshotId(key));
 	}
 
 	public void updateFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
 		Conversation conversation = getConversation(key);
-		getContinuationGroup(conversation).updateContinuation(getContinuationId(key), snapshot(execution));
+		getSnapshotGroup(conversation).updateSnapshot(getSnapshotId(key), snapshot(execution));
 	}
 
 	// hooks for subclassing
 
-	protected FlowExecutionContinuationGroup createFlowExecutionContinuationGroup() {
-		return new FlowExecutionContinuationGroup(maxContinuations);
+	protected FlowExecutionSnapshotGroup createFlowExecutionSnapshotGroup() {
+		SimpleFlowExecutionSnapshotGroup group = new SimpleFlowExecutionSnapshotGroup();
+		group.setMaxSnapshots(maxSnapshots);
+		return group;
 	}
 
 	/**
-	 * Returns the continuation group associated with the governing conversation.
-	 * @param conversation the conversation where the continuation group is stored
-	 * @return the continuation group
+	 * Returns the snapshot group associated with the governing conversation.
+	 * @param conversation the conversation where the snapshot group is stored
+	 * @return the snapshot group
 	 */
-	protected FlowExecutionContinuationGroup getContinuationGroup(Conversation conversation) {
-		FlowExecutionContinuationGroup group = (FlowExecutionContinuationGroup) conversation
-				.getAttribute(CONTINUATION_GROUP_ATTRIBUTE);
+	protected FlowExecutionSnapshotGroup getSnapshotGroup(Conversation conversation) {
+		FlowExecutionSnapshotGroup group = (FlowExecutionSnapshotGroup) conversation
+				.getAttribute(SNAPSHOT_GROUP_ATTRIBUTE);
 		if (group == null) {
-			group = createFlowExecutionContinuationGroup();
-			conversation.putAttribute(CONTINUATION_GROUP_ATTRIBUTE, group);
+			group = createFlowExecutionSnapshotGroup();
+			conversation.putAttribute(SNAPSHOT_GROUP_ATTRIBUTE, group);
 		}
 		return group;
 	}

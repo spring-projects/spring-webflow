@@ -18,79 +18,54 @@ package org.springframework.webflow.execution.repository.support;
 import java.io.Serializable;
 
 import org.springframework.util.Assert;
-import org.springframework.webflow.conversation.ConversationId;
-import org.springframework.webflow.conversation.ConversationManager;
+import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.BadlyFormattedFlowExecutionKeyException;
-import org.springframework.webflow.execution.repository.continuation.FlowExecutionContinuation;
 
 /**
- * A flow execution key consisting of two parts:
+ * A flow execution key that consists of two parts:
  * <ol>
- * <li>A <i>conversationId</i>, identifying an active conversation managed by a {@link ConversationManager}.
- * <li>A <i>continuationId</i>, identifying a restorable {@link FlowExecutionContinuation} within a continuation group
- * governed by that conversation.
+ * <li>A <i>executionId</i>, identifying a logical {@link FlowExecution} that is running.
+ * <li>A <i>snapshotId</i>, identifying a physical flow execution snapshot that can be restored.
  * </ol>
- * <p>
- * This key is used to restore a FlowExecution from a conversation-service backed store.
- * 
- * @see ConversationManager
- * @see FlowExecutionContinuation
- * 
  * @author Keith Donald
  */
 public class CompositeFlowExecutionKey extends FlowExecutionKey {
 
-	/**
-	 * The default conversation id prefix delimiter.
-	 */
-	private static final String CONVERSATION_ID_PREFIX = "c";
+	private static final String EXECUTION_ID_PREFIX = "e";
 
-	/**
-	 * The default continuation id prefix delimiter.
-	 */
-	private static final String CONTINUATION_ID_PREFIX = "v";
+	private static final String SNAPSHOT_ID_PREFIX = "s";
 
-	/**
-	 * The format of the default string-encoded form, as returned by toString().
-	 */
-	private static final String FORMAT = CONVERSATION_ID_PREFIX + "<conversationId>" + CONTINUATION_ID_PREFIX
-			+ "<continuationId>";
+	private static final String FORMAT = EXECUTION_ID_PREFIX + "<executionId>" + SNAPSHOT_ID_PREFIX + "<snapshotId>";
 
-	/**
-	 * The conversation id.
-	 */
-	private ConversationId conversationId;
+	private Serializable executionId;
 
-	/**
-	 * The continuation id.
-	 */
-	private Serializable continuationId;
+	private Serializable snapshotId;
 
 	/**
 	 * Create a new composite flow execution key given the composing parts.
-	 * @param conversationId the conversation id
-	 * @param continuationId the continuation id
+	 * @param executionId the execution id
+	 * @param snapshotId the snapshot id
 	 */
-	public CompositeFlowExecutionKey(ConversationId conversationId, Serializable continuationId) {
-		Assert.notNull(conversationId, "The conversation id is required");
-		Assert.notNull(continuationId, "The continuation id is required");
-		this.conversationId = conversationId;
-		this.continuationId = continuationId;
+	public CompositeFlowExecutionKey(Serializable executionId, Serializable snapshotId) {
+		Assert.notNull(executionId, "The execution id is required");
+		Assert.notNull(snapshotId, "The snapshot id is required");
+		this.executionId = executionId;
+		this.snapshotId = snapshotId;
 	}
 
 	/**
-	 * Returns the conversation id.
+	 * Returns the execution id part of this key.
 	 */
-	public ConversationId getConversationId() {
-		return conversationId;
+	public Serializable getExecutionId() {
+		return executionId;
 	}
 
 	/**
-	 * Returns the continuation id.
+	 * Returns the snapshot id part of this key.
 	 */
-	public Serializable getContinuationId() {
-		return continuationId;
+	public Serializable getSnapshotId() {
+		return snapshotId;
 	}
 
 	public boolean equals(Object obj) {
@@ -98,16 +73,16 @@ public class CompositeFlowExecutionKey extends FlowExecutionKey {
 			return false;
 		}
 		CompositeFlowExecutionKey other = (CompositeFlowExecutionKey) obj;
-		return conversationId.equals(other.conversationId) && continuationId.equals(other.continuationId);
+		return executionId.equals(other.executionId) && snapshotId.equals(other.snapshotId);
 	}
 
 	public int hashCode() {
-		return conversationId.hashCode() + continuationId.hashCode();
+		return executionId.hashCode() + snapshotId.hashCode();
 	}
 
 	public String toString() {
-		return new StringBuffer().append(CONVERSATION_ID_PREFIX).append(getConversationId()).append(
-				CONTINUATION_ID_PREFIX).append(getContinuationId()).toString();
+		return new StringBuffer().append(EXECUTION_ID_PREFIX).append(executionId).append(SNAPSHOT_ID_PREFIX).append(
+				snapshotId).toString();
 	}
 
 	// static helpers
@@ -123,18 +98,18 @@ public class CompositeFlowExecutionKey extends FlowExecutionKey {
 	 * Helper that splits the string-form of an instance of this class into its "parts" so the parts can be easily
 	 * parsed.
 	 * @param encodedKey the string-encoded composite flow execution key
-	 * @return the composite key parts as a String array (conversationId = 0, continuationId = 1)
+	 * @return the composite key parts as a String array (executionId = 0, snapshotId = 1)
 	 */
 	public static String[] keyParts(String encodedKey) throws BadlyFormattedFlowExecutionKeyException {
-		if (!encodedKey.startsWith(CONVERSATION_ID_PREFIX)) {
+		if (!encodedKey.startsWith(EXECUTION_ID_PREFIX)) {
 			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, FORMAT);
 		}
-		int continuationStart = encodedKey.indexOf(CONTINUATION_ID_PREFIX, CONVERSATION_ID_PREFIX.length());
-		if (continuationStart == -1) {
+		int snapshotStart = encodedKey.indexOf(SNAPSHOT_ID_PREFIX, EXECUTION_ID_PREFIX.length());
+		if (snapshotStart == -1) {
 			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, FORMAT);
 		}
-		String conversationId = encodedKey.substring(CONVERSATION_ID_PREFIX.length(), continuationStart);
-		String continuationId = encodedKey.substring(continuationStart + CONTINUATION_ID_PREFIX.length());
-		return new String[] { conversationId, continuationId };
+		String executionId = encodedKey.substring(EXECUTION_ID_PREFIX.length(), snapshotStart);
+		String snapshotId = encodedKey.substring(snapshotStart + SNAPSHOT_ID_PREFIX.length());
+		return new String[] { executionId, snapshotId };
 	}
 }

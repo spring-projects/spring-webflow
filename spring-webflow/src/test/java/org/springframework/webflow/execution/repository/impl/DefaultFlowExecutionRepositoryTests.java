@@ -11,6 +11,7 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.conversation.NoSuchConversationException;
+import org.springframework.webflow.conversation.impl.BadlyFormattedConversationIdException;
 import org.springframework.webflow.conversation.impl.SimpleConversationId;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
@@ -53,18 +54,18 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 	}
 
 	public void testParseFlowExecutionKey() {
-		String key = "c12345v54321";
+		String key = "e12345s54321";
 		FlowExecutionKey k = repository.parseFlowExecutionKey(key);
 		assertEquals(key, k.toString());
 	}
 
 	public void testParseBadlyFormattedFlowExecutionKey() {
-		String key = "c12345";
+		String key = "e12345";
 		try {
 			repository.parseFlowExecutionKey(key);
 			fail("Should have failed");
 		} catch (BadlyFormattedFlowExecutionKeyException e) {
-			assertEquals("c12345", e.getInvalidKey());
+			assertEquals("e12345", e.getInvalidKey());
 			assertNotNull(e.getFormat());
 		}
 	}
@@ -81,19 +82,19 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 	}
 
 	public void testGetLock() {
-		FlowExecutionKey key = repository.parseFlowExecutionKey("c12345v54321");
+		FlowExecutionKey key = repository.parseFlowExecutionKey("e12345s54321");
 		FlowExecutionLock lock = repository.getLock(key);
 		assertNotNull(lock);
 		lock.unlock();
 	}
 
 	public void testGetLockNoSuchFlowExecution() {
-		FlowExecutionKey key = repository.parseFlowExecutionKey("cbogusv54321");
+		FlowExecutionKey key = repository.parseFlowExecutionKey("e99999s54321");
 		try {
 			repository.getLock(key);
 			fail("should have failed");
 		} catch (NoSuchFlowExecutionException e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -184,12 +185,16 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 
 		public ConversationId parseConversationId(String encodedId) throws ConversationException {
-			return new SimpleConversationId(encodedId);
+			try {
+				return new SimpleConversationId(new Integer(Integer.parseInt(encodedId)));
+			} catch (NumberFormatException e) {
+				throw new BadlyFormattedConversationIdException(encodedId, e);
+			}
 		}
 
 		private static class StubConversation implements Conversation {
 
-			private final ConversationId ID = new SimpleConversationId("12345");
+			private final ConversationId ID = new SimpleConversationId(new Integer(12345));
 
 			private boolean locked;
 

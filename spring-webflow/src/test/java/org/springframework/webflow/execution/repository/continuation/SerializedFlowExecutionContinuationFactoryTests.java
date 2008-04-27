@@ -21,7 +21,7 @@ import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
 
 public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 	private Flow flow;
-	private SerializedFlowExecutionContinuationFactory factory;
+	private SerializedFlowExecutionSnapshotFactory factory;
 	private FlowExecutionStateRestorer stateRestorer;
 	private FlowExecutionKeyFactory executionKeyFactory;
 
@@ -31,7 +31,7 @@ public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		factory = new SerializedFlowExecutionContinuationFactory();
+		factory = new SerializedFlowExecutionSnapshotFactory();
 		stateRestorer = new FlowExecutionImplStateRestorer(new FlowDefinitionLocator() {
 			public FlowDefinition getFlowDefinition(String flowId) throws NoSuchFlowDefinitionException,
 					FlowDefinitionConstructionException {
@@ -45,7 +45,7 @@ public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
-		FlowExecutionContinuation continuation = factory.createContinuation(flowExecution);
+		FlowExecutionSnapshot continuation = factory.createSnapshot(flowExecution);
 		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) continuation.unmarshal();
 		assertNotSame(flowExecution, flowExecution2);
 		stateRestorer.restoreState(flowExecution2, null, flowExecution.getConversationScope(), executionKeyFactory);
@@ -60,9 +60,9 @@ public class SerializedFlowExecutionContinuationFactoryTests extends TestCase {
 		FlowExecution flowExecution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		flowExecution.start(null, new MockExternalContext());
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
-		FlowExecutionContinuation continuation = factory.createContinuation(flowExecution);
+		FlowExecutionSnapshot continuation = factory.createSnapshot(flowExecution);
 		byte[] bytes = continuation.toByteArray();
-		FlowExecutionContinuation continuation2 = factory.restoreContinuation(bytes);
+		FlowExecutionSnapshot continuation2 = factory.restoreSnapshot(bytes);
 		assertEquals(continuation, continuation2);
 		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) continuation2.unmarshal();
 		assertNotSame(flowExecution, flowExecution2);

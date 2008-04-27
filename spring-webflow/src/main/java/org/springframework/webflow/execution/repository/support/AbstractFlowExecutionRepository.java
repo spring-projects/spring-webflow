@@ -46,7 +46,7 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
  * rehydrate a flow execution after it has been obtained from storage from resume.
  * <p>
  * The configured {@link FlowExecutionStateRestorer} should be compatible with the chosen {@link FlowExecution}
- * implementation and is configuration as done by a {@link FlowExecutionFactory} (listeners, execution attributes, ...).
+ * implementation and its {@link FlowExecutionFactory}.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -122,14 +122,9 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 					"The string-encoded flow execution key is required");
 		}
 		String[] keyParts = CompositeFlowExecutionKey.keyParts(encodedKey);
-		ConversationId conversationId;
-		try {
-			conversationId = conversationManager.parseConversationId(keyParts[0]);
-		} catch (ConversationException e) {
-			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, CompositeFlowExecutionKey.getFormat(), e);
-		}
-		Serializable continuationId = parseContinuationId(keyParts[1], encodedKey);
-		return new CompositeFlowExecutionKey(conversationId, continuationId);
+		Serializable executionId = parseExecutionId(keyParts[0], encodedKey);
+		Serializable snapshotId = parseSnapshotId(keyParts[1], encodedKey);
+		return new CompositeFlowExecutionKey(executionId, snapshotId);
 	}
 
 	public FlowExecutionLock getLock(FlowExecutionKey key) throws FlowExecutionRepositoryException {
@@ -170,10 +165,9 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	protected FlowExecutionKey getNextKey(FlowExecution execution) {
 		if (alwaysGenerateNewNextKey) {
-			CompositeFlowExecutionKey key = (CompositeFlowExecutionKey) execution.getKey();
-			Integer continuationId = (Integer) key.getContinuationId();
-			Integer nextId = nextContinuationId(continuationId);
-			return new CompositeFlowExecutionKey(key.getConversationId(), nextId);
+			CompositeFlowExecutionKey currentKey = (CompositeFlowExecutionKey) execution.getKey();
+			Integer currentSnapshotId = (Integer) currentKey.getSnapshotId();
+			return new CompositeFlowExecutionKey(currentKey.getExecutionId(), nextSnapshotId(currentSnapshotId));
 		} else {
 			return execution.getKey();
 		}
@@ -187,26 +181,11 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	protected Conversation getConversation(FlowExecutionKey key) throws NoSuchFlowExecutionException {
 		try {
-			return conversationManager.getConversation(getConversationId(key));
+			ConversationId conversationId = (ConversationId) ((CompositeFlowExecutionKey) key).getExecutionId();
+			return conversationManager.getConversation(conversationId);
 		} catch (NoSuchConversationException e) {
 			throw new NoSuchFlowExecutionException(key, e);
 		}
-	}
-
-	/**
-	 * Returns the conversationId portion of the flow execution key.
-	 * @param key the execution key
-	 */
-	protected ConversationId getConversationId(FlowExecutionKey key) {
-		return ((CompositeFlowExecutionKey) key).getConversationId();
-	}
-
-	/**
-	 * Returns the continuationId portion of the flow execution key.
-	 * @param key the execution key
-	 */
-	protected Serializable getContinuationId(FlowExecutionKey key) {
-		return ((CompositeFlowExecutionKey) key).getContinuationId();
 	}
 
 	/**
@@ -251,15 +230,25 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		return conversation;
 	}
 
-	private Integer nextContinuationId(Integer continuationId) {
+	private Integer nextSnapshotId(Integer currentSnapshotId) {
 		if (JdkVersion.isAtLeastJava15()) {
-			return Integer.valueOf(continuationId.intValue() + 1);
+			return Integer.valueOf(currentSnapshotId.intValue() + 1);
 		} else {
-			return new Integer(continuationId.intValue() + 1);
+			return new Integer(currentSnapshotId.intValue() + 1);
 		}
 	}
 
-	private Serializable parseContinuationId(String encodedId, String encodedKey) {
+	private ConversationId parseExecutionId(String encodedId, String encodedKey)
+			throws BadlyFormattedFlowExecutionKeyException {
+		try {
+			return conversationManager.parseConversationId(encodedId);
+		} catch (ConversationException e) {
+			throw new BadlyFormattedFlowExecutionKeyException(encodedKey, CompositeFlowExecutionKey.getFormat(), e);
+		}
+	}
+
+	private Serializable parseSnapshotId(String encodedId, String encodedKey)
+			throws BadlyFormattedFlowExecutionKeyException {
 		try {
 			return Integer.valueOf(encodedId);
 		} catch (NumberFormatException e) {

@@ -32,73 +32,66 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * A continuation implementation that is based on standard Java serialization, created by a
- * {@link SerializedFlowExecutionContinuationFactory}.
+ * A snapshot implementation that is based on standard Java serialization, created by a
+ * {@link SerializedFlowExecutionSnapshotFactory}.
  * 
- * @see SerializedFlowExecutionContinuationFactory
+ * @see SerializedFlowExecutionSnapshotFactory
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class SerializedFlowExecutionContinuation extends FlowExecutionContinuation implements Externalizable {
+class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements Externalizable {
 
-	/**
-	 * The serialized flow execution.
-	 */
 	private byte[] flowExecutionData;
 
-	/**
-	 * Whether or not the flow execution byte array is compressed.
-	 */
 	private boolean compressed;
 
 	/**
 	 * Default constructor necessary for {@link Externalizable} custom serialization semantics. Should not be called by
 	 * application code.
 	 */
-	public SerializedFlowExecutionContinuation() {
+	public SerializedFlowExecutionSnapshot() {
 	}
 
 	/**
-	 * Creates a new serialized flow execution continuation. This will marshall given flow execution into a serialized
-	 * continuation form.
+	 * Creates a new serialized flow execution snapshot.
 	 * @param flowExecution the flow execution
-	 * @param compress whether or not the flow execution should be compressed
+	 * @param compress whether or not to apply compression during snapshotting
 	 */
-	public SerializedFlowExecutionContinuation(FlowExecution flowExecution, boolean compress)
-			throws ContinuationCreationException {
+	public SerializedFlowExecutionSnapshot(FlowExecution flowExecution, boolean compress)
+			throws SnapshotCreationException {
 		try {
 			flowExecutionData = serialize(flowExecution);
 			if (compress) {
 				flowExecutionData = compress(flowExecutionData);
 			}
 		} catch (NotSerializableException e) {
-			throw new ContinuationCreationException(flowExecution, "Could not serialize flow execution; "
+			throw new SnapshotCreationException(flowExecution, "Could not serialize flow execution; "
 					+ "make sure all objects stored in flow or flash scope are serializable", e);
 		} catch (IOException e) {
-			throw new ContinuationCreationException(flowExecution,
+			throw new SnapshotCreationException(flowExecution,
 					"IOException thrown serializing flow execution -- this should not happen!", e);
 		}
 		this.compressed = compress;
 	}
 
 	/**
-	 * Returns whether or not the flow execution data in this continuation is compressed.
+	 * Returns whether or not the flow execution data in this snapshot is compressed.
 	 */
 	public boolean isCompressed() {
 		return compressed;
 	}
 
-	public FlowExecution unmarshal() throws ContinuationUnmarshalException {
+	public FlowExecution unmarshal() throws SnapshotUnmarshalException {
 		try {
 			return deserialize(getFlowExecutionData());
 		} catch (IOException e) {
-			throw new ContinuationUnmarshalException(
-					"IOException thrown deserializing the flow execution stored in this continuation -- this should not happen!",
+			throw new SnapshotUnmarshalException(
+					"IOException thrown deserializing the flow execution stored in this snapshot -- this should not happen!",
 					e);
 		} catch (ClassNotFoundException e) {
-			throw new ContinuationUnmarshalException(
-					"ClassNotFoundException thrown deserializing the flow execution stored in this continuation -- "
+			throw new SnapshotUnmarshalException(
+					"ClassNotFoundException thrown deserializing the flow execution stored in this snapshot -- "
 							+ "This should not happen! Make sure there are no classloader issues. "
 							+ "For example, perhaps the Web Flow system is being loaded by a classloader "
 							+ "that is a parent of the classloader loading application classes?", e);
@@ -122,10 +115,10 @@ class SerializedFlowExecutionContinuation extends FlowExecutionContinuation impl
 	}
 
 	public boolean equals(Object o) {
-		if (!(o instanceof SerializedFlowExecutionContinuation)) {
+		if (!(o instanceof SerializedFlowExecutionSnapshot)) {
 			return false;
 		}
-		SerializedFlowExecutionContinuation c = (SerializedFlowExecutionContinuation) o;
+		SerializedFlowExecutionSnapshot c = (SerializedFlowExecutionSnapshot) o;
 		return Arrays.equals(flowExecutionData, c.flowExecutionData);
 	}
 
@@ -156,7 +149,7 @@ class SerializedFlowExecutionContinuation extends FlowExecutionContinuation impl
 		compressed = in.readBoolean();
 	}
 
-	// internal helpers
+	// subclassing hooks
 
 	/**
 	 * Return the flow execution data in its raw byte[] form. Will decompress if necessary.

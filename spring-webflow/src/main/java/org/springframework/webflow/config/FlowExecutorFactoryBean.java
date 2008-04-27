@@ -175,7 +175,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 		DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
 				executionStateRestorer);
 		if (maxFlowExecutionSnapshots != null) {
-			repository.setMaxContinuations(maxFlowExecutionSnapshots.intValue());
+			repository.setMaxSnapshots(maxFlowExecutionSnapshots.intValue());
 		}
 		return repository;
 	}

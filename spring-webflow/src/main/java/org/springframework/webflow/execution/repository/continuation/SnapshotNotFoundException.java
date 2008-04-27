@@ -15,36 +15,35 @@
  */
 package org.springframework.webflow.execution.repository.continuation;
 
-import org.springframework.webflow.execution.FlowExecution;
+import java.io.Serializable;
+
 import org.springframework.webflow.execution.repository.FlowExecutionRepositoryException;
 
 /**
- * Thrown when a continuation snapshot could not be taken of flow execution state.
+ * Thrown when a flow execution snapshot cannot be found This usually occurs when the client references a snapshot that
+ * has since been removed.
  * 
  * @author Keith Donald
+ * @author Erwin Vervaet
  */
-public class ContinuationCreationException extends FlowExecutionRepositoryException {
+public class SnapshotNotFoundException extends FlowExecutionRepositoryException {
+
+	private Serializable snapshotId;
 
 	/**
-	 * The flow execution that could not be snapshotted.
+	 * Creates a snapshot not found exception.
+	 * @param snapshotId the snapshot id that could not be found
 	 */
-	private FlowExecution flowExecution;
-
-	/**
-	 * Creates a new continuation creation exception.
-	 * @param flowExecution the flow execution
-	 * @param message a descriptive message
-	 * @param cause the cause
-	 */
-	public ContinuationCreationException(FlowExecution flowExecution, String message, Throwable cause) {
-		super(message, cause);
-		this.flowExecution = flowExecution;
+	public SnapshotNotFoundException(Serializable snapshotId) {
+		super("No flow execution snapshot could be found with id '" + snapshotId
+				+ "'; perhaps the snapshot has been removed? ");
+		this.snapshotId = snapshotId;
 	}
 
 	/**
-	 * Returns the flow execution that could not be snapshotted.
+	 * The id of the snapshot that was not found.
 	 */
-	public FlowExecution getFlowExecution() {
-		return flowExecution;
+	public Serializable getSnapshotId() {
+		return snapshotId;
 	}
 }

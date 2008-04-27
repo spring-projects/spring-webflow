@@ -18,27 +18,26 @@ package org.springframework.webflow.execution.repository.continuation;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * A factory for creating different {@link FlowExecutionContinuation} implementations.
+ * A factory for creating different {@link FlowExecutionSnapshot} implementations.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-public interface FlowExecutionContinuationFactory {
+public interface FlowExecutionSnapshotFactory {
 
 	/**
-	 * Creates a new flow execution continuation for given flow execution.
+	 * Takes a snapshot of the flow execution.
 	 * @param flowExecution the flow execution
-	 * @return the continuation
-	 * @throws ContinuationCreationException when the continuation cannot be created
+	 * @return the new snapshot
+	 * @throws SnapshotCreationException if the snapshot could not be created
 	 */
-	public FlowExecutionContinuation createContinuation(FlowExecution flowExecution)
-			throws ContinuationCreationException;
+	public FlowExecutionSnapshot createSnapshot(FlowExecution flowExecution) throws SnapshotCreationException;
 
 	/**
-	 * Restore a flow execution continuation object from the provided byte array.
-	 * @param bytes the flow execution byte array
-	 * @return the continuation
-	 * @throws ContinuationUnmarshalException when the continuation cannot be restored
+	 * Restore a flow execution snapshot from a byte array.
+	 * @param bytes the byte array
+	 * @return the snapshot
+	 * @throws SnapshotUnmarshalException if the snapshot could not be restored
 	 */
-	public FlowExecutionContinuation restoreContinuation(byte[] bytes) throws ContinuationUnmarshalException;
+	public FlowExecutionSnapshot restoreSnapshot(byte[] bytes) throws SnapshotUnmarshalException;
 }
