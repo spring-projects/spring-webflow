@@ -26,9 +26,9 @@ Java SE 5.0 with Ant 1.7 is required to build.
 
 Release distribution contents:
 
-"." contains the Web Flow distribution readme and copyright
+"." contains the Web Flow distribution readme, license, changelog, and copyright
 "dist" contains the Web Flow distribution jar files
-"src" contains the Web FLow distribution source jar files
+"src" contains the Web Flow distribution source jar files
 "docs" contains the Spring Web Flow reference manual and API Javadocs
 "projects" contains all buildable projects, including sample applications
 "projects/build-spring-webflow" is the directory to access to build the Web Flow distribution
