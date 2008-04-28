@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Strategy interface that encapsulates knowledge about a client-side ajax system and how to communicate with that
  * system.
+ * 
  * @author Keith Donald
  */
 public interface AjaxHandler {
