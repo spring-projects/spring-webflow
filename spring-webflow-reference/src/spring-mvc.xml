@@ -176,7 +176,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 			<programlisting language="xml"><![CDATA[
 <!-- Enables FlowHandler URL mapping -->
 <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-    <constructor-arg ref="flowExecutor" />
+    <property name="flowExecutor" ref="flowExecutor" />
 </bean>
 ]]>
 			</programlisting>
@@ -198,7 +198,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		</para>
 		<programlisting language="xml"><![CDATA[
 <bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
-   <constructor-arg ref="flowExecutor"/>
+    <property name="flowExecutor" ref="flowExecutor" />
 </bean>]]>
 		</programlisting>
 		<para>

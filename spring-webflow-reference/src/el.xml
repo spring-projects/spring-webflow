@@ -197,6 +197,15 @@
 <evaluate expression="bookingValidator.validate(booking, messageContext)" />]]>
 			</programlisting>
 		</sect2>
+		<sect2 id="el-variable-resourceBundle">
+			<title>resourceBundle</title>
+			<para>
+				Use <code>resourceBundle</code> to access a message resource.
+			</para>
+			<programlisting type="xml"><![CDATA[
+<set name="flashScope.successMessage" value="resourceBundle.successMessage" />]]>
+			</programlisting>
+		</sect2>
 		<sect2 id="el-variable-requestContext">
 			<title>flowRequestContext</title>
 			<para>

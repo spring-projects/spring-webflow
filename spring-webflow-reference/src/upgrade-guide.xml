@@ -129,7 +129,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 					This element replaces previous <code>FlowExecutorFactoryBean</code> bean definitions.
 				</para>
 				<programlisting language="xml"><![CDATA[
-<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"/>
+<webflow:flow-executor id="flowExecutor" />
 				]]></programlisting>
 			</sect3>
 			<sect3 id="upgrade-guide-webflow-config-schema-listeners">

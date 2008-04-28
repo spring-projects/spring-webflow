@@ -216,7 +216,7 @@ public void validateEnterBookingDetails(MessageContext context) {
 				<para>
 					The second way is to define a separate object, called a Validator, which validates your model object.
 					To do this, create a class that defines a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
-					The method must declare a <code>Object</code> parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
+					The method must declare a parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
@@ -331,6 +331,12 @@ context.addMessage(builder.info().code("reservationConfirmation").build());]]>
 checkinDate=Check in date must be a future date
 notHealthy={0} is bad for your health
 reservationConfirmation=We have processed your reservation - thank you and enjoy your stay]]>
+			</programlisting>
+			<para>
+				From within a view or a flow, you may also access message resources using the <code>resourceBundle</code> EL variable:
+			</para>
+			<programlisting type="properties"><![CDATA[
+<h:outputText value="#{resourceBundle.reservationConfirmation}" />]]>
 			</programlisting>
 		</sect2>
 	</sect1>

@@ -19,18 +19,11 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
-import org.springframework.util.Assert;
-import org.springframework.web.servlet.HandlerAdapter;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.WebContentGenerator;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -41,6 +34,8 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
+
+import com.sun.tools.javac.tree.Tree$Assert;
 
 /**
  * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows in a Servlet
@@ -365,8 +360,12 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		sendRedirect(url.toString(), response);
 	}
 
-	private void sendRedirect(String url, HttpServletResponse response) throws IOException {
-		response.sendRedirect(response.encodeRedirectURL(url));
+	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if (ajaxHandler.isAjaxRequest(getServletContext(), request, response)) {
+			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, url, false);
+		} else {
+			response.sendRedirect(response.encodeRedirectURL(url));
+		}
 	}
 
 	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,

@@ -4,29 +4,24 @@
     <sect1 id="spring-js-introduction">
         <title>Introduction</title>
         <para>
-            Spring Javascript is intended to be a lightweight wrapper around common JavaScript toolkits such as Dojo. It
-            aims to provide a common client-side programming model for progressively enhancing a web page with rich
-            widget behavior and Ajax remoting.
+            Spring Javascript (spring-js) is a lightweight abstraction over common JavaScript toolkits such as Dojo.
+            It aims to provide a common client-side programming model for progressively enhancing a web page with rich widget behavior and Ajax remoting.
         </para>
         <para>
-            The Spring Javascript library has been used to apply rich functionality to the Spring MVC + Spring Web Flow
-            version of the Spring Travel application.
+            Use of the Spring JS API is demonstrated in the the Spring MVC + Web Flow version of the Spring Travel reference application.
+            In addition, the JSF components provided as part of the Spring Faces library build in Spring.js.
         </para>
     </sect1>
     <sect1 id="spring-js-includes">
         <title>Including Spring Javascript in a Page</title>
         <para>
-            Spring Javascript is designed such that an implementation of its API can be built for any of the popular
-            Javascript toolkits. The first implementation provided is for the Dojo toolkit. (Implementations for jQuery,
-            Ext, Prototype and YUI will be considered in future releases.) Using Spring Javascript in a page requires
-            including both the underlying library as normal, the
-            <code>Spring.js</code>
-            base interface file and the
-            <code>Spring-(library implementation).js</code>
-            file for the corresponding toolkit, in this case
-            <code>Spring-Dojo.js</code>
-            . The following scripts includes are used to serve the files from the
-            <code>ResourceServlet</code>
+            Spring Javascript is designed such that an implementation of its API can be built for any of the popular Javascript toolkits.
+            The initial implementation provided is for the Dojo toolkit.
+        </para>
+        <para>
+            Using Spring Javascript in a page requires including the underlying toolkit as normal,
+            the <code>Spring.js</code> base interface file, and the <code>Spring-(library implementation).js</code> file for the underlying toolkit.
+            As an example, the following script includes obtain the Dojo implementation of Spring.js:
         </para>
         <programlisting language="xml"><![CDATA[
 <script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js" />"> </script>
@@ -34,10 +29,8 @@
 <script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js" />"> </script>]]>
         </programlisting>
         <para>
-            When using the widget system from an underlying library, typically you must also include some CSS resources
-            to obtain the desired look and feel. For the Dojo-based sample, Dojo's
-            <code>tundra.css</code>
-            is included:
+            When using the widget system of an underlying library, typically you must also include some CSS resources to obtain the desired look and feel.
+            For the Dojo-based reference application, Dojo's <code>tundra.css</code> is included:
         </para>
         <programlisting><![CDATA[
 <link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />]]>
@@ -46,105 +39,84 @@
     <sect1 id="spring-js-decorations">
         <title>Spring Javascript Decorations</title>
         <para>
-            A central concept in Spring Javascript is the notion of applying decorations to existing DOM nodes. This
-            technique is used to progressively enhance a web page such that the page will still be functional in a less
-            capable browser. The
-            <code>addDecoration</code>
-            method is used to apply decorations. For example, to enhance a Spring MVC
-            <code>&lt;form:input&gt;</code>
-            tag with rich suggestion behavior:
+            A central concept in Spring Javascript is the notion of applying decorations to existing DOM nodes.
+            This technique is used to progressively enhance a web page such that the page will still be functional in a less capable browser.
+            The <code>addDecoration</code> method is used to apply decorations.
+        </para>
+        <para>
+	         The following example illustrates enhancing a Spring MVC <code>&lt;form:input&gt;</code> tag with rich suggestion behavior:
         </para>
         <programlisting><![CDATA[
 <form:input id="searchString" path="searchString"/>
 <script type="text/javascript">
     Spring.addDecoration(new Spring.ElementDecoration({
-	    elementId : "searchString",
-	    widgetType : "dijit.form.ValidationTextBox",
-        widgetAttrs : { promptMessage : "Search hotels by name, address, city, or zip." }}));
+        elementId: "searchString",
+        widgetType: "dijit.form.ValidationTextBox",
+        widgetAttrs: { promptMessage : "Search hotels by name, address, city, or zip." }}));
 </script>]]>
         </programlisting>
         <para>
-            The
-            <code>ElementDecoration</code>
-            is used to apply rich widget behavior to an existing DOM node. This decoration type does not aim to
-            completely hide the underlying toolkit, so the toolkit's native widget type and widget attributes are used
-            directly. This approach will allow you to use this common decoration model to apply any rich widget from the
-            underlying toolkit in a consistent manner.
+            The <code>ElementDecoration</code> is used to apply rich widget behavior to an existing DOM node.
+            This decoration type does not aim to completely hide the underlying toolkit, so the toolkit's native widget type and attributes are used directly.
+            This approach allows you to use a common decoration model to integrate any widget from the underlying toolkit in a consistent manner.
+            See the <code>booking-mvc</code> reference application for more examples of applying decorations to do things from suggestions to client-side validation.
         </para>
         <para>
-            When using the
-            <code>ElementDecoration</code>
-            to apply widgets that have rich validation behavior, a common need is to prevent the form from being
-            submitted to the server until validation passes. This can be done with the
-            <code>ValidateAllDecoration</code>
-            :
+            When using the <code>ElementDecoration</code> to apply widgets that have rich validation behavior, a common need is to prevent the form from being submitted to the server until validation passes.
+            This can be done with the <code>ValidateAllDecoration</code>:
         </para>
         <programlisting><![CDATA[
 <input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />
 <script type="text/javascript">
-	Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+    Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick' }));
 </script>]]>
         </programlisting>
         <para>
-            This decorates the "Proceed" button with a special onclick event handler that fires the client side
-            validators and does not allow the form to submit until they pass successfully.
+            This decorates the "Proceed" button with a special onclick event handler that fires the client side validators and does not allow the form to submit until they pass successfully.
         </para>
         <para>
-            An
-            <code>AjaxEventDecoration</code>
-            will apply a client-side event listener that fires a remote Ajax request to the server and installs a
-            callback for automatically handling the response:
+            An <code>AjaxEventDecoration</code> applies a client-side event listener that fires a remote Ajax request to the server.  It also auto-registers a callback function to link in the response:
         </para>
         <programlisting><![CDATA[
-<a id="prevResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&
-page=${searchCriteria.page - 1}">Previous Results</a>
+<a id="prevResultsLink" href="search?searchString=${searchCriteria.searchString}&page=${searchCriteria.page - 1}">Previous Results</a>
 <script type="text/javascript">
-	Spring.addDecoration(new Spring.AjaxEventDecoration({
-    	elementId: "prevResultsLink",
-	    event: "onclick",
-	    params: {fragments: "body"}
+    Spring.addDecoration(new Spring.AjaxEventDecoration({
+        elementId: "prevResultsLink",
+        event: "onclick",
+        params: { fragments: "body" }
     }));
 </script>]]>
         </programlisting>
         <para>
-            This decorates the onclick event of the "Previous Results" link with an Ajax call, passing along a special
-            parameter that specifies the fragment to be re-rendered in the response. Note that this link would still be
-            fully functional if Javascript was unavailable in the client. (See the section on
-            <link linkend="spring-js-ajax">Handling Ajax Requests</link>
-            for details on how this request is handled on the server.)
+            This decorates the onclick event of the "Previous Results" link with an Ajax call, passing along a special parameter that specifies the fragment to be re-rendered in the response.
+            Note that this link would still be fully functional if Javascript was unavailable in the client.
+            (See the section on <link linkend="spring-js-ajax">Handling Ajax Requests</link> for details on how this request is handled on the server.)
         </para>
         <para>
-            Sometimes it is necessary to calling Spring Javascript's
-            <code>RemotingHandler</code>
-            directly instead of using the
-            <code>AjaxEventDecoration</code>
-            . For example, see inline
-            <code>onclick</code>
-            handler of this button:
+            Sometimes it is necessary to call Spring Javascript's <code>RemotingHandler</code> directly instead of using the <code>AjaxEventDecoration</code>.
+            For example, see inline <code>onclick</code> handler of this button:
         </para>
         <programlisting><![CDATA[
 <input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" 
-    onclick="Spring.remoting.submitForm('proceed', 'booking', {fragments:'messages,bookingForm'}); return false;" />
+       onclick="Spring.remoting.submitForm('proceed', 'booking', { fragments:'messages,bookingForm' }); return false;" />
 <script type="text/javascript">
-    Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+    Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick'} ));
 </script>]]>
         </programlisting>
     </sect1>
     <sect1 id="spring-js-ajax">
         <title>Handling Ajax Requests</title>
         <para>
-            Spring Javascript's client-side Ajax response handling is built upon the notion of receiving "fragments"
-            back from the server. These fragments are just standard HTML that is meant to replace portions of the
-            existing page. The key piece needed on the server is a way to determine which pieces of a full repsonse need
-            to be pulled out for partial rendering.
+            Spring Javascript's client-side Ajax response handling is built upon the notion of receiving "fragments" back from the server.
+            These fragments are just standard HTML that is meant to replace portions of the existing page.
+            The key piece needed on the server is a way to determine which pieces of a full response need to be pulled out for partial rendering.
         </para>
         <para>
             In order to be able to render partial fragments of a full response, the full response must be built using a
             templating technology that allows the use of composition for constructing the response, and for the member
-            parts of the composition to be referenced and rendered individually. Spring Javascript initially provides
-            some simple Spring MVC extensions that make use of Tiles to achieve this, but the same effect could
-            theoretically be achieved with any templating system that meets the same criteria, and more such options
-            will be explored in future releases.
+            parts of the composition to be referenced and rendered individually.
+            Spring Javascript provides some simple Spring MVC extensions that make use of Tiles to achieve this.
+            The same technique could theoretically be used with any templating system supporting composition.
         </para>
         <para>
             Spring Javascript's Ajax remoting functionality is built upon the notion that the core handling code for an
@@ -164,40 +136,31 @@ page=${searchCriteria.page - 1}">Previous Results</a>
 </bean>]]>
             </programlisting>
             <para>
-                This configures the
-                <code>AjaxUrlBasedViewResolver</code>
-                which in turn is able to interpret Ajax requests and create a
-                <code>FlowAjaxTilesView</code>
-                to handle rendering of the appropriate fragments. Note that
-                <code>FlowAjaxTilesView</code>
-                is capable of handling the rendering for both Web Flow and pure Spring MVC requests. The fragments
-                correspond to individual attributes of a Tiles view definition. For example, take the following Tiles
-                view definition:
+                This configures the <code>AjaxUrlBasedViewResolver</code> which in turn interprets Ajax requests and creates <code>FlowAjaxTilesView</code> objects to handle rendering of the appropriate fragments.
+                Note that <code>FlowAjaxTilesView</code> is capable of handling the rendering for both Web Flow and pure Spring MVC requests.
+                The fragments correspond to individual attributes of a Tiles view definition. For example, take the following Tiles view definition:
             </para>
             <programlisting><![CDATA[
 <definition name="hotels/index" extends="standardLayout">
     <put-attribute name="body" value="index.body" />
 </definition>
+
 <definition name="index.body" template="/WEB-INF/hotels/index.jsp">
     <put-attribute name="hotelSearchForm" value="/WEB-INF/hotels/hotelSearchForm.jsp" />
     <put-attribute name="bookingsTable" value="/WEB-INF/hotels/bookingsTable.jsp" />
 </definition>]]>
             </programlisting>
             <para>
-                An Ajax request could specify the "body", "hotelSearchForm" or "bookingsTable" to be rendered as
-                fragments in the request.
+                An Ajax request could specify the "body", "hotelSearchForm" or "bookingsTable" to be rendered as fragments in the request.
             </para>
         </sect2>
         <sect2 id="spring-js-ajax-mvc-webflow">
             <title>Handling Ajax Requests with Spring MVC + Spring Web Flow</title>
             <para>
-                Spring Web Flow handles the optional rendering of fragments directly in the flow definition language
-                through use of the
-                <code>render</code>
-                element. The benefit of this approach is that the selection of fragments is completely decoupled from
-                client-side code, such that no special parameters need to be passed with the request the way they
-                currently must be with the pure Spring MVC controller approach.  For example, if you wanted to render
-                the "hotelSearchForm" fragment from the previous example Tiles view into a rich Javascript popup: 
+                Spring Web Flow handles the optional rendering of fragments directly in the flow definition language through use of the <code>render</code> element.
+                The benefit of this approach is that the selection of fragments is completely decoupled from client-side code, such that no special parameters need to be passed with the request the way they
+                currently must be with the pure Spring MVC controller approach.
+                For example, if you wanted to render the "hotelSearchForm" fragment from the previous example Tiles view into a rich Javascript popup: 
             </para>
             <programlisting><![CDATA[
 <view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
