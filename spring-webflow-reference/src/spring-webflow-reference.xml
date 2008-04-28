@@ -11,6 +11,7 @@
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
 <!ENTITY system-setup SYSTEM "system-setup.xml">
 <!ENTITY spring-mvc SYSTEM "spring-mvc.xml">
+<!ENTITY spring-js SYSTEM "spring-js.xml">
 <!ENTITY spring-faces SYSTEM "spring-faces.xml">
 <!ENTITY portlet SYSTEM "portlet.xml">
 <!ENTITY testing SYSTEM "testing.xml">
@@ -83,6 +84,7 @@
 	&flow-inheritance;
 	&system-setup;
 	&spring-mvc;
+    &spring-js;
 	&spring-faces;
 	&portlet;
 	&testing;
