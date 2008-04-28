@@ -268,7 +268,7 @@
             <programlisting language="xml"><![CDATA[ 
 <on-render>
     <evaluate expression="bookingService.findBookings(currentUser.name)" 
-        result="viewScope.bookings" result-type="dataModel" />
+              result="viewScope.bookings" result-type="dataModel" />
 </on-render>]]>
             </programlisting>
             <para>
@@ -335,7 +335,7 @@
 <view-state id="reviewHotels">
     <on-render>
         <evaluate expression="bookingService.findHotels(searchCriteria)" 
-            result="viewScope.hotels" result-type="dataModel" />
+                  result="viewScope.hotels" result-type="dataModel" />
     </on-render>
 </view-state>]]>
             </programlisting>
@@ -494,7 +494,7 @@
 <view-state id="reviewHotels">
     <on-render>
         <evaluate expression="bookingService.findHotels(searchCriteria)" 
-            result="viewScope.hotels" result-type="dataModel" />
+                  result="viewScope.hotels" result-type="dataModel" />
     </on-render>
     <transition on="next">
         <evaluate expression="searchCriteria.nextPage()" />
