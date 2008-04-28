@@ -11,7 +11,7 @@
 		</para>
 	</sect1>
 	<sect1 id="portlet-config-core">
-		<title>Configuring web.xml &amp; portlet.xml</title>
+		<title>Configuring web.xml and portlet.xml</title>
 		<para>
 			The configuration for a portlet depends on the portlet container used.
 			The sample applications, included with Web Flow, are both configured to use <ulink url="http://portals.apache.org/pluto/">Apache Pluto</ulink>, the JSR-168 reference implementation.
@@ -97,7 +97,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			]]></programlisting>
 		</sect2>
 		<sect2 id="portlet-config-spring-mappings">
-			<title>Adapter Mappings</title>
+			<title>Handler Mappings</title>
 			<para>
 				Spring Portlet MVC provides a rich set of methods to map portlet requests.
 				Complete documentation  is available in the <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</ulink>.
@@ -133,20 +133,6 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 </bean>
 			]]></programlisting>
 		</sect2>
-		<sect2 id="portlet-config-spring-redirectonpause">
-			<title>Redirect on Pause</title>
-			<para>
-				In a portlet environemnt, <code>always-redirect-on-pause</code> must be set to <code>false</code>.
-				If not turned off, the initial view will fail to render.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-    <webflow:flow-execution-attributes>
-        <webflow:always-redirect-on-pause value="false"/>
-    </webflow:flow-execution-attributes>
-</webflow:flow-executor>
-			]]></programlisting>
-		</sect2>
 	</sect1>
 	<sect1 id="portlet-views">
 		<title>Portlet Views</title>
@@ -179,7 +165,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 requestContext.getExternalContext().getRequestMap().get("portletWindowState");
 			]]></programlisting>
 			<programlisting language="el"><![CDATA[
-${externalContext.requestMap.portletWindowState}
+externalContext.requestMap.portletWindowState
 			]]></programlisting>
 		</sect2>
 		<sect2 id="portlet-modes-mode">
@@ -193,7 +179,7 @@ ${externalContext.requestMap.portletWindowState}
 requestContext.getExternalContext().getRequestMap().get("portletMode");
 			]]></programlisting>
 			<programlisting language="el"><![CDATA[
-${externalContext.requestMap.portletMode}
+externalContext.requestMap.portletMode
 			]]></programlisting>
 		</sect2>
 	</sect1>
@@ -211,6 +197,7 @@ ${externalContext.requestMap.portletMode}
 			<para>
 				The portlet container passes the execution key from the previous flow when switching to a new mode.
 				Even if the mode is mapped to a different <code>FlowHandler</code> the flow execution will resume the previous execution.
+				You may switch the mode programatically when processing a flow event or after ending a flow in an ActionRequest.
 			</para>
 			<para>
 				One way to start a new flow is to create a URL targeting the mode without the execution key.
