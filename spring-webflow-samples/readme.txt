@@ -17,10 +17,10 @@ To build the samples:
 ---------------------
 1. cd to the ../build-spring-webflow directory
 
-2. run 'ant' to build the Spring Web Flow projects and the main-line "booking-faces" and "booking-mvc" sample projects.
-   Built .war files are placed in the target/artifacts directory of each sample.
+2. run 'ant' to build the Spring Web Flow projects and the main-line 'booking-faces' and 'booking-mvc' sample projects.
+   Built .war files are placed in the 'target/artifacts' directory of each sample.
 
-3. After running the master build, you may also cd to any sample directory and run 'ant jar' to build the sample manually.
+3. After running the master build, you may also cd to any sample directory and run 'ant jar' to build a sample manually.
 
 To import Web Flow projects into Eclipse:
 -----------------------------------------
