@@ -12,16 +12,36 @@
             In addition, the JSF components provided as part of the Spring Faces library build on Spring.js.
         </para>
     </sect1>
+    <sect1 id="spring-js-resource-servlet">
+		<title>Serving Javascript Resources</title>
+		<para>
+            Spring JS provides a generic <code>ResourceServlet</code> to serve web resources such as CSS and JavaScript files from jar files and the webapp root directory.
+            To deploy this servlet, declare the following in <code>web.xml</code>:
+        </para>
+        <programlisting><![CDATA[
+<!-- Serves static resource content from .jar files such as spring-js.jar -->
+<servlet>
+    <servlet-name>Resource Servlet</servlet-name>
+    <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+</servlet>
+        
+<!-- Map all /resources requests to the Resource Servlet for handling -->
+<servlet-mapping>
+    <servlet-name>Resources Servlet</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+</servlet-mapping>]]>
+        </programlisting>
+    </sect1>    
     <sect1 id="spring-js-includes">
         <title>Including Spring Javascript in a Page</title>
         <para>
-            Spring Javascript is designed such that an implementation of its API can be built for any of the popular Javascript toolkits.
-            The initial implementation provided is for the Dojo toolkit.
+            Spring JS is designed such that an implementation of its API can be built for any of the popular Javascript toolkits.
+            The initial implementation of Spring.js builds on the Dojo toolkit.
         </para>
         <para>
             Using Spring Javascript in a page requires including the underlying toolkit as normal,
             the <code>Spring.js</code> base interface file, and the <code>Spring-(library implementation).js</code> file for the underlying toolkit.
-            As an example, the following script includes obtain the Dojo implementation of Spring.js:
+            As an example, the following script includes obtain the Dojo implementation of Spring.js from the <code>ResourceServlet</code>:
         </para>
         <programlisting language="xml"><![CDATA[
 <script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js" />"> </script>
@@ -30,7 +50,7 @@
         </programlisting>
         <para>
             When using the widget system of an underlying library, typically you must also include some CSS resources to obtain the desired look and feel.
-            For the Dojo-based reference application, Dojo's <code>tundra.css</code> is included:
+            For the booking-mvc reference application, Dojo's <code>tundra.css</code> is included:
         </para>
         <programlisting><![CDATA[
 <link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />]]>

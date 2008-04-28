@@ -106,7 +106,7 @@
         <programlisting><![CDATA[
 <!-- Serves static resource content from .jar files such as spring-faces.jar -->
 <servlet>
-    <servlet-name>Resources Servlet</servlet-name>
+    <servlet-name>Resource Servlet</servlet-name>
     <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
     <load-on-startup>0</load-on-startup>
 </servlet>
