@@ -65,7 +65,7 @@ Dependencies in [brackets] are optional, and are just necessary for certain func
 
 * spring-faces-2.0.0.jar
 - Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
-- Dependencies: spring-webflow, spring-javascript, JSF API
+- Dependencies: spring-webflow, spring-js, JSF API
                                 
 For an exact list of project dependencies, see each project's ivy file at "projects/${project_name}/ivy.xml".
 
@@ -85,15 +85,15 @@ These jars may be accessed using Maven or Ivy dependency managers.
 To access jars using Maven, add the following repositories to your Maven pom:
 
 <repository>
-    <id>springsource-release</id>
-    <name>SpringSource Release Artifact Repository</name>
-    <url>http://repository.springsource.com/maven/release</url>
+    <id>com.springsource.repository.bundles.release</id>
+    <name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/release</url>
 </repository>
 
 <repository>
-    <id>springsource-external</id>
-    <name>SpringSource External Artifact Repository</name>
-    <url>http://repository.springsource.com/maven/external</url>
+    <id>com.springsource.repository.bundles.external</id>
+    <name>SpringSource Enterprise Bundle Repository - External Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/external</url>
 </repository>
 
 Then declare the following dependencies:
@@ -126,14 +126,14 @@ If using JavaServerFaces:
 
 To access jars using Ivy, add the following repositories to your Ivy config:
 
-<url name="springsource-release">
-    <ivy pattern="http://repository.springsource.com/ivy/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+<url name="com.springsource.repository.bundles.release">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
-<url name="springsource-external">
-    <ivy pattern="http://repository.springsource.com/ivy/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+<url name="com.springsource.repository.bundles.external">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
 Then declare the following dependencies in your ivy.xml:
@@ -151,20 +151,16 @@ Refer to the reference documentation for more in-depth coverage on obtaining Web
 6. ADDITIONAL RESOURCES
 -----------------------
 The Spring Web Flow homepage is located at:
-
     http://www.springframework.org/webflow
 
 There you will find resources such as a 'Quick Start' guide and a 'Frequently Asked Questions' section.
 
 The Spring Web Flow community forums are located at:
-
     http://forum.springframework.org
 	
 There you will find an active community of users collaborating about the project.
 
 The Spring Community portal is located at:
-
     http://www.springframework.org
 
-There you will find links to many resources on Spring Portfolio projects,
-including on-line access to Spring and Spring Web Flow documentation.
+There you will find links to many resources on Spring Portfolio projects, including on-line access to Spring documentation.

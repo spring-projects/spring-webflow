@@ -3,10 +3,21 @@ Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
 Import-Package: javax.servlet;version="[2.4,3.0)",javax.servlet.http;v
  ersion="[2.4,3.0)",org.apache.commons.logging;version="[1.1.1,2.0)",o
- rg.springframework.util;version="[2.5.3,3.0)"
+ rg.apache.tiles;version="[2.0.5,3.0)",org.apache.tiles.access;version
+ ="[2.0.5,3.0)",org.apache.tiles.context;version="[2.0.5.osgi,3.0)",or
+ g.apache.tiles.definition;version="[2.0.5.osgi,3.0)",org.apache.tiles
+ .impl;version="[2.0.5.osgi,3.0)",org.springframework.util;version="[2
+ .5.3,3.0)",org.springframework.web.context;version="[2.5.3,3.0)",org.
+ springframework.web.servlet;version="[2.5.3,3.0)",org.springframework
+ .web.servlet.support;version="[2.5.3,3.0)",org.springframework.web.se
+ rvlet.view;version="[2.5.3,3.0)",org.springframework.web.servlet.view
+ .tiles2;version="[2.5.3,3.0)"
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.springframework.js
-Export-Package: org.springframework.js.resource;version="2.0.0";uses:=
- "javax.servlet,javax.servlet.http"
+Export-Package: org.springframework.js.ajax;version="2.0.0";uses:="jav
+ ax.servlet,javax.servlet.http,org.springframework.web.servlet",org.sp
+ ringframework.js.ajax.tiles2;version="2.0.0";uses:="javax.servlet.htt
+ p",org.springframework.js.resource;version="2.0.0";uses:="javax.servl
+ et,javax.servlet.http"
 Bundle-Version: 2.0.0
 

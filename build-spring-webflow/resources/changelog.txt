@@ -5,9 +5,102 @@ http://www.springframework.org/webflow
 Changes in version 2.0.0 (28.04.2008)
 -------------------------------------
 New Features
-Minor Improvements
+* Formally introduced the Spring Javascript (spring-js) public API and quick reference.
+  The Spring.js library provides a consistent API for decorating HTML DOM nodes with rich widgets such as a filtering select,
+  calendar, validating text box, currency text box, etc.  The API builds on Dojo 1.1 as the underlying widget toolkit.
+
+* Added support for Ajax views with Spring MVC and Tiles.  This enables the rendering of JSP fragments / partials in a plain Spring MVC environment.
+  See the 'booking-mvc' reference application for an example.
+
+* Enhanced the 'booking-mvc' sample to use the Spring.js API for applying Ajax and client-side validation behaviors.
+  This puts the Spring MVC + Web Flow + JSP sample on par with the Spring MVC + Web Flow + JSF sample in terms of "rich web" behavior.
+  Ajax partial rendering, popup dialogs, hover effects, as well as text, number, and date validation are all demonstrated.
+
+* Added support for automatic partial rendering of error messages when validation errors occur.
+
+* Added support for convention-based model validation in a JSF environment, consistent with the rules defined in the reference documentation.
+
+* Added support for accessing flow message bundle resources, such as internationalized labels, using the 'resourceBundle' EL variable.
+  For example: the expression #{resourceBundle.myLabel} would resolve 'myLabel' in your messages.properties file.
+
+* Added support for accessing beans managed by the standard JSF managed-bean facility from a flow definition.
+  This is particularly useful for using Web Flow in existing JSF applications.
+  To enable, set the 'enable-managed-beans' attribute to true in your Faces flow-builder-services configuration.
+
+* Added support for explicit redirect prefixes, respected when requesting external redirects from within a flow or by a FlowHandler.
+  The supported prefixes are:
+      servletRelative:/<path> - relative to the current servlet mapping
+      contextRelative:/<path> - relative to the web application
+      serverRelative:/<path> - relative to the server
+      http://<url> or https://<url> - an absolute URL 
+      No prefix - servlet-mapping relative e.g. '/hotels/index' would be servlet-mapping relative.
+
+* Added instructions on how to obtain Web Flow release artifacts from the SpringSource Enterprise Bundle Repository using Maven or Ivy.
+  See the readme.txt included in this distribution for instructions on how to do this.
+
+Improvements
+* Renamed Web Flow specific terms 'conversation' and 'continuation' to 'flow execution' and 'flow execution snapshot', respectively (SWF-651).
+  With these terms, rather than saying "users participate in conversations and continuations are created to support backtracking",
+  you would simply say "users participate in flow executions and snapshots of execution state are taken to support backtracking".
+  This lexicon improvement resulted in a package rename of repository.continuation to repository.snapshot, as well as several repository class renames.
+  The default encoded flow execution key format is now e<executionId>s<snapshotId> as a result.
+  The webflow-config flow-execution-repository attributes are now 'max-executions' and 'max-snapshots' as a result.
+  The term "Conversation" still has a place, e.g. conversationScope, but this is a concept specific to the base web MVC platform and external to Web Flow.
+
+* Made the FlowExecutionSnapshotFactory of DefaultFlowExecutionRepository pluggable (SWF-530).
+
+* Removed the 'type' attribute of the webflow-config flow-execution-repository element (SWF-651).
+  This element should be used to customize configuration of the default repository implementation.
+  To plug in custom implementations, use regular Spring beans.
+
+* Introduced a FlowExecutionSnapshotGroup hook for customizing the algorithm used to manage the storage of flow execution snapshots (SWF-503).
+
+* Moved the view-state 'history' attribute to the view <transition> element to allow setting history policies per transition (SWF-628).
+
+* Improved the implementation of the Spring MVC integration for both Servlet MVC and Portlet MVC environments.
+  These improvements consisted of:
+  - Eliminating code duplication between FlowController and FlowHandlerAdapter. The FlowController now delegates to a FlowHandlerAdapter internally.
+
+  - Removing the FlowController and FlowHandlerAdapter constructors that accepted a FlowExecutor argument in favor of a default constructor with a flowExecutor property.  
+    This was done for simplicity reasons for their typical use as Spring beans.
+    Please note this change requires a minor update to pre 2.0.0 Web Flow + MVC configurations.
+
+  - Adding support for auto-detecting if Web Flow is running in a Servlet or Portlet MVC environment, and applying the appropriate environmental defaults.
+
+  - Introducing a FlowViewResolver hook for customizing how Spring MVC views are resolved in a Web Flow environment when defining a custom MvcViewFactoryCreator.
+    By default, view ids are resolved to flow-relative file resources.
+    Pre-existing Spring MVC ViewResolvers can be used by setting the 'viewResolvers' property on the configured MvcViewFactoryCreator instance.
+
+  - Improving the Portlet FlowHandler interface definition.  A Portlet FlowHandler can now return a error view to render when handling a flow exception.
+    Also, the FlowHandler can respond to a flow outcome in an ActionRequest.  A typical response action is to change the Portlet mode; e.g. from EDIT to VIEW.
+
+  - Introducing a FlowExecutionOutcome parameter object for conveniently handling a flow outcome such as 'bookingConfirmed' (SWF-634).
+    This improvements effects the signature of the FlowHandler interface.
+
+* Factored out AjaxHandler into the spring-js project as a strategy interface that can be used across controller / view environments.
+  Also moved the SpringJavascript and RichFaces AjaxHandler implementations to this project.
+  This change makes the spring-js.jar a required Web Flow dependency needed in conjunction with the Web Flow Spring MVC integration.
+
+* SelectionTrackingActionListener nows work with any JSF component that iterates over a DataModel (SWF-646).
+
 Bug Fixes
-Documentation
+* Fixed several issues with the Web Flow 1 to 2 flow upgrader tool (SWF-643, SWF-644).
+* Flash scope is now stored with the Conversation object, preventing snapshotting of flash values and providing equivalent semantics of flash in other frameworks (SWF-639).
+* Fixed several JDK 1.4 compatibility issues (SWF-612, SWF-638).
+* Fixed a bug preventing action execution attributes such as a FormAction 'validatorMethod' from being respected (SWF-626).
+* Fixed a bug preventing data binding to nested bean properties (SWF-625).
+* Fixed a bug preventing bind suppression with bind="false" when using OGNL.
+* Fixed a parsing bug for the <exception-handler> XML flow definition element (SWF-613).
+* ResourceServlet now restricts access to protected resources within the WEB-INF directory (SWF-604).
+* Fixed several bugs in both the Hibernate and JPA persistence listeners preventing use of flow-managed persistence contexts with subflows (SWF-600).
+* 'bind' attribute is now supported on global-transitions now, for global events where data binding should occur (SWF-597).
+* Fixed a bug where a MessageContext is not preserving message order (SWF-596).
+* Fixed a possible NPE when using Spring Faces command buttons (SWF-594).
+* Resolved cyclical dependency between mvc.view and the mvc.servlet/mvc.portlet packages (SWF-580). 
+  This resulted in the move of MvcViewFactoryCreator from the mvc.view package to a new mvc.builder package.
+* Fixed a bug preventing non-validating Dojo widgets from working with Spring Javascript (SWF-606).
+* Fixed a bug preventing proper Locale resolution for flow message bundles (SWF-622).
+* Fixed a bug preventing HTML button form parsing of eventIds for view-state external redirect postbacks (SWF-632).
 
 Changes in version 2.0 RC1 (11.04.2008)
 -------------------------------------
