@@ -197,7 +197,7 @@ externalContext.requestMap.portletMode
 			<para>
 				The portlet container passes the execution key from the previous flow when switching to a new mode.
 				Even if the mode is mapped to a different <code>FlowHandler</code> the flow execution will resume the previous execution.
-				You may switch the mode programatically when processing a flow event or after ending a flow in an ActionRequest.
+				You may switch the mode programatically in your FlowHandler after ending a flow in an ActionRequest.
 			</para>
 			<para>
 				One way to start a new flow is to create a URL targeting the mode without the execution key.
