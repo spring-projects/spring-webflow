@@ -1,16 +1,26 @@
-SPRING WEB FLOW (SWF) CHANGELOG
-===============================
+SPRING WEB FLOW CHANGELOG
+=========================
 http://www.springframework.org/webflow
+
+Changes in version 2.0.0 (28.04.2008)
+-------------------------------------
+New Features
+Minor Improvements
+Bug Fixes
+Documentation
 
 Changes in version 2.0 RC1 (11.04.2008)
 -------------------------------------
 Major New Features
-* Introduced a new Web Flow 2 reference guide, available in PDF and HTML format.  The new guide is written in "quick reference" style with complete code examples.
+* Introduced a new Web Flow 2 reference guide, available in PDF and HTML format.
+  The new guide is written in "quick reference" style with complete code examples.
 
-* Added support for migrating from Web Flow 1 to 2.  Included in this distribution is a WebFlowUpgrader tool capable of converting flows from the version 1 syntax to the version 2 syntax.
+* Added support for migrating from Web Flow 1 to 2.
+  Included in this distribution is a WebFlowUpgrader tool capable of converting flows from the version 1 syntax to the version 2 syntax.
   See the reference guide for instructions on how to use this tool.
 
-* Added support for flow definition inheritance.  With this feature, A flow may extend one or more flows.  A flow state can also extend another state.
+* Added support for flow definition inheritance.
+  With this feature, A flow may extend one or more flows. A flow state can also extend another state.
   This feature is used to facilitate reuse between flows and states that share a common structure.
 
 * Added Portlet support.  See the Portlet section of the reference guide and the booking-mvc-portlet and booking-faces-portlet sample applications for examples.
@@ -22,30 +32,41 @@ Major New Features
 
 * Added integration with the RichFaces JSF component library.  Rich Faces can be used with the Spring Faces component library or used standalone.
 
-* Added a "jsf-booking" reference application that offers a comparsion between a traditional "JSF-centric" web application and a Spring web application that uses JSF as the UI component model.
-  Compare jsf-booking with booking-faces to see the differences in the architectural approach and implementation.  Particularly insightful for seasoned JSF developers interested in Spring.
+* Added a "jsf-booking" reference application that offers a comparsion between a traditional "JSF-centric" web application
+  and a Spring web application that uses JSF as the UI component model.
+  Compare jsf-booking with booking-faces to see the differences in the architectural approach and implementation.
+  Particularly insightful for seasoned JSF developers interested in Spring.
 
-* Introduced support for automatic model binding and validation with Spring MVC.  This support provides a concise alternative to manual setupForm and bindAndValidate calls using FormAction.
-  This support also allows registration of data input Formatters application wide, reducing the need to manually register PropertyEditors on a view-by-view basis in many cases.
+* Introduced support for automatic model binding and validation with Spring MVC.
+  This support provides a concise alternative to manual setupForm and bindAndValidate calls using FormAction.
+  This support also allows registration of data input Formatters application wide,
+  reducing the need to manually register PropertyEditors on a view-by-view basis in many cases.
   Support for suppressing data binding for a event such as a cancel button click is also provided.
 
-* Introduced view scope.  View scope is allocated when a view-state enters and destroyed when a view-state exits.  The scope is particularly useful for updating a model over a series of Ajax requests.
+* Introduced view scope.
+  View scope is allocated when a view-state enters and destroyed when a view-state exits.
+  The scope is particularly useful for updating a model over a series of Ajax requests.
 
-* Added support for flow message bundles.  Create a messages.properties file in your flow's working directory for the Locales you need to support and off you go.
+* Added support for flow message bundles.
+  Create a messages.properties file in your flow's working directory for the Locales you need to support and off you go.
 
-* Introduced configurable view-state history polices.  A view state can preserve its history to support backtracking, discard its history to prevent backtracking, and invalidate all previous history
-  to disallow backtracking after a point of no return.  See the new 'history' attribute on the view-state element.
+* Introduced configurable view-state history polices.
+  A view state can preserve its history to support backtracking, discard its history to prevent backtracking,
+  and invalidate all previous history to disallow backtracking after a point of no return.
+  See the new 'history' attribute on the view-state element.
 
-* Refined the flow execution snapshotting process.  These refinements capture view-state form values on postback to support restoring those values when backtracking.
+* Refined the flow execution snapshotting process.
+  These refinements capture view-state form values on postback to support restoring those values when backtracking.
 
-* Simplified flow execution testing by allowing you to "jump" to any state to begin a test case.  See the booking-mvc and booking-faces for examples of flow test cases.
+* Simplified flow execution testing by allowing you to "jump" to any state to begin a test case.
+  See the booking-mvc and booking-faces for examples of flow test cases.
 
 Minor Improvements
 * Added "before view rendering" and "after view rendering" FlowExecutionListener callbacks.
 * Upgraded to Dojo 1.1 from 1.0.
 * Attempts to lock a Conversation will now throw an Exception after a configurable timeout period (default is 30).
 * Changed the faces-config schema to simply 'faces' in-line with Spring conventions.
-* Added automatic registration of all Spring 2 Flow scopes in the flow-local application context, removing the need for a custom enable-flow-scopes tag.
+* Added automatic registration of Spring 2 Flow scopes in the flow-local application context, removing the need for a custom enable-flow-scopes tag.
 * Added a flow-registry 'parent' attribute, allowing registries to be linked together in a hierarchy.
 * Made the JSF 1.2 RI the default JSF implementation used by the JSF samples.
 * Updated the distribution structure to use the new "Spring Build" system.
@@ -132,20 +153,16 @@ Changes in version 2.0 M2 (30.10.2007)
 
 General
 * Spring Web Flow now cares for the entire web controller request/response lifecycle (including control over the view rendering process, too!)
-* Spring Web Flow now runs in a "standalone" mode as well as an "embedded" mode.  "Standalone" mode introduces a Spring Web Servlet that
-  delegates directly to the Spring Web Flow Engine.  "embedded" mode allows Spring Web Flow to be used within another Servlet, such as the 
-  Spring MVC DispatcherServlet.
 * Spring Web Flow now provides first-class JSF and Spring MVC integration by driving their respective view rendering and
   restoration request lifecycles in the context of a web flow execution request.  This simplifies view technology integration
   for the developer, provides a cleaner and more powerful architectural model, and makes it possible to mix-and-match JSF and MVC-style views
-  in the same application, if desired. Support for Struts using this integration approach will be added in a future 2.x milestone.
-  Support for Portlet MVC using this approach will be added in a future 2.x milestone.
+  in the same application, if desired.  Support for Portlet MVC using this approach will be added in a future 2.x milestone.
 * Please see the "booking-jsf" reference application for a complete example of a "standalone" webflow app using JSF as the view technology.
   Please see the "booking-mvc" reference application for a complete example of a "embedded" webflow app using Spring MVC as the view technology.
   Note it would be possible to introduce flows that render JSF-based views in this "embedded" mode, if desired.
-* The recommended URL scheme for working with flows is now REST-based:
-	http://host/<flowId>[/requestPath][?requestParameters][#fragment] - to launch a new flow execution; for example http://host/booking
-	http://host/executions/<flowId>/<flowExecutionKey> - to resume a paused flow execution; for example http://host/executions/booking
+* The default URL scheme for working with flows is now REST-based:
+	http://host/<flowId>[?requestParameters] - to launch a new flow execution; for example http://host/booking
+	http://host/<flowId>?execution=<flowExecutionKey> - to resume a paused flow execution; for example http://host/booking?execution=e1s1
   This scheme will be configurable in later 2.x milestones, primarily to ease migration to 2.0 from 1.0.
 * Flow execution key assignment now happens before a view state is entered now, allowing a flow execution to send proper callback Url to a 
   external systems that will take over control of the conversation and return control at a later time.  An example would be a e-shopping site
