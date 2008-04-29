@@ -26,8 +26,9 @@
         <dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles" rev="2.0.5" conf="optional->compile"/>
         <dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.core" rev="2.0.5.osgi" conf="optional->compile"/>
 		<dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.jsp" rev="2.0.5" conf="optional->compile"/>
-		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.4.A" conf="compile->compile"/>
         <dependency org="org.springframework" name="org.springframework.beans" rev="2.5.4.A" conf="compile->compile"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.4.A" conf="compile->compile"/>        
+		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.4.A" conf="compile->compile"/>
         <dependency org="org.springframework" name="org.springframework.web" rev="2.5.4.A" conf="compile->compile"/>
         <dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.4.A" conf="compile->compile"/>
 
