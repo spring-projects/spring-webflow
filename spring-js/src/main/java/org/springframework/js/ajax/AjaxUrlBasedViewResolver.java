@@ -18,12 +18,10 @@ package org.springframework.js.ajax;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -64,9 +62,8 @@ public class AjaxUrlBasedViewResolver extends UrlBasedViewResolver {
 
 		protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String targetUrl,
 				boolean http10Compatible) throws IOException {
-			ServletContext context = RequestContextUtils.getWebApplicationContext(request).getServletContext();
-			if (ajaxHandler.isAjaxRequest(context, request, response)) {
-				ajaxHandler.sendAjaxRedirect(context, request, response, targetUrl, false);
+			if (ajaxHandler.isAjaxRequest(request, response)) {
+				ajaxHandler.sendAjaxRedirect(targetUrl, request, response, false);
 			} else {
 				super.sendRedirect(request, response, targetUrl, http10Compatible);
 			}

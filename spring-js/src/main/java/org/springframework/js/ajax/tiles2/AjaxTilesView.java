@@ -54,11 +54,19 @@ public class AjaxTilesView extends TilesView {
 
 	private AjaxHandler ajaxHandler = new SpringJavascriptAjaxHandler();
 
+	public AjaxHandler getAjaxHandler() {
+		return ajaxHandler;
+	}
+
+	public void setAjaxHandler(AjaxHandler ajaxHandler) {
+		this.ajaxHandler = ajaxHandler;
+	}
+
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
 		ServletContext servletContext = getServletContext();
-		if (ajaxHandler.isAjaxRequest(servletContext, request, response)) {
+		if (ajaxHandler.isAjaxRequest(request, response)) {
 			BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(servletContext);
 			if (container == null) {
 				throw new ServletException("Tiles container is not initialized. "
@@ -106,13 +114,4 @@ public class AjaxTilesView extends TilesView {
 			}
 		}
 	}
-
-	public AjaxHandler getAjaxHandler() {
-		return ajaxHandler;
-	}
-
-	public void setAjaxHandler(AjaxHandler ajaxHandler) {
-		this.ajaxHandler = ajaxHandler;
-	}
-
 }

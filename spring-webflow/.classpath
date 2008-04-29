@@ -44,5 +44,7 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.lib/1.0.2/com.springsource.org.apache.openjpa.lib-1.0.2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.persistence/1.0.2/com.springsource.org.apache.openjpa.persistence-1.0.2.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.persistence.jdbc/1.0.2/com.springsource.org.apache.openjpa.persistence.jdbc-1.0.2.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/javax.transaction/com.springsource.javax.transaction/1.1.0/com.springsource.javax.transaction-1.1.0.jar" sourcepath="/IVY_CACHE/javax.transaction/com.springsource.javax.transaction/1.1.0/com.springsource.javax.transaction-sources-1.1.0.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.apache.openjpa/com.springsource.org.apache.openjpa.lib.java5/1.0.2/com.springsource.org.apache.openjpa.lib.java5-1.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

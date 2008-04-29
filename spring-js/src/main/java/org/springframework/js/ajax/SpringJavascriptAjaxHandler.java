@@ -17,7 +17,6 @@ package org.springframework.js.ajax;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,7 +50,7 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 	 */
 	public static final String AJAX_SOURCE_PARAM = "ajaxSource";
 
-	public boolean isAjaxRequest(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response) {
 		String acceptHeader = request.getHeader("Accept");
 		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
 		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
@@ -61,8 +60,8 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 		}
 	}
 
-	public void sendAjaxRedirect(ServletContext context, HttpServletRequest request, HttpServletResponse response,
-			String targetUrl, boolean popup) throws IOException {
+	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+			boolean popup) throws IOException {
 		if (popup) {
 			response.setHeader(POPUP_VIEW_HEADER, "true");
 		}

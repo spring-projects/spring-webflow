@@ -17,7 +17,6 @@ package org.springframework.js.ajax;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,16 +31,18 @@ public interface AjaxHandler {
 	/**
 	 * Is the current request an Ajax request?
 	 * @param request the current request
+	 * @param response the current response
 	 */
-	public boolean isAjaxRequest(ServletContext context, HttpServletRequest request, HttpServletResponse response);
+	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * Send a redirect request to the Ajax client. This should cause the client-side agent to send a new request to the
 	 * specified target url.
-	 * @param response the response object
+	 * @param request the current request
+	 * @param response the current response
 	 * @param targetUrl the target url to redirect to
 	 * @param popup wheter the redirect should be sent from a new popup dialog window
 	 */
-	public void sendAjaxRedirect(ServletContext context, HttpServletRequest request, HttpServletResponse response,
-			String targetUrl, boolean popup) throws IOException;
+	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+			boolean popup) throws IOException;
 }

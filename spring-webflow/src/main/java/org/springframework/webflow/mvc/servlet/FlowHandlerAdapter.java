@@ -182,7 +182,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
 			HttpServletResponse response) {
 		ServletExternalContext context = new MvcExternalContext(getServletContext(), request, response, flowUrlHandler);
-		context.setAjaxRequest(ajaxHandler.isAjaxRequest(getServletContext(), request, response));
+		context.setAjaxRequest(ajaxHandler.isAjaxRequest(request, response));
 		return context;
 	}
 
@@ -305,7 +305,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			logger.debug("Sending flow execution redirect to '" + url + "'");
 		}
 		if (context.isAjaxRequest()) {
-			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, url, context.getRedirectInPopup());
+			ajaxHandler.sendAjaxRedirect(url, request, response, context.getRedirectInPopup());
 		} else {
 			sendRedirect(url, request, response);
 		}
@@ -366,8 +366,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	}
 
 	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (ajaxHandler.isAjaxRequest(getServletContext(), request, response)) {
-			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, url, false);
+		if (ajaxHandler.isAjaxRequest(request, response)) {
+			ajaxHandler.sendAjaxRedirect(url, request, response, false);
 		} else {
 			response.sendRedirect(response.encodeRedirectURL(url));
 		}
