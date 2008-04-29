@@ -35,7 +35,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
 import org.springframework.faces.ui.AjaxViewRoot;
-import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -53,6 +52,8 @@ import org.springframework.webflow.execution.ViewFactory;
 public class JsfViewFactory implements ViewFactory {
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
+
+	private static SpringJavascriptAjaxHandler springJsAjaxHandler = new SpringJavascriptAjaxHandler();
 
 	private final Expression viewIdExpression;
 
@@ -136,11 +137,10 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {
-		// this is not very clean
+		// consider factoring out into external context
 		if (context.getNativeContext() instanceof ServletContext) {
-			AjaxHandler handler = new SpringJavascriptAjaxHandler();
-			return handler.isAjaxRequest((ServletContext) context.getNativeContext(), (HttpServletRequest) context
-					.getNativeRequest(), (HttpServletResponse) context.getNativeResponse());
+			return springJsAjaxHandler.isAjaxRequest((HttpServletRequest) context.getNativeRequest(),
+					(HttpServletResponse) context.getNativeResponse());
 		} else {
 			return false;
 		}

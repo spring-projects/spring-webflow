@@ -26,37 +26,47 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ajax4jsf.context.AjaxContext;
 import org.springframework.faces.webflow.FlowLifecycle;
+import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
  * Ajax handler that works with Rich Faces, allowing support for Web Flow ajax features with the Rich Faces toolkit.
  * 
  * @author Jeremy Grelle
  */
-public class RichFacesAjaxHandler extends SpringJavascriptAjaxHandler {
+public class RichFacesAjaxHandler extends WebApplicationObjectSupport {
 
-	public boolean isAjaxRequest(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+	private AjaxHandler delegate = new SpringJavascriptAjaxHandler();
+
+	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response) {
 		FacesContextHelper helper = new FacesContextHelper();
-		if (AjaxContext.getCurrentInstance(helper.getFacesContext(context, request, response)).isAjaxRequest(
-				helper.getFacesContext(context, request, response))) {
+		try {
+			if (AjaxContext.getCurrentInstance(helper.getFacesContext(getServletContext(), request, response))
+					.isAjaxRequest(helper.getFacesContext(getServletContext(), request, response))) {
+				return true;
+			} else {
+				return delegate.isAjaxRequest(request, response);
+			}
+		} finally {
 			helper.cleanup();
-			return true;
-		} else {
-			helper.cleanup();
-			return super.isAjaxRequest(context, request, response);
 		}
 	}
 
-	public void sendAjaxRedirect(ServletContext context, HttpServletRequest request, HttpServletResponse response,
-			String targetUrl, boolean popup) throws IOException {
+	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+			boolean popup) throws IOException {
 		FacesContextHelper helper = new FacesContextHelper();
-		if (AjaxContext.getCurrentInstance(helper.getFacesContext(context, request, response)).isAjaxRequest(
-				helper.getFacesContext(context, request, response))) {
+		try {
+			if (AjaxContext.getCurrentInstance(helper.getFacesContext(getServletContext(), request, response))
+					.isAjaxRequest(helper.getFacesContext(getServletContext(), request, response))) {
+				helper.cleanup();
+				response.sendRedirect(response.encodeRedirectURL(targetUrl));
+			} else {
+				helper.cleanup();
+				delegate.sendAjaxRedirect(targetUrl, request, response, popup);
+			}
+		} finally {
 			helper.cleanup();
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
-		} else {
-			helper.cleanup();
-			super.sendAjaxRedirect(context, request, response, targetUrl, popup);
 		}
 	}
 
