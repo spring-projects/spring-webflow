@@ -32,7 +32,7 @@
         <dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.4.A" conf="compile->compile"/>
 
 		<!-- test time only dependencies -->
-		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.logging" rev="1.1.1" conf="test->compile" />
+		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->compile"/>
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->compile" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->compile" />
 		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.4.A" conf="test->compile" />
