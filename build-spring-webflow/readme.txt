@@ -14,14 +14,16 @@ DEVELOPERS
 - To build a new Spring Web Flow distribution for release:
 
   1. Update the files containing the version number to reflect the new release version, if necessary.
-	build.properties
-        build-spring-webflow/resources/readme.txt
-	spring-webflow-reference/src/spring-webflow-reference.xml
+	
+         build.properties
+         build-spring-webflow/resources/readme.txt
+         spring-webflow-reference/src/spring-webflow-reference.xml
 
   2. From this directory, run:
-	ant jar package
+	
+         ant jar package
 		
      The release archive will be created and placed in:
-     	target/artifacts
+         target/artifacts
                 	
 Questions? See http://forum.springframework.org

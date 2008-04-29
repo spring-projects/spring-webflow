@@ -49,21 +49,21 @@ The following jar files are included in the distribution.
 The contents of each jar and its dependencies are noted.
 Dependencies in [brackets] are optional, and are just necessary for certain functionality.
 
-* spring-webflow-2.0.0.jar
+* org.springframework.webflow-2.0.0.jar
 - Contents: The Spring Web Flow system
-- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc, spring-js
-                [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Servlet API, Portlet API, Struts, JUnit]
+- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc-servlet, spring-js
+                [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
               
-* spring-binding-2.0.0.jar
+* org.springframework.binding-2.0.0.jar
 - Contents: The Spring Data Binding framework, a utility library used by Web Flow
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context
-                [Log4J]
+                [Log4J, OGNL, EL API]
 
-* spring-js-2.0.0.jar
+* org.springframework.js-2.0.0.jar
 - Contents: The Spring JavaScript module, containing Spring's Dojo integration and additional JavaScript functionality.
 - Dependencies: Dojo Toolkit 1.1
 
-* spring-faces-2.0.0.jar
+* org.springframework.faces-2.0.0.jar
 - Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
 - Dependencies: spring-webflow, spring-js, JSF API
                                 
