@@ -59,10 +59,8 @@ public class RichFacesAjaxHandler extends WebApplicationObjectSupport {
 		try {
 			if (AjaxContext.getCurrentInstance(helper.getFacesContext(getServletContext(), request, response))
 					.isAjaxRequest(helper.getFacesContext(getServletContext(), request, response))) {
-				helper.cleanup();
 				response.sendRedirect(response.encodeRedirectURL(targetUrl));
 			} else {
-				helper.cleanup();
 				delegate.sendAjaxRedirect(targetUrl, request, response, popup);
 			}
 		} finally {
