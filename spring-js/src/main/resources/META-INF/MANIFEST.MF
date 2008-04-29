@@ -7,17 +7,16 @@ Import-Package: javax.servlet;version="[2.4,3.0)",javax.servlet.http;v
  ="[2.0.5,3.0)",org.apache.tiles.context;version="[2.0.5.osgi,3.0)",or
  g.apache.tiles.definition;version="[2.0.5.osgi,3.0)",org.apache.tiles
  .impl;version="[2.0.5.osgi,3.0)",org.springframework.util;version="[2
- .5.3,3.0)",org.springframework.web.context;version="[2.5.3,3.0)",org.
- springframework.web.servlet;version="[2.5.3,3.0)",org.springframework
- .web.servlet.support;version="[2.5.3,3.0)",org.springframework.web.se
- rvlet.view;version="[2.5.3,3.0)",org.springframework.web.servlet.view
- .tiles2;version="[2.5.3,3.0)"
+ .5.4.A,3.0)",org.springframework.web.servlet;version="[2.5.4.A,3.0)",
+ org.springframework.web.servlet.support;version="[2.5.4.A,3.0)",org.s
+ pringframework.web.servlet.view;version="[2.5.4.A,3.0)",org.springfra
+ mework.web.servlet.view.tiles2;version="[2.5.4.A,3.0)"
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.springframework.js
-Export-Package: org.springframework.js.ajax;version="2.0.0";uses:="jav
- ax.servlet,javax.servlet.http,org.springframework.web.servlet",org.sp
- ringframework.js.ajax.tiles2;version="2.0.0";uses:="javax.servlet.htt
- p",org.springframework.js.resource;version="2.0.0";uses:="javax.servl
- et,javax.servlet.http"
-Bundle-Version: 2.0.0
+Export-Package: org.springframework.js.ajax;version="2.0";uses:="javax
+ .servlet.http,org.springframework.web.servlet",org.springframework.js
+ .ajax.tiles2;version="2.0";uses:="javax.servlet.http,org.springframew
+ ork.js.ajax",org.springframework.js.resource;version="2.0";uses:="jav
+ ax.servlet,javax.servlet.http"
+Bundle-Version: 2.0
 
