@@ -19,11 +19,18 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.util.Assert;
+import org.springframework.web.servlet.HandlerAdapter;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.WebContentGenerator;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -34,8 +41,6 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
-
-import com.sun.tools.javac.tree.Tree$Assert;
 
 /**
  * A custom MVC HandlerAdapter that encapsulates the generic workflow associated with executing flows in a Servlet
@@ -302,7 +307,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (context.isAjaxRequest()) {
 			ajaxHandler.sendAjaxRedirect(getServletContext(), request, response, url, context.getRedirectInPopup());
 		} else {
-			sendRedirect(url, response);
+			sendRedirect(url, request, response);
 		}
 	}
 
@@ -317,7 +322,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sending flow definition redirect to '" + url + "'");
 		}
-		sendRedirect(url, response);
+		sendRedirect(url, request, response);
 	}
 
 	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response)
@@ -335,15 +340,15 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				url.append('/');
 			}
 			url.append(contextRelativeUrl);
-			sendRedirect(url.toString(), response);
+			sendRedirect(url.toString(), request, response);
 		} else if (location.startsWith(SERVER_RELATIVE_LOCATION_PREFIX)) {
 			String url = location.substring(SERVER_RELATIVE_LOCATION_PREFIX.length());
 			if (!url.startsWith("/")) {
 				url = "/" + url;
 			}
-			sendRedirect(url, response);
+			sendRedirect(url, request, response);
 		} else if (location.startsWith("http://") || location.startsWith("https://")) {
-			sendRedirect(location, response);
+			sendRedirect(location, request, response);
 		} else {
 			sendServletRelativeRedirect(location, request, response);
 		}
@@ -357,7 +362,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			url.append('/');
 		}
 		url.append(location);
-		sendRedirect(url.toString(), response);
+		sendRedirect(url.toString(), request, response);
 	}
 
 	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response) throws IOException {
