@@ -100,19 +100,19 @@ Then declare the following dependencies:
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-binding</artifactId>
+    <artifactId>org.springframework.binding</artifactId>
     <version>2.0.0</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-js</artifactId>
+    <artifactId>org.springframework.js</artifactId>
     <version>2.0.0</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-webflow</artifactId>
+    <artifactId>org.springframework.webflow</artifactId>
     <version>2.0.0</version>
 </dependency> 
 
@@ -120,7 +120,7 @@ If using JavaServerFaces:
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-faces</artifactId>
+    <artifactId>org.springframework.faces</artifactId>
     <version>2.0.0</version>
 </dependency> 
 
@@ -138,9 +138,9 @@ To access jars using Ivy, add the following repositories to your Ivy config:
 
 Then declare the following dependencies in your ivy.xml:
 
-<dependency org="org.springframework.webflow" name="spring-binding" rev="2.0.0" conf="compile->compile" />
-<dependency org="org.springframework.webflow" name="spring-js" rev="2.0.0" conf="compile->compile" />
-<dependency org="org.springframework.webflow" name="spring-webflow" rev="2.0.0" conf="compile->compile" />
+<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.0.0" conf="compile->compile" />
+<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.0.0" conf="compile->compile" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.0.0" conf="compile->compile" />
 
 If using JavaServerFaces:
 

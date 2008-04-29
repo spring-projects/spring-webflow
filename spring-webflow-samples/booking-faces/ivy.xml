@@ -43,9 +43,9 @@
 		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.4.A" conf="compile->compile"/>
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.4.A" conf="compile->compile"/>
 		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.0.A" conf="compile->compile"/>
-		<dependency org="org.springframework.webflow" name="spring-faces" rev="latest.integration" conf="compile->jsf12"/>
-		<dependency org="org.springframework.webflow" name="spring-js" rev="latest.integration" conf="compile->compile"/>
-		<dependency org="org.springframework.webflow" name="spring-webflow" rev="latest.integration" conf="compile->compile"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->jsf12"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->compile"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->compile"/>
 
 		<!-- test-time only dependencies -->
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->compile" />

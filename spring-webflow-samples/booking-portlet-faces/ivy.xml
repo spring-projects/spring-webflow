@@ -45,8 +45,8 @@
 		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.4.A" conf="compile->compile"/>
 		<dependency org="org.springframework" name="org.springframework.web.portlet" rev="2.5.4.A" conf="compile->compile"/>
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.4.A" conf="compile->compile"/>
-		<dependency org="org.springframework.webflow" name="spring-faces" rev="latest.integration" conf="compile->jsf12"/>
-		<dependency org="org.springframework.webflow" name="spring-webflow" rev="latest.integration" conf="compile->compile"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->jsf12"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->compile"/>
 
 		<!-- test-time only dependencies -->
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->compile"/>
