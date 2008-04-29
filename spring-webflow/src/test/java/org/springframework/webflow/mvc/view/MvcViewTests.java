@@ -19,6 +19,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
+import org.springframework.webflow.action.ViewFactoryActionAdapter;
+import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
@@ -66,6 +68,36 @@ public class MvcViewTests extends TestCase {
 		assertEquals("Keith", ((Principal) model.get("currentUser")).getName());
 		assertEquals(context, model.get("flowRequestContext"));
 		assertEquals("/mockFlow?execution=c1v1", model.get("flowExecutionUrl"));
+		assertNull(model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean"));
+	}
+
+	public void testRenderNoKey() throws Exception {
+		MockRequestControlContext context = new MockRequestControlContext();
+		EndState endState = new EndState(context.getRootFlow(), "end");
+		endState.setFinalResponseAction(new ViewFactoryActionAdapter(new StubViewFactory()));
+		context.setCurrentState(endState);
+		context.getRequestScope().put("foo", "bar");
+		context.getFlowScope().put("bar", "baz");
+		context.getFlowScope().put("bindBean", new BindBean());
+		context.getConversationScope().put("baz", "boop");
+		context.getFlashScope().put("boop", "bing");
+		context.getMockExternalContext().setCurrentUser("Keith");
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
+		view.render();
+		assertTrue(renderCalled);
+		assertEquals("bar", model.get("foo"));
+		assertEquals("baz", model.get("bar"));
+		assertEquals("boop", model.get("baz"));
+		assertEquals("bing", model.get("boop"));
+		assertFalse(model.containsKey("flowExecutionKey"));
+		assertFalse(model.containsKey("flowExecutionUrl"));
+		assertEquals("Keith", ((Principal) model.get("currentUser")).getName());
+		assertEquals(context, model.get("flowRequestContext"));
 		assertNull(model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean"));
 	}
 

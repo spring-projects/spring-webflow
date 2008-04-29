@@ -51,6 +51,7 @@ import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
@@ -111,8 +112,11 @@ public abstract class AbstractMvcView implements View {
 		model.putAll(flowScopes());
 		exposeBindingModel(model);
 		model.put("flowRequestContext", requestContext);
-		model.put("flowExecutionKey", requestContext.getFlowExecutionContext().getKey().toString());
-		model.put("flowExecutionUrl", requestContext.getFlowExecutionUrl());
+		FlowExecutionKey key = requestContext.getFlowExecutionContext().getKey();
+		if (key != null) {
+			model.put("flowExecutionKey", requestContext.getFlowExecutionContext().getKey().toString());
+			model.put("flowExecutionUrl", requestContext.getFlowExecutionUrl());
+		}
 		model.put("currentUser", requestContext.getExternalContext().getCurrentUser());
 		try {
 			doRender(model);
