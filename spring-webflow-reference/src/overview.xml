@@ -60,7 +60,7 @@
 	<sect1 id="jars">
 		<title>How to obtain Web Flow artifacts from Maven or Ivy</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the SpringSource Bundle Repository.
+			Each jar in the Web Flow distribution is available in the SpringSource Enterprise Bundle Repository.
 			These jars may be accessed using Maven or Ivy dependency managers.
 			Each jar is also an OSGI-compliant bundle.
 		</para>
