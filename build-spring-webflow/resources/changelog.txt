@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.0 (28.04.2008)
+Changes in version 2.0.0 (29.04.2008)
 -------------------------------------
 New Features
 * Formally introduced the Spring Javascript (spring-js) public API and quick reference.
@@ -101,6 +101,7 @@ Bug Fixes
 * Fixed a bug preventing non-validating Dojo widgets from working with Spring Javascript (SWF-606).
 * Fixed a bug preventing proper Locale resolution for flow message bundles (SWF-622).
 * Fixed a bug preventing HTML button form parsing of eventIds for view-state external redirect postbacks (SWF-632).
+* Fixed a possible NPE when rendering a MVC View from a EndState (SWF-656).
 
 Changes in version 2.0 RC1 (11.04.2008)
 -------------------------------------
