@@ -35,7 +35,7 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
  * 
  * @author Jeremy Grelle
  */
-public class RichFacesAjaxHandler extends WebApplicationObjectSupport {
+public class RichFacesAjaxHandler extends WebApplicationObjectSupport implements AjaxHandler {
 
 	private AjaxHandler delegate = new SpringJavascriptAjaxHandler();
 
