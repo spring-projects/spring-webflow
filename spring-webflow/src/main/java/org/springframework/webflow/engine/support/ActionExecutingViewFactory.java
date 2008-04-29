@@ -15,9 +15,7 @@
  */
 package org.springframework.webflow.engine.support;
 
-import java.util.Iterator;
-
-import org.springframework.webflow.core.collection.ParameterMap;
+import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -87,51 +85,7 @@ public class ActionExecutingViewFactory implements ViewFactory {
 		}
 
 		private void determineEventId(RequestContext context) {
-			eventId = findParameter("_eventId", context.getRequestParameters());
+			eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), "_eventId");
 		}
-
-		/**
-		 * Obtain a named parameter from the request parameters. This method will try to obtain a parameter value using
-		 * the following algorithm:
-		 * <ol>
-		 * <li>Try to get the parameter value using just the given <i>logical</i> name. This handles parameters of the
-		 * form <tt>logicalName = value</tt>. For normal parameters, e.g. submitted using a hidden HTML form field,
-		 * this will return the requested value.</li>
-		 * <li>Try to obtain the parameter value from the parameter name, where the parameter name in the request is of
-		 * the form <tt>logicalName_value = xyz</tt> with "_" being the configured delimiter. This deals with
-		 * parameter values submitted using an HTML form submit button.</li>
-		 * <li>If the value obtained in the previous step has a ".x" or ".y" suffix, remove that. This handles cases
-		 * where the value was submitted using an HTML form image button. In this case the parameter in the request
-		 * would actually be of the form <tt>logicalName_value.x = 123</tt>. </li>
-		 * </ol>
-		 * @param logicalParameterName the <i>logical</i> name of the request parameter
-		 * @param parameters the available parameter map
-		 * @return the value of the parameter, or <code>null</code> if the parameter does not exist in given request
-		 */
-		private String findParameter(String logicalParameterName, ParameterMap parameters) {
-			// first try to get it as a normal name=value parameter
-			String value = parameters.get(logicalParameterName);
-			if (value != null) {
-				return value;
-			}
-			// if no value yet, try to get it as a name_value=xyz parameter
-			String prefix = logicalParameterName + "_";
-			Iterator paramNames = parameters.asMap().keySet().iterator();
-			while (paramNames.hasNext()) {
-				String paramName = (String) paramNames.next();
-				if (paramName.startsWith(prefix)) {
-					String strValue = paramName.substring(prefix.length());
-					// support images buttons, which would submit parameters as
-					// name_value.x=123
-					if (strValue.endsWith(".x") || strValue.endsWith(".y")) {
-						strValue = strValue.substring(0, strValue.length() - 2);
-					}
-					return strValue;
-				}
-			}
-			// we couldn't find the parameter value
-			return null;
-		}
-
 	}
 }
