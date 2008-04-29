@@ -23,9 +23,8 @@
 		<title>What this guide covers</title>
 		<para>
 			This guide covers all aspects of Spring Web Flow.
-			It is organized into two major sections, a Users Section followed by an Architects Section.
-			The Users Section covers implementing flows in end-user applications and working with the feature set.
-			The Architects Section covers extending the framework and the overall architectural model.
+			It covers implementing flows in end-user applications and working with the feature set.
+			It also covers extending the framework and the overall architectural model.
 		</para>
 	</sect1>
 	<sect1 id="system-requirements">
@@ -34,18 +33,130 @@
 			Java 1.4 or higher
 		</para>
 		<para>
-			Spring 2.5.3 or higher
+			Spring 2.5.4 or higher
 		</para>
 	</sect1>
 	<sect1 id="support">
-		<title>Where to get additional support</title>
+		<title>Where to get support</title>
 		<para>
-			Professional "from the source" support on Spring Web Flow is available from
+			Professional from-the-source support on Spring Web Flow is available from
 			<ulink url="http://www.springsource.com">SpringSource</ulink>, the company behind Spring, and
 			<ulink url="http://www.ervacon.com">Ervacon</ulink>, operated by Web Flow project co-founder Erwin Vervaet
 		</para>
-		<para>
-			Spring Community support is available at <ulink url="http://www.springframework.org">www.springframework.org</ulink>
-		</para>
 	</sect1>
+	<sect1 id="development">
+		<title>Where to follow development</title>
+		<para>
+			You can help make Web Flow best serve the needs of the Spring community by interacting with developers 
+			at the <ulink url="http://forum.springframework.org">Spring Community Forums</ulink>.
+		</para>
+		<para>
+			Report bugs and influence the Web Flow project roadmap using the <ulink url="http://jira.springframework.org">Spring Issue Tracker</ulink>.
+		</para>
+		<para>
+			Subscribe to the <ulink url="http://www.springframework.org">Spring Community Portal</ulink> for the latest Spring news and announcements.
+		</para>		
+	</sect1>
+	<sect1 id="jars">
+		<title>How to obtain Web Flow artifacts from Maven or Ivy</title>
+		<para>
+			Each jar in the Web Flow distribution is available in the SpringSource Bundle Repository.
+			These jars may be accessed using Maven or Ivy dependency managers.
+			Each jar is also an OSGI-compliant bundle.
+		</para>
+		<sect2 id="jars-maven">
+			<title>Accessing Web Flow with Maven</title>
+			<para>
+				To access jars using Maven, add the following repositories to your Maven pom:
+			</para>
+			<programlisting><![CDATA[
+<repository>
+    <id>com.springsource.repository.bundles.release</id>
+    <name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/release</url>
+</repository>
+
+<repository>
+    <id>com.springsource.repository.bundles.external</id>
+    <name>SpringSource Enterprise Bundle Repository - External Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/external</url>
+</repository>]]>
+			</programlisting>
+			<para>
+				Then declare the following dependencies:			
+			</para>
+			<programlisting><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.binding</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.js</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.webflow</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+]]>
+			</programlisting>
+			<para>
+				And if using JavaServerFaces:
+			</para>
+			<programlisting><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.faces</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="jars-ivy">
+			<title>Accessing Web Flow with Ivy</title>
+			<para>
+				To access jars using Ivy, add the following repositories to your Ivy config:
+			</para>
+			<programlisting><![CDATA[
+<url name="com.springsource.repository.bundles.release">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/
+                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/
+                       [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+</url>
+
+<url name="com.springsource.repository.bundles.external">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/
+                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/
+                       [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+</url>]]>
+			</programlisting>
+			<para>
+				Then declare the following dependencies:			
+			</para>
+			<programlisting><![CDATA[
+<dependency org="org.springframework.webflow" name="org.springframework.binding"
+            rev="2.0.0.RELEASE" conf="compile->compile" />
+<dependency org="org.springframework.webflow" name="org.springframework.js"
+            rev="2.0.0.RELEASE" conf="compile->compile" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow"
+            rev="2.0.0.RELEASE" conf="compile->compile" />
+]]>
+			</programlisting>
+			<para>
+				And if using JavaServerFaces:
+			</para>
+			<programlisting><![CDATA[
+<dependency org="org.springframework.webflow" name="org.springframework.faces"
+            rev="2.0.0.RELEASE" conf="compile->compile" />
+]]>
+			</programlisting>
+		</sect2>		
+	</sect1>	
 </chapter>
