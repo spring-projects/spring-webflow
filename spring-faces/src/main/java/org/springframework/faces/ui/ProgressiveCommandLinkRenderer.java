@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.faces.webflow.JsfUtils;

@@ -23,8 +23,7 @@ import org.springframework.core.Ordered;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
- * Registers the Spring Web Flow bean scopes with a
- * @{link ConfigurableListableBeanFactory}.
+ * Registers the Spring Web Flow bean scopes with a {@link ConfigurableListableBeanFactory}.
  * 
  * @author Ben Hale
  * @see Scope

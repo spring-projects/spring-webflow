@@ -28,6 +28,7 @@ import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
+import javax.faces.render.Renderer;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

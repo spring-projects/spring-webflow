@@ -22,6 +22,7 @@ import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 
 /**
  * {@link Renderer} for the {@code <sf:validateAllOnClick>} tag.
