@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tiles.Attribute;
 import org.apache.tiles.Definition;
-import org.apache.tiles.Attribute.AttributeType;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.impl.BasicTilesContainer;
@@ -67,6 +66,14 @@ public class AjaxTilesView extends TilesView {
 
 		ServletContext servletContext = getServletContext();
 		if (ajaxHandler.isAjaxRequest(request, response)) {
+
+			String[] attrNames = getRenderFragments(model, request, response);
+			if (attrNames.length == 0) {
+				logger.warn("An Ajax request was detected, but no fragments were specified to be re-rendered.  "
+						+ "Falling back to full page render.");
+				super.renderMergedOutputModel(model, request, response);
+			}
+
 			BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(servletContext);
 			if (container == null) {
 				throw new ServletException("Tiles container is not initialized. "
@@ -83,11 +90,16 @@ public class AjaxTilesView extends TilesView {
 			Map flattenedAttributeMap = new HashMap();
 			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition);
 
-			String[] attrNames = getRenderFragments(model, request, response);
 			response.flushBuffer();
 			for (int i = 0; i < attrNames.length; i++) {
 				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(attrNames[i]);
-				container.render(attributeToRender, response.getWriter(), new Object[] { request, response });
+
+				if (attributeToRender == null) {
+					throw new ServletException("No tiles attribute with a name of '" + attrNames[i]
+							+ "' could be found for the current view: " + this);
+				} else {
+					container.render(attributeToRender, response.getWriter(), new Object[] { request, response });
+				}
 			}
 		} else {
 			super.renderMergedOutputModel(model, request, response);
@@ -105,13 +117,14 @@ public class AjaxTilesView extends TilesView {
 		while (i.hasNext()) {
 			Object key = i.next();
 			Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
-			if (attr.getType() == AttributeType.DEFINITION) {
-				Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
-						attr.getValue().toString(), requestContext);
+			Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(attr.getValue().toString(),
+					requestContext);
+			if (nestedDefinition != null) {
 				flattenAttributeMap(container, requestContext, resultMap, nestedDefinition);
 			} else {
 				resultMap.put(key, attr);
 			}
+
 		}
 	}
 }
