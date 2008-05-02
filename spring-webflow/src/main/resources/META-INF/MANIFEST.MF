@@ -63,6 +63,7 @@ Import-Package: edu.emory.mathcs.backport.java.util.concurrent;version
  eb.servlet.view;version="[2.5.4.A,3.0)",org.springframework.web.util;
  version="[2.5.4.A,3.0)",org.w3c.dom,org.xml.sax
 Bundle-ManifestVersion: 2
+Bundle-Name: Spring Web Flow
 Bundle-SymbolicName: org.springframework.webflow
 Export-Package: org.springframework.webflow.action;version="2.0";uses:
  ="org.springframework.beans,org.springframework.binding.convert,org.s

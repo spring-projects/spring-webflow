@@ -35,6 +35,7 @@ Import-Package: javax.el;version="[2.1,3.0)",javax.faces;version="[1.2
  webflow.execution;version="[2.0,2.0]",org.springframework.webflow.exp
  ression.el;version="[2.0,2.0]",org.w3c.dom
 Bundle-ManifestVersion: 2
+Bundle-Name: Spring Faces
 Bundle-SymbolicName: org.springframework.faces
 Export-Package: org.springframework.faces.config;version="2.0";uses:="
  org.springframework.beans.factory.support,org.w3c.dom",org.springfram

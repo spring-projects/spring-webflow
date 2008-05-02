@@ -10,6 +10,7 @@ Import-Package: javax.el;version="[2.1,3.0)",ognl;version="[2.6.9,3.0)
  core.style;version="[2.5.4.A,3.0)",org.springframework.util;version="
  [2.5.4.A,3.0)",org.springframework.validation;version="[2.5.4.A,3.0)"
 Bundle-ManifestVersion: 2
+Bundle-Name: Spring Binding
 Bundle-SymbolicName: org.springframework.binding
 Export-Package: org.springframework.binding.collection;version="2.0",o
  rg.springframework.binding.convert;version="2.0",org.springframework.
