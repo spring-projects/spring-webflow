@@ -109,7 +109,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	public void init() throws FlowModelBuilderException {
 		try {
 			document = documentLoader.loadDocument(resource);
-			lastModifiedTimestamp = resource.getFile().lastModified();
+			lastModifiedTimestamp = resource.lastModified();
 		} catch (IOException e) {
 			throw new FlowModelBuilderException("Could not access the XML flow definition at " + resource, e);
 		} catch (ParserConfigurationException e) {
@@ -197,7 +197,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	public boolean hasFlowModelChanged() {
 		try {
-			long lastModified = resource.getFile().lastModified();
+			long lastModified = resource.lastModified();
 			if (lastModified > lastModifiedTimestamp) {
 				return true;
 			} else {
