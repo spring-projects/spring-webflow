@@ -235,7 +235,7 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 		}
 
 		protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-			return ClassUtils.forName(desc.getName(), this.classLoader);
+			return ClassUtils.forName(desc.getName(), classLoader);
 		}
 
 	}
