@@ -31,6 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -222,6 +223,14 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 			}
 		}
 		return (String[]) possibleOutcomes.toArray(new String[possibleOutcomes.size()]);
+	}
+
+	public ClassLoader getClassLoader() {
+		if (applicationContext != null) {
+			return applicationContext.getClassLoader();
+		} else {
+			return ClassUtils.getDefaultClassLoader();
+		}
 	}
 
 	public ApplicationContext getApplicationContext() {

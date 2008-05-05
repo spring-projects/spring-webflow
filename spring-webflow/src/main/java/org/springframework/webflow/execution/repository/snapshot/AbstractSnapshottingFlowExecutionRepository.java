@@ -18,12 +18,13 @@ package org.springframework.webflow.execution.repository.snapshot;
 import java.io.Serializable;
 
 import org.springframework.util.Assert;
+import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationManager;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.support.AbstractFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.support.CompositeFlowExecutionKey;
-import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
 /**
  * Base class for repositories that take flow execution snapshots using a {@link FlowExecutionSnapshotFactory}.
@@ -35,27 +36,26 @@ public abstract class AbstractSnapshottingFlowExecutionRepository extends Abstra
 	/**
 	 * The factory to use to take flow execution snapshots.
 	 */
-	private FlowExecutionSnapshotFactory executionSnapshotFactory;
+	private FlowExecutionSnapshotFactory snapshotFactory;
 
 	/**
 	 * Creates a new snapshotting flow execution repository.
 	 * @param conversationManager the conversation manager
-	 * @param executionStateRestorer the execution state restorer
-	 * @param executionSnapshotFactory the execution snapshot factory
+	 * @param snapshotFactory the execution snapshot factory
 	 */
 	public AbstractSnapshottingFlowExecutionRepository(ConversationManager conversationManager,
-			FlowExecutionStateRestorer executionStateRestorer, FlowExecutionSnapshotFactory executionSnapshotFactory) {
-		super(conversationManager, executionStateRestorer);
-		Assert.notNull(executionSnapshotFactory, "The flow execution snapshot factory is required");
-		this.executionSnapshotFactory = executionSnapshotFactory;
+			FlowExecutionSnapshotFactory snapshotFactory) {
+		super(conversationManager);
+		Assert.notNull(snapshotFactory, "The flow execution snapshot factory is required");
+		this.snapshotFactory = snapshotFactory;
 	}
 
 	/**
 	 * Returns the configured flow execution snapshot factory.
 	 * @return the snapshot factory
 	 */
-	public FlowExecutionSnapshotFactory getExecutionSnapshotFactory() {
-		return executionSnapshotFactory;
+	public FlowExecutionSnapshotFactory getSnapshotFactory() {
+		return snapshotFactory;
 	}
 
 	/**
@@ -72,15 +72,29 @@ public abstract class AbstractSnapshottingFlowExecutionRepository extends Abstra
 	 * @return the snapshot
 	 */
 	protected FlowExecutionSnapshot snapshot(FlowExecution flowExecution) {
-		return executionSnapshotFactory.createSnapshot(flowExecution);
+		return snapshotFactory.createSnapshot(flowExecution);
 	}
 
 	/**
-	 * Deserialize a serialized flow execution.
-	 * @param snapshotBytes the flow execution snapshot byte array
-	 * @return the deserialized flow execution
+	 * Restore a flow execution from a snapshot.
+	 * @param snapshot the snapshot
+	 * @param key the flow execution snapshot key
+	 * @param conversation the governing conversation
+	 * @return the restored flow execution
 	 */
-	protected FlowExecution deserializeExecution(byte[] snapshotBytes) {
-		return executionSnapshotFactory.restoreSnapshot(snapshotBytes).unmarshal();
+	protected FlowExecution restoreFlowExecution(FlowExecutionSnapshot snapshot, FlowExecutionKey key,
+			Conversation conversation) {
+		MutableAttributeMap conversationScope = (MutableAttributeMap) conversation.getAttribute("scope");
+		String flowId = (String) conversation.getAttribute("name");
+		return snapshotFactory.restoreExecution(snapshot, flowId, key, conversationScope, this);
+	}
+
+	/**
+	 * Puts the value of conversation scope in the conversation object.
+	 * @param flowExecution the flow execution holding a reference to conversation scope
+	 * @param conversation the conversation where conversation scope is stored
+	 */
+	protected void putConversationScope(FlowExecution flowExecution, Conversation conversation) {
+		conversation.putAttribute("scope", flowExecution.getConversationScope());
 	}
 }

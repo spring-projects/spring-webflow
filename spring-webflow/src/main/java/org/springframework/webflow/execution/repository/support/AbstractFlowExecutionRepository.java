@@ -28,7 +28,6 @@ import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.conversation.NoSuchConversationException;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
@@ -62,20 +61,15 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 
 	private ConversationManager conversationManager;
 
-	private FlowExecutionStateRestorer executionStateRestorer;
-
 	private boolean alwaysGenerateNewNextKey = true;
 
 	/**
 	 * Constructor for use in subclasses.
 	 * @param conversationManager the conversation manager to use
 	 */
-	protected AbstractFlowExecutionRepository(ConversationManager conversationManager,
-			FlowExecutionStateRestorer executionStateRestorer) {
+	protected AbstractFlowExecutionRepository(ConversationManager conversationManager) {
 		Assert.notNull(conversationManager, "The conversation manager is required");
-		Assert.notNull(executionStateRestorer, "The execution state restorer is required");
 		this.conversationManager = conversationManager;
-		this.executionStateRestorer = executionStateRestorer;
 	}
 
 	/**
@@ -83,13 +77,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 */
 	public ConversationManager getConversationManager() {
 		return conversationManager;
-	}
-
-	/**
-	 * The flow execution state restorer for restoring transient execution state.
-	 */
-	public FlowExecutionStateRestorer getExecutionStateRestorer() {
-		return executionStateRestorer;
 	}
 
 	/**
@@ -107,6 +94,8 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		this.alwaysGenerateNewNextKey = alwaysGenerateNewNextKey;
 	}
 
+	// implementing flow execution key factory
+
 	public FlowExecutionKey getKey(FlowExecution execution) {
 		if (execution.getKey() == null) {
 			Conversation conversation = beginConversation(execution);
@@ -115,6 +104,8 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 			return getNextKey(execution);
 		}
 	}
+
+	// implementing flow execution repository
 
 	public FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException {
 		if (!StringUtils.hasText(encodedKey)) {
@@ -186,27 +177,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		} catch (NoSuchConversationException e) {
 			throw new NoSuchFlowExecutionException(key, e);
 		}
-	}
-
-	/**
-	 * Returns the transient state of the flow execution after potential deserialization.
-	 * @param execution the flow execution
-	 * @param key the flow execution key
-	 * @param conversation the governing conversation where the execution is stored
-	 */
-	protected FlowExecution restoreTransientState(FlowExecution execution, FlowExecutionKey key,
-			Conversation conversation) {
-		MutableAttributeMap conversationScope = (MutableAttributeMap) conversation.getAttribute("scope");
-		return executionStateRestorer.restoreState(execution, key, conversationScope, this);
-	}
-
-	/**
-	 * Puts the value of conversation scope in the conversation object.
-	 * @param flowExecution the flow execution holding a reference to conversation scope
-	 * @param conversation the conversation where conversation scope is stored
-	 */
-	protected void putConversationScope(FlowExecution flowExecution, Conversation conversation) {
-		conversation.putAttribute("scope", flowExecution.getConversationScope());
 	}
 
 	/**

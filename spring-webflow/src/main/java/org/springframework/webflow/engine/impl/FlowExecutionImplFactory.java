@@ -15,28 +15,58 @@
  */
 package org.springframework.webflow.engine.impl;
 
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.message.DefaultMessageContextFactory;
 import org.springframework.util.Assert;
+import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.CollectionUtils;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
+import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
+import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 
 /**
  * A factory for instances of the {@link FlowExecutionImpl default flow execution} implementation.
  * @author Keith Donald
  */
-public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigurer implements FlowExecutionFactory {
+public class FlowExecutionImplFactory implements FlowExecutionFactory {
 
 	private static final Log logger = LogFactory.getLog(FlowExecutionImplFactory.class);
 
-	/**
-	 * The factory used to assign keys to flow executions that need to be persisted.
-	 */
+	private AttributeMap executionAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+
+	private FlowExecutionListenerLoader executionListenerLoader = StaticFlowExecutionListenerLoader.EMPTY_INSTANCE;
+
 	private FlowExecutionKeyFactory executionKeyFactory = new SimpleFlowExecutionKeyFactory();
+
+	/**
+	 * Sets the attributes to apply to flow executions created by this factory. Execution attributes may affect flow
+	 * execution behavior.
+	 * @param executionAttributes flow execution system attributes
+	 */
+	public void setExecutionAttributes(AttributeMap executionAttributes) {
+		Assert.notNull(executionAttributes, "The execution attributes map is required");
+		this.executionAttributes = executionAttributes;
+	}
+
+	/**
+	 * Sets the strategy for loading listeners that should observe executions of a flow definition. Allows full control
+	 * over what listeners should apply for executions of a flow definition.
+	 */
+	public void setExecutionListenerLoader(FlowExecutionListenerLoader executionListenerLoader) {
+		Assert.notNull(executionListenerLoader, "The execution listener loader is required");
+		this.executionListenerLoader = executionListenerLoader;
+	}
 
 	/**
 	 * Sets the strategy for generating flow execution keys for persistent flow executions.
@@ -46,7 +76,7 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 	}
 
 	public FlowExecution createFlowExecution(FlowDefinition flowDefinition) {
-		Assert.isInstanceOf(Flow.class, flowDefinition, "Flow definition is of wrong type: ");
+		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of wrong type: ");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating new execution of '" + flowDefinition.getId() + "'");
 		}
@@ -54,6 +84,48 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 		configureServices(execution);
 		execution.setKeyFactory(executionKeyFactory);
 		return execution;
+	}
+
+	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
+			FlowExecutionKey flowExecutionKey, MutableAttributeMap conversationScope,
+			FlowDefinitionLocator subflowDefinitionLocator) {
+		Assert.isInstanceOf(FlowExecutionImpl.class, flowExecution, "FlowExecution is of wrong type: ");
+		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of wrong type: ");
+		FlowExecutionImpl execution = (FlowExecutionImpl) flowExecution;
+		Flow flow = (Flow) flowDefinition;
+		execution.setFlow(flow);
+		if (execution.hasSessions()) {
+			FlowSessionImpl rootSession = execution.getRootSession();
+			rootSession.setFlow(flow);
+			rootSession.setState(flow.getStateInstance(rootSession.getStateId()));
+			if (execution.hasSubflowSessions()) {
+				for (Iterator it = execution.getSubflowSessionIterator(); it.hasNext();) {
+					FlowSessionImpl subflowSession = (FlowSessionImpl) it.next();
+					Flow subflowDef = (Flow) subflowDefinitionLocator.getFlowDefinition(subflowSession.getFlowId());
+					subflowSession.setFlow(subflowDef);
+					subflowSession.setState(subflowDef.getStateInstance(subflowSession.getStateId()));
+				}
+			}
+		}
+		execution.setKey(flowExecutionKey);
+		if (conversationScope == null) {
+			conversationScope = new LocalAttributeMap();
+		}
+		execution.setConversationScope(conversationScope);
+		configureServices(execution);
+		return execution;
+	}
+
+	/**
+	 * Called by subclasses to apply the configured set of standard services to the flow execution.
+	 * @param execution the flow execution
+	 */
+	protected void configureServices(FlowExecutionImpl execution) {
+		execution.setAttributes(executionAttributes);
+		execution.setListeners(executionListenerLoader.getListeners(execution.getDefinition()));
+		execution.setKeyFactory(executionKeyFactory);
+		execution.setMessageContextFactory(new DefaultMessageContextFactory(execution.getDefinition()
+				.getApplicationContext()));
 	}
 
 	/**
@@ -102,7 +174,7 @@ public class FlowExecutionImplFactory extends FlowExecutionImplServicesConfigure
 			}
 
 			public int hashCode() {
-				return value * 29;
+				return value;
 			}
 
 			public String toString() {

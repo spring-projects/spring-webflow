@@ -15,11 +15,15 @@
  */
 package org.springframework.webflow.execution.repository.snapshot;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
+import org.springframework.util.Assert;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionFactory;
+import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowExecutionKeyFactory;
+import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
 
 /**
  * A factory that creates new instances of flow execution snapshots based on standard Java serialization.
@@ -29,10 +33,24 @@ import org.springframework.webflow.execution.FlowExecution;
  */
 public class SerializedFlowExecutionSnapshotFactory implements FlowExecutionSnapshotFactory {
 
-	/**
-	 * Flag to toggle snapshot compression; compression is on by default.
-	 */
+	private FlowExecutionFactory flowExecutionFactory;
+
+	private FlowDefinitionLocator flowDefinitionLocator;
+
 	private boolean compress = true;
+
+	/**
+	 * Creates a new serialized flow execution snapshot factory
+	 * @param flowDefinitionLocator the flow definition locator
+	 * @param flowExecutionFactory the flow execution factory
+	 */
+	public SerializedFlowExecutionSnapshotFactory(FlowExecutionFactory flowExecutionFactory,
+			FlowDefinitionLocator flowDefinitionLocator) {
+		Assert.notNull(flowExecutionFactory, "The FlowExecutionFactory to restore transient flow state is required");
+		Assert.notNull(flowDefinitionLocator, "The FlowDefinitionLocator to restore FlowDefinitions is required");
+		this.flowExecutionFactory = flowExecutionFactory;
+		this.flowDefinitionLocator = flowDefinitionLocator;
+	}
 
 	/**
 	 * Returns whether or not the snapshots should be compressed.
@@ -52,18 +70,19 @@ public class SerializedFlowExecutionSnapshotFactory implements FlowExecutionSnap
 		return new SerializedFlowExecutionSnapshot(flowExecution, compress);
 	}
 
-	public FlowExecutionSnapshot restoreSnapshot(byte[] bytes) throws SnapshotUnmarshalException {
+	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
+			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory)
+			throws FlowExecutionRestorationFailureException {
+		SerializedFlowExecutionSnapshot snapshotImpl = (SerializedFlowExecutionSnapshot) snapshot;
+		FlowDefinition def = flowDefinitionLocator.getFlowDefinition(flowId);
+		FlowExecution execution;
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-			try {
-				return (FlowExecutionSnapshot) ois.readObject();
-			} finally {
-				ois.close();
-			}
-		} catch (IOException e) {
-			throw new SnapshotUnmarshalException("IO problem while creating the flow execution snapshot", e);
-		} catch (ClassNotFoundException e) {
-			throw new SnapshotUnmarshalException("Class not found while creating the flow execution snapshot", e);
+			execution = snapshotImpl.unmarshal(def.getClassLoader());
+		} catch (SnapshotUnmarshalException e) {
+			throw new FlowExecutionRestorationFailureException(key, e);
 		}
+		flowExecutionFactory.restoreFlowExecution(execution, def, key, conversationScope, flowDefinitionLocator);
+		return execution;
 	}
+
 }

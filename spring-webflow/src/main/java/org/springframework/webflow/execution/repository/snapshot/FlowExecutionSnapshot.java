@@ -17,10 +17,8 @@ package org.springframework.webflow.execution.repository.snapshot;
 
 import java.io.Serializable;
 
-import org.springframework.webflow.execution.FlowExecution;
-
 /**
- * A snapshot of a flow execution that can be restored from and serialized to a byte array.
+ * A snapshot that can be used to restore a FlowExecution using a {@link FlowExecutionSnapshotFactory}.
  * 
  * @see FlowExecutionSnapshotFactory
  * 
@@ -28,18 +26,5 @@ import org.springframework.webflow.execution.FlowExecution;
  * @author Keith Donald
  */
 public abstract class FlowExecutionSnapshot implements Serializable {
-
-	/**
-	 * Returns underlying flow execution object.
-	 * @return the unmarshalled flow execution
-	 * @throws SnapshotUnmarshalException when there is a problem unmarshalling the execution
-	 */
-	public abstract FlowExecution unmarshal() throws SnapshotUnmarshalException;
-
-	/**
-	 * Converts this snapshot to a byte array for convenient serialization.
-	 * @return this as a byte array
-	 */
-	public abstract byte[] toByteArray();
 
 }

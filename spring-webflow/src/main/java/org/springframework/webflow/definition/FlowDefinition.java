@@ -18,8 +18,7 @@ package org.springframework.webflow.definition;
 import org.springframework.context.ApplicationContext;
 
 /**
- * The definition of a flow, a program that when executed carries out the orchestration of a task on behalf of a single
- * client.
+ * The definition of a flow, a program that when executed carries out a task on behalf of a single client.
  * <p>
  * A flow definition is a reusable, self-contained controller module that defines a blue print for an executable user
  * task. Flows typically orchestrate controlled navigations or dialogs within web applications to guide users through
@@ -70,8 +69,14 @@ public interface FlowDefinition extends Annotated {
 	public String[] getPossibleOutcomes();
 
 	/**
-	 * Returns a reference to application context hosting application objects and services needed by this flow
-	 * definition.
+	 * Returns the class loader used by this flow definition to load classes.
+	 * @return the class loader
+	 */
+	public ClassLoader getClassLoader();
+
+	/**
+	 * Returns a reference to application context hosting application objects and services used by this flow definition.
+	 * @return the application context
 	 */
 	public ApplicationContext getApplicationContext();
 

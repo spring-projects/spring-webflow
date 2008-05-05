@@ -15,7 +15,11 @@
  */
 package org.springframework.webflow.execution.repository.snapshot;
 
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecution;
+import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowExecutionKeyFactory;
+import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
 
 /**
  * A factory for creating different {@link FlowExecutionSnapshot} implementations.
@@ -34,10 +38,16 @@ public interface FlowExecutionSnapshotFactory {
 	public FlowExecutionSnapshot createSnapshot(FlowExecution flowExecution) throws SnapshotCreationException;
 
 	/**
-	 * Restore a flow execution snapshot from a byte array.
-	 * @param bytes the byte array
-	 * @return the snapshot
-	 * @throws SnapshotUnmarshalException if the snapshot could not be restored
+	 * Restores a flow execution from a previously taken snapshot.
+	 * @param snapshot the previously taken snapshot
+	 * @param flowId the id of the root flow definition
+	 * @param key the flow execution key
+	 * @param conversationScope conversation scope
+	 * @param keyFactory factory for creating new snapshot keys
+	 * @return the restored flow execution
+	 * @throws FlowExecutionRestorationFailureException if flow execution restoration fails
 	 */
-	public FlowExecutionSnapshot restoreSnapshot(byte[] bytes) throws SnapshotUnmarshalException;
+	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
+			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory)
+			throws FlowExecutionRestorationFailureException;
 }

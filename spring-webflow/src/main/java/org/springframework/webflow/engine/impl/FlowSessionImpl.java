@@ -45,24 +45,24 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	/**
 	 * The flow definition (a singleton).
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient Flow flow;
 
 	/**
-	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplStateRestorer}.
+	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplFactory}.
 	 */
 	private String flowId;
 
 	/**
 	 * The current state of this flow session.
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient State state;
 
 	/**
-	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplStateRestorer}.
+	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplFactory}.
 	 */
 	private String stateId;
 
@@ -161,7 +161,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return flow;
 	}
 
-	// package private setters used by FlowExecutionImplStateRestorer for setting/updating internal state
+	// package private setters used by FlowExecutionImplFactory for setting/updating internal state
 
 	/**
 	 * Restores the definition of this flow session.
@@ -194,10 +194,26 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	/**
+	 * Sets the de-serialized id indicating the flow id of this session. Used for testing only.
+	 * @param flowId the flow id
+	 */
+	void setFlowId(String flowId) {
+		this.flowId = flowId;
+	}
+
+	/**
 	 * Returns the de-serialized id indicating the current state of this session.
 	 */
 	String getStateId() {
 		return stateId;
+	}
+
+	/**
+	 * Sets the de-serialized id indicating the state of this session. Used for testing only.
+	 * @param stateId the state id
+	 */
+	void setStateId(String stateId) {
+		this.stateId = stateId;
 	}
 
 	// internal helpers

@@ -90,6 +90,9 @@ class ConversationContainer implements Serializable {
 	public synchronized Conversation createConversation(ConversationParameters parameters,
 			ConversationLockFactory lockFactory) {
 		ContainedConversation conversation = new ContainedConversation(this, nextId(), lockFactory.createLock());
+		conversation.putAttribute("name", parameters.getName());
+		conversation.putAttribute("caption", parameters.getCaption());
+		conversation.putAttribute("description", parameters.getDescription());
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			// end oldest conversation

@@ -35,13 +35,12 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
-import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecutionFactory;
-import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.repository.impl.DefaultFlowExecutionRepository;
-import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
+import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
 import org.springframework.webflow.mvc.builder.MvcEnvironment;
@@ -128,8 +127,9 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(flowDefinitionLocator, "The flow definition locator property is required");
 		MutableAttributeMap executionAttributes = createFlowExecutionAttributes();
-		DefaultFlowExecutionRepository executionRepository = createFlowExecutionRepository(executionAttributes);
-		FlowExecutionFactory executionFactory = createFlowExecutionFactory(executionAttributes, executionRepository);
+		FlowExecutionImplFactory executionFactory = createFlowExecutionFactory(executionAttributes);
+		DefaultFlowExecutionRepository executionRepository = createFlowExecutionRepository(executionFactory);
+		executionFactory.setExecutionKeyFactory(executionRepository);
 		flowExecutor = new FlowExecutorImpl(flowDefinitionLocator, executionFactory, executionRepository);
 	}
 
@@ -169,15 +169,14 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 		}
 	}
 
-	private DefaultFlowExecutionRepository createFlowExecutionRepository(AttributeMap executionAttributes) {
+	private DefaultFlowExecutionRepository createFlowExecutionRepository(FlowExecutionFactory executionFactory) {
 		ConversationManager conversationManager = createConversationManager();
-		FlowExecutionStateRestorer executionStateRestorer = createFlowExecutionStateRestorer(executionAttributes);
-		DefaultFlowExecutionRepository repository = new DefaultFlowExecutionRepository(conversationManager,
-				executionStateRestorer);
+		FlowExecutionSnapshotFactory snapshotFactory = createFlowExecutionSnapshotFactory(executionFactory);
+		DefaultFlowExecutionRepository rep = new DefaultFlowExecutionRepository(conversationManager, snapshotFactory);
 		if (maxFlowExecutionSnapshots != null) {
-			repository.setMaxSnapshots(maxFlowExecutionSnapshots.intValue());
+			rep.setMaxSnapshots(maxFlowExecutionSnapshots.intValue());
 		}
-		return repository;
+		return rep;
 	}
 
 	private ConversationManager createConversationManager() {
@@ -188,24 +187,16 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 		return conversationManager;
 	}
 
-	private FlowExecutionStateRestorer createFlowExecutionStateRestorer(AttributeMap executionAttributes) {
-		FlowExecutionImplStateRestorer executionStateRestorer = new FlowExecutionImplStateRestorer(
-				flowDefinitionLocator);
-		executionStateRestorer.setExecutionAttributes(executionAttributes);
-		if (flowExecutionListenerLoader != null) {
-			executionStateRestorer.setExecutionListenerLoader(flowExecutionListenerLoader);
-		}
-		return executionStateRestorer;
+	private FlowExecutionSnapshotFactory createFlowExecutionSnapshotFactory(FlowExecutionFactory executionFactory) {
+		return new SerializedFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);
 	}
 
-	private FlowExecutionFactory createFlowExecutionFactory(AttributeMap executionAttributes,
-			FlowExecutionKeyFactory keyFactory) {
+	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap executionAttributes) {
 		FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 		executionFactory.setExecutionAttributes(executionAttributes);
 		if (flowExecutionListenerLoader != null) {
 			executionFactory.setExecutionListenerLoader(flowExecutionListenerLoader);
 		}
-		executionFactory.setExecutionKeyFactory(keyFactory);
 		return executionFactory;
 	}
 

@@ -132,6 +132,10 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 			return null;
 		}
 
+		public ClassLoader getClassLoader() {
+			return null;
+		}
+
 		public ApplicationContext getApplicationContext() {
 			return null;
 		}
@@ -166,6 +170,10 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		}
 
 		public String[] getPossibleOutcomes() {
+			return null;
+		}
+
+		public ClassLoader getClassLoader() {
 			return null;
 		}
 

@@ -15,7 +15,9 @@
  */
 package org.springframework.webflow.execution;
 
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 
 /**
  * An abstract factory for creating flow executions. A flow execution represents a runtime, top-level instance of a flow
@@ -41,4 +43,19 @@ public interface FlowExecutionFactory {
 	 * @return the new flow execution, fully initialized and awaiting to be started
 	 */
 	public FlowExecution createFlowExecution(FlowDefinition flowDefinition);
+
+	/**
+	 * Restore the transient state of the flow execution.
+	 * @param flowExecution the flow execution, newly deserialized and needing restoration
+	 * @param flowDefinition the root flow definition for the execution, typically not part of the serialized form
+	 * @param flowExecutionKey the flow execution key, typically not part of the serialized form
+	 * @param conversationScope the execution's conversation scope, which is typically not part of the serialized form
+	 * since it could be shared by multiple physical flow execution <i>copies</i> all sharing the same logical
+	 * conversation
+	 * @param subflowDefinitionLocator for locating the definitions of any subflows started by the execution
+	 * @return the restored flow execution
+	 */
+	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
+			FlowExecutionKey flowExecutionKey, MutableAttributeMap conversationScope,
+			FlowDefinitionLocator subflowDefinitionLocator);
 }

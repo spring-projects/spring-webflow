@@ -19,15 +19,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.springframework.util.ClassUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
@@ -82,9 +85,15 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 		return compressed;
 	}
 
-	public FlowExecution unmarshal() throws SnapshotUnmarshalException {
+	/**
+	 * Unmarshal the flow execution from this snapshot's data.
+	 * @param classLoader the classloader to use to resolve types during execution deserialization
+	 * @return the unmarashalled flow execution
+	 * @throws SnapshotUnmarshalException
+	 */
+	public FlowExecution unmarshal(ClassLoader classLoader) throws SnapshotUnmarshalException {
 		try {
-			return deserialize(getFlowExecutionData());
+			return deserialize(getFlowExecutionData(), classLoader);
 		} catch (IOException e) {
 			throw new SnapshotUnmarshalException(
 					"IOException thrown deserializing the flow execution stored in this snapshot -- this should not happen!",
@@ -95,22 +104,6 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 							+ "This should not happen! Make sure there are no classloader issues. "
 							+ "For example, perhaps the Web Flow system is being loaded by a classloader "
 							+ "that is a parent of the classloader loading application classes?", e);
-		}
-	}
-
-	public byte[] toByteArray() {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(flowExecutionData.length + 40);
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			try {
-				oos.writeObject(this);
-				oos.flush();
-			} finally {
-				oos.close();
-			}
-			return baos.toByteArray();
-		} catch (IOException e) {
-			throw new IllegalStateException();
 		}
 	}
 
@@ -186,12 +179,14 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 	 * Internal helper method to deserialize given flow execution data. Override if a custom serialization method is
 	 * used.
 	 * @param data serialized flow flow execution data
+	 * @param classLoader the class loader to use to resolve classes during deserialization
 	 * @return deserialized flow execution
 	 * @throws IOException when something goes wrong during deserialization
 	 * @throws ClassNotFoundException when required classes cannot be loaded
 	 */
-	protected FlowExecution deserialize(byte[] data) throws IOException, ClassNotFoundException {
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+	protected FlowExecution deserialize(byte[] data, ClassLoader classLoader) throws IOException,
+			ClassNotFoundException {
+		ObjectInputStream ois = new ConfigurableObjectInputStream(new ByteArrayInputStream(data), classLoader);
 		try {
 			return (FlowExecution) ois.readObject();
 		} finally {
@@ -228,5 +223,20 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 			gzipin.close();
 		}
 		return baos.toByteArray();
+	}
+
+	private static class ConfigurableObjectInputStream extends ObjectInputStream {
+
+		private final ClassLoader classLoader;
+
+		public ConfigurableObjectInputStream(InputStream in, ClassLoader classLoader) throws IOException {
+			super(in);
+			this.classLoader = classLoader;
+		}
+
+		protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+			return ClassUtils.forName(desc.getName(), this.classLoader);
+		}
+
 	}
 }

@@ -62,7 +62,7 @@ public interface Conversation {
 	public void lock() throws ConversationLockException;
 
 	/**
-	 * Returns the conversation attribute with the specified name. You need to aquire the lock on this conversation
+	 * Returns the conversation attribute with the specified name. You need to acquire the lock on this conversation
 	 * before calling this method.
 	 * @param name the attribute name
 	 * @return the attribute value
@@ -70,7 +70,7 @@ public interface Conversation {
 	public Object getAttribute(Object name);
 
 	/**
-	 * Puts a conversation attribute into this context. You need to aquire the lock on this conversation before calling
+	 * Puts a conversation attribute into this context. You need to acquire the lock on this conversation before calling
 	 * this method.
 	 * @param name the attribute name
 	 * @param value the attribute value
@@ -78,7 +78,7 @@ public interface Conversation {
 	public void putAttribute(Object name, Object value);
 
 	/**
-	 * Removes a conversation attribute. You need to aquire the lock on this conversation before calling this method.
+	 * Removes a conversation attribute. You need to acquire the lock on this conversation before calling this method.
 	 * @param name the attribute name
 	 */
 	public void removeAttribute(Object name);
@@ -93,4 +93,5 @@ public interface Conversation {
 	 * Unlock this conversation, making it available to others for manipulation.
 	 */
 	public void unlock();
+
 }

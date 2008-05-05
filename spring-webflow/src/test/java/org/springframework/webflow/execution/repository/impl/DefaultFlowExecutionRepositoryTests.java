@@ -21,19 +21,19 @@ import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
-import org.springframework.webflow.engine.impl.FlowExecutionImplStateRestorer;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.execution.FlowExecutionFactory;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.BadlyFormattedFlowExecutionKeyException;
 import org.springframework.webflow.execution.repository.FlowExecutionLock;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
+import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class DefaultFlowExecutionRepositoryTests extends TestCase {
 	private Flow flow;
 	private ConversationManager conversationManager;
-	private FlowExecutionImplStateRestorer stateRestorer;
 	private DefaultFlowExecutionRepository repository;
 
 	protected void setUp() throws Exception {
@@ -44,13 +44,16 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 			}
 		};
 		conversationManager = new StubConversationManager();
-		stateRestorer = new FlowExecutionImplStateRestorer(new FlowDefinitionLocator() {
+		FlowDefinitionLocator locator = new FlowDefinitionLocator() {
 			public FlowDefinition getFlowDefinition(String flowId) throws NoSuchFlowDefinitionException,
 					FlowDefinitionConstructionException {
 				return flow;
 			}
-		});
-		repository = new DefaultFlowExecutionRepository(conversationManager, stateRestorer);
+		};
+		FlowExecutionFactory executionFactory = new FlowExecutionImplFactory();
+		SerializedFlowExecutionSnapshotFactory snapshotFactory = new SerializedFlowExecutionSnapshotFactory(
+				executionFactory, locator);
+		repository = new DefaultFlowExecutionRepository(conversationManager, snapshotFactory);
 	}
 
 	public void testParseFlowExecutionKey() {

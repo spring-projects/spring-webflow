@@ -23,10 +23,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRestoration
 import org.springframework.webflow.execution.repository.snapshot.AbstractSnapshottingFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshotFactory;
-import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
-import org.springframework.webflow.execution.repository.snapshot.SnapshotUnmarshalException;
-import org.springframework.webflow.execution.repository.support.FlowExecutionStateRestorer;
 
 /**
  * The default flow execution repository implementation. Takes <i>one to {@link #getMaxSnapshots() max}</i> flow
@@ -66,26 +63,14 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 	private int maxSnapshots = 30;
 
 	/**
-	 * Create a new default flow execution repository using the given state restorer and conversation manager. Defaults
-	 * to a {@link SerializedFlowExecutionSnapshotFactory}.
-	 * @param conversationManager the conversation manager to use
-	 * @param executionStateRestorer the state restoration strategy to use
-	 */
-	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
-			FlowExecutionStateRestorer executionStateRestorer) {
-		super(conversationManager, executionStateRestorer, new SerializedFlowExecutionSnapshotFactory());
-	}
-
-	/**
 	 * Create a new default flow execution repository using the given state restorer, conversation manager, and snapshot
 	 * factory.
 	 * @param conversationManager the conversation manager to use
-	 * @param executionStateRestorer the state restoration strategy to use
-	 * @param executionSnapshotFactory the flow execution snapshot factory to use
+	 * @param snapshotFactory the flow execution snapshot factory to use
 	 */
 	public DefaultFlowExecutionRepository(ConversationManager conversationManager,
-			FlowExecutionStateRestorer executionStateRestorer, FlowExecutionSnapshotFactory executionSnapshotFactory) {
-		super(conversationManager, executionStateRestorer, executionSnapshotFactory);
+			FlowExecutionSnapshotFactory snapshotFactory) {
+		super(conversationManager, snapshotFactory);
 	}
 
 	/**
@@ -116,12 +101,7 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 		} catch (SnapshotNotFoundException e) {
 			throw new FlowExecutionRestorationFailureException(key, e);
 		}
-		try {
-			FlowExecution execution = snapshot.unmarshal();
-			return restoreTransientState(execution, key, conversation);
-		} catch (SnapshotUnmarshalException e) {
-			throw new FlowExecutionRestorationFailureException(key, e);
-		}
+		return restoreFlowExecution(snapshot, key, conversation);
 	}
 
 	public void putFlowExecution(FlowExecution flowExecution) {
@@ -142,9 +122,10 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 
 	// implementing flow execution key factory
 
-	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
-		Conversation conversation = getConversation(execution.getKey());
-		getSnapshotGroup(conversation).removeAllSnapshots();
+	public void updateFlowExecutionSnapshot(FlowExecution execution) {
+		FlowExecutionKey key = execution.getKey();
+		Conversation conversation = getConversation(key);
+		getSnapshotGroup(conversation).updateSnapshot(getSnapshotId(key), snapshot(execution));
 	}
 
 	public void removeFlowExecutionSnapshot(FlowExecution execution) {
@@ -153,10 +134,9 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 		getSnapshotGroup(conversation).removeSnapshot(getSnapshotId(key));
 	}
 
-	public void updateFlowExecutionSnapshot(FlowExecution execution) {
-		FlowExecutionKey key = execution.getKey();
-		Conversation conversation = getConversation(key);
-		getSnapshotGroup(conversation).updateSnapshot(getSnapshotId(key), snapshot(execution));
+	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+		Conversation conversation = getConversation(execution.getKey());
+		getSnapshotGroup(conversation).removeAllSnapshots();
 	}
 
 	// hooks for subclassing

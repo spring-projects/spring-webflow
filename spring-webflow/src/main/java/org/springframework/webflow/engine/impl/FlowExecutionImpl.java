@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,10 +60,9 @@ import org.springframework.webflow.execution.View;
  * <p>
  * This implementation of FlowExecution is serializable so it can be safely stored in an HTTP session or other
  * persistent store such as a file, database, or client-side form field. Once deserialized, the
- * {@link FlowExecutionImplStateRestorer} strategy is expected to be used to restore the execution to a usable state.
+ * {@link FlowExecutionImplFactory} is expected to be used to restore the execution to a usable state.
  * 
  * @see FlowExecutionImplFactory
- * @see FlowExecutionImplStateRestorer
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -78,7 +77,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * The execution's root flow; the top level flow that acts as the starting point for this flow execution.
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient Flow flow;
 
@@ -96,7 +95,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * A thread-safe listener list, holding listeners monitoring the lifecycle of this flow execution.
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient FlowExecutionListeners listeners;
 
@@ -118,21 +117,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * A data structure for attributes shared by all flow sessions.
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient MutableAttributeMap conversationScope;
 
 	/**
 	 * A data structure for runtime system execution attributes.
 	 * <p>
-	 * Transient to support restoration by the {@link FlowExecutionImplStateRestorer}.
+	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient AttributeMap attributes;
-
-	/**
-	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplStateRestorer}.
-	 */
-	private String flowId;
 
 	/**
 	 * The outcome reached by this flow execution when it ends.
@@ -158,16 +152,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		this.flowSessions = new LinkedList();
 		this.conversationScope = new LocalAttributeMap();
 		this.conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap());
-	}
-
-	/**
-	 * Package private constructor only useful for testing restoration behavior for this object.
-	 * @param flowId the flow id
-	 * @param flowSessions the flow sessions
-	 */
-	FlowExecutionImpl(String flowId, LinkedList flowSessions) {
-		this.flowId = flowId;
-		this.flowSessions = flowSessions;
 	}
 
 	public String getCaption() {
@@ -437,22 +421,23 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		this.attributes = attributes;
 	}
 
+	FlowExecutionKeyFactory getKeyFactory() {
+		return keyFactory;
+	}
+
 	void setKeyFactory(FlowExecutionKeyFactory keyFactory) {
 		this.keyFactory = keyFactory;
+	}
+
+	MessageContextFactory getMessageContextFactory() {
+		return messageContextFactory;
 	}
 
 	void setMessageContextFactory(MessageContextFactory messageContextFactory) {
 		this.messageContextFactory = messageContextFactory;
 	}
 
-	// Used by FlowExecutionImplStateRestorer
-
-	/**
-	 * Returns the flow definition id of this flow execution.
-	 */
-	String getFlowId() {
-		return flowId;
-	}
+	// Used by {@link FlowExecutionImplFactory}
 
 	/**
 	 * Returns the list of flow session maintained by this flow execution.
@@ -485,7 +470,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * Returns an iterator looping over the subflow sessions in this flow execution.
 	 */
-	ListIterator getSubflowSessionIterator() {
+	Iterator getSubflowSessionIterator() {
 		return flowSessions.listIterator(1);
 	}
 
@@ -514,13 +499,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		started = in.readBoolean();
-		flowId = (String) in.readObject();
 		flowSessions = (LinkedList) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeBoolean(started);
-		out.writeObject(flow.getId());
 		out.writeObject(flowSessions);
 	}
 
@@ -536,7 +519,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
 						.toString();
 			} else {
-				return "[Unhydrated execution of '" + flowId + "']";
+				return "[Unhydrated execution of '" + getRootSession().getFlowId() + "']";
 			}
 		}
 	}
