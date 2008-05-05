@@ -85,6 +85,10 @@ public class FlowViewStateManager extends StateManager {
 			return super.restoreTreeStructure(context, viewId, renderKitId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		if (!requestContext.inViewState()) {
+			logger.debug("Not in a view state; no state to restore");
+			return null;
+		}
 		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
 		if (view == null || !view.viewId.equals(viewId)) {
 			logger.debug("No matching view in view scope");
