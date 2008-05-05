@@ -69,19 +69,15 @@ public class DateFormatter implements Formatter {
 	}
 
 	protected DateFormat getDateFormat() {
-		if (pattern != null) {
-			if (locale != null) {
-				return new SimpleDateFormat(pattern, locale);
-			} else {
-				return new SimpleDateFormat(pattern);
-			}
-		} else {
-			if (locale != null) {
-				return new SimpleDateFormat(DEFAULT_PATTERN, locale);
-			} else {
-				return new SimpleDateFormat(DEFAULT_PATTERN);
-			}
+		String pattern = this.pattern;
+		if (pattern == null) {
+			pattern = DEFAULT_PATTERN;
 		}
+		Locale locale = this.locale;
+		if (locale == null) {
+			locale = Locale.getDefault();
+		}
+		return new SimpleDateFormat(pattern, locale);
 	}
 
 }

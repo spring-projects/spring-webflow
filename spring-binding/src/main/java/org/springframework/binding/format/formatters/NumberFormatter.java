@@ -24,17 +24,31 @@ import org.springframework.util.Assert;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
+/**
+ * A formatter for the common number types such as integers, and big decimals.
+ * 
+ * @author Keith Donald
+ */
 public class NumberFormatter implements Formatter {
 
 	private String pattern;
 
 	private Class numberClass;
 
+	/**
+	 * Creates a number formatter for the specified number type.
+	 * @param numberClass the number type, a class extending from {@link Number}.
+	 */
 	public NumberFormatter(Class numberClass) {
 		Assert.notNull(numberClass, "The number class is required");
 		this.numberClass = numberClass;
 	}
 
+	/**
+	 * Sets the pattern for formatting numbers.
+	 * @param pattern the format pattern
+	 * @see DecimalFormat
+	 */
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
@@ -55,9 +69,17 @@ public class NumberFormatter implements Formatter {
 			return null;
 		}
 		if (pattern != null) {
-			return NumberUtils.parseNumber(formattedString, numberClass, getNumberFormat());
+			try {
+				return NumberUtils.parseNumber(formattedString, numberClass, getNumberFormat());
+			} catch (IllegalArgumentException e) {
+				throw new InvalidFormatException(formattedString, pattern, e);
+			}
 		} else {
-			return NumberUtils.parseNumber(formattedString, numberClass);
+			try {
+				return NumberUtils.parseNumber(formattedString, numberClass);
+			} catch (NumberFormatException e) {
+				throw new InvalidFormatException(formattedString, "A " + numberClass.getName(), e);
+			}
 		}
 	}
 
