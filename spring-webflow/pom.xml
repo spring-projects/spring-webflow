@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.webflow</groupId>
-	<artifactId>spring-webflow</artifactId>
+	<artifactId>org.springframework.webflow</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Web Flow</name>
 	<version>2.0.0.RELEASE</version>
@@ -58,7 +58,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-binding</artifactId>
+            <artifactId>org.springframework.binding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+         <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>org.springframework.js</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- build time only dependencies  -->
