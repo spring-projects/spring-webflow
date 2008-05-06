@@ -120,7 +120,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private boolean viewAlreadySet(FacesContext facesContext) {
-		if (facesContext.getViewRoot() != null && facesContext.getViewRoot() != null) {
+		if (facesContext.getViewRoot() != null) {
 			// the corner case where a before RESTORE_VIEW PhaseListener has handled setting the UIViewRoot
 			return true;
 		} else {
