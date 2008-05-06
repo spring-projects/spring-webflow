@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.mapping.Mapping;
@@ -92,10 +93,10 @@ public class DefaultMappingContext {
 	 * @param mapping the mapping to make the current mapping
 	 */
 	public void setCurrentMapping(Mapping mapping) {
-		if (this.currentMapping != null) {
+		if (currentMapping != null) {
 			throw new IllegalStateException("The current mapping has not finished yet");
 		}
-		this.currentMapping = mapping;
+		currentMapping = mapping;
 	}
 
 	/**
@@ -120,11 +121,12 @@ public class DefaultMappingContext {
 	/**
 	 * Indicates the current mapping ended with a 'type conversion' error. This means the value obtained from the source
 	 * could not be converted to a type that could be assigned to the target expression.
-	 * @param originalValue the original source value that could not be converted during the mapping attempt
-	 * @param targetType the desired target type to which conversion could not be performed
+	 * @param exception the conversion exception that occurred, containing the original source value that could not be
+	 * converted during the mapping attempt, as well as the desired target type to which conversion could not be
+	 * performed
 	 */
-	public void setTypeConversionErrorResult(Object originalValue, Class targetType) {
-		add(new MappingResult(currentMapping, new TypeConversionError(originalValue, targetType)));
+	public void setTypeConversionErrorResult(ConversionExecutionException exception) {
+		add(new MappingResult(currentMapping, new TypeConversionError(exception)));
 	}
 
 	/**
@@ -143,7 +145,11 @@ public class DefaultMappingContext {
 		add(new MappingResult(currentMapping, new TargetAccessError(originalValue, error)));
 	}
 
-	public MappingResults toResult() {
+	/**
+	 * Returns the mapping results recorded in this context.
+	 * @return the mapping results
+	 */
+	public MappingResults getMappingResults() {
 		return new DefaultMappingResults(source, target, mappingResults);
 	}
 
@@ -153,8 +159,8 @@ public class DefaultMappingContext {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding " + result);
 		}
-		this.mappingResults.add(result);
-		this.currentMapping = null;
+		mappingResults.add(result);
+		currentMapping = null;
 	}
 
 }

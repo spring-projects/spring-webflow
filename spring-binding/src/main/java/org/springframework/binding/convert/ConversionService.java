@@ -33,9 +33,10 @@ public interface ConversionService {
 	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
 	 * @param sourceClass the source class to convert from
 	 * @param targetClass the target class to convert to
-	 * @return the executor that can execute instance conversion, never null
-	 * @throws ConversionException an exception occurred retrieving a converter for the source-to-target pair
+	 * @return the executor that can execute instance type conversion, never null
+	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass) throws ConversionException;
+	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+			throws ConversionExecutorNotFoundException;
 
 }

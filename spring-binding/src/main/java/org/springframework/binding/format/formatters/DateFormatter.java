@@ -25,26 +25,50 @@ import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.StringUtils;
 
+/**
+ * A formatter for {@link Date} types. Allows the configuration of an explicit date pattern and locale.
+ * @see SimpleDateFormat
+ * @author Keith Donald
+ */
 public class DateFormatter implements Formatter {
 
-	public static final String DEFAULT_PATTERN = "yyyy-MM-dd";
+	/**
+	 * The default date pattern.
+	 */
+	private static final String DEFAULT_PATTERN = "yyyy-MM-dd";
 
 	private String pattern;
 
 	private Locale locale;
 
+	/**
+	 * The pattern to use to format date values.
+	 * @return the date formatting pattern
+	 */
 	public String getPattern() {
 		return pattern;
 	}
 
+	/**
+	 * Sets the pattern to use to format date values.
+	 * @param pattern the date formatting pattern
+	 */
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
 
+	/**
+	 * The locale to use in formatting date values. If null, the default locale is used.
+	 * @return the locale
+	 */
 	public Locale getLocale() {
 		return locale;
 	}
 
+	/**
+	 * Sets the locale to use in formatting date values.
+	 * @param locale the locale
+	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
@@ -64,20 +88,26 @@ public class DateFormatter implements Formatter {
 		try {
 			return dateFormat.parse(formattedString);
 		} catch (ParseException e) {
-			throw new InvalidFormatException(formattedString, dateFormat.toString());
+			throw new InvalidFormatException(formattedString, determinePattern(pattern), e);
 		}
 	}
 
+	// subclassing hookings
+
 	protected DateFormat getDateFormat() {
-		String pattern = this.pattern;
-		if (pattern == null) {
-			pattern = DEFAULT_PATTERN;
-		}
-		Locale locale = this.locale;
-		if (locale == null) {
-			locale = Locale.getDefault();
-		}
+		String pattern = determinePattern(this.pattern);
+		Locale locale = determineLocale(this.locale);
 		return new SimpleDateFormat(pattern, locale);
+	}
+
+	// internal helpers
+
+	private String determinePattern(String pattern) {
+		return pattern != null ? pattern : DEFAULT_PATTERN;
+	}
+
+	private Locale determineLocale(Locale locale) {
+		return locale != null ? locale : Locale.getDefault();
 	}
 
 }

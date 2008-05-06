@@ -18,6 +18,7 @@ package org.springframework.binding.convert.converters;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.springframework.binding.convert.Converter;
 import org.springframework.util.NumberUtils;
 
 /**
@@ -26,7 +27,7 @@ import org.springframework.util.NumberUtils;
  * 
  * @author Keith Donald
  */
-public class TextToNumber extends AbstractConverter {
+public class TextToNumber implements Converter {
 
 	public Class[] getSourceClasses() {
 		return new Class[] { String.class };
@@ -37,7 +38,7 @@ public class TextToNumber extends AbstractConverter {
 				BigInteger.class, BigDecimal.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
 		return NumberUtils.parseNumber((String) source, targetClass);
 	}
 

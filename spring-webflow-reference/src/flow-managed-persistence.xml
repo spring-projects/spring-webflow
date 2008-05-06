@@ -85,12 +85,14 @@
 	<sect1 id="conversationScopedPersistenceContext">
 		<title>ConversationScoped PersistenceContext</title>
 		<para>
-			This pattern creates a <code>PersistenceContext</code> in <code>conversationScope</code> on flow startup,
-			and uses that context for data access until the conversation ends.
+			This pattern creates a <code>PersistenceContext</code> in <code>conversationScope</code> on flow startup, and uses that context for data access until the conversation ends.
 			This pattern generally employs a manual flush mode; that is, the application decides when to flush changes to the database.
 			A convention for flow-managed flushing may be employed, such as always flushing after a transition one from one view-state to another.
 			This pattern provides no flow-level isolation of intermediate edits since flushing synchronizes persistent object state with the database.
 			With this pattern, all data access generally occurs non-transactionally.
+		</para>
+		<para>
+			An implementation of this flow-managed persistence pattern is not yet available in the Web Flow distribution, and will be considered for future releases.
 		</para>
 	</sect1>
 	<sect1 id="viewScopedPersistenceContext">
@@ -104,5 +106,8 @@
 			This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
 			This pattern stores much less flow state, but generally increases the amount of data access since persistent entities are fetched and flushed more often.
 		</para>
+		<para>
+			An implementation of this flow-managed persistence pattern is not yet available in the Web Flow distribution, and will be considered for future releases.
+		</para>		
 	</sect1>
 </chapter>

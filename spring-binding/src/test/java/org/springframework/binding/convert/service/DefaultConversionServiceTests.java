@@ -21,12 +21,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.Converter;
 import org.springframework.binding.convert.converters.TextToBoolean;
-import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.binding.convert.service.StaticConversionExecutor;
 
 /**
  * Test case for the default conversion service.
@@ -44,7 +43,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			service.getConversionExecutor(List.class, ArrayList.class);
 			fail();
-		} catch (ConversionException e) {
+		} catch (ConversionExecutorNotFoundException e) {
 			// expected
 		}
 	}
@@ -60,7 +59,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			executor.execute("ja");
 			fail();
-		} catch (ConversionException e) {
+		} catch (ConversionExecutionException e) {
 			// expected
 		}
 
@@ -76,7 +75,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			service.getConversionExecutor(String.class, HashMap.class);
 			fail("Should have thrown an exception");
-		} catch (ConversionException e) {
+		} catch (ConversionExecutorNotFoundException e) {
 		}
 	}
 

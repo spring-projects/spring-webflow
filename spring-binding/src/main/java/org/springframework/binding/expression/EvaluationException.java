@@ -33,8 +33,7 @@ public class EvaluationException extends RuntimeException {
 	 * @param cause the underlying cause of this exception
 	 */
 	public EvaluationException(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		this(evaluationAttempt, evaluationAttempt
-				+ " failed - make sure the expression is evaluatable in the context provided", cause);
+		this(evaluationAttempt, defaultMessage(evaluationAttempt, cause), cause);
 	}
 
 	/**
@@ -53,4 +52,13 @@ public class EvaluationException extends RuntimeException {
 	public EvaluationAttempt getEvaluationAttempt() {
 		return evaluationAttempt;
 	}
+
+	private static String defaultMessage(EvaluationAttempt evaluationAttempt, Throwable cause) {
+		if (cause != null) {
+			return evaluationAttempt + " failed - " + cause.getMessage();
+		} else {
+			return evaluationAttempt + " failed - make sure the expression is evaluatable in the context provided";
+		}
+	}
+
 }

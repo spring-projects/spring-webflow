@@ -17,6 +17,8 @@ package org.springframework.webflow.expression;
 
 import javax.el.ExpressionFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
@@ -41,6 +43,8 @@ import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
  * @author Erwin Vervaet
  */
 public final class DefaultExpressionParserFactory {
+
+	private static final Log logger = LogFactory.getLog(DefaultExpressionParserFactory.class);
 
 	/**
 	 * The singleton instance of the default expression parser.
@@ -73,6 +77,9 @@ public final class DefaultExpressionParserFactory {
 	private static synchronized ExpressionParser getDefaultExpressionParser() {
 		if (INSTANCE == null) {
 			INSTANCE = createDefaultExpressionParser();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Initialized default Web Flow ExpressionParser " + INSTANCE);
+			}
 		}
 		return INSTANCE;
 	}

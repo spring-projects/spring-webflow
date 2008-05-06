@@ -50,8 +50,8 @@ public interface Converter {
 	 * <code>targetClasses</code>
 	 * @param context an optional conversion context that may be used to influence the conversion process
 	 * @return the converted object, an instance of the target type
-	 * @throws ConversionException an exception occurred during the type conversion
+	 * @throws Exception an exception occurred performing the conversion
 	 */
-	public Object convert(Object source, Class targetClass, Object context) throws ConversionException;
+	public Object convert(Object source, Class targetClass, Object context) throws Exception;
 
 }

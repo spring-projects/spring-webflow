@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.Converter;
 import org.springframework.util.Assert;
@@ -80,10 +80,11 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass) throws ConversionException {
+	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+			throws ConversionExecutorNotFoundException {
 		Assert.notNull(sourceClass, "The source class to convert from is required");
 		Assert.notNull(targetClass, "The target class to convert to is required");
-		if (this.sourceClassConverters == null || this.sourceClassConverters.isEmpty()) {
+		if (sourceClassConverters == null || sourceClassConverters.isEmpty()) {
 			throw new IllegalStateException("No converters have been added to this service's registry");
 		}
 		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
@@ -101,9 +102,9 @@ public class GenericConversionService implements ConversionService {
 				// try the parent
 				return parent.getConversionExecutor(sourceClass, targetClass);
 			} else {
-				throw new ConversionException(sourceClass, targetClass,
-						"No converter registered to convert from sourceClass '" + sourceClass + "' to target class '"
-								+ targetClass + "'");
+				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+						"No ConversionExecutor found for converting from sourceClass '" + sourceClass.getName()
+								+ "' to target class '" + targetClass.getName() + "'");
 			}
 		}
 	}

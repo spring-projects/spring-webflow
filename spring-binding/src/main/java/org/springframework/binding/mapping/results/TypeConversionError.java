@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.mapping.results;
 
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.mapping.Result;
 import org.springframework.core.style.ToStringCreator;
 
@@ -29,18 +30,18 @@ public class TypeConversionError extends Result {
 
 	private Class targetType;
 
+	private ConversionExecutionException exception;
+
 	/**
 	 * Creates a new type conversion error.
-	 * @param originalValue the value that could not be converted
-	 * @param targetType the target type of the conversion
+	 * @param exception the underlying type conversion exception
 	 */
-	public TypeConversionError(Object originalValue, Class targetType) {
-		this.originalValue = originalValue;
-		this.targetType = targetType;
+	public TypeConversionError(ConversionExecutionException exception) {
+		this.exception = exception;
 	}
 
 	public Object getOriginalValue() {
-		return originalValue;
+		return exception.getValue();
 	}
 
 	public Object getMappedValue() {
@@ -60,12 +61,19 @@ public class TypeConversionError extends Result {
 	/**
 	 * Returns the target type of the conversion attempt.
 	 */
-	public Class getTargetType() {
-		return targetType;
+	public Class getTargetClass() {
+		return exception.getTargetClass();
+	}
+
+	/**
+	 * Returns the backing type conversion exception that occurred.
+	 */
+	public ConversionExecutionException getException() {
+		return exception;
 	}
 
 	public String toString() {
 		return new ToStringCreator(this).append("originalValue", originalValue).append("targetType", targetType)
-				.toString();
+				.append("details", exception.getMessage()).toString();
 	}
 }

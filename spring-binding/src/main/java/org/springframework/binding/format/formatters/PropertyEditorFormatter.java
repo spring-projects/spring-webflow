@@ -21,7 +21,8 @@ import org.springframework.binding.format.Formatter;
 import org.springframework.util.Assert;
 
 /**
- * Adapts a property editor to the formatter interface.
+ * Adapts a {@link PropertyEditor} to the formatter interface.
+ * 
  * @author Keith Donald
  */
 public class PropertyEditorFormatter implements Formatter {
@@ -32,7 +33,7 @@ public class PropertyEditorFormatter implements Formatter {
 	 * Wrap the given property editor in a formatter.
 	 */
 	public PropertyEditorFormatter(PropertyEditor propertyEditor) {
-		Assert.notNull(propertyEditor, "Property editor is required");
+		Assert.notNull(propertyEditor, "The PropertyEditor is required");
 		this.propertyEditor = propertyEditor;
 	}
 

@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.convert.converters;
 
+import org.springframework.binding.convert.Converter;
 import org.springframework.util.StringUtils;
 
 /**
@@ -22,7 +23,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Keith Donald
  */
-public class TextToBoolean extends AbstractConverter {
+public class TextToBoolean implements Converter {
 
 	private static final String VALUE_TRUE = "true";
 
@@ -70,7 +71,7 @@ public class TextToBoolean extends AbstractConverter {
 		return new Class[] { Boolean.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
 		String text = (String) source;
 		if (!StringUtils.hasText(text)) {
 			return null;

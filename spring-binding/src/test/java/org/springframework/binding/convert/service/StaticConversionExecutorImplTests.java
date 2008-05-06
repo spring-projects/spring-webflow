@@ -19,8 +19,8 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.converters.AbstractConverter;
+import org.springframework.binding.convert.ConversionExecutionException;
+import org.springframework.binding.convert.Converter;
 
 public class StaticConversionExecutorImplTests extends TestCase {
 
@@ -47,12 +47,12 @@ public class StaticConversionExecutorImplTests extends TestCase {
 		try {
 			conversionExecutor.execute(new StringBuffer());
 			fail();
-		} catch (ConversionException e) {
+		} catch (ConversionExecutionException e) {
 			// expected
 		}
 	}
 
-	private class TestTextToDate extends AbstractConverter {
+	private class TestTextToDate implements Converter {
 
 		public Class[] getSourceClasses() {
 			return new Class[] { String.class };
@@ -62,7 +62,7 @@ public class StaticConversionExecutorImplTests extends TestCase {
 			return new Class[] { Date.class };
 		}
 
-		protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+		public Object convert(Object source, Class targetClass, Object context) throws Exception {
 			return source == null ? null : new Date();
 		}
 	}

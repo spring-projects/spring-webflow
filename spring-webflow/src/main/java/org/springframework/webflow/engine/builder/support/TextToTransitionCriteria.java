@@ -15,8 +15,8 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.converters.AbstractConverter;
+import org.springframework.binding.convert.ConversionExecutionException;
+import org.springframework.binding.convert.Converter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
@@ -47,7 +47,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class TextToTransitionCriteria extends AbstractConverter {
+class TextToTransitionCriteria implements Converter {
 
 	/**
 	 * Context for flow builder services.
@@ -70,7 +70,7 @@ class TextToTransitionCriteria extends AbstractConverter {
 		return new Class[] { TransitionCriteria.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)
@@ -87,10 +87,10 @@ class TextToTransitionCriteria extends AbstractConverter {
 	 * @param encodedCriteria the encoded transition criteria expression
 	 * @param parser the parser that should parse the expression
 	 * @return the transition criteria object
-	 * @throws ConversionException when something goes wrong
+	 * @throws ConversionExecutionException when something goes wrong
 	 */
 	protected TransitionCriteria createBooleanExpressionTransitionCriteria(String encodedCriteria,
-			ExpressionParser parser) throws ConversionException {
+			ExpressionParser parser) throws ConversionExecutionException {
 		Expression expression = parser.parseExpression(encodedCriteria, new FluentParserContext().template().evaluate(
 				RequestContext.class).variable(new ExpressionVariable("result", "lastEvent.id")));
 		return new DefaultTransitionCriteria(expression);

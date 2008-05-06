@@ -24,7 +24,7 @@ import java.util.List;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.service.RuntimeBindingConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
@@ -905,7 +905,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 	}
 
-	private ConversionExecutor fromStringTo(Class targetType) throws ConversionException {
+	private ConversionExecutor fromStringTo(Class targetType) throws ConversionExecutionException {
 		return getLocalContext().getConversionService().getConversionExecutor(String.class, targetType);
 	}
 

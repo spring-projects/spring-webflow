@@ -25,8 +25,9 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * A formatter for the common number types such as integers, and big decimals.
- * 
+ * A formatter for common number types such as integers and big decimals. Supports basic decoding of number values from
+ * text, as well as applying custom number format patterns.
+ * @see DecimalFormat
  * @author Keith Donald
  */
 public class NumberFormatter implements Formatter {
@@ -78,7 +79,7 @@ public class NumberFormatter implements Formatter {
 			try {
 				return NumberUtils.parseNumber(formattedString, numberClass);
 			} catch (NumberFormatException e) {
-				throw new InvalidFormatException(formattedString, "A " + numberClass.getName(), e);
+				throw new InvalidFormatException(formattedString, "A valid " + numberClass.getName() + " string", e);
 			}
 		}
 	}

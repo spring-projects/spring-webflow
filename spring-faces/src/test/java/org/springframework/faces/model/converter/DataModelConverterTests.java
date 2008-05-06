@@ -7,16 +7,25 @@ import java.util.List;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
+import junit.framework.TestCase;
+
 import org.springframework.binding.convert.Converter;
 import org.springframework.faces.model.SerializableListDataModel;
-
-import junit.framework.TestCase;
 
 public class DataModelConverterTests extends TestCase {
 
 	Converter converter = new DataModelConverter();
 
-	public void testConvertListToListDataModel() {
+	public void testConvertListToDataModel() throws Exception {
+		List sourceList = new ArrayList();
+
+		DataModel resultModel = (DataModel) converter.convert(sourceList, DataModel.class, null);
+
+		assertNotNull(resultModel);
+		assertSame(sourceList, resultModel.getWrappedData());
+	}
+
+	public void testConvertListToListDataModel() throws Exception {
 		List sourceList = new ArrayList();
 
 		DataModel resultModel = (DataModel) converter.convert(sourceList, ListDataModel.class, null);
@@ -25,7 +34,7 @@ public class DataModelConverterTests extends TestCase {
 		assertSame(sourceList, resultModel.getWrappedData());
 	}
 
-	public void testConvertListToSerializableListDataModel() {
+	public void testConvertListToSerializableListDataModel() throws Exception {
 		List sourceList = new ArrayList();
 
 		DataModel resultModel = (DataModel) converter.convert(sourceList, SerializableListDataModel.class, null);
@@ -35,7 +44,7 @@ public class DataModelConverterTests extends TestCase {
 		assertTrue(resultModel instanceof Serializable);
 	}
 
-	public void testConvertListToSerializableListDataModelNullSource() {
+	public void testConvertListToSerializableListDataModelNullSource() throws Exception {
 		List sourceList = null;
 
 		DataModel resultModel = (DataModel) converter.convert(sourceList, SerializableListDataModel.class, null);

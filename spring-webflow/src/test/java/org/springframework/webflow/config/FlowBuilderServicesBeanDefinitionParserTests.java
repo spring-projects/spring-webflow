@@ -2,7 +2,7 @@ package org.springframework.webflow.config;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
@@ -57,21 +57,21 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
 	public static class TestConversionService implements ConversionService {
 
-		public Class getClassByAlias(String alias) throws ConversionException {
+		public Class getClassByAlias(String alias) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
-				throws ConversionException {
+				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public ConversionExecutor getConversionExecutorByTargetAlias(Class sourceClass, String targetAlias)
-				throws ConversionException {
+				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass) throws ConversionException {
+		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

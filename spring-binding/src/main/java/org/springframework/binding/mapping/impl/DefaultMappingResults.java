@@ -23,9 +23,6 @@ import java.util.List;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
-import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Default mapping results implementation.
@@ -99,11 +96,6 @@ public class DefaultMappingResults implements MappingResults {
 	}
 
 	public String toString() {
-		String sourceString = ClassUtils.getShortName(source.getClass()) + "@"
-				+ ObjectUtils.getIdentityHexString(source);
-		String targetString = ClassUtils.getShortName(target.getClass()) + "@"
-				+ ObjectUtils.getIdentityHexString(target);
-		return new ToStringCreator(this).append("source", sourceString).append("target", targetString).append(
-				"results", mappingResults).toString();
+		return "Mapping Results = " + mappingResults.toString();
 	}
 }

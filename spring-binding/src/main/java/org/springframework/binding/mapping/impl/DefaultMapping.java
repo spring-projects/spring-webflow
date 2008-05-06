@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.mapping.impl;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
@@ -123,9 +123,9 @@ public class DefaultMapping implements Mapping {
 		if (sourceValue != null) {
 			if (typeConverter != null) {
 				try {
-					targetValue = typeConverter.execute(targetValue, context);
-				} catch (ConversionException e) {
-					context.setTypeConversionErrorResult(sourceValue, e.getTargetClass());
+					targetValue = typeConverter.execute(sourceValue, context);
+				} catch (ConversionExecutionException e) {
+					context.setTypeConversionErrorResult(e);
 					return;
 				}
 			} else {
@@ -139,12 +139,12 @@ public class DefaultMapping implements Mapping {
 						return;
 					}
 					if (targetType != null && !targetType.isInstance(targetValue)) {
+						ConversionExecutor typeConverter = conversionService.getConversionExecutor(sourceValue
+								.getClass(), targetType);
 						try {
-							ConversionExecutor typeConverter = conversionService.getConversionExecutor(sourceValue
-									.getClass(), targetType);
 							targetValue = typeConverter.execute(sourceValue, context);
-						} catch (ConversionException e) {
-							context.setTypeConversionErrorResult(sourceValue, e.getTargetClass());
+						} catch (ConversionExecutionException e) {
+							context.setTypeConversionErrorResult(e);
 							return;
 						}
 					}

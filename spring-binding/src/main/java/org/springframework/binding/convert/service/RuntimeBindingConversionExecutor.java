@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.convert.service;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.util.Assert;
@@ -62,11 +62,11 @@ public class RuntimeBindingConversionExecutor implements ConversionExecutor {
 		return targetClass.hashCode();
 	}
 
-	public Object execute(Object source) throws ConversionException {
+	public Object execute(Object source) throws ConversionExecutionException {
 		return execute(source, null);
 	}
 
-	public Object execute(Object source, Object context) throws ConversionException {
+	public Object execute(Object source, Object context) throws ConversionExecutionException {
 		return conversionService.getConversionExecutor(source.getClass(), targetClass).execute(source);
 	}
 

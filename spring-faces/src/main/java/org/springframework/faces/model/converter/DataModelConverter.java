@@ -21,7 +21,7 @@ import java.util.List;
 import javax.faces.model.DataModel;
 
 import org.springframework.binding.convert.Converter;
-import org.springframework.binding.convert.converters.AbstractConverter;
+import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -30,14 +30,7 @@ import org.springframework.util.ClassUtils;
  * 
  * @author Jeremy Grelle
  */
-public class DataModelConverter extends AbstractConverter {
-
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
-		Constructor emptyConstructor = ClassUtils.getConstructorIfAvailable(targetClass, new Class[] {});
-		DataModel model = (DataModel) emptyConstructor.newInstance(new Object[] {});
-		model.setWrappedData(source);
-		return model;
-	}
+public class DataModelConverter implements Converter {
 
 	public Class[] getSourceClasses() {
 		return new Class[] { Object[].class, List.class, Object.class };
@@ -45,6 +38,16 @@ public class DataModelConverter extends AbstractConverter {
 
 	public Class[] getTargetClasses() {
 		return new Class[] { DataModel.class };
+	}
+
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
+		if (targetClass.equals(DataModel.class)) {
+			targetClass = OneSelectionTrackingListDataModel.class;
+		}
+		Constructor emptyConstructor = ClassUtils.getConstructorIfAvailable(targetClass, new Class[] {});
+		DataModel model = (DataModel) emptyConstructor.newInstance(new Object[] {});
+		model.setWrappedData(source);
+		return model;
 	}
 
 }

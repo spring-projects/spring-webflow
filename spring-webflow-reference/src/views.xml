@@ -161,11 +161,6 @@
 			For a flow event to be generated that can drive a view state transition, model binding must complete successfully.
 			If model binding fails, the view is re-rendered to allow the user to revise their edits.
 		</para>
-		<para>
-			The exact model binding and validation semantics are a function of the view technology in use.
-			See the Spring MVC and Faces section for more information on MVC and JSF semantics, respectively.
-			Regardless of the view technology used, your flow should not change.
-		</para>
 	</sect1>
 	<sect1 id="view-bind">
 		<title>Suppressing binding</title>

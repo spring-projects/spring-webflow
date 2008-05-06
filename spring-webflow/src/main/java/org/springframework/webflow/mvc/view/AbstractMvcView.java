@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -356,11 +356,11 @@ public abstract class AbstractMvcView implements View {
 			this.formatterRegistry = formatterRegistry;
 		}
 
-		public Object execute(Object source) throws ConversionException {
+		public Object execute(Object source) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Should never be called");
 		}
 
-		public Object execute(Object source, Object context) throws ConversionException {
+		public Object execute(Object source, Object context) throws ConversionExecutionException {
 			String formattedValue = (String) source;
 			DefaultMappingContext mappingContext = (DefaultMappingContext) context;
 			Expression target = mappingContext.getCurrentMapping().getTargetExpression();
@@ -380,7 +380,7 @@ public abstract class AbstractMvcView implements View {
 				try {
 					return formatter.parse(formattedValue);
 				} catch (InvalidFormatException e) {
-					throw new ConversionException(String.class, targetClass, e);
+					throw new ConversionExecutionException(formattedValue, String.class, targetClass, e);
 				}
 			} else {
 				return formattedValue;

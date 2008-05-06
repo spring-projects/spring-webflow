@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
@@ -125,7 +125,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 */
 	private class ParentConversionServiceProxy implements ConversionService {
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
-				throws ConversionException {
+				throws ConversionExecutionException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 	}

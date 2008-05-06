@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.binding.convert.Converter;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Keith Donald
  */
-public class TextToClass extends AbstractConverter {
+public class TextToClass implements Converter {
 
 	private Map aliasMap = new HashMap();
 
@@ -52,7 +53,7 @@ public class TextToClass extends AbstractConverter {
 		return new Class[] { Class.class };
 	}
 
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
 		String text = (String) source;
 		if (StringUtils.hasText(text)) {
 			text = text.trim();

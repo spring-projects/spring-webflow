@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.convert.service;
 
-import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.Converter;
 import org.springframework.core.style.ToStringCreator;
@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-class StaticConversionExecutor implements ConversionExecutor {
+public class StaticConversionExecutor implements ConversionExecutor {
 
 	/**
 	 * The source value type this executor will attempt to convert from.
@@ -86,20 +86,24 @@ class StaticConversionExecutor implements ConversionExecutor {
 		return converter;
 	}
 
-	public Object execute(Object source) throws ConversionException {
+	public Object execute(Object source) throws ConversionExecutionException {
 		return execute(source, null);
 	}
 
-	public Object execute(Object source, Object context) throws ConversionException {
+	public Object execute(Object source, Object context) throws ConversionExecutionException {
 		if (targetClass.isInstance(source)) {
 			// source is already assignment compatible with target class
 			return source;
 		}
 		if (source != null && !sourceClass.isInstance(source)) {
-			throw new ConversionException(getSourceClass(), source, getTargetClass(), "Source object '" + source
-					+ "' is expected to be an instance of " + getSourceClass(), null);
+			throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), "Source object "
+					+ source + " is expected to be an instance of " + getSourceClass());
 		}
-		return converter.convert(source, targetClass, context);
+		try {
+			return converter.convert(source, targetClass, context);
+		} catch (Exception e) {
+			throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), e);
+		}
 	}
 
 	public boolean equals(Object o) {

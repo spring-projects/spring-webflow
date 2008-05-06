@@ -181,6 +181,32 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 ]]>
 			</programlisting>
 		</sect2>
+		<sect2 id="spring-mvc-flow-handler-redirects">
+			<title>FlowHandler Redirects</title>
+			<para>
+				A FlowHandler handling a FlowExecutionOutcome or FlowException returns a <code>String</code> to indicate the resource to redirect to after handling.
+				In the previous example, the <code>BookingFlowHandler</code> redirects to the <code>booking/show</code> resource URI for <code>bookingConfirmed</code> outcomes,
+				and the <code>hotels/index</code> resource URI for all other outcomes. 
+			</para>
+			<para>
+				By default, returned resource locations are relative to the current servlet mapping.
+				This allows for a flow handler to redirect to other Controllers in the application using relative paths.
+				In addition, explicit redirect prefixes are supported for cases where more control is needed.
+			</para>
+			<para>
+				The explicit redirect prefixes supported are:
+			</para>
+			<itemizedlist>
+				<listitem><para><code>servletRelative:</code> - redirect to a resource relative to the current servlet</para></listitem>
+				<listitem><para><code>contextRelative:</code> - redirect to a resource relative to the current web application context path</para></listitem>
+				<listitem><para><code>serverRelative:</code> - redirect to a resource relative to the server root</para></listitem>
+				<listitem><para><code>http://</code> or <code>https://</code> - redirect to a fully-qualified resource URI</para></listitem>
+			</itemizedlist>
+			<para>
+				These same redirect prefixes are also supported within a flow definition when using the <code>externalRedirect:</code> directive in
+				conjunction with a view-state or end-state; for example, <code>view="externalRedirect:http://springframework.org"</code>
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 id="spring-mvc-config-spring-flow-controllers">
 		<title>Flow Controller</title>

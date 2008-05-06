@@ -15,15 +15,14 @@
  */
 package org.springframework.binding.convert.service;
 
-import org.springframework.binding.convert.converters.AbstractConverter;
-
+import org.springframework.binding.convert.Converter;
 
 /**
  * Package private converter that is a "no op".
  * 
  * @author Keith Donald
  */
-class NoOpConverter extends AbstractConverter {
+class NoOpConverter implements Converter {
 
 	private Class sourceClass;
 
@@ -37,7 +36,7 @@ class NoOpConverter extends AbstractConverter {
 		this.targetClass = targetClass;
 	}
 
-	protected Object doConvert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convert(Object source, Class targetClass, Object context) throws Exception {
 		return source;
 	}
 

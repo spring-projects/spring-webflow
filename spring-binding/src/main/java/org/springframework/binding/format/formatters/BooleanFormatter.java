@@ -19,6 +19,11 @@ import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.util.StringUtils;
 
+/**
+ * A formatter for boolean values. Formats {@link Boolean#TRUE} as "true" and {@link Boolean#FALSE} as "false".
+ * 
+ * @author Keith Donald
+ */
 public class BooleanFormatter implements Formatter {
 
 	public String format(Object value) throws IllegalArgumentException {
@@ -30,12 +35,11 @@ public class BooleanFormatter implements Formatter {
 		} else if (Boolean.FALSE.equals(value)) {
 			return "false";
 		} else {
-			throw new IllegalArgumentException("Must be a Boolean " + value);
+			throw new IllegalArgumentException("Not a Boolean: " + value);
 		}
 	}
 
 	public Object parse(String formattedString) throws InvalidFormatException {
-		formattedString = (formattedString != null ? formattedString.trim() : null);
 		if (!StringUtils.hasText(formattedString)) {
 			return null;
 		}

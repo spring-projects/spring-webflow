@@ -9,7 +9,7 @@ import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.binding.format.formatters.NumberFormatter;
 import org.springframework.binding.format.registry.GenericFormatterRegistry;
 
-public class FormatterRegistryImplTests extends TestCase {
+public class GenericFormatterRegistryTests extends TestCase {
 
 	GenericFormatterRegistry registry = new GenericFormatterRegistry();
 

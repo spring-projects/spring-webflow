@@ -15,8 +15,8 @@
  */
 package org.springframework.binding.mapping.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -29,13 +29,16 @@ import org.springframework.core.style.ToStringCreator;
 
 /**
  * Generic mapper implementation that allows mappings to be configured programatically.
+ * 
+ * @see #addMapping(DefaultMapping)
+ * @see #setConversionService(ConversionService)
  * @author Keith Donald
  */
 public class DefaultMapper implements Mapper {
 
 	private static final Log logger = LogFactory.getLog(DefaultMapper.class);
 
-	private List mappings = new LinkedList();
+	private List mappings = new ArrayList();
 
 	private ConversionService conversionService;
 
@@ -56,7 +59,7 @@ public class DefaultMapper implements Mapper {
 
 	/**
 	 * Add a mapping to this mapper.
-	 * @param mapping the mapping to add
+	 * @param mapping the mapping to add (required)
 	 * @return this, to support convenient call chaining
 	 */
 	public DefaultMapper addMapping(DefaultMapping mapping) {
@@ -73,15 +76,21 @@ public class DefaultMapper implements Mapper {
 	}
 
 	public MappingResults map(Object source, Object target) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Beginning mapping between source [" + source.getClass().getName() + "] and target ["
+					+ target.getClass().getName() + "]");
+		}
 		DefaultMappingContext context = new DefaultMappingContext(source, target, conversionService);
 		Iterator it = mappings.iterator();
 		while (it.hasNext()) {
 			DefaultMapping mapping = (DefaultMapping) it.next();
 			mapping.map(context);
 		}
-		MappingResults results = context.toResult();
+		MappingResults results = context.getMappingResults();
 		if (logger.isDebugEnabled()) {
-			logger.debug("Mapper completed; results = " + results);
+			logger.debug("Completing mapping between source [" + source.getClass().getName() + "] and target ["
+					+ target.getClass().getName() + "]; total mappings = " + results.getAllResults().size()
+					+ "; total errors = " + results.getErrorResults().size() + "; " + results);
 		}
 		return results;
 	}

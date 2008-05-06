@@ -39,40 +39,45 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	public void setUp() {
 	}
 
-	public void testAny() {
+	public void testAny() throws Exception {
 		String expression = "*";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert("*"));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert(""));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert(null));
+		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert("*", TransitionCriteria.class, null));
+		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert("", TransitionCriteria.class, null));
+		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convert(null, TransitionCriteria.class, null));
 	}
 
-	public void testStaticEventId() {
+	public void testStaticEventId() throws Exception {
 		String expression = "sample";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
 	public void testTrueEvaluation() throws Exception {
 		String expression = "${flowScope.foo == 'bar'}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
 	public void testFalseEvaluation() throws Exception {
 		String expression = "${flowScope.foo != 'bar'}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
 		RequestContext ctx = getRequestContext();
 		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
 	}
 
 	public void testNonStringEvaluation() throws Exception {
 		String expression = "${3 + 4}";
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression);
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
 		MockRequestContext ctx = getRequestContext();
 		ctx.setCurrentEvent(new Event(this, "7"));
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
@@ -84,7 +89,8 @@ public class TextToTransitionCriteriaTests extends TestCase {
 				return new StaticExpression(null);
 			}
 		});
-		TransitionCriteria criterion = (TransitionCriteria) converter.convert("doesnt matter");
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert("doesnt matter",
+				TransitionCriteria.class, null);
 		RequestContext ctx = getRequestContext();
 		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
 	}
