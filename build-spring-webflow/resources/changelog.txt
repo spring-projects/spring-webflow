@@ -2,6 +2,32 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.0.1 (13.05.2008)
+-------------------------------------
+New Features
+
+Improvements
+* Added a Bundle-Name: entry to each project's manifest for improved OSGi compliance.
+* Changed to use the ClassLoader of a flow's ApplicationContext when deserializing a FlowExecution, allowing for more a modular usage of SWF when running in a OSGi environment.
+* Co-located FlowExecution creation and state restoration logic inside a FlowExecutionFactory, a design improvement eliminating the need for a separate FlowExecutionStateRestorer.
+* Reduced the size a persistent flow execution by removing the need to store the id of the root flow definition with each FlowExecutionSnapshot.
+* Simplified the Converter interface and implementation contract by allowing Converters to throw any Exception to report type conversion failures.
+  The ConversionExecutor now cares for wrapping any exception in a ConversionExecutionException providing full context about the conversion attempt.
+  This change will effect any custom Converter implementations extending from AbstractConverter.
+  Please see the existing converters in the org.springframework.binding.converters package for examples of refined Converter implementations.
+* Improved booking samples by removing the unnecessary dispatcher-servlet-config.xml file and favoring configuration driven by a single master Spring configuration file.
+
+Bug Fixes
+* Fixed a bug preventing the handling of NumberFormatExceptions when binding to number properties using the default NumberFormatter.
+* Fixed a bug preventing the loading of externalized flow definition resources in a EAR environment, for example, in Web Logic.
+* Fixed a bug requiring Spring Portlet MVC in the classpath even in a Servlet-based web application when running on a Portal server.
+* Fixed a bug preventing generic use of javax.faces.model.DataModel as the target type of a List conversion.
+
+Documentation
+* Added documentation on FlowHandler and externalRedirect: redirect prefixes.
+* Clarified the conversation-scoped and view-state managed persistence context patterns will be considered for implementation in future Web Flow releases.
+* Removed unnecessary note about special Spring MVC and JSF model binding semantics; the semantics should be equal between view technologies, even if the underlying technologies differ.
+
 Changes in version 2.0.0 (29.04.2008)
 -------------------------------------
 New Features
