@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution;
 
+import org.springframework.core.NamedThreadLocal;
+
 /**
  * Simple holder class that associates a {@link RequestContext} instance with the current thread. The RequestContext
  * will not be inherited by any child threads spawned by the current thread.
@@ -28,7 +30,7 @@ package org.springframework.webflow.execution;
  */
 public class RequestContextHolder {
 
-	private static final ThreadLocal requestContextHolder = new ThreadLocal();
+	private static final ThreadLocal requestContextHolder = new NamedThreadLocal("Flow RequestContext");
 
 	/**
 	 * Associate the given RequestContext with the current thread.

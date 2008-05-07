@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.context;
 
+import org.springframework.core.NamedThreadLocal;
+
 /**
  * Simple holder class that associates an {@link ExternalContext} instance with the current thread. The ExternalContext
  * will not be inherited by any child threads spawned by the current thread.
@@ -28,7 +30,7 @@ package org.springframework.webflow.context;
  */
 public final class ExternalContextHolder {
 
-	private static final ThreadLocal externalContextHolder = new ThreadLocal();
+	private static final ThreadLocal externalContextHolder = new NamedThreadLocal("Flow ExternalContext");
 
 	/**
 	 * Associate the given ExternalContext with the current thread.
