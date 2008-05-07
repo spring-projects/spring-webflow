@@ -16,6 +16,7 @@ Improvements
   This change will effect any custom Converter implementations extending from AbstractConverter.
   Please see the existing converters in the org.springframework.binding.converters package for examples of refined Converter implementations.
 * Improved booking samples by removing the unnecessary dispatcher-servlet-config.xml file and favoring configuration driven by a single master Spring configuration file.
+* Made RequestContext and ExternalContext thread locals named for supporting introspection
 
 Bug Fixes
 * Fixed a bug preventing the handling of NumberFormatExceptions when binding to number properties using the default NumberFormatter.
