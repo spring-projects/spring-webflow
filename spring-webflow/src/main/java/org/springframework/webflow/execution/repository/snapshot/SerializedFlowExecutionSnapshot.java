@@ -26,6 +26,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -238,5 +240,31 @@ class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements E
 			return ClassUtils.forName(desc.getName(), classLoader);
 		}
 
+		protected Class resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException {
+			ClassLoader nonPublicLoader = null;
+			boolean hasNonPublicInterface = false;
+
+			// define proxy in class loader of non-public interface(s), if any
+			Class[] classObjs = new Class[interfaces.length];
+			for (int i = 0; i < interfaces.length; i++) {
+				Class cl = ClassUtils.forName(interfaces[i], classLoader);
+				if ((cl.getModifiers() & Modifier.PUBLIC) == 0) {
+					if (hasNonPublicInterface) {
+						if (nonPublicLoader != cl.getClassLoader()) {
+							throw new IllegalAccessError("Conflicting non-public interface class loaders");
+						}
+					} else {
+						nonPublicLoader = cl.getClassLoader();
+						hasNonPublicInterface = true;
+					}
+				}
+				classObjs[i] = cl;
+			}
+			try {
+				return Proxy.getProxyClass(hasNonPublicInterface ? nonPublicLoader : classLoader, classObjs);
+			} catch (IllegalArgumentException e) {
+				throw new ClassNotFoundException(null, e);
+			}
+		}
 	}
 }
