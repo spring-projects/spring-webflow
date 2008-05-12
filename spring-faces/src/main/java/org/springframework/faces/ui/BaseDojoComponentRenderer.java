@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.faces.webflow.JsfUtils;
 
 /**
  * Base {@link Renderer} for components that require the Dojo implementation of Spring JavaScript to be available on the
@@ -45,11 +46,13 @@ public abstract class BaseDojoComponentRenderer extends BaseSpringJavascriptComp
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+		if (!JsfUtils.isAsynchronousFlowRequest()) {
+			resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			resourceHelper.renderScriptLink(context, dojoJsResourceUri);
 
-		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+		}
 	}
 
 }

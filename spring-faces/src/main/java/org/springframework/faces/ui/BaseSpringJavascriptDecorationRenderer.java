@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.faces.webflow.JsfUtils;
 
 public abstract class BaseSpringJavascriptDecorationRenderer extends Renderer {
 
@@ -31,7 +32,9 @@ public abstract class BaseSpringJavascriptDecorationRenderer extends Renderer {
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
-		resourceHelper.renderScriptLink(context, springJsResourceUri);
+		if (!JsfUtils.isAsynchronousFlowRequest()) {
+			resourceHelper.renderScriptLink(context, springJsResourceUri);
+		}
 	}
 
 }

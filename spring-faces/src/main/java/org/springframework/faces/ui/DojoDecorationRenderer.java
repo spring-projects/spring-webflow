@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -52,11 +53,13 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+		if (!JsfUtils.isAsynchronousFlowRequest()) {
+			resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-		resourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			resourceHelper.renderScriptLink(context, dojoJsResourceUri);
 
-		resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+		}
 	}
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {

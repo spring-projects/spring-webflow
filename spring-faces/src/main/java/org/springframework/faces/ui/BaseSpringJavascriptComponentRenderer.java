@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
+import org.springframework.faces.webflow.JsfUtils;
 
 /**
  * Base {@link Renderer} for components that require the Spring JavaScript library on the client.
@@ -39,6 +40,8 @@ public abstract class BaseSpringJavascriptComponentRenderer extends BaseComponen
 
 		super.encodeBegin(context, component);
 
-		resourceHelper.renderScriptLink(context, springJsResourceUri);
+		if (!JsfUtils.isAsynchronousFlowRequest()) {
+			resourceHelper.renderScriptLink(context, springJsResourceUri);
+		}
 	}
 }
