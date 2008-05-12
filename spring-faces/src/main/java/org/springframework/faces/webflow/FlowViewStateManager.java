@@ -126,6 +126,9 @@ public class FlowViewStateManager extends StateManager {
 	 * JSF 1.1 version of state saving
 	 */
 	public javax.faces.application.StateManager.SerializedView saveSerializedView(FacesContext context) {
+		if (context.getViewRoot().isTransient()) {
+			return null;
+		}
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveSerializedView(context);
 		}
@@ -137,6 +140,9 @@ public class FlowViewStateManager extends StateManager {
 	 * JSF 1.2 version of state saving
 	 */
 	public Object saveView(FacesContext context) {
+		if (context.getViewRoot().isTransient()) {
+			return null;
+		}
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveView(context);
 		}

@@ -197,7 +197,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public ExternalContext getExternalContext() {
-		return delegate.getExternalContext();
+		return new FlowExternalContext(delegate.getExternalContext());
 	}
 
 	public RenderKit getRenderKit() {
@@ -309,6 +309,31 @@ public class FlowFacesContext extends FacesContext {
 
 		public void remove() {
 			throw new UnsupportedOperationException("Messages cannot be removed through this iterator.");
+		}
+
+	}
+
+	private class FlowExternalContext extends ExternalContextWrapper {
+
+		private static final String CUSTOM_RESPONSE = "customResponse";
+
+		public FlowExternalContext(ExternalContext delegate) {
+			super(delegate);
+		}
+
+		public Object getResponse() {
+			if (context.getRequestScope().contains(CUSTOM_RESPONSE)) {
+				return context.getRequestScope().get(CUSTOM_RESPONSE);
+			}
+			return delegate.getResponse();
+		}
+
+		/**
+		 * Store the native response object to be used for the duration of the Faces Request
+		 */
+		public void setResponse(Object response) {
+			context.getRequestScope().put(CUSTOM_RESPONSE, response);
+			delegate.setResponse(response);
 		}
 
 	}
