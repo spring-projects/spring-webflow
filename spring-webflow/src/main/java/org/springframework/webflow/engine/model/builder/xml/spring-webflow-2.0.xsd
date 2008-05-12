@@ -1353,7 +1353,7 @@ The most basic value is a static event id:
 <br>
 Sophisticated transitional expressions are also supported when enclosed in a delimited expression:
 <pre>
-	&lt;transition on="${event == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
+	&lt;transition on="${currentEvent.id == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
 </pre>
 ]]>
 				</xsd:documentation>
