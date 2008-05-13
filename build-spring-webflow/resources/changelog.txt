@@ -23,6 +23,11 @@ Bug Fixes
 * Fixed a bug preventing the loading of externalized flow definition resources in a EAR environment, for example, in Web Logic.
 * Fixed a bug requiring Spring Portlet MVC in the classpath even in a Servlet-based web application when running on a Portal server.
 * Fixed a bug preventing generic use of javax.faces.model.DataModel as the target type of a List conversion.
+* Fixed a bug effecting TransitionCriteria expressions that evaluate the currentEvent; for example ${currentEvent.id == 'submit'}.
+  This bug fix required a change to how currentEvent attributes are accessed with EL: instead of accessing an event attribute directly like ${currentEvent.attr},
+  access an attribute through the 'attributes' property like ${currentEvent.attributes.attr}.  The reference documentation was updated to reflect this change.
+* Fixed a bug resulting in loss of JSF ExternalContext state during execution of the JSF Lifecycle.
+  This bug was affecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
 
 Documentation
 * Added documentation on FlowHandler and externalRedirect: redirect prefixes.
