@@ -332,6 +332,25 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
+	public void testLaunchFlowWithExternalRedirectNotHttp10Compatible() throws Exception {
+		flowHandlerAdapter.setRedirectHttp10Compatible(false);
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		context.requestExternalRedirect("serverRelative:/bar");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+		assertEquals(303, response.getStatus());
+		assertEquals("/bar", response.getHeader("Location"));
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
 	public void testDefaultHandleFlowException() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
