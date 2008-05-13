@@ -17,7 +17,7 @@
 		<security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
 		
 		<!-- Override default login and logout pages -->
-		<security:form-login  login-page="/spring/login" />
+		<security:form-login login-page="/spring/login" />
 		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
 	</security:http>
     
