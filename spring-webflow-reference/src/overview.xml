@@ -58,11 +58,10 @@
 		</para>		
 	</sect1>
 	<sect1 id="jars">
-		<title>How to obtain Web Flow artifacts from Maven or Ivy</title>
+		<title>How to obtain Web Flow artifacts from the SpringSource Bundle Repository</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the SpringSource Enterprise Bundle Repository.
+			Each jar in the Web Flow distribution is available in the <ulink url="http://www.springsource.com/repository/">SpringSource Enterprise Bundle Repository</ulink> for use in an OSGi environment.
 			These jars may be accessed using Maven or Ivy dependency managers.
-			Each jar is also an OSGI-compliant bundle.
 		</para>
 		<sect2 id="jars-maven">
 			<title>Accessing Web Flow with Maven</title>
@@ -157,6 +156,48 @@
             rev="2.0.0.RELEASE" conf="compile->compile" />
 ]]>
 			</programlisting>
-		</sect2>		
+		</sect2>
+	</sect1>
+	<sect1 id="jars-mvn-central">
+		<title>How to obtain Web Flow artifacts from Maven Central</title>
+		<para>
+			Each jar in the Web Flow distribution is also available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
+			The large majority of artifacts retrieved from this repository are not OSGi bundles.
+			If you wish to run your Web Flows in an OSGi environment, you are encouraged to use the <link linkend="jars">SpringSource Bundle Repository</link>.
+		</para>
+		<para>
+			To access Web Flow jars from Maven Central, declare the following dependencies in you pom:			
+		</para>
+		<programlisting><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.binding</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.js</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.webflow</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency>
+]]>
+		</programlisting>
+		<para>
+			And if using JavaServerFaces:
+		</para>
+		<programlisting><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.faces</artifactId>
+    <version>2.0.0.RELEASE</version>
+</dependency> 
+]]>
+		</programlisting>
 	</sect1>	
 </chapter>

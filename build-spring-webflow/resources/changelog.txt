@@ -27,10 +27,11 @@ Bug Fixes
   This bug fix required a change to how currentEvent attributes are accessed with EL: instead of accessing an event attribute directly like ${currentEvent.attr},
   access an attribute through the 'attributes' property like ${currentEvent.attributes.attr}.  The reference documentation was updated to reflect this change.
 * Fixed a bug resulting in loss of JSF ExternalContext state during execution of the JSF Lifecycle.
-  This bug was affecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
+  This bug was effecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
 
 Documentation
 * Added documentation on FlowHandler and externalRedirect: redirect prefixes.
+* Added documentation on accessing Web Flow artifacts from Maven Central.
 * Clarified the conversation-scoped and view-state managed persistence context patterns will be considered for implementation in future Web Flow releases.
 * Removed unnecessary note about special Spring MVC and JSF model binding semantics; the semantics should be equal between view technologies, even if the underlying technologies differ.
 
