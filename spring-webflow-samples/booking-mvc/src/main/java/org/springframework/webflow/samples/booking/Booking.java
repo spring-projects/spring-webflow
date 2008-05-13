@@ -178,11 +178,11 @@ public class Booking implements Serializable {
 
     public void validateEnterBookingDetails(MessageContext context) {
 	if (checkinDate.before(today())) {
-	    context.addMessage(new MessageBuilder().error().source("checkinDate").code("checkinDate.beforeToday")
-		    .build());
+	    context.addMessage(new MessageBuilder().error().source("checkinDate").code(
+		    "booking.checkinDate.beforeToday").build());
 	} else if (checkoutDate.before(checkinDate)) {
 	    context.addMessage(new MessageBuilder().error().source("checkoutDate").code(
-		    "checkoutDate.beforeCheckinDate").build());
+		    "booking.checkoutDate.beforeCheckinDate").build());
 	}
     }
 
