@@ -176,20 +176,20 @@ public class Booking implements Serializable {
 	this.creditCardExpiryYear = creditCardExpiryYear;
     }
 
-    public boolean validateEnterBookingDetails(MessageContext context) {
+    public void validateEnterBookingDetails(MessageContext context) {
+	if (checkinDate.before(today())) {
+	    context.addMessage(new MessageBuilder().error().source("checkinDate").code("checkinDate.beforeToday")
+		    .build());
+	} else if (checkoutDate.before(checkinDate)) {
+	    context.addMessage(new MessageBuilder().error().source("checkoutDate").code(
+		    "checkoutDate.beforeCheckinDate").build());
+	}
+    }
+
+    private Date today() {
 	Calendar calendar = Calendar.getInstance();
 	calendar.add(Calendar.DAY_OF_MONTH, -1);
-	boolean valid = true;
-	if (checkinDate.before(calendar.getTime())) {
-	    context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
-		    "Check in date must be a future date").build());
-	    valid = false;
-	} else if (!checkinDate.before(checkoutDate)) {
-	    context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
-		    "Check out date must be later than check in date").build());
-	    valid = false;
-	}
-	return valid;
+	return calendar.getTime();
     }
 
     @Override
