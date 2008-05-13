@@ -129,11 +129,16 @@
 </context-param>]]>
         </programlisting>
     </sect1>
-	<sect1 id="spring-faces-webflow-config">
-		<title>Configuring Web Flow to render JSF views</title>
-		<para>
-			The next step is to configure Web Flow to render JSF views.  To do this, in your Spring Web Flow configuration include the <code>faces</code> namespace and link in the faces <code>flow-builder-services</code>:
-		</para>
+    <sect1 id="spring-faces-webflow-config">
+        <title>Configuring Web Flow to render JSF views</title>
+        <para>
+            The next step is to configure Web Flow to render JSF views. To do this, in your Spring Web Flow
+            configuration include the
+            <code>faces</code>
+            namespace and link in the faces
+            <code>flow-builder-services</code>
+            :
+        </para>
         <programlisting><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -162,10 +167,8 @@
 
 </beans>]]>
         </programlisting>
-		<para>
-			See the booking-faces reference application in the distribution for a complete working example.
-		</para>
-	</sect1>
+        <para>See the booking-faces reference application in the distribution for a complete working example.</para>
+    </sect1>
     <sect1 id="spring-faces-config">
         <title>Configuring faces-config.xml</title>
         <para>
@@ -558,8 +561,8 @@
             JSF and Web Flow combine to provide and extensive server-side validation model for your web application, but
             excessive roundtrips to the server to execute this validation and return error messages can be a tedious
             experience for your users. Spring Faces provides a number of client-side rich validation controls that can
-            enhance the user experience by applying simple validations that give immediate feedback.  Some simple 
-            examples are illustrated below.  See the Spring Faces taglib docs for a complete tag reference.
+            enhance the user experience by applying simple validations that give immediate feedback. Some simple
+            examples are illustrated below. See the Spring Faces taglib docs for a complete tag reference.
         </para>
         <sect2 id="spring-faces-text-validation">
             <title>Validating a Text Field</title>
@@ -620,19 +623,175 @@
             </para>
         </sect2>
         <sect2 id="spring-faces-validate-all">
-        <title>Preventing an Invalid Form Submission</title>
-        <para>The <code>validateAllOnClick</code> component can be used to intercept the "onclick" event of a child 
-        component and suppress the event if all client-side validations do not pass.</para>
-        <programlisting><![CDATA[ 
+            <title>Preventing an Invalid Form Submission</title>
+            <para>
+                The
+                <code>validateAllOnClick</code>
+                component can be used to intercept the "onclick" event of a child component and suppress the event if
+                all client-side validations do not pass.
+            </para>
+            <programlisting><![CDATA[ 
 <sf:validateAllOnClick>
     <sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/>&#160;
 </sf:validateAllOnClick>]]>
             </programlisting>
             <para>
-                This will prevent the form from being submitted when the user clicks the "proceed" button if the form
-                is invalid.  When the validations are executed, the user is given clear and immediate indicators of the
+                This will prevent the form from being submitted when the user clicks the "proceed" button if the form is
+                invalid. When the validations are executed, the user is given clear and immediate indicators of the
                 problems that need to be corrected.
             </para>
+        </sect2>
+    </sect1>
+    <sect1 id="spring-faces-component-libraries">
+        <title>Third-Party Component Library Integration</title>
+        <para>
+            Spring Faces strives to be compatible with any third-party JSF component library. By honoring all of the
+            standard semantics of the JSF specification within the SWF-driven JSF lifecycle, third-party libraries in
+            general should "just work". The main thing to remember is that configuration in web.xml will change slightly
+            since Spring Faces requests are not routed through the standard FacesServlet. Typically, anything that is
+            traditionally mapped to the FacesServlet should be mapped to the Spring DispatcherServlet instead. (You can
+            also map to both if for example you are migrating a legacy JSF application page-by-page.) In some cases, a
+            deeper level of integration can be achieved by configuring special flow services that are "aware" of a
+            particular component library, and these will be noted in the examples to follow.
+        </para>
+        <sect2 id="spring-faces-with-richfaces">
+            <title>Rich Faces Integration</title>
+            <para>
+                To use the Rich Faces component library with Spring Faces, the following filter configuration is needed
+                in web.xml (in addition to the typical Spring Faces configuration):
+            </para>
+            <programlisting><![CDATA[ 
+<filter> 
+    <display-name>RichFaces Filter</display-name> 
+    <filter-name>richfaces</filter-name> 
+    <filter-class>org.ajax4jsf.Filter</filter-class> 
+</filter> 
+
+<filter-mapping> 
+    <filter-name>richfaces</filter-name> 
+    <servlet-name>Spring Web MVC Dispatcher Servlet</servlet-name>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+</filter-mapping>]]>
+            </programlisting>
+            <para>
+                For deeper integration (including the ability to have a view with combined use of the Spring Faces Ajax
+                components and Rich Faces Ajax components), configure the RichFacesAjaxHandler on your FlowController:
+            </para>
+            <programlisting><![CDATA[ 
+<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
+    <property name="flowExecutor" ref="flowExecutor" />
+    <property name="ajaxHandler">
+        <bean class="org.springframework.faces.richfaces.RichFacesAjaxHandler"/>
+    </property>
+</bean>]]>
+            </programlisting>
+            <para>
+                RichFaces Ajax components can be used in conjunction with the
+                <code>render</code>
+                tag to render partial fragments on an Ajax request. Instead of embedding the ids of the components to be
+                re-rendered directly in the view template (as you traditionally do with Rich Faces), you can bind the
+                <code>reRender</code>
+                attribute of a RichFaces Ajax component to a special
+                <code>flowRenderFragments</code>
+                EL variable. For example, in your view template you can have a fragment that you would potentially like
+                to re-render in response to a particular event:
+            </para>
+            <programlisting><![CDATA[
+<h:form id="hotels">
+    <a4j:outputPanel id="searchResultsFragment">
+        <h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
+        <h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount > 0}">
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                #{hotel.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Address</f:facet>
+                #{hotel.address}
+            </h:column>
+        </h:dataTable>
+    </a4j:outputPanel>
+</h:form>]]>
+            </programlisting>
+            <para>
+                then a RichFaces Ajax
+                <code>commandLink</code>
+                to fire the event:
+            </para>
+            <programlisting><![CDATA[
+<a4j:commandLink id="nextPageLink" value="More Results" action="next" reRender="#{flowRenderFragments}" />]]>
+            </programlisting>
+            <para>
+                and then in your flow definition a
+                <code>transition</code>
+                to handle the event:
+            </para>
+            <programlisting><![CDATA[
+<transition on="next">
+    <evaluate expression="searchCriteria.nextPage()" />
+    <render fragments="hotels:searchResultsFragment" />
+</transition>]]>
+            </programlisting>
+        </sect2>
+        <sect2 id="spring-faces-with-trinidad">
+            <title>Apache MyFaces Trinidad Integration</title>
+            <para>
+                The Apache MyFaces Trinidad library has been tested with the Spring Faces integration and proven to fit
+                in nicely. Deeper integration to allow the Trinidad components and Spring Faces components to play
+                well together has not yet been attempted, but Trinidad provides a pretty thorough solution on its own
+                when used in conjunction with the Spring Faces integration layer.
+            </para>
+            <para>
+                Typical Trinidad + Spring Faces configuration is as follows in web.xml (in addition to the typical
+                Spring Faces configuration):
+            </para>
+            <programlisting><![CDATA[
+<context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+</context-param>
+
+<context-param>
+    <param-name>
+        org.apache.myfaces.trinidad.CHANGE_PERSISTENCE
+    </param-name>
+    <param-value>session</param-value>
+</context-param>
+
+<context-param>
+    <param-name>
+        org.apache.myfaces.trinidad.ENABLE_QUIRKS_MODE
+    </param-name>
+    <param-value>false</param-value>
+</context-param>
+
+<filter>
+    <filter-name>Trinidad Filter</filter-name>
+    <filter-class>
+        org.apache.myfaces.trinidad.webapp.TrinidadFilter
+    </filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>Trinidad Filter</filter-name>
+    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+</filter-mapping>
+
+<servlet>
+    <servlet-name>Trinidad Resource Servlet</servlet-name>
+    <servlet-class>
+        org.apache.myfaces.trinidad.webapp.ResourceServlet
+    </servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>resources</servlet-name>
+    <url-pattern>/adf/*</url-pattern>
+</servlet-mapping>
+]]>
+            </programlisting>
         </sect2>
     </sect1>
 </chapter>
