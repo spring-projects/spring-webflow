@@ -74,6 +74,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	private AjaxHandler ajaxHandler;
 
+	private boolean redirectHttp10Compatible = true;
+
 	/**
 	 * Creates a new flow handler adapter.
 	 * @see #setFlowExecutor(FlowExecutor)
@@ -129,6 +131,21 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	public void setAjaxHandler(AjaxHandler ajaxHandler) {
 		this.ajaxHandler = ajaxHandler;
+	}
+
+	/**
+	 * Set whether redirects sent by this handler adapter should be compatible with HTTP 1.0 clients.
+	 * <p>
+	 * By default, this will enforce a redirect HTTP status code of 302 by delegating to
+	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is
+	 * the correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
+	 * <p>
+	 * Many HTTP 1.1 clients treat 302 just like 303, not making any difference. However, some clients depend on 303
+	 * when redirecting after a POST request; turn this flag off in such a scenario.
+	 * @see javax.servlet.http.HttpServletResponse#sendRedirect
+	 */
+	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
+		this.redirectHttp10Compatible = redirectHttp10Compatible;
 	}
 
 	public void afterPropertiesSet() throws Exception {
@@ -369,7 +386,14 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (ajaxHandler.isAjaxRequest(request, response)) {
 			ajaxHandler.sendAjaxRedirect(url, request, response, false);
 		} else {
-			response.sendRedirect(response.encodeRedirectURL(url));
+			if (redirectHttp10Compatible) {
+				// Always send status code 302.
+				response.sendRedirect(response.encodeRedirectURL(url));
+			} else {
+				// Correct HTTP status code is 303, in particular for POST requests.
+				response.setStatus(303);
+				response.setHeader("Location", response.encodeRedirectURL(url));
+			}
 		}
 	}
 

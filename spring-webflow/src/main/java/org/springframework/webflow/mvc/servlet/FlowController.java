@@ -105,6 +105,21 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	}
 
 	/**
+	 * Set whether redirects sent by this controller should be compatible with HTTP 1.0 clients.
+	 * <p>
+	 * By default, this will enforce a redirect HTTP status code of 302 by delegating to
+	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is
+	 * the correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
+	 * <p>
+	 * Many HTTP 1.1 clients treat 302 just like 303, not making any difference. However, some clients depend on 303
+	 * when redirecting after a POST request; turn this flag off in such a scenario.
+	 * @see javax.servlet.http.HttpServletResponse#sendRedirect
+	 */
+	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
+		flowHandlerAdapter.setRedirectHttp10Compatible(redirectHttp10Compatible);
+	}
+
+	/**
 	 * Sets the custom flow handles for managing the access to flows in a custom manner.
 	 * @param flowHandlers the flow handler map
 	 */
