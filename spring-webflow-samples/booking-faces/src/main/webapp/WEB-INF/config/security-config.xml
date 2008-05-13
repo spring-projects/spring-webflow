@@ -33,7 +33,6 @@
                 <property name="justUseSavedRequestOnGet" value="false"/>
             </bean>       
         </property>
-        <security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER"/>
     </bean>
 	
 	<!--
