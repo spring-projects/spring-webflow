@@ -30,7 +30,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -349,7 +349,7 @@ public class FlowTests extends TestCase {
 	}
 
 	public TransitionCriteria on(String eventId) {
-		return new EventIdTransitionCriteria(eventId);
+		return new MockTransitionCriteria(eventId);
 	}
 
 	protected TargetStateResolver to(String stateId) {

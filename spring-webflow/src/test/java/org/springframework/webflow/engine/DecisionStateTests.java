@@ -18,7 +18,7 @@ package org.springframework.webflow.engine;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestControlContext;
 
@@ -32,7 +32,7 @@ public class DecisionStateTests extends TestCase {
 	public void testIfDecision() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
-		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("target")));
+		state.getTransitionSet().add(new Transition(new MockTransitionCriteria("foo"), to("target")));
 		new EndState(flow, "target");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentEvent(new Event(this, "foo"));
@@ -43,7 +43,7 @@ public class DecisionStateTests extends TestCase {
 	public void testElseDecision() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
-		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("invalid")));
+		state.getTransitionSet().add(new Transition(new MockTransitionCriteria("foo"), to("invalid")));
 		state.getTransitionSet().add(new Transition(to("target")));
 		new EndState(flow, "target");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -55,8 +55,8 @@ public class DecisionStateTests extends TestCase {
 	public void testCannotDecide() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
-		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("foo"), to("invalid")));
-		state.getTransitionSet().add(new Transition(new EventIdTransitionCriteria("bar"), to("invalid")));
+		state.getTransitionSet().add(new Transition(new MockTransitionCriteria("foo"), to("invalid")));
+		state.getTransitionSet().add(new Transition(new MockTransitionCriteria("bar"), to("invalid")));
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentEvent(new Event(this, "bogus"));
 		try {

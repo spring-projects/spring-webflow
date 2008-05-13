@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.support.ActionTransitionCriteria;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -212,7 +212,7 @@ public class ViewStateTests extends TestCase {
 	}
 
 	protected TransitionCriteria on(String event) {
-		return new EventIdTransitionCriteria(event);
+		return new MockTransitionCriteria(event);
 	}
 
 	protected TargetStateResolver to(String stateId) {

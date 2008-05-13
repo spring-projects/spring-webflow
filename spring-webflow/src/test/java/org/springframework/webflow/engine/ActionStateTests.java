@@ -18,7 +18,7 @@ package org.springframework.webflow.engine;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -81,7 +81,7 @@ public class ActionStateTests extends TestCase {
 	}
 
 	protected TransitionCriteria on(String event) {
-		return new EventIdTransitionCriteria(event);
+		return new MockTransitionCriteria(event);
 	}
 
 	protected TargetStateResolver to(String stateId) {

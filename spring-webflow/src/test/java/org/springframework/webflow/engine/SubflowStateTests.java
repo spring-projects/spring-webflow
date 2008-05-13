@@ -28,7 +28,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -118,7 +118,7 @@ public class SubflowStateTests extends TestCase {
 	}
 
 	protected TransitionCriteria on(String event) {
-		return new EventIdTransitionCriteria(event);
+		return new MockTransitionCriteria(event);
 	}
 
 	protected TargetStateResolver to(String stateId) {

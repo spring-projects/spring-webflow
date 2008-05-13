@@ -33,12 +33,10 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * This converter supports the following encoded forms:
  * <ul>
- * <li>"*" - will result in a TransitionCriteria object that matches on everything ({@link org.springframework.webflow.engine.WildcardTransitionCriteria})
- * </li>
- * <li>"eventId" - will result in a TransitionCriteria object that matches given event id ({@link org.springframework.webflow.engine.support.EventIdTransitionCriteria})
- * </li>
- * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an expression ({@link org.springframework.webflow.engine.support.DefaultTransitionCriteria})
- * </li>
+ * <li>"*" - will result in a TransitionCriteria object that matches on everything. </li>
+ * <li>"eventId" - will result in a TransitionCriteria object that matches given event id. </li>
+ * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an
+ * expression. </li>
  * </ul>
  * 
  * @see org.springframework.webflow.engine.TransitionCriteria

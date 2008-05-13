@@ -26,7 +26,7 @@ import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
-import org.springframework.webflow.engine.support.EventIdTransitionCriteria;
+import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -103,7 +103,7 @@ public class EndStateTests extends TestCase {
 	}
 
 	protected static TransitionCriteria on(String event) {
-		return new EventIdTransitionCriteria(event);
+		return new MockTransitionCriteria(event);
 	}
 
 	protected static TargetStateResolver to(String stateId) {
