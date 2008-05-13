@@ -19,7 +19,6 @@ import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.Converter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.TransitionCriteria;
@@ -92,7 +91,7 @@ class TextToTransitionCriteria implements Converter {
 	protected TransitionCriteria createBooleanExpressionTransitionCriteria(String encodedCriteria,
 			ExpressionParser parser) throws ConversionExecutionException {
 		Expression expression = parser.parseExpression(encodedCriteria, new FluentParserContext().template().evaluate(
-				RequestContext.class).variable(new ExpressionVariable("result", "lastEvent.id")));
+				RequestContext.class));
 		return new DefaultTransitionCriteria(expression);
 	}
 }

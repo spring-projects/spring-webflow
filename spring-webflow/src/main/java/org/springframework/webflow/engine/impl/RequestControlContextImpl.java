@@ -228,7 +228,8 @@ class RequestControlContextImpl implements RequestControlContext {
 
 	public String toString() {
 		return new ToStringCreator(this).append("externalContext", externalContext)
-				.append("requestScope", requestScope).append("attributes", attributes).append("flowExecution",
-						flowExecution).toString();
+				.append("currentEvent", currentEvent).append("requestScope", requestScope).append("attributes",
+						attributes).append("messageContext", messageContext).append("flowExecution", flowExecution)
+				.toString();
 	}
 }

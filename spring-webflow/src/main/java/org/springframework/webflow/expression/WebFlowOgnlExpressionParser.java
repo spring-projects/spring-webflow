@@ -34,7 +34,6 @@ import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -55,7 +54,6 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 		addPropertyAccessor(MessageSource.class, new MessageSourcePropertyAccessor());
 		addPropertyAccessor(RequestContext.class, new RequestContextPropertyAccessor(new ObjectPropertyAccessor()));
 		addPropertyAccessor(Action.class, new ActionPropertyAccessor());
-		addPropertyAccessor(Event.class, new EventPropertyAccessor());
 	}
 
 	/**
@@ -212,20 +210,6 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			throw new OgnlException("Cannot set properties on a Action instance - operation not allowed");
-		}
-	}
-
-	/**
-	 * Resolves event attributes.
-	 */
-	private static class EventPropertyAccessor implements PropertyAccessor {
-		public Object getProperty(Map context, Object target, Object name) throws OgnlException {
-			Event event = (Event) target;
-			return event.getAttributes().get(name.toString());
-		}
-
-		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
-			throw new OgnlException("Cannot set attributes on an Event instance - operation not allowed");
 		}
 	}
 

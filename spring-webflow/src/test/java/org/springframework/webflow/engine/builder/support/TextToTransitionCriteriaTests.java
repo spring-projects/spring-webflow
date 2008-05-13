@@ -83,6 +83,15 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
+	public void testCurrenEventEval() throws Exception {
+		String expression = "${currentEvent == 'submit'}";
+		TransitionCriteria criterion = (TransitionCriteria) converter.convert(expression, TransitionCriteria.class,
+				null);
+		MockRequestContext ctx = getRequestContext();
+		ctx.setCurrentEvent(new Event(this, "submit"));
+		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+	}
+
 	public void testNullExpressionEvaluation() throws Exception {
 		serviceLocator.getFlowBuilderServices().setExpressionParser(new ExpressionParser() {
 			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {

@@ -177,7 +177,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		LocalAttributeMap attributes = new LocalAttributeMap();
 		attributes.put("foo", "bar");
 		context.setCurrentEvent(new Event(this, "event", attributes));
-		Expression exp = parser.parseExpression("currentEvent.foo", new FluentParserContext()
+		Expression exp = parser.parseExpression("currentEvent.attributes.foo", new FluentParserContext()
 				.evaluate(RequestContext.class));
 		assertEquals("bar", exp.getValue(context));
 	}

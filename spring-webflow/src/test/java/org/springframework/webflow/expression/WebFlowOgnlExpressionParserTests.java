@@ -16,6 +16,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
@@ -171,6 +172,16 @@ public class WebFlowOgnlExpressionParserTests extends TestCase {
 		AnnotatedAction action = (AnnotatedAction) exp.getValue(context);
 		assertSame(ac.getBean("multiAction"), action.getTargetAction());
 		assertEquals("setupForm", action.getMethod());
+	}
+
+	public void testResolveEventAttributes() {
+		MockRequestContext context = new MockRequestContext();
+		LocalAttributeMap attributes = new LocalAttributeMap();
+		attributes.put("foo", "bar");
+		context.setCurrentEvent(new Event(this, "event", attributes));
+		Expression exp = parser.parseExpression("currentEvent.attributes.foo", new FluentParserContext()
+				.evaluate(RequestContext.class));
+		assertEquals("bar", exp.getValue(context));
 	}
 
 	public void testResolveMessage() {

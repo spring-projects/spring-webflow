@@ -402,7 +402,7 @@ public interface FlowOutcome {
 			<programlisting language="xml"><![CDATA[
 <subflow-state id="addGuest" subflow="createGuest">
     <transition on="guestCreated" to="reviewBooking">
-        <evaluate expression="booking.guests.add(currentEvent.guest)" />  
+        <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
     </transition>
     <transition on="creationCancelled" to="reviewBooking" />
 </subfow-state>]]>
@@ -430,7 +430,7 @@ public interface FlowOutcome {
 				</para>
 				<programlisting language="xml"><![CDATA[
 <transition on="guestCreated" to="reviewBooking">
-    <evaluate expression="booking.guests.add(currentEvent.guest)" />  
+    <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
 </transition>]]>
 				</programlisting>
 				<para>
@@ -469,7 +469,7 @@ public interface FlowOutcome {
 
     <subflow-state id="addGuest" subflow="createGuest">
         <transition on="guestCreated" to="reviewBooking">
-            <evaluate expression="booking.guests.add(currentEvent.guest)"/>  
+            <evaluate expression="booking.guests.add(currentEvent.attributes.guest)"/>  
         </transition>
         <transition on="creationCancelled" to="reviewBooking" />
     </subfow-state>
