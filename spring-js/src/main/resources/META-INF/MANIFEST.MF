@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Bundle-Name: Spring Javascript
 Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
 Import-Package: javax.servlet;version="[2.4,3.0)",javax.servlet.http;v
@@ -14,12 +15,11 @@ Import-Package: javax.servlet;version="[2.4,3.0)",javax.servlet.http;v
  ersion="[2.5.4.A,3.0)",org.springframework.web.servlet.view.tiles2;ve
  rsion="[2.5.4.A,3.0)"
 Bundle-ManifestVersion: 2
-Bundle-Name: Spring Javascript
 Bundle-SymbolicName: org.springframework.js
-Export-Package: org.springframework.js.ajax;version="2.0";uses:="javax
- .servlet.http,org.springframework.web.servlet",org.springframework.js
- .ajax.tiles2;version="2.0";uses:="javax.servlet.http,org.springframew
- ork.js.ajax",org.springframework.js.resource;version="2.0";uses:="jav
- ax.servlet,javax.servlet.http"
-Bundle-Version: 2.0
+Export-Package: org.springframework.js.ajax;version="2.0.1";uses:="jav
+ ax.servlet.http,org.springframework.web.servlet",org.springframework.
+ js.ajax.tiles2;version="2.0.1";uses:="javax.servlet.http,org.springfr
+ amework.js.ajax",org.springframework.js.resource;version="2.0.1";uses
+ :="javax.servlet,javax.servlet.http"
+Bundle-Version: 2.0.1
 

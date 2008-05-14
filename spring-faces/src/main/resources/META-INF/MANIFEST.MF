@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Bundle-Name: Spring Faces
 Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
 Import-Package: javax.el;version="[2.1,3.0)",javax.faces;version="[1.2
@@ -13,47 +14,47 @@ Import-Package: javax.el;version="[2.1,3.0)",javax.faces;version="[1.2
  ans;version="[2.5.4.A,3.0)",org.springframework.beans.factory;version
  ="[2.5.4.A,3.0)",org.springframework.beans.factory.support;version="[
  2.5.4.A,3.0)",org.springframework.beans.factory.xml;version="[2.5.4.A
- ,3.0)",org.springframework.binding.convert;version="[2.0,2.0]",org.sp
- ringframework.binding.convert.converters;version="[2.0,2.0]",org.spri
- ngframework.binding.convert.service;version="[2.0,2.0]",org.springfra
- mework.binding.expression;version="[2.0,2.0]",org.springframework.bin
- ding.expression.el;version="[2.0,2.0]",org.springframework.binding.fo
- rmat;version="[2.0,2.0]",org.springframework.binding.format.registry;
- version="[2.0,2.0]",org.springframework.binding.message;version="[2.0
- ,2.0]",org.springframework.context;version="[2.5.4.A,3.0)",org.spring
- framework.core.io;version="[2.5.4.A,3.0)",org.springframework.core.st
- yle;version="[2.5.4.A,3.0)",org.springframework.js.ajax;version="[2.0
- ,2.0]",org.springframework.util;version="[2.5.4.A,3.0)",org.springfra
- mework.web.context.support;version="[2.5.4.A,3.0)",org.springframewor
- k.web.jsf;version="[2.5.4.A,3.0)",org.springframework.web.servlet.vie
- w;version="[2.5.4.A,3.0)",org.springframework.webflow.context;version
- ="[2.0,2.0]",org.springframework.webflow.core.collection;version="[2.
- 0,2.0]",org.springframework.webflow.definition;version="[2.0,2.0]",or
- g.springframework.webflow.engine;version="[2.0,2.0]",org.springframew
- ork.webflow.engine.builder;version="[2.0,2.0]",org.springframework.we
- bflow.engine.builder.support;version="[2.0,2.0]",org.springframework.
- webflow.execution;version="[2.0,2.0]",org.springframework.webflow.exp
- ression.el;version="[2.0,2.0]",org.w3c.dom
+ ,3.0)",org.springframework.binding.convert;version="[2.0.1,2.0.1]",or
+ g.springframework.binding.convert.converters;version="[2.0.1,2.0.1]",
+ org.springframework.binding.convert.service;version="[2.0.1,2.0.1]",o
+ rg.springframework.binding.expression;version="[2.0.1,2.0.1]",org.spr
+ ingframework.binding.expression.el;version="[2.0.1,2.0.1]",org.spring
+ framework.binding.format;version="[2.0.1,2.0.1]",org.springframework.
+ binding.format.registry;version="[2.0.1,2.0.1]",org.springframework.b
+ inding.message;version="[2.0.1,2.0.1]",org.springframework.context;ve
+ rsion="[2.5.4.A,3.0)",org.springframework.core.io;version="[2.5.4.A,3
+ .0)",org.springframework.core.style;version="[2.5.4.A,3.0)",org.sprin
+ gframework.js.ajax;version="[2.0.1,2.0.1]",org.springframework.util;v
+ ersion="[2.5.4.A,3.0)",org.springframework.web.context.support;versio
+ n="[2.5.4.A,3.0)",org.springframework.web.jsf;version="[2.5.4.A,3.0)"
+ ,org.springframework.web.servlet.view;version="[2.5.4.A,3.0)",org.spr
+ ingframework.webflow.context;version="[2.0.1,2.0.1]",org.springframew
+ ork.webflow.core.collection;version="[2.0.1,2.0.1]",org.springframewo
+ rk.webflow.definition;version="[2.0.1,2.0.1]",org.springframework.web
+ flow.engine;version="[2.0.1,2.0.1]",org.springframework.webflow.engin
+ e.builder;version="[2.0.1,2.0.1]",org.springframework.webflow.engine.
+ builder.support;version="[2.0.1,2.0.1]",org.springframework.webflow.e
+ xecution;version="[2.0.1,2.0.1]",org.springframework.webflow.expressi
+ on.el;version="[2.0.1,2.0.1]",org.w3c.dom
 Bundle-ManifestVersion: 2
-Bundle-Name: Spring Faces
 Bundle-SymbolicName: org.springframework.faces
-Export-Package: org.springframework.faces.config;version="2.0";uses:="
- org.springframework.beans.factory.support,org.w3c.dom",org.springfram
- ework.faces.expression;version="2.0";uses:="javax.el,javax.faces.cont
- ext,javax.faces.el",org.springframework.faces.model;version="2.0";use
- s:="javax.faces.event",org.springframework.faces.model.converter;vers
- ion="2.0",org.springframework.faces.mvc;version="2.0";uses:="javax.se
- rvlet.http",org.springframework.faces.richfaces;version="2.0";uses:="
- javax.faces.context,javax.servlet,javax.servlet.http",org.springframe
- work.faces.support;version="2.0";uses:="javax.faces.event",org.spring
- framework.faces.ui;version="2.0";uses:="javax.el,javax.faces,javax.fa
- ces.component,javax.faces.context,javax.faces.el,javax.faces.event",o
- rg.springframework.faces.ui.resource;version="2.0";uses:="javax.faces
- .context",org.springframework.faces.webflow;version="2.0";uses:="java
- x.el,javax.faces,javax.faces.application,javax.faces.component,javax.
- faces.context,javax.faces.el,javax.faces.event,javax.faces.lifecycle,
- javax.faces.render,org.springframework.beans.factory,org.springframew
- ork.binding.expression,org.springframework.binding.format,org.springf
- ramework.webflow.execution"
-Bundle-Version: 2.0
+Export-Package: org.springframework.faces.config;version="2.0.1";uses:
+ ="org.springframework.beans.factory.support,org.w3c.dom",org.springfr
+ amework.faces.expression;version="2.0.1";uses:="javax.el,javax.faces.
+ context,javax.faces.el",org.springframework.faces.model;version="2.0.
+ 1";uses:="javax.faces.event",org.springframework.faces.model.converte
+ r;version="2.0.1",org.springframework.faces.mvc;version="2.0.1";uses:
+ ="javax.servlet.http",org.springframework.faces.richfaces;version="2.
+ 0.1";uses:="javax.faces.context,javax.servlet,javax.servlet.http",org
+ .springframework.faces.support;version="2.0.1";uses:="javax.faces.eve
+ nt",org.springframework.faces.ui;version="2.0.1";uses:="javax.el,java
+ x.faces,javax.faces.component,javax.faces.context,javax.faces.el,java
+ x.faces.event",org.springframework.faces.ui.resource;version="2.0.1";
+ uses:="javax.faces.context",org.springframework.faces.webflow;version
+ ="2.0.1";uses:="javax.el,javax.faces,javax.faces.application,javax.fa
+ ces.component,javax.faces.context,javax.faces.el,javax.faces.event,ja
+ vax.faces.lifecycle,javax.faces.render,org.springframework.beans.fact
+ ory,org.springframework.binding.expression,org.springframework.bindin
+ g.format,org.springframework.webflow.execution"
+Bundle-Version: 2.0.1
 

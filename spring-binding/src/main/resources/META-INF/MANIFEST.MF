@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Bundle-Name: Spring Binding
 Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
 Import-Package: javax.el;version="[2.1,3.0)",ognl;version="[2.6.9,3.0)
@@ -10,31 +11,30 @@ Import-Package: javax.el;version="[2.1,3.0)",ognl;version="[2.6.9,3.0)
  core.style;version="[2.5.4.A,3.0)",org.springframework.util;version="
  [2.5.4.A,3.0)",org.springframework.validation;version="[2.5.4.A,3.0)"
 Bundle-ManifestVersion: 2
-Bundle-Name: Spring Binding
 Bundle-SymbolicName: org.springframework.binding
-Export-Package: org.springframework.binding.collection;version="2.0",o
- rg.springframework.binding.convert;version="2.0",org.springframework.
- binding.convert.converters;version="2.0";uses:="org.springframework.b
- inding.convert",org.springframework.binding.convert.service;version="
- 2.0";uses:="org.springframework.binding.convert",org.springframework.
- binding.expression;version="2.0";uses:="org.springframework.core.styl
- e",org.springframework.binding.expression.el;version="2.0";uses:="jav
- ax.el,org.springframework.binding.expression",org.springframework.bin
- ding.expression.ognl;version="2.0";uses:="ognl,org.springframework.bi
- nding.expression",org.springframework.binding.expression.support;vers
- ion="2.0";uses:="org.springframework.binding.expression",org.springfr
- amework.binding.format;version="2.0",org.springframework.binding.form
- at.formatters;version="2.0";uses:="org.springframework.binding.format
- ",org.springframework.binding.format.registry;version="2.0";uses:="or
- g.springframework.binding.format",org.springframework.binding.mapping
- ;version="2.0";uses:="org.springframework.binding.expression",org.spr
- ingframework.binding.mapping.impl;version="2.0";uses:="org.springfram
- ework.binding.convert,org.springframework.binding.expression,org.spri
- ngframework.binding.mapping",org.springframework.binding.mapping.resu
- lts;version="2.0";uses:="org.springframework.binding.expression",org.
- springframework.binding.message;version="2.0";uses:="org.springframew
- ork.context,org.springframework.validation",org.springframework.bindi
- ng.method;version="2.0";uses:="org.springframework.binding.convert,or
- g.springframework.binding.expression"
-Bundle-Version: 2.0
+Export-Package: org.springframework.binding.collection;version="2.0.1"
+ ,org.springframework.binding.convert;version="2.0.1",org.springframew
+ ork.binding.convert.converters;version="2.0.1",org.springframework.bi
+ nding.convert.service;version="2.0.1";uses:="org.springframework.bind
+ ing.convert",org.springframework.binding.expression;version="2.0.1";u
+ ses:="org.springframework.core.style",org.springframework.binding.exp
+ ression.el;version="2.0.1";uses:="javax.el,org.springframework.bindin
+ g.expression",org.springframework.binding.expression.ognl;version="2.
+ 0.1";uses:="ognl,org.springframework.binding.expression",org.springfr
+ amework.binding.expression.support;version="2.0.1";uses:="org.springf
+ ramework.binding.expression",org.springframework.binding.format;versi
+ on="2.0.1",org.springframework.binding.format.formatters;version="2.0
+ .1";uses:="org.springframework.binding.format",org.springframework.bi
+ nding.format.registry;version="2.0.1";uses:="org.springframework.bind
+ ing.format",org.springframework.binding.mapping;version="2.0.1";uses:
+ ="org.springframework.binding.expression",org.springframework.binding
+ .mapping.impl;version="2.0.1";uses:="org.springframework.binding.conv
+ ert,org.springframework.binding.expression,org.springframework.bindin
+ g.mapping",org.springframework.binding.mapping.results;version="2.0.1
+ ";uses:="org.springframework.binding.convert,org.springframework.bind
+ ing.expression",org.springframework.binding.message;version="2.0.1";u
+ ses:="org.springframework.context,org.springframework.validation",org
+ .springframework.binding.method;version="2.0.1";uses:="org.springfram
+ ework.binding.convert,org.springframework.binding.expression"
+Bundle-Version: 2.0.1
 
