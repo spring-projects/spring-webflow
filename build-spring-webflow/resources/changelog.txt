@@ -32,7 +32,7 @@ Bug Fixes
 * Restored JDK 1.4 compatibility in two places: when catching and re-throwing an Exception thrown by a Spring MVC View, when writing out mock responses during testing.
     
 Documentation
-* Added documentation on Spring Faces integration with Rich Faces, Trindad, and IceFaces.
+* Added documentation on Spring Faces integration with Rich Faces and Apache Trinidad JSF component libraries.
 * Added documentation on FlowHandler and externalRedirect: redirect prefixes.
 * Added documentation on accessing Web Flow artifacts from Maven Central.
 * Clarified the conversation-scoped and view-state managed persistence context patterns will be considered for implementation in future Web Flow releases.
