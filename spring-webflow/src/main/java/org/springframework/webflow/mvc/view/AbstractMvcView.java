@@ -458,6 +458,10 @@ public abstract class AbstractMvcView implements View {
 			throw new UnsupportedOperationException("Setting request parameters is not allowed");
 		}
 
+		public String toString() {
+			return parameterName;
+		}
+
 	}
 
 	private static class FormatterBackedMappingConversionExecutor implements ConversionExecutor {
