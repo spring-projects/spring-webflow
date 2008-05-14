@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.1 (13.05.2008)
+Changes in version 2.0.1 (14.05.2008)
 -------------------------------------
 New Features
 
