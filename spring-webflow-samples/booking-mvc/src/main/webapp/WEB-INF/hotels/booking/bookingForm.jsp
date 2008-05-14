@@ -153,8 +153,7 @@
 			<script type="text/javascript">
 				Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
 			</script>
-			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
-			
+			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;			
 		</div>
 	</fieldset>
 </form:form>
