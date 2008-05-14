@@ -16,19 +16,25 @@
 package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.InvalidFormatException;
@@ -63,6 +69,8 @@ import org.springframework.webflow.expression.DefaultExpressionParserFactory;
  */
 public abstract class AbstractMvcView implements View {
 
+	private static final Log logger = LogFactory.getLog(AbstractMvcView.class);
+
 	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
 
 	private static final MappingResultsCriteria MAPPING_ERROR = new MappingError();
@@ -80,6 +88,12 @@ public abstract class AbstractMvcView implements View {
 	private boolean viewErrors;
 
 	private String eventId;
+
+	private Set allowedBindFields;
+
+	private String fieldMarkerPrefix = "_";
+
+	private ConversionExecutor bindingTypeConverter;
 
 	/**
 	 * Creates a new MVC view.
@@ -105,6 +119,34 @@ public abstract class AbstractMvcView implements View {
 	 */
 	public void setFormatterRegistry(FormatterRegistry formatterRegistry) {
 		this.formatterRegistry = formatterRegistry;
+		bindingTypeConverter = new FormatterBackedMappingConversionExecutor(this.formatterRegistry);
+	}
+
+	/**
+	 * Specify a prefix that can be used for parameters that mark potentially empty fields, having "prefix + field" as
+	 * name. Such a marker parameter is checked by existence: You can send any value for it, for example "visible". This
+	 * is particularly useful for HTML checkboxes and select options.
+	 * <p>
+	 * Default is "_", for "_FIELD" parameters (e.g. "_subscribeToNewsletter"). Set this to null if you want to turn off
+	 * the empty field check completely.
+	 * <p>
+	 * HTML checkboxes only send a value when they're checked, so it is not possible to detect that a formerly checked
+	 * box has just been unchecked, at least not with standard HTML means.
+	 * <p>
+	 * This auto-reset mechanism addresses this deficiency, provided that a marker parameter is sent for each checkbox
+	 * field, like "_subscribeToNewsletter" for a "subscribeToNewsletter" field. As the marker parameter is sent in any
+	 * case, the data binder can detect an empty field and automatically reset its value.
+	 */
+	public void setFieldMarkerPrefix(String fieldMarkerPrefix) {
+		this.fieldMarkerPrefix = fieldMarkerPrefix;
+	}
+
+	/**
+	 * Register fields that should be allowed for binding. Default is all fields.
+	 * @param allowedBindFields the set of field name strings to allow
+	 */
+	public void setAllowedBindFields(Set allowedBindFields) {
+		this.allowedBindFields = allowedBindFields;
 	}
 
 	public void render() throws IOException {
@@ -236,21 +278,89 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private MappingResults bind(Object model) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Setting up view->model mappings");
+		}
 		DefaultMapper mapper = new DefaultMapper();
-		addDefaultMappings(mapper, requestContext.getRequestParameters(), model);
-		return mapper.map(requestContext.getRequestParameters(), model);
+		ParameterMap requestParameters = requestContext.getRequestParameters();
+		addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
+		return mapper.map(requestParameters, model);
 	}
 
-	private void addDefaultMappings(DefaultMapper mapper, ParameterMap requestParameters, Object model) {
-		for (Iterator it = requestParameters.asMap().keySet().iterator(); it.hasNext();) {
-			String name = (String) it.next();
-			Expression source = new RequestParameterExpression(name);
-			Expression target = expressionParser.parseExpression(name, new FluentParserContext().evaluate(model
-					.getClass()));
-			DefaultMapping mapping = new DefaultMapping(source, target);
-			mapping.setTypeConverter(new FormatterBackedMappingConversionExecutor(formatterRegistry));
-			mapper.addMapping(mapping);
+	private void addDefaultMappings(DefaultMapper mapper, Set parameterNames, Object model) {
+		for (Iterator it = parameterNames.iterator(); it.hasNext();) {
+			String parameterName = (String) it.next();
+			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
+				String field = parameterName.substring(fieldMarkerPrefix.length());
+				if (isAllowedField(field)) {
+					if (!parameterNames.contains(field)) {
+						addEmptyValueMapping(mapper, field, model);
+					}
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Will not map field marker parameter '" + parameterName + "'");
+					}
+				}
+			} else {
+				if (isAllowedField(parameterName)) {
+					addDefaultMapping(mapper, parameterName, model);
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Will not map parameter '" + parameterName + "'");
+					}
+				}
+			}
 		}
+	}
+
+	private boolean isAllowedField(String field) {
+		if (allowedBindFields == null) {
+			// always allow
+			return true;
+		} else {
+			return allowedBindFields.contains(field);
+		}
+	}
+
+	private void addEmptyValueMapping(DefaultMapper mapper, String field, Object model) {
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(field, parserContext);
+		try {
+			Class propertyType = target.getValueType(model);
+			Expression source = new StaticExpression(getEmptyValue(propertyType));
+			DefaultMapping mapping = new DefaultMapping(source, target);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Adding empty parameter value mapping for field '" + field + "'");
+			}
+			mapper.addMapping(mapping);
+		} catch (EvaluationException e) {
+
+		}
+	}
+
+	private Object getEmptyValue(Class fieldType) {
+		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
+			// Special handling of boolean property.
+			return Boolean.FALSE;
+		} else if (fieldType != null && fieldType.isArray()) {
+			// Special handling of array property.
+			return Array.newInstance(fieldType.getComponentType(), 0);
+		} else {
+			// Default value: try null.
+			return null;
+		}
+	}
+
+	private void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
+		Expression source = new RequestParameterExpression(parameter);
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(parameter, parserContext);
+		DefaultMapping mapping = new DefaultMapping(source, target);
+		mapping.setTypeConverter(bindingTypeConverter);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding mapping for parameter '" + parameter + "'");
+		}
+		mapper.addMapping(mapping);
 	}
 
 	private boolean hasMappingErrors(MappingResults results) {

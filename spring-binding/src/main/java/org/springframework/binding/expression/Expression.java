@@ -47,8 +47,9 @@ public interface Expression extends Serializable {
 	 * context.
 	 * @param context the context to evaluate
 	 * @return the most general type of value that can be set on this context
+	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
-	public Class getValueType(Object context);
+	public Class getValueType(Object context) throws EvaluationException;
 
 	/**
 	 * Returns the original string used to create this expression, unmodified.

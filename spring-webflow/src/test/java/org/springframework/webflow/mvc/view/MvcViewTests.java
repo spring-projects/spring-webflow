@@ -3,6 +3,7 @@ package org.springframework.webflow.mvc.view;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
@@ -184,6 +185,84 @@ public class MvcViewTests extends TestCase {
 		assertEquals("foo", bindBean.getBeanProperty().getName());
 	}
 
+	public void testResumeEventModelBindingAllowedFields() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("stringProperty", "foo");
+		context.putRequestParameter("integerProperty", "5");
+		context.putRequestParameter("dateProperty", "2007-01-01");
+		context.putRequestParameter("beanProperty.name", "foo");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
+		HashSet allowedBindFields = new HashSet();
+		allowedBindFields.add("stringProperty");
+		view.setAllowedBindFields(allowedBindFields);
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		assertEquals("foo", bindBean.getStringProperty());
+		assertEquals(new Integer(3), bindBean.getIntegerProperty());
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, 2008);
+		assertEquals(cal.getTime(), bindBean.getDateProperty());
+		assertEquals(null, bindBean.getBeanProperty().getName());
+	}
+
+	public void testResumeEventModelBindingFieldMarker() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("_booleanProperty", "whatever");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
+		HashSet allowedBindFields = new HashSet();
+		allowedBindFields.add("booleanProperty");
+		view.setAllowedBindFields(allowedBindFields);
+		view.processUserEvent();
+		assertEquals(false, bindBean.getBooleanProperty());
+	}
+
+	public void testResumeEventModelBindingFieldMarkerFieldPresent() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("booleanProperty", "true");
+		context.putRequestParameter("_booleanProperty", "whatever");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setFormatterRegistry(formatterRegistry);
+		view.processUserEvent();
+		assertEquals(true, bindBean.getBooleanProperty());
+	}
+
 	private class MockMvcView extends AbstractMvcView {
 
 		public MockMvcView(View view, RequestContext context) {
@@ -214,6 +293,7 @@ public class MvcViewTests extends TestCase {
 		private String stringProperty;
 		private Integer integerProperty = new Integer(3);
 		private Date dateProperty;
+		private boolean booleanProperty = true;
 		private NestedBean beanProperty;
 
 		public BindBean() {
@@ -238,6 +318,14 @@ public class MvcViewTests extends TestCase {
 
 		public void setIntegerProperty(Integer integerProperty) {
 			this.integerProperty = integerProperty;
+		}
+
+		public boolean getBooleanProperty() {
+			return booleanProperty;
+		}
+
+		public void setBooleanProperty(boolean booleanProperty) {
+			this.booleanProperty = booleanProperty;
 		}
 
 		public Date getDateProperty() {
