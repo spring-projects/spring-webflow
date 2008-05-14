@@ -30,6 +30,7 @@ Bug Fixes
 * Fixed a bug resulting in loss of JSF ExternalContext state during execution of the JSF Lifecycle.
   This bug was effecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
 * Fixed a bug preventing resolution of flow-local messages for flows launched as subflows.
+* Fixed a bug where field errors recorded using Errors.rejectValue were not being associated with the source field properly.
    
 Documentation
 * Added documentation on Spring Faces integration with Rich Faces, Trindad, and IceFaces.
