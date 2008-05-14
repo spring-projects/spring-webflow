@@ -30,7 +30,7 @@ Bug Fixes
 * Fixed a bug resulting in loss of JSF ExternalContext state during execution of the JSF Lifecycle.
   This bug was effecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
 * Fixed a bug preventing resolution of flow-local messages for flows launched as subflows.
-* Fixed a bug where field errors recorded using Errors.rejectValue were not being associated with the source field properly.
+* Fixed a bug where field errors recorded using Errors.rejectValue were not being associated with the source field.
    
 Documentation
 * Added documentation on Spring Faces integration with Rich Faces, Trindad, and IceFaces.
@@ -38,6 +38,7 @@ Documentation
 * Added documentation on accessing Web Flow artifacts from Maven Central.
 * Clarified the conversation-scoped and view-state managed persistence context patterns will be considered for implementation in future Web Flow releases.
 * Removed unnecessary note about special Spring MVC and JSF model binding semantics; the semantics should be equal between view technologies, even if the underlying technologies differ.
+* Improved documentation on model validator conventions.
 
 Changes in version 2.0.0 (29.04.2008)
 -------------------------------------

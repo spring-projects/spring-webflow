@@ -231,6 +231,11 @@ public class BookingValidator {
 				<para>
 					A Validator can also accept a Spring MVC <code>Errors</code> object, which is required for invoking existing Spring Validators.
 				</para>
+				<para>
+					Validators must be registered as Spring beans employing the naming convention <code>${model}Validator</code> to be detected and invoked automatically.
+					In the example above, Spring 2.5 classpath-scanning would detect the @Component and automatically register it as a bean with the name <code>bookingValidator</code>.
+					Then, anytime the <code>booking</code> model needs to be validated, this <code>bookingValidator</code> instance would be invoked for you.
+				</para>
 			</sect3>
 		</sect2>
 	</sect1>
