@@ -39,11 +39,12 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
-		messageContext.addMessage(new MessageBuilder().error().code(errorCode).defaultText(defaultMessage).build());
+		messageContext.addMessage(new MessageBuilder().error().code(errorCode).args(errorArgs).defaultText(
+				defaultMessage).build());
 	}
 
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
-		messageContext.addMessage(new MessageBuilder().error().source(field).code(errorCode)
+		messageContext.addMessage(new MessageBuilder().error().source(field).code(errorCode).args(errorArgs)
 				.defaultText(defaultMessage).build());
 	}
 

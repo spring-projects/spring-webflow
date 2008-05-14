@@ -104,10 +104,13 @@ public class MessageBuilder {
 	 * Records that the message being built should try and resolve its text using the codes provided. Adds the codes to
 	 * the codes list. Successive calls to this method add additional codes. Codes are applied in the order they are
 	 * added.
-	 * @param codes the message codes
+	 * @param codes the message codes; if null, no changes will be made
 	 * @return this, for fluent API usage
 	 */
 	public MessageBuilder codes(String[] codes) {
+		if (codes == null) {
+			return this;
+		}
 		this.codes.add(Arrays.asList(codes));
 		return this;
 	}
@@ -126,10 +129,13 @@ public class MessageBuilder {
 	/**
 	 * Records that the message being built has variable arguments. Adds the args to the args list. Successive calls to
 	 * this method add additional args. Args are applied in the order they are added.
-	 * @param args the message argument values
+	 * @param args the message argument values, if null no changes will be made
 	 * @return this, for fluent API usage
 	 */
 	public MessageBuilder args(Object[] args) {
+		if (args == null) {
+			return this;
+		}
 		this.args.add(Arrays.asList(args));
 		return this;
 	}
@@ -154,6 +160,9 @@ public class MessageBuilder {
 	 * @return this, for fluent API usage
 	 */
 	public MessageBuilder resolvableArgs(Object[] args) {
+		if (args == null) {
+			return this;
+		}
 		for (int i = 0; i < args.length; i++) {
 			this.args.add(new ResolvableArgument(args[i]));
 		}
