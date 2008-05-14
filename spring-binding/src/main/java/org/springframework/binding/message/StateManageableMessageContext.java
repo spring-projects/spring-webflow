@@ -17,6 +17,8 @@ package org.springframework.binding.message;
 
 import java.io.Serializable;
 
+import org.springframework.context.MessageSource;
+
 /**
  * A message context whose internal state can be managed by an external care-taker. State management employs the GOF
  * Memento pattern. This context can produce a serializable memento representing its internal state at any time. A
@@ -27,7 +29,7 @@ import java.io.Serializable;
 public interface StateManageableMessageContext extends MessageContext {
 
 	/**
-	 * Create a serializable memento (token) representing a snapshot of the internal state of this message context.
+	 * Create a serializable memento, or token representing a snapshot of the internal state of this message context.
 	 * @return the messages memento
 	 */
 	public Serializable createMessagesMemento();
@@ -38,4 +40,11 @@ public interface StateManageableMessageContext extends MessageContext {
 	 * @param messagesMemento the messages memento
 	 */
 	public void restoreMessages(Serializable messagesMemento);
+
+	/**
+	 * Configure the message source used to resolve messages added to this context.
+	 * @param messageSource the message source
+	 * @see MessageContext#addMessage(MessageResolver)
+	 */
+	public void setMessageSource(MessageSource messageSource);
 }

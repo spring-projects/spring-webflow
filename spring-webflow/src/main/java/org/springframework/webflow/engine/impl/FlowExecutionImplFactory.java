@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.message.DefaultMessageContextFactory;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
@@ -81,7 +80,8 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 			logger.debug("Creating new execution of '" + flowDefinition.getId() + "'");
 		}
 		FlowExecutionImpl execution = new FlowExecutionImpl((Flow) flowDefinition);
-		configureServices(execution);
+		execution.setAttributes(executionAttributes);
+		execution.setListeners(executionListenerLoader.getListeners(execution.getDefinition()));
 		execution.setKeyFactory(executionKeyFactory);
 		return execution;
 	}
@@ -112,20 +112,10 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 			conversationScope = new LocalAttributeMap();
 		}
 		execution.setConversationScope(conversationScope);
-		configureServices(execution);
-		return execution;
-	}
-
-	/**
-	 * Called by subclasses to apply the configured set of standard services to the flow execution.
-	 * @param execution the flow execution
-	 */
-	protected void configureServices(FlowExecutionImpl execution) {
 		execution.setAttributes(executionAttributes);
 		execution.setListeners(executionListenerLoader.getListeners(execution.getDefinition()));
 		execution.setKeyFactory(executionKeyFactory);
-		execution.setMessageContextFactory(new DefaultMessageContextFactory(execution.getDefinition()
-				.getApplicationContext()));
+		return execution;
 	}
 
 	/**

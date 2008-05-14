@@ -247,7 +247,15 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	/**
-	 * Sets the current user principal as a string.
+	 * Sets the current user principal.
+	 * @param currentUser the current user
+	 */
+	public void setCurrentUser(Principal currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	/**
+	 * Convenience method that sets the current user principal as a string.
 	 * @param currentUser the current user name
 	 */
 	public void setCurrentUser(String currentUser) {

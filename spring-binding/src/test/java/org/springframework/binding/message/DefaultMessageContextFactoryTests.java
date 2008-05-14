@@ -8,17 +8,16 @@ import junit.framework.TestCase;
 import org.springframework.context.support.StaticMessageSource;
 
 public class DefaultMessageContextFactoryTests extends TestCase {
-	private DefaultMessageContextFactory factory;
+	private DefaultMessageContext context;
 
 	protected void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
-		factory = new DefaultMessageContextFactory(messageSource);
 		messageSource.addMessage("message", Locale.getDefault(), "Hello world resolved!");
 		messageSource.addMessage("argmessage", Locale.getDefault(), "Hello world {0}!");
+		context = new DefaultMessageContext(messageSource);
 	}
 
 	public void testCreateMessageContext() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().defaultText("Hello world!").build());
 		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
@@ -28,7 +27,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testResolveMessage() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
 		Message[] messages = context.getMessagesBySource(this);
 		assertEquals(1, messages.length);
@@ -38,7 +36,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testResolveMessageDefaultText() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().code("bogus").defaultText("Hello world fallback!").build());
 		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
@@ -49,7 +46,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testResolveMessageWithArgs() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().source(this).code("argmessage").arg("Keith").defaultText(
 				"Hello world fallback!").build());
 		Message[] messages = context.getAllMessages();
@@ -61,7 +57,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testResolveMessageWithMultipleCodes() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().error().source(this).code("bogus").code("argmessage").arg("Keith")
 				.defaultText("Hello world fallback!").build());
 		Message[] messages = context.getMessagesBySource(this);
@@ -73,7 +68,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testSaveRestoreMessages() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().defaultText("Info").build());
 		context.addMessage(new MessageBuilder().error().defaultText("Error").build());
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
@@ -82,7 +76,7 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 		assertTrue(context instanceof StateManageableMessageContext);
 		StateManageableMessageContext manageable = (StateManageableMessageContext) context;
 		Serializable messages = manageable.createMessagesMemento();
-		context = factory.createMessageContext();
+		context = new DefaultMessageContext(context.getMessageSource());
 		assertEquals(0, context.getAllMessages().length);
 		manageable = (StateManageableMessageContext) context;
 		manageable.restoreMessages(messages);
@@ -91,7 +85,6 @@ public class DefaultMessageContextFactoryTests extends TestCase {
 	}
 
 	public void testMessageSequencing() {
-		MessageContext context = factory.createMessageContext();
 		context.addMessage(new MessageBuilder().defaultText("Info").build());
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
 		context.addMessage(new MessageBuilder().error().defaultText("Error").build());

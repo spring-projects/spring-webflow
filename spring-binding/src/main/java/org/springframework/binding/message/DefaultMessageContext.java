@@ -16,6 +16,7 @@
 package org.springframework.binding.message;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.Assert;
 import org.springframework.util.CachingMapDecorator;
 
 /**
@@ -37,7 +38,7 @@ import org.springframework.util.CachingMapDecorator;
  * 
  * @author Keith Donald
  */
-class DefaultMessageContext implements StateManageableMessageContext {
+public class DefaultMessageContext implements StateManageableMessageContext {
 
 	private static final Log logger = LogFactory.getLog(DefaultMessageContext.class);
 
@@ -49,8 +50,23 @@ class DefaultMessageContext implements StateManageableMessageContext {
 		}
 	};
 
+	/**
+	 * Creates a new default message context.
+	 */
+	public DefaultMessageContext() {
+		init(null);
+	}
+
+	/**
+	 * Creates a new default message context.
+	 * @param messageSource the message source to resolve messages added to this context (may be null)
+	 */
 	public DefaultMessageContext(MessageSource messageSource) {
 		init(messageSource);
+	}
+
+	public MessageSource getMessageSource() {
+		return messageSource;
 	}
 
 	// implementing message context
@@ -69,7 +85,6 @@ class DefaultMessageContext implements StateManageableMessageContext {
 	}
 
 	public Message[] getMessagesByCriteria(MessageCriteria criteria) {
-		Assert.notNull(criteria, "The message criteria is required");
 		List messages = new ArrayList();
 		Iterator it = sourceMessages.values().iterator();
 		while (it.hasNext()) {
@@ -125,10 +140,17 @@ class DefaultMessageContext implements StateManageableMessageContext {
 		sourceMessages.putAll((Map) messagesMemento);
 	}
 
+	public void setMessageSource(MessageSource messageSource) {
+		if (messageSource == null) {
+			messageSource = new DefaultTextFallbackMessageSource();
+		}
+		this.messageSource = messageSource;
+	}
+
 	// internal helpers
 
 	private void init(MessageSource messageSource) {
-		this.messageSource = messageSource;
+		setMessageSource(messageSource);
 		// create the 'null' source message list eagerly to ensure global messages are indexed first
 		this.sourceMessages.get(null);
 	}
@@ -137,4 +159,9 @@ class DefaultMessageContext implements StateManageableMessageContext {
 		return new ToStringCreator(this).append("sourceMessages", sourceMessages).toString();
 	}
 
+	private static class DefaultTextFallbackMessageSource extends AbstractMessageSource {
+		protected MessageFormat resolveCode(String code, Locale locale) {
+			return null;
+		}
+	}
 }
