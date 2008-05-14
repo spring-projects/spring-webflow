@@ -111,7 +111,7 @@ public class MessageBuilder {
 		if (codes == null) {
 			return this;
 		}
-		this.codes.add(Arrays.asList(codes));
+		this.codes.addAll(Arrays.asList(codes));
 		return this;
 	}
 
@@ -136,7 +136,7 @@ public class MessageBuilder {
 		if (args == null) {
 			return this;
 		}
-		this.args.add(Arrays.asList(args));
+		this.args.addAll(Arrays.asList(args));
 		return this;
 	}
 
