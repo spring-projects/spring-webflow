@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import org.springframework.context.support.StaticMessageSource;
 
-public class DefaultMessageContextFactoryTests extends TestCase {
+public class DefaultMessageContextTests extends TestCase {
 	private DefaultMessageContext context;
 
 	protected void setUp() {

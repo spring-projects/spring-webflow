@@ -34,7 +34,8 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.CachingMapDecorator;
 
 /**
- * Default message context implementation.
+ * The default message context implementation. Uses a {@link MessageSource} to resolve messages that are added by
+ * callers.
  * 
  * @author Keith Donald
  */
@@ -51,7 +52,8 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	};
 
 	/**
-	 * Creates a new default message context.
+	 * Creates a new default message context. Defaults to a message source that simply resolves default text and cannot
+	 * resolve localized message codes.
 	 */
 	public DefaultMessageContext() {
 		init(null);
@@ -59,7 +61,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 
 	/**
 	 * Creates a new default message context.
-	 * @param messageSource the message source to resolve messages added to this context (may be null)
+	 * @param messageSource the message source to resolve messages added to this context
 	 */
 	public DefaultMessageContext(MessageSource messageSource) {
 		init(messageSource);

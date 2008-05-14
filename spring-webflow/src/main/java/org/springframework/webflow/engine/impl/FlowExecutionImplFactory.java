@@ -54,7 +54,6 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	 * @param executionAttributes flow execution system attributes
 	 */
 	public void setExecutionAttributes(AttributeMap executionAttributes) {
-		Assert.notNull(executionAttributes, "The execution attributes map is required");
 		this.executionAttributes = executionAttributes;
 	}
 
@@ -63,7 +62,6 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	 * over what listeners should apply for executions of a flow definition.
 	 */
 	public void setExecutionListenerLoader(FlowExecutionListenerLoader executionListenerLoader) {
-		Assert.notNull(executionListenerLoader, "The execution listener loader is required");
 		this.executionListenerLoader = executionListenerLoader;
 	}
 
@@ -75,7 +73,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	}
 
 	public FlowExecution createFlowExecution(FlowDefinition flowDefinition) {
-		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of wrong type: ");
+		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of the wrong type: ");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating new execution of '" + flowDefinition.getId() + "'");
 		}
@@ -89,8 +87,8 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
 			FlowExecutionKey flowExecutionKey, MutableAttributeMap conversationScope,
 			FlowDefinitionLocator subflowDefinitionLocator) {
-		Assert.isInstanceOf(FlowExecutionImpl.class, flowExecution, "FlowExecution is of wrong type: ");
-		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of wrong type: ");
+		Assert.isInstanceOf(FlowExecutionImpl.class, flowExecution, "FlowExecution is of the wrong type: ");
+		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of the wrong type: ");
 		FlowExecutionImpl execution = (FlowExecutionImpl) flowExecution;
 		Flow flow = (Flow) flowDefinition;
 		execution.setFlow(flow);

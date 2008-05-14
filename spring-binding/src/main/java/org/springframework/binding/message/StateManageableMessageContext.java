@@ -42,7 +42,8 @@ public interface StateManageableMessageContext extends MessageContext {
 	public void restoreMessages(Serializable messagesMemento);
 
 	/**
-	 * Configure the message source used to resolve messages added to this context.
+	 * Configure the message source used to resolve messages added to this context. May be set at any time to change how
+	 * coded messages are resolved.
 	 * @param messageSource the message source
 	 * @see MessageContext#addMessage(MessageResolver)
 	 */
