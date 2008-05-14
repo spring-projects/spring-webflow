@@ -106,7 +106,7 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 		}
 
 		public void render() throws IOException {
-			context.getExternalContext().getResponseWriter().append(viewId);
+			context.getExternalContext().getResponseWriter().write(viewId);
 		}
 	}
 }
