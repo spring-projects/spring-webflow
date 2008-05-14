@@ -123,7 +123,9 @@ public abstract class AbstractMvcView implements View {
 		} catch (IOException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new IllegalStateException("Unexpected exception occurred rendering view " + view, e);
+			IllegalStateException ise = new IllegalStateException("Exception occurred rendering view " + view);
+			ise.initCause(e);
+			throw ise;
 		}
 	}
 
