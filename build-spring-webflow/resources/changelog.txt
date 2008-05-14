@@ -29,6 +29,7 @@ Bug Fixes
   This bug was effecting integration of the Trindad component library, which requires a special Response object to be set for its Ajax support to work.
 * Fixed a bug preventing resolution of flow-local messages for flows launched as subflows.
 * Fixed a bug where field errors recorded using Errors.rejectValue were not being associated with the source field.
+* Fixed a bug preventing binding of unselected checkbox fields in a Spring MVC enviornment.
 * Restored JDK 1.4 compatibility in two places: when catching and re-throwing an Exception thrown by a Spring MVC View, when writing out mock responses during testing.
     
 Documentation
