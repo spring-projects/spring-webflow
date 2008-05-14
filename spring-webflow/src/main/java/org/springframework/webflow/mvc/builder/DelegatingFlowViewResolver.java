@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.mvc.builder;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 	 * @param viewResolvers the Spring MVC view resolver chain to delegate to
 	 */
 	public DelegatingFlowViewResolver(List viewResolvers) {
-		this.viewResolvers = viewResolvers;
+		this.viewResolvers = viewResolvers != null ? viewResolvers : Collections.EMPTY_LIST;
 	}
 
 	public View resolveView(String viewId, RequestContext context) {
@@ -51,7 +52,10 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 					return view;
 				}
 			} catch (Exception e) {
-				throw new IllegalStateException("Exception resolving view with name '" + viewId + "'", e);
+				IllegalStateException ise = new IllegalStateException("Exception resolving view with name '" + viewId
+						+ "'");
+				ise.initCause(e);
+				throw ise;
 			}
 		}
 		return null;
