@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>Spring JavaScript</name>
 	<version>2.0.1.RELEASE</version>
-	<description>Spring's module for decorating web pages with behaviors using leading Javascript toolkits</description>
+	<description>Spring's module for decorating web pages with behaviors using leading JavaScript toolkits</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
 		<license>
