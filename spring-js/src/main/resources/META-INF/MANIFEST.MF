@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Name: Spring Javascript
+Bundle-Name: Spring JavaScript
 Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
 Import-Package: javax.servlet;version="[2.4,3.0)",javax.servlet.http;v
