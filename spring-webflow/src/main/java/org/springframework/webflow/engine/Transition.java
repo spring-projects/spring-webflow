@@ -116,7 +116,11 @@ public class Transition extends AnnotatedObject implements TransitionDefinition 
 	}
 
 	public String getTargetStateId() {
-		return targetStateResolver.toString();
+		if (targetStateResolver != null) {
+			return targetStateResolver.toString();
+		} else {
+			return null;
+		}
 	}
 
 	/**
