@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.1 (14.05.2008)
+Changes in version 2.0.1 (15.05.2008)
 -------------------------------------
 Improvements
 * Added a Bundle-Name: entry to each project's manifest for improved OSGi compliance.
@@ -16,7 +16,8 @@ Improvements
 * Improved booking samples by removing the unnecessary dispatcher-servlet-config.xml file and favoring configuration driven by a single master Spring configuration file.
 * Made RequestContext and ExternalContext thread locals named for supporting introspection
 * Added a MockExternalContext.setCurrentUser(Principal) method allowing for control over Principal implementation.
-
+* Resolved cyclical dependencies between the action and engine packages, the config and engine packages, and the engine.model.registry and engine.model.builder subpackages.
+  
 Bug Fixes
 * Fixed a bug preventing the handling of NumberFormatExceptions when binding to number properties using the default NumberFormatter.
 * Fixed a bug preventing the loading of externalized flow definition resources in a EAR environment, for example, in Web Logic.
