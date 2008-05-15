@@ -21,8 +21,8 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
+import org.springframework.webflow.execution.AnnotatedAction;
 
 /**
  * Resolves the method to invoke on a resolved Web Flow Action instance. The resolved Action is usually a

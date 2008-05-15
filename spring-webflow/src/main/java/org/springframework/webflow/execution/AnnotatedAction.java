@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine;
+package org.springframework.webflow.execution;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.webflow.action.MultiAction;
-import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.core.AnnotatedObject;
 
 /**
  * An action proxy/decorator that stores arbitrary properties about a target <code>Action</code> implementation for
@@ -53,8 +50,7 @@ public class AnnotatedAction extends AnnotatedObject implements Action {
 	/**
 	 * The action execution method attribute ("method").
 	 * <p>
-	 * The method property is a hint about what method should be invoked; for example, the name of a specific target
-	 * method on a {@link MultiAction multi-action}.
+	 * The method property is a hint about what method should be invoked.
 	 */
 	public static final String METHOD_ATTRIBUTE = "method";
 

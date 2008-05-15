@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.definition;
 
+import org.springframework.webflow.core.Annotated;
+
 /**
  * A step within a {@link FlowDefinition flow definition} where behavior is executed.
  * <p>

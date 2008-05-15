@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine.model.registry;
+package org.springframework.webflow.engine.model.builder;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.engine.model.FlowModel;
-import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
-import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
+import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 
 /**
  * A flow model holder that can detect changes on an underlying flow model resource and refresh that resource

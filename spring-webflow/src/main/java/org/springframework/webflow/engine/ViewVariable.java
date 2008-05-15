@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine;
 
+import org.springframework.webflow.core.AnnotatedObject;
 import org.springframework.webflow.execution.RequestContext;
 
 /**

@@ -16,6 +16,7 @@
 package org.springframework.webflow.definition;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.webflow.core.Annotated;
 
 /**
  * The definition of a flow, a program that when executed carries out a task on behalf of a single client.

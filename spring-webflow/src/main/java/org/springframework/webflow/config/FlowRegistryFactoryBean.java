@@ -39,9 +39,9 @@ import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
+import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
-import org.springframework.webflow.engine.model.registry.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 

@@ -32,8 +32,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.engine.AnnotatedAction;
 import org.springframework.webflow.execution.Action;
+import org.springframework.webflow.execution.AnnotatedAction;
 import org.springframework.webflow.execution.RequestContext;
 
 /**

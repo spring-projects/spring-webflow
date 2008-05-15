@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.model.registry;
 
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
-import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 
 /**
  * A holder holding a reference to a Flow model. Provides a layer of indirection, enabling things like "hot-reloadable"
@@ -32,9 +31,8 @@ public interface FlowModelHolder {
 
 	/**
 	 * Returns the flow model held by this holder. Calling this method the first time may trigger flow model assembly.
-	 * @throws FlowModelBuilderException if an exception occurred building the flow model
 	 */
-	public FlowModel getFlowModel() throws FlowModelBuilderException;
+	public FlowModel getFlowModel();
 
 	/**
 	 * Has the underlying flow model changed since it was last accessed via a call to {@link #getFlowModel()}.
@@ -52,8 +50,7 @@ public interface FlowModelHolder {
 	/**
 	 * Refresh the flow model held by this holder. Calling this method typically triggers flow re-assembly, which may
 	 * include a refresh from an externalized resource such as a file.
-	 * @throws FlowModelBuilderException if an exception occurred building the flow model
 	 */
-	public void refresh() throws FlowModelBuilderException;
+	public void refresh();
 
 }

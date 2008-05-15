@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.FlowModel;
+import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 

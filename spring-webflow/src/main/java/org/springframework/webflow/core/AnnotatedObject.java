@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine;
+package org.springframework.webflow.core;
 
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.definition.Annotated;
 
 /**
  * A base class for all objects in the web flow system that support annotation using arbitrary properties. Mainly used

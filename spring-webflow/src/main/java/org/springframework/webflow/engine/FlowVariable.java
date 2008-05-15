@@ -17,6 +17,7 @@ package org.springframework.webflow.engine;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.core.AnnotatedObject;
 import org.springframework.webflow.execution.RequestContext;
 
 /**

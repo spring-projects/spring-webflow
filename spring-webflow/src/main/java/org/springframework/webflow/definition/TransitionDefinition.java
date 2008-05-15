@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.definition;
 
+import org.springframework.webflow.core.Annotated;
+
 /**
  * A transition takes a flow from one state to another.
  * 

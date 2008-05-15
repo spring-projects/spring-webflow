@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.config.scope;
+package org.springframework.webflow.scope;
 
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
 /**
- * View {@link Scope scope} implementation.
- * @author Keith Donald
+ * Request {@link Scope scope} implementation.
+ * @author Ben Hale
  */
-public class ViewScope extends AbstractWebFlowScope {
+public class RequestScope extends AbstractWebFlowScope {
 	protected MutableAttributeMap getScope() {
-		return getRequiredRequestContext().getViewScope();
+		return getRequiredRequestContext().getRequestScope();
 	}
 }

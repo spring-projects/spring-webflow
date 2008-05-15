@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.engine.support;
 
-import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;
+import org.springframework.webflow.execution.ActionExecutor;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 

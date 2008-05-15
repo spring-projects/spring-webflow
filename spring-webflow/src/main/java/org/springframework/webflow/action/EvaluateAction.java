@@ -18,8 +18,8 @@ package org.springframework.webflow.action;
 import org.springframework.binding.expression.Expression;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.webflow.engine.ActionExecutor;
 import org.springframework.webflow.execution.Action;
+import org.springframework.webflow.execution.ActionExecutor;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 

@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.engine;
+package org.springframework.webflow.execution;
 
 import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.execution.Action;
-import org.springframework.webflow.execution.FlowExecutionException;
 
 /**
  * Thrown if an unhandled exception occurs when an action is executed. Typically wraps another exception noting the root
  * cause failure. The root cause may be checked or unchecked.
  * 
  * @see org.springframework.webflow.execution.Action
- * @see org.springframework.webflow.engine.ActionState
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

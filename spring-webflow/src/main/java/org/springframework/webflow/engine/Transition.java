@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.core.AnnotatedObject;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
