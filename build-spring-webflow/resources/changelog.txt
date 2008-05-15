@@ -2,6 +2,15 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.0.2 (29.05.2008)
+-------------------------------------
+Improvements
+
+Bug Fixes
+* Fixed a bug preventing mapping of non-string request parameters such as MultiPart files
+
+Documentation
+
 Changes in version 2.0.1 (15.05.2008)
 -------------------------------------
 Improvements

@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0.1 (May 2008)
+SPRING WEB FLOW 2.0.2 (May 2008)
 ----------------------------------
 http://www.springframework.org/webflow
 
@@ -20,7 +20,7 @@ It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2.0.1 requires Java SE 1.4 and Spring Framework 2.5.4 or above to run.
+Spring Web Flow 2.0.2 requires Java SE 1.4 and Spring Framework 2.5.4 or above to run.
 
 Java SE 5.0 with Ant 1.7 is required to build.
 
@@ -49,21 +49,21 @@ The following jar files are included in the distribution.
 The contents of each jar and its dependencies are noted.
 Dependencies in [brackets] are optional, and are just necessary for certain functionality.
 
-* org.springframework.webflow-2.0.1.RELEASE.jar
+* org.springframework.webflow-2.0.2.RELEASE.jar
 - Contents: The Spring Web Flow system
 - Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc-servlet, spring-js
                 [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
               
-* org.springframework.binding-2.0.1.RELEASE.jar
+* org.springframework.binding-2.0.2.RELEASE.jar
 - Contents: The Spring Data Binding framework, a utility library used by Web Flow
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context
                 [Log4J, OGNL, EL API]
 
-* org.springframework.js-2.0.1.RELEASE.jar
+* org.springframework.js-2.0.2.RELEASE.jar
 - Contents: The Spring JavaScript module, containing Spring's Dojo integration and additional JavaScript functionality.
 - Dependencies: Dojo Toolkit 1.1
 
-* org.springframework.faces-2.0.1.RELEASE.jar
+* org.springframework.faces-2.0.2.RELEASE.jar
 - Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
 - Dependencies: spring-webflow, spring-js, JSF API
                                 
@@ -101,19 +101,19 @@ Then declare the following dependencies:
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 If using JavaServerFaces:
@@ -121,7 +121,7 @@ If using JavaServerFaces:
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 To access jars using Ivy, add the following repositories to your Ivy config:
@@ -138,13 +138,13 @@ To access jars using Ivy, add the following repositories to your Ivy config:
 
 Then declare the following dependencies in your ivy.xml:
 
-<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.0.1.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.0.1.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.0.1.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.0.2.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.0.2.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.0.2.RELEASE" conf="compile->runtime" />
 
 If using JavaServerFaces:
 
-<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.0.1.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.0.2.RELEASE" conf="compile->runtime" />
 
 Refer to the reference documentation for more coverage on obtaining Web Flow jars using Maven or Ivy.
 	
