@@ -446,8 +446,8 @@ public abstract class AbstractMvcView implements View {
 		}
 
 		public Object getValue(Object context) throws EvaluationException {
-			ParameterMap map = (ParameterMap) context;
-			return map.get(parameterName);
+			ParameterMap parameters = (ParameterMap) context;
+			return parameters.asMap().get(parameterName);
 		}
 
 		public Class getValueType(Object context) {
