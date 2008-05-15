@@ -45,6 +45,12 @@
 			</fileset>
 		</copy>
 
+		<replaceregexp match="build.stamp.*\n" replace="" flags="g"
+				file="${package.output.dir}/projects/build.properties"/>
+
+		<replaceregexp match="release.type=.*" replace="release.type=integration" flags="g"
+				file="${package.output.dir}/projects/build.properties"/>
+
 		<zip destfile="${package.output.file}">
 			<zipfileset dir="${package.dir}"/>
 		</zip>
