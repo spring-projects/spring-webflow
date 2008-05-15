@@ -6,8 +6,8 @@
     <artifactId>org.springframework.faces</artifactId>
     <packaging>jar</packaging>
     <name>Spring Faces</name>
-    <version>2.0.0.RELEASE</version>
-    <description>Spring Faces Framework</description>
+    <version>2.0.1.RELEASE</version>
+    <description>Spring's module for developing rich web applications using JSF</description>
     <url>http://www.springframework.org</url>
     <licenses>
         <license>
@@ -17,11 +17,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</connection>
-        <developerConnection>
-            scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow
-        </developerConnection>
-        <url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-webflow</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-webflow</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-webflow</url>
     </scm>
     <organization>
         <name>Spring Framework</name>

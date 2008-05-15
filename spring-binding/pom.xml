@@ -5,8 +5,8 @@
 	<artifactId>org.springframework.binding</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Binding</name>
-	<version>2.0.0.RELEASE</version>
-	<description>Spring Data Binding Framework - An internal module used by Spring Web Flow</description>
+	<version>2.0.1.RELEASE</version>
+	<description>The Spring Data Binding Framework: An utility module used by other Spring projects</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
 		<license>

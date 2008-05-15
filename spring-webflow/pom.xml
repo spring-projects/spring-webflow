@@ -5,8 +5,8 @@
 	<artifactId>org.springframework.webflow</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Web Flow</name>
-	<version>2.0.0.RELEASE</version>
-	<description>Spring Web Flow</description>
+	<version>2.0.1.RELEASE</version>
+	<description>Spring's controller framework for implementing reusable UI flows</description>
 	<url>http://www.springframework.org</url>
 	<licenses>
 		<license>
