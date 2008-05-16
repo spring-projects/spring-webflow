@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+           http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
 
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true" >
@@ -33,6 +33,7 @@
                 <property name="justUseSavedRequestOnGet" value="false"/>
             </bean>       
         </property>
+        <security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />        
     </bean>
 	
 	<!--
