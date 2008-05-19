@@ -477,6 +477,10 @@ public abstract class AbstractMvcView implements View {
 		}
 
 		public Object execute(Object source, Object context) throws ConversionExecutionException {
+			if (!(source instanceof String)) {
+				// for the case of MultipartFile parameters; nothing to do
+				return source;
+			}
 			String formattedValue = (String) source;
 			DefaultMappingContext mappingContext = (DefaultMappingContext) context;
 			Expression target = mappingContext.getCurrentMapping().getTargetExpression();

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import org.springframework.binding.collection.SharedMapDecorator;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
@@ -296,6 +297,15 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public void putRequestParameter(String parameterName, String[] parameterValues) {
 		getMockRequestParameterMap().put(parameterName, parameterValues);
+	}
+
+	/**
+	 * Puts a MultipartFile request parameter into the mock parameter map.
+	 * @param parameterName the parameter name
+	 * @param parameterValue the parameter value
+	 */
+	public void putRequestParameter(String parameterName, MultipartFile parameterValue) {
+		getMockRequestParameterMap().put(parameterName, parameterValue);
 	}
 
 	/**

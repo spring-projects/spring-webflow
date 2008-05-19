@@ -17,8 +17,10 @@ import org.springframework.binding.format.formatters.DateFormatter;
 import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.engine.EndState;
@@ -161,6 +163,7 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("integerProperty", "5");
 		context.putRequestParameter("dateProperty", "2007-01-01");
 		context.putRequestParameter("beanProperty.name", "foo");
+		context.putRequestParameter("multipartFile", new MockMultipartFile("foo", new byte[0]));
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
@@ -183,6 +186,7 @@ public class MvcViewTests extends TestCase {
 		cal.set(Calendar.YEAR, 2007);
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
 		assertEquals("foo", bindBean.getBeanProperty().getName());
+		assertEquals("foo", bindBean.getMultipartFile().getName());
 	}
 
 	public void testResumeEventModelBindingAllowedFields() throws Exception {
@@ -295,6 +299,7 @@ public class MvcViewTests extends TestCase {
 		private Date dateProperty;
 		private boolean booleanProperty = true;
 		private NestedBean beanProperty;
+		private MultipartFile multipartFile;
 
 		public BindBean() {
 			Calendar cal = Calendar.getInstance();
@@ -338,6 +343,14 @@ public class MvcViewTests extends TestCase {
 
 		public NestedBean getBeanProperty() {
 			return beanProperty;
+		}
+
+		public MultipartFile getMultipartFile() {
+			return multipartFile;
+		}
+
+		public void setMultipartFile(MultipartFile multipartFile) {
+			this.multipartFile = multipartFile;
 		}
 	}
 

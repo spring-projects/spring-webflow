@@ -17,6 +17,7 @@ package org.springframework.webflow.test;
 
 import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -262,6 +263,15 @@ public class MockRequestContext implements RequestContext {
 	 */
 	public void putRequestParameter(String parameterName, String[] parameterValues) {
 		getMockExternalContext().putRequestParameter(parameterName, parameterValues);
+	}
+
+	/**
+	 * Puts a MultipartFile request parameter into the mock parameter map.
+	 * @param parameterName the parameter name
+	 * @param parameterValue the parameter value
+	 */
+	public void putRequestParameter(String parameterName, MultipartFile parameterValue) {
+		getMockExternalContext().putRequestParameter(parameterName, parameterValue);
 	}
 
 	// convenience accessors

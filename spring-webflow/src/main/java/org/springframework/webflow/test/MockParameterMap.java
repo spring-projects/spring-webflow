@@ -17,6 +17,7 @@ package org.springframework.webflow.test;
 
 import java.util.HashMap;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 
@@ -57,4 +58,16 @@ public class MockParameterMap extends LocalParameterMap {
 		getMapInternal().put(parameterName, parameterValues);
 		return this;
 	}
+
+	/**
+	 * Add a new multi-part file parameter to this map.
+	 * @param parameterName the parameter name
+	 * @param parameterValues the parameter values
+	 * @return this, to support call chaining
+	 */
+	public MockParameterMap put(String parameterName, MultipartFile parameterValues) {
+		getMapInternal().put(parameterName, parameterValues);
+		return this;
+	}
+
 }
