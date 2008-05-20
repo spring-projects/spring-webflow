@@ -77,7 +77,7 @@
 		<para>
 			These responsibilities are illustrated in the definition of the <code>org.springframework.mvc.servlet.FlowHandler</code> interface:
 		</para>
-		<programlisting type="java">
+		<programlisting language="java">
 public interface FlowHandler {
 
     public String getFlowId();

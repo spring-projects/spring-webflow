@@ -297,7 +297,7 @@ public class BookingValidator {
 		</para>
 		<sect2 id="plain-text-message">
 			<title>Adding plain text messages</title>
-			<programlisting type="java"><![CDATA[
+			<programlisting language="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate")
@@ -310,7 +310,7 @@ context.addMessage(builder.info()
 		</sect2>
 		<sect2 id="plain-text-message-intl">
 			<title>Adding internationalized messages</title>
-			<programlisting type="java"><![CDATA[
+			<programlisting language="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());
@@ -326,7 +326,7 @@ context.addMessage(builder.info().code("reservationConfirmation").build());]]>
 				To create a flow-specific message bundle, simply define <code>messages.properties</code> file(s) in your flow's directory.
 				Create a default <code>messages.properties</code> file and a .properties file for each additional <code>Locale</code> you need to support.
 			</para>
-			<programlisting type="properties"><![CDATA[
+			<programlisting><![CDATA[
 #messages.properties
 checkinDate=Check in date must be a future date
 notHealthy={0} is bad for your health
@@ -335,7 +335,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 			<para>
 				From within a view or a flow, you may also access message resources using the <code>resourceBundle</code> EL variable:
 			</para>
-			<programlisting type="properties"><![CDATA[
+			<programlisting><![CDATA[
 <h:outputText value="#{resourceBundle.reservationConfirmation}" />]]>
 			</programlisting>
 		</sect2>

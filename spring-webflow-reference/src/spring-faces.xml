@@ -214,7 +214,7 @@
 <var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/>]]>
             </programlisting>
             <para>and then reference this variable in one of the flow's JSF view templates through EL:</para>
-            <programlisting language="xhtml"><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <h:inputText id="searchString" value="#{searchCriteria.searchString}"/>]]>
             </programlisting>
             <para>
@@ -280,7 +280,7 @@
                 method an wrap it in a custom JSF DataModel so that the list can be used in a standard JSF DataTable
                 component:
             </para>
-            <programlisting language="xhtml"><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" 
              rendered="#{bookings.rowCount > 0}">
     <h:column>
@@ -347,7 +347,7 @@
                 <code>hotels</code>
                 list, and then place a "More Results" link below the table:
             </para>
-            <programlisting language="xhtml"><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <h:commandLink id="nextPageLink" value="More Results" action="next"/>]]>
             </programlisting>
             <para>
@@ -394,7 +394,7 @@
                 <code>commandLink</code>
                 component:
             </para>
-            <programlisting language="xhtml"><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <h:commandLink id="viewHotelLink" value="View Hotel" action="select"/>]]>
             </programlisting>
             <para>
@@ -483,7 +483,7 @@
                 they can alternately be forced to use a normal form submit by setting ajaxEnabled="false" on the
                 component):
             </para>
-            <programlisting language="xhtml"><![CDATA[            
+            <programlisting language="xml"><![CDATA[            
 <sf:commandLink id="nextPageLink" value="More Results" action="next" />]]>
             </programlisting>
             <para>

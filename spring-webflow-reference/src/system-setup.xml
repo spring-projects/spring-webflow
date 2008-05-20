@@ -13,7 +13,7 @@
 			Web Flow provides a Spring schema that allows you to configure the system.
 			To use this schema, include it in one of your infrastructure-layer beans files:
 		</para>
-		<programlisting type="xml"><![CDATA[
+		<programlisting language="xml"><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
@@ -38,7 +38,7 @@
 			<para>
 				Register your flows in a <code>FlowRegistry</code>:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry">
     <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
 </webflow:flow-registry>]]>
@@ -49,7 +49,7 @@
 			<para>
 				Deploy a FlowExecutor, the central service for executing flows:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" />]]>
 			</programlisting>
 		</sect2>
@@ -66,7 +66,7 @@
 				If no flow-builder-services tag is specified, the default service implementations are used.
 				When the tag is defined, you only need to reference the services you want to customize.
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
     <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
 </webflow:flow-registry>
@@ -77,7 +77,7 @@
 				The configurable services are the <code>conversion-service</code>, <code>formatter-registry</code>, <code>expression-parser</code>, and <code>view-factory-creator</code>.
 				These services are configured by referencing custom beans you define.  For example:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-builder-services id="flowBuilderServices"
     conversion-service="conversionService"
     formatter-registry="formatterRegistry"
@@ -126,7 +126,7 @@
 				Use the <code>parent</code> attribute to link two flow registries together in a hierarchy.
 				When the child registry is queried, if it cannot find the requested flow it will delegate to its parent.
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <!-- my-system-config.xml -->
 <webflow:flow-registry id="flowRegistry" parent="sharedFlowRegistry">
     <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
@@ -144,7 +144,7 @@
 				Use the <code>location</code> element to specify paths to flow definitions to register.
 				By default, flows will be assigned registry identifiers equal to their filenames minus the file extension.
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />]]>
 			</programlisting>
 		</sect2>		
@@ -153,7 +153,7 @@
 			<para>
 				Specify an id to assign a custom registry identifier to a flow:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" />]]>
 			</programlisting>
 		</sect2>
@@ -162,7 +162,7 @@
 			<para>
 				Use the <code>flow-definition-attributes</code> element to assign custom meta-attributes to a registered flow:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml">
     <flow-definition-attributes>
         <attribute name="caption" value="Books a hotel" />
@@ -176,7 +176,7 @@
 			<para>
 				Use the <code>flow-location-patterns</code> element to register flows that match a specific resource location pattern:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" />]]>
 			</programlisting>
 		</sect2>					
@@ -188,7 +188,7 @@
 			<para>
 				Use the <code>flow-execution-listeners</code> element to register listeners that observe the lifecycle of flow executions:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <flow-execution-listeners>
     <listener ref="securityListener"/>
     <listener ref="persistenceListener"/>
@@ -197,7 +197,7 @@
 			<para>
 				You may also configure a listener to observe only certain flows:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <listener ref="securityListener" criteria="securedFlow1,securedFlow2"/>]]>
 			</programlisting>
 		</sect2>
@@ -206,7 +206,7 @@
 			<para>
 				Use the <code>flow-execution-repository</code> element to tune flow execution persistence settings:
 			</para>
-			<programlisting type="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <flow-execution-repository max-executions="5" max-execution-snapshots="30" />]]>
 			</programlisting>
 			<sect3 id="repository-max-executions">

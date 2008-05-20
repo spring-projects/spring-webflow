@@ -164,7 +164,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			<programlisting language="java"><![CDATA[
 requestContext.getExternalContext().getRequestMap().get("portletWindowState");
 			]]></programlisting>
-			<programlisting language="el"><![CDATA[
+			<programlisting><![CDATA[
 externalContext.requestMap.portletWindowState
 			]]></programlisting>
 		</sect2>
@@ -178,7 +178,7 @@ externalContext.requestMap.portletWindowState
 			<programlisting language="java"><![CDATA[
 requestContext.getExternalContext().getRequestMap().get("portletMode");
 			]]></programlisting>
-			<programlisting language="el"><![CDATA[
+			<programlisting><![CDATA[
 externalContext.requestMap.portletMode
 			]]></programlisting>
 		</sect2>

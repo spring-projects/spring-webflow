@@ -33,7 +33,7 @@
 				The source must be a single flow to convert.
 				The resulting converted flow will be sent to standard output.
 			</para>
-			<programlisting language="shell">
+			<programlisting>
 java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</programlisting>
 			<sect3 id="upgrade-guide-definition-language-tool-warnings">
