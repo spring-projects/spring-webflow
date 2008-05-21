@@ -54,6 +54,9 @@ public class ManySelectionTrackingListDataModel extends SerializableListDataMode
 	}
 
 	public void setSelected(boolean rowSelected) {
+		if (!isRowAvailable()) {
+			return;
+		}
 		if (rowSelected && !selections.contains(getRowData())) {
 			selections.add(getRowData());
 		} else {

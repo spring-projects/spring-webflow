@@ -64,11 +64,15 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 	}
 
 	public void setSelected(boolean rowSelected) {
-		if (rowSelected && !selections.contains(getRowData())) {
+		if (!isRowAvailable()) {
+			return;
+		}
+
+		if (!rowSelected) {
+			selections.clear();
+		} else if (rowSelected && !selections.contains(getRowData())) {
 			selections.clear();
 			selections.add(getRowData());
-		} else if (!rowSelected) {
-			selections.clear();
 		}
 	}
 
