@@ -145,15 +145,20 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 
 	protected String encodeParams(FacesContext context, UIComponent component) {
 		StringBuffer paramArray = new StringBuffer();
+		paramArray.append("[");
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {
 				UIParameter param = (UIParameter) component.getChildren().get(i);
 				Assert.hasText(param.getName(),
 						"UIParameter requires a name when used as a child of a UICommand component");
-
-				paramArray.append(", " + param.getName() + ": '" + param.getValue() + "'");
+				if (paramArray.length() > 1) {
+					paramArray.append(", ");
+				}
+				paramArray.append("{name : '" + param.getName() + "'");
+				paramArray.append(", value : '" + param.getValue() + "'}");
 			}
 		}
+		paramArray.append("]");
 		return paramArray.toString();
 	}
 
