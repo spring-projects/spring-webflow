@@ -24,6 +24,16 @@ public class SearchCriteria implements Serializable {
      */
     private int page;
 
+    private String sortBy = "name";
+
+    public String getSortBy() {
+	return sortBy;
+    }
+
+    public void setSortBy(String sortBy) {
+	this.sortBy = sortBy;
+    }
+
     public String getSearchString() {
 	return searchString;
     }
@@ -58,6 +68,7 @@ public class SearchCriteria implements Serializable {
 
     public void resetPage() {
 	page = 0;
+	sortBy = "name";
     }
 
     public String toString() {

@@ -19,7 +19,12 @@
 				<h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
 				<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="h" rendered="#{hotels.rowCount > 0}">
 					<h:column>
-						<f:facet name="header">Name</f:facet>
+						<f:facet name="header">
+							<!-- @TODO - Ajax won't work here until JSF RI fixes bug in UIData.invokeOnComponent - scheduled for 1.2_09 -->
+							<sf:commandLink id="sortByNameLink" ajaxEnabled="false" action="sort" value="Name">
+								<f:param name="sortBy" value="name" />
+							</sf:commandLink>
+						</f:facet>
 						#{h.name}
 					</h:column>
 					<h:column>
@@ -27,7 +32,12 @@
 						#{h.address}
 					</h:column>
 					<h:column>
-						<f:facet name="header">City, State</f:facet>
+						<f:facet name="header">
+							<!-- @TODO - Ajax won't work here until JSF RI fixes bug in UIData.invokeOnComponent - scheduled for 1.2_09 -->
+							<sf:commandLink id="sortByCity" ajaxEnabled="false" action="sort" value="City, State" >
+								<f:param name="sortBy" value="city" />
+							</sf:commandLink>
+						</f:facet>
 						#{h.city}, #{h.state}, #{h.country}
 					</h:column> 
 					<h:column>

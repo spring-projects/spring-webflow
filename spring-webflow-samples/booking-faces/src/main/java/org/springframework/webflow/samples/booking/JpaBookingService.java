@@ -43,8 +43,9 @@ public class JpaBookingService implements BookingService {
 	String pattern = getSearchPattern(criteria);
 	return em.createQuery(
 		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
-			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
-		criteria.getPageSize()).setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
+			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern + " order by h."
+			+ criteria.getSortBy()).setMaxResults(criteria.getPageSize()).setFirstResult(
+		criteria.getPage() * criteria.getPageSize()).getResultList();
     }
 
     @Transactional(readOnly = true)

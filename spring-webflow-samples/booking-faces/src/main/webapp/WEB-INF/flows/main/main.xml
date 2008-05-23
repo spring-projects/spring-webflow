@@ -22,6 +22,10 @@
 		<on-render>
 			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
 		</on-render>
+        <transition on="sort">
+            <set name="searchCriteria.sortBy" value="requestParameters.sortBy"/>
+            <render fragments="hotels:searchResultsFragment" />
+        </transition>
 		<transition on="previous">
 			<evaluate expression="searchCriteria.previousPage()" />
 			<render fragments="hotels:searchResultsFragment" />
