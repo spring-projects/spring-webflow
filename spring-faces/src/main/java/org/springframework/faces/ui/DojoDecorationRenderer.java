@@ -23,6 +23,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.Converter;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.faces.webflow.JsfUtils;
@@ -106,21 +107,38 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 		if (valueHolder.getValue() != null) {
 			attrs.append(", value : ");
-			String strValue;
-			if (valueHolder.getValue() instanceof String) {
-				strValue = "'" + (String) valueHolder.getValue() + "'";
-			} else {
-				strValue = "'" + valueHolder.getConverter().getAsString(context, component, valueHolder.getValue())
-						+ "'";
-				if (valueHolder.getValue() instanceof Date) {
-					strValue = "dojo.date.locale.parse(" + strValue
-							+ ", {selector : 'date', datePattern : 'yyyy-MM-dd'})";
-				}
+			String strValue = "'" + getValueAsString(context, component) + "'";
+			if (valueHolder.getValue() instanceof Date) {
+				strValue = "dojo.date.locale.parse(" + strValue + ", {selector : 'date', datePattern : 'yyyy-MM-dd'})";
 			}
 			attrs.append(strValue);
 		}
 
 		return attrs.toString();
+	}
+
+	protected String getValueAsString(FacesContext context, UIComponent component) {
+
+		ValueHolder valueHolder = (ValueHolder) component;
+
+		if (valueHolder.getValue() instanceof String) {
+			return valueHolder.getValue().toString();
+		}
+
+		Converter converter;
+		if (valueHolder.getConverter() != null) {
+			converter = valueHolder.getConverter();
+		} else {
+			converter = context.getApplication().createConverter(valueHolder.getValue().getClass());
+		}
+
+		if (converter == null) {
+			throw new FacesException("A converter could not be found to convert the value of " + component
+					+ " to a String.");
+		}
+
+		return converter.getAsString(context, component, valueHolder.getValue());
+
 	}
 
 	protected String getDojoAttributesAsString(FacesContext context, UIComponent component) {
