@@ -5,13 +5,13 @@
 <security:authorize ifAllGranted="ROLE_USER">
 	<h2>Current Hotel Bookings</h2>
 
-	<c:if test="${empty bookings}">
+	<c:if test="${empty bookingList}">
 	<tr>
 		<td colspan="7">No bookings found</td>
 	</tr>
 	</c:if>
 
-	<c:if test="${!empty bookings}">
+	<c:if test="${!empty bookingList}">
 	<table class="summary">
 		<thead>
 			<tr>
@@ -25,7 +25,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="booking" items="${bookings}">
+			<c:forEach var="booking" items="${bookingList}">
 			<tr>
 				<td>${booking.hotel.name}</td>
 				<td>${booking.hotel.address}</td>

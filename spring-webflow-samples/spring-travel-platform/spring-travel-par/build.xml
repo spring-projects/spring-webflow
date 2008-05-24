@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="springtravel-par">
+
+    <path id="bundles">
+        <pathelement location="../org.springframework.samples.springtravel.resource" />
+        <pathelement location="../org.springframework.samples.springtravel.hotel" />
+    </path>
+
+    <property file="${basedir}/../../../build.properties" />
+    <property file="${basedir}/../../../build.versions" />
+    <import file="${basedir}/../../../spring-build/par/default.xml" />
+
+</project>

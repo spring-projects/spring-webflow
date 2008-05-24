@@ -21,7 +21,6 @@ public class HotelsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("bookings")
     public List<Booking> index(SearchCriteria searchCriteria, Principal currentUser) {
 	if (currentUser != null) {
 	    return bookingService.findBookings(currentUser.getName());

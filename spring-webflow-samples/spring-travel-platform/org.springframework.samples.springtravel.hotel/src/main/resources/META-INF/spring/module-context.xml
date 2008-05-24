@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:osgi="http://www.springframework.org/schema/osgi"		
+	    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+   	    xmlns:faces="http://www.springframework.org/schema/faces"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           	http://www.springframework.org/schema/osgi
+           	http://www.springframework.org/schema/osgi/spring-osgi.xsd			
+           	http://www.springframework.org/schema/webflow-config
+           	http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           	http://www.springframework.org/schema/faces
+           	http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
+
+	<!-- The registry of executable flow definitions in this module -->
+	<webflow:flow-registry id="hotelFlowRegistry" flow-builder-services="facesFlowBuilderServices">
+		<webflow:flow-location path="org/springframework/samples/springtravel/hotel/search/hotel.xml" />
+		<webflow:flow-location path="org/springframework/samples/springtravel/hotel/booking/booking.xml" />
+	</webflow:flow-registry>
+	
+	<!-- Service encapsulating hotel search and booking logic -->
+	<bean id="bookingService" class="org.springframework.samples.springtravel.hotel.JpaBookingAgent" />
+	
+    <!-- Drives local transactions using thing the JPA API -->	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+		
+    <!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+    </bean>
+
+	<osgi:reference id="dataSource" interface="javax.sql.DataSource"/>
+	
+	<!-- Enables annotation based configuration for @Transactional, @Repository, and @PersistenceContext -->
+	<context:annotation-config/>
+	
+	<!-- Enables the flow JSF integration -->
+	<faces:flow-builder-services id="facesFlowBuilderServices" />
+
+</beans>
