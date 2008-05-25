@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-Name: Spring Binding
 Created-By: 1.5.0_13-b05 (Sun Microsystems Inc.)
 Ant-Version: Apache Ant 1.7.0
-Import-Package: javax.el;version="[2.1,3.0)",ognl;version="[2.6.9,3.0)
- ",org.apache.commons.logging;version="[1.1.1,2.0)",org.springframewor
- k.beans;version="[2.5.4.A,3.0)",org.springframework.context;version="
+Import-Package: javax.el;version="[2.1,3.0)";resolution:=optional,ognl;version="[2.6.9,3.0)";resolution:=optional,
+ org.apache.commons.logging;version="[1.1.1,2.0)",org.springframework
+ .beans;version="[2.5.4.A,3.0)",org.springframework.context;version="
  [2.5.4.A,3.0)",org.springframework.context.i18n;version="[2.5.4.A,3.0
  )",org.springframework.context.support;version="[2.5.4.A,3.0)",org.sp
  ringframework.core.enums;version="[2.5.4.A,3.0)",org.springframework.
