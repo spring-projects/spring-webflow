@@ -7,10 +7,11 @@ Import-Package: javax.el;version="[2.1,3.0)",javax.faces;version="[1.2
  ent;version="[1.2,2.0)",javax.faces.context;version="[1.2,2.0)",javax
  .faces.convert;version="[1.2,2.0)",javax.faces.el;version="[1.2,2.0)"
  ,javax.faces.event;version="[1.2,2.0)",javax.faces.lifecycle;version=
- "[1.2,2.0)",javax.faces.model;version="[1.2,2.0)",javax.faces.render;
- version="[1.2,2.0)",javax.servlet;version="[2.4,3.0)",javax.servlet.h
- ttp;version="[2.4,3.0)",org.ajax4jsf.context;version="[1.1.1,2.0)",or
- g.apache.commons.logging;version="[1.1.1,2.0)",org.springframework.be
+ "[1.2,2.0)",javax.faces.model;version="[1.2,2.0)",javax.faces.render;version="[1.2,2.0)",
+ javax.servlet;version="[2.4,3.0)",
+ javax.servlet.http;version="[2.4,3.0)",
+ ajax4jsf.context;version="[1.1.1,2.0)";resolution:=optional,
+ org.apache.commons.logging;version="[1.1.1,2.0)",org.springframework.be
  ans;version="[2.5.4.A,3.0)",org.springframework.beans.factory;version
  ="[2.5.4.A,3.0)",org.springframework.beans.factory.support;version="[
  2.5.4.A,3.0)",org.springframework.beans.factory.xml;version="[2.5.4.A
