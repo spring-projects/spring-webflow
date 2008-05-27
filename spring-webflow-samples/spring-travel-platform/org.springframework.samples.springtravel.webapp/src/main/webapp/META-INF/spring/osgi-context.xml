@@ -8,8 +8,6 @@
        http://www.springframework.org/schema/beans   
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<reference id="dataSource" interface="javax.sql.DataSource" />
-	
-    <service ref="hotelHandlerMappings" interface="org.springframework.web.servlet.HandlerMapping" />
+    <reference id="hotelHandlerMappings" interface="org.springframework.web.servlet.HandlerMapping" />
 
 </beans:beans>           

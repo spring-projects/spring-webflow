@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.springframework.samples.springtravel.webapp
+Bundle-Name: Spring Travel Web Application Module
+Platform-ModuleType: Web
+Web-ContextPath: springtravel-faces
+Web-DispatcherServletUrlPatterns: /spring/*
+Web-Servlets: FacesServlet;servlet-class:="javax.faces.webapp.FacesServlet";load-on-startup:="1";url-patterns:="*.faces",
+ ResourcesServlet;servlet-class:="org.springframework.js.resource.ResourceServlet";load-on-startup:="0";url-patterns:="/resources/*"
+Web-FilterMappings: springSecurityFilterChain;url-patterns:="/*"
+Web-ContextParams: javax.faces.DEFAULT_SUFFIX;param-value:=".xhtml",
+ facelets.DEVELOPMENT;param-value:="true",
+ facelets.REFRESH_PERIOD;param-value:="1"
+Web-SessionTimeout: 5
+Web-WelcomeFiles: index.html
