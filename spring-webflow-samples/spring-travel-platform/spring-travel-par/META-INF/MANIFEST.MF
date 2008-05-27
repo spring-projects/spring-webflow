@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-Application-SymbolicName: org.springframework.samples.springtravel-faces
-Application-Version: 1.0.0
-Application-Name: Hotel Booking Faces Sample
+Application-SymbolicName: org.springframework.samples.springtravel
+Application-Name: Spring Travel
 
