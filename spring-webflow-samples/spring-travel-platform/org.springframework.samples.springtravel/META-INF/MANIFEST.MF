@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Application-SymbolicName: org.springframework.samples.springtravel
+Application-Name: Spring Travel
+
