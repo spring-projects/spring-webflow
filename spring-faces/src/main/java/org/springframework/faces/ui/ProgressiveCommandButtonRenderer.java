@@ -84,7 +84,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 				}
 				onclick.append("Spring.remoting.submitForm('" + component.getClientId(context) + "', ");
 				onclick.append("'" + RendererUtils.getFormId(context, component) + "', ");
-				onclick.append("{processIds: '" + processIds + "'" + encodeParams(context, component)
+				onclick.append("{processIds: '" + processIds + "'" + encodeParamsAsObject(context, component)
 						+ "}); return false;");
 			} else {
 				onclick.append(getOnClickNoAjax(context, component));
@@ -143,23 +143,18 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 		return true;
 	}
 
-	protected String encodeParams(FacesContext context, UIComponent component) {
-		StringBuffer paramArray = new StringBuffer();
-		paramArray.append("[");
+	protected String encodeParamsAsObject(FacesContext context, UIComponent component) {
+		StringBuffer paramObj = new StringBuffer();
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {
 				UIParameter param = (UIParameter) component.getChildren().get(i);
 				Assert.hasText(param.getName(),
 						"UIParameter requires a name when used as a child of a UICommand component");
-				if (paramArray.length() > 1) {
-					paramArray.append(", ");
-				}
-				paramArray.append("{name : '" + param.getName() + "'");
-				paramArray.append(", value : '" + param.getValue() + "'}");
+
+				paramObj.append(", " + param.getName() + " : '" + param.getValue() + "'");
 			}
 		}
-		paramArray.append("]");
-		return paramArray.toString();
+		return paramObj.toString();
 	}
 
 }

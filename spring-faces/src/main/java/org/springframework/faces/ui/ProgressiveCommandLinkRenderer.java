@@ -26,12 +26,14 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.faces.webflow.JsfUtils;
+import org.springframework.util.Assert;
 
 /**
  * {@link Renderer} for the {@code <sf:commandLink>} tag.
@@ -162,11 +164,30 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	}
 
 	protected String getOnClickNoAjax(FacesContext context, UIComponent component) {
-		String params = encodeParams(context, component);
+		String params = encodeParamsAsArray(context, component);
 		StringBuffer onclick = new StringBuffer();
 		onclick.append("this.submitFormFromLink('" + RendererUtils.getFormId(context, component) + "','"
 				+ component.getClientId(context) + "', " + params + "); return false;");
 		return onclick.toString();
+	}
+
+	protected String encodeParamsAsArray(FacesContext context, UIComponent component) {
+		StringBuffer paramArray = new StringBuffer();
+		paramArray.append("[");
+		for (int i = 0; i < component.getChildCount(); i++) {
+			if (component.getChildren().get(i) instanceof UIParameter) {
+				UIParameter param = (UIParameter) component.getChildren().get(i);
+				Assert.hasText(param.getName(),
+						"UIParameter requires a name when used as a child of a UICommand component");
+				if (paramArray.length() > 1) {
+					paramArray.append(", ");
+				}
+				paramArray.append("{name : '" + param.getName() + "'");
+				paramArray.append(", value : '" + param.getValue() + "'}");
+			}
+		}
+		paramArray.append("]");
+		return paramArray.toString();
 	}
 
 	private class DoubleQuoteEscapingWriter extends ResponseWriter {
