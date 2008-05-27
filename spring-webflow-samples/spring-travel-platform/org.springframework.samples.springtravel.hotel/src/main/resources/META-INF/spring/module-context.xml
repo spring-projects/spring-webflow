@@ -16,16 +16,39 @@
            	http://www.springframework.org/schema/faces
            	http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
+	<!-- Maps request URIs to controllers -->			
+	<bean id="hotelHandlerMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+				/hotel/search=flowController
+				/hotel/booking=flowController
+			</value>
+		</property>
+	</bean>
+
+	<!-- Handles requests mapped to the Spring Web Flow system -->
+	<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
+		<property name="flowExecutor" ref="flowExecutor"/>
+	</bean>
+
+	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
+	<webflow:flow-executor id="flowExecutor">
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="jpaFlowExecutionListener" />
+			<webflow:listener ref="securityFlowExecutionListener" />
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
+	
 	<!-- The registry of executable flow definitions in this module -->
-	<webflow:flow-registry id="hotelFlowRegistry" flow-builder-services="facesFlowBuilderServices">
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
 		<webflow:flow-location path="org/springframework/samples/springtravel/hotel/search/hotel.xml" />
 		<webflow:flow-location path="org/springframework/samples/springtravel/hotel/booking/booking.xml" />
 	</webflow:flow-registry>
 	
 	<!-- Service encapsulating hotel search and booking logic -->
-	<bean id="bookingService" class="org.springframework.samples.springtravel.hotel.JpaBookingAgent" />
+	<bean id="bookingAgent" class="org.springframework.samples.springtravel.hotel.JpaBookingAgent" />
 	
-    <!-- Drives local transactions using thing the JPA API -->	
+    <!-- Drives local transactions using the JPA API -->	
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>
 	</bean>
@@ -45,5 +68,14 @@
 	
 	<!-- Enables the flow JSF integration -->
 	<faces:flow-builder-services id="facesFlowBuilderServices" />
+
+	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
+	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+		<constructor-arg ref="entityManagerFactory" />
+		<constructor-arg ref="transactionManager" />
+	</bean>
+	
+	<!-- Installs a listener to apply Spring Security authorities -->
+	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 
 </beans>

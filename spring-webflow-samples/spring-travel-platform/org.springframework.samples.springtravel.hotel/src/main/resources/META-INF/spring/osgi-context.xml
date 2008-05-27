@@ -8,6 +8,6 @@
        http://www.springframework.org/schema/beans   
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <service ref="hotelFlowRegistry" interface="org.springframework.webflow.definition.registry.FlowDefinitionRegistry" />
+    <service ref="hotelHandlerMappings" interface="org.springframework.web.servlet.HandlerMapping" />
 
 </beans:beans>           
