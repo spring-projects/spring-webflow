@@ -54,6 +54,7 @@ public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 		script.append("Spring.addDecoration(new Spring.AjaxEventDecoration({");
 		script.append("event:'" + event + "'");
 		script.append(", elementId: '" + childId + "'");
+		script.append(", sourceId: '" + component.getClientId(context) + "'");
 		script.append(", formId : '" + RendererUtils.getFormId(context, component) + "'");
 		script.append(", params: {processIds : '" + processIds + "'");
 		script.append(", ajaxSource : '" + component.getClientId(context) + "'} }));");
