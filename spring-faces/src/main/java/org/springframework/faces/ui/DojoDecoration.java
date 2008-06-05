@@ -30,7 +30,7 @@ import javax.faces.el.ValueBinding;
 public abstract class DojoDecoration extends UIComponentBase {
 
 	protected static final String[] DOJO_ATTRS = new String[] { "disabled", "intermediateChanges", "tabIndex",
-			"required", "promptMessage", "invalidMessage", "constraints", "regExp", "regExpGen" };
+			"required", "promptMessage", "invalidMessage", "constraints", "regExp", "regExpGen", "propercase" };
 
 	private Boolean disabled;
 
@@ -49,6 +49,8 @@ public abstract class DojoDecoration extends UIComponentBase {
 	private String regExp;
 
 	private String regExpGen;
+
+	private Boolean propercase;
 
 	public Boolean getDisabled() {
 		if (disabled != null) {
@@ -134,12 +136,20 @@ public abstract class DojoDecoration extends UIComponentBase {
 		this.regExpGen = regExpGen;
 	}
 
+	public Boolean getPropercase() {
+		return propercase;
+	}
+
+	public void setPropercase(Boolean propercase) {
+		this.propercase = propercase;
+	}
+
 	protected abstract String[] getDojoAttributes();
 
 	public abstract String getDojoComponentType();
 
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[10];
+		Object[] values = new Object[11];
 		values[0] = super.saveState(context);
 		values[1] = this.constraints;
 		values[2] = this.disabled;
@@ -150,6 +160,7 @@ public abstract class DojoDecoration extends UIComponentBase {
 		values[7] = this.regExpGen;
 		values[8] = this.required;
 		values[9] = this.tabIndex;
+		values[10] = this.propercase;
 		return values;
 	}
 
@@ -165,6 +176,7 @@ public abstract class DojoDecoration extends UIComponentBase {
 		this.regExpGen = (String) values[7];
 		this.required = (Boolean) values[8];
 		this.tabIndex = (Integer) values[9];
+		this.propercase = (Boolean) values[10];
 	}
 
 	public String getFamily() {
