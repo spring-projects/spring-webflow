@@ -30,7 +30,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,13 +37,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.HttpServletBean;
 
 /**
  * Special resource servlet for efficiently resolving and rendering static resources from within a JAR file.
  * 
  * @author Jeremy Grelle
  */
-public class ResourceServlet extends HttpServlet {
+public class ResourceServlet extends HttpServletBean {
 
 	private static final String HTTP_CONTENT_LENGTH_HEADER = "Content-Length";
 
@@ -54,13 +54,15 @@ public class ResourceServlet extends HttpServlet {
 
 	private static final String HTTP_CACHE_CONTROL_HEADER = "Cache-Control";
 
-	private static final String GZIP_ENABLED_PARAM = "gzipEnabled";
-
 	private static final Log log = LogFactory.getLog(ResourceServlet.class);
 
 	private final String protectedPath = "/?WEB-INF/.*";
 
 	private boolean gzipEnabled = true;
+
+	private String[] allowedResourcePaths = new String[] { "/**/*.css", "/**/*.gif", "/**/*.ico", "/**/*.jpeg",
+			"/**/*.jpg", "/**/*.js", "/**/*.png", "META-INF/**/*.css", "META-INF/**/*.gif", "META-INF/**/*.ico",
+			"META-INF/**/*.jpeg", "META-INF/**/*.jpg", "META-INF/**/*.js", "META-INF/**/*.png" };
 
 	private Map defaultMimeTypes = new HashMap();
 	{
@@ -77,13 +79,6 @@ public class ResourceServlet extends HttpServlet {
 	{
 		compressedMimeTypes.add("text/css");
 		compressedMimeTypes.add("text/javascript");
-	}
-
-	public void init() throws ServletException {
-		String gzipEnabledParamValue = getServletConfig().getInitParameter(GZIP_ENABLED_PARAM);
-		if (StringUtils.hasText(gzipEnabledParamValue)) {
-			gzipEnabled = Boolean.valueOf(gzipEnabledParamValue).booleanValue();
-		}
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -215,7 +210,7 @@ public class ResourceServlet extends HttpServlet {
 		URL[] resources = new URL[localResourcePaths.length];
 		for (int i = 0; i < localResourcePaths.length; i++) {
 			String localResourcePath = localResourcePaths[i];
-			if (localResourcePath.matches(protectedPath)) {
+			if (!isAllowed(localResourcePath)) {
 				if (log.isWarnEnabled()) {
 					log.warn("An attempt to access a protected resource at " + localResourcePath + " was disallowed.");
 				}
@@ -224,6 +219,14 @@ public class ResourceServlet extends HttpServlet {
 			URL resource = getServletContext().getResource(localResourcePath);
 			if (resource == null) {
 				String jarResourcePath = "META-INF" + localResourcePath;
+				if (!isAllowed(jarResourcePath)) {
+					if (log.isWarnEnabled()) {
+						log
+								.warn("An attempt to access a protected resource at " + jarResourcePath
+										+ " was disallowed.");
+					}
+					return null;
+				}
 				if (log.isDebugEnabled()) {
 					log.debug("Searching classpath for resource: " + jarResourcePath);
 				}
@@ -239,6 +242,18 @@ public class ResourceServlet extends HttpServlet {
 			}
 		}
 		return resources;
+	}
+
+	private boolean isAllowed(String resourcePath) {
+		if (resourcePath.matches(protectedPath)) {
+			return false;
+		}
+		/*
+		 * PathMatcher pathMatcher = new AntPathMatcher(); for (int i = 0; i < allowedResourcePaths.length; i++) {
+		 * String pattern = allowedResourcePaths[i]; if (pathMatcher.match(pattern, resourcePath)) { return true; } }
+		 * return false;
+		 */
+		return true;
 	}
 
 	/**
@@ -321,5 +336,13 @@ public class ResourceServlet extends HttpServlet {
 		public void reset() {
 			// noop
 		}
+	}
+
+	public void setGzipEnabled(boolean gzipEnabled) {
+		this.gzipEnabled = gzipEnabled;
+	}
+
+	public void setAllowedResourcePaths(String[] allowedResourcePaths) {
+		this.allowedResourcePaths = allowedResourcePaths;
 	}
 }
