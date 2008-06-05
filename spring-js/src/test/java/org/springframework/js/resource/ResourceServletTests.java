@@ -75,19 +75,6 @@ public class ResourceServletTests extends TestCase {
 		assertEquals(404, response.getStatus());
 	}
 
-	public final void testBenchmark() throws Exception {
-		String requestPath = "/dojo/dojo.js";
-
-		// for (int i = 0; i < 100; i++) {
-		// request = new MockHttpServletRequest();
-		// response = new MockHttpServletResponse();
-		request.setPathInfo(requestPath);
-		servlet.doGet(request, response);
-
-		assertEquals(200, response.getStatus());
-		// }
-	}
-
 	private class ResourceTestMockServletContext extends MockServletContext {
 
 		public String getMimeType(String filePath) {

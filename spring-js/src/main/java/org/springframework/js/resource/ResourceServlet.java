@@ -35,7 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
@@ -248,12 +250,14 @@ public class ResourceServlet extends HttpServletBean {
 		if (resourcePath.matches(protectedPath)) {
 			return false;
 		}
-		/*
-		 * PathMatcher pathMatcher = new AntPathMatcher(); for (int i = 0; i < allowedResourcePaths.length; i++) {
-		 * String pattern = allowedResourcePaths[i]; if (pathMatcher.match(pattern, resourcePath)) { return true; } }
-		 * return false;
-		 */
-		return true;
+		PathMatcher pathMatcher = new AntPathMatcher();
+		for (int i = 0; i < allowedResourcePaths.length; i++) {
+			String pattern = allowedResourcePaths[i];
+			if (pathMatcher.match(pattern, resourcePath)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
