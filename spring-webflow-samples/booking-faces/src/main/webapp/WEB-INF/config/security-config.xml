@@ -6,36 +6,21 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+           http://www.springframework.org/schema/security/spring-security-2.0.2.xsd">
 
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true" >
-        
+
 		<!-- Restrict URLs based on role -->
 		<security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
 		<security:intercept-url pattern="/spring/logoutSuccess*" access="ROLE_ANONYMOUS" />
 		<security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
 		
 		<!-- Override default login and logout pages -->
-		<security:form-login login-page="/spring/login" />
+		<security:form-login login-page="/spring/login" login-processing-url="/spring/loginProcess" default-target-url="/spring/main" />        
 		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
 	</security:http>
     
-    <security:authentication-manager alias="authenticationManager"/>
-    
-    <bean id="authFilter" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/spring/login?login_error=1"/>
-        <property name="defaultTargetUrl" value="/spring/main"/>
-        <property name="filterProcessesUrl" value="/spring/loginProcess"/>
-        <property name="targetUrlResolver">
-            <bean class="org.springframework.security.ui.TargetUrlResolverImpl">
-                <property name="justUseSavedRequestOnGet" value="false"/>
-            </bean>       
-        </property>
-        <security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />        
-    </bean>
-	
 	<!--
 		Define local authentication provider, a real app would use an external provider (JDBC, LDAP, CAS, etc)
 		
