@@ -69,7 +69,7 @@ public class XmlFlowRegistrar extends ExternalizedFlowDefinitionRegistrar {
 
 	/**
 	 * Creates a new XML flow registrar. Protected constructor - if used, make sure the required
-	 * {@link #flowServiceLocator} reference is set.
+	 * {@link #setFlowServiceLocator(FlowServiceLocator) flow service locator} reference is set.
 	 */
 	protected XmlFlowRegistrar() {
 	}
