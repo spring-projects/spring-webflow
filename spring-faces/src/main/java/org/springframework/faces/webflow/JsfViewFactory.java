@@ -18,6 +18,7 @@ package org.springframework.faces.webflow;
 import java.util.Iterator;
 
 import javax.faces.application.ViewHandler;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -88,7 +89,7 @@ public class JsfViewFactory implements ViewFactory {
 				}
 				UIViewRoot viewRoot = facesContext.getViewRoot();
 				viewRoot.setLocale(context.getExternalContext().getLocale());
-				processComponentBinding(facesContext, viewRoot);
+				processTree(facesContext, viewRoot);
 				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
 				view.setRestored(true);
 			} else {
@@ -99,7 +100,7 @@ public class JsfViewFactory implements ViewFactory {
 					}
 					view = createJsfView(viewRoot, lifecycle, context);
 					facesContext.setViewRoot(view.getViewRoot());
-					processComponentBinding(facesContext, view.getViewRoot());
+					processTree(facesContext, view.getViewRoot());
 					view.setRestored(true);
 				} else {
 					if (logger.isDebugEnabled()) {
@@ -164,15 +165,24 @@ public class JsfViewFactory implements ViewFactory {
 		}
 	}
 
-	private void processComponentBinding(FacesContext context, UIComponent component) {
+	/**
+	 * Walk the component tree to perform any required per-component operations.
+	 * 
+	 * @param context
+	 * @param component
+	 */
+	private void processTree(FacesContext context, UIComponent component) {
+		if (component instanceof EditableValueHolder) {
+			((EditableValueHolder) component).setValid(true);
+		}
 		ValueBinding binding = component.getValueBinding("binding");
 		if (binding != null) {
 			binding.setValue(context, component);
 		}
-		Iterator it = component.getChildren().iterator();
+		Iterator it = component.getFacetsAndChildren();
 		while (it.hasNext()) {
 			UIComponent child = (UIComponent) it.next();
-			processComponentBinding(context, child);
+			processTree(context, child);
 		}
 	}
 }

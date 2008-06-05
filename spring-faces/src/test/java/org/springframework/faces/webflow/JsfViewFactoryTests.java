@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
@@ -121,6 +124,10 @@ public class JsfViewFactoryTests extends TestCase {
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
+		UIInput input = new UIInput();
+		input.setId("invalidInput");
+		input.setValid(false);
+		existingRoot.getChildren().add(input);
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
 		EasyMock.replay(new Object[] { context });
@@ -131,6 +138,49 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
+		assertTrue("The input component's valid flag was not reset", input.isValid());
+	}
+
+	/**
+	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 */
+	public final void testGetView_RestoreWithBindings() {
+
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
+				RequestContext.class).expectResult(String.class)), lifecycle);
+
+		UIViewRoot existingRoot = new UIViewRoot();
+		existingRoot.setViewId(VIEW_ID);
+		UIPanel panel = new UIPanel();
+		panel.setId("panel1");
+		UIOutput output = new UIOutput();
+		output.setValueBinding("binding", jsfMock.facesContext().getApplication()
+				.createValueBinding("#{myBean.output}"));
+		output.setId("output1");
+		UIInput input = new UIInput();
+		input.setValueBinding("binding", jsfMock.facesContext().getApplication().createValueBinding("#{myBean.input}"));
+		input.setId("input1");
+
+		existingRoot.getChildren().add(panel);
+		panel.getFacets().put("label", output);
+		panel.getChildren().add(input);
+
+		TestBean testBean = new TestBean();
+		jsfMock.externalContext().getRequestMap().put("myBean", testBean);
+
+		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+
+		EasyMock.replay(new Object[] { context });
+
+		View restoredView = factory.getView(context);
+
+		assertNotNull("A View was not restored", restoredView);
+		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
+		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
+		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
+		assertSame("The UIInput binding was not restored properly", input, testBean.getInput());
+		assertSame("The faceted UIOutput binding was not restored properly", output, testBean.getOutput());
 	}
 
 	/**
@@ -249,6 +299,28 @@ public class JsfViewFactoryTests extends TestCase {
 
 		public String getDescription() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+	}
+
+	protected class TestBean {
+
+		UIOutput output;
+		UIInput input;
+
+		public UIOutput getOutput() {
+			return output;
+		}
+
+		public void setOutput(UIOutput output) {
+			this.output = output;
+		}
+
+		public UIInput getInput() {
+			return input;
+		}
+
+		public void setInput(UIInput input) {
+			this.input = input;
 		}
 	}
 }
