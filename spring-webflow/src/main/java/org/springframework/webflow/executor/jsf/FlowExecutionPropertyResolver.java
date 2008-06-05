@@ -27,6 +27,8 @@ import org.springframework.webflow.execution.FlowExecution;
  * scopes as java.util.Maps: "flowScope", "conversationScope", and "flashScope". Also supports attribute searching when
  * no scope prefix is specified. The search order is flash, flow, conversation.
  * 
+ * @see FlowExecutionVariableResolver
+ * 
  * @author Keith Donald
  */
 public class FlowExecutionPropertyResolver extends AbstractFlowExecutionPropertyResolver {

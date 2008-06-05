@@ -411,7 +411,6 @@ public class FlowPhaseListener implements PhaseListener {
 	 * holder component implementation, for example--to handle flow execution restoration/access exceptions in a certain
 	 * way.
 	 * @return the flow execution key state holder
-	 * @see #saveInViewRoot(FacesContext, String)
 	 */
 	protected FlowExecutionKeyStateHolder createFlowExecutionKeyStateHolder() {
 		return new FlowExecutionKeyStateHolder();
@@ -557,9 +556,10 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Standard default view id resolver which uses the web flow view name as the jsf view id
+	 * Standard default view id mapper which uses the Web Flow view name as the JSF view id.
 	 */
 	public static class DefaultViewIdMapper implements ViewIdMapper {
+
 		public String mapViewId(String viewName) {
 			return viewName;
 		}

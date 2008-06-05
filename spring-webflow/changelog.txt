@@ -8,7 +8,11 @@ Changes in version 1.0.6 ()
 General
 * JavaDoc polishing.
 
-* Static CURRENT_FORM_OBJECT_ATTRIBUTE on FormObjectAccessor is now public (it's supposed to be a well known name).
+Package org.springframework.webflow.action
+* Static CURRENT_FORM_OBJECT_ATTRIBUTE on FormObjectAccessor is now public: it's supposed to be a well known name.
+
+Package org.springframework.webflow.executor.jsf
+* Statics on FlowFacesUtils are now public: they're supposed to be well known names.
 
 Changes in version 1.0.5 (03.10.2007)
 -------------------------------------

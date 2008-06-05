@@ -38,27 +38,27 @@ public class FlowFacesUtils {
 
 	/**
 	 * Bean name of a custom flow executor implementation.
-	 * 
+	 * <p>
 	 * Note the flow executor object is used only at configuration time to extract other lower-level services needed by
 	 * the JSF integration (flow execution repository, flow execution factory). The runtime FlowExecutor interface is
 	 * never used by this JSF integration.
 	 */
-	private static final String FLOW_EXECUTOR_BEAN_NAME = "flowExecutor";
+	public static final String FLOW_EXECUTOR_BEAN_NAME = "flowExecutor";
 
 	/**
 	 * Bean name of a custom flow execution repository implementation.
 	 */
-	private static final String FLOW_EXECUTION_REPOSITORY_BEAN_NAME = "flowExecutionRepository";
+	public static final String FLOW_EXECUTION_REPOSITORY_BEAN_NAME = "flowExecutionRepository";
 
 	/**
 	 * Bean name of a custom flow definition locator implementation.
 	 */
-	private static final String FLOW_DEFINITION_LOCATOR_BEAN_NAME = "flowDefinitionLocator";
+	public static final String FLOW_DEFINITION_LOCATOR_BEAN_NAME = "flowDefinitionLocator";
 
 	/**
 	 * Bean name of a custom flow execution factory implementation.
 	 */
-	private static final String FLOW_EXECUTION_FACTORY_BEAN_NAME = "flowExecutionFactory";
+	public static final String FLOW_EXECUTION_FACTORY_BEAN_NAME = "flowExecutionFactory";
 
 	/**
 	 * The default flow execution repository implementation to use.
@@ -72,8 +72,9 @@ public class FlowFacesUtils {
 
 	/**
 	 * Returns the locator for flow definitions to use in a JSF environment. Searches for a bean in the root web
-	 * application context named {@link #FLOW_DEFINITION_LOCATOR_BEAN_NAME}. A bean of type
-	 * {@link FlowDefinitionLocator} must exist by this name.
+	 * application context named {@link #FLOW_DEFINITION_LOCATOR_BEAN_NAME}. This bean must of type
+	 * {@link FlowDefinitionLocator}. As a fallback, this method will try to lookup the
+	 * {@link #getFlowExecutor(FacesContext)} to obtains its flow definition locator.
 	 * @param context the faces context
 	 * @return the flow definition locator
 	 */
@@ -105,6 +106,8 @@ public class FlowFacesUtils {
 	 * @return the flow execution repository
 	 */
 	public synchronized static FlowExecutionRepository getExecutionRepository(FacesContext context) {
+		// note: synchronized because this sets the defaultExecutionRepository static member
+
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
 		if (ac.containsBean(FLOW_EXECUTION_REPOSITORY_BEAN_NAME)) {
 			return (FlowExecutionRepository) ac.getBean(FLOW_EXECUTION_REPOSITORY_BEAN_NAME,
@@ -127,11 +130,13 @@ public class FlowFacesUtils {
 	 * Returns the flow execution factory to use in a JSF environment. Searches for a bean in the root web application
 	 * context named {@link #FLOW_EXECUTION_FACTORY_BEAN_NAME}. If no such bean exists with this name, falls back on
 	 * the repository configured by a bean with name {@link #FLOW_EXECUTOR_BEAN_NAME}. If no bean exists with that
-	 * name, uses the default factory implementation.
+	 * name, uses the default factory implementation ({@link FlowExecutionImplFactory}).
 	 * @param context the faces context
 	 * @return the flow execution factory
 	 */
 	public synchronized static FlowExecutionFactory getExecutionFactory(FacesContext context) {
+		// note: synchronized because this sets the defaultExecutionFactory static member
+
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
 		if (ac.containsBean(FLOW_EXECUTION_FACTORY_BEAN_NAME)) {
 			return (FlowExecutionFactory) ac.getBean(FLOW_EXECUTION_FACTORY_BEAN_NAME, FlowExecutionFactory.class);
@@ -155,7 +160,7 @@ public class FlowFacesUtils {
 	 * @param context the faces context
 	 * @return the flow executor, or null if no such bean exists
 	 */
-	private synchronized static FlowExecutorImpl getFlowExecutor(FacesContext context) {
+	public static FlowExecutorImpl getFlowExecutor(FacesContext context) {
 		ApplicationContext ac = FacesContextUtils.getRequiredWebApplicationContext(context);
 		if (ac.containsBean(FLOW_EXECUTOR_BEAN_NAME)) {
 			return (FlowExecutorImpl) ac.getBean(FLOW_EXECUTOR_BEAN_NAME, FlowExecutorImpl.class);

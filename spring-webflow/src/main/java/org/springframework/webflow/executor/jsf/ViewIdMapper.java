@@ -21,7 +21,7 @@ import javax.faces.application.ViewHandler;
  * Interface to be implemented by objects that can map Web Flow view names to JSF view identifiers. JSF view identifiers
  * are used to determine if the current view has changed and to create views by delegating to the application's
  * {@link ViewHandler}.
- * 
+ * <p>
  * A view handler typically treats a JSF view id as the physical location of a view template encapsulating a page
  * layout. The JSF view id normally specifies the physical location of the view template minus a suffix. View handlers
  * typically replace the suffix of any view id with their own default suffix (e.g. ".jsp" or ".xhtml") and then try to

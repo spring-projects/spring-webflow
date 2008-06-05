@@ -24,9 +24,9 @@ import org.springframework.webflow.execution.FlowExecution;
 /**
  * Custom variable resolver that resolves to a thread-bound FlowExecution object for binding expressions prefixed with a
  * {@link #FLOW_EXECUTION_VARIABLE_NAME}. For instance "flowExecution.conversationScope.myProperty".
- * 
+ * <p>
  * This class is designed to be used with a {@link FlowExecutionPropertyResolver}.
- * 
+ * <p>
  * This class is a more flexible alternative to the {@link FlowVariableResolver} which is expected to be used ONLY with
  * a {@link FlowPropertyResolver} to resolve flow scope variables ONLY. It is more flexible because it provides access
  * to any scope structure of a {@link FlowExecution} object.
@@ -47,7 +47,7 @@ public class FlowExecutionVariableResolver extends VariableResolver {
 
 	/**
 	 * Creates a new flow executon variable resolver that resolves the current FlowExecution object.
-	 * @param resolverDelegate the resolver to delegate to when the variable is not named "flowExecution".
+	 * @param resolverDelegate the resolver to delegate to when the variable is not named "flowExecution"
 	 */
 	public FlowExecutionVariableResolver(VariableResolver resolverDelegate) {
 		this.resolverDelegate = resolverDelegate;

@@ -23,11 +23,11 @@ import javax.faces.el.VariableResolver;
  * Custom variable resolver that resolves the current FlowExecution object for binding expressions prefixed with
  * {@link #FLOW_SCOPE_VARIABLE}. For instance "flowScope.myBean.myProperty". Designed to be used in conjunction with
  * {@link FlowPropertyResolver} only.
- * 
+ * <p>
  * This class is the original flow execution variable resolver implementation introduced in Spring Web Flow's JSF
  * support available since 1.0. In general, prefer use of {@link DelegatingFlowVariableResolver} or
  * {@link FlowExecutionVariableResolver} to this implementation as they are both considerably more flexible.
- * 
+ * <p>
  * This resolver should only be used with the {@link FlowPropertyResolver} which can only resolve flow-scoped variables.
  * May be deprecated in a future release of Spring Web Flow.
  * 

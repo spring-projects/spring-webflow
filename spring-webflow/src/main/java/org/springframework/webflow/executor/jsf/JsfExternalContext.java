@@ -152,8 +152,14 @@ public class JsfExternalContext implements ExternalContext {
 		this.outcome = outcome;
 	}
 
+	public String toString() {
+		return new ToStringCreator(this).append("actionId", actionId).append("outcome", outcome).append("facesContext",
+				facesContext).toString();
+	}
+
 	/**
 	 * An accessor of a JSF session map.
+	 * 
 	 * @author Keith Donald
 	 */
 	private static class SessionSharedMap extends SharedMapDecorator {
@@ -171,7 +177,8 @@ public class JsfExternalContext implements ExternalContext {
 	}
 
 	/**
-	 * An accessor of an JSF application map.
+	 * An accessor of a JSF application map.
+	 * 
 	 * @author Keith Donald
 	 */
 	private static class ApplicationSharedMap extends SharedMapDecorator {
@@ -186,10 +193,5 @@ public class JsfExternalContext implements ExternalContext {
 		public Object getMutex() {
 			return facesContext.getExternalContext().getContext();
 		}
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("actionId", actionId).append("outcome", outcome).append("facesContext",
-				facesContext).toString();
 	}
 }

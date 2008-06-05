@@ -22,14 +22,21 @@ import javax.faces.el.EvaluationException;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * A static utility class for accessing the current flow execution holder.
+ * A static utility class for accessing the current {@link FlowExecutionHolder flow execution holder}.
  * <p>
- * By default, the current flow execution holder is stored associated with the current thread in the
+ * By default, the current flow execution holder is stored associated with the current request in the
  * {@link FacesContext}'s {@link ExternalContext#getRequestMap()}.
  * 
  * @author Keith Donald
  */
 public class FlowExecutionHolderUtils {
+
+	/**
+	 * Returns the key used to index the flow execution holder in the request attributes.
+	 */
+	static String getFlowExecutionHolderKey() {
+		return FlowExecutionHolder.class.getName();
+	}
 
 	/**
 	 * Returns the current flow execution holder for the given faces context.
@@ -99,12 +106,5 @@ public class FlowExecutionHolderUtils {
 			getFlowExecutionHolder(context).unlockFlowExecutionIfNecessary();
 			context.getExternalContext().getRequestMap().remove(getFlowExecutionHolderKey());
 		}
-	}
-
-	/**
-	 * Returns the key used to index the flow execution holder in the request attributes.
-	 */
-	static String getFlowExecutionHolderKey() {
-		return FlowExecutionHolder.class.getName();
 	}
 }

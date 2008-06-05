@@ -24,6 +24,9 @@ import org.springframework.webflow.execution.FlowExecution;
 
 /**
  * Base class for property resolvers that get and set flow execution attributes.
+ * <p>
+ * Subclasses have to implemented the defined template methods: {@link #doGetAttributeType(FlowExecution, String)},
+ * {@link #doGetAttribute(FlowExecution, String)} and {@link #doSetAttribute(FlowExecution, String, Object)}.
  * 
  * @author Keith Donald
  */
@@ -61,7 +64,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 
 	public Class getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
 		if (base instanceof FlowExecution) {
-			// cannot access flow execution by index so we cannot determine type. Return null per JSF spec
+			// cannot access flow execution by index so we cannot determine type; return null per JSF spec
 			return null;
 		} else {
 			return resolverDelegate.getType(base, index);
@@ -104,7 +107,7 @@ public abstract class AbstractFlowExecutionPropertyResolver extends PropertyReso
 
 	public void setValue(Object base, Object property, Object value) throws EvaluationException,
 			PropertyNotFoundException {
-		if ((base instanceof FlowExecution)) {
+		if (base instanceof FlowExecution) {
 			FlowExecution execution = (FlowExecution) base;
 			assertPropertyNameValid(property);
 			doSetAttribute(execution, (String) property, value);

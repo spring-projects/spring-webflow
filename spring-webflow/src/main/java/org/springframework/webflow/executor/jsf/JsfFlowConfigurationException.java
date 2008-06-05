@@ -24,10 +24,16 @@ import org.springframework.webflow.core.FlowException;
  */
 public class JsfFlowConfigurationException extends FlowException {
 
+	/**
+	 * Create a new configuration exception.
+	 */
 	public JsfFlowConfigurationException(String msg) {
 		super(msg);
 	}
 
+	/**
+	 * Create a new configuration exception caused by an underlying exception.
+	 */
 	public JsfFlowConfigurationException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

@@ -26,13 +26,18 @@ import org.springframework.webflow.execution.repository.FlowExecutionLock;
 /**
  * A holder storing a reference to a flow execution and the key of that flow execution if it has been (or is about to
  * be) managed in a repository.
+ * <p>
+ * An instance of this class will be associated with the current request. It is used to hold on to flow execution
+ * related information while processing a request.
+ * 
+ * @see FlowExecutionHolderUtils
  * 
  * @author Keith Donald
  */
 public class FlowExecutionHolder implements Serializable {
 
 	/**
-	 * The flow execution continuation key (may be null if the flow execution has not yet been generated a repository
+	 * The flow execution continuation key (may be null if the flow execution has not yet been assigned a repository
 	 * key). May change as well over the life of this object, as a flow execution can be given a new key to capture its
 	 * state at another point in time.
 	 */
@@ -96,14 +101,14 @@ public class FlowExecutionHolder implements Serializable {
 	}
 
 	/**
-	 * Returns the flow execution lock
+	 * Returns the flow execution lock.
 	 */
 	public FlowExecutionLock getFlowExecutionLock() {
 		return flowExecutionLock;
 	}
 
 	/**
-	 * Sets the lock acquired on the flow execution
+	 * Sets the lock acquired on the flow execution.
 	 * @param lock the flow execution lock
 	 */
 	public void setFlowExecutionLock(FlowExecutionLock lock) {
@@ -138,7 +143,7 @@ public class FlowExecutionHolder implements Serializable {
 	}
 
 	/**
-	 * Unlock the held flow execution if necessary.
+	 * Unlock the held flow execution if necessary and clear the lock.
 	 */
 	public void unlockFlowExecutionIfNecessary() {
 		if (flowExecutionLock != null) {

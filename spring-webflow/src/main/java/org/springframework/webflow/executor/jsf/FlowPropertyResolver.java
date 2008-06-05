@@ -26,10 +26,10 @@ import org.springframework.web.jsf.FacesContextUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
 /**
- * Custom property resolver that resolves flow session scope attributes of the current flow execution. This resolver
- * will also create and set the attribute value to a bean from the root Spring Web Application Context if the value does
- * not already exist, allowing for lazy-initialized binding variables.
- * 
+ * Custom property resolver that resolves flow scope attributes of the current flow execution. This resolver will also
+ * create and set the attribute value to a bean from the root Spring Web Application Context if the value does not
+ * already exist, allowing for lazy-initialized binding variables.
+ * <p>
  * Designed mainly to be used with the {@link FlowVariableResolver}. This is the original property resolver implemented
  * with Spring Web Flow 1.0. In general, prefer {@link DelegatingFlowVariableResolver} or
  * {@link FlowExecutionVariableResolver} over use of this class. Also, consider use of the
@@ -54,7 +54,7 @@ public class FlowPropertyResolver extends AbstractFlowExecutionPropertyResolver 
 		Object value = execution.getActiveSession().getScope().get(attributeName);
 		// note that MyFaces returns Object.class for a null value here, but
 		// as I read the JSF spec, null should be returned when the object
-		// type can not be determined this certainly seems to be the case
+		// type cannot be determined this certainly seems to be the case
 		// for a map value which doesn' even exist
 		return (value == null) ? null : value.getClass();
 	}
