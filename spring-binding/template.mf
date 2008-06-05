@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Import-Template: org.springframework.*;version="[2.5.4.A,3.0)",org.apa
+ che.commons.logging;version="[1.1.1,2.0)",javax.el;version="[2.1,3.0)
+ ";resolution:=optional,ognl;version="[2.6.9,3.0)";resolution:=optional
+Bundle-SymbolicName: org.springframework.binding
+Ignored-Existing-Headers: Import-Package,Export-Package
+Bundle-Version: 2.0.1
+

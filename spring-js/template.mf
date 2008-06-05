@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Import-Template: org.springframework.*;version="[2.5.4.A,3.0)",org.apa
+ che.commons.logging;version="[1.1.1,2.0)",javax.servlet;version="[2.4
+ ,3.0)",javax.servlet.http;version="[2.4,3.0)",org.apache.tiles;versio
+ n="[2.0.5,3.0)";resolution:=optional,org.apache.tiles.access;version=
+ "[2.0.5,3.0)";resolution:=optional,org.apache.tiles.context;version="
+ [2.0.5.osgi,3.0)";resolution:=optional,org.apache.tiles.definition;ve
+ rsion="[2.0.5.osgi,3.0)";resolution:=optional,org.apache.tiles.impl;v
+ ersion="[2.0.5.osgi,3.0)";resolution:=optional
+Bundle-SymbolicName: org.springframework.js
+Ignored-Existing-Headers: Import-Package,Export-Package
+Bundle-Version: 2.0.1
+
