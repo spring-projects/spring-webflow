@@ -48,7 +48,7 @@ public class FormObjectAccessor {
 	 * of some clients that can only deal with a single form backing object, e.g. Struts when using the Struts
 	 * FlowAction.
 	 */
-	private static final String CURRENT_FORM_OBJECT_ATTRIBUTE = "currentFormObject";
+	public static final String CURRENT_FORM_OBJECT_ATTRIBUTE = "currentFormObject";
 
 	/**
 	 * The errors prefix.
