@@ -61,7 +61,6 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * and NavigationHandlers may access during the request lifecycle. Once in the holder the execution is considered
  * "restored" and referred to as the "current" flow execution for this request.
  * <p>
- * <p>
  * This phase listener implements the following algorithm:
  * <ul>
  * <li>On BEFORE_RESTORE_VIEW, restore a {@link FlowExecution} if a call to
@@ -72,7 +71,7 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * {@link FlowExecutorArgumentHandler#extractFlowId(ExternalContext)} returns a valid flow id. This occurs when a
  * browser accesses a flow definition URL directly and is used to launch a new flow execution.
  * <li>During RESTORE_VIEW, the {@link FlowExecutionKeyStateHolder state holder component} will restore the current
- * FlowExecution if it is present in the JSF ViewRoot. This occurs when a postback from a JSF view that is participating
+ * FlowExecution if it is present in the JSF ViewRoot. This occurs on a postback from a JSF view that is participating
  * in a flow.
  * <li>On BEFORE_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase generate a new key that
  * will identify the updated execution within the configured {@link FlowExecutionRepository}. Expose the new flow
@@ -80,10 +79,10 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * <li>On AFTER_RENDER_RESPONSE, if a flow execution was restored in the RESTORE_VIEW phase <em>save</em> the updated
  * execution to the repository using the new key generated in the BEFORE_RENDER_RESPONSE phase.
  * </ul>
- * 
- * Note about customization: since PhaseListeners managed directly by the JSF provider cannot be benefit from
- * DependencyInjection, See Spring's {@link org.springframework.web.jsf.DelegatingPhaseListenerMulticaster} when you
- * need to customize a FlowPhaseListener instance.
+ * <p>
+ * Note about customization: since PhaseListeners managed directly by the JSF provider cannot benefit from dependency
+ * injection, See Spring's {@link org.springframework.web.jsf.DelegatingPhaseListenerMulticaster} when you need to
+ * customize a FlowPhaseListener instance.
  * 
  * @author Colin Sampaleanu
  * @author Keith Donald

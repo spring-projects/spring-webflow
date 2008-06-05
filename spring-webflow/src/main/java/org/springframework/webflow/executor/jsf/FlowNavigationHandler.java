@@ -38,20 +38,18 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracto
 /**
  * An implementation of a JSF <code>NavigationHandler</code> that provides integration with Spring Web Flow.
  * Responsible for delegating to Spring Web Flow to launch and resume flow executions, treating JSF action outcomes
- * (like a command button click) as web flow events.
- * 
+ * (like a command button click) as Web Flow events.
+ * <p>
  * This class delegates to the standard NavigationHandler implementation when a navigation request does not pertain to a
  * flow execution.
  * <p>
  * The following navigation handler algorithm is implemented by default:
- * </p>
  * <p>
  * If a flow execution has been restored in the current request:
  * <ul>
  * <li>Resume the flow execution by signaling the JSF action outcome as an event against the current state.
  * <li>Once event processing completes expose the selected view as the "current" {@link ViewSelection}.
  * </ul>
- * </p>
  * <p>
  * If a flow execution has not been restored in the current request:
  * <ul>
@@ -61,12 +59,12 @@ import org.springframework.webflow.executor.support.FlowExecutorArgumentExtracto
  * <li>If the specified logical outcome is not of the form <em>flowId:xxx</em>, simply delegate to the standard
  * <code>NavigationHandler</code> implementation and return.
  * </ul>
- * </p>
+ * <p>
  * How the flowId and eventId arguments are extracted can be customized by setting a custom
  * {@link #setArgumentExtractor(FlowExecutorArgumentExtractor) argument extractor}.
- * 
- * Note about customization: since NavigationHandlers managed directly by the JSF provider cannot be benefit from
- * DependencyInjection, See Spring's {@link org.springframework.web.jsf.DelegatingNavigationHandlerProxy} when you need
+ * <p>
+ * Note about customization: since NavigationHandlers managed directly by the JSF provider cannot benefit from
+ * dependency injection, See Spring's {@link org.springframework.web.jsf.DelegatingNavigationHandlerProxy} when you need
  * to customize a FlowNavigationHandler instance.
  * 
  * @author Craig McClanahan
@@ -101,7 +99,6 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 	 * Create a new {@link FlowNavigationHandler} using the default constructor.
 	 */
 	public FlowNavigationHandler() {
-		super();
 	}
 
 	/**

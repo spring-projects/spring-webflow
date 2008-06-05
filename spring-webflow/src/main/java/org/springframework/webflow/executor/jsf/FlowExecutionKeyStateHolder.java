@@ -103,7 +103,7 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 	}
 
 	/**
-	 * Restore the FlowExecution from the stored FlowExecutionKey
+	 * Restore the FlowExecution from the stored FlowExecutionKey.
 	 */
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
@@ -116,8 +116,8 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 		// restore only if the key is present and the current flow execution has not already been restored
 		if (StringUtils.hasText(flowExecutionKey) && !FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
 			// restore the "current" flow execution from repository so it will be available to variable/property
-			// resolvers
-			// and the flow navigation handler (this could happen as part of a view action like a form submission)
+			// resolvers and the flow navigation handler (this could happen as part of a view action like a form
+			// submission)
 			FlowExecutionRepository repository = getRepository(context);
 			// restore the key from the stored encoded key string
 			FlowExecutionKey key = repository.parseFlowExecutionKey(flowExecutionKey);
@@ -127,10 +127,9 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 				try {
 					FlowExecution flowExecution = repository.getFlowExecution(key);
 					if (logger.isDebugEnabled()) {
-						logger
-								.debug("Loaded existing flow execution with key '"
-										+ flowExecutionKey
-										+ "' as part of component restoration [triggered via an action event like a button click]");
+						logger.debug("Restorted existing flow execution with key '" + flowExecutionKey
+								+ "' as part of component restoration"
+								+ " [triggered via an action event like a button click]");
 					}
 					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(key, flowExecution, lock),
 							facesContext);
@@ -141,6 +140,9 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 					lock.unlock();
 					throw e;
 				}
+
+				// in the normal case, the FlowPhaseListener will do lock.unlock(), or failing that the
+				// FlowSystemCleanupFilter
 			} catch (FlowExecutionAccessException e) {
 				handleFlowExecutionAccessException(e, facesContext);
 			}
@@ -169,6 +171,8 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 	public String getClientId(FacesContext context) {
 		return COMPONENT_ID;
 	}
+
+	// internal helpers
 
 	private FlowExecutionRepository getRepository(JsfExternalContext context) {
 		return FlowFacesUtils.getExecutionRepository(context.getFacesContext());
