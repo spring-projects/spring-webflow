@@ -25,7 +25,7 @@ dojo.declare("Spring.DefaultEquals", null, {
 
 dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spring.DefaultEquals], {
 	constructor : function(config) {
-		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength', 'class');
+		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength', 'class', 'title');
 		dojo.mixin(this, config);
 		if(this.widgetModule == "") {
 			this.widgetModule = this.widgetType;
@@ -237,7 +237,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		}
 		
 		//Extract and store all <script> elements from the response
-		var scriptPattern = '(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)';
+		var scriptPattern = '(?:<script(.|[\n|\r])*?>)((\n|\r|.)*?)(?:<\/script>)';
 		var extractedScriptNodes = [];
 		var matchAll = new RegExp(scriptPattern, 'img');
 		var matchOne = new RegExp(scriptPattern, 'im');
@@ -247,7 +247,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		{
 			for (var i=0; i<scriptNodes.length; i++)
 			{
-				var script = (scriptNodes[i].match(matchOne) || ['',''])[1];
+				var script = (scriptNodes[i].match(matchOne) || ['','',''])[2];
 				script = script.replace(/<!--/mg,'').replace(/\/\/-->/mg,'');
 				extractedScriptNodes.push(script);
 			}
