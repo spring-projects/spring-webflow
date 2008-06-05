@@ -13,7 +13,7 @@
 		</property>
 	</bean>
 		
-	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml' -->
+	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml') -->
 	<bean id="faceletsViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
 		<property name="prefix" value="/WEB-INF/" />
