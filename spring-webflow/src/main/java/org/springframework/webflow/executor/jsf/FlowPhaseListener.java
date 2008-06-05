@@ -97,7 +97,7 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * A helper for handling arguments needed by this phase listener to restore and launch flow executions.
-	 * 
+	 * <p>
 	 * This helper is responsible for two main things:
 	 * <ol>
 	 * <li>Helping in the restoration of the "current" FlowExecution by extracting arguments from the request.
@@ -115,7 +115,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * <li>Generating external URLs to redirect to on a ExternalRedirect repsonse.
 	 * </ul>
 	 * </ol>
-	 * How arguments are extracted and how URLs are generated can be customized by setting a custom {{@link #setArgumentHandler(FlowExecutorArgumentHandler) argument handler}.
+	 * How arguments are extracted and how URLs are generated can be customized by setting a custom argument handler.
 	 */
 	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
 
@@ -195,16 +195,16 @@ public class FlowPhaseListener implements PhaseListener {
 
 	/**
 	 * Sets the JSF view id mapper used by this phase listener. The {@link ViewIdMapper} provides a mechanism to convert
-	 * a logical Spring Web Flow application view name into a JSF view id.<br/>
-	 * 
+	 * a logical Spring Web Flow application view name into a JSF view id.
+	 * <p>
 	 * JSF view ids are important to this phase listener: it uses them to check whether the current view has changed,
-	 * and if a new view needs to be created and activated by delegating to the application's {@link ViewHandler}.<br/>
-	 * 
+	 * and if a new view needs to be created and activated by delegating to the application's {@link ViewHandler}.
+	 * <p>
 	 * A view handler typically treats a JSF view id as the physical location of a view template encapsulating a page
 	 * layout. The JSF view id normally specifies the physical location of the view template minus a suffix. View
 	 * handlers typically replace the suffix of any view id with their own default suffix (e.g. ".jsp" or ".xhtml") and
-	 * then try to locate a physical template view.<br/>
-	 * 
+	 * then try to locate a physical template view.
+	 * <p>
 	 * The {@link ViewIdMapper} provides the ability to customize how SWF view name is mapped to a JSF view id that will
 	 * be passed to the ViewHandler. The default value for the view id mapper is a {@link DefaultViewIdMapper} which
 	 * just returns the SWF viewId as-is.
@@ -262,6 +262,12 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
+	// internal processing logic
+
+	/**
+	 * Restores the flow exeuction identified by given request, making it available to other JSF artifacts while
+	 * processing the request.
+	 */
 	protected void restoreFlowExecution(FacesContext facesContext) {
 		JsfExternalContext context = new JsfExternalContext(facesContext);
 		if (argumentHandler.isFlowExecutionKeyPresent(context)) {
@@ -277,8 +283,8 @@ public class FlowPhaseListener implements PhaseListener {
 					FlowExecution flowExecution = repository.getFlowExecution(flowExecutionKey);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Loaded existing flow execution with key '" + flowExecutionKey
-								+ "' due to browser access "
-								+ "[either via a flow execution redirect or direct browser refresh]");
+								+ "' due to browser access"
+								+ " [either via a flow execution redirect or direct browser refresh]");
 					}
 					FlowExecutionHolderUtils.setFlowExecutionHolder(new FlowExecutionHolder(flowExecutionKey,
 							flowExecution, lock), facesContext);
@@ -289,6 +295,8 @@ public class FlowPhaseListener implements PhaseListener {
 					lock.unlock();
 					throw e;
 				}
+
+				// in the normal case, unlock will happen later, or failing that the FlowSystemCleanupFilter
 			} catch (FlowExecutionAccessException e) {
 				// thrown if access to the execution could not be granted
 				handleFlowExecutionAccessException(e, facesContext);
@@ -304,8 +312,8 @@ public class FlowPhaseListener implements PhaseListener {
 			ViewSelection selectedView = flowExecution.start(createInput(context), context);
 			holder.setViewSelection(selectedView);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Launched a new flow execution due to browser access "
-						+ "[either via a flow redirect or direct browser URL access]");
+				logger.debug("Launched a new flow execution due to browser access"
+						+ " [either via a flow redirect or direct browser URL access]");
 			}
 		}
 	}
@@ -455,18 +463,39 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 	}
 
-	// private helpers
-
-	private JsfExternalContext getCurrentContext() {
-		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
-	}
-
-	private void cleanupResources(FacesContext context) {
+	/**
+	 * Cleans up any allocated flow system resources and clears out the external context holder.
+	 * @param context the faces context
+	 */
+	protected void cleanupResources(FacesContext context) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Cleaning up allocated flow system resources");
 		}
 		FlowExecutionHolderUtils.cleanupCurrentFlowExecution(context);
 		ExternalContextHolder.setExternalContext(null);
+	}
+
+	// private helpers
+
+	private void generateKey(JsfExternalContext context, FlowExecutionHolder holder) {
+		FlowExecution flowExecution = holder.getFlowExecution();
+		if (flowExecution.isActive()) {
+			// generate new continuation key for the flow execution before rendering the response
+			FlowExecutionKey flowExecutionKey = holder.getFlowExecutionKey();
+			FlowExecutionRepository repository = getRepository(context);
+			if (flowExecutionKey == null) {
+				// it is a new conversation - generate a brand new key
+				flowExecutionKey = repository.generateKey(flowExecution);
+				FlowExecutionLock lock = repository.getLock(flowExecutionKey);
+				lock.lock();
+				// set that the flow execution lock has been acquired
+				holder.setFlowExecutionLock(lock);
+			} else {
+				// it is an existing conversation - get the next key
+				flowExecutionKey = repository.getNextKey(flowExecution, flowExecutionKey);
+			}
+			holder.setFlowExecutionKey(flowExecutionKey);
+		}
 	}
 
 	private void updateViewRoot(FacesContext facesContext, String viewId) {
@@ -501,30 +530,9 @@ public class FlowPhaseListener implements PhaseListener {
 		keyHolder.setFlowExecutionKey(flowExecutionKey);
 	}
 
-	private void generateKey(JsfExternalContext context, FlowExecutionHolder holder) {
-		FlowExecution flowExecution = holder.getFlowExecution();
-		if (flowExecution.isActive()) {
-			// generate new continuation key for the flow execution before rendering the response
-			FlowExecutionKey flowExecutionKey = holder.getFlowExecutionKey();
-			FlowExecutionRepository repository = getRepository(context);
-			if (flowExecutionKey == null) {
-				// it is a new conversation - generate a brand new key
-				flowExecutionKey = repository.generateKey(flowExecution);
-				FlowExecutionLock lock = repository.getLock(flowExecutionKey);
-				lock.lock();
-				// set that the flow execution lock has been acquired
-				holder.setFlowExecutionLock(lock);
-			} else {
-				// it is an existing conversation - get the next key
-				flowExecutionKey = repository.getNextKey(flowExecution, flowExecutionKey);
-			}
-			holder.setFlowExecutionKey(flowExecutionKey);
-		}
-	}
-
 	/**
-	 * Utility method needed needed only because we can not rely on JSF RequestMap supporting Map's putAll method. Tries
-	 * putAll, falls back to individual adds.
+	 * Utility method needed only because we cannot rely on JSF RequestMap supporting Map's putAll method. Tries putAll,
+	 * falls back to individual adds.
 	 * @param targetMap the target map to add the model data to
 	 * @param map the model data to add to the target map
 	 */
@@ -532,14 +540,17 @@ public class FlowPhaseListener implements PhaseListener {
 		try {
 			targetMap.putAll(map);
 		} catch (UnsupportedOperationException e) {
-			// work around nasty MyFaces bug where it's RequestMap doesn't
-			// support putAll remove after it's fixed in MyFaces
+			// work around nasty MyFaces bug where it's RequestMap doesn't support putAll
 			Iterator it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry entry = (Map.Entry) it.next();
 				targetMap.put(entry.getKey(), entry.getValue());
 			}
 		}
+	}
+
+	private JsfExternalContext getCurrentContext() {
+		return (JsfExternalContext) ExternalContextHolder.getExternalContext();
 	}
 
 	private FlowDefinitionLocator getLocator(JsfExternalContext context) {

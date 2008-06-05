@@ -13,6 +13,7 @@ Package org.springframework.webflow.action
 
 Package org.springframework.webflow.executor.jsf
 * Statics on FlowFacesUtils are now public: they're supposed to be well known names.
+* FlowPhaseListener.cleanupResources() is now protected.
 
 Changes in version 1.0.5 (03.10.2007)
 -------------------------------------
