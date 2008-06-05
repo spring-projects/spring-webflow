@@ -10,12 +10,6 @@
 
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">
-		<!-- Restrict URLs based on role -->
-		<security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
-		<security:intercept-url pattern="/spring/logoutSuccess*" access="ROLE_ANONYMOUS" />
-		<security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
-		
-		<!-- Override default login and logout pages -->
 		<security:form-login login-page="/spring/login" login-processing-url="/spring/loginProcess" default-target-url="/spring/hotels/index" authentication-failure-url="/spring/login?login_error=1" />
 		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
 	</security:http>
