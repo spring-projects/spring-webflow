@@ -19,6 +19,8 @@ public class FlowExecutorBeanDefinitionParserTests extends TestCase {
 	public void testConfigOk() {
 		FlowExecutor executor = (FlowExecutor) context.getBean("flowExecutor", FlowExecutor.class);
 		executor.launchExecution("flow", null, new MockExternalContext());
+		FlowExecutor executor2 = (FlowExecutor) context.getBean("flowExecutorSimpleRepo", FlowExecutor.class);
+		executor2.launchExecution("flow", null, new MockExternalContext());
 	}
 
 	public static class ConfigurationListener extends FlowExecutionListenerAdapter {

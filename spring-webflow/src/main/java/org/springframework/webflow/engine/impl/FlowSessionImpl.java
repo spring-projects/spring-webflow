@@ -50,21 +50,11 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	private transient Flow flow;
 
 	/**
-	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplFactory}.
-	 */
-	private String flowId;
-
-	/**
 	 * The current state of this flow session.
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
 	private transient State state;
-
-	/**
-	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplFactory}.
-	 */
-	private String stateId;
 
 	/**
 	 * The session data model ("flow scope").
@@ -75,6 +65,16 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * The parent session of this session (may be <code>null</code> if this is a root session.)
 	 */
 	private FlowSessionImpl parent;
+
+	/**
+	 * Set so the transient {@link #flow} field can be restored by the {@link FlowExecutionImplFactory}.
+	 */
+	private String flowId;
+
+	/**
+	 * Set so the transient {@link #state} field can be restored by the {@link FlowExecutionImplFactory}.
+	 */
+	private String stateId;
 
 	/**
 	 * Default constructor required for externalizable serialization. Should NOT be called programmatically.
@@ -150,7 +150,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeObject(flow.getId());
-		out.writeObject(state.getId());
+		out.writeObject(state != null ? state.getId() : null);
 		out.writeObject(scope);
 		out.writeObject(parent);
 	}
@@ -190,7 +190,11 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Returns the de-serialized id indicating the flow id of this session.
 	 */
 	String getFlowId() {
-		return flowId;
+		if (flow == null) {
+			return flowId;
+		} else {
+			return flow.getId();
+		}
 	}
 
 	/**
@@ -205,7 +209,11 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Returns the de-serialized id indicating the current state of this session.
 	 */
 	String getStateId() {
-		return stateId;
+		if (state == null) {
+			return stateId;
+		} else {
+			return state.getId();
+		}
 	}
 
 	/**
@@ -234,8 +242,8 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 
 	public String toString() {
 		if (flow != null) {
-			return new ToStringCreator(this).append("flow", flow.getId()).append("state",
-					state != null ? state.getId() : null).append("scope", scope).toString();
+			return new ToStringCreator(this).append("flow", getFlowId()).append("state", getStateId()).append("scope",
+					scope).toString();
 		} else {
 			return "[Unhydrated session '" + flowId + "' in state '" + stateId + "']";
 		}

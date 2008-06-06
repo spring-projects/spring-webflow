@@ -41,6 +41,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
 import org.springframework.webflow.execution.repository.impl.DefaultFlowExecutionRepository;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshotFactory;
 import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
+import org.springframework.webflow.execution.repository.snapshot.SimpleFlowExecutionSnapshotFactory;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
 import org.springframework.webflow.mvc.builder.MvcEnvironment;
@@ -188,7 +189,12 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 	}
 
 	private FlowExecutionSnapshotFactory createFlowExecutionSnapshotFactory(FlowExecutionFactory executionFactory) {
-		return new SerializedFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);
+		if (maxFlowExecutionSnapshots != null && maxFlowExecutionSnapshots.intValue() == 0) {
+			maxFlowExecutionSnapshots = new Integer(1);
+			return new SimpleFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);
+		} else {
+			return new SerializedFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);
+		}
 	}
 
 	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap executionAttributes) {
