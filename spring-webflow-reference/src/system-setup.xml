@@ -216,9 +216,10 @@
 				</para>
 			</sect3>
 			<sect3 id="repository-max-snapshots">
-				<title>max-snapshots</title>
+				<title>max-execution-snapshots</title>
 				<para>
 					Tune the <code>max-execution-snapshots</code> attribute to place a cap on the number of history snapshots that can be taken per flow execution.
+					To disable snapshotting, set this value to 0.  To enable an unlimited number of snapshots, set this value to -1. 
 				</para>
 			</sect3>
 		</sect2>
