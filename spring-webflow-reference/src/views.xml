@@ -239,6 +239,38 @@ public class BookingValidator {
 			</sect3>
 		</sect2>
 	</sect1>
+	<sect1 id="transition-actions">
+		<title>Transition actions</title>
+		<para>
+			A view-state transition can execute one or more actions before executing.
+			These actions may return an error result to prevent the transition itself from executing.
+			If an error result occurs, the view will re-render and should typically display an appropriate error message to the user.
+		</para>
+		<para>
+			If the transition action invokes a plain Java method, the invoked method may return false to prevent the transition from executing.
+			This technique can be used to handle exceptions thrown by service-layer methods.
+			The example below invokes an action that calls a service and handles an exceptional situation:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<transition on="submit" to="bookingConfirmed">
+    <evaluate expression="bookingAction.makeBooking(booking, messageContext)" />
+</transition>]]>
+		</programlisting>
+		<programlisting language="java"><![CDATA[
+public class BookingAction {
+   public boolean makeBooking(Booking booking, MessageContext context) {
+       try {
+           bookingService.make(booking);
+           return true;
+       } catch (RoomNotAvailableException e) {
+           context.addMessage(builder.error().
+               .defaultText("No room is available at this hotel").build());
+           return false;
+       }
+   }
+}]]>
+		</programlisting>
+	</sect1>
 	<sect1 id="simple-event-handlers">
 		<title>Handling events</title>
 		<para>
