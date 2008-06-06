@@ -3,9 +3,9 @@ Bundle-Name: Spring Web Flow
 Bundle-Vendor: SpringSource
 Bundle-ManifestVersion: 2
 Import-Template: 
- org.springframework.js.*;version="[2.0.2, 2.0.2]",
+ org.springframework.js.*;version="[2.0.2, 2.0.3)",
  org.springframework.*;version="[2.5.4.A, 3.0.0)",
- org.springframework.binding.*;version="[2.0.2, 2.0.2]",
+ org.springframework.binding.*;version="[2.0.2, 2.0.3)",
  org.springframework.orm.*;version="[2.5.4.A, 3.0.0)";resolution:=optional,
  org.springframework.security.*;version="[2.0.0, 3.0.0)";resolution:=optional,
  org.springframework.transaction.*;version="[2.5.4.A, 3.0.0)";resolution:=optional,
