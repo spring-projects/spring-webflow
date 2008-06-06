@@ -42,6 +42,18 @@ protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext
     builderContext.registerBean("bookingService", new StubBookingService());
 }]]>
         </programlisting>
+        <para>
+        	If your flow extends from another flow, or has states that extend other states,
+        	also override <code>getModelResources(FlowDefinitionResourceFactory)</code> to return the path to the parent flows.
+        </para>
+		<programlisting language="java"><![CDATA[
+@Override
+protected FlowDefinitionResource[] getModelResources(FlowDefinitionResourceFactory resourceFactory) {
+   return new FlowDefinitionResource[] {
+       resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/common/common.xml")
+   };
+}]]>
+		</programlisting>
 	</sect1>
 	<sect1 id="testing-flowstartup">
 		<title>Testing flow startup</title>
@@ -127,6 +139,7 @@ public Flow createMockBookingSubflow() {
     });
     // immediately return the bookingConfirmed outcome so the caller can respond
     new EndState(mockBookingFlow, "bookingConfirmed");
+    return mockBookingFlow;
 }]]>
 		</programlisting>
 	</sect1>
