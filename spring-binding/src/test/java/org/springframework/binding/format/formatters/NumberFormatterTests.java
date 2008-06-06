@@ -1,6 +1,7 @@
 package org.springframework.binding.format.formatters;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -12,13 +13,15 @@ public class NumberFormatterTests extends TestCase {
 
 	public void testFormatIntegerDefaultPattern() {
 		formatter = new NumberFormatter(Integer.class);
+		formatter.setLocale(Locale.ENGLISH);
 		String value = formatter.format(new Integer(12345));
-		assertEquals("12345", value);
+		assertEquals("12,345", value);
 	}
 
 	public void testFormatBigDecimalCustomPattern() {
 		formatter = new NumberFormatter(BigDecimal.class);
 		formatter.setPattern("000.00");
+		formatter.setLocale(Locale.ENGLISH);
 		BigDecimal dec = new BigDecimal("123.45");
 		String value = formatter.format(dec);
 		assertEquals("123.45", value);
@@ -31,21 +34,23 @@ public class NumberFormatterTests extends TestCase {
 
 	public void testParseIntegerDefaultPattern() {
 		formatter = new NumberFormatter(Integer.class);
-		Integer integer = (Integer) formatter.parse("12345");
-		assertEquals(Integer.valueOf(12345), integer);
+		formatter.setLocale(Locale.ENGLISH);
+		Integer integer = (Integer) formatter.parse("123,450");
+		assertEquals(Integer.valueOf(123450), integer);
 	}
 
 	public void testParseBigDecimalCustomPattern() {
 		formatter = new NumberFormatter(BigDecimal.class);
 		formatter.setPattern("000.00");
+		formatter.setLocale(Locale.ENGLISH);
 		BigDecimal dec = (BigDecimal) formatter.parse("123.45");
 		assertEquals(new BigDecimal("123.45"), dec);
 	}
 
-	public void testParseInvalidFormatNoPattern() {
+	public void testParseInvalidFormatPatternTruncation() {
 		try {
 			formatter = new NumberFormatter(Integer.class);
-			formatter.parse("12345b");
+			formatter.parse("123,450b");
 			fail("Should have failed");
 		} catch (InvalidFormatException e) {
 		}
@@ -56,6 +61,7 @@ public class NumberFormatterTests extends TestCase {
 			formatter = new NumberFormatter(BigDecimal.class);
 			formatter.setPattern("000.00");
 			formatter.parse("bogus");
+			fail("Should have failed");
 		} catch (InvalidFormatException e) {
 		}
 	}

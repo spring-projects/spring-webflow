@@ -3,6 +3,7 @@ package org.springframework.binding.format.formatters;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -12,6 +13,7 @@ public class DateFormatterTests extends TestCase {
 
 	public void testFormatDefaultPattern() {
 		DateFormatter dateFormatter = new DateFormatter();
+		dateFormatter.setLocale(new Locale("nl"));
 		Calendar calendar = new GregorianCalendar(2008, 3, 1);
 		assertEquals("2008-04-01", dateFormatter.format(calendar.getTime()));
 	}

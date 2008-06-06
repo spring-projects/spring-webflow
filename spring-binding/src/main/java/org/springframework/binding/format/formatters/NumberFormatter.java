@@ -17,24 +17,33 @@ package org.springframework.binding.format.formatters;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * A formatter for common number types such as integers and big decimals. Supports basic decoding of number values from
- * text, as well as applying custom number format patterns.
+ * A formatter for common number types such as integers and big decimals. Allows the configuration of an explicit number
+ * pattern and locale.
  * @see DecimalFormat
  * @author Keith Donald
  */
 public class NumberFormatter implements Formatter {
 
+	private static Log logger = LogFactory.getLog(NumberFormatter.class);
+
 	private String pattern;
 
 	private Class numberClass;
+
+	private Locale locale;
 
 	/**
 	 * Creates a number formatter for the specified number type.
@@ -46,6 +55,14 @@ public class NumberFormatter implements Formatter {
 	}
 
 	/**
+	 * The pattern to use to format number values. If not specified, the default DecimalFormat pattern is used.
+	 * @return the date formatting pattern
+	 */
+	public String getPattern() {
+		return pattern;
+	}
+
+	/**
 	 * Sets the pattern for formatting numbers.
 	 * @param pattern the format pattern
 	 * @see DecimalFormat
@@ -54,37 +71,72 @@ public class NumberFormatter implements Formatter {
 		this.pattern = pattern;
 	}
 
+	/**
+	 * The locale to use in formatting number values. If null, the locale associated with the current thread is used.
+	 * @see LocaleContextHolder#getLocale()
+	 * @return the locale
+	 */
+	public Locale getLocale() {
+		return locale;
+	}
+
+	/**
+	 * Sets the locale to use in formatting number values.
+	 * @param locale the locale
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
 	public String format(Object number) {
 		if (number == null) {
 			return "";
 		}
-		if (pattern != null) {
-			return getNumberFormat().format(number);
-		} else {
-			return number.toString();
-		}
+		return getNumberFormat().format(number);
 	}
 
 	public Object parse(String formattedString) throws InvalidFormatException {
 		if (!StringUtils.hasText(formattedString)) {
 			return null;
 		}
-		if (pattern != null) {
-			try {
-				return NumberUtils.parseNumber(formattedString, numberClass, getNumberFormat());
-			} catch (IllegalArgumentException e) {
-				throw new InvalidFormatException(formattedString, pattern, e);
-			}
+		ParsePosition parsePosition = new ParsePosition(0);
+		NumberFormat format = getNumberFormat();
+		Number number = format.parse(formattedString, parsePosition);
+		if (number == null || formattedString.length() != parsePosition.getIndex()) {
+			throw new InvalidFormatException(formattedString, getPattern(format));
 		} else {
-			try {
-				return NumberUtils.parseNumber(formattedString, numberClass);
-			} catch (NumberFormatException e) {
-				throw new InvalidFormatException(formattedString, "A valid " + numberClass.getName() + " string", e);
-			}
+			return NumberUtils.convertNumberToTargetClass(number, numberClass);
 		}
 	}
 
-	private NumberFormat getNumberFormat() {
-		return new DecimalFormat(pattern);
+	// subclassing hookings
+
+	protected NumberFormat getNumberFormat() {
+		Locale locale = determineLocale(this.locale);
+		NumberFormat format = NumberFormat.getInstance(locale);
+		if (pattern != null) {
+			if (format instanceof DecimalFormat) {
+				((DecimalFormat) format).applyPattern(pattern);
+			} else {
+				logger.warn("Unable to apply format pattern '" + pattern
+						+ "'; Returned NumberFormat is not a DecimalFormat");
+			}
+		}
+		return format;
+	}
+
+	// internal helpers
+
+	private Locale determineLocale(Locale locale) {
+		return locale != null ? locale : LocaleContextHolder.getLocale();
+	}
+
+	private String getPattern(NumberFormat format) {
+		if (format instanceof DecimalFormat) {
+			return ((DecimalFormat) format).toPattern();
+		} else {
+			logger.warn("Pattern string cannot be determined because NumberFormat is not a DecimalFormat");
+			return "defaultNumberFormatInstance";
+		}
 	}
 }

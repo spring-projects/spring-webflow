@@ -21,8 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.StringUtils;
 
 /**
@@ -31,6 +34,8 @@ import org.springframework.util.StringUtils;
  * @author Keith Donald
  */
 public class DateFormatter implements Formatter {
+
+	private static Log logger = LogFactory.getLog(DateFormatter.class);
 
 	/**
 	 * The default date pattern.
@@ -42,7 +47,7 @@ public class DateFormatter implements Formatter {
 	private Locale locale;
 
 	/**
-	 * The pattern to use to format date values.
+	 * The pattern to use to format date values. If not specified, the default pattern 'yyyy-MM-dd' is used.
 	 * @return the date formatting pattern
 	 */
 	public String getPattern() {
@@ -58,7 +63,8 @@ public class DateFormatter implements Formatter {
 	}
 
 	/**
-	 * The locale to use in formatting date values. If null, the default locale is used.
+	 * The locale to use in formatting date values. If not specified, the locale of the current thread is used.
+	 * @see LocaleContextHolder#getLocale()
 	 * @return the locale
 	 */
 	public Locale getLocale() {
@@ -88,16 +94,24 @@ public class DateFormatter implements Formatter {
 		try {
 			return dateFormat.parse(formattedString);
 		} catch (ParseException e) {
-			throw new InvalidFormatException(formattedString, determinePattern(pattern), e);
+			throw new InvalidFormatException(formattedString, getPattern(dateFormat), e);
 		}
 	}
 
 	// subclassing hookings
 
 	protected DateFormat getDateFormat() {
-		String pattern = determinePattern(this.pattern);
 		Locale locale = determineLocale(this.locale);
-		return new SimpleDateFormat(pattern, locale);
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		format.setLenient(false);
+		if (format instanceof SimpleDateFormat) {
+			String pattern = determinePattern(this.pattern);
+			((SimpleDateFormat) format).applyPattern(pattern);
+		} else {
+			logger.warn("Unable to apply format pattern '" + pattern
+					+ "'; Returned DateFormat is not a SimpleDateFormat");
+		}
+		return format;
 	}
 
 	// internal helpers
@@ -107,7 +121,16 @@ public class DateFormatter implements Formatter {
 	}
 
 	private Locale determineLocale(Locale locale) {
-		return locale != null ? locale : Locale.getDefault();
+		return locale != null ? locale : LocaleContextHolder.getLocale();
+	}
+
+	private String getPattern(DateFormat format) {
+		if (format instanceof SimpleDateFormat) {
+			return ((SimpleDateFormat) format).toPattern();
+		} else {
+			logger.warn("Pattern string cannot be determined because DateFormat is not a SimpleDateFormat");
+			return "defaultDateFormatInstance";
+		}
 	}
 
 }
