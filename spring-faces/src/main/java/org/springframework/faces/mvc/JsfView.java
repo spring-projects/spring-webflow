@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
@@ -66,9 +67,10 @@ public class JsfView extends AbstractUrlBasedView {
 		}
 
 		UIViewRoot viewRoot = viewHandler.createView(facesContext, getUrl());
-
 		Assert.notNull(viewRoot, "A JSF view could not be created for " + getUrl());
+		viewRoot.setLocale(RequestContextUtils.getLocale(request));
 		viewRoot.setTransient(true);
+
 		facesContext.setViewRoot(viewRoot);
 
 		JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
