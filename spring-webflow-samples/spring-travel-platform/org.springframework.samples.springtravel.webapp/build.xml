@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="org.springframework.samples.springtravel.webapp" xmlns:ivy="antlib:org.apache.ivy.ant">
-
-	<property file="${basedir}/../build.properties"/>
-	<property file="${basedir}/../build.versions"/>
-	<import file="${basedir}/../spring-build/web-module/default.xml"/>
-	
-</project>
