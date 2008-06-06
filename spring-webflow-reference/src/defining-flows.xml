@@ -6,7 +6,7 @@
 		<para>
 			This chapter begins the Users Section.
 			It shows how to implement flows using the flow definition language.
-			By the end of this chapter, you should have a good understanding of language constructs and capable of authoring a flow definition.
+			By the end of this chapter you should have a good understanding of language constructs, and be capable of authoring a flow definition.
 		</para>
 	</sect1>
 	<sect1 id="flow-overview">
@@ -173,7 +173,7 @@
 		<sect2 id="evaluate-element">
 			<title>evaluate</title>
 			<para>
-				The action element you will use the most often is the <code>evaluate</code> element.
+				The action element you will use most often is the <code>evaluate</code> element.
 				Use the <code>evaluate</code> element to evaluate an expression at a point within your flow.
 				With this single tag you can invoke methods on Spring beans or any other flow variable.
 				For example:
@@ -263,7 +263,7 @@ public interface FlowOutcome {
 		<sect2 id="input-element">
 			<title>input</title>
 			<para>
-				Use the input element to declare a flow input attribute:
+				Use the <code>input</code> element to declare a flow input attribute:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <input name="hotelId" />]]>
@@ -296,7 +296,7 @@ public interface FlowOutcome {
 			</sect3>
 			<sect3 id="input-element-required">
 				<para>
-					Use the required attribute to enforce the input is not null or empty:
+					Use the <code>required</code> attribute to enforce the input is not null or empty:
 				</para>
 				<programlisting language="xml"><![CDATA[
 <input name="hotelId" type="long" value="flowScope.hotelId" required="true" />]]>
@@ -374,7 +374,7 @@ public interface FlowOutcome {
 		<para>
 			A flow may declare one or more instance variables.
 			These variables are allocated when the flow starts.
-			Any @Autowired transient references the variable holds are also rewired when the flow resumes.
+			Any <code>@Autowired</code> transient references the variable holds are also rewired when the flow resumes.
 		</para>
 		<sect2 id="var-element">
 			<title>var</title>
@@ -414,7 +414,7 @@ public interface FlowOutcome {
 			<sect3 id="subflow-state-element-input">
 				<title>Passing a subflow input</title>
 				<para>
-					Use the input element to pass input to the subflow:
+					Use the <code>input</code> element to pass input to the subflow:
 				</para>
 				<programlisting language="xml"><![CDATA[
 <subflow-state id="addGuest" subflow="createGuest">

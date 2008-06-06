@@ -166,7 +166,7 @@
 			If you wish to run your Web Flows in an OSGi environment, you are encouraged to use the <link linkend="jars">SpringSource Bundle Repository</link>.
 		</para>
 		<para>
-			To access Web Flow jars from Maven Central, declare the following dependencies in you pom:			
+			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>

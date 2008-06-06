@@ -64,7 +64,7 @@
 		<title>Abstract flows</title>
 		<para>
 			Often parent flows are not designed to be executed directly.
-			In order to protect these flow from running, they can be marked as <code>abstract</code>.
+			In order to protect these flows from running, they can be marked as <code>abstract</code>.
 			If an abstract flow attempts to run, a <code>FlowBuilderException</code> will be thrown.
 		</para>
 		<programlisting language="xml"><![CDATA[
@@ -78,7 +78,7 @@
 			There are rules for every element in the Web Flow definition language that govern how that particular element is merged.
 		</para>
 		<para>
-			There are two types of elements mergeable and non-mergeable.
+			There are two types of elements: <emphasis>mergeable</emphasis> and <emphasis>non-mergeable</emphasis>.
 			Mergeable elements will always attempt to merge together if the elements are similar.
 			Non-mergeable elements in a parent or child flow will always be contained in the resulting flow intact.
 			They will not be modified as part of the merge process.
@@ -91,13 +91,13 @@
 		<sect2 id="flow-inheritance-algorithm-mergeable">
 			<title>Mergeable Elements</title>
 			<para>
-				If the elements are of the same type and the keyed attribute are identical, the content of the parent element will be merged with the child element.
+				If the elements are of the same type and their keyed attribute are identical, the content of the parent element will be merged with the child element.
 				The merge algorithm will continue to merge each sub-element of the merging parent and child.
 				Otherwise the parent element is added as a new element to the child. 
 			</para>
 			<para>
 				In most cases, elements from a parent flow that are added will be added after elements in the child flow.
-				Exceptions to this rule include actions elements (evaluate, render and set) which will be added at the beginning.
+				Exceptions to this rule include action elements (evaluate, render and set) which will be added at the beginning.
 				This allows for the results of parent actions to be used by child actions.
 			</para>
 			<para>

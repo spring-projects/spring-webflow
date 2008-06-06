@@ -4,7 +4,7 @@
 	<sect1 id="views-introduction">
 		<title>Introduction</title>
 		<para>
-			This chapter shows you how to use the view-state element to render views within a flow.
+			This chapter shows you how to use the <code>view-state</code> element to render views within a flow.
 		</para>
 	</sect1>
 	<sect1 id="view-convention">
@@ -85,7 +85,7 @@
 			<title>Allocating view variables</title>
 			<para>
 				Use the <code>var</code> tag to declare a view variable.
-				Like a flow variable, any @Autowired references are automatically restored when the view state resumes.
+				Like a flow variable, any <code>@Autowired</code> references are automatically restored when the view state resumes.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" />]]>
@@ -144,7 +144,7 @@
 		<para>
 			Use the <code>model</code> attribute to declare a model object the view binds to.
 			This attribute is typically used with views that render data controls, such as forms.
-			The following example declares the <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
+			The following example declares an <code>enterBookingDetails</code> state manipulates the <code>booking</code> model:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <view-state id="enterBookingDetails" model="booking">]]>
@@ -209,7 +209,7 @@ public void validateEnterBookingDetails(MessageContext context) {
 			<sect3 id="view-validation=programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
-					The second way is to define a separate object, called a Validator, which validates your model object.
+					The second way is to define a separate object, called a <emphasis>Validator</emphasis>, which validates your model object.
 					To do this, create a class that defines a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
 					The method must declare a parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
@@ -233,7 +233,7 @@ public class BookingValidator {
 				</para>
 				<para>
 					Validators must be registered as Spring beans employing the naming convention <code>${model}Validator</code> to be detected and invoked automatically.
-					In the example above, Spring 2.5 classpath-scanning would detect the @Component and automatically register it as a bean with the name <code>bookingValidator</code>.
+					In the example above, Spring 2.5 classpath-scanning would detect the <code>@Component</code> and automatically register it as a bean with the name <code>bookingValidator</code>.
 					Then, anytime the <code>booking</code> model needs to be validated, this <code>bookingValidator</code> instance would be invoked for you.
 				</para>
 			</sect3>

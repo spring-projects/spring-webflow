@@ -17,7 +17,7 @@
 				<code>jboss-el</code> is currently the default EL implementation.
 				When found in your classpath along with the <code>el-api</code>, it will be used automatically.
 				<note>
-					The <code>el-api</code> dependency is typically a <emphasis>provided</emphasis> by your web container.  Tomcat 6 includes it, for example.
+					The <code>el-api</code> dependency is typically <emphasis>provided</emphasis> by your web container.  Tomcat 6 includes it, for example.
 				</note>
 			</para>
 		</sect2>
@@ -61,7 +61,7 @@
 			<sect3 id="el-types-eval">
 				<title>Standard eval expressions</title>
 				<para>
-					The first, and most common type of expression, is the standard <emphasis>eval expression</emphasis>.
+					The first, and most common, type of expression, is the standard <emphasis>eval expression</emphasis>.
 					Such expressions are dynamically evaluated by the EL and should not be enclosed in delimiters like <code>${}</code> or <code>#{}</code>.
 					For example:
 				</para>

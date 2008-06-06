@@ -6,7 +6,7 @@
 		<para>
 			Security is an important concept for any application.
 			End users should not be able to access any portion of a site simply by guessing the URL.
-			Areas of a site that are sensitive must insure that only authorized requested are processed.
+			Areas of a site that are sensitive must ensure that only authorized requested are processed.
 			Spring Security is a proven security platform that can integrate with your application at multiple levels.
 			This section will focus on securing flow execution.
 		</para>
@@ -72,7 +72,7 @@
 	<sect1 id="flow-security-listener">
 		<title>The SecurityFlowExecutionListener</title>
 		<para>
-			Defining security rules in the flow by themself will not protect the flow execution.
+			Defining security rules in the flow by themselves will not protect the flow execution.
 			A <code>SecurityFlowExecutionListener</code> must also be defined in the webflow configuration and applied to the flow executor.
 		</para>
 		<programlisting language="xml"><![CDATA[

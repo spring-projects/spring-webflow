@@ -18,7 +18,7 @@
 		<para>
  			The example below maps all requests that begin with <code>/spring/</code> to the DispatcherServlet.
 			An <code>init-param</code> is used to provide the <code>contextConfigLocation</code>.
-			This is configuration file for the web application.
+			This is the configuration file for the web application.
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>

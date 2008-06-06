@@ -180,7 +180,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
-    <constructor-arg ref="flowExecutor"/>
+    <property name="flowExecutor" ref="flowExecutor"/>
     <property name="flowRequestUrlHandler">
         <bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/>
     </property>
