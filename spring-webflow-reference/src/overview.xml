@@ -68,7 +68,7 @@
 			<para>
 				To access jars using Maven, add the following repositories to your Maven pom:
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <repository>
     <id>com.springsource.repository.bundles.release</id>
     <name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
@@ -84,34 +84,34 @@
 			<para>
 				Then declare the following dependencies:			
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 ]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 ]]>
 			</programlisting>
@@ -121,7 +121,7 @@
 			<para>
 				To access jars using Ivy, add the following repositories to your Ivy config:
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <url name="com.springsource.repository.bundles.release">
     <ivy pattern="http://repository.springsource.com/ivy/bundles/release/
                   [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
@@ -139,21 +139,21 @@
 			<para>
 				Then declare the following dependencies:			
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency org="org.springframework.webflow" name="org.springframework.binding"
-            rev="2.0.0.RELEASE" conf="compile->compile" />
+            rev="2.0.2.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.js"
-            rev="2.0.0.RELEASE" conf="compile->compile" />
+            rev="2.0.2.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.webflow"
-            rev="2.0.0.RELEASE" conf="compile->compile" />
+            rev="2.0.2.RELEASE" conf="compile->runtime" />
 ]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
 			</para>
-			<programlisting><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency org="org.springframework.webflow" name="org.springframework.faces"
-            rev="2.0.0.RELEASE" conf="compile->compile" />
+            rev="2.0.2.RELEASE" conf="compile->runtime" />
 ]]>
 			</programlisting>
 		</sect2>
@@ -168,34 +168,34 @@
 		<para>
 			To access Web Flow jars from Maven Central, declare the following dependencies in you pom:			
 		</para>
-		<programlisting><![CDATA[
+		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency>
 ]]>
 		</programlisting>
 		<para>
 			And if using JavaServerFaces:
 		</para>
-		<programlisting><![CDATA[
+		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
 </dependency> 
 ]]>
 		</programlisting>

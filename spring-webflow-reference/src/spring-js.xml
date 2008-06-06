@@ -19,7 +19,7 @@
             This servlet provides a convenient way to serve Spring.js files to your pages.
             To deploy this servlet, declare the following in <code>web.xml</code>:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <!-- Serves static resource content from .jar files such as spring-js.jar -->
 <servlet>
     <servlet-name>Resource Servlet</servlet-name>
@@ -53,7 +53,7 @@
             When using the widget system of an underlying library, typically you must also include some CSS resources to obtain the desired look and feel.
             For the booking-mvc reference application, Dojo's <code>tundra.css</code> is included:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />]]>
         </programlisting>
     </sect1>
@@ -67,7 +67,7 @@
         <para>
 	         The following example illustrates enhancing a Spring MVC <code>&lt;form:input&gt;</code> tag with rich suggestion behavior:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <form:input id="searchString" path="searchString"/>
 <script type="text/javascript">
     Spring.addDecoration(new Spring.ElementDecoration({
@@ -86,7 +86,7 @@
             When using the <code>ElementDecoration</code> to apply widgets that have rich validation behavior, a common need is to prevent the form from being submitted to the server until validation passes.
             This can be done with the <code>ValidateAllDecoration</code>:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />
 <script type="text/javascript">
     Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick' }));
@@ -98,7 +98,7 @@
         <para>
             An <code>AjaxEventDecoration</code> applies a client-side event listener that fires a remote Ajax request to the server.  It also auto-registers a callback function to link in the response:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <a id="prevResultsLink" href="search?searchString=${searchCriteria.searchString}&page=${searchCriteria.page - 1}">Previous Results</a>
 <script type="text/javascript">
     Spring.addDecoration(new Spring.AjaxEventDecoration({
@@ -117,7 +117,7 @@
             Sometimes it is necessary to call Spring Javascript's <code>RemotingHandler</code> directly instead of using the <code>AjaxEventDecoration</code>.
             For example, see inline <code>onclick</code> handler of this button:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" 
        onclick="Spring.remoting.submitForm('proceed', 'booking', { fragments:'messages,bookingForm' }); return false;" />
 <script type="text/javascript">
@@ -151,7 +151,7 @@
                 the provided Spring MVC extensions in your Spring application context for rendering the partial response
                 (note that these extensions require the use of Tiles for templating):
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
     <property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
 </bean>]]>
@@ -161,7 +161,7 @@
                 Note that <code>FlowAjaxTilesView</code> is capable of handling the rendering for both Web Flow and pure Spring MVC requests.
                 The fragments correspond to individual attributes of a Tiles view definition. For example, take the following Tiles view definition:
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <definition name="hotels/index" extends="standardLayout">
     <put-attribute name="body" value="index.body" />
 </definition>
@@ -183,7 +183,7 @@
                 currently must be with the pure Spring MVC controller approach.
                 For example, if you wanted to render the "hotelSearchForm" fragment from the previous example Tiles view into a rich Javascript popup: 
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
     <on-entry>
         <render fragments="hotelSearchForm" />

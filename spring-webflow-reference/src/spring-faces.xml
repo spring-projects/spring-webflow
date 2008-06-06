@@ -13,7 +13,6 @@
             integrates Dojo as the underlying UI toolkit.
         </para>
     </sect1>
-
     <sect1 id="spring-faces-integration">
         <title>Spring-centric Integration Approach</title>
         <para>
@@ -103,7 +102,7 @@
             so that CSS and JavaScript resources may be output correctly by the components. This servlet must be mapped
             to /resources/* in order for the URL's rendered by the components to function correctly.
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <!-- Serves static resource content from .jar files such as spring-faces.jar -->
 <servlet>
     <servlet-name>Resource Servlet</servlet-name>
@@ -121,7 +120,7 @@
             The Spring Faces components require the use of Facelets instead of JSP, so the typical Facelets
             configuration must be added as well when using these components.
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 !-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
 <context-param>
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
@@ -139,7 +138,7 @@
             <code>flow-builder-services</code>
             :
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -167,7 +166,13 @@
 
 </beans>]]>
         </programlisting>
-        <para>See the booking-faces reference application in the distribution for a complete working example.</para>
+        <para>
+        	The <code>faces:flow-builder-services</code> tag also several other defaults appropriate for a JSF environment.
+        	Specifically, the Unified EL is configured as the default Expression Language.
+        </para>
+        <para>
+            See the swf-booking-faces reference application in the distribution for a complete working example.
+       	</para>
     </sect1>
     <sect1 id="spring-faces-config">
         <title>Configuring faces-config.xml</title>
@@ -178,7 +183,7 @@
             not need to add anything specific to Spring Faces to your
             <code>faces-config.xml</code>
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <faces-config>
     <application>
         <!-- Enables Facelets -->
@@ -536,7 +541,7 @@
                 <code>view-state</code>
                 .
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
     <on-entry>
         <render fragments="hotelSearchFragment" />
@@ -571,7 +576,7 @@
                 <code>clientTextValidator</code>
                 component:
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <sf:clientTextValidator required="true">
     <h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
 </sf:clientTextValidator>]]>
@@ -589,7 +594,7 @@
                 <code>clientNumberValidator</code>
                 component:
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <sf:clientTextValidator required="true" regExp="[0-9]{16}" 
                         invalidMessage="A 16-digit credit card number is required.">
     <h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
@@ -609,7 +614,7 @@
                 <code>clientDateValidator</code>
                 component:
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <sf:clientDateValidator required="true" >
     <h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
 	   	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
@@ -630,7 +635,7 @@
                 component can be used to intercept the "onclick" event of a child component and suppress the event if
                 all client-side validations do not pass.
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <sf:validateAllOnClick>
     <sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/>&#160;
 </sf:validateAllOnClick>]]>
@@ -660,7 +665,7 @@
                 To use the Rich Faces component library with Spring Faces, the following filter configuration is needed
                 in web.xml (in addition to the typical Spring Faces configuration):
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <filter> 
     <display-name>RichFaces Filter</display-name> 
     <filter-name>richfaces</filter-name> 
@@ -679,7 +684,7 @@
                 For deeper integration (including the ability to have a view with combined use of the Spring Faces Ajax
                 components and Rich Faces Ajax components), configure the RichFacesAjaxHandler on your FlowController:
             </para>
-            <programlisting><![CDATA[ 
+            <programlisting language="xml"><![CDATA[ 
 <bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
     <property name="flowExecutor" ref="flowExecutor" />
     <property name="ajaxHandler">
@@ -698,7 +703,7 @@
                 EL variable. For example, in your view template you can have a fragment that you would potentially like
                 to re-render in response to a particular event:
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <h:form id="hotels">
     <a4j:outputPanel id="searchResultsFragment">
         <h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
@@ -720,7 +725,7 @@
                 <code>commandLink</code>
                 to fire the event:
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <a4j:commandLink id="nextPageLink" value="More Results" action="next" reRender="#{flowRenderFragments}" />]]>
             </programlisting>
             <para>
@@ -728,7 +733,7 @@
                 <code>transition</code>
                 to handle the event:
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <transition on="next">
     <evaluate expression="searchCriteria.nextPage()" />
     <render fragments="hotels:searchResultsFragment" />
@@ -747,7 +752,7 @@
                 Typical Trinidad + Spring Faces configuration is as follows in web.xml (in addition to the typical
                 Spring Faces configuration):
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <context-param>
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
     <param-value>server</param-value>

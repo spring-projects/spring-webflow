@@ -123,15 +123,10 @@
 			</para>
 			<programlisting language="xml"><![CDATA[
 <security:http auto-config="true">
-    <security:intercept-url pattern="/spring/login*" access="ROLE_ANONYMOUS" />
-    <security:intercept-url pattern="/spring/logout-success*" access="ROLE_ANONYMOUS" />
-    <security:intercept-url pattern="/spring/logout*" access="ROLE_USER" />
-
     <security:form-login login-page="/spring/login" 
                          login-processing-url="/spring/loginProcess"
                          default-target-url="/spring/main" 
-                         authentication-failure-url="/spring/login?login_error=1" />
-   
+                         authentication-failure-url="/spring/login?login_error=1" />  
     <security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" />
 </security:http>
 
