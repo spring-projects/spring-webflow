@@ -2,14 +2,35 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.2 (29.05.2008)
+Changes in version 2.0.2 (06.06.2008)
 -------------------------------------
+New Features
+* Allow flow-execution-repository max-execution-snapshots to be set to 0 to disable snapshotting (SWF-709).
+  Use this to disable serialization-based execution state snapshotting.
+  Note that browser back button use is not supported when this option is enabled. 
+
 Improvements
+* Added syntax highlighting to the reference manual.
+* Documented the Default ExpressionParser configuration for Spring Faces (SWF-707).
+* Documented transition actions and how to restrict transition execution by returning action error results (SWF-715).
+* Documented how to link in parent flows in a test environment when using inheritance (SWF-694)
+* Documented how to access Web Flow Nightly Builds from the SpringSource Bundle Repository (SWF-710).
+* Simplified Spring Security Config across the booking samples (SWF-724).
+* Now set Locale of UIViewRoot to the Spring MVC Request Locale for JSF-based Spring MVC Views (SWF-659).
 
 Bug Fixes
-* Fixed a bug preventing mapping of non-string request parameters such as MultiPart files
-
-Documentation
+* Fixed a bug preventing use of Faces commandLinks or commandButtons inside facet definitions (SWF-692).
+* Fixed a bug where Spring.ElementDecoration did not properly copy styles from the decorated node (SWF-703).
+* Fixed a bug where ajaxEnabled="false" did not work properly with the Faces commandLink (SWF-700).
+* Fixed a bug the Spring Web MVC AjaxView was not properly sending Ajax redirect requests to Spring.js (SWF-682).
+* Fixed a bug in Spring.js related to regexp matching of <script> tags in a HTML page (SWF-672).
+* Fixed a bug in decoration of radio buttons and select boxes with use of ajaxEvent and selectOneRadio components (SWF-712).
+* Fixed a bug where a modal popup window would not disappear after a flow external redirect (SWF-675).
+* Fixed a bug where the Faces components were not rendering the 'propercase' attribute (SWF-736).
+* Fixed a bug where the ResourceServlet allowed access to sensitive files (SWF-706).
+* Fixed a bug preventing mapping of non-string request parameters such as MultiPart files.
+* Fixed a bug where the clientTextValidator component doesn't respect a custom JSF Converter (SWF-690)
+* Fixed several locale-related bugs in the Web Flow Test Suite (SWF-697).
 
 Changes in version 2.0.1 (15.05.2008)
 -------------------------------------
