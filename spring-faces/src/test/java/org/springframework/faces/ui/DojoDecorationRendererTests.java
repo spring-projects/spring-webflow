@@ -1,6 +1,7 @@
 package org.springframework.faces.ui;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIInput;
@@ -75,7 +76,9 @@ public class DojoDecorationRendererTests extends TestCase {
 		String expectedAttributes = "name : 'foo', value : dojo.date.locale.parse('Nov 21, 1977', "
 				+ "{selector : 'date', datePattern : 'yyyy-MM-dd'})";
 		UIInput childComponent = new UIInput();
-		childComponent.setConverter(new DateTimeConverter());
+		DateTimeConverter converter = new DateTimeConverter();
+		converter.setLocale(Locale.ENGLISH);
+		childComponent.setConverter(converter);
 		childComponent.setId("foo");
 		childComponent.setValue(new Date("11/21/1977"));
 		DojoDecorationRenderer renderer = new DojoDecorationRenderer();
