@@ -199,5 +199,57 @@
 </dependency> 
 ]]>
 		</programlisting>
-	</sect1>	
+	</sect1>
+	<sect1>
+		<title>How to Obtain Nightly Builds</title>
+		<para>
+			Nightly snapshots of the Web Flow trunk are available at the SpringSource Bundle Repository.
+			To access snapshots, add the following repository to your pom:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<repository>
+    <id>com.springsource.repository.bundles.snapshot</id>
+    <name>SpringSource Enterprise Bundle Repository - Nightly Snapshots</name>
+    <url>http://repository.springsource.com/maven/bundles/snapshot</url>
+</repository>]]>
+		</programlisting>
+			<para>
+				Then declare the following dependencies:			
+			</para>
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.binding</artifactId>
+    <version>2.0.3.CI-###</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.js</artifactId>
+    <version>2.0.3.CI-###</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.webflow</artifactId>
+    <version>2.0.3.CI-###</version>
+</dependency> 
+]]>
+			</programlisting>
+		<para>
+			And if using JavaServerFaces:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.faces</artifactId>
+    <version>2.0.3.CI-###</version>
+</dependency> 
+]]>
+		</programlisting>
+			<para>
+				Where '###' above represents the build number like 2.0.3.CI-500.
+				Get the latest build number by browsing the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">nightly build area</ulink>.
+			</para>
+	</sect1>
 </chapter>
