@@ -16,9 +16,13 @@
 package org.springframework.webflow.executor.jsf;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -49,7 +53,6 @@ import org.springframework.webflow.execution.support.FlowExecutionRedirect;
 import org.springframework.webflow.executor.RequestParameterInputMapper;
 import org.springframework.webflow.executor.ResponseInstruction;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentHandler;
-import org.springframework.webflow.executor.support.RequestParameterFlowExecutorArgumentHandler;
 import org.springframework.webflow.executor.support.ResponseInstructionHandler;
 
 /**
@@ -117,7 +120,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * </ol>
 	 * How arguments are extracted and how URLs are generated can be customized by setting a custom argument handler.
 	 */
-	private FlowExecutorArgumentHandler argumentHandler = new RequestParameterFlowExecutorArgumentHandler();
+	private FlowExecutorArgumentHandler argumentHandler = new JsfArgumentHandler();
 
 	/**
 	 * The service responsible for mapping attributes of an {@link ExternalContext} to a new {@link FlowExecution}
@@ -227,8 +230,9 @@ public class FlowPhaseListener implements PhaseListener {
 			// we do not need to worry about clean up here since other phases will continue to run even if an exception
 			// occurs in restoreFlowExecution(FacesContext)
 		} else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
-			if (FlowExecutionHolderUtils.isFlowExecutionRestored(event.getFacesContext())) {
+			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 				try {
+					restoreFacesMessages(context);
 					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 				} catch (RuntimeException e) {
 					// we must cleanup here since this is the render response phase and the after phase callback will
@@ -248,6 +252,7 @@ public class FlowPhaseListener implements PhaseListener {
 		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 				try {
+					saveFacesMessages(context);
 					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 				} finally {
 					// always cleanup after save - we are done with flow execution request processing
@@ -374,6 +379,12 @@ public class FlowPhaseListener implements PhaseListener {
 			protected void handleFlowExecutionRedirect(FlowExecutionRedirect redirect) throws Exception {
 				String url = argumentHandler.createFlowExecutionUrl(holder.getFlowExecutionKey().toString(), holder
 						.getFlowExecution(), context);
+
+				// even though we are going to send a redirect, we still need to make sure the
+				// view state is preserved accross the redirect since we're not changing views
+				// (this is a flow execution redirect after all)!
+				context.getFacesContext().getViewRoot().processSaveState(context.getFacesContext());
+
 				sendRedirect(url, context.getFacesContext());
 			}
 
@@ -466,6 +477,8 @@ public class FlowPhaseListener implements PhaseListener {
 	/**
 	 * Cleans up any allocated flow system resources and clears out the external context holder.
 	 * @param context the faces context
+	 * 
+	 * @since 1.0.6
 	 */
 	protected void cleanupResources(FacesContext context) {
 		if (logger.isDebugEnabled()) {
@@ -473,6 +486,69 @@ public class FlowPhaseListener implements PhaseListener {
 		}
 		FlowExecutionHolderUtils.cleanupCurrentFlowExecution(context);
 		ExternalContextHolder.setExternalContext(null);
+	}
+
+	/**
+	 * Restore faces messages found inside the flow execution and add them back to given faces context.
+	 * 
+	 * @since 1.0.6
+	 */
+	protected void restoreFacesMessages(FacesContext context) {
+		MutableAttributeMap scope = getScope(context);
+		Map facesMessagesMap = (Map) scope.get(getFacesMessagesKey());
+		if (facesMessagesMap != null) {
+			// restore messages by adding them back to the faces context
+			for (Iterator clientIds = facesMessagesMap.keySet().iterator(); clientIds.hasNext();) {
+				String clientId = (String) clientIds.next();
+				for (Iterator messages = ((List) facesMessagesMap.get(clientId)).iterator(); messages.hasNext();) {
+					context.addMessage(clientId, (FacesMessage) messages.next());
+				}
+			}
+
+			// remove the restored messages from the flow execution so they cannot be restored again
+			scope.remove(getFacesMessagesKey());
+		}
+	}
+
+	/**
+	 * Save faces messages in the flow execution, allowing them to survive a client side redirect.
+	 * 
+	 * @since 1.0.6
+	 */
+	protected void saveFacesMessages(FacesContext context) {
+		// gather all message to put away in the flow execution
+		Map facesMessagesMap = new HashMap();
+		for (Iterator clientIds = context.getClientIdsWithMessages(); clientIds.hasNext();) {
+			String clientId = (String) clientIds.next();
+			addFacesMessages(context, clientId, facesMessagesMap);
+		}
+		addFacesMessages(context, null, facesMessagesMap);
+
+		// put them in a flow execution scope
+		MutableAttributeMap scope = getScope(context);
+		if (facesMessagesMap.isEmpty()) {
+			scope.remove(getFacesMessagesKey());
+		} else {
+			scope.put(getFacesMessagesKey(), facesMessagesMap);
+		}
+	}
+
+	/**
+	 * Returns the scope map to store faces messages in. By default, flash scope is used.
+	 * 
+	 * @since 1.0.6
+	 */
+	protected MutableAttributeMap getScope(FacesContext context) {
+		return FlowExecutionHolderUtils.getCurrentFlowExecution(context).getActiveSession().getFlashMap();
+	}
+
+	/**
+	 * Returns the key used to store the faces messages in one of the flow execution scopes.
+	 * 
+	 * @since 1.0.6
+	 */
+	protected String getFacesMessagesKey() {
+		return this.getClass().getName() + ".FacesMessages";
 	}
 
 	// private helpers
@@ -547,6 +623,14 @@ public class FlowPhaseListener implements PhaseListener {
 				targetMap.put(entry.getKey(), entry.getValue());
 			}
 		}
+	}
+
+	private void addFacesMessages(FacesContext context, String clientId, Map facesMessagesMap) {
+		List facesMessages = new LinkedList();
+		for (Iterator messagesForClientId = context.getMessages(clientId); messagesForClientId.hasNext();) {
+			facesMessages.add(messagesForClientId.next());
+		}
+		facesMessagesMap.put(clientId, facesMessages);
 	}
 
 	private JsfExternalContext getCurrentContext() {
