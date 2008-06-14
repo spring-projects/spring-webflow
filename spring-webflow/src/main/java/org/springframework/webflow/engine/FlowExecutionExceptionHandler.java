@@ -35,6 +35,10 @@ public interface FlowExecutionExceptionHandler {
 	/**
 	 * Handle the exception in the context of the current request, optionally making an error view selection that should
 	 * be rendered.
+	 * <p>
+	 * Note that you should avoid throwing exceptions from an exception handler. If you do, plug in a fallback exception
+	 * handler that handles those kinds of exceptions, otherwise you could end up with an infinite loop while handling
+	 * exceptions.
 	 * @param exception the exception that occured
 	 * @param context the execution control context for this request
 	 * @return the selected error view that should be displayed (may be null if the handler chooses not to select a
