@@ -42,8 +42,10 @@
 			</url>         	
            	
 			<!-- try maven repo -->
-           	<ibiblio name="maven2-repo" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2/"/>           	
-
+			<url name="maven2-repo" m2compatible="true">
+				<ivy pattern="http://repo1.maven.org/maven2/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="http://repo1.maven.org/maven2/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
 		</chain>
 
 	</resolvers>
