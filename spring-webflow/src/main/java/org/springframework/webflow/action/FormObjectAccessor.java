@@ -47,6 +47,8 @@ public class FormObjectAccessor {
 	 * We need to keep track of the 'current form object' using this attribute to be able to deal with the limitations
 	 * of some clients that can only deal with a single form backing object, e.g. Struts when using the Struts
 	 * FlowAction.
+	 * 
+	 * @since 1.0.6
 	 */
 	public static final String CURRENT_FORM_OBJECT_ATTRIBUTE = "currentFormObject";
 

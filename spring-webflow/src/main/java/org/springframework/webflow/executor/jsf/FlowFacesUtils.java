@@ -42,21 +42,29 @@ public class FlowFacesUtils {
 	 * Note the flow executor object is used only at configuration time to extract other lower-level services needed by
 	 * the JSF integration (flow execution repository, flow execution factory). The runtime FlowExecutor interface is
 	 * never used by this JSF integration.
+	 * 
+	 * @since 1.0.6
 	 */
 	public static final String FLOW_EXECUTOR_BEAN_NAME = "flowExecutor";
 
 	/**
 	 * Bean name of a custom flow execution repository implementation.
+	 * 
+	 * @since 1.0.6
 	 */
 	public static final String FLOW_EXECUTION_REPOSITORY_BEAN_NAME = "flowExecutionRepository";
 
 	/**
 	 * Bean name of a custom flow definition locator implementation.
+	 * 
+	 * @since 1.0.6
 	 */
 	public static final String FLOW_DEFINITION_LOCATOR_BEAN_NAME = "flowDefinitionLocator";
 
 	/**
 	 * Bean name of a custom flow execution factory implementation.
+	 * 
+	 * @since 1.0.6
 	 */
 	public static final String FLOW_EXECUTION_FACTORY_BEAN_NAME = "flowExecutionFactory";
 
