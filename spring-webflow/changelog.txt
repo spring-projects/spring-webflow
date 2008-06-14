@@ -15,6 +15,8 @@ Package org.springframework.webflow.executor
 * Statics on FlowFacesUtils are now public: they're supposed to be well known names.
 * FlowPhaseListener.cleanupResources() is now protected.
 * Added AutowiringFlowExecutionListener (SWF-746).
+* In a JSF 1.2 environment, SWF will now correctly maintain the "java.faces.ViewState" parameter accross flow
+  execution redirects (SWF-445).
 
 Changes in version 1.0.5 (03.10.2007)
 -------------------------------------
