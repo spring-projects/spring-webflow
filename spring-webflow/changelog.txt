@@ -11,7 +11,7 @@ General
 Package org.springframework.webflow.action
 * Static CURRENT_FORM_OBJECT_ATTRIBUTE on FormObjectAccessor is now public: it's supposed to be a well known name.
 
-Package org.springframework.webflow.executor.jsf
+Package org.springframework.webflow.executor
 * Statics on FlowFacesUtils are now public: they're supposed to be well known names.
 * FlowPhaseListener.cleanupResources() is now protected.
 
