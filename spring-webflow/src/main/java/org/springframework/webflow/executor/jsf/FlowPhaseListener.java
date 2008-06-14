@@ -15,7 +15,10 @@
  */
 package org.springframework.webflow.executor.jsf;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -140,6 +143,29 @@ public class FlowPhaseListener implements PhaseListener {
 	private ViewIdMapper viewIdMapper = new DefaultViewIdMapper();
 
 	/**
+	 * Indicates whether or not FacesMessage objects are serializable.
+	 * <p>
+	 * While JSF 1.0 and 1.1 FacesMessage objects should be serializable (they implement Serializable), they in fact are
+	 * not, because they hold on to a non-serializable Severity object, and contain no custom serializing code. JSF 1.2
+	 * fixes this problem.
+	 */
+	private boolean facesMessageSerializable;
+
+	public FlowPhaseListener() {
+		try {
+			new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new FacesMessage());
+			facesMessageSerializable = true;
+		} catch (NotSerializableException e) {
+			logger.warn("FacesMessages do not appear to be serializable -- "
+					+ "As a result, messages will be stored in conversation scope on flow execution redirect");
+			facesMessageSerializable = false;
+		} catch (IOException e) {
+			// should not happen
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * Returns the argument handler used by this phase listener.
 	 */
 	public FlowExecutorArgumentHandler getArgumentHandler() {
@@ -227,12 +253,12 @@ public class FlowPhaseListener implements PhaseListener {
 		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
 			ExternalContextHolder.setExternalContext(new JsfExternalContext(context));
 			restoreFlowExecution(event.getFacesContext());
+			restoreFacesMessages(context);
 			// we do not need to worry about clean up here since other phases will continue to run even if an exception
 			// occurs in restoreFlowExecution(FacesContext)
 		} else if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 				try {
-					restoreFacesMessages(context);
 					prepareResponse(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 				} catch (RuntimeException e) {
 					// we must cleanup here since this is the render response phase and the after phase callback will
@@ -252,7 +278,6 @@ public class FlowPhaseListener implements PhaseListener {
 		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
 			if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 				try {
-					saveFacesMessages(context);
 					saveFlowExecution(getCurrentContext(), FlowExecutionHolderUtils.getFlowExecutionHolder(context));
 				} finally {
 					// always cleanup after save - we are done with flow execution request processing
@@ -380,6 +405,9 @@ public class FlowPhaseListener implements PhaseListener {
 				String url = argumentHandler.createFlowExecutionUrl(holder.getFlowExecutionKey().toString(), holder
 						.getFlowExecution(), context);
 
+				// save faces messages in the flow execution so that they can survive the redirect
+				saveFacesMessages(context.getFacesContext());
+
 				// even though we are going to send a redirect, we still need to make sure the
 				// view state is preserved accross the redirect since we're not changing views
 				// (this is a flow execution redirect after all)!
@@ -494,19 +522,21 @@ public class FlowPhaseListener implements PhaseListener {
 	 * @since 1.0.6
 	 */
 	protected void restoreFacesMessages(FacesContext context) {
-		MutableAttributeMap scope = getScope(context);
-		Map facesMessagesMap = (Map) scope.get(getFacesMessagesKey());
-		if (facesMessagesMap != null) {
-			// restore messages by adding them back to the faces context
-			for (Iterator clientIds = facesMessagesMap.keySet().iterator(); clientIds.hasNext();) {
-				String clientId = (String) clientIds.next();
-				for (Iterator messages = ((List) facesMessagesMap.get(clientId)).iterator(); messages.hasNext();) {
-					context.addMessage(clientId, (FacesMessage) messages.next());
+		if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
+			MutableAttributeMap scope = getScope(context);
+			Map facesMessagesMap = (Map) scope.get(getFacesMessagesKey());
+			if (facesMessagesMap != null) {
+				// restore messages by adding them back to the faces context
+				for (Iterator clientIds = facesMessagesMap.keySet().iterator(); clientIds.hasNext();) {
+					String clientId = (String) clientIds.next();
+					for (Iterator messages = ((List) facesMessagesMap.get(clientId)).iterator(); messages.hasNext();) {
+						context.addMessage(clientId, (FacesMessage) messages.next());
+					}
 				}
-			}
 
-			// remove the restored messages from the flow execution so they cannot be restored again
-			scope.remove(getFacesMessagesKey());
+				// remove the restored messages from the flow execution so they cannot be restored again
+				scope.remove(getFacesMessagesKey());
+			}
 		}
 	}
 
@@ -534,12 +564,18 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Returns the scope map to store faces messages in. By default, flash scope is used.
+	 * Returns the scope map to store faces messages in. By default, flash scope is used for JSF 1.2, conversation scope
+	 * for JSF 1.0 and 1.1.
 	 * 
 	 * @since 1.0.6
 	 */
 	protected MutableAttributeMap getScope(FacesContext context) {
-		return FlowExecutionHolderUtils.getCurrentFlowExecution(context).getActiveSession().getFlashMap();
+		if (facesMessageSerializable) {
+			return FlowExecutionHolderUtils.getCurrentFlowExecution(context).getActiveSession().getFlashMap();
+		} else {
+			// use conversation scope, which does not mandate serializability
+			return FlowExecutionHolderUtils.getCurrentFlowExecution(context).getConversationScope();
+		}
 	}
 
 	/**
