@@ -41,6 +41,8 @@ import org.springframework.webflow.execution.ScopeType;
  * 
  * @see AutowireCapableBeanFactory
  * 
+ * @since 1.0.6
+ * 
  * @author Erwin Vervaet
  */
 public class AutowiringFlowExecutionListener extends FlowExecutionListenerAdapter implements ApplicationContextAware {
