@@ -1,21 +1,21 @@
 package org.springframework.webflow.executor.support;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Flow execution listener that will autowire objects found in the flow execution scopes when a flow execution
- * {@link FlowExecutionListener#resumed(RequestContext) resumes}. It will run through all flow execution scopes in the
- * order request, flash, flow and finally conversation scope.
+ * {@link FlowExecutionListener#resumed(RequestContext) resumes}.
  * <p>
  * This listener is particularly useful when you are storing stateful objects inside the flow execution that have
  * dependencies on other objects, typically singleton service objects managed by Spring in an application context. Since
@@ -100,18 +100,27 @@ public class AutowiringFlowExecutionListener extends FlowExecutionListenerAdapte
 	}
 
 	public void resumed(RequestContext context) {
-		autowire(ScopeType.REQUEST, context);
-		autowire(ScopeType.FLASH, context);
-		autowire(ScopeType.FLOW, context);
-		autowire(ScopeType.CONVERSATION, context);
+		// autowire request scope, which is not tied to the flow session
+		autowire(ScopeType.REQUEST, context.getRequestScope());
+
+		// autowire flash and flow scope for all flow sessions in the flow execution
+		FlowSession flowSession = context.getFlowExecutionContext().getActiveSession();
+		while (flowSession != null) {
+			autowire(ScopeType.FLASH, flowSession.getFlashMap());
+			autowire(ScopeType.FLOW, flowSession.getScope());
+
+			flowSession = flowSession.getParent();
+		}
+
+		// autowire conversation scope, which is not tied to the flow session
+		autowire(ScopeType.CONVERSATION, context.getConversationScope());
 	}
 
 	/**
-	 * Autowire all objects in specified flow execution scope.
+	 * Autowire all objects in given flow execution scope.
 	 */
-	private void autowire(ScopeType scopeType, RequestContext context) {
-		Map scope = scopeType.getScope(context).asMap();
-		for (Iterator keys = scope.keySet().iterator(); keys.hasNext();) {
+	private void autowire(ScopeType scopeType, MutableAttributeMap scope) {
+		for (Iterator keys = scope.asMap().keySet().iterator(); keys.hasNext();) {
 			String key = (String) keys.next();
 			Object value = scope.get(key);
 			if (shouldBeAutowired(scopeType, key, value)) {
