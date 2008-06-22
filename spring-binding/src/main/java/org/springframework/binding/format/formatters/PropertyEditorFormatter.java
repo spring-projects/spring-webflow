@@ -21,20 +21,27 @@ import org.springframework.binding.format.Formatter;
 import org.springframework.util.Assert;
 
 /**
- * Adapts a {@link PropertyEditor} to the formatter interface.
+ * Adapts a {@link PropertyEditor} to the formatter interface. Useful for re-using pre-existing PropertyEditors as
+ * Formatters.
+ * 
+ * Note: this class synchronizes calls into the configured PropertyEditor instance to ensure thread safety.
  * 
  * @author Keith Donald
  */
 public class PropertyEditorFormatter implements Formatter {
+
+	private Class objectType;
 
 	private PropertyEditor propertyEditor;
 
 	/**
 	 * Wrap the given property editor in a formatter.
 	 */
-	public PropertyEditorFormatter(PropertyEditor propertyEditor) {
+	public PropertyEditorFormatter(PropertyEditor propertyEditor, Class objectType) {
 		Assert.notNull(propertyEditor, "The PropertyEditor is required");
+		Assert.notNull(objectType, "The object type is required");
 		this.propertyEditor = propertyEditor;
+		this.objectType = objectType;
 	}
 
 	/**
@@ -44,13 +51,27 @@ public class PropertyEditorFormatter implements Formatter {
 		return propertyEditor;
 	}
 
+	// implementing Formatter
+
+	public Class getObjectType() {
+		return objectType;
+	}
+
 	public String format(Object value) {
-		propertyEditor.setValue(value);
-		return propertyEditor.getAsText();
+		synchronized (propertyEditor) {
+			propertyEditor.setValue(value);
+			String text = propertyEditor.getAsText();
+			propertyEditor.setValue(null);
+			return text;
+		}
 	}
 
 	public Object parse(String formattedValue) {
-		propertyEditor.setAsText(formattedValue);
-		return propertyEditor.getValue();
+		synchronized (propertyEditor) {
+			propertyEditor.setAsText(formattedValue);
+			Object value = propertyEditor.getValue();
+			propertyEditor.setValue(null);
+			return value;
+		}
 	}
 }

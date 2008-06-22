@@ -75,7 +75,9 @@ public class GenericConversionService implements ConversionService {
 			}
 			for (int j = 0; j < targetClasses.length; j++) {
 				Class targetClass = targetClasses[j];
-				sourceMap.put(targetClass, converter);
+				if (!targetClass.equals(sourceClass)) {
+					sourceMap.put(targetClass, converter);
+				}
 			}
 		}
 	}

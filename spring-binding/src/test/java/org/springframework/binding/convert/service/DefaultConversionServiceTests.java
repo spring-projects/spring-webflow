@@ -18,6 +18,7 @@ package org.springframework.binding.convert.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -25,7 +26,9 @@ import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.FormatterConverter;
 import org.springframework.binding.convert.converters.TextToBoolean;
+import org.springframework.binding.format.formatters.IntegerFormatter;
 
 /**
  * Test case for the default conversion service.
@@ -84,5 +87,21 @@ public class DefaultConversionServiceTests extends TestCase {
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3");
 		assertEquals(3, three.intValue());
+	}
+
+	public void testRegisterConverter() {
+		GenericConversionService service = new GenericConversionService();
+		IntegerFormatter formatter = new IntegerFormatter(Integer.class);
+		formatter.setLocale(Locale.US);
+		FormatterConverter converter = new FormatterConverter(formatter);
+		service.addConverter(converter);
+		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
+		Integer three = (Integer) executor.execute("3,000");
+		assertEquals(3000, three.intValue());
+
+		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
+		String string = (String) executor2.execute(new Integer(3000));
+		assertEquals("3,000", string);
+
 	}
 }

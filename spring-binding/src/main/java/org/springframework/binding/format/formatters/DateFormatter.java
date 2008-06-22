@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -79,10 +80,17 @@ public class DateFormatter implements Formatter {
 		this.locale = locale;
 	}
 
+	// implementing Formatter
+
+	public Class getObjectType() {
+		return Date.class;
+	}
+
 	public String format(Object date) {
 		if (date == null) {
 			return "";
 		}
+		Assert.isInstanceOf(Date.class, date, "Object is not a [java.util.Date]");
 		return getDateFormat().format((Date) date);
 	}
 

@@ -17,12 +17,12 @@ package org.springframework.binding.format.registry;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.format.formatters.BooleanFormatter;
 import org.springframework.binding.format.formatters.DateFormatter;
+import org.springframework.binding.format.formatters.IntegerFormatter;
 import org.springframework.binding.format.formatters.NumberFormatter;
 
 public class DefaultFormatterRegistry extends GenericFormatterRegistry {
@@ -43,16 +43,16 @@ public class DefaultFormatterRegistry extends GenericFormatterRegistry {
 	 * Registers the default formatters. Subclasses may override.
 	 */
 	protected void registerDefaultFormatters() {
-		registerFormatter(Integer.class, new NumberFormatter(Integer.class));
-		registerFormatter(Long.class, new NumberFormatter(Long.class));
-		registerFormatter(Short.class, new NumberFormatter(Short.class));
-		registerFormatter(Float.class, new NumberFormatter(Float.class));
-		registerFormatter(Double.class, new NumberFormatter(Double.class));
-		registerFormatter(Byte.class, new NumberFormatter(Byte.class));
-		registerFormatter(BigInteger.class, new NumberFormatter(BigInteger.class));
-		registerFormatter(BigDecimal.class, new NumberFormatter(BigDecimal.class));
-		registerFormatter(Boolean.class, new BooleanFormatter());
-		registerFormatter(Date.class, new DateFormatter());
+		registerFormatter(new IntegerFormatter(Integer.class));
+		registerFormatter(new IntegerFormatter(BigInteger.class));
+		registerFormatter(new IntegerFormatter(Long.class));
+		registerFormatter(new IntegerFormatter(Short.class));
+		registerFormatter(new NumberFormatter(Float.class));
+		registerFormatter(new NumberFormatter(Double.class));
+		registerFormatter(new NumberFormatter(BigDecimal.class));
+		registerFormatter(new NumberFormatter(Byte.class));
+		registerFormatter(new BooleanFormatter());
+		registerFormatter(new DateFormatter());
 	}
 
 	/**

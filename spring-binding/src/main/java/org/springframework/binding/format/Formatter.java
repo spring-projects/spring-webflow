@@ -16,17 +16,24 @@
 package org.springframework.binding.format;
 
 /**
- * Formats objects for display.
+ * Formats objects of a certain class for display.
  * 
  * @author Keith Donald
  */
 public interface Formatter {
 
 	/**
+	 * Returns the type of object this Formatter formats. Successful {@link #parse(String) parse calls} will return
+	 * instances of this type. {@link #format(Object)} callers must provide an instance of this type.
+	 * @return the type of object being formatted
+	 */
+	public Class getObjectType();
+
+	/**
 	 * Format the object for display.
 	 * @param object the object to format
 	 * @return the formatted string, fit for display in a UI
-	 * @throws IllegalArgumentException if the object could not be formatted
+	 * @throws IllegalArgumentException if the object is of the wrong type
 	 */
 	public String format(Object object) throws IllegalArgumentException;
 
@@ -34,7 +41,7 @@ public interface Formatter {
 	 * Parse the formatted string representation of an object and return the object.
 	 * @param formattedString the formatted string representation
 	 * @return the parsed object
-	 * @throws InvalidFormatException the formatted string was in an invalid form
+	 * @throws InvalidFormatException the formatted string was in an invalid form, often due to user input error
 	 */
 	public Object parse(String formattedString) throws InvalidFormatException;
 

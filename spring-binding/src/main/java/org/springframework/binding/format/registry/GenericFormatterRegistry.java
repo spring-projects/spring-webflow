@@ -16,7 +16,6 @@
 package org.springframework.binding.format.registry;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.springframework.binding.format.Formatter;
@@ -24,8 +23,10 @@ import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.util.Assert;
 
 /**
- * Base class for formatter factories. Manages the locale used by the produced formatters using Spring's
- * {@link org.springframework.context.i18n.LocaleContext} system.
+ * A general-purpose {@link FormatterRegistry} implementation allows formatters to be registered programatically.
+ * 
+ * @see #registerFormatter(Class, Formatter)
+ * @see #registerFormatter(String, Formatter)
  * 
  * @author Keith Donald
  */
@@ -38,7 +39,7 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 	public Formatter getFormatter(Class clazz) {
 		Assert.notNull(clazz, "The formatted class argument is required");
 		clazz = convertToWrapperClassIfNecessary(clazz);
-		return findFormatter(clazz);
+		return (Formatter) formattersByClass.get(clazz);
 	}
 
 	public Formatter getFormatter(String id) {
@@ -48,9 +49,9 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 
 	// impl
 
-	public void registerFormatter(Class clazz, Formatter formatter) {
+	public void registerFormatter(Formatter formatter) {
 		Assert.notNull(formatter, "The formatter to register is required");
-		formattersByClass.put(clazz, formatter);
+		formattersByClass.put(formatter.getObjectType(), formatter);
 	}
 
 	public void registerFormatter(String id, Formatter formatter) {
@@ -60,26 +61,6 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 	}
 
 	// helpers
-
-	private Formatter findFormatter(Class clazz) {
-		LinkedList classQueue = new LinkedList();
-		classQueue.addFirst(clazz);
-		while (!classQueue.isEmpty()) {
-			clazz = (Class) classQueue.removeLast();
-			Formatter factory = (Formatter) formattersByClass.get(clazz);
-			if (factory != null) {
-				return factory;
-			}
-			if (!clazz.isInterface() && clazz.getSuperclass() != null) {
-				classQueue.add(clazz.getSuperclass());
-			}
-			Class[] interfaces = clazz.getInterfaces();
-			for (int i = 0; i < interfaces.length; i++) {
-				classQueue.addFirst(interfaces[i]);
-			}
-		}
-		return null;
-	}
 
 	private Class convertToWrapperClassIfNecessary(Class targetType) {
 		if (targetType.isPrimitive()) {

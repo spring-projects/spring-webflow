@@ -16,12 +16,7 @@
 package org.springframework.binding.format;
 
 /**
- * Source for shared and commonly used <code>Formatters</code>.
- * <p>
- * Note: formatters are typically not thread safe as <code>Format</code> objects aren't thread safe. In general, you
- * should not attempt to share formatters between threads.
- * </p>
- * @see java.text.Format
+ * A Source for shared and commonly used <code>Formatters</code>.
  * 
  * @author Keith Donald
  */

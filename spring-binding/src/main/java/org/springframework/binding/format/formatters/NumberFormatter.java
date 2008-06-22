@@ -30,9 +30,19 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * A formatter for common number types such as integers and big decimals. Allows the configuration of an explicit number
- * pattern and locale.
+ * A general formatter for common number types such as integers and big decimals. Allows the configuration of an
+ * explicit number pattern and locale.
+ * 
+ * Works with a general purpose {@link DecimalFormat} instance returned by calling
+ * {@link NumberFormat#getInstance(Locale)} by default. This instance supports parsing any number type generally and
+ * will not perform special type-specific logic such as rounding or truncation. Subclasses may override.
+ * 
+ * Will coerse parsed Numbers to the desired numberClass as necessary. If type-coersion results in an overflow
+ * condition; for example, what can occur with a Long being coersed to a Short, an exception will be thrown.
+ * 
+ * @see NumberFormat
  * @see DecimalFormat
+ * 
  * @author Keith Donald
  */
 public class NumberFormatter implements Formatter {
@@ -45,12 +55,15 @@ public class NumberFormatter implements Formatter {
 
 	private Locale locale;
 
+	private boolean lenient;
+
 	/**
 	 * Creates a number formatter for the specified number type.
 	 * @param numberClass the number type, a class extending from {@link Number}.
 	 */
 	public NumberFormatter(Class numberClass) {
 		Assert.notNull(numberClass, "The number class is required");
+		Assert.isTrue(Number.class.isAssignableFrom(numberClass), "The class must extend from Number");
 		this.numberClass = numberClass;
 	}
 
@@ -88,9 +101,36 @@ public class NumberFormatter implements Formatter {
 		this.locale = locale;
 	}
 
+	/**
+	 * If this Formatter is "lenient" in parsing number strings. A lenient formatter does not require that all
+	 * characters in the String be parsed successfully. Default is false.
+	 * @return the lenient flag
+	 */
+	public boolean getLenient() {
+		return lenient;
+	}
+
+	/**
+	 * Sets if this Formatter should parse leniently.
+	 * @param lenient the lenient flag
+	 */
+	public void setLenient(boolean lenient) {
+		this.lenient = lenient;
+	}
+
+	// implementing Formatter
+
+	public Class getObjectType() {
+		return numberClass;
+	}
+
 	public String format(Object number) {
 		if (number == null) {
 			return "";
+		}
+		if (!numberClass.isInstance(number)) {
+			throw new IllegalArgumentException("Object is not a [" + numberClass.getName() + "]; it is a ["
+					+ number.getClass().getName() + "]");
 		}
 		return getNumberFormat().format(number);
 	}
@@ -102,18 +142,28 @@ public class NumberFormatter implements Formatter {
 		ParsePosition parsePosition = new ParsePosition(0);
 		NumberFormat format = getNumberFormat();
 		Number number = format.parse(formattedString, parsePosition);
-		if (number == null || formattedString.length() != parsePosition.getIndex()) {
+		if (number == null) {
+			// no object could be parsed
 			throw new InvalidFormatException(formattedString, getPattern(format));
-		} else {
-			return NumberUtils.convertNumberToTargetClass(number, numberClass);
 		}
+		if (!lenient) {
+			if (formattedString.length() != parsePosition.getIndex()) {
+				// indicates a part of the string that was not parsed; e.g. ".5" in 1234.5 when parsing an Integer
+				throw new InvalidFormatException(formattedString, getPattern(format));
+			}
+		}
+		return convertToNumberClass(number);
 	}
 
 	// subclassing hookings
 
+	/**
+	 * Factory method that returns a fully-configured {@link NumberFormat} instance to use to format an object for
+	 * display. Applies the locale and pattern properties if configured. Subclasses may override.
+	 */
 	protected NumberFormat getNumberFormat() {
 		Locale locale = determineLocale(this.locale);
-		NumberFormat format = NumberFormat.getInstance(locale);
+		NumberFormat format = createNumberFormat(locale);
 		if (pattern != null) {
 			if (format instanceof DecimalFormat) {
 				((DecimalFormat) format).applyPattern(pattern);
@@ -123,6 +173,27 @@ public class NumberFormatter implements Formatter {
 			}
 		}
 		return format;
+	}
+
+	/**
+	 * Delegates to the {@link NumberFormat java.text.NumberFormat API} to construct the new NumberFormat instance.
+	 * Called by {@link #getNumberFormat()} after calculating the Locale. Subclasses may override to control how the
+	 * Format instance is constructed.
+	 * @param locale the calculated Locale
+	 * @return the new NumberFormat instance
+	 */
+	protected NumberFormat createNumberFormat(Locale locale) {
+		return NumberFormat.getInstance(locale);
+	}
+
+	/**
+	 * Coerces the Number object returned by NumberFormat to the desired numberClass. Subclasses may override.
+	 * @param number the parsed number
+	 * @return the coersed number
+	 * @throws IllegalArgumentException when an overflow condition occurs during coersion
+	 */
+	protected Number convertToNumberClass(Number number) throws IllegalArgumentException {
+		return NumberUtils.convertNumberToTargetClass(number, numberClass);
 	}
 
 	// internal helpers

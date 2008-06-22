@@ -17,6 +17,7 @@ package org.springframework.binding.format.formatters;
 
 import org.springframework.binding.format.Formatter;
 import org.springframework.binding.format.InvalidFormatException;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,16 +27,19 @@ import org.springframework.util.StringUtils;
  */
 public class BooleanFormatter implements Formatter {
 
+	public Class getObjectType() {
+		return Boolean.class;
+	}
+
 	public String format(Object value) throws IllegalArgumentException {
 		if (value == null) {
 			return "";
 		}
+		Assert.isInstanceOf(Boolean.class, value, "Object is not a [java.lang.Boolean]");
 		if (Boolean.TRUE.equals(value)) {
 			return "true";
-		} else if (Boolean.FALSE.equals(value)) {
-			return "false";
 		} else {
-			throw new IllegalArgumentException("Not a Boolean: " + value);
+			return "false";
 		}
 	}
 
