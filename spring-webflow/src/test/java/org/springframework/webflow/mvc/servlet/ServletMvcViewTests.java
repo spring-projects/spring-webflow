@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.View;
-import org.springframework.webflow.mvc.servlet.ServletMvcView;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
@@ -34,7 +33,7 @@ public class ServletMvcViewTests extends TestCase {
 	protected void setUp() {
 		DateFormatter dateFormatter = new DateFormatter();
 		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(Date.class, dateFormatter);
+		formatterRegistry.registerFormatter(dateFormatter);
 	}
 
 	public void testRender() throws Exception {

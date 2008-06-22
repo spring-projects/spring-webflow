@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class MvcViewTests extends TestCase {
 	protected void setUp() {
 		DateFormatter dateFormatter = new DateFormatter();
 		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(Date.class, dateFormatter);
+		formatterRegistry.registerFormatter(dateFormatter);
 	}
 
 	public void testRender() throws Exception {
@@ -164,6 +165,10 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("dateProperty", "2007-01-01");
 		context.putRequestParameter("beanProperty.name", "foo");
 		context.putRequestParameter("multipartFile", new MockMultipartFile("foo", new byte[0]));
+		// context.putRequestParameter("stringArrayProperty", new String[] { "foo", "bar", "baz" });
+		// context.putRequestParameter("integerArrayProperty", new String[] { "1", "2", "3" });
+		// context.putRequestParameter("primitiveArrayProperty", new String[] { "1", "2", "3" });
+		// context.putRequestParameter("listProperty", new String[] { "1", "2", "3" });
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
@@ -187,6 +192,22 @@ public class MvcViewTests extends TestCase {
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
 		assertEquals("foo", bindBean.getBeanProperty().getName());
 		assertEquals("foo", bindBean.getMultipartFile().getName());
+		// assertEquals(3, bindBean.getStringArrayProperty().length);
+		// assertEquals("foo", bindBean.getStringArrayProperty()[0]);
+		// assertEquals("bar", bindBean.getStringArrayProperty()[1]);
+		// assertEquals("baz", bindBean.getStringArrayProperty()[2]);
+		// assertEquals(3, bindBean.getIntegerArrayProperty().length);
+		// assertEquals(new Integer(1), bindBean.getIntegerArrayProperty()[0]);
+		// assertEquals(new Integer(2), bindBean.getIntegerArrayProperty()[1]);
+		// assertEquals(new Integer(3), bindBean.getIntegerArrayProperty()[2]);
+		// assertEquals(3, bindBean.getPrimitiveArrayProperty().length);
+		// assertEquals(1, bindBean.getPrimitiveArrayProperty()[0]);
+		// assertEquals(2, bindBean.getPrimitiveArrayProperty()[1]);
+		// assertEquals(3, bindBean.getPrimitiveArrayProperty()[2]);
+		// assertEquals(3, bindBean.getListProperty().size());
+		// assertEquals(new Integer(1), bindBean.getListProperty().get(0));
+		// assertEquals(new Integer(2), bindBean.getListProperty().get(1));
+		// assertEquals(new Integer(3), bindBean.getListProperty().get(2));
 	}
 
 	public void testResumeEventModelBindingAllowedFields() throws Exception {
@@ -301,6 +322,12 @@ public class MvcViewTests extends TestCase {
 		private NestedBean beanProperty;
 		private MultipartFile multipartFile;
 
+		private String[] stringArrayProperty;
+		private Integer[] integerArrayProperty;
+		private int[] primitiveArrayProperty;
+		private List listProperty;
+		private Map mapProperty;
+
 		public BindBean() {
 			Calendar cal = Calendar.getInstance();
 			cal.clear();
@@ -352,6 +379,51 @@ public class MvcViewTests extends TestCase {
 		public void setMultipartFile(MultipartFile multipartFile) {
 			this.multipartFile = multipartFile;
 		}
+
+		public String[] getStringArrayProperty() {
+			return stringArrayProperty;
+		}
+
+		public void setStringArrayProperty(String[] stringArrayProperty) {
+			this.stringArrayProperty = stringArrayProperty;
+		}
+
+		public Integer[] getIntegerArrayProperty() {
+			return integerArrayProperty;
+		}
+
+		public void setIntegerArrayProperty(Integer[] integerArrayProperty) {
+			this.integerArrayProperty = integerArrayProperty;
+		}
+
+		public int[] getPrimitiveArrayProperty() {
+			return primitiveArrayProperty;
+		}
+
+		public void setPrimitiveArrayProperty(int[] primitiveArrayProperty) {
+			this.primitiveArrayProperty = primitiveArrayProperty;
+		}
+
+		public List getListProperty() {
+			return listProperty;
+		}
+
+		public void setListProperty(List listProperty) {
+			this.listProperty = listProperty;
+		}
+
+		public Map getMapProperty() {
+			return mapProperty;
+		}
+
+		public void setMapProperty(Map mapProperty) {
+			this.mapProperty = mapProperty;
+		}
+
+		public void setBeanProperty(NestedBean beanProperty) {
+			this.beanProperty = beanProperty;
+		}
+
 	}
 
 	public static class NestedBean {

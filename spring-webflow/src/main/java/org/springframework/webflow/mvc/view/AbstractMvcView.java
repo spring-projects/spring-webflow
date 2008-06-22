@@ -52,6 +52,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -477,8 +478,11 @@ public abstract class AbstractMvcView implements View {
 		}
 
 		public Object execute(Object source, Object context) throws ConversionExecutionException {
-			if (!(source instanceof String)) {
+			if (source instanceof MultipartFile) {
 				// for the case of MultipartFile parameters; nothing to do
+				return source;
+			}
+			if (source instanceof String[]) {
 				return source;
 			}
 			String formattedValue = (String) source;

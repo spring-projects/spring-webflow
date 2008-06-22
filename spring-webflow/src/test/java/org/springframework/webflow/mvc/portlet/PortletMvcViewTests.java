@@ -1,6 +1,5 @@
 package org.springframework.webflow.mvc.portlet;
 
-import java.util.Date;
 import java.util.Locale;
 
 import javax.portlet.RenderRequest;
@@ -26,7 +25,7 @@ public class PortletMvcViewTests extends TestCase {
 	protected void setUp() {
 		DateFormatter dateFormatter = new DateFormatter();
 		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(Date.class, dateFormatter);
+		formatterRegistry.registerFormatter(dateFormatter);
 	}
 
 	public void testRender() throws Exception {
