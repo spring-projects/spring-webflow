@@ -45,7 +45,7 @@ public class GenericFormatterRegistryTests extends TestCase {
 		NumberFormatter percentFormatter = new NumberFormatter(BigDecimal.class);
 		percentFormatter.setPattern("00%");
 		registry.registerFormatter("percent", percentFormatter);
-		Formatter formatter = registry.getFormatter(Integer.class, "percent");
+		Formatter formatter = registry.getFormatter(BigDecimal.class, "percent");
 		assertEquals("35%", formatter.format(new BigDecimal(".35")));
 		BigDecimal value = (BigDecimal) formatter.parse("35%");
 		assertEquals(new BigDecimal(".35"), value);
@@ -58,6 +58,16 @@ public class GenericFormatterRegistryTests extends TestCase {
 		assertNull(formatter);
 		formatter = registry.getFormatter(Double.class, "double");
 		assertNotNull(formatter);
+	}
+
+	public void testRegisterCustomFormatterBogusClass() {
+		registry.registerFormatter("double", new NumberFormatter(Double.class));
+		try {
+			registry.getFormatter(Integer.class, "double");
+			fail("Should have failed");
+		} catch (IllegalArgumentException e) {
+
+		}
 	}
 
 	public interface CustomType {

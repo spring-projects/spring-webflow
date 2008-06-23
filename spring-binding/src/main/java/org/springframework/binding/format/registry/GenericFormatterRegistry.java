@@ -46,7 +46,10 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 		Assert.notNull(clazz, "The formatted class argument is required");
 		Assert.hasText(id, "The id of the custom formatter is required");
 		Formatter formatter = (Formatter) formattersById.get(id);
-		if (formatter != null && formatter.getObjectType().equals(clazz)) {
+		if (formatter != null && !formatter.getObjectType().equals(clazz)) {
+			throw new IllegalArgumentException(
+					"Provided class argument does not match registered Formatter objectType [" + clazz.getName()
+							+ "]; unable to return custom Formatter instance " + formatter);
 		}
 		return formatter;
 	}
