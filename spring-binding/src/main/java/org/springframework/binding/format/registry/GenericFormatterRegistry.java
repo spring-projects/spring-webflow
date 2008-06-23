@@ -42,9 +42,13 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 		return (Formatter) formattersByClass.get(clazz);
 	}
 
-	public Formatter getFormatter(String id) {
+	public Formatter getFormatter(Class clazz, String id) {
+		Assert.notNull(clazz, "The formatted class argument is required");
 		Assert.hasText(id, "The id of the custom formatter is required");
-		return (Formatter) formattersById.get(id);
+		Formatter formatter = (Formatter) formattersById.get(id);
+		if (formatter != null && formatter.getObjectType().equals(clazz)) {
+		}
+		return formatter;
 	}
 
 	// impl

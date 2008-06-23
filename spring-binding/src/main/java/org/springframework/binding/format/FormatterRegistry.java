@@ -32,9 +32,10 @@ public interface FormatterRegistry {
 	/**
 	 * Returns the formatter for the given class of object with the given id. Use this method to query a custom
 	 * formatter instance for a given class of object.
+	 * @param clazz the type of object that will be formatted
 	 * @param id the id of the custom formatter instance; typically descriptive like "localDate"
 	 * @return the formatter
 	 */
-	public Formatter getFormatter(String id);
+	public Formatter getFormatter(Class clazz, String id);
 
 }

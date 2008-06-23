@@ -513,7 +513,7 @@ public abstract class AbstractMvcView implements View {
 
 		private Formatter getFormatter(Expression target, Class targetClass) {
 			if (formatterRegistry != null) {
-				Formatter formatter = formatterRegistry.getFormatter(target.getExpressionString());
+				Formatter formatter = formatterRegistry.getFormatter(targetClass, target.getExpressionString());
 				if (formatter != null) {
 					return formatter;
 				} else {

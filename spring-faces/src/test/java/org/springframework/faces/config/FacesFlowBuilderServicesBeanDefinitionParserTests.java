@@ -88,7 +88,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass) throws ConversionExecutionException {
+		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass)
+				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
@@ -100,7 +101,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public Formatter getFormatter(String id) {
+		public Formatter getFormatter(Class clazz, String id) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
