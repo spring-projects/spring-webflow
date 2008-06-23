@@ -56,13 +56,12 @@ public class AutowiringPhaseListener extends AutowiringSupport implements PhaseL
 	}
 
 	public void beforePhase(PhaseEvent event) {
+	}
+
+	public void afterPhase(PhaseEvent event) {
 		FacesContext context = event.getFacesContext();
 		if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
 			autowire(FlowExecutionHolderUtils.getCurrentFlowExecution(context));
 		}
-	}
-
-	public void afterPhase(PhaseEvent event) {
-		// nothing to do after the phase
 	}
 }
