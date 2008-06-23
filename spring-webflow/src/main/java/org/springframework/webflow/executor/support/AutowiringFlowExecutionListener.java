@@ -1,17 +1,21 @@
 package org.springframework.webflow.executor.support;
 
-import java.util.Iterator;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.execution.EnterStateVetoException;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
+import org.springframework.webflow.execution.ViewSelection;
 
 /**
  * Flow execution listener that will autowire objects found in the flow execution scopes when a flow execution
@@ -25,12 +29,12 @@ import org.springframework.webflow.execution.ScopeType;
  * time the flow execution resumes.
  * <p>
  * By default, the listener will use autowiring by name. This behaviour can be changed by setting the "autowireMode"
- * property to the approriate value.
+ * property to the appropriate value.
  * <p>
- * Dependency checking is turned off by default: If no matching service layer bean can be found, the setter in question
+ * Dependency checking is turned off by default: if no matching service layer bean can be found, the setter in question
  * will simply not get invoked. To enforce matching service layer beans, set the "dependencyCheck" property to true.
  * <p>
- * Autowiring will be attempted for all objects stored in any of the flow execution scopes. Override the
+ * Autowiring will be attempted for all objects stored in flash, flow and conversation scope. Override the
  * {@link #shouldBeAutowired(ScopeType, String, Object)} method if you want to limit autowiring to specific objects.
  * <p>
  * Autowiring is done using {@link AutowireCapableBeanFactory#autowireBeanProperties(Object, int, boolean)}. If you
@@ -45,112 +49,61 @@ import org.springframework.webflow.execution.ScopeType;
  * 
  * @author Erwin Vervaet
  */
-public class AutowiringFlowExecutionListener extends FlowExecutionListenerAdapter implements ApplicationContextAware {
-
-	/**
-	 * The autowiring mode to use.
-	 */
-	private int autowireMode = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
-
-	/**
-	 * The dependency check setting to use.
-	 */
-	private boolean dependencyCheck = false;
+public class AutowiringFlowExecutionListener extends AutowiringSupport implements ApplicationContextAware,
+		FlowExecutionListener {
 
 	/**
 	 * The bean factory we will delegate autowiring to.
 	 */
 	private AutowireCapableBeanFactory beanFactory;
 
-	/**
-	 * Returns the configured autowiring mode. The default is autowiring by name.
-	 */
-	public int getAutowireMode() {
-		return autowireMode;
-	}
-
-	/**
-	 * Set the autowiring mode to use, either by name or by type. Defaults to autowiring by name.
-	 * @see AutowireCapableBeanFactory#AUTOWIRE_BY_NAME
-	 * @see AutowireCapableBeanFactory#AUTOWIRE_BY_TYPE
-	 * @see AutowireCapableBeanFactory#AUTOWIRE_NO
-	 */
-	public void setAutowireMode(int autowireMode) {
-		this.autowireMode = autowireMode;
-	}
-
-	/**
-	 * Returns the configured dependency check setting. Defaults to false.
-	 */
-	public boolean getDependencyCheck() {
-		return dependencyCheck;
-	}
-
-	/**
-	 * Set whether to perform a dependency check for object references in the instance being autowired. Defaults to
-	 * false.
-	 * @see AutowireCapableBeanFactory#autowireBeanProperties(Object, int, boolean)
-	 */
-	public void setDependencyCheck(boolean dependencyCheck) {
-		this.dependencyCheck = dependencyCheck;
+	protected AutowireCapableBeanFactory getBeanFactory() {
+		return beanFactory;
 	}
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.beanFactory = applicationContext.getAutowireCapableBeanFactory();
 	}
 
+	// implementing FlowExecutionListener
+
+	public void requestSubmitted(RequestContext context) {
+	}
+
+	public void requestProcessed(RequestContext context) {
+	}
+
+	public void sessionStarting(RequestContext context, FlowDefinition definition, MutableAttributeMap input) {
+	}
+
+	public void sessionCreated(RequestContext context, FlowSession session) {
+	}
+
+	public void sessionStarted(RequestContext context, FlowSession session) {
+	}
+
+	public void eventSignaled(RequestContext context, Event event) {
+	}
+
+	public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
+	}
+
+	public void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition newState) {
+	}
+
 	public void resumed(RequestContext context) {
-		// autowire request scope, which is not tied to the flow session
-		autowire(ScopeType.REQUEST, context.getRequestScope());
-
-		// autowire flash and flow scope for all flow sessions in the flow execution
-		FlowSession flowSession = context.getFlowExecutionContext().getActiveSession();
-		while (flowSession != null) {
-			autowire(ScopeType.FLASH, flowSession.getFlashMap());
-			autowire(ScopeType.FLOW, flowSession.getScope());
-
-			flowSession = flowSession.getParent();
-		}
-
-		// autowire conversation scope, which is not tied to the flow session
-		autowire(ScopeType.CONVERSATION, context.getConversationScope());
+		autowire(context.getFlowExecutionContext());
 	}
 
-	/**
-	 * Autowire all objects in given flow execution scope.
-	 */
-	private void autowire(ScopeType scopeType, MutableAttributeMap scope) {
-		for (Iterator keys = scope.asMap().keySet().iterator(); keys.hasNext();) {
-			String key = (String) keys.next();
-			Object value = scope.get(key);
-			if (shouldBeAutowired(scopeType, key, value)) {
-				autowire(scopeType, key, value);
-			}
-		}
+	public void paused(RequestContext context, ViewSelection selectedView) {
 	}
 
-	/**
-	 * Determine whether or not given value, indexed using given key in specified flow execution scope, should be
-	 * autowired. The default implementation simply returns true, i.e. it tries to autowire all objects found in the
-	 * flow execution scopes.
-	 * <p>
-	 * Subclasses can override this method if they want to limit autowiring to a particular scope or to particular
-	 * objects, for instance objects implementing a paritcular marker interface, having a certain marker annotation or
-	 * objects whose class name follows some naming convention.
-	 */
-	protected boolean shouldBeAutowired(ScopeType scopeType, String key, Object value) {
-		return true;
+	public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
 	}
 
-	/**
-	 * Autowire given value indexed using given key in specified flow execution scope. By default, this method will
-	 * simply call {@link AutowireCapableBeanFactory#autowireBeanProperties(Object, int, boolean)} using the configured
-	 * {@link #setAutowireMode(int) autowiring mode} and {@link #setDependencyCheck(boolean) dependency check} settings.
-	 * <p>
-	 * Subclasses can override this method when special autowiring is required, for instance using any of the other
-	 * method offered by {@link AutowireCapableBeanFactory}.
-	 */
-	protected void autowire(ScopeType scopeType, String key, Object value) {
-		beanFactory.autowireBeanProperties(value, autowireMode, dependencyCheck);
+	public void sessionEnded(RequestContext context, FlowSession session, AttributeMap output) {
+	}
+
+	public void exceptionThrown(RequestContext context, FlowExecutionException exception) {
 	}
 }
