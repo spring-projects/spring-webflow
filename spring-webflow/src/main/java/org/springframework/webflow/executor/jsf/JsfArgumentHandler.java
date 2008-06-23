@@ -21,6 +21,9 @@ import org.springframework.webflow.executor.support.RequestParameterFlowExecutor
  * or
  * {@link #createExternalUrl(org.springframework.webflow.execution.support.ExternalRedirect, String, ExternalContext) external URLs},
  * since we're clearly not in a postback situation in those cases.
+ * <p>
+ * Also note that the resulting URL could potentially be too long when using JSF client-side state saving mode.  In general
+ * there are issues in trying to use alwaysRedirectOnPause with client-side state saving.
  * 
  * @since 1.0.6
  * 
