@@ -50,6 +50,9 @@ public class GenericFormatterRegistry implements FormatterRegistry {
 	// impl
 
 	public void registerFormatter(Formatter formatter) {
+		Assert.notNull(clazz, "The class the formatter formats is required");
+		Assert.isTrue(!clazz.isPrimitive(),
+				"Registering Formatters of primitive classes not allowed: register wrapper Object classes instead");
 		Assert.notNull(formatter, "The formatter to register is required");
 		formattersByClass.put(formatter.getObjectType(), formatter);
 	}
