@@ -18,8 +18,9 @@ Package org.springframework.webflow.executor
 * In a JSF 1.2 environment, SWF will now correctly maintain the "java.faces.ViewState" parameter accross flow
   execution redirects (SWF-445).
 * FlowPhaseListener now maintains FacesMessages accross a flow execution redirect by temporarily storing them in
-  flash scope (SWF-745).
+  the flow execution (SWF-745).
 * FlowPhaseListener will now save the JSF component state before a flow execution redirect is issued (SWF-747).
+* Fixed FlowPhaseListener to correctly deal with scenarios where we fallback to standard JSF navigation.
 
 Changes in version 1.0.5 (03.10.2007)
 -------------------------------------

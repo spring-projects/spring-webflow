@@ -54,7 +54,7 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 	public static final String COMPONENT_ID = "FlowExecutionKeyStateHolder";
 
 	/**
-	 * The key value
+	 * The key value.
 	 */
 	private String flowExecutionKey;
 
@@ -65,7 +65,7 @@ public class FlowExecutionKeyStateHolder extends UIComponentBase {
 	}
 
 	public void setId(String id) {
-		// Do nothing so as to ensure the id never gets overwritten.
+		// do nothing so as to ensure the id never gets overwritten.
 		return;
 	}
 

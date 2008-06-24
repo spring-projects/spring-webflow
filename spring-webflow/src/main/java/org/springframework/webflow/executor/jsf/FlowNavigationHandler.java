@@ -170,12 +170,13 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 			} else {
 				// not a launch request - see if this is a resume request to continue an existing execution
 				if (FlowExecutionHolderUtils.isFlowExecutionRestored(facesContext)) {
+					FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(facesContext);
+
 					// a flow execution has been restored - see if we need to signal an event against it
 					if (argumentExtractor.isEventIdPresent(context)) {
 						// signal the event against the current flow execution
 						String eventId = argumentExtractor.extractEventId(context);
 						try {
-							FlowExecutionHolder holder = FlowExecutionHolderUtils.getFlowExecutionHolder(facesContext);
 							ViewSelection selectedView = holder.getFlowExecution().signalEvent(eventId, context);
 							// set the next view to render
 							holder.setViewSelection(selectedView);
@@ -185,6 +186,7 @@ public class FlowNavigationHandler extends DecoratingNavigationHandler {
 										+ "'; falling back to standard navigation handler.");
 							}
 							// not a valid event in the current state: proceed with standard navigation
+							holder.setNavigationFallback(true);
 							originalNavigationHandler.handleNavigation(facesContext, fromAction, outcome);
 						}
 					}

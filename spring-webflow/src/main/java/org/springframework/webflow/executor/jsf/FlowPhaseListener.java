@@ -382,13 +382,19 @@ public class FlowPhaseListener implements PhaseListener {
 	 * @param holder the holder
 	 */
 	protected void prepareResponse(final JsfExternalContext context, final FlowExecutionHolder holder) {
+		if (holder.isNavigationFallback()) {
+			// navigation was not processed by Web Flow, but by the standard JSF navigation handler
+			// just leave response rendering up to JSF
+			return;
+		}
+
 		ViewSelection selectedView = holder.getViewSelection();
 		if (selectedView == null) {
 			// no navigation event has been processed - simply refresh the execution with the same key
 			selectedView = holder.getFlowExecution().refresh(context);
 			holder.setViewSelection(selectedView);
 		} else {
-			// an navigation event has been processed - generate a new flow execution key if necessary
+			// a navigation event has been processed - generate a new flow execution key if necessary
 			generateKey(context, holder);
 		}
 		new ResponseInstructionHandler() {

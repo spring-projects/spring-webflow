@@ -37,6 +37,10 @@ import org.springframework.webflow.executor.support.AutowiringSupport;
  * require special autowiring behaviour, consider overriding the {@link #autowire(ScopeType, String, Object)} method.
  * <p>
  * This phase listener will use the root web application context as {@link AutowireCapableBeanFactory}.
+ * <p>
+ * Note about customization: since PhaseListeners managed directly by the JSF provider cannot benefit from dependency
+ * injection, See Spring's {@link org.springframework.web.jsf.DelegatingPhaseListenerMulticaster} when you need to
+ * customize an AutowiringPhaseListener instance.
  * 
  * @see FlowPhaseListener
  * @see WebApplicationContextUtils#getWebApplicationContext(ServletContext)

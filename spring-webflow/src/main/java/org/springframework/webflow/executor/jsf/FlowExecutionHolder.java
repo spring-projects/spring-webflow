@@ -54,9 +54,15 @@ public class FlowExecutionHolder implements Serializable {
 	private FlowExecutionLock flowExecutionLock;
 
 	/**
-	 * The currently selected view selection for this request.
+	 * The currently selected view for this request.
 	 */
 	private ViewSelection viewSelection;
+
+	/**
+	 * Flag that indicates whether or not it was Web Flow that processed navigation, or if there was fallback to the
+	 * standard JSF navigation handler. Defaults to false.
+	 */
+	private boolean navigationFallback = false;
 
 	/**
 	 * Creates a new flow execution holder for a flow execution that has not yet been placed in a repository.
@@ -131,6 +137,24 @@ public class FlowExecutionHolder implements Serializable {
 	}
 
 	/**
+	 * Set whether or not fallback happened to the standard JSF navigation handler. Defaults to false.
+	 * 
+	 * @since 1.0.6
+	 */
+	public void setNavigationFallback(boolean b) {
+		this.navigationFallback = b;
+	}
+
+	/**
+	 * Returns whether or not fallback happened to the standard JSF navigation handler.
+	 * 
+	 * @since 1.0.6
+	 */
+	public boolean isNavigationFallback() {
+		return navigationFallback;
+	}
+
+	/**
 	 * Replace the current flow execution with the one provided. This method will clear out all state associated with
 	 * the original execution and unlock it if necessary.
 	 * @param flowExecution the new "current" flow execution
@@ -138,6 +162,7 @@ public class FlowExecutionHolder implements Serializable {
 	public void replaceWith(FlowExecution flowExecution) {
 		this.flowExecutionKey = null;
 		this.viewSelection = null;
+		this.navigationFallback = false;
 		unlockFlowExecutionIfNecessary();
 		this.flowExecution = flowExecution;
 	}
