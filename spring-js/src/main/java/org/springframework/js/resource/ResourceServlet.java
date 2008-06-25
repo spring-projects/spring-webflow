@@ -130,7 +130,7 @@ public class ResourceServlet extends HttpServletBean {
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		String mimeType = response.getContentType();
 
-		if (gzipEnabled && StringUtils.hasText(acceptEncoding) && acceptEncoding.contains("gzip")
+		if (gzipEnabled && StringUtils.hasText(acceptEncoding) && acceptEncoding.indexOf("gzip") > -1
 				&& compressedMimeTypes.contains(mimeType)) {
 			log.debug("Enabling GZIP compression for the current response.");
 			return new GZIPResponseStream(response);
