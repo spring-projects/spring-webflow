@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.springframework.samples.springtravel.webapp
+Bundle-Name: Spring Travel Web Application Module
+Import-Bundle: 
+ org.springframework.webflow;version="[2.0.3,3.0.0)",
+ org.springframework.js;version="[2.0.3,3.0)",
+ org.springframework.faces;version="[2.0.3,3.0)",
+ com.springsource.org.apache.myfaces;version="[1.2.0,2.0.0)",
+ com.springsource.org.apache.myfaces.javax.faces;version="[1.2.0,2.0.0)",
+ com.springsource.com.sun.facelets;version="[1.1.14,1.2.0)",
+ org.springframework.security;version="[2.0.0,2.1.0)"
+Import-Library: 
+ org.springframework.spring;version="[2.5.4,3.0.0)",
+ org.hibernate.ejb;version="[3.3.1.ga, 3.3.1.ga]"
+Platform-ModuleType: Web
+Web-ContextPath: springtravel-faces
+Web-DispatcherServletUrlPatterns: /spring/*
+Web-ServletContextListeners: 
+ org.apache.myfaces.webapp.StartupServletContextListener
+Web-Servlets: 
+ FacesServlet;servlet-class:="javax.faces.webapp.FacesServlet";load-on-startup:="1";url-patterns:="*.faces",
+ ResourcesServlet;servlet-class:="org.springframework.js.resource.ResourceServlet";load-on-startup:="0";url-patterns:="/resources/*"
+Web-FilterMappings: springSecurityFilterChain;url-patterns:="/*"
+Web-ContextParams: 
+ javax.faces.DEFAULT_SUFFIX;param-value:=".xhtml",
+ facelets.DEVELOPMENT;param-value:="true",
+ facelets.REFRESH_PERIOD;param-value:="1",
+ facelets.RESOURCE_RESOLVER;param-value:="org.springframework.faces.webflow.FlowResourceResolver"
+Web-SessionTimeout: 5
+Web-WelcomeFiles: index.html

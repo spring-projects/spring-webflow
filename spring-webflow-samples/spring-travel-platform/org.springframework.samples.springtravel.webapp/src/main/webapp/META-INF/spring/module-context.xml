@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- Maps request URIs to controllers -->
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="defaultHandler">
+			<!-- Selects view names to render based on the request URI: e.g. /main selects "main" -->	
+			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+		</property>
+		<property name="order" value="100"/>
+	</bean>
+		
+	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml') -->
+	<bean id="faceletsViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".xhtml" />
+	</bean>
+	
+</beans>
