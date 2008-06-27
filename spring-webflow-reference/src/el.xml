@@ -108,7 +108,8 @@
 			<title>flowScope</title>
 			<para>
 				Use <code>flowScope</code> to assign a flow variable.
-				Flow scope gets allocated when a flow starts and destroyed when the flow ends.
+				Flow scope gets allocated when a flow starts and destroyed when the flow ends.  With the default 
+                implementation, any objects stored in flow scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" />]]>
@@ -119,7 +120,8 @@
 			<para>
 				Use <code>viewScope</code> to assign a view variable.
 				View scope gets allocated when a <code>view-state</code> enters and destroyed when the state exits.
-				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.
+				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.  With the 
+                default implementation, any objects stored in view scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <on-render>
@@ -142,7 +144,8 @@
 			<title>flashScope</title>
 			<para>
 				Use <code>flashScope</code> to assign a flash variable.
-				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the flow ends.
+				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the 
+                flow ends.  With the default implementation, any objects stored in flash scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <set name="flashScope.statusMessage" value="'Booking confirmed'" />]]>				
@@ -153,7 +156,9 @@
 			<para>
 				Use <code>conversationScope</code> to assign a conversation variable.
 				Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
-				Conversation scope is shared by a top-level flow and all of its subflows.
+				Conversation scope is shared by a top-level flow and all of its subflows.  With the default 
+                implementation, conversation scoped objects are stored in the HTTP session and should generally be 
+                Serializable to account for typical session replication.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" />]]>
