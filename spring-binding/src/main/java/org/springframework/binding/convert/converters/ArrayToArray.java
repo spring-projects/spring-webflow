@@ -26,23 +26,15 @@ public class ArrayToArray implements Converter {
 			return null;
 		}
 		Class sourceComponentType = source.getClass().getComponentType();
-		if (!sourceComponentType.isPrimitive()) {
-			Object[] sourceArray = (Object[]) source;
-			Class targetComponentType = targetClass.getComponentType();
-			ConversionExecutor executor = conversionService.getConversionExecutor(sourceComponentType,
-					targetComponentType);
-			Object target = Array.newInstance(targetComponentType, sourceArray.length);
-			if (!targetComponentType.isPrimitive()) {
-				Object[] targetArray = (Object[]) target;
-				for (int i = 0; i < sourceArray.length; i++) {
-					targetArray[i] = executor.execute(sourceArray[i]);
-				}
-				return targetArray;
-			} else {
-				throw new UnsupportedOperationException("Primitive arrays not yet supported");
-			}
-		} else {
-			throw new UnsupportedOperationException("Primitive arrays not yet supported");
+		Class targetComponentType = targetClass.getComponentType();
+		int length = Array.getLength(source);
+		Object targetArray = Array.newInstance(targetComponentType, length);
+		ConversionExecutor converter = conversionService
+				.getConversionExecutor(sourceComponentType, targetComponentType);
+		for (int i = 0; i < length; i++) {
+			Object value = Array.get(source, i);
+			Array.set(targetArray, i, converter.execute(value));
 		}
+		return targetArray;
 	}
 }
