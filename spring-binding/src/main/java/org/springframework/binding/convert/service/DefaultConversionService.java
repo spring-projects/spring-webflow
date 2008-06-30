@@ -15,6 +15,10 @@
  */
 package org.springframework.binding.convert.service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
 import org.springframework.binding.convert.converters.StringToBigInteger;
@@ -29,6 +33,7 @@ import org.springframework.binding.convert.converters.StringToInteger;
 import org.springframework.binding.convert.converters.StringToLabeledEnum;
 import org.springframework.binding.convert.converters.StringToLong;
 import org.springframework.binding.convert.converters.StringToShort;
+import org.springframework.core.enums.LabeledEnum;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -48,6 +53,7 @@ public class DefaultConversionService extends GenericConversionService {
 	 */
 	public DefaultConversionService() {
 		addDefaultConverters();
+		addDefaultAliases();
 	}
 
 	/**
@@ -67,6 +73,23 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToClass());
 		addConverter(new StringToLabeledEnum());
 		addConverter(new StringToDate());
+	}
+
+	protected void addDefaultAliases() {
+		addAlias("byte", Byte.class);
+		addAlias("boolean", Boolean.class);
+		addAlias("character", Character.class);
+		addAlias("short", Short.class);
+		addAlias("integer", Integer.class);
+		addAlias("long", Long.class);
+		addAlias("float", Float.class);
+		addAlias("double", Double.class);
+		addAlias("bigInteger", BigInteger.class);
+		addAlias("bigDecimal", BigDecimal.class);
+		addAlias("class", Class.class);
+		addAlias("labeledEnum", LabeledEnum.class);
+		addAlias("date", Date.class);
+		addAlias("string", String.class);
 	}
 
 	/**

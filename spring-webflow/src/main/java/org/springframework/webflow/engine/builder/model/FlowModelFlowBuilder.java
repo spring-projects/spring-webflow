@@ -375,7 +375,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private FlowVariable parseFlowVariable(VarModel var) {
-		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
+		Class clazz = toClass(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
 				.getApplicationContext().getAutowireCapableBeanFactory());
 		return new FlowVariable(var.getName(), valueFactory);
@@ -499,7 +499,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private void parseAndSetMappingConversionExecutor(AbstractMappingModel mappingModel, DefaultMapping mapping) {
 		if (StringUtils.hasText(mappingModel.getType())) {
-			Class type = (Class) fromStringTo(Class.class).execute(mappingModel.getType());
+			Class type = toClass(mappingModel.getType());
 			ConversionExecutor typeConverter = new RuntimeBindingConversionExecutor(type, getLocalContext()
 					.getConversionService());
 			mapping.setTypeConverter(typeConverter);
@@ -624,7 +624,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private ViewVariable parseViewVariable(VarModel var) {
-		Class clazz = (Class) fromStringTo(Class.class).execute(var.getClassName());
+		Class clazz = toClass(var.getClassName());
 		VariableValueFactory valueFactory = new BeanFactoryVariableValueFactory(clazz, getFlow()
 				.getApplicationContext().getAutowireCapableBeanFactory());
 		return new ViewVariable(var.getName(), valueFactory);
@@ -718,7 +718,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(TransitionModel transition) {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
-		Class exceptionClass = (Class) fromStringTo(Class.class).execute(transition.getOnException());
+		Class exceptionClass = toClass(transition.getOnException());
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(transition.getTo());
 		handler.add(exceptionClass, targetStateResolver);
@@ -820,7 +820,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 					new FluentParserContext().evaluate(RequestContext.class));
 			Class expectedResultType = null;
 			if (StringUtils.hasText(evaluate.getResultType())) {
-				expectedResultType = (Class) fromStringTo(Class.class).execute(evaluate.getResultType());
+				expectedResultType = toClass(evaluate.getResultType());
 			}
 			return new ActionResultExposer(resultExpression, expectedResultType, getLocalContext()
 					.getConversionService());
@@ -849,7 +849,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				new FluentParserContext().evaluate(RequestContext.class));
 		Class expectedType = null;
 		if (StringUtils.hasText(set.getType())) {
-			expectedType = (Class) fromStringTo(Class.class).execute(set.getType());
+			expectedType = toClass(set.getType());
 		}
 		return new SetAction(nameExpression, valueExpression, expectedType, getLocalContext().getConversionService());
 	}
@@ -874,7 +874,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Object parseAttributeValueIfNecessary(AttributeModel attribute, String stringValue) {
 		if (StringUtils.hasText(attribute.getType())) {
-			Class targetClass = (Class) fromStringTo(Class.class).execute(attribute.getType());
+			Class targetClass = toClass(attribute.getType());
 			return fromStringTo(targetClass).execute(stringValue);
 		} else {
 			return stringValue;
@@ -907,6 +907,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private ConversionExecutor fromStringTo(Class targetType) throws ConversionExecutionException {
 		return getLocalContext().getConversionService().getConversionExecutor(String.class, targetType);
+	}
+
+	private Class toClass(String name) {
+		return getLocalContext().getConversionService().getClassByName(name);
 	}
 
 	private static class FlowRelativeResourceLoader implements ResourceLoader {

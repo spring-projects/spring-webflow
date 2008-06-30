@@ -54,22 +54,12 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
 	public static class TestConversionService implements ConversionService {
 
-		public Class getClassByAlias(String alias) throws ConversionExecutionException {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
 				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public ConversionExecutor getConversionExecutorByTargetAlias(Class sourceClass, String targetAlias)
-				throws ConversionExecutionException {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public ConversionExecutor[] getConversionExecutorsForSource(Class sourceClass)
-				throws ConversionExecutionException {
+		public Class getClassByName(String alias) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

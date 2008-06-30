@@ -32,6 +32,7 @@ import org.springframework.binding.convert.converters.ObjectToArray;
 import org.springframework.binding.convert.converters.ReverseConverter;
 import org.springframework.binding.convert.converters.TwoWayConverter;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
 /**
  * Base implementation of a conversion service. Initially empty, e.g. no converters are registered by default.
@@ -46,6 +47,11 @@ public class GenericConversionService implements ConversionService {
 	 * the source->target conversion.
 	 */
 	private final Map sourceClassConverters = new HashMap();
+
+	/**
+	 * Indexes classes by well-known aliases.
+	 */
+	private final Map aliasMap = new HashMap();
 
 	/**
 	 * An optional parent conversion service.
@@ -87,6 +93,13 @@ public class GenericConversionService implements ConversionService {
 			sourceMap = getSourceMap(targetClass);
 			sourceMap.put(sourceClass, new ReverseConverter((TwoWayConverter) converter));
 		}
+	}
+
+	/**
+	 * Add an alias for given target type.
+	 */
+	public void addAlias(String alias, Class targetType) {
+		aliasMap.put(alias, targetType);
 	}
 
 	private Map getSourceMap(Class sourceClass) {
@@ -143,6 +156,26 @@ public class GenericConversionService implements ConversionService {
 				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
 						"No ConversionExecutor found for converting from sourceClass '" + sourceClass.getName()
 								+ "' to target class '" + targetClass.getName() + "'");
+			}
+		}
+	}
+
+	public Class getClassByName(String name) throws IllegalArgumentException {
+		Class clazz = (Class) aliasMap.get(name);
+		if (clazz != null) {
+			return clazz;
+		} else {
+			if (parent != null) {
+				return parent.getClassByName(name);
+			} else {
+				try {
+					return ClassUtils.forName(name);
+				} catch (ClassNotFoundException e) {
+					IllegalArgumentException iae = new IllegalArgumentException(
+							"No Class alias or instance found with name '" + name + "' in this ConversionService");
+					iae.initCause(e);
+					throw iae;
+				}
 			}
 		}
 	}

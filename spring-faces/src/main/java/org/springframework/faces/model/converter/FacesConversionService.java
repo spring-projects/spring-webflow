@@ -12,6 +12,8 @@ e.org/licenses/LICENSE-2.0
  */
 package org.springframework.faces.model.converter;
 
+import javax.faces.model.DataModel;
+
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
@@ -35,5 +37,6 @@ public class FacesConversionService extends DefaultConversionService {
 
 	protected void addFacesConverters() {
 		addConverter(new DataModelConverter());
+		addAlias("dataModel", DataModel.class);
 	}
 }

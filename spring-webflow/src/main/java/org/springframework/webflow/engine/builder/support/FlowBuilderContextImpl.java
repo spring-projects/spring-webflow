@@ -123,6 +123,11 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 				throws ConversionExecutionException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
+
+		public Class getClassByName(String name) {
+			return getFlowBuilderServices().getConversionService().getClassByName(name);
+		}
+
 	}
 
 }
