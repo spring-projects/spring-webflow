@@ -255,12 +255,13 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		response = response.replace(matchAll, '');
 
 		//Extract the new DOM nodes from the response
-		var tempDiv = dojo.doc.createElement("div");
-		tempDiv.id="ajaxResponse";
-		tempDiv.style.visibility= "hidden";
-		document.body.appendChild(tempDiv);
-		var tempContainer = new dojo.NodeList(tempDiv);
-		var newNodes = tempContainer.addContent(response, "first").query("#ajaxResponse > *").orphan();
+		var tempSpan = dojo.doc.createElement("span");
+		tempSpan.id="ajaxResponse";
+		tempSpan.style.visibility= "hidden";
+		document.body.appendChild(tempSpan);
+		tempSpan.innerHTML=response;
+		var tempContainer = new dojo.NodeList(tempSpan);
+		var newNodes = tempContainer.query("#ajaxResponse > *").orphan();
 		tempContainer.orphan();
 	
 		//For a modal view, just dump the new nodes into a modal dialog
@@ -268,7 +269,6 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			Spring.remoting.renderNodeListToModalDialog(newNodes);
 		}
 		else {
-		
 			//Insert the new DOM nodes and update the Form's action URL
 			newNodes.forEach(function(item){
 				if (item.id != null && item.id != "") {
