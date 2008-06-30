@@ -219,6 +219,6 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 	}
 
 	private Class fromStringToClass(String name) {
-		return conversionService.getClassByName(name);
+		return conversionService.getClassForAlias(name);
 	}
 }

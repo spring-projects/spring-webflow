@@ -32,7 +32,6 @@ import org.springframework.binding.convert.converters.ObjectToArray;
 import org.springframework.binding.convert.converters.ReverseConverter;
 import org.springframework.binding.convert.converters.TwoWayConverter;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * Base implementation of a conversion service. Initially empty, e.g. no converters are registered by default.
@@ -160,22 +159,15 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public Class getClassByName(String name) throws IllegalArgumentException {
+	public Class getClassForAlias(String name) throws IllegalArgumentException {
 		Class clazz = (Class) aliasMap.get(name);
 		if (clazz != null) {
 			return clazz;
 		} else {
 			if (parent != null) {
-				return parent.getClassByName(name);
+				return parent.getClassForAlias(name);
 			} else {
-				try {
-					return ClassUtils.forName(name);
-				} catch (ClassNotFoundException e) {
-					IllegalArgumentException iae = new IllegalArgumentException(
-							"No Class alias or instance found with name '" + name + "' in this ConversionService");
-					iae.initCause(e);
-					throw iae;
-				}
+				return null;
 			}
 		}
 	}

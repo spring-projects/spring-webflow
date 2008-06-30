@@ -124,8 +124,8 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 
-		public Class getClassByName(String name) {
-			return getFlowBuilderServices().getConversionService().getClassByName(name);
+		public Class getClassForAlias(String name) {
+			return getFlowBuilderServices().getConversionService().getClassForAlias(name);
 		}
 
 	}

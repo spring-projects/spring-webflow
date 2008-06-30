@@ -40,11 +40,10 @@ public interface ConversionService {
 			throws ConversionExecutorNotFoundException;
 
 	/**
-	 * Lookup a class by its fully qualified name or alias. As an example, for Long.class the fully qualified class name
-	 * is <code>java.lang.Long</code> and the alias is <code>long</code>.
-	 * @param name the fully qualified class name or alias
-	 * @return the class
+	 * Lookup a class by it alias. For example, <code>long</code> for <code>java.lang.Long</code>
+	 * @param alias the class alias
+	 * @return the class, or <code>null</code> if no alias exists
 	 */
-	public Class getClassByName(String name);
+	public Class getClassForAlias(String alias);
 
 }

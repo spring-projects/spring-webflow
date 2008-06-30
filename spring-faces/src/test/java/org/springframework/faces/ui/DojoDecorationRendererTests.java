@@ -44,7 +44,6 @@ public class DojoDecorationRendererTests extends TestCase {
 		UIInput childComponent = new UIInput();
 		childComponent.setValue(new TestValue());
 		DojoDecorationRenderer renderer = new DojoDecorationRenderer();
-
 		try {
 			renderer.getValueAsString(jsf.facesContext(), childComponent);
 			fail("getValueAsString should throw exception if no converter is found");

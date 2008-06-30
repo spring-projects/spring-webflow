@@ -910,7 +910,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private Class toClass(String name) {
-		return getLocalContext().getConversionService().getClassByName(name);
+		return getLocalContext().getConversionService().getClassForAlias(name);
 	}
 
 	private static class FlowRelativeResourceLoader implements ResourceLoader {

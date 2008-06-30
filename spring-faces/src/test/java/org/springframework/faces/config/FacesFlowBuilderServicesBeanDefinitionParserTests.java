@@ -76,7 +76,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public Class getClassByName(String name) throws ConversionExecutionException {
+		public Class getClassForAlias(String name) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 	}

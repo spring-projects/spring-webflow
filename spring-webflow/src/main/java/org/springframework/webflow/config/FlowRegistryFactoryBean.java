@@ -237,7 +237,7 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	}
 
 	private Class fromStringToClass(String type) {
-		return flowBuilderServices.getConversionService().getClassByName(type);
+		return flowBuilderServices.getConversionService().getClassForAlias(type);
 	}
 
 	private FlowDefinition buildFlowDefinition(FlowBuilderInfo builderInfo) {

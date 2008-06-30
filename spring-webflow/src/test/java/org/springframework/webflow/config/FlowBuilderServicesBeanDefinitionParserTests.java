@@ -59,7 +59,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public Class getClassByName(String alias) throws ConversionExecutionException {
+		public Class getClassForAlias(String alias) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
