@@ -19,7 +19,19 @@
 	</publications>
 
 	<dependencies>
-		
+		<dependency org="org.springframework.samples" name="org.springframework.samples.springtravel.resource" rev="latest.integration" conf="compile->runtime" />
+		<dependency org="org.springframework.samples" name="org.springframework.samples.springtravel.hotel.search" rev="latest.integration" conf="compile->runtime" />
+		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="provided->runtime" />
+		<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="latest.integration" conf="provided->runtime" />
+		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="provided->runtime" />
+		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="provided->runtime" />
+		<dependency org="org.hibernate" name="org.hibernate.ejb-library" rev="3.3.1.ga" conf="provided->runtime" />
+		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided->runtime" />
+		<dependency org="org.apache.myfaces" name="org.apache.myfaces-library" rev="1.2.2" conf="provided->runtime" />
+		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="test->runtime" />
+		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.2.A" conf="provided->runtime" />
+		<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="provided->runtime" />
+		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="provided->runtime" />
 	</dependencies>
 
 </ivy-module>

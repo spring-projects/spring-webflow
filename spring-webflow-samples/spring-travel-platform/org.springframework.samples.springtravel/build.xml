@@ -3,7 +3,7 @@
 
     <path id="bundles">
         <pathelement location="../org.springframework.samples.springtravel.resource" />
-        <pathelement location="../org.springframework.samples.springtravel.hotel" />
+        <pathelement location="../org.springframework.samples.springtravel.hotel.search" />
         <pathelement location="../org.springframework.samples.springtravel.webapp" />
     </path>
 

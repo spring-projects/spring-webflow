@@ -9,6 +9,7 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<reference id="dataSource" interface="javax.sql.DataSource" />
-	<reference id="hotelSearchAgent" interface="org.springframework.samples.springtravel.hotel.search.HotelSearchAgent" />
+	
+    <service ref="hotelSearchAgent" interface="org.springframework.samples.springtravel.hotel.search.HotelSearchAgent" />
 
 </beans:beans>           

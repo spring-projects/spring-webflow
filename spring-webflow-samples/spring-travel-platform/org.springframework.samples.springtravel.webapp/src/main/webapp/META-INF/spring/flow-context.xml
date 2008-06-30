@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:context="http://www.springframework.org/schema/context"
-		xmlns:tx="http://www.springframework.org/schema/tx"
 	    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
    	    xmlns:faces="http://www.springframework.org/schema/faces"
 		xsi:schemaLocation="
 			http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-			http://www.springframework.org/schema/context
-			http://www.springframework.org/schema/context/spring-context-2.5.xsd
-			http://www.springframework.org/schema/tx
-			http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
            	http://www.springframework.org/schema/webflow-config
            	http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
            	http://www.springframework.org/schema/faces
            	http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
 	<!-- Maps request URIs to controllers -->			
-	<bean id="hotelHandlerMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
 				/hotel/search=flowController
@@ -42,8 +36,8 @@
 	
 	<!-- The registry of executable flow definitions in this module -->
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
-		<webflow:flow-location path="classpath:org/springframework/samples/springtravel/hotel/search/search.xml" />
-		<webflow:flow-location path="classpath:org/springframework/samples/springtravel/hotel/booking/booking.xml" />
+		<webflow:flow-location path="WEB-INF/controllers/hotel/search/search.xml" />
+		<webflow:flow-location path="WEB-INF/controllers/hotel/booking/booking.xml" />
 	</webflow:flow-registry>
 	
 	<!-- Enables the flow JSF integration -->
