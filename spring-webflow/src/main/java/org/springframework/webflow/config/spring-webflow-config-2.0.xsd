@@ -5,7 +5,7 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	targetNamespace="http://www.springframework.org/schema/webflow-config"
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="2.0">
+	version="2.0.3">
 	
 	<xsd:annotation>
 		<xsd:documentation>
@@ -188,15 +188,6 @@ This tag is only needed when you wish to plugin custom implementations.
 							<xsd:documentation>
 								<![CDATA[
 The custom ConversionService implementation to use to convert from one type to another.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="formatter-registry">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The custom FormatterRegistry implementation to use to format model properties for display in a View.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

@@ -20,7 +20,6 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
@@ -39,19 +38,9 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	}
 
 	protected void doParse(Element element, ParserContext context, BeanDefinitionBuilder builder) {
-		parseFormatterRegistry(element, builder, context);
 		parseConversionService(element, builder, context);
 		parseExpressionParser(element, builder, context);
 		parseViewFactoryCreator(element, builder, context);
-	}
-
-	private void parseFormatterRegistry(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
-		String formatterRegistry = element.getAttribute("formatter-registry");
-		if (StringUtils.hasText(formatterRegistry)) {
-			definitionBuilder.addPropertyReference("formatterRegistry", formatterRegistry);
-		} else {
-			definitionBuilder.addPropertyValue("formatterRegistry", DefaultFormatterRegistry.getSharedInstance());
-		}
 	}
 
 	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {

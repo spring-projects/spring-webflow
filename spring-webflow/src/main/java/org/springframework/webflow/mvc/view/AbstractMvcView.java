@@ -27,23 +27,19 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.expression.support.StaticExpression;
-import org.springframework.binding.format.Formatter;
-import org.springframework.binding.format.FormatterRegistry;
-import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
-import org.springframework.binding.mapping.impl.DefaultMappingContext;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageContextErrors;
@@ -52,7 +48,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -82,7 +77,7 @@ public abstract class AbstractMvcView implements View {
 
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
 
-	private FormatterRegistry formatterRegistry;
+	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
 
 	private MappingResults mappingResults;
 
@@ -93,8 +88,6 @@ public abstract class AbstractMvcView implements View {
 	private Set allowedBindFields;
 
 	private String fieldMarkerPrefix = "_";
-
-	private ConversionExecutor bindingTypeConverter;
 
 	/**
 	 * Creates a new MVC view.
@@ -118,9 +111,8 @@ public abstract class AbstractMvcView implements View {
 	 * Sets the formatter registry to use to expose formatters for field values.
 	 * @param formatterRegistry the formatter registry
 	 */
-	public void setFormatterRegistry(FormatterRegistry formatterRegistry) {
-		this.formatterRegistry = formatterRegistry;
-		bindingTypeConverter = new FormatterBackedMappingConversionExecutor(this.formatterRegistry);
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
 	}
 
 	/**
@@ -248,7 +240,7 @@ public abstract class AbstractMvcView implements View {
 		Object modelObject = getModelObject();
 		if (modelObject != null) {
 			BindingModel bindingModel = new BindingModel(getModelExpression().getExpressionString(), modelObject,
-					expressionParser, formatterRegistry, requestContext.getMessageContext());
+					expressionParser, conversionService, requestContext.getMessageContext());
 			bindingModel.setMappingResults(mappingResults);
 			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}
@@ -283,6 +275,7 @@ public abstract class AbstractMvcView implements View {
 			logger.debug("Setting up view->model mappings");
 		}
 		DefaultMapper mapper = new DefaultMapper();
+		mapper.setConversionService(conversionService);
 		ParameterMap requestParameters = requestContext.getRequestParameters();
 		addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
 		return mapper.map(requestParameters, model);
@@ -357,7 +350,6 @@ public abstract class AbstractMvcView implements View {
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
 		Expression target = expressionParser.parseExpression(parameter, parserContext);
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		mapping.setTypeConverter(bindingTypeConverter);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding mapping for parameter '" + parameter + "'");
 		}
@@ -460,78 +452,7 @@ public abstract class AbstractMvcView implements View {
 		}
 
 		public String toString() {
-			return parameterName;
+			return "parameter:'" + parameterName + "'";
 		}
-
 	}
-
-	private static class FormatterBackedMappingConversionExecutor implements ConversionExecutor {
-
-		private FormatterRegistry formatterRegistry;
-
-		public FormatterBackedMappingConversionExecutor(FormatterRegistry formatterRegistry) {
-			this.formatterRegistry = formatterRegistry;
-		}
-
-		public Object execute(Object source) throws ConversionExecutionException {
-			throw new UnsupportedOperationException("Should never be called");
-		}
-
-		public Object execute(Object source, Object context) throws ConversionExecutionException {
-			if (source instanceof MultipartFile) {
-				// for the case of MultipartFile parameters; nothing to do
-				return source;
-			}
-			if (source instanceof String[]) {
-				return source;
-			}
-			String formattedValue = (String) source;
-			DefaultMappingContext mappingContext = (DefaultMappingContext) context;
-			Expression target = mappingContext.getCurrentMapping().getTargetExpression();
-			Class targetClass = getTargetClass();
-			if (targetClass == null) {
-				try {
-					targetClass = target.getValueType(mappingContext.getTarget());
-				} catch (EvaluationException e) {
-					// ignore
-				}
-			}
-			if (targetClass == null) {
-				return formattedValue;
-			}
-			Formatter formatter = getFormatter(target, targetClass);
-			if (formatter != null) {
-				try {
-					return formatter.parse(formattedValue);
-				} catch (InvalidFormatException e) {
-					throw new ConversionExecutionException(formattedValue, String.class, targetClass, e);
-				}
-			} else {
-				return formattedValue;
-			}
-		}
-
-		private Formatter getFormatter(Expression target, Class targetClass) {
-			if (formatterRegistry != null) {
-				Formatter formatter = formatterRegistry.getFormatter(targetClass, target.getExpressionString());
-				if (formatter != null) {
-					return formatter;
-				} else {
-					return formatterRegistry.getFormatter(targetClass);
-				}
-			} else {
-				return null;
-			}
-		}
-
-		public Class getSourceClass() {
-			return String.class;
-		}
-
-		public Class getTargetClass() {
-			return null;
-		}
-
-	}
-
 }

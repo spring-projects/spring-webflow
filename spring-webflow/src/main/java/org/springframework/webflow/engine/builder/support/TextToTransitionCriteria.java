@@ -16,7 +16,7 @@
 package org.springframework.webflow.engine.builder.support;
 
 import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -59,15 +59,15 @@ class TextToTransitionCriteria implements Converter {
 		this.flowBuilderContext = flowBuilderContext;
 	}
 
-	public Class[] getSourceClasses() {
-		return new Class[] { String.class };
+	public Class getSourceClass() {
+		return String.class;
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { TransitionCriteria.class };
+	public Class getTargetClass() {
+		return TransitionCriteria.class;
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)

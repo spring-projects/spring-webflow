@@ -28,7 +28,6 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -127,7 +126,6 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private BeanDefinition createDefaultFlowBuilderServices(ParserContext context) {
 		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		defaultBuilder.addPropertyValue("formatterRegistry", DefaultFormatterRegistry.getSharedInstance());
 		defaultBuilder.addPropertyValue("conversionService", DefaultConversionService.getSharedInstance());
 		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
 		defaultBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(

@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.builder.model;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -83,14 +82,6 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 			return (ViewFactoryCreator) localFlowContext.getBean("viewFactoryCreator", ViewFactoryCreator.class);
 		} else {
 			return parent.getViewFactoryCreator();
-		}
-	}
-
-	public FormatterRegistry getFormatterRegistry() {
-		if (localFlowContext.containsLocalBean("formatterRegistry")) {
-			return (FormatterRegistry) localFlowContext.getBean("formatterRegistry", FormatterRegistry.class);
-		} else {
-			return parent.getFormatterRegistry();
 		}
 	}
 

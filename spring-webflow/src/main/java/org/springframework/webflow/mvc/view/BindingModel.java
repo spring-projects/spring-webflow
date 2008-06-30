@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
-import org.springframework.binding.format.Formatter;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
@@ -55,7 +55,7 @@ public class BindingModel extends AbstractErrors {
 
 	private ExpressionParser expressionParser;
 
-	private FormatterRegistry formatterRegistry;
+	private ConversionService conversionService;
 
 	private MappingResults mappingResults;
 
@@ -70,13 +70,13 @@ public class BindingModel extends AbstractErrors {
 	 * @param messageContext the message context containing flow messages to display
 	 */
 	public BindingModel(String objectName, Object boundObject, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry, MessageContext messageContext) {
+			ConversionService conversionService, MessageContext messageContext) {
 		Assert.hasText(objectName, "The object name is required");
 		Assert.notNull(boundObject, "The bound object instance is required");
 		this.objectName = objectName;
 		this.boundObject = boundObject;
 		this.expressionParser = expressionParser;
-		this.formatterRegistry = formatterRegistry;
+		this.conversionService = conversionService;
 		this.messageContext = messageContext;
 	}
 
@@ -131,18 +131,18 @@ public class BindingModel extends AbstractErrors {
 	}
 
 	private Object getFormattedValue(Expression fieldExpression) {
-		Formatter formatter = getFormatter(fieldExpression);
-		if (formatter != null) {
-			return formatter.format(fieldExpression.getValue(boundObject));
+		ConversionExecutor converter = getConverter(fieldExpression);
+		if (converter != null) {
+			return converter.execute(fieldExpression.getValue(boundObject));
 		} else {
 			return fieldExpression.getValue(boundObject);
 		}
 	}
 
-	private Formatter getFormatter(Expression fieldExpression) {
-		if (formatterRegistry != null) {
+	private ConversionExecutor getConverter(Expression fieldExpression) {
+		if (conversionService != null) {
 			Class valueType = fieldExpression.getValueType(boundObject);
-			return formatterRegistry.getFormatter(valueType);
+			return conversionService.getConversionExecutor(valueType, String.class);
 		} else {
 			return null;
 		}

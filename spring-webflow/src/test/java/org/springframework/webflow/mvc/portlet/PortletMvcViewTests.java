@@ -1,15 +1,11 @@
 package org.springframework.webflow.mvc.portlet;
 
-import java.util.Locale;
-
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.springframework.binding.format.formatters.DateFormatter;
-import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
@@ -19,14 +15,6 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class PortletMvcViewTests extends TestCase {
-
-	private DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
-
-	protected void setUp() {
-		DateFormatter dateFormatter = new DateFormatter();
-		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(dateFormatter);
-	}
 
 	public void testRender() throws Exception {
 		RenderRequest request = new MockRenderRequest();
@@ -39,7 +27,6 @@ public class PortletMvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = (org.springframework.web.servlet.View) EasyMock
 				.createMock(org.springframework.web.servlet.View.class);
 		AbstractMvcView view = new PortletMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertNotNull(request.getAttribute(ViewRendererServlet.VIEW_ATTRIBUTE));
 		assertNotNull(request.getAttribute(ViewRendererServlet.MODEL_ATTRIBUTE));

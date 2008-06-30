@@ -32,8 +32,8 @@ public class TextToTargetStateResolverTests extends TestCase {
 
 	public void testStatic() throws Exception {
 		String expression = "mockState";
-		TargetStateResolver resolver = (TargetStateResolver) converter.convert(expression, TargetStateResolver.class,
-				null);
+		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
+				TargetStateResolver.class);
 		MockRequestContext context = new MockRequestContext();
 		Transition transition = new Transition();
 		assertEquals("mockState", resolver.resolveTargetState(transition, null, context).getId());
@@ -41,8 +41,8 @@ public class TextToTargetStateResolverTests extends TestCase {
 
 	public void testDynamic() throws Exception {
 		String expression = "${flowScope.lastState}";
-		TargetStateResolver resolver = (TargetStateResolver) converter.convert(expression, TargetStateResolver.class,
-				null);
+		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
+				TargetStateResolver.class);
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("lastState", "mockState");
 		Transition transition = new Transition();
@@ -51,15 +51,15 @@ public class TextToTargetStateResolverTests extends TestCase {
 
 	public void testNull() throws Exception {
 		String expression = null;
-		TargetStateResolver resolver = (TargetStateResolver) converter.convert(expression, TargetStateResolver.class,
-				null);
+		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
+				TargetStateResolver.class);
 		assertNull(resolver);
 	}
 
 	public void testEmpty() throws Exception {
 		String expression = "";
-		TargetStateResolver resolver = (TargetStateResolver) converter.convert(expression, TargetStateResolver.class,
-				null);
+		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
+				TargetStateResolver.class);
 		assertNull(resolver);
 	}
 }

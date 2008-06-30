@@ -608,7 +608,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private ViewFactory createViewFactory(Expression viewId) {
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
-				getLocalContext().getExpressionParser(), getLocalContext().getFormatterRegistry());
+				getLocalContext().getExpressionParser(), getLocalContext().getConversionService());
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {

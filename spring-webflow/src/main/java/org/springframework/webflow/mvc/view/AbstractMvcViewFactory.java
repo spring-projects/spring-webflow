@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.mvc.view;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -35,22 +35,22 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private ExpressionParser expressionParser;
 
-	private FormatterRegistry formatterRegistry;
+	private ConversionService conversionService;
 
 	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry) {
+			ConversionService conversionService) {
 		this.viewId = viewId;
 		this.viewResolver = viewResolver;
 		this.expressionParser = expressionParser;
-		this.formatterRegistry = formatterRegistry;
+		this.conversionService = conversionService;
 	}
 
 	protected ExpressionParser getExpressionParser() {
 		return expressionParser;
 	}
 
-	protected FormatterRegistry getFormatterRegistry() {
-		return formatterRegistry;
+	protected ConversionService getConversionService() {
+		return conversionService;
 	}
 
 	public View getView(RequestContext context) {

@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.engine.builder;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -32,11 +32,11 @@ public interface ViewFactoryCreator {
 	 * provided identifier.
 	 * @param viewId an expression that resolves the id of the view to render
 	 * @param expressionParser an optional expression parser to use to resolve view expressions
-	 * @param formatterRegistry an optional formatter registry to use to format text values
+	 * @param conversionService an optional conversion service to use to format text values
 	 * @return the view factory
 	 */
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry);
+			ConversionService conversionService);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.

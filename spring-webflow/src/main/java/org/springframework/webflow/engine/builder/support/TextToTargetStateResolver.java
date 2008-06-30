@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -55,15 +55,15 @@ class TextToTargetStateResolver implements Converter {
 		this.flowBuilderContext = flowBuilderContext;
 	}
 
-	public Class[] getSourceClasses() {
-		return new Class[] { String.class };
+	public Class getSourceClass() {
+		return String.class;
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { TargetStateResolver.class };
+	public Class getTargetClass() {
+		return TargetStateResolver.class;
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
 		String targetStateId = (String) source;
 		if (!StringUtils.hasText(targetStateId)) {
 			return null;

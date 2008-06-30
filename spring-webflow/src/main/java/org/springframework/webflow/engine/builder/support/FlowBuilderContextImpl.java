@@ -20,7 +20,6 @@ import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -92,10 +91,6 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	public ViewFactoryCreator getViewFactoryCreator() {
 		return flowBuilderServices.getViewFactoryCreator();
-	}
-
-	public FormatterRegistry getFormatterRegistry() {
-		return flowBuilderServices.getFormatterRegistry();
 	}
 
 	public ExpressionParser getExpressionParser() {

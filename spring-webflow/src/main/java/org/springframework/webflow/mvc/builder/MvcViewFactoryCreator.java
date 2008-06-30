@@ -17,9 +17,9 @@ package org.springframework.webflow.mvc.builder;
 
 import java.util.List;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.servlet.View;
@@ -115,11 +115,11 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry) {
+			ConversionService conversionService) {
 		if (environment == MvcEnvironment.SERVLET) {
-			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
+			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService);
 		} else if (environment == MvcEnvironment.PORTLET) {
-			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, formatterRegistry);
+			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService);
 		} else {
 			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
 		}

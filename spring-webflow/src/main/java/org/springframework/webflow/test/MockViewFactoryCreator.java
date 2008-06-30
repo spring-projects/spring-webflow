@@ -17,9 +17,9 @@ package org.springframework.webflow.test;
 
 import java.io.IOException;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -35,7 +35,7 @@ import org.springframework.webflow.execution.ViewFactory;
 class MockViewFactoryCreator implements ViewFactoryCreator {
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry) {
+			ConversionService conversionService) {
 		return new MockViewFactory(viewId);
 	}
 

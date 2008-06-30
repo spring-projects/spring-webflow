@@ -13,15 +13,12 @@
 	<webflow:flow-builder-services id="flowBuilderServicesCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService"
-		formatter-registry="customFormatterRegistry"/>
+		conversion-service="customConversionService" />
 	
 	<bean id="customExpressionParser" class="org.springframework.webflow.expression.DefaultExpressionParserFactory" factory-method="getExpressionParser"/>
 	
 	<bean id="customViewFactoryCreator" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
 	
 	<bean id="customConversionService" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
-
-	<bean id="customFormatterRegistry" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestFormatterRegistry"/>
 	
 </beans>

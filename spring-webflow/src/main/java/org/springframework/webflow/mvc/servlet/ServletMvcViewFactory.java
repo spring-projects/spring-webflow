@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.mvc.servlet;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
@@ -32,14 +32,14 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
 public class ServletMvcViewFactory extends AbstractMvcViewFactory {
 
 	public ServletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry) {
-		super(viewId, viewResolver, expressionParser, formatterRegistry);
+			ConversionService conversionService) {
+		super(viewId, viewResolver, expressionParser, conversionService);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {
 		ServletMvcView mvcView = new ServletMvcView(view, context);
 		mvcView.setExpressionParser(getExpressionParser());
-		mvcView.setFormatterRegistry(getFormatterRegistry());
+		mvcView.setConversionService(getConversionService());
 		return mvcView;
 	}
 

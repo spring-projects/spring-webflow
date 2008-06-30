@@ -3,7 +3,6 @@ package org.springframework.webflow.mvc.servlet;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.format.formatters.DateFormatter;
-import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -28,14 +25,6 @@ public class ServletMvcViewTests extends TestCase {
 
 	private Map model;
 
-	private DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
-
-	protected void setUp() {
-		DateFormatter dateFormatter = new DateFormatter();
-		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(dateFormatter);
-	}
-
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.getRequestScope().put("foo", "bar");
@@ -50,7 +39,6 @@ public class ServletMvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new ServletMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));

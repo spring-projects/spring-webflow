@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.builder;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
@@ -70,12 +69,6 @@ public interface FlowBuilderContext {
 	 * @return the expression parser
 	 */
 	public ExpressionParser getExpressionParser();
-
-	/**
-	 * Returns an application-wide registry of formatters for formatting view values.
-	 * @return the formatter registry
-	 */
-	public FormatterRegistry getFormatterRegistry();
 
 	/**
 	 * Returns the application context hosting the flow system.

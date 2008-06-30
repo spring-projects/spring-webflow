@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.mvc.portlet;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
@@ -31,22 +31,15 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 
-	/**
-	 * Creates a new portlet mvc view factory.
-	 * @param viewId the view id expression
-	 * @param viewResolver the flow view resolver
-	 * @param expressionParser the expression parser
-	 * @param formatterRegistry the view formatter registry
-	 */
 	public PortletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			FormatterRegistry formatterRegistry) {
-		super(viewId, viewResolver, expressionParser, formatterRegistry);
+			ConversionService conversionService) {
+		super(viewId, viewResolver, expressionParser, conversionService);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {
 		PortletMvcView mvcView = new PortletMvcView(view, context);
 		mvcView.setExpressionParser(getExpressionParser());
-		mvcView.setFormatterRegistry(getFormatterRegistry());
+		mvcView.setConversionService(getConversionService());
 		return mvcView;
 	}
 

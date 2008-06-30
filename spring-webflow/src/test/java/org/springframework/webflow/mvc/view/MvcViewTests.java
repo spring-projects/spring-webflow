@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.support.StaticExpression;
-import org.springframework.binding.format.formatters.DateFormatter;
-import org.springframework.binding.format.registry.DefaultFormatterRegistry;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -38,14 +35,6 @@ public class MvcViewTests extends TestCase {
 
 	private Map model;
 
-	private DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
-
-	protected void setUp() {
-		DateFormatter dateFormatter = new DateFormatter();
-		dateFormatter.setLocale(Locale.ENGLISH);
-		formatterRegistry.registerFormatter(dateFormatter);
-	}
-
 	public void testRender() throws Exception {
 		MockRequestControlContext context = new MockRequestControlContext();
 		context.setCurrentState(new ViewState(context.getRootFlow(), "test", new StubViewFactory()));
@@ -61,7 +50,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));
@@ -91,7 +79,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));
@@ -119,7 +106,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
 		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
@@ -151,7 +137,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
 		assertEquals("submit", view.getFlowEvent().getId());
@@ -165,10 +150,10 @@ public class MvcViewTests extends TestCase {
 		context.putRequestParameter("dateProperty", "2007-01-01");
 		context.putRequestParameter("beanProperty.name", "foo");
 		context.putRequestParameter("multipartFile", new MockMultipartFile("foo", new byte[0]));
-		// context.putRequestParameter("stringArrayProperty", new String[] { "foo", "bar", "baz" });
-		// context.putRequestParameter("integerArrayProperty", new String[] { "1", "2", "3" });
-		// context.putRequestParameter("primitiveArrayProperty", new String[] { "1", "2", "3" });
-		// context.putRequestParameter("listProperty", new String[] { "1", "2", "3" });
+		context.putRequestParameter("stringArrayProperty", new String[] { "foo", "bar", "baz" });
+		context.putRequestParameter("integerArrayProperty", new String[] { "1", "2", "3" });
+		context.putRequestParameter("primitiveArrayProperty", new String[] { "1", "2", "3" });
+		context.putRequestParameter("listProperty", new String[] { "1", "2", "3" });
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
@@ -180,7 +165,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
 		assertEquals("submit", view.getFlowEvent().getId());
@@ -192,22 +176,22 @@ public class MvcViewTests extends TestCase {
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
 		assertEquals("foo", bindBean.getBeanProperty().getName());
 		assertEquals("foo", bindBean.getMultipartFile().getName());
-		// assertEquals(3, bindBean.getStringArrayProperty().length);
-		// assertEquals("foo", bindBean.getStringArrayProperty()[0]);
-		// assertEquals("bar", bindBean.getStringArrayProperty()[1]);
-		// assertEquals("baz", bindBean.getStringArrayProperty()[2]);
-		// assertEquals(3, bindBean.getIntegerArrayProperty().length);
-		// assertEquals(new Integer(1), bindBean.getIntegerArrayProperty()[0]);
-		// assertEquals(new Integer(2), bindBean.getIntegerArrayProperty()[1]);
-		// assertEquals(new Integer(3), bindBean.getIntegerArrayProperty()[2]);
-		// assertEquals(3, bindBean.getPrimitiveArrayProperty().length);
-		// assertEquals(1, bindBean.getPrimitiveArrayProperty()[0]);
-		// assertEquals(2, bindBean.getPrimitiveArrayProperty()[1]);
-		// assertEquals(3, bindBean.getPrimitiveArrayProperty()[2]);
-		// assertEquals(3, bindBean.getListProperty().size());
-		// assertEquals(new Integer(1), bindBean.getListProperty().get(0));
-		// assertEquals(new Integer(2), bindBean.getListProperty().get(1));
-		// assertEquals(new Integer(3), bindBean.getListProperty().get(2));
+		assertEquals(3, bindBean.getStringArrayProperty().length);
+		assertEquals("foo", bindBean.getStringArrayProperty()[0]);
+		assertEquals("bar", bindBean.getStringArrayProperty()[1]);
+		assertEquals("baz", bindBean.getStringArrayProperty()[2]);
+		assertEquals(3, bindBean.getIntegerArrayProperty().length);
+		assertEquals(new Integer(1), bindBean.getIntegerArrayProperty()[0]);
+		assertEquals(new Integer(2), bindBean.getIntegerArrayProperty()[1]);
+		assertEquals(new Integer(3), bindBean.getIntegerArrayProperty()[2]);
+		assertEquals(3, bindBean.getPrimitiveArrayProperty().length);
+		assertEquals(1, bindBean.getPrimitiveArrayProperty()[0]);
+		assertEquals(2, bindBean.getPrimitiveArrayProperty()[1]);
+		assertEquals(3, bindBean.getPrimitiveArrayProperty()[2]);
+		assertEquals(3, bindBean.getListProperty().size());
+		assertEquals("1", bindBean.getListProperty().get(0));
+		assertEquals("2", bindBean.getListProperty().get(1));
+		assertEquals("3", bindBean.getListProperty().get(2));
 	}
 
 	public void testResumeEventModelBindingAllowedFields() throws Exception {
@@ -228,7 +212,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		HashSet allowedBindFields = new HashSet();
 		allowedBindFields.add("stringProperty");
 		view.setAllowedBindFields(allowedBindFields);
@@ -259,7 +242,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		HashSet allowedBindFields = new HashSet();
 		allowedBindFields.add("booleanProperty");
 		view.setAllowedBindFields(allowedBindFields);
@@ -283,7 +265,6 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		view.setFormatterRegistry(formatterRegistry);
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());
 	}

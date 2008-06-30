@@ -19,7 +19,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.format.FormatterRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
@@ -61,11 +60,6 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 	private ConversionService conversionService;
 
 	/**
-	 * The service for formatting string values for display in a UI.
-	 */
-	private FormatterRegistry formatterRegistry;
-
-	/**
 	 * The parser for parsing expression strings into expression objects. The default is Web Flow's default expression
 	 * parser implementation.
 	 */
@@ -100,14 +94,6 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 		this.conversionService = conversionService;
 	}
 
-	public FormatterRegistry getFormatterRegistry() {
-		return formatterRegistry;
-	}
-
-	public void setFormatterRegistry(FormatterRegistry formatterRegistry) {
-		this.formatterRegistry = formatterRegistry;
-	}
-
 	public ExpressionParser getExpressionParser() {
 		return expressionParser;
 	}
@@ -132,7 +118,6 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 		Assert.notNull(flowArtifactFactory, "The FlowArtifactFactory is required");
 		Assert.notNull(viewFactoryCreator, "The ViewFactoryCreator is required");
 		Assert.notNull(conversionService, "The type ConversionService is required");
-		Assert.notNull(formatterRegistry, "The FormatterRegistry is required");
 		Assert.notNull(expressionParser, "The expressionParser is required");
 		Assert.notNull(applicationContext, "The ApplicationContext is required");
 	}
