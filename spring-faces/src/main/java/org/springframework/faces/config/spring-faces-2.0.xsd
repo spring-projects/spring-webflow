@@ -31,15 +31,6 @@ The custom ConversionService implementation to use to convert from one type to a
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="formatter-registry">
-						<xsd:annotation>
-							<xsd:documentation>
-								<![CDATA[
-The custom FormatterRegistry implementation to use to format model properties for display in a View.
-]]>
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
 					<xsd:attribute name="expression-parser">
 						<xsd:annotation>
 							<xsd:documentation>

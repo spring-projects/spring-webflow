@@ -15,8 +15,7 @@
 	<faces:flow-builder-services id="flowBuilderServicesCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService"
-		formatter-registry="customFormatterRegistry"/>
+		conversion-service="customConversionService"/>
 	
 	<bean id="customExpressionParser" class="org.springframework.webflow.expression.DefaultExpressionParserFactory" factory-method="getExpressionParser"/>
 	
@@ -24,6 +23,4 @@
 	
 	<bean id="customConversionService" class="org.springframework.faces.config.FacesFlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
 
-	<bean id="customFormatterRegistry" class="org.springframework.faces.config.FacesFlowBuilderServicesBeanDefinitionParserTests$TestFormatterRegistry"/>
-	
 </beans>

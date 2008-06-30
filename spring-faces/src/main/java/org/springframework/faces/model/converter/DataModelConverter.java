@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.util.ClassUtils;
 
@@ -32,15 +32,15 @@ import org.springframework.util.ClassUtils;
  */
 public class DataModelConverter implements Converter {
 
-	public Class[] getSourceClasses() {
-		return new Class[] { Object[].class, List.class, Object.class };
+	public Class getSourceClass() {
+		return Object.class;
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { DataModel.class };
+	public Class getTargetClass() {
+		return DataModel.class;
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
 		if (targetClass.equals(DataModel.class)) {
 			targetClass = OneSelectionTrackingListDataModel.class;
 		}

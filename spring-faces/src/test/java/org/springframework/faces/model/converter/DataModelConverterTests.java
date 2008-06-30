@@ -9,7 +9,7 @@ import javax.faces.model.ListDataModel;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 import org.springframework.faces.model.SerializableListDataModel;
 
 public class DataModelConverterTests extends TestCase {
@@ -19,7 +19,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToDataModel() throws Exception {
 		List sourceList = new ArrayList();
 
-		DataModel resultModel = (DataModel) converter.convert(sourceList, DataModel.class, null);
+		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList, DataModel.class);
 
 		assertNotNull(resultModel);
 		assertSame(sourceList, resultModel.getWrappedData());
@@ -28,7 +28,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToListDataModel() throws Exception {
 		List sourceList = new ArrayList();
 
-		DataModel resultModel = (DataModel) converter.convert(sourceList, ListDataModel.class, null);
+		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList, ListDataModel.class);
 
 		assertNotNull(resultModel);
 		assertSame(sourceList, resultModel.getWrappedData());
@@ -37,7 +37,8 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToSerializableListDataModel() throws Exception {
 		List sourceList = new ArrayList();
 
-		DataModel resultModel = (DataModel) converter.convert(sourceList, SerializableListDataModel.class, null);
+		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList,
+				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);
 		assertSame(sourceList, resultModel.getWrappedData());
@@ -47,7 +48,8 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToSerializableListDataModelNullSource() throws Exception {
 		List sourceList = null;
 
-		DataModel resultModel = (DataModel) converter.convert(sourceList, SerializableListDataModel.class, null);
+		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList,
+				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);
 		assertTrue(resultModel instanceof Serializable);

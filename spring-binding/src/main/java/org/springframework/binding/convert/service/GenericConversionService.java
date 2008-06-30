@@ -171,45 +171,86 @@ public class GenericConversionService implements ConversionService {
 	// internal helpers
 
 	private Map findConvertersForSource(Class sourceClass) {
-		LinkedList classQueue = new LinkedList();
-		classQueue.addFirst(sourceClass);
-		while (!classQueue.isEmpty()) {
-			sourceClass = (Class) classQueue.removeLast();
-			Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
+		if (sourceClass.isInterface()) {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(sourceClass);
+			while (!classQueue.isEmpty()) {
+				sourceClass = (Class) classQueue.removeLast();
+				Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
+				if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
+					return sourceTargetConverters;
+				}
+				// queue up source class's implemented interfaces.
+				Class[] interfaces = sourceClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
+			}
+			Map sourceTargetConverters = (Map) sourceClassConverters.get(Object.class);
 			if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
 				return sourceTargetConverters;
+			} else {
+				return Collections.EMPTY_MAP;
 			}
-			if (!sourceClass.isInterface() && sourceClass.getSuperclass() != null) {
-				classQueue.addFirst(sourceClass.getSuperclass());
+		} else {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(sourceClass);
+			while (!classQueue.isEmpty()) {
+				sourceClass = (Class) classQueue.removeLast();
+				Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
+				if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
+					return sourceTargetConverters;
+				}
+				if (sourceClass.getSuperclass() != null) {
+					classQueue.addFirst(sourceClass.getSuperclass());
+				}
+				// queue up source class's implemented interfaces.
+				Class[] interfaces = sourceClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
 			}
-			// queue up source class's implemented interfaces.
-			Class[] interfaces = sourceClass.getInterfaces();
-			for (int i = 0; i < interfaces.length; i++) {
-				classQueue.addFirst(interfaces[i]);
-			}
+			return Collections.EMPTY_MAP;
 		}
-		return Collections.EMPTY_MAP;
 	}
 
 	private Converter findTargetConverter(Map sourceTargetConverters, Class targetClass) {
-		LinkedList classQueue = new LinkedList();
-		classQueue.addFirst(targetClass);
-		while (!classQueue.isEmpty()) {
-			targetClass = (Class) classQueue.removeLast();
-			Converter converter = (Converter) sourceTargetConverters.get(targetClass);
-			if (converter != null) {
-				return converter;
+		if (targetClass.isInterface()) {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(targetClass);
+			while (!classQueue.isEmpty()) {
+				targetClass = (Class) classQueue.removeLast();
+				Converter converter = (Converter) sourceTargetConverters.get(targetClass);
+				if (converter != null) {
+					return converter;
+				}
+				// queue up target class's implemented interfaces.
+				Class[] interfaces = targetClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
 			}
-			if (!targetClass.isInterface() && targetClass.getSuperclass() != null) {
-				classQueue.addFirst(targetClass.getSuperclass());
+			return (Converter) sourceTargetConverters.get(Object.class);
+		} else {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(targetClass);
+			while (!classQueue.isEmpty()) {
+				targetClass = (Class) classQueue.removeLast();
+				Converter converter = (Converter) sourceTargetConverters.get(targetClass);
+				if (converter != null) {
+					return converter;
+				}
+				if (targetClass.getSuperclass() != null) {
+					classQueue.addFirst(targetClass.getSuperclass());
+				}
+				// queue up target class's implemented interfaces.
+				Class[] interfaces = targetClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
 			}
-			// queue up target class's implemented interfaces.
-			Class[] interfaces = targetClass.getInterfaces();
-			for (int i = 0; i < interfaces.length; i++) {
-				classQueue.addFirst(interfaces[i]);
-			}
+			return null;
 		}
-		return null;
 	}
 
 	private Class convertToWrapperClassIfNecessary(Class targetType) {
