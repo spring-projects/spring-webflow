@@ -20,14 +20,14 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.StringToDate;
 
 public class StaticConversionExecutorImplTests extends TestCase {
 
 	private StaticConversionExecutor conversionExecutor;
 
 	protected void setUp() throws Exception {
-		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, new TestTextToDate());
+		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, new StringToDate());
 	}
 
 	public void testTypeConversion() {
@@ -51,20 +51,4 @@ public class StaticConversionExecutorImplTests extends TestCase {
 			// expected
 		}
 	}
-
-	private class TestTextToDate implements Converter {
-
-		public Class[] getSourceClasses() {
-			return new Class[] { String.class };
-		}
-
-		public Class[] getTargetClasses() {
-			return new Class[] { Date.class };
-		}
-
-		public Object convert(Object source, Class targetClass, Object context) throws Exception {
-			return source == null ? null : new Date();
-		}
-	}
-
 }

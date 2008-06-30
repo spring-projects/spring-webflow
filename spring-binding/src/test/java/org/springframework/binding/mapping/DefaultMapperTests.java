@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.Converter;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
@@ -12,7 +11,6 @@ import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
-import org.springframework.util.StringUtils;
 
 public class DefaultMapperTests extends TestCase {
 	private DefaultMapper mapper = new DefaultMapper();
@@ -64,19 +62,6 @@ public class DefaultMapperTests extends TestCase {
 
 	public void testMappingWithCustomConversionService() {
 		DefaultConversionService conversionService = new DefaultConversionService();
-		conversionService.addConverter(new Converter() {
-			public Class[] getSourceClasses() {
-				return new Class[] { String.class };
-			}
-
-			public Class[] getTargetClasses() {
-				return new Class[] { Locale.class };
-			}
-
-			public Object convert(Object source, Class targetClass, Object context) throws Exception {
-				return StringUtils.parseLocaleString((String) source);
-			}
-		});
 		mapper.setConversionService(conversionService);
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("foo", null), parser.parseExpression(
 				"beep", null));

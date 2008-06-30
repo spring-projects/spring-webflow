@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.convert.service;
 
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 
 /**
  * Package private converter that is a "no op".
@@ -36,15 +36,24 @@ class NoOpConverter implements Converter {
 		this.targetClass = targetClass;
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
+	public Class getSourceClass() {
+		return sourceClass;
+	}
+
+	public Class getTargetClass() {
+		return targetClass;
+	}
+
+	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
 		return source;
 	}
 
-	public Class[] getSourceClasses() {
-		return new Class[] { sourceClass };
+	public boolean isTwoWay() {
+		return true;
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { targetClass };
+	public Object convertTargetToSourceClass(Object target, Class sourceClass) throws Exception,
+			UnsupportedOperationException {
+		return target;
 	}
 }

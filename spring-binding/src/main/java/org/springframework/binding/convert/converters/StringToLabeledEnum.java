@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert.converters;
 
-import org.springframework.binding.convert.Converter;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.core.enums.LabeledEnumResolver;
 import org.springframework.core.enums.StaticLabeledEnumResolver;
@@ -25,20 +24,21 @@ import org.springframework.core.enums.StaticLabeledEnumResolver;
  * 
  * @author Keith Donald
  */
-public class TextToLabeledEnum implements Converter {
+public class StringToLabeledEnum extends StringToObject {
 
 	private LabeledEnumResolver labeledEnumResolver = StaticLabeledEnumResolver.instance();
 
-	public Class[] getSourceClasses() {
-		return new Class[] { String.class };
+	public StringToLabeledEnum() {
+		super(LabeledEnum.class);
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { LabeledEnum.class };
+	protected Object toObject(String string, Class targetClass) throws Exception {
+		return labeledEnumResolver.getLabeledEnumByLabel(targetClass, string);
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
-		String label = (String) source;
-		return labeledEnumResolver.getLabeledEnumByLabel(targetClass, label);
+	protected String toString(Object object) throws Exception {
+		LabeledEnum labeledEnum = (LabeledEnum) object;
+		return labeledEnum.getLabel();
 	}
+
 }

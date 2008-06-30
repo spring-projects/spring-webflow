@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format;
+package org.springframework.binding.convert.converters;
 
 /**
  * Thrown when a formatted value is of the wrong form.

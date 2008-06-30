@@ -16,30 +16,25 @@
 package org.springframework.binding.convert.converters;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import org.springframework.binding.convert.Converter;
-import org.springframework.util.NumberUtils;
 
 /**
- * Converts textual representations of numbers to a <code>Number</code> specialization. Delegates to a synchronized
- * formatter to parse text strings.
+ * Converts a String to a BigDecimal.
  * 
  * @author Keith Donald
  */
-public class TextToNumber implements Converter {
+public class StringToBigDecimal extends StringToObject {
 
-	public Class[] getSourceClasses() {
-		return new Class[] { String.class };
+	public StringToBigDecimal() {
+		super(BigDecimal.class);
 	}
 
-	public Class[] getTargetClasses() {
-		return new Class[] { Integer.class, Short.class, Long.class, Float.class, Double.class, Byte.class,
-				BigInteger.class, BigDecimal.class };
+	public Object toObject(String string, Class objectClass) throws Exception {
+		return new BigDecimal(string);
 	}
 
-	public Object convert(Object source, Class targetClass, Object context) throws Exception {
-		return NumberUtils.parseNumber((String) source, targetClass);
+	public String toString(Object object) throws Exception {
+		BigDecimal number = (BigDecimal) object;
+		return number.toString();
 	}
 
 }

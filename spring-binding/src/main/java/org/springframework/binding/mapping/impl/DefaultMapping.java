@@ -123,7 +123,7 @@ public class DefaultMapping implements Mapping {
 		if (sourceValue != null) {
 			if (typeConverter != null) {
 				try {
-					targetValue = typeConverter.execute(sourceValue, context);
+					targetValue = typeConverter.execute(sourceValue);
 				} catch (ConversionExecutionException e) {
 					context.setTypeConversionErrorResult(e);
 					return;
@@ -142,7 +142,7 @@ public class DefaultMapping implements Mapping {
 						ConversionExecutor typeConverter = conversionService.getConversionExecutor(sourceValue
 								.getClass(), targetType);
 						try {
-							targetValue = typeConverter.execute(sourceValue, context);
+							targetValue = typeConverter.execute(sourceValue);
 						} catch (ConversionExecutionException e) {
 							context.setTypeConversionErrorResult(e);
 							return;

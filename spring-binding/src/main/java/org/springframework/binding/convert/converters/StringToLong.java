@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.formatters;
-
-import java.text.NumberFormat;
-import java.util.Locale;
+package org.springframework.binding.convert.converters;
 
 /**
- * The default formatter for integer instances that are whole numbers and do not have fractions, such as Integers,
- * Longs, and Shorts. Simply delegates to {@link NumberFormat#getIntegerInstance(Locale)}.
+ * Converts a String to an Long using {@link Long#valueOf(String)}.
  * 
  * @author Keith Donald
  */
-public class IntegerFormatter extends NumberFormatter {
+public class StringToLong extends StringToObject {
 
-	public IntegerFormatter(Class numberClass) {
-		super(numberClass);
+	public StringToLong() {
+		super(Long.class);
 	}
 
-	protected NumberFormat createNumberFormat(Locale locale) {
-		return NumberFormat.getIntegerInstance(locale);
+	public Object toObject(String string, Class objectClass) throws Exception {
+		return Long.valueOf(string);
 	}
+
+	public String toString(Object object) throws Exception {
+		Long number = (Long) object;
+		return number.toString();
+	}
+
 }

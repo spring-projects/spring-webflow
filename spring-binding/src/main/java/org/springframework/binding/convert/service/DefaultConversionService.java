@@ -16,10 +16,19 @@
 package org.springframework.binding.convert.service;
 
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.converters.TextToBoolean;
-import org.springframework.binding.convert.converters.TextToClass;
-import org.springframework.binding.convert.converters.TextToLabeledEnum;
-import org.springframework.binding.convert.converters.TextToNumber;
+import org.springframework.binding.convert.converters.StringToBigDecimal;
+import org.springframework.binding.convert.converters.StringToBigInteger;
+import org.springframework.binding.convert.converters.StringToBoolean;
+import org.springframework.binding.convert.converters.StringToByte;
+import org.springframework.binding.convert.converters.StringToCharacter;
+import org.springframework.binding.convert.converters.StringToClass;
+import org.springframework.binding.convert.converters.StringToDate;
+import org.springframework.binding.convert.converters.StringToDouble;
+import org.springframework.binding.convert.converters.StringToFloat;
+import org.springframework.binding.convert.converters.StringToInteger;
+import org.springframework.binding.convert.converters.StringToLabeledEnum;
+import org.springframework.binding.convert.converters.StringToLong;
+import org.springframework.binding.convert.converters.StringToShort;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -45,10 +54,19 @@ public class DefaultConversionService extends GenericConversionService {
 	 * Add all default converters to the conversion service.
 	 */
 	protected void addDefaultConverters() {
-		addConverter(new TextToClass());
-		addConverter(new TextToBoolean());
-		addConverter(new TextToLabeledEnum());
-		addConverter(new TextToNumber());
+		addConverter(new StringToByte());
+		addConverter(new StringToBoolean());
+		addConverter(new StringToCharacter());
+		addConverter(new StringToShort());
+		addConverter(new StringToInteger());
+		addConverter(new StringToLong());
+		addConverter(new StringToFloat());
+		addConverter(new StringToDouble());
+		addConverter(new StringToBigInteger());
+		addConverter(new StringToBigDecimal());
+		addConverter(new StringToClass());
+		addConverter(new StringToLabeledEnum());
+		addConverter(new StringToDate());
 	}
 
 	/**

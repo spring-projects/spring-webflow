@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.format.formatters;
+package org.springframework.binding.convert.converters;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,10 +23,7 @@ import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.format.Formatter;
-import org.springframework.binding.format.InvalidFormatException;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,9 +31,9 @@ import org.springframework.util.StringUtils;
  * @see SimpleDateFormat
  * @author Keith Donald
  */
-public class DateFormatter implements Formatter {
+public class StringToDate extends StringToObject {
 
-	private static Log logger = LogFactory.getLog(DateFormatter.class);
+	private static Log logger = LogFactory.getLog(StringToDate.class);
 
 	/**
 	 * The default date pattern.
@@ -46,6 +43,10 @@ public class DateFormatter implements Formatter {
 	private String pattern;
 
 	private Locale locale;
+
+	public StringToDate() {
+		super(Date.class);
+	}
 
 	/**
 	 * The pattern to use to format date values. If not specified, the default pattern 'yyyy-MM-dd' is used.
@@ -80,30 +81,24 @@ public class DateFormatter implements Formatter {
 		this.locale = locale;
 	}
 
-	// implementing Formatter
-
-	public Class getObjectType() {
-		return Date.class;
-	}
-
-	public String format(Object date) {
-		if (date == null) {
-			return "";
-		}
-		Assert.isInstanceOf(Date.class, date, "Object is not a [java.util.Date]");
-		return getDateFormat().format((Date) date);
-	}
-
-	public Object parse(String formattedString) throws InvalidFormatException {
-		if (!StringUtils.hasText(formattedString)) {
+	public Object toObject(String string, Class targetClass) throws Exception {
+		if (!StringUtils.hasText(string)) {
 			return null;
 		}
 		DateFormat dateFormat = getDateFormat();
 		try {
-			return dateFormat.parse(formattedString);
+			return dateFormat.parse(string);
 		} catch (ParseException e) {
-			throw new InvalidFormatException(formattedString, getPattern(dateFormat), e);
+			throw new InvalidFormatException(string, getPattern(dateFormat), e);
 		}
+	}
+
+	public String toString(Object target) throws Exception {
+		Date date = (Date) target;
+		if (date == null) {
+			return "";
+		}
+		return getDateFormat().format(date);
 	}
 
 	// subclassing hookings

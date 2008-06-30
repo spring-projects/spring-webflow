@@ -17,7 +17,7 @@ package org.springframework.binding.convert.service;
 
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.convert.Converter;
+import org.springframework.binding.convert.converters.Converter;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -87,10 +87,6 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	}
 
 	public Object execute(Object source) throws ConversionExecutionException {
-		return execute(source, null);
-	}
-
-	public Object execute(Object source, Object context) throws ConversionExecutionException {
 		if (targetClass.isInstance(source)) {
 			// source is already assignment compatible with target class
 			return source;
@@ -100,7 +96,7 @@ public class StaticConversionExecutor implements ConversionExecutor {
 					+ source + " is expected to be an instance of " + getSourceClass());
 		}
 		try {
-			return converter.convert(source, targetClass, context);
+			return converter.convertSourceToTargetClass(source, targetClass);
 		} catch (Exception e) {
 			throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), e);
 		}
