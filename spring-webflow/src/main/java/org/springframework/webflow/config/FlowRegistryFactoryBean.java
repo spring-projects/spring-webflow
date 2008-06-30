@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -53,7 +54,7 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
  * @author Keith Donald
  * @author Jeremy Grelle
  */
-class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
+class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean {
 
 	private FlowLocation[] flowLocations;
 
@@ -64,6 +65,8 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	private FlowBuilderServices flowBuilderServices;
 
 	private FlowDefinitionRegistry parent;
+
+	private ClassLoader classLoader;
 
 	/**
 	 * The definition registry produced by this factory bean.
@@ -115,6 +118,12 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 	 */
 	public void setParent(FlowDefinitionRegistry parent) {
 		this.parent = parent;
+	}
+
+	// implement BeanClassLoaderAware
+
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 	public void afterPropertiesSet() throws Exception {
@@ -236,20 +245,33 @@ class FlowRegistryFactoryBean implements FactoryBean, InitializingBean {
 		}
 	}
 
-	private Class fromStringToClass(String type) {
-		return flowBuilderServices.getConversionService().getClassForAlias(type);
+	private Class fromStringToClass(String name) {
+		Class clazz = flowBuilderServices.getConversionService().getClassForAlias(name);
+		if (clazz != null) {
+			return clazz;
+		} else {
+			return loadClass(name);
+		}
+	}
+
+	private Class loadClass(String name) {
+		try {
+			return ClassUtils.forName(name, classLoader);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalArgumentException("Unable to load class '" + name + "'");
+		}
 	}
 
 	private FlowDefinition buildFlowDefinition(FlowBuilderInfo builderInfo) {
 		try {
-			Class flowBuilderClass = ClassUtils.forName(builderInfo.getClassName());
+			Class flowBuilderClass = loadClass(builderInfo.getClassName());
 			FlowBuilder builder = (FlowBuilder) flowBuilderClass.newInstance();
 			AttributeMap flowAttributes = getFlowAttributes(builderInfo.getAttributes());
 			FlowBuilderContext builderContext = new FlowBuilderContextImpl(builderInfo.getId(), flowAttributes,
 					flowRegistry, flowBuilderServices);
 			FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 			return assembler.assembleFlow();
-		} catch (ClassNotFoundException e) {
+		} catch (IllegalArgumentException e) {
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
 		} catch (InstantiationException e) {
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);

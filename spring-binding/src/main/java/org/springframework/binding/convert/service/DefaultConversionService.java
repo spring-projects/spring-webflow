@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
 import org.springframework.binding.convert.converters.StringToBigInteger;
@@ -36,6 +37,7 @@ import org.springframework.binding.convert.converters.StringToLocale;
 import org.springframework.binding.convert.converters.StringToLong;
 import org.springframework.binding.convert.converters.StringToShort;
 import org.springframework.core.enums.LabeledEnum;
+import org.springframework.util.ClassUtils;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -43,12 +45,14 @@ import org.springframework.core.enums.LabeledEnum;
  * 
  * @author Keith Donald
  */
-public class DefaultConversionService extends GenericConversionService {
+public class DefaultConversionService extends GenericConversionService implements BeanClassLoaderAware {
 
 	/**
 	 * A singleton shared instance. Should never be modified.
 	 */
 	private static DefaultConversionService SHARED_INSTANCE;
+
+	private ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
 
 	/**
 	 * Creates a new default conversion service, installing the default converters.
@@ -72,7 +76,7 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToDouble());
 		addConverter(new StringToBigInteger());
 		addConverter(new StringToBigDecimal());
-		addConverter(new StringToClass());
+		addConverter(new StringToClass(classLoader));
 		addConverter(new StringToLocale());
 		addConverter(new StringToDate());
 		addConverter(new StringToLabeledEnum());
@@ -94,6 +98,10 @@ public class DefaultConversionService extends GenericConversionService {
 		addAlias("locale", Locale.class);
 		addAlias("date", Date.class);
 		addAlias("labeledEnum", LabeledEnum.class);
+	}
+
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 	/**

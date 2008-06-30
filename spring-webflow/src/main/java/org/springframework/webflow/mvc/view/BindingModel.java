@@ -66,7 +66,7 @@ public class BindingModel extends AbstractErrors {
 	 * @param objectName the name of the bound model object
 	 * @param boundObject the bound model object
 	 * @param expressionParser the expression parser used to access model object properties
-	 * @param formatterRegistry the formatter registry used to access formatters for formatting properties
+	 * @param conversionService the registry used to access converters for formatting properties
 	 * @param messageContext the message context containing flow messages to display
 	 */
 	public BindingModel(String objectName, Object boundObject, ExpressionParser expressionParser,

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -27,6 +28,7 @@ import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.impl.SessionBindingConversationManager;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -56,7 +58,7 @@ import org.springframework.webflow.mvc.builder.MvcEnvironment;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, InitializingBean {
+class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, BeanClassLoaderAware, InitializingBean {
 
 	private static final String ALWAYS_REDIRECT_ON_PAUSE = "alwaysRedirectOnPause";
 
@@ -75,6 +77,8 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 	private FlowExecutor flowExecutor;
 
 	private MvcEnvironment environment;
+
+	private ClassLoader classLoader;
 
 	/**
 	 * Sets the flow definition locator that will locate flow definitions needed for execution. Typically also a
@@ -121,6 +125,12 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		environment = MvcEnvironment.environmentFor(applicationContext);
+	}
+
+	// implement BeanClassLoaderAware
+
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 	// implementing InitializingBean
@@ -219,6 +229,16 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, I
 	}
 
 	private Class fromStringToClass(String name) {
-		return conversionService.getClassForAlias(name);
+		Class clazz = conversionService.getClassForAlias(name);
+		if (clazz != null) {
+			return clazz;
+		} else {
+			try {
+				return ClassUtils.forName(name, classLoader);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException("Unable to load class '" + name + "'");
+			}
+		}
 	}
+
 }

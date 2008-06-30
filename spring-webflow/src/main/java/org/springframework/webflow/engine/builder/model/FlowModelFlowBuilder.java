@@ -43,6 +43,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestScope;
@@ -910,7 +911,17 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private Class toClass(String name) {
-		return getLocalContext().getConversionService().getClassForAlias(name);
+		Class clazz = getLocalContext().getConversionService().getClassForAlias(name);
+		if (clazz != null) {
+			return clazz;
+		} else {
+			try {
+				ClassLoader classLoader = getLocalContext().getApplicationContext().getClassLoader();
+				return ClassUtils.forName(name, classLoader);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException("Unable to load class '" + name + "'");
+			}
+		}
 	}
 
 	private static class FlowRelativeResourceLoader implements ResourceLoader {

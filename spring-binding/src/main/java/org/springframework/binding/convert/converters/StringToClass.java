@@ -24,12 +24,15 @@ import org.springframework.util.ClassUtils;
  */
 public class StringToClass extends StringToObject {
 
-	public StringToClass() {
+	private ClassLoader classLoader;
+
+	public StringToClass(ClassLoader classLoader) {
 		super(Class.class);
+		this.classLoader = classLoader;
 	}
 
 	public Object toObject(String string, Class objectClass) throws Exception {
-		return ClassUtils.forName(string);
+		return ClassUtils.forName(string, classLoader);
 	}
 
 	public String toString(Object object) throws Exception {
