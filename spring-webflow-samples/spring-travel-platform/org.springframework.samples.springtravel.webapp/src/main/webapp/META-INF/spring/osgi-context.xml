@@ -8,11 +8,8 @@
        http://www.springframework.org/schema/beans   
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <reference id="hotelHandlerMappings">
-    	<interfaces>
-    		<beans:value>org.springframework.web.servlet.HandlerMapping</beans:value>
-    		<beans:value>org.springframework.core.Ordered</beans:value>
-    	</interfaces>
-    </reference>
+    <reference id="bookingAgent" interface="org.springframework.samples.springtravel.hotel.BookingAgent" />
+    <reference id="transactionManager" interface="org.springframework.orm.jpa.JpaTransactionManager" />
+    <reference id="entityManagerFactory" interface="javax.persistence.EntityManagerFactory" />
 
 </beans:beans>           

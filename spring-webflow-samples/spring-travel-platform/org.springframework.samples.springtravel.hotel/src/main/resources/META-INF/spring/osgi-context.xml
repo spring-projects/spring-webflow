@@ -10,11 +10,8 @@
 
 	<reference id="dataSource" interface="javax.sql.DataSource" />
 	
-    <service ref="hotelHandlerMappings">
-    	<interfaces>
-    		<beans:value>org.springframework.web.servlet.HandlerMapping</beans:value>
-    		<beans:value>org.springframework.core.Ordered</beans:value>
-    	</interfaces>
-    </service>
+    <service ref="bookingAgent" interface="org.springframework.samples.springtravel.hotel.BookingAgent" />
+    <service ref="transactionManager" interface="org.springframework.orm.jpa.JpaTransactionManager" />
+    <service ref="entityManagerFactory" interface="javax.persistence.EntityManagerFactory" />
 
 </beans:beans>           
