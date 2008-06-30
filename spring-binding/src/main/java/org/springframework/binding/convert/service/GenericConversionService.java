@@ -45,7 +45,7 @@ public class GenericConversionService implements ConversionService {
 	 * is a map of target classes that can be converted to, ultimately mapping to a specific converter that can perform
 	 * the source->target conversion.
 	 */
-	private Map sourceClassConverters = new HashMap();
+	private final Map sourceClassConverters = new HashMap();
 
 	/**
 	 * An optional parent conversion service.
@@ -145,11 +145,6 @@ public class GenericConversionService implements ConversionService {
 								+ "' to target class '" + targetClass.getName() + "'");
 			}
 		}
-	}
-
-	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
-			throws ConversionExecutorNotFoundException {
-		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	// subclassing support

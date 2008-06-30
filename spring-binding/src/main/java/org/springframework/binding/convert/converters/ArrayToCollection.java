@@ -2,7 +2,6 @@ package org.springframework.binding.convert.converters;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -65,18 +64,17 @@ public class ArrayToCollection implements TwoWayConverter {
 			converter = null;
 		}
 		Collection collection = (Collection) constructor.newInstance(null);
-		Method add = collectionImplClass.getMethod("add", new Class[] { Object.class });
 		int length = Array.getLength(source);
 		if (converter != null) {
 			for (int i = 0; i < length; i++) {
 				Object value = Array.get(source, i);
 				value = converter.execute(value);
-				add.invoke(collection, new Object[] { value });
+				collection.add(value);
 			}
 		} else {
 			for (int i = 0; i < length; i++) {
 				Object value = Array.get(source, i);
-				add.invoke(collection, new Object[] { value });
+				collection.add(value);
 			}
 		}
 		return collection;
@@ -91,9 +89,12 @@ public class ArrayToCollection implements TwoWayConverter {
 		int i = 0;
 		for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 			Object value = it.next();
-			ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), sourceClass
-					.getComponentType());
-			Array.set(array, i, converter.execute(value));
+			if (value != null) {
+				ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), sourceClass
+						.getComponentType());
+				value = converter.execute(value);
+			}
+			Array.set(array, i, value);
 		}
 		return array;
 	}

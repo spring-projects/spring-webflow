@@ -56,17 +56,19 @@ public class ObjectToArray implements TwoWayConverter {
 			StringBuffer buffer = new StringBuffer();
 			for (int i = 0; i < length; i++) {
 				Object value = Array.get(target, i);
-				buffer.append(converter.execute(value));
-				if (i < length) {
+				if (value != null) {
+					buffer.append(converter.execute(value));
+				}
+				if (i < length - 1) {
 					buffer.append(",");
 				}
 			}
+			return buffer.toString();
 		} else {
 			Object value = Array.get(target, 0);
 			Class componentType = target.getClass().getComponentType();
 			ConversionExecutor converter = conversionService.getConversionExecutor(componentType, sourceClass);
 			return converter.execute(value);
 		}
-		return null;
 	}
 }

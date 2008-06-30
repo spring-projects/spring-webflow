@@ -201,6 +201,13 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(new Integer(3), result[2]);
 	}
 
+	public void testToArrayObjectConversion() {
+		DefaultConversionService service = new DefaultConversionService();
+		ConversionExecutor executor = service.getConversionExecutor(String[].class, String.class);
+		String result = (String) executor.execute(new String[] { "1", "2", "3" });
+		assertEquals("1,2,3", result);
+	}
+
 	/*
 	 * 
 	 * public void testArrayListConversionWithElementConversion() throws Exception { DefaultConversionService service =

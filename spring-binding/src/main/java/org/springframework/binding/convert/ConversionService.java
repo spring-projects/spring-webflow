@@ -39,18 +39,4 @@ public interface ConversionService {
 	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
 			throws ConversionExecutorNotFoundException;
 
-	/**
-	 * Return a custom conversion executor capable of converting source objects of the specified
-	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
-	 * <p>
-	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
-	 * @param id the id of the custom conversion executor (should be unique among custom converters)
-	 * @param sourceClass the source class to convert from
-	 * @param targetClass the target class to convert to
-	 * @return the executor that can execute instance type conversion, never null
-	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
-	 */
-	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
-			throws ConversionExecutorNotFoundException;
-
 }
