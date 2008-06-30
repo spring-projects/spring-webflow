@@ -18,6 +18,7 @@ package org.springframework.binding.convert.service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.Locale;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
@@ -72,12 +73,13 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToBigInteger());
 		addConverter(new StringToBigDecimal());
 		addConverter(new StringToClass());
-		addConverter(new StringToLabeledEnum());
 		addConverter(new StringToLocale());
 		addConverter(new StringToDate());
+		addConverter(new StringToLabeledEnum());
 	}
 
 	protected void addDefaultAliases() {
+		addAlias("string", String.class);
 		addAlias("byte", Byte.class);
 		addAlias("boolean", Boolean.class);
 		addAlias("character", Character.class);
@@ -89,9 +91,9 @@ public class DefaultConversionService extends GenericConversionService {
 		addAlias("bigInteger", BigInteger.class);
 		addAlias("bigDecimal", BigDecimal.class);
 		addAlias("class", Class.class);
-		addAlias("labeledEnum", LabeledEnum.class);
+		addAlias("locale", Locale.class);
 		addAlias("date", Date.class);
-		addAlias("string", String.class);
+		addAlias("labeledEnum", LabeledEnum.class);
 	}
 
 	/**
