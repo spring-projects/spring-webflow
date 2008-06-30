@@ -27,11 +27,12 @@ public class StaticConversionExecutorImplTests extends TestCase {
 	private StaticConversionExecutor conversionExecutor;
 
 	protected void setUp() throws Exception {
-		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, new StringToDate());
+		StringToDate stringToDate = new StringToDate();
+		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, stringToDate);
 	}
 
 	public void testTypeConversion() {
-		assertTrue(conversionExecutor.execute("10-10-2008").getClass().equals(Date.class));
+		assertTrue(conversionExecutor.execute("2008-10-10").getClass().equals(Date.class));
 	}
 
 	public void testAssignmentCompatibleTypeConversion() {

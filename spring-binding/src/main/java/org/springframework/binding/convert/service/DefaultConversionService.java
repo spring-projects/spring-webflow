@@ -31,6 +31,7 @@ import org.springframework.binding.convert.converters.StringToDouble;
 import org.springframework.binding.convert.converters.StringToFloat;
 import org.springframework.binding.convert.converters.StringToInteger;
 import org.springframework.binding.convert.converters.StringToLabeledEnum;
+import org.springframework.binding.convert.converters.StringToLocale;
 import org.springframework.binding.convert.converters.StringToLong;
 import org.springframework.binding.convert.converters.StringToShort;
 import org.springframework.core.enums.LabeledEnum;
@@ -72,6 +73,7 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToBigDecimal());
 		addConverter(new StringToClass());
 		addConverter(new StringToLabeledEnum());
+		addConverter(new StringToLocale());
 		addConverter(new StringToDate());
 	}
 
