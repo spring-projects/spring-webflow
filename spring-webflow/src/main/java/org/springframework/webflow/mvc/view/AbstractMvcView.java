@@ -108,8 +108,8 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	/**
-	 * Sets the formatter registry to use to expose formatters for field values.
-	 * @param formatterRegistry the formatter registry
+	 * Sets the service to use to expose formatters for field values.
+	 * @param conversionService the conversion service
 	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;

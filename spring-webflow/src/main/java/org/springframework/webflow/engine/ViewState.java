@@ -251,7 +251,7 @@ public class ViewState extends TransitionableState {
 		while (it.hasNext()) {
 			ViewVariable variable = (ViewVariable) it.next();
 			if (logger.isDebugEnabled()) {
-				logger.debug("Destroying " + variable);
+				logger.debug("Restoring " + variable);
 
 			}
 			variable.restore(context);
