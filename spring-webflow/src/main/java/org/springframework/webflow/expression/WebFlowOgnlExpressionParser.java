@@ -22,8 +22,6 @@ import ognl.Ognl;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.collection.MapAdaptable;
@@ -42,8 +40,6 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Keith Donald
  */
 public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
-
-	private static final Log logger = LogFactory.getLog(WebFlowOgnlExpressionParser.class);
 
 	/**
 	 * Creates a Web Flow OGNL Expression Parser.
@@ -96,54 +92,27 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 			String property = name.toString();
 			RequestContext requestContext = (RequestContext) target;
 			if (property.equals("flowRequestContext")) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved the current RequestContext under variable '" + property + "'");
-				}
 				return requestContext;
 			}
 			if (property.equals("currentUser")) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved implicit flow variable '" + property + "'");
-				}
 				return requestContext.getExternalContext().getCurrentUser();
 			}
 			if (property.equals("resourceBundle")) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved implicit flow variable '" + property + "'");
-				}
 				return requestContext.getActiveFlow().getApplicationContext();
 			}
 			if (requestContext.getRequestScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved request scoped variable '" + property + "'");
-				}
 				return requestContext.getRequestScope().get(property);
 			} else if (requestContext.getFlashScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved flash scoped variable '" + property + "'");
-				}
 				return requestContext.getFlashScope().get(property);
 			} else if (requestContext.inViewState() && requestContext.getViewScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved view scoped variable '" + property + "'");
-				}
 				return requestContext.getViewScope().get(property);
 			} else if (requestContext.getFlowScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved flow scoped variable '" + property + "'");
-				}
 				return requestContext.getFlowScope().get(property);
 			} else if (requestContext.getConversationScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved conversation scoped variable '" + property + "'");
-				}
 				return requestContext.getConversationScope().get(property);
 			}
 			BeanFactory bf = getBeanFactory(requestContext);
 			if (bf.containsBean(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved variable '" + property + "' in Spring BeanFactory");
-				}
 				return bf.getBean(property);
 			}
 			return delegate.getProperty(context, target, name);
@@ -162,29 +131,14 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 				throw new OgnlException("The 'resourceBundle' variable is not writeable");
 			}
 			if (requestContext.getRequestScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved request scoped variable '" + property + "'");
-				}
 				requestContext.getRequestScope().put(property, value);
 			} else if (requestContext.getFlashScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved flash scoped variable '" + property + "'");
-				}
 				requestContext.getFlashScope().put(property, value);
 			} else if (requestContext.inViewState() && requestContext.getViewScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved view scoped variable '" + property + "'");
-				}
 				requestContext.getViewScope().put(property, value);
 			} else if (requestContext.getFlowScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved flow scoped variable '" + property + "'");
-				}
 				requestContext.getFlowScope().put(property, value);
 			} else if (requestContext.getConversationScope().contains(property)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Successfully resolved conversation scoped variable '" + property + "'");
-				}
 				requestContext.getConversationScope().put(property, value);
 			} else {
 				delegate.setProperty(context, target, name, value);

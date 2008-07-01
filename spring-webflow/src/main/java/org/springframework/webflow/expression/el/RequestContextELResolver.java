@@ -21,8 +21,6 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -39,8 +37,6 @@ public class RequestContextELResolver extends ELResolver {
 	 * Name of the request context variable.
 	 */
 	public static final String REQUEST_CONTEXT_VARIABLE_NAME = "flowRequestContext";
-
-	private static final Log logger = LogFactory.getLog(RequestContextELResolver.class);
 
 	private RequestContext context;
 
@@ -73,9 +69,6 @@ public class RequestContextELResolver extends ELResolver {
 
 	public Object getValue(ELContext elContext, Object base, Object property) {
 		if (base == null && REQUEST_CONTEXT_VARIABLE_NAME.equals(property)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Successfully resolved the current RequestContext under variable '" + property + "'");
-			}
 			elContext.setPropertyResolved(true);
 			return getRequestContext();
 		} else {
