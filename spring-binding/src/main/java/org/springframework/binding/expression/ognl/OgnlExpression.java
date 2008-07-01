@@ -26,6 +26,7 @@ import ognl.OgnlException;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -107,6 +108,8 @@ class OgnlExpression implements Expression {
 		try {
 			// OGNL has no native way to get this information
 			return new BeanWrapperImpl(context).getPropertyDescriptor(expressionString).getPropertyType();
+		} catch (InvalidPropertyException e) {
+			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
 		} catch (BeansException e) {
 			throw new EvaluationException(new EvaluationAttempt(this, context), e);
 		}
