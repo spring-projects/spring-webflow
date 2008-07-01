@@ -479,6 +479,10 @@
                 components that go beyond the standard JSF components by adding the ability to do Ajax-based partial
                 view updates. These components degrade gracefully so that the flow will still be fully functional by
                 falling back to full page refreshes if a user with a less capable browser views the page.
+                <note>
+                    Though the core JSF support in Spring Faces is JSF 1.1-compatible, the Spring Faces 
+                    Ajax components require JSF 1.2.
+                </note>
             </para>
             <para>
                 Revisiting the earlier example with the paged table, you can change the "More Results" link to use an
