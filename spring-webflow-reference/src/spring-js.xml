@@ -28,7 +28,7 @@
         
 <!-- Map all /resources requests to the Resource Servlet for handling -->
 <servlet-mapping>
-    <servlet-name>Resources Servlet</servlet-name>
+    <servlet-name>Resource Servlet</servlet-name>
     <url-pattern>/resources/*</url-pattern>
 </servlet-mapping>]]>
         </programlisting>
