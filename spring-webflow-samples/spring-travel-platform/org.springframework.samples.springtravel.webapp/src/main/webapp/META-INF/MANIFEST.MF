@@ -30,7 +30,6 @@ Web-FilterMappings: springSecurityFilterChain;url-patterns:="/*"
 Web-ContextParams: 
  javax.faces.DEFAULT_SUFFIX;param-value:=".xhtml",
  facelets.DEVELOPMENT;param-value:="true",
- facelets.REFRESH_PERIOD;param-value:="1",
- facelets.RESOURCE_RESOLVER;param-value:="org.springframework.faces.webflow.FlowResourceResolver"
+ facelets.REFRESH_PERIOD;param-value:="1"
 Web-SessionTimeout: 5
 Web-WelcomeFiles: index.html
