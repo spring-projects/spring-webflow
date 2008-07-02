@@ -44,12 +44,6 @@ public class JpaHotelBookingAgent implements HotelBookingAgent {
 		}
 	}
 
-	@Transactional(readOnly = true)
-	public HotelBooking createBooking(Hotel hotel, String username) {
-		User user = findUser(username);
-		return new HotelBooking(hotel, user);
-	}
-
 	@Transactional
 	public void cancelBooking(Long id) {
 		HotelBooking booking = em.find(HotelBooking.class, id);
@@ -58,12 +52,29 @@ public class JpaHotelBookingAgent implements HotelBookingAgent {
 		}
 	}
 
+	// flow helper
+	
+	@Transactional(readOnly = true)
+	public HotelBooking createBooking(Long hotelId, String username) {
+		User user = findUser(username);
+		Hotel hotel = findHotel(hotelId);
+		HotelBooking booking = new HotelBooking(hotel, user);
+		em.persist(booking);
+		return booking;
+	}
+
 	// helpers
 
 	private User findUser(String username) {
 		return (User) em.createQuery(
 				"select u from User u where u.username = :username")
 				.setParameter("username", username).getSingleResult();
+	}
+	
+	private Hotel findHotel(Long hotelId) {
+		return (Hotel) em.createQuery(
+				"select h from Hotel h where h.id = :hotelId")
+				.setParameter("hotelId", hotelId).getSingleResult();
 	}
 
 }

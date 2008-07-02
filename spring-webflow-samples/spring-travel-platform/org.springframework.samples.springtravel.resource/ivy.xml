@@ -18,7 +18,7 @@
 
 	<dependencies>
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="provided->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided->runtime" />
+		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided-platform->compile" />
 	</dependencies>
 
 </ivy-module>

@@ -20,22 +20,25 @@ public interface HotelBookingAgent {
 	public List<HotelBooking> findBookings(String username);
 
 	/**
-	 * Create a new, transient hotel booking instance for the given user.
-	 * 
-	 * @param hotel
-	 *            the hotel
-	 * @param userName
-	 *            the user name
-	 * @return the new transient booking instance
-	 */
-	public HotelBooking createBooking(Hotel hotel, String userName);
-
-	/**
 	 * Cancel an existing booking.
 	 * 
 	 * @param id
 	 *            the booking id
 	 */
 	public void cancelBooking(Long id);
+
+	// flow helpers
+	
+	/**
+	 * Create a new, persistent, hotel booking instance for the given user.  This method is a flow 
+	 * helper, it has no direct relationship to the booking process.
+	 * 
+	 * @param hotelId
+	 *            the hotel id
+	 * @param userName
+	 *            the user name
+	 * @return the new transient booking instance
+	 */
+	public HotelBooking createBooking(Long hotelId, String userName);
 
 }

@@ -19,8 +19,8 @@
 	<dependencies>
 		<dependency org="org.springframework.samples" name="org.springframework.samples.springtravel.resource" rev="latest.integration" conf="compile->runtime" />
 		<dependency org="org.hibernate" name="org.hibernate.ejb-library" rev="3.3.1.ga" conf="provided->runtime" />
-		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided->runtime" />
-		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="test->runtime" />
+		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided-platform->compile" />
+		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="provided->runtime" />
 
 	</dependencies>
 

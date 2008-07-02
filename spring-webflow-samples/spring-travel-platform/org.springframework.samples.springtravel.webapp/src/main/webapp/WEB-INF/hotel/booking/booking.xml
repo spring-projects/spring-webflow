@@ -10,8 +10,7 @@
 	<input name="hotelId" required="true"/>
 	
 	<on-start>
-		<evaluate expression="hotelSearchAgent.findHotelById(hotelId)" result="flowScope.hotel" />
-		<evaluate expression="hotelBookingAgent.createBooking(hotel, currentUser.name)" result="flowScope.booking" />
+		<evaluate expression="hotelBookingAgent.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
 	</on-start>
 	
 	<view-state id="enterBookingDetails" model="booking">
@@ -20,9 +19,7 @@
 	</view-state>
 	
 	<view-state id="reviewBooking">
-		<transition on="confirm" to="bookingConfirmed">
-			<evaluate expression="persistenceContext.persist(booking)" />
-		</transition>
+		<transition on="confirm" to="bookingConfirmed" />
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="bookingCancelled" />
 	</view-state>
