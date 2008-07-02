@@ -16,7 +16,9 @@
 package org.springframework.faces.webflow;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.el.ELContext;
 import javax.faces.FactoryFinder;
@@ -33,6 +35,8 @@ import javax.faces.render.RenderKit;
 
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageCriteria;
+import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.util.ClassUtils;
@@ -58,6 +62,16 @@ public class FlowFacesContext extends FacesContext {
 	 * The key for storing the renderResponse flag
 	 */
 	static final String RENDER_RESPONSE_KEY = "flowRenderResponse";
+
+	/**
+	 * Key for identifying summary messages
+	 */
+	static final String SUMMARY_MESSAGE_KEY = "_summary";
+
+	/**
+	 * Key for identifying detail messages
+	 */
+	static final String DETAIL_MESSAGE_KEY = "_detail";
 
 	/**
 	 * The key for storing the renderResponse flag
@@ -88,25 +102,48 @@ public class FlowFacesContext extends FacesContext {
 	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		MessageBuilder builder = new MessageBuilder();
-		StringBuffer msgText = new StringBuffer();
-		if (StringUtils.hasText(message.getSummary())) {
-			msgText.append(message.getSummary());
-		}
-
 		String source = null;
 		if (StringUtils.hasText(clientId)) {
 			source = clientId;
 		}
 
-		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
-			builder.source(source).defaultText(msgText.toString()).info();
-		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
-			builder.source(source).defaultText(msgText.toString()).warning();
-		} else {
-			builder.source(source).defaultText(msgText.toString()).error();
+		StringBuffer summaryText = new StringBuffer();
+		if (StringUtils.hasText(message.getSummary())) {
+			summaryText.append(message.getSummary());
 		}
-		context.getMessageContext().addMessage(builder.build());
+
+		String summarySource = source + SUMMARY_MESSAGE_KEY;
+		MessageResolver summaryResolver;
+		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
+			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).info()
+					.build();
+		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
+			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).warning()
+					.build();
+		} else {
+			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).error()
+					.build();
+		}
+		context.getMessageContext().addMessage(summaryResolver);
+
+		StringBuffer detailText = new StringBuffer();
+		if (StringUtils.hasText(message.getDetail())) {
+			detailText.append(message.getDetail());
+		}
+		String detailSource = source + DETAIL_MESSAGE_KEY;
+		MessageResolver detailResolver;
+		if (message.getSeverity() == FacesMessage.SEVERITY_INFO) {
+			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).info()
+					.build();
+		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
+			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).warning()
+					.build();
+		} else {
+			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).error()
+					.build();
+		}
+		context.getMessageContext().addMessage(detailResolver);
+
 	}
 
 	/**
@@ -237,18 +274,54 @@ public class FlowFacesContext extends FacesContext {
 		return delegate;
 	}
 
+	// ------------------ Private helper methods ----------------------//
+
+	private FacesMessage toFacesMessage(Message summaryMessage, Message detailMessage) {
+		if (summaryMessage.getSeverity() == Severity.INFO) {
+			return new FacesMessage(FacesMessage.SEVERITY_INFO, summaryMessage.getText(), detailMessage.getText());
+		} else if (summaryMessage.getSeverity() == Severity.WARNING) {
+			return new FacesMessage(FacesMessage.SEVERITY_WARN, summaryMessage.getText(), detailMessage.getText());
+		} else {
+			return new FacesMessage(FacesMessage.SEVERITY_ERROR, summaryMessage.getText(), detailMessage.getText());
+		}
+	}
+
 	private class FacesMessageIterator implements Iterator {
 
-		private Message[] messages;
+		private Object[] messages;
 
 		private int currentIndex = -1;
 
 		protected FacesMessageIterator() {
-			this.messages = context.getMessageContext().getAllMessages();
+			Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(new SummaryMessageCriteria());
+			Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(new DetailMessageCriteria());
+			Message[] userMessages = context.getMessageContext().getMessagesByCriteria(new UserMessageCriteria());
+
+			List translatedMessages = new ArrayList();
+			for (int i = 0; i < summaryMessages.length; i++) {
+				translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
+			}
+			for (int z = 0; z < userMessages.length; z++) {
+				translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			}
+
+			this.messages = translatedMessages.toArray();
 		}
 
 		protected FacesMessageIterator(String clientId) {
-			this.messages = context.getMessageContext().getMessagesBySource(clientId);
+			Message[] summaryMessages = context.getMessageContext().getMessagesBySource(clientId + SUMMARY_MESSAGE_KEY);
+			Message[] detailMessages = context.getMessageContext().getMessagesBySource(clientId + DETAIL_MESSAGE_KEY);
+			Message[] userMessages = context.getMessageContext().getMessagesBySource(clientId);
+
+			List translatedMessages = new ArrayList();
+			for (int i = 0; i < summaryMessages.length; i++) {
+				translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
+			}
+			for (int z = 0; z < userMessages.length; z++) {
+				translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			}
+
+			this.messages = translatedMessages.toArray();
 		}
 
 		public boolean hasNext() {
@@ -257,19 +330,7 @@ public class FlowFacesContext extends FacesContext {
 
 		public Object next() {
 			currentIndex++;
-			Message nextMessage = messages[currentIndex];
-			FacesMessage facesMessage;
-			if (nextMessage.getSeverity() == Severity.INFO) {
-				facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, nextMessage.getText(), nextMessage
-						.getText());
-			} else if (nextMessage.getSeverity() == Severity.WARNING) {
-				facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, nextMessage.getText(), nextMessage
-						.getText());
-			} else {
-				facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, nextMessage.getText(), nextMessage
-						.getText());
-			}
-			return facesMessage;
+			return messages[currentIndex];
 		}
 
 		public void remove() {
@@ -285,26 +346,20 @@ public class FlowFacesContext extends FacesContext {
 		int currentIndex = -1;
 
 		protected ClientIdIterator() {
-			this.messages = context.getMessageContext().getAllMessages();
+			this.messages = context.getMessageContext().getMessagesByCriteria(new IdentifiedMessageCriteria());
 		}
 
 		public boolean hasNext() {
-			while (messages.length > currentIndex + 1) {
-				Message next = messages[currentIndex + 1];
-				if (next.getSource() != null && !"".equals(next.getSource())) {
-					return true;
-				}
-				currentIndex++;
-			}
-			return false;
+			return messages.length > currentIndex + 1;
 		}
 
 		public Object next() {
 			Message next = messages[++currentIndex];
-			while (next.getSource() == null || "".equals(next.getSource())) {
-				next = messages[++currentIndex];
+			if (next.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)) {
+				return next.getSource().toString().replaceAll(SUMMARY_MESSAGE_KEY, "");
+			} else {
+				return next.getSource().toString();
 			}
-			return next.getSource().toString();
 		}
 
 		public void remove() {
@@ -338,4 +393,48 @@ public class FlowFacesContext extends FacesContext {
 
 	}
 
+	private class SummaryMessageCriteria implements MessageCriteria {
+
+		public boolean test(Message message) {
+			if (message.getSource() == null) {
+				return false;
+			}
+			return message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY);
+		}
+	}
+
+	private class DetailMessageCriteria implements MessageCriteria {
+
+		public boolean test(Message message) {
+			if (message.getSource() == null) {
+				return false;
+			}
+			return message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
+		}
+	}
+
+	private class UserMessageCriteria implements MessageCriteria {
+
+		public boolean test(Message message) {
+			if (message.getSource() == null) {
+				return true;
+			}
+			return !message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)
+					&& !message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
+		}
+	}
+
+	private class IdentifiedMessageCriteria implements MessageCriteria {
+
+		String nullSummaryId = null + SUMMARY_MESSAGE_KEY;
+
+		public boolean test(Message message) {
+			if (message.getSource() == null || message.getSource().equals("")
+					|| message.getSource().equals(nullSummaryId)
+					|| message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY)) {
+				return false;
+			}
+			return true;
+		}
+	}
 }
