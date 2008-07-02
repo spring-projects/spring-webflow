@@ -2,6 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.springframework.samples.springtravel.webapp
 Bundle-Name: Spring Travel Web Application Module
+Bundle-Vendor: SpringSource
+Bundle-Version: 1.0.0
 Import-Package: 
  org.springframework.samples.springtravel.hotel.search,
  javax.sql

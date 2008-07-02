@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Spring Travel Hotel Module
 Bundle-SymbolicName: org.springframework.samples.springtravel.hotel.search
 Bundle-Vendor: SpringSource
+Bundle-Version: 2.0.3
 Export-Package: 
  org.springframework.samples.springtravel.hotel.search
 Import-Package: 
