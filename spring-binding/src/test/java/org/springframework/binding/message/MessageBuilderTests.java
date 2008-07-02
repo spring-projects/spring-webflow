@@ -26,6 +26,14 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	public void testBuildFatal() {
+		MessageResolver resolver = builder.fatal().defaultText("foo").build();
+		Message message = resolver.resolveMessage(messageSource, locale);
+		assertEquals("foo", message.getText());
+		assertEquals(Severity.FATAL, message.getSeverity());
+		assertNull(message.getSource());
+	}
+
 	public void testBuildError() {
 		MessageResolver resolver = builder.error().defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);

@@ -120,8 +120,11 @@ public class FlowFacesContext extends FacesContext {
 		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
 			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).warning()
 					.build();
-		} else {
+		} else if (message.getSeverity() == FacesMessage.SEVERITY_ERROR) {
 			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).error()
+					.build();
+		} else {
+			summaryResolver = new MessageBuilder().source(summarySource).defaultText(summaryText.toString()).fatal()
 					.build();
 		}
 		context.getMessageContext().addMessage(summaryResolver);
@@ -138,8 +141,11 @@ public class FlowFacesContext extends FacesContext {
 		} else if (message.getSeverity() == FacesMessage.SEVERITY_WARN) {
 			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).warning()
 					.build();
-		} else {
+		} else if (message.getSeverity() == FacesMessage.SEVERITY_ERROR) {
 			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).error()
+					.build();
+		} else {
+			detailResolver = new MessageBuilder().source(detailSource).defaultText(detailText.toString()).fatal()
 					.build();
 		}
 		context.getMessageContext().addMessage(detailResolver);
@@ -168,7 +174,7 @@ public class FlowFacesContext extends FacesContext {
 			if (message.getSeverity().getOrdinal() > max.getOrdinal()) {
 				max = message.getSeverity();
 			}
-			if (max.getOrdinal() == FacesMessage.SEVERITY_ERROR.getOrdinal())
+			if (max.getOrdinal() == FacesMessage.SEVERITY_FATAL.getOrdinal())
 				break;
 		}
 		return max;
@@ -281,8 +287,10 @@ public class FlowFacesContext extends FacesContext {
 			return new FacesMessage(FacesMessage.SEVERITY_INFO, summaryMessage.getText(), detailMessage.getText());
 		} else if (summaryMessage.getSeverity() == Severity.WARNING) {
 			return new FacesMessage(FacesMessage.SEVERITY_WARN, summaryMessage.getText(), detailMessage.getText());
-		} else {
+		} else if (summaryMessage.getSeverity() == Severity.ERROR) {
 			return new FacesMessage(FacesMessage.SEVERITY_ERROR, summaryMessage.getText(), detailMessage.getText());
+		} else {
+			return new FacesMessage(FacesMessage.SEVERITY_FATAL, summaryMessage.getText(), detailMessage.getText());
 		}
 	}
 

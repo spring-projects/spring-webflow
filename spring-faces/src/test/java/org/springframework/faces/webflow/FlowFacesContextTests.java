@@ -89,7 +89,7 @@ public class FlowFacesContextTests extends TestCase {
 			assertNotNull(i.next());
 			iterationCount++;
 		}
-		assertEquals("There should be 4 messages to iterate", 4, iterationCount);
+		assertEquals("There should be 5 messages to iterate", 5, iterationCount);
 	}
 
 	public final void testGetMessagesByClientId_ForComponent() {
@@ -158,7 +158,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
 		EasyMock.replay(new Object[] { requestContext });
 
-		assertEquals(FacesMessage.SEVERITY_ERROR, facesContext.getMaximumSeverity());
+		assertEquals(FacesMessage.SEVERITY_FATAL, facesContext.getMaximumSeverity());
 	}
 
 	private void setupMessageContext() {
@@ -176,6 +176,8 @@ public class FlowFacesContextTests extends TestCase {
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("baz").error()
 				.build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("baz").error()
+				.build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().defaultText("Subzero Wins - Fatality").fatal()
 				.build());
 	}
 

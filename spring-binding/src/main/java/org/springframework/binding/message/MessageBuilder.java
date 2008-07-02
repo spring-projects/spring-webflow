@@ -38,6 +38,7 @@ import org.springframework.core.style.ToStringCreator;
  * </code>
  * </p>
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class MessageBuilder {
 
@@ -75,6 +76,15 @@ public class MessageBuilder {
 	 */
 	public MessageBuilder error() {
 		severity = Severity.ERROR;
+		return this;
+	}
+
+	/**
+	 * Records that the message being built is a fatal message.
+	 * @return this, for fluent API usage
+	 */
+	public MessageBuilder fatal() {
+		severity = Severity.FATAL;
 		return this;
 	}
 
