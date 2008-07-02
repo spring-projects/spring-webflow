@@ -97,7 +97,7 @@ public class ResourceServlet extends HttpServletBean {
 			if (log.isDebugEnabled()) {
 				log.debug("Resource not found: " + rawResourcePath);
 			}
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
