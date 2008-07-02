@@ -291,7 +291,22 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 	},
 	
 	handleError: function(response, ioArgs) {
+		dojo.require("dijit.Dialog");
+		
 		console.error("HTTP status code: ", ioArgs.xhr.status);
+		
+		if (Spring.debug) {
+			var dialog = new dijit.Dialog({});
+			dojo.connect(dialog, "hide", dialog, function(){
+				this.destroyRecursive(false);
+			});
+			dialog.domNode.style.width = "80%";
+			dialog.domNode.style.height = "80%";
+			dialog.domNode.style.textAlign = "left";
+			dialog.setContent(response.responseText);
+			dialog.show();
+		}
+		
 		return response;
 	},
 	
