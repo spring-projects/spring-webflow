@@ -9,11 +9,8 @@ import org.springframework.samples.springtravel.hotel.booking.HotelBooking;
 import org.springframework.samples.springtravel.hotel.booking.HotelBookingAgent;
 import org.springframework.samples.springtravel.hotel.booking.User;
 import org.springframework.samples.springtravel.hotel.search.Hotel;
-import org.springframework.samples.springtravel.hotel.search.SearchCriteria;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * A JPA-based implementation of the Hotel Booking Agent. Delegates to a JPA entity
