@@ -17,7 +17,6 @@ package org.springframework.binding.mapping.impl;
 
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.Mapping;
@@ -106,7 +105,7 @@ public class DefaultMapping implements Mapping {
 	 * Execute this mapping.
 	 * @param context the mapping context
 	 */
-	void map(DefaultMappingContext context) {
+	public void map(DefaultMappingContext context) {
 		context.setCurrentMapping(this);
 		Object sourceValue;
 		try {
@@ -127,27 +126,6 @@ public class DefaultMapping implements Mapping {
 				} catch (ConversionExecutionException e) {
 					context.setTypeConversionErrorResult(e);
 					return;
-				}
-			} else {
-				ConversionService conversionService = context.getConversionService();
-				if (conversionService != null) {
-					Class targetType;
-					try {
-						targetType = targetExpression.getValueType(context.getTarget());
-					} catch (EvaluationException e) {
-						context.setTargetAccessError(sourceValue, e);
-						return;
-					}
-					if (targetType != null && !targetType.isInstance(targetValue)) {
-						ConversionExecutor typeConverter = conversionService.getConversionExecutor(sourceValue
-								.getClass(), targetType);
-						try {
-							targetValue = typeConverter.execute(sourceValue);
-						} catch (ConversionExecutionException e) {
-							context.setTypeConversionErrorResult(e);
-							return;
-						}
-					}
 				}
 			}
 		}

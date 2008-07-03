@@ -46,4 +46,6 @@ public interface ConversionService {
 	 */
 	public Class getClassForAlias(String alias);
 
+	public ConversionExecutor[] getConversionExecutors(Class sourceClass);
+
 }

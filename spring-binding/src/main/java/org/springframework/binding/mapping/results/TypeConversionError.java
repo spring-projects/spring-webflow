@@ -15,6 +15,9 @@
  */
 package org.springframework.binding.mapping.results;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.mapping.Result;
 import org.springframework.core.style.ToStringCreator;
@@ -73,7 +76,12 @@ public class TypeConversionError extends Result {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("originalValue", originalValue).append("targetType", targetType)
-				.append("details", exception.getMessage()).toString();
+		ToStringCreator creator = new ToStringCreator(this).append("originalValue", originalValue).append("targetType",
+				targetType);
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter writer = new PrintWriter(stringWriter);
+		exception.printStackTrace(writer);
+		creator.append("exceptionStackTrace", stringWriter.toString());
+		return creator.toString();
 	}
 }

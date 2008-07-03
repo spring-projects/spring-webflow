@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.expression.ognl;
+package org.springframework.binding.expression.beanwrapper;
 
-import ognl.Ognl;
-import ognl.OgnlException;
-
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
@@ -28,13 +26,19 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  * 
  * @author Keith Donald
  */
-public class OgnlExpressionParser extends AbstractExpressionParser {
+public class BeanWrapperExpressionParser extends AbstractExpressionParser {
+
+	private ConversionService conversionService;
+
+	public ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
+
 	protected Expression doParseExpression(String expressionString, ParserContext context) throws ParserException {
-		try {
-			return new OgnlExpression(Ognl.parseExpression(expressionString), parseVariableExpressions(context
-					.getExpressionVariables()), context.getExpectedEvaluationResultType(), expressionString);
-		} catch (OgnlException e) {
-			throw new ParserException(expressionString, e);
-		}
+		return new BeanWrapperExpression(expressionString, conversionService);
 	}
 }

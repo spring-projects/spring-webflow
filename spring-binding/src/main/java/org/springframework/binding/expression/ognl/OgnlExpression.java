@@ -40,24 +40,12 @@ import org.springframework.binding.expression.SetValueAttempt;
  */
 class OgnlExpression implements Expression {
 
-	/**
-	 * The expression.
-	 */
 	private Object expression;
 
-	/**
-	 * Expression variable initial values.
-	 */
 	private Map variableExpressions;
 
-	/**
-	 * The expected type of object returned from evaluating the expression.
-	 */
 	private Class expectedResultType;
 
-	/**
-	 * The original expression string.
-	 */
 	private String expressionString;
 
 	/**

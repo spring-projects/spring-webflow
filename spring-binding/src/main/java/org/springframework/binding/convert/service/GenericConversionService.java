@@ -16,11 +16,15 @@
 package org.springframework.binding.convert.service;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionExecutorNotFoundException;
@@ -173,6 +177,22 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	// subclassing support
+
+	public ConversionExecutor[] getConversionExecutors(Class sourceClass) {
+		Map sourceMap = getSourceMap(sourceClass);
+		if (sourceMap.isEmpty()) {
+			return new ConversionExecutor[0];
+		}
+		Set entries = sourceMap.entrySet();
+		List conversionExecutors = new ArrayList(entries.size());
+		for (Iterator it = entries.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			Class targetClass = (Class) entry.getKey();
+			Converter converter = (Converter) entry.getValue();
+			conversionExecutors.add(new StaticConversionExecutor(sourceClass, targetClass, converter));
+		}
+		return (ConversionExecutor[]) conversionExecutors.toArray(new ConversionExecutor[entries.size()]);
+	}
 
 	/**
 	 * Returns an indexed map of converters. Each entry key is a source class that can be converted from, and each entry
