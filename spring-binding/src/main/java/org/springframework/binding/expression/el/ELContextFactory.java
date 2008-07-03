@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.expression.el;
 
-import java.io.Serializable;
-
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
@@ -30,7 +28,7 @@ import javax.el.ELResolver;
  * @author Keith Donald
  * @author Jeremy Grelle
  */
-public interface ELContextFactory extends Serializable {
+public interface ELContextFactory {
 
 	/**
 	 * Configures and returns an {@link ELContext} to be used in evaluating EL expressions on the given base target

@@ -51,8 +51,8 @@ public class ELExpression implements Expression {
 	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, ConversionService conversionService,
 			boolean template) {
 		Assert.notNull(factory, "The ELContextFactory is required to evaluate EL expressions");
-		Assert.notNull(valueExpression, "The EL value expression is required for evaluation");
-		Assert.notNull(conversionService, "The conversion service is required");
+		Assert.notNull(valueExpression, "The EL ValueExpression is required for evaluation");
+		Assert.notNull(conversionService, "The ConversionService to perform type coersions is required");
 		this.elContextFactory = factory;
 		this.valueExpression = valueExpression;
 		this.conversionService = conversionService;
@@ -151,7 +151,6 @@ public class ELExpression implements Expression {
 	}
 
 	public String toString() {
-		return valueExpression.getExpressionString();
+		return getExpressionString();
 	}
-
 }

@@ -84,6 +84,7 @@ class OgnlExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
+			// TODO set TypeConverter here to invoke our ConversionService
 			Ognl.setValue(expression, evaluationContext, context, value);
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
@@ -97,7 +98,7 @@ class OgnlExpression implements Expression {
 	public Class getValueType(Object context) {
 		try {
 			// OGNL has no native way to get this information
-			return new BeanWrapperImpl(context).getPropertyDescriptor(expressionString).getPropertyType();
+			return new BeanWrapperImpl(context).getPropertyType(expressionString);
 		} catch (InvalidPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (BeansException e) {
@@ -125,6 +126,6 @@ class OgnlExpression implements Expression {
 	}
 
 	public String toString() {
-		return expression.toString();
+		return expressionString;
 	}
 }
