@@ -24,10 +24,13 @@ public class PropertyNotFoundException extends EvaluationException {
 
 	/**
 	 * Creates a new property not found exception
-	 * @param evaluationAttempt the evaluaion attempt details
+	 * @param contextClass the class of object upon which property evaluation was attempted
+	 * @param property the property that could not be found
 	 * @param cause root cause of the failure
 	 */
-	public PropertyNotFoundException(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		super(evaluationAttempt, cause);
+	public PropertyNotFoundException(Class contextClass, String property, Throwable cause) {
+		super(contextClass, property, "Property '" + property + "' not found on context of class ["
+				+ contextClass.getName() + "]", cause);
 	}
+
 }

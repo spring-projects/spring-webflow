@@ -19,11 +19,11 @@ import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
 
-import org.springframework.binding.expression.EvaluationAttempt;
+import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
-import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
 /**
@@ -39,6 +39,8 @@ public class ELExpression implements Expression {
 
 	private boolean template;
 
+	private ConversionService conversionService;
+
 	/**
 	 * Creates a new el expression
 	 * @param factory the el context factory for creating the EL context that will be used during expression evaluation
@@ -46,11 +48,14 @@ public class ELExpression implements Expression {
 	 * @param template whether or not this expression is a template expression; if not it was parsed as an implict eval
 	 * expression (without delimiters)
 	 */
-	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, boolean template) {
+	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, ConversionService conversionService,
+			boolean template) {
 		Assert.notNull(factory, "The ELContextFactory is required to evaluate EL expressions");
 		Assert.notNull(valueExpression, "The EL value expression is required for evaluation");
+		Assert.notNull(conversionService, "The conversion service is required");
 		this.elContextFactory = factory;
 		this.valueExpression = valueExpression;
+		this.conversionService = conversionService;
 		this.template = template;
 	}
 
@@ -63,33 +68,41 @@ public class ELExpression implements Expression {
 					// special case for handling reserved null keyword
 					return null;
 				} else {
-					EvaluationAttempt attempt = new EvaluationAttempt(this, context);
-					throw new EvaluationException(attempt, attempt
-							+ " failed: the expression path did not resolve--is the base variable spelled correctly?",
-							null);
+					throw new EvaluationException(context.getClass(), getExpressionString(), "The expression '"
+							+ getExpressionString() + "' did not resolve... is the base variable ''"
+							+ getBaseVariable() + "' spelled correctly?");
 				}
 			}
 			return result;
 		} catch (javax.el.PropertyNotFoundException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (ELException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An ELException occurred getting the value for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 
 	public void setValue(Object context, Object value) throws EvaluationException {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
+			Class targetType = getValueType(context);
+			if (value != null && targetType != null) {
+				ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), targetType);
+				value = converter.execute(value);
+			}
 			valueExpression.setValue(ctx, value);
 			if (!ctx.isPropertyResolved()) {
-				SetValueAttempt attempt = new SetValueAttempt(this, context, value);
-				throw new EvaluationException(attempt, attempt
-						+ " failed: the expression path did not resolve--is the base variable incorrect?", null);
+				throw new EvaluationException(context.getClass(), getExpressionString(), "The expression '"
+						+ getExpressionString() + "' did not resolve... is the base variable ''" + getBaseVariable()
+						+ "' spelled correctly?");
 			}
 		} catch (javax.el.PropertyNotFoundException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
+		} catch (ELException e) {
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An ELException occurred setting the value of expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "] to [" + value + "]", e);
 		}
 	}
 
@@ -98,9 +111,11 @@ public class ELExpression implements Expression {
 		try {
 			return valueExpression.getType(ctx);
 		} catch (javax.el.PropertyNotFoundException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
-		} catch (ELException ex) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), ex);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
+		} catch (ELException e) {
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An ELException occurred getting the value type for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 
@@ -110,6 +125,16 @@ public class ELExpression implements Expression {
 		} else {
 			String rawExpressionString = valueExpression.getExpressionString();
 			return rawExpressionString.substring("#{".length(), rawExpressionString.length() - 1);
+		}
+	}
+
+	private String getBaseVariable() {
+		String expressionString = getExpressionString();
+		int firstDot = expressionString.indexOf('.');
+		if (firstDot == -1) {
+			return expressionString;
+		} else {
+			return expressionString.substring(0, firstDot);
 		}
 	}
 

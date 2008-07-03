@@ -19,7 +19,6 @@ import java.util.Collection;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
@@ -50,8 +49,10 @@ public class CollectionAddingExpression implements Expression {
 	public void setValue(Object context, Object value) throws EvaluationException {
 		Object result = getValue(context);
 		if (result == null) {
-			throw new EvaluationException(new SetValueAttempt(this, context, value), new IllegalArgumentException(
-					"The collection expression evaluated to a [null] reference"));
+			throw new EvaluationException(context.getClass(), collectionExpression.getExpressionString(),
+					"Unable to access collection value for expression '" + collectionExpression.getExpressionString()
+							+ "'", new IllegalStateException(
+							"The collection expression evaluated to a [null] reference"));
 		}
 		Assert.isInstanceOf(Collection.class, result, "Not a collection: ");
 		if (value != null) {
@@ -65,7 +66,7 @@ public class CollectionAddingExpression implements Expression {
 	}
 
 	public String getExpressionString() {
-		return null;
+		return collectionExpression.getExpressionString();
 	}
 
 	public String toString() {

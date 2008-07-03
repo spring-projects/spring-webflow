@@ -19,10 +19,10 @@ import java.beans.PropertyEditorSupport;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.InvalidPropertyException;
+import org.springframework.beans.NotReadablePropertyException;
+import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
@@ -76,10 +76,12 @@ public class BeanWrapperExpression implements Expression {
 		try {
 			BeanWrapperImpl beanWrapper = new BeanWrapperImpl(context);
 			return beanWrapper.getPropertyValue(expression);
-		} catch (InvalidPropertyException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+		} catch (NotReadablePropertyException e) {
+			throw new PropertyNotFoundException(context.getClass(), expression, e);
 		} catch (BeansException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"A BeansException occurred getting the value for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 
@@ -92,10 +94,12 @@ public class BeanWrapperExpression implements Expression {
 				beanWrapper.registerCustomEditor(converter.getTargetClass(), new PropertyEditorConverter(converter));
 			}
 			beanWrapper.setPropertyValue(expression, value);
-		} catch (InvalidPropertyException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+		} catch (NotWritablePropertyException e) {
+			throw new PropertyNotFoundException(context.getClass(), expression, e);
 		} catch (BeansException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"A BeansException occurred setting the value of expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "] to [" + value + "]", e);
 		}
 	}
 
@@ -103,10 +107,12 @@ public class BeanWrapperExpression implements Expression {
 		try {
 			BeanWrapperImpl beanWrapper = new BeanWrapperImpl(context);
 			return beanWrapper.getPropertyType(expression);
-		} catch (InvalidPropertyException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+		} catch (NotReadablePropertyException e) {
+			throw new PropertyNotFoundException(context.getClass(), expression, e);
 		} catch (BeansException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An BeansException occurred getting the value type for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 

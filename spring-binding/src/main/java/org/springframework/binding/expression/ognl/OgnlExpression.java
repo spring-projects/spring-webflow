@@ -27,11 +27,9 @@ import ognl.OgnlException;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.InvalidPropertyException;
-import org.springframework.binding.expression.EvaluationAttempt;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
-import org.springframework.binding.expression.SetValueAttempt;
 
 /**
  * Evaluates a parsed Ognl expression.
@@ -75,9 +73,11 @@ class OgnlExpression implements Expression {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
 			return Ognl.getValue(expression, evaluationContext, context, expectedResultType);
 		} catch (NoSuchPropertyException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (OgnlException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An OgnlException occurred getting the value for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 
@@ -86,9 +86,11 @@ class OgnlExpression implements Expression {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
 			Ognl.setValue(expression, evaluationContext, context, value);
 		} catch (NoSuchPropertyException e) {
-			throw new PropertyNotFoundException(new SetValueAttempt(this, context, value), e);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (OgnlException e) {
-			throw new EvaluationException(new SetValueAttempt(this, context, value), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An OgnlException occurred setting the value of expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "] to [" + value + "]", e);
 		}
 	}
 
@@ -97,9 +99,11 @@ class OgnlExpression implements Expression {
 			// OGNL has no native way to get this information
 			return new BeanWrapperImpl(context).getPropertyDescriptor(expressionString).getPropertyType();
 		} catch (InvalidPropertyException e) {
-			throw new PropertyNotFoundException(new EvaluationAttempt(this, context), e);
+			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (BeansException e) {
-			throw new EvaluationException(new EvaluationAttempt(this, context), e);
+			throw new EvaluationException(context.getClass(), getExpressionString(),
+					"An BeansException occurred getting the value type for expression '" + getExpressionString()
+							+ "' on context [" + context.getClass() + "]", e);
 		}
 	}
 

@@ -26,6 +26,8 @@ import javax.el.FunctionMapper;
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
 
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ExpressionVariable;
@@ -46,6 +48,8 @@ public class ELExpressionParser implements ExpressionParser {
 	 * The ExpressionFactory for constructing EL expressions
 	 */
 	private ExpressionFactory expressionFactory;
+
+	private ConversionService conversionService = new DefaultConversionService();
 
 	private Map contextFactories = new HashMap();
 
@@ -86,7 +90,7 @@ public class ELExpressionParser implements ExpressionParser {
 		try {
 			ValueExpression expression = parseValueExpression(expressionString, context);
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
-			return new ELExpression(contextFactory, expression, template);
+			return new ELExpression(contextFactory, expression, conversionService, template);
 		} catch (ELException e) {
 			throw new ParserException(expressionString, e);
 		}

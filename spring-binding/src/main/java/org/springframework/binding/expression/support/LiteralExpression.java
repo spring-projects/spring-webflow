@@ -17,7 +17,6 @@ package org.springframework.binding.expression.support;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.SetValueAttempt;
 import org.springframework.util.Assert;
 
 public class LiteralExpression implements Expression {
@@ -53,9 +52,9 @@ public class LiteralExpression implements Expression {
 	}
 
 	public void setValue(Object context, Object value) throws EvaluationException {
-		throw new EvaluationException(new SetValueAttempt(this, context, value), new UnsupportedOperationException(
+		throw new UnsupportedOperationException(
 				"Cannot set a literal expression value.  Are you attempting to set a property expression?  "
-						+ "If so, should the expression string be enclosed in eval delimiters?"));
+						+ "If so, should the expression string be enclosed in eval delimiters?");
 	}
 
 	public Class getValueType(Object context) {

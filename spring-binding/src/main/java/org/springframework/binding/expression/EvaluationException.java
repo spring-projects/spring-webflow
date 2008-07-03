@@ -22,43 +22,45 @@ package org.springframework.binding.expression;
  */
 public class EvaluationException extends RuntimeException {
 
-	/**
-	 * The evaluation attempt that failed. Transient because an EvaluationAttempt is not serializable.
-	 */
-	private EvaluationAttempt evaluationAttempt;
+	private Class contextClass;
+
+	private String expressionString;
 
 	/**
 	 * Creates a new evaluation exception.
-	 * @param evaluationAttempt the evaluation attempt that failed
-	 * @param cause the underlying cause of this exception
+	 * @param contextClass the class of object upon which evaluation was attempted
+	 * @param expressionString the string form of the expression that failed to evaluate
+	 * @param message the exception message
 	 */
-	public EvaluationException(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		this(evaluationAttempt, defaultMessage(evaluationAttempt, cause), cause);
+	public EvaluationException(Class contextClass, String expressionString, String message) {
+		this(contextClass, expressionString, message, null);
 	}
 
 	/**
 	 * Creates a new evaluation exception.
-	 * @param evaluationAttempt the evaluation attempt that failed
-	 * @param cause the underlying cause of this exception
+	 * @param contextClass the class of object upon which evaluation was attempted
+	 * @param expressionString the string form of the expression that failed to evaluate
+	 * @param message the exception message
+	 * @param cause the underlying cause of this evaluation exception
 	 */
-	public EvaluationException(EvaluationAttempt evaluationAttempt, String message, Throwable cause) {
+	public EvaluationException(Class contextClass, String expressionString, String message, Throwable cause) {
 		super(message, cause);
-		this.evaluationAttempt = evaluationAttempt;
 	}
 
 	/**
-	 * Returns the evaluation attempt that failed.
+	 * The class of object upon which evaluation was attempted and failed.
+	 * @return the context class
 	 */
-	public EvaluationAttempt getEvaluationAttempt() {
-		return evaluationAttempt;
+	public Class getContextClass() {
+		return contextClass;
 	}
 
-	private static String defaultMessage(EvaluationAttempt evaluationAttempt, Throwable cause) {
-		if (cause != null) {
-			return evaluationAttempt + " failed - " + cause.getMessage();
-		} else {
-			return evaluationAttempt + " failed - make sure the expression is evaluatable in the context provided";
-		}
+	/**
+	 * The string form of the expression that failed to evaluate against an instance of the the context class.
+	 * @return the expression string
+	 */
+	public String getExpressionString() {
+		return expressionString;
 	}
 
 }

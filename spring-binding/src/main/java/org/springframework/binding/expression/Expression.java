@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.expression;
 
-import java.io.Serializable;
-
 /**
  * An expression capable of evaluating itself against context objects. Encapsulates the details of a previously parsed
  * expression string. Provides a common abstraction for expression evaluation independent of any language like OGNL or
@@ -24,7 +22,7 @@ import java.io.Serializable;
  * 
  * @author Keith Donald
  */
-public interface Expression extends Serializable {
+public interface Expression {
 
 	/**
 	 * Evaluate this expression in the provided context and return the result of evaluation.
