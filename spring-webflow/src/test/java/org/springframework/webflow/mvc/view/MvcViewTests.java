@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -106,6 +107,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setConversionService(new DefaultConversionService());
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
 		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");

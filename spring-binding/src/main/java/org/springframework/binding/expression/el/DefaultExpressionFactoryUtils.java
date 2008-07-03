@@ -44,7 +44,8 @@ public class DefaultExpressionFactoryUtils {
 	public static ExpressionFactory createExpressionFactory() throws IllegalStateException {
 		Class expressionFactoryClass;
 		try {
-			expressionFactoryClass = ClassUtils.forName(getDefaultExpressionFactoryClassName());
+			expressionFactoryClass = ClassUtils.forName(getDefaultExpressionFactoryClassName(),
+					DefaultExpressionFactoryUtils.class.getClassLoader());
 		} catch (ClassNotFoundException e) {
 			IllegalStateException ise = new IllegalStateException(
 					"The default ExpressionFactory class '"

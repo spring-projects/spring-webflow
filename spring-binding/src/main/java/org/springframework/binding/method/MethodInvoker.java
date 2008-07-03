@@ -39,7 +39,7 @@ public class MethodInvoker {
 	/**
 	 * Conversion service for converting arguments to the necessary type if required.
 	 */
-	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
+	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
 	 * A cache of invoked bean methods, keyed weakly.

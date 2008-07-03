@@ -94,7 +94,7 @@ public final class DefaultExpressionParserFactory {
 			return new WebFlowELExpressionParser(elFactory);
 		} catch (Exception e) {
 			try {
-				ClassUtils.forName("ognl.Ognl");
+				ClassUtils.forName("ognl.Ognl", DefaultExpressionParserFactory.class.getClassLoader());
 				return new WebFlowOgnlExpressionParser();
 			} catch (ClassNotFoundException ex) {
 				IllegalStateException ise = new IllegalStateException(

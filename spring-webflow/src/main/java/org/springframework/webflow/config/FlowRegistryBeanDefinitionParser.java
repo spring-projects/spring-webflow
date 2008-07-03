@@ -126,7 +126,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private BeanDefinition createDefaultFlowBuilderServices(ParserContext context) {
 		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		defaultBuilder.addPropertyValue("conversionService", DefaultConversionService.getSharedInstance());
+		defaultBuilder.addPropertyValue("conversionService", new DefaultConversionService());
 		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
 		defaultBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(
 				MvcViewFactoryCreator.class).getBeanDefinition());

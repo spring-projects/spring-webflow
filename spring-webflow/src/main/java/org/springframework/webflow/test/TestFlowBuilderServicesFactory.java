@@ -16,7 +16,7 @@ public class TestFlowBuilderServicesFactory {
 	public static FlowBuilderServices getServices() {
 		FlowBuilderServices services = new FlowBuilderServices();
 		services.setViewFactoryCreator(new MockViewFactoryCreator());
-		services.setConversionService(DefaultConversionService.getSharedInstance());
+		services.setConversionService(new DefaultConversionService());
 		services.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		services.setApplicationContext(createTestApplicationContext());
 		return services;

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2008 the original author or authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.binding.expression.beanwrapper;
 
 import java.beans.PropertyEditorSupport;
@@ -12,12 +27,34 @@ import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
 
+/**
+ * An expression that delegates to a {@link BeanWrapperImpl bean wrapper} to evaluate or set a property of a context.
+ * 
+ * Also supports the configuration of a {@link ConversionService} to allow StringToObject type conversion to occur as
+ * part of setting a property. The StringToObject ConversionExecutors are automatically adapted and registered as
+ * PropertyEditors.
+ * 
+ * Mainly exists to take advantage of BeanWrapper's unique property access features as an Expression implementation,
+ * notably the ability to infer types of generic collections and maps and perform type coersion on collection elements
+ * when setting values.
+ * 
+ * Note that Spring's BeanWrapper is not a full-blown EL implementation: it only supports property access, and does not
+ * support method invocation, arithmetic operations, or logic operations.
+ * 
+ * @author Keith Donald
+ */
 public class BeanWrapperExpression implements Expression {
 
 	private String expression;
 
 	private ConversionService conversionService;
 
+	/**
+	 * Creates a new bean wrapper expression.
+	 * @param expression the property expression string
+	 * @param conversionService the conversion service containing converters to use as PropertyEditors for type
+	 * conversion
+	 */
 	public BeanWrapperExpression(String expression, ConversionService conversionService) {
 		this.expression = expression;
 		this.conversionService = conversionService;
@@ -81,7 +118,7 @@ public class BeanWrapperExpression implements Expression {
 		return expression;
 	}
 
-	public static class PropertyEditorConverter extends PropertyEditorSupport {
+	private static class PropertyEditorConverter extends PropertyEditorSupport {
 
 		private ConversionExecutor converter;
 

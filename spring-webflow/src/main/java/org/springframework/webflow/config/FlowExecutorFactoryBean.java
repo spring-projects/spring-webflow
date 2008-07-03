@@ -72,7 +72,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private FlowExecutionListenerLoader flowExecutionListenerLoader;
 
-	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
+	private ConversionService conversionService;
 
 	private FlowExecutor flowExecutor;
 
@@ -137,6 +137,9 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(flowDefinitionLocator, "The flow definition locator property is required");
+		if (conversionService == null) {
+			conversionService = new DefaultConversionService();
+		}
 		MutableAttributeMap executionAttributes = createFlowExecutionAttributes();
 		FlowExecutionImplFactory executionFactory = createFlowExecutionFactory(executionAttributes);
 		DefaultFlowExecutionRepository executionRepository = createFlowExecutionRepository(executionFactory);

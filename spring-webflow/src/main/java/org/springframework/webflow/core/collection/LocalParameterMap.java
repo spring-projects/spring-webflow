@@ -42,6 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class LocalParameterMap implements ParameterMap, Serializable {
 
+	private static final DefaultConversionService DEFAULT_CONVERSION_SERVICE = new DefaultConversionService();
+
 	/**
 	 * The backing map storing the parameters.
 	 */
@@ -65,7 +67,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * @param parameters the contents of this parameter map
 	 */
 	public LocalParameterMap(Map parameters) {
-		this(parameters, DefaultConversionService.getSharedInstance());
+		this(parameters, DEFAULT_CONVERSION_SERVICE);
 	}
 
 	/**
@@ -192,7 +194,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return (Number) get(parameterName, targetType);
 	}
 
-	public Number getNumber(String parameterName, Class targetType, Number defaultValue) throws ConversionExecutionException {
+	public Number getNumber(String parameterName, Class targetType, Number defaultValue)
+			throws ConversionExecutionException {
 		assertAssignableTo(Number.class, targetType);
 		return (Number) get(parameterName, targetType, defaultValue);
 	}
@@ -211,7 +214,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return (Integer) get(parameterName, Integer.class, defaultValue);
 	}
 
-	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException, ConversionExecutionException {
+	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException,
+			ConversionExecutionException {
 		return (Integer) getRequired(parameterName, Integer.class);
 	}
 
@@ -235,7 +239,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return (Boolean) get(parameterName, Boolean.class, defaultValue);
 	}
 
-	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException, ConversionExecutionException {
+	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException,
+			ConversionExecutionException {
 		return (Boolean) getRequired(parameterName, Boolean.class);
 	}
 
@@ -305,7 +310,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		parameterAccessor = new MapAccessor(parameters);
-		conversionService = DefaultConversionService.getSharedInstance();
+		conversionService = DEFAULT_CONVERSION_SERVICE;
 	}
 
 	public String toString() {

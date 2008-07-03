@@ -48,7 +48,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		if (StringUtils.hasText(conversionService)) {
 			definitionBuilder.addPropertyReference("conversionService", conversionService);
 		} else {
-			definitionBuilder.addPropertyValue("conversionService", DefaultConversionService.getSharedInstance());
+			definitionBuilder.addPropertyValue("conversionService", new DefaultConversionService());
 		}
 	}
 

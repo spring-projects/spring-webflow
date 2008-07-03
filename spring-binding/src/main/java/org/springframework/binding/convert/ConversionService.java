@@ -19,8 +19,7 @@ package org.springframework.binding.convert;
  * A service interface for retrieving type conversion executors. The returned command objects are thread-safe and may be
  * safely cached for use by client code.
  * 
- * Type converters convert from one type to another. They are more generic than formatters, which convert from string to
- * object and back.
+ * Type converters convert from one type to another.
  * 
  * @author Keith Donald
  */
@@ -40,12 +39,18 @@ public interface ConversionService {
 			throws ConversionExecutorNotFoundException;
 
 	/**
+	 * Return all conversion executors capable of converting <i>from</i> the provided <code>sourceClass</code>. For
+	 * example, <code>ConversionExecutor[] getConversionExecutor(String.class)</code> would return all converters that
+	 * convert from String to some other Object.
+	 * @param sourceClass the source class converting from
+	 * @return the conversion executors that can convert from that source class
+	 */
+	public ConversionExecutor[] getConversionExecutors(Class sourceClass);
+
+	/**
 	 * Lookup a class by it alias. For example, <code>long</code> for <code>java.lang.Long</code>
 	 * @param alias the class alias
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
 	public Class getClassForAlias(String alias);
-
-	public ConversionExecutor[] getConversionExecutors(Class sourceClass);
-
 }

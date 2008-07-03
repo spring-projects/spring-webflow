@@ -20,14 +20,11 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
-import org.springframework.beans.factory.BeanClassLoaderAware;
-import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
 import org.springframework.binding.convert.converters.StringToBigInteger;
 import org.springframework.binding.convert.converters.StringToBoolean;
 import org.springframework.binding.convert.converters.StringToByte;
 import org.springframework.binding.convert.converters.StringToCharacter;
-import org.springframework.binding.convert.converters.StringToClass;
 import org.springframework.binding.convert.converters.StringToDate;
 import org.springframework.binding.convert.converters.StringToDouble;
 import org.springframework.binding.convert.converters.StringToFloat;
@@ -37,7 +34,6 @@ import org.springframework.binding.convert.converters.StringToLocale;
 import org.springframework.binding.convert.converters.StringToLong;
 import org.springframework.binding.convert.converters.StringToShort;
 import org.springframework.core.enums.LabeledEnum;
-import org.springframework.util.ClassUtils;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -45,14 +41,7 @@ import org.springframework.util.ClassUtils;
  * 
  * @author Keith Donald
  */
-public class DefaultConversionService extends GenericConversionService implements BeanClassLoaderAware {
-
-	/**
-	 * A singleton shared instance. Should never be modified.
-	 */
-	private static DefaultConversionService SHARED_INSTANCE;
-
-	private ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
+public class DefaultConversionService extends GenericConversionService {
 
 	/**
 	 * Creates a new default conversion service, installing the default converters.
@@ -76,7 +65,6 @@ public class DefaultConversionService extends GenericConversionService implement
 		addConverter(new StringToDouble());
 		addConverter(new StringToBigInteger());
 		addConverter(new StringToBigDecimal());
-		addConverter(new StringToClass(classLoader));
 		addConverter(new StringToLocale());
 		addConverter(new StringToDate());
 		addConverter(new StringToLabeledEnum());
@@ -94,23 +82,9 @@ public class DefaultConversionService extends GenericConversionService implement
 		addAlias("double", Double.class);
 		addAlias("bigInteger", BigInteger.class);
 		addAlias("bigDecimal", BigDecimal.class);
-		addAlias("class", Class.class);
 		addAlias("locale", Locale.class);
 		addAlias("date", Date.class);
 		addAlias("labeledEnum", LabeledEnum.class);
 	}
 
-	public void setBeanClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
-	}
-
-	/**
-	 * Returns the shared {@link DefaultConversionService} instance.
-	 */
-	public synchronized static ConversionService getSharedInstance() {
-		if (SHARED_INSTANCE == null) {
-			SHARED_INSTANCE = new DefaultConversionService();
-		}
-		return SHARED_INSTANCE;
-	}
 }

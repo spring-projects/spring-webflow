@@ -17,6 +17,8 @@ package org.springframework.binding.expression.ognl;
 
 import ognl.Ognl;
 import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserContext;
@@ -29,6 +31,16 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  * @author Keith Donald
  */
 public class OgnlExpressionParser extends AbstractExpressionParser {
+
+	/**
+	 * Add a property access strategy for the given class.
+	 * @param clazz the class that contains properties needing access
+	 * @param propertyAccessor the property access strategy
+	 */
+	public void addPropertyAccessor(Class clazz, PropertyAccessor propertyAccessor) {
+		OgnlRuntime.setPropertyAccessor(clazz, propertyAccessor);
+	}
+
 	protected Expression doParseExpression(String expressionString, ParserContext context) throws ParserException {
 		try {
 			return new OgnlExpression(Ognl.parseExpression(expressionString), parseVariableExpressions(context

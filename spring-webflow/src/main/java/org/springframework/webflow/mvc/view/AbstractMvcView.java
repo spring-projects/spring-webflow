@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -77,7 +76,7 @@ public abstract class AbstractMvcView implements View {
 
 	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
 
-	private ConversionService conversionService = DefaultConversionService.getSharedInstance();
+	private ConversionService conversionService;
 
 	private MappingResults mappingResults;
 
