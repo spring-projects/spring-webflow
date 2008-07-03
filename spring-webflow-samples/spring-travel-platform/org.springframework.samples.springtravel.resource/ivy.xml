@@ -18,6 +18,7 @@
 
 	<dependencies>
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="provided->runtime"/>
+		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.dbcp" rev="1.2.2.osgi" conf="provided->runtime" />
 		<dependency org="org.springframework" name="org.springframework.spring-library" rev="2.5.4.A" conf="provided-platform->compile" />
 	</dependencies>
 
