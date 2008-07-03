@@ -6,9 +6,6 @@
 
 	<!-- Deploys a in-memory "booking" datasource populated; can easily swap out-->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<description>
-			commons-dbcp based datasource as org.springframework.jdbc.datasource.DriverManagerDataSource is not supported under osgi
-		</description>
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
 		<property name="url" value="jdbc:hsqldb:mem:booking" />
 		<property name="username" value="sa" />

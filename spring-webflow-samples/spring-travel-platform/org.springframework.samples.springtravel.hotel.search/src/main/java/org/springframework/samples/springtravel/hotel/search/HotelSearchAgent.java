@@ -16,13 +16,4 @@ public interface HotelSearchAgent {
 	 */
 	public List<Hotel> findHotels(SearchCriteria criteria);
 
-	/**
-	 * Find hotels by their identifier.
-	 * 
-	 * @param id
-	 *            the hotel id
-	 * @return the hotel
-	 */
-	public Hotel findHotelById(Long id);
-
 }

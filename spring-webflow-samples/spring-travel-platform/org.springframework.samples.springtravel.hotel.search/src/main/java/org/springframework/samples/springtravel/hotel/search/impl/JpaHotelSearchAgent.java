@@ -43,9 +43,4 @@ public class JpaHotelSearchAgent implements HotelSearchAgent {
 		return hotels;
 	}
 
-	@Transactional(readOnly = true)
-	public Hotel findHotelById(Long id) {
-		return em.find(Hotel.class, id);
-	}
-
 }
