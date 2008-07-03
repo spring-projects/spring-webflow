@@ -73,7 +73,6 @@ public class DefaultMapperTests extends TestCase {
 		assertSame(bean1, results.getSource());
 		assertSame(bean2, results.getTarget());
 		assertEquals(1, results.getAllResults().size());
-		System.out.println(results.getAllResults());
 		assertEquals(0, results.getErrorResults().size());
 		assertEquals(Locale.ENGLISH, bean2.beep);
 	}

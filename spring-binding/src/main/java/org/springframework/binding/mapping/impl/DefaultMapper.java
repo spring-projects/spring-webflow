@@ -90,7 +90,7 @@ public class DefaultMapper implements Mapper {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Completing mapping between source [" + source.getClass().getName() + "] and target ["
 					+ target.getClass().getName() + "]; total mappings = " + results.getAllResults().size()
-					+ "; total errors = " + results.getErrorResults().size() + "; " + results);
+					+ "; total errors = " + results.getErrorResults().size());
 		}
 		return results;
 	}
