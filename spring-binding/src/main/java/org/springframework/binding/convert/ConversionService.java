@@ -26,10 +26,10 @@ package org.springframework.binding.convert;
 public interface ConversionService {
 
 	/**
-	 * Execute a conversion of the source to the specified target class.
+	 * Execute a conversion of the source object provided to the specified <code>targetClass</code>
 	 * @param source the source to convert from (may be null)
 	 * @param targetClass the target class to convert to
-	 * @return the converted object
+	 * @return the converted object, an instance of the <code>targetClass</code>
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException;
