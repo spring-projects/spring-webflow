@@ -19,6 +19,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
@@ -31,13 +32,13 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  */
 public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 
-	private ConversionService conversionService;
+	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
 	 * The conversion service to use to obtain {@link ConversionExecutor conversion executors} that will be adapted to
 	 * {@link PropertiesEditor property editors} for use during a
-	 * {@link BeanWrapperImpl#setPropertyValue(String, Object) set value} call.
-	 * @return the conversion service
+	 * {@link BeanWrapperImpl#setPropertyValue(String, Object) set value} call. The default if not specified is an
+	 * instance of {@link DefaultConversionService}.
 	 */
 	public ConversionService getConversionService() {
 		return conversionService;

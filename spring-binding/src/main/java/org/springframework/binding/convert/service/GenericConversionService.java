@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
@@ -160,6 +161,15 @@ public class GenericConversionService implements ConversionService {
 						"No ConversionExecutor found for converting from sourceClass '" + sourceClass.getName()
 								+ "' to target class '" + targetClass.getName() + "'");
 			}
+		}
+	}
+
+	public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+		if (source != null) {
+			ConversionExecutor conversionExecutor = getConversionExecutor(source.getClass(), targetClass);
+			return conversionExecutor.execute(source);
+		} else {
+			return null;
 		}
 	}
 

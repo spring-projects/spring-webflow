@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingResult;
@@ -48,12 +47,9 @@ public class DefaultMappingContext {
 
 	private List mappingResults;
 
-	private ConversionService conversionService;
-
-	public DefaultMappingContext(Object source, Object target, ConversionService conversionService) {
+	public DefaultMappingContext(Object source, Object target) {
 		this.source = source;
 		this.target = target;
-		this.conversionService = conversionService;
 		this.mappingResults = new ArrayList();
 	}
 
@@ -69,14 +65,6 @@ public class DefaultMappingContext {
 	 */
 	public Object getTarget() {
 		return target;
-	}
-
-	/**
-	 * Returns the conversion service that can be used to perform type conversions during the mapping process. May be
-	 * null if no externally managed conversion service is provided.
-	 */
-	public ConversionService getConversionService() {
-		return conversionService;
 	}
 
 	/**

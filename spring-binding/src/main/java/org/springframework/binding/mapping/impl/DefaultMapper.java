@@ -40,23 +40,6 @@ public class DefaultMapper implements Mapper {
 
 	private List mappings = new ArrayList();
 
-	private ConversionService conversionService;
-
-	/**
-	 * Returns the conversion service to use to perform type conversions as needed by mapping operations. May be null.
-	 */
-	public ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	/**
-	 * Sets the conversion service to use to perform type conversions as needed by mapping operations. Optional.
-	 * @param conversionService the conversion service;
-	 */
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
-	}
-
 	/**
 	 * Add a mapping to this mapper.
 	 * @param mapping the mapping to add (required)
@@ -80,7 +63,7 @@ public class DefaultMapper implements Mapper {
 			logger.debug("Beginning mapping between source [" + source.getClass().getName() + "] and target ["
 					+ target.getClass().getName() + "]");
 		}
-		DefaultMappingContext context = new DefaultMappingContext(source, target, conversionService);
+		DefaultMappingContext context = new DefaultMappingContext(source, target);
 		Iterator it = mappings.iterator();
 		while (it.hasNext()) {
 			DefaultMapping mapping = (DefaultMapping) it.next();

@@ -16,6 +16,7 @@
 package org.springframework.binding.expression.ognl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TestBean {
@@ -23,6 +24,8 @@ public class TestBean {
 	private boolean flag;
 
 	private int number;
+
+	private Date date;
 
 	private List list = new ArrayList();
 
@@ -49,4 +52,13 @@ public class TestBean {
 	public void setList(List list) {
 		this.list = list;
 	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 }

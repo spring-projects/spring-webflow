@@ -26,12 +26,21 @@ package org.springframework.binding.convert;
 public interface ConversionService {
 
 	/**
-	 * Return the default conversion executor capable of converting source objects of the specified
-	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
+	 * Execute a conversion of the source to the specified target class.
+	 * @param source the source to convert from (may be null)
+	 * @param targetClass the target class to convert to
+	 * @return the converted object
+	 * @throws ConversionException if an exception occurred during the conversion process
+	 */
+	public Object executeConversion(Object source, Class targetClass) throws ConversionException;
+
+	/**
+	 * Return the conversion executor capable of converting source objects of the specified <code>sourceClass</code>
+	 * to instances of the <code>targetClass</code>.
 	 * <p>
 	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
-	 * @param sourceClass the source class to convert from
-	 * @param targetClass the target class to convert to
+	 * @param sourceClass the source class to convert from (required)
+	 * @param targetClass the target class to convert to (required)
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */

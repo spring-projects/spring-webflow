@@ -44,20 +44,33 @@ import org.springframework.util.Assert;
  */
 public class ELExpressionParser implements ExpressionParser {
 
-	/**
-	 * The ExpressionFactory for constructing EL expressions
-	 */
 	private ExpressionFactory expressionFactory;
 
-	private ConversionService conversionService = new DefaultConversionService();
-
 	private Map contextFactories = new HashMap();
+
+	private ConversionService conversionService = new DefaultConversionService();
 
 	/**
 	 * Creates a new EL expression parser for standalone usage.
 	 */
 	public ELExpressionParser(ExpressionFactory expressionFactory) {
 		init(expressionFactory);
+	}
+
+	/**
+	 * The conversion service to use to perform type conversions as needed by the Unified EL system. If not specified,
+	 * the default is an instance of {@link DefaultConversionService}.
+	 */
+	public ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	/**
+	 * Sets the conversion service to use to perform type conversions as needed by the Unified EL system.
+	 * @param conversionService the conversion service to use
+	 */
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
 	}
 
 	/**

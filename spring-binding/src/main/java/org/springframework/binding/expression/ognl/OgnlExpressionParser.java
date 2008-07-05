@@ -20,6 +20,8 @@ import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
@@ -31,6 +33,24 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  * @author Keith Donald
  */
 public class OgnlExpressionParser extends AbstractExpressionParser {
+
+	private ConversionService conversionService = new DefaultConversionService();
+
+	/**
+	 * The conversion service to use to perform type conversions as needed by the OGNL system. If not specified, the
+	 * default is an instance of {@link DefaultConversionService}.
+	 */
+	public ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	/**
+	 * Sets the conversion service to use to perform type conversions as needed by the OGNL system.
+	 * @param conversionService the conversion service to use
+	 */
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
 
 	/**
 	 * Add a property access strategy for the given class.
@@ -44,7 +64,8 @@ public class OgnlExpressionParser extends AbstractExpressionParser {
 	protected Expression doParseExpression(String expressionString, ParserContext context) throws ParserException {
 		try {
 			return new OgnlExpression(Ognl.parseExpression(expressionString), parseVariableExpressions(context
-					.getExpressionVariables()), context.getExpectedEvaluationResultType(), expressionString);
+					.getExpressionVariables()), context.getExpectedEvaluationResultType(), expressionString,
+					conversionService);
 		} catch (OgnlException e) {
 			throw new ParserException(expressionString, e);
 		}

@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.expression.ognl;
 
+import java.lang.reflect.Member;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,10 +24,12 @@ import java.util.Map;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlException;
+import ognl.TypeConverter;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.InvalidPropertyException;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
@@ -46,14 +49,18 @@ class OgnlExpression implements Expression {
 
 	private String expressionString;
 
+	private ConversionService conversionService;
+
 	/**
 	 * Creates a new OGNL expression.
 	 */
-	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType, String expressionString) {
+	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType,
+			String expressionString, ConversionService conversionService) {
 		this.expression = expression;
 		this.variableExpressions = variableExpressions;
 		this.expectedResultType = expectedResultType;
 		this.expressionString = expressionString;
+		this.conversionService = conversionService;
 	}
 
 	public boolean equals(Object o) {
@@ -84,7 +91,7 @@ class OgnlExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
-			// TODO set TypeConverter here to invoke our ConversionService
+			Ognl.setTypeConverter(evaluationContext, createTypeConverter());
 			Ognl.setValue(expression, evaluationContext, context, value);
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
@@ -93,6 +100,15 @@ class OgnlExpression implements Expression {
 					"An OgnlException occurred setting the value of expression '" + getExpressionString()
 							+ "' on context [" + context.getClass() + "] to [" + value + "]", e);
 		}
+	}
+
+	private TypeConverter createTypeConverter() {
+		return new TypeConverter() {
+			public Object convertValue(Map context, Object target, Member member, String propertyName, Object value,
+					Class toType) {
+				return conversionService.executeConversion(value, toType);
+			}
+		};
 	}
 
 	public Class getValueType(Object context) {

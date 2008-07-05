@@ -4,11 +4,9 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.binding.expression.el.ELExpressionParser;
-import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 
@@ -43,38 +41,6 @@ public class DefaultMapperTests extends TestCase {
 				}
 			}
 		}).size());
-	}
-
-	public void testMappingWithAutomaticConversion() {
-		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("foo", new FluentParserContext()
-				.expectResult(Integer.class)), parser.parseExpression("boop", null));
-		mapper.addMapping(mapping1);
-		TestBean bean1 = new TestBean();
-		bean1.foo = "12345";
-		TestBean2 bean2 = new TestBean2();
-		MappingResults results = mapper.map(bean1, bean2);
-		assertSame(bean1, results.getSource());
-		assertSame(bean2, results.getTarget());
-		assertEquals(1, results.getAllResults().size());
-		assertEquals(0, results.getErrorResults().size());
-		assertEquals(new Integer(12345), bean2.boop);
-	}
-
-	public void testMappingWithCustomConversionService() {
-		DefaultConversionService conversionService = new DefaultConversionService();
-		mapper.setConversionService(conversionService);
-		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("foo", null), parser.parseExpression(
-				"beep", null));
-		mapper.addMapping(mapping1);
-		TestBean bean1 = new TestBean();
-		bean1.foo = "en";
-		TestBean2 bean2 = new TestBean2();
-		MappingResults results = mapper.map(bean1, bean2);
-		assertSame(bean1, results.getSource());
-		assertSame(bean2, results.getTarget());
-		assertEquals(1, results.getAllResults().size());
-		assertEquals(0, results.getErrorResults().size());
-		assertEquals(Locale.ENGLISH, bean2.beep);
 	}
 
 	public static class TestBean {
