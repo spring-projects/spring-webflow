@@ -16,8 +16,10 @@
 package org.springframework.webflow.mvc.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -142,6 +144,12 @@ public class BindingModel extends AbstractErrors {
 	private ConversionExecutor getConverter(Expression fieldExpression) {
 		if (conversionService != null) {
 			Class valueType = fieldExpression.getValueType(boundObject);
+			// TODO -- this really is not accurate for Collection or Array or Map types
+			// This needs to be cleaned up
+			if (valueType.isArray() || Collection.class.isAssignableFrom(valueType)
+					|| Map.class.isAssignableFrom(valueType)) {
+				return null;
+			}
 			return conversionService.getConversionExecutor(valueType, String.class);
 		} else {
 			return null;

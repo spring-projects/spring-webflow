@@ -2,6 +2,7 @@ package org.springframework.faces.config;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -70,6 +71,10 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	}
 
 	public static class TestConversionService implements ConversionService {
+
+		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
 
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
 				throws ConversionExecutionException {

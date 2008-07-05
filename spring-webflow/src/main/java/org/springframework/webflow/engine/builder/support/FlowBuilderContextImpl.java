@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -119,6 +120,10 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
 	 */
 	private class ParentConversionServiceProxy implements ConversionService {
+		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+			return getFlowBuilderServices().getConversionService().executeConversion(source, targetClass);
+		}
+
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
 				throws ConversionExecutionException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);

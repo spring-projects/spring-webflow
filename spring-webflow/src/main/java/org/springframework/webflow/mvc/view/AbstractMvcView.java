@@ -274,7 +274,6 @@ public abstract class AbstractMvcView implements View {
 			logger.debug("Setting up view->model mappings");
 		}
 		DefaultMapper mapper = new DefaultMapper();
-		mapper.setConversionService(conversionService);
 		ParameterMap requestParameters = requestContext.getRequestParameters();
 		addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
 		return mapper.map(requestParameters, model);
