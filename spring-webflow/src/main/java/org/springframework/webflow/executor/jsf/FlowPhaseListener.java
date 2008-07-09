@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -349,6 +350,31 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
+	 * Updates the current flow execution in the repository.
+	 * @param context the external context
+	 * @param holder the current flow execution holder
+	 */
+	protected void saveFlowExecution(JsfExternalContext context, FlowExecutionHolder holder) {
+		FlowExecution flowExecution = holder.getFlowExecution();
+		FlowExecutionRepository repository = getRepository(context);
+		if (flowExecution.isActive()) {
+			// save the flow execution out to the repository
+			if (logger.isDebugEnabled()) {
+				logger.debug("Saving execution to repository with key " + holder.getFlowExecutionKey());
+			}
+			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
+		} else {
+			if (holder.getFlowExecutionKey() != null) {
+				// remove the flow execution from the repository
+				if (logger.isDebugEnabled()) {
+					logger.debug("Removing execution in repository with key '" + holder.getFlowExecutionKey() + "'");
+				}
+				repository.removeFlowExecution(holder.getFlowExecutionKey());
+			}
+		}
+	}
+
+	/**
 	 * Hook method to handle a thrown flow execution access exception. By default this implementation simply rethrows
 	 * the exception. Subclasses may override this method to redirect to an error page or take some other action in the
 	 * case where a flow execution could not be restored (for example, because the flow execution had previously ended
@@ -417,7 +443,7 @@ public class FlowPhaseListener implements PhaseListener {
 				// even though we are going to send a redirect, we still need to make sure the
 				// view state is preserved accross the redirect since we're not changing views
 				// (this is a flow execution redirect after all)!
-				context.getFacesContext().getViewRoot().processSaveState(context.getFacesContext());
+				saveViewState(context.getFacesContext());
 
 				sendRedirect(url, context.getFacesContext());
 			}
@@ -458,42 +484,6 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Factory method that creates the state holder UI component that will track the flow execution key used for
-	 * execution restoration during subsequent restore view phases. Subclasses may override to customize the state
-	 * holder component implementation, for example--to handle flow execution restoration/access exceptions in a certain
-	 * way.
-	 * @return the flow execution key state holder
-	 */
-	protected FlowExecutionKeyStateHolder createFlowExecutionKeyStateHolder() {
-		return new FlowExecutionKeyStateHolder();
-	}
-
-	/**
-	 * Updates the current flow execution in the repository.
-	 * @param context the external context
-	 * @param holder the current flow execution holder
-	 */
-	protected void saveFlowExecution(JsfExternalContext context, FlowExecutionHolder holder) {
-		FlowExecution flowExecution = holder.getFlowExecution();
-		FlowExecutionRepository repository = getRepository(context);
-		if (flowExecution.isActive()) {
-			// save the flow execution out to the repository
-			if (logger.isDebugEnabled()) {
-				logger.debug("Saving execution to repository with key " + holder.getFlowExecutionKey());
-			}
-			repository.putFlowExecution(holder.getFlowExecutionKey(), flowExecution);
-		} else {
-			if (holder.getFlowExecutionKey() != null) {
-				// remove the flow execution from the repository
-				if (logger.isDebugEnabled()) {
-					logger.debug("Removing execution in repository with key '" + holder.getFlowExecutionKey() + "'");
-				}
-				repository.removeFlowExecution(holder.getFlowExecutionKey());
-			}
-		}
-	}
-
-	/**
 	 * Helper method to issue a redirect in a JSF environment properly. Subclasses may use as utility code.
 	 * @param url the url to redirect to
 	 * @param context the faces context
@@ -506,6 +496,23 @@ public class FlowPhaseListener implements PhaseListener {
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Could not send redirect to " + url);
 		}
+	}
+
+	/**
+	 * Save the view state of the request contained in given faces context.
+	 * <p>
+	 * This implementation directly uses the {@link StateManager} and does not call
+	 * {@link ViewHandler#writeState(FacesContext)} since some ViewHanlder implementations (e.g. Facelets) only expect
+	 * writeState to be called when {@link ViewHandler#renderView(FacesContext, UIViewRoot)} has been called.
+	 * 
+	 * @since 1.0.6
+	 */
+	protected void saveViewState(FacesContext context) throws IOException {
+		// note that we're not doing StateManager.writeState() since that seems to cause problems because no
+		// response writer has been initialized and there doesn't seem to be an implementation independent way
+		// to initialize the response writer
+		// this will likely not work when using JSF client state saving
+		context.getApplication().getStateManager().saveSerializedView(context);
 	}
 
 	/**
@@ -529,7 +536,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 */
 	protected void restoreFacesMessages(FacesContext context) {
 		if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
-			MutableAttributeMap scope = getScope(context);
+			MutableAttributeMap scope = getFacesMessagesScope(context);
 			Map facesMessagesMap = (Map) scope.get(getFacesMessagesKey());
 			if (facesMessagesMap != null) {
 				// restore messages by adding them back to the faces context
@@ -561,7 +568,7 @@ public class FlowPhaseListener implements PhaseListener {
 		addFacesMessages(context, null, facesMessagesMap);
 
 		// put them in a flow execution scope
-		MutableAttributeMap scope = getScope(context);
+		MutableAttributeMap scope = getFacesMessagesScope(context);
 		if (facesMessagesMap.isEmpty()) {
 			scope.remove(getFacesMessagesKey());
 		} else {
@@ -575,7 +582,7 @@ public class FlowPhaseListener implements PhaseListener {
 	 * 
 	 * @since 1.0.6
 	 */
-	protected MutableAttributeMap getScope(FacesContext context) {
+	protected MutableAttributeMap getFacesMessagesScope(FacesContext context) {
 		if (facesMessageSerializable) {
 			return FlowExecutionHolderUtils.getCurrentFlowExecution(context).getActiveSession().getFlashMap();
 		} else {
@@ -585,12 +592,25 @@ public class FlowPhaseListener implements PhaseListener {
 	}
 
 	/**
-	 * Returns the key used to store the faces messages in one of the flow execution scopes.
+	 * Returns the key used to store the faces messages in one of the flow execution scopes. Defaults to
+	 * "org.springframework.webflow.executor.jsf.FlowPhaseListener.FacesMessages".
+	 * @see #getFacesMessagesScope(FacesContext)
 	 * 
 	 * @since 1.0.6
 	 */
 	protected String getFacesMessagesKey() {
 		return this.getClass().getName() + ".FacesMessages";
+	}
+
+	/**
+	 * Factory method that creates the state holder UI component that will track the flow execution key used for
+	 * execution restoration during subsequent restore view phases. Subclasses may override to customize the state
+	 * holder component implementation, for example--to handle flow execution restoration/access exceptions in a certain
+	 * way.
+	 * @return the flow execution key state holder
+	 */
+	protected FlowExecutionKeyStateHolder createFlowExecutionKeyStateHolder() {
+		return new FlowExecutionKeyStateHolder();
 	}
 
 	// private helpers
