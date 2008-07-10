@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.test.execution;
 
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -47,12 +49,12 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * The flag indicating if the flow definition built from an externalized resource as part of this test should be
 	 * cached.
 	 */
-	private boolean cacheFlowDefinition = false;
+	private boolean cacheFlowDefinition;
 
 	/**
 	 * A helper for constructing paths to flow definition resources in the filesystem, classpath, or other location.
 	 */
-	private FlowDefinitionResourceFactory resourceFactory = new FlowDefinitionResourceFactory();
+	private FlowDefinitionResourceFactory resourceFactory;
 
 	/**
 	 * Private flow builder context object.
@@ -64,7 +66,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * @see #setName(String)
 	 */
 	public AbstractExternalizedFlowExecutionTests() {
-		super();
+		init();
 	}
 
 	/**
@@ -73,14 +75,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 */
 	public AbstractExternalizedFlowExecutionTests(String name) {
 		super(name);
-	}
-
-	/**
-	 * Internal helper that returns the flow execution factory used by the test cast to a
-	 * {@link FlowExecutionImplFactory}.
-	 */
-	private FlowExecutionImplFactory getFlowExecutionImplFactory() {
-		return (FlowExecutionImplFactory) getFlowExecutionFactory();
+		init();
 	}
 
 	/**
@@ -133,6 +128,16 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 */
 	protected FlowDefinitionResourceFactory getResourceFactory() {
 		return resourceFactory;
+	}
+
+	/**
+	 * Returns the {@link ResourceLoader} used by the {@link FlowDefinitionResourceFactory} to load flow resources from
+	 * a path. Subclasses may override to customize the resource loader used.
+	 * @see #getResourceFactory()
+	 * @return the resource loader
+	 */
+	protected ResourceLoader createResourceLoader() {
+		return new DefaultResourceLoader();
 	}
 
 	protected final FlowDefinition getFlowDefinition() {
@@ -202,5 +207,15 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * @return the flow builder that can build the flow definition
 	 */
 	protected abstract FlowBuilder createFlowBuilder(FlowDefinitionResource resource);
+
+	// internal helpers
+
+	private void init() {
+		resourceFactory = new FlowDefinitionResourceFactory(createResourceLoader());
+	}
+
+	private FlowExecutionImplFactory getFlowExecutionImplFactory() {
+		return (FlowExecutionImplFactory) getFlowExecutionFactory();
+	}
 
 }
