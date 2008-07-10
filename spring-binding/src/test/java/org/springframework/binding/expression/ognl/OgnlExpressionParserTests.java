@@ -160,12 +160,4 @@ public class OgnlExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(boolean.class, e.getValueType(bean));
 	}
-
-	public void testSetComplexDateType() {
-		String value = "2008-07-04";
-		Expression e = parser.parseExpression("date", null);
-		e.setValue(bean, value);
-		assertEquals(1215144000000L, bean.getDate().getTime());
-	}
-
 }

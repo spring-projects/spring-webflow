@@ -32,7 +32,22 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
  */
 public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 
-	private ConversionService conversionService = new DefaultConversionService();
+	private ConversionService conversionService;
+
+	/**
+	 * Creates a new expression parser that uses a {@link DefaultConversionService} to perform type conversion.
+	 */
+	public BeanWrapperExpressionParser() {
+		this.conversionService = new DefaultConversionService();
+	}
+
+	/**
+	 * Creates a new expression parser that uses the specified conversion service for type conversion.
+	 * @param conversionService the conversion service to use
+	 */
+	public BeanWrapperExpressionParser(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
 
 	/**
 	 * The conversion service to use to obtain {@link ConversionExecutor conversion executors} that will be adapted to
