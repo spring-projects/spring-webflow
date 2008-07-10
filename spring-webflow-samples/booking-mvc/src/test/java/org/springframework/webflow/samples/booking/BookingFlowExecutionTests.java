@@ -13,8 +13,6 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
     private BookingService bookingService;
 
-    private boolean persistCalled;
-
     protected void setUp() {
 	bookingService = EasyMock.createMock(BookingService.class);
     }
@@ -64,16 +62,9 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
     public void testReviewBooking_Confirm() {
 	setCurrentState("reviewBooking");
 	getFlowScope().put("booking", createTestBooking());
-	getFlowScope().put("persistenceContext", new Object() {
-	    public void persist(Booking booking) {
-		persistCalled = true;
-	    }
-	});
 	MockExternalContext context = new MockExternalContext();
 	context.setEventId("confirm");
 	resumeFlow(context);
-
-	assertTrue(persistCalled);
 	assertFlowExecutionEnded();
 	assertFlowExecutionOutcomeEquals("bookingConfirmed");
     }
