@@ -17,9 +17,11 @@ package org.springframework.webflow.mvc.builder;
 
 import java.util.List;
 
+import org.springframework.beans.BeanWrapper;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.servlet.View;
@@ -54,6 +56,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	private MvcEnvironment environment;
 
 	private FlowViewResolver flowViewResolver = new FlowResourceFlowViewResolver();
+
+	private boolean useSpringBeanBinding;
 
 	/**
 	 * Create a new Spring MVC View Factory Creator.
@@ -110,12 +114,36 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.flowViewResolver = flowViewResolver;
 	}
 
+	/**
+	 * Whether data binding with Spring's {@link BeanWrapper} should be enabled. Default is false. With this enabled,
+	 * the same binding system used by Spring MVC 2.x is also used in a Web Flow environment.
+	 * @return the use Spring bean binding flag
+	 */
+	public boolean getUseSpringBeanBinding() {
+		return useSpringBeanBinding;
+	}
+
+	/**
+	 * Sets whether to use data binding with Spring's {@link BeanWrapper} should be enabled. Set to 'true' to enable.
+	 * 'false', disabled, is the default. With this enabled, the same binding system used by Spring MVC 2.x is also used
+	 * in a Web Flow environment.
+	 * @param useSpringBeanBinding the Spring bean binding flag
+	 */
+	public void setUseSpringBeanBinding(boolean useSpringBeanBinding) {
+		this.useSpringBeanBinding = useSpringBeanBinding;
+	}
+
+	// implementing ApplicationContextAware
+
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		environment = MvcEnvironment.environmentFor(applicationContext);
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			ConversionService conversionService) {
+		if (useSpringBeanBinding) {
+			expressionParser = new BeanWrapperExpressionParser(conversionService);
+		}
 		if (environment == MvcEnvironment.SERVLET) {
 			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService);
 		} else if (environment == MvcEnvironment.PORTLET) {

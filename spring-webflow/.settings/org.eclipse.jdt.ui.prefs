@@ -1,9 +1,8 @@
-#Wed Aug 15 08:39:01 EDT 2007
+#Thu Jul 10 09:39:53 BST 2008
 eclipse.preferences.version=1
 editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
 formatter_profile=_Spring Java Conventions
 formatter_settings_version=11
-internal.default.compliance=user
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=false
 org.eclipse.jdt.ui.javadoc=false
