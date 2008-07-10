@@ -19,9 +19,7 @@
 	</view-state>
 	
 	<view-state id="reviewBooking" model="booking">
-		<transition on="confirm" to="bookingConfirmed">
-			<evaluate expression="persistenceContext.persist(booking)" />
-		</transition>
+		<transition on="confirm" to="bookingConfirmed" />
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="cancel" />
 	</view-state>
