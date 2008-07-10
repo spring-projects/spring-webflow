@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<com.springsource.platform.ide.par:Par xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.springsource.platform.ide.par="http:///com/springsource/platform/ide/par.ecore">
-  <bundle symbolicName="org.springframework.samples.springtravel.hotel.search"/>
-  <bundle symbolicName="org.springframework.samples.springtravel.resource"/>
-  <bundle symbolicName="org.springframework.samples.springtravel.webapp"/>
-</com.springsource.platform.ide.par:Par>

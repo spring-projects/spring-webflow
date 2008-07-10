@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Application-SymbolicName: org.springframework.samples.springtravel
-Application-Version: 1.0.0
-Application-Name: Spring Travel PAR
-
