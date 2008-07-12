@@ -93,15 +93,24 @@ public class JsfViewFactory implements ViewFactory {
 				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
 				view.setRestored(true);
 			} else {
-				UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
-				if (viewRoot != null) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("View root restored for '" + viewName + "'");
+				if (context.inViewState()) {
+					UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+					if (viewRoot != null) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("View root restored for '" + viewName + "'");
+						}
+						view = createJsfView(viewRoot, lifecycle, context);
+						facesContext.setViewRoot(view.getViewRoot());
+						processTree(facesContext, view.getViewRoot());
+						view.setRestored(true);
+					} else {
+						if (logger.isDebugEnabled()) {
+							logger.debug("Creating view root for '" + viewName + "'");
+						}
+						view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
+						facesContext.setViewRoot(view.getViewRoot());
+						view.setRestored(false);
 					}
-					view = createJsfView(viewRoot, lifecycle, context);
-					facesContext.setViewRoot(view.getViewRoot());
-					processTree(facesContext, view.getViewRoot());
-					view.setRestored(true);
 				} else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Creating view root for '" + viewName + "'");

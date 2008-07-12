@@ -244,6 +244,7 @@ public class ViewState extends TransitionableState {
 		context.getFlashScope().clear();
 		context.getMessageContext().clearMessages();
 		context.viewRendered(view);
+		context.getExternalContext().recordResponseCommitted();
 	}
 
 	private void restoreVariables(RequestContext context) {

@@ -28,6 +28,7 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
@@ -89,6 +90,12 @@ public class PortletExternalContext implements ExternalContext {
 	 * An accessor for the servlet context application map.
 	 */
 	private SharedAttributeMap applicationMap;
+
+	/**
+	 * A flag indicating if the flow committed the response. Set to true by requesting an execution redirect, definition
+	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseCommitted()}
+	 */
+	private boolean responseCommitted;
 
 	/**
 	 * A flag indicating if a flow execution redirect has been requested.
@@ -196,7 +203,7 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
-		if (this.isRenderPhase()) {
+		if (isRenderPhase()) {
 			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
 		} else {
 			throw new IllegalStateException("You can only obtain a flow execution URL in a RenderRequest");
@@ -216,24 +223,31 @@ public class PortletExternalContext implements ExternalContext {
 		}
 	}
 
-	public boolean isResponseCommitted() {
-		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
-				|| getExternalRedirectRequested();
-	}
-
 	public boolean isResponseAllowed() {
 		return isRenderPhase();
 	}
 
+	public boolean isResponseCommitted() {
+		return responseCommitted;
+	}
+
+	public void recordResponseCommitted() {
+		assertResponseNotCommitted();
+		responseCommitted = true;
+	}
+
 	public void requestFlowExecutionRedirect() {
+		recordResponseCommitted();
 		flowExecutionRedirectRequested = true;
 	}
 
 	public void requestExternalRedirect(String uri) {
+		recordResponseCommitted();
 		externalRedirectUrl = uri;
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
+		recordResponseCommitted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
@@ -328,6 +342,10 @@ public class PortletExternalContext implements ExternalContext {
 		} else {
 			throw new IllegalArgumentException("Unknown portlet phase, expected: action or render");
 		}
+	}
+
+	private void assertResponseNotCommitted() throws IllegalStateException {
+		Assert.isTrue(!responseCommitted, "A response has already been committed to this ExternalContext");
 	}
 
 }

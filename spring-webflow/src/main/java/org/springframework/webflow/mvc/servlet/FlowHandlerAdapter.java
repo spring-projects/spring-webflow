@@ -246,15 +246,18 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * passed as input to the new execution.
 	 * @param flowId the id of the ended flow
 	 * @param outcome the flow execution outcome
+	 * @param context ServletExternalContext the completed ServletExternalContext
 	 * @param request the current request
 	 * @param response the current response
 	 */
 	protected void defaultHandleExecutionOutcome(String flowId, FlowExecutionOutcome outcome,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (!response.isCommitted()) {
+			ServletExternalContext context, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		if (!context.isResponseCommitted()) {
 			// by default, just start the flow over passing the output as input
 			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of ended flow '" + flowId + "'");
+				logger.debug("Ended flow '" + flowId + "' did not commit a response; "
+						+ "attempting to start a new flow execution as a default outcome handler");
 			}
 			response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
 		}
@@ -307,7 +310,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				if (location != null) {
 					sendExternalRedirect(location, request, response);
 				} else {
-					defaultHandleExecutionOutcome(result.getFlowId(), result.getOutcome(), request, response);
+					defaultHandleExecutionOutcome(result.getFlowId(), result.getOutcome(), context, request, response);
 				}
 			}
 		} else {

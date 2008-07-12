@@ -154,6 +154,29 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
+	public void testResumeFlowRequestEndsAfterProcessingFlowCommittedResponse() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("POST");
+		request.addParameter("execution", "12345");
+		Map parameters = new HashMap();
+		request.setParameters(parameters);
+		flowExecutor.resumeExecution("12345", context);
+		LocalAttributeMap output = new LocalAttributeMap();
+		output.put("bar", "baz");
+		context.recordResponseCommitted();
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
+		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		ModelAndView mv = flowHandlerAdapter.handle(request, response, flowHandler);
+		assertNull(mv);
+		assertEquals(null, response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
 	public void testLaunchFlowWithExecutionRedirect() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");

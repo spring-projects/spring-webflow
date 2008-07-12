@@ -102,6 +102,8 @@ public class JsfViewFactoryTests extends TestCase {
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
 		((MockViewHandler) viewHandler).setCreateView(newRoot);
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -129,6 +131,9 @@ public class JsfViewFactoryTests extends TestCase {
 		input.setValid(false);
 		existingRoot.getChildren().add(input);
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -171,6 +176,9 @@ public class JsfViewFactoryTests extends TestCase {
 
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+
 		EasyMock.replay(new Object[] { context });
 
 		View restoredView = factory.getView(context);
@@ -200,6 +208,9 @@ public class JsfViewFactoryTests extends TestCase {
 		request.addHeader("Accept", "text/html;type=ajax");
 
 		EasyMock.expect(context.getCurrentState()).andReturn(new NormalViewState());
+
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
 
 		EasyMock.replay(new Object[] { context });
 

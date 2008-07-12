@@ -86,6 +86,8 @@ public class JsfFinalResponseActionTests extends TestCase {
 		newRoot.setViewId(VIEW_ID);
 		newRoot.setRenderKitId("HTML_BASIC");
 		((MockViewHandler) viewHandler).setCreateView(newRoot);
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.FALSE);
 
 		EasyMock.replay(new Object[] { context });
 

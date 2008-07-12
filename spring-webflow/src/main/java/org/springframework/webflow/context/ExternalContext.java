@@ -142,8 +142,9 @@ public interface ExternalContext {
 	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
 	 * Calling this method commits the response.
 	 * @see #isResponseCommitted()
+	 * @throws IllegalStateException if a response has already been committed
 	 */
-	public void requestFlowExecutionRedirect();
+	public void requestFlowExecutionRedirect() throws IllegalStateException;
 
 	/**
 	 * Request that a flow definition redirect be performed by the calling environment. Typically called from within a
@@ -152,16 +153,18 @@ public interface ExternalContext {
 	 * @see #isResponseCommitted()
 	 * @param flowId the id of the flow definition to redirect to
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
+	 * @throws IllegalStateException if a response has already been committed
 	 */
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input);
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException;
 
 	/**
 	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
 	 * method commits the response.
 	 * @see #isResponseCommitted()
 	 * @param location the location of the resource to redirect to
+	 * @throws IllegalStateException if a response has already been committed
 	 */
-	public void requestExternalRedirect(String location);
+	public void requestExternalRedirect(String location) throws IllegalStateException;
 
 	/**
 	 * Request that the redirect response requested be sent to the client in a manner that causes the client to issue
@@ -171,6 +174,14 @@ public interface ExternalContext {
 	 * @see #requestExternalRedirect(String)
 	 */
 	public void requestRedirectInPopup();
+
+	/**
+	 * Called by flow artifacts such as View states and end states to indicate they handled the response, typically by
+	 * writing out content to the response stream. Setting this flag allows this external context to know the response
+	 * was handled, and that it not need to take additional response handling action itself.
+	 * @throws IllegalStateException if a response has already been committed
+	 */
+	public void recordResponseCommitted() throws IllegalStateException;
 
 	/**
 	 * Has the response been committed?

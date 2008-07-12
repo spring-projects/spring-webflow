@@ -27,7 +27,6 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.service.RuntimeBindingConversionExecutor;
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
@@ -42,7 +41,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -58,7 +56,6 @@ import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 import org.springframework.webflow.engine.FlowVariable;
@@ -921,58 +918,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			} catch (ClassNotFoundException e) {
 				throw new IllegalArgumentException("Unable to load class '" + name + "'");
 			}
-		}
-	}
-
-	private static class FlowRelativeResourceLoader implements ResourceLoader {
-		private Resource resource;
-
-		public FlowRelativeResourceLoader(Resource resource) {
-			this.resource = resource;
-		}
-
-		public ClassLoader getClassLoader() {
-			return resource.getClass().getClassLoader();
-		}
-
-		public Resource getResource(String location) {
-			try {
-				return resource.createRelative(location);
-			} catch (IOException e) {
-				IllegalArgumentException iae = new IllegalArgumentException(
-						"Unable to access a flow relative resource at location '" + location + "'");
-				iae.initCause(e);
-				throw iae;
-			}
-		}
-	}
-
-	private static class SubflowExpression implements Expression {
-
-		private Expression subflowId;
-
-		private FlowDefinitionLocator flowDefinitionLocator;
-
-		public SubflowExpression(Expression subflowId, FlowDefinitionLocator flowDefinitionLocator) {
-			this.subflowId = subflowId;
-			this.flowDefinitionLocator = flowDefinitionLocator;
-		}
-
-		public Object getValue(Object context) throws EvaluationException {
-			String subflowId = (String) this.subflowId.getValue(context);
-			return flowDefinitionLocator.getFlowDefinition(subflowId);
-		}
-
-		public void setValue(Object context, Object value) throws EvaluationException {
-			throw new UnsupportedOperationException("Cannot set a subflow expression");
-		}
-
-		public Class getValueType(Object context) {
-			return null;
-		}
-
-		public String getExpressionString() {
-			return null;
 		}
 	}
 
