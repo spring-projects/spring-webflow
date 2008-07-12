@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingResults;
@@ -31,7 +30,6 @@ import org.springframework.core.style.ToStringCreator;
  * Generic mapper implementation that allows mappings to be configured programatically.
  * 
  * @see #addMapping(DefaultMapping)
- * @see #setConversionService(ConversionService)
  * @author Keith Donald
  */
 public class DefaultMapper implements Mapper {

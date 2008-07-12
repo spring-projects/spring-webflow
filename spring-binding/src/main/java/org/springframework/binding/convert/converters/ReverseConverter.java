@@ -15,6 +15,13 @@
  */
 package org.springframework.binding.convert.converters;
 
+/**
+ * A converter that calls the {@link TwoWayConverter#convertTargetToSourceClass(Object, Class)} on a target
+ * {@link TwoWayConverter} instance. Useful for invoking the "reverse" (target-to-source) conversion algorithm using the
+ * standard Converter contract.
+ * 
+ * @author Keith Donald
+ */
 public class ReverseConverter implements Converter {
 
 	private TwoWayConverter converter;

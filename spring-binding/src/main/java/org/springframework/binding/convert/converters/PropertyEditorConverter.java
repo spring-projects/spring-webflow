@@ -17,10 +17,19 @@ package org.springframework.binding.convert.converters;
 
 import java.beans.PropertyEditor;
 
+/**
+ * Adapts a PropertyEditor to the {@link TwoWayConverter} interface.
+ * @author Keith Donald
+ */
 public class PropertyEditorConverter extends StringToObject {
 
 	private PropertyEditor propertyEditor;
 
+	/**
+	 * Creates a new property editor converter.
+	 * @param propertyEditor the property editor to adapt
+	 * @param targetClass the {@link PropertyEditor#getValue() value class} this property editor converts to from string
+	 */
 	public PropertyEditorConverter(PropertyEditor propertyEditor, Class targetClass) {
 		super(targetClass);
 		this.propertyEditor = propertyEditor;

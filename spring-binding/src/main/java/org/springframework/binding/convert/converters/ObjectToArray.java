@@ -20,6 +20,13 @@ import java.lang.reflect.Array;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 
+/**
+ * Special two-way converter that converts an object to an single-element array. Supports type conversion of the
+ * individual array elements; for example, the ability to convert a String to an Integer[]. Mainly used internally by
+ * {@link ConversionService} implementations.
+ * 
+ * @author Keith Donald
+ */
 public class ObjectToArray implements TwoWayConverter {
 
 	private ConversionService conversionService;
