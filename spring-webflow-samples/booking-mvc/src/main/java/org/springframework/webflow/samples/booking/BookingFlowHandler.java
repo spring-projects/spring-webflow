@@ -13,7 +13,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
     @Override
     public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 	    HttpServletResponse response) {
-	return null;
+	return "/hotels/index";
     }
 
     @Override
