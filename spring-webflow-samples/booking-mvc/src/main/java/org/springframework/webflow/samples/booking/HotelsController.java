@@ -30,8 +30,8 @@ public class HotelsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("hotels")
-    public List<Hotel> search(SearchCriteria criteria) {
+    public @ModelAttribute("hotels")
+    List<Hotel> search(SearchCriteria criteria) {
 	return bookingService.findHotels(criteria);
     }
 
