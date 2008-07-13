@@ -171,7 +171,8 @@ public class JsfViewFactory implements ViewFactory {
 			Resource viewResource = flowContext.getResource(viewId);
 			if (!(viewResource instanceof ContextResource)) {
 				throw new IllegalStateException(
-						"A ContextResource is required to get relative view paths within this context");
+						"A ContextResource is required to get relative view paths within this context; the resource was "
+								+ viewResource);
 			}
 			String viewPath = ((ContextResource) viewResource).getPathWithinContext();
 			if (!viewPath.startsWith("/")) {
