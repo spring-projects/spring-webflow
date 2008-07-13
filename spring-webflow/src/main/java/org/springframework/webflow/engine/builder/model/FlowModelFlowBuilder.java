@@ -570,9 +570,15 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			attributes.put("commit", fromStringTo(Boolean.class).execute(state.getCommit()));
 		}
 		parseAndPutSecured(state.getSecured(), attributes);
+		Action finalResponseAction;
+		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), true);
+		if (viewFactory != null) {
+			finalResponseAction = new ViewFactoryActionAdapter(viewFactory);
+		} else {
+			finalResponseAction = null;
+		}
 		getLocalContext().getFlowArtifactFactory().createEndState(state.getId(), flow,
-				parseActions(state.getOnEntryActions()),
-				new ViewFactoryActionAdapter(parseViewFactory(state.getView(), state.getId(), true)),
+				parseActions(state.getOnEntryActions()), finalResponseAction,
 				parseFlowOutputMapper(state.getOutputs()), parseExceptionHandlers(state.getExceptionHandlers(), null),
 				attributes);
 	}

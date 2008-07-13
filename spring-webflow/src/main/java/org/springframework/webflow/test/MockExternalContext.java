@@ -154,27 +154,24 @@ public class MockExternalContext implements ExternalContext {
 		return true;
 	}
 
-	public boolean isResponseCommitted() {
+	public boolean isResponseComplete() {
 		return responseCommitted;
 	}
 
-	public void recordResponseCommitted() throws IllegalStateException {
+	public void recordResponseComplete() throws IllegalStateException {
 		responseCommitted = true;
 	}
 
 	public void requestFlowExecutionRedirect() {
-		recordResponseCommitted();
 		flowExecutionRedirectRequested = true;
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
-		recordResponseCommitted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
 
 	public void requestExternalRedirect(String uri) {
-		recordResponseCommitted();
 		externalRedirectUrl = uri;
 	}
 

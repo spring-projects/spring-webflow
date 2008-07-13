@@ -24,7 +24,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
@@ -79,7 +78,7 @@ public class ServletExternalContext implements ExternalContext {
 
 	/**
 	 * A flag indicating if the flow committed the response. Set to true by requesting an execution redirect, definition
-	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseCommitted()}
+	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseComplete()}
 	 */
 	private boolean responseCommitted;
 
@@ -220,27 +219,23 @@ public class ServletExternalContext implements ExternalContext {
 		return true;
 	}
 
-	public boolean isResponseCommitted() {
+	public boolean isResponseComplete() {
 		return responseCommitted;
 	}
 
-	public void recordResponseCommitted() {
-		assertResponseNotCommitted();
+	public void recordResponseComplete() {
 		responseCommitted = true;
 	}
 
 	public void requestFlowExecutionRedirect() {
-		recordResponseCommitted();
 		flowExecutionRedirectRequested = true;
 	}
 
 	public void requestExternalRedirect(String location) {
-		recordResponseCommitted();
 		externalRedirectUrl = location;
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
-		recordResponseCommitted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
@@ -346,7 +341,4 @@ public class ServletExternalContext implements ExternalContext {
 		this.flowUrlHandler = flowUrlHandler;
 	}
 
-	private void assertResponseNotCommitted() throws IllegalStateException {
-		Assert.isTrue(!responseCommitted, "A response has already been committed to this ExternalContext");
-	}
 }

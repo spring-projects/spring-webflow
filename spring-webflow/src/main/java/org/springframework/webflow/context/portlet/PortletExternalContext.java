@@ -28,7 +28,6 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
@@ -93,7 +92,7 @@ public class PortletExternalContext implements ExternalContext {
 
 	/**
 	 * A flag indicating if the flow committed the response. Set to true by requesting an execution redirect, definition
-	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseCommitted()}
+	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseComplete()}
 	 */
 	private boolean responseCommitted;
 
@@ -227,27 +226,23 @@ public class PortletExternalContext implements ExternalContext {
 		return isRenderPhase();
 	}
 
-	public boolean isResponseCommitted() {
+	public boolean isResponseComplete() {
 		return responseCommitted;
 	}
 
-	public void recordResponseCommitted() {
-		assertResponseNotCommitted();
+	public void recordResponseComplete() {
 		responseCommitted = true;
 	}
 
 	public void requestFlowExecutionRedirect() {
-		recordResponseCommitted();
 		flowExecutionRedirectRequested = true;
 	}
 
 	public void requestExternalRedirect(String uri) {
-		recordResponseCommitted();
 		externalRedirectUrl = uri;
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
-		recordResponseCommitted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
@@ -342,10 +337,6 @@ public class PortletExternalContext implements ExternalContext {
 		} else {
 			throw new IllegalArgumentException("Unknown portlet phase, expected: action or render");
 		}
-	}
-
-	private void assertResponseNotCommitted() throws IllegalStateException {
-		Assert.isTrue(!responseCommitted, "A response has already been committed to this ExternalContext");
 	}
 
 }

@@ -98,7 +98,7 @@ public class EndState extends State {
 			// entire flow execution is ending; issue the final response
 			if (finalResponseAction != null && context.getExternalContext().isResponseAllowed()) {
 				ActionExecutor.execute(finalResponseAction, context);
-				context.getExternalContext().recordResponseCommitted();
+				context.getExternalContext().recordResponseComplete();
 			}
 			context.endActiveFlowSession(getId(), createSessionOutput(context));
 		} else {

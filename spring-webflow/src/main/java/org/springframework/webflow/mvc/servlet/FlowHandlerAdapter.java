@@ -253,7 +253,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	protected void defaultHandleExecutionOutcome(String flowId, FlowExecutionOutcome outcome,
 			ServletExternalContext context, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		if (!context.isResponseCommitted()) {
+		if (!context.isResponseComplete()) {
 			// by default, just start the flow over passing the output as input
 			if (logger.isDebugEnabled()) {
 				logger.debug("Ended flow '" + flowId + "' did not commit a response; "

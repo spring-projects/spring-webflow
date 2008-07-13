@@ -97,26 +97,29 @@ public class JsfViewFactory implements ViewFactory {
 					UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
 					if (viewRoot != null) {
 						if (logger.isDebugEnabled()) {
-							logger.debug("View root restored for '" + viewName + "'");
+							logger.debug("UIViewRoot restored for '" + viewName + "'");
 						}
+						facesContext.setViewRoot(viewRoot);
+						processTree(facesContext, viewRoot);
 						view = createJsfView(viewRoot, lifecycle, context);
-						facesContext.setViewRoot(view.getViewRoot());
-						processTree(facesContext, view.getViewRoot());
 						view.setRestored(true);
 					} else {
 						if (logger.isDebugEnabled()) {
-							logger.debug("Creating view root for '" + viewName + "'");
+							logger.debug("Creating UIViewRoot from '" + viewName + "'");
 						}
-						view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
-						facesContext.setViewRoot(view.getViewRoot());
+						viewRoot = viewHandler.createView(facesContext, viewName);
+						facesContext.setViewRoot(viewRoot);
+						view = createJsfView(viewRoot, lifecycle, context);
 						view.setRestored(false);
 					}
 				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Creating view root for '" + viewName + "'");
+						logger.debug("Creating transient UIViewRoot from '" + viewName + "'");
 					}
-					view = createJsfView(viewHandler.createView(facesContext, viewName), lifecycle, context);
-					facesContext.setViewRoot(view.getViewRoot());
+					UIViewRoot viewRoot = viewHandler.createView(facesContext, viewName);
+					viewRoot.setTransient(true);
+					facesContext.setViewRoot(viewRoot);
+					view = createJsfView(viewRoot, lifecycle, context);
 					view.setRestored(false);
 				}
 			}

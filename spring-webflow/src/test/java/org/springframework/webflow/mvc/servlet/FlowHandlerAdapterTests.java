@@ -166,7 +166,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		flowExecutor.resumeExecution("12345", context);
 		LocalAttributeMap output = new LocalAttributeMap();
 		output.put("bar", "baz");
-		context.recordResponseCommitted();
+		context.recordResponseComplete();
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
 		EasyMock.expectLastCall().andReturn(result);
