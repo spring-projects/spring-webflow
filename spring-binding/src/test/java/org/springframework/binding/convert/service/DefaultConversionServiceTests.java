@@ -39,17 +39,10 @@ import org.springframework.binding.format.DefaultNumberFormatFactory;
  * @author Keith Donald
  */
 public class DefaultConversionServiceTests extends TestCase {
-
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
 		List lst = new ArrayList();
 		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
-		try {
-			service.getConversionExecutor(List.class, ArrayList.class);
-			fail();
-		} catch (ConversionExecutorNotFoundException e) {
-			// expected
-		}
 	}
 
 	public void testOverrideConverter() {

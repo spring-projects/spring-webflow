@@ -171,7 +171,7 @@ public class GenericConversionService implements ConversionService {
 				if (converter != null) {
 					return converter;
 				}
-				Class[] interfaces = targetClass.getInterfaces();
+				Class[] interfaces = currentClass.getInterfaces();
 				for (int i = 0; i < interfaces.length; i++) {
 					classQueue.addFirst(interfaces[i]);
 				}
@@ -267,16 +267,19 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	private Converter findTargetConverter(Map sourceTargetConverters, Class targetClass) {
+		if (sourceTargetConverters.isEmpty()) {
+			return null;
+		}
 		if (targetClass.isInterface()) {
 			LinkedList classQueue = new LinkedList();
 			classQueue.addFirst(targetClass);
 			while (!classQueue.isEmpty()) {
-				targetClass = (Class) classQueue.removeLast();
-				Converter converter = (Converter) sourceTargetConverters.get(targetClass);
+				Class currentClass = (Class) classQueue.removeLast();
+				Converter converter = (Converter) sourceTargetConverters.get(currentClass);
 				if (converter != null) {
 					return converter;
 				}
-				Class[] interfaces = targetClass.getInterfaces();
+				Class[] interfaces = currentClass.getInterfaces();
 				for (int i = 0; i < interfaces.length; i++) {
 					classQueue.addFirst(interfaces[i]);
 				}
@@ -286,15 +289,15 @@ public class GenericConversionService implements ConversionService {
 			LinkedList classQueue = new LinkedList();
 			classQueue.addFirst(targetClass);
 			while (!classQueue.isEmpty()) {
-				targetClass = (Class) classQueue.removeLast();
-				Converter converter = (Converter) sourceTargetConverters.get(targetClass);
+				Class currentClass = (Class) classQueue.removeLast();
+				Converter converter = (Converter) sourceTargetConverters.get(currentClass);
 				if (converter != null) {
 					return converter;
 				}
-				if (targetClass.getSuperclass() != null) {
-					classQueue.addFirst(targetClass.getSuperclass());
+				if (currentClass.getSuperclass() != null) {
+					classQueue.addFirst(currentClass.getSuperclass());
 				}
-				Class[] interfaces = targetClass.getInterfaces();
+				Class[] interfaces = currentClass.getInterfaces();
 				for (int i = 0; i < interfaces.length; i++) {
 					classQueue.addFirst(interfaces[i]);
 				}
