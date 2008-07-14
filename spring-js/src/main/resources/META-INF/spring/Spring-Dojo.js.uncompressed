@@ -295,7 +295,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		
 		console.error("HTTP status code: ", ioArgs.xhr.status);
 		
-		if (Spring.debug) {
+		if (Spring.debug && ioArgs.xhr.status != 200) {
 			var dialog = new dijit.Dialog({});
 			dojo.connect(dialog, "hide", dialog, function(){
 				this.destroyRecursive(false);

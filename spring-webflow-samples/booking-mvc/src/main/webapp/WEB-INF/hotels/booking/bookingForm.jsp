@@ -82,12 +82,12 @@
 						elementId : 'smoking',
 						widgetType : "dijit.form.RadioButton",
 						widgetModule : "dijit.form.CheckBox",
-						widgetAttrs : { value : true }));
+						widgetAttrs : { value : true }}));
 					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : 'non-smoking',
 						widgetType : "dijit.form.RadioButton",
 						widgetModule : "dijit.form.CheckBox",
-						widgetAttrs : { value : false }));
+						widgetAttrs : { value : false }}));
 				</script>
 				
 			</div>
