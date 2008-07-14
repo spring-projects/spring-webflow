@@ -134,9 +134,6 @@ public class GenericConversionService implements ConversionService {
 							+ "request an interface or concrete implementation instead");
 				}
 				return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(this));
-			} else {
-				Converter arrayToObject = new ReverseConverter(new ObjectToArray(this));
-				return new StaticConversionExecutor(sourceClass, targetClass, arrayToObject);
 			}
 		}
 		if (targetClass.isArray()) {
@@ -147,8 +144,7 @@ public class GenericConversionService implements ConversionService {
 				return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToArray(this));
 			}
 		}
-		Map sourceTargetConverters = findConvertersForSource(sourceClass);
-		Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
+		Converter converter = findRegisteredConverter(sourceClass, targetClass);
 		if (converter != null) {
 			// we found a converter
 			return new StaticConversionExecutor(sourceClass, targetClass, converter);
@@ -162,6 +158,27 @@ public class GenericConversionService implements ConversionService {
 								+ "' to target class '" + targetClass.getName() + "'");
 			}
 		}
+	}
+
+	private Converter findRegisteredConverter(Class sourceClass, Class targetClass) {
+		LinkedList classQueue = new LinkedList();
+		classQueue.addFirst(sourceClass);
+		while (!classQueue.isEmpty()) {
+			Class currentClass = (Class) classQueue.removeLast();
+			Map sourceTargetConverters = findConvertersForSource(currentClass);
+			Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
+			if (converter != null) {
+				return converter;
+			}
+			if (currentClass.getSuperclass() != null) {
+				classQueue.addFirst(currentClass.getSuperclass());
+			}
+			Class[] interfaces = currentClass.getInterfaces();
+			for (int i = 0; i < interfaces.length; i++) {
+				classQueue.addFirst(interfaces[i]);
+			}
+		}
+		return null;
 	}
 
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException {
@@ -226,47 +243,8 @@ public class GenericConversionService implements ConversionService {
 	// internal helpers
 
 	private Map findConvertersForSource(Class sourceClass) {
-		if (sourceClass.isInterface()) {
-			LinkedList classQueue = new LinkedList();
-			classQueue.addFirst(sourceClass);
-			while (!classQueue.isEmpty()) {
-				sourceClass = (Class) classQueue.removeLast();
-				Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
-				if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
-					return sourceTargetConverters;
-				}
-				// queue up source class's implemented interfaces.
-				Class[] interfaces = sourceClass.getInterfaces();
-				for (int i = 0; i < interfaces.length; i++) {
-					classQueue.addFirst(interfaces[i]);
-				}
-			}
-			Map sourceTargetConverters = (Map) sourceClassConverters.get(Object.class);
-			if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
-				return sourceTargetConverters;
-			} else {
-				return Collections.EMPTY_MAP;
-			}
-		} else {
-			LinkedList classQueue = new LinkedList();
-			classQueue.addFirst(sourceClass);
-			while (!classQueue.isEmpty()) {
-				sourceClass = (Class) classQueue.removeLast();
-				Map sourceTargetConverters = (Map) sourceClassConverters.get(sourceClass);
-				if (sourceTargetConverters != null && !sourceTargetConverters.isEmpty()) {
-					return sourceTargetConverters;
-				}
-				if (sourceClass.getSuperclass() != null) {
-					classQueue.addFirst(sourceClass.getSuperclass());
-				}
-				// queue up source class's implemented interfaces.
-				Class[] interfaces = sourceClass.getInterfaces();
-				for (int i = 0; i < interfaces.length; i++) {
-					classQueue.addFirst(interfaces[i]);
-				}
-			}
-			return Collections.EMPTY_MAP;
-		}
+		Map sourceConverters = (Map) sourceClassConverters.get(sourceClass);
+		return sourceConverters != null ? sourceConverters : Collections.EMPTY_MAP;
 	}
 
 	private Converter findTargetConverter(Map sourceTargetConverters, Class targetClass) {

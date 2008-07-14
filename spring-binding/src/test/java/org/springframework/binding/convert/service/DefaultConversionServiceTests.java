@@ -187,25 +187,24 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, String[].class);
 		String[] result = (String[]) executor.execute("1,2,3");
-		assertEquals("1", result[0]);
-		assertEquals("2", result[1]);
-		assertEquals("3", result[2]);
+		assertEquals(1, result.length);
+		assertEquals("1,2,3", result[0]);
+	}
+
+	public void testToListConversion() {
+		DefaultConversionService service = new DefaultConversionService();
+		ConversionExecutor executor = service.getConversionExecutor(String.class, List.class);
+		List result = (List) executor.execute("1,2,3");
+		assertEquals(1, result.size());
+		assertEquals("1,2,3", result.get(0));
 	}
 
 	public void testToArrayConversionWithElementConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer[].class);
-		Integer[] result = (Integer[]) executor.execute("1,2,3");
-		assertEquals(new Integer(1), result[0]);
-		assertEquals(new Integer(2), result[1]);
-		assertEquals(new Integer(3), result[2]);
-	}
-
-	public void testToArrayObjectConversion() {
-		DefaultConversionService service = new DefaultConversionService();
-		ConversionExecutor executor = service.getConversionExecutor(String[].class, String.class);
-		String result = (String) executor.execute(new String[] { "1", "2", "3" });
-		assertEquals("1,2,3", result);
+		Integer[] result = (Integer[]) executor.execute("123");
+		assertEquals(1, result.length);
+		assertEquals(new Integer(123), result[0]);
 	}
 
 	// public void testGenericTypeConversionOGNL() {

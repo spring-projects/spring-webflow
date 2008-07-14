@@ -15,11 +15,9 @@
  */
 package org.springframework.binding.convert.converters;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,28 +30,21 @@ import org.springframework.core.GenericCollectionTypeResolver;
 import org.springframework.core.JdkVersion;
 
 /**
- * Special one-way converter that converts from a source array to a target collection. Supports the selection of an
- * "approximate" collection implementation when a target collection interface such as <code>List.class</code> is
- * specified. Supports type conversion of array elements when a concrete parameterized collection class is provided,
- * such as <code>IntegerList<Integer>.class</code>.
- * 
- * Note that type erasure prevents arbitrary access to generic collection element type information at runtime,
- * preventing the ability to convert elements for collections declared as properties.
- * 
- * Mainly used internally by {@link ConversionService} implementations.
+ * Special two-way converter that converts an object to an single-element collection. Supports type conversion of the
+ * individual element with parameterized collection implementations.
  * 
  * @author Keith Donald
  */
-public class ArrayToCollection implements TwoWayConverter {
+public class ObjectToCollection implements Converter {
 
 	private ConversionService conversionService;
 
-	public ArrayToCollection(ConversionService conversionService) {
+	public ObjectToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
 	public Class getSourceClass() {
-		return Object[].class;
+		return Object.class;
 	}
 
 	public Class getTargetClass() {
@@ -68,34 +59,14 @@ public class ArrayToCollection implements TwoWayConverter {
 		Constructor constructor = collectionImplClass.getConstructor(null);
 		Collection collection = (Collection) constructor.newInstance(null);
 		ConversionExecutor converter = getElementConverter(source, targetClass);
-		int length = Array.getLength(source);
-		for (int i = 0; i < length; i++) {
-			Object value = Array.get(source, i);
-			if (converter != null) {
-				value = converter.execute(value);
-			}
-			collection.add(value);
+		Object value;
+		if (converter != null) {
+			value = converter.execute(source);
+		} else {
+			value = source;
 		}
+		collection.add(value);
 		return collection;
-	}
-
-	public Object convertTargetToSourceClass(Object target, Class sourceClass) throws Exception {
-		if (target == null) {
-			return null;
-		}
-		Collection collection = (Collection) target;
-		Object array = Array.newInstance(sourceClass.getComponentType(), collection.size());
-		int i = 0;
-		for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-			Object value = it.next();
-			if (value != null) {
-				ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), sourceClass
-						.getComponentType());
-				value = converter.execute(value);
-			}
-			Array.set(array, i, value);
-		}
-		return array;
 	}
 
 	private Class getCollectionImplClass(Class targetClass) {
@@ -124,5 +95,4 @@ public class ArrayToCollection implements TwoWayConverter {
 		}
 		return null;
 	}
-
 }
