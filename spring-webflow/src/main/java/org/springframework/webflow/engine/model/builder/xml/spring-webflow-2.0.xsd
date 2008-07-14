@@ -3,7 +3,7 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.springframework.org/schema/webflow"
 	elementFormDefault="qualified"
-	version="2.0">
+	version="2.0.3">
 
 	<xsd:annotation>
 		<xsd:documentation>
