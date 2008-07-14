@@ -327,6 +327,35 @@ fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a conc
 										</xsd:attribute>
 									</xsd:complexType>
 								</xsd:element>
+								<xsd:element name="binding" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A view model binding.  A binding connects a UI element in this view to a model property.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:attribute name="property" type="xsd:string" use="required">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The name of the model property to bind to.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+										<xsd:attribute name="converter" type="xsd:string">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The name of a custom converter to use to format the property for display in the UI.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+									</xsd:complexType>
+								</xsd:element>
 								<xsd:element name="on-entry" minOccurs="0">
 									<xsd:annotation>
 										<xsd:documentation>

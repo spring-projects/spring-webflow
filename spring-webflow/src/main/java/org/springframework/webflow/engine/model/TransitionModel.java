@@ -30,13 +30,21 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class TransitionModel extends AbstractModel {
+
 	private String on;
+
 	private String onException;
+
 	private String to;
+
 	private String bind;
+
 	private String history;
+
 	private LinkedList attributes;
+
 	private SecuredModel secured;
+
 	private LinkedList actions;
 
 	/**
@@ -169,32 +177,6 @@ public class TransitionModel extends AbstractModel {
 	}
 
 	/**
-	 * @param attribute the attribute to add
-	 */
-	public void addAttribute(AttributeModel attribute) {
-		if (attribute == null) {
-			return;
-		}
-		if (attributes == null) {
-			attributes = new LinkedList();
-		}
-		attributes.add(attribute);
-	}
-
-	/**
-	 * @param attributes the attributes to add
-	 */
-	public void addAttributes(LinkedList attributes) {
-		if (attributes == null || attributes.isEmpty()) {
-			return;
-		}
-		if (this.attributes == null) {
-			this.attributes = new LinkedList();
-		}
-		this.attributes.addAll(attributes);
-	}
-
-	/**
 	 * @return the secured
 	 */
 	public SecuredModel getSecured() {
@@ -220,31 +202,5 @@ public class TransitionModel extends AbstractModel {
 	 */
 	public void setActions(LinkedList actions) {
 		this.actions = actions;
-	}
-
-	/**
-	 * @param action the action to add
-	 */
-	public void addAction(AbstractActionModel action) {
-		if (action == null) {
-			return;
-		}
-		if (actions == null) {
-			actions = new LinkedList();
-		}
-		actions.add(action);
-	}
-
-	/**
-	 * @param actions the actions to add
-	 */
-	public void addActions(LinkedList actions) {
-		if (actions == null || actions.isEmpty()) {
-			return;
-		}
-		if (this.actions == null) {
-			this.actions = new LinkedList();
-		}
-		this.actions.addAll(actions);
 	}
 }

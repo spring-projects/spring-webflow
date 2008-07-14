@@ -25,8 +25,11 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class SetModel extends AbstractActionModel {
+
 	private String name;
+
 	private String value;
+
 	private String type;
 
 	/**

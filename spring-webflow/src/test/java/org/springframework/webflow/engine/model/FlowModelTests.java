@@ -72,15 +72,15 @@ public class FlowModelTests extends TestCase {
 	}
 
 	public void testMergeVars() {
-		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		VarModel var = new VarModel("name", "value");
+		parent.addVar(var);
+		FlowModel child = new FlowModel();
+		var = new VarModel("name", "value2");
 		child.addVar(var);
-		parent.addVar(var);
-		var = new VarModel("name", "value");
-		parent.addVar(var);
 		child.merge(parent);
-		assertEquals(3, child.getVars().size());
+		assertEquals(1, child.getVars().size());
+		assertEquals("value2", ((VarModel) child.getVars().get(0)).getClassName());
 	}
 
 	public void testMergeMappings() {

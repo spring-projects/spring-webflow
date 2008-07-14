@@ -24,7 +24,9 @@ import org.springframework.util.ObjectUtils;
  * @author Scott Andrews
  */
 public class DecisionStateModel extends AbstractStateModel {
+
 	private LinkedList ifs;
+
 	private LinkedList onExitActions;
 
 	/**
@@ -69,32 +71,6 @@ public class DecisionStateModel extends AbstractStateModel {
 	}
 
 	/**
-	 * @param conditional the if to add
-	 */
-	public void addIf(IfModel conditional) {
-		if (conditional == null) {
-			return;
-		}
-		if (ifs == null) {
-			ifs = new LinkedList();
-		}
-		ifs.add(conditional);
-	}
-
-	/**
-	 * @param ifs the ifs to add
-	 */
-	public void addIf(LinkedList ifs) {
-		if (ifs == null || ifs.isEmpty()) {
-			return;
-		}
-		if (this.ifs == null) {
-			this.ifs = new LinkedList();
-		}
-		this.ifs.addAll(ifs);
-	}
-
-	/**
 	 * @return the on exit actions
 	 */
 	public LinkedList getOnExitActions() {
@@ -108,29 +84,4 @@ public class DecisionStateModel extends AbstractStateModel {
 		this.onExitActions = onExitActions;
 	}
 
-	/**
-	 * @param onExitAction the on exit action to add
-	 */
-	public void addOnExitAction(AbstractActionModel onExitAction) {
-		if (onExitAction == null) {
-			return;
-		}
-		if (onExitActions == null) {
-			onExitActions = new LinkedList();
-		}
-		onExitActions.add(onExitAction);
-	}
-
-	/**
-	 * @param onExitActions the on exit actions to add
-	 */
-	public void addOnExitActions(LinkedList onExitActions) {
-		if (onExitActions == null || onExitActions.isEmpty()) {
-			return;
-		}
-		if (this.onExitActions == null) {
-			this.onExitActions = new LinkedList();
-		}
-		this.onExitActions.addAll(onExitActions);
-	}
 }

@@ -26,8 +26,11 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class AttributeModel extends AbstractModel {
+
 	private String name;
+
 	private String type;
+
 	private String value;
 
 	/**

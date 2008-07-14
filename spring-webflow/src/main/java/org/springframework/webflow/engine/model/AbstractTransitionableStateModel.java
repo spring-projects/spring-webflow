@@ -23,7 +23,9 @@ import java.util.LinkedList;
  * @author Scott Andrews
  */
 public abstract class AbstractTransitionableStateModel extends AbstractStateModel {
+
 	private LinkedList transitions;
+
 	private LinkedList onExitActions;
 
 	/**
@@ -41,32 +43,6 @@ public abstract class AbstractTransitionableStateModel extends AbstractStateMode
 	}
 
 	/**
-	 * @param transition the transition to add
-	 */
-	public void addTransition(TransitionModel transition) {
-		if (transition == null) {
-			return;
-		}
-		if (transitions == null) {
-			transitions = new LinkedList();
-		}
-		transitions.add(transition);
-	}
-
-	/**
-	 * @param transitions the transitions to add
-	 */
-	public void addTransitions(LinkedList transitions) {
-		if (transitions == null || transitions.isEmpty()) {
-			return;
-		}
-		if (this.transitions == null) {
-			this.transitions = new LinkedList();
-		}
-		this.transitions.addAll(transitions);
-	}
-
-	/**
 	 * @return the on exit actions
 	 */
 	public LinkedList getOnExitActions() {
@@ -80,29 +56,4 @@ public abstract class AbstractTransitionableStateModel extends AbstractStateMode
 		this.onExitActions = onExitActions;
 	}
 
-	/**
-	 * @param onExitAction the on exit action to add
-	 */
-	public void addOnExitAction(AbstractActionModel onExitAction) {
-		if (onExitAction == null) {
-			return;
-		}
-		if (this.onExitActions == null) {
-			this.onExitActions = new LinkedList();
-		}
-		this.onExitActions.add(onExitAction);
-	}
-
-	/**
-	 * @param onExitActions the on exit actions to add
-	 */
-	public void addOnExitsActions(LinkedList onExitActions) {
-		if (onExitActions == null || onExitActions.isEmpty()) {
-			return;
-		}
-		if (this.onExitActions == null) {
-			this.onExitActions = new LinkedList();
-		}
-		this.onExitActions.addAll(onExitActions);
-	}
 }

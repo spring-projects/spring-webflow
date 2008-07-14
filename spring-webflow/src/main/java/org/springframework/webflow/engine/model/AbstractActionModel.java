@@ -57,19 +57,6 @@ public abstract class AbstractActionModel extends AbstractModel {
 	}
 
 	/**
-	 * @param attribute the attribute to add
-	 */
-	public void addAttribute(AttributeModel attribute) {
-		if (attribute == null) {
-			return;
-		}
-		if (attributes == null) {
-			attributes = new LinkedList();
-		}
-		attributes.add(attribute);
-	}
-
-	/**
 	 * @param attributes the attributes to add
 	 */
 	public void addAttributes(LinkedList attributes) {

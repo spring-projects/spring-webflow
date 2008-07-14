@@ -14,6 +14,7 @@ import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
+import org.springframework.webflow.engine.model.BindingModel;
 import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.SecuredModel;
@@ -141,6 +142,18 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
 		assertEquals("foo", ((VarModel) ((ViewStateModel) flow.getStates().get(0)).getVars().get(0)).getName());
+	}
+
+	public void testViewStateModelBinding() {
+		ClassPathResource resource = new ClassPathResource("flow-viewstate-model-binding.xml", getClass());
+		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
+		builder.init();
+		builder.build();
+		FlowModel flow = builder.getFlowModel();
+		ViewStateModel model = (ViewStateModel) flow.getStates().get(0);
+		assertEquals("formObject", model.getModel());
+		assertEquals("objectProperty", ((BindingModel) model.getBindings().get(0)).getProperty());
+		assertEquals("customConverter", ((BindingModel) model.getBindings().get(0)).getConverter());
 	}
 
 	public void testViewStateRedirect() {

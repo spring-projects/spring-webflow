@@ -28,8 +28,11 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class IfModel extends AbstractModel {
+
 	private String test;
+
 	private String then;
+
 	private String elze;
 
 	/**

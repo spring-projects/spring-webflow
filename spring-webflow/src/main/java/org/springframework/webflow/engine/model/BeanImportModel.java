@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class BeanImportModel extends AbstractModel {
+
 	private String resource;
 
 	/**

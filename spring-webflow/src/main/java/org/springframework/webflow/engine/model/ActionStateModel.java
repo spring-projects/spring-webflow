@@ -24,6 +24,7 @@ import org.springframework.util.ObjectUtils;
  * @author Scott Andrews
  */
 public class ActionStateModel extends AbstractTransitionableStateModel {
+
 	private LinkedList actions;
 
 	/**
@@ -68,29 +69,4 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 		this.actions = actions;
 	}
 
-	/**
-	 * @param action the action to add
-	 */
-	public void addAction(AbstractActionModel action) {
-		if (action == null) {
-			return;
-		}
-		if (actions == null) {
-			actions = new LinkedList();
-		}
-		actions.add(action);
-	}
-
-	/**
-	 * @param actions the actions to add
-	 */
-	public void addAction(LinkedList actions) {
-		if (actions == null || actions.isEmpty()) {
-			return;
-		}
-		if (this.actions == null) {
-			this.actions = new LinkedList();
-		}
-		this.actions.addAll(actions);
-	}
 }

@@ -32,7 +32,9 @@ import org.springframework.webflow.security.SecurityFlowExecutionListener;
  * @author Scott Andrews
  */
 public class SecuredModel extends AbstractModel {
+
 	private String attributes;
+
 	private String match;
 
 	/**

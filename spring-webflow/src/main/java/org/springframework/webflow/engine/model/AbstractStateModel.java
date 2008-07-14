@@ -25,11 +25,17 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public abstract class AbstractStateModel extends AbstractModel {
+
 	private String id;
+
 	private String parent;
+
 	private LinkedList attributes;
+
 	private SecuredModel secured;
+
 	private LinkedList onEntryActions;
+
 	private LinkedList exceptionHandlers;
 
 	/**
@@ -83,32 +89,6 @@ public abstract class AbstractStateModel extends AbstractModel {
 	}
 
 	/**
-	 * @param attribute the attribute to add
-	 */
-	public void addAttribute(AttributeModel attribute) {
-		if (attribute == null) {
-			return;
-		}
-		if (attributes == null) {
-			attributes = new LinkedList();
-		}
-		attributes.add(attribute);
-	}
-
-	/**
-	 * @param attributes the attributes to add
-	 */
-	public void addAttributes(LinkedList attributes) {
-		if (attributes == null || attributes.isEmpty()) {
-			return;
-		}
-		if (this.attributes == null) {
-			this.attributes = new LinkedList();
-		}
-		this.attributes.addAll(attributes);
-	}
-
-	/**
 	 * @return the secured
 	 */
 	public SecuredModel getSecured() {
@@ -137,32 +117,6 @@ public abstract class AbstractStateModel extends AbstractModel {
 	}
 
 	/**
-	 * @param onEntryAction the on entry action to add
-	 */
-	public void addOnEntryAction(AbstractActionModel onEntryAction) {
-		if (onEntryAction == null) {
-			return;
-		}
-		if (onEntryActions == null) {
-			onEntryActions = new LinkedList();
-		}
-		onEntryActions.add(onEntryAction);
-	}
-
-	/**
-	 * @param onEntryActions the on entry actions to add
-	 */
-	public void addOnEntryActions(LinkedList onEntryActions) {
-		if (onEntryActions == null || onEntryActions.isEmpty()) {
-			return;
-		}
-		if (this.onEntryActions == null) {
-			this.onEntryActions = new LinkedList();
-		}
-		this.onEntryActions.addAll(onEntryActions);
-	}
-
-	/**
 	 * @return the exception handlers
 	 */
 	public LinkedList getExceptionHandlers() {
@@ -176,29 +130,4 @@ public abstract class AbstractStateModel extends AbstractModel {
 		this.exceptionHandlers = exceptionHandlers;
 	}
 
-	/**
-	 * @param exceptionHandler the exception handler to add
-	 */
-	public void addExceptionHandler(ExceptionHandlerModel exceptionHandler) {
-		if (exceptionHandler == null) {
-			return;
-		}
-		if (exceptionHandlers == null) {
-			exceptionHandlers = new LinkedList();
-		}
-		exceptionHandlers.add(exceptionHandler);
-	}
-
-	/**
-	 * @param exceptionHandlers the exception handlers to add
-	 */
-	public void addExceptionHandlers(LinkedList exceptionHandlers) {
-		if (exceptionHandlers == null || exceptionHandlers.isEmpty()) {
-			return;
-		}
-		if (this.exceptionHandlers == null) {
-			this.exceptionHandlers = new LinkedList();
-		}
-		this.exceptionHandlers.addAll(exceptionHandlers);
-	}
 }

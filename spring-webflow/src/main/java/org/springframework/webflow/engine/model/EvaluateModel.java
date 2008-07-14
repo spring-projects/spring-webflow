@@ -25,8 +25,11 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class EvaluateModel extends AbstractActionModel {
+
 	private String expression;
+
 	private String result;
+
 	private String resultType;
 
 	/**

@@ -22,9 +22,8 @@ import junit.framework.TestCase;
  */
 public class VarModelTests extends TestCase {
 
-	public void testNotMergeable() {
+	public void testMergeable() {
 		VarModel child = new VarModel("name", "value");
-		assertFalse(child.isMergeableWith(child));
+		assertTrue(child.isMergeableWith(child));
 	}
-
 }

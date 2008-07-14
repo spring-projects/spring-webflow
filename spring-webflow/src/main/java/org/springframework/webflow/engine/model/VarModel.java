@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.engine.model;
 
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,7 +27,9 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class VarModel extends AbstractModel {
+
 	private String name;
+
 	private String className;
 
 	/**
@@ -40,11 +43,16 @@ public class VarModel extends AbstractModel {
 	}
 
 	public boolean isMergeableWith(Model model) {
-		return false;
+		if (!(model instanceof VarModel)) {
+			return false;
+		}
+		VarModel var = (VarModel) model;
+		return ObjectUtils.nullSafeEquals(getName(), var.getName());
 	}
 
 	public void merge(Model model) {
-
+		VarModel var = (VarModel) model;
+		setClassName(merge(getClassName(), var.getClassName()));
 	}
 
 	/**

@@ -25,8 +25,11 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class EndStateModel extends AbstractStateModel {
+
 	private String view;
+
 	private String commit;
+
 	private LinkedList outputs;
 
 	/**
@@ -120,16 +123,4 @@ public class EndStateModel extends AbstractStateModel {
 		outputs.add(output);
 	}
 
-	/**
-	 * @param outputs the output mappings to add
-	 */
-	public void addOutputs(LinkedList outputs) {
-		if (outputs == null || outputs.isEmpty()) {
-			return;
-		}
-		if (this.outputs == null) {
-			this.outputs = new LinkedList();
-		}
-		this.outputs.addAll(outputs);
-	}
 }

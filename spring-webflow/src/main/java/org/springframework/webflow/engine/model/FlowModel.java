@@ -46,21 +46,35 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class FlowModel extends AbstractModel {
-	// private String id;
+
 	private String abztract;
+
 	private String parent;
+
 	private String startStateId;
+
 	private LinkedList attributes;
+
 	private SecuredModel secured;
+
 	private PersistenceContextModel persistenceContext;
+
 	private LinkedList vars;
+
 	private LinkedList inputs;
+
 	private LinkedList outputs;
+
 	private LinkedList onStartActions;
+
 	private LinkedList states;
+
 	private LinkedList globalTransitions;
+
 	private LinkedList onEndActions;
+
 	private LinkedList exceptionHandlers;
+
 	private LinkedList beanImports;
 
 	/**
@@ -449,24 +463,10 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param states the action states to add
-	 */
-	public void addActionStates(LinkedList states) {
-		addStates(states);
-	}
-
-	/**
 	 * @param state the view state to add
 	 */
 	public void addViewState(ViewStateModel state) {
 		addState(state);
-	}
-
-	/**
-	 * @param states the view states to add
-	 */
-	public void addViewStates(LinkedList states) {
-		addStates(states);
 	}
 
 	/**
@@ -477,13 +477,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param states the decision states to add
-	 */
-	public void addDecisionStates(LinkedList states) {
-		addStates(states);
-	}
-
-	/**
 	 * @param state the subflow state to add
 	 */
 	public void addSubflowState(SubflowStateModel state) {
@@ -491,24 +484,10 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param states the subflow states to add
-	 */
-	public void addSubflowStates(LinkedList states) {
-		addStates(states);
-	}
-
-	/**
 	 * @param state the end state to add
 	 */
 	public void addEndState(EndStateModel state) {
 		addState(state);
-	}
-
-	/**
-	 * @param states the end states to add
-	 */
-	public void addEndStates(LinkedList states) {
-		addStates(states);
 	}
 
 	/**

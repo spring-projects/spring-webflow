@@ -25,8 +25,11 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractMappingModel extends AbstractModel {
 
 	private String name;
+
 	private String value;
+
 	private String type;
+
 	private String required;
 
 	/**

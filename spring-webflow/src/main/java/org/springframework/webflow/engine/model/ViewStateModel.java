@@ -26,11 +26,19 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class ViewStateModel extends AbstractTransitionableStateModel {
+
 	private String view;
+
 	private String redirect;
+
 	private String popup;
+
 	private String model;
+
 	private LinkedList vars;
+
+	private LinkedList bindings;
+
 	private LinkedList onRenderActions;
 
 	/**
@@ -63,6 +71,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setPopup(merge(getPopup(), state.getPopup()));
 		setModel(merge(getModel(), state.getModel()));
 		setVars(merge(getVars(), state.getVars(), false));
+		setBindings(merge(getBindings(), state.getBindings(), false));
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
 	}
 
@@ -166,16 +175,30 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	}
 
 	/**
-	 * @param vars the vars to add
+	 * @return the bindings
 	 */
-	public void addVars(LinkedList vars) {
-		if (vars == null || vars.isEmpty()) {
+	public LinkedList getBindings() {
+		return bindings;
+	}
+
+	/**
+	 * @param bindings the bindings to set
+	 */
+	public void setBindings(LinkedList bindings) {
+		this.bindings = bindings;
+	}
+
+	/**
+	 * @param var the var to add
+	 */
+	public void addBinding(BindingModel binding) {
+		if (binding == null) {
 			return;
 		}
-		if (this.vars == null) {
-			this.vars = new LinkedList();
+		if (bindings == null) {
+			bindings = new LinkedList();
 		}
-		this.vars.addAll(vars);
+		bindings.add(binding);
 	}
 
 	/**
@@ -191,31 +214,4 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	public void setOnRenderActions(LinkedList onRenderActions) {
 		this.onRenderActions = onRenderActions;
 	}
-
-	/**
-	 * @param onRenderAction the on render action to add
-	 */
-	public void addOnRenderAction(AbstractActionModel onRenderAction) {
-		if (onRenderAction == null) {
-			return;
-		}
-		if (this.onRenderActions == null) {
-			this.onRenderActions = new LinkedList();
-		}
-		this.onRenderActions.add(onRenderAction);
-	}
-
-	/**
-	 * @param onRenderActions the on render actions to add
-	 */
-	public void addOnRenderActions(LinkedList onRenderActions) {
-		if (onRenderActions == null || onRenderActions.isEmpty()) {
-			return;
-		}
-		if (this.onRenderActions == null) {
-			this.onRenderActions = new LinkedList();
-		}
-		this.onRenderActions.addAll(onRenderActions);
-	}
-
 }

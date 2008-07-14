@@ -25,9 +25,13 @@ import org.springframework.util.StringUtils;
  * @author Scott Andrews
  */
 public class SubflowStateModel extends AbstractTransitionableStateModel {
+
 	private String subflow;
+
 	private String subflowAttributeMapper;
+
 	private LinkedList inputs;
+
 	private LinkedList outputs;
 
 	/**
@@ -114,32 +118,6 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	}
 
 	/**
-	 * @param input the input mapping to add
-	 */
-	public void addInput(InputModel input) {
-		if (input == null) {
-			return;
-		}
-		if (inputs == null) {
-			inputs = new LinkedList();
-		}
-		inputs.add(input);
-	}
-
-	/**
-	 * @param inputs the input mappings to add
-	 */
-	public void addInputs(LinkedList inputs) {
-		if (inputs == null || inputs.isEmpty()) {
-			return;
-		}
-		if (this.inputs == null) {
-			this.inputs = new LinkedList();
-		}
-		this.inputs.addAll(inputs);
-	}
-
-	/**
 	 * @return the output mappings
 	 */
 	public LinkedList getOutputs() {
@@ -153,29 +131,4 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 		this.outputs = outputs;
 	}
 
-	/**
-	 * @param output the output mapping to add
-	 */
-	public void addOutput(OutputModel output) {
-		if (output == null) {
-			return;
-		}
-		if (outputs == null) {
-			outputs = new LinkedList();
-		}
-		outputs.add(output);
-	}
-
-	/**
-	 * @param outputs the output mappings to add
-	 */
-	public void addOutputs(LinkedList outputs) {
-		if (outputs == null || outputs.isEmpty()) {
-			return;
-		}
-		if (this.outputs == null) {
-			this.outputs = new LinkedList();
-		}
-		this.outputs.addAll(outputs);
-	}
 }
