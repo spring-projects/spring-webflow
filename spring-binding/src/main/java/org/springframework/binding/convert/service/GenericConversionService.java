@@ -161,24 +161,43 @@ public class GenericConversionService implements ConversionService {
 	}
 
 	private Converter findRegisteredConverter(Class sourceClass, Class targetClass) {
-		LinkedList classQueue = new LinkedList();
-		classQueue.addFirst(sourceClass);
-		while (!classQueue.isEmpty()) {
-			Class currentClass = (Class) classQueue.removeLast();
-			Map sourceTargetConverters = findConvertersForSource(currentClass);
-			Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
-			if (converter != null) {
-				return converter;
+		if (sourceClass.isInterface()) {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(sourceClass);
+			while (!classQueue.isEmpty()) {
+				Class currentClass = (Class) classQueue.removeLast();
+				Map sourceTargetConverters = findConvertersForSource(currentClass);
+				Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
+				if (converter != null) {
+					return converter;
+				}
+				Class[] interfaces = targetClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
 			}
-			if (currentClass.getSuperclass() != null) {
-				classQueue.addFirst(currentClass.getSuperclass());
+			Map objectConverters = findConvertersForSource(Object.class);
+			return findTargetConverter(objectConverters, targetClass);
+		} else {
+			LinkedList classQueue = new LinkedList();
+			classQueue.addFirst(sourceClass);
+			while (!classQueue.isEmpty()) {
+				Class currentClass = (Class) classQueue.removeLast();
+				Map sourceTargetConverters = findConvertersForSource(currentClass);
+				Converter converter = findTargetConverter(sourceTargetConverters, targetClass);
+				if (converter != null) {
+					return converter;
+				}
+				if (currentClass.getSuperclass() != null) {
+					classQueue.addFirst(currentClass.getSuperclass());
+				}
+				Class[] interfaces = currentClass.getInterfaces();
+				for (int i = 0; i < interfaces.length; i++) {
+					classQueue.addFirst(interfaces[i]);
+				}
 			}
-			Class[] interfaces = currentClass.getInterfaces();
-			for (int i = 0; i < interfaces.length; i++) {
-				classQueue.addFirst(interfaces[i]);
-			}
+			return null;
 		}
-		return null;
 	}
 
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException {
@@ -257,7 +276,6 @@ public class GenericConversionService implements ConversionService {
 				if (converter != null) {
 					return converter;
 				}
-				// queue up target class's implemented interfaces.
 				Class[] interfaces = targetClass.getInterfaces();
 				for (int i = 0; i < interfaces.length; i++) {
 					classQueue.addFirst(interfaces[i]);
@@ -276,7 +294,6 @@ public class GenericConversionService implements ConversionService {
 				if (targetClass.getSuperclass() != null) {
 					classQueue.addFirst(targetClass.getSuperclass());
 				}
-				// queue up target class's implemented interfaces.
 				Class[] interfaces = targetClass.getInterfaces();
 				for (int i = 0; i < interfaces.length; i++) {
 					classQueue.addFirst(interfaces[i]);
