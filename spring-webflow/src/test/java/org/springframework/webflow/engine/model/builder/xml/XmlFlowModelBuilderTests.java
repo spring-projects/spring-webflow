@@ -152,8 +152,9 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowModel flow = builder.getFlowModel();
 		ViewStateModel model = (ViewStateModel) flow.getStates().get(0);
 		assertEquals("formObject", model.getModel());
-		assertEquals("objectProperty", ((BindingModel) model.getBindings().get(0)).getProperty());
-		assertEquals("customConverter", ((BindingModel) model.getBindings().get(0)).getConverter());
+		assertEquals("true", model.getBinder().getAutoBind());
+		assertEquals("objectProperty", ((BindingModel) model.getBinder().getBindings().get(0)).getProperty());
+		assertEquals("customConverter", ((BindingModel) model.getBinder().getBindings().get(0)).getConverter());
 	}
 
 	public void testViewStateRedirect() {

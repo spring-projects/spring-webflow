@@ -327,33 +327,68 @@ fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a conc
 										</xsd:attribute>
 									</xsd:complexType>
 								</xsd:element>
-								<xsd:element name="binding" minOccurs="0" maxOccurs="unbounded">
+								<xsd:element name="binder" minOccurs="0" maxOccurs="unbounded">
 									<xsd:annotation>
 										<xsd:documentation>
 											<![CDATA[
-A view model binding.  A binding connects a UI element in this view to a model property.
+Configures the process of binding UI elements such as form fields to model properties.
 ]]>
 										</xsd:documentation>
-									</xsd:annotation>
+									</xsd:annotation>							
 									<xsd:complexType>
-										<xsd:attribute name="property" type="xsd:string" use="required">
-											<xsd:annotation>
-												<xsd:documentation>
-													<![CDATA[
+										<xsd:sequence>								
+											<xsd:element name="binding" minOccurs="0" maxOccurs="unbounded">
+												<xsd:annotation>
+													<xsd:documentation>
+														<![CDATA[
+Defines a view model binding.  A binding connects a UI element in this view to a model property.
+]]>
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:attribute name="property" type="xsd:string" use="required">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
 The name of the model property to bind to.
 ]]>
-												</xsd:documentation>
-											</xsd:annotation>
-										</xsd:attribute>
-										<xsd:attribute name="converter" type="xsd:string">
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+													<xsd:attribute name="converter" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
+The name of a custom converter to use to format the property for display in the UI.
+]]>
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+													<xsd:attribute name="required" type="xsd:boolean">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
+Indicates if this binding is required.  A required binding generates an error when setting a null or empty value.
+A binding that is not required allows null and empty values to be bound.
+]]>
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="auto-bind" type="xsd:boolean">
 											<xsd:annotation>
 												<xsd:documentation>
 													<![CDATA[
-The name of a custom converter to use to format the property for display in the UI.
+Toggles automatic model binding.  If true, binding between request parameters and model properties occurs automatically by convention.
+For example, the request parameter "firstName" might map to property "firstName" on a Person model.
+If false, binding must be explicitly enabled per property by configuring one or more binding elements.
+The default, if not overridden, is true.
 ]]>
 												</xsd:documentation>
 											</xsd:annotation>
-										</xsd:attribute>
+										</xsd:attribute>										
 									</xsd:complexType>
 								</xsd:element>
 								<xsd:element name="on-entry" minOccurs="0">

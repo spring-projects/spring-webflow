@@ -37,7 +37,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 
 	private LinkedList vars;
 
-	private LinkedList bindings;
+	private BinderModel binder;
 
 	private LinkedList onRenderActions;
 
@@ -71,7 +71,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setPopup(merge(getPopup(), state.getPopup()));
 		setModel(merge(getModel(), state.getModel()));
 		setVars(merge(getVars(), state.getVars(), false));
-		setBindings(merge(getBindings(), state.getBindings(), false));
+		setBinder((BinderModel) merge(getBinder(), state.getBinder()));
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
 	}
 
@@ -174,31 +174,12 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		vars.add(var);
 	}
 
-	/**
-	 * @return the bindings
-	 */
-	public LinkedList getBindings() {
-		return bindings;
+	public BinderModel getBinder() {
+		return binder;
 	}
 
-	/**
-	 * @param bindings the bindings to set
-	 */
-	public void setBindings(LinkedList bindings) {
-		this.bindings = bindings;
-	}
-
-	/**
-	 * @param var the var to add
-	 */
-	public void addBinding(BindingModel binding) {
-		if (binding == null) {
-			return;
-		}
-		if (bindings == null) {
-			bindings = new LinkedList();
-		}
-		bindings.add(binding);
+	public void setBinder(BinderModel binder) {
+		this.binder = binder;
 	}
 
 	/**
@@ -214,4 +195,5 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	public void setOnRenderActions(LinkedList onRenderActions) {
 		this.onRenderActions = onRenderActions;
 	}
+
 }

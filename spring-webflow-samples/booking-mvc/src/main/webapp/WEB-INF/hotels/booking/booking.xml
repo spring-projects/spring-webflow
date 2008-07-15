@@ -14,6 +14,15 @@
 	</on-start>
 	
 	<view-state id="enterBookingDetails" model="booking">
+		<binder auto-bind="false">
+			<binding property="checkinDate" converter="shortDate" required="true" />
+			<binding property="checkoutDate" converter="shortDate" required="true" />
+			<binding property="smoking" required="true" />
+			<binding property="creditCard" required="true" />
+			<binding property="creditCardName" required="true" />
+			<binding property="creditCardExpirationMonth" required="true"/>
+			<binding property="creditCardExpirationYear" required="true"/>
+		</binder>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />
 	</view-state>

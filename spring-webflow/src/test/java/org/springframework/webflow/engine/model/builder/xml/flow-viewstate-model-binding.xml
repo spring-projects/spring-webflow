@@ -3,7 +3,9 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<view-state id="form" model="formObject">
-		<binding property="objectProperty" converter="customConverter"/>	
+		<binder auto-bind="true">
+			<binding property="objectProperty" converter="customConverter" required="true" />	
+		</binder>
 	</view-state>
 
 </flow>

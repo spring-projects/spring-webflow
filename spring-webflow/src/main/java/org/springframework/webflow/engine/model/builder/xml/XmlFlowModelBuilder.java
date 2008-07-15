@@ -33,6 +33,7 @@ import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.engine.model.BindingModel;
 import org.springframework.webflow.engine.model.DecisionStateModel;
 import org.springframework.webflow.engine.model.EndStateModel;
@@ -518,6 +519,18 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
+	private BinderModel parseBinder(Element element) {
+		Element binderElement = DomUtils.getChildElementByTagName(element, "binder");
+		if (binderElement != null) {
+			BinderModel binder = new BinderModel();
+			binder.setAutoBind(binderElement.getAttribute("auto-bind"));
+			binder.setBindings(parseBindings(binderElement));
+			return binder;
+		} else {
+			return null;
+		}
+	}
+
 	private LinkedList parseBindings(Element element) {
 		List bindingElements = DomUtils.getChildElementsByTagName(element, "binding");
 		if (bindingElements.isEmpty()) {
@@ -594,7 +607,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setPopup(element.getAttribute("popup"));
 		state.setModel(element.getAttribute("model"));
 		state.setVars(parseVars(element));
-		state.setBindings(parseBindings(element));
+		state.setBinder(parseBinder(element));
 		state.setOnRenderActions(parseOnRenderActions(element));
 		state.setAttributes(parseAttributes(element));
 		state.setSecured(parseSecured(element));
