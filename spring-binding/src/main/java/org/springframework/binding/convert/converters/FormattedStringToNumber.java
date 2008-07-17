@@ -50,6 +50,10 @@ public class FormattedStringToNumber extends StringToObject {
 
 	private boolean lenient;
 
+	public FormattedStringToNumber() {
+		super(Number.class);
+	}
+
 	public FormattedStringToNumber(Class numberClass) {
 		super(numberClass);
 	}

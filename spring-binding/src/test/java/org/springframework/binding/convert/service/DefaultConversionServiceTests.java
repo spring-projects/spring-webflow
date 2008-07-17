@@ -15,13 +15,17 @@
  */
 package org.springframework.binding.convert.service;
 
+import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -39,6 +43,7 @@ import org.springframework.binding.format.DefaultNumberFormatFactory;
  * @author Keith Donald
  */
 public class DefaultConversionServiceTests extends TestCase {
+
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
 		List lst = new ArrayList();
@@ -85,7 +90,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 	public void testRegisterConverter() {
 		GenericConversionService service = new GenericConversionService();
-		FormattedStringToNumber converter = new FormattedStringToNumber(Integer.class);
+		FormattedStringToNumber converter = new FormattedStringToNumber();
 		DefaultNumberFormatFactory numberFormatFactory = new DefaultNumberFormatFactory();
 		numberFormatFactory.setLocale(Locale.US);
 		converter.setNumberFormatFactory(numberFormatFactory);
@@ -94,6 +99,21 @@ public class DefaultConversionServiceTests extends TestCase {
 		Integer three = (Integer) executor.execute("3,000");
 		assertEquals(3000, three.intValue());
 		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
+		String string = (String) executor2.execute(new Integer(3000));
+		assertEquals("3,000", string);
+	}
+
+	public void testRegisterCustomConverter() {
+		DefaultConversionService service = new DefaultConversionService();
+		FormattedStringToNumber converter = new FormattedStringToNumber();
+		DefaultNumberFormatFactory numberFormatFactory = new DefaultNumberFormatFactory();
+		numberFormatFactory.setLocale(Locale.US);
+		converter.setNumberFormatFactory(numberFormatFactory);
+		service.addConverter("usaNumber", converter);
+		ConversionExecutor executor = service.getConversionExecutor("usaNumber", String.class, Integer.class);
+		Integer three = (Integer) executor.execute("3,000");
+		assertEquals(3000, three.intValue());
+		ConversionExecutor executor2 = service.getConversionExecutor("usaNumber", Integer.class, String.class);
 		String string = (String) executor2.execute(new Integer(3000));
 		assertEquals("3,000", string);
 	}
@@ -198,6 +218,42 @@ public class DefaultConversionServiceTests extends TestCase {
 		Integer[] result = (Integer[]) executor.execute("123");
 		assertEquals(1, result.length);
 		assertEquals(new Integer(123), result[0]);
+	}
+
+	public void testGetConversionExecutorsForSource() {
+		DefaultConversionService service1 = new DefaultConversionService();
+		service1.addConverter(new CustomConverter());
+		GenericConversionService service2 = new GenericConversionService();
+		FormattedStringToNumber formatterConverter = new FormattedStringToNumber(BigDecimal.class);
+		service2.addConverter(formatterConverter);
+		service2.setParent(service1);
+		Set converters = service2.getConversionExecutors(String.class);
+		Iterator it = converters.iterator();
+		while (it.hasNext()) {
+			ConversionExecutor executor = (ConversionExecutor) it.next();
+			if (executor.getTargetClass().equals(BigDecimal.class)) {
+				StaticConversionExecutor se = (StaticConversionExecutor) executor;
+				assertSame(formatterConverter, se.getConverter());
+			}
+		}
+		assertEquals(14, converters.size());
+	}
+
+	private static class CustomConverter implements Converter {
+
+		public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+			// TODO Auto-generated method stub
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public Class getSourceClass() {
+			return String.class;
+		}
+
+		public Class getTargetClass() {
+			return Principal.class;
+		}
+
 	}
 
 	// public void testGenericTypeConversionOGNL() {

@@ -16,6 +16,8 @@
 package org.springframework.binding.expression.beanwrapper;
 
 import java.beans.PropertyEditorSupport;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
@@ -88,9 +90,9 @@ public class BeanWrapperExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		try {
 			BeanWrapperImpl beanWrapper = new BeanWrapperImpl(context);
-			ConversionExecutor[] converters = conversionService.getConversionExecutors(String.class);
-			for (int i = 0; i < converters.length; i++) {
-				ConversionExecutor converter = converters[i];
+			Set converters = conversionService.getConversionExecutors(String.class);
+			for (Iterator it = converters.iterator(); it.hasNext();) {
+				ConversionExecutor converter = (ConversionExecutor) it.next();
 				beanWrapper.registerCustomEditor(converter.getTargetClass(), new PropertyEditorConverter(converter));
 			}
 			beanWrapper.setPropertyValue(expression, value);

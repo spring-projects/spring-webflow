@@ -16,13 +16,12 @@
 package org.springframework.binding.convert.service;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +50,12 @@ public class GenericConversionService implements ConversionService {
 	 * the source->target conversion.
 	 */
 	private final Map sourceClassConverters = new HashMap();
+
+	/**
+	 * A map of custom converters. Custom converters are assigned a unique identifier that can be used to lookup the
+	 * converter. This allows multiple converters for the same source->target class to be registered.
+	 */
+	private final Map customConverters = new HashMap();
 
 	/**
 	 * Indexes classes by well-known aliases.
@@ -83,20 +88,21 @@ public class GenericConversionService implements ConversionService {
 	public void addConverter(Converter converter) {
 		Class sourceClass = converter.getSourceClass();
 		Class targetClass = converter.getTargetClass();
-		if (sourceClass.isPrimitive()) {
-			throw new IllegalArgumentException("Invalid Converter " + converter
-					+ "; A primitive type is not allowed for the [sourceClass] argument");
-		}
-		if (targetClass.isPrimitive()) {
-			throw new IllegalArgumentException("Invalid Converter " + converter
-					+ "; A primitive type is not allowed for the [targetClass] argument");
-		}
 		Map sourceMap = getSourceMap(sourceClass);
 		sourceMap.put(targetClass, converter);
 		if (converter instanceof TwoWayConverter) {
 			sourceMap = getSourceMap(targetClass);
 			sourceMap.put(sourceClass, new ReverseConverter((TwoWayConverter) converter));
 		}
+	}
+
+	/**
+	 * Add given custom converter to this conversion service.
+	 * @param id the id of the custom converter instance
+	 * @param converter the converter
+	 */
+	public void addConverter(String id, Converter converter) {
+		customConverters.put(id, converter);
 	}
 
 	/**
@@ -154,9 +160,39 @@ public class GenericConversionService implements ConversionService {
 				return parent.getConversionExecutor(sourceClass, targetClass);
 			} else {
 				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
-						"No ConversionExecutor found for converting from sourceClass '" + sourceClass.getName()
-								+ "' to target class '" + targetClass.getName() + "'");
+						"No ConversionExecutor found for converting from sourceClass [" + sourceClass.getName()
+								+ "] to target class [" + targetClass.getName() + "]");
 			}
+		}
+	}
+
+	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+			throws ConversionExecutorNotFoundException {
+		Converter converter = (Converter) customConverters.get(id);
+		if (converter == null) {
+			throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+					"No custom ConversionExecutor found with id '" + id + "' for converting from sourceClass ["
+							+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
+		}
+		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
+			if (!converter.getTargetClass().isAssignableFrom(targetClass)) {
+				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+						"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+								+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
+			}
+			return new StaticConversionExecutor(sourceClass, targetClass, converter);
+		} else if (converter.getTargetClass().isAssignableFrom(sourceClass) && converter instanceof TwoWayConverter) {
+			if (!converter.getSourceClass().isAssignableFrom(targetClass)) {
+				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+						"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+								+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
+			}
+			TwoWayConverter twoWay = (TwoWayConverter) converter;
+			return new StaticConversionExecutor(sourceClass, targetClass, new ReverseConverter(twoWay));
+		} else {
+			throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+					"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+							+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
 		}
 	}
 
@@ -224,20 +260,27 @@ public class GenericConversionService implements ConversionService {
 
 	// subclassing support
 
-	public ConversionExecutor[] getConversionExecutors(Class sourceClass) {
+	public Set getConversionExecutors(Class sourceClass) {
+		Set parentExecutors;
+		if (parent != null) {
+			parentExecutors = parent.getConversionExecutors(sourceClass);
+		} else {
+			parentExecutors = Collections.EMPTY_SET;
+		}
 		Map sourceMap = getSourceMap(sourceClass);
-		if (sourceMap.isEmpty()) {
-			return new ConversionExecutor[0];
+		if (parentExecutors.isEmpty() && sourceMap.isEmpty()) {
+			return Collections.EMPTY_SET;
 		}
 		Set entries = sourceMap.entrySet();
-		List conversionExecutors = new ArrayList(entries.size());
+		Set conversionExecutors = new HashSet(entries.size() + parentExecutors.size());
 		for (Iterator it = entries.iterator(); it.hasNext();) {
 			Map.Entry entry = (Map.Entry) it.next();
 			Class targetClass = (Class) entry.getKey();
 			Converter converter = (Converter) entry.getValue();
 			conversionExecutors.add(new StaticConversionExecutor(sourceClass, targetClass, converter));
 		}
-		return (ConversionExecutor[]) conversionExecutors.toArray(new ConversionExecutor[entries.size()]);
+		conversionExecutors.addAll(parentExecutors);
+		return conversionExecutors;
 	}
 
 	/**

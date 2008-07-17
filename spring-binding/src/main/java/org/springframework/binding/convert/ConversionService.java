@@ -15,6 +15,8 @@
  */
 package org.springframework.binding.convert;
 
+import java.util.Set;
+
 /**
  * A service interface for retrieving type conversion executors. The returned command objects are thread-safe and may be
  * safely cached for use by client code.
@@ -35,8 +37,8 @@ public interface ConversionService {
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException;
 
 	/**
-	 * Return the conversion executor capable of converting source objects of the specified <code>sourceClass</code>
-	 * to instances of the <code>targetClass</code>.
+	 * Return the default conversion executor capable of converting source objects of the specified
+	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
 	 * <p>
 	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
 	 * @param sourceClass the source class to convert from (required)
@@ -48,16 +50,30 @@ public interface ConversionService {
 			throws ConversionExecutorNotFoundException;
 
 	/**
+	 * Return the custom conversion executor capable of converting source objects of the specified
+	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
+	 * <p>
+	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
+	 * @param id the id of the custom conversion executor (required)
+	 * @param sourceClass the source class to convert from (required)
+	 * @param targetClass the target class to convert to (required)
+	 * @return the executor that can execute instance type conversion, never null
+	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
+	 */
+	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+			throws ConversionExecutorNotFoundException;
+
+	/**
 	 * Return all conversion executors capable of converting <i>from</i> the provided <code>sourceClass</code>. For
-	 * example, <code>ConversionExecutor[] getConversionExecutor(String.class)</code> would return all converters that
-	 * convert from String to some other Object.
+	 * example, <code>getConversionExecutor(String.class)</code> would return all converters that convert from String
+	 * to some other Object. Mainly useful for adapting a set of converters to some other environment.
 	 * @param sourceClass the source class converting from
 	 * @return the conversion executors that can convert from that source class
 	 */
-	public ConversionExecutor[] getConversionExecutors(Class sourceClass);
+	public Set getConversionExecutors(Class sourceClass);
 
 	/**
-	 * Lookup a class by it alias. For example, <code>long</code> for <code>java.lang.Long</code>
+	 * Lookup a class by its well-known alias. For example, <code>long</code> for <code>java.lang.Long</code>
 	 * @param alias the class alias
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
