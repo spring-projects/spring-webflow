@@ -3,7 +3,7 @@ Contained in this directory are the Spring Web Flow (SWF) related project source
 DIRECTORIES
 
 1. build-spring-webflow - Contains the metadata needed to build the SWF projects using spring-build.
-                          To build all projects, simply run 'ant' (v1.7 or >) in this directory.
+                          To build all projects, simply run 'ant' (version 1.7 or >) in this directory.
 
 2. spring-build - A linked in SVN external to Spring's master build system. 
                   Used to power the build for all Spring projects.
