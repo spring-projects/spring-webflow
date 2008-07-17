@@ -66,23 +66,26 @@ public abstract class AutowiringSupport {
 	}
 
 	/**
-	 * Autowire all objects in flash, flow and conversation scope for given flow execution.
+	 * Autowire all objects in flash, flow and conversation scope for given flow execution. Autowiring will only happen
+	 * if the provided flow execution is still active.
 	 * @see #autowire(ScopeType, MutableAttributeMap)
 	 */
 	public void autowire(FlowExecutionContext flowExecutionContext) {
-		// no need to autowire request scope since that will be setup from scratch in this request
+		if (flowExecutionContext.isActive()) {
+			// no need to autowire request scope since that will be setup from scratch in this request
 
-		// autowire flash and flow scope for all flow sessions in the flow execution
-		FlowSession flowSession = flowExecutionContext.getActiveSession();
-		while (flowSession != null) {
-			autowire(ScopeType.FLASH, flowSession.getFlashMap());
-			autowire(ScopeType.FLOW, flowSession.getScope());
+			// autowire flash and flow scope for all flow sessions in the flow execution
+			FlowSession flowSession = flowExecutionContext.getActiveSession();
+			while (flowSession != null) {
+				autowire(ScopeType.FLASH, flowSession.getFlashMap());
+				autowire(ScopeType.FLOW, flowSession.getScope());
 
-			flowSession = flowSession.getParent();
+				flowSession = flowSession.getParent();
+			}
+
+			// autowire conversation scope, which is not tied to the flow session
+			autowire(ScopeType.CONVERSATION, flowExecutionContext.getConversationScope());
 		}
-
-		// autowire conversation scope, which is not tied to the flow session
-		autowire(ScopeType.CONVERSATION, flowExecutionContext.getConversationScope());
 	}
 
 	/**

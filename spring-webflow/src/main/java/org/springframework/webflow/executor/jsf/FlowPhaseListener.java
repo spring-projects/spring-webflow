@@ -37,6 +37,7 @@ import javax.faces.event.PhaseListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.AttributeMapper;
+import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -416,8 +417,13 @@ public class FlowPhaseListener implements PhaseListener {
 
 		ViewSelection selectedView = holder.getViewSelection();
 		if (selectedView == null) {
-			// no navigation event has been processed - simply refresh the execution with the same key
-			selectedView = holder.getFlowExecution().refresh(context);
+			if (holder.getFlowExecution().isActive()) {
+				// no navigation event has been processed - simply refresh the execution with the same key
+				selectedView = holder.getFlowExecution().refresh(context);
+			} else {
+				// fall back to a null-view
+				selectedView = ViewSelection.NULL_VIEW;
+			}
 			holder.setViewSelection(selectedView);
 		} else {
 			// a navigation event has been processed - generate a new flow execution key if necessary
@@ -536,6 +542,12 @@ public class FlowPhaseListener implements PhaseListener {
 	 */
 	protected void restoreFacesMessages(FacesContext context) {
 		if (FlowExecutionHolderUtils.isFlowExecutionRestored(context)) {
+			if (!FlowExecutionHolderUtils.getRequiredCurrentFlowExecution(context).isActive()) {
+				// the flow execution has ended -- no need to restore faces messages since we can't have a
+				// redirect in this case anyway
+				return;
+			}
+
 			MutableAttributeMap scope = getFacesMessagesScope(context);
 			Map facesMessagesMap = (Map) scope.get(getFacesMessagesKey());
 			if (facesMessagesMap != null) {
@@ -559,6 +571,9 @@ public class FlowPhaseListener implements PhaseListener {
 	 * @since 1.0.6
 	 */
 	protected void saveFacesMessages(FacesContext context) {
+		Assert.state(FlowExecutionHolderUtils.getCurrentFlowExecution(context).isActive(),
+				"The flow execution should be active when trying to save faces messages");
+
 		// gather all message to put away in the flow execution
 		Map facesMessagesMap = new HashMap();
 		for (Iterator clientIds = context.getClientIdsWithMessages(); clientIds.hasNext();) {
