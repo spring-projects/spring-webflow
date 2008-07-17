@@ -260,8 +260,8 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void updateHistory(RequestControlContext context) {
-		TransitionDefinition t = context.getCurrentTransition();
-		History history = (History) t.getAttributes().get("history");
+		TransitionDefinition transition = context.getCurrentTransition();
+		History history = (History) transition.getAttributes().get("history");
 		if (history == null || history == History.PRESERVE) {
 			context.updateCurrentFlowExecutionSnapshot();
 		} else if (history == History.DISCARD) {

@@ -23,17 +23,7 @@ import java.util.LinkedList;
  */
 public class BinderModel extends AbstractModel {
 
-	private String autoBind;
-
 	private LinkedList bindings;
-
-	public String getAutoBind() {
-		return autoBind;
-	}
-
-	public void setAutoBind(String autoBind) {
-		this.autoBind = autoBind;
-	}
 
 	public LinkedList getBindings() {
 		return bindings;
@@ -49,7 +39,6 @@ public class BinderModel extends AbstractModel {
 
 	public void merge(Model model) {
 		BinderModel binder = (BinderModel) model;
-		setAutoBind(merge(getAutoBind(), binder.getAutoBind()));
 		setBindings(merge(getBindings(), binder.getBindings()));
 	}
 }

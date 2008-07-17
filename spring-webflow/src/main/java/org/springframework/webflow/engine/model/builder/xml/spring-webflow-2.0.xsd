@@ -377,18 +377,6 @@ A binding that is not required allows null and empty values to be bound.
 												</xsd:complexType>
 											</xsd:element>
 										</xsd:sequence>
-										<xsd:attribute name="auto-bind" type="xsd:boolean">
-											<xsd:annotation>
-												<xsd:documentation>
-													<![CDATA[
-Toggles automatic model binding.  If true, binding between request parameters and model properties occurs automatically by convention.
-For example, the request parameter "firstName" might map to property "firstName" on a Person model.
-If false, binding must be explicitly enabled per property by configuring one or more binding elements.
-The default, if not overridden, is true.
-]]>
-												</xsd:documentation>
-											</xsd:annotation>
-										</xsd:attribute>										
 									</xsd:complexType>
 								</xsd:element>
 								<xsd:element name="on-entry" minOccurs="0">

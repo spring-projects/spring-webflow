@@ -15,9 +15,12 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
+import java.util.Set;
+
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
@@ -129,8 +132,13 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 
-		public ConversionExecutor[] getConversionExecutors(Class sourceClass) {
+		public Set getConversionExecutors(Class sourceClass) {
 			return getFlowBuilderServices().getConversionService().getConversionExecutors(sourceClass);
+		}
+
+		public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+				throws ConversionExecutorNotFoundException {
+			return getFlowBuilderServices().getConversionService().getConversionExecutor(id, sourceClass, targetClass);
 		}
 
 		public Class getClassForAlias(String name) {

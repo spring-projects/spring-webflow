@@ -523,7 +523,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		Element binderElement = DomUtils.getChildElementByTagName(element, "binder");
 		if (binderElement != null) {
 			BinderModel binder = new BinderModel();
-			binder.setAutoBind(binderElement.getAttribute("auto-bind"));
 			binder.setBindings(parseBindings(binderElement));
 			return binder;
 		} else {

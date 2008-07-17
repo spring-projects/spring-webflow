@@ -261,12 +261,10 @@ public abstract class AbstractMvcView implements View {
 	private boolean shouldBind(Object model) {
 		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
 		TransitionDefinition transition = currentState.getTransition(eventId);
-		if (transition != null) {
-			if (transition.getAttributes().contains("bind")) {
-				return transition.getAttributes().getBoolean("bind").booleanValue();
-			}
+		if (transition == null) {
+			return true;
 		}
-		return true;
+		return transition.getAttributes().getBoolean("bind", Boolean.FALSE).booleanValue();
 	}
 
 	private MappingResults bind(Object model) {
