@@ -1,6 +1,6 @@
 package org.springframework.faces.ui;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Locale;
 
 import javax.faces.FacesException;
@@ -76,10 +76,14 @@ public class DojoDecorationRendererTests extends TestCase {
 				+ "{selector : 'date', datePattern : 'yyyy-MM-dd'})";
 		UIInput childComponent = new UIInput();
 		DateTimeConverter converter = new DateTimeConverter();
-		converter.setLocale(Locale.ENGLISH);
+		converter.setLocale(Locale.US);
 		childComponent.setConverter(converter);
 		childComponent.setId("foo");
-		childComponent.setValue(new Date("11/21/1977"));
+		Calendar cal = Calendar.getInstance(Locale.US);
+		cal.set(Calendar.MONTH, Calendar.NOVEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 21);
+		cal.set(Calendar.YEAR, 1977);
+		childComponent.setValue(cal.getTime());
 		DojoDecorationRenderer renderer = new DojoDecorationRenderer();
 		String nodeAttributes = renderer.getNodeAttributesAsString(jsf.facesContext(), childComponent);
 		assertEquals(expectedAttributes, nodeAttributes);
