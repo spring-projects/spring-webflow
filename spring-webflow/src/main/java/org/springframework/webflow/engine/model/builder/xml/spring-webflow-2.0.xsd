@@ -1451,6 +1451,15 @@ Indicates whether model binding should occur before this transition executes. De
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:attribute name="validate" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates whether model validation should occur before this transition executes. Defaults to true.
+							]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 				<xsd:attribute name="history">
 					<xsd:annotation>
 						<xsd:documentation>
