@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -107,6 +108,10 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 
 		public void render() throws IOException {
 			context.getExternalContext().getResponseWriter().write(viewId);
+		}
+
+		public String toString() {
+			return new ToStringCreator(this).append("viewId", viewId).toString();
 		}
 	}
 }
