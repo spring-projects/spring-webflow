@@ -14,7 +14,7 @@
 	</on-start>
 	
 	<view-state id="enterBookingDetails" model="booking">
-		<binder auto-bind="false">
+		<binder>
 			<binding property="checkinDate" converter="shortDate" required="true" />
 			<binding property="checkoutDate" converter="shortDate" required="true" />
 			<binding property="smoking" required="true" />
