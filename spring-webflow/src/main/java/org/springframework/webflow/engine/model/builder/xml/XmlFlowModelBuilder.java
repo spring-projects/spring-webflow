@@ -543,7 +543,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private BindingModel parseBinding(Element element) {
-		return new BindingModel(element.getAttribute("property"), element.getAttribute("converter"));
+		return new BindingModel(element.getAttribute("property"), element.getAttribute("converter"), element
+				.getAttribute("required"));
 	}
 
 	private LinkedList parseOnExitActions(Element element) {

@@ -49,4 +49,5 @@ public class ServletMvcView extends AbstractMvcView {
 				context.getActiveFlow().getApplicationContext());
 		getView().render(model, request, response);
 	}
+
 }

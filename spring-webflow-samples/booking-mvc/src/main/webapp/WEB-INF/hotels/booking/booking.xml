@@ -17,11 +17,12 @@
 		<binder>
 			<binding property="checkinDate" converter="shortDate" required="true" />
 			<binding property="checkoutDate" converter="shortDate" required="true" />
+			<binding property="beds" required="true"/>
 			<binding property="smoking" required="true" />
 			<binding property="creditCard" required="true" />
 			<binding property="creditCardName" required="true" />
-			<binding property="creditCardExpirationMonth" required="true"/>
-			<binding property="creditCardExpirationYear" required="true"/>
+			<binding property="creditCardExpiryMonth" required="true"/>
+			<binding property="creditCardExpiryYear" required="true"/>
 		</binder>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />

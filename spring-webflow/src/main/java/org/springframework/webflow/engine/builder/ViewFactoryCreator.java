@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.builder;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
@@ -33,10 +34,11 @@ public interface ViewFactoryCreator {
 	 * @param viewId an expression that resolves the id of the view to render
 	 * @param expressionParser an optional expression parser to use to resolve view expressions
 	 * @param conversionService an optional conversion service to use to format text values
+	 * @param binderModel an optional configuration for how the rendered view binds to a model that provides its data
 	 * @return the view factory
 	 */
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService);
+			ConversionService conversionService, BinderModel binderModel);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.
@@ -44,4 +46,5 @@ public interface ViewFactoryCreator {
 	 * @return the default view id
 	 */
 	public String getViewIdByConvention(String viewStateId);
+
 }

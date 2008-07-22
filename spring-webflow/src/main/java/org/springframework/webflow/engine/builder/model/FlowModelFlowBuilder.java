@@ -75,6 +75,7 @@ import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.engine.model.DecisionStateModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.EvaluateModel;
@@ -513,7 +514,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private void parseAndAddViewState(ViewStateModel state, Flow flow) {
-		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), false);
+		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), false, state.getBinder());
 		Boolean redirect = null;
 		if (StringUtils.hasText(state.getRedirect())) {
 			redirect = (Boolean) fromStringTo(Boolean.class).execute(state.getRedirect());
@@ -571,7 +572,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 		parseAndPutSecured(state.getSecured(), attributes);
 		Action finalResponseAction;
-		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), true);
+		ViewFactory viewFactory = parseViewFactory(state.getView(), state.getId(), true, null);
 		if (viewFactory != null) {
 			finalResponseAction = new ViewFactoryActionAdapter(viewFactory);
 		} else {
@@ -583,7 +584,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				attributes);
 	}
 
-	private ViewFactory parseViewFactory(String view, String stateId, boolean endState) {
+	private ViewFactory parseViewFactory(String view, String stateId, boolean endState, BinderModel binderModel) {
 		if (!StringUtils.hasText(view)) {
 			if (endState) {
 				return null;
@@ -591,7 +592,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				view = getLocalContext().getViewFactoryCreator().getViewIdByConvention(stateId);
 				Expression viewId = getLocalContext().getExpressionParser().parseExpression(view,
 						new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
-				return createViewFactory(viewId);
+				return createViewFactory(viewId, binderModel);
 			}
 		} else if (view.startsWith("externalRedirect:")) {
 			String encodedUrl = view.substring("externalRedirect:".length());
@@ -606,13 +607,13 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			Expression viewId = getLocalContext().getExpressionParser().parseExpression(view,
 					new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
-			return createViewFactory(viewId);
+			return createViewFactory(viewId, binderModel);
 		}
 	}
 
-	private ViewFactory createViewFactory(Expression viewId) {
+	private ViewFactory createViewFactory(Expression viewId, BinderModel binderModel) {
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
-				getLocalContext().getExpressionParser(), getLocalContext().getConversionService());
+				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderModel);
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {

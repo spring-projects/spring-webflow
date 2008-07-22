@@ -38,6 +38,7 @@ import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.webflow.engine.model.BinderModel;
 
 /**
  * Makes the properties of the "model" object available to Spring views during rendering. Also makes data binding (aka
@@ -62,6 +63,8 @@ public class BindingModel extends AbstractErrors {
 	private MappingResults mappingResults;
 
 	private MessageContext messageContext;
+
+	private BinderModel binderModel;
 
 	/**
 	 * Creates a new Spring Binding model.
@@ -89,6 +92,10 @@ public class BindingModel extends AbstractErrors {
 	 */
 	public void setMappingResults(MappingResults results) {
 		this.mappingResults = results;
+	}
+
+	public void setBinderModel(BinderModel binderModel) {
+		this.binderModel = binderModel;
 	}
 
 	// implementing Errors
@@ -144,11 +151,22 @@ public class BindingModel extends AbstractErrors {
 	private ConversionExecutor getConverter(Expression fieldExpression) {
 		if (conversionService != null) {
 			Class valueType = fieldExpression.getValueType(boundObject);
-			// TODO -- this really is not accurate for Collection or Array or Map types
-			// This needs to be cleaned up
+			// special handling for array, collection, map types
+			// necessary as getFieldValue is called by form tags for non-formattable properties, too
+			// TODO - investigate how to improve this in Spring MVC
 			if (valueType.isArray() || Collection.class.isAssignableFrom(valueType)
 					|| Map.class.isAssignableFrom(valueType)) {
 				return null;
+			}
+			if (binderModel != null) {
+				org.springframework.webflow.engine.model.BindingModel binding = binderModel.getBinding(fieldExpression
+						.getExpressionString());
+				if (binding != null) {
+					String converterId = binding.getConverter();
+					if (converterId != null) {
+						return conversionService.getConversionExecutor(converterId, valueType, String.class);
+					}
+				}
 			}
 			return conversionService.getConversionExecutor(valueType, String.class);
 		} else {

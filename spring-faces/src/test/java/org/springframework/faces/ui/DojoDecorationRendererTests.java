@@ -80,9 +80,7 @@ public class DojoDecorationRendererTests extends TestCase {
 		childComponent.setConverter(converter);
 		childComponent.setId("foo");
 		Calendar cal = Calendar.getInstance(Locale.US);
-		cal.set(Calendar.MONTH, Calendar.NOVEMBER);
-		cal.set(Calendar.DAY_OF_MONTH, 21);
-		cal.set(Calendar.YEAR, 1977);
+		cal.set(1977, Calendar.NOVEMBER, 21, 12, 0);
 		childComponent.setValue(cal.getTime());
 		DojoDecorationRenderer renderer = new DojoDecorationRenderer();
 		String nodeAttributes = renderer.getNodeAttributesAsString(jsf.facesContext(), childComponent);

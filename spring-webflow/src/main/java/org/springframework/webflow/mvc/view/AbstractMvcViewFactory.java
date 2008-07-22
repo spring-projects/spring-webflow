@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.view;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -37,12 +38,15 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private ConversionService conversionService;
 
+	private BinderModel binderModel;
+
 	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			ConversionService conversionService) {
+			ConversionService conversionService, BinderModel binderModel) {
 		this.viewId = viewId;
 		this.viewResolver = viewResolver;
 		this.expressionParser = expressionParser;
 		this.conversionService = conversionService;
+		this.binderModel = binderModel;
 	}
 
 	protected ExpressionParser getExpressionParser() {
@@ -51,6 +55,10 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	protected ConversionService getConversionService() {
 		return conversionService;
+	}
+
+	protected BinderModel getBinderModel() {
+		return binderModel;
 	}
 
 	public View getView(RequestContext context) {

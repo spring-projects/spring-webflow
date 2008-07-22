@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -51,6 +52,7 @@ import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
@@ -84,9 +86,9 @@ public abstract class AbstractMvcView implements View {
 
 	private String eventId;
 
-	private Set allowedBindFields;
-
 	private String fieldMarkerPrefix = "_";
+
+	private BinderModel binderModel;
 
 	/**
 	 * Creates a new MVC view.
@@ -115,6 +117,14 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	/**
+	 * Sets the configuration describing how this view should bind to its model to access data for rendering.
+	 * @param binderModel the model binder configuratio
+	 */
+	public void setBinderModel(BinderModel binderModel) {
+		this.binderModel = binderModel;
+	}
+
+	/**
 	 * Specify a prefix that can be used for parameters that mark potentially empty fields, having "prefix + field" as
 	 * name. Such a marker parameter is checked by existence: You can send any value for it, for example "visible". This
 	 * is particularly useful for HTML checkboxes and select options.
@@ -131,14 +141,6 @@ public abstract class AbstractMvcView implements View {
 	 */
 	public void setFieldMarkerPrefix(String fieldMarkerPrefix) {
 		this.fieldMarkerPrefix = fieldMarkerPrefix;
-	}
-
-	/**
-	 * Register fields that should be allowed for binding. Default is all fields.
-	 * @param allowedBindFields the set of field name strings to allow
-	 */
-	public void setAllowedBindFields(Set allowedBindFields) {
-		this.allowedBindFields = allowedBindFields;
 	}
 
 	public void render() throws IOException {
@@ -178,9 +180,11 @@ public abstract class AbstractMvcView implements View {
 				viewErrors = true;
 				addErrorMessages(mappingResults);
 			} else {
-				validate(model);
-				if (requestContext.getMessageContext().hasErrorMessages()) {
-					viewErrors = true;
+				if (shouldValidate(model)) {
+					validate(model);
+					if (requestContext.getMessageContext().hasErrorMessages()) {
+						viewErrors = true;
+					}
 				}
 			}
 		}
@@ -240,6 +244,7 @@ public abstract class AbstractMvcView implements View {
 		if (modelObject != null) {
 			BindingModel bindingModel = new BindingModel(getModelExpression().getExpressionString(), modelObject,
 					expressionParser, conversionService, requestContext.getMessageContext());
+			bindingModel.setBinderModel(binderModel);
 			bindingModel.setMappingResults(mappingResults);
 			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}
@@ -264,7 +269,7 @@ public abstract class AbstractMvcView implements View {
 		if (transition == null) {
 			return true;
 		}
-		return transition.getAttributes().getBoolean("bind", Boolean.FALSE).booleanValue();
+		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
 	}
 
 	private MappingResults bind(Object model) {
@@ -273,8 +278,49 @@ public abstract class AbstractMvcView implements View {
 		}
 		DefaultMapper mapper = new DefaultMapper();
 		ParameterMap requestParameters = requestContext.getRequestParameters();
-		addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
+		if (binderModel != null) {
+			addModelBindingMappings(mapper, requestParameters.asMap().keySet(), model);
+		} else {
+			addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
+		}
 		return mapper.map(requestParameters, model);
+	}
+
+	private void addModelBindingMappings(DefaultMapper mapper, Set parameterNames, Object model) {
+		Iterator it = binderModel.getBindings().iterator();
+		while (it.hasNext()) {
+			org.springframework.webflow.engine.model.BindingModel binding = (org.springframework.webflow.engine.model.BindingModel) it
+					.next();
+			String parameterName = binding.getProperty();
+			if (parameterNames.contains(parameterName)) {
+				addMapping(mapper, binding, model);
+			} else {
+				if (fieldMarkerPrefix != null && parameterNames.contains(fieldMarkerPrefix + parameterName)) {
+					addEmptyValueMapping(mapper, parameterName, model);
+				}
+			}
+		}
+	}
+
+	private void addMapping(DefaultMapper mapper, org.springframework.webflow.engine.model.BindingModel binding,
+			Object model) {
+		Expression source = new RequestParameterExpression(binding.getProperty());
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);
+		DefaultMapping mapping = new DefaultMapping(source, target);
+		// TODO - this is inefficient - consider introducing a typed Binding object
+		if (binding.getRequired() != null) {
+			mapping.setRequired(Boolean.valueOf(binding.getRequired()).booleanValue());
+		}
+		if (binding.getConverter() != null) {
+			ConversionExecutor conversionExecutor = conversionService.getConversionExecutor(binding.getConverter(),
+					String.class, target.getValueType(model));
+			mapping.setTypeConverter(conversionExecutor);
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding mapping for parameter '" + binding.getProperty() + "'");
+		}
+		mapper.addMapping(mapping);
 	}
 
 	private void addDefaultMappings(DefaultMapper mapper, Set parameterNames, Object model) {
@@ -282,33 +328,12 @@ public abstract class AbstractMvcView implements View {
 			String parameterName = (String) it.next();
 			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
 				String field = parameterName.substring(fieldMarkerPrefix.length());
-				if (isAllowedField(field)) {
-					if (!parameterNames.contains(field)) {
-						addEmptyValueMapping(mapper, field, model);
-					}
-				} else {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Will not map field marker parameter '" + parameterName + "'");
-					}
+				if (!parameterNames.contains(field)) {
+					addEmptyValueMapping(mapper, field, model);
 				}
 			} else {
-				if (isAllowedField(parameterName)) {
-					addDefaultMapping(mapper, parameterName, model);
-				} else {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Will not map parameter '" + parameterName + "'");
-					}
-				}
+				addDefaultMapping(mapper, parameterName, model);
 			}
-		}
-	}
-
-	private boolean isAllowedField(String field) {
-		if (allowedBindFields == null) {
-			// always allow
-			return true;
-		} else {
-			return allowedBindFields.contains(field);
 		}
 	}
 
@@ -320,7 +345,7 @@ public abstract class AbstractMvcView implements View {
 			Expression source = new StaticExpression(getEmptyValue(propertyType));
 			DefaultMapping mapping = new DefaultMapping(source, target);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Adding empty parameter value mapping for field '" + field + "'");
+				logger.debug("Adding empty value mapping for parameter '" + field + "'");
 			}
 			mapper.addMapping(mapping);
 		} catch (EvaluationException e) {
@@ -347,7 +372,7 @@ public abstract class AbstractMvcView implements View {
 		Expression target = expressionParser.parseExpression(parameter, parserContext);
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding mapping for parameter '" + parameter + "'");
+			logger.debug("Adding default mapping for parameter '" + parameter + "'");
 		}
 		mapper.addMapping(mapping);
 	}
@@ -375,6 +400,15 @@ public abstract class AbstractMvcView implements View {
 				.append(field).append('.').append(errorCode).toString();
 		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
 				.defaultText(errorCode + " on " + field).build();
+	}
+
+	private boolean shouldValidate(Object model) {
+		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
+		TransitionDefinition transition = currentState.getTransition(eventId);
+		if (transition == null) {
+			return true;
+		}
+		return transition.getAttributes().getBoolean("validate", Boolean.TRUE).booleanValue();
 	}
 
 	private void validate(Object model) {

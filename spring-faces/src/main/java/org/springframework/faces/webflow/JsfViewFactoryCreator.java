@@ -21,6 +21,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.ViewFactory;
 
 /**
@@ -35,7 +36,7 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 	private Lifecycle lifecycle;
 
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			ConversionService conversionService) {
+			ConversionService conversionService, BinderModel binderModel) {
 		return new JsfViewFactory(viewIdExpression, getLifecycle());
 	}
 

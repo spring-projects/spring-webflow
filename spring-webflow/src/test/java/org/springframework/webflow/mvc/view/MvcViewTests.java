@@ -25,6 +25,7 @@ import org.springframework.webflow.action.ViewFactoryActionAdapter;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
@@ -214,9 +215,10 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
-		HashSet allowedBindFields = new HashSet();
-		allowedBindFields.add("stringProperty");
-		view.setAllowedBindFields(allowedBindFields);
+		BinderModel binderModel = new BinderModel();
+		binderModel
+				.addBinding(new org.springframework.webflow.engine.model.BindingModel("stringProperty", null, "true"));
+		view.setBinderModel(binderModel);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
 		assertEquals("submit", view.getFlowEvent().getId());
@@ -246,7 +248,6 @@ public class MvcViewTests extends TestCase {
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		HashSet allowedBindFields = new HashSet();
 		allowedBindFields.add("booleanProperty");
-		view.setAllowedBindFields(allowedBindFields);
 		view.processUserEvent();
 		assertEquals(false, bindBean.getBooleanProperty());
 	}

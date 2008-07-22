@@ -28,14 +28,18 @@ public class BindingModel extends AbstractModel {
 
 	private String converter;
 
+	private String required;
+
 	/**
 	 * Create a binding model
 	 * @param property the name of the bound property
 	 * @param converter the converter
+	 * @param required required status
 	 */
-	public BindingModel(String property, String converter) {
+	public BindingModel(String property, String converter, String required) {
 		setProperty(property);
 		setConverter(converter);
+		setRequired(required);
 	}
 
 	public boolean isMergeableWith(Model model) {
@@ -84,6 +88,18 @@ public class BindingModel extends AbstractModel {
 			this.converter = converter;
 		} else {
 			this.converter = null;
+		}
+	}
+
+	public String getRequired() {
+		return required;
+	}
+
+	public void setRequired(String required) {
+		if (StringUtils.hasText(required)) {
+			this.required = required;
+		} else {
+			this.required = null;
 		}
 	}
 

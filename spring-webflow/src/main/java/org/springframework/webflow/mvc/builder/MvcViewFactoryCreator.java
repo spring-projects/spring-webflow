@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
+import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
 import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
@@ -140,14 +141,14 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService) {
+			ConversionService conversionService, BinderModel binderModel) {
 		if (useSpringBeanBinding) {
 			expressionParser = new BeanWrapperExpressionParser(conversionService);
 		}
 		if (environment == MvcEnvironment.SERVLET) {
-			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService);
+			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService, binderModel);
 		} else if (environment == MvcEnvironment.PORTLET) {
-			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService);
+			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService, binderModel);
 		} else {
 			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
 		}

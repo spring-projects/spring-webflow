@@ -168,11 +168,23 @@ public class GenericConversionService implements ConversionService {
 
 	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
 			throws ConversionExecutorNotFoundException {
+		Assert.hasText(id, "The id of the custom converter is required");
+		Assert.notNull(sourceClass, "The source class to convert from is required");
+		Assert.notNull(targetClass, "The target class to convert to is required");
+		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
+		targetClass = convertToWrapperClassIfNecessary(targetClass);
+		if (targetClass.isAssignableFrom(sourceClass)) {
+			return new StaticConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
+		}
 		Converter converter = (Converter) customConverters.get(id);
 		if (converter == null) {
-			throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
-					"No custom ConversionExecutor found with id '" + id + "' for converting from sourceClass ["
-							+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
+			if (parent != null) {
+				return parent.getConversionExecutor(id, sourceClass, targetClass);
+			} else {
+				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+						"No custom ConversionExecutor found with id '" + id + "' for converting from sourceClass ["
+								+ sourceClass.getName() + "] to targetClass [" + targetClass.getName() + "]");
+			}
 		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
 			if (!converter.getTargetClass().isAssignableFrom(targetClass)) {
