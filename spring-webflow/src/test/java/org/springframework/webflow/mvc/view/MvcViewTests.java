@@ -216,8 +216,7 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		BinderModel binderModel = new BinderModel();
-		binderModel
-				.addBinding(new org.springframework.webflow.engine.model.BindingModel("stringProperty", null, "true"));
+		binderModel.addBinding(new org.springframework.webflow.engine.model.BindingModel("stringProperty", null, true));
 		view.setBinderModel(binderModel);
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());

@@ -80,13 +80,15 @@ public abstract class AbstractMvcView implements View {
 
 	private ConversionService conversionService;
 
-	private MappingResults mappingResults;
+	private String fieldMarkerPrefix = "_";
 
-	private boolean viewErrors;
+	private String eventIdParameterName = "_eventId";
 
 	private String eventId;
 
-	private String fieldMarkerPrefix = "_";
+	private MappingResults mappingResults;
+
+	private boolean viewErrors;
 
 	private BinderModel binderModel;
 
@@ -141,6 +143,15 @@ public abstract class AbstractMvcView implements View {
 	 */
 	public void setFieldMarkerPrefix(String fieldMarkerPrefix) {
 		this.fieldMarkerPrefix = fieldMarkerPrefix;
+	}
+
+	/**
+	 * Sets the name of the request parameter to use to lookup user events signaled by this view. If not specified, the
+	 * default is <code>_eventId</code>
+	 * @param eventIdParameterName the event id parameter name
+	 */
+	public void setEventIdParameterName(String eventIdParameterName) {
+		this.eventIdParameterName = eventIdParameterName;
 	}
 
 	public void render() throws IOException {
@@ -308,10 +319,7 @@ public abstract class AbstractMvcView implements View {
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
 		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);
 		DefaultMapping mapping = new DefaultMapping(source, target);
-		// TODO - this is inefficient - consider introducing a typed Binding object
-		if (binding.getRequired() != null) {
-			mapping.setRequired(Boolean.valueOf(binding.getRequired()).booleanValue());
-		}
+		mapping.setRequired(binding.getRequired());
 		if (binding.getConverter() != null) {
 			ConversionExecutor conversionExecutor = conversionService.getConversionExecutor(binding.getConverter(),
 					String.class, target.getValueType(model));
@@ -441,7 +449,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private void determineEventId(RequestContext context) {
-		eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), "_eventId");
+		eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.view;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -40,6 +41,10 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private BinderModel binderModel;
 
+	private String eventIdParameterName;
+
+	private String fieldMarkerPrefix;
+
 	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
 			ConversionService conversionService, BinderModel binderModel) {
 		this.viewId = viewId;
@@ -49,22 +54,28 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		this.binderModel = binderModel;
 	}
 
-	protected ExpressionParser getExpressionParser() {
-		return expressionParser;
+	public void setEventIdParameterName(String eventIdParameterName) {
+		this.eventIdParameterName = eventIdParameterName;
 	}
 
-	protected ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	protected BinderModel getBinderModel() {
-		return binderModel;
+	public void setFieldMarkerPrefix(String fieldMarkerPrefix) {
+		this.fieldMarkerPrefix = fieldMarkerPrefix;
 	}
 
 	public View getView(RequestContext context) {
 		String viewId = (String) this.viewId.getValue(context);
 		org.springframework.web.servlet.View view = viewResolver.resolveView(viewId, context);
-		return createMvcView(view, context);
+		AbstractMvcView mvcView = createMvcView(view, context);
+		mvcView.setExpressionParser(expressionParser);
+		mvcView.setConversionService(conversionService);
+		mvcView.setBinderModel(binderModel);
+		if (StringUtils.hasText(eventIdParameterName)) {
+			mvcView.setEventIdParameterName(eventIdParameterName);
+		}
+		if (StringUtils.hasText(fieldMarkerPrefix)) {
+			mvcView.setFieldMarkerPrefix(fieldMarkerPrefix);
+		}
+		return mvcView;
 	}
 
 	protected abstract AbstractMvcView createMvcView(org.springframework.web.servlet.View view, RequestContext context);

@@ -38,11 +38,7 @@ public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {
-		PortletMvcView mvcView = new PortletMvcView(view, context);
-		mvcView.setExpressionParser(getExpressionParser());
-		mvcView.setConversionService(getConversionService());
-		mvcView.setBinderModel(getBinderModel());
-		return mvcView;
+		return new PortletMvcView(view, context);
 	}
 
 }

@@ -28,7 +28,7 @@ public class BindingModel extends AbstractModel {
 
 	private String converter;
 
-	private String required;
+	private boolean required;
 
 	/**
 	 * Create a binding model
@@ -36,7 +36,7 @@ public class BindingModel extends AbstractModel {
 	 * @param converter the converter
 	 * @param required required status
 	 */
-	public BindingModel(String property, String converter, String required) {
+	public BindingModel(String property, String converter, boolean required) {
 		setProperty(property);
 		setConverter(converter);
 		setRequired(required);
@@ -91,16 +91,12 @@ public class BindingModel extends AbstractModel {
 		}
 	}
 
-	public String getRequired() {
+	public boolean getRequired() {
 		return required;
 	}
 
-	public void setRequired(String required) {
-		if (StringUtils.hasText(required)) {
-			this.required = required;
-		} else {
-			this.required = null;
-		}
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 }

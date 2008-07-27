@@ -38,11 +38,7 @@ public class ServletMvcViewFactory extends AbstractMvcViewFactory {
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {
-		ServletMvcView mvcView = new ServletMvcView(view, context);
-		mvcView.setExpressionParser(getExpressionParser());
-		mvcView.setConversionService(getConversionService());
-		mvcView.setBinderModel(getBinderModel());
-		return mvcView;
+		return new ServletMvcView(view, context);
 	}
 
 }
