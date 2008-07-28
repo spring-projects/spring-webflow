@@ -37,18 +37,16 @@ import org.springframework.faces.ui.resource.ResourceHelper;
  */
 public class ResourceGroupRenderer extends Renderer {
 
-	private static final ResourceHelper resourceHelper = new ResourceHelper();
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		if (component.getChildCount() > 0) {
-			resourceHelper.beginCombineStyles(context);
+			ResourceHelper.beginCombineStyles(context);
 		}
 	}
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		if (component.getChildCount() > 0) {
-			resourceHelper.endCombineStyles(context);
+			ResourceHelper.endCombineStyles(context);
 		}
 	}
 }

@@ -32,6 +32,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 
@@ -102,9 +103,9 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			button.encodeEnd(context);
 
 			// Now render the link's HTML into a javascript variable
+			ResourceHelper.beginScriptBlock(context);
+
 			ResponseWriter writer = context.getResponseWriter();
-			writer.startElement("script", component);
-			writer.writeAttribute("type", "text/javascript", null);
 			String scriptVarStart = "var " + component.getClientId(context).replaceAll(":", "_") + "_link = \"";
 			writer.writeText(scriptVarStart, null);
 			writer = new DoubleQuoteEscapingWriter(writer);
@@ -133,16 +134,17 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			writer.writeText(scriptVarEnd, null);
 
 			decorationParams.append(", linkHtml : " + component.getClientId(context).replaceAll(":", "_") + "_link");
-			writer.endElement("script");
+
+			ResourceHelper.endScriptBlock(context);
 		}
 
 		decorationParams.append("}");
 		StringBuffer advisorScript = new StringBuffer();
 		advisorScript.append("Spring.addDecoration(new Spring.CommandLinkDecoration(" + decorationParams.toString()
 				+ "));");
-		writer.startElement("script", component);
+		ResourceHelper.beginScriptBlock(context);
 		writer.writeText(advisorScript, null);
-		writer.endElement("script");
+		ResourceHelper.endScriptBlock(context);
 	}
 
 	protected String[] getAttributesToRender(UIComponent component) {

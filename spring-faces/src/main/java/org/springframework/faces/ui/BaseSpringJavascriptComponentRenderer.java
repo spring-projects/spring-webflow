@@ -34,14 +34,12 @@ public abstract class BaseSpringJavascriptComponentRenderer extends BaseComponen
 
 	private String springJsResourceUri = "/spring/Spring.js";
 
-	private ResourceHelper resourceHelper = new ResourceHelper();
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			resourceHelper.renderScriptLink(context, springJsResourceUri);
+			ResourceHelper.renderScriptLink(context, springJsResourceUri);
 		}
 	}
 }

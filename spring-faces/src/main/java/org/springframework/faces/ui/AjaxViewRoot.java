@@ -34,6 +34,7 @@ import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
+import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.View;
@@ -201,10 +202,9 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			if (StringUtils.hasLength(formId)) {
 				String script = "dojo.byId('" + formId + "').action = '"
 						+ context.getApplication().getViewHandler().getActionURL(context, getViewId()) + "'";
-				writer.startElement("script", null);
-				writer.writeAttribute("type", "text/javascript", null);
+				ResourceHelper.beginScriptBlock(context);
 				writer.writeText(script, null);
-				writer.endElement("script");
+				ResourceHelper.endScriptBlock(context);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

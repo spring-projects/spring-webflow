@@ -41,17 +41,15 @@ public abstract class BaseDojoComponentRenderer extends BaseSpringJavascriptComp
 
 	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
 
-	private ResourceHelper resourceHelper = new ResourceHelper();
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+			ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-			resourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, dojoJsResourceUri);
 
-			resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, springDojoJsResourceUri);
 		}
 	}
 

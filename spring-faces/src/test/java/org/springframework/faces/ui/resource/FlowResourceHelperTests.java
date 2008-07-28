@@ -10,8 +10,6 @@ import org.springframework.faces.webflow.JSFMockHelper;
 
 public class FlowResourceHelperTests extends TestCase {
 
-	ResourceHelper resourceHelper = new ResourceHelper();
-
 	StringWriter writer = new StringWriter();
 
 	JSFMockHelper jsf = new JSFMockHelper();
@@ -31,8 +29,8 @@ public class FlowResourceHelperTests extends TestCase {
 		String scriptPath = "/dojo/dojo.js";
 		String expectedUrl = "null/resources/dojo/dojo.js";
 
-		resourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
-		resourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
 
 		String expectedOutput = "<script type=\"text/javascript\" src=\"" + expectedUrl + "\"/>";
 
@@ -45,8 +43,8 @@ public class FlowResourceHelperTests extends TestCase {
 		String scriptPath = "/dijit/themes/dijit.css";
 		String expectedUrl = "null/resources/dijit/themes/dijit.css";
 
-		resourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
-		resourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
 
 		String expectedOutput = "<link type=\"text/css\" rel=\"stylesheet\" href=\"" + expectedUrl + "\"/>";
 

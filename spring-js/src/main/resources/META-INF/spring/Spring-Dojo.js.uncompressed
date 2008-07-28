@@ -248,7 +248,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			for (var i=0; i<scriptNodes.length; i++)
 			{
 				var script = (scriptNodes[i].match(matchOne) || ['','',''])[2];
-				script = script.replace(/<!--/mg,'').replace(/\/\/-->/mg,'');
+				script = script.replace(/<!--/mg,'').replace(/\/\/-->/mg,'').replace(/<!\[CDATA\[(\/\/>)*/mg,'').replace(/(<!)*\]\]>/mg,'');
 				extractedScriptNodes.push(script);
 			}
 		}

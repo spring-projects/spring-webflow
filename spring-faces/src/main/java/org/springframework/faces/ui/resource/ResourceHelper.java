@@ -43,13 +43,23 @@ public class ResourceHelper {
 
 	private static final String COMBINED_RESOURCES_KEY = "org.springframework.faces.CombinedResources";
 
+	private static final String SCRIPT_BLOCK_ESCAPE_BEGIN = "<!--//--><![CDATA[//><!--\n";
+
+	private static final String SCRIPT_BLOCK_ESCAPE_END = "\n//--><!]]>";
+
+	private static final String SCRIPT_ELEMENT = "script";
+
+	private ResourceHelper() {
+
+	}
+
 	/**
 	 * Renders either a script or style resource depending on the resourcePath
 	 * @param facesContext
 	 * @param resourcePath
 	 * @throws IOException
 	 */
-	public void renderResource(FacesContext facesContext, String resourcePath) throws IOException {
+	public static void renderResource(FacesContext facesContext, String resourcePath) throws IOException {
 		if (resourcePath.endsWith(".js")) {
 			renderScriptLink(facesContext, resourcePath);
 		} else if (resourcePath.endsWith(".css")) {
@@ -63,7 +73,7 @@ public class ResourceHelper {
 	 * @param scriptPath
 	 * @throws IOException
 	 */
-	public void renderScriptLink(FacesContext facesContext, String scriptPath) throws IOException {
+	public static void renderScriptLink(FacesContext facesContext, String scriptPath) throws IOException {
 		renderScriptLink(facesContext, scriptPath, Collections.EMPTY_MAP);
 	}
 
@@ -74,12 +84,13 @@ public class ResourceHelper {
 	 * @param attributes - a map of additional attributes to render on the script tag
 	 * @throws IOException
 	 */
-	public void renderScriptLink(FacesContext facesContext, String scriptPath, Map attributes) throws IOException {
+	public static void renderScriptLink(FacesContext facesContext, String scriptPath, Map attributes)
+			throws IOException {
 		if (alreadyRendered(facesContext, scriptPath)) {
 			return;
 		}
 		ResponseWriter writer = facesContext.getResponseWriter();
-		writer.startElement("script", null);
+		writer.startElement(SCRIPT_ELEMENT, null);
 		writer.writeAttribute("type", "text/javascript", null);
 		Iterator i = attributes.keySet().iterator();
 		while (i.hasNext()) {
@@ -88,7 +99,7 @@ public class ResourceHelper {
 		}
 		String src = facesContext.getExternalContext().getRequestContextPath() + "/resources" + scriptPath;
 		writer.writeAttribute("src", src, null);
-		writer.endElement("script");
+		writer.endElement(SCRIPT_ELEMENT);
 		markRendered(facesContext, scriptPath);
 	}
 
@@ -98,7 +109,7 @@ public class ResourceHelper {
 	 * @param cssPath
 	 * @throws IOException
 	 */
-	public void renderStyleLink(FacesContext facesContext, String cssPath) throws IOException {
+	public static void renderStyleLink(FacesContext facesContext, String cssPath) throws IOException {
 		if (alreadyRendered(facesContext, cssPath)) {
 			return;
 		} else if (isCombineStyles(facesContext)) {
@@ -121,33 +132,33 @@ public class ResourceHelper {
 	 * @param module
 	 * @throws IOException
 	 */
-	public void renderDojoInclude(FacesContext facesContext, String module) throws IOException {
+	public static void renderDojoInclude(FacesContext facesContext, String module) throws IOException {
 		if (alreadyRendered(facesContext, module)) {
 			return;
 		}
 		ResponseWriter writer = facesContext.getResponseWriter();
-		writer.startElement("script", null);
+		writer.startElement(SCRIPT_ELEMENT, null);
 		writer.writeAttribute("type", "text/javascript", null);
 		writer.writeText("dojo.require('" + module + "');", null);
-		writer.endElement("script");
+		writer.endElement(SCRIPT_ELEMENT);
 		markRendered(facesContext, module);
 	}
 
-	public void beginCombineStyles(FacesContext facesContext) {
+	public static void beginCombineStyles(FacesContext facesContext) {
 		List combinedResources = new ArrayList();
 		facesContext.getExternalContext().getRequestMap().put(COMBINED_RESOURCES_KEY, combinedResources);
 	}
 
-	private boolean isCombineStyles(FacesContext facesContext) {
+	private static boolean isCombineStyles(FacesContext facesContext) {
 		return facesContext.getExternalContext().getRequestMap().containsKey(COMBINED_RESOURCES_KEY);
 	}
 
-	private void addStyle(FacesContext facesContext, String stylePath) {
+	private static void addStyle(FacesContext facesContext, String stylePath) {
 		List combinedResources = (List) facesContext.getExternalContext().getRequestMap().get(COMBINED_RESOURCES_KEY);
 		combinedResources.add(stylePath);
 	}
 
-	public void endCombineStyles(FacesContext facesContext) throws IOException {
+	public static void endCombineStyles(FacesContext facesContext) throws IOException {
 		List combinedResources = (List) facesContext.getExternalContext().getRequestMap()
 				.remove(COMBINED_RESOURCES_KEY);
 		StringBuffer combinedPath = new StringBuffer();
@@ -164,7 +175,20 @@ public class ResourceHelper {
 		renderStyleLink(facesContext, combinedPath.toString());
 	}
 
-	private void markRendered(FacesContext facesContext, String scriptPath) {
+	public static void beginScriptBlock(FacesContext facesContext) throws IOException {
+		ResponseWriter writer = facesContext.getResponseWriter();
+		writer.startElement(SCRIPT_ELEMENT, null);
+		writer.writeAttribute("type", "text/javascript", null);
+		writer.writeText(SCRIPT_BLOCK_ESCAPE_BEGIN, null);
+	}
+
+	public static void endScriptBlock(FacesContext facesContext) throws IOException {
+		ResponseWriter writer = facesContext.getResponseWriter();
+		writer.writeText(SCRIPT_BLOCK_ESCAPE_END, null);
+		writer.endElement(SCRIPT_ELEMENT);
+	}
+
+	private static void markRendered(FacesContext facesContext, String scriptPath) {
 		Set renderedResources = (Set) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
 		if (renderedResources == null) {
 			renderedResources = new HashSet();
@@ -173,7 +197,7 @@ public class ResourceHelper {
 		renderedResources.add(scriptPath);
 	}
 
-	private boolean alreadyRendered(FacesContext facesContext, String scriptPath) {
+	private static boolean alreadyRendered(FacesContext facesContext, String scriptPath) {
 		Set renderedResources = (Set) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
 		return renderedResources != null && renderedResources.contains(scriptPath);
 	}

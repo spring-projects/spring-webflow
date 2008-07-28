@@ -35,10 +35,8 @@ public class DojoStyleRenderer extends Renderer {
 
 	private static final String dijitTheme = "tundra";
 
-	private static final ResourceHelper resourceHelper = new ResourceHelper();
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
-		resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+		ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 	}
 }

@@ -38,8 +38,6 @@ import org.springframework.util.StringUtils;
  */
 public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRenderer {
 
-	private static final String SCRIPT_ELEMENT = "script";
-
 	private String dojoJsResourceUri = "/dojo/dojo.js";
 
 	private String dijitThemePath = "/dijit/themes/";
@@ -48,18 +46,16 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
 
-	private ResourceHelper resourceHelper = new ResourceHelper();
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			resourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+			ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-			resourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, dojoJsResourceUri);
 
-			resourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, springDojoJsResourceUri);
 		}
 	}
 
@@ -72,10 +68,10 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
-		resourceHelper.renderDojoInclude(context, ((DojoDecoration) component).getDojoComponentType());
+		ResourceHelper.renderDojoInclude(context, ((DojoDecoration) component).getDojoComponentType());
 
-		writer.startElement(SCRIPT_ELEMENT, component);
-		writer.writeAttribute("type", "text/javascript", null);
+		ResourceHelper.beginScriptBlock(context);
+
 		StringBuffer script = new StringBuffer();
 		script.append("  Spring.addDecoration(new Spring.ElementDecoration({  ");
 		script.append("  elementId : '" + advisedChild.getClientId(context) + "',  ");
@@ -94,7 +90,8 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 		script.append("  }}));");
 
 		writer.writeText(script, null);
-		writer.endElement(SCRIPT_ELEMENT);
+
+		ResourceHelper.endScriptBlock(context);
 	}
 
 	protected String getNodeAttributesAsString(FacesContext context, UIComponent component) {

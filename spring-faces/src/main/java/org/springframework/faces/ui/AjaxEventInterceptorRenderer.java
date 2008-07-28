@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
 
+import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -39,9 +40,9 @@ public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 		Assert.hasText(event, "The event attribute is required on " + component);
 		Assert.isTrue(component.getChildCount() == 1, "Exactly one child component is required for " + component);
 
+		ResourceHelper.beginScriptBlock(context);
+
 		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement("script", component);
-		writer.writeAttribute("type", "text/javascript", null);
 
 		String processIds = (String) component.getAttributes().get("processIds");
 		if (StringUtils.hasText(processIds) && !processIds.contains(component.getClientId(context))) {
@@ -60,7 +61,8 @@ public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 		script.append(", ajaxSource : '" + component.getClientId(context) + "'} }));");
 
 		writer.writeText(script.toString(), null);
-		writer.endElement("script");
+
+		ResourceHelper.endScriptBlock(context);
 	}
 
 	private String getElementId(FacesContext context, UIComponent component) {

@@ -24,6 +24,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import org.springframework.faces.ui.resource.ResourceHelper;
+
 /**
  * {@link Renderer} for the {@code <sf:validateAllOnClick>} tag.
  * 
@@ -31,8 +33,6 @@ import javax.faces.render.Renderer;
  * 
  */
 public class ValidateAllRenderer extends BaseSpringJavascriptDecorationRenderer {
-
-	private static final String SCRIPT_ELEMENT = "script";
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 
@@ -48,12 +48,13 @@ public class ValidateAllRenderer extends BaseSpringJavascriptDecorationRenderer 
 
 		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
 
-		writer.startElement(SCRIPT_ELEMENT, component);
-		writer.writeAttribute("type", "text/javascript", null);
+		ResourceHelper.beginScriptBlock(context);
+
 		StringBuffer script = new StringBuffer();
 		script.append("Spring.addDecoration(new Spring.ValidateAllDecoration({" + "event : 'onclick', "
 				+ "elementId : '" + advisedChild.getClientId(context) + "'}));");
 		writer.writeText(script, null);
-		writer.endElement(SCRIPT_ELEMENT);
+
+		ResourceHelper.endScriptBlock(context);
 	}
 }
