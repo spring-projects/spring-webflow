@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="actions">
+	<title>Executing actions</title>
+	<sect1 id="actions-introduction">
+		<title>Introduction</title>
+		<para>
+			This chapter shows you how to use the <code>action-state</code> element to control the execution of an action at a point within a flow.
+			It will also show how to use the <code>decision-state</code> element to make a flow routing decision.
+			Finally, several examples of invoking actions from the various points possible within a flow will be discussed.
+		</para>
+	</sect1>
+	<sect1 id="action-state">
+		<title>Defining action states</title>
+		<para>
+			Use the <code>action-state</code> element when you wish to invoke an action, then transition to another state based on the action's outcome:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<action-state id="moreAnswersNeeded">
+    <evaluate expression="interview.moreAnswersNeeded()"/>
+    <transition on="yes" to="answerQuestions" />
+    <transition on="no" to="finish" />
+</action-state>
+]]>
+        </programlisting>		
+		<para>
+			The full example below illustrates a interview flow that uses the action-state above to determine if more answers are needed to complete the interview:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <on-start>
+        <evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" />
+    </on-start>
+
+    <view-state id="answerQuestions" model="questionSet">
+    	<on-entry>
+            <evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
+    	</on-entry>
+        <transition on="submitAnswers">
+            <evaluate expression="interview.recordAnswers(questionSet)" />
+        </transition>
+    </view-state>
+    
+    <action-state id="moreAnswersNeeded">
+        <evaluate expression="interview.moreAnswersNeeded()"/>
+        <transition on="yes" to="answerQuestions" />
+        <transition on="no" to="finish" />
+    </action-state>
+
+    <end-state id="finish" />
+    
+</flow>]]>
+			</programlisting>		
+	</sect1>
+	<sect1 id="decision-state">
+		<title>Defining decision states</title>
+		<para>
+			Use the <code>decision-state</code> element as an alternative to the action-state to make a routing decision using a convenient if/else syntax.
+			The example below shows the <code>moreAnswersNeeded</code> state above now implemented as a decision state instead of an action-state:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<decision-state id="moreAnswersNeeded">
+    <if test="interview.moreAnswersNeeded" then="answerQuestions" else="finish"/>
+</decision-state>
+]]>
+			</programlisting>
+	</sect1>
+	<sect1 id="action-outcome-events">
+		<title>Action outcome event mappings</title>
+		<para>
+			Actions often invoke methods on plain Java objects.
+			When called from action-states and decision-states, these method return values can be used to drive state transitions.
+			Since transitions are triggered by events, a method return value must first be mapped to an Event object.
+			The following table describes how common return value types are mapped to Event objects:
+		</para>
+		<table id="event-mapping-table">
+			<title>Action method return value to event id mappings</title>
+			<tgroup cols="2">
+				<colspec colname="Method return type" colwidth="*"/>
+				<colspec colname="Event identifier" colwidth="3*"/>
+				<thead>
+					<row>
+						<entry>Method return type</entry>
+						<entry>Mapped Event identifier expression</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>java.lang.Boolean</entry>
+						<entry>yes (for true), no (for false)</entry>
+					</row>
+					<row>
+						<entry>java.lang.Enum</entry>
+						<entry>the Enum name</entry>
+					</row>
+					<row>
+						<entry>java.lang.String</entry>
+						<entry>the String value</entry>
+					</row>
+					<row>
+						<entry>any other type</entry>
+						<entry>success</entry>
+					</row>
+				</tbody>			
+			</tgroup>
+		</table>
+		<para>
+			This is illustrated in the example action state below, which invokes a method that returns a boolean value:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<action-state id="moreAnswersNeeded">
+    <evaluate expression="interview.moreAnswersNeeded()"/>
+    <transition on="yes" to="answerQuestions" />
+    <transition on="no" to="finish" />
+</action-state>
+]]>
+        </programlisting>		
+	</sect1>
+	<sect1 id="action-examples">
+		<title>Action execution examples</title>
+		<sect2 id="action-on-start">
+			<title>on-start</title>
+			<para>
+				The following example shows an action that creates a new Booking object by invoking a method on a service:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <input name="hotelId" />
+
+    <on-start>
+        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+                  result="flowScope.booking" />
+    </on-start>
+
+</flow>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="action-on-state-entry">
+			<title>on-entry</title>
+			<para>
+				The following example shows a state entry action that sets the special <code>fragments</code> variable that causes the view-state to render a partial fragment of its view:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
+    <on-entry>
+        <render fragments="hotelSearchForm" />
+    </on-entry>
+</view-state>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="action-on-state-exit">
+			<title>on-exit</title>
+			<para>
+				The following example shows a state exit action that releases a lock on a record being edited:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<view-state id="editOrder">
+    <on-entry>
+        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)" result="viewScope.order" />
+    </on-entry>
+    <transition on="save" to="finish">
+        <evaluate expression="orderService.update(order, currentUser)" />
+    </transition>
+    <on-exit>
+        <evaluate expression="orderService.releaseLock(order, currentUser)" />
+    </on-exit>
+</view-state>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="on-end">
+			<title>on-end</title>
+			<para>
+				The following example shows the equivalent object locking behavior using flow start and end actions:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <input name="orderId" />
+
+    <on-start>
+        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)" result="flowScope.order" />
+    </on-start>
+
+    <view-state id="editOrder">
+        <transition on="save" to="finish">
+            <evaluate expression="orderService.update(order, currentUser)" />
+        </transition>
+    </view-state>
+
+    <on-end>
+        <evaluate expression="orderService.releaseLock(order, currentUser)" />
+    </on-end>
+    
+</flow>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="action-on-render">
+			<title>on-render</title>
+			<para>
+				The following example shows a render action that loads a list of hotels to display before the view is rendered:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<view-state id="reviewHotels">
+    <on-render>
+	    <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
+    </on-render>
+    <transition on="select" to="reviewHotel">
+        <set name="flowScope.hotel" value="hotels.selectedRow" />
+    </transition>
+</view-state>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="action-on-transition">
+			<title>on-transition</title>
+			<para>
+				The following example shows a transition action adds a subflow outcome event attribute to a collection:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<subflow-state id="addGuest" subflow="createGuest">
+    <transition on="guestCreated" to="reviewBooking">
+        <evaluate expression="booking.guestList.add(currentEvent.attributes.newGuest)" />  
+    </transition>
+</subfow-state>]]>
+			</programlisting>
+		</sect2>						
+	</sect1>
+</chapter>
