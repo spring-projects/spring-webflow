@@ -297,7 +297,7 @@ public interface FlowOutcome {
 				</para>
 			</sect3>
 			<sect3 id="input-element-required">
-				<title>Marking a input as required</title>
+				<title>Marking an input as required</title>
 				<para>
 					Use the <code>required</code> attribute to enforce the input is not null or empty:
 				</para>
