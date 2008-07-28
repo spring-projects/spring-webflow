@@ -375,7 +375,7 @@ public class BookingAction {
 		</para>
 		<programlisting language="xml"><![CDATA[
 <transition on="event">
-    <-- Handle event -->
+    <!-- Handle event -->
 </transition>]]>
 		</programlisting>
 		<para>
