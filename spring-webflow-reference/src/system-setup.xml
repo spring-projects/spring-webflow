@@ -74,18 +74,16 @@
 <webflow:flow-builder-services id="flowBuilderServices" />]]>
 			</programlisting>
 			<para>
-				The configurable services are the <code>conversion-service</code>, <code>formatter-registry</code>, <code>expression-parser</code>, and <code>view-factory-creator</code>.
+				The configurable services are the <code>conversion-service</code>, <code>expression-parser</code>, and <code>view-factory-creator</code>.
 				These services are configured by referencing custom beans you define.  For example:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-builder-services id="flowBuilderServices"
     conversion-service="conversionService"
-    formatter-registry="formatterRegistry"
     expression-parser="expressionParser"
     view-factory-creator="viewFactoryCreator" />
 
 <bean id="conversionService" class="..." />
-<bean id="formatterRegistry" class="..." />
 <bean id="expressionParser" class="..." />
 <bean id="viewFactoryCreator" class="..." />]]>
 			</programlisting>
@@ -95,14 +93,6 @@
 					Use the <code>conversion-service</code> attribute to customize the <code>ConversionService</code> used by the Web Flow system.
 					Converters are used to convert from one type to another when required during flow execution.
 					The default ConversionService registers converters for your basic object types such as numbers, classes, and enums.
-				</para>
-			</sect3>
-			<sect3 id="builder-service-formatter">
-				<title>formatter-registry</title>
-				<para>
-					Use the <code>formatter-registry</code> attribute to customize the <code>FormatterRegistry</code> used by the Web Flow system.
-					Formatters are used by Views to format model property values for display.
-					The default FormatterRegistry registers converters for your basic model object types such as numbers and dates.				
 				</para>
 			</sect3>
 			<sect3 id="builder-service-expression-parser">
