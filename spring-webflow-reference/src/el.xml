@@ -16,6 +16,7 @@
 				Web Flow attempts to use the <ulink url="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</ulink> by default. 
 				<code>jboss-el</code> is currently the default EL implementation.
 				When found in your classpath along with the <code>el-api</code>, it will be used automatically.
+				You can find the JBoss EL jar in the <ulink url="http://www.springsource.com/repository/app/bundle/detail?name=com.springsource.org.jboss.el">SpringSource Bundle Repository</ulink>.
 				<note>
 					The <code>el-api</code> dependency is typically <emphasis>provided</emphasis> by your web container.  Tomcat 6 includes it, for example.
 				</note>

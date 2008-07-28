@@ -239,7 +239,7 @@
 				This flow now creates a Booking object in flow scope when it starts.
 				The id of the hotel to book is obtained from a flow input attribute.
 			</para>
-		</sect2>		
+		</sect2>
 	</sect1>
 	<sect1 id="flow-inputoutput">
 		<title>Input/Output Mapping</title>
@@ -273,6 +273,7 @@ public interface FlowOutcome {
 				For example, the input above would be saved under the name <code>hotelId</code>.
 			</para>
 			<sect3 id="input-element-type">
+				<title>Declaring an input type</title>
 				<para>
 					Use the <code>type</code> attribute to declare the input attribute's type:
 				</para>
@@ -284,6 +285,7 @@ public interface FlowOutcome {
 				</para>
 			</sect3>
 			<sect3 id="input-element-value">
+				<title>Assigning an input value</title>
 				<para>
 					Use the <code>value</code> attribute to specify an expression to assign the input value to:
 				</para>
@@ -295,6 +297,7 @@ public interface FlowOutcome {
 				</para>
 			</sect3>
 			<sect3 id="input-element-required">
+				<title>Marking a input as required</title>
 				<para>
 					Use the <code>required</code> attribute to enforce the input is not null or empty:
 				</para>
@@ -319,6 +322,7 @@ public interface FlowOutcome {
 				For example, the output above would be assigned the value of the <code>bookingId</code> variable.
 			</para>
 			<sect3 id="output-element-value">
+				<title>Specifying the source of an output value</title>
 				<para>
 					Use the <code>value</code> attribute to denote a specific output value expression:
 				</para>
@@ -469,13 +473,13 @@ public interface FlowOutcome {
 
     <subflow-state id="addGuest" subflow="createGuest">
         <transition on="guestCreated" to="reviewBooking">
-            <evaluate expression="booking.guests.add(currentEvent.attributes.guest)"/>  
+            <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
         </transition>
         <transition on="creationCancelled" to="reviewBooking" />
     </subfow-state>
 		
     <end-state id="bookingConfirmed" >
-        <output name="bookingId" value="booking.id"/>
+        <output name="bookingId" value="booking.id" />
     </end-state>
 
     <end-state id="bookingCancelled" />

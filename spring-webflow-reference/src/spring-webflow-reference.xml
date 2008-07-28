@@ -6,6 +6,7 @@
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
 <!ENTITY el SYSTEM "el.xml">
 <!ENTITY views SYSTEM "views.xml">
+<!ENTITY actions SYSTEM "actions.xml">
 <!ENTITY flow-managed-persistence SYSTEM "flow-managed-persistence.xml">
 <!ENTITY flow-security SYSTEM "flow-security.xml">
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
@@ -23,43 +24,28 @@
 	<bookinfo>
 		<title>Spring Web Flow 2 Reference Guide</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 2.0.2</releaseinfo>
-		<pubdate>June 2008</pubdate>
+		<releaseinfo>Version 2.0.3</releaseinfo>
+		<pubdate>July 2008</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>
 				<surname>Donald</surname>
-				<affiliation>
-					<orgname>SpringSource</orgname>
-				</affiliation>
 			</author>
 			<author>
 				<firstname>Erwin</firstname>
 				<surname>Vervaet</surname>
-				<affiliation>
-					<orgname>Ervacon</orgname>
-				</affiliation>
 			</author>
 			<author>
 				<firstname>Jeremy</firstname>
 				<surname>Grelle</surname>
-				<affiliation>
-					<orgname>SpringSource</orgname>
-				</affiliation>
 			</author>
 			<author>
 				<firstname>Scott</firstname>
 				<surname>Andrews</surname>
-				<affiliation>
-					<orgname>SpringSource</orgname>
-				</affiliation>
 			</author>
 			<author>
 				<firstname>Rossen</firstname>
 				<surname>Stoyanchev</surname>
-				<affiliation>
-					<orgname>SpringSource</orgname>
-				</affiliation>
 			</author>
 		</authorgroup>
 		<legalnotice>
@@ -79,6 +65,7 @@
 	&defining-flows;
 	&el;
 	&views;
+	&actions;
 	&flow-managed-persistence;
 	&flow-security;
 	&flow-inheritance;
