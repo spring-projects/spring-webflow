@@ -70,15 +70,17 @@ public interface FlowModelBuilder {
 	public void dispose() throws FlowModelBuilderException;
 
 	/**
-	 * Returns true if the underlying flow model has changed since the last call to {@link #init()}.
-	 * @return true if the flow model has changed
-	 */
-	public boolean hasFlowModelChanged();
-
-	/**
 	 * Get the underlying flow model resource accessed to build this flow model. Returns null if this builder does not
 	 * construct the flow model from a resource.
 	 * @return the flow model resource
 	 */
 	public Resource getFlowModelResource();
+
+	/**
+	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}. Always
+	 * returns false if the flow model is not build from a resource.
+	 * @return true if the resource backing the flow model has changed
+	 */
+	public boolean hasFlowModelResourceChanged();
+
 }

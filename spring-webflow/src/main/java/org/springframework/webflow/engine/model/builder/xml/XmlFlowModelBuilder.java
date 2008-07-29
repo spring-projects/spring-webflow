@@ -75,9 +75,9 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private Document document;
 
-	private FlowModel flowModel;
-
 	private long lastModifiedTimestamp;
+
+	private FlowModel flowModel;
 
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
@@ -111,7 +111,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	public void init() throws FlowModelBuilderException {
 		try {
 			document = documentLoader.loadDocument(resource);
-			lastModifiedTimestamp = resource.lastModified();
+			initLastModifiedTimestamp();
 		} catch (IOException e) {
 			throw new FlowModelBuilderException("Could not access the XML flow definition at " + resource, e);
 		} catch (ParserConfigurationException e) {
@@ -132,59 +132,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		mergeStates();
 	}
 
-	protected void mergeFlows() {
-		if (flowModel.getParent() != null) {
-			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
-			for (Iterator it = parents.iterator(); it.hasNext();) {
-				String parentFlowId = (String) it.next();
-				if (StringUtils.hasText(parentFlowId)) {
-					try {
-						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
-					} catch (NoSuchFlowModelException e) {
-						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
-								+ "' to inherit from", e);
-					}
-				}
-			}
-		}
-	}
-
-	protected void mergeStates() {
-		if (flowModel.getStates() == null) {
-			return;
-		}
-		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
-			AbstractStateModel childState = (AbstractStateModel) it.next();
-			String parent = childState.getParent();
-			if (childState.getParent() != null) {
-				String flowId;
-				String stateId;
-				AbstractStateModel parentState = null;
-				if (!parent.contains("#")) {
-					throw new FlowModelBuilderException("Invalid parent syntax '" + parent
-							+ "', should take form 'flowId#stateId'");
-				}
-				flowId = parent.substring(0, parent.indexOf("#")).trim();
-				stateId = parent.substring(parent.indexOf("#") + 1).trim();
-				try {
-					parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
-					if (parentState == null) {
-						throw new FlowModelBuilderException("Unable to find state '" + stateId + "' in flow '" + flowId
-								+ "'");
-					}
-					childState.merge(parentState);
-				} catch (NoSuchFlowModelException e) {
-					throw new FlowModelBuilderException("Unable to find flow '" + flowId + "' to inherit from", e);
-				} catch (ClassCastException e) {
-					throw new FlowModelBuilderException("Parent state type '" + parentState.getClass().getName()
-							+ "' cannot be merged with state type '" + childState.getClass().getName() + "'", e);
-
-				}
-			}
-		}
-	}
-
 	public FlowModel getFlowModel() throws FlowModelBuilderException {
+		if (flowModel == null) {
+			throw new FlowModelBuilderException(
+					"The FlowModel must be built first -- called init() and build() before calling getFlowModel()");
+		}
 		return flowModel;
 	}
 
@@ -197,7 +149,10 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		return resource;
 	}
 
-	public boolean hasFlowModelChanged() {
+	public boolean hasFlowModelResourceChanged() {
+		if (lastModifiedTimestamp == -1) {
+			return false;
+		}
 		try {
 			long lastModified = resource.lastModified();
 			if (lastModified > lastModifiedTimestamp) {
@@ -228,6 +183,14 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		Assert.notNull(resource, "The location of the XML-based flow definition is required");
 		this.resource = resource;
 		this.modelLocator = modelLocator;
+	}
+
+	private void initLastModifiedTimestamp() {
+		try {
+			lastModifiedTimestamp = resource.lastModified();
+		} catch (IOException e) {
+			lastModifiedTimestamp = -1;
+		}
 	}
 
 	private FlowModel parseFlow(Element element) {
@@ -657,6 +620,58 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setOnEntryActions(parseOnEntryActions(element));
 		state.setExceptionHandlers(parseExceptionHandlers(element));
 		return state;
+	}
+
+	private void mergeFlows() {
+		if (flowModel.getParent() != null) {
+			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
+			for (Iterator it = parents.iterator(); it.hasNext();) {
+				String parentFlowId = (String) it.next();
+				if (StringUtils.hasText(parentFlowId)) {
+					try {
+						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
+					} catch (NoSuchFlowModelException e) {
+						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
+								+ "' to inherit from", e);
+					}
+				}
+			}
+		}
+	}
+
+	private void mergeStates() {
+		if (flowModel.getStates() == null) {
+			return;
+		}
+		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
+			AbstractStateModel childState = (AbstractStateModel) it.next();
+			String parent = childState.getParent();
+			if (childState.getParent() != null) {
+				String flowId;
+				String stateId;
+				AbstractStateModel parentState = null;
+				if (!parent.contains("#")) {
+					throw new FlowModelBuilderException("Invalid parent syntax '" + parent
+							+ "', should take form 'flowId#stateId'");
+				}
+				flowId = parent.substring(0, parent.indexOf("#")).trim();
+				stateId = parent.substring(parent.indexOf("#") + 1).trim();
+				try {
+					parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
+					if (parentState == null) {
+						throw new FlowModelBuilderException("Unable to find state '" + stateId + "' in flow '" + flowId
+								+ "'");
+					}
+					childState.merge(parentState);
+				} catch (NoSuchFlowModelException e) {
+					throw new FlowModelBuilderException("Unable to find flow '" + flowId + "' to inherit from", e);
+				} catch (ClassCastException e) {
+					throw new FlowModelBuilderException("Parent state type '" + parentState.getClass().getName()
+							+ "' cannot be merged with state type '" + childState.getClass().getName() + "'", e);
+
+				}
+			}
+		}
 	}
 
 	public String toString() {

@@ -61,7 +61,7 @@ public class DefaultFlowModelHolderTests extends TestCase {
 			return null;
 		}
 
-		public boolean hasFlowModelChanged() {
+		public boolean hasFlowModelResourceChanged() {
 			return false;
 		}
 

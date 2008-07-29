@@ -60,7 +60,7 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 		if (flowModel == null) {
 			assembleFlowModel();
 		} else {
-			if (flowModelBuilder.hasFlowModelChanged()) {
+			if (flowModelBuilder.hasFlowModelResourceChanged()) {
 				assembleFlowModel();
 			}
 		}
@@ -72,7 +72,7 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	}
 
 	public boolean hasFlowModelChanged() {
-		return flowModelBuilder.hasFlowModelChanged();
+		return flowModelBuilder.hasFlowModelResourceChanged();
 	}
 
 	public synchronized void refresh() {
