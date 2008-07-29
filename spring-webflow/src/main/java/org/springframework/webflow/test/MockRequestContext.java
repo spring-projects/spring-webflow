@@ -28,6 +28,7 @@ import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.Transition;
+import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowSession;
@@ -116,6 +117,15 @@ public class MockRequestContext implements RequestContext {
 
 	public StateDefinition getCurrentState() {
 		return getFlowExecutionContext().getActiveSession().getState();
+	}
+
+	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException {
+		TransitionableState state = (TransitionableState) getFlowExecutionContext().getActiveSession().getState();
+		TransitionDefinition transition = state.getTransition(eventId);
+		if (transition == null) {
+			transition = getRootFlow().getGlobalTransition(eventId);
+		}
+		return transition;
 	}
 
 	public boolean inViewState() {

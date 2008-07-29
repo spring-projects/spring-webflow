@@ -39,6 +39,8 @@ public class TransitionModel extends AbstractModel {
 
 	private String bind;
 
+	private String validate;
+
 	private String history;
 
 	private LinkedList attributes;
@@ -66,6 +68,7 @@ public class TransitionModel extends AbstractModel {
 		setOnException(merge(getOnException(), transition.getOnException()));
 		setTo(merge(getTo(), transition.getTo()));
 		setBind(merge(getBind(), transition.getBind()));
+		setBind(merge(getValidate(), transition.getValidate()));
 		setHistory(merge(getHistory(), transition.getHistory()));
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
@@ -141,6 +144,24 @@ public class TransitionModel extends AbstractModel {
 			this.bind = bind;
 		} else {
 			this.bind = null;
+		}
+	}
+
+	/**
+	 * @return the validate
+	 */
+	public String getValidate() {
+		return validate;
+	}
+
+	/**
+	 * @param validate the validate to set
+	 */
+	public void setValidate(String validate) {
+		if (StringUtils.hasText(validate)) {
+			this.validate = validate;
+		} else {
+			this.validate = null;
 		}
 	}
 

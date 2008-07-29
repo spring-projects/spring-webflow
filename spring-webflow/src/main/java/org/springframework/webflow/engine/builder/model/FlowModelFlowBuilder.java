@@ -66,9 +66,9 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.engine.ViewVariable;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
-import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.model.AbstractActionModel;
@@ -628,8 +628,12 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		List bindings = binderModel.getBindings();
 		for (Iterator it = bindings.iterator(); it.hasNext();) {
 			BindingModel bindingModel = (BindingModel) it.next();
-			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()))
-					.booleanValue();
+			boolean required;
+			if (StringUtils.hasText(bindingModel.getRequired())) {
+				required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired())).booleanValue();
+			} else {
+				required = false;
+			}
 			Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
 			binderConfiguration.addBinding(binding);
 		}
@@ -796,6 +800,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		MutableAttributeMap attributes = parseMetaAttributes(transition.getAttributes());
 		if (StringUtils.hasText(transition.getBind())) {
 			attributes.put("bind", fromStringTo(Boolean.class).execute(transition.getBind()));
+		}
+		if (StringUtils.hasText(transition.getValidate())) {
+			attributes.put("validate", fromStringTo(Boolean.class).execute(transition.getValidate()));
 		}
 		if (StringUtils.hasText(transition.getHistory())) {
 			attributes.put("history", fromStringTo(History.class).execute(transition.getHistory()));

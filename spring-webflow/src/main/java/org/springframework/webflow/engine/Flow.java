@@ -40,6 +40,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -464,6 +465,21 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 */
 	public TransitionSet getGlobalTransitionSet() {
 		return globalTransitionSet;
+	}
+
+	/**
+	 * Returns the transition that matches the event with the provided id.
+	 * @param eventId the event id
+	 * @return the transition that matches, or null if no match is found.
+	 */
+	public TransitionDefinition getGlobalTransition(String eventId) {
+		for (Iterator it = globalTransitionSet.iterator(); it.hasNext();) {
+			Transition transition = (Transition) it.next();
+			if (transition.getId().equals(eventId)) {
+				return transition;
+			}
+		}
+		return null;
 	}
 
 	/**

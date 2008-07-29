@@ -37,10 +37,12 @@ import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.Transition;
+import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -321,8 +323,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * Create a flow execution control context.
 	 * @param externalContext the external context triggering this request
 	 */
-	protected RequestControlContext createRequestContext(ExternalContext externalContext,
-			MessageContext messageContext) {
+	protected RequestControlContext createRequestContext(ExternalContext externalContext, MessageContext messageContext) {
 		return new RequestControlContextImpl(this, externalContext, messageContext);
 	}
 
@@ -414,6 +415,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	void removeAllFlowExecutionSnapshots() {
 		keyFactory.removeAllFlowExecutionSnapshots(this);
+	}
+
+	TransitionDefinition getMatchingTransition(String eventId) {
+		FlowSessionImpl session = getActiveSessionInternal();
+		TransitionableState currentState = (TransitionableState) session.getState();
+		TransitionDefinition transition = currentState.getTransition(eventId);
+		if (transition == null) {
+			transition = session.getFlow().getGlobalTransition(eventId);
+		}
+		return transition;
 	}
 
 	// package private setters for restoring transient state used by FlowExecutionImplServicesConfigurer

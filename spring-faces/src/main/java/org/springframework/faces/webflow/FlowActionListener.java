@@ -36,7 +36,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.webflow.definition.TransitionDefinition;
-import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
@@ -147,11 +146,10 @@ public class FlowActionListener implements ActionListener {
 		if (model == null) {
 			return false;
 		}
-		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
-		TransitionDefinition transition = currentState.getTransition(eventId);
+		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
 		if (transition != null) {
-			if (transition.getAttributes().contains("bind")) {
-				return transition.getAttributes().getBoolean("bind").booleanValue();
+			if (transition.getAttributes().contains("validate")) {
+				return transition.getAttributes().getBoolean("validate").booleanValue();
 			}
 		}
 		return true;

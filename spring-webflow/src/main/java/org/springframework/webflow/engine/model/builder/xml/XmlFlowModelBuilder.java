@@ -471,6 +471,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		transition.setTo(element.getAttribute("to"));
 		transition.setOnException(element.getAttribute("on-exception"));
 		transition.setBind(element.getAttribute("bind"));
+		transition.setValidate(element.getAttribute("validate"));
 		transition.setHistory(element.getAttribute("history"));
 		transition.setAttributes(parseAttributes(element));
 		transition.setSecured(parseSecured(element));

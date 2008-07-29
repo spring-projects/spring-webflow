@@ -51,7 +51,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
-import org.springframework.webflow.definition.TransitionableStateDefinition;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.execution.Event;
@@ -186,13 +185,14 @@ public abstract class AbstractMvcView implements View {
 		if (model == null) {
 			return;
 		}
-		if (shouldBind(model)) {
+		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
+		if (shouldBind(model, transition)) {
 			mappingResults = bind(model);
 			if (hasMappingErrors(mappingResults)) {
 				viewErrors = true;
 				addErrorMessages(mappingResults);
 			} else {
-				if (shouldValidate(model)) {
+				if (shouldValidate(model, transition)) {
 					validate(model);
 					if (requestContext.getMessageContext().hasErrorMessages()) {
 						viewErrors = true;
@@ -275,9 +275,7 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
-	private boolean shouldBind(Object model) {
-		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
-		TransitionDefinition transition = currentState.getTransition(eventId);
+	private boolean shouldBind(Object model, TransitionDefinition transition) {
 		if (transition == null) {
 			return true;
 		}
@@ -409,9 +407,7 @@ public abstract class AbstractMvcView implements View {
 				.defaultText(errorCode + " on " + field).build();
 	}
 
-	private boolean shouldValidate(Object model) {
-		TransitionableStateDefinition currentState = (TransitionableStateDefinition) requestContext.getCurrentState();
-		TransitionDefinition transition = currentState.getTransition(eventId);
+	private boolean shouldValidate(Object model, TransitionDefinition transition) {
 		if (transition == null) {
 			return true;
 		}

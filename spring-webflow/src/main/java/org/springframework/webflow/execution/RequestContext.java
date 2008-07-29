@@ -75,6 +75,15 @@ public interface RequestContext {
 	public StateDefinition getCurrentState() throws IllegalStateException;
 
 	/**
+	 * Returns the transition that would execute on the occurrence of the given event.
+	 * @param eventId the id of the user event
+	 * @return the transition that would trigger, or <code>null</code> if no transition matches
+	 * @throws IllegalStateException if this flow execution has not been started at all, or if this execution has ended
+	 * and is no longer actively executing
+	 */
+	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException;
+
+	/**
 	 * Returns true if the flow is currently active and in a view state. When in a view state {@link #getViewScope()},
 	 * can be safely called.
 	 * @see #getViewScope()

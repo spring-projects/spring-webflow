@@ -73,8 +73,8 @@ public class ProgressiveUICommand extends UICommand {
 		RequestContext context = RequestContextHolder.getRequestContext();
 		if (context != null && getActionExpression().isLiteralText()
 				&& context.getCurrentState() instanceof TransitionableState) {
-			TransitionDefinition transition = ((TransitionableState) context.getCurrentState())
-					.getTransition(getActionExpression().getExpressionString());
+			TransitionDefinition transition = context
+					.getMatchingTransition(getActionExpression().getExpressionString());
 			if (transition != null && transition.getAttributes().contains("bind")) {
 				return Boolean.FALSE.equals(transition.getAttributes().getBoolean("bind"));
 			}

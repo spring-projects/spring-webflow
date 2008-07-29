@@ -105,6 +105,10 @@ class RequestControlContextImpl implements RequestControlContext {
 		return flowExecution.getActiveSession().getState();
 	}
 
+	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException {
+		return flowExecution.getMatchingTransition(eventId);
+	}
+
 	public MutableAttributeMap getRequestScope() {
 		return requestScope;
 	}
