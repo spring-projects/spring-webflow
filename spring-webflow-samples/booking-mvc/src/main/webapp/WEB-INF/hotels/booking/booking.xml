@@ -6,7 +6,7 @@
 	<secured attributes="ROLE_USER" />
 
 	<persistence-context/>
-	
+
 	<input name="hotelId" required="true"/>
 	
 	<on-start>
@@ -17,12 +17,12 @@
 		<binder>
 			<binding property="checkinDate" converter="shortDate" required="true" />
 			<binding property="checkoutDate" converter="shortDate" required="true" />
-			<binding property="beds" required="true"/>
+			<binding property="beds" required="true" />
 			<binding property="smoking" required="true" />
 			<binding property="creditCard" required="true" />
 			<binding property="creditCardName" required="true" />
-			<binding property="creditCardExpiryMonth" required="true"/>
-			<binding property="creditCardExpiryYear" required="true"/>
+			<binding property="creditCardExpiryMonth" required="true" />
+			<binding property="creditCardExpiryYear" required="true" />
 		</binder>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />
@@ -34,8 +34,8 @@
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
-	<end-state id="bookingConfirmed" commit="true" view="externalRedirect:/hotels/index"/>
+	<end-state id="bookingConfirmed" commit="true" />
 
 	<end-state id="cancel"/>
-		
+			
 </flow>
