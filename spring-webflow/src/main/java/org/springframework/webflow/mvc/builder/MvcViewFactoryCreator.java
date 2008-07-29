@@ -27,8 +27,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
-import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
 import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
@@ -153,12 +153,12 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderModel binderModel) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		if (useSpringBeanBinding) {
 			expressionParser = new BeanWrapperExpressionParser(conversionService);
 		}
 		AbstractMvcViewFactory viewFactory = createMvcViewFactory(viewId, expressionParser, conversionService,
-				binderModel);
+				binderConfiguration);
 		if (StringUtils.hasText(eventIdParameterName)) {
 			viewFactory.setEventIdParameterName(eventIdParameterName);
 		}
@@ -169,11 +169,13 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	private AbstractMvcViewFactory createMvcViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderModel binderModel) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		if (environment == MvcEnvironment.SERVLET) {
-			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService, binderModel);
+			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
+					binderConfiguration);
 		} else if (environment == MvcEnvironment.PORTLET) {
-			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService, binderModel);
+			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
+					binderConfiguration);
 		} else {
 			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
 		}

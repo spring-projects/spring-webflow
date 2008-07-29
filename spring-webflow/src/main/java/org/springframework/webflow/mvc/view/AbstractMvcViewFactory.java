@@ -19,7 +19,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.util.StringUtils;
-import org.springframework.webflow.engine.model.BinderModel;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -39,19 +39,27 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private ConversionService conversionService;
 
-	private BinderModel binderModel;
+	private BinderConfiguration binderConfiguration;
 
 	private String eventIdParameterName;
 
 	private String fieldMarkerPrefix;
 
+	/**
+	 * Creates a new MVC view factory.
+	 * @param viewId the id of the view as an expression
+	 * @param viewResolver the resolver to resolve the View implementation
+	 * @param expressionParser the expression parser
+	 * @param conversionService the conversion service
+	 * @param binderConfiguration the model binding configuration
+	 */
 	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderModel binderModel) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		this.viewId = viewId;
 		this.viewResolver = viewResolver;
 		this.expressionParser = expressionParser;
 		this.conversionService = conversionService;
-		this.binderModel = binderModel;
+		this.binderConfiguration = binderConfiguration;
 	}
 
 	public void setEventIdParameterName(String eventIdParameterName) {
@@ -68,7 +76,7 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		AbstractMvcView mvcView = createMvcView(view, context);
 		mvcView.setExpressionParser(expressionParser);
 		mvcView.setConversionService(conversionService);
-		mvcView.setBinderModel(binderModel);
+		mvcView.setBinderConfiguration(binderConfiguration);
 		if (StringUtils.hasText(eventIdParameterName)) {
 			mvcView.setEventIdParameterName(eventIdParameterName);
 		}

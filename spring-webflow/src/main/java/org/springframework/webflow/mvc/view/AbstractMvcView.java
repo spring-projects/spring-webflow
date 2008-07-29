@@ -52,7 +52,8 @@ import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.definition.TransitionableStateDefinition;
-import org.springframework.webflow.engine.model.BinderModel;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
+import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
@@ -90,7 +91,7 @@ public abstract class AbstractMvcView implements View {
 
 	private boolean viewErrors;
 
-	private BinderModel binderModel;
+	private BinderConfiguration binderConfiguration;
 
 	/**
 	 * Creates a new MVC view.
@@ -122,8 +123,8 @@ public abstract class AbstractMvcView implements View {
 	 * Sets the configuration describing how this view should bind to its model to access data for rendering.
 	 * @param binderModel the model binder configuratio
 	 */
-	public void setBinderModel(BinderModel binderModel) {
-		this.binderModel = binderModel;
+	public void setBinderConfiguration(BinderConfiguration binderConfiguration) {
+		this.binderConfiguration = binderConfiguration;
 	}
 
 	/**
@@ -255,7 +256,7 @@ public abstract class AbstractMvcView implements View {
 		if (modelObject != null) {
 			BindingModel bindingModel = new BindingModel(getModelExpression().getExpressionString(), modelObject,
 					expressionParser, conversionService, requestContext.getMessageContext());
-			bindingModel.setBinderModel(binderModel);
+			bindingModel.setBinderConfiguration(binderConfiguration);
 			bindingModel.setMappingResults(mappingResults);
 			model.put(BindingResult.MODEL_KEY_PREFIX + getModelExpression().getExpressionString(), bindingModel);
 		}
@@ -289,7 +290,7 @@ public abstract class AbstractMvcView implements View {
 		}
 		DefaultMapper mapper = new DefaultMapper();
 		ParameterMap requestParameters = requestContext.getRequestParameters();
-		if (binderModel != null) {
+		if (binderConfiguration != null) {
 			addModelBindingMappings(mapper, requestParameters.asMap().keySet(), model);
 		} else {
 			addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
@@ -298,10 +299,9 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private void addModelBindingMappings(DefaultMapper mapper, Set parameterNames, Object model) {
-		Iterator it = binderModel.getBindings().iterator();
+		Iterator it = binderConfiguration.getBindings().iterator();
 		while (it.hasNext()) {
-			org.springframework.webflow.engine.model.BindingModel binding = (org.springframework.webflow.engine.model.BindingModel) it
-					.next();
+			Binding binding = (Binding) it.next();
 			String parameterName = binding.getProperty();
 			if (parameterNames.contains(parameterName)) {
 				addMapping(mapper, binding, model);
@@ -313,8 +313,7 @@ public abstract class AbstractMvcView implements View {
 		}
 	}
 
-	private void addMapping(DefaultMapper mapper, org.springframework.webflow.engine.model.BindingModel binding,
-			Object model) {
+	private void addMapping(DefaultMapper mapper, Binding binding, Object model) {
 		Expression source = new RequestParameterExpression(binding.getProperty());
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
 		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);

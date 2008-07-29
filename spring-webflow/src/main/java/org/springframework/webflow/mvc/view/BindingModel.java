@@ -38,7 +38,8 @@ import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.webflow.engine.model.BinderModel;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
+import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 
 /**
  * Makes the properties of the "model" object available to Spring views during rendering. Also makes data binding (aka
@@ -64,7 +65,7 @@ public class BindingModel extends AbstractErrors {
 
 	private MessageContext messageContext;
 
-	private BinderModel binderModel;
+	private BinderConfiguration binderConfiguration;
 
 	/**
 	 * Creates a new Spring Binding model.
@@ -94,8 +95,8 @@ public class BindingModel extends AbstractErrors {
 		this.mappingResults = results;
 	}
 
-	public void setBinderModel(BinderModel binderModel) {
-		this.binderModel = binderModel;
+	public void setBinderConfiguration(BinderConfiguration binderConfiguration) {
+		this.binderConfiguration = binderConfiguration;
 	}
 
 	// implementing Errors
@@ -158,9 +159,8 @@ public class BindingModel extends AbstractErrors {
 					|| Map.class.isAssignableFrom(valueType)) {
 				return null;
 			}
-			if (binderModel != null) {
-				org.springframework.webflow.engine.model.BindingModel binding = binderModel.getBinding(fieldExpression
-						.getExpressionString());
+			if (binderConfiguration != null) {
+				Binding binding = binderConfiguration.getBinding(fieldExpression.getExpressionString());
 				if (binding != null) {
 					String converterId = binding.getConverter();
 					if (converterId != null) {

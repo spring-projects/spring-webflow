@@ -19,7 +19,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.web.servlet.View;
-import org.springframework.webflow.engine.model.BinderModel;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 import org.springframework.webflow.mvc.view.AbstractMvcViewFactory;
@@ -32,9 +32,17 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 
+	/**
+	 * Creates a new portlet-based MVC view factory.
+	 * @param viewId the id of the view as an expression
+	 * @param viewResolver the resolver to resolve the View implementation
+	 * @param expressionParser the expression parser
+	 * @param conversionService the conversion service
+	 * @param binderConfiguration the model binding configuration
+	 */
 	public PortletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderModel binderModel) {
-		super(viewId, viewResolver, expressionParser, conversionService, binderModel);
+			ConversionService conversionService, BinderConfiguration binderConfiguration) {
+		super(viewId, viewResolver, expressionParser, conversionService, binderConfiguration);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {

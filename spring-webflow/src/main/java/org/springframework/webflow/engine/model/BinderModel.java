@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -37,17 +36,6 @@ public class BinderModel extends AbstractModel {
 		return bindings;
 	}
 
-	public BindingModel getBinding(String name) {
-		Iterator it = bindings.iterator();
-		while (it.hasNext()) {
-			BindingModel binding = (BindingModel) it.next();
-			if (name.equals(binding.getProperty())) {
-				return binding;
-			}
-		}
-		return null;
-	}
-
 	public void setBindings(LinkedList bindings) {
 		this.bindings = bindings;
 	}
@@ -60,4 +48,5 @@ public class BinderModel extends AbstractModel {
 		BinderModel binder = (BinderModel) model;
 		setBindings(merge(getBindings(), binder.getBindings()));
 	}
+
 }

@@ -13,9 +13,9 @@ import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.engine.model.BinderModel;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 
@@ -47,7 +47,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
 		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-				ConversionService conversionService, BinderModel binderModel) {
+				ConversionService conversionService, BinderConfiguration binderConfiguration) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

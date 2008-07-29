@@ -68,6 +68,8 @@ import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.engine.ViewVariable;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
+import org.springframework.webflow.engine.builder.BinderConfiguration;
+import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractMappingModel;
@@ -76,6 +78,7 @@ import org.springframework.webflow.engine.model.ActionStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
 import org.springframework.webflow.engine.model.BinderModel;
+import org.springframework.webflow.engine.model.BindingModel;
 import org.springframework.webflow.engine.model.DecisionStateModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.EvaluateModel;
@@ -612,8 +615,25 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private ViewFactory createViewFactory(Expression viewId, BinderModel binderModel) {
+		BinderConfiguration binderConfiguration = createBinderConfiguration(binderModel);
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
-				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderModel);
+				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderConfiguration);
+	}
+
+	private BinderConfiguration createBinderConfiguration(BinderModel binderModel) {
+		if (binderModel == null) {
+			return null;
+		}
+		BinderConfiguration binderConfiguration = new BinderConfiguration();
+		List bindings = binderModel.getBindings();
+		for (Iterator it = bindings.iterator(); it.hasNext();) {
+			BindingModel bindingModel = (BindingModel) it.next();
+			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()))
+					.booleanValue();
+			Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
+			binderConfiguration.addBinding(binding);
+		}
+		return binderConfiguration;
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {
