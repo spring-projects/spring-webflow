@@ -10,11 +10,11 @@
 			<evaluate expression="bookingService.findBookings(currentUser.name)" result="viewScope.bookings" result-type="dataModel" />
 		</on-render>
 		<transition on="search" to="reviewHotels">
-            <evaluate expression="searchCriteria.resetPage()"/>
+            <evaluate expression="searchCriteria.resetPage()" />
         </transition>
 		<transition on="cancelBooking">
 			<evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" />
-			<render fragments="bookingsFragment"/>
+			<render fragments="bookingsFragment" />
 		</transition>
 	</view-state>
 	 
@@ -23,7 +23,7 @@
 			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
 		</on-render>
         <transition on="sort">
-            <set name="searchCriteria.sortBy" value="requestParameters.sortBy"/>
+            <set name="searchCriteria.sortBy" value="requestParameters.sortBy" />
             <render fragments="hotels:searchResultsFragment" />
         </transition>
 		<transition on="previous">

@@ -77,8 +77,8 @@ public interface FlowModelBuilder {
 	public Resource getFlowModelResource();
 
 	/**
-	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}. Always
-	 * returns false if the flow model is not build from a resource.
+	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}.
+	 * Always returns false if the flow model is not build from a resource.
 	 * @return true if the resource backing the flow model has changed
 	 */
 	public boolean hasFlowModelResourceChanged();

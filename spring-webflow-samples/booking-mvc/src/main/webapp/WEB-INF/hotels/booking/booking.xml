@@ -7,7 +7,7 @@
 
 	<persistence-context/>
 
-	<input name="hotelId" required="true"/>
+	<input name="hotelId" required="true" />
 	
 	<on-start>
 		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
@@ -36,6 +36,6 @@
 	
 	<end-state id="bookingConfirmed" commit="true" />
 
-	<end-state id="cancel"/>
+	<end-state id="cancel" />
 			
 </flow>
