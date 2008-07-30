@@ -75,12 +75,13 @@ This distribution contains documentation and sample applications demonstrating t
 A great way to get started is to review and run the sample applications, supplementing with reference manual material as you go.
 To build deployable .war files for all samples, simply access the projects/build-spring-webflow directory and run ant.
 All projects are directly importable into Eclipse as "Dynamic Web Projects".
-See projects/spring-webflow-samples/readme.txt for more information.
+See http://www.springframework.org/webflow-samples for more information.
 
-5. OBTAINING RELEASE JARS USING MAVEN OR IVY
---------------------------------------------
+5. OBTAINING RELEASE JARS FROM THE SPRINGSOURCE BUNDLE REPOSITORY
+-----------------------------------------------------------------
 Each jar in the Web Flow distribution is available in the SpringSource release repository.
 These jars may be accessed using Maven or Ivy dependency managers.
+Browse the contents of the repository by accessing http://www.springsource.com/repository.
 
 To access jars using Maven, add the following repositories to your Maven pom:
 

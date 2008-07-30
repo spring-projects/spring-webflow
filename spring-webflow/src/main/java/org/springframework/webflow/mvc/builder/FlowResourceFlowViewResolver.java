@@ -80,7 +80,7 @@ public class FlowResourceFlowViewResolver implements FlowViewResolver {
 	// internal helpers
 
 	private View getViewInternal(String viewPath, RequestContext context, ApplicationContext flowContext) {
-		if (viewPath.endsWith(".jsp")) {
+		if (viewPath.endsWith(".jsp") || viewPath.endsWith(".jspx")) {
 			if (JSTL_PRESENT) {
 				JstlView view = new JstlView(viewPath);
 				view.setApplicationContext(flowContext);
@@ -92,7 +92,7 @@ public class FlowResourceFlowViewResolver implements FlowViewResolver {
 			}
 		} else {
 			throw new IllegalArgumentException("Unsupported view type " + viewPath
-					+ " only types supported by this FlowViewResolver implementation are [.jsp]");
+					+ " only types supported by this FlowViewResolver implementation are [.jsp] and [.jspx]");
 		}
 	}
 }
