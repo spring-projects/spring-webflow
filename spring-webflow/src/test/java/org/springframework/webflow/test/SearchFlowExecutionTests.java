@@ -82,7 +82,6 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		context.putRequestParameter("id", "1");
 		resumeFlow(context);
 		assertCurrentStateEquals("displayResults");
-		assertResponseWrittenEquals("searchResults", context);
 	}
 
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {

@@ -9,16 +9,21 @@
 		<on-render>
 			<evaluate expression="bookingService.findBookings(currentUser.name)" result="viewScope.bookings" result-type="dataModel" />
 		</on-render>
-		<transition on="search" to="reviewHotels">
-            <evaluate expression="searchCriteria.resetPage()" />
-        </transition>
+		<transition on="search" />
 		<transition on="cancelBooking">
 			<evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" />
 			<render fragments="bookingsFragment" />
 		</transition>
 	</view-state>
-	 
-	<view-state id="reviewHotels">
+	
+	<action-state id="resetPage">
+        <evaluate expression="searchCriteria.resetPage()" />
+        <transition on="success" to="enterSearchCriteria">
+        	<render fragments="form"/>
+        </transition>
+	</action-state>
+	
+	<view-state id="reviewHotels" redirect="false">
 		<on-render>
 			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
 		</on-render>

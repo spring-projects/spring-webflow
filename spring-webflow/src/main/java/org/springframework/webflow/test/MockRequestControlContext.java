@@ -121,7 +121,7 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		}
 	}
 
-	public boolean getAlwaysRedirectOnPause() {
+	public boolean getRedirectOnPause() {
 		return alwaysRedirectOnPause;
 	}
 

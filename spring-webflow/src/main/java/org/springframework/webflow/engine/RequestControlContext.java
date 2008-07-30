@@ -139,9 +139,9 @@ public interface RequestControlContext extends RequestContext {
 	public void endActiveFlowSession(String outcome, MutableAttributeMap output) throws IllegalStateException;
 
 	/**
-	 * Returns true if the 'always redirect pause' flow execution attribute is set to true, false otherwise.
+	 * Returns true if the 'redirect on pause' flow execution attribute is set to true, false otherwise.
 	 * @return true or false
 	 */
-	public boolean getAlwaysRedirectOnPause();
+	public boolean getRedirectOnPause();
 
 }

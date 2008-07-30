@@ -39,7 +39,7 @@
     	<on-entry>
             <evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
     	</on-entry>
-        <transition on="submitAnswers">
+        <transition on="submitAnswers" to="moreAnswersNeeded">
             <evaluate expression="interview.recordAnswers(questionSet)" />
         </transition>
     </view-state>

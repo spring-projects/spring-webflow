@@ -167,16 +167,28 @@ public class ViewState extends TransitionableState {
 	}
 
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
-		context.assignFlowExecutionKey();
-		if (context.getExternalContext().isResponseAllowed()) {
-			if (shouldRedirect(context)) {
-				context.getExternalContext().requestFlowExecutionRedirect();
-				if (popup) {
-					context.getExternalContext().requestRedirectInPopup();
+		ViewState originatingViewState = (ViewState) context.getRequestScope().get("webflow.originatingViewState");
+		if (this == originatingViewState) {
+			if (context.getExternalContext().isResponseAllowed()) {
+				if (context.getExternalContext().isAjaxRequest()) {
+					View view = viewFactory.getView(context);
+					render(context, view);
+				} else {
+					context.getExternalContext().requestFlowExecutionRedirect();
 				}
-			} else {
-				View view = viewFactory.getView(context);
-				render(context, view);
+			}
+		} else {
+			context.assignFlowExecutionKey();
+			if (context.getExternalContext().isResponseAllowed()) {
+				if (shouldRedirect(context)) {
+					context.getExternalContext().requestFlowExecutionRedirect();
+					if (popup) {
+						context.getExternalContext().requestRedirectInPopup();
+					}
+				} else {
+					View view = viewFactory.getView(context);
+					render(context, view);
+				}
 			}
 		}
 	}
@@ -190,9 +202,14 @@ public class ViewState extends TransitionableState {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Event '" + event.getId() + "' returned from view " + view);
 			}
+			context.getRequestScope().put("webflow.originatingViewState", this);
 			boolean stateExited = context.handleEvent(event);
 			if (!stateExited && context.getExternalContext().isResponseAllowed()) {
-				render(context, view);
+				if (context.getExternalContext().isAjaxRequest()) {
+					render(context, view);
+				} else {
+					context.getExternalContext().requestFlowExecutionRedirect();
+				}
 			}
 		} else {
 			if (context.getExternalContext().isResponseAllowed()) {
@@ -224,7 +241,7 @@ public class ViewState extends TransitionableState {
 		if (redirect != null) {
 			return redirect.booleanValue();
 		} else {
-			return context.getAlwaysRedirectOnPause();
+			return context.getRedirectOnPause();
 		}
 	}
 

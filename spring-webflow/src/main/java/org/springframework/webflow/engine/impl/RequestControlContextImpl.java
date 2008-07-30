@@ -225,7 +225,7 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.endActiveFlowSession(outcome, output, this);
 	}
 
-	public boolean getAlwaysRedirectOnPause() {
+	public boolean getRedirectOnPause() {
 		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}

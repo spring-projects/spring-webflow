@@ -500,7 +500,7 @@ The default convention is to treat the id of this view state as the view identif
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Requests this view-state send a flow execution redirect before rendering.  Default is false.				
+Requests this view-state send a flow execution redirect before rendering.  Default is false.			
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
