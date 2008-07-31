@@ -4,6 +4,59 @@ http://www.springframework.org/webflow
 
 Changes in version 2.0.3 (31.07.2008)
 -------------------------------------
+New Features
+* Introduced view-state <binder> sub-element, allowing the model bindings to be configured explicitly per view (SWF-568). 
+  This allows you to restrict the allowed field->model bindings.
+  It also allows you to register a custom type Converter per field by referring to it by its identifier; e.g. "shortDate".
+  In addition, you can set basic binding value constraints such as required=true.
+  See the 'Views' section of the reference documentation for more information and the Spring Travel booking-mvc sample for an example.
+
+* You can now use Spring's own DataBinder for form data binding; as an alternative to OGNL or Unified EL.
+  This allows you to take advantage of the unique features of the DataBinder such as the ability to apply type conversion to elements of a generic collection.
+  To do this, set the "useSpringBeanBinding" property to true on a custom MvcViewFactoryCreator instance.
+  See the Config section of the reference documentation for how to install a custom ViewFactoryCreator.
+
+* Added the ability to disable model validation per transition by setting validate="false".
+  This allows enabling binding but disabling validation; useful when going back between pages.
+  See the 'Views' section of the reference documentation for more information.
+
+* Introduced new flavor of the Spring Travel referenced application built to run as a set of OSGi bundles
+  on the SpringSource Application Platform in a PAR deployment unit.
+  Access spring-webflow-samples/platform-spring-travel to review and build the sample.
+
+* Now ensure that Spring Faces now outputs Javascript blocks that are valid for both HTML and XHTML content types (SWF-785).
+
+Improvements
+* Unified the "Formatter" and "Conversion" systems into a single "Conversion" type conversion system.
+  This unified type conversion system is now used consistently throughout Web Flow, including for view data binding.
+  Simplified the Converter API to make it easier to implement custom converters, including TwoWayConverters.
+  See the example converters in org.springframework.binding.convert.converters package for example Converter implementations.
+  To plug in your own custom converters, register a custom ConversionService.
+  Custom converters will be usable immediately throughout the system, and can be aliased e.g. "shortDate".
+  See the Config section of the reference documentation for how to install a custom ConversionService, and the booking-mvc sample for an example.
+
+* Made several improvements to the documentation.  Added coverage of action-states and decision-states (SWF-721).
+  Also added converage of the new view-state binder element.
+
+* Added support for rendering .jspx views selected by a flow in a Spring MVC environment (SWF-793).
+
+* Error responses returned as the result of handling an Ajax request are now displayed in an error popup dialog by default (SWF-783).
+
+* Made the eventId request parameter configurable in a Spring MVC environment (SWF-731).
+
+Bug Fixes
+* Fixed a bug preventing binding of String[] array request parameters to collection properties in a Spring MVC environment (SWF-720).
+  This bug effected use of <form:checkboxes> and <form:select> tags.
+* Fixed a bug where classpath: resource loading prefix was not respected within a Flow ApplicationContext (SWF-743).
+  This prevented loading of classpath-based resources defined in flow beans files imported using the <bean-import> tag.
+* Fixed a bug where the Severity.FATAL severity was lost in the mapping of a JSF FacesMessage to a Spring Message (SWF-752).
+  Added Severity.FATAL as a supported message severity.
+* Fixed a bug where the "detail" part of a FacesMessage was lost in the mapping of a JSF FacesMessages to a Spring Message (SWF-751).
+* Fixed a bug where transitioning back to the originating view-state within one request always triggered a redirect (SWF-808).
+  Redirect+after+post is appropriate for non-Ajax requests, but was not appropriate for Ajax requests. 
+* Fixed a bug where attempting to render a view from an end-state resulted in an exception (SWF-711).
+* Fixed a bug where flows where not accessible inside unexpanded WAR archives (SWF-784).
+* Fixed several browser compatibility bugs affecting IE 6 with Spring Javascript (SWF-764).
 
 Changes in version 2.0.2 (06.06.2008)
 -------------------------------------
