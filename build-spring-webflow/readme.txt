@@ -10,6 +10,10 @@ Build Pre-requisites:
 - javac 1.5 or > must be in your system path
 - ant 1.7 or > must be in your system path
 
+Building Behind a Firewall:
+- If you are building behind a proxy and are having connection problems, update the ../spring-build/lib/ivy/jets3t.properties file.
+  For more information about the configuration properties see http://jets3t.s3.amazonaws.com/toolkit/configuration.html#jets3t
+
 DEVELOPERS
 - To build a new Spring Web Flow distribution for release:
 
