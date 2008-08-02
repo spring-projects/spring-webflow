@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <webflow-project-description>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.0.4.v200802202100]]></pluginVersion>
+	<pluginVersion><![CDATA[2.1.0.v200808011800]]></pluginVersion>
 	<configs>
 		<config>
-			<file>src/main/webapp/WEB-INF/flows/main/main-flow.xml</file>
-			<name><![CDATA[main-flow]]></name>
+			<file>src/main/webapp/WEB-INF/flows/booking/booking.xml</file>
+			<name><![CDATA[booking]]></name>
 		</config>
 		<config>
-			<file>src/main/webapp/WEB-INF/flows/booking/booking-flow.xml</file>
-			<name><![CDATA[booking-flow]]></name>
+			<file>src/main/webapp/WEB-INF/flows/main/main.xml</file>
+			<name><![CDATA[main]]></name>
 		</config>
 	</configs>
 </webflow-project-description>
