@@ -155,7 +155,7 @@ public class BindingModel extends AbstractErrors {
 			// special handling for array, collection, map types
 			// necessary as getFieldValue is called by form tags for non-formattable properties, too
 			// TODO - investigate how to improve this in Spring MVC
-			if (valueType.isArray() || Collection.class.isAssignableFrom(valueType)
+			if (valueType == null || valueType.isArray() || Collection.class.isAssignableFrom(valueType)
 					|| Map.class.isAssignableFrom(valueType)) {
 				return null;
 			}
