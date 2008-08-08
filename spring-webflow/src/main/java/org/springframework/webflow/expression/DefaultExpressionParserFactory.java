@@ -20,10 +20,7 @@ import javax.el.ExpressionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.ParserContext;
-import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
@@ -61,14 +58,7 @@ public final class DefaultExpressionParserFactory {
 	 * @return the expression parser
 	 */
 	public static synchronized ExpressionParser getExpressionParser() {
-		// return a wrapper that will lazily load the default expression parser
-		// this prevents the underlying parser from being initialized until it is actually used
-		// this allows the EL to be an optional dependency if the expression parser wrapper is replaced and never used
-		return new ExpressionParser() {
-			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
-				return getDefaultExpressionParser().parseExpression(expressionString, context);
-			}
-		};
+		return getDefaultExpressionParser();
 	}
 
 	/**
@@ -78,7 +68,7 @@ public final class DefaultExpressionParserFactory {
 	 * @return the expression parser
 	 */
 	public static synchronized ExpressionParser getExpressionParser(final ConversionService conversionService) {
-		return new DefaultExpressionParserProxy(conversionService);
+		return createDefaultExpressionParser(conversionService);
 	}
 
 	/**
@@ -127,25 +117,6 @@ public final class DefaultExpressionParserFactory {
 				ise.initCause(ex);
 				throw ise;
 			}
-		}
-	}
-
-	private static class DefaultExpressionParserProxy implements ExpressionParser {
-		private ConversionService conversionService;
-
-		private ExpressionParser instance;
-
-		public DefaultExpressionParserProxy(ConversionService conversionService) {
-			this.conversionService = conversionService;
-		}
-
-		public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
-			synchronized (instance) {
-				if (instance == null) {
-					instance = createDefaultExpressionParser(conversionService);
-				}
-			}
-			return instance.parseExpression(expressionString, context);
 		}
 	}
 }

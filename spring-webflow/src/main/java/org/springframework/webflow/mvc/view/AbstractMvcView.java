@@ -57,7 +57,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
 /**
  * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
@@ -76,7 +75,7 @@ public abstract class AbstractMvcView implements View {
 
 	private RequestContext requestContext;
 
-	private ExpressionParser expressionParser = DefaultExpressionParserFactory.getExpressionParser();
+	private ExpressionParser expressionParser;
 
 	private ConversionService conversionService;
 

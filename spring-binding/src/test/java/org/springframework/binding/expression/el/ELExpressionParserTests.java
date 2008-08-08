@@ -131,6 +131,13 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals("foo2bar", exp.getValue(target));
 	}
 
+	public void testGetValueTypeNullCollectionValue() {
+		String exp = "list[3]";
+		Expression e = parser.parseExpression(exp, null);
+		TestBean target = new TestBean();
+		assertEquals(null, e.getValueType(target));
+	}
+
 	public static class TestBean {
 		private String value = "foo";
 
@@ -153,6 +160,7 @@ public class ELExpressionParserTests extends TestCase {
 			list.add("1");
 			list.add("2");
 			list.add("3");
+			list.add(null);
 		}
 
 		public TestBean getBean() {
@@ -177,6 +185,10 @@ public class ELExpressionParserTests extends TestCase {
 
 		public void setMaximum(int maximum) {
 			this.maximum = maximum;
+		}
+
+		public List getList() {
+			return list;
 		}
 	}
 

@@ -160,4 +160,10 @@ public class OgnlExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(boolean.class, e.getValueType(bean));
 	}
+
+	public void testGetValueTypeNullCollectionValue() {
+		String exp = "list[0]";
+		Expression e = parser.parseExpression(exp, null);
+		assertEquals(null, e.getValueType(bean));
+	}
 }

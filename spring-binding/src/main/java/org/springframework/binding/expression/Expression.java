@@ -44,7 +44,8 @@ public interface Expression {
 	 * Returns the most general type that can be passed to the {@link #setValue(Object, Object)} method for the given
 	 * context.
 	 * @param context the context to evaluate
-	 * @return the most general type of value that can be set on this context
+	 * @return the most general type of value that can be set on this context, or <code>null</code> if the type
+	 * information cannot be determined
 	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
 	public Class getValueType(Object context) throws EvaluationException;

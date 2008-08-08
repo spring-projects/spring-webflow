@@ -16,6 +16,7 @@
 package org.springframework.webflow;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Simple test bean used by some test cases. Note that this bean has value semantics.
@@ -25,6 +26,8 @@ public class TestBean implements Serializable {
 	public String datum1 = "";
 
 	public int datum2;
+
+	private Date datum3;
 
 	public boolean executed;
 
@@ -38,6 +41,14 @@ public class TestBean implements Serializable {
 
 	public int getDatum2() {
 		return datum2;
+	}
+
+	public Date getDatum3() {
+		return datum3;
+	}
+
+	public void setDatum3(Date datum3) {
+		this.datum3 = datum3;
 	}
 
 	public boolean isExecuted() {
