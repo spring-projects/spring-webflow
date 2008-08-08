@@ -28,6 +28,7 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -53,6 +54,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));
@@ -82,6 +84,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.render();
 		assertTrue(renderCalled);
 		assertEquals("bar", model.get("foo"));
@@ -109,6 +112,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.setConversionService(new DefaultConversionService());
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
@@ -169,6 +173,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
 		assertEquals("submit", view.getFlowEvent().getId());
@@ -216,6 +221,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		BinderConfiguration binderConfiguration = new BinderConfiguration();
 		binderConfiguration.addBinding(new Binding("stringProperty", null, true));
 		view.setBinderConfiguration(binderConfiguration);
@@ -246,6 +252,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		HashSet allowedBindFields = new HashSet();
 		allowedBindFields.add("booleanProperty");
 		view.processUserEvent();
@@ -268,6 +275,7 @@ public class MvcViewTests extends TestCase {
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());
 	}

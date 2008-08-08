@@ -15,15 +15,9 @@
  */
 package org.springframework.webflow.expression;
 
-import java.util.Calendar;
-
 import junit.framework.TestCase;
 
-import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.FluentParserContext;
-import org.springframework.webflow.TestBean;
 
 /**
  * Unit tests for {@link DefaultExpressionParserFactory}.
@@ -35,15 +29,15 @@ public class DefaultExpressionParserFactoryTests extends TestCase {
 		assertNotNull(parser);
 	}
 
-	public void testGetDefaultExpressionParserConversionService() {
-		DefaultConversionService conversionService = new DefaultConversionService();
-		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser(conversionService);
-		Expression exp = parser.parseExpression("datum3", new FluentParserContext().expectResult(String.class));
-		TestBean context = new TestBean();
-		Calendar cal = Calendar.getInstance();
-		cal.set(2008, 1, 1);
-		exp.setValue(context, cal.getTime());
-		String string = (String) exp.getValue(context);
-		assertEquals(null, string);
-	}
+	// public void testGetDefaultExpressionParserConversionService() {
+	// DefaultConversionService conversionService = new DefaultConversionService();
+	// ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser(conversionService);
+	// Expression exp = parser.parseExpression("datum3", new FluentParserContext().expectResult(String.class));
+	// TestBean context = new TestBean();
+	// Calendar cal = Calendar.getInstance();
+	// cal.set(2008, 1, 1);
+	// exp.setValue(context, cal.getTime());
+	// String string = (String) exp.getValue(context);
+	// assertEquals(null, string);
+	// }
 }
