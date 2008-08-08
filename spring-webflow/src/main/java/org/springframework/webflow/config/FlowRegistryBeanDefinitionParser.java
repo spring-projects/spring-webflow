@@ -27,6 +27,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
@@ -126,8 +127,10 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	private BeanDefinition createDefaultFlowBuilderServices(ParserContext context) {
 		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		defaultBuilder.addPropertyValue("conversionService", new DefaultConversionService());
-		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
+		ConversionService conversionService = new DefaultConversionService();
+		defaultBuilder.addPropertyValue("conversionService", conversionService);
+		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory
+				.getExpressionParser(conversionService));
 		defaultBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(
 				MvcViewFactoryCreator.class).getBeanDefinition());
 		return defaultBuilder.getBeanDefinition();

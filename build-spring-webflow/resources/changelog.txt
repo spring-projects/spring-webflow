@@ -2,6 +2,12 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.0.4 (15.08.2008)
+-------------------------------------
+Bug Fixes
+* Fixed bug where a registered ConversionService was not auto-wired with the default ExpressionParser implementation.
+  This prevented user-installed type converters from being applied without explicit configuration.
+  
 Changes in version 2.0.3 (31.07.2008)
 -------------------------------------
 New Features

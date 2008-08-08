@@ -19,6 +19,7 @@ import javax.el.ExpressionFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
@@ -56,7 +57,7 @@ public final class DefaultExpressionParserFactory {
 	}
 
 	/**
-	 * Returns the default expression parser for Spring Web Flow. The returned instance is a thread-safe object.
+	 * Returns the default expression parser for Spring Web Flow. The returned instance is a cached thread-safe object.
 	 * @return the expression parser
 	 */
 	public static synchronized ExpressionParser getExpressionParser() {
@@ -71,14 +72,24 @@ public final class DefaultExpressionParserFactory {
 	}
 
 	/**
+	 * Returns the default expression parser for Spring Web Flow configured with the provided ConversionService for type
+	 * conversion. The returned instance is a thread-safe object.
+	 * @param conversionService the conversionService
+	 * @return the expression parser
+	 */
+	public static synchronized ExpressionParser getExpressionParser(final ConversionService conversionService) {
+		return new DefaultExpressionParserProxy(conversionService);
+	}
+
+	/**
 	 * Returns the default expression parser, creating it if necessary.
 	 * @return the default expression parser
 	 */
 	private static synchronized ExpressionParser getDefaultExpressionParser() {
 		if (INSTANCE == null) {
-			INSTANCE = createDefaultExpressionParser();
+			INSTANCE = createDefaultExpressionParser(null);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Initialized default Web Flow ExpressionParser " + INSTANCE);
+				logger.debug("Initialized shared default Web Flow ExpressionParser " + INSTANCE);
 			}
 		}
 		return INSTANCE;
@@ -88,14 +99,23 @@ public final class DefaultExpressionParserFactory {
 	 * Create the default expression parser. This implementation tries EL first, then OGNL if EL is not configured.
 	 * @return the default Web Flow expression parser
 	 */
-	private static ExpressionParser createDefaultExpressionParser() throws IllegalStateException {
+	private static ExpressionParser createDefaultExpressionParser(ConversionService conversionService)
+			throws IllegalStateException {
 		try {
 			ExpressionFactory elFactory = DefaultExpressionFactoryUtils.createExpressionFactory();
-			return new WebFlowELExpressionParser(elFactory);
+			WebFlowELExpressionParser expressionParser = new WebFlowELExpressionParser(elFactory);
+			if (conversionService != null) {
+				expressionParser.setConversionService(conversionService);
+			}
+			return expressionParser;
 		} catch (Exception e) {
 			try {
 				ClassUtils.forName("ognl.Ognl", DefaultExpressionParserFactory.class.getClassLoader());
-				return new WebFlowOgnlExpressionParser();
+				WebFlowOgnlExpressionParser expressionParser = new WebFlowOgnlExpressionParser();
+				if (conversionService != null) {
+					expressionParser.setConversionService(conversionService);
+				}
+				return expressionParser;
 			} catch (ClassNotFoundException ex) {
 				IllegalStateException ise = new IllegalStateException(
 						"Unable to create the default expression parser for Spring Web Flow: Neither a Unified EL implementation or OGNL could be found.");
@@ -107,6 +127,25 @@ public final class DefaultExpressionParserFactory {
 				ise.initCause(ex);
 				throw ise;
 			}
+		}
+	}
+
+	private static class DefaultExpressionParserProxy implements ExpressionParser {
+		private ConversionService conversionService;
+
+		private ExpressionParser instance;
+
+		public DefaultExpressionParserProxy(ConversionService conversionService) {
+			this.conversionService = conversionService;
+		}
+
+		public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
+			synchronized (instance) {
+				if (instance == null) {
+					instance = createDefaultExpressionParser(conversionService);
+				}
+			}
+			return instance.parseExpression(expressionString, context);
 		}
 	}
 }

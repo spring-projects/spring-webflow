@@ -15,10 +15,12 @@
  */
 package org.springframework.webflow.config;
 
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -57,8 +59,19 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		if (StringUtils.hasText(expressionParser)) {
 			definitionBuilder.addPropertyReference("expressionParser", expressionParser);
 		} else {
-			definitionBuilder
-					.addPropertyValue("expressionParser", DefaultExpressionParserFactory.getExpressionParser());
+			Object value = definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue(
+					"converisonService");
+			if (value instanceof RuntimeBeanReference) {
+				BeanDefinitionBuilder builder = BeanDefinitionBuilder
+						.genericBeanDefinition(DefaultExpressionParserFactory.class);
+				builder.setFactoryMethod("getExpressionParser");
+				builder.addConstructorArgValue(value);
+				definitionBuilder.addPropertyValue("expressionParser", builder.getBeanDefinition());
+			} else {
+				ConversionService conversionService = (ConversionService) value;
+				definitionBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory
+						.getExpressionParser(conversionService));
+			}
 		}
 	}
 
