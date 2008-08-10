@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.binding.convert.converters.NumberToNumber;
 import org.springframework.binding.convert.converters.ObjectToCollection;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
 import org.springframework.binding.convert.converters.StringToBigInteger;
@@ -70,6 +71,7 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToDate());
 		addConverter(new StringToLabeledEnum());
 		addConverter(new ObjectToCollection(this));
+		addConverter(new NumberToNumber());
 	}
 
 	protected void addDefaultAliases() {

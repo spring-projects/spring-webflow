@@ -1,10 +1,12 @@
 package org.springframework.binding.message;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import junit.framework.TestCase;
 
 import org.springframework.context.support.StaticMessageSource;
+import org.springframework.validation.MapBindingResult;
 
 public class MessageContextErrorsTests extends TestCase {
 	public void testReject() {
@@ -13,7 +15,8 @@ public class MessageContextErrorsTests extends TestCase {
 		messageSource.addMessage("bar", Locale.getDefault(), "{0}");
 
 		DefaultMessageContext context = new DefaultMessageContext(messageSource);
-		MessageContextErrors errors = new MessageContextErrors(context);
+		Object object = new Object();
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
 		errors.reject("foo");
 		errors.reject("bogus", "baz");
 		errors.reject("bar", new Object[] { "boop" }, null);
@@ -40,7 +43,8 @@ public class MessageContextErrorsTests extends TestCase {
 		messageSource.addMessage("bar", Locale.getDefault(), "{0}");
 
 		DefaultMessageContext context = new DefaultMessageContext(messageSource);
-		MessageContextErrors errors = new MessageContextErrors(context);
+		Object object = new Object();
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
 		errors.rejectValue("field", "foo");
 		errors.rejectValue("field", "bogus", "baz");
 		errors.rejectValue("field", "bar", new Object[] { "boop" }, null);
@@ -60,4 +64,41 @@ public class MessageContextErrorsTests extends TestCase {
 		assertEquals("boop", msg.getText());
 		assertEquals(Severity.ERROR, msg.getSeverity());
 	}
+
+	public void testAddAllErrors() {
+		StaticMessageSource messageSource = new StaticMessageSource();
+		messageSource.addMessage("foo", Locale.getDefault(), "bar");
+		messageSource.addMessage("bar", Locale.getDefault(), "{0}");
+
+		DefaultMessageContext context = new DefaultMessageContext(messageSource);
+		Object object = new Object();
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
+		MapBindingResult result = new MapBindingResult(new HashMap(), "object");
+		result.reject("bar", new Object[] { "boop" }, null);
+		result.rejectValue("field", "bar", new Object[] { "boop" }, null);
+		errors.addAllErrors(result);
+
+		Message msg = context.getAllMessages()[0];
+		assertEquals(null, msg.getSource());
+		assertEquals("boop", msg.getText());
+		assertEquals(Severity.ERROR, msg.getSeverity());
+
+		msg = context.getAllMessages()[1];
+		assertEquals("field", msg.getSource());
+		assertEquals("boop", msg.getText());
+		assertEquals(Severity.ERROR, msg.getSeverity());
+	}
+
+	public void testGetGlobalErrors() {
+
+	}
+
+	public void testGetFieldErrors() {
+
+	}
+
+	public void testGetFieldValue() {
+
+	}
+
 }

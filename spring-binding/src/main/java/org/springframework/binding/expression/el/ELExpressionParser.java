@@ -103,7 +103,7 @@ public class ELExpressionParser implements ExpressionParser {
 		try {
 			ValueExpression expression = parseValueExpression(expressionString, context);
 			ELContextFactory contextFactory = getContextFactory(context.getEvaluationContextType(), expressionString);
-			return new ELExpression(contextFactory, expression, conversionService, template);
+			return new ELExpression(contextFactory, expression);
 		} catch (ELException e) {
 			throw new ParserException(expressionString, e);
 		}
@@ -112,16 +112,13 @@ public class ELExpressionParser implements ExpressionParser {
 	private ValueExpression parseValueExpression(String expressionString, ParserContext context) throws ELException {
 		ParserELContext elContext = new ParserELContext();
 		elContext.mapVariables(context.getExpressionVariables(), expressionFactory);
-		return expressionFactory.createValueExpression(elContext, expressionString, getExpectedType(context));
+		ValueExpression expression = expressionFactory.createValueExpression(elContext, expressionString, Object.class);
+		return new BindingValueExpression(expression, getExpectedType(context), conversionService, context.isTemplate());
 	}
 
 	private Class getExpectedType(ParserContext context) {
 		Class expectedType = context.getExpectedEvaluationResultType();
-		if (expectedType != null) {
-			return expectedType;
-		} else {
-			return Object.class;
-		}
+		return expectedType != null ? expectedType : Object.class;
 	}
 
 	private ELContextFactory getContextFactory(Class expressionTargetType, String expressionString) {
@@ -134,20 +131,19 @@ public class ELExpressionParser implements ExpressionParser {
 
 	private void init(ExpressionFactory expressionFactory) {
 		this.expressionFactory = expressionFactory;
-		DefaultElContextFactory defaultContextFactory = new DefaultElContextFactory();
-		putContextFactory(null, defaultContextFactory);
-		putContextFactory(Object.class, defaultContextFactory);
+		DefaultElContextFactory contextFactory = new DefaultElContextFactory();
+		putContextFactory(null, contextFactory);
+		putContextFactory(Object.class, contextFactory);
 	}
 
 	private void assertNotDelimited(String expressionString) {
 		if ((expressionString.startsWith("#{") && expressionString.endsWith("}"))
 				|| (expressionString.startsWith("${") && expressionString.endsWith("}"))) {
-			throw new ParserException(
-					expressionString,
-					"This expression '"
-							+ expressionString
-							+ "' being parsed is expected be an 'eval' EL expression string.  Do not attempt to enclose such expression strings in #{} or ${} delimiters--this is redundant. If you need to parse a template that mixes literal text with evaluatable blocks, set the 'template' parser context attribute to true.",
-					null);
+			throw new ParserException(expressionString, "This expression '" + expressionString
+					+ "' being parsed is expected be an 'eval' EL expression string. "
+					+ "Do not attempt to enclose such expression strings in #{} or ${} delimiters. "
+					+ "If you need to parse a template that mixes literal text with evaluatable blocks, "
+					+ "set the 'template' parser context attribute to true.", null);
 		}
 	}
 

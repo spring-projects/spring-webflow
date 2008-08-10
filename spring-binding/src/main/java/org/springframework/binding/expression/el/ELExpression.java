@@ -19,8 +19,6 @@ import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
 
-import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
@@ -37,26 +35,16 @@ public class ELExpression implements Expression {
 
 	private ValueExpression valueExpression;
 
-	private boolean template;
-
-	private ConversionService conversionService;
-
 	/**
 	 * Creates a new el expression
 	 * @param factory the el context factory for creating the EL context that will be used during expression evaluation
 	 * @param valueExpression the value expression to evaluate
-	 * @param template whether or not this expression is a template expression; if not it was parsed as an implict eval
-	 * expression (without delimiters)
 	 */
-	public ELExpression(ELContextFactory factory, ValueExpression valueExpression, ConversionService conversionService,
-			boolean template) {
+	public ELExpression(ELContextFactory factory, ValueExpression valueExpression) {
 		Assert.notNull(factory, "The ELContextFactory is required to evaluate EL expressions");
 		Assert.notNull(valueExpression, "The EL ValueExpression is required for evaluation");
-		Assert.notNull(conversionService, "The ConversionService to perform type coersions is required");
 		this.elContextFactory = factory;
 		this.valueExpression = valueExpression;
-		this.conversionService = conversionService;
-		this.template = template;
 	}
 
 	public Object getValue(Object context) throws EvaluationException {
@@ -86,11 +74,6 @@ public class ELExpression implements Expression {
 	public void setValue(Object context, Object value) throws EvaluationException {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
-			Class targetType = getValueType(context);
-			if (value != null && targetType != null) {
-				ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), targetType);
-				value = converter.execute(value);
-			}
 			valueExpression.setValue(ctx, value);
 			if (!ctx.isPropertyResolved()) {
 				throw new EvaluationException(context.getClass(), getExpressionString(), "The expression '"
@@ -120,12 +103,7 @@ public class ELExpression implements Expression {
 	}
 
 	public String getExpressionString() {
-		if (template) {
-			return valueExpression.getExpressionString();
-		} else {
-			String rawExpressionString = valueExpression.getExpressionString();
-			return rawExpressionString.substring("#{".length(), rawExpressionString.length() - 1);
-		}
+		return valueExpression.getExpressionString();
 	}
 
 	private String getBaseVariable() {
