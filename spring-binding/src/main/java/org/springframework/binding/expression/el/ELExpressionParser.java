@@ -70,6 +70,7 @@ public class ELExpressionParser implements ExpressionParser {
 	 * @param conversionService the conversion service to use
 	 */
 	public void setConversionService(ConversionService conversionService) {
+		Assert.notNull(conversionService, "The conversion service is required");
 		this.conversionService = conversionService;
 	}
 
