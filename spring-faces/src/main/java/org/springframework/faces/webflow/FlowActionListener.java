@@ -176,8 +176,10 @@ public class FlowActionListener implements ActionListener {
 					validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
 							model.getClass(), Errors.class });
 					if (validateMethod != null) {
-						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-								new MessageContextErrors(requestContext.getMessageContext()) });
+						String objectName = getModelExpression(requestContext).getExpressionString();
+						MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(),
+								objectName, model, null, null);
+						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 					}
 				}
 			}

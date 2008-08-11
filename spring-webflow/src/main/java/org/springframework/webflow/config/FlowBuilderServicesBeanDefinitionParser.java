@@ -59,8 +59,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		if (StringUtils.hasText(expressionParser)) {
 			definitionBuilder.addPropertyReference("expressionParser", expressionParser);
 		} else {
-			Object value = definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue(
-					"converisonService");
+			Object value = getConversionServiceValue(definitionBuilder);
 			if (value instanceof RuntimeBeanReference) {
 				BeanDefinitionBuilder builder = BeanDefinitionBuilder
 						.genericBeanDefinition(DefaultExpressionParserFactory.class);
@@ -85,4 +84,8 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		}
 	}
 
+	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
+		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
+				.getValue();
+	}
 }

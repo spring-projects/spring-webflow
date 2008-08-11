@@ -42,14 +42,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	}
 
 	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
-		boolean enableManagedBeans = parseEnableManagedBeans(element, definitionBuilder);
-		if (enableManagedBeans) {
-			definitionBuilder.addPropertyValue("expressionParser", new JsfManagedBeanAwareELExpressionParser(
-					DefaultExpressionFactoryUtils.createExpressionFactory()));
-		} else {
-			parseExpressionParser(element, definitionBuilder);
-		}
 		parseConversionService(element, definitionBuilder);
+		parseExpressionParser(element, definitionBuilder, parseEnableManagedBeans(element, definitionBuilder));
 		parseViewFactoryCreator(element, definitionBuilder);
 	}
 
@@ -80,26 +74,52 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		}
 	}
 
-	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String expressionParser = element.getAttribute("expression-parser");
-		if (StringUtils.hasText(expressionParser)) {
-			definitionBuilder.addPropertyReference("expressionParser", expressionParser);
-		} else {
-			Object value = definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue(
-					"conversionService");
+	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder,
+			boolean enableManagedBeans) {
+		if (enableManagedBeans) {
+			if (StringUtils.hasText(element.getAttribute("expression-parser"))) {
+				throw new IllegalStateException(
+						"Do not specify a custom expression-parser when enable-managed-beans is true");
+			}
+			Object value = getConversionServiceValue(definitionBuilder);
 			if (value instanceof RuntimeBeanReference) {
 				BeanDefinitionBuilder builder = BeanDefinitionBuilder
-						.genericBeanDefinition(WebFlowELExpressionParser.class);
+						.genericBeanDefinition(JsfManagedBeanAwareELExpressionParser.class);
 				builder.addConstructorArgValue(DefaultExpressionFactoryUtils.createExpressionFactory());
 				builder.addPropertyValue("conversionService", value);
 				definitionBuilder.addPropertyValue("expressionParser", builder.getBeanDefinition());
 			} else {
 				ConversionService conversionService = (ConversionService) value;
-				WebFlowELExpressionParser elExpressionParser = new WebFlowELExpressionParser(
+				JsfManagedBeanAwareELExpressionParser elExpressionParser = new JsfManagedBeanAwareELExpressionParser(
 						DefaultExpressionFactoryUtils.createExpressionFactory());
 				elExpressionParser.setConversionService(conversionService);
 				definitionBuilder.addPropertyValue("expressionParser", elExpressionParser);
 			}
+		} else {
+			String expressionParser = element.getAttribute("expression-parser");
+			if (StringUtils.hasText(expressionParser)) {
+				definitionBuilder.addPropertyReference("expressionParser", expressionParser);
+			} else {
+				Object value = getConversionServiceValue(definitionBuilder);
+				if (value instanceof RuntimeBeanReference) {
+					BeanDefinitionBuilder builder = BeanDefinitionBuilder
+							.genericBeanDefinition(WebFlowELExpressionParser.class);
+					builder.addConstructorArgValue(DefaultExpressionFactoryUtils.createExpressionFactory());
+					builder.addPropertyValue("conversionService", value);
+					definitionBuilder.addPropertyValue("expressionParser", builder.getBeanDefinition());
+				} else if (value instanceof ConversionService) {
+					ConversionService conversionService = (ConversionService) value;
+					WebFlowELExpressionParser elExpressionParser = new WebFlowELExpressionParser(
+							DefaultExpressionFactoryUtils.createExpressionFactory());
+					elExpressionParser.setConversionService(conversionService);
+					definitionBuilder.addPropertyValue("expressionParser", elExpressionParser);
+				}
+			}
 		}
+	}
+
+	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
+		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
+				.getValue();
 	}
 }
