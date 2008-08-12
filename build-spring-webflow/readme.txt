@@ -21,6 +21,12 @@ DEVELOPERS
 	
          build.properties
          build-spring-webflow/resources/readme.txt
+         spring-binding/pom.xml
+         spring-js/pom.xml
+         spring-faces/pom.xml
+         spring-faces/template.mf
+         spring-webflow/pom.xml
+         spring-webflow/template.mf
          spring-webflow-reference/src/spring-webflow-reference.xml
 
   2. From this directory, run:
