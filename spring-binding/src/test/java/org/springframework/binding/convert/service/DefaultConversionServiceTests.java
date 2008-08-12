@@ -236,7 +236,7 @@ public class DefaultConversionServiceTests extends TestCase {
 				assertSame(formatterConverter, se.getConverter());
 			}
 		}
-		assertEquals(14, converters.size());
+		assertEquals(15, converters.size());
 	}
 
 	private static class CustomConverter implements Converter {
