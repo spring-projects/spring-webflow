@@ -110,17 +110,4 @@ public class EndStateModel extends AbstractStateModel {
 		this.outputs = outputs;
 	}
 
-	/**
-	 * @param output the output mapping to add
-	 */
-	public void addOutput(OutputModel output) {
-		if (output == null) {
-			return;
-		}
-		if (outputs == null) {
-			outputs = new LinkedList();
-		}
-		outputs.add(output);
-	}
-
 }

@@ -288,14 +288,14 @@ public abstract class AbstractMvcView implements View {
 		DefaultMapper mapper = new DefaultMapper();
 		ParameterMap requestParameters = requestContext.getRequestParameters();
 		if (binderConfiguration != null) {
-			addModelBindingMappings(mapper, requestParameters.asMap().keySet(), model);
+			addModelBindings(mapper, requestParameters.asMap().keySet(), model);
 		} else {
 			addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
 		}
 		return mapper.map(requestParameters, model);
 	}
 
-	private void addModelBindingMappings(DefaultMapper mapper, Set parameterNames, Object model) {
+	private void addModelBindings(DefaultMapper mapper, Set parameterNames, Object model) {
 		Iterator it = binderConfiguration.getBindings().iterator();
 		while (it.hasNext()) {
 			Binding binding = (Binding) it.next();

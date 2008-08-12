@@ -164,13 +164,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param startState the flow's start state to set
-	 */
-	public void setStartState(AbstractStateModel startState) {
-		setStartStateId(startState.getId());
-	}
-
-	/**
 	 * @return the attributes
 	 */
 	public LinkedList getAttributes() {
@@ -182,32 +175,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setAttributes(LinkedList attributes) {
 		this.attributes = attributes;
-	}
-
-	/**
-	 * @param attribute the attribute to add
-	 */
-	public void addAttribute(AttributeModel attribute) {
-		if (attribute == null) {
-			return;
-		}
-		if (attributes == null) {
-			attributes = new LinkedList();
-		}
-		attributes.add(attribute);
-	}
-
-	/**
-	 * @param attributes the attributes to add
-	 */
-	public void addAttributes(LinkedList attributes) {
-		if (attributes == null || attributes.isEmpty()) {
-			return;
-		}
-		if (this.attributes == null) {
-			this.attributes = new LinkedList();
-		}
-		this.attributes.addAll(attributes);
 	}
 
 	/**
@@ -253,32 +220,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param var the var to add
-	 */
-	public void addVar(VarModel var) {
-		if (var == null) {
-			return;
-		}
-		if (vars == null) {
-			vars = new LinkedList();
-		}
-		vars.add(var);
-	}
-
-	/**
-	 * @param vars the vars to add
-	 */
-	public void addVars(LinkedList vars) {
-		if (vars == null || vars.isEmpty()) {
-			return;
-		}
-		if (this.vars == null) {
-			this.vars = new LinkedList();
-		}
-		this.vars.addAll(vars);
-	}
-
-	/**
 	 * @return the input mappings
 	 */
 	public LinkedList getInputs() {
@@ -290,32 +231,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setInputs(LinkedList inputs) {
 		this.inputs = inputs;
-	}
-
-	/**
-	 * @param input the input mapping to add
-	 */
-	public void addInput(InputModel input) {
-		if (input == null) {
-			return;
-		}
-		if (inputs == null) {
-			inputs = new LinkedList();
-		}
-		inputs.add(input);
-	}
-
-	/**
-	 * @param inputs the input mappings to add
-	 */
-	public void addInputs(LinkedList inputs) {
-		if (inputs == null || inputs.isEmpty()) {
-			return;
-		}
-		if (this.inputs == null) {
-			this.inputs = new LinkedList();
-		}
-		this.inputs.addAll(inputs);
 	}
 
 	/**
@@ -333,32 +248,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param output the output mapping to add
-	 */
-	public void addOutput(OutputModel output) {
-		if (output == null) {
-			return;
-		}
-		if (outputs == null) {
-			outputs = new LinkedList();
-		}
-		outputs.add(output);
-	}
-
-	/**
-	 * @param outputs the output mappings to add
-	 */
-	public void addOutputs(LinkedList outputs) {
-		if (outputs == null || outputs.isEmpty()) {
-			return;
-		}
-		if (this.outputs == null) {
-			this.outputs = new LinkedList();
-		}
-		this.outputs.addAll(outputs);
-	}
-
-	/**
 	 * @return the on start actions
 	 */
 	public LinkedList getOnStartActions() {
@@ -370,32 +259,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setOnStartActions(LinkedList onStartActions) {
 		this.onStartActions = onStartActions;
-	}
-
-	/**
-	 * @param onStartAction the on start action to add
-	 */
-	public void addOnStartAction(AbstractActionModel onStartAction) {
-		if (onStartAction == null) {
-			return;
-		}
-		if (onStartActions == null) {
-			onStartActions = new LinkedList();
-		}
-		onStartActions.add(onStartAction);
-	}
-
-	/**
-	 * @param onStartActions the on start actions to add
-	 */
-	public void addOnStartActions(LinkedList onStartActions) {
-		if (onStartActions == null || onStartActions.isEmpty()) {
-			return;
-		}
-		if (this.onStartActions == null) {
-			this.onStartActions = new LinkedList();
-		}
-		this.onStartActions.addAll(onStartActions);
 	}
 
 	/**
@@ -430,67 +293,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param state the state to add
-	 */
-	public void addState(AbstractStateModel state) {
-		if (state == null) {
-			return;
-		}
-		if (states == null) {
-			states = new LinkedList();
-		}
-		states.add(state);
-	}
-
-	/**
-	 * @param states the states to add
-	 */
-	public void addStates(LinkedList states) {
-		if (states == null || states.isEmpty()) {
-			return;
-		}
-		if (this.states == null) {
-			this.states = new LinkedList();
-		}
-		this.states.addAll(states);
-	}
-
-	/**
-	 * @param state the action state to add
-	 */
-	public void addActionState(ActionStateModel state) {
-		addState(state);
-	}
-
-	/**
-	 * @param state the view state to add
-	 */
-	public void addViewState(ViewStateModel state) {
-		addState(state);
-	}
-
-	/**
-	 * @param state the decision state to add
-	 */
-	public void addDecisionState(DecisionStateModel state) {
-		addState(state);
-	}
-
-	/**
-	 * @param state the subflow state to add
-	 */
-	public void addSubflowState(SubflowStateModel state) {
-		addState(state);
-	}
-
-	/**
-	 * @param state the end state to add
-	 */
-	public void addEndState(EndStateModel state) {
-		addState(state);
-	}
-
-	/**
 	 * @return the global transitions
 	 */
 	public LinkedList getGlobalTransitions() {
@@ -502,32 +304,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setGlobalTransitions(LinkedList globalTransitions) {
 		this.globalTransitions = globalTransitions;
-	}
-
-	/**
-	 * @param globalTransition the global transition to add
-	 */
-	public void addGlobalTransition(TransitionModel globalTransition) {
-		if (globalTransition == null) {
-			return;
-		}
-		if (globalTransitions == null) {
-			globalTransitions = new LinkedList();
-		}
-		globalTransitions.add(globalTransition);
-	}
-
-	/**
-	 * @param globalTransitions the global transitions to add
-	 */
-	public void addGlobalTransitions(LinkedList globalTransitions) {
-		if (globalTransitions == null || globalTransitions.isEmpty()) {
-			return;
-		}
-		if (this.globalTransitions == null) {
-			this.globalTransitions = new LinkedList();
-		}
-		this.globalTransitions.addAll(globalTransitions);
 	}
 
 	/**
@@ -545,32 +321,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param onEndAction the on end action to add
-	 */
-	public void addOnEndAction(AbstractActionModel onEndAction) {
-		if (onEndAction == null) {
-			return;
-		}
-		if (onEndActions == null) {
-			onEndActions = new LinkedList();
-		}
-		onEndActions.add(onEndAction);
-	}
-
-	/**
-	 * @param onEndActions the on end actions to add
-	 */
-	public void addOnEndActions(LinkedList onEndActions) {
-		if (onEndActions == null || onEndActions.isEmpty()) {
-			return;
-		}
-		if (this.onEndActions == null) {
-			this.onEndActions = new LinkedList();
-		}
-		this.onEndActions.addAll(onEndActions);
-	}
-
-	/**
 	 * @return the exception handlers
 	 */
 	public LinkedList getExceptionHandlers() {
@@ -585,32 +335,6 @@ public class FlowModel extends AbstractModel {
 	}
 
 	/**
-	 * @param exceptionHandler the exception handler to add
-	 */
-	public void addExceptionHandler(ExceptionHandlerModel exceptionHandler) {
-		if (exceptionHandler == null) {
-			return;
-		}
-		if (exceptionHandlers == null) {
-			exceptionHandlers = new LinkedList();
-		}
-		exceptionHandlers.add(exceptionHandler);
-	}
-
-	/**
-	 * @param exceptionHandlers the exception handlers to add
-	 */
-	public void addExceptionHandlers(LinkedList exceptionHandlers) {
-		if (exceptionHandlers == null || exceptionHandlers.isEmpty()) {
-			return;
-		}
-		if (this.exceptionHandlers == null) {
-			this.exceptionHandlers = new LinkedList();
-		}
-		this.exceptionHandlers.addAll(exceptionHandlers);
-	}
-
-	/**
 	 * @return the bean imports
 	 */
 	public LinkedList getBeanImports() {
@@ -622,32 +346,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setBeanImports(LinkedList beanImports) {
 		this.beanImports = beanImports;
-	}
-
-	/**
-	 * @param beanImport the bean import to add
-	 */
-	public void addBeanImport(BeanImportModel beanImport) {
-		if (beanImport == null) {
-			return;
-		}
-		if (beanImports == null) {
-			beanImports = new LinkedList();
-		}
-		beanImports.add(beanImport);
-	}
-
-	/**
-	 * @param beanImports the bean imports to add
-	 */
-	public void addBeanImports(LinkedList beanImports) {
-		if (beanImports == null || beanImports.isEmpty()) {
-			return;
-		}
-		if (this.beanImports == null) {
-			this.beanImports = new LinkedList();
-		}
-		this.beanImports.addAll(beanImports);
 	}
 
 }

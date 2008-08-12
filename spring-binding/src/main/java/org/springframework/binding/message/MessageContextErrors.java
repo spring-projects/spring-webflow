@@ -53,13 +53,15 @@ public class MessageContextErrors extends AbstractErrors {
 	 * Creates a new message context errors adapter.
 	 * @param messageContext the backing message context
 	 * @param objectName the object name
+	 * @param boundObject the model object
+	 * @param expressionParser the expression parser
+	 * @param mappingResults object mapping results
 	 */
 	public MessageContextErrors(MessageContext messageContext, String objectName, Object boundObject,
 			ExpressionParser expressionParser, MappingResults mappingResults) {
 		this.messageContext = messageContext;
-		this.messageContext = messageContext;
-		this.boundObject = boundObject;
 		this.objectName = objectName;
+		this.boundObject = boundObject;
 		this.expressionParser = expressionParser;
 		this.mappingResults = mappingResults;
 	}
@@ -118,6 +120,7 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public Object getFieldValue(String field) {
+		// requires boundObject, and expressionParser to work
 		if (mappingResults != null) {
 			List results = mappingResults.getResults(new FieldErrorResult(field));
 			if (!results.isEmpty()) {

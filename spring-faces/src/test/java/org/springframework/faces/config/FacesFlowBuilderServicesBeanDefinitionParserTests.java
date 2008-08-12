@@ -53,12 +53,21 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
 	}
 
-	public void testFlowBuilderServicesCustomized() {
-		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesCustom");
+	public void testFlowBuilderServicesAllCustomized() {
+		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesAllCustom");
 		assertNotNull(builderServices);
-		assertNotNull(builderServices.getExpressionParser());
+		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+	}
+
+	public void testFlowBuilderServicesConversionServiceCustomized() {
+		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesConversionServiceCustom");
+		assertNotNull(builderServices);
+		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertTrue(((WebFlowELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {

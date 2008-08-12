@@ -161,19 +161,6 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		this.vars = vars;
 	}
 
-	/**
-	 * @param var the var to add
-	 */
-	public void addVar(VarModel var) {
-		if (var == null) {
-			return;
-		}
-		if (vars == null) {
-			vars = new LinkedList();
-		}
-		vars.add(var);
-	}
-
 	public BinderModel getBinder() {
 		return binder;
 	}

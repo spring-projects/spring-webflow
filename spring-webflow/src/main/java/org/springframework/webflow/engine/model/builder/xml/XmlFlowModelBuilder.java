@@ -198,18 +198,18 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		flow.setAbstract(element.getAttribute("abstract"));
 		flow.setParent(element.getAttribute("parent"));
 		flow.setStartStateId(element.getAttribute("start-state"));
-		flow.addAttributes(parseAttributes(element));
+		flow.setAttributes(parseAttributes(element));
 		flow.setSecured(parseSecured(element));
 		flow.setPersistenceContext(parsePersistenceContext(element));
-		flow.addVars(parseVars(element));
-		flow.addInputs(parseInputs(element));
-		flow.addOnStartActions(parseOnStartActions(element));
-		flow.addStates(parseStates(element));
-		flow.addGlobalTransitions(parseGlobalTransitions(element));
-		flow.addOnEndActions(parseOnEndActions(element));
-		flow.addOutputs(parseOutputs(element));
-		flow.addExceptionHandlers(parseExceptionHandlers(element));
-		flow.addBeanImports(parseBeanImports(element));
+		flow.setVars(parseVars(element));
+		flow.setInputs(parseInputs(element));
+		flow.setOnStartActions(parseOnStartActions(element));
+		flow.setStates(parseStates(element));
+		flow.setGlobalTransitions(parseGlobalTransitions(element));
+		flow.setOnEndActions(parseOnEndActions(element));
+		flow.setOutputs(parseOutputs(element));
+		flow.setExceptionHandlers(parseExceptionHandlers(element));
+		flow.setBeanImports(parseBeanImports(element));
 		return flow;
 	}
 

@@ -12,9 +12,12 @@
 	
 	<faces:flow-builder-services id="flowBuilderServicesLegacy" enable-managed-beans="true"/>
 
-	<faces:flow-builder-services id="flowBuilderServicesCustom" 
+	<faces:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
+		conversion-service="customConversionService"/>
+
+	<faces:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService"/>
 	
 	<bean id="customExpressionParser" class="org.springframework.webflow.expression.DefaultExpressionParserFactory" factory-method="getExpressionParser"/>

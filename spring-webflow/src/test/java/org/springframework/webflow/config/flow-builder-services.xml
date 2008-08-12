@@ -10,9 +10,12 @@
 	
 	<webflow:flow-builder-services id="flowBuilderServicesDefault"/>
 	
-	<webflow:flow-builder-services id="flowBuilderServicesCustom" 
+	<webflow:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
+		conversion-service="customConversionService" />
+
+	<webflow:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService" />
 	
 	<bean id="customExpressionParser" class="org.springframework.webflow.expression.DefaultExpressionParserFactory" factory-method="getExpressionParser"/>

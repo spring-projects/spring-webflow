@@ -13,7 +13,7 @@ public interface NumberFormatFactory {
 	/**
 	 * Factory method that returns a fully-configured {@link NumberFormat} instance to use to format an object for
 	 * display.
-	 * @return returns the number for a
+	 * @return the number format
 	 */
 	public NumberFormat getNumberFormat();
 

@@ -1,5 +1,8 @@
 package org.springframework.webflow.engine.model.registry;
 
+import java.util.Collections;
+import java.util.LinkedList;
+
 import junit.framework.TestCase;
 
 import org.springframework.core.io.Resource;
@@ -37,7 +40,7 @@ public class DefaultFlowModelHolderTests extends TestCase {
 
 		public FlowModel getFlowModel() throws FlowModelBuilderException {
 			FlowModel flow = new FlowModel();
-			flow.addEndState(new EndStateModel("end"));
+			flow.setStates(new LinkedList(Collections.singletonList(new EndStateModel("end"))));
 			return flow;
 		}
 
