@@ -91,6 +91,18 @@
 		</div>
 		<div class="field">
 			<div class="label">
+				<h:outputLabel for="amenities">Amenities:</h:outputLabel>
+			</div>
+			<div class="input">
+				<h:selectOneRadio id="amenities" value="#{booking.amenities}" layout="pageDirection">
+					<f:selectItem itemValue="OCEAN_VIEW" itemLabel="Ocean View" />
+					<f:selectItem itemValue="LATE_CHECKOUT" itemLabel="Late Checkout" />
+					<f:selectItem itemValue="MINIBAR" itemLabel="Minibar" />
+				</h:selectOneRadio>
+			</div>
+		</div>
+		<div class="field">
+			<div class="label">
 				<h:outputLabel for="creditCard">Credit Card #:</h:outputLabel>
 			</div>
 			<div class="input">

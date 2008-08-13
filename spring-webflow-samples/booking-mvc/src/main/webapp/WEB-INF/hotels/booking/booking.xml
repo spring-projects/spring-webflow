@@ -23,6 +23,7 @@
 			<binding property="creditCardName" required="true" />
 			<binding property="creditCardExpiryMonth" required="true" />
 			<binding property="creditCardExpiryYear" required="true" />
+			<binding property="amenities" required="false" />
 		</binder>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />

@@ -49,6 +49,8 @@ public class Booking implements Serializable {
 
     private int beds;
 
+    private Amenity amenities;
+
     public Booking() {
     }
 
@@ -176,6 +178,15 @@ public class Booking implements Serializable {
 
     public void setCreditCardExpiryYear(int creditCardExpiryYear) {
 	this.creditCardExpiryYear = creditCardExpiryYear;
+    }
+
+    @Transient
+    public Amenity getAmenities() {
+	return amenities;
+    }
+
+    public void setAmenities(Amenity amenities) {
+	this.amenities = amenities;
     }
 
     public void validateEnterBookingDetails(MessageContext context) {

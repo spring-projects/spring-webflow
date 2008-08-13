@@ -89,7 +89,27 @@
 						widgetModule : "dijit.form.CheckBox",
 						widgetAttrs : { value : false }}));
 				</script>
-				
+			</div>
+		</div>
+		<div class="field">
+			<div class="label">
+				Amenities:
+			</div>
+			<div id="amenities" class="input">
+				<ul>
+					<li><form:checkbox path="amenities" value="OCEAN_VIEW" label="Ocean View" /></li>
+					<li><form:checkbox path="amenities" value="LATE_CHECKOUT" label="Late Checkout" /></li>
+					<li><form:checkbox path="amenities" value="MINIBAR" label="Minibar" /></li>
+				</ul>
+				<script type="text/javascript">
+					dojo.query('#amenities input').forEach(function(element){
+						Spring.addDecoration(new Spring.ElementDecoration({
+							elementId: element.id,
+							widgetType : "dijit.form.CheckBox",
+							widgetAttrs : { checked : element.checked }
+						}));
+					});
+				</script>
 			</div>
 		</div>
 		<div class="field">

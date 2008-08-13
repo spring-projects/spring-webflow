@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -45,6 +46,8 @@ public class Booking implements Serializable {
     private boolean smoking;
 
     private int beds;
+
+    private Set<Amenity> amenities;
 
     public Booking() {
 	Calendar calendar = Calendar.getInstance();
@@ -174,6 +177,15 @@ public class Booking implements Serializable {
 
     public void setCreditCardExpiryYear(int creditCardExpiryYear) {
 	this.creditCardExpiryYear = creditCardExpiryYear;
+    }
+
+    @Transient
+    public Set<Amenity> getAmenities() {
+	return amenities;
+    }
+
+    public void setAmenities(Set<Amenity> amenities) {
+	this.amenities = amenities;
     }
 
     public void validateEnterBookingDetails(MessageContext context) {
