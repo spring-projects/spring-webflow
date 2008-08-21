@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="publish-top-level">
+<project name="publish-top-level" xmlns:aws="antlib:org.springframework.build.aws">
 
 	<target name="publish" depends="publish-multi-bundle.publish, publish-package"
 			description="Publish package, Ivy, and Maven artifacts"/>
+
+	<target name="publish-package" depends="aws.init">
+		<checksum file="${package.output.file}" algorithm="sha1"/>
+		<checksum file="${artifacts.dir}/${package.basename}-with-dependencies.zip" algorithm="sha1"/>
+		<aws:s3 accessKey="${accessKey}" secretKey="${secretKey}">
+			<upload bucketName="dist.${bucket.basename}" file="${package.output.file}"
+					toFile="${adjusted.release.type}/${project.key}/${package.file.name}" publicRead="true"/>
+			<upload bucketName="dist.${bucket.basename}" file="${package.output.file}.sha1"
+					toFile="${adjusted.release.type}/${project.key}/${package.file.name}.sha1" publicRead="true"/>
+			<upload bucketName="dist.${bucket.basename}" file="${artifacts.dir}/${package.basename}-with-dependencies.zip"
+					toFile="${adjusted.release.type}/${project.key}/${artifacts.dir}/${package.basename}-with-dependencies.zip" publicRead="true"/>
+			<upload bucketName="dist.${bucket.basename}" file="${artifacts.dir}/${package.basename}-with-dependencies.zip.sha1"
+					toFile="${adjusted.release.type}/${project.key}/${artifacts.dir}/${package.basename}-with-dependencies.zip.sha1" publicRead="true"/>
+		</aws:s3>
+	</target>
 
 </project>
