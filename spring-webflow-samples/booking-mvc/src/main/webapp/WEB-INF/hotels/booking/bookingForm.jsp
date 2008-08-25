@@ -102,7 +102,7 @@
 					<li><form:checkbox path="amenities" value="MINIBAR" label="Minibar" /></li>
 				</ul>
 				<script type="text/javascript">
-					dojo.query('#amenities input').forEach(function(element){
+					dojo.query("#amenities input[type='checkbox']").forEach(function(element){
 						Spring.addDecoration(new Spring.ElementDecoration({
 							elementId: element.id,
 							widgetType : "dijit.form.CheckBox",
