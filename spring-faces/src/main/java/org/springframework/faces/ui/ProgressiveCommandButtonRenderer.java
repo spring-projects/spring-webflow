@@ -43,7 +43,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 
 	private static String[] ATTRIBUTES_TO_RENDER;
 
-	private static String BUTTON_TAG_NAME = "button";
+	private static String INPUT_TAG_NAME = "input";
 
 	static {
 		List tempList = new ArrayList();
@@ -120,7 +120,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 	}
 
 	protected String getRenderedTagName(UIComponent component) {
-		return BUTTON_TAG_NAME;
+		return INPUT_TAG_NAME;
 	}
 
 	public void decode(FacesContext context, UIComponent component) {
@@ -129,18 +129,8 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 		}
 	}
 
-	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
-		// If the button has no children, render out the "value" as text.
-		ResponseWriter writer = context.getResponseWriter();
-		String valueAttr = "value";
-		if (component.getAttributes().get(valueAttr) != null) {
-			writer.writeText(component.getAttributes().get(valueAttr), valueAttr);
-		}
-		super.encodeChildren(context, component);
-	}
-
 	public boolean getRendersChildren() {
-		return true;
+		return false;
 	}
 
 	protected String encodeParamsAsObject(FacesContext context, UIComponent component) {

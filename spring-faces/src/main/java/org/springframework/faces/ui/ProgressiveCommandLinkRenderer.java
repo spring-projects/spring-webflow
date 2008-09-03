@@ -89,6 +89,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		}
 	};
 
+	private RenderAttributeCallback noOpCallback = new RenderAttributeCallback() {
+
+		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
+				Object attributeValue, String property) throws IOException {
+			// No-op
+		}
+	};
+
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		// No need to be progressive if this is an AJAX request since it can be assumed JavaScript is enabled
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
@@ -112,6 +120,16 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			context.setResponseWriter(writer);
 		}
 		super.encodeBegin(context, component);
+	}
+
+	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+		// If the link has no children, render out the "value" as text.
+		ResponseWriter writer = context.getResponseWriter();
+		String valueAttr = "value";
+		if (component.getAttributes().get(valueAttr) != null) {
+			writer.writeText(component.getAttributes().get(valueAttr), valueAttr);
+		}
+		super.encodeChildren(context, component);
 	}
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
@@ -147,6 +165,10 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		ResourceHelper.endScriptBlock(context);
 	}
 
+	public boolean getRendersChildren() {
+		return true;
+	}
+
 	protected String[] getAttributesToRender(UIComponent component) {
 		return ATTRIBUTES_TO_RENDER;
 	}
@@ -161,6 +183,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			attributeCallbacks.putAll(super.getAttributeCallbacks(component));
 			attributeCallbacks.put("href", hrefCallback);
 			attributeCallbacks.put("class", classCallback);
+			attributeCallbacks.put("type", noOpCallback);
 		}
 		return attributeCallbacks;
 	}
