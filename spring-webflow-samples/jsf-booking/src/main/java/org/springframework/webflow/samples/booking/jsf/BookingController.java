@@ -31,6 +31,7 @@ public class BookingController {
 
     public void setHotelId(Long hotelId) {
 	if (hotelId != null && hotelId != 0 && !initialized) {
+	    // put booking in session
 	    booking = bookingService.createBooking(hotelId, getCurrentUser());
 	    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("booking", booking);
 	    initialized = true;

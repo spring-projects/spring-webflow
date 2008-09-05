@@ -11,12 +11,6 @@
 	</application>
 	
 	<managed-bean>
-		<managed-bean-name>bookingController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.BookingController</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-	
-	<managed-bean>
 		<managed-bean-name>searchController</managed-bean-name>
 		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.SearchController</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
@@ -39,7 +33,7 @@
 			<value>#{param.id}</value>
 		</managed-property>
 	</managed-bean>
-	
+
 	<managed-bean>
 		<managed-bean-name>bookingController</managed-bean-name>
 		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.BookingController</managed-bean-class>
@@ -57,14 +51,8 @@
 			<value>#{booking}</value>
 		</managed-property>
 	</managed-bean>
-	
-	<managed-bean>
-		<managed-bean-name>searchCriteria</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.SearchCriteria</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
 
-	 <navigation-rule>
+	<navigation-rule>
 		<from-view-id>/main/enterSearchCriteria.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>reviewHotels</from-outcome>

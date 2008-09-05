@@ -11,9 +11,6 @@
            http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<!-- Activates annotation-based bean configuration -->
-	<context:annotation-config />
-	
 	<!-- Scans for application @Components to deploy -->
 	<context:component-scan base-package="org.springframework.webflow.samples.booking" />
 

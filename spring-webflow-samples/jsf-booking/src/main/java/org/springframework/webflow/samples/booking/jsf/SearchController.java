@@ -12,24 +12,23 @@ import org.springframework.webflow.samples.booking.SearchCriteria;
 
 public class SearchController {
 
-    private BookingService bookingService;
+    private SearchCriteria searchCriteria;
 
-    private SearchCriteria searchCriteria = new SearchCriteria();
+    private DataModel bookings;
 
     private DataModel hotels;
 
-    private DataModel bookings;
+    private BookingService bookingService;
 
     public void setBookingService(BookingService bookingService) {
 	this.bookingService = bookingService;
     }
 
     public SearchCriteria getSearchCriteria() {
+	if (searchCriteria == null) {
+	    searchCriteria = new SearchCriteria();
+	}
 	return searchCriteria;
-    }
-
-    public DataModel getHotels() {
-	return hotels;
     }
 
     public DataModel getBookings() {
@@ -40,11 +39,25 @@ public class SearchController {
 	return bookings;
     }
 
+    public DataModel getHotels() {
+	return hotels;
+    }
+
+    // from enterSearchCriteria.xhtml
+
     public String search() {
 	searchCriteria.resetPage();
 	executeSearch();
 	return "reviewHotels";
     }
+
+    public void cancelBookingListener(ActionEvent event) {
+	Booking booking = (Booking) bookings.getRowData();
+	bookingService.cancelBooking(booking);
+	((List) bookings.getWrappedData()).remove(booking);
+    }
+
+    // from reviewHotels.xhtml
 
     public void nextListener(ActionEvent event) {
 	searchCriteria.nextPage();
@@ -56,11 +69,7 @@ public class SearchController {
 	executeSearch();
     }
 
-    public void cancelBookingListener(ActionEvent event) {
-	Booking booking = (Booking) bookings.getRowData();
-	bookingService.cancelBooking(booking);
-	((List) bookings.getWrappedData()).remove(booking);
-    }
+    // internal helpers
 
     private void executeSearch() {
 	hotels = new ListDataModel();
