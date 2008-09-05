@@ -60,12 +60,11 @@ import org.springframework.webflow.executor.support.ResponseInstructionHandler;
  * result from technical limitations in the Portlet API, for instance the fact that a render request cannot issue a
  * redirect. Keep the following in mind when developing Portlets using Spring Web Flow:
  * <ul>
- * <li>Using the well known POST-REDIRECT-GET idiom, for instance using <i>alwaysRedirectOnPause</i> or the
- * "redirect:" view prefix, does not make sense in a Portlet environment where the Portlet container handles this using
- * a seperate <i>render phase</i>. In other words, a {@link FlowExecutionRedirect} is not supportd.</li>
+ * <li>Using the well known POST-REDIRECT-GET idiom, for instance using <i>alwaysRedirectOnPause</i> or the "redirect:"
+ * view prefix, does not make sense in a Portlet environment where the Portlet container handles this using a seperate
+ * <i>render phase</i>. In other words, a {@link FlowExecutionRedirect} is not supportd.</li>
  * <li>This controller will launch a new flow execution <i>every time</i> it handles a render request without having
- * previously handled an action request (for the same session) or the render request containing a flow execution key.
- * </li>
+ * previously handled an action request (for the same session) or the render request containing a flow execution key.</li>
  * <li>Launching new flow executions is done in the render phase. As a result the first view selection your flow makes
  * cannot be a {@link FlowDefinitionRedirect} or an {@link ExternalRedirect}.</li>
  * </ul>
@@ -224,7 +223,8 @@ public class PortletFlowController extends AbstractController implements Initial
 
 			protected void handleExternalRedirect(ExternalRedirect redirect) throws Exception {
 				// issue the redirect to the external URL
-				String url = argumentHandler.createExternalUrl(redirect, flowExecutionKey, context);
+				String url = argumentHandler.createExternalUrl(redirect, responseInstruction.getFlowExecutionKey(),
+						context);
 				response.sendRedirect(url);
 			}
 

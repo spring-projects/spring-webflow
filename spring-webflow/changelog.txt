@@ -21,6 +21,7 @@ Package org.springframework.webflow.executor
   the flow execution (SWF-745).
 * FlowPhaseListener will now save the JSF component state before a flow execution redirect is issued (SWF-747).
 * Fixed FlowPhaseListener to correctly deal with scenarios where we fallback to standard JSF navigation.
+* Fixed use of wrong flow execution key in externalRedirect view when using PortletFlowController (SWF-435).
 
 Changes in version 1.0.5 (03.10.2007)
 -------------------------------------
@@ -969,7 +970,7 @@ Changes in version PR3 (22.5.2005)
 * Pluggable expression evaluation capability.
 * Pluggability for all core definition objects: Flow, State, Transition, action, ...
 * Pluggability of transaction synchronizer interface for custom application-transaction demarcation.
-* A lot of general refining and polishing – package structure should be stable now.
+* A lot of general refining and polishing ï¿½ package structure should be stable now.
 * Flow attribute mapping is now possible from a XML definition using the new "input", and "output" mapping elements within the
   "attribute-mapper" element (see the spring-webflow.dtd).
 * FlowController now provides a setFlow(Flow) method for convenience.
