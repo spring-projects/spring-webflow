@@ -21,6 +21,7 @@ Package org.springframework.webflow.executor
   the flow execution (SWF-745).
 * FlowPhaseListener will now save the JSF component state before a flow execution redirect is issued (SWF-747).
 * Fixed FlowPhaseListener to correctly deal with scenarios where we fallback to standard JSF navigation.
+* Added serializable variants of commonly used JSF data model classes (SWF-748).
 * Fixed use of wrong flow execution key in externalRedirect view when using PortletFlowController (SWF-435).
 
 Changes in version 1.0.5 (03.10.2007)
