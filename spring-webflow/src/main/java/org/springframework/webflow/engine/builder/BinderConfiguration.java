@@ -1,15 +1,15 @@
 package org.springframework.webflow.engine.builder;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
- * Contains the information needed to bind model to a view. This information consists of one or more
- * {@link Binding bindings} that connect properties of the model to UI elements of the view.
+ * Contains the information needed to bind model to a view. This information consists of one or more {@link Binding
+ * bindings} that connect properties of the model to UI elements of the view.
  * 
  * @see ViewFactoryCreator
  * 
@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
  */
 public class BinderConfiguration {
 
-	private Set bindings = new HashSet();
+	private Set bindings = new LinkedHashSet();
 
 	/**
 	 * Adds a new binding to this binding configuration.

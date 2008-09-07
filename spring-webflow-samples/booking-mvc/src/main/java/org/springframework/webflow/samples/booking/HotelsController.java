@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,29 +21,27 @@ public class HotelsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Booking> index(SearchCriteria searchCriteria, Principal currentUser) {
+    public void index(SearchCriteria searchCriteria, Principal currentUser, Model model) {
 	if (currentUser != null) {
-	    return bookingService.findBookings(currentUser.getName());
-	} else {
-	    return null;
+	    List<Booking> booking = bookingService.findBookings(currentUser.getName());
+	    model.addAttribute(booking);
 	}
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public @ModelAttribute("hotels")
-    List<Hotel> search(SearchCriteria criteria) {
-	return bookingService.findHotels(criteria);
+    public String search(SearchCriteria criteria, Model model) {
+	List<Hotel> hotels = bookingService.findHotels(criteria);
+	model.addAttribute(hotels);
+	return "hotels/search";
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Hotel show(@RequestParam("id")
-    Long id) {
+    public Hotel show(@RequestParam("id") Long id) {
 	return bookingService.findHotelById(id);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String deleteBooking(@RequestParam("id")
-    Long id) {
+    public String deleteBooking(@RequestParam("id") Long id) {
 	bookingService.cancelBooking(id);
 	return "redirect:index";
     }

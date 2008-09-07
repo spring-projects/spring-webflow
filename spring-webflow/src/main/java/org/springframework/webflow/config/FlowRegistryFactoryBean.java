@@ -44,6 +44,7 @@ import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 
 /**
@@ -71,12 +72,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 	/**
 	 * The definition registry produced by this factory bean.
 	 */
-	private FlowDefinitionRegistryImpl flowRegistry;
-
-	/**
-	 * The model registry used to build flow models that can be assembled into registerable Flows.
-	 */
-	private FlowModelRegistryImpl flowModelRegistry;
+	private DefaultFlowRegistry flowRegistry;
 
 	/**
 	 * A helper for creating abstract representation of externalized flow definition resources.
@@ -128,9 +124,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	public void afterPropertiesSet() throws Exception {
 		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getApplicationContext());
-		flowRegistry = new FlowDefinitionRegistryImpl();
+		flowRegistry = new DefaultFlowRegistry();
 		flowRegistry.setParent(parent);
-		flowModelRegistry = new FlowModelRegistryImpl();
 		registerFlowLocations();
 		registerFlowLocationPatterns();
 		registerFlowBuilders();
@@ -201,8 +196,14 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private AttributeMap getFlowAttributes(Set attributes) {
 		MutableAttributeMap flowAttributes = null;
+		if (flowBuilderServices.getDevelopment()) {
+			flowAttributes = new LocalAttributeMap(1 + attributes.size(), 1);
+			flowAttributes.put("development", Boolean.TRUE);
+		}
 		if (!attributes.isEmpty()) {
-			flowAttributes = new LocalAttributeMap();
+			if (flowAttributes == null) {
+				flowAttributes = new LocalAttributeMap(attributes.size(), 1);
+			}
 			for (Iterator it = attributes.iterator(); it.hasNext();) {
 				FlowElementAttribute attribute = (FlowElementAttribute) it.next();
 				flowAttributes.put(attribute.getName(), getConvertedValue(attribute));
@@ -217,13 +218,13 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private FlowModelHolder createFlowModelHolder(FlowDefinitionResource resource) {
 		FlowModelHolder modelHolder = new DefaultFlowModelHolder(createFlowModelBuilder(resource));
-		flowModelRegistry.registerFlowModel(resource.getId(), modelHolder);
+		flowRegistry.getFlowModelRegistry().registerFlowModel(resource.getId(), modelHolder);
 		return modelHolder;
 	}
 
 	private FlowModelBuilder createFlowModelBuilder(FlowDefinitionResource resource) {
 		if (isXml(resource.getPath())) {
-			return new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
+			return new XmlFlowModelBuilder(resource.getPath(), flowRegistry.getFlowModelRegistry());
 		} else {
 			throw new IllegalArgumentException(resource
 					+ " is not a supported resource type; supported types are [.xml]");
@@ -277,6 +278,22 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
 		} catch (IllegalAccessException e) {
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
+		}
+	}
+
+	public static class DefaultFlowRegistry extends FlowDefinitionRegistryImpl {
+		private FlowModelRegistry flowModelRegistry = new FlowModelRegistryImpl();
+
+		public FlowModelRegistry getFlowModelRegistry() {
+			return flowModelRegistry;
+		}
+
+		public void setParent(FlowDefinitionRegistry parent) {
+			super.setParent(parent);
+			if (parent instanceof DefaultFlowRegistry) {
+				DefaultFlowRegistry parentFlowRegistry = (DefaultFlowRegistry) parent;
+				flowModelRegistry.setParent(parentFlowRegistry.getFlowModelRegistry());
+			}
 		}
 	}
 

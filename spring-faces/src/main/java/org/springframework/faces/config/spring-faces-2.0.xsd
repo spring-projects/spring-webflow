@@ -59,6 +59,16 @@ from EL expressions in flow definitions.
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
+					<xsd:attribute name="development" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Puts all flows in development mode.
+When set to true, changes to a flow definition will be auto-detected and will result in a flow refresh.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

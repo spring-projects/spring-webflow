@@ -18,11 +18,11 @@
 	
 	<!-- The registry of executable flow definitions -->
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
-		<webflow:flow-location path="/WEB-INF/hotels/booking/booking.xml" />
+		<webflow:flow-location id="hotels/booking" path="/WEB-INF/hotels/booking/booking.xml" />
 	</webflow:flow-registry>
-	
+		
 	<!-- Plugs in a custom creator for Web Flow views -->
-	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" conversion-service="conversionService"/>
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" conversion-service="conversionService" development="true" />
 	
 	<!-- Configures Web Flow to use Tiles to create views for rendering; Tiles allows for applying consistent layouts to your views -->
 	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator"> 

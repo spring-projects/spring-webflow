@@ -11,7 +11,7 @@
 		<xsd:documentation>
 			<![CDATA[
 Spring Web Flow Configuration Schema
-Authors: Keith Donald, Ben Hale, Jeremy Grelle
+Authors: Keith Donald, Jeremy Grelle
 <br>
 A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 ]]>
@@ -206,6 +206,16 @@ The custom ExpressionParser implementation to use to compile expression strings 
 							<xsd:documentation>
 								<![CDATA[
 The custom ViewFactoryCreator implementation to use produce ViewFactories capable of rendering Views.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="development" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Puts all flows in development mode.
+When set to true, changes to a flow definition will be auto-detected and will result in a flow refresh.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

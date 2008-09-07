@@ -5,31 +5,23 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<!-- URL to flow mapping rules -->			
-	<bean id="flowMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="mappings">
-			<value>
-				/hotels/booking=bookingFlowHandler
-			</value>
-		</property>
-		<property name="order" value="0"/>
+	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="order" value="0" />
 	</bean>
 
-	<!-- Controls access to the hotel booking flow -->
-	<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
-
-	<!-- Enables convention-based request URL mapping to @Controllers e.g. /hotels/* maps to HotelsController -->
+	<!-- Maps request paths to @Controller classes; e.g. a path of /hotels looks for a controller named HotelsController -->
 	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
-		<property name="order" value="1"/>
-	</bean>	
-
-	<!-- Maps all other request URLs to views -->			
-	<bean id="viewMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="1" />
 		<property name="defaultHandler">
-			<!-- Selects view names to render based on the request URI: e.g. the "/intro" URL would map to the view named "intro" -->	
+			<!-- If no @Controller match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro" -->	
 			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 		</property>
-		<property name="order" value="2"/>
+	</bean>
+
+	<!-- Resolves logical view names returned by Controllers to Tiles; a view name to resolve is treated as the name of a tiles definition -->
+	<bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
 	</bean>
 
 	<!-- Configures the Tiles layout system -->
@@ -44,18 +36,13 @@
 		</property>
 	</bean>
 	
-	<!-- Resolves views by delegating to the Tiles layout system; a view name to resolve is treated as the name of a tiles definition -->
-	<bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
-		<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
-	</bean>
-
-	<!-- Enables annotated POJO @Controllers -->
+	<!-- Dispatches requests mapped to POJO @Controller implementations -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
-	<!-- Enables plain Controllers -->
+	<!-- Dispatches requests mapped to org.springframework.web.servlet.mvc.Controller implementations -->
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 
-	<!-- Enables FlowHandlers -->
+	<!-- Dispatches requests mapped to flows -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor"/>
 	</bean>

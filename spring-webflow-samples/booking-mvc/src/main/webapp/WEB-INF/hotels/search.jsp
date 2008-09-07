@@ -17,7 +17,7 @@
 </script>
 </p>
 <div id="hotelResults" class="section">
-<c:if test="${not empty hotels}">
+<c:if test="${not empty hotelList}">
 	<table class="summary">
 		<thead>
 			<tr>
@@ -29,7 +29,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="hotel" items="${hotels}">
+			<c:forEach var="hotel" items="${hotelList}">
 				<tr>
 					<td>${hotel.name}</td>
 					<td>${hotel.address}</td>
@@ -38,7 +38,7 @@
 					<td><a href="show?id=${hotel.id}">View Hotel</a></td>
 				</tr>
 			</c:forEach>
-			<c:if test="${empty hotels}">
+			<c:if test="${empty hotelList}">
 				<tr>
 					<td colspan="5">No hotels found</td>
 				</tr>
@@ -56,7 +56,7 @@
 				}));
 			</script>
 		</c:if>
-		<c:if test="${not empty hotels && fn:length(hotels) == searchCriteria.pageSize}">
+		<c:if test="${not empty hotelList && fn:length(hotelList) == searchCriteria.pageSize}">
 			<a id="moreResultsLink" href="search?searchString=${searchCriteria.searchString}&pageSize=${searchCriteria.pageSize}&page=${searchCriteria.page + 1}">More Results</a>
 			<script type="text/javascript">
 				Spring.addDecoration(new Spring.AjaxEventDecoration({

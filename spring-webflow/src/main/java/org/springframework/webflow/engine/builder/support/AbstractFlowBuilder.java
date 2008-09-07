@@ -41,18 +41,10 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 	 */
 	private FlowBuilderContext context;
 
-	/**
-	 * Returns this flow builder's context.
-	 * @return the flow builder context
-	 */
-	protected FlowBuilderContext getContext() {
-		return context;
-	}
-
 	public void init(FlowBuilderContext context) throws FlowBuilderException {
 		this.context = context;
 		doInit();
-		this.flow = createFlow();
+		flow = createFlow();
 	}
 
 	/**
@@ -71,6 +63,14 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 		String id = getContext().getFlowId();
 		AttributeMap attributes = getContext().getFlowAttributes();
 		return getContext().getFlowArtifactFactory().createFlow(id, attributes);
+	}
+
+	/**
+	 * Returns this flow builder's context.
+	 * @return the flow builder context
+	 */
+	protected FlowBuilderContext getContext() {
+		return context;
 	}
 
 	public void buildVariables() throws FlowBuilderException {

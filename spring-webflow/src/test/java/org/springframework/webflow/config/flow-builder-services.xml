@@ -13,7 +13,7 @@
 	<webflow:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService" />
+		conversion-service="customConversionService" development="true" />
 
 	<webflow:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService" />

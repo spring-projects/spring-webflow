@@ -15,7 +15,7 @@
 	<faces:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService"/>
+		conversion-service="customConversionService" development="true" />
 
 	<faces:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService"/>

@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.util.UrlPathHelper;
-import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
@@ -32,7 +31,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * Expects URLs to launch flow to be of this pattern:
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/[namespace]/&lt;flow id&gt;
+ * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow id&gt;
  * </pre>
  * 
  * For example:
@@ -44,7 +43,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * Expects URLs to resume flows to be of this pattern:
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/[namespace]/&lt;flow id&gt;?execution=&lt;flow execution key&gt;
+ * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow id&gt;?execution=&lt;flow execution key&gt;
  * </pre>
  * 
  * For example:
@@ -73,7 +72,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public String getFlowId(HttpServletRequest request) {
-		return WebUtils.extractFilenameFromUrlPath(urlPathHelper.getLookupPathForRequest(request));
+		return request.getPathInfo().substring(0);
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
@@ -86,9 +85,12 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(getFlowHandlerUri(request));
-		url.append('/');
-		url.append(encode(flowId));
+		url.append(request.getContextPath());
+		url.append(request.getServletPath());
+		if (!flowId.startsWith("/")) {
+			url.append('/');
+		}
+		url.append(flowId);
 		if (input != null && !input.isEmpty()) {
 			url.append('?');
 			appendQueryParameters(url, input.asMap());
@@ -123,12 +125,6 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalArgumentException("Cannot url encode " + value);
 		}
-	}
-
-	private String getFlowHandlerUri(HttpServletRequest request) {
-		String flowRequestUri = request.getRequestURI();
-		int lastSlash = flowRequestUri.lastIndexOf('/');
-		return flowRequestUri.substring(0, lastSlash);
 	}
 
 }

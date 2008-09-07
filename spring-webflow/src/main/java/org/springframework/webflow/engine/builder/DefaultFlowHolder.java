@@ -76,8 +76,8 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 			logger.debug("Assembling the flow for the first time");
 			assembleFlow();
 		} else {
-			if (getFlowBuilder().hasFlowChanged()) {
-				logger.debug("The flow has changed; reassembling...");
+			if (flowDefinition.inDevelopment() && getFlowBuilder().hasFlowChanged()) {
+				logger.debug("The flow under development has changed; reassembling...");
 				assembleFlow();
 			}
 		}

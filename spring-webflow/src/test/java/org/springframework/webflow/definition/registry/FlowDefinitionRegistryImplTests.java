@@ -140,6 +140,9 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 			return null;
 		}
 
+		public boolean inDevelopment() {
+			return false;
+		}
 	}
 
 	private static class BarFlow implements FlowDefinition {
@@ -180,5 +183,10 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		public ApplicationContext getApplicationContext() {
 			return null;
 		}
+
+		public boolean inDevelopment() {
+			return false;
+		}
+
 	}
 }

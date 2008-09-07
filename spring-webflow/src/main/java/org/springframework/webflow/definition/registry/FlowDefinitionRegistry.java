@@ -67,4 +67,6 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 */
 	public void registerFlowDefinition(FlowDefinition definition);
 
+	public boolean containsFlowDefinition(String flowId);
+
 }

@@ -19,7 +19,6 @@ import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.util.StringUtils;
@@ -39,13 +38,14 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		return FlowBuilderServices.class;
 	}
 
-	protected void doParse(Element element, ParserContext context, BeanDefinitionBuilder builder) {
-		parseConversionService(element, builder, context);
-		parseExpressionParser(element, builder, context);
-		parseViewFactoryCreator(element, builder, context);
+	protected void doParse(Element element, BeanDefinitionBuilder builder) {
+		parseConversionService(element, builder);
+		parseExpressionParser(element, builder);
+		parseViewFactoryCreator(element, builder);
+		parseDevelopment(element, builder);
 	}
 
-	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
+	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder) {
 		String conversionService = element.getAttribute("conversion-service");
 		if (StringUtils.hasText(conversionService)) {
 			definitionBuilder.addPropertyReference("conversionService", conversionService);
@@ -54,7 +54,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		}
 	}
 
-	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
+	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder) {
 		String expressionParser = element.getAttribute("expression-parser");
 		if (StringUtils.hasText(expressionParser)) {
 			definitionBuilder.addPropertyReference("expressionParser", expressionParser);
@@ -74,7 +74,12 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		}
 	}
 
-	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder, ParserContext context) {
+	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
+		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
+				.getValue();
+	}
+
+	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder) {
 		String viewFactoryCreator = element.getAttribute("view-factory-creator");
 		if (StringUtils.hasText(viewFactoryCreator)) {
 			definitionBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
@@ -84,8 +89,10 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		}
 	}
 
-	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
-		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
-				.getValue();
+	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String development = element.getAttribute("development");
+		if (StringUtils.hasText(development)) {
+			definitionBuilder.addPropertyValue("development", development);
+		}
 	}
 }

@@ -190,8 +190,7 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 			RenderResponse response) {
 		if (e instanceof NoSuchFlowExecutionException) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of previously expired/ended flow '" + flowHandler.getFlowId()
-						+ "'");
+				logger.debug("Restarting a new execution of previously ended flow '" + flowHandler.getFlowId() + "'");
 			}
 			// by default, attempt to restart the flow
 			startFlow(flowHandler, null, request, response);

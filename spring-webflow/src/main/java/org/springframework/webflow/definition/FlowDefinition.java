@@ -81,4 +81,10 @@ public interface FlowDefinition extends Annotated {
 	 */
 	public ApplicationContext getApplicationContext();
 
+	/**
+	 * Returns true if this flow definition is currently in development (running in development mode).
+	 * @return the development flag
+	 */
+	public boolean inDevelopment();
+
 }

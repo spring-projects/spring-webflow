@@ -137,8 +137,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * Set whether redirects sent by this handler adapter should be compatible with HTTP 1.0 clients.
 	 * <p>
 	 * By default, this will enforce a redirect HTTP status code of 302 by delegating to
-	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is
-	 * the correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
+	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is the
+	 * correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
 	 * <p>
 	 * Many HTTP 1.1 clients treat 302 just like 303, not making any difference. However, some clients depend on 303
 	 * when redirecting after a POST request; turn this flag off in such a scenario.
@@ -278,7 +278,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (e instanceof NoSuchFlowExecutionException && flowId != null) {
 			if (!response.isCommitted()) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Restarting a new execution of previously expired/ended flow '" + flowId + "'");
+					logger.debug("Restarting a new execution of previously ended flow '" + flowId + "'");
 				}
 				// by default, attempt to restart the flow
 				response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, null, request));

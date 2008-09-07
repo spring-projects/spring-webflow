@@ -15,9 +15,6 @@
  */
 package org.springframework.binding.mapping.results;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.mapping.Result;
@@ -72,11 +69,7 @@ public class TargetAccessError extends Result {
 	}
 
 	public String toString() {
-		ToStringCreator creator = new ToStringCreator(this).append("errorCode", getErrorCode());
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(stringWriter);
-		error.printStackTrace(writer);
-		creator.append("stackTrace", stringWriter.toString());
-		return creator.toString();
+		return new ToStringCreator(this).append("errorCode", getErrorCode()).append("message", error.getMessage())
+				.toString();
 	}
 }

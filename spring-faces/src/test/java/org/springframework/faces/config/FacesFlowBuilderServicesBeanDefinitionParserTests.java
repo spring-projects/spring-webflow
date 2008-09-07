@@ -43,6 +43,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
+		assertFalse(builderServices.getDevelopment());
 	}
 
 	public void testEnableManagedBeans() {
@@ -51,6 +52,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		assertTrue(builderServices.getExpressionParser() instanceof JsfManagedBeanAwareELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
+		assertFalse(builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesAllCustomized() {
@@ -59,6 +61,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesConversionServiceCustomized() {
@@ -68,6 +71,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(((WebFlowELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
+		assertFalse(builderServices.getDevelopment());
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {

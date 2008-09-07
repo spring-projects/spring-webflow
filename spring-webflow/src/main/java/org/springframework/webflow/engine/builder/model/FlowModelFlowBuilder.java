@@ -142,13 +142,22 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	protected void doInit() throws FlowBuilderException {
 		try {
 			flowModel = flowModelHolder.getFlowModel();
+			initLocalFlowContext();
 		} catch (FlowModelBuilderException e) {
 			throw new FlowBuilderException("Unable to get the model for this flow", e);
 		}
 		if ("true".equals(flowModel.getAbstract())) {
 			throw new FlowBuilderException("Abstract flow models cannot be instantiated.");
 		}
-		initLocalFlowContext();
+	}
+
+	protected Flow createFlow() {
+		String flowId = getContext().getFlowId();
+		AttributeMap flowAttributes = parseFlowMetaAttributes(flowModel);
+		flowAttributes = getContext().getFlowAttributes().union(flowAttributes);
+		Flow flow = getLocalContext().getFlowArtifactFactory().createFlow(flowId, flowAttributes);
+		flow.setApplicationContext(getLocalContext().getApplicationContext());
+		return flow;
 	}
 
 	/**
@@ -257,12 +266,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	// subclassing hooks
 
-	protected Flow createFlow() {
-		Flow flow = parseFlow(flowModel);
-		flow.setApplicationContext(getLocalContext().getApplicationContext());
-		return flow;
-	}
-
 	protected FlowModel getFlowModel() {
 		return flowModel;
 	}
@@ -346,6 +349,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		return flowContext;
 	}
 
+	private boolean isFlowInDevelopment() {
+		return getContext().getFlowAttributes().getBoolean("development", Boolean.FALSE).booleanValue();
+	}
+
 	private void registerMessageSource(GenericApplicationContext flowContext, Resource flowResource) {
 		boolean localMessageSourcePresent = flowContext
 				.containsLocalBean(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME);
@@ -360,20 +367,20 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				BeanDefinitionBuilder builder = BeanDefinitionBuilder
 						.rootBeanDefinition(ReloadableResourceBundleMessageSource.class);
 				builder.addPropertyValue("basename", "messages");
+				if (isFlowInDevelopment()) {
+					builder.addPropertyValue("cacheSeconds", "0");
+				}
 				flowContext.registerBeanDefinition(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME, builder
 						.getBeanDefinition());
 			}
 		}
 	}
 
-	private Flow parseFlow(FlowModel flow) {
-		String flowId = getLocalContext().getFlowId();
-		AttributeMap externallyAssignedAttributes = getLocalContext().getFlowAttributes();
+	private AttributeMap parseFlowMetaAttributes(FlowModel flow) {
 		MutableAttributeMap flowAttributes = parseMetaAttributes(flow.getAttributes());
 		parseAndPutPersistenceContext(flow.getPersistenceContext(), flowAttributes);
 		parseAndPutSecured(flow.getSecured(), flowAttributes);
-		return this.getLocalContext().getFlowArtifactFactory().createFlow(flowId,
-				flowAttributes.union(externallyAssignedAttributes));
+		return flowAttributes;
 	}
 
 	private FlowVariable parseFlowVariable(VarModel var) {

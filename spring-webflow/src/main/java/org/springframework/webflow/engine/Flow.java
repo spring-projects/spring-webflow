@@ -91,10 +91,10 @@ import org.springframework.webflow.execution.RequestContext;
  * {@link #start(RequestControlContext, MutableAttributeMap) start}, {@link #resume(RequestControlContext)},
  * {@link #handleEvent(RequestControlContext) on event},
  * {@link #end(RequestControlContext, String, MutableAttributeMap) end}, and
- * {@link #handleException(FlowExecutionException, RequestControlContext)}. Each method accepts a
- * {@link RequestContext request context} that allows for this flow to access execution state in a thread safe manner. A
- * flow execution is what models a running instance of this flow definition, somewhat analogous to a java object that is
- * an instance of a class.
+ * {@link #handleException(FlowExecutionException, RequestControlContext)}. Each method accepts a {@link RequestContext
+ * request context} that allows for this flow to access execution state in a thread safe manner. A flow execution is
+ * what models a running instance of this flow definition, somewhat analogous to a java object that is an instance of a
+ * class.
  * 
  * @see org.springframework.webflow.engine.State
  * @see org.springframework.webflow.engine.ActionState
@@ -239,6 +239,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		return applicationContext;
 	}
 
+	public boolean inDevelopment() {
+		return getAttributes().getBoolean("development", Boolean.FALSE).booleanValue();
+	}
+
 	/**
 	 * Add given state definition to this flow definition. Marked protected, as this method is to be called by the
 	 * (privileged) state definition classes themselves during state construction as part of a FlowBuilder invocation.
@@ -288,8 +292,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Set the start state for this flow to the state with the provided <code>stateId</code>; a state must exist by
-	 * the provided <code>stateId</code>.
+	 * Set the start state for this flow to the state with the provided <code>stateId</code>; a state must exist by the
+	 * provided <code>stateId</code>.
 	 * @param stateId the id of the new start state
 	 * @throws IllegalArgumentException when no state exists with the id you provided
 	 */
@@ -423,8 +427,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	/**
-	 * Returns the list of actions executed by this flow when an execution of the flow <i>ends</i>. The returned list
-	 * is mutable.
+	 * Returns the list of actions executed by this flow when an execution of the flow <i>ends</i>. The returned list is
+	 * mutable.
 	 * @return the end action list
 	 */
 	public ActionList getEndActionList() {
@@ -518,11 +522,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * Start a new session for this flow in its start state. This boils down to the following:
 	 * <ol>
-	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li>
-	 * <li>Map provided input data into the flow. Typically data will be mapped into flow scope using the registered
-	 * input mapper ({@link #setInputMapper(Mapper)}).</li>
-	 * <li>Execute all registered start actions ({@link #getStartActionList()}).</li>
-	 * <li>Enter the configured start state ({@link #setStartState(State)})</li>
+	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li> <li>Map
+	 * provided input data into the flow. Typically data will be mapped into flow scope using the registered input
+	 * mapper ({@link #setInputMapper(Mapper)}).</li> <li>Execute all registered start actions (
+	 * {@link #getStartActionList()}).</li> <li>Enter the configured start state ({@link #setStartState(State)})</li>
 	 * </ol>
 	 * @param context the flow execution control context
 	 * @param input eligible input into the session
@@ -576,9 +579,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Inform this flow definition that an execution session of itself has ended. As a result, the flow will do the
 	 * following:
 	 * <ol>
-	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li>
-	 * <li>Map data available in the flow execution control context into provided output map using a registered output
-	 * mapper ({@link #setOutputMapper(Mapper)}).</li>
+	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li> <li>Map data available in the flow
+	 * execution control context into provided output map using a registered output mapper (
+	 * {@link #setOutputMapper(Mapper)}).</li>
 	 * </ol>
 	 * @param context the flow execution control context
 	 * @param outcome the logical flow outcome that will be returned by the session, generally the id of the terminating

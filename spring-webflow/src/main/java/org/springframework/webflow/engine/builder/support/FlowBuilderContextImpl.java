@@ -27,6 +27,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.webflow.core.collection.AttributeMap;
+import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
@@ -61,7 +62,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		Assert.notNull(flowDefinitionLocator, "The flow definition locator is required");
 		Assert.notNull(flowBuilderServices, "The flow builder services holder is required");
 		this.flowId = flowId;
-		this.flowAttributes = flowAttributes;
+		initFlowAttributes(flowAttributes);
 		this.flowDefinitionLocator = flowDefinitionLocator;
 		this.flowBuilderServices = flowBuilderServices;
 		this.conversionService = createConversionService();
@@ -119,6 +120,14 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return service;
 	}
 
+	private void initFlowAttributes(AttributeMap flowAttributes) {
+		if (flowAttributes != null) {
+			this.flowAttributes = flowAttributes;
+		} else {
+			this.flowAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+		}
+	}
+	
 	/**
 	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
 	 */

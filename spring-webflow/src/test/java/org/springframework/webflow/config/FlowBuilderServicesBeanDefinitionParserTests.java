@@ -35,6 +35,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof DefaultConversionService);
+		assertFalse(builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesAllCustomized() {
@@ -43,6 +44,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesConversionServiceCustomized() {
@@ -52,6 +54,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
 		assertTrue(((WebFlowELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
+		assertFalse(builderServices.getDevelopment());
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {

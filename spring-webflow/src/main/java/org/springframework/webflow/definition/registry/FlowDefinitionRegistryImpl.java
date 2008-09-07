@@ -69,6 +69,10 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
 	// implementing FlowDefinitionRegistry
 
+	public boolean containsFlowDefinition(String flowId) {
+		return flowDefinitions.containsKey(flowId);
+	}
+
 	public int getFlowDefinitionCount() {
 		return flowDefinitions.size();
 	}

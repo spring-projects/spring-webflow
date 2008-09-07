@@ -45,15 +45,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		parseConversionService(element, definitionBuilder);
 		parseExpressionParser(element, definitionBuilder, parseEnableManagedBeans(element, definitionBuilder));
 		parseViewFactoryCreator(element, definitionBuilder);
-	}
-
-	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String enableManagedBeans = element.getAttribute("enable-managed-beans");
-		if (StringUtils.hasText(enableManagedBeans)) {
-			return Boolean.valueOf(enableManagedBeans).booleanValue();
-		} else {
-			return false;
-		}
+		parseDevelopment(element, definitionBuilder);
 	}
 
 	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder) {
@@ -62,15 +54,6 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 			definitionBuilder.addPropertyReference("conversionService", conversionService);
 		} else {
 			definitionBuilder.addPropertyValue("conversionService", new FacesConversionService());
-		}
-	}
-
-	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String viewFactoryCreator = element.getAttribute("view-factory-creator");
-		if (StringUtils.hasText(viewFactoryCreator)) {
-			definitionBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
-		} else {
-			definitionBuilder.addPropertyValue("viewFactoryCreator", new JsfViewFactoryCreator());
 		}
 	}
 
@@ -121,5 +104,30 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
 		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
 				.getValue();
+	}
+
+	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String enableManagedBeans = element.getAttribute("enable-managed-beans");
+		if (StringUtils.hasText(enableManagedBeans)) {
+			return Boolean.valueOf(enableManagedBeans).booleanValue();
+		} else {
+			return false;
+		}
+	}
+
+	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String viewFactoryCreator = element.getAttribute("view-factory-creator");
+		if (StringUtils.hasText(viewFactoryCreator)) {
+			definitionBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
+		} else {
+			definitionBuilder.addPropertyValue("viewFactoryCreator", new JsfViewFactoryCreator());
+		}
+	}
+
+	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String development = element.getAttribute("development");
+		if (StringUtils.hasText(development)) {
+			definitionBuilder.addPropertyValue("development", development);
+		}
 	}
 }

@@ -43,14 +43,14 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 public class FlowBuilderServices implements ApplicationContextAware, InitializingBean {
 
 	/**
-	 * The factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and
-	 * {@link State states}.
+	 * The factory encapsulating the creation of central Flow artifacts such as {@link Flow flows} and {@link State
+	 * states}.
 	 */
 	private FlowArtifactFactory flowArtifactFactory = new FlowArtifactFactory();
 
 	/**
-	 * The view factory creator for creating views to render during flow execution. The default is <code>null</code>
-	 * and this service must be configured externally.
+	 * The view factory creator for creating views to render during flow execution. The default is <code>null</code> and
+	 * this service must be configured externally.
 	 */
 	private ViewFactoryCreator viewFactoryCreator;
 
@@ -69,6 +69,11 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 	 * The Spring application context that provides access to the services of the application.
 	 */
 	private ApplicationContext applicationContext;
+
+	/**
+	 * Whether or not the flow system is in development mode. In development mode, flows auto-refresh on change.
+	 */
+	private boolean development;
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
 		return flowArtifactFactory;
@@ -100,6 +105,14 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		this.expressionParser = expressionParser;
+	}
+
+	public boolean getDevelopment() {
+		return development;
+	}
+
+	public void setDevelopment(boolean development) {
+		this.development = development;
 	}
 
 	public ApplicationContext getApplicationContext() {
