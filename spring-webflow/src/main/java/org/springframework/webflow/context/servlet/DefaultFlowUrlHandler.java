@@ -65,6 +65,10 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public String getFlowId(HttpServletRequest request) {
+		String pathInfo = request.getPathInfo();
+		if (pathInfo == null) {
+			throw new IllegalStateException("The HttpServletRequest pathInfo is null; unable to extract flowId");
+		}
 		return request.getPathInfo().substring(1);
 	}
 
