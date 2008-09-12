@@ -5,23 +5,12 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<!-- Maps request URIs to controllers -->			
-	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="mappings">
-			<value>
-				/main=flowController
-				/booking=flowController
-			</value>
-		</property>
+	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
 		<property name="defaultHandler">
-			<!-- Selects view names to render based on the request URI: e.g. /main selects "main" -->	
+			<!-- If no flow match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro" -->	
 			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 		</property>
-	</bean>
-
-	<!-- Handles requests mapped to the Spring Web Flow system -->
-	<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
-		<property name="flowExecutor" ref="flowExecutor"/>
 	</bean>
 
 	<!-- Maps logical view names to Facelet templates (e.g. 'search' to '/WEB-INF/search.xhtml' -->
@@ -30,5 +19,13 @@
 		<property name="prefix" value="/WEB-INF/" />
 		<property name="suffix" value=".xhtml" />
 	</bean>
-		
+
+	<!-- Handles requests mapped to the Spring Web Flow system -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<property name="flowExecutor" ref="flowExecutor" />
+	</bean>
+	
+	<!-- Dispatches requests mapped to org.springframework.web.servlet.mvc.Controller implementations -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+			
 </beans>
