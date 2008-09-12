@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
@@ -66,10 +67,13 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	public String getFlowId(HttpServletRequest request) {
 		String pathInfo = request.getPathInfo();
-		if (pathInfo == null) {
-			throw new IllegalStateException("The HttpServletRequest pathInfo is null; unable to extract flowId");
+		if (pathInfo != null) {
+			return pathInfo.substring(1);
+		} else {
+			String servletPath = request.getServletPath();
+			int lastSlash = servletPath.lastIndexOf("/");
+			return WebUtils.extractFilenameFromUrlPath(servletPath.substring(lastSlash));
 		}
-		return request.getPathInfo().substring(1);
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {

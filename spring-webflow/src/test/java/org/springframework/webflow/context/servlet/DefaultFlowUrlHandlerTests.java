@@ -10,6 +10,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 
 public class DefaultFlowUrlHandlerTests extends TestCase {
 	private DefaultFlowUrlHandler urlHandler = new DefaultFlowUrlHandler();
+
 	private MockHttpServletRequest request = new MockHttpServletRequest();
 
 	public void testGetFlowId() {
@@ -17,6 +18,14 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
+		assertEquals("foo", urlHandler.getFlowId(request));
+	}
+
+	public void testGetFlowIdNoPathInfo() {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app/foo.htm");
+		request.setPathInfo(null);
+		request.setRequestURI("/springtravel/app/foo.htm");
 		assertEquals("foo", urlHandler.getFlowId(request));
 	}
 
