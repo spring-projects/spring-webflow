@@ -33,10 +33,8 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.AnnotatedObject;
 import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
@@ -509,15 +507,6 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	// behavioral code, could be overridden in subclasses
-
-	/**
-	 * Factory method that creates the initial input map to pass to this flow when a new execution of this flow is
-	 * started. Allows this flow to assemble the input map from data in the external context representing the calling
-	 * environment.
-	 */
-	public MutableAttributeMap createExecutionInputMap(ExternalContext context) {
-		return new LocalAttributeMap();
-	}
 
 	/**
 	 * Start a new session for this flow in its start state. This boils down to the following:

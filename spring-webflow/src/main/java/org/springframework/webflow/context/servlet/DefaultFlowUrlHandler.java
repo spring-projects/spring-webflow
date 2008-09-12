@@ -22,7 +22,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.util.UrlPathHelper;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
@@ -61,18 +60,12 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	private String urlEncodingScheme = DEFAULT_URL_ENCODING_SCHEME;
 
-	private UrlPathHelper urlPathHelper;
-
-	public DefaultFlowUrlHandler() {
-		urlPathHelper = new UrlPathHelper();
-	}
-
 	public String getFlowExecutionKey(HttpServletRequest request) {
 		return request.getParameter("execution");
 	}
 
 	public String getFlowId(HttpServletRequest request) {
-		return request.getPathInfo().substring(0);
+		return request.getPathInfo().substring(1);
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
