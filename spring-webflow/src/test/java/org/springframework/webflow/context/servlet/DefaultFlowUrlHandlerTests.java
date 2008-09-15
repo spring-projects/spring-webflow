@@ -26,7 +26,13 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setServletPath("/app/foo.htm");
 		request.setPathInfo(null);
 		request.setRequestURI("/springtravel/app/foo.htm");
-		assertEquals("foo", urlHandler.getFlowId(request));
+		assertEquals("app/foo", urlHandler.getFlowId(request));
+	}
+
+	public void testGetFlowIdOnlyContextPath() {
+		request.setContextPath("/springtravel");
+		request.setRequestURI("/springtravel");
+		assertEquals("springtravel", urlHandler.getFlowId(request));
 	}
 
 	public void testGetFlowExecutionKey() {
@@ -45,6 +51,21 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		String url = urlHandler.createFlowDefinitionUrl("bookHotel", null, request);
 		assertEquals("/springtravel/app/bookHotel", url);
+	}
+
+	public void testCreateFlowDefinitionUrlNoPathInfo() {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app/foo.htm");
+		request.setRequestURI("/springtravel/app/foo");
+		String url = urlHandler.createFlowDefinitionUrl("app/foo", null, request);
+		assertEquals("/springtravel/app/foo", url);
+	}
+
+	public void testCreateFlowDefinitionUrlContextPathOnly() {
+		request.setContextPath("/springtravel");
+		request.setRequestURI("/springtravel");
+		String url = urlHandler.createFlowDefinitionUrl("springtravel", null, request);
+		assertEquals("/springtravel", url);
 	}
 
 	public void testCreateFlowDefinitionUrlEmptyInput() {

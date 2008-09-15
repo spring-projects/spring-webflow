@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.util.WebUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
@@ -71,8 +71,16 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 			return pathInfo.substring(1);
 		} else {
 			String servletPath = request.getServletPath();
-			int lastSlash = servletPath.lastIndexOf("/");
-			return WebUtils.extractFilenameFromUrlPath(servletPath.substring(lastSlash));
+			if (StringUtils.hasText(servletPath)) {
+				int dotIndex = servletPath.lastIndexOf('.');
+				if (dotIndex != -1) {
+					return servletPath.substring(1, dotIndex);
+				} else {
+					return servletPath.substring(1);
+				}
+			} else {
+				return request.getContextPath().substring(1);
+			}
 		}
 	}
 
@@ -86,12 +94,21 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
-		url.append(request.getContextPath());
-		url.append(request.getServletPath());
-		if (!flowId.startsWith("/")) {
+		if (request.getPathInfo() != null) {
+			url.append(request.getContextPath());
+			url.append(request.getServletPath());
 			url.append('/');
+			url.append(flowId);
+		} else {
+			if (StringUtils.hasText(request.getServletPath())) {
+				url.append(request.getContextPath());
+				url.append('/');
+				url.append(flowId);
+			} else {
+				url.append('/');
+				url.append(flowId);
+			}
 		}
-		url.append(flowId);
 		if (input != null && !input.isEmpty()) {
 			url.append('?');
 			appendQueryParameters(url, input.asMap());

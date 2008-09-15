@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
-	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+	<bean class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
 		<property name="order" value="0" />
 	</bean>
 
@@ -36,15 +36,18 @@
 		</property>
 	</bean>
 	
-	<!-- Dispatches requests mapped to POJO @Controller implementations -->
+	<!-- Dispatches requests mapped to POJO @Controllers implementations -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
 	<!-- Dispatches requests mapped to org.springframework.web.servlet.mvc.Controller implementations -->
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 
-	<!-- Dispatches requests mapped to flows -->
+	<!-- Dispatches requests mapped to flows to FlowHandler implementations -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor"/>
 	</bean>
-	
+
+	<!-- Custom FlowHandler for the hotel booking flow -->
+	<bean name="hotels/booking" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />	
+		
 </beans>
