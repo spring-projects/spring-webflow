@@ -628,23 +628,25 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private BinderConfiguration createBinderConfiguration(BinderModel binderModel) {
-		if (binderModel == null) {
+		if (binderModel != null && binderModel.getBindings() != null) {
+			BinderConfiguration binderConfiguration = new BinderConfiguration();
+			List bindings = binderModel.getBindings();
+			for (Iterator it = bindings.iterator(); it.hasNext();) {
+				BindingModel bindingModel = (BindingModel) it.next();
+				boolean required;
+				if (StringUtils.hasText(bindingModel.getRequired())) {
+					required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()))
+							.booleanValue();
+				} else {
+					required = false;
+				}
+				Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
+				binderConfiguration.addBinding(binding);
+			}
+			return binderConfiguration;
+		} else {
 			return null;
 		}
-		BinderConfiguration binderConfiguration = new BinderConfiguration();
-		List bindings = binderModel.getBindings();
-		for (Iterator it = bindings.iterator(); it.hasNext();) {
-			BindingModel bindingModel = (BindingModel) it.next();
-			boolean required;
-			if (StringUtils.hasText(bindingModel.getRequired())) {
-				required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired())).booleanValue();
-			} else {
-				required = false;
-			}
-			Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
-			binderConfiguration.addBinding(binding);
-		}
-		return binderConfiguration;
 	}
 
 	private ViewVariable[] parseViewVariables(List vars) {

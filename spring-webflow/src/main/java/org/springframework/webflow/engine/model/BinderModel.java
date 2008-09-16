@@ -25,13 +25,6 @@ public class BinderModel extends AbstractModel {
 
 	private LinkedList bindings;
 
-	public void addBinding(BindingModel bindingModel) {
-		if (bindings == null) {
-			bindings = new LinkedList();
-		}
-		bindings.add(bindingModel);
-	}
-
 	public LinkedList getBindings() {
 		return bindings;
 	}
