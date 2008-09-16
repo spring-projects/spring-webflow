@@ -337,7 +337,7 @@ Configures the process of binding UI elements such as form fields to model prope
 									</xsd:annotation>							
 									<xsd:complexType>
 										<xsd:sequence>								
-											<xsd:element name="binding" minOccurs="0" maxOccurs="unbounded">
+											<xsd:element name="binding" minOccurs="1" maxOccurs="unbounded">
 												<xsd:annotation>
 													<xsd:documentation>
 														<![CDATA[
