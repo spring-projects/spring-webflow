@@ -17,6 +17,7 @@ package org.springframework.binding.expression.ognl;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
@@ -165,5 +166,19 @@ public class OgnlExpressionParserTests extends TestCase {
 		String exp = "list[0]";
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(null, e.getValueType(bean));
+	}
+
+	public void testSetValueWithCoersion() {
+		Expression e = parser.parseExpression("date", null);
+		e.setValue(bean, "2008-9-15");
+	}
+
+	public void testSetBogusValueWithCoersion() {
+		Expression e = parser.parseExpression("date", null);
+		try {
+			e.setValue(bean, "bogus");
+			fail("Should have failed tme");
+		} catch (EvaluationException ex) {
+		}
 	}
 }

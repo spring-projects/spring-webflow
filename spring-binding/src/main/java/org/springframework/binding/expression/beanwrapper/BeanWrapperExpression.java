@@ -23,6 +23,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
@@ -135,7 +136,15 @@ public class BeanWrapperExpression implements Expression {
 		}
 
 		public void setAsText(String text) throws IllegalArgumentException {
-			setValue(converter.execute(text));
+			try {
+				Object convertedValue = converter.execute(text);
+				setValue(convertedValue);
+			} catch (ConversionException e) {
+				IllegalArgumentException iae = new IllegalArgumentException("Unable to convert text '" + text + "'");
+				iae.initCause(e);
+				throw iae;
+			}
 		}
 	}
+
 }
