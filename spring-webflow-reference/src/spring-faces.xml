@@ -167,7 +167,7 @@
 </beans>]]>
         </programlisting>
         <para>
-        	The <code>faces:flow-builder-services</code> tag also several other defaults appropriate for a JSF environment.
+        	The <code>faces:flow-builder-services</code> tag also configures several other defaults appropriate for a JSF environment.
         	Specifically, the Unified EL is configured as the default Expression Language.
         </para>
         <para>
