@@ -37,7 +37,12 @@ public class StaticConversionExecutorImplTests extends TestCase {
 
 	public void testAssignmentCompatibleTypeConversion() {
 		java.sql.Date date = new java.sql.Date(123L);
-		assertSame(date, conversionExecutor.execute(date));
+		try {
+			assertSame(date, conversionExecutor.execute(date));
+			fail("Should have failed");
+		} catch (ConversionExecutionException e) {
+
+		}
 	}
 
 	public void testConvertNull() {

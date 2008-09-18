@@ -87,13 +87,9 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	}
 
 	public Object execute(Object source) throws ConversionExecutionException {
-		if (targetClass.isInstance(source)) {
-			// source is already assignment compatible with target class
-			return source;
-		}
 		if (source != null && !sourceClass.isInstance(source)) {
 			throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), "Source object "
-					+ source + " is expected to be an instance of " + getSourceClass());
+					+ source + " to convert is expected to be an instance of " + getSourceClass());
 		}
 		try {
 			return converter.convertSourceToTargetClass(source, targetClass);
