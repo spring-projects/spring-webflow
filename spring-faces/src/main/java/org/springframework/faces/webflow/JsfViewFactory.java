@@ -32,9 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.ContextResource;
-import org.springframework.core.io.Resource;
 import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
@@ -82,7 +79,7 @@ public class JsfViewFactory implements ViewFactory {
 				viewHandler.initView(facesContext);
 			}
 			JsfView view;
-			String viewName = resolveViewName(context);
+			String viewName = (String) viewIdExpression.getValue(context);
 			if (viewAlreadySet(facesContext)) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Existing view root found with id '" + facesContext.getViewRoot().getId() + "'");
@@ -156,29 +153,6 @@ public class JsfViewFactory implements ViewFactory {
 					(HttpServletResponse) context.getNativeResponse());
 		} else {
 			return false;
-		}
-	}
-
-	private String resolveViewName(RequestContext context) {
-		String viewId = (String) viewIdExpression.getValue(context);
-		if (viewId.startsWith("/")) {
-			return viewId;
-		} else {
-			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
-			if (flowContext == null) {
-				throw new IllegalStateException("A Flow ApplicationContext is required to resolve Flow View Resources");
-			}
-			Resource viewResource = flowContext.getResource(viewId);
-			if (!(viewResource instanceof ContextResource)) {
-				throw new IllegalStateException(
-						"A ContextResource is required to get relative view paths within this context; the resource was "
-								+ viewResource);
-			}
-			String viewPath = ((ContextResource) viewResource).getPathWithinContext();
-			if (!viewPath.startsWith("/")) {
-				viewPath = "/" + viewPath;
-			}
-			return viewPath;
 		}
 	}
 

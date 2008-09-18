@@ -23,6 +23,10 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ContextResource;
+import org.springframework.core.io.Resource;
+import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
@@ -55,14 +59,26 @@ public class FlowViewHandler extends ViewHandler {
 		}
 	}
 
+	public UIViewRoot createView(FacesContext context, String viewId) {
+		String resourcePath = viewId;
+		if (JsfUtils.isFlowRequest()) {
+			resourcePath = resolveResourcePath(RequestContextHolder.getRequestContext(), viewId);
+		}
+		return delegate.createView(context, resourcePath);
+	}
+
+	public UIViewRoot restoreView(FacesContext context, String viewId) {
+		String resourcePath = viewId;
+		if (JsfUtils.isFlowRequest()) {
+			resourcePath = resolveResourcePath(RequestContextHolder.getRequestContext(), viewId);
+		}
+		return delegate.restoreView(context, resourcePath);
+	}
+
 	// ------------------- Pass-through delegate methods ------------------//
 
 	public String calculateRenderKitId(FacesContext context) {
 		return delegate.calculateRenderKitId(context);
-	}
-
-	public UIViewRoot createView(FacesContext context, String viewId) {
-		return delegate.createView(context, viewId);
 	}
 
 	public String getResourceURL(FacesContext context, String path) {
@@ -73,12 +89,32 @@ public class FlowViewHandler extends ViewHandler {
 		delegate.renderView(context, viewToRender);
 	}
 
-	public UIViewRoot restoreView(FacesContext context, String viewId) {
-		return delegate.restoreView(context, viewId);
-	}
-
 	public void writeState(FacesContext context) throws IOException {
 		delegate.writeState(context);
+	}
+
+	// --------------------- Private Helpers ------------------------------//
+
+	private String resolveResourcePath(RequestContext context, String viewId) {
+		if (viewId.startsWith("/")) {
+			return viewId;
+		} else {
+			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
+			if (flowContext == null) {
+				throw new IllegalStateException("A Flow ApplicationContext is required to resolve Flow View Resources");
+			}
+			Resource viewResource = flowContext.getResource(viewId);
+			if (!(viewResource instanceof ContextResource)) {
+				throw new IllegalStateException(
+						"A ContextResource is required to get relative view paths within this context; the resource was "
+								+ viewResource);
+			}
+			String viewPath = ((ContextResource) viewResource).getPathWithinContext();
+			if (!viewPath.startsWith("/")) {
+				viewPath = "/" + viewPath;
+			}
+			return viewPath;
+		}
 	}
 
 }
