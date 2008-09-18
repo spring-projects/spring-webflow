@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<!-- Instructs Spring to perfrom declarative transaction managemenet on annotated classes -->
+	<!-- Instructs Spring to perfrom declarative transaction management on annotated classes -->
 	<tx:annotation-driven />
 
 	<!-- Drives transactions using local JPA APIs -->
