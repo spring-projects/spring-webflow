@@ -6,7 +6,7 @@
 		<para>
 			Security is an important concept for any application.
 			End users should not be able to access any portion of a site simply by guessing the URL.
-			Areas of a site that are sensitive must ensure that only authorized requested are processed.
+			Areas of a site that are sensitive must ensure that only authorized requests are processed.
 			Spring Security is a proven security platform that can integrate with your application at multiple levels.
 			This section will focus on securing flow execution.
 		</para>
