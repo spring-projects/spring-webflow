@@ -29,12 +29,14 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.converters.FormattedStringToNumber;
 import org.springframework.binding.convert.converters.StringToBoolean;
+import org.springframework.binding.convert.converters.TwoWayConverter;
 import org.springframework.binding.format.DefaultNumberFormatFactory;
 
 /**
@@ -123,6 +125,47 @@ public class DefaultConversionServiceTests extends TestCase {
 		service.addConverter("trimmer", new Trimmer());
 		ConversionExecutor executor = service.getConversionExecutor("trimmer", String.class, String.class);
 		assertEquals("a string", executor.execute("a string   "));
+	}
+
+	public void testRegisterCustomConverterForSameTypeNotCompatibleSource() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("trimmer", new Trimmer());
+		try {
+			service.getConversionExecutor("trimmer", Object.class, String.class);
+		} catch (ConversionException e) {
+
+		}
+	}
+
+	public void testRegisterCustomConverterForSameTypeNotCompatibleTarget() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("trimmer", new Trimmer());
+		try {
+			service.getConversionExecutor("trimmer", String.class, Object.class);
+		} catch (ConversionException e) {
+
+		}
+	}
+
+	public void testRegisterCustomConverterReverseComparsion() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", Principal.class, String.class);
+		assertEquals("name", executor.execute(new Principal() {
+			public String getName() {
+				return "name";
+			}
+		}));
+	}
+
+	public void testRegisterCustomConverterReverseNotCompatibleSource() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		try {
+			service.getConversionExecutor("trimmer", Principal.class, Object.class);
+		} catch (ConversionException e) {
+
+		}
 	}
 
 	public void testConversionPrimitive() {
@@ -248,8 +291,14 @@ public class DefaultConversionServiceTests extends TestCase {
 
 	private static class CustomConverter implements Converter {
 
-		public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
-			throw new UnsupportedOperationException("Auto-generated method stub");
+		public Object convertSourceToTargetClass(final Object source, Class targetClass) throws Exception {
+			return new Principal() {
+
+				public String getName() {
+					return (String) source;
+				}
+
+			};
 		}
 
 		public Class getSourceClass() {
@@ -260,6 +309,12 @@ public class DefaultConversionServiceTests extends TestCase {
 			return Principal.class;
 		}
 
+	}
+
+	private static class CustomTwoWayConverter extends CustomConverter implements TwoWayConverter {
+		public Object convertTargetToSourceClass(Object target, Class sourceClass) throws Exception {
+			return ((Principal) target).getName();
+		}
 	}
 
 	private static class Trimmer implements Converter {
