@@ -26,7 +26,7 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		<programlisting language="java"><![CDATA[
 @Override
 protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
-    return resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/booking/booking.xml");
+    return resourceFactory.createFileResource("src/main/webapp/WEB-INF/hotels/booking/booking.xml");
 }]]>
 		</programlisting>
 	</sect1>
@@ -50,7 +50,7 @@ protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext
 @Override
 protected FlowDefinitionResource[] getModelResources(FlowDefinitionResourceFactory resourceFactory) {
    return new FlowDefinitionResource[] {
-       resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/common/common.xml")
+       resourceFactory.createFileResource("src/main/webapp/WEB-INF/common/common.xml")
    };
 }]]>
 		</programlisting>

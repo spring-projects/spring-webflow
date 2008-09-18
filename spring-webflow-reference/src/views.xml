@@ -40,7 +40,7 @@
 	<sect1 id="view-explicit">
 		<title>Specifying view identifiers</title>
 		<para>
-			Use the <code>view</code> attribute to explictly specify the id of the view to render.
+			Use the <code>view</code> attribute to specify the id of the view to render explicitly.
 		</para>
 		<sect2 id="view-explicit-flowrelative">
 			<title>Flow relative view ids</title>
@@ -113,7 +113,8 @@
 			<programlisting language="xml"><![CDATA[
 <view-state id="searchResults">
     <on-render>
-        <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+        <evaluate expression="bookingService.findHotels(searchCriteria)"
+                  result="viewScope.hotels" />
     </on-render>
     <transition on="next">
         <evaluate expression="searchCriteria.nextPage()" />
@@ -335,25 +336,36 @@ public class BookingValidator {
 		<para>
 			In this example, data binding will still occur on <code>back</code> but validation will be suppressed.
 		</para>
-	</sect1>	
-	<sect1 id="transition-actions">
-		<title>Transition actions</title>
+	</sect1>
+	<sect1 id="view-transitions">
+		<title>Executing view transitions</title>
 		<para>
-			A view-state transition can execute one or more actions before executing.
-			These actions may return an error result to prevent the transition itself from executing.
-			If an error result occurs, the view will re-render and should typically display an appropriate error message to the user.
+			Define one or more <code>transition</code> elements to handle user events that may occur on the view.
+			A transition may take the user to another view, or it may simply execute an action and re-render the current view.
+			A transition may also request the rendering of parts of a view called "fragments" when handling an Ajax event.
+			Finally, "global" transitions that are shared across all views may also be defined.
 		</para>
 		<para>
-			If the transition action invokes a plain Java method, the invoked method may return false to prevent the transition from executing.
-			This technique can be used to handle exceptions thrown by service-layer methods.
-			The example below invokes an action that calls a service and handles an exceptional situation:
+			Implementing view transitions is illustrated in the following sections.
 		</para>
-		<programlisting language="xml"><![CDATA[
+		<sect2 id="transition-actions">
+			<title>Transition actions</title>
+			<para>
+				A view-state transition can execute one or more actions before executing.
+				These actions may return an error result to prevent the transition from exiting the current view-state.
+				If an error result occurs, the view will re-render and should display an appropriate message to the user.
+			</para>
+			<para>
+				If the transition action invokes a plain Java method, the invoked method may return false to prevent the transition from executing.
+				This technique can be used to handle exceptions thrown by service-layer methods.
+				The example below invokes an action that calls a service and handles an exceptional situation:
+			</para>
+			<programlisting language="xml"><![CDATA[
 <transition on="submit" to="bookingConfirmed">
     <evaluate expression="bookingAction.makeBooking(booking, messageContext)" />
 </transition>]]>
-		</programlisting>
-		<programlisting language="java"><![CDATA[
+			</programlisting>
+			<programlisting language="java"><![CDATA[
 public class BookingAction {
    public boolean makeBooking(Booking booking, MessageContext context) {
        try {
@@ -366,45 +378,12 @@ public class BookingAction {
        }
    }
 }]]>
-		</programlisting>
-	</sect1>
-	<sect1 id="simple-event-handlers">
-		<title>Handling events</title>
-		<para>
-			From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
-		</para>
-		<programlisting language="xml"><![CDATA[
-<transition on="event">
-    <!-- Handle event -->
-</transition>]]>
-		</programlisting>
-		<para>
-			These event handlers do not change the state of the flow.
-			They simply execute their actions and re-render the current view or one or more fragments of the current view.
-		</para>
-		<sect2 id="event-handlers-render">
-			<title>Rendering partials</title>
-			<para>
-				Use the <code>render</code> element to request partial re-rendering of a view after handling an event:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<transition on="next">
-    <evaluate expression="searchCriteria.nextPage()" />
-    <render fragments="searchResultsFragment" />            
-</transition>]]>
 			</programlisting>
-			<para>
-				The fragments attribute should reference the ID(s) of the view element(s) you wish to re-render.
-				Specify multiple elements to re-render by separating them with a comma delimiter.
-			</para>
-			<para>
-				Such partial rendering is often used with events signaled by Ajax to update a specific zone of the view.
-			</para>
 		</sect2>
 		<sect2 id="event-handlers-global">
-			<title>Handling global events</title>
+			<title>Global transitions</title>
 			<para>
-				Use the flow's <code>global-transitions</code> element to create event handlers that apply across all views.
+				Use the flow's <code>global-transitions</code> element to create transitions that apply across all views.
 				Global-transitions are often used to handle global menu links that are part of the layout.
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -413,7 +392,41 @@ public class BookingAction {
     <transition on="logout" to="logout">
 </global-transitions>]]>
 			</programlisting>
-		</sect2>		
+		</sect2>	
+		<sect2 id="simple-event-handlers">
+			<title>Event handlers</title>
+			<para>
+				From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
+			</para>
+			<programlisting language="xml"><![CDATA[
+<transition on="event">
+    <!-- Handle event -->
+</transition>]]>
+			</programlisting>
+			<para>
+				These event handlers do not change the state of the flow.
+				They simply execute their actions and re-render the current view or one or more fragments of the current view.
+			</para>
+		</sect2>
+		<sect2 id="event-handlers-render">
+			<title>Rendering fragments</title>
+			<para>
+				Use the <code>render</code> element within a transition to request partial re-rendering of the current view after handling the event:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<transition on="next">
+    <evaluate expression="searchCriteria.nextPage()" />
+    <render fragments="searchResultsFragment" />            
+</transition>]]>
+			</programlisting>
+			<para>
+				The fragments attribute should reference the id(s) of the view element(s) you wish to re-render.
+				Specify multiple elements to re-render by separating them with a comma delimiter.
+			</para>
+			<para>
+				Such partial rendering is often used with events signaled by Ajax to update a specific zone of the view.
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 id="view-messages">
 		<title>Working with messages</title>

@@ -180,9 +180,9 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
-    <property name="flowExecutor" ref="flowExecutor"/>
+    <property name="flowExecutor" ref="flowExecutor" />
     <property name="flowUrlHandler">
-        <bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/>
+        <bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler" />
     </property>
 </bean>
 			]]></programlisting>
@@ -206,14 +206,14 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 </webflow:flow-registry>
 
 <webflow:flow-builder-services id="flowBuilderServices" 
-                               view-factory-creator="mvcViewFactoryCreator"/>
+                               view-factory-creator="viewFactoryCreator"/>
 
-<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
-    <property name="viewResolvers" ref="tilesViewResolver"/>
+<bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+    <property name="viewResolvers" ref="tilesViewResolver" />
 </bean>
 
 <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-    <property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesJstlView"/>
+    <property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesJstlView" />
 </bean>
 
 <bean class="org.springframework.web.servlet.view.tiles.TilesConfigurer">

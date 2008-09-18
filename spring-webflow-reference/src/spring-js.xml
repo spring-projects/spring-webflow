@@ -99,10 +99,10 @@
             An <code>AjaxEventDecoration</code> applies a client-side event listener that fires a remote Ajax request to the server.  It also auto-registers a callback function to link in the response:
         </para>
         <programlisting language="xml"><![CDATA[
-<a id="prevResultsLink" href="search?searchString=${searchCriteria.searchString}&page=${searchCriteria.page - 1}">Previous Results</a>
+<a id="prevLink" href="search?searchString=${criteria.searchString}&page=${criteria.page - 1}">Previous</a>
 <script type="text/javascript">
     Spring.addDecoration(new Spring.AjaxEventDecoration({
-        elementId: "prevResultsLink",
+        elementId: "prevLink",
         event: "onclick",
         params: { fragments: "body" }
     }));
@@ -119,7 +119,7 @@
         </para>
         <programlisting language="xml"><![CDATA[
 <input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" 
-       onclick="Spring.remoting.submitForm('proceed', 'booking', { fragments:'messages,bookingForm' }); return false;" />
+       onclick="Spring.remoting.submitForm('proceed', 'booking', { fragments:'messages' }); return false;" />
 <script type="text/javascript">
     Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick'} ));
 </script>]]>

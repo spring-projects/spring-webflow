@@ -16,7 +16,7 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <action-state id="moreAnswersNeeded">
-    <evaluate expression="interview.moreAnswersNeeded()"/>
+    <evaluate expression="interview.moreAnswersNeeded()" />
     <transition on="yes" to="answerQuestions" />
     <transition on="no" to="finish" />
 </action-state>
@@ -36,16 +36,16 @@
     </on-start>
 
     <view-state id="answerQuestions" model="questionSet">
-    	<on-entry>
+        <on-entry>
             <evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
-    	</on-entry>
+        </on-entry>
         <transition on="submitAnswers" to="moreAnswersNeeded">
             <evaluate expression="interview.recordAnswers(questionSet)" />
         </transition>
     </view-state>
     
     <action-state id="moreAnswersNeeded">
-        <evaluate expression="interview.moreAnswersNeeded()"/>
+        <evaluate expression="interview.moreAnswersNeeded()" />
         <transition on="yes" to="answerQuestions" />
         <transition on="no" to="finish" />
     </action-state>
@@ -63,7 +63,7 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <decision-state id="moreAnswersNeeded">
-    <if test="interview.moreAnswersNeeded" then="answerQuestions" else="finish"/>
+    <if test="interview.moreAnswersNeeded" then="answerQuestions" else="finish" />
 </decision-state>
 ]]>
 			</programlisting>
@@ -163,7 +163,8 @@
 			<programlisting language="xml"><![CDATA[
 <view-state id="editOrder">
     <on-entry>
-        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)" result="viewScope.order" />
+        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+                  result="viewScope.order" />
     </on-entry>
     <transition on="save" to="finish">
         <evaluate expression="orderService.update(order, currentUser)" />
@@ -188,7 +189,8 @@
     <input name="orderId" />
 
     <on-start>
-        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)" result="flowScope.order" />
+        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+                  result="flowScope.order" />
     </on-start>
 
     <view-state id="editOrder">
@@ -212,7 +214,8 @@
 			<programlisting language="xml"><![CDATA[
 <view-state id="reviewHotels">
     <on-render>
-	    <evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" result-type="dataModel" />
+        <evaluate expression="bookingService.findHotels(searchCriteria)"
+	              result="viewScope.hotels" result-type="dataModel" />
     </on-render>
     <transition on="select" to="reviewHotel">
         <set name="flowScope.hotel" value="hotels.selectedRow" />

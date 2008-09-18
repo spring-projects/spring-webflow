@@ -22,10 +22,10 @@
 
 <book>
 	<bookinfo>
-		<title>Spring Web Flow 2 Reference Guide</title>
-		<subtitle>Reference Documentation</subtitle>
+		<title>Spring Web Flow Reference Guide</title>
+		<productname>Spring Web Flow</productname>
 		<releaseinfo>Version 2.0.4</releaseinfo>
-		<pubdate>August 2008</pubdate>
+		<pubdate>September 2008</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>
