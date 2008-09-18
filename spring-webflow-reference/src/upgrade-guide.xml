@@ -172,7 +172,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-java-url-handler">
-			<title>Flow Request URL Handler</title>
+			<title>Flow URL Handler</title>
 			<para>
 				The default URL handler has changed in Web Flow 2.
 				The flow identifier is now derived from the URL rather then passed explicitly.
@@ -181,7 +181,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			<programlisting language="xml"><![CDATA[
 <bean name="/pos.htm" class="org.springframework.webflow.mvc.servlet.FlowController">
     <property name="flowExecutor" ref="flowExecutor"/>
-    <property name="flowRequestUrlHandler">
+    <property name="flowUrlHandler">
         <bean class="org.springframework.webflow.context.servlet.WebFlow1FlowUrlHandler"/>
     </property>
 </bean>
