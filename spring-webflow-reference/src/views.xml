@@ -228,7 +228,7 @@ public class StringToMonetaryAmount extends StringToObject {
 			<para>
 				The ConversionService is the object Web Flow consults at runtime to lookup conversion executors to convert from one type to another.
 				There is generally one ConversionService per application.
-				See the <link linkend="builder-service-conversion">System Setup</link> section for documentation on how to configure an extended ConversionService implementation that registers custom Converters.
+				See the <link linkend="builder-service-conversion">System Setup</link> section for documentation on how to configure an extended ConversionService implementation that registers custom Converters to apply application-wide.
 				Also consult the Convert API documentation for more information.
 			</para>
 		</sect2>
