@@ -166,6 +166,73 @@
 			If model binding fails, the view is re-rendered to allow the user to revise their edits.
 		</para>
 	</sect1>
+	<sect1 id="view-type-conversion">
+		<title>Performing type conversion</title>
+		<para>
+			When a model binding occurs during view postback, the binding system will attempt to convert the input value to the type of the target model property if necessary.
+			Default Converters are registered for common types such as Numbers, primitives, enums, and Dates and are applied automatically.
+			Users also have the ability to register their own converters for user-defined types, and to override the default Converters.
+		</para>
+		<sect2 id="converter-impl">
+			<title>Implementing a Converter</title>
+			<para>
+				To implement your own Converter, implement the <code>org.springframework.binding.convert.converters.TwoWayConverter</code> interface.
+				A convenient <code>StringToObject</code> base class has been provided to simplify the implementation of this interface for converters
+				that convert from a user input String to a user-defined Object and back.  Simply extend from this class and override these two methods:
+			</para>
+			<programlisting language="java">
+protected abstract Object toObject(String string, Class targetClass) throws Exception;
+
+protected abstract String toString(Object object) throws Exception;			
+			</programlisting>
+			<para>
+				<code>toObject(String, Class)</code> should convert from the input string to your object's type, and <code>toString(Object)</code> should do the reverse.
+			</para>
+			<para>
+				The following example shows a Converter that converts from String to a MonetaryAmount for working with currency values:
+			</para>
+			<programlisting language="java">
+public class StringToMonetaryAmount extends StringToObject {
+
+   public StringToMonetaryAmount() {
+       super(MonetaryAmount.class);
+   }
+
+   @Override
+   protected Object toObject(String string, Class targetClass) {
+       return MonetaryAmount.valueOf(string);
+   }
+
+   @Override
+   protected String toString(Object object) {
+       MonetaryAmount amount = (MonetaryAmount) object;
+       return amount.toString();
+   }
+}			
+			</programlisting>
+			<para>
+				Review the pre-built converters in the <code>org.springframework.binding.convert.converters</code> package to see more examples of Converter implementations.
+			</para>
+		</sect2>
+		<sect2 id="converter-registration">
+			<title>Registering a Converter</title>
+			<para>
+				To install your own Converter or override any of the default Converters, extend from <code>org.springframework.binding.convert.service.DefaultConversionService</code> and override the <code>addDefaultConverters()</code> method.				
+				Use the <code>addConverter(Converter)</code> method to register the primary Converter to use to convert between two types, such as a <code>String</code> and a <code>MonetaryAmount</code>.
+				Optionally use the <code>addConverter(String, Converter)</code> method to register alternate converters for the same type pair; for example, to support formatting a <code>java.util.Date</code> as a String in several different ways.
+				Consult the Convert JavaDoc API documentation for more information.
+			</para>
+			<para>
+				Each alternate Converter is indexed by a unique <code>converterId</code> that can be referenced when configuring a model binding.
+				When no converter id is referenced explicitly by a binding, the primary Converter between the two types is always used.
+			</para>
+			<para>
+				The ConversionService is the object Web Flow consults at runtime to lookup conversion executors to convert from one type to another.
+				There is generally one ConversionService per application.
+				See the <link linkend="builder-service-conversion">System Setup</link> section for documentation on how to configure an extended ConversionService implementation that registers custom Converters.
+			</para>
+		</sect2>
+	</sect1>
 	<sect1 id="view-bind">
 		<title>Suppressing binding</title>
 		<para>
@@ -178,7 +245,7 @@
     <transition on="cancel" to="bookingCancelled" bind="false" />
 </view-state>]]>
 		</programlisting>
-	</sect1>
+	</sect1>	
 	<sect1 id="view-binder">
 		<title>Specifying bindings explicitly</title>
 		<para>

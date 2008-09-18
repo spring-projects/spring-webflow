@@ -63,7 +63,7 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <decision-state id="moreAnswersNeeded">
-    <if test="interview.moreAnswersNeeded" then="answerQuestions" else="finish" />
+    <if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" />
 </decision-state>
 ]]>
 			</programlisting>
