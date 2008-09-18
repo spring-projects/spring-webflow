@@ -153,7 +153,7 @@
 <view-state id="enterBookingDetails" model="booking">]]>
 	    </programlisting>
 	    <para>		
-			The model may an object in any accessible scope, such as <code>flowScope</code> or <code>viewScope</code>.
+			The model may be an object in any accessible scope, such as <code>flowScope</code> or <code>viewScope</code>.
 			Specifying a <code>model</code> triggers the following behavior when a view event occurs:
 		</para>
 		<orderedlist>
