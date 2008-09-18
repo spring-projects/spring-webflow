@@ -220,7 +220,6 @@ public class StringToMonetaryAmount extends StringToObject {
 				To install your own Converter or override any of the default Converters, extend from <code>org.springframework.binding.convert.service.DefaultConversionService</code> and override the <code>addDefaultConverters()</code> method.				
 				Use the <code>addConverter(Converter)</code> method to register the primary Converter to use to convert between two types, such as a <code>String</code> and a <code>MonetaryAmount</code>.
 				Optionally use the <code>addConverter(String, Converter)</code> method to register alternate converters for the same type pair; for example, to support formatting a <code>java.util.Date</code> as a String in several different ways.
-				Consult the Convert JavaDoc API documentation for more information.
 			</para>
 			<para>
 				Each alternate Converter is indexed by a unique <code>converterId</code> that can be referenced when configuring a model binding.
@@ -230,6 +229,7 @@ public class StringToMonetaryAmount extends StringToObject {
 				The ConversionService is the object Web Flow consults at runtime to lookup conversion executors to convert from one type to another.
 				There is generally one ConversionService per application.
 				See the <link linkend="builder-service-conversion">System Setup</link> section for documentation on how to configure an extended ConversionService implementation that registers custom Converters.
+				Also consult the Convert API documentation for more information.
 			</para>
 		</sect2>
 	</sect1>
