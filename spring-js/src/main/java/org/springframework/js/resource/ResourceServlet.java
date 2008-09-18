@@ -60,6 +60,8 @@ public class ResourceServlet extends HttpServletBean {
 
 	private final String protectedPath = "/?WEB-INF/.*";
 
+	private String jarPathPrefix = "META-INF";
+
 	private boolean gzipEnabled = true;
 
 	private String[] allowedResourcePaths = new String[] { "/**/*.css", "/**/*.gif", "/**/*.ico", "/**/*.jpeg",
@@ -220,7 +222,7 @@ public class ResourceServlet extends HttpServletBean {
 			}
 			URL resource = getServletContext().getResource(localResourcePath);
 			if (resource == null) {
-				String jarResourcePath = "META-INF" + localResourcePath;
+				String jarResourcePath = jarPathPrefix + localResourcePath;
 				if (!isAllowed(jarResourcePath)) {
 					if (log.isWarnEnabled()) {
 						log
@@ -228,6 +230,9 @@ public class ResourceServlet extends HttpServletBean {
 										+ " was disallowed.");
 					}
 					return null;
+				}
+				if (jarResourcePath.startsWith("/")) {
+					jarResourcePath = jarResourcePath.substring(1);
 				}
 				if (log.isDebugEnabled()) {
 					log.debug("Searching classpath for resource: " + jarResourcePath);
@@ -342,11 +347,27 @@ public class ResourceServlet extends HttpServletBean {
 		}
 	}
 
+	/**
+	 * Set whether to apply gzip compression to resources if the requesting client supports it.
+	 */
 	public void setGzipEnabled(boolean gzipEnabled) {
 		this.gzipEnabled = gzipEnabled;
 	}
 
+	/**
+	 * Set allowed resources as an array of URL patterns, e.g. "META-INF/** /*.js", The paths may be any Ant-style
+	 * pattern parsable by AntPathMatcher.
+	 * 
+	 * @see AntPathMatcher
+	 */
 	public void setAllowedResourcePaths(String[] allowedResourcePaths) {
 		this.allowedResourcePaths = allowedResourcePaths;
+	}
+
+	/**
+	 * Set the default path prefix to apply to resources being served from jar files. Default is "META-INF".
+	 */
+	public void setJarPathPrefix(String jarPathPrefix) {
+		this.jarPathPrefix = jarPathPrefix;
 	}
 }
