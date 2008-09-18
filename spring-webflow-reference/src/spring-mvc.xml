@@ -254,7 +254,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		</para>
 		<programlisting language="xml"><![CDATA[
 <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
-    <flow:location path="/WEB-INF/hotels/booking/booking.xml" />
+    <webflow:location path="/WEB-INF/hotels/booking/booking.xml" />
 </webflow:flow-registry>
 
 <webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
