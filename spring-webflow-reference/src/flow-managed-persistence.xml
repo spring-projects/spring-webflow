@@ -87,7 +87,7 @@
 		<para>
 			This pattern creates a <code>PersistenceContext</code> in <code>conversationScope</code> on flow startup, and uses that context for data access until the conversation ends.
 			This pattern generally employs a manual flush mode; that is, the application decides when to flush changes to the database.
-			A convention for flow-managed flushing may be employed, such as always flushing after a transition one from one view-state to another.
+			A convention for flow-managed flushing may be employed, such as always flushing after a transition from one view-state to another.
 			This pattern provides no flow-level isolation of intermediate edits since flushing synchronizes persistent object state with the database.
 			With this pattern, all data access generally occurs non-transactionally.
 		</para>
