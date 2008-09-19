@@ -1,28 +1,29 @@
-<div class="dijit dijitReset dijitInlineTable dijitLeft"
-	id="widget_${id}"
-	dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" waiRole="presentation"
-	><div class="dijitInputLayoutContainer"
-		><div class="dijitReset dijitSpinnerButtonContainer"
-			>&nbsp;<div class="dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitUpArrowButton"
-				dojoAttachPoint="upArrowNode"
-				dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse"
-				stateModifier="UpArrow"
-				><div class="dijitArrowButtonInner">&thinsp;</div
-				><div class="dijitArrowButtonChar">&#9650;</div
-			></div
-			><div class="dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitDownArrowButton"
-				dojoAttachPoint="downArrowNode"
-				dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse"
-				stateModifier="DownArrow"
-				><div class="dijitArrowButtonInner">&thinsp;</div
-				><div class="dijitArrowButtonChar">&#9660;</div
-			></div
-		></div
-		><div class="dijitReset dijitValidationIcon"><br></div
-		><div class="dijitReset dijitValidationIconText">&Chi;</div
-		><div class="dijitReset dijitInputField"
-			><input class='dijitReset' dojoAttachPoint="textbox,focusNode" type="${type}" dojoAttachEvent="onfocus:_update,onkeyup:_update,onkeypress:_onKeyPress"
+<table class="dijit dijitReset dijitInlineTable dijitLeft" cellspacing="0" cellpadding="0"
+	id="widget_${id}" name="${name}"
+	dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse,onkeypress:_onKeyPress"
+	waiRole="presentation"
+	><tr class="dijitReset"
+		><td rowspan="2" class="dijitReset dijitStretch dijitInputField" width="100%"
+			><input dojoAttachPoint="textbox,focusNode" type="${type}" dojoAttachEvent="onfocus,onkeyup"
 				waiRole="spinbutton" autocomplete="off" name="${name}"
-		/></div
-	></div
-></div>
+		></td
+		><td rowspan="2" class="dijitReset dijitValidationIconField" width="0%" 
+			><div dojoAttachPoint='iconNode' class='dijitValidationIcon'></div
+		></td
+		><td class="dijitReset dijitRight dijitButtonNode dijitUpArrowButton" width="0%"
+				dojoAttachPoint="upArrowNode"
+				dojoAttachEvent="onmousedown:_handleUpArrowEvent,onmouseup:_handleUpArrowEvent,onmouseover:_handleUpArrowEvent,onmouseout:_handleUpArrowEvent"
+				stateModifier="UpArrow"
+			><div class="dijitA11yUpArrow">&#9650;</div
+		></td
+	></tr
+	><tr class="dijitReset"
+		><td class="dijitReset dijitRight dijitButtonNode dijitDownArrowButton" width="0%"
+				dojoAttachPoint="downArrowNode"
+				dojoAttachEvent="onmousedown:_handleDownArrowEvent,onmouseup:_handleDownArrowEvent,onmouseover:_handleDownArrowEvent,onmouseout:_handleDownArrowEvent"
+				stateModifier="DownArrow"
+			><div class="dijitA11yDownArrow">&#9660;</div
+		></td
+	></tr
+></table>
+

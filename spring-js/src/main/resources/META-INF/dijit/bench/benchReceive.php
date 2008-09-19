@@ -120,9 +120,7 @@ function add_rec($table, $data) {
 
 	if ($query = mysql_query("insert into $table set $sqlfields")) {
 		$id = mysql_insert_id();
-		return ($id);
-	}else{
-		return FALSE;
+		return ($id); } else { return FALSE; }
 	}
 }
 

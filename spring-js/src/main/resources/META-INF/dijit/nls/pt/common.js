@@ -1,1 +1,1 @@
-({"buttonCancel":"Cancelar ","buttonSave":"Salvar","buttonOk":"OK","itemClose":"Close"})
+({"buttonCancel": "Cancelar ", "buttonSave": "Salvar", "buttonOk": "OK"})

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation
+	Copyright (c) 2004-2007, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -9,4 +9,4 @@
 */
 
 
-if(!dojo._hasResource["dijit.form.DateTextBox"]){dojo._hasResource["dijit.form.DateTextBox"]=true;dojo.provide("dijit.form.DateTextBox");dojo.require("dijit._Calendar");dojo.require("dijit.form._DateTimeTextBox");dojo.declare("dijit.form.DateTextBox",dijit.form._DateTimeTextBox,{popupClass:"dijit._Calendar",_selector:"date"});}
+if(!dojo._hasResource["dijit.form.DateTextBox"]){dojo._hasResource["dijit.form.DateTextBox"]=true;dojo.provide("dijit.form.DateTextBox");dojo.require("dijit._Calendar");dojo.require("dijit.form.TimeTextBox");dojo.declare("dijit.form.DateTextBox",dijit.form.TimeTextBox,{_popupClass:"dijit._Calendar",postMixInProperties:function(){this.inherited("postMixInProperties",arguments);this.constraints.selector="date";}});}

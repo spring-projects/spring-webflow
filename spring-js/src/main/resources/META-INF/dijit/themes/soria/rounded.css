@@ -1,0 +1,34 @@
+/*
+	this is experimental stylestuff for the pseudo-builtin support
+	webkit and firefox provide for CSS3 radius: property.
+*/
+.soria .dijitTab {
+	margin-left:0px;
+	-moz-border-radius-topleft:6pt;
+	-moz-border-radius-topright:5pt;
+	-webkit-border-top-left-radius:6pt;
+	-webkit-border-top-right-radius:6pt;
+}
+.soria .dijitAlignBottom .dijitTab {
+
+	-webkit-border-top-left-radius:0;
+	-webkit-border-top-right-radius:0;
+	-moz-border-radius-topleft:0;
+	-moz-border-radius-topright:0;
+
+	-webkit-border-bottom-left-radius:6pt;
+	-webkit-border-bottom-right-radius:6pt;
+	-moz-border-radius-bottomleft:6pt;
+	-moz-border-radius-bottomright:5pt;
+}
+
+.soria .dijitButton { 
+	-moz-border-radius:4pt;
+}	
+
+.soria .dijitDialogTitleBar {
+	-webkit-border-top-left-radius:6pt;
+	-webkit-border-top-right-radius:6pt;
+	-moz-border-radius-topleft:6pt;
+	-moz-border-radius-topright:5pt;
+}

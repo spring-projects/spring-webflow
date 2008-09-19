@@ -1,13 +1,10 @@
-.dj_gecko .dijitRtl .dijitInputField {
-	direction: ltr; /* Firefox needs this - probably a bug */
-}
-.dj_gecko .dijitRtl .dijitInputField * {
-	direction: rtl; /* Firefox needs dijitInputField to be ltr, so fix the contained tags */
-}
-
 /* Tree */
 
-.dijitRtl .dijitTreeContainer .dijitTreeExpando, .dijitRtl .dijitTreeContainer .dijitTreeExpand {
+.dijitRtl .dijitTreeContainer .dijitTreeExpando {
+	float:right;
+}
+
+.dijitRtl .dijitTreeContainer .dijitTreeExpand {
 	float:right;
 }
 
@@ -18,9 +15,11 @@
 	padding-right: 0; 
 } 
 
+/* ComboBox */
+
 .dijitRtl .dijitComboBox .dijitInputField {
 	border-right-width:1px !important;
-	border-left-width:0 !important;
+	border-left-width:0px !important;
 }
 
 /* Calendar */
@@ -34,7 +33,7 @@
 }
 
 .dijitRtl .dijitProgressBarFull .dijitProgressBarLabel {
-	right:0; /* FF workaround */
+	right:0px; /* FF workaround */
 }
 
 /* Button */
@@ -51,55 +50,45 @@
 
 /* AccordionPane */
 
-.dijitRtl .dijitAccordionArrow,
-.dijitRtl .dijitAccordionTitle .arrowTextUp,
-.dijitRtl .dijitAccordionTitle .arrowTextDown {
+.dijitRtl .dijitAccordionPane .dijitAccordionTitle .dijitAccordionArrow,
+.dijitRtl .dijitAccordionPane .dijitAccordionTitle .arrowTextUp,
+.dijitRtl .dijitAccordionPane .dijitAccordionTitle .arrowTextDown {
 	float: left;
 }
 
 /* Slider */
 
-.dijitRtl .dijitSliderImageHandleV {
+.dijitRtl .dijitVerticalSliderImageHandle {
 	left:auto;
 	right:-6px;
 }
 
-.dj_ie .dijitRtl .dijitSliderImageHandleV {
+.dj_ie .dijitRtl .dijitVerticalSliderImageHandle {
 	right:-10px;
 }
 
-.dijitRtl .dijitSliderMoveableH {
+.dijitRtl .dijitHorizontalSliderMoveable {
 	right:auto;
 	left:0;
 }
 
-.dijitRtl .dijitRuleContainerV {
+.dijitRtl .VerticalRuleContainer {
 	float:right;
 }
 
-.dj_gecko .dijitRtl .dijitRuleContainerV {
-	float:left;
-}
-
-.dj_ie .dijitRtl .dijitRuleContainerV {
+.dj_ie .dijitRtl .VerticalRuleContainer {
 	text-align:right;
 }
 
-.dj_ie .dijitRtl .dijitRuleLabelV {
+.dj_ie .dijitRtl .VerticalRuleLabel {
 	text-align:left;
 }
 
-.dj_ie .dijitRtl .dijitRuleLabelH {
+.dj_ie .dijitRtl .HorizontalRuleLabel {
 	zoom:1;
 }
 
-.dj_ie .dijitRtl .dijitSliderProgressBarH {
-	right:0;
-	left:auto;
-}
-
-.dj_gecko .dijitRtl .dijitSliderProgressBarH {
-	float:right;
+.dj_ie .dijitRtl .dijitHorizontalSliderProgressBar {
 	right:0;
 	left:auto;
 }
@@ -125,6 +114,17 @@
 	margin-right:1px !important;
 }
 
+/* TabContainer */
+
+.dijitRtl .dijitTab {
+	float:right;
+}
+
+.dj_ie .dijitRtl .dijitTab,
+.dj_ie .dijitRtl .dijitTab .dijitTabInnerDiv {
+	zoom:1;
+}
+
 .dj_ie6 .dijitRtl .dijitTab {
 	/* force ie6 to render each tab based on the tab's label */
 	width:1px;
@@ -148,47 +148,4 @@
 .dj_ie6 .dijitRtl .dijitTabContainer .dijitAlignRight {
 	overflow-x:visible;
 	margin-right:2px !important;
-}
-
-.dj_ie7 .dijitRtl .dijitTab .dijitTabInnerDiv {
-	float:left;
-}
-
-.dj_ie7 .dijitRtl .dijitTab .closeImage {
-	padding: 0 0 0 12px;
-}
-
-.dj_ie .dijitRtl .dijitAlignRight .dijitTab {
-	position:relative;
-}
-
-/* TitlePane */
-
-.dijitRtl .dijitTitlePane .dijitArrowNode {
-	float: left;
-}
-
-.dijitRtl .dijitSpinner .dijitInputLayoutContainer .dijitArrowButton {
-	right: auto;
-	left: 0;
-	border-width: 0 1px 0 0 !important;
-}
-
-.dijitRtl .dijitSpinnerButtonContainer {
-	float: left;
-}
-
-.dijitRtl .dijit_a11y .dijitSpinnerButtonContainer {
-	margin-left: none;
-	margin-right: 2px;
-}
-
-.dijitRtl DIV.dijitArrowButton, .dijitRtl .dijitValidationIcon, .dijitRtl .dijitValidationIconText {
-	float: left;
-}
-
-/* ContentPane*/
-.dijitRtl .dijitContentPaneLoading, .dijitRtl .dijitContentPaneError {
-	background-position:right;
-	padding-right:25px;
 }

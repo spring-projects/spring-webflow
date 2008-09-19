@@ -5,6 +5,7 @@ dojo.js:
 ./../../dojo/_base/_loader/bootstrap.js
 ./../../dojo/_base/_loader/loader.js
 ./../../dojo/_base/_loader/hostenv_browser.js
+./jslib/dojoGuardEnd.jsfrag
 ./../../release/dojo/dojo/_base/lang.js
 ./../../release/dojo/dojo/_base/declare.js
 ./../../release/dojo/dojo/_base/connect.js
@@ -20,7 +21,6 @@ dojo.js:
 ./../../release/dojo/dojo/_base/query.js
 ./../../release/dojo/dojo/_base/xhr.js
 ./../../release/dojo/dojo/_base/fx.js
-./../../release/dojo/dojo/_base/browser.js
 ./../../release/dojo/dojo/i18n.js
 ./../../release/dojo/dijit/_base/focus.js
 ./../../release/dojo/dijit/_base/manager.js
@@ -49,7 +49,8 @@ dojo.js:
 ./../../release/dojo/dojo/date.js
 ./../../release/dojo/dojo/date/locale.js
 ./../../release/dojo/dijit/_Calendar.js
-./../../release/dojo/dijit/form/_DateTimeTextBox.js
+./../../release/dojo/dijit/_TimePicker.js
+./../../release/dojo/dijit/form/TimeTextBox.js
 ./../../release/dojo/dijit/form/DateTextBox.js
 ./../../release/dojo/dojo/cldr/monetary.js
 ./../../release/dojo/dojo/currency.js
@@ -58,11 +59,10 @@ dojo.js:
 ./../../release/dojo/dojo/dnd/autoscroll.js
 ./../../release/dojo/dojo/dnd/Mover.js
 ./../../release/dojo/dojo/dnd/Moveable.js
-./../../release/dojo/dojo/dnd/TimedMoveable.js
+./../../release/dojo/dojo/dnd/move.js
 ./../../release/dojo/dojo/fx.js
 ./../../release/dojo/dijit/_Container.js
 ./../../release/dojo/dijit/layout/_LayoutWidget.js
 ./../../release/dojo/dijit/layout/ContentPane.js
 ./../../release/dojo/dijit/form/Form.js
 ./../../release/dojo/dijit/Dialog.js
-./jslib/dojoGuardEnd.jsfrag

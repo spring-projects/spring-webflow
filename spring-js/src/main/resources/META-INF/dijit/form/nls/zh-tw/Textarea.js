@@ -1,1 +1,1 @@
-({"iframeTitle1":"編輯區","iframeTitle2":"編輯區框"})
+({"iframeTitle1": "編輯區", "iframeTitle2": "編輯區框"})

@@ -51,7 +51,7 @@
 		function runTest(){
 			if(isRunning){ return; }
 			_toggleRunMsg();
-			setTimeout(function(){_runRealTest();},1000);
+			setTimeout("_runRealTest()",1000);
 		}
 
 		function _runRealTest(){
@@ -99,7 +99,7 @@
 			});
 
 			dojo.byId("results").innerHTML += msg;
-			setTimeout(function(){_toggleRunMsg();},250); 
+			setTimeout("_toggleRunMsg()",250); 
 			
 			// Nodes have to be in the document for IE7 to GC them.
 			// Do this after generating the widgets to dispel 
