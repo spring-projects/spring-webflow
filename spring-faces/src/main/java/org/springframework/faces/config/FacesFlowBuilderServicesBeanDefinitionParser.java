@@ -17,9 +17,10 @@ package org.springframework.faces.config;
 
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.binding.convert.ConversionService;
+import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
@@ -37,77 +38,33 @@ import org.w3c.dom.Element;
 public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser implements
 		BeanDefinitionParser {
 
+	// --------------------------- XML Config Attributes ----------------------- //
+	private static final String CONVERSION_SERVICE_ATTR = "conversion-service";
+	private static final String DEVELOPMENT_ATTR = "development";
+	private static final String ENABLE_MANAGED_BEANS_ATTR = "enable-managed-beans";
+	private static final String EXPRESSION_PARSER_ATTR = "expression-parser";
+	private static final String VIEW_FACTORY_CREATOR_ATTR = "view-factory-creator";
+
+	// --------------------------- Bean Configuration Properties --------------------- //
+	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
+	private static final String DEVELOPMENT_PROPERTY = "development";
+	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
+	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
+
 	protected Class getBeanClass(Element element) {
 		return FlowBuilderServices.class;
 	}
 
-	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
-		parseConversionService(element, definitionBuilder);
-		parseExpressionParser(element, definitionBuilder, parseEnableManagedBeans(element, definitionBuilder));
-		parseViewFactoryCreator(element, definitionBuilder);
+	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
+		parseConversionService(element, parserContext, definitionBuilder);
+		parseExpressionParser(element, parserContext, definitionBuilder, parseEnableManagedBeans(element,
+				definitionBuilder));
+		parseViewFactoryCreator(element, parserContext, definitionBuilder);
 		parseDevelopment(element, definitionBuilder);
 	}
 
-	private void parseConversionService(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String conversionService = element.getAttribute("conversion-service");
-		if (StringUtils.hasText(conversionService)) {
-			definitionBuilder.addPropertyReference("conversionService", conversionService);
-		} else {
-			definitionBuilder.addPropertyValue("conversionService", new FacesConversionService());
-		}
-	}
-
-	private void parseExpressionParser(Element element, BeanDefinitionBuilder definitionBuilder,
-			boolean enableManagedBeans) {
-		if (enableManagedBeans) {
-			if (StringUtils.hasText(element.getAttribute("expression-parser"))) {
-				throw new IllegalStateException(
-						"Do not specify a custom expression-parser when enable-managed-beans is true");
-			}
-			Object value = getConversionServiceValue(definitionBuilder);
-			if (value instanceof RuntimeBeanReference) {
-				BeanDefinitionBuilder builder = BeanDefinitionBuilder
-						.genericBeanDefinition(JsfManagedBeanAwareELExpressionParser.class);
-				builder.addConstructorArgValue(DefaultExpressionFactoryUtils.createExpressionFactory());
-				builder.addPropertyValue("conversionService", value);
-				definitionBuilder.addPropertyValue("expressionParser", builder.getBeanDefinition());
-			} else {
-				ConversionService conversionService = (ConversionService) value;
-				JsfManagedBeanAwareELExpressionParser elExpressionParser = new JsfManagedBeanAwareELExpressionParser(
-						DefaultExpressionFactoryUtils.createExpressionFactory());
-				elExpressionParser.setConversionService(conversionService);
-				definitionBuilder.addPropertyValue("expressionParser", elExpressionParser);
-			}
-		} else {
-			String expressionParser = element.getAttribute("expression-parser");
-			if (StringUtils.hasText(expressionParser)) {
-				definitionBuilder.addPropertyReference("expressionParser", expressionParser);
-			} else {
-				Object value = getConversionServiceValue(definitionBuilder);
-				if (value instanceof RuntimeBeanReference) {
-					BeanDefinitionBuilder builder = BeanDefinitionBuilder
-							.genericBeanDefinition(WebFlowELExpressionParser.class);
-					builder.addConstructorArgValue(DefaultExpressionFactoryUtils.createExpressionFactory());
-					builder.addPropertyValue("conversionService", value);
-					definitionBuilder.addPropertyValue("expressionParser", builder.getBeanDefinition());
-				} else if (value instanceof ConversionService) {
-					ConversionService conversionService = (ConversionService) value;
-					WebFlowELExpressionParser elExpressionParser = new WebFlowELExpressionParser(
-							DefaultExpressionFactoryUtils.createExpressionFactory());
-					elExpressionParser.setConversionService(conversionService);
-					definitionBuilder.addPropertyValue("expressionParser", elExpressionParser);
-				}
-			}
-		}
-	}
-
-	private Object getConversionServiceValue(BeanDefinitionBuilder definitionBuilder) {
-		return definitionBuilder.getBeanDefinition().getPropertyValues().getPropertyValue("conversionService")
-				.getValue();
-	}
-
 	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String enableManagedBeans = element.getAttribute("enable-managed-beans");
+		String enableManagedBeans = element.getAttribute(ENABLE_MANAGED_BEANS_ATTR);
 		if (StringUtils.hasText(enableManagedBeans)) {
 			return Boolean.valueOf(enableManagedBeans).booleanValue();
 		} else {
@@ -115,19 +72,71 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		}
 	}
 
-	private void parseViewFactoryCreator(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String viewFactoryCreator = element.getAttribute("view-factory-creator");
-		if (StringUtils.hasText(viewFactoryCreator)) {
-			definitionBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
-		} else {
-			definitionBuilder.addPropertyValue("viewFactoryCreator", new JsfViewFactoryCreator());
+	private void parseConversionService(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String conversionService = element.getAttribute(CONVERSION_SERVICE_ATTR);
+		if (!StringUtils.hasText(conversionService)) {
+			BeanDefinitionBuilder conversionServiceBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(FacesConversionService.class);
+			conversionService = BeanDefinitionReaderUtils.registerWithGeneratedName(conversionServiceBuilder
+					.getBeanDefinition(), context.getRegistry());
 		}
+		definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
+	}
+
+	private void parseViewFactoryCreator(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String viewFactoryCreator = element.getAttribute(VIEW_FACTORY_CREATOR_ATTR);
+		if (!StringUtils.hasText(viewFactoryCreator)) {
+			BeanDefinitionBuilder viewFactoryCreatorBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(JsfViewFactoryCreator.class);
+			viewFactoryCreator = BeanDefinitionReaderUtils.registerWithGeneratedName(viewFactoryCreatorBuilder
+					.getBeanDefinition(), context.getRegistry());
+		}
+		definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
+	}
+
+	private void parseExpressionParser(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder,
+			boolean enableManagedBeans) {
+
+		String conversionService = getConversionService(definitionBuilder);
+		String expressionParser = element.getAttribute(EXPRESSION_PARSER_ATTR);
+
+		BeanDefinitionBuilder expressionFactoryBuilder = BeanDefinitionBuilder
+				.genericBeanDefinition(DefaultExpressionFactoryUtils.class);
+		expressionFactoryBuilder.setFactoryMethod("createExpressionFactory");
+
+		if (!StringUtils.hasText(expressionParser)) {
+
+			BeanDefinitionBuilder expressionParserBuilder;
+
+			if (enableManagedBeans) {
+				expressionParserBuilder = BeanDefinitionBuilder
+						.genericBeanDefinition(JsfManagedBeanAwareELExpressionParser.class);
+			} else {
+				expressionParserBuilder = BeanDefinitionBuilder.genericBeanDefinition(WebFlowELExpressionParser.class);
+			}
+
+			expressionParserBuilder.addConstructorArgValue(expressionFactoryBuilder.getBeanDefinition());
+			expressionParserBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
+			expressionParser = BeanDefinitionReaderUtils.registerWithGeneratedName(expressionParserBuilder
+					.getBeanDefinition(), context.getRegistry());
+		} else if (enableManagedBeans) {
+			throw new IllegalStateException(
+					"Do not specify a custom expression-parser when enable-managed-beans is true");
+		}
+		definitionBuilder.addPropertyReference(EXPRESSION_PARSER_PROPERTY, expressionParser);
+
+	}
+
+	private String getConversionService(BeanDefinitionBuilder definitionBuilder) {
+		RuntimeBeanReference conversionServiceReference = (RuntimeBeanReference) definitionBuilder.getBeanDefinition()
+				.getPropertyValues().getPropertyValue(CONVERSION_SERVICE_PROPERTY).getValue();
+		return conversionServiceReference.getBeanName();
 	}
 
 	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String development = element.getAttribute("development");
+		String development = element.getAttribute(DEVELOPMENT_ATTR);
 		if (StringUtils.hasText(development)) {
-			definitionBuilder.addPropertyValue("development", development);
+			definitionBuilder.addPropertyValue(DEVELOPMENT_PROPERTY, development);
 		}
 	}
 }
