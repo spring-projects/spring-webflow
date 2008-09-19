@@ -1,12 +1,19 @@
 package org.springframework.webflow.config;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
+import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
+import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 
 public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 	private ClassPathXmlApplicationContext context;
@@ -46,6 +53,21 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 		assertEquals("foo3", foo3.getId());
 		assertEquals("bar", foo3.getAttributes().get("foo"));
 		assertEquals(new Integer(2), foo3.getAttributes().get("bar"));
+	}
+
+	public void testDefaultFlowBuilderServices() {
+		Map flowBuilderServicesBeans = context.getBeansOfType(FlowBuilderServices.class);
+		assertTrue(flowBuilderServicesBeans.size() > 0);
+
+		Iterator i = flowBuilderServicesBeans.values().iterator();
+		while (i.hasNext()) {
+			FlowBuilderServices builderServices = (FlowBuilderServices) i.next();
+			assertNotNull(builderServices);
+			assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+			assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
+			assertTrue(builderServices.getConversionService() instanceof DefaultConversionService);
+			assertFalse(builderServices.getDevelopment());
+		}
 	}
 
 	public void testNoSuchFlow() {

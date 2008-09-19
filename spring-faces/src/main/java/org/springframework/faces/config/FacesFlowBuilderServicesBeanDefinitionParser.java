@@ -88,12 +88,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		if (!StringUtils.hasText(conversionService)) {
 			BeanDefinitionBuilder conversionServiceBuilder = BeanDefinitionBuilder
 					.genericBeanDefinition(FACES_CONVERSION_SERVICE_CLASS_NAME);
-			conversionService = context.getReaderContext().generateBeanName(
-					conversionServiceBuilder.getRawBeanDefinition());
-			conversionServiceBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
-			conversionServiceBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-			context.registerBeanComponent(new BeanComponentDefinition(conversionServiceBuilder.getBeanDefinition(),
-					conversionService));
+			conversionService = registerInfrastructureComponent(element, context, conversionServiceBuilder);
 		}
 		definitionBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
 	}
@@ -103,12 +98,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		if (!StringUtils.hasText(viewFactoryCreator)) {
 			BeanDefinitionBuilder viewFactoryCreatorBuilder = BeanDefinitionBuilder
 					.genericBeanDefinition(JSF_VIEW_FACTORY_CREATOR_CLASS_NAME);
-			viewFactoryCreator = context.getReaderContext().generateBeanName(
-					viewFactoryCreatorBuilder.getRawBeanDefinition());
-			viewFactoryCreatorBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
-			viewFactoryCreatorBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-			context.registerBeanComponent(new BeanComponentDefinition(viewFactoryCreatorBuilder.getBeanDefinition(),
-					viewFactoryCreator));
+			viewFactoryCreator = registerInfrastructureComponent(element, context, viewFactoryCreatorBuilder);
 		}
 		definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
 	}
@@ -137,12 +127,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 
 			expressionParserBuilder.addConstructorArgValue(expressionFactoryBuilder.getBeanDefinition());
 			expressionParserBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
-			expressionParser = context.getReaderContext().generateBeanName(
-					expressionParserBuilder.getRawBeanDefinition());
-			expressionParserBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
-			expressionParserBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-			context.registerBeanComponent(new BeanComponentDefinition(expressionParserBuilder.getBeanDefinition(),
-					expressionParser));
+			expressionParser = registerInfrastructureComponent(element, context, expressionParserBuilder);
 
 		} else if (enableManagedBeans) {
 			context.getReaderContext().error(
@@ -153,16 +138,26 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 
 	}
 
+	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {
+		String development = element.getAttribute(DEVELOPMENT_ATTR);
+		if (StringUtils.hasText(development)) {
+			definitionBuilder.addPropertyValue(DEVELOPMENT_PROPERTY, development);
+		}
+	}
+
 	private String getConversionService(BeanDefinitionBuilder definitionBuilder) {
 		RuntimeBeanReference conversionServiceReference = (RuntimeBeanReference) definitionBuilder.getBeanDefinition()
 				.getPropertyValues().getPropertyValue(CONVERSION_SERVICE_PROPERTY).getValue();
 		return conversionServiceReference.getBeanName();
 	}
 
-	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {
-		String development = element.getAttribute(DEVELOPMENT_ATTR);
-		if (StringUtils.hasText(development)) {
-			definitionBuilder.addPropertyValue(DEVELOPMENT_PROPERTY, development);
-		}
+	private String registerInfrastructureComponent(Element element, ParserContext context,
+			BeanDefinitionBuilder componentBuilder) {
+		String beanName = context.getReaderContext().generateBeanName(componentBuilder.getRawBeanDefinition());
+		componentBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
+		componentBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		context.registerBeanComponent(new BeanComponentDefinition(componentBuilder.getBeanDefinition(),
+				beanName));
+		return beanName;
 	}
 }

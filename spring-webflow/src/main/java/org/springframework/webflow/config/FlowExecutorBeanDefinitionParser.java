@@ -35,8 +35,10 @@ import org.w3c.dom.Element;
  */
 class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	protected Class getBeanClass(Element element) {
-		return FlowExecutorFactoryBean.class;
+	private static final String FLOW_EXECUTOR_FACTORY_BEAN_CLASS_NAME = "org.springframework.webflow.config.FlowExecutorFactoryBean";
+
+	protected String getBeanClassName(Element element) {
+		return FLOW_EXECUTOR_FACTORY_BEAN_CLASS_NAME;
 	}
 
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {

@@ -23,17 +23,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.parsing.BeanComponentDefinition;
+import org.springframework.beans.factory.parsing.CompositeComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
-import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 import org.w3c.dom.Element;
 
 /**
@@ -43,17 +40,24 @@ import org.w3c.dom.Element;
  */
 class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	protected Class getBeanClass(Element element) {
-		return FlowRegistryFactoryBean.class;
+	// --------------------------- Full qualified class names ----------------------- //
+	private static final String DEFAULT_CONVERSION_SERVICE_CLASS_NAME = "org.springframework.binding.convert.service.DefaultConversionService";
+	private static final String DEFAULT_EXPRESSION_PARSER_FACTORY_CLASS_NAME = "org.springframework.webflow.expression.DefaultExpressionParserFactory";
+	private static final String FLOW_BUILDER_SERVICES_CLASS_NAME = "org.springframework.webflow.engine.builder.support.FlowBuilderServices";
+	private static final String FLOW_REGISTRY_FACTORY_BEAN_CLASS_NAME = "org.springframework.webflow.config.FlowRegistryFactoryBean";
+	private static final String MVC_VIEW_FACTORY_CREATOR_CLASS_NAME = "org.springframework.webflow.mvc.builder.MvcViewFactoryCreator";
+
+	protected String getBeanClassName(Element element) {
+		return FLOW_REGISTRY_FACTORY_BEAN_CLASS_NAME;
 	}
 
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder definitionBuilder) {
-		String flowBuilderServices = element.getAttribute("flow-builder-services");
-		if (StringUtils.hasText(flowBuilderServices)) {
-			definitionBuilder.addPropertyReference("flowBuilderServices", flowBuilderServices);
-		} else {
-			definitionBuilder.addPropertyValue("flowBuilderServices", createDefaultFlowBuilderServices(parserContext));
-		}
+		CompositeComponentDefinition componentDefinition = new CompositeComponentDefinition(element.getLocalName(),
+				parserContext.extractSource(element));
+		parserContext.pushContainingComponent(componentDefinition);
+
+		parseFlowBuilderServices(element, parserContext, definitionBuilder);
+
 		String parent = element.getAttribute("parent");
 		if (StringUtils.hasText(parent)) {
 			definitionBuilder.addPropertyReference("parent", parent);
@@ -61,6 +65,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		definitionBuilder.addPropertyValue("flowLocations", parseLocations(element));
 		definitionBuilder.addPropertyValue("flowLocationPatterns", parseLocationPatterns(element));
 		definitionBuilder.addPropertyValue("flowBuilders", parseFlowBuilders(element));
+
+		parserContext.popAndRegisterContainingComponent();
 	}
 
 	private List parseLocations(Element element) {
@@ -125,15 +131,44 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		return builders;
 	}
 
-	private BeanDefinition createDefaultFlowBuilderServices(ParserContext context) {
-		BeanDefinitionBuilder defaultBuilder = BeanDefinitionBuilder.genericBeanDefinition(FlowBuilderServices.class);
-		ConversionService conversionService = new DefaultConversionService();
-		defaultBuilder.addPropertyValue("conversionService", conversionService);
-		defaultBuilder.addPropertyValue("expressionParser", DefaultExpressionParserFactory
-				.getExpressionParser(conversionService));
-		defaultBuilder.addPropertyValue("viewFactoryCreator", BeanDefinitionBuilder.genericBeanDefinition(
-				MvcViewFactoryCreator.class).getBeanDefinition());
-		return defaultBuilder.getBeanDefinition();
+	private void parseFlowBuilderServices(Element element, ParserContext context,
+			BeanDefinitionBuilder definitionBuilder) {
+		String flowBuilderServices = element.getAttribute("flow-builder-services");
+		if (!StringUtils.hasText(flowBuilderServices)) {
+
+			BeanDefinitionBuilder flowBuilderServicesBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(FLOW_BUILDER_SERVICES_CLASS_NAME);
+
+			BeanDefinitionBuilder conversionServiceBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(DEFAULT_CONVERSION_SERVICE_CLASS_NAME);
+			String conversionService = registerInfrastructureComponent(element, context, conversionServiceBuilder);
+			flowBuilderServicesBuilder.addPropertyReference("conversionService", conversionService);
+
+			BeanDefinitionBuilder expressionParserBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(DEFAULT_EXPRESSION_PARSER_FACTORY_CLASS_NAME);
+			expressionParserBuilder.setFactoryMethod("getExpressionParser");
+			expressionParserBuilder.addConstructorArgReference(conversionService);
+			String expressionParser = registerInfrastructureComponent(element, context, expressionParserBuilder);
+			flowBuilderServicesBuilder.addPropertyReference("expressionParser", expressionParser);
+
+			BeanDefinitionBuilder viewFactoryCreatorBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(MVC_VIEW_FACTORY_CREATOR_CLASS_NAME);
+			String viewFactoryCreator = registerInfrastructureComponent(element, context, viewFactoryCreatorBuilder);
+			flowBuilderServicesBuilder.addPropertyReference("viewFactoryCreator", viewFactoryCreator);
+
+			flowBuilderServices = registerInfrastructureComponent(element, context, flowBuilderServicesBuilder);
+		}
+		definitionBuilder.addPropertyReference("flowBuilderServices", flowBuilderServices);
+	}
+
+	private String registerInfrastructureComponent(Element element, ParserContext context,
+			BeanDefinitionBuilder viewFactoryCreatorBuilder) {
+		String beanName = context.getReaderContext().generateBeanName(viewFactoryCreatorBuilder.getRawBeanDefinition());
+		viewFactoryCreatorBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
+		viewFactoryCreatorBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		context.registerBeanComponent(new BeanComponentDefinition(viewFactoryCreatorBuilder.getBeanDefinition(),
+				beanName));
+		return beanName;
 	}
 
 }
