@@ -39,19 +39,20 @@
 		<title>Mapping URLs to Flows</title>
 		<para>
 			The <code>DispatcherServlet</code> maps request URLs to handlers.
-			A simple way to create URL mapping rules is to define a <code>SimpleUrlHandlerMapping</code>:
+			A flow is one type of handler.
+			The simplest way to configure the Dispatcher to map to flows is to define a <code>FlowIdHandlerMapping</code>
 		</para>
 		<programlisting language="xml"><![CDATA[
-<bean id="flowUrlMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    <property name="mappings">
-        <value>
-            /hotels/booking=bookingFlowHandler
-        </value>
-    </property>
+<bean id="flowUrlMappings" class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
+    <property name="flowRegistry" ref="flowRegistry"/>
+    <property name="order" value="0"/>
 </bean>]]>
 		</programlisting>
 		<para>
-			The example above maps the servlet-relative request URL <code>/hotels/booking</code> to the <code>bookingFlowHandler</code>.
+			Configuring this mapping allows the Dispatcher to map application resource paths to flows in a flow registry.
+			For example, accessing the resource path <code>/hotels/booking</code> would result in a registry query for the flow with id <code>hotels/booking</code>.
+			If a flow is found with that id, that flow will handle the request.
+			If no flow is found, the next handler mapping in the Dispatcher's ordered chain will be queried or a "noHandlerFound" response will be returned.
 		</para>
 	</sect1>
 	<sect1 id="spring-mvc-config-flow-handlers">
