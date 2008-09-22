@@ -62,7 +62,7 @@
 		<sect2 id="flow-registry-builder-services">
 			<title>Configuring custom FlowBuilder services</title>
 			<para>
-				Use the <code>flow-builder-services</code> attribute to customize the services used to build the flows in a registry.
+				Use the <code>flow-builder-services</code> attribute to customize the services and settings used to build flows in a flow-registry.
 				If no flow-builder-services tag is specified, the default service implementations are used.
 				When the tag is defined, you only need to reference the services you want to customize.
 			</para>
@@ -107,6 +107,17 @@
 				<para>
 					Use the <code>view-factory-creator</code> attribute to customize the <code>ViewFactoryCreator</code> used by the Web Flow system.
 					The default ViewFactoryCreator produces Spring MVC ViewFactories capable of rendering JSP, Velocity, and Freemarker views.
+				</para>
+			</sect3>
+			<para>
+				The configurable settings are <code>development</code>.
+				These settings are global configuration attributes that can be applied during the flow construction process.
+			</para>
+			<sect3 id="builder-development">
+				<title>development</title>
+				<para>
+					Set this to <code>true</code> to switch on <emphasis>development mode</emphasis> for all flows in this registry.
+					Development mode switches on hot-reloading of flow definition changes, including changes to dependent flow resources such as message bundles.
 				</para>
 			</sect3>
 		</sect2>
