@@ -236,5 +236,27 @@
 </subfow-state>]]>
 			</programlisting>
 		</sect2>						
+		<sect2 id="named actions">
+			<title>Named actions</title>
+			<para>
+				The following example shows how to execute a chain of actions in an action-state.
+				The name of each action becomes a qualifier for the action's result event.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<action-state id="doTwoThings">
+    <evaluate expression="service.thingOne()">
+        <attribute name="name" value="thingOne" />
+    </evaluate>
+    <evaluate expression="service.thingTwo()">
+        <attribute name="name" value="thingTwo" />
+    </evaluate>
+    <transition on="thingTwo.success" to="showResults" />
+</action-state>]]>
+			</programlisting>
+			<para>
+				In this example, the flow will transition to <code>showResults</code> when <code>thingTwo</code>
+				completes successfully.
+			</para>
+		</sect2>	
 	</sect1>
 </chapter>
