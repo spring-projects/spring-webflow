@@ -116,7 +116,7 @@
 			<sect3 id="builder-development">
 				<title>development</title>
 				<para>
-					Set this to <code>true</code> to switch on <emphasis>development mode</emphasis> for all flows in this registry.
+					Set this to <code>true</code> to switch on flow <emphasis>development mode</emphasis>.
 					Development mode switches on hot-reloading of flow definition changes, including changes to dependent flow resources such as message bundles.
 				</para>
 			</sect3>
