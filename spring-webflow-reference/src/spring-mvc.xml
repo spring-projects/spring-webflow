@@ -54,10 +54,11 @@
 		</programlisting>
 		<para>
 			Once flow handling is enabled, the next step is to map specific application resources to your flows.
-			The simplest way to do this is to define a <code>FlowIdHandlerMapping</code>
+			The simplest way to do this is to define a <code>FlowIdHandlerMapping</code>:
 		</para>
 		<programlisting language="xml"><![CDATA[
-<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->		
+<!-- Maps request paths to flows in the flowRegistry;
+     e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->		
 <bean class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
     <property name="flowRegistry" ref="flowRegistry"/>
     <property name="order" value="0"/>
@@ -69,25 +70,53 @@
 			If a flow is found with that id, that flow will handle the request.
 			If no flow is found, the next handler mapping in the Dispatcher's ordered chain will be queried or a "noHandlerFound" response will be returned.
 		</para>
+		<para>
+			When a valid flow mapping is found, the <code>FlowHandlerAdapter</code> figures out whether to
+			start a new execution of that flow or resume an existing execution based on information present the HTTP request.
+			There are a number of defaults related to starting and resuming flow executions the adapter employs:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					HTTP request parameters are made available in the input map of all starting flow executions.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When a flow execution ends without sending a final response, the default handler will attempt
+					to start a new execution in the same request.
+				</para>
+			</listitem>			
+			<listitem>
+				<para>
+					Unhandled exceptions are propagated to the Dispatcher unless the exception is a NoSuchFlowExecutionException.
+					The default handler will attempt to recover from a NoSuchFlowExecutionException by starting over a new execution.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			Consult the API documentation for <code>FlowHandlerAdapter</code> for more information.
+			You may override these defaults by subclassing or by implementing your own FlowHandler, discussed in the next section.
+		</para>
 	</sect1>
 	<sect1 id="spring-mvc-config-flow-handlers">
 		<title>Implementing custom FlowHandlers</title>
 		<para>
-			A <code>FlowHandler</code> manages the execution of a single flow definition in a servlet environment.
-			A <code>FlowHandler</code> is responsible for:
+			<code>FlowHandler</code> is the extension point that can be used to customize how executions of a flow are managed in a HTTP servlet environment.
+			A <code>FlowHandler</code> is used by the <code>FlowHandlerAdapter</code> and responsible for:
 		</para>
 		<itemizedlist>
 			<listitem>
-				<para>Providing the <code>id</code> of the flow definition to execute</para>
+				<para>Returning the <code>id</code> of a flow definition to execute</para>
 			</listitem>
 			<listitem>
-				<para>Creating the input to pass new flow executions</para>
+				<para>Creating the input to pass new executions of that flow as they are started</para>
 			</listitem>
 			<listitem>
-				<para>Handling flow execution outcomes</para>
+				<para>Handling outcomes returned by executions of that flow as they end</para>
 			</listitem>
 			<listitem>
-				<para>Handling flow execution exceptions</para>
+				<para>Handling any exceptions thrown by executions of that flow as they occur</para>
 			</listitem>
 		</itemizedlist>
 		<para>
@@ -108,15 +137,15 @@ public interface FlowHandler {
 }				
 		</programlisting>
 		<para>
-			To implement a FlowHandler, subclass <code>AbstractFlowHandler</code>.  You only need to override the methods that you need.
-			Specifically:
+			To implement a FlowHandler, subclass <code>AbstractFlowHandler</code>.  All these operations are optional, and if not implemented
+			the defaults will apply.  You only need to override the methods that you need.  Specifically:
 		</para>
 		<itemizedlist>
 			<listitem>
 				<para>
-					Override <code>getFlowId(HttpServletRequest)</code> when the id of your flow cannot be derived from the URL.
-					By default, the flow id is derived from the last path element in the request URI, before any query parameters.
-					For example, <code>http://localhost/hotels/booking?hotelId=1</code> results in a flow id of <code>booking</code> by default.
+					Override <code>getFlowId(HttpServletRequest)</code> when the id of your flow cannot be directly derived from the HTTP request.
+					By default, the id of the flow to execute is derived from the pathInfo portion of the request URI.
+					For example, <code>http://localhost/app/hotels/booking?hotelId=1</code> results in a flow id of <code>hotels/booking</code> by default.
 				</para>
 			</listitem>
 			<listitem>
@@ -142,8 +171,8 @@ public interface FlowHandler {
 		<sect2 id="spring-mvc-flow-handler-example">
 			<title>Example FlowHandler</title>
 			<para>
-				A common interaction pattern between Spring MVC And Web Flow is for a Flow to redirect to a Controller when it ends.
-				FlowHandlers allow this to be done without coupling the flow definition with a specific controller URL.
+				A common interaction pattern between Spring MVC And Web Flow is for a Flow to redirect to a @Controller when it ends.
+				FlowHandlers allow this to be done without coupling the flow definition itself with a specific controller URL.
 				An example FlowHandler that redirects to a Spring MVC Controller is shown below:
 			</para>
 			<programlisting language="java"><![CDATA[
@@ -164,13 +193,14 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 				Any other outcome will redirect back to the hotels index page.
 			</para>
 			<para>
-				To use your FlowHandler, first deploy an instance to Spring so it can be mapped to a URL:
+				To install a custom FlowHandler, simply deploy it as a bean.
+				The bean name must match the id of the flow the handler should apply to.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<bean id="hotels/booking" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />]]>
+<bean name="hotels/booking" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />]]>
 			</programlisting>
 			<para>
-				With this configuration, accessing the URL <code>/hotels/booking</code> will launch the <code>hotels/booking</code> flow.
+				With this configuration, accessing the resource <code>/hotels/booking</code> will launch the <code>hotels/booking</code> flow using the custom BookingFlowHandler.
 				When the booking flow ends, the FlowHandler will process the flow execution outcome and redirect to the appropriate controller.
 			</para>
 		</sect2>
