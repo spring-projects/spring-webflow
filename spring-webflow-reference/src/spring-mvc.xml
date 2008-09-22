@@ -54,12 +54,12 @@
 		</programlisting>
 		<para>
 			Once flow handling is enabled, the next step is to map specific application resources to your flows.
-			The simplest way to do this is to define a <code>FlowIdHandlerMapping</code>:
+			The simplest way to do this is to define a <code>FlowHandlerMapping</code>:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <!-- Maps request paths to flows in the flowRegistry;
      e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->		
-<bean class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
+<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
     <property name="flowRegistry" ref="flowRegistry"/>
     <property name="order" value="0"/>
 </bean>]]>
@@ -102,7 +102,7 @@
 	<sect1 id="spring-mvc-config-flow-handlers">
 		<title>Implementing custom FlowHandlers</title>
 		<para>
-			<code>FlowHandler</code> is the extension point that can be used to customize how executions of a flow are managed in a HTTP servlet environment.
+			<code>FlowHandler</code> is the extension point that can be used to customize how flows are executed in a HTTP servlet environment.
 			A <code>FlowHandler</code> is used by the <code>FlowHandlerAdapter</code> and responsible for:
 		</para>
 		<itemizedlist>
