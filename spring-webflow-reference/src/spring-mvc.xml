@@ -41,69 +41,77 @@
 			The <code>DispatcherServlet</code> maps requests for application resources to handlers.
 			A flow is one type of handler.
 		</para>
-		<para>
-			The first step to dispatching requests to flows is to enable flow handling within Spring MVC.
-			To this, install the <code>FlowHandlerAdapter</code>:
-		</para>
-		<programlisting language="xml"><![CDATA[
+		<sect2>
+			<title>Registering the FlowHandlerAdapter</title>
+			<para>
+				The first step to dispatching requests to flows is to enable flow handling within Spring MVC.
+				To this, install the <code>FlowHandlerAdapter</code>:
+			</para>
+			<programlisting language="xml"><![CDATA[
 <!-- Enables FlowHandler URL mapping -->
 <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
     <property name="flowExecutor" ref="flowExecutor" />
-</bean>
-]]>
-		</programlisting>
-		<para>
-			Once flow handling is enabled, the next step is to map specific application resources to your flows.
-			The simplest way to do this is to define a <code>FlowHandlerMapping</code>:
-		</para>
-		<programlisting language="xml"><![CDATA[
+</bean>]]>
+			</programlisting>
+		</sect2>
+		<sect2>
+			<title>Defining flow mappings</title>
+			<para>
+				Once flow handling is enabled, the next step is to map specific application resources to your flows.
+				The simplest way to do this is to define a <code>FlowHandlerMapping</code>:
+			</para>
+			<programlisting language="xml"><![CDATA[
 <!-- Maps request paths to flows in the flowRegistry;
      e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->		
 <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
     <property name="flowRegistry" ref="flowRegistry"/>
     <property name="order" value="0"/>
 </bean>]]>
-		</programlisting>
-		<para>
-			Configuring this mapping allows the Dispatcher to map application resource paths to flows in a flow registry.
-			For example, accessing the resource path <code>/hotels/booking</code> would result in a registry query for the flow with id <code>hotels/booking</code>.
-			If a flow is found with that id, that flow will handle the request.
-			If no flow is found, the next handler mapping in the Dispatcher's ordered chain will be queried or a "noHandlerFound" response will be returned.
-		</para>
-		<para>
-			When a valid flow mapping is found, the <code>FlowHandlerAdapter</code> figures out whether to
-			start a new execution of that flow or resume an existing execution based on information present the HTTP request.
-			There are a number of defaults related to starting and resuming flow executions the adapter employs:
-		</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					HTTP request parameters are made available in the input map of all starting flow executions.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					When a flow execution ends without sending a final response, the default handler will attempt
-					to start a new execution in the same request.
-				</para>
-			</listitem>			
-			<listitem>
-				<para>
-					Unhandled exceptions are propagated to the Dispatcher unless the exception is a NoSuchFlowExecutionException.
-					The default handler will attempt to recover from a NoSuchFlowExecutionException by starting over a new execution.
-				</para>
-			</listitem>
-		</itemizedlist>
-		<para>
-			Consult the API documentation for <code>FlowHandlerAdapter</code> for more information.
-			You may override these defaults by subclassing or by implementing your own FlowHandler, discussed in the next section.
-		</para>
+			</programlisting>
+			<para>
+				Configuring this mapping allows the Dispatcher to map application resource paths to flows in a flow registry.
+				For example, accessing the resource path <code>/hotels/booking</code> would result in a registry query for the flow with id <code>hotels/booking</code>.
+				If a flow is found with that id, that flow will handle the request.
+				If no flow is found, the next handler mapping in the Dispatcher's ordered chain will be queried or a "noHandlerFound" response will be returned.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Flow handling workflow</title>
+			<para>
+				When a valid flow mapping is found, the <code>FlowHandlerAdapter</code> figures out whether to
+				start a new execution of that flow or resume an existing execution based on information present the HTTP request.
+				There are a number of defaults related to starting and resuming flow executions the adapter employs:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						HTTP request parameters are made available in the input map of all starting flow executions.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						When a flow execution ends without sending a final response, the default handler will attempt
+						to start a new execution in the same request.
+					</para>
+				</listitem>			
+				<listitem>
+					<para>
+						Unhandled exceptions are propagated to the Dispatcher unless the exception is a NoSuchFlowExecutionException.
+						The default handler will attempt to recover from a NoSuchFlowExecutionException by starting over a new execution.
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>
+				Consult the API documentation for <code>FlowHandlerAdapter</code> for more information.
+				You may override these defaults by subclassing or by implementing your own FlowHandler, discussed in the next section.
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 id="spring-mvc-config-flow-handlers">
 		<title>Implementing custom FlowHandlers</title>
 		<para>
 			<code>FlowHandler</code> is the extension point that can be used to customize how flows are executed in a HTTP servlet environment.
-			A <code>FlowHandler</code> is used by the <code>FlowHandlerAdapter</code> and responsible for:
+			A <code>FlowHandler</code> is used by the <code>FlowHandlerAdapter</code> and is responsible for:
 		</para>
 		<itemizedlist>
 			<listitem>
@@ -192,6 +200,9 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 				The <code>bookingConfirmed</code> outcome will result in a redirect to show the new booking.
 				Any other outcome will redirect back to the hotels index page.
 			</para>
+		</sect2>
+		<sect2>
+			<title>Deploying a custom FlowHandler</title>
 			<para>
 				To install a custom FlowHandler, simply deploy it as a bean.
 				The bean name must match the id of the flow the handler should apply to.
@@ -249,5 +260,43 @@ public class BookingFlowHandler extends AbstractFlowHandler {
     <property name="viewResolvers" ref="myExistingViewResolverToUseForFlows"/>
 </bean>]]>
 		</programlisting>
+	</sect1>
+	<sect1 id="spring-mvc-resuming-on-event">
+		<title>Signaling an event from a View</title>
+		<para>
+			When a flow enters a view-state it pauses, redirects the user to its execution URL, and waits for a user event to resume.
+			Events are generally signaled by activating buttons, links, or other user interface commands.
+			How events are decoded server-side is specific to the view technology in use.
+			This section shows how to trigger events from HTML-based views generated by templating engines such as JSP, Velocity, or Freemarker.
+		</para>
+		<sect2 id="button">
+			<title>Using a named HTML button to signal an event</title>
+			<programlisting language="xml"><![CDATA[
+<input type="submit" name="_eventId_proceed" value="Proceed" />
+<input type="submit" name="_eventId_cancel" value="Cancel" />]]>		
+			</programlisting>
+		</sect2>
+		<sect2 id="button">
+			<title>Using a hidden HTML form parameter to signal an event</title>
+			<programlisting language="xml"><![CDATA[
+<input type="submit" value="Proceed" />
+<input type="hidden" name="_eventId" value="proceed" />]]>	
+			</programlisting>
+		</sect2>
+		<sect2 id="button">
+			<title>Using a HTML link to signal an event</title>
+			<programlisting language="xml"><![CDATA[
+<a href="${flowExecutionUrl}&_eventId=cancel">Cancel</a>]]>		
+			</programlisting>
+		</sect2>
+		<para>
+			Firing an event results in a HTTP request being sent back to the server.
+			On the server-side, the flow handles decoding the event from within its current view-state.
+			How this decoding process works is specific to the view implementation.
+			A Spring MVC view implementation simply looks for a request parameter named <code>_eventId</code>.
+			If no <code>_eventId</code> parameter is found, the view will look for a parameter that
+			starts with <code>_eventId_</code> and will use the remaining substring as the event id.
+			If neither cases exist, no flow event is triggered.
+		</para>
 	</sect1>
 </chapter>
