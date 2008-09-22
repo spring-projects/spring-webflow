@@ -36,14 +36,29 @@
 </servlet-mapping>]]></programlisting>
 	</sect1>
 	<sect1 id="spring-mvc-config-spring-url-mapping">
-		<title>Mapping URLs to Flows</title>
+		<title>Dispatching to flows</title>
 		<para>
-			The <code>DispatcherServlet</code> maps request URLs to handlers.
+			The <code>DispatcherServlet</code> maps requests for application resources to handlers.
 			A flow is one type of handler.
-			The simplest way to configure the Dispatcher to map to flows is to define a <code>FlowIdHandlerMapping</code>
+		</para>
+		<para>
+			The first step to dispatching requests to flows is to enable flow handling within Spring MVC.
+			To this, install the <code>FlowHandlerAdapter</code>:
 		</para>
 		<programlisting language="xml"><![CDATA[
-<bean id="flowUrlMappings" class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
+<!-- Enables FlowHandler URL mapping -->
+<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+    <property name="flowExecutor" ref="flowExecutor" />
+</bean>
+]]>
+		</programlisting>
+		<para>
+			Once flow handling is enabled, the next step is to map specific application resources to your flows.
+			The simplest way to do this is to define a <code>FlowIdHandlerMapping</code>
+		</para>
+		<programlisting language="xml"><![CDATA[
+<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->		
+<bean class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
     <property name="flowRegistry" ref="flowRegistry"/>
     <property name="order" value="0"/>
 </bean>]]>
@@ -56,9 +71,9 @@
 		</para>
 	</sect1>
 	<sect1 id="spring-mvc-config-flow-handlers">
-		<title>Flow Handlers</title>
+		<title>Implementing custom FlowHandlers</title>
 		<para>
-			A <code>FlowHandler</code> manages executions of a single flow definition.
+			A <code>FlowHandler</code> manages the execution of a single flow definition in a servlet environment.
 			A <code>FlowHandler</code> is responsible for:
 		</para>
 		<itemizedlist>
@@ -152,35 +167,12 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 				To use your FlowHandler, first deploy an instance to Spring so it can be mapped to a URL:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<bean id="bookingFlowHandler" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />]]>
+<bean id="hotels/booking" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />]]>
 			</programlisting>
 			<para>
-				Then add the URL mapping rule:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<property name="mappings">
-    <value>
-        /hotels/booking=bookingFlowHandler
-    </value>
-</property>]]>
-			</programlisting>
-			<para>
-				With this configuration, accessing the URL <code>/hotels/booking</code> will launch the <code>booking</code> flow.
+				With this configuration, accessing the URL <code>/hotels/booking</code> will launch the <code>hotels/booking</code> flow.
 				When the booking flow ends, the FlowHandler will process the flow execution outcome and redirect to the appropriate controller.
 			</para>
-		</sect2>
-		<sect2 id="spring-mvc-flow-handler-adapter">
-			<title>Registering the FlowHandlerAdapter</title>
-			<para>
-				To enable flow handlers, make sure you define the special <code>FlowHandlerAdapter</code>.  You only need to do this once.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<!-- Enables FlowHandler URL mapping -->
-<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-    <property name="flowExecutor" ref="flowExecutor" />
-</bean>
-]]>
-			</programlisting>
 		</sect2>
 		<sect2 id="spring-mvc-flow-handler-redirects">
 			<title>FlowHandler Redirects</title>
@@ -208,43 +200,6 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 				conjunction with a view-state or end-state; for example, <code>view="externalRedirect:http://springframework.org"</code>
 			</para>
 		</sect2>
-	</sect1>
-	<sect1 id="spring-mvc-config-spring-flow-controllers">
-		<title>Flow Controller</title>
-		<para>
-			With the FlowHandler MVC integration approach, you define one handler per flow.
-			This is overkill in the cases where default flow handling rules are sufficient.
-		</para>
-		<para>
-			For simple cases, consider using the <code>FlowController</code> to map flow requests to a single handler.
-			You only have to configure this controller once and it will apply the flow handling defaults outlined in the previous section.
-			Also, you can still override these defaults by configuring the controller's <code>flowHandlers</code> property.
-		</para>
-		<para>
-			Below is a typical <code>FlowController</code> definition:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
-    <property name="flowExecutor" ref="flowExecutor" />
-</bean>]]>
-		</programlisting>
-		<para>
-			Below illustrates several URLs mapped to this controller:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<bean id="flowUrlMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    <property name="mappings">
-        <value>
-            /login=flowController
-            /hotels/booking=flowController
-        </value>
-    </property>
-</bean>]]>
-		</programlisting>
-		<para>
-			With this configuration, accessing <code>/login</code> launches the login flow.
-			Accessing <code>/hotels/booking</code> launches the booking flow.
-		</para>
 	</sect1>
 	<sect1 id="spring-mvc-config-spring-view-resolution">
 		<title>View Resolution</title>
