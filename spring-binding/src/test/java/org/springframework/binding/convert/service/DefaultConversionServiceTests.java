@@ -293,11 +293,9 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		public Object convertSourceToTargetClass(final Object source, Class targetClass) throws Exception {
 			return new Principal() {
-
 				public String getName() {
 					return (String) source;
 				}
-
 			};
 		}
 
