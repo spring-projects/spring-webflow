@@ -124,7 +124,7 @@
 
 <!-- shared-config.xml -->
 <webflow:flow-registry id="sharedFlowRegistry">
-    <-- Global flows shared by several applications -->
+    <!-- Global flows shared by several applications -->
 </webflow:flow-registry>]]>
 			</programlisting>
 		</sect2>
