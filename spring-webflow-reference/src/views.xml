@@ -566,9 +566,10 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 booking.checkinDate.typeMismatch
 			</programlisting>
 			<para>
-				The first part of the key is the model class's short name.  The second part of the key is the property name.
-				The third part is the error code.  This allows for the lookup of a unique message to display to the user
-				when a type conversion failure occurs on a Booking checkinDate binding.  Such a message might say:
+				The first part of the key is the model class's short name.
+				The second part of the key is the property name. The third part is the error code.
+				This allows for the lookup of a unique message to display to the user when a binding fails on a model property.
+				Such a message might say:
 			</para>
 			<programlisting>
 booking.checkinDate.typeMismatch=The check in date must be in the format yyyy-mm-dd.
