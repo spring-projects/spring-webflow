@@ -548,6 +548,39 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 <h:outputText value="#{resourceBundle.reservationConfirmation}" />]]>
 			</programlisting>
 		</sect2>
+		<sect2 id="message-generation">
+			<title>Understanding system generated messages</title>
+			<para>
+				There are several places where Web Flow itself will generate messages to display to the user.
+				One important place this occurs is during view-to-model data binding.
+				When a binding error occurs, such as a type conversion error, Web Flow will map that error to a message retrieved from your resource bundle automatically.
+				To lookup the message to display, Web Flow tries resource keys that contain the binding error code and target property name.
+			</para>
+			<para>
+				As an example, consider a binding to a <code>checkinDate</code> property of a <code>Booking</code> object.
+				Suppose the user typed in a alphabetic string.
+				In this case, a type conversion error will be raised.
+				Web Flow will map the 'typeMismatch' error code to a message by first querying your resource bundle for a message with the following key:
+			</para>
+			<programlisting>
+booking.checkinDate.typeMismatch
+			</programlisting>
+			<para>
+				The first part of the key is the model class's short name.  The second part of the key is the property name.
+				The third part is the error code.  This allows for the lookup of a unique message to display to the user
+				when a type conversion failure occurs on a Booking checkinDate binding.  Such a message might say:
+			</para>
+			<programlisting>
+booking.checkinDate.typeMismatch=The check in date must be in the format yyyy-mm-dd.
+			</programlisting>
+			<para>
+				If no such resource key can be found of that form, a more generic key will be tried.
+				This key is simply the error code.  The field name of the property is provided as a message argument.
+			</para>
+			<programlisting>
+typeMismatch=The {0} field is of the wrong type.
+			</programlisting>
+		</sect2>
 	</sect1>
 	<sect1 id="view-popup">
 		<title>Displaying popups</title>
