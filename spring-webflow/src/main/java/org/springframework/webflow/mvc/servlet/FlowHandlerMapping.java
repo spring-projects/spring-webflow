@@ -37,7 +37,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
  * 
  * @author Keith Donald
  */
-public class FlowIdHandlerMapping extends AbstractHandlerMapping {
+public class FlowHandlerMapping extends AbstractHandlerMapping {
 
 	private FlowUrlHandler flowUrlHandler = new DefaultFlowUrlHandler();
 
