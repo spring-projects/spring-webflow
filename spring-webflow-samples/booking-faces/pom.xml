@@ -3,11 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.webflow.samples</groupId>
-	<artifactId>booking-faces</artifactId>
+	<artifactId>swf-booking-faces</artifactId>
 	<packaging>war</packaging>
 	<version>2.0.4.RELEASE</version>
 	<dependencies>
-	 	<!-- global dependencies -->
 		<dependency>
 			<groupId>com.sun.facelets</groupId>
 			<artifactId>com.springsource.com.sun.facelets</artifactId>
@@ -169,20 +168,17 @@
 	<repositories>
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
-			<name> SpringSource Enterprise Bundle Repository - SpringSource
-				Releases </name>
-			<url> http://repository.springsource.com/maven/bundles/release </url>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
 		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.external</id>
-			<name> SpringSource Enterprise Bundle Repository - External Releases 
-			</name>
-			<url> http://repository.springsource.com/maven/bundles/external 
-			</url>
+			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
 		</repository>
 	</repositories>
 	<build>
-		<finalName>booking-faces</finalName>
+		<finalName>swf-booking-faces</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

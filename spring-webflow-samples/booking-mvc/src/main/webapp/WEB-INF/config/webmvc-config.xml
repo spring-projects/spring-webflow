@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
-	<bean class="org.springframework.webflow.mvc.servlet.FlowIdHandlerMapping">
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
 		<property name="order" value="0" />
 	</bean>
 
