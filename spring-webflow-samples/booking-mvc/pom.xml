@@ -5,7 +5,7 @@
 	<groupId>org.springframework.webflow.samples</groupId>
 	<artifactId>booking-mvc</artifactId>
 	<packaging>war</packaging>
-	<version>2.0.4.RELEASE</version>
+	<version>2.0.4.BUILD-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -178,16 +178,18 @@
 	<repositories>
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
-			<name> SpringSource Enterprise Bundle Repository - SpringSource
-				Releases </name>
-			<url> http://repository.springsource.com/maven/bundles/release </url>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
 		</repository>
 		<repository>
 			<id>com.springsource.repository.bundles.external</id>
-			<name> SpringSource Enterprise Bundle Repository - External Releases 
-			</name>
-			<url> http://repository.springsource.com/maven/bundles/external 
-			</url>
+			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.snapshot</id>
+			<name>SpringSource Enterprise Bundle Repository - Snapshot Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/snapshot</url>
 		</repository>
 	</repositories>
 	<build>

@@ -5,7 +5,7 @@
 	<groupId>org.springframework.webflow.samples</groupId>
 	<artifactId>swf-booking-faces</artifactId>
 	<packaging>war</packaging>
-	<version>2.0.4.RELEASE</version>
+	<version>2.0.4.BUILD-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.facelets</groupId>
@@ -176,6 +176,11 @@
 			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/external</url>
 		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.snapshot</id>
+			<name>SpringSource Enterprise Bundle Repository - Snapshot Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/snapshot</url>
+		</repository>		
 	</repositories>
 	<build>
 		<finalName>swf-booking-faces</finalName>
