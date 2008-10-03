@@ -303,7 +303,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			dialog.domNode.style.width = "80%";
 			dialog.domNode.style.height = "80%";
 			dialog.domNode.style.textAlign = "left";
-			dialog.setContent(response.responseText);
+			dialog.setContent(ioArgs.xhr.responseText);
 			dialog.show();
 		}
 		
