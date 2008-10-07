@@ -83,14 +83,16 @@ public class AjaxTilesView extends TilesView {
 			exposeModelAsRequestAttributes(model, request);
 			JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
-			TilesRequestContext tilesRequestContext = container.getContextFactory().createRequestContext(
-					container.getApplicationContext(), new Object[] { request, response });
+			TilesRequestContext tilesRequestContext = new AjaxTilesRequestContext(container.getContextFactory()
+					.createRequestContext(container.getApplicationContext(), new Object[] { request, response }));
 			Definition compositeDefinition = container.getDefinitionsFactory().getDefinition(getUrl(),
 					tilesRequestContext);
 			Map flattenedAttributeMap = new HashMap();
 			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition);
 
-			response.flushBuffer();
+			// initialize the session before rendering any fragments. Otherwise views that require the session which has
+			// not otherwise been initialized will fail to render
+			request.getSession();
 			for (int i = 0; i < attrNames.length; i++) {
 				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(attrNames[i]);
 
