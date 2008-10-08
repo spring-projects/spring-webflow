@@ -1,6 +1,8 @@
 package org.springframework.binding.mapping;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -41,6 +43,29 @@ public class DefaultMapperTests extends TestCase {
 				}
 			}
 		}).size());
+	}
+
+	public void testMappingConversion() {
+		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("beep", null), parser.parseExpression(
+				"beep", null));
+		mapper.addMapping(mapping1);
+		Map bean1 = new HashMap();
+		bean1.put("beep", "en");
+		TestBean2 bean2 = new TestBean2();
+		MappingResults results = mapper.map(bean1, bean2);
+		assertFalse(results.hasErrorResults());
+		assertEquals(Locale.ENGLISH, bean2.beep);
+	}
+
+	public void testMappingConversionError() {
+		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("boop", null), parser.parseExpression(
+				"boop", null));
+		mapper.addMapping(mapping1);
+		Map bean1 = new HashMap();
+		bean1.put("boop", "bogus");
+		TestBean2 bean2 = new TestBean2();
+		MappingResults results = mapper.map(bean1, bean2);
+		assertTrue(results.hasErrorResults());
 	}
 
 	public static class TestBean {

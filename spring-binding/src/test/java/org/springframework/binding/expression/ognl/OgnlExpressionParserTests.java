@@ -156,6 +156,12 @@ public class OgnlExpressionParserTests extends TestCase {
 		assertEquals("false0", exp.getValue(bean));
 	}
 
+	public void testGetExpressionString() {
+		String expressionString = "maximum";
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals("maximum", exp.getExpressionString());
+	}
+
 	public void testGetValueType() {
 		String exp = "flag";
 		Expression e = parser.parseExpression(exp, null);

@@ -7,8 +7,9 @@ import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 
-import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -50,7 +51,7 @@ class BindingValueExpression extends ValueExpression {
 
 	public Object getValue(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
 		Object value = targetExpression.getValue(context);
-		return conversionService.executeConversion(value, expectedType);
+		return convertValueIfNecessary(value, expectedType);
 	}
 
 	public boolean isReadOnly(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
@@ -59,11 +60,7 @@ class BindingValueExpression extends ValueExpression {
 
 	public void setValue(ELContext context, Object value) throws NullPointerException, PropertyNotFoundException,
 			PropertyNotWritableException, ELException {
-		Class targetType = targetExpression.getType(context);
-		if (value != null && targetType != null) {
-			ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), targetType);
-			value = converter.execute(value);
-		}
+		value = convertValueIfNecessary(value, targetExpression.getType(context));
 		targetExpression.setValue(context, value);
 	}
 
@@ -90,6 +87,15 @@ class BindingValueExpression extends ValueExpression {
 
 	public int hashCode() {
 		return targetExpression.hashCode();
+	}
+
+	private Object convertValueIfNecessary(Object value, Class expectedType) {
+		try {
+			return conversionService.executeConversion(value, expectedType);
+		} catch (ConversionException e) {
+			throw new ELException("Unable to coerce value " + StylerUtils.style(value) + " to expected type ["
+					+ expectedType + "]", e);
+		}
 	}
 
 }

@@ -138,6 +138,39 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals(null, e.getValueType(target));
 	}
 
+	public void testGetExpressionString() {
+		String expressionString = "maximum";
+		Expression exp = parser.parseExpression(expressionString, null);
+		assertEquals("maximum", exp.getExpressionString());
+	}
+
+	public void testGetExpressionType() {
+		String expressionString = "maximum";
+		Expression exp = parser.parseExpression(expressionString, null);
+		TestBean context = new TestBean();
+		assertEquals(int.class, exp.getValueType(context));
+	}
+
+	public void testSetValue() {
+		String expressionString = "maximum";
+		Expression exp = parser.parseExpression(expressionString, null);
+		TestBean context = new TestBean();
+		exp.setValue(context, new Integer(5));
+		assertEquals(5, context.getMaximum());
+	}
+
+	public void testSetValueConversionError() {
+		String expressionString = "maximum";
+		Expression exp = parser.parseExpression(expressionString, null);
+		TestBean context = new TestBean();
+		try {
+			exp.setValue(context, "bogus");
+			fail("Should have failed with coersion");
+		} catch (EvaluationException e) {
+
+		}
+	}
+
 	public static class TestBean {
 		private String value = "foo";
 
@@ -171,12 +204,12 @@ public class ELExpressionParserTests extends TestCase {
 			return value;
 		}
 
-		public String encode(String data) {
-			return "!" + data;
+		public void setValue(String value) {
+			this.value = value;
 		}
 
-		public void setValue(String value) {
-
+		public String encode(String data) {
+			return "!" + data;
 		}
 
 		public int getMaximum() {
