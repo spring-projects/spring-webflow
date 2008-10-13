@@ -190,11 +190,13 @@ externalContext.requestMap.portletMode
 			<para>
 				The Portlet API only allows redirects to be requested from an action request.
 				Because views are rendered on the render request, views and <code>view-state</code>s cannot trigger a redirect.
+			</para>
+			<para>
 				The <code>externalRedirect:</code> view prefix is a convenience for Servlet based flows.
 				An <code>IllegalStateException</code> is thrown if a redirect is requested from a render request.
 			</para>
 			<para>
-				This limitation can be worked around for an <code>end-state</code> by implementing the <code>FlowHandler.handleExecutionOutcome</code> method.
+				<code>end-state</code> redirects can be achieved by implementing <code>FlowHandler.handleExecutionOutcome</code>.
 				This callback provides the <code>ActionResponse</code> object which supports redirects.
 			</para>
 		</sect2>
