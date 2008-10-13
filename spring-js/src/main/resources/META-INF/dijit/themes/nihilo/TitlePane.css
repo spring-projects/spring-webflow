@@ -7,35 +7,35 @@
 	background: #cccccc;
 	background:#fff url("images/titleBar.png") repeat-x top left;
 	border:1px solid #bfbfbf;
-	padding:4px 4px 2px 4px;
+	padding:3px 4px;
 	cursor: pointer;
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #6d6d6d;
 }
 
-/* TODO: merge these, and all other icons to a series of background-image:() and background-position: -16*n px styles */
+.nihilo .dijitTitlePaneTitle * {
+	vertical-align: middle;
+}
+
 .nihilo .dijitTitlePane .dijitArrowNode {
 	width:15px;
 	height:15px;
-	float:right;
-	margin-top: -2px;
 }
 
 .nihilo .dijitTitlePaneFocused .dijitTitlePaneTextNode {
 	color: #243C5F;
 }
 
-
 .nihilo .dijitOpen .dijitTitlePaneTextNode {
 	color: #243C5F;
 }
 
 .nihilo .dijitTitlePane .dijitClosed .dijitArrowNode {
-	background: url('images/spriteRoundedIconsSmall.png') no-repeat top left;
+	background: url('images/spriteRoundedIconsSmall.png') no-repeat -30px top;
 }
 .dj_ie6 .nihilo .dijitTitlePane .dijitClosed .dijitArrowNode {
-	background:url('images/spriteRoundedIconsSmall.gif') no-repeat top left;
+	background:url('images/spriteRoundedIconsSmall.gif') no-repeat -30px top;
 }
 .nihilo .dijitTitlePane .dijitOpen .dijitArrowNode {
 	background:url('images/spriteRoundedIconsSmall.png') no-repeat -15px top;
@@ -44,19 +44,18 @@
 	background:url('images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
 .nihilo .dijitTitlePane .dijitArrowNodeInner {
-	visibility:hidden;
+	display:none;
 }
+
 .dijit_a11y .dijitTitlePane .dijitArrowNodeInner {
-	visibility:visible;
+	display:inline !important;
+	font-family:monospace;
+	cursor: pointer;
+	padding-bottom:.2em;
 }
 
-.nihilo .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
-	margin-right:5px;
-}
-
-.nihilo .dijitOpen .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
-	position:relative;
-	top:2px;
+.dijit_a11y .dijitTitlePane .dijitArrowNode {
+	display:none;
 }
 
 .nihilo .dijitTitlePaneContentOuter {
@@ -72,6 +71,8 @@
 .dj_ie6 .nihilo .dijitTitlePane .dijitTitlePaneTitle {
 	zoom: 1;
 }
-.nihilo .dijitClickableRegion {
-	background-color : #ffc !important;
+
+.nihilo .dijitTitlePaneTextNode {
+	margin-left: 4px;
+	margin-right: 4px;
 }

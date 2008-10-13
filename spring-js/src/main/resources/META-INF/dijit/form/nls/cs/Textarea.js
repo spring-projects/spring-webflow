@@ -1,1 +1,1 @@
-({"iframeTitle1": "oblast úprav", "iframeTitle2": "rámec oblasti úprav"})
+({"iframeEditTitle":"oblast úprav","iframeFocusTitle":"rámec oblasti úprav"})

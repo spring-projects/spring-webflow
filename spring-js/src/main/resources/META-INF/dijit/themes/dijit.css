@@ -5,51 +5,62 @@
 
 
 
-/**** 
-		GENERIC PIECES 
+/****
+		GENERIC PIECES
  ****/
 
 .dijitReset {
 	/* Use this style to null out padding, margin, border in your template elements
 		so that page specific styles don't break them.
 		- Use in all TABLE, TR and TD tags.	
-		- If there is more than one class on the tag, place this first so other classes override.
 	*/
-	margin:0px;
-	border:0px;
-	padding:0px;
+	margin:0;
+	border:0;
+	padding:0;
 	line-height:normal;
+	font: inherit;
+	color: inherit;
 }
 
 .dijitInline {
 	/*  To inline block elements.
-		Similar to InlineBox below, but this has fewer side-effects in Moz.  
+		Similar to InlineBox below, but this has fewer side-effects in Moz.
 		Also, apparently works on a DIV as well as a FIELDSET.
 	*/
 	display:-moz-inline-box;		/* FF2 */
 	display:inline-block;			/* webkit and FF3 */
-	border:0px;
-	padding:0px;
+	#zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline; /* don't use .dj_ie since that increases the priority */
+	border:0;
+	padding:0;
 	vertical-align:middle;
+	#vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
 }
 
-.dj_ie .dijitInline { 
-	zoom: 1; /* set hasLayout:true to mimic inline-block */
-	#display:inline;
+.dj_ie INPUT.dijitTextBox,
+.dj_ie .dijitInputField INPUT {
+	font-size: 100%;
+}
+
+.dj_ie .dijitInputField INPUT { /* try to get rid of IE implicit margin around INPUT */
+	margin: -1px 0 !important;
+}
+.dj_iequirks .dijitInputField INPUT { /* try to get rid of IE implicit margin around INPUT */
+	margin-top: -3px !important;
 }
 
 .dijitInlineTable {
 	/* To inline tables with a given width set (otherwise, use dijitInline above)
 	 * Must also put style="-moz-inline-stack" on the node itself to workaround FF2 bugs
 	 */
-	display: -moz-inline-stack;			/* FF2 */
+	display: -moz-inline-stack;	/* FF2 */
 	display:inline-table;
-	display:inline-block;			/* webkit and FF3 */
-	#display:inline;				/* MSIE   (TODO: is this needed???) */
-	border:0px;
-	padding:0px;
-	vertical-align:middle;
-	position:relative; /* #5034 */
+	display:inline-block;		/* webkit and FF3 */
+	#zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline; /* don't use .dj_ie since that increases the priority */
+	box-sizing: content-box; -moz-box-sizing: content-box;
+	border:0;
+	padding:0;
 }
 
 .dijitTeeny {
@@ -72,23 +83,18 @@
 .dijit_ally .dijitPopup div,
 .dijit_a11y .dijitPopup table,
 .dijit_a11y .dijitTooltipContainer {
-	opacity: 1 !important;
 	background-color: white !important;
-}
-.dj_ie .dijit_a11y .dijitPopup * {
-	filter: none;
 }
 
 .dijitInputField {
-	font-family:inherit;
-	font-size:inherit;
-	font-weight:inherit;
+	overflow:hidden;
+	#zoom:1;
 }
 
 .dijitPositionOnly {
 	/* Null out all position-related properties */
-	padding: 0px !important;
-	border: 0px !important;
+	padding: 0 !important;
+	border: 0 !important;
 	background-color: transparent !important;
 	background-image: none !important;
 	height: auto !important;
@@ -99,7 +105,7 @@
 	/* Null position-related properties */
 	float: none !important;
 	position: static !important;
-	margin: 0px 0px 0px 0px !important;
+	margin: 0 0 0 0 !important;
 	vertical-align: middle !important;
 }
 
@@ -109,8 +115,8 @@
 	 * being transparent
 	 */
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	width: 100%;
 	height: 100%;
 	z-index: -1;
@@ -120,8 +126,9 @@
 }
 
 .dijitClickableRegion {
-	/* a region we expect the user to click on */
-	cursor : pointer;
+	/* An InlineEditBox in view mode (click this to edit the text) */
+	background-color: #e2ebf2;
+	cursor: text;
 }
 
 
@@ -135,55 +142,41 @@
 	overflow: hidden;	/* need on IE so something can be reduced in size, and so scrollbars aren't temporarily displayed when resizing */
 }
 
-/**** 
-		A11Y 
+/****
+		A11Y
  ****/
 .dijit_a11y * {
 	background-image:none !important;
-	background-color:transparent !important;
 }
 
-.dijit_a11y .dijitCalendarIncrementControl .dijitA11ySideArrow { 
-	padding-left:.2em; 
-	visibility:visible !important; 
+.dijit_a11y .dijitCalendarIncrementControl .dijitA11ySideArrow {
+	padding-left:.2em;
+	visibility:visible !important;
+}
+.dj_ie6 .dijit_a11y .dijitCalendarIncrementControl {
+	font-size:.75em !important;
 }
 
-.dijitToolbar .dijitDropDownButton .dijitA11yDownArrow{
-	/*make the arrow smaller in toolbar*/
-	padding:0;
-	margin:0;
-}
-.dj_ie6 .dijitToolbar .dijitDropDownButton .dijitA11yDownArrow{
-	/*vertical-align: middle does not place the arrow in the middle of the toolbar in IE*/
-	vertical-align: bottom;
+.dijit_a11y .dijitCalendarSelectedDate {
+	text-decoration:overline !important;
 }
 
 .dijitA11ySideArrow {
 	vertical-align:top;
-	margin-right:0em; 
-	margin-left:.2em; 
+	margin-right:0em;
+	margin-left:.2em;
 	line-height:2em;
-	text-align:center; 
+	text-align:center;
 }
 
-.dj_ie .dijitA11yDownArrow,
-.dj_ie .dijitA11yUpArrow {
-	font-size:.8em;
-	vertical-align:middle;
-	margin-right:.5em;
-}
-
-
-
-
-.dijit_a11y .dijitButton .dijitButtonNode,
-.dijit_a11y .dijitDropDownButton .dijitButtonNode,
-.dijit_a11y .dijitComboButton .dijitButtonNode,
-.dijit_a11y .dijitComboBox .dijitInputField,
-.dijit_a11y .dijitComboBox .dijitButtonNode {
-	border:1px solid black !important;
+.dijit_a11y .dijit * {
 	background:white !important;
 	color:black !important;
+}
+.dijit_a11y .dijitButtonNode {
+	border-color: black!important;
+	border-style: outset!important;
+	border-width: medium!important;
 }
 
 .dijit_a11y .dijitButtonDisabled .dijitButtonNode,
@@ -193,24 +186,41 @@
 .dijit_a11y .dijitComboBoxDisabled .dijitButtonNode,
 .dijit_a11y .dijitSpinnerDisabled .dijitButtonNode,
 .dijit_a11y .dijitSpinnerDisabled .dijitInputField {
-	border:1px dotted #999999 !important;
-	color:#999999 !important;
+	border-style: outset!important;
+	border-width: medium!important;
+	border-color: #999 !important;
+	color:#999 !important;
 }
 
-.dijit_a11y .dijitComboButton .dijitDownArrowButton,
-.dijit_a11y .dijitComboBox .dijitDownArrowButton {
-	border-left:0px !important;
+.dj_ff2 .dijit_a11y .dijitComboButton .dijitButtonContentsFocused,
+.dj_ff2 .dijit_a11y .dijitComboButton .dijitDownArrowButtonFocused {
+	border: 1px dotted black !important;
+}
+
+/* button inner contents - labels, icons etc. */
+.dijitButtonNode * {
+	vertical-align: middle;
+}
+.dijit_a11y .dijitArrowButtonInner {
+	width: 1.0em;
+	display: none !important;
+}
+.dijitButtonNode .dijitArrowButtonInner {
+	background:no-repeat center;
+	width: 16px;
+}
+.dijitComboBox .dijitArrowButtonInner {
+	display: block;
 }
 
 /* In high contrast mode, display the check symbol */
-.dijit_a11y .dijitToggleButtonChecked .dijitToggleButtonIconChar { 
-	display: inline !important; 
+.dijit_a11y .dijitToggleButtonChecked .dijitToggleButtonIconChar {
+	display: inline !important;
 }
 
 
-
 /****
-		3-element borders:  ( dijitLeft + dijitStretch + dijitRight ) 
+		3-element borders:  ( dijitLeft + dijitStretch + dijitRight )
  ****/
 	
 .dijitLeft {
@@ -232,86 +242,117 @@
 	background-repeat:no-repeat;
 }
 
-
-/****
-		Right-to-left rules
- ****/
-.dijitRTL .dijitRightArrow {
-	/* it becomes a left arrow for LTR locales */
-	/* MOW: TODO... */
-	margin-left:-2.1em;
-}
-
-
-
-
-
-/****
-		dijit.form.Button
-		dijit.form.DropDownButton
-		dijit.form.ComboButton
-		dijit.form.ComboBox (partial)
- ****/
 .dijitButton,
 .dijitDropDownButton,
-.dijitComboButton,
-.dijitComboBox {
+.dijitComboButton {
 	/* outside of button */
 	margin: 0.2em;
-	/* normalize line-heights inside the button */
-	line-height: 1.3em;
+}
+
+.dijitToolbar .dijitButton,
+.dijitToolbar .dijitDropDownButton,
+.dijitToolbar .dijitComboButton {
+	margin: 0;
+}
+
+.dj_ie .dijitToolbar button,
+.dj_safari .dijitToolbar button {
+	/* FF adds implicit padding to buttons so make other browsers follow suit,
+	 * to avoid a bunch of browse specific rules in theme files
+	 */
+	padding: 1px 2px;
+}
+
+.dj_ie .dijitComboButton {
+	/* hack to get inline-table to vertically align w/other buttons */
+	margin-bottom: -3px;
 }
 
 .dj_safari .dijitToolbar .dijitDropDownButton {
 	padding-left: 0.3em;
 }
+.dj_gecko .dijitToolbar .dijitButtonNode::-moz-focus-inner {
+	padding:0;
+}
 
 .dijitButtonNode {
 	/* Node that is acting as a button -- may or may not be a BUTTON element */
 	border:1px solid gray;
-	margin:0px;
-	padding:.2em .2em .1em .2em;
-	overflow:visible;
+	margin:0;
 	line-height:normal;
-	font-family:inherit;
-	font-size:inherit;
-	color: inherit;
 	cursor:pointer;
-	vertical-align:middle;	
+	vertical-align: middle;
+	#vertical-align: auto;
 	text-align:center;
 	white-space: nowrap;
 }
 
-.dijitDownArrowButton,
-.dijitUpArrowButton {
+/*
+.dijitButtonNode button { 
+	cursor: pointer;
+} 
+*/
+
+.dj_ie .dijitButtonNode {
+	/* ensure hasLayout */
+	zoom: 1;
+}
+
+.dj_ie .dijitButtonNode button { 
+	/*  
+		disgusting hack to get rid of spurious padding around button elements 
+		on IE. MSIE is truly the web's boat anchor. 
+	*/ 
+	overflow: visible;
+	cursor: pointer;
+} 
+
+.dijitArrowButton {
 	/* Node that is acting as a arrow button -- drop down (spinner has its own treatment).  Also gets dijitButtonNode */
 	/* place AFTER dijitButtonNode so it overrides */
-	padding:0em .4em;
-	margin:0px;
-	font-size: 0.7em;
+	padding: 0 .4em;
+}
+DIV.dijitArrowButton {
+	float: right;
 }
 
-
-.dijitButtonContents {
-	color:inherit;
+.dijitSpinner .dijitInputLayoutContainer .dijitArrowButton {
+	border-style: solid;
+	border-width: 0 0 0 1px !important;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	float: none;
+}
+.dijitSpinner .dijitInputLayoutContainer .dijitArrowButton {
+	position: absolute;
+	height: 50%;
+}
+.dijitSpinner .dijitInputLayoutContainer .dijitDownArrowButton {
+	top: none;
+	bottom: 0;
+	border-top-width: 1px !important;
+}
+.dijitSpinner .dijitInputLayoutContainer .dijitUpArrowButton {
+	top: 0;
+	bottom: none;
 }
 
-.dijitDropDownButton .dijitA11yDownArrow {
-	margin-left:.8em;
+TABLE.dijitComboButton {
+	/* In ComboButton, borders are on each cell rather than on <table> itself */
+	border-collapse: collapse;
+	border:0;
+	padding:0;
+	margin:0;
 }
-
-.dijitComboButton TABLE {
-	/* each cell in a combo-table should have its own separate border */
+.dijitToolbar .dijitComboButton {
+	/* because Toolbar only draws a border around the hovered thing */
 	border-collapse: separate;
-	border:0px;
-	padding:0px;
-	margin:0px;
 }
 
-.dijitComboButton .dijitButtonContents {
-	border-right-width:0px !important;
+.dj_ie BUTTON.dijitButtonNode {
+	overflow: visible; /* eliminates arbitrary left and right padding on buttons */
 }
-
 
 table .dijitButton .dijitButtonNode,
 table .dijitComboButton .dijitButtonNode {
@@ -323,7 +364,7 @@ table .dijitComboButton .dijitButtonNode {
 .dijitButtonNode IMG {
 	/* make text and images line up cleanly */
 	vertical-align:middle;
-	margin-bottom:.2em;
+	/*margin-bottom:.2em;*/
 }
 
 /******
@@ -335,7 +376,14 @@ table .dijitComboButton .dijitButtonNode {
 .dijitComboBox,
 .dijitSpinner {
 	border: solid black 1px;
+	#overflow: hidden; /* #6027, #6067 */
 	width: 15em;	/* need to set default size on outer node since inner nodes say <input style="width:100%"> and <td width=100%>.  user can override */
+	vertical-align: middle;
+	#vertical-align: auto;	
+}
+
+.dijitTimeTextBox {
+	width: 8em;
 }
 
 /* rules for safari to deal with fuzzy blue focus border */
@@ -346,92 +394,66 @@ table .dijitComboButton .dijitButtonNode {
 }
 .dijitTextBoxFocused,
 .dijitComboBoxFocused,
-.dijitSpinnerFocused {
+.dijitSpinnerFocused,
+.dijitTextAreaFocused {
 	/* should we display focus like we do on other browsers, or use the safari standard focus indicator?? */
 	outline: auto 5px -webkit-focus-ring-color;
+}
+.dijitTextAreaFocused div {
+	/* prevent dotted border on FF3 */
+	outline: none !important;
 }
 
 .dijitTextBox INPUT,
 .dijitComboBox INPUT,
 .dijitSpinner INPUT {
-	padding:0px;
 	border-left: solid black 1px;	/* TODO: for RTL mode should be border-right */
 	display:inline;
 	position:static !important;
-	border:0px !important;	
-	margin:0px !important;
-	vertical-align:0em !important;
+	border:0 !important;	
+	margin:0 !important;
+	vertical-align:top !important;
 	visibility:visible !important;
 	background-color:transparent !important;
 	background-image:none !important;
 	width:100% !important;
 }
 
-/* #4711: prevent IE from over-expanding 100% width input boxes */
-.dj_ie .dijitTextBox .dijitInputField,
-.dj_ie .dijitComboBox .dijitInputField,
-.dj_ie .dijitSpinner .dijitInputField {
-	position:relative;
-}
-.dj_ie .dijitTextBox .dijitInputField INPUT,
-.dj_ie .dijitComboBox .dijitInputField INPUT,
-.dj_ie .dijitSpinner .dijitInputField INPUT {
-	position:absolute !important;
-	top:auto !important;
-	left:auto !important;
-	right:auto !important;
-	bottom:auto !important;
-	font-size:100%;
-}
-
-.dj_ie INPUT.dijitTextBox {
-	font-size:100%;
-}
-
 /* Display an "X" for invalid input. Themes will override these rules to display an icon instead.
 */
-.dijitValidationIcon { display: none; background-position-y:center; }
-.dijitValidationIconText { visibility: hidden; }
+.dijitValidationIcon {
+	visibility: hidden;
+	display: block;
+	padding: 0 2px;
+	float: right;
+	height: auto;
+}
+.dijitValidationIconText {
+	visibility: hidden;
+	display: none;
+	float:right;
+	font-family: sans-serif;
+	font-style:italic;
+	font-size: 0.45em;
+	line-height: 190%;
+}
 .dijit_a11y .dijitValidationIcon { display: none !important; }
 .dijit_a11y .dijitValidationIconText { display: block !important; }
 
-.dijitTextBoxError .dijitValidationIconText,
-.dijitComboBoxError .dijitValidationIconText,
-.dijitSpinnerError .dijitValidationIconText {
+.dijitError .dijitValidationIcon,
+.dijitError .dijitValidationIconText {
 	visibility: visible;
 }
 
-.dijitSpinner .dijitDownArrowButton,
-.dijitSpinner .dijitUpArrowButton {
-    padding: 0 .4em;
-    border: 1px solid;
-    line-height: .769em;
-    /* TODO: as we use border-collapse, is this necessary? */
-    border-left-style: none;
-}
-.dj_ie .dijitSpinner .dijitDownArrowButton,
-.dj_ie .dijitSpinner .dijitUpArrowButton {
-    padding: 0 .2em!important;
-    text-align: center;
-}
-.dijitSpinner .dijitDownArrowButton div,
-.dijitSpinner .dijitUpArrowButton div {
-    text-align: center;
-    font-size: .769em;
-    line-height: 1em;
-    vertical-align: baseline;
-    margin: 0 auto;
-}
-
-.dijitTextBox .dijitDownArrowButton {
+.dijitTextBox .dijitArrowButton {
 	/* this is for a combo box with no arrow displayed; we set baseClass=TextBox */
 	display:none;
 }
 
 /****
 		dijit.form.CheckBox
- 	 & 
-  		dijit.form.RadioButton 
+ 	 &
+  		dijit.form.RadioButton
  ****/
 
 .dijitCheckBox,
@@ -443,19 +465,19 @@ table .dijitComboButton .dijitButtonNode {
 	height: 16px;
 	background-position:center center;
 	background-repeat:no-repeat;
+	overflow: hidden;
 }
 
 .dijitCheckBox INPUT,
 .dijitRadio INPUT {
-	margin: 0; 
+	margin: 0;
 	padding: 0;
 	display: block;
 }
- 
+
 .dijitCheckBoxInput {
 	/* place the actual input on top, but all-but-invisible */
 	opacity: 0.01;
-	overflow:hidden;
 }
 
 .dj_ie .dijitCheckBoxInput {
@@ -478,7 +500,7 @@ table .dijitComboButton .dijitButtonNode {
 /****
 		dijit.ProgressBar
  ****/
- 
+
 .dijitProgressBarEmpty{
 	/* outer container and background of the bar that's not finished yet*/
 	position:relative;overflow:hidden;
@@ -493,19 +515,21 @@ table .dijitComboButton .dijitButtonNode {
 	z-index:-1;
 	top:0;
 	width:100%;
-	height:100%;
+}
+.dj_ie6 .dijitProgressBarFull {
+	height:1.6em;
 }
 
-.dijitProgressBarTile{
+.dijitProgressBarTile {
 	/* inner container for finished portion */
 	position:absolute;
 	overflow:hidden;
-	top:0px;
-	left:0px;
-	bottom:0px;
-	right:0px;
-	margin:0px;
-	padding:0px;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	margin:0;
+	padding:0;
 	width:auto;
 	height:auto;
 	background-color:#aaa;
@@ -519,31 +543,26 @@ table .dijitComboButton .dijitButtonNode {
 	background-color:transparent !important;
 }
 
-.dj_iequirks .dijitProgressBarTile{
-	width:100%;
-	height:100%;
-}
-
-.dj_ie6 .dijitProgressBarTile{
+.dj_ie6 .dijitProgressBarTile {
 	/* width:auto works in IE6 with position:static but not position:absolute */
 	position:static;
-	/* height:auto does not work in IE6 */
-	height:100%;
+	/* height:auto or 100% does not work in IE6 */
+	height:1.6em;
 }
 
-.dijitProgressBarIndeterminate .dijitProgressBarLabel{
+.dijitProgressBarIndeterminate .dijitProgressBarLabel {
 	visibility:hidden;
 }
 
-.dijitProgressBarIndeterminate .dijitProgressBarTile{
+.dijitProgressBarIndeterminate .dijitProgressBarTile {
 	/* animated gif for 'indeterminate' mode */
 }
 
-.dijitProgressBarIndeterminateHighContrastImage{
+.dijitProgressBarIndeterminateHighContrastImage {
 	display:none;
 }
 
-.dijit_a11y .dijitProgressBarIndeterminate .dijitProgressBarIndeterminateHighContrastImage{
+.dijit_a11y .dijitProgressBarIndeterminate .dijitProgressBarIndeterminateHighContrastImage {
 	display:block;
 	position:absolute;
 	top:0;
@@ -554,26 +573,13 @@ table .dijitComboButton .dijitButtonNode {
 	height:auto;
 }
 
-.dijitProgressBarLabel{
+.dijitProgressBarLabel {
 	display:block;
 	position:static;
 	width:100%;
 	text-align:center;
-	background-color:transparent;
+	background-color:transparent !important;
 }
-
-/* progress bar in vertical mode - TODO: remove? no longer supported? */
-.dijitProgressBarVertical .dijitProgressBarFull{
-	bottom:0px;		/* start at the bottom */
-}
-
-.dj_ie6 .dijitProgressBarVertical .dijitProgressBarTile{
-	position:absolute;
-	/* can't use position:static here -- need absolute positioning to place
-	   the bar at the bottom of a vertical progressbar */
-	width:100%;
-}
-
 
 /****
 		dijit.Tooltip
@@ -588,12 +594,7 @@ table .dijitComboButton .dijitButtonNode {
 	top: -10000px;
 	overflow: visible;
 }
-/*
-See http://trac.dojotoolkit.org/ticket/5006
-.dijitTooltipDialog {
-	position: relative;
-}
-*/
+
 .dijitTooltipContainer {
 	border: solid black 2px;
 	background: #b8b5b5;
@@ -609,11 +610,14 @@ See http://trac.dojotoolkit.org/ticket/5006
 	position: absolute;
 }
 
+.dijitTooltipData {
+	display:none;
+}
 /* MOW: using actual images at this time
 /* draw an arrow with CSS only * /
 .dijitTooltipConnector {
 	/* the border on the triangle * /
-	font-size: 0px; line-height: 0%; width: 0px;
+	font-size: 0; line-height: 0%; width: 0;
 	border-top: none;
 	border-bottom: 14px solid black;
 	border-left: 7px solid transparent;
@@ -625,7 +629,7 @@ See http://trac.dojotoolkit.org/ticket/5006
 
 .dijitTooltipConnector div {
 	/* the background of the triangle * /
-	font-size: 0px; line-height: 0%; width: 0px;
+	font-size: 0; line-height: 0%; width: 0;
 	position: absolute;
 	border-bottom: 10px solid #b8b5b5;
 	border-left: 5px solid transparent;
@@ -642,10 +646,10 @@ See http://trac.dojotoolkit.org/ticket/5006
 /* Layout widgets. This is essential CSS to make layout work (it isn't "styling" CSS)
    make sure that the position:absolute in dijitAlign* overrides other classes */
 
-.dijitLayoutContainer{ 
+.dijitLayoutContainer{
 	position: relative;
 	display: block;
-	overflow: hidden; 
+	overflow: hidden;
 }
 
 body .dijitAlignTop,
@@ -653,16 +657,88 @@ body .dijitAlignBottom,
 body .dijitAlignLeft,
 body .dijitAlignRight {
 	position: absolute;
-	overflow: hidden; 
+	overflow: hidden;
 }
 
 body .dijitAlignClient { position: absolute; }
 
-/* SplitContainer 
+/*
+ * BorderContaienr
+ *
+ * .dijitBorderContainer is a stylized layout where panes have border and margin.
+ * .dijitBorderContainerNoGutter is a raw layout.
+ */
+.dijitBorderContainer, .dijitBorderContainerNoGutter {
+	position:relative;
+	overflow: hidden;
+}
+
+.dijitBorderContainerPane,
+.dijitBorderContainerNoGutterPane {
+	position: absolute !important;	/* !important to override position:relative in dijitTabContainer etc. */
+	z-index: 2;		/* above the splitters so that off-by-one browser errors don't cover up border of pane */
+}
+
+.dijitBorderContainer > .dijitTextArea {
+	/* On Safari, for SimpleTextArea inside a BorderContainer,
+		don't want to display the grip to resize */
+	resize: none;
+}
+
+.dijitGutter {
+	/* gutter is just a place holder for empty space between panes in BorderContainer */
+	position: absolute;
+	font-size: 1px;		/* needed by IE6 even though div is empty, otherwise goes to 15px */
+}
+
+/* SplitContainer
 
 	'V' == container that splits vertically (up/down)
 	'H' = horizontal (left/right)
 */
+
+.dijitSplitter {
+	position: absolute;
+	overflow: hidden;
+	z-index: 1;		/* behind the panes */
+	background-color: #fff;
+	border-color: gray;
+	border-style: solid;
+	border-width: 0;
+	z-index: 11;
+}
+
+.dijitSplitterActive {
+	z-index: 11 !important;
+}
+
+.dijitSplitterCover{
+	position:absolute;
+	z-index:1;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+
+/* #6945: stop mouse events */
+.dj_ie .dijitSplitterCover{
+	background: white;
+	filter: alpha(opacity=0)
+}
+
+.dijitSplitterH {
+	height: 7px;
+	border-top:1px;
+	border-bottom:1px;
+	cursor: ns-resize;
+}
+.dijitSplitterV {
+	width: 7px;
+	border-left:1px;
+	border-right:1px;
+	cursor: ew-resize;
+}
 .dijitSplitContainer{
 	position: relative;
 	overflow: hidden;
@@ -685,25 +761,21 @@ body .dijitAlignClient { position: absolute; }
 	margin: 0;
 }
 
-.dijitSplitContainerSizerV {
-	cursor: n-resize;
-}
-
-.dijitSplitContainerSizerH .thumb {
+.dijitSplitContainerSizerH .thumb, .dijitSplitterV .dijitSplitterThumb {
+	overflow:hidden;
 	position:absolute;
 	top:49%;
 }
 
-.dijitSplitContainerSizerV .thumb {
+.dijitSplitContainerSizerV .thumb, .dijitSplitterH .dijitSplitterThumb {
 	position:absolute;
 	left:49%;
 }
 
+.dijitSplitterShadow,
 .dijitSplitContainerVirtualSizerH,
 .dijitSplitContainerVirtualSizerV {
 	font-size: 1px;
-	cursor: move;
-	cursor: w-resize;
 	background-color: ThreeDShadow;
 	-moz-opacity: 0.5;
 	opacity: 0.5;
@@ -711,10 +783,21 @@ body .dijitAlignClient { position: absolute; }
 	margin: 0;
 }
 
-.dijitSplitContainerVirtualSizerV {
+.dj_ie .dijitSplitterV, .dijitSplitContainerVirtualSizerH {
+	cursor: w-resize;
+}
+.dj_ie .dijitSplitterH, .dijitSplitContainerSizerV, .dijitSplitContainerVirtualSizerV {
 	cursor: n-resize;
 }
 
+.dijit_a11y .dijitSplitterH {
+	border-top:1px solid #d3d3d3 !important;
+	border-bottom:1px solid #d3d3d3 !important;
+}
+.dijit_a11y .dijitSplitterV {
+	border-left:1px solid #d3d3d3 !important;
+	border-right:1px solid #d3d3d3 !important;
+}
 
 /* ContentPane */
 
@@ -727,13 +810,16 @@ body .dijitAlignClient { position: absolute; }
 	display: block;
 	overflow: hidden;
 }
+.dj_ie7 .dijitTitlePaneTextNode {
+	display:inline; 
+}
 
 /* Color Palette */
 
 .dijitColorPalette {
 	border:1px solid #999;
 	background:#fff;
-	-moz-border-radius:3pt; 
+	-moz-border-radius:3pt;
 }
 
 img.dijitColorPaletteUnder {
@@ -743,50 +829,48 @@ img.dijitColorPaletteUnder {
 	top:0;
 }
 .dijitColorPaletteInner {
-	position: relative; 
+	position: relative;
 	overflow:hidden;
 	outline:0;
+}
+.dijitPaletteCell {
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	overflow: hidden;
+	z-index: 10;
+	outline-width: 0;
 }
 .dijitPaletteImg {
 	width: 16px; /*This is the width of one color in the provided palettes. */
 	height: 14px; /* Height of one color in the provided palettes. */
 	position: absolute;
+	top: 1px;
+	left: 1px;
 	overflow: hidden;
 	cursor: default;
-	z-index: 10;
-	border:1px solid #999; 
+	border:1px solid #999;
 	/* -moz-border-radius:2pt; */
 }
 
-.dijitPaletteImgHighlight {
+.dijitPaletteCellHighlight img {
 	width: 14px; /*This is the width of one color in the provided palettes. */
 	height: 12px; /* Height of one color in the provided palettes. */
 	position: absolute;
+	top: 1px;
+	left: 1px;
 	overflow: hidden;
 	cursor: default;
-	z-index: 10;
-}
-
-/* .dijitPaletteImg:hover, */
-.dijitPaletteImg:focus,
-.dijitPaletteImgHighlight {
-	width: 14px; /*This is the width of one color in the provided palettes. */
-	height: 12px; /* Height of one color in the provided palettes. */
-	border:2px solid #000; 
-	outline:2px solid #dedede;
+	border:2px solid #000;
+	outline:1px solid #dedede;
 	/* -moz-border-radius:0; */	
 }
 
-
-.dijitColorPaletteCell {
-	width:16px;
-	height:14px;
-	border: 1px solid;
+.dijit_a11y .dijitPaletteCell {
+	background-color:transparent !important;
 }
-
-.dijitColorPaletteCell:hover {
-	border-style: solid;
-	outline:0;
+.dijit_a11y .dijitPaletteImg {
+	background-color:transparent !important;
 }
 
 /* Accordion */
@@ -799,44 +883,42 @@ img.dijitColorPaletteUnder {
 	overflow: auto;
 }
 
+/* #7104 - workaround IE jankyness with overflows */
+.dj_ie .dijitAccordionBody {
+	position:relative;
+}
 
 .dijitAccordionContainer {
 	border:1px solid #b7b7b7;
-	border-top:0 !important; 
+	border-top:0 !important;
 }
 
-.dijitAccordionPane .dijitAccordionTitle:hover {
+.dijitAccordionTitle:hover {
 	cursor: pointer;
-}
-
-.dijitAccordionPane .dijitAccordionTitle .dijitAccordionArrow {
-	float: right;
 }
 
 /* images off, high-contrast mode styles */
 .dijitAccordionPane .dijitAccordionTitle .arrowTextUp,
 .dijitAccordionPane .dijitAccordionTitle .arrowTextDown {
-	display: none; 
-	float: right;
-	font-size: 0.65em; 
+	display: none;
+	font-size: 0.65em;
 	font-weight: normal !important;
 }
 
-.dijit_a11y .dijitAccordionPane .dijitAccordionTitle .arrowTextUp { 
-	display: inline; 
+.dijit_a11y .dijitAccordionTitle .arrowTextUp {
+	display: inline;
+}
+.dijit_a11y .dijitAccordionTitle-selected .arrowTextDown {
+	display: inline;
 }
 
-.dijit_a11y .dijitAccordionPane-selected .dijitAccordionTitle .arrowTextDown {
-	display: inline; 
-}
-
-.dijit_a11y .dijitAccordionPane-selected .dijitAccordionTitle .arrowTextUp {
-	display: none; 
+.dijit_a11y .dijitAccordionTitle-selected .arrowTextUp {
+	display: none;
 }
 
 /* Calendar */
 
-.dijitCalendarContainer thead tr th, .dijitCalendarContainer thead tr td, .dijitCalendarContainer tbody tr td, .dijitCalendarContainer tfoot tr td { 
+.dijitCalendarContainer thead tr th, .dijitCalendarContainer thead tr td, .dijitCalendarContainer tbody tr td, .dijitCalendarContainer tfoot tr td {
 	padding: 0;
 }
 
@@ -863,26 +945,15 @@ img.dijitColorPaletteUnder {
 	cursor:hand;
 }
 
-.dijitCalendarPreviousMonthDisabled {
-	cursor:default !important
-}
-
-.dijitCalendarCurrentMonthDisabled {
-	cursor:default !important
-}
-
+.dijitCalendarPreviousMonthDisabled,
+.dijitCalendarCurrentMonthDisabled,
 .dijitCalendarNextMonthDisabled {
-	cursor:default !important;
+	cursor:default !important
 }
 
-.dijitCalendarDateTemplate {
-	cursor:pointer;
-}
-
-.dijitCalendarSelectedYear {
-	cursor:pointer;
-}
-.dijitCalendarNextYear, 
+.dijitCalendarDateTemplate,
+.dijitCalendarSelectedYear,
+.dijitCalendarNextYear,
 .dijitCalendarPreviousYear {
 	cursor:pointer;
 }
@@ -903,13 +974,14 @@ img.dijitColorPaletteUnder {
 	background-color:white;
 }
 .dijitMenuTable {
-	margin:1px 0px;
+	margin:1px 0;
 	border-collapse:collapse;
-	border-width:0px;
+	border-width:0;
 	background-color:white;
 }
 
 .dijitMenuItem{
+	text-align: left;
 	white-space: nowrap;
 	padding:.1em .2em;
 }
@@ -923,7 +995,6 @@ img.dijitColorPaletteUnder {
 
 .dijitMenuItemIcon {
 	position: relative;
-	background-position: center center;
 	background-repeat: no-repeat;
 }
 
@@ -952,72 +1023,117 @@ img.dijitColorPaletteUnder {
 	border: 1px #fff dotted !important;
 }
 
-.dijit_a11y .dijitMenuExpandInner { 
-	display:block !important;
-} 
+.dijitMenuExpandA11y {
+	display: none;
+}
+.dijit_a11y .dijitMenuExpandA11y {
+	display: inline;
+}
 
-/* separator can be two pixels -- set border of either one to 0px to have only one */
+/* separator can be two pixels -- set border of either one to 0 to have only one */
 .dijitMenuSeparatorTop {
 	height: 50%;
-	margin: 0px;
+	margin: 0;
 	margin-top:3px;
 	font-size: 1px;
 }
 
 .dijitMenuSeparatorBottom {
 	height: 50%;
-	margin: 0px;
+	margin: 0;
 	margin-bottom:3px;
 	font-size: 1px;
 }
 
+/* the checked menu item */
+.dijitCheckedMenuItemIconChar {
+	vertical-align: middle;
+	visibility:hidden;
+}
+.dijitCheckedMenuItemIconChecked .dijitCheckedMenuItemIconChar {
+	visibility:visible !important;
+}
+.dijit_a11y .dijitCheckedMenuItemIconChar {
+	display:block !important;
+}
 
 
 /* Tab */
 
-
-.dijitTabContainer .dijitAlignTop {
-/* position the tab labels row down by 1 px, and on top of the dijitTabPaneWrapper
-	so the buttons can overlay the tab pane properly		*/
-	top:1px !important;
-	z-index:10;	
+.dijitTabContainerBottom-tabs,
+.dijitTabContainerTop-tabs,
+.dijitTabContainerLeft-tabs,
+.dijitTabContainerRight-tabs {
+	z-index:10;
+	overflow: visible !important;  /* so tabs can cover up border adjacent to container */
 }
 
-.dijitTabContainer .dijitAlignBottom {
-/* position the tab labels row up by 1 px so they overlap	*/
-	margin-top:-1px !important;
-	z-index:10;	
-}
-
-.dijitTabContainer .dijitAlignLeft {
-/* position the tab labels left by 1 px so they overlap		*/
-	margin-right:-1px !important;
-	z-index:10;	
-}
-
-.dijitTabContainer .dijitAlignRight {
-/* position the tab labels row up by 1 px, and on top of the dijitTabPaneWrapper
-	so the buttons can overlay the tab pane properly		*/
-	margin-left:-1px !important;
-	z-index:10;	
-}
-
-.dijitTabPaneWrapper {
+.dijitTabContainerBottom-container,
+.dijitTabContainerTop-container,
+.dijitTabContainerLeft-container,
+.dijitTabContainerRight-container {
 	z-index:0;
 	overflow: hidden;
+	border: 1px solid black;
 }
+
+.dijitTabContainerTop-tabs {
+	border-bottom: 1px solid black;
+}
+.dijitTabContainerTop-container {
+	border-top: 0px;
+}
+
+.dijitTabContainerLeft-tabs {
+	border-right: 1px solid black;
+}
+.dijitTabContainerLeft-container {
+	border-left: 0px;
+}
+
+.dijitTabContainerBottom-tabs {
+	border-top: 1px solid black;
+}
+.dijitTabContainerBottom-container {
+	border-bottom: 0px;
+}
+
+.dijitTabContainerRight-tabs {
+	border-left: 1px solid black
+}
+.dijitTabContainerRight-container {
+	border-right: 0px;
+}
+
 
 .dijitTab {
 	position:relative;
-	float:left;
 	cursor:pointer;
 	white-space:nowrap;
 	z-index:3;
 }
 
-.dijitTabContainer .dijitAlignLeft .dijitTab,
-.dijitTabContainer .dijitAlignRight .dijitTab {
-	float:none;
+.dijitTabContainerTop-tabs .dijitTab {
+	top: 1px;	/* to overlap border on .dijitTabContainerTop-tabs */
+}
+.dijitTabContainerBottom-tabs .dijitTab {
+	top: -1px;	/* to overlap border on .dijitTabContainerBottom-tabs */
+}
+.dijitTabContainerLeft-tabs .dijitTab {
+	left: 1px;	/* to overlap border on .dijitTabContainerLeft-tabs */
+}
+.dijitTabContainerRight-tabs .dijitTab {
+	left: -1px;	/* to overlap border on .dijitTabContainerRight-tabs */
+}
+
+
+.dijitTabContainerTop-tabs .dijitTab,
+.dijitTabContainerBottom-tabs .dijitTab {
+	/* Inline-block */
+	display:-moz-inline-box;		/* FF2 */
+	display:inline-block;			/* webkit and FF3 */
+	#zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline; /* don't use .dj_ie since that increases the priority */
 }
 
 .dijitTabInnerDiv {
@@ -1033,22 +1149,22 @@ img.dijitColorPaletteUnder {
 /* images off, high-contrast mode styles */
 .dijitTab .closeText {
 	display:none;
-	padding: 0px 2px;
-	margin: 0px 2px;
+	padding: 0 2px;
+	margin: 0 2px;
 }
-.dijit_a11y .dijitTab .closeImage {
-	padding: 0px !important;
-	margin: 0px !important;
-	top: 0px !important;
-	bottom: 0px !important;
+
+.dijit_a11y .closeText {
+	display:inline;
+	margin-left:6px;
 }
-.dijit_a11y .closeText { 
-	display:inline; 
-	margin-left:6px; 
-} 
-.dijit_a11y .closeText:hover { 
+
+.dijit_a11y .dijitTab .dijitClosable .closeImage {
+	display:none;
+}
+
+.dijit_a11y .closeText:hover {
 	border:thin solid;
-} 
+}
 .dijit_a11y .dijitTabChecked {
 	border-style:dashed !important;
 }
@@ -1074,7 +1190,7 @@ img.dijitColorPaletteUnder {
 .dijitInlineEditor .dijitButtonContainer {
 	/* div around the buttons -- makes them float below the field */
 	position:absolute;
-	right:0px;
+	right:0;
 	overflow:visible;
 }
 
@@ -1084,35 +1200,36 @@ img.dijitColorPaletteUnder {
 
 /* Tree */
 
-.dijitTreeExpando {
-    float: left;
-    display: inline;
-    clear:both;
+.dijitTreeRow, .dijitTreeContent {
+	white-space: nowrap;
 }
 
-.dijitTreeExpand {
-    float: left;
-    display: inline;
+.dijitTreeRow img {
+	/* make the expando and folder icons line up with the label */
+	vertical-align: middle;
 }
 
 .dijitTreeContent {
     cursor: default;
-    /* can't make inline - multiline bugs */
 }
 
-.dijitExpandoText { 
-	display: none; 
-} 
- 
-.dijit_a11y .dijitExpandoText { 
-	float: left; 
-	display: inline; 
+.dijitExpandoText {
+	display: none;
+}
+
+.dijit_a11y .dijitExpandoText {
+	display: inline;
 	padding-left: 10px;
-	padding-right: 10px; 
+	padding-right: 10px;
 	font-family: monospace;
 	border-style: solid;
 	border-width: thin;
-} 
+	cursor: pointer;
+}
+
+.dijitTreeLabel {
+	margin: 0px 4px;
+}
 
 /* Dialog */
 
@@ -1122,17 +1239,21 @@ img.dijitColorPaletteUnder {
 	padding: 1px;
 }
 
+.dijitDialogFixed div.dijitDialogTitleBar {
+	cursor:default; 
+}
+
 .dijitDialogUnderlayWrapper {
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	z-index: 998;
 	display: none;
-	background: transparent;
+	background: transparent !important;
 }
 
 .dijitDialogUnderlay {
-	background: #eeeeee;
+	background: #eee;
 	opacity: 0.5;
 }
 
@@ -1141,6 +1262,7 @@ img.dijitColorPaletteUnder {
 }
 
 /* images off, high-contrast mode styles */
+.dijit_a11y .dijitInputLayoutContainer,
 .dijit_a11y .dijitDialog {
 	opacity: 1 !important;
 	background-color: white !important;
@@ -1148,10 +1270,11 @@ img.dijitColorPaletteUnder {
 
 .dijitDialog .closeText {
 	display:none;
+	/* for the onhover border in high contrast on IE: */
 	position:absolute;
 }
 
-.dijit_a11y .dijitDialog .closeText { 
+.dijit_a11y .dijitDialog .closeText {
 	display:inline;
 }
 
@@ -1162,18 +1285,18 @@ img.dijitColorPaletteUnder {
 	vertical-align:middle;
 }
 
-.dijitHorizontalSliderMoveable {
-	right:0px;
+.dijitSliderMoveableH {
+	right:0;
 }
 
 .dijit_a11y div.dijitSliderImageHandle,
 .dijitSliderImageHandle {
-	margin:0px;
-	padding:0px;
+	margin:0;
+	padding:0;
 	position:absolute !important;
 	border:8px solid gray;
-	width:0px;
-	height:0px;
+	width:0;
+	height:0;
 }
 .dijit_a11y .dijitSliderFocused .dijitSliderImageHandle {
 	border:4px solid #000;
@@ -1181,12 +1304,12 @@ img.dijitColorPaletteUnder {
 	width:8px;
 }
 
-.dijitVerticalSliderImageHandle {
+.dijitSliderImageHandleV {
 	top:-8px;
 	left:-6px;
 }
 
-.dijitHorizontalSliderImageHandle {
+.dijitSliderImageHandleH {
 	left:-8px;
 	top:-5px;
 	vertical-align:top;
@@ -1197,29 +1320,40 @@ img.dijitColorPaletteUnder {
 	border-color:black;
 }
 
-.dijitHorizontalSliderBar {
-	height:4px;
-	border-width:1px 0px;
+.dijitSliderBarContainerV {
+	position:relative;
+	height:100%;
+	z-index:1;
 }
 
-.dijitVerticalSliderBar {
+.dijitSliderBarContainerH {
+	position:relative;
+	z-index:1;
+}
+
+.dijitSliderBarH {
+	height:4px;
+	border-width:1px 0;
+}
+
+.dijitSliderBarV {
 	width:4px;
-	border-width:0px 1px;
+	border-width:0 1px;
 }
 
 .dijitSliderProgressBar {
 	background-color:red;
-	#z-index:0;
+	z-index:1;
 }
 
-.dijitVerticalSliderProgressBar {
+.dijitSliderProgressBarV {
 	position:static !important;
 	height:0%;
 	vertical-align:top;
 	text-align:left;
 }
 
-.dijitHorizontalSliderProgressBar {
+.dijitSliderProgressBarH {
 	position:absolute !important;
 	width:0%;
 	vertical-align:middle;
@@ -1229,145 +1363,133 @@ img.dijitColorPaletteUnder {
 .dijitSliderRemainingBar {
 	overflow:hidden;
 	background-color:transparent;
-	#z-index:-1;
+	z-index:1;
 }
 
-.dijitVerticalSliderRemainingBar {
+.dijitSliderRemainingBarV {
 	height:100%;
 	text-align:left;
 }
 
-.dijitHorizontalSliderRemainingBar {
+.dijitSliderRemainingBarH {
 	width:100% !important;
 }
 
 /* the slider bumper is the space consumed by the slider handle when it hangs over an edge */
 .dijitSliderBumper {
 	overflow:hidden;
-	#z-index:-1
+	z-index:1;
 }
 
-.dijitVerticalSliderBumper {
+.dijitSliderBumperV {
 	width:4px;
 	height:8px;
-	border-width:0px 1px;
+	border-width:0 1px;
 }
 
-.dijitHorizontalSliderBumper {
+.dijitSliderBumperH {
 	width:8px;
 	height:4px;
-	border-width:1px 0px;
+	border-width:1px 0;
 }
 
-.dijitVerticalSliderBottomBumper,
-.dijitHorizontalSliderLeftBumper {
+.dijitSliderBottomBumper,
+.dijitSliderLeftBumper {
 	background-color:red;
 }
 
-.dijitVerticalSliderTopBumper,
-.dijitHorizontalSliderRightBumper {
+.dijitSliderTopBumper,
+.dijitSliderRightBumper {
 	background-color:transparent;
 }
 
-.dijitHorizontalSliderDecoration {
+.dijitSliderDecorationH {
 	text-align:center;
 }
 
 .dijitSlider .dijitSliderButton {
 	font-family:monospace;
-	margin:0px;
-	padding:0px;
+	margin:0;
+	padding:0;
 	display:block;
 }
 
 .dijit_a11y .dijitSliderButtonInner {
-	visibility:visible !important; 
-}
-
-.dijitSlider .dijitVerticalSliderTopButton {
-	vertical-align:bottom;
-}
-
-.dijitSlider .dijitVerticalSliderBottomButton {
-	vertical-align:top;
+	visibility:visible !important;
 }
 
 .dijitSliderButtonContainer {
 	text-align:center;
-	height:0px;
+	height:0;
 }
 
 .dijitSlider .dijitButtonNode {
-	padding:0px;
+	padding:0;
 	display:block;
 }
 
-.dj_ie .RuleContainer {
-	z-index: -1; /* #4809 */
-}
-
-.RuleContainer {
+.dijitRuleContainer {
 	position:relative;
 	overflow:visible;
 }
 
-.VerticalRuleContainer {
+.dijitRuleContainerV {
 	height:100%;
-	line-height:0px;
+	line-height:0;
 	float:left;
 	text-align:left;
 }
 
-.dj_opera .VerticalRuleContainer {
+.dj_opera .dijitRuleContainerV {
 	line-height:2%;
 }
 
-.dj_ie .VerticalRuleContainer {
+.dj_ie .dijitRuleContainerV {
 	line-height:normal;
 }
 
-.dj_gecko .VerticalRuleContainer {
-	margin:0px 0px 1px 0px; /* mozilla bug workaround for float:left,height:100% block elements */
+.dj_gecko .dijitRuleContainerV {
+	margin:0 0 1px 0; /* mozilla bug workaround for float:left,height:100% block elements */
 }
 
-.RuleMark {
+.dijitRuleMark {
 	position:absolute;
 	border:1px solid black;
-	line-height:0px;
+	line-height:0;
 	height:100%;
 }
 
-.HorizontalRuleMark {
-	width:0px;
-	border-top-width:0px !important;
-	border-bottom-width:0px !important;
-	border-left-width:0px !important;
+.dijitRuleMarkH {
+	width:0;
+	border-top-width:0 !important;
+	border-bottom-width:0 !important;
+	border-left-width:0 !important;
 }
 
-.RuleLabelContainer {
+.dijitRuleLabelContainer {
 	position:absolute;
 }
 
-.HorizontalRuleLabelContainer {
+.dijitRuleLabelContainerH {
 	text-align:center;
 	display:inline-block;
 }
 
-.HorizontalRuleLabel {
+.dijitRuleLabelH {
 	position:relative;
 	left:-50%;
 }
 
-.VerticalRuleMark {
-	height:0px;
-	border-right-width:0px !important;
-	border-bottom-width:0px !important;
-	border-left-width:0px !important;
+.dijitRuleMarkV {
+	height:0;
+	border-right-width:0 !important;
+	border-bottom-width:0 !important;
+	border-left-width:0 !important;
 	width:100%;
-	left:0px;
+	left:0;
 }
 
-.dj_ie .VerticalRuleLabelContainer {
+.dj_ie .dijitRuleLabelContainerV {
 	margin-top:-.55em;
 }
 
@@ -1378,15 +1500,29 @@ img.dijitColorPaletteUnder {
 
 .dijitTextArea {
 	width:100%;
+	overflow: auto;	/* w/out this IE's SimpleTextArea goes to overflow: scroll */
+}
+.dijitTextArea > DIV {
+	text-decoration:none;
+	overflow:auto;
+	min-height: 1.40em;
 }
 
 .dj_ie .dijitTextArea p {
-	margin-top:0px;
-	margin-bottom:0px;
+	margin-top:0;
+	margin-bottom:0;
+	line-height: normal !important;
+}
+
+.dijitToolbarSeparator {
+	height: 18px;
+	width: 5px;
+	padding: 0 1px;
+	margin: 0;
 }
 
 /* Editor */
-.IEFixedToolbar {
+.dijitIEFixedToolbar {
 	position:absolute;
 	/* top:0; */
 	top: expression(eval((document.documentElement||document.body).scrollTop));
@@ -1399,45 +1535,35 @@ img.dijitColorPaletteUnder {
 	border:0;
 	padding:2px 8px 2px 8px;
 }
-.dijitTimePickerTick {
-	/* opacity:0.1 !important; */
-	color:#dedede;	
-	border-bottom:1px solid #dedede;
-	border-top:1px solid #dedede;
-	position:relative;
-}
-.dijitTimePickerTick .dijitTimePickerItemInner {
-	font-size:0.25em;
-}
+
+.dijitTimePickerTick,
 .dijitTimePickerMarker {
-	background-color:#ededed;
-	border-top:1px solid #999;
-	border-bottom:1px solid #999;
+	border-bottom:1px solid gray;
 }
 
-.dijitTimePickerItemHover {
-	opacity:1 !important;
-	background-color:#808080;
-	color:#fff;
-	border-top:1px solid #333;
-	border-bottom:1px solid #333;
-	cursor:pointer;
-}
-.dijitTimePickerMarker.dijitTimePickerItemHover {
-	font-size:1.3em;
+.dijitTimePicker .dijitDownArrowButton {
+	border-top: none !important;
 }
 
-.dijitTimePickerItemHover .dijitTimePickerItemInner {
-	display:block;
-	overflow:visible;
-	background-color:#808080;
-	font-size:1em;
+.dijitTimePickerTick {
+	color:#CCC;
+}
+
+.dijitTimePickerMarker {
+	color:black;
+	background-color:#CCC;
 }
 
 .dijitTimePickerItemSelected {
 	font-weight:bold;
 	color:#333;
-	background-color:#b7cdee !important;
+	background-color:#b7cdee;
+}
+
+.dijitTimePickerItemHover {
+	background-color:gray;
+	color:white;
+	cursor:pointer;
 }
 
 .dijit_a11y .dijitTimePickerItem {
@@ -1447,15 +1573,57 @@ img.dijitColorPaletteUnder {
 
 /* Disable the high contrast character */
 .dijitToggleButtonIconChar {
-        display:none !important;
+	display:none !important;
 }
 .dijit_a11y .dijitToggleButtonIconChar {
 	display:inline !important;
 }
 
 .dijit_a11y .dijitToggleButtonIconChar {
-	visibility:hidden; 
+	visibility:hidden;
 }
 .dijit_a11y .dijitToggleButtonChecked .dijitToggleButtonIconChar {
 	visibility:visible !important;
+}
+
+.dijitArrowButtonChar {
+	display:none !important;
+}
+.dijit_a11y .dijitArrowButtonChar {
+	display:inline !important;
+}
+.dijitInputLayoutContainer {
+	position: relative;
+	overflow: hidden;
+}
+.dijitSpinnerButtonContainer {
+	float: right;
+	width: 18px;
+	position: relative;
+	overflow: hidden;
+}
+.dijitSpinner .dijitInputLayoutContainer .dijitArrowButton {
+	height: 50%;
+	width: 16px;
+	overflow: hidden;
+}
+.dijitSpinner .dijitInputLayoutContainer .dijitArrowButtonInner {
+	overflow: hidden;
+	line-height: 50%;
+}
+.dijit_a11y .dijitSpinner .dijitInputLayoutContainer .dijitArrowButton {
+	width: 100%;
+}
+.dijit_a11y .dijitSpinner .dijitArrowButton .dijitArrowButtonChar {
+	font-size: 0.4em;
+	vertical-align: top;
+}
+.dijit_a11y .dijitSpinnerButtonContainer {
+	width: 0.5em;
+	margin-left: 2px;
+	overflow: visible;
+}
+.dijit_a11y .dijitSpinnerButtonContainer .dijitButtonNode {
+	border-width: 1px 0px 0px 1px;
+	border-style: solid !important;
 }

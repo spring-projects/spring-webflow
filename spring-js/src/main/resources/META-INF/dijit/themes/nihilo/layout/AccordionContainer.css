@@ -1,7 +1,30 @@
 /** 
  * dijit.layout.Accordioncontainer 
  *
- */ 
+ */
+
+.nihilo .dijitAccordionContainer {
+	border-color: #ccc;	
+}
+
+/* nested classes */
+
+.nihilo .dijitTabContainer-dijitAccordionContainer {
+    border: none;
+}
+
+.nihilo .dijitAccordionContainer-dijitAccordionContainer {
+    border: none;
+    background-color: #fff;
+}
+
+.nihilo .dijitSplitContainer-dijitAccordionContainer,
+.nihilo .dijitBorderContainer-dijitAccordionContainer {
+    border: 1px #ccc solid;
+    background-color: #fff;
+}
+
+/* common */
 
 .nihilo .dijitAccordionPane {
 	background-color: #e7e7e7;
@@ -28,7 +51,7 @@
 }
 
 .nihilo .dijitAccordionArrow {
-	background:url("../images/spriteRoundedIconsSmall.gif") no-repeat;
+	background:url("../images/spriteRoundedIconsSmall.gif") no-repeat -30px top;
 	width:15px;
 	height:15px;
 	margin-top:-1px;
@@ -37,6 +60,11 @@
 .nihilo .dijitAccordionTitle-selected .dijitAccordionArrow {
 	background:url("../images/spriteRoundedIconsSmall.gif") no-repeat -15px top;
 	margin-top:-1px;
+}
+
+.nihilo .dijitAccordionText {
+	margin-left: 4px;
+	margin-right: 4px;
 }
 
 .nihilo .dijitAccordionBody {

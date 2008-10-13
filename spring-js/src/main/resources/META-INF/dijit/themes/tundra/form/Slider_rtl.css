@@ -1,31 +1,31 @@
-.dijitRtl .dijitSliderProgressBarH,
-.dijitRtl .dijitSliderRemainingBarH,
-.dijitRtl .dijitSliderLeftBumper,
-.dijitRtl .dijitSliderRightBumper,
-.dijitRtl .dijitSliderTopBumper {
+.dijitRtl .tundra .dijitSliderProgressBarH,
+.dijitRtl .tundra .dijitSliderRemainingBarH,
+.dijitRtl .tundra .dijitSliderLeftBumper,
+.dijitRtl .tundra .dijitSliderRightBumper,
+.dijitRtl .tundra .dijitSliderTopBumper {
 	background-position: top right;
 }
 
-.dijitRtl .dijitSliderProgressBarV,
-.dijitRtl .dijitSliderRemainingBarV,
-.dijitRtl .dijitSliderBottomBumper {
+.dijitRtl .tundra .dijitSliderProgressBarV,
+.dijitRtl .tundra .dijitSliderRemainingBarV,
+.dijitRtl .tundra .dijitSliderBottomBumper {
 	background-position: bottom right;
 }
 
-.dijitRtl .dijitSliderLeftBumper {
+.dijitRtl .tundra .dijitSliderLeftBumper {
 	border-left-width: 0px;
 	border-right-width: 1px;
 }
 
-.dijitRtl .dijitSliderRightBumper {
+.dijitRtl .tundra .dijitSliderRightBumper {
 	border-left-width: 1px;
 	border-right-width: 0px;
 }
 
-.dijitRtl .dijitSliderIncrementIconH {
-	background-image:url('../images/arrowLeft.png');
+.dijitRtl .tundra .dijitSliderIncrementIconH {
+	background-position: -7px 0px;
 }
 
-.dijitRtl .dijitSliderDecrementIconH {
-	background-image:url('../images/arrowRight.png');
+.dijitRtl .tundra .dijitSliderDecrementIconH {
+	background-position: -14px 0px;
 }

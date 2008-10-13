@@ -2,47 +2,49 @@
 	background: #cccccc;
 	background:#fff url("images/titleBar.png") repeat-x bottom left;
 	border:1px solid #bfbfbf;
-	padding:4px 4px 2px 4px;
+	padding:3px 4px;
 	cursor: pointer;
 }
 
-/* TODO: merge these, and all other icons to a series of background-image:() and background-position: -16*n px styles */
+.tundra .dijitTitlePaneTitle * {
+	vertical-align: middle;
+}
+
 .tundra .dijitTitlePane .dijitArrowNode {
-	width:16px;
-	height:16px;
-	float:right;
+	cursor: pointer;
+	background-image: url('images/spriteArrows.png');
+	background-repeat: no-repeat;
+	height: 7px;
+	width: 7px;
+}
+.dj_ie6 .tundra .dijitTitlePane .dijitArrowNode {
+	background-image: url('images/spriteArrows.gif');
+}
+
+.tundra .dijitTitlePane .dijitOpen .dijitArrowNode {
+	background-position: 0px 0px;
 }
 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
-	background:url('images/arrowRight.png') no-repeat center center;
+	background-position: -14px 0px;
 }
 
 .tundra .dijitTitlePaneFocused .dijitTitlePaneTextNode {
 	text-decoration:underline;
 }
 
-.dj_ie6 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
-	background-image:url('images/arrowRight.gif');
-}
-.tundra .dijitTitlePane .dijitOpen .dijitArrowNode {
-	background:url('images/arrowDown.png') no-repeat center center;
-}
-.dj_ie6 .tundra .dijitTitlePane .dijitOpen .dijitArrowNode {
-	background-image:url('images/arrowDown.gif');
-}
 .tundra .dijitTitlePane .dijitArrowNodeInner {
-	visibility:hidden;
+	display:none;
 }
+
 .dijit_a11y .dijitTitlePane .dijitArrowNodeInner {
-	visibility:visible;
+	display:inline !important;
+	font-family:monospace;
+	cursor: pointer;
+	padding-bottom:.2em;
 }
 
-.tundra .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
-	margin-right:5px;
-}
-
-.tundra .dijitOpen .dijitTitlePaneTitle .dijitOpenCloseArrowOuter {
-	position:relative;
-	top:2px;
+.dijit_a11y .dijitTitlePane .dijitArrowNode {
+	display:none;
 }
 
 .tundra .dijitTitlePaneContentOuter {
@@ -58,6 +60,8 @@
 .dj_ie6 .tundra .dijitTitlePane .dijitTitlePaneTitle {
 	zoom: 1;
 }
-.tundra .dijitClickableRegion {
-	background-color : #ffc !important;
+
+.tundra .dijitTitlePaneTextNode {
+	margin-left: 4px;
+	margin-right: 4px;
 }

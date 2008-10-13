@@ -2,17 +2,21 @@
 <head>
 	<title>Dijit Theme Tester</title>
 
+	<!-- required: the themes's CSS -->
+	<link rel="stylesheet" href="../../dijit/themes/tundra/tundra.css" id="themeStyles">
+
 	<style type="text/css">
 		@import "../../dojo/resources/dojo.css";
 		@import "../tests/css/dijitTests.css";
 
 		html, body { height: 100%; width: 100%; padding: 0; border: 0; }
-		#main { height: 100%; width: 100%; padding: 0; border: 0; }
+		#main { height: 100%; width: 100%; padding: 5px; border: 0; }
 /*		#header, #mainSplit { margin: 10px; } */
+		#header { margin: 0px; }
 		#leftAccordion { width: 25%; }
 		#bottomTabs { height: 40%; }
-		#main .dijitSplitterH { height: 7px }
-		#main .dijitSplitterV { width: 7px }
+		#main .dijitSplitterH { height: 5px }
+		#main .dijitSplitterV { width: 5px }
 
 		/* pre-loader specific stuff to prevent unsightly flash of unstyled content */
 		#loader { 
@@ -23,7 +27,7 @@
 			width:100%; height:100%;  
 			background:#ededed; 
 			z-index:999;
-			vertical-align:center; 
+			vertical-align:middle; 
 		}
 		#loaderInner {
 			padding:5px;
@@ -33,7 +37,6 @@
 			width:175px; 
 			background:#3c3; 
 			color:#fff; 			
-			
 		}
 
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; } 
@@ -53,6 +56,7 @@
 		}
 	</style>
 
+	<!-- for logging stray globals, not needed -->
 	<script type="text/javascript">
 		window.__globalList = {dojo: true, dijit: true, dojox: true, djConfig: true};
 		for(var i in window){
@@ -60,15 +64,19 @@
 		}
 	</script>
 
+	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		djConfig="parseOnLoad: false, isDebug: true"></script>
-	<!--
+
+	<!-- not needed! used only for debugging / testing additional themes -->
+	<script type="text/javascript" src="../tests/_testCommon.js"></script>
+		
+	<!-- 
 	<script type="text/javascript" src="http://prototypejs.org/assets/2007/10/16/prototype.js"></script>
 	-->
 	<script type="text/javascript" src="../dijit.js"></script>
 	<script type="text/javascript" src="../dijit-all.js" charset="utf-8"></script>
 
-	<script type="text/javascript" src="../tests/_testCommon.js"></script>
 	<script type="text/javascript"> // dojo.requires()
 
 		dojo.require("dijit.Menu");
@@ -81,6 +89,8 @@
 
 		// editor:
 		dojo.require("dijit.Editor"); 
+		dojo.require("dijit._editor.plugins.FontChoice");
+		dojo.require("dijit._editor.plugins.LinkDialog");
 		
 		// dnd:
 		dojo.require("dojo.dnd.Source");
@@ -88,10 +98,12 @@
 		// various Form elemetns
 		dojo.require("dijit.form.CheckBox");
 		dojo.require("dijit.form.Textarea");
+		dojo.require("dijit.form.SimpleTextarea");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.DateTextBox");	
 		dojo.require("dijit.form.TimeTextBox");	
+		dojo.require("dijit.form.CurrencyTextBox");	
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.InlineEditBox");
 		dojo.require("dijit.form.NumberSpinner");
@@ -164,6 +176,14 @@
 			if(strayGlobals.length){
 				console.warn("Stray globals: "+strayGlobals.join(", "));
 			}
+		});
+
+
+		dojo.addOnLoad(function(){
+			dojo.byId("backgroundArea").innerHTML = dojo.date.locale.format(new Date(2005, 11, 30), { selector: 'date' });
+			var nineAm = new Date(0);
+			nineAm.setHours(9);
+			dojo.byId("timePicker").innerHTML = dojo.date.locale.format(nineAm, { selector: 'time' });
 		});
 
 		/***
@@ -239,20 +259,20 @@
 	<!-- "main" BorderContainer just contains page title and another BorderContainer -->
 	<div id="main" dojoType="dijit.layout.BorderContainer">
 
-		<h1 id="header" dojoType="dijit.layout.ContentPane" region="top">Dijit Theme Test Page</h1>
+		<h1 id="header" dojoType="dijit.layout.ContentPane" region="top" splitter="true">Dijit Theme Test Page</h1>
 
 		<!-- "mainSplit" BorderContainer has all the real content -->
 		<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar"
 			region="center" id="mainSplit">
 	
-			<div dojoType="dijit.layout.AccordionContainer" duration="200"
+			<div dojoType="dijit.layout.AccordionContainer"
 				minSize="20" style="width: 300px;" id="leftAccordion" region="leading" splitter="true">
 
 				<div dojoType="dijit.layout.AccordionPane" title="Popups and Alerts"><div style="padding:8px">
-					<h2>Tooltips:</h2>
+					<h2>Tooltips</h2>
 					<ul>
 						<li>
-						<span id="ttRich">rich text tooltip</span>
+						<span id="ttRich"><b>rich</b> <i>text</i> tooltip</span>
 						<span dojoType="dijit.Tooltip" connectId="ttRich" style="display:none;">
 							Embedded <b>bold</b> <i>RICH</i> text <span style="color:#309; font-size:x-large;">weirdness!</span>
 						</span>
@@ -261,12 +281,41 @@
 						<li><a id="ttOne" href="#bogus">anchor tooltip</a>
 						<span dojoType="dijit.Tooltip" connectId="ttOne" style="display:none;">tooltip on anchor</span>
 						</li>
-
 					</ul>
+
+					<table style="width: 100%;">
+						<tr>
+							<td></td>
+							<td>
+								<div id="ttBelow" href="#bogus">tooltip below</div>
+								<div dojoType="dijit.Tooltip" connectId="ttBelow" style="display:none; width: 100px;" position="below" >I'm <i>below</i>!</div>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<div id="ttRight" href="#bogus">tooltip after</div>
+								<div dojoType="dijit.Tooltip" connectId="ttRight" style="display:none;" position="after" >I'm on the <i>right</i>!<br>(or left on RTL systems)</div>
+							</td>
+							<td></td>
+							<td>
+								<div id="ttLeft" href="#bogus">tooltip before</div>
+								<div dojoType="dijit.Tooltip" connectId="ttLeft" style="display:none;" position="before,after" >I'm on the <i>left</i>!<br>(or right on RTL systems)</div>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<div id="ttAbove" href="#bogus">tooltip above</div>
+								<div dojoType="dijit.Tooltip" connectId="ttAbove" style="display:none;" position="above" >I'm <i>above</i>!</div>
+							</td>
+							<td></td>
+						</tr>
+					</table>
 
 					<hr class="spacer">
 
-					<h2>Dialogs:</h2>
+					<h2>Dialogs</h2>
 					<ul>
 						<li><a href="#" onclick="dijit.byId('dialog1').show()">show Modal Dialog</a></li>
 					</ul>
@@ -307,14 +356,20 @@
 				</div>
 	
 				<div dojoType="dijit.layout.AccordionPane" title="Color Picker">
-					<!-- color palette picker -->
-					<h2 class="testHeader">Dijit Color Palette(7x10)</h2>
-					<div dojoType="dijit.ColorPalette" onChange="setColor(this.value);"></div>
-					<br>
-					Test color is: <span id="outputSpan"></span>
-
-					<br><br>
-					<div dojoType="dijit.ColorPalette" palette="3x4"></div>
+					<p>
+						Selecting a color will change the background color of the page.
+						Use this to test how tooltips and drop downs appear with different backgrounds.
+					</p>
+					<h2 class="testHeader">3x4</h2>
+					<script>
+						function setBackground(color){
+							dojo.query('.dijitAccordionBody').style('background', color);
+							dojo.query('.dijitTabPaneWrapper').style('background', color);
+						}
+					</script>
+					<div dojoType="dijit.ColorPalette"  palette="3x4" onChange="setBackground(arguments[0]);"></div>
+					<h2 class="testHeader">7x10</h2>
+					<div dojoType="dijit.ColorPalette" onChange="setBackground(arguments[0]);"></div>
 				</div>
 
 				
@@ -323,50 +378,226 @@
 
 			<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
 			<div dojoType="dijit.layout.TabContainer" region="center" id="topTabs">
-				<!-- first tab? -->
-				<div id="tab1" dojoType="dijit.layout.ContentPane" title="Form Feel" style="padding:10px;display:none;">
-					<h2>Various Form Elements:</h2>
 
-					<form name="dijitFormTest">
+				<div id="basicFormTab" dojoType="dijit.layout.ContentPane" title="Basic Form Widgets" style="padding:10px;display:none;">
 
-					<p><input type="checkBox" dojoType="dijit.form.CheckBox" checked="checked"> Standard Dijit CheckBox
-					<br><input type="checkBox" dojoType="dijit.form.CheckBox" disabled="disabled"> Disabled Dijit
-					<br><input type="checkBox" dojoType="dijit.form.CheckBox" disabled="disabled" checked="checked"> Checked and Disabled Dijit
-					</p>
+					<h2>Buttons</h2>
+					<p>Buttons can do an action, display a menu, or both:</p>
+					
+					Enabled:
+					
+					<button dojoType="dijit.form.Button" iconClass="plusIcon" onClick='console.debug("clicked simple")'>
+						Simple
+					</button>
 
-					<p>
-					<span>Radio group #1:</span>
-					<input type="radio" name="g1" id="g1rb1" value="news" dojoType="dijit.form.RadioButton">
-					<label for="g1rb1">news</label>
-					<input type="radio" name="g1" id="g1rb2" value="talk" dojoType="dijit.form.RadioButton" checked="checked"/>
-					<label for="g1rb2">talk</label>
-					<input type="radio" name="g1" id="g1rb3" value="weather" dojoType="dijit.form.RadioButton" disabled="disabled"/>
-					<label for="g1rb3">weather (disabled)</label>
-					</p>
+					<button dojoType="dijit.form.DropDownButton" iconClass="noteIcon">
+						<span>Drop Down</span>
+						<div dojoType="dijit.Menu" id="editMenu1" style="display: none;">
+							<div dojoType="dijit.MenuItem"
+								iconClass="dijitEditorIcon dijitEditorIconCut"
+								onClick="console.debug('not actually cutting anything, just a test!')">
+								Cut
+							</div>
 
-					<p>
-					<span>Radio group #2: (no default value, and has breaks)</span><br>
-					<input type="radio" name="g2" id="g2rb1" value="top40" dojoType="dijit.form.RadioButton">
-					<label for="g2rb1">top 40</label><br>
-					<input type="radio" name="g2" id="g2rb2" value="oldies" dojoType="dijit.form.RadioButton">
-					<label for="g2rb2">oldies</label><br>
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconCopy"
+								onClick="console.debug('not actually copying anything, just a test!')">
+								Copy
+							</div>
 
-					<input type="radio" name="g2" id="g2rb3" value="country" dojoType="dijit.form.RadioButton">
-					<label for="g2rb3">country</label><br>
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconPaste"
+								onClick="console.debug('not actually pasting anything, just a test!')">
+								Paste
+							</div>
+						</div>
+					</button>
 
-					<br>
-					(Note if using keyboard: tab to navigate, and use arrow or space to select)
-					</p>
+					<button dojoType="dijit.form.ComboButton" iconClass="noteIcon"
+						optionsTitle='save options'
+						onClick='console.debug("clicked combo save")'>
+						<span>Combo</span>
+						<div dojoType="dijit.Menu" id="saveMenu1" style="display: none;">
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconSave"
+								onClick="console.debug('not actually saving anything, just a test!')">
+								Save
+							</div>
+							<div dojoType="dijit.MenuItem"
+								onClick="console.debug('not actually saving anything, just a test!')">
+								Save As
+							</div>
+						</div>
+					</button>
+
+					<button dojoType="dijit.form.ToggleButton" checked onChange="console.log('toggled button checked='+arguments[0]);" iconClass="dijitCheckBoxIcon">
+						Toggle
+					</button>
+
+					<hr class="spacer">
+
+					Disabled:
+					
+					<button dojoType="dijit.form.Button" iconClass="plusIcon" disabled>
+						Simple
+					</button>
+
+					<button dojoType="dijit.form.DropDownButton" iconClass="noteIcon" disabled>
+						<span>Drop Down</span>
+						<div dojoType="dijit.Menu" id="editMenu2" style="display: none;">
+							<div dojoType="dijit.MenuItem"
+								iconClass="dijitEditorIcon dijitEditorIconCut"
+								onClick="console.debug('not actually cutting anything, just a test!')">
+								Cut
+							</div>
+
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconCopy"
+								onClick="console.debug('not actually copying anything, just a test!')">
+								Copy
+							</div>
+
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconPaste"
+								onClick="console.debug('not actually pasting anything, just a test!')">
+								Paste
+							</div>
+						</div>
+					</button>
+
+					<button dojoType="dijit.form.ComboButton" iconClass="noteIcon"
+						optionsTitle='save options'
+						disabled>
+						<span>Combo</span>
+						<div dojoType="dijit.Menu" id="saveMenu2" style="display: none;">
+							<div dojoType="dijit.MenuItem"
+								 iconClass="dijitEditorIcon dijitEditorIconSave"
+								onClick="console.debug('not actually saving anything, just a test!')">
+								Save
+							</div>
+							<div dojoType="dijit.MenuItem"
+								onClick="console.debug('not actually saving anything, just a test!')">
+								Save As
+							</div>
+						</div>
+					</button>
+
+					<button dojoType="dijit.form.ToggleButton" checked disabled iconClass="dijitCheckBoxIcon">
+						Toggle
+					</button>
+
+					<hr class="spacer">
+
+					<h2>CheckBox</h2>
+					<fieldset>
+						<input id="check1" type="checkBox" dojoType="dijit.form.CheckBox">
+						<label for="check1">unchecked</label>
+
+						<input id="check2" type="checkBox" dojoType="dijit.form.CheckBox" checked="checked">
+						<label for="check2">checked</label>
+
+						<input id="check3" type="checkBox" dojoType="dijit.form.CheckBox" disabled>
+						<label for="check3">disabled</label>
+
+						<input id="check4" type="checkBox" dojoType="dijit.form.CheckBox" checked="checked" disabled>
+						<label for="check4">disabled and checked</label>
+					</fieldset>
+
+					<h2>Radio Buttons</h2>
+					<fieldset>
+						<input type="radio" name="g1" id="g1rb1" value="news" dojoType="dijit.form.RadioButton">
+						<label for="g1rb1">news</label>
+						<input type="radio" name="g1" id="g1rb2" value="talk" dojoType="dijit.form.RadioButton" checked>
+						<label for="g1rb2">talk</label>
+						<input type="radio" name="g1" id="g1rb3" value="weather" dojoType="dijit.form.RadioButton" disabled>
+						<label for="g1rb3">weather (disabled)</label>
+					</fieldset>
+				</div> <!-- end of basic form widgets -->
+
+				<div id="textboxTab" dojoType="dijit.layout.ContentPane" title="Text Input Widgets" style="padding:10px;display:none;">
+
+					<h2>dijit.form.DateTextBox</h2>
+					<label for="date1">Enabled:</label>
+					<input id="date1" name="date1" type="text" dojoType="dijit.form.DateTextBox" value="2008-12-25">
+					<label for="date2">Disabled:</label>
+					<input id="date2" name="date2" type="text" dojoType="dijit.form.DateTextBox" value="2008-12-25" disabled>
+
+					<h2>dijit.form.TimeTextBox</h2>
+					<label for="time1">Enabled:</label>
+					<input id="time1" name="time1" type="text" dojoType="dijit.form.TimeTextBox" value="T17:45:00">
+					<label for="time2">Disabled:</label>
+					<input id="time2" name="time2" type="text" dojoType="dijit.form.TimeTextBox" value="T17:45:00" disabled>
+
+					<h2>dijit.form.CurrencyTextBox</h2>
+					<label for="currency1">Enabled:</label>
+					<input id="currency1" type="text" name="income1" value="54775.53"
+						dojoType="dijit.form.CurrencyTextBox"
+						required="true"
+						constraints="{fractional:true}"
+						currency="USD"
+						invalidMessage="Invalid amount.  Include dollar sign, commas, and cents.  Cents are mandatory.">
+					<label for="currency2">Disabled:</label>
+					<input id="currency2" type="text" name="income1" value="54775.53"
+						dojoType="dijit.form.CurrencyTextBox"
+						required="true"
+						constraints="{fractional:true}"
+						currency="USD"
+						invalidMessage="Invalid amount.  Include dollar sign, commas, and cents.  Cents are mandatory." disabled>
+
+					<h2>dijit.form.ComboBox</h2>
+					<label for="datatestComboBox">Enabled: </label>
+					<input dojoType="dijit.form.ComboBox"
+						value="California"
+						store="stateStore"
+						searchAttr="name"
+						name="state2"
+						id="datatestComboBox"
+					>
+					<label for="datatestComboBox2">Disabled: </label>
+					<input dojoType="dijit.form.ComboBox"
+						value="California"
+						store="stateStore"
+						searchAttr="name"
+						name="state2"
+						id="datatestComboBox2"
+						disabled
+					>
 
 					<hr class="spacer">
 
 					<h2>dijit.form.NumberSpinner max=100</h2>
-					<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="integertextbox3" value="10">
+					<label for="spinner1">Enabled: </label>
+					<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="spinner1" value="10">
+					<label for="spinner">Disabled: </label>
+					<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="spinner2" value="10" disabled>
 
-					<hr class="spacer">
+				</div>
 
-					<h2>dijit.form.Textarea: (sans <i>any</i> styling...)</h2>
-					<textarea dojoType="dijit.form.Textarea" name="areText">Lorem ipsum dolor sit amet,
+				<div id="textareaTab" dojoType="dijit.layout.ContentPane" title="TextArea/Editor" style="padding:10px;">
+
+					<h2>dijit.form.Textarea</h2>
+					<p>Enabled:</p>
+					<textarea dojoType="dijit.form.Textarea" name="areText">This text area will expand and contract as you type text.
+					
+					Lorem ipsum dolor sit amet,
+					consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
+					dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+					tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+					</textarea>
+
+					<br>
+					<p>Disabled:</p>
+					<textarea dojoType="dijit.form.Textarea" name="areText2" disabled>This text
+					area is disabled and you shouldn't be able to type in it.
+					</textarea>
+
+
+					<h2>dijit.form.SimpleTextarea</h2>
+					<p></p>
+					<p>Enabled:</p>
+					<textarea dojoType="dijit.form.SimpleTextarea" name="areText">This text area has a constant height and displays a scrollbar when necessary.
+					
+					Lorem ipsum dolor sit amet,
 					consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
 					dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
 					tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
@@ -376,29 +607,52 @@
 					nulla facilisi.
 					</textarea>
 
-					<hr class="spacer">
+					<p>Disabled:</p>
+					<textarea dojoType="dijit.form.SimpleTextarea" name="areText2" disabled>Lorem ipsum dolor sit amet,
+					consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
+					dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+					tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
+					autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat,
+					vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio
+					dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait
+					nulla facilisi.
+					</textarea>
 
-					<h2>dijit.form.ComboBox</h2>
-					<label for="datatestComboBox">US State test 2: </label>
-					<input dojoType="dijit.form.ComboBox"
-						value="California"
-						class="medium"
-						store="stateStore"
-						searchAttr="name"
-						style="width: 300px;"
-						name="state2"
-						id="datatestComboBox"
-					>
+					<h2>dijit.Editor</h2>
+					<p>Enabled:</p>
+					<!-- FIXME:
+						set height on this node to size the whole editor, but causes the tab to not scroll
+						until you select another tab and come back. alternative is no height: here, but that
+						causes editor to become VERY tall, and size to a normal height when selected (like the
+						dijit.form.TextArea in "Form Feel" Tab), but in reverse. refs #3980 and is maybe new bug?
+					-->
+					<div style="border:1px solid #ededed;">
+					<textarea height="175" dojoType="dijit.Editor" extraPlugins="['|', 'createLink', 'fontName']" styleSheets="../../dojo/resources/dojo.css" style="width:400px; height:175px; overflow:auto; ">
+						<ul>
+							<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
+							<li>This is the Editor with a Toolbar attached.</li>
+						</ul>
+					</textarea>
+					</div>
+					<p>Disabled:</p>
+					<div style="border:1px solid #ededed;">
+					<textarea height="175" dojoType="dijit.Editor" extraPlugins="['|', 'createLink', 'fontName']" styleSheets="../../dojo/resources/dojo.css"
+						style="width:400px; height:175px; overflow:auto; " disabled="true">
+						<ul>
+							<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
+							<li>This is the Editor with a Toolbar attached.</li>
+						</ul>
+					</textarea>
+					</div>
+				</div><!-- end of Textarea/Editor tab -->
 
-					</form>
 
-				</div><!-- end first tab -->
+				<div dojoType="dijit.layout.ContentPane" title="Sliders" style="padding:10px;display:none;">
 
-				<!-- second upper tab -->
-				<div id="tab2" dojoType="dijit.layout.ContentPane" title="Various Dijits"
-					style="padding:10px; display:none;">
 
 					<!-- Sliders: -->
+
+					<h2>Enabled</h2>
 					<div style="float:right;">
 					<div dojoType="dijit.form.VerticalSlider" name="vertical1"
 						onChange="dojo.byId('slider2input').value=arguments[0];"
@@ -408,18 +662,18 @@
 						discreteValues="11"
 						style="height:175px; clear:both"
 						id="slider2">
-							<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration"style="width:2em;color:gray;" labelStyle="right:0px;">
+							<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration"style="width:2em;" labelStyle="right:0px;">
 								<li>0
 								<li>100
 							</ol>
 
-							<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
-							<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
-							<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;color:gray;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
+							<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;"></div>
+							<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;"></div>
+							<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
 					</div>
 					<br> Slider2 Value:<input readonly id="slider2input" size="3" value="10">
 					</div>
-											<h2>Sliders</h2>
+
 					<div dojoType="dijit.form.HorizontalSlider" name="horizontal1"
 						onChange="dojo.byId('slider1input').value=dojo.number.format(arguments[0]/100,{places:1,pattern:'#%'});"
 						value="10"
@@ -429,10 +683,10 @@
 						intermediateChanges="true"
 						style="width:50%; height: 20px;"
 						id="horizontal1">
-							<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;color:gray;" numericMargin="1" count="6"></ol>
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" numericMargin="1" count="6"></ol>
 							<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=11 style="height:5px;"></div>
 							<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
-							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;color:gray;">
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
 								<li>lowest
 								<li>normal
 								<li>highest
@@ -451,7 +705,7 @@
 						style="width:300px; height: 40px;"
 						id="horizontal2">
 							<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
-							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;color:gray;">
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;">
 								<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
 								<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
 
@@ -459,167 +713,93 @@
 							</ol>
 					</div>
 
-					<br style="clear:both;">
+					<h2 style="clear:both">Disabled</h2>
+					<div style="float:right;">
+					<div dojoType="dijit.form.VerticalSlider" name="vertical1"
+						value="10"
+						maximum="100"
+						minimum="0"
+						discreteValues="11"
+						style="height:175px; clear:both"
+						disabled>
+							<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration"style="width:2em;" labelStyle="right:0px;">
+								<li>0
+								<li>100
+							</ol>
+
+							<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;"></div>
+							<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;"></div>
+							<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
+					</div>
+					</div>
+					<div dojoType="dijit.form.HorizontalSlider" name="horizontal1"
+						value="10"
+						maximum="100"
+						minimum="0"
+						showButtons="false"
+						intermediateChanges="true"
+						style="width:50%; height: 20px;"
+						disabled>
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" numericMargin="1" count="6"></ol>
+							<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=11 style="height:5px;"></div>
+							<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
+								<li>lowest
+								<li>normal
+								<li>highest
+							</ol>
+
+					</div>
+
+					<div dojoType="dijit.form.HorizontalSlider" name="horizontal2"
+						minimum="1"
+						value="2"
+						maximum="3"
+						discreteValues="3"
+						showButtons="false"
+						intermediateChanges="true"
+						style="width:300px; height: 40px;"
+						disabled>
+							<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
+							<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;">
+								<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
+								<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
+
+								<li><img width=20 height=20 src="../tests/images/note.gif"><br><span style="font-size: large">large</span>
+							</ol>
+					</div>
+
+					</form>
+
+				</div>
+
+				<div id="variousTab" dojoType="dijit.layout.ContentPane" title="Various Dijits"
+					style="padding:10px; display:none;">
+
+
+					<h2>TitlePane</h2>
+					<div dojoType="dijit.TitlePane" title="my pane" width="275">
+						<p>This is a title pane.  It can be expanded and collapsed.</p>
+
+						<p>Sed sollicitudin suscipit risus. Nam
+						ullamcorper. Sed nisl lectus, pellentesque nec,
+						malesuada eget, ornare a, libero. Lorem ipsum dolor
+						sit amet, consectetuer adipiscing elit.</p>
+
+					</div><!-- end title pane -->
+
 					<hr class="spacer">
 
 					<h2>ProgressBar</h2>
-					<div style="width:400px; height:20px;" annotate="true" maximum="200" id="setTestBar"
+					<div style="width:400px;" maximum="200" id="setTestBar"
 						progress="20" dojoType="dijit.ProgressBar"></div>
 
 					Indeterminate:
-					<div style="width:400px; height:20px" indeterminate="true" dojoType="dijit.ProgressBar"></div>
+					<div style="width:400px;" indeterminate="true" dojoType="dijit.ProgressBar"></div>
 
-					<hr class="spacer">
+				</div><!-- end:various dijits upper tab -->
 
-					<h2>TitlePane (nested)</h2>
-					<div dojoType="dijit.TitlePane" title="Outer pane" width="275">
-						<p>This is a title pane, containing another title pane ...</p>
-						<div dojoType="dijit.TitlePane" title="Inner pane" width="125">
-
-							<p>And this is the inner title pane...</p>
-
-							<p>Sed sollicitudin suscipit risus. Nam
-							ullamcorper. Sed nisl lectus, pellentesque nec,
-							malesuada eget, ornare a, libero. Lorem ipsum dolor
-							sit amet, consectetuer adipiscing elit.</p>
-
-						</div><!-- end inner titlepane -->
-						<p>And this is the closing line for the outer title pane.</p>
-					</div><!-- end outer title pane -->
-					<h2>HTML After, check indent</h2>
-				</div><!-- end:second upper tab -->
-
-				<!-- start third upper tab -->
-				<div id="tab3" dojoType="dijit.layout.ContentPane" title="Buttons"
-					style="padding:10px; display:none;  ">
-
-					<h2>Simple, drop down &amp; combo buttons</h2>
-					<p>Buttons can do an action, display a menu, or both:</p>
-
-					<div class="box">
-						<button dojoType="dijit.form.Button" iconClass="plusIcon" onClick='console.debug("clicked simple")'>
-							Create
-						</button>
-
-						<button dojoType="dijit.form.DropDownButton" iconClass="noteIcon">
-							<span>Edit</span>
-							<div dojoType="dijit.Menu" id="editMenu" style="display: none;">
-								<div dojoType="dijit.MenuItem"
-									iconClass="dijitEditorIcon dijitEditorIconCut"
-									onClick="console.debug('not actually cutting anything, just a test!')">
-									Cut
-								</div>
-
-								<div dojoType="dijit.MenuItem"
-									 iconClass="dijitEditorIcon dijitEditorIconCopy"
-									onClick="console.debug('not actually copying anything, just a test!')">
-									Copy
-								</div>
-
-								<div dojoType="dijit.MenuItem"
-									 iconClass="dijitEditorIcon dijitEditorIconPaste"
-									onClick="console.debug('not actually pasting anything, just a test!')">
-									Paste
-								</div>
-							</div>
-						</button>
-
-						<button dojoType="dijit.form.ComboButton" iconClass="noteIcon"
-							optionsTitle='save options'
-							onClick='console.debug("clicked combo save")'>
-							<span>Save</span>
-							<div dojoType="dijit.Menu" id="saveMenu" style="display: none;">
-								<div dojoType="dijit.MenuItem"
-									 iconClass="dijitEditorIcon dijitEditorIconSave"
-									onClick="console.debug('not actually saving anything, just a test!')">
-									Save
-								</div>
-								<div dojoType="dijit.MenuItem"
-									onClick="console.debug('not actually saving anything, just a test!')">
-									Save As
-								</div>
-							</div>
-						</button>
-
-						<button dojoType="dijit.form.Button" iconClass="plusIcon" onClick='console.debug("clicked simple")'
-							disabled='true'>
-							Disabled
-						</button>
-					</div><!-- end:box -->
-
-					<hr class="spacer">
-
-					<h2>Sizing</h2>
-					<p>Short button, tall buttons, big buttons, small buttons... These buttons
-					size to their content (just like &lt;button&gt;).</p>
-
-					<div class="box">
-						<button dojoType="dijit.form.Button" iconClass="flatScreenIcon" onclick='console.debug("big");'>
-							<span style="font-size:xx-large">big</span>
-						</button>
-
-						<button id="smallButton1" dojoType="dijit.form.Button" onclick='console.debug("small");'>
-							<img src="../tests/images/arrowSmall.gif" width="15" height="5">
-							<span style="font-size:x-small">small</span>
-						</button>
-
-						<button dojoType="dijit.form.Button" onclick='console.debug("long");'>
-							<img src="../tests/images/tube.gif" width="150" height="16"> long
-						</button>
-
-						<button dojoType="dijit.form.Button" onclick='console.debug("tall");' width2height="0.1">
-							<img src="../tests/images/tubeTall.gif" height="75" width="35"><br>
-							<span style="font-size:medium">tall</span>
-						</button>
-						<div style="clear: both;"></div>
-					</div><!-- end box -->
-
-					<hr class="spacer">
-
-					<h2>Customized buttons</h2>
-					<p>Dojo users can mix in their styles.  Here's an example:</p>
-
-					<div><!-- custom styled button tests -->
-						<button dojoType="dijit.form.Button" class="myCustomTheme"
-							onclick='console.debug("short");'>
-							<div class="dc">short</div>
-						</button>
-
-						<button dojoType="dijit.form.Button" class="myCustomTheme"
-							onclick='console.debug("longer");'>
-							<div class="dc">bit longer</div>
-						</button>
-
-						<button dojoType="dijit.form.Button" class="myCustomTheme"
-							onclick='console.debug("longer yet");'>
-							<div class="dc">ridiculously long</div>
-						</button>
-
-						<div style="clear: both;"></div>
-					</div><!-- end styled buttons -->
-
-				</div><!-- end third upper tab-->
-
-				<!-- fourth upper tab -->
-				<div id="tab" dojoType="dijit.layout.ContentPane" title="Editable Text" style="padding:10px;" selected="selected">
-
-					<h2>dijit.Editor:</h2>
-					<!-- FIXME:
-						set height on this node to size the whole editor, but causes the tab to not scroll
-						until you select another tab and come back. alternative is no height: here, but that
-						causes editor to become VERY tall, and size to a normal height when selected (like the
-						dijit.form.TextArea in "Form Feel" Tab), but in reverse. refs #3980 and is maybe new bug?
-					-->
-					<div style="border:1px solid #ededed;">
-					<textarea height="175" dojoType="dijit.Editor" styleSheets="../../dojo/resources/dojo.css" sytle="width:400px; height:175px; overflow:auto; ">
-						<ul>
-							<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
-							<li>This is the Editor with a Toolbar attached.</li>
-						</ul>
-					</textarea>
-					</div>
-					<hr class="spacer">
-
+				<div id="InlineEditBoxTab" dojoType="dijit.layout.ContentPane" title="InlineEditBox"><!-- TODO: out of synch? missing style= -->
 
 					<h2 class="testTitle">dijit.InlineEditBox + dijit.form.TextBox on &lt;h3&gt;</h2>
 
@@ -642,31 +822,31 @@
 
 					<p>
 						These links will
-						<a href="#" onClick="dijit.byId('areaEditable').setDisabled(true)">disable</a> /
-						<a href="#" onClick="dijit.byId('areaEditable').setDisabled(false)">enable</a>
+						<a href="#" onClick="dijit.byId('areaEditable').attr('disabled', true)">disable</a> /
+						<a href="#" onClick="dijit.byId('areaEditable').attr('disabled', false)">enable</a>
 						the text area above.
 					</p>
 
 					<hr class="spacer">
 
-					<h2>dijit.form.DateTextBox:</h2>
+					<h2>dijit.form.DateTextBox</h2>
 
 					(HTML inline before)
-					<span id="backgroundArea" dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="170px">12/30/2005</span>
+					<span id="backgroundArea" dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="170px"></span>
 					(HTML after)
 
 					<hr class="spacer">
 
-					<h2>dijit.form.TimeTextBox:</h2>
+					<h2>dijit.form.TimeTextBox</h2>
 
 					(HTML inline before)
-					<span id="timePicker" dojoType="dijit.InlineEditBox" editor="dijit.form.TimeTextBox" width="150px">9:00 AM</span>
+					<span id="timePicker" dojoType="dijit.InlineEditBox" editor="dijit.form.TimeTextBox" width="150px"></span>
 					(HTML after)
 
 					<hr class="spacer">
 
 
-					<h2>dijit.form.FilteringSelect + Inline + remote data store:</h2>
+					<h2>dijit.form.FilteringSelect + Inline + remote data store</h2>
 					(HTML inline before)
 					<span id="backgroundArea2" dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
 						editorParams="{store: stateStore, autoComplete: true, promptMessage: 'Please enter a state'}"
@@ -675,10 +855,9 @@
 					</span>
 					(HTML after)
 
-				</div><!-- end fourth upper tab -->
+				</div><!-- end InlineEditBox tab -->
 
-				<!-- fifth upper tab -->
-				<div id="tab5" dojoType="dijit.layout.ContentPane" title="DnD"
+				<div id="dndTab" dojoType="dijit.layout.ContentPane" title="DnD"
 					style="padding:10px; display:none;  ">
 					<div style="float:left; margin:5px; ">
 						<h3>Source 1</h3>
@@ -696,10 +875,9 @@
 							<div class="dojoDndItem">Item <strong>3</strong></div>
 						</div>
 					</div>
-				</div>
+				</div><!-- end DnD tab -->
 
-				<!-- sixth upper tab -->
-				<div id="tab6" dojoType="dijit.layout.ContentPane" title="Closable"
+				<div id="closableTab" dojoType="dijit.layout.ContentPane" title="Closable"
 					style="display:none; padding:10px; " closable="true">
 					This pane is closable, just for the icon ...
 				</div>

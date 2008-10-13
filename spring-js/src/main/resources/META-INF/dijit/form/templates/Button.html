@@ -1,12 +1,18 @@
-<div class="dijit dijitLeft dijitInline dijitButton"
-	dojoAttachEvent="onclick:_onButtonClick,onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse"
-	><div class='dijitRight'
-		><button class="dijitStretch dijitButtonNode dijitButtonContents" dojoAttachPoint="focusNode,titleNode"
-			type="${type}" waiRole="button" waiState="labelledby-${id}_label"
-			><span class="dijitInline ${iconClass}" dojoAttachPoint="iconNode" 
- 				><span class="dijitToggleButtonIconChar">&#10003</span 
-			></span
-			><span class="dijitButtonText" id="${id}_label" dojoAttachPoint="containerNode">${label}</span
-		></button
-	></div
-></div>
+<span class="dijit dijitReset dijitLeft dijitInline"
+	dojoAttachEvent="ondijitclick:_onButtonClick,onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse"
+	><span class="dijitReset dijitRight dijitInline"
+		><span class="dijitReset dijitInline dijitButtonNode"
+			><button class="dijitReset dijitStretch dijitButtonContents"
+				dojoAttachPoint="titleNode,focusNode" 
+				name="${name}" type="${type}" waiRole="button" waiState="labelledby-${id}_label"
+				><span class="dijitReset dijitInline" dojoAttachPoint="iconNode" 
+					><span class="dijitReset dijitToggleButtonIconChar">&#10003;</span 
+				></span 
+				><span class="dijitReset dijitInline dijitButtonText" 
+					id="${id}_label"  
+					dojoAttachPoint="containerNode"
+				></span
+			></button
+		></span
+	></span
+></span>

@@ -1,8 +1,8 @@
-.dijitRtl .dijitMenuItem .dijitMenuItemIcon {
+.dijitRtl .tundra .dijitMenuItem .dijitMenuItemIcon {
 	padding-left: 3px;
 	padding-right: 0px;
 }
 
-.dijitRtl .dijitMenuItem .dijitMenuExpandEnabled {
-	background-image:url('images/arrowLeft.gif');
+.dijitRtl .tundra .dijitMenuItem .dijitMenuExpand {
+	background-position: -7px 0px;
 }

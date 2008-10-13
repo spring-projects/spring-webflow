@@ -51,15 +51,12 @@
 	width:15px;
 	height:18px;
 	background:url("../images/preciseSliderThumb.png") no-repeat center top;
+	#background:url("../images/preciseSliderThumb.gif") no-repeat center top;
 	cursor:pointer;
 }
 .nihilo .dijitSliderFocused .dijitSliderImageHandleH {
 	background-image:url("../images/preciseSliderThumbFocus.png");
 	#background-image:url("../images/preciseSliderThumbFocus.gif");
-}
-
-.dj_ie6 .nihilo .dijitSliderImageHandleH {
-	background-image:url("../images/preciseSliderThumb.gif");
 }
 
 .nihilo .dijitSliderLeftBumper {
@@ -79,14 +76,13 @@
 	width:20px;
 	height:15px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
+	#background:url("../images/sliderThumb.gif") no-repeat center center;
 	cursor:pointer;
 }
 
 .nihilo .dijitSliderFocused .dijitSliderImageHandleV {
 	background-image:url("../images/sliderThumbFocus.png");
-}
-.dj_ie6 .nihilo .dijitSliderFocused .dijitSliderImageHandleV {
-	background-image:url("../images/sliderThumbFocus.gif");
+	#background-image:url("../images/sliderThumbFocus.gif");
 }
 
 .nihilo .dijitSliderBottomBumper {
@@ -104,11 +100,13 @@
 .nihilo .dijitSliderIncrementIconH,
 .nihilo .dijitSliderIncrementIconV {
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -45px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -45px top;
 	width:15px; height:15px;
 	cursor:pointer;
 }
 .nihilo .dijitSliderIncrementIconH {
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -30px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -30px top;
 }
 
 .nihilo .dijitSliderDecrementIconH,
@@ -117,8 +115,12 @@
 	height:15px;
 	cursor:pointer;
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -15px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
-.nihilo .dijitSliderDecrementIconH { background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top; }
+.nihilo .dijitSliderDecrementIconH { 
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top; 
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0px top; 
+}
 
 .nihilo .dijitSliderButtonInner {
 	visibility:hidden;

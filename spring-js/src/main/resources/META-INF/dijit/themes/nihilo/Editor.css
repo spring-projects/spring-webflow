@@ -17,6 +17,10 @@
 	height: 18px;
 	text-align: center;
 }
+.nihilo .dijitDisabled .dijitEditorIcon {
+	background-image: url('images/editorDisabled.gif'); /* editor icons sprite image */
+}
+
 .nihilo .dijitEditorIconSep { background-position: 0px; }
 .nihilo .dijitEditorIconBackColor { background-position: -18px; }
 .nihilo .dijitEditorIconBold { background-position: -36px; }
@@ -58,3 +62,6 @@
 .nihilo .dijitEditorIconWikiword { background-position: -684px; }
 .nihilo .dijitEditorIconToggleDir { background-position: -540px; /* padding: 0; margin: 0; color:#555555;
 									font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */}
+.nihilo .dijitEditorIconTabIndent { background-position: -702px; }
+.nihilo .dijitEditorIconSelectAll { background-position: -720px; }
+.nihilo .dijitEditorIconUnlink { background-position: -738px; }

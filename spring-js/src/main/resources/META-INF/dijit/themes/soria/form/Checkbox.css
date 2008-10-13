@@ -56,14 +56,12 @@
 	background-position: -32px;
 }
 
-.soria .dijitCheckBoxHover,
-.soria .dijitCheckBoxFocused {
+.soria .dijitCheckBoxHover {
 	/* hovering over an unchecked enabled checkbox */
 	background-position: -80px;
 }
 
-.soria .dijitCheckBoxCheckedHover,
-		.soria .dijitCheckBoxCheckedFocused {
+.soria .dijitCheckBoxCheckedHover {
 	/* hovering over a checked enabled checkbox */
 	background-position: -64px;
 }

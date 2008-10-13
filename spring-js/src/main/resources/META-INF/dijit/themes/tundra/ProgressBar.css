@@ -2,13 +2,13 @@
 	margin:2px 0px 2px 0px;
 }
 
-.tundra .dijitProgressBarEmpty{
+.tundra .dijitProgressBarEmpty {
 	/* outer container and background of the bar that's not finished yet*/
-	background:#fff url("images/progressBarEmpty.png") repeat-x top left;
+	background:#fff url("images/progressBarEmpty.png") repeat-x center center;
 	border-color: #a2a2a2 #b8b8b8 #b8b8b8 #a2a2a2;
 }
 
-.tundra .dijitProgressBarTile{
+.tundra .dijitProgressBarTile {
 	/* inner container for finished portion when in 'tile' (image) mode */
 	background:#f0f0f0 url("images/progressBarFull.png") repeat-x center center;
 }

@@ -1,1 +1,1 @@
-({"set": "설정", "text": "텍스트:", "title": "URL 링크", "url": "URL:", "urlInvalidMessage": "유효하지 않은 URL입니다. 'http://www.dojotoolkit.org'와 같이 전체 URL을 입력하십시오. "})
+({"set":"설정","text":"설명:","insertImageTitle":"이미지 등록 정보","url":"URL:","createLinkTitle":"링크 등록 정보"})

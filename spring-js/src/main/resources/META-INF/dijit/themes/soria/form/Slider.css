@@ -79,14 +79,13 @@
 	width:20px;
 	height:15px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
+	#background:url("../images/sliderThumb.gif") no-repeat center center;
 	cursor:pointer;
 }
 
 .soria .dijitSliderFocused .dijitSliderImageHandleV {
 	background-image:url("../images/sliderThumbFocus.png");
-}
-.dj_ie6 .soria .dijitSliderFocused .dijitSliderImageHandleV {
-	background-image:url("../images/sliderThumbFocus.gif");
+	#background-image:url("../images/sliderThumbFocus.gif");
 }
 
 .soria .dijitSliderBottomBumper {
@@ -104,11 +103,13 @@
 .soria .dijitSliderIncrementIconH,
 .soria .dijitSliderIncrementIconV {
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -45px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -45px top;
 	width:15px; height:15px;
 	cursor:pointer;
 }
 .soria .dijitSliderIncrementIconH {
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -30px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -30px top;
 }
 
 .soria .dijitSliderDecrementIconH,
@@ -117,8 +118,12 @@
 	height:15px;
 	cursor:pointer;
 	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -15px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
-.soria .dijitSliderDecrementIconH { background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top; }
+.soria .dijitSliderDecrementIconH { 
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0px top;
+}
 
 .soria .dijitSliderButtonInner {
 	visibility:hidden;

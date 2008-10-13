@@ -1,38 +1,36 @@
 
 
 /* Tree */
-.dijitRtl .dijitTreeContainer .dijitTreeNode {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeNode {
     background-image : url('images/treeI_rtl.gif');
     background-position : top right;
     margin-left: auto;
     margin-right: 19px;
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeIsRoot {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeIsRoot {
 	margin-left: auto;
     margin-right: 0;
     background-image: none;
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeIsLast {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeIsLast {
     background-image: url('images/treeI_half_rtl.gif');
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeContent {
-    margin-left: auto;
-    margin-right: 18px;
+.dijitRtl .soria .dijitTreeContainer .dijitTreeContent {
     padding-left: auto;
     padding-right: 1px;   
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeExpandoOpened {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeExpandoOpened {
 	background: url('images/spriteTree_rtl.gif') no-repeat -18px top;
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeExpandoClosed {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeExpandoClosed {
 	background-image: url('images/spriteTree_rtl.gif');
 }
 
-.dijitRtl .dijitTreeContainer .dijitTreeExpandoLeaf {
+.dijitRtl .soria .dijitTreeContainer .dijitTreeExpandoLeaf {
 	background: url('images/spriteTree_rtl.gif') no-repeat -36px top;
 }

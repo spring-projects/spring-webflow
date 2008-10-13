@@ -56,14 +56,12 @@
 	background-position: -32px;
 }
 
-.nihilo .dijitCheckBoxHover,
-.nihilo .dijitCheckBoxFocused {
+.nihilo .dijitCheckBoxHover {
 	/* hovering over an unchecked enabled checkbox */
 	background-position: -80px;
 }
 
-.nihilo .dijitCheckBoxCheckedHover,
-		.nihilo .dijitCheckBoxCheckedFocused {
+.nihilo .dijitCheckBoxCheckedHover {
 	/* hovering over a checked enabled checkbox */
 	background-position: -64px;
 }

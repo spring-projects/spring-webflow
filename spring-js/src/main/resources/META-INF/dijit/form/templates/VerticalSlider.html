@@ -1,16 +1,16 @@
-<table class="dijitReset dijitSlider" cellspacing="0" cellpadding="0" border="0" rules="none"
+<table class="dijitReset dijitSlider" cellspacing="0" cellpadding="0" border="0" rules="none" dojoAttachEvent="onkeypress:_onKeyPress"
 ><tbody class="dijitReset"
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
-		><td class="dijitReset dijitSliderButtonContainer dijitVerticalSliderButtonContainer"
-			><div class="dijitVerticalSliderIncrementIcon" tabIndex="-1" style="display:none" dojoAttachPoint="incrementButton" dojoAttachEvent="onclick: increment"><span class="dijitSliderButtonInner">+</span></div
+		><td class="dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV"
+			><div class="dijitSliderIncrementIconV" tabIndex="-1" style="display:none" dojoAttachPoint="decrementButton"><span class="dijitSliderButtonInner">+</span></div
 		></td
 		><td class="dijitReset"></td
 	></tr
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
 		><td class="dijitReset"
-			><center><div class="dijitSliderBar dijitSliderBumper dijitVerticalSliderBumper dijitSliderTopBumper dijitVerticalSliderTopBumper"></div></center
+			><center><div class="dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderTopBumper dijitSliderTopBumper" dojoAttachEvent="onclick:_onClkIncBumper"></div></center
 		></td
 		><td class="dijitReset"></td
 	></tr
@@ -18,11 +18,11 @@
 		><td dojoAttachPoint="leftDecoration" class="dijitReset" style="text-align:center;height:100%;"></td
 		><td class="dijitReset" style="height:100%;"
 			><input dojoAttachPoint="valueNode" type="hidden" name="${name}"
-			/><center style="position:relative;height:100%;" dojoAttachPoint="sliderBarContainer"
-				><div dojoAttachPoint="remainingBar" class="dijitSliderBar dijitVerticalSliderBar dijitSliderRemainingBar dijitVerticalSliderRemainingBar" dojoAttachEvent="onclick:_onBarClick"></div
-				><div dojoAttachPoint="progressBar" class="dijitSliderBar dijitVerticalSliderBar dijitSliderProgressBar dijitVerticalSliderProgressBar" dojoAttachEvent="onclick:_onBarClick"
-					><div dojoAttachPoint="sliderHandle,focusNode" class="dijitSliderMoveable" dojoAttachEvent="onkeypress:_onKeyPress,onclick:_onHandleClick" style="vertical-align:top;" waiRole="slider" valuemin="${minimum}" valuemax="${maximum}"
-						><div class="dijitSliderImageHandle dijitVerticalSliderImageHandle"></div
+			/><center class="dijitReset dijitSliderBarContainerV" waiRole="presentation" dojoAttachPoint="sliderBarContainer"
+				><div waiRole="presentation" dojoAttachPoint="remainingBar" class="dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV" dojoAttachEvent="onclick:_onBarClick"><!--#5629--></div
+				><div waiRole="presentation" dojoAttachPoint="progressBar" class="dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV" dojoAttachEvent="onclick:_onBarClick"
+					><div class="dijitSliderMoveable" style="vertical-align:top;" 
+						><div dojoAttachPoint="sliderHandle,focusNode" class="dijitSliderImageHandle dijitSliderImageHandleV" dojoAttachEvent="onmousedown:_onHandleClick" waiRole="slider" valuemin="${minimum}" valuemax="${maximum}"></div
 					></div
 				></div
 			></center
@@ -32,14 +32,14 @@
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
 		><td class="dijitReset"
-			><center><div class="dijitSliderBar dijitSliderBumper dijitVerticalSliderBumper dijitSliderBottomBumper dijitVerticalSliderBottomBumper"></div></center
+			><center><div class="dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderBottomBumper dijitSliderBottomBumper" dojoAttachEvent="onclick:_onClkDecBumper"></div></center
 		></td
 		><td class="dijitReset"></td
 	></tr
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
-		><td class="dijitReset dijitSliderButtonContainer dijitVerticalSliderButtonContainer"
-			><div class="dijitVerticalSliderDecrementIcon" tabIndex="-1" style="display:none" dojoAttachPoint="decrementButton" dojoAttachEvent="onclick: decrement"><span class="dijitSliderButtonInner">-</span></div
+		><td class="dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV"
+			><div class="dijitSliderDecrementIconV" tabIndex="-1" style="display:none" dojoAttachPoint="incrementButton"><span class="dijitSliderButtonInner">-</span></div
 		></td
 		><td class="dijitReset"></td
 	></tr

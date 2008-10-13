@@ -33,11 +33,11 @@
 	outline:1px;
 }
 .tundra .dijitSliderFocused .dijitSliderBar {
-	border-color:#333;	
+	border-color:#888;	
 }
 
 .dijit_a11y .dijitSliderProgressBar {
-	background-color:#333 !important;
+	background-color:#888 !important;
 }
 
 .tundra .dijitSliderImageHandleH {
@@ -95,24 +95,37 @@
 	border-top-width: 1px;
 }
 
+.tundra .dijitSliderDecrementIconH,
+.tundra .dijitSliderDecrementIconV,
 .tundra .dijitSliderIncrementIconH,
 .tundra .dijitSliderIncrementIconV {
-	background:url('../images/arrowUp.png') no-repeat center center;
-	width:16px; height:16px;
-	cursor:pointer;
+	cursor: pointer;
+	background-image: url('../images/spriteArrows.png');
+	background-repeat: no-repeat;
+	margin: 5px;
+	height: 7px;
+	width: 7px;
+	font-size: 1px;
 }
-.tundra .dijitSliderIncrementIconH {
-	background-image:url('../images/arrowRight.png');
+.dj_ie6 .tundra .dijitSliderDecrementIconH,
+.dj_ie6 .tundra .dijitSliderDecrementIconV,
+.dj_ie6 .tundra .dijitSliderIncrementIconH,
+.dj_ie6 .tundra .dijitSliderIncrementIconV {
+	background-image: url('../images/spriteArrows.gif');
 }
 
-.tundra .dijitSliderDecrementIconH,
-.tundra .dijitSliderDecrementIconV {
-	width:16px;
-	height:16px;
-	cursor:pointer;
-	background:url('../images/arrowDown.png') no-repeat center center;
+.tundra .dijitSliderDecrementIconH {
+	background-position: -7px 0px;
 }
-.tundra .dijitSliderDecrementIconH { background-image:url('../images/arrowLeft.png'); }
+.tundra .dijitSliderIncrementIconH {
+	background-position: -14px 0px;
+}
+.tundra .dijitSliderDecrementIconV {
+	background-position: 0px 0px;
+}
+.tundra .dijitSliderIncrementIconV {
+	background-position: -21px 0px;
+}
 
 .tundra .dijitSliderButtonInner {
 	visibility:hidden;

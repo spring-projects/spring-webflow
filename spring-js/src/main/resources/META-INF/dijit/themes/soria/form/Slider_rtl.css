@@ -1,34 +1,36 @@
 
 /* Slider */
 
-.dijitRtl .dijitSliderProgressBarH,
-.dijitRtl .dijitSliderRemainingBarH,
-.dijitRtl .dijitSliderLeftBumper,
-.dijitRtl .dijitSliderRightBumper,
-.dijitRtl .dijitSliderTopBumper {
+.dijitRtl .soria .dijitSliderProgressBarH,
+.dijitRtl .soria .dijitSliderRemainingBarH,
+.dijitRtl .soria .dijitSliderLeftBumper,
+.dijitRtl .soria .dijitSliderRightBumper,
+.dijitRtl .soria .dijitSliderTopBumper {
 	background-position: top right;
 }
 
-.dijitRtl .dijitSliderProgressBarV,
-.dijitRtl .dijitSliderRemainingBarV,
-.dijitRtl .dijitSliderBottomBumper {
+.dijitRtl .soria .dijitSliderProgressBarV,
+.dijitRtl .soria .dijitSliderRemainingBarV,
+.dijitRtl .soria .dijitSliderBottomBumper {
 	background-position: bottom right;
 }
 
-.dijitRtl .dijitSliderLeftBumper {
+.dijitRtl .soria .dijitSliderLeftBumper {
 	border-left-width: 0px;
 	border-right-width: 1px;
 }
 
-.dijitRtl .dijitSliderRightBumper {
+.dijitRtl .soria .dijitSliderRightBumper {
 	border-left-width: 1px;
 	border-right-width: 0px;
 }
 
-.dijitRtl .dijitSliderIncrementIconH {
-	background-image:url('../images/arrowLeft.png');
+.dijitRtl .soria .dijitSliderIncrementIconH {
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat left top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat left top;
 }
 
-.dijitRtl .dijitSliderDecrementIconH {
-	background-image:url('../images/arrowRight.png');
+.dijitRtl .soria .dijitSliderDecrementIconH {
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat -30px top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -30px top;
 }

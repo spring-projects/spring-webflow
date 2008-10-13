@@ -4,10 +4,12 @@
 	/* next/prev month buttons */
 	width:15px;
 	height:15px;
-	font-size: 1px;
+	background-image: url("images/spriteRoundedIconsSmall.png");
+	background-repeat: no-repeat
 }
 .dj_ie6 .nihilo .dijitCalendarIncrementControl {
-	padding:.1em;
+	font-size:.1em;
+	background-image: url("images/spriteRoundedIconsSmall.gif");
 }
 
 .nihilo .dijitCalendarIncreaseInner,
@@ -16,17 +18,10 @@
 }
 
 .nihilo .dijitCalendarDecrease {
-	background:url("images/spriteRoundedIconsSmall.png") no-repeat top left;
+	background-position: top left;
 }
-.dj_ie6 .nihilo .dijitCalendarDecrease {
-	background:url("images/spriteRoundedIconsSmall.gif") no-repeat top left;
-}
-
 .nihilo .dijitCalendarIncrease {
-	background:url(images/spriteRoundedIconsSmall.png) no-repeat -30px top;
-}
-.dj_ie6 .nihilo .dijitCalendarIncrease {
-	background:url("images/spriteRoundedIconsSmall.gif") no-repeat -30px top;
+	background-position: -30px top;
 }
 
 .nihilo table.dijitCalendarContainer {
@@ -45,8 +40,9 @@
 	text-align:center;
 }
 .dj_ie6 .nihilo .dijitCalendarMonthContainer th {
-	padding-top:.1em;
-	padding-bottom:0em;
+	padding-top:.2em;
+	padding-bottom:.1em;
+	
 }
 
 .nihilo .dijitCalendarDayLabelTemplate {
@@ -69,22 +65,20 @@
 	font-weight: bold;
 }
 
-.dj_ie7 .nihilo .dijitCalendarDateTemplate,
-.dj_ie6 .nihilo .dijitCalendarDateTemplate {
-	font-size: 0.8em;
-}
-
 .nihilo .dijitCalendarDateTemplate {
 	/* style for each day cell */
 	font-size: 0.9em;
 	font-weight: bold;
 	text-align: center;
-	padding: 0.3em 0.3em 0.1em 0.3em;
+	padding: 0.3em 0.3em 0.05em 0.3em;
 	letter-spacing: 1px;
 	background-color: #fdfdfd;
 	border:#fdfdfd solid 1px !important;
 }
 
+.dj_ie .nihilo .dijitCalendarDateTemplate {
+	padding: 0.1em .33em 0.02em .33em;
+}
 
 .nihilo .dijitCalendarPreviousMonth,
 .nihilo .dijitCalendarNextMonth 		{

@@ -1,101 +1,74 @@
-
-/* Tabs */
-
+/* Tabs, shared classes */
 .tundra .dijitTabPaneWrapper {
-	/*
-	overflow: hidden;
-	*/
 	background:#fff;
 	border:1px solid #ccc;
+	margin: 0;
+	padding: 0;
 }
 
 .tundra .dijitTab {
 	line-height:normal;
-	margin-right:5px;	/* space between one tab and the next in top/bottom mode */
+	margin-right:4px;	/* space between one tab and the next in top/bottom mode */
 	padding:0px;
 	border:1px solid #ccc;
 	background:#e2e2e2 url("../images/tabEnabled.png") repeat-x;
 }
 
-.tundra .dijitAlignLeft .dijitTab,
-.tundra .dijitAlignRight .dijitTab {
-	margin-right:0px;
-	margin-bottom:5px;	/* space between one tab and the next in left/right mode */
-}
-
 .tundra .dijitTabInnerDiv {
-	padding:6px 10px 4px 10px;
-	border-left:1px solid #fff;
-	border-bottom:1px solid #fff;
+	padding:6px 8px 5px 9px;
 }
 
-.tundra .dijitTabHover,
-.tundra .dijitTabCloseButtonHover {
-	color: #243C5F;
-	border-top-color:#92a0b3;
-	border-left-color:#92a0b3;
-	border-right-color:#92a0b3;
-	background:#e2e2e2 url("../images/tabHover.png") repeat-x bottom;
+.dijitTabSpacer {
+	font-size: 1px;
 }
 
-.dj_ie6 .tundra .dijitTabHover,
-.dj_ie6 .tundra .dijitTabCloseButtonHover {
-	background-image: url("../images/tabHover.gif");
-}
-
-.tundra .dijitTabChecked,
-.tundra .dijitTabCloseButtonChecked
-{
+/* checked tab*/
+.tundra .dijitTabChecked {
 	/* the selected tab (with or without hover) */
 	background-color:#fff;
 	border-color: #ccc;
 	background-image:none;
 }
 
-/* make the active tab white on the side next to the content pane */
-.tundra .dijitAlignTop .dijitTabChecked,
-.tundra .dijitAlignTop .dijitTabCloseButtonChecked
-{
-	border-bottom-color:white;
-	vertical-align:bottom;
+/* hovered tab */
+.tundra .dijitTabHover {
+	color: #243C5F;
+	border-top-color:#92a0b3;
+	border-left-color:#92a0b3;
+	border-right-color:#92a0b3;
+	background:#e2e2e2 url("../images/tabHover.gif") repeat-x;
 }
 
-.tundra .dijitAlignBottom .dijitTabChecked,
-.tundra .dijitAlignBottom .dijitTabCloseButtonChecked
-{
-	border-top-color:white;
-	-moz-border-radius:2px 2px 0px 0px;	/* eliminate some border detritrus on moz */
+.tundra .dijitTabCheckedHover {
+	color: inherit;
+	border:1px solid #ccc;
+	background:#fff;
 }
 
-.tundra .dijitAlignLeft .dijitTabChecked,
-.tundra .dijitAlignLeft .dijitTabCloseButtonChecked
-{
-	border-right-color:white;
-}
-
-.tundra .dijitAlignRight .dijitTabChecked,
-.tundra .dijitAlignRight .dijitTabCloseButtonChecked
-{
-	border-left-color:white;
-}
-
-
-/* make space for a positioned close button */
-.tundra .dijitTab .dijitClosable {
-	position: relative;
-	padding:6px 20px 4px 10px;
+.tundra .dijitTab .dijitClosable .closeNode {
+	/* Inline-block */
+	display:-moz-inline-box;		/* FF2 */
+	display:inline-block;			/* webkit and FF3 */
+	#zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline; /* don't use .dj_ie since that increases the priority */
+	vertical-align:top;
+	width: 1em;
+	height: 1em;
+	padding: 0;
+	margin: 0;
 }
 
 .tundra .dijitTab .dijitClosable .closeImage {
-	position:absolute;
-	top: 7px;
-	right: 3px;
-	height: 12px;
-	width: 12px;
-	padding: 0;
-	margin: 0;
 	background: url("../images/tabClose.png") no-repeat right top;
+	width: 12px;
+	height: 12px;
 }
+
+.tundra .dijitTab .dijitTabButtonSpacer {
+	height: 12px;
+	width: 1px;
+}
+
 .dj_ie6 .dijitTab .dijitClosable .closeImage {
 	background-image:url("../images/tabClose.gif");
 }
@@ -114,25 +87,151 @@
 	background-image : url("../images/tabCloseHover.gif");
 }
 
-.tundra .dijitAlignLeft .dijitTab .dijitClosable {
-	padding:6px 10px 4px 20px;
+/* ================================ */
+/* top tabs */
+.tundra .dijitTabContainerTop-tabs {
+	margin-bottom: -1px;
+	border-color: #ccc;
 }
 
-/* correct for IE6.
-    We cant force hasLayout as that blows out the shrink wrapped tabs
-    ..so we shim in the closeImage position properties instead
-*/
-.dj_ie6 .tundra .dijitAlignLeft .dijitTab .dijitClosable .closeImage {
-	left:-20px;
+/* top container */
+.tundra .dijitTabContainerTop-container {
+	border-top: none;
 }
 
-.tundra .dijitAlignBottom .dijitTab .dijitClosable .closeImage {
-	top: auto;
-	bottom: 7px;
-	right: 3px;
+/* checked tabs */
+.tundra .dijitTabContainerTop-tabs .dijitTabChecked {
+	border-bottom-color:white;
 }
 
-.tundra .dijitAlignLeft .dijitTab .dijitClosable .closeImage {
-	top: 7px;
-	left: 3px;
+/* strip */
+.tundra .dijitTabContainerTopStrip {
+	border: 1px solid #ccc;
+	padding-top: 2px;
+	padding-left: 3px;
+}
+
+.tundra .dijitTabContainerTopStrip {
+	background: #f2f2f2;
+}
+
+/* ================================ */
+/* bottom tabs */
+.tundra .dijitTabContainerBottom-tabs {
+	margin-top: -1px;
+	border-color: #ccc;
+}
+
+/* bottom container */
+.tundra .dijitTabContainerBottom-container {
+	border-bottom: none;
+}
+
+/* checked tabs */
+.tundra .dijitTabContainerBottom-tabs .dijitTabChecked {
+	border-top-color:white;
+}
+
+/* strip */
+.tundra .dijitTabContainerBottomStrip {
+	padding-bottom: 2px;
+	padding-left: 3px;	
+	border: 1px solid #ccc;
+}
+
+.tundra .dijitTabContainerBottomStrip {
+	background: #f2f2f2;
+}
+
+/* top/bottom strip */
+.tundra .dijitTabContainerBottom-spacer,
+.tundra .dijitTabContainerTop-spacer {
+	height: 0px;
+	border-top: 1px solid #ccc;
+	background: #fff;
+}
+
+
+/* ================================ */
+/* right tabs */
+.tundra .dijitTabContainerRight-tabs {
+	margin-left: -1px;
+	border-color: #ccc;
+}
+
+/* right container */
+.tundra .dijitTabContainerRight-container {
+	border-right: none;
+}
+
+/* checked tabs */
+.tundra .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left-color:white;
+}
+
+/* strip */
+.tundra .dijitTabContainerRightStrip {
+	padding-right: 2px;
+	padding-top: 3px;	
+	border: 1px solid #ccc;
+}
+
+.tundra .dijitTabContainerRightStrip {
+	background: #f2f2f2;
+}
+
+/* ================================ */
+/* left tabs */
+.tundra .dijitTabContainerLeft-tabs {
+	margin-right: -1px;
+	border-color: #ccc;
+}
+
+/* left conatiner */
+.tundra .dijitTabContainerLeft-container {
+	border-left: none;
+}
+
+/* checked tabs */
+.tundra .dijitTabContainerLeft-tabs .dijitTabChecked {
+	border-right-color:white;
+}
+
+/* strip */
+.tundra .dijitTabContainerLeftStrip {
+	padding-left: 2px;
+	padding-top: 3px;	
+	border: 1px solid #ccc;
+}
+
+.tundra .dijitTabContainerLeftStrip {
+	background: #f2f2f2;
+}
+
+/* ================================ */
+/* left/right tabs */
+.tundra .dijitTabContainerLeft-tabs .dijitTab,
+.tundra .dijitTabContainerRight-tabs .dijitTab {
+	margin-right:0px;
+	margin-bottom:4px;	/* space between one tab and the next in left/right mode */
+}
+
+/* left/right tabstrip */
+.tundra .dijitTabContainerLeft-spacer,
+.tundra .dijitTabContainerRight-spacer {
+	width: 0px;
+	border-left: 1px solid #ccc;
+	background: #fff;
+}
+
+
+/* ================================ */
+
+/* this resets the tabcontainer stripe when within a contentpane */
+.tundra .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
+	border-left: 0px solid #ccc;
+	border-top: 0px solid #ccc;
+	border-right: 0px solid #ccc;
+	padding-top: 0px;
+	padding-left: 0px;	
 }

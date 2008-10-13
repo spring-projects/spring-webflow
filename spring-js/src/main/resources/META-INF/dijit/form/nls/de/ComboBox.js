@@ -1,1 +1,1 @@
-({"previousMessage": "Vorherige Auswahl", "nextMessage": "Weitere Auswahlmöglichkeiten"})
+({"previousMessage":"Vorherige Auswahl","nextMessage":"Weitere Auswahlmöglichkeiten"})

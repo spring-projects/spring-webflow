@@ -15,6 +15,10 @@
 	height: 18px;
 	text-align: center;
 }
+.tundra .dijitDisabled .dijitEditorIcon {
+	background-image: url('images/editorDisabled.gif'); /* editor icons sprite image */
+}
+
 .tundra .dijitEditorIconSep { background-position: 0px; }
 .tundra .dijitEditorIconBackColor { background-position: -18px; }
 .tundra .dijitEditorIconBold { background-position: -36px; }
@@ -56,3 +60,6 @@
 .tundra .dijitEditorIconWikiword { background-position: -684px; }
 .tundra .dijitEditorIconToggleDir { background-position: -540px; /* padding: 0; margin: 0; color:#555555;
 									font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */}
+.tundra .dijitEditorIconTabIndent { background-position: -702px; }
+.tundra .dijitEditorIconSelectAll { background-position: -720px; }
+.tundra .dijitEditorIconUnlink { background-position: -738px; }

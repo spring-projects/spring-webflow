@@ -1,8 +1,8 @@
-<fieldset dojoAttachPoint="editNode" waiRole="presentation" style="position: absolute; visibility:hidden" class="dijitReset dijitInline"
+<span dojoAttachPoint="editNode" waiRole="presentation" style="position: absolute; visibility:hidden" class="dijitReset dijitInline"
 	dojoAttachEvent="onkeypress: _onKeyPress" 
-	><input dojoAttachPoint="editorPlaceholder"
-	/><span dojoAttachPoint="buttonContainer"
-		><button class='saveButton' dojoAttachPoint="saveButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:save">${buttonSave}</button
-		><button class='cancelButton' dojoAttachPoint="cancelButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:cancel">${buttonCancel}</button
+	><span dojoAttachPoint="editorPlaceholder"></span
+	><span dojoAttachPoint="buttonContainer"
+		><button class='saveButton' dojoAttachPoint="saveButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:save" disabled="true" label="${buttonSave}"></button
+		><button class='cancelButton' dojoAttachPoint="cancelButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:cancel" label="${buttonCancel}"></button
 	></span
-></fieldset>
+></span>

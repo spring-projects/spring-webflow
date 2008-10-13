@@ -1,1 +1,1 @@
-({"iframeTitle1": "szerkesztési terület", "iframeTitle2": "szerkesztési terület keret"})
+({"iframeEditTitle":"szerkesztési terület","iframeFocusTitle":"szerkesztési terület keret"})

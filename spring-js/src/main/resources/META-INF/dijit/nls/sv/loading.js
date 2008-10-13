@@ -1,1 +1,1 @@
-({"loadingState":"Laddar...","errorState":"Ett fel har uppstått."})
+({"loadingState":"Läser in...","errorState":"Det uppstod ett fel."})

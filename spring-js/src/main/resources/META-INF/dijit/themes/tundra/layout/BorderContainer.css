@@ -1,10 +1,19 @@
 /* BorderContainer */
 
-.tundra .dijitSplitterH {
-	background:url("../images/splitContainerSizerH.png") repeat-x #fff;
+.tundra .dijitBorderContainer {
+	background-color: #fcfcfc;
+	padding: 5px;
+}
+
+.tundra .dijitBorderContainer-dijitBorderContainer {
+	border: none;
+	padding: 0px;
+}
+
+.tundra .dijitSplitterH,
+.tundra .dijitGutterH {
+	background:#fcfcfc;
 	border:0;
-	border-left:0px solid #d3d3d3;
-	border-right:0px solid #d3d3d3;
 	height:5px;
 }
 
@@ -15,11 +24,10 @@
 	height:2px;
 }
 
-.tundra .dijitSplitterV {
-	background:url("../images/splitContainerSizerV.png") repeat-y #fff;
+.tundra .dijitSplitterV,
+.tundra .dijitGutterV {
+	background:#fcfcfc;
 	border:0;
-	border-top:0px solid #d3d3d3;
-	border-bottom:0px solid #d3d3d3;
 	width:5px;
 }
 
@@ -28,4 +36,15 @@
 	left:1px;
 	height:19px;
 	width:5px;
+}
+
+/* active splitter */
+.tundra .dijitSplitterActive {
+	font-size: 1px;
+	background-image: none;
+	background-color: #aaa;
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	filter: Alpha(Opacity=60);
+	margin: 0;
 }

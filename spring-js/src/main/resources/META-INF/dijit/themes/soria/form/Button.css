@@ -9,17 +9,19 @@
 .soria .dijitButtonNode {
 	/* enabled state - inner */
 	/* border:1px outset #a0a0a0; */
-	border:1px solid #8ba0bd;
+	border: 1px solid #8ba0bd;
 	border-bottom:1px solid #657c9c;
-	border-right:1px solid #657c9c;
-	padding: 0.2em;
-	background:#bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
-}
-.dj_ie .soria .dijitButtonNode {
-	zoom: 1;
+	padding: 0.1em 0.2em 0.2em 0.2em; 
+	background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
 }
 
+.soria .dijitButtonNode button { 
+	border: 0px; 
+	background-color: transparent; 
+} 
+ 
 .soria .dijitButtonText {
+	text-align: center; 
 	padding: 0 0.3em;
 }
 
@@ -49,19 +51,12 @@
 .soria .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border-color: #b9bbdd #b9bbdd #b9bbdd #b9bbdd;
-	/*color:#b4b4b4;*/
 	background:#c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
-.dj_ie .soria .dijitButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitToggleButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitDropDownButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitComboButtonDisabled .dijitButtonNode *,
-.dj_ie .soria .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=50); /* IE */
-}
 
 .soria .dijitButtonHover .dijitButtonNode,
+.soria .dijitButtonNodeHover,
 .soria .dijitToggleButtonHover .dijitButtonNode,
 .soria .dijitDropDownButtonHover .dijitButtonNode,
 .soria .dijitComboButtonHover .dijitButtonContents,
@@ -71,7 +66,7 @@
 .soria .dijitSpinnerDownArrowHover .dijitDownArrowButton {
 	/* hover state - inner */
 	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
-	color:#000;
+	color:#243C5F;
 	background:#acc5e2 url("../images/buttonHover.png") repeat-x top left;
 }
 

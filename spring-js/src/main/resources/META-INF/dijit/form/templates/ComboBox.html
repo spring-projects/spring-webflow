@@ -1,21 +1,19 @@
-<table class="dijit dijitReset dijitInlineTable dijitLeft" cellspacing="0" cellpadding="0"
-	id="widget_${id}" name="${name}" dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse" waiRole="presentation"
-	><tr class="dijitReset"
-		><td class='dijitReset dijitStretch dijitInputField' width="100%"
-			><input type="text" autocomplete="off" name="${name}"
-			dojoAttachEvent="onkeypress, onkeyup, onfocus, compositionend"
-			dojoAttachPoint="textbox,focusNode" waiRole="combobox"
-		/></td
-		><td class="dijitReset dijitValidationIconField" width="0%"
-			><div dojoAttachPoint='iconNode' class='dijitValidationIcon'></div
-			><div class='dijitValidationIconText'>&Chi;</div
-		></td
-		><td class='dijitReset dijitRight dijitButtonNode dijitDownArrowButton' width="0%"
-			dojoAttachPoint="downArrowNode"
+<div class="dijit dijitReset dijitInlineTable dijitLeft"
+	id="widget_${id}"
+	dojoAttachEvent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoAttachPoint="comboNode" waiRole="combobox" tabIndex="-1"
+	><div style="overflow:hidden;"
+		><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'
+			dojoAttachPoint="downArrowNode" waiRole="presentation"
 			dojoAttachEvent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse"
-			><div class="dijitDownArrowButtonInner" waiRole="presentation"
-				><div class="dijitDownArrowButtonChar">&#9660;</div
-			></div
-		></td	
-	></tr
-></table>
+			><div class="dijitArrowButtonInner">&thinsp;</div
+			><div class="dijitArrowButtonChar">&#9660;</div
+		></div
+		><div class="dijitReset dijitValidationIcon"><br></div
+		><div class="dijitReset dijitValidationIconText">&Chi;</div
+		><div class="dijitReset dijitInputField"
+			><input type="text" autocomplete="off" name="${name}" class='dijitReset'
+			dojoAttachEvent="onkeypress:_onKeyPress, onfocus:_update, compositionend"
+			dojoAttachPoint="textbox,focusNode" waiRole="textbox" waiState="haspopup-true,autocomplete-list"
+		/></div
+	></div
+></div>

@@ -1,5 +1,5 @@
-.dijitRtl .dijitComboBox .dijitButtonNode,
-.dijitRtl .dijitSpinner .dijitButtonNode {
+.dijitRtl .soria .dijitComboBox .dijitButtonNode,
+.dijitRtl .soria .dijitSpinner .dijitButtonNode {
 	/* line between the input area and the drop down button */
 	border-color: #8ba0bd;
 	border-left: 0px solid #8ba0bd;

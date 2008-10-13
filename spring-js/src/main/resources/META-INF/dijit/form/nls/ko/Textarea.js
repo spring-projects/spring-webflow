@@ -1,1 +1,1 @@
-({"iframeTitle1": "편집 영역", "iframeTitle2": "편집 영역 프레임"})
+({"iframeEditTitle":"편집 영역","iframeFocusTitle":"편집 영역 프레임"})

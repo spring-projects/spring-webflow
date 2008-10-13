@@ -1,12 +1,8 @@
 /*
-	Copyright (c) 2004-2007, The Dojo Foundation
-	All Rights Reserved.
-
-	Licensed under the Academic Free License version 2.1 or above OR the
-	modified BSD license. For more information on Dojo licensing, see:
-
-		http://dojotoolkit.org/book/dojo-book-0-9/introduction/licensing
+	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dijit.form.TimeTextBox"]){dojo._hasResource["dijit.form.TimeTextBox"]=true;dojo.provide("dijit.form.TimeTextBox");dojo.require("dojo.date");dojo.require("dojo.date.locale");dojo.require("dojo.date.stamp");dojo.require("dijit._TimePicker");dojo.require("dijit.form.ValidationTextBox");dojo.declare("dijit.form.TimeTextBox",dijit.form.RangeBoundTextBox,{regExpGen:dojo.date.locale.regexp,compare:dojo.date.compare,format:function(_1,_2){if(!_1||_1.toString()==this._invalid){return null;}return dojo.date.locale.format(_1,_2);},parse:dojo.date.locale.parse,serialize:dojo.date.stamp.toISOString,value:new Date(""),_invalid:(new Date("")).toString(),_popupClass:"dijit._TimePicker",postMixInProperties:function(){this.inherited("postMixInProperties",arguments);var _3=this.constraints;_3.selector="time";if(typeof _3.min=="string"){_3.min=dojo.date.stamp.fromISOString(_3.min);}if(typeof _3.max=="string"){_3.max=dojo.date.stamp.fromISOString(_3.max);}},_onFocus:function(_4){this._open();},setValue:function(_5,_6){this.inherited("setValue",arguments);if(this._picker){if(!_5||_5.toString()==this._invalid){_5=new Date();}this._picker.setValue(_5);}},_open:function(){if(this.disabled){return;}var _7=this;if(!this._picker){var _8=dojo.getObject(this._popupClass,false);this._picker=new _8({onValueSelected:function(_9){_7.focus();setTimeout(dojo.hitch(_7,"_close"),1);dijit.form.TimeTextBox.superclass.setValue.call(_7,_9,true);},lang:this.lang,constraints:this.constraints,isDisabledDate:function(_a){return _7.constraints&&(dojo.date.compare(_7.constraints.min,_a)>0||dojo.date.compare(_7.constraints.max,_a)<0);}});this._picker.setValue(this.getValue()||new Date());}if(!this._opened){dijit.popup.open({parent:this,popup:this._picker,around:this.domNode,onCancel:dojo.hitch(this,this._close),onClose:function(){_7._opened=false;}});this._opened=true;}dojo.marginBox(this._picker.domNode,{w:this.domNode.offsetWidth});},_close:function(){if(this._opened){dijit.popup.close(this._picker);this._opened=false;}},_onBlur:function(){this._close();this.inherited("_onBlur",arguments);},getDisplayedValue:function(){return this.textbox.value;},setDisplayedValue:function(_b){this.textbox.value=_b;}});}
+if(!dojo._hasResource["dijit.form.TimeTextBox"]){dojo._hasResource["dijit.form.TimeTextBox"]=true;dojo.provide("dijit.form.TimeTextBox");dojo.require("dijit._TimePicker");dojo.require("dijit.form._DateTimeTextBox");dojo.declare("dijit.form.TimeTextBox",dijit.form._DateTimeTextBox,{baseClass:"dijitTextBox dijitTimeTextBox",popupClass:"dijit._TimePicker",_selector:"time"});}

@@ -4,10 +4,12 @@
 	/* next/prev month buttons */
 	width:15px;
 	height:15px;
-	font-size: 1px;
+	background-image: url("images/spriteRoundedIconsSmall.png");
+	background-repeat: no-repeat
 }
 .dj_ie6 .tundra .dijitCalendarIncrementControl {
-	padding:.1em;
+	font-size:.1em;
+	background-image: url("images/spriteRoundedIconsSmall.gif");
 }
 
 .tundra .dijitCalendarIncreaseInner,
@@ -16,17 +18,10 @@
 }
 
 .tundra .dijitCalendarDecrease {
-	background:url("images/spriteRoundedIconsSmall.png") no-repeat top left;
+	background-position: top left;
 }
-.dj_ie6 .tundra .dijitCalendarDecrease {
-	background:url("images/spriteRoundedIconsSmall.gif") no-repeat top left;
-}
-
 .tundra .dijitCalendarIncrease {
-	background:url("images/spriteRoundedIconsSmall.png") no-repeat -30px top;
-}
-.dj_ie6 .tundra .dijitCalendarIncrease {
-	background:url("images/spriteRoundedIconsSmall.gif") no-repeat -30px top;
+	background-position: -30px top;
 }
 
 .tundra table.dijitCalendarContainer {
@@ -45,8 +40,8 @@
 	text-align:center;
 }
 .dj_ie6 .tundra .dijitCalendarMonthContainer th {
-	padding-top:.1em;
-	padding-bottom:0em;
+	padding-top:.2em;
+	padding-bottom:.1em;
 }
 
 .tundra .dijitCalendarDayLabelTemplate {
@@ -69,11 +64,6 @@
 	font-weight: bold;
 }
 
-.dj_ie7 .tundra .dijitCalendarDateTemplate,
-.dj_ie6 .tundra .dijitCalendarDateTemplate {
-	font-size: 0.8em;
-}
-
 .tundra .dijitCalendarDateTemplate {
 	/* style for each day cell */
 	font-size: 0.9em;
@@ -83,6 +73,9 @@
 	letter-spacing: 1px;
 }
 
+.dj_ie .tundra .dijitCalendarDateTemplate {
+	padding: 0.1em .33em 0.02em .33em;
+}
 
 .tundra .dijitCalendarPreviousMonth,
 .tundra .dijitCalendarNextMonth 		{
@@ -117,6 +110,10 @@
 	/* cell for today's date */
 	text-decoration:underline;
 	font-weight:bold;
+}
+
+.tundra .dijitCalendarHoveredDate {
+	background-color: #e2ebf2 !important;
 }
 
 .tundra .dijitCalendarSelectedDate {

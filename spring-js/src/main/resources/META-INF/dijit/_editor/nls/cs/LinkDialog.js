@@ -1,1 +1,1 @@
-({"set": "Nastavit", "text": "Text:", "title": "Adresa URL odkazu", "url": "Adresa URL:", "urlInvalidMessage": "Neplatná adresa URL. Zadejte úplnou adresu URL ve tvaru 'http://www.dojotoolkit.org'"})
+({"set":"Nastavit","text":"Popis:","insertImageTitle":"Vlastnosti obrázku","url":"Adresa URL:","createLinkTitle":"Vlastnosti odkazu"})

@@ -11,15 +11,17 @@
 	/* border:1px outset #a0a0a0; */
 	border:1px solid #dedede;
 	border-bottom:1px solid #dedede;
-	border-right:1px solid #dedede;
-	padding: 0.2em;
-	background:#fff url("../images/buttonEnabled.png") repeat-x top left;
-}
-.dj_ie .nihilo .dijitButtonNode {
-	zoom: 1;
+	padding: 0.1em 0.2em 0.2em 0.2em; 
+	background: #fff url("../images/buttonEnabled.png") repeat-x top left;
 }
 
+.nihilo .dijitButtonNode button { 
+	border: 0px; 
+	background-color: transparent; 
+} 
+ 
 .nihilo .dijitButtonText {
+	text-align: center; 
 	padding: 0 0.3em;
 }
 
@@ -49,19 +51,12 @@
 .nihilo .dijitSpinnerDisabled .dijitButtonNode {
 	/* disabled state - inner */
 	border-color: #dedede;
-	/*color:#b4b4b4;*/
 	background:#fafafa url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60; /* Safari, Opera and Mozilla */
 }
-.dj_ie .nihilo .dijitButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitToggleButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitDropDownButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitComboButtonDisabled .dijitButtonNode *,
-.dj_ie .nihilo .dijitSpinnerDisabled .dijitButtonNode * {
-	filter: gray() alpha(opacity=50); /* IE */
-}
 
 .nihilo .dijitButtonHover .dijitButtonNode,
+.nihilo .dijitButtonNodeHover,
 .nihilo .dijitToggleButtonHover .dijitButtonNode,
 .nihilo .dijitDropDownButtonHover .dijitButtonNode,
 .nihilo .dijitComboButtonHover .dijitButtonContents,
@@ -71,7 +66,7 @@
 .nihilo .dijitSpinnerDownArrowHover .dijitDownArrowButton {
 	/* hover state - inner */
 	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
-	color:#000;
+	color:#243C5F;
 	background:#fcfcfc url("../images/buttonHover.png") repeat-x top left;
 }
 

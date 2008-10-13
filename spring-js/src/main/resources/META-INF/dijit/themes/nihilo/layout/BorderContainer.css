@@ -3,8 +3,19 @@
  *
  */ 
 
-.nihilo .dijitSplitterH {
-	background:url("../images/splitContainerSizerH.png") repeat-x #fff;
+.nihilo .dijitBorderContainer {
+	background-color: #fcfcfc;
+	padding: 5px;
+}
+
+.nihilo .dijitBorderContainer-dijitBorderContainer {
+	border: none;
+	padding: 0px;
+}
+
+.nihilo .dijitSplitterH,
+.nihilo .dijitGutterH {
+	background:#FCFCFC;
 	border:0;
 	border-left:0px solid #d3d3d3;
 	border-right:0px solid #d3d3d3;
@@ -18,8 +29,9 @@
 	height:2px;
 }
 
-.nihilo .dijitSplitterV {
-	background:url("../images/splitContainerSizerV.png") repeat-y #fff;
+.nihilo .dijitSplitterV,
+.nihilo .dijitGutterV {
+	background:#FCFCFC;
 	border:0;
 	border-top:0px solid #d3d3d3;
 	border-bottom:0px solid #d3d3d3;
@@ -31,4 +43,15 @@
 	left:1px;
 	height:19px;
 	width:5px;
+}
+
+/* active splitter */
+.nihilo .dijitSplitterActive {
+	font-size: 1px;
+	background-image: none;
+	background-color: #aaa;
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	filter: Alpha(Opacity=60);
+	margin: 0;
 }
