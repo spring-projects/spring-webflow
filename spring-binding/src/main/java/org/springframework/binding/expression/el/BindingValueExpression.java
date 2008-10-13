@@ -90,11 +90,15 @@ class BindingValueExpression extends ValueExpression {
 	}
 
 	private Object convertValueIfNecessary(Object value, Class expectedType) {
-		try {
-			return conversionService.executeConversion(value, expectedType);
-		} catch (ConversionException e) {
-			throw new ELException("Unable to coerce value " + StylerUtils.style(value) + " to expected type ["
-					+ expectedType + "]", e);
+		if (expectedType == null) {
+			return value;
+		} else {
+			try {
+				return conversionService.executeConversion(value, expectedType);
+			} catch (ConversionException e) {
+				throw new ELException("Unable to coerce value " + StylerUtils.style(value) + " to expected type ["
+						+ expectedType + "]", e);
+			}
 		}
 	}
 
