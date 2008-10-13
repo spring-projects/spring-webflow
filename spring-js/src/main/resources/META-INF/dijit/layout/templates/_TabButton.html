@@ -1,0 +1,11 @@
+<div waiRole="presentation" dojoAttachEvent='onclick:onClick,onmouseenter:_onMouse,onmouseleave:_onMouse'>
+    <div waiRole="presentation" class='dijitTabInnerDiv' dojoAttachPoint='innerDiv'>
+        <div waiRole="presentation" class='dijitTabContent' dojoAttachPoint='tabContent'>
+	        <span dojoAttachPoint='containerNode,focusNode' class='tabLabel'>${!label}</span><img class ="dijitTabButtonSpacer" src="${_blankGif}" />
+	        <div class="dijitInline closeNode" dojoAttachPoint='closeNode' dojoAttachEvent='onclick:onClickCloseButton'>
+	        	<img src="${_blankGif}" alt="" dojoAttachPoint='closeButtonNode' class='closeImage' dojoAttachEvent='onmouseenter:_onMouse, onmouseleave:_onMouse' stateModifier='CloseButton' waiRole="presentation"/>
+	            <span dojoAttachPoint='closeText' class='closeText'>x</span>
+	        </div>
+        </div>
+    </div>
+</div>
