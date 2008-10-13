@@ -22,6 +22,8 @@ import org.springframework.mock.web.portlet.MockActionResponse;
 import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockPortletRequest;
 import org.springframework.mock.web.portlet.MockPortletResponse;
+import org.springframework.mock.web.portlet.MockRenderRequest;
+import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
@@ -37,11 +39,20 @@ public class PortletExternalContextTests extends TestCase {
 
 	private PortletExternalContext context;
 
+	private MockPortletRequest renderRequest;
+
+	private MockPortletResponse renderResponse;
+
+	private PortletExternalContext renderContext;
+
 	protected void setUp() {
 		portletContext = new MockPortletContext();
 		request = new MockActionRequest();
 		response = new MockActionResponse();
 		context = new PortletExternalContext(portletContext, request, response);
+		renderRequest = new MockRenderRequest();
+		renderResponse = new MockRenderResponse();
+		renderContext = new PortletExternalContext(portletContext, renderRequest, renderResponse);
 	}
 
 	public void testGetContextPath() {
@@ -76,16 +87,43 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowExecutionRedirectRequested());
 	}
 
+	public void testCommitExecutionRedirectRenderRequest() {
+		try {
+			renderContext.requestFlowExecutionRedirect();
+			fail("IllegalStateException expected");
+		} catch (IllegalStateException e) {
+			// we want this
+		}
+	}
+
 	public void testCommitFlowRedirect() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 	}
 
+	public void testCommitFlowRedirectRenderRequest() {
+		try {
+			renderContext.requestFlowDefinitionRedirect("foo", null);
+			fail("IllegalStateException expected");
+		} catch (IllegalStateException e) {
+			// we want this
+		}
+	}
+
 	public void testCommitExternalRedirect() {
 		context.requestExternalRedirect("foo");
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
+	}
+
+	public void testCommitExternalRedirectRenderRequest() {
+		try {
+			renderContext.requestExternalRedirect("foo");
+			fail("IllegalStateException expected");
+		} catch (IllegalStateException e) {
+			// we want this
+		}
 	}
 
 	public void testCommitExecutionRedirectPopup() {
@@ -109,6 +147,15 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.getRedirectInPopup());
+	}
+
+	public void testExecutionRedirectPopupRenderRequest() {
+		try {
+			renderContext.requestRedirectInPopup();
+			fail("IllegalStateException expected");
+		} catch (IllegalStateException e) {
+			// we want this
+		}
 	}
 
 	public void testResponseAllowed() {

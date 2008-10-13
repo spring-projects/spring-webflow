@@ -235,19 +235,31 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public void requestFlowExecutionRedirect() {
+		if (isRenderPhase()) {
+			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
+		}
 		flowExecutionRedirectRequested = true;
 	}
 
 	public void requestExternalRedirect(String uri) {
+		if (isRenderPhase()) {
+			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
+		}
 		externalRedirectUrl = uri;
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
+		if (isRenderPhase()) {
+			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
+		}
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 	}
 
 	public void requestRedirectInPopup() {
+		if (isRenderPhase()) {
+			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
+		}
 		redirectInPopup = true;
 	}
 
