@@ -40,7 +40,7 @@
 					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "checkinDate",
 						widgetType : "dijit.form.DateTextBox",
-						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkinDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
+						widgetAttrs : { datePattern : "MM-dd-yyyy", required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -54,7 +54,7 @@
 					Spring.addDecoration(new Spring.ElementDecoration({
 						elementId : "checkoutDate",
 						widgetType : "dijit.form.DateTextBox",
-						widgetAttrs : { value : dojo.date.locale.parse(dojo.byId("checkoutDate").value, {selector : "date", datePattern : "yyyy-MM-dd"}), required : true }}));  
+						widgetAttrs : { datePattern : "MM-dd-yyyy", required : true }}));  
 				</script>
 			</div>
 		</div>
@@ -170,10 +170,10 @@
 			</div>
 		</div>
 		<div class="buttonGroup">
-			<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" 
-				onclick="Spring.remoting.submitForm('proceed', 'booking', {fragments:'messages,bookingForm'}); return false;"/>&#160;
+			<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />&#160;
 			<script type="text/javascript">
 				Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+				Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed',event:'onclick',formId:'booking',params:{fragments:'messages,bookingForm'}}));
 			</script>
 			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
 		</div>

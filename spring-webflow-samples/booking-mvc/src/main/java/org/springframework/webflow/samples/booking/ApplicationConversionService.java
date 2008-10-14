@@ -10,7 +10,9 @@ public class ApplicationConversionService extends DefaultConversionService {
     @Override
     protected void addDefaultConverters() {
 	super.addDefaultConverters();
-	addConverter("shortDate", new StringToDate());
+	StringToDate dateConverter = new StringToDate();
+	dateConverter.setPattern("MM-dd-yyyy");
+	addConverter("shortDate", dateConverter);
     }
 
 }

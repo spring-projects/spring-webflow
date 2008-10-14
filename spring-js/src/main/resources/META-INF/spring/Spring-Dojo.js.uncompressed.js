@@ -41,6 +41,17 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 			console.error("Could not apply " + this.widgetType + " decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
 		}
 		else {
+			var datePattern = this.widgetAttrs['datePattern'];
+			if (datePattern && this.widgetType == 'dijit.form.DateTextBox') {
+				if (!this.widgetAttrs['value']) {
+					this.widgetAttrs['value'] = dojo.date.locale.parse(element.value, {selector : "date", datePattern : datePattern});
+				}
+				if (!this.widgetAttrs['serialize']) {
+					this.widgetAttrs['serialize'] = function(d, options){
+						return dojo.date.locale.format(d, {selector : "date", datePattern : datePattern});
+					}
+				}
+			}
 			for (var copyField in this.copyFields) {
 				copyField = this.copyFields[copyField];
 				if (!this.widgetAttrs[copyField] && element[copyField] &&
@@ -97,7 +108,8 @@ dojo.declare("Spring.ValidateAllDecoration", [Spring.AbstractValidateAllDecorati
 	},
 	
 	handleEvent : function(event, context){
-		if (!Spring.validateAll()) {
+		event.springValidateAll = Spring.validateAll(); 
+		if (!event.springValidateAll) {
 			dojo.stopEvent(event);
 		} else if(dojo.isFunction(context.originalHandler)) {
 			var result = context.originalHandler(event);
@@ -130,7 +142,9 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 		if(this.formId == ""){
 			Spring.remoting.getLinkedResource(this.sourceId, this.params, this.popup);
 		} else {
-			Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
+			if (event.springValidateAll){
+				Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
+			}
 		}
 		dojo.stopEvent(event);
 	}

@@ -16,18 +16,14 @@
 package org.springframework.faces.ui;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.convert.Converter;
 
 import org.springframework.faces.ui.resource.ResourceHelper;
 import org.springframework.faces.webflow.JsfUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Generic renderer for components that use the Dojo implementation of Spring JavaScript to decorate a child component
@@ -78,13 +74,8 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 		script.append("  widgetType : '" + ((DojoDecoration) component).getDojoComponentType() + "',  ");
 		script.append("  widgetAttrs : { ");
 
-		String nodeAttrs = getNodeAttributesAsString(context, advisedChild);
 		String dojoAttrs = getDojoAttributesAsString(context, component);
 
-		script.append(nodeAttrs);
-		if (StringUtils.hasText(dojoAttrs)) {
-			script.append(", ");
-		}
 		script.append(dojoAttrs);
 
 		script.append("  }}));");
@@ -92,50 +83,6 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 		writer.writeText(script, null);
 
 		ResourceHelper.endScriptBlock(context);
-	}
-
-	protected String getNodeAttributesAsString(FacesContext context, UIComponent component) {
-
-		StringBuffer attrs = new StringBuffer();
-
-		attrs.append("name : '" + component.getClientId(context) + "'");
-
-		ValueHolder valueHolder = (ValueHolder) component;
-
-		if (valueHolder.getValue() != null) {
-			attrs.append(", value : ");
-			String strValue = "'" + getValueAsString(context, component) + "'";
-			if (valueHolder.getValue() instanceof Date) {
-				strValue = "dojo.date.locale.parse(" + strValue + ", {selector : 'date', datePattern : 'yyyy-MM-dd'})";
-			}
-			attrs.append(strValue);
-		}
-
-		return attrs.toString();
-	}
-
-	protected String getValueAsString(FacesContext context, UIComponent component) {
-
-		ValueHolder valueHolder = (ValueHolder) component;
-
-		if (valueHolder.getValue() instanceof String) {
-			return valueHolder.getValue().toString();
-		}
-
-		Converter converter;
-		if (valueHolder.getConverter() != null) {
-			converter = valueHolder.getConverter();
-		} else {
-			converter = context.getApplication().createConverter(valueHolder.getValue().getClass());
-		}
-
-		if (converter == null) {
-			throw new FacesException("A converter could not be found to convert the value of " + component
-					+ " to a String.");
-		}
-
-		return converter.getAsString(context, component, valueHolder.getValue());
-
 	}
 
 	protected String getDojoAttributesAsString(FacesContext context, UIComponent component) {
