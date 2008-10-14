@@ -29,7 +29,7 @@ public class MainFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
     @Override
     protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
-	return resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/main/main.xml");
+	return resourceFactory.createFileResource("src/main/webapp/WEB-INF/flows/main/main-flow.xml");
     }
 
     @Override

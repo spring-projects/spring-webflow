@@ -19,7 +19,7 @@ public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
     @Override
     protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
-	return resourceFactory.createFileResource("src/main/webapp/WEB-INF/hotels/booking/booking.xml");
+	return resourceFactory.createFileResource("src/main/webapp/WEB-INF/hotels/booking/booking-flow.xml");
     }
 
     @Override
