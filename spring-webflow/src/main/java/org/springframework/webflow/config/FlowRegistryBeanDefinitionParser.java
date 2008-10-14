@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
  * {@link BeanDefinitionParser} for the flow <code>&lt;flow-registry&gt;</code> tag.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
@@ -62,6 +63,12 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (StringUtils.hasText(parent)) {
 			definitionBuilder.addPropertyReference("parent", parent);
 		}
+
+		String basePath = element.getAttribute("base-path");
+		if (StringUtils.hasText(basePath)) {
+			definitionBuilder.addPropertyValue("basePath", basePath);
+		}
+
 		definitionBuilder.addPropertyValue("flowLocations", parseLocations(element));
 		definitionBuilder.addPropertyValue("flowLocationPatterns", parseLocationPatterns(element));
 		definitionBuilder.addPropertyValue("flowBuilders", parseFlowBuilders(element));

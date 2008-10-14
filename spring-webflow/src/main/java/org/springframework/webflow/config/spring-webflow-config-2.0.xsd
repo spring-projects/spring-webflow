@@ -11,7 +11,7 @@
 		<xsd:documentation>
 			<![CDATA[
 Spring Web Flow Configuration Schema
-Authors: Keith Donald, Jeremy Grelle
+Authors: Keith Donald, Jeremy Grelle, Scott Andrews
 <br>
 A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 ]]>
@@ -92,6 +92,17 @@ Optional.  For use when one or more custom builder services are required.
 								<![CDATA[
 A reference to this registry's parent.  Registries can be organized in a hierarchy.  If a child registry does not contain a flow,
 its parent registry will be queried.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="base-path" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The base path where flow definitions are found.  All flow locations must be referenced relative to the base path.  The default 
+flow id is constructed based on the path to the flow minus the base path.  The remaining directory path will be used as the flow 
+id.  If flow definition is found directly on the base path, the file name, without extension, is used as the flow id 
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

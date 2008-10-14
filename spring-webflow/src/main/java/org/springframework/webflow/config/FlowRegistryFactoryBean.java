@@ -54,6 +54,7 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
  * 
  * @author Keith Donald
  * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean {
 
@@ -66,6 +67,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 	private FlowBuilderServices flowBuilderServices;
 
 	private FlowDefinitionRegistry parent;
+
+	private String basePath;
 
 	private ClassLoader classLoader;
 
@@ -110,6 +113,13 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 	}
 
 	/**
+	 * Base path used when determining the default flow id
+	 */
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
+	}
+
+	/**
 	 * The parent of the registry created by this factory bean.
 	 */
 	public void setParent(FlowDefinitionRegistry parent) {
@@ -124,6 +134,9 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	public void afterPropertiesSet() throws Exception {
 		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getApplicationContext());
+		if (basePath != null) {
+			flowResourceFactory.setBasePath(basePath);
+		}
 		flowRegistry = new DefaultFlowRegistry();
 		flowRegistry.setParent(parent);
 		registerFlowLocations();

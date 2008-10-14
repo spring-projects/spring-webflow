@@ -19,22 +19,30 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
  * A factory for creating flow definition resources that serve as pointers to external Flow definition files.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class FlowDefinitionResourceFactory {
 
+	private static final String CLASSPATH_SCHEME = "classpath:";
+	private static final String CLASSPATH_STAR_SCHEME = "classpath*:";
+	private static final String SLASH = "/";
+
 	private ResourceLoader resourceLoader;
+	private String basePath;
 
 	/**
 	 * Creates a new flow definition resource factory using a default resource loader.
@@ -50,6 +58,16 @@ public class FlowDefinitionResourceFactory {
 	public FlowDefinitionResourceFactory(ResourceLoader resourceLoader) {
 		Assert.notNull(resourceLoader, "The resource loader cannot be null");
 		this.resourceLoader = resourceLoader;
+	}
+
+	/**
+	 * Sets the base removed from the flow path when determining the default flow id.
+	 * <p>
+	 * '/WEB-INF' by default
+	 * @param basePath the flow's base path
+	 */
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
 	}
 
 	/**
@@ -81,7 +99,16 @@ public class FlowDefinitionResourceFactory {
 	 * @return the flow definition resource
 	 */
 	public FlowDefinitionResource createResource(String path, AttributeMap attributes, String flowId) {
-		Resource resource = resourceLoader.getResource(path);
+		Resource resource;
+		if (basePath == null) {
+			resource = resourceLoader.getResource(path);
+		} else {
+			try {
+				resource = resourceLoader.getResource(basePath).createRelative(path);
+			} catch (IOException e) {
+				throw new IllegalStateException("The base path cannot be resolved from '" + basePath + "'", e);
+			}
+		}
 		if (flowId == null || flowId.length() == 0) {
 			flowId = getFlowId(resource);
 		}
@@ -96,7 +123,16 @@ public class FlowDefinitionResourceFactory {
 	public FlowDefinitionResource[] createResources(String pattern) throws IOException {
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			ResourcePatternResolver resolver = (ResourcePatternResolver) resourceLoader;
-			Resource[] resources = resolver.getResources(pattern);
+			Resource[] resources;
+			if (basePath == null) {
+				resources = resolver.getResources(pattern);
+			} else {
+				if (basePath.endsWith(SLASH) || pattern.startsWith(SLASH)) {
+					resources = resolver.getResources(basePath + pattern);
+				} else {
+					resources = resolver.getResources(basePath + SLASH + pattern);
+				}
+			}
 			FlowDefinitionResource[] flowResources = new FlowDefinitionResource[resources.length];
 			for (int i = 0; i < resources.length; i++) {
 				Resource resource = resources[i];
@@ -133,19 +169,63 @@ public class FlowDefinitionResourceFactory {
 	// subclassing hooks
 
 	/**
-	 * Obtains the flow id from the flow resource. By default, the flow id becomes the filename of the resource minus
-	 * the extension. Subclasses may override.
+	 * Obtains the flow id from the flow resource. By default, the flow id becomes the portion of the path between the
+	 * basePath and the filename. If no directory structure is available then the filename without the extension is
+	 * used. Subclasses may override.
+	 * <p>
+	 * For example, '${basePath}/booking.xml' becomes 'booking' and '${basePath}/hotels/booking/booking.xml' becomes
+	 * 'hotels/booking'
 	 * @param flowResource the flow resource
 	 * @return the flow id
 	 */
 	protected String getFlowId(Resource flowResource) {
-		String fileName = flowResource.getFilename();
-		int extensionIndex = fileName.lastIndexOf('.');
-		if (extensionIndex != -1) {
-			return fileName.substring(0, extensionIndex);
+		String basePath = this.basePath;
+		String filePath;
+		if (basePath == null) {
+			// default to the filename
+			return getFlowIdFromFileName(flowResource);
+		} else if (flowResource instanceof ClassPathResource) {
+			filePath = ((ClassPathResource) flowResource).getPath();
+			// remove classpath scheme
+			if (basePath.startsWith(CLASSPATH_SCHEME)) {
+				basePath = basePath.substring(CLASSPATH_SCHEME.length());
+			} else if (basePath.startsWith(CLASSPATH_STAR_SCHEME)) {
+				basePath = basePath.substring(CLASSPATH_STAR_SCHEME.length());
+			}
+		} else if (!(flowResource instanceof ContextResource)) {
+			// default to the filename
+			return getFlowIdFromFileName(flowResource);
 		} else {
-			return fileName;
+			filePath = ((ContextResource) flowResource).getPathWithinContext();
 		}
+
+		int beginIndex = 0;
+		int endIndex = filePath.length();
+		if (filePath.startsWith(SLASH) || !basePath.startsWith(SLASH)) {
+			if (filePath.startsWith(basePath)) {
+				beginIndex = basePath.length();
+			}
+		} else {
+			if (filePath.startsWith(SLASH + basePath)) {
+				beginIndex = basePath.length() + 1;
+			}
+		}
+		// ignore a leading slash
+		if (filePath.startsWith(SLASH, beginIndex)) {
+			beginIndex++;
+		}
+		if (filePath.lastIndexOf(SLASH) >= beginIndex) {
+			// ignore the filename
+			endIndex = filePath.lastIndexOf(SLASH);
+		} else {
+			// there is no path info, default to the filename
+			return getFlowIdFromFileName(flowResource);
+		}
+		return filePath.substring(beginIndex, endIndex);
+	}
+
+	private String getFlowIdFromFileName(Resource flowResource) {
+		return StringUtils.stripFilenameExtension(flowResource.getFilename());
 	}
 
 }
