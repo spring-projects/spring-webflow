@@ -28,6 +28,7 @@ import org.ajax4jsf.context.AjaxContext;
 import org.springframework.faces.webflow.FlowLifecycle;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.util.Assert;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
@@ -80,11 +81,12 @@ public class RichFacesAjaxHandler extends WebApplicationObjectSupport implements
 			if (FacesContext.getCurrentInstance() != null) {
 				return FacesContext.getCurrentInstance();
 			} else {
-				created = true;
 				FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
 						.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 				FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context, request, response,
 						FlowLifecycle.newInstance());
+				Assert.notNull(defaultFacesContext, "Creation of the default FacesContext failed.");
+				created = true;
 				return defaultFacesContext;
 			}
 		}
