@@ -24,6 +24,7 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageContextErrors;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -62,6 +63,8 @@ public class ValidationHelper {
 	 */
 	public ValidationHelper(Object model, RequestContext requestContext, String eventId, String modelName,
 			ExpressionParser expressionParser, MappingResults mappingResults) {
+		Assert.notNull(model, "The model to validate is requried");
+		Assert.notNull(requestContext, "The request context for the validator is required");
 		this.model = model;
 		this.requestContext = requestContext;
 		this.eventId = eventId;
@@ -77,7 +80,7 @@ public class ValidationHelper {
 		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
 		validateWithContext(model, validateMethodName);
 		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
-		if (beanFactory != null) {
+		if (beanFactory != null && StringUtils.hasText(modelName)) {
 			String validatorName = modelName + "Validator";
 			if (beanFactory.containsBean(validatorName)) {
 				Object validator = beanFactory.getBean(validatorName);
