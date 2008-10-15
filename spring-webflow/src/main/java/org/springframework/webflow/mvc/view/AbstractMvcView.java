@@ -17,7 +17,6 @@ package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
@@ -41,13 +39,8 @@ import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.message.MessageBuilder;
-import org.springframework.binding.message.MessageContext;
-import org.springframework.binding.message.MessageContextErrors;
 import org.springframework.binding.message.MessageResolver;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -57,6 +50,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
+import org.springframework.webflow.validation.ValidationHelper;
 
 /**
  * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
@@ -414,34 +408,8 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private void validate(Object model) {
-		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
-		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
-				new Class[] { MessageContext.class });
-		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
-		}
-		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
-		if (beanFactory != null) {
-			String validatorName = getModelExpression().getExpressionString() + "Validator";
-			if (beanFactory.containsBean(validatorName)) {
-				Object validator = beanFactory.getBean(validatorName);
-				validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-						model.getClass(), MessageContext.class });
-				if (validateMethod != null) {
-					ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-							requestContext.getMessageContext() });
-				} else {
-					validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-							model.getClass(), Errors.class });
-					if (validateMethod != null) {
-						String objectName = getModelExpression().getExpressionString();
-						MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(),
-								objectName, model, expressionParser, mappingResults);
-						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
-					}
-				}
-			}
-		}
+		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
+				expressionParser, mappingResults).validate();
 	}
 
 	private void determineEventId(RequestContext context) {

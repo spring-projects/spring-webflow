@@ -15,7 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +27,13 @@ import javax.faces.event.ActionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.message.MessageContext;
-import org.springframework.binding.message.MessageContextErrors;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.Errors;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
+import org.springframework.webflow.validation.ValidationHelper;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
@@ -104,7 +99,7 @@ public class FlowActionListener implements ActionListener {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		Object model = getModelObject(requestContext);
 		if (shouldValidate(requestContext, model, eventId)) {
-			validate(requestContext, model);
+			validate(requestContext, model, eventId);
 			if (requestContext.getMessageContext().hasErrorMessages()) {
 				isValid = false;
 				if (requestContext.getExternalContext().isAjaxRequest()) {
@@ -155,34 +150,8 @@ public class FlowActionListener implements ActionListener {
 		return true;
 	}
 
-	private void validate(RequestContext requestContext, Object model) {
-		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
-		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
-				new Class[] { MessageContext.class });
-		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
-		}
-		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
-		if (beanFactory != null) {
-			String validatorName = getModelExpression(requestContext).getExpressionString() + "Validator";
-			if (beanFactory.containsBean(validatorName)) {
-				Object validator = beanFactory.getBean(validatorName);
-				validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-						model.getClass(), MessageContext.class });
-				if (validateMethod != null) {
-					ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-							requestContext.getMessageContext() });
-				} else {
-					validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-							model.getClass(), Errors.class });
-					if (validateMethod != null) {
-						String objectName = getModelExpression(requestContext).getExpressionString();
-						MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(),
-								objectName, model, null, null);
-						ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
-					}
-				}
-			}
-		}
+	private void validate(RequestContext requestContext, Object model, String eventId) {
+		new ValidationHelper(model, requestContext, eventId, getModelExpression(requestContext).getExpressionString(),
+				null, null).validate();
 	}
 }
