@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
 /**
@@ -190,14 +191,13 @@ public class Booking implements Serializable {
     }
 
     public void validateEnterBookingDetails(ValidationContext context) {
-	context.getUserEvent();
+	MessageContext messages = context.getMessageContext();
 	if (checkinDate.before(today())) {
-	    context.getMessageContext().addMessage(
-		    new MessageBuilder().error().source("checkinDate").code("booking.checkinDate.beforeToday").build());
+	    messages.addMessage(new MessageBuilder().error().source("checkinDate").code(
+		    "booking.checkinDate.beforeToday").build());
 	} else if (checkoutDate.before(checkinDate)) {
-	    context.getMessageContext().addMessage(
-		    new MessageBuilder().error().source("checkoutDate").code("booking.checkoutDate.beforeCheckinDate")
-			    .build());
+	    messages.addMessage(new MessageBuilder().error().source("checkoutDate").code(
+		    "booking.checkoutDate.beforeCheckinDate").build());
 	}
     }
 

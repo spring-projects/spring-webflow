@@ -113,7 +113,7 @@ public abstract class AbstractMvcView implements View {
 
 	/**
 	 * Sets the configuration describing how this view should bind to its model to access data for rendering.
-	 * @param binderModel the model binder configuratio
+	 * @param binderConfiguration the model binder configuration
 	 */
 	public void setBinderConfiguration(BinderConfiguration binderConfiguration) {
 		this.binderConfiguration = binderConfiguration;
