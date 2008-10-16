@@ -8,6 +8,7 @@
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
 		<property name="order" value="0" />
+		<property name="flowRegistry" ref="flowRegistry" />
 	</bean>
 
 	<!-- Maps request paths to @Controller classes; e.g. a path of /hotels looks for a controller named HotelsController -->

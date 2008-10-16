@@ -7,6 +7,7 @@
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="flowRegistry" ref="flowRegistry" />
 		<property name="defaultHandler">
 			<!-- If no flow match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro" -->	
 			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
