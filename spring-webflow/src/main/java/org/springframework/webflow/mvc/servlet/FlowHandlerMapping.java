@@ -18,6 +18,9 @@ package org.springframework.webflow.mvc.servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
@@ -39,9 +42,11 @@ import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
  */
 public class FlowHandlerMapping extends AbstractHandlerMapping {
 
-	private FlowUrlHandler flowUrlHandler = new DefaultFlowUrlHandler();
+	private static final Log logger = LogFactory.getLog(FlowHandlerMapping.class);
 
 	private FlowDefinitionRegistry flowRegistry;
+
+	private FlowUrlHandler flowUrlHandler;
 
 	/**
 	 * Returns the registry of flows to query when this mapping is tested.
@@ -77,9 +82,9 @@ public class FlowHandlerMapping extends AbstractHandlerMapping {
 	}
 
 	protected void initServletContext(ServletContext servletContext) {
-		if (flowRegistry == null) {
-			flowRegistry = (FlowDefinitionRegistry) getApplicationContext().getBean("flowRegistry",
-					FlowDefinitionRegistry.class);
+		Assert.notNull(flowRegistry, "The FlowRegistry to query when mapping requests is required");
+		if (flowUrlHandler == null) {
+			flowUrlHandler = new DefaultFlowUrlHandler();
 		}
 	}
 
@@ -88,11 +93,22 @@ public class FlowHandlerMapping extends AbstractHandlerMapping {
 		if (getApplicationContext().containsBean(flowId)) {
 			Object handler = getApplicationContext().getBean(flowId);
 			if (handler instanceof FlowHandler) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Mapping request with URI '" + request.getRequestURI() + "' to flow with id '"
+							+ flowId + "'; custom FlowHandler " + handler + " will manage flow execution");
+				}
 				return handler;
 			}
 		}
 		if (flowRegistry.containsFlowDefinition(flowId)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Mapping request with URI '" + request.getRequestURI() + "' to flow with id '" + flowId
+						+ "'");
+			}
 			return new DefaultFlowHandler(flowId);
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("No flow mapping found for request with URI '" + request.getRequestURI() + "'");
 		}
 		return null;
 	}
