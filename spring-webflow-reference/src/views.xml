@@ -319,63 +319,88 @@ public class StringToMonetaryAmount extends StringToObject {
 	<sect1 id="view-validate">
 		<title>Validating a model</title>
 		<para>
-			Model validation is driven by constraints specified against the model object.
-			These constraints may be specified declaratively, or enforced using a programmatic validation routine or external <code>Validator</code>.
+			Model validation is driven by constraints specified against a model object.
+			Web Flow supports enforcing such constraints programatically.
 		</para>
 		<sect2 id="view-validation-programmatic">
 			<title>Programmatic validation</title>
 			<para>
 				There are two ways to perform model validation programatically.
-				Both options use a <code>ValidationContext</code> parameter for recording validation error messages in addition to the current <code>Principal</code> and user event that triggered validation.
-				The user event is the same value that matches against the 'on' attribute of a transition.
-			</para>
-			<para>
-				Prior to Web Flow 2.0.4, a <code>MessageContext</code> was required instead of a ValidationContext.
-				This style validator is still supported, however, the ValidationContext provides access to the MessageContext and additional information.
+				The first is to implement validation logic in your model object.
+				The second is to implement an external <code>Validator</code>.
+				Both ways provide you with a <code>ValidationContext</code> to record error messages and access information about the current user.
 			</para>
 			<sect3 id="view-validation=programmatic-validate-method">
 				<title>Implementing a model validate method</title>
 				<para>
-					The first way is to define a validate method on the model object class.
-					To do this, create a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
+					Defining validation logic in your model object is the simplest way to validate its state.
+					Once such logic is structured according to Web Flow conventions, Web Flow will automatically invoke that logic during the view-state postback lifecycle.
+					Web Flow conventions have you structure model validation logic by view-state, allowing you to easily validate the subset of model properties that are editable on that view.
+					To do this, simply create a public method with the name <code>validate${state}</code>, where <code>${state}</code> is the id of your view-state where you want validation to run.
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
-public void validateEnterBookingDetails(ValidationContext context) {
-    Calendar calendar = Calendar.getInstance();
-    if (checkinDate.before(today())) {
-        context.getMessageContext().addMessage(new MessageBuilder().error().source(
-            "checkinDate").defaultText("Check in date must be a future date").build());
-    } else if (!checkinDate.before(checkoutDate)) {
-        context.getMessageContext().addMessage(new MessageBuilder().error().source(
-            "checkoutDate").defaultText("Check out date must be later than check in date")
-            .build());
+public class Booking {
+    private Date checkinDate;
+    private Date checkoutDate;
+    ...
+        
+    public void validateEnterBookingDetails(ValidationContext context) {
+        MessageContext messages = context.getMessages();
+        if (checkinDate.before(today())) {
+            messages.addMessage(new MessageBuilder().error().source("checkinDate").
+                defaultText("Check in date must be a future date").build());
+        } else if (!checkinDate.before(checkoutDate)) {
+            messages.addMessage(new MessageBuilder().error().source("checkoutDate").
+                defaultText("Check out date must be later than check in date").build());
+        }
     }
-}]]>
+}
+]]>
 				</programlisting>
+				<para>
+					In the example above, when a transition is triggered in a <code>enterBookingDetails</code> view-state that is editing a <code>Booking</code> model,
+					Web Flow will invoke the <code>validateEnterBookingDetails(ValidationContext)</code> method automatically unless validation has been suppressed for that transition.
+					An example of such a view-state is shown below:
+				</para>
+				<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" model="booking">
+    <transition on="proceed" to="reviewBooking">
+</view-state>]]>
+				</programlisting>
+				<para>
+					Any number of validation methods are defined.  Generally, a flow edits a model over a series of views.  In that case, a validate method would be defined 
+					for each view-state where validation needs to run.
+				</para>
 			</sect3>
 			<sect3 id="view-validation=programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
 					The second way is to define a separate object, called a <emphasis>Validator</emphasis>, which validates your model object.
-					To do this, create a class that defines a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
+					To do this, first create a class whose name has the pattern ${model}Validator, where <code>${model}</code> is the capitialized form of the model expression, such as <code>booking</code>.
+					Then define a public method with the name <code>validate${state}</code>, where <code>${state}</code> is the id of your view-state, such as <code>enterBookingDetails</code>.
+					The class should then be deployed as a Spring bean.  Any number of validation methods can be defined.
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
 @Component
 public class BookingValidator {
     public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
+        MessageContext messages = context.getMessages();
         if (booking.getCheckinDate().before(today())) {
-            context.getMessageContext().addMessage(new MessageBuilder().error().source(
-                "checkinDate").defaultText("Check in date must be a future date").build());
-        } else if (!booking.getCheckinDate().before(checkoutDate)) {
-            context.getMessageContext().addMessage(new MessageBuilder().error().source(
-                "checkoutDate").defaultText("Check out date must be later than check in date")
-                .build());
+            messages.addMessage(new MessageBuilder().error().source("checkinDate").
+                defaultText("Check in date must be a future date").build());
+        } else if (!booking.getCheckinDate().before(booking.getCheckoutDate())) {
+            messages.addMessage(new MessageBuilder().error().source("checkoutDate").
+                defaultText("Check out date must be later than check in date").build());
         }
     }
 }]]>
 				</programlisting>
+				<para>
+					In the example above, when a transition is triggered in a <code>enterBookingDetails</code> view-state that is editing a <code>Booking</code> model,
+					Web Flow will invoke the <code>validateEnterBookingDetails(Booking, ValidationContext)</code> method automatically unless validation has been suppressed for that transition.
+				</para>
 				<para>
 					A Validator can also accept a Spring MVC <code>Errors</code> object, which is required for invoking existing Spring Validators.
 				</para>
@@ -386,12 +411,13 @@ public class BookingValidator {
 				</para>
 			</sect3>
 		</sect2>
-		<sect2 id="view-validation-declarative">
-			<title>Declarative validation</title>
+		<sect2 id="view-validation-context">
+			<title>ValidationContext</title>
 			<para>
-				Spring Web Flow does not yet ship integration with a declarative validation framework such as Hibernate Validator.
-				It is expected that integration will be provided in a future Web Flow release.
-				This integration will allow declarative validation constraints to be defined against model properties.
+				A ValidationContext allows you to obtain a <code>MessageContext</code> to record messages during validation.
+				It also exposes information about the current user, such as the signaled <code>userEvent</code> and the current user's <code>Principal</code> identity.
+				This information can be used to customize validation logic based on what button or link was activated in the UI, or who is authenticated.
+				See the API Javadocs for <code>ValidationContext</code> for more information.
 			</para>
 		</sect2>		
 	</sect1>

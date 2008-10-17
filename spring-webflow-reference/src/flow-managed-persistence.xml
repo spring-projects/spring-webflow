@@ -6,23 +6,14 @@
 		<para>
 			Most applications access data in some way.
 			Many modify data shared by multiple users and therefore require transactional data access properties.
-			This chapter shows you how to use flows to manage data access in a web application.
+			They often transform relational data sets into domain objects to support application processing.
+			Web Flow offers "flow managed persistence" where a flow can create, commit, and close a object persistence context for you.
+			Web Flow integrates both Hibernate and JPA object persistence technologies.
 		</para>
-	</sect1>
-	<sect1 id="flow-managed-data-access-patterns">
-		<title>Data access patterns</title>
 		<para>
-			There are essentially three flow-managed data access patterns:
-		</para>
-		<orderedlist>
-			<listitem><para>The FlowScoped PersistenceContext</para></listitem>
-			<listitem><para>The ConversationScoped PersistenceContext</para></listitem>
-			<listitem><para>The ViewState PersistenceContext</para></listitem>
-		</orderedlist>
-		<para>
-			Apart from these three patterns, there is the pattern of fully encapsulating PersistenceContext management within the service layer of your application.
+			Apart from flow-managed persistence, there is the pattern of fully encapsulating PersistenceContext management within the service layer of your application.
 			In that case, the web layer does not get involved with persistence, instead it works entirely with detached objects that are passed to and returned by your service layer.
-			This chapter will focus on the flow-managed persistence patterns, exploring how and when to use them.
+			This chapter will focus on the flow-managed persistence, exploring how and when to use this feature.
 		</para>
 	</sect1>
 	<sect1 id="flowScopedPersistenceContext">
@@ -81,33 +72,5 @@
 			In addition, any data access that occurs using a Spring managed data access object will use this EntityManager automatically.
 			Such data access operations should always execute non transactionally or in read-only transactions to maintain isolation of intermediate edits.
 		</para>
-	</sect1>
-	<sect1 id="conversationScopedPersistenceContext">
-		<title>ConversationScoped PersistenceContext</title>
-		<para>
-			This pattern creates a <code>PersistenceContext</code> in <code>conversationScope</code> on flow startup, and uses that context for data access until the conversation ends.
-			This pattern generally employs a manual flush mode; that is, the application decides when to flush changes to the database.
-			A convention for flow-managed flushing may be employed, such as always flushing after a transition from one view-state to another.
-			This pattern provides no flow-level isolation of intermediate edits since flushing synchronizes persistent object state with the database.
-			With this pattern, all data access generally occurs non-transactionally.
-		</para>
-		<para>
-			An implementation of this flow-managed persistence pattern is not yet available in the Web Flow distribution, and will be considered for future releases.
-		</para>
-	</sect1>
-	<sect1 id="viewScopedPersistenceContext">
-		<title>ViewState PersistenceContext</title>
-		<para>
-			This pattern creates a <code>PersistenceContext</code> with a read-only transaction before view rendering.
-			The context is used to load the model for the view.  It stays open through view rendering and commits after rendering completes.
-			Then on the occurrence of an event, this pattern creates a fresh <code>PersistenceContext</code> with a read-write transaction.
-			The model is merged with the new context and any changes are committed after event handling completes.
-			Therefore, this pattern results in edits being saved to the DB after each event.  Any rollback of intermediate flow steps requires compensating transactions.
-			This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
-			This pattern stores much less flow state, but generally increases the amount of data access since persistent entities are fetched and flushed more often.
-		</para>
-		<para>
-			An implementation of this flow-managed persistence pattern is not yet available in the Web Flow distribution, and will be considered for future releases.
-		</para>		
 	</sect1>
 </chapter>
