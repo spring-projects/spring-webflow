@@ -86,7 +86,7 @@ public void testStartBookingFlow() {
         	You goal should be to exercise all paths through the flow.
         	You can use the convenient <code>setCurrentState(String)</code> method to jump to the flow state where you wish to begin your test.
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="java"><![CDATA[
 public void testEnterBookingDetails_Proceed() {
 
     setCurrentState("enterBookingDetails");
