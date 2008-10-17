@@ -78,6 +78,7 @@ class OgnlExpression implements Expression {
 	public Object getValue(Object context) throws EvaluationException {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
+			Ognl.setTypeConverter(evaluationContext, createTypeConverter());
 			return Ognl.getValue(expression, evaluationContext, context, expectedResultType);
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
