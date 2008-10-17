@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.definition.registry;
 
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.definition.FlowDefinition;
 
 /**
@@ -58,6 +59,10 @@ class StaticFlowDefinitionHolder implements FlowDefinitionHolder {
 
 	public int hashCode() {
 		return flowDefinition.hashCode();
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("flowDefinition", flowDefinition).toString();
 	}
 
 }

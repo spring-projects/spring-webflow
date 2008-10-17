@@ -92,7 +92,8 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	public void registerFlowDefinition(FlowDefinitionHolder definitionHolder) {
 		Assert.notNull(definitionHolder, "The holder of the flow definition to register is required");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Registering flow definition held by " + definitionHolder);
+			logger.debug("Registering flow definition held by " + definitionHolder + " under id '"
+					+ definitionHolder.getFlowDefinitionId() + "'");
 		}
 		flowDefinitions.put(definitionHolder.getFlowDefinitionId(), definitionHolder);
 	}
@@ -115,6 +116,6 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("flowDefinitions", flowDefinitions).append("parent", parent).toString();
+		return new ToStringCreator(this).append("flowIds", getFlowDefinitionIds()).append("parent", parent).toString();
 	}
 }

@@ -17,6 +17,8 @@ package org.springframework.webflow.engine.builder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
@@ -60,6 +62,7 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 	 * @param assembler the flow assembler to use
 	 */
 	public DefaultFlowHolder(FlowAssembler assembler) {
+		Assert.notNull(assembler, "The FlowAssembler is required");
 		this.assembler = assembler;
 	}
 
@@ -106,7 +109,7 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 	}
 
 	public String toString() {
-		return "'" + getFlowDefinitionId() + "'";
+		return new ToStringCreator(this).append("flowBuilder", assembler.getFlowBuilder()).toString();
 	}
 
 }

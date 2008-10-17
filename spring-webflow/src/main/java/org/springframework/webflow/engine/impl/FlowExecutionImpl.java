@@ -57,9 +57,8 @@ import org.springframework.webflow.execution.View;
 
 /**
  * Default implementation of FlowExecution that uses a stack-based data structure to manage spawned flow sessions. This
- * class is closely coupled with package-private <code>FlowSessionImpl</code> and
- * <code>RequestControlContextImpl</code>. The three classes work together to form a complete flow execution
- * implementation based on a finite state machine.
+ * class is closely coupled with package-private <code>FlowSessionImpl</code> and <code>RequestControlContextImpl</code>
+ * . The three classes work together to form a complete flow execution implementation based on a finite state machine.
  * <p>
  * This implementation of FlowExecution is serializable so it can be safely stored in an HTTP session or other
  * persistent store such as a file, database, or client-side form field. Once deserialized, the
@@ -211,7 +210,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			IllegalStateException {
 		Assert.state(!started, "This flow has already been started; you cannot call 'start()' more than once");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Starting execution in " + externalContext);
+			logger.debug("Starting in " + externalContext + " with input " + input);
 		}
 		started = true;
 		MessageContext messageContext = createMessageContext(null);
@@ -230,13 +229,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 				try {
 					listeners.firePaused(requestContext);
 				} catch (Throwable e) {
-					logger.error("Flow execution listener threw exception", e);
+					logger.error("FlowExecutionListener threw exception", e);
 				}
 			}
 			try {
 				listeners.fireRequestProcessed(requestContext);
 			} catch (Throwable e) {
-				logger.error("Flow execution listener threw exception", e);
+				logger.error("FlowExecutionListener threw exception", e);
 			}
 			RequestContextHolder.setRequestContext(null);
 		}
@@ -251,7 +250,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Resuming execution in " + externalContext);
+			logger.debug("Resuming in " + externalContext);
 		}
 		Flow activeFlow = getActiveSessionInternal().getFlow();
 		MessageContext messageContext = createMessageContext(activeFlow.getApplicationContext());
@@ -271,13 +270,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 				try {
 					listeners.firePaused(requestContext);
 				} catch (Throwable e) {
-					logger.error("Flow execution listener threw exception", e);
+					logger.error("FlowExecutionListener threw exception", e);
 				}
 			}
 			try {
 				listeners.fireRequestProcessed(requestContext);
 			} catch (Throwable e) {
-				logger.error("Flow execution listener threw exception", e);
+				logger.error("FlowExecutionListener threw exception", e);
 			}
 			RequestContextHolder.setRequestContext(null);
 		}
@@ -539,8 +538,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	// internal helpers
 
 	/**
-	 * Activate a new <code>FlowSession</code> for the flow definition. Creates the new flow session and pushes it
-	 * onto the stack.
+	 * Activate a new <code>FlowSession</code> for the flow definition. Creates the new flow session and pushes it onto
+	 * the stack.
 	 * @param flow the flow definition
 	 * @return the new flow session
 	 */

@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.executor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.ExternalContextHolder;
@@ -72,6 +74,8 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  */
 public class FlowExecutorImpl implements FlowExecutor {
 
+	private static final Log logger = LogFactory.getLog(FlowExecutorImpl.class);
+
 	/**
 	 * The locator to access flow definitions registered in a central registry.
 	 */
@@ -127,6 +131,9 @@ public class FlowExecutorImpl implements FlowExecutor {
 	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
 			throws FlowException {
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Launching new execution of flow '" + flowId + "' with input " + input);
+			}
 			ExternalContextHolder.setExternalContext(context);
 			FlowDefinition flowDefinition = definitionLocator.getFlowDefinition(flowId);
 			FlowExecution flowExecution = executionFactory.createFlowExecution(flowDefinition);
@@ -144,6 +151,9 @@ public class FlowExecutorImpl implements FlowExecutor {
 
 	public FlowExecutionResult resumeExecution(String flowExecutionKey, ExternalContext context) throws FlowException {
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Resuming flow execution with key '" + flowExecutionKey);
+			}
 			ExternalContextHolder.setExternalContext(context);
 			FlowExecutionKey key = executionRepository.parseFlowExecutionKey(flowExecutionKey);
 			FlowExecutionLock lock = executionRepository.getLock(key);

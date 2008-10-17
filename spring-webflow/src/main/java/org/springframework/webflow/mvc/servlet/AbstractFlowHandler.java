@@ -49,7 +49,7 @@ public class AbstractFlowHandler implements FlowHandler {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("flowId", getFlowId()).toString();
+		return new ToStringCreator(this).toString();
 	}
 
 }
