@@ -42,6 +42,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -132,6 +133,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	 * @param flowModelHolder the flow model holder
 	 */
 	public FlowModelFlowBuilder(FlowModelHolder flowModelHolder) {
+		Assert.notNull(flowModelHolder, "The FlowModelHolder is required");
 		this.flowModelHolder = flowModelHolder;
 	}
 
