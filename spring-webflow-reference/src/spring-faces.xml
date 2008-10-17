@@ -501,7 +501,7 @@
                 <code>render</code>
                 action that specifies which portions of the component tree need to be re-rendered:
             </para>
-            <programlisting><![CDATA[
+            <programlisting language="xml"><![CDATA[
 <view-state id="reviewHotels">
     <on-render>
         <evaluate expression="bookingService.findHotels(searchCriteria)" 
