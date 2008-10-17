@@ -156,9 +156,8 @@
 	<webflow:flow-executor id="flowExecutor" />
 
 	<!-- The registry of executable flow definitions -->
-	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices">
-		<webflow:flow-location path="/WEB-INF/flows/main/main.xml" />
-		<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices" base-path="/WEB-INF">
+		<webflow:flow-location-pattern value="**/*-flow.xml" />
 	</webflow:flow-registry>
 
 	<!-- Configures the Spring Web Flow JSF integration -->
