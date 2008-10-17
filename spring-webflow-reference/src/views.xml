@@ -326,24 +326,30 @@ public class StringToMonetaryAmount extends StringToObject {
 			<title>Programmatic validation</title>
 			<para>
 				There are two ways to perform model validation programatically.
+				Both options use a <code>ValidationContext</code> parameter for recording validation error messages in addition to the current <code>Principal</code> and user event that triggered validation.
+				The user event is the same value that matches against the 'on' attribute of a transition.
+			</para>
+			<para>
+				Prior to Web Flow 2.0.4, a <code>MessageContext</code> was required instead of a ValidationContext.
+				This style validator is still supported, however, the ValidationContext provides access to the MessageContext and additional information.
 			</para>
 			<sect3 id="view-validation=programmatic-validate-method">
 				<title>Implementing a model validate method</title>
 				<para>
 					The first way is to define a validate method on the model object class.
 					To do this, create a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
-					The method must declare a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
-public void validateEnterBookingDetails(MessageContext context) {
+public void validateEnterBookingDetails(ValidationContext context) {
     Calendar calendar = Calendar.getInstance();
     if (checkinDate.before(today())) {
-        context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
-            "Check in date must be a future date").build());
+        context.getMessageContext().addMessage(new MessageBuilder().error().source(
+            "checkinDate").defaultText("Check in date must be a future date").build());
     } else if (!checkinDate.before(checkoutDate)) {
-        context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
-            "Check out date must be later than check in date").build());
+        context.getMessageContext().addMessage(new MessageBuilder().error().source(
+            "checkoutDate").defaultText("Check out date must be later than check in date")
+            .build());
     }
 }]]>
 				</programlisting>
@@ -353,19 +359,19 @@ public void validateEnterBookingDetails(MessageContext context) {
 				<para>
 					The second way is to define a separate object, called a <emphasis>Validator</emphasis>, which validates your model object.
 					To do this, create a class that defines a public method with the name <code>validate${state}</code>, where <code>state</code> is the id of your view-state.
-					The method must declare a parameter to accept your model object, and a <code>MessageContext</code> parameter for recording validation error messages.
 					For example:
 				</para>
 				<programlisting language="java"><![CDATA[
 @Component
 public class BookingValidator {
-    public void validateEnterBookingDetails(Booking booking, MessageContext context) {
+    public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
         if (booking.getCheckinDate().before(today())) {
-            context.addMessage(new MessageBuilder().error().source("checkinDate").defaultText(
-                "Check in date must be a future date").build());
+            context.getMessageContext().addMessage(new MessageBuilder().error().source(
+                "checkinDate").defaultText("Check in date must be a future date").build());
         } else if (!booking.getCheckinDate().before(checkoutDate)) {
-            context.addMessage(new MessageBuilder().error().source("checkoutDate").defaultText(
-                "Check out date must be later than check in date").build());
+            context.getMessageContext().addMessage(new MessageBuilder().error().source(
+                "checkoutDate").defaultText("Check out date must be later than check in date")
+                .build());
         }
     }
 }]]>
