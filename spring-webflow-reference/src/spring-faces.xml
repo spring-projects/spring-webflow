@@ -620,8 +620,8 @@
             <programlisting language="xml"><![CDATA[ 
 <sf:clientDateValidator required="true" >
     <h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
-	   	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
-	</h:inputText>
+        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
+    </h:inputText>
 </sf:clientDateValidator>]]>
             </programlisting>
             <para>
