@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
@@ -112,10 +111,6 @@ public class FlowHandlerMapping extends AbstractHandlerMapping {
 			logger.debug("No flow mapping found for request with URI '" + request.getRequestURI() + "'");
 		}
 		return null;
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("flowRegistry", flowRegistry).toString();
 	}
 
 	private static class DefaultFlowHandler extends AbstractFlowHandler {
