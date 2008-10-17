@@ -55,7 +55,10 @@
 		</para>
 		<para>
 			Subscribe to the <ulink url="http://www.springframework.org">Spring Community Portal</ulink> for the latest Spring news and announcements.
-		</para>		
+		</para>
+		<para>
+			Visit the <ulink url="http://www.springframework.org/webflow">Web Flow Project Home</ulink> for more resources on the project.
+		</para>
 	</sect1>
 	<sect1 id="jars">
 		<title>How to obtain Web Flow artifacts from the SpringSource Bundle Repository</title>
