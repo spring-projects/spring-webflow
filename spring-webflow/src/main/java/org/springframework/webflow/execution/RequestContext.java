@@ -32,8 +32,8 @@ import org.springframework.webflow.definition.TransitionDefinition;
  * <p>
  * A new instance of this object is typically created when one of the core operations supported by a flow execution is
  * invoked, either <code>start</code> to launch the flow execution, <code>signalEvent</code> to resume the flow
- * execution, or <code>refresh</code> to reconstitute the flow execution's last view selection for purposes of
- * reissuing a user response.
+ * execution, or <code>refresh</code> to reconstitute the flow execution's last view selection for purposes of reissuing
+ * a user response.
  * <p>
  * Once created this context object is passed around throughout flow execution request processing where it may be
  * accessed and reasoned upon by SWF-internal artifacts such as states, user-implemented action code, and state
@@ -190,8 +190,8 @@ public interface RequestContext {
 	public MutableAttributeMap getAttributes();
 
 	/**
-	 * Returns the context-relative URL of this flow execution. Needed by response writers that write out the URL of
-	 * this flow execution to allow calling back this execution in a subsequent request.
+	 * Returns the URL of this flow execution. Needed by response writers that write out the URL of this flow execution
+	 * to allow calling back this execution in a subsequent request.
 	 * @throws IllegalStateException if the flow execution has not yet had its key assigned
 	 * @return the flow execution URL
 	 */

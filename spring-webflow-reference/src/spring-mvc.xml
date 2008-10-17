@@ -271,20 +271,38 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		</para>
 		<sect2 id="webflow-event-named-html-button">
 			<title>Using a named HTML button to signal an event</title>
+			<para>
+				The example below shows two buttons on the same form that signal <code>proceed</code> and <code>cancel</code> events when clicked, respectively.
+			</para>
 			<programlisting language="xml"><![CDATA[
 <input type="submit" name="_eventId_proceed" value="Proceed" />
 <input type="submit" name="_eventId_cancel" value="Cancel" />]]>		
 			</programlisting>
+			<para>
+				When a button is pressed Web Flow finds a request parameter name beginning with <code>_eventId_</code> and treats the remaining substring as the event id.
+				So in this example, submitting <code>_eventId_proceed</code> becomes <code>proceed</code>.
+				This style should be considered when there are several different events that can be signaled from the same form.
+			</para>
 		</sect2>
 		<sect2 id="webflow-event-hidden-parameter">
 			<title>Using a hidden HTML form parameter to signal an event</title>
+			<para>
+				The example below shows a form that signals the <code>proceed</code> event when submitted:
+			</para>
 			<programlisting language="xml"><![CDATA[
 <input type="submit" value="Proceed" />
 <input type="hidden" name="_eventId" value="proceed" />]]>	
 			</programlisting>
+			<para>
+				Here, Web Flow simply detects the special <code>_eventId</code> parameter and uses its value as the event id.
+				This style should only be considered when there is one event that can be signaled on the form.
+			</para>
 		</sect2>
 		<sect2 id="webflow-event-link">
 			<title>Using a HTML link to signal an event</title>
+			<para>
+				The example below shows a link that signals the <code>cancel</code> event when activated: 
+			</para>
 			<programlisting language="xml"><![CDATA[
 <a href="${flowExecutionUrl}&_eventId=cancel">Cancel</a>]]>		
 			</programlisting>
@@ -293,7 +311,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 			Firing an event results in a HTTP request being sent back to the server.
 			On the server-side, the flow handles decoding the event from within its current view-state.
 			How this decoding process works is specific to the view implementation.
-			A Spring MVC view implementation simply looks for a request parameter named <code>_eventId</code>.
+			Recall a Spring MVC view implementation simply looks for a request parameter named <code>_eventId</code>.
 			If no <code>_eventId</code> parameter is found, the view will look for a parameter that
 			starts with <code>_eventId_</code> and will use the remaining substring as the event id.
 			If neither cases exist, no flow event is triggered.

@@ -69,8 +69,8 @@ public interface ExternalContext {
 	public SharedAttributeMap getSessionMap();
 
 	/**
-	 * Provides access to the <i>global</i> external session map, providing a storage for data globally accross the
-	 * user session and accessible to both internal and external SWF artifacts.
+	 * Provides access to the <i>global</i> external session map, providing a storage for data globally accross the user
+	 * session and accessible to both internal and external SWF artifacts.
 	 * <p>
 	 * Note: most external context implementations do not distinguish between the concept of a "local" user session
 	 * scope and a "global" session scope. The Portlet world does, but not the Servlet for example. In those cases
@@ -93,8 +93,8 @@ public interface ExternalContext {
 	public boolean isAjaxRequest();
 
 	/**
-	 * Get a context-relative flow execution URL for the execution with the provided key. Typically used by response
-	 * writers that write out references to the flow execution to support postback on a subsequent request.
+	 * Get a flow execution URL for the execution with the provided key. Typically used by response writers that write
+	 * out references to the flow execution to support postback on a subsequent request.
 	 * @param flowId the flow definition id
 	 * @param flowExecutionKey the flow execution key
 	 * @return the flow execution URL
