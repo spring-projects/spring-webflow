@@ -114,15 +114,35 @@
             (See the section on <link linkend="spring-js-ajax">Handling Ajax Requests</link> for details on how this request is handled on the server.)
         </para>
         <para>
-            Sometimes it is necessary to call Spring Javascript's <code>RemotingHandler</code> directly instead of using the <code>AjaxEventDecoration</code>.
-            For example, see inline <code>onclick</code> handler of this button:
+        	It is also possible to apply more than one decoration to an element.
+        	The following example shows a button being decorated with Ajax and validate-all submit suppression:
         </para>
         <programlisting language="xml"><![CDATA[
-<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" 
-       onclick="Spring.remoting.submitForm('proceed', 'booking', { fragments:'messages' }); return false;" />
+<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />  
 <script type="text/javascript">
-    Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick'} ));
+    Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+    Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed', event:'onclick',formId:'booking', params:{fragments:'messages'}}));
 </script>]]>
+        </programlisting>
+        <para>
+        	It is also possible to apply a decoration to multiple elements in a single statement using Dojo's query API.
+        	The following example decorates a set of checkbox elements as Dojo Checkbox widgets:
+        </para>
+        <programlisting language="xml"><![CDATA[
+<div id="amenities">
+<form:checkbox path="amenities" value="OCEAN_VIEW" label="Ocean View" /></li>
+<form:checkbox path="amenities" value="LATE_CHECKOUT" label="Late Checkout" /></li>
+<form:checkbox path="amenities" value="MINIBAR" label="Minibar" /></li>
+<script type="text/javascript">
+    dojo.query("#amenities input[type='checkbox']").forEach(function(element) {
+        Spring.addDecoration(new Spring.ElementDecoration({
+            elementId: element.id,
+            widgetType : "dijit.form.CheckBox",
+            widgetAttrs : { checked : element.checked }
+        }));
+    });
+</script>
+</div>]]>
         </programlisting>
     </sect1>
     <sect1 id="spring-js-ajax">
