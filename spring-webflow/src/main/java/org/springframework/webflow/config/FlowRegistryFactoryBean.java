@@ -32,7 +32,6 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
-import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
 import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
@@ -44,8 +43,6 @@ import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
-import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
-import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 
 /**
  * A factory for a flow definition registry. Is a Spring FactoryBean, for provision by the flow definition registry bean
@@ -231,6 +228,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private FlowModelHolder createFlowModelHolder(FlowDefinitionResource resource) {
 		FlowModelHolder modelHolder = new DefaultFlowModelHolder(createFlowModelBuilder(resource));
+		// register the flow model holder with the backing flow model registry - this is needed to support flow model
+		// merging during the flow build process
 		flowRegistry.getFlowModelRegistry().registerFlowModel(resource.getId(), modelHolder);
 		return modelHolder;
 	}
@@ -291,22 +290,6 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
 		} catch (IllegalAccessException e) {
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
-		}
-	}
-
-	public static class DefaultFlowRegistry extends FlowDefinitionRegistryImpl {
-		private FlowModelRegistry flowModelRegistry = new FlowModelRegistryImpl();
-
-		public FlowModelRegistry getFlowModelRegistry() {
-			return flowModelRegistry;
-		}
-
-		public void setParent(FlowDefinitionRegistry parent) {
-			super.setParent(parent);
-			if (parent instanceof DefaultFlowRegistry) {
-				DefaultFlowRegistry parentFlowRegistry = (DefaultFlowRegistry) parent;
-				flowModelRegistry.setParent(parentFlowRegistry.getFlowModelRegistry());
-			}
 		}
 	}
 
