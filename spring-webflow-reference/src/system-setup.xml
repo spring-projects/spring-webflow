@@ -59,6 +59,112 @@
 	</sect1>
 	<sect1 id="flow-registry">
 		<title>flow-registry options</title>
+		<para>
+			This section explores flow-registry configuration options.
+		</para>
+		<sect2 id="flow-registry-location">
+			<title>Specifying flow locations</title>
+			<para>
+				Use the <code>location</code> element to specify paths to flow definitions to register.
+				By default, flows will be assigned registry identifiers equal to their filenames minus the file extension, unless a registry bath path is defined.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />]]>
+			</programlisting>
+		</sect2>		
+		<sect2 id="flow-registry-location-id">
+			<title>Assigning custom flow identifiers</title>
+			<para>
+				Specify an id to assign a custom registry identifier to a flow:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-registry-location-attributes">
+			<title>Assigning flow meta-attributes</title>
+			<para>
+				Use the <code>flow-definition-attributes</code> element to assign custom meta-attributes to a registered flow:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml">
+    <flow-definition-attributes>
+        <attribute name="caption" value="Books a hotel" />
+    </flow-definition-attributes>
+</webflow:flow-location>]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-registry-patterns">
+			<title>Registering flows using a location pattern</title>
+			<para>
+				Use the <code>flow-location-patterns</code> element to register flows that match a specific resource location pattern:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="flow-registry-base-path">
+			<title>Flow location base path</title>
+			<para>
+				Use the <code>base-path</code> attribute to define a base location for all flows in the application.
+				All flow locations are then relative to the base path.
+				The base path can be a resource path such as '/WEB-INF' or a location on the classpath like 'classpath:org/springframework/webflow/samples'.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-registry id="flowRegistry" base-path="/WEB-INF">
+    <webflow:flow-location path="/hotels/booking/booking.xml" />
+</webflow:flow-registry>]]>
+			</programlisting>
+			<para>
+				With a base path defined, the algorithm that assigns flow identifiers changes slightly.
+				Flows will now be assigned registry identifiers equal to the the path segment between their base path and file name.
+				For example, if a flow definition is located at '/WEB-INF/hotels/booking/booking-flow.xml' and the base path is '/WEB-INF' the remaining path to this flow is 'hotels/booking' which becomes the flow id.
+			</para>
+			<tip>
+				<title>Directory per flow definition</title>
+				<para>
+					Recall it is a best practice to package each flow definition in a unique directory.
+					This improves modularity, allowing dependent resources to be packaged with the flow definition.
+					It also prevents two flows from having the same identifiers when using the convention.
+				</para>
+			</tip>
+			<para>
+				If no base path is not specified or if the flow definition is directly on the base path, flow id assignment from the filename (minus the extension) is used.
+				For example, if a flow definition file is 'booking.xml', the flow identifier is simply 'booking'.
+			</para>
+			<para>
+				Location patterns are particularly powerful when combined with a registry base path.
+				Instead of the flow identifiers becoming '*-flow', they will be based on the directory path.
+				For example:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<webflow:flow-registry id="flowRegistry" base-path="/WEB-INF">
+    <webflow:flow-location-pattern value="/**/*-flow.xml" />
+</webflow:flow-registry>]]>
+			</programlisting>
+			<para>
+				In the above example, suppose you had flows located in <code>/user/login</code>, <code>/user/registration</code>, <code>/hotels/booking</code>, and <code>/flights/booking</code> directories within <code>WEB-INF</code>,
+				you'd end up with flow ids of <code>user/login</code>, <code>user/registration</code>, <code>hotels/booking</code>, and <code>flights/booking</code>, respectively.
+			</para>
+		</sect2>
+		<sect2 id="flow-registry-parent">
+			<title>Configuring FlowRegistry hierarchies</title>
+			<para>
+				Use the <code>parent</code> attribute to link two flow registries together in a hierarchy.
+				When the child registry is queried, if it cannot find the requested flow it will delegate to its parent.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<!-- my-system-config.xml -->
+<webflow:flow-registry id="flowRegistry" parent="sharedFlowRegistry">
+    <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
+</webflow:flow-registry>
+
+<!-- shared-config.xml -->
+<webflow:flow-registry id="sharedFlowRegistry">
+    <!-- Global flows shared by several applications -->
+</webflow:flow-registry>]]>
+			</programlisting>
+		</sect2>				
 		<sect2 id="flow-registry-builder-services">
 			<title>Configuring custom FlowBuilder services</title>
 			<para>
@@ -121,110 +227,12 @@
 				</para>
 			</sect3>
 		</sect2>
-		<sect2 id="flow-registry-parent">
-			<title>Configuring FlowRegistry hierarchies</title>
-			<para>
-				Use the <code>parent</code> attribute to link two flow registries together in a hierarchy.
-				When the child registry is queried, if it cannot find the requested flow it will delegate to its parent.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<!-- my-system-config.xml -->
-<webflow:flow-registry id="flowRegistry" parent="sharedFlowRegistry">
-    <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
-</webflow:flow-registry>
-
-<!-- shared-config.xml -->
-<webflow:flow-registry id="sharedFlowRegistry">
-    <!-- Global flows shared by several applications -->
-</webflow:flow-registry>]]>
-			</programlisting>
-		</sect2>
-		<sect2 id="flow-registry-base-path">
-			<title>Flow location base path</title>
-			<para>
-				Use the <code>base-path</code> attribute to define the base location of all flow definitions for the application.
-				All flow locations, for the registry, are loaded relative to the base path.
-				The base path can be a file path such as '/WEB-INF' or a location on the classpath like 'classpath:org/springframework/webflow/samples'.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-registry id="flowRegistry" base-path="/WEB-INF">
-    ...
-</webflow:flow-registry>]]>
-			</programlisting>
-			<para>
-				When a base path is defined, the convention is different to determine the default flow identifier.
-				The default identifier is determined from the path to the flow definition between the base path and the file name.
-				For example, if a flow definition is located at '/WEB-INF/hotels/booking/booking-flow.xml' and the base path is '/WEB-INF' the remaining path to the flow definition file is 'hotels/booking' which becomes the flow identifier.
-			</para>
-			<tip>
-				<title>Directory per flow definition</title>
-				<para>
-					It is a best practice to package each flow definition in a unique directory.
-					This allows flow specific resources to be packaged with the flow definition.
-					It also prevents two flows from obtaining the same identifier by convention.
-				</para>
-			</tip>
-			<para>
-				If the base path is not specified or if the flow definition is directly on the base path, the filename (without the extension) is used.
-				For example, if a flow definition file is 'booking.xml', the flow identifier is 'booking'.
-			</para>
-		</sect2>
-		<sect2 id="flow-registry-location">
-			<title>Specifying flow locations</title>
-			<para>
-				Use the <code>location</code> element to specify paths to flow definitions to register.
-				By default, flows will be assigned registry identifiers equal to their filenames minus the file extension, unless a registry bath path is defined.
-				See <link linkend="flow-registry-base-path">Flow location base path</link> for more information.
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />]]>
-			</programlisting>
-		</sect2>		
-		<sect2 id="flow-registry-location-id">
-			<title>Assigning custom flow identifiers</title>
-			<para>
-				Specify an id to assign a custom registry identifier to a flow:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" />]]>
-			</programlisting>
-		</sect2>
-		<sect2 id="flow-registry-location-attributes">
-			<title>Assigning flow meta-attributes</title>
-			<para>
-				Use the <code>flow-definition-attributes</code> element to assign custom meta-attributes to a registered flow:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml">
-    <flow-definition-attributes>
-        <attribute name="caption" value="Books a hotel" />
-        <attribute name="persistence-context" value="true" type="boolean" />
-    </flow-definition-attributes>
-</webflow:flow-location>]]>
-			</programlisting>
-		</sect2>
-		<sect2 id="flow-registry-patterns">
-			<title>Registering flows using a location pattern</title>
-			<para>
-				Use the <code>flow-location-patterns</code> element to register flows that match a specific resource location pattern:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" />]]>
-			</programlisting>
-			<para>
-				Location patterns are particularly powerful when combined with a registry base path.
-				Instead of the flow identifiers becoming '*-flow', they will be based on the path represented by '**'.
-				For example:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<webflow:flow-registry base-path="/WEB-INF">
-    <webflow:flow-location-pattern value="**/*-flow.xml" />
-</webflow:flow-registry>]]>
-			</programlisting>
-		</sect2>					
 	</sect1>
 	<sect1 id="flow-executor">
 		<title>flow-executor options</title>
+		<para>
+			This section explores flow-executor configuration options.
+		</para>		
 		<sect2 id="flow-executor-execution-listeners">
 			<title>Attaching flow execution listeners</title>
 			<para>
