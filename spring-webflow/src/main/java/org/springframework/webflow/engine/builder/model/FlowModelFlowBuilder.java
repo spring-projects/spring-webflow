@@ -257,6 +257,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		return flowModelHolder.hasFlowModelChanged();
 	}
 
+	public String getFlowResourceString() {
+		return flowModelHolder.getFlowModelResource().getDescription();
+	}
+
 	/**
 	 * Shutdown the builder, releasing any resources it holds. A new flow construction process should start with another
 	 * call to the {@link #init(FlowBuilderContext)} method.
@@ -303,9 +307,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Resource[] parseContextResources(List beanImports) {
 		if (beanImports != null && !beanImports.isEmpty()) {
 			Resource flowResource = flowModelHolder.getFlowModelResource();
-			if (flowResource == null) {
-				throw new FlowBuilderException("The FlowModel must be Resource in order to load bean-imports");
-			}
 			List resources = new ArrayList(beanImports.size());
 			for (Iterator it = getFlowModel().getBeanImports().iterator(); it.hasNext();) {
 				BeanImportModel beanImport = (BeanImportModel) it.next();
@@ -339,9 +340,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		flowContext.getBeanFactory().registerScope("flow", new FlowScope());
 		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
 		Resource flowResource = flowModelHolder.getFlowModelResource();
-		if (flowResource != null) {
-			flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
-		}
+		flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
 		if (JdkVersion.isAtLeastJava15()) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		}
@@ -359,7 +358,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private void registerMessageSource(GenericApplicationContext flowContext, Resource flowResource) {
 		boolean localMessageSourcePresent = flowContext
 				.containsLocalBean(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME);
-		if (flowResource != null && !localMessageSourcePresent) {
+		if (!localMessageSourcePresent) {
 			Resource messageBundle;
 			try {
 				messageBundle = flowResource.createRelative("messages.properties");
@@ -968,7 +967,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("resource", flowModelHolder.getFlowModelResource()).toString();
+		return new ToStringCreator(this).append("flowModelResource", flowModelHolder.getFlowModelResource()).toString();
 	}
 
 }

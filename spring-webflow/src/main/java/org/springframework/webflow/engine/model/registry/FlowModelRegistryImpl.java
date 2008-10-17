@@ -18,8 +18,6 @@ package org.springframework.webflow.engine.model.registry;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.engine.model.FlowModel;
@@ -31,8 +29,6 @@ import org.springframework.webflow.engine.model.FlowModel;
  * @author Scott Andrews
  */
 public class FlowModelRegistryImpl implements FlowModelRegistry {
-
-	private static final Log logger = LogFactory.getLog(FlowModelRegistryImpl.class);
 
 	/**
 	 * The map of loaded Flow models maintained in this registry.
@@ -52,9 +48,6 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 
 	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException {
 		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Getting FlowModel with id '" + id + "'");
-			}
 			return getFlowModelHolder(id).getFlowModel();
 
 		} catch (NoSuchFlowModelException e) {
@@ -74,9 +67,6 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 
 	public void registerFlowModel(String id, FlowModelHolder modelHolder) {
 		Assert.notNull(modelHolder, "The holder of the flow model to register is required");
-		if (logger.isDebugEnabled()) {
-			logger.debug("Registering flow model " + modelHolder);
-		}
 		flowModels.put(id, modelHolder);
 	}
 

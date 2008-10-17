@@ -41,9 +41,8 @@ public interface FlowModelHolder {
 	public boolean hasFlowModelChanged();
 
 	/**
-	 * Returns the underlying resource defining the flow model. Will return null if the flow model did not originate
-	 * from a file-based resource.
-	 * @return the flow model resource, or null
+	 * Returns the underlying resource defining the flow model.
+	 * @return the flow model resource
 	 */
 	public Resource getFlowModelResource();
 

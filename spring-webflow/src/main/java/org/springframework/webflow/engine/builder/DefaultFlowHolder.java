@@ -70,6 +70,10 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 		return assembler.getFlowBuilderContext().getFlowId();
 	}
 
+	public String getFlowDefinitionResourceString() {
+		return assembler.getFlowBuilder().getFlowResourceString();
+	}
+
 	public synchronized FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException {
 		if (assembling) {
 			// must return early assembly result for when a flow calls itself recursively

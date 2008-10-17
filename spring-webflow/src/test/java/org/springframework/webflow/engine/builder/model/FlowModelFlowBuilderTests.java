@@ -338,7 +338,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		}
 
 		public Resource getFlowModelResource() {
-			return null;
+			return new ClassPathResource("", getClass());
 		}
 
 		public boolean hasFlowModelChanged() {

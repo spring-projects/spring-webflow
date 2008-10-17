@@ -109,6 +109,10 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 		return false;
 	}
 
+	public String getFlowResourceString() {
+		return getClass().getName();
+	}
+
 	/**
 	 * Flow builder destruction hook. Does nothing by default. May be overridden by subclasses.
 	 */

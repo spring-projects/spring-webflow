@@ -35,6 +35,14 @@ public interface FlowDefinitionHolder {
 	public String getFlowDefinitionId();
 
 	/**
+	 * Returns a descriptive string that identifies the source of this FlowDefinition. This is also a lightweight method
+	 * callers may call to obtain the logical resource where the flow definition resides without triggering flow
+	 * definition assembly. Used for informational purposes.
+	 * @return the flow definition resource string
+	 */
+	public String getFlowDefinitionResourceString();
+
+	/**
 	 * Returns the flow definition held by this holder. Calling this method the first time may trigger flow assembly
 	 * (which may be expensive).
 	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
@@ -47,4 +55,5 @@ public interface FlowDefinitionHolder {
 	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
 	 */
 	public void refresh() throws FlowDefinitionConstructionException;
+
 }

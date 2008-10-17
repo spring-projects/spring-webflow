@@ -20,20 +20,19 @@ import org.springframework.webflow.engine.Flow;
 /**
  * Builder interface used to build a flow definition. The process of building a flow consists of the following steps:
  * <ol>
- * <li> Initialize this builder, creating the initial flow definition, by calling {@link #init(FlowBuilderContext)}.
- * <li> Call {@link #buildVariables()} to create any variables of the flow and add them to the flow definition.
- * <li> Call {@link #buildInputMapper()} to create and set the input mapper for the flow.
- * <li> Call {@link #buildStartActions()} to create and add any start actions to the flow.
- * <li> Call {@link #buildStates()} to create the states of the flow and add them to the flow definition.
- * <li> Call {@link #buildGlobalTransitions()} to create any transitions shared by all states of the flow and add them
- * to the flow definition.
- * <li> Call {@link #buildEndActions()} to create and add any end actions to the flow.
- * <li> Call {@link #buildOutputMapper()} to create and set the output mapper for the flow.
- * <li> Call {@link #buildExceptionHandlers()} to create the exception handlers of the flow and add them to the flow
+ * <li>Initialize this builder, creating the initial flow definition, by calling {@link #init(FlowBuilderContext)}.
+ * <li>Call {@link #buildVariables()} to create any variables of the flow and add them to the flow definition.
+ * <li>Call {@link #buildInputMapper()} to create and set the input mapper for the flow.
+ * <li>Call {@link #buildStartActions()} to create and add any start actions to the flow.
+ * <li>Call {@link #buildStates()} to create the states of the flow and add them to the flow definition.
+ * <li>Call {@link #buildGlobalTransitions()} to create any transitions shared by all states of the flow and add them to
+ * the flow definition.
+ * <li>Call {@link #buildEndActions()} to create and add any end actions to the flow.
+ * <li>Call {@link #buildOutputMapper()} to create and set the output mapper for the flow.
+ * <li>Call {@link #buildExceptionHandlers()} to create the exception handlers of the flow and add them to the flow
  * definition.
- * <li> Call {@link #getFlow()} to return the fully-built {@link Flow} definition.
- * <li> Dispose this builder, releasing any resources allocated during the building process by calling
- * {@link #dispose()}.
+ * <li>Call {@link #getFlow()} to return the fully-built {@link Flow} definition.
+ * <li>Dispose this builder, releasing any resources allocated during the building process by calling {@link #dispose()}.
  * </ol>
  * <p>
  * Implementations should encapsulate flow construction logic, either for a specific kind of flow, for example, an
@@ -127,9 +126,16 @@ public interface FlowBuilder {
 	public void dispose() throws FlowBuilderException;
 
 	/**
-	 * As the underlying flow resource managed by this builder changed since the last build occurred?
+	 * As the underlying flow managed by this builder changed since the last build occurred?
 	 * @return true if changed, false if not
 	 */
 	public boolean hasFlowChanged();
+
+	/**
+	 * Returns a string describing the location of the flow resource; the logical location where the source code can be
+	 * found. Used for informational purposes.
+	 * @return the flow resource string
+	 */
+	public String getFlowResourceString();
 
 }

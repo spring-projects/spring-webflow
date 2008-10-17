@@ -41,6 +41,10 @@ class StaticFlowDefinitionHolder implements FlowDefinitionHolder {
 		return flowDefinition.getId();
 	}
 
+	public String getFlowDefinitionResourceString() {
+		return flowDefinition.getClass().getName();
+	}
+
 	public FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException {
 		return flowDefinition;
 	}
