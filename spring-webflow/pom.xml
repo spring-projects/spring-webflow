@@ -126,6 +126,13 @@
 			<optional>true</optional>
 		</dependency>       
 	</dependencies>
+	<repositories>
+		<!-- Where the el-api is located -->	
+		<repository>
+ 			<id>java.net</id>
+ 			<url>http://download.java.net/maven/2</url>
+		</repository>
+	</repositories>		
 	<properties>
 		<spring.version>2.5.5</spring.version>
 	</properties>	

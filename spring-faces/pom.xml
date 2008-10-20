@@ -89,8 +89,21 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+	<repositories>
+		<!-- Where the el-api is located -->
+		<repository>
+ 			<id>java.net</id>
+ 			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<!-- Where the JSF RI api/impl is located -->
+		<repository>
+			<id>java.net</id>
+			<url>http://download.java.net/maven/1</url>
+			<layout>legacy</layout>
+		</repository>		
+	</repositories>	
 	<properties>
 		<spring.version>2.5.5</spring.version>
-		<jsf.version>1.2_08</jsf.version>		
+		<jsf.version>1.2_09</jsf.version>		
 	</properties>	
 </project>
