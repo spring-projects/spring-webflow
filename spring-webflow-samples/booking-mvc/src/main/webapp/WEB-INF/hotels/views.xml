@@ -10,7 +10,7 @@
 	</definition>
 	
     <definition name="index.body" template="/WEB-INF/hotels/index.jsp">
-        <put-attribute name="hotelSearchForm" value="/WEB-INF/hotels/hotelSearchForm.jsp" />
+        <put-attribute name="hotelSearchForm" value="hotels.searchForm" />
         <put-attribute name="bookingsTable" value="/WEB-INF/hotels/bookingsTable.jsp" />
     </definition>
 	
@@ -21,5 +21,7 @@
 	<definition name="hotels/show" extends="standardLayout">
 		<put-attribute name="body" value="/WEB-INF/hotels/show.jsp" />
 	</definition>
+	
+	<definition name="hotels.searchForm" template="/WEB-INF/hotels/hotelSearchForm.jsp" />
 	
 </tiles-definitions>

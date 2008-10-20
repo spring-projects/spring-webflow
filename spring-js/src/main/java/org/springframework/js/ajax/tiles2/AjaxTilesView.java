@@ -121,12 +121,10 @@ public class AjaxTilesView extends TilesView {
 			Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
 			Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(attr.getValue().toString(),
 					requestContext);
+			resultMap.put(key, attr);
 			if (nestedDefinition != null) {
 				flattenAttributeMap(container, requestContext, resultMap, nestedDefinition);
-			} else {
-				resultMap.put(key, attr);
 			}
-
 		}
 	}
 }
