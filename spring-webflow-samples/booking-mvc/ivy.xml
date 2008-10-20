@@ -46,8 +46,8 @@
 		<dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.5.A" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.5.A" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.5.A" conf="compile->runtime"/>
-		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.2.A" conf="compile->runtime"/>
-		<dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="2.0.2.A" conf="compile->runtime"/>
+		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.4.A" conf="compile->runtime"/>
+		<dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="2.0.4.A" conf="compile->runtime"/>
  		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
   		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
