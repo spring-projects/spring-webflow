@@ -79,17 +79,18 @@
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>1.2_08</version>
+			<version>${jsf.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
-			<version>1.2_08</version>
+			<version>${jsf.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<properties>
 		<spring.version>2.5.5</spring.version>
+		<jsf.version>1.2_08</jsf.version>		
 	</properties>	
 </project>
