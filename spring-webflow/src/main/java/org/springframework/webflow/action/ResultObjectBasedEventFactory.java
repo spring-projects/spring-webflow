@@ -22,7 +22,8 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Result object-to-event adapter interface that tries to do a sensible conversion of the result object into a web flow
- * event. It uses the following conversion table: <table border="1">
+ * event. It uses the following conversion table:
+ * <table border="1">
  * <tr>
  * <th>Result object type</th>
  * <th>Event id</th>
@@ -77,7 +78,7 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			String resultId = ((LabeledEnum) resultObject).getLabel();
 			return event(source, resultId, getResultAttributeName(), resultObject);
 		} else if (isJdk5Enum(resultObject.getClass())) {
-			String eventId = EnumNameResolver.getEnumName(resultObject);
+			String eventId = EnumUtils.getEnumName(resultObject);
 			return event(source, eventId, getResultAttributeName(), resultObject);
 		} else if (isString(resultObject.getClass())) {
 			return event(source, (String) resultObject);
@@ -108,7 +109,7 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 
 	private boolean isJdk5Enum(Class type) {
 		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			return type.isEnum();
+			return EnumUtils.isEnum(type);
 		} else {
 			return false;
 		}
@@ -125,9 +126,13 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	/**
 	 * Simple helper class with Java 5 specific code factored out to keep the containing class JDK 1.3 compatible.
 	 */
-	private static class EnumNameResolver {
+	private static class EnumUtils {
 		public static String getEnumName(Object enumValue) {
 			return ((java.lang.Enum) enumValue).name();
+		}
+
+		public static boolean isEnum(Class type) {
+			return java.lang.Enum.class.isAssignableFrom(type);
 		}
 	}
 }

@@ -73,4 +73,5 @@ public class ResultObjectEventFactoryTests extends TestCase {
 			super(1, "foo");
 		}
 	}
+
 }
