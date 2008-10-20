@@ -12,7 +12,7 @@ import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.TestingAuthenticationToken;
+import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
@@ -157,6 +157,6 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private Authentication getAuthentication() {
 		GrantedAuthority[] authorities = { new GrantedAuthorityImpl("ROLE_1"), new GrantedAuthorityImpl("ROLE_2"),
 				new GrantedAuthorityImpl("ROLE_3") };
-		return new TestingAuthenticationToken("test", "", authorities);
+		return new UsernamePasswordAuthenticationToken("test", "", authorities);
 	}
 }
