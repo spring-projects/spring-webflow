@@ -113,9 +113,9 @@ public class ResourceServlet extends HttpServletBean {
 				InputStream in = resourceConn.getInputStream();
 				try {
 					byte[] buffer = new byte[1024];
-					while (in.available() > 0) {
-						int len = in.read(buffer);
-						out.write(buffer, 0, len);
+					int bytesRead = -1;
+					while ((bytesRead = in.read(buffer)) != -1) {
+						out.write(buffer, 0, bytesRead);
 					}
 				} finally {
 					in.close();
