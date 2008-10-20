@@ -92,14 +92,19 @@
 	<repositories>
 		<!-- Where the el-api is located -->
 		<repository>
- 			<id>java.net</id>
+ 			<id>maven2.java.net</id>
  			<url>http://download.java.net/maven/2</url>
 		</repository>
-		<!-- Where the JSF RI api/impl is located -->
+		<!-- Where the JSF RI api/impl and Facelets are located -->
 		<repository>
-			<id>java.net</id>
+			<id>maven1.java.net</id>
 			<url>http://download.java.net/maven/1</url>
 			<layout>legacy</layout>
+		</repository>
+		<!-- Where Rich Faces is located -->
+		<repository>
+			<id>maven2.jboss.org</id>
+			<url>http://repository.jboss.org/maven2</url>
 		</repository>		
 	</repositories>	
 	<properties>

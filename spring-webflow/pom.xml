@@ -129,7 +129,7 @@
 	<repositories>
 		<!-- Where the el-api is located -->	
 		<repository>
- 			<id>java.net</id>
+ 			<id>maven2.java.net</id>
  			<url>http://download.java.net/maven/2</url>
 		</repository>
 	</repositories>		
