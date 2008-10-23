@@ -22,8 +22,10 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
@@ -64,9 +66,23 @@ public class ResourceServlet extends HttpServletBean {
 
 	private boolean gzipEnabled = true;
 
-	private String[] allowedResourcePaths = new String[] { "/**/*.css", "/**/*.gif", "/**/*.ico", "/**/*.jpeg",
-			"/**/*.jpg", "/**/*.js", "/**/*.png", "META-INF/**/*.css", "META-INF/**/*.gif", "META-INF/**/*.ico",
-			"META-INF/**/*.jpeg", "META-INF/**/*.jpg", "META-INF/**/*.js", "META-INF/**/*.png" };
+	private Set allowedResourcePaths = new HashSet();
+	{
+		allowedResourcePaths.add("/**/*.css");
+		allowedResourcePaths.add("/**/*.gif");
+		allowedResourcePaths.add("/**/*.ico");
+		allowedResourcePaths.add("/**/*.jpeg");
+		allowedResourcePaths.add("/**/*.jpg");
+		allowedResourcePaths.add("/**/*.js");
+		allowedResourcePaths.add("/**/*.png");
+		allowedResourcePaths.add("META-INF/**/*.css");
+		allowedResourcePaths.add("META-INF/**/*.gif");
+		allowedResourcePaths.add("META-INF/**/*.ico");
+		allowedResourcePaths.add("META-INF/**/*.jpeg");
+		allowedResourcePaths.add("META-INF/**/*.jpg");
+		allowedResourcePaths.add("META-INF/**/*.js");
+		allowedResourcePaths.add("META-INF/**/*.png");
+	};
 
 	private Map defaultMimeTypes = new HashMap();
 	{
@@ -81,8 +97,7 @@ public class ResourceServlet extends HttpServletBean {
 
 	private Set compressedMimeTypes = new HashSet();
 	{
-		compressedMimeTypes.add("text/css");
-		compressedMimeTypes.add("text/javascript");
+		compressedMimeTypes.add("text/*");
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -133,12 +148,24 @@ public class ResourceServlet extends HttpServletBean {
 		String mimeType = response.getContentType();
 
 		if (gzipEnabled && StringUtils.hasText(acceptEncoding) && acceptEncoding.indexOf("gzip") > -1
-				&& compressedMimeTypes.contains(mimeType)) {
+				&& matchesCompressedMimeTypes(mimeType)) {
 			log.debug("Enabling GZIP compression for the current response.");
 			return new GZIPResponseStream(response);
 		} else {
 			return response.getOutputStream();
 		}
+	}
+
+	private boolean matchesCompressedMimeTypes(String mimeType) {
+		PathMatcher pathMatcher = new AntPathMatcher();
+		Iterator compressedMimeTypesIt = compressedMimeTypes.iterator();
+		while (compressedMimeTypesIt.hasNext()) {
+			String compressedMimeType = (String) compressedMimeTypesIt.next();
+			if (pathMatcher.match(compressedMimeType, mimeType)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void prepareResponse(HttpServletResponse response, URL[] resources, String rawResourcePath)
@@ -256,8 +283,9 @@ public class ResourceServlet extends HttpServletBean {
 			return false;
 		}
 		PathMatcher pathMatcher = new AntPathMatcher();
-		for (int i = 0; i < allowedResourcePaths.length; i++) {
-			String pattern = allowedResourcePaths[i];
+		Iterator allowedResourcePathsIt = allowedResourcePaths.iterator();
+		while (allowedResourcePathsIt.hasNext()) {
+			String pattern = (String) allowedResourcePathsIt.next();
 			if (pathMatcher.match(pattern, resourcePath)) {
 				return true;
 			}
@@ -355,13 +383,25 @@ public class ResourceServlet extends HttpServletBean {
 	}
 
 	/**
-	 * Set allowed resources as an array of URL patterns, e.g. "META-INF/** /*.js", The paths may be any Ant-style
-	 * pattern parsable by AntPathMatcher.
+	 * Set allowed resources as an comma separated String of URL patterns, e.g. "META-INF/** /*.js", The paths may be
+	 * any Ant-style pattern parsable by AntPathMatcher.
 	 * 
 	 * @see AntPathMatcher
 	 */
-	public void setAllowedResourcePaths(String[] allowedResourcePaths) {
-		this.allowedResourcePaths = allowedResourcePaths;
+	public void setAllowedResourcePaths(String allowedResourcePaths) {
+		this.allowedResourcePaths = new HashSet(Arrays.asList(StringUtils.tokenizeToStringArray(allowedResourcePaths,
+				",", true, true)));
+	}
+
+	/**
+	 * Set comma separated MIME types that should have gzip compression applied. Typically, gzip compression is only
+	 * useful for text based content. Ant-style patterns are supported, e.g. "text/*".
+	 * 
+	 * @see AntPathMatcher
+	 */
+	public void setCompressedMimeTypes(String compressedMimeTypes) {
+		this.compressedMimeTypes = new HashSet(Arrays.asList(StringUtils.tokenizeToStringArray(compressedMimeTypes,
+				",", true, true)));
 	}
 
 	/**

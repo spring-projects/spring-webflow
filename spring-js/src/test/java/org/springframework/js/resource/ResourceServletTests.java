@@ -36,6 +36,7 @@ public class ResourceServletTests extends TestCase {
 		servlet.doGet(request, response);
 
 		assertEquals(200, response.getStatus());
+		assertNull(response.getHeader("Content-Encoding"));
 	}
 
 	public final void testExecute_CombinedResources() throws Exception {
@@ -48,6 +49,17 @@ public class ResourceServletTests extends TestCase {
 		servlet.doGet(request, response);
 
 		assertEquals(200, response.getStatus());
+	}
+
+	public final void testExecute_CompressedResponse() throws Exception {
+
+		String requestPath = "/dojo/dojo.js";
+		request.setPathInfo(requestPath);
+		request.addHeader("Accept-Encoding", "gzip");
+		servlet.doGet(request, response);
+
+		assertEquals(200, response.getStatus());
+		assertEquals("gzip", response.getHeader("Content-Encoding"));
 	}
 
 	public final void testExecute_ResourceNotFound() throws Exception {
