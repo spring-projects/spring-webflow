@@ -47,6 +47,7 @@ import org.springframework.web.servlet.HttpServletBean;
  * Special resource servlet for efficiently resolving and rendering static resources from within a JAR file.
  * 
  * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 public class ResourceServlet extends HttpServletBean {
 
@@ -99,6 +100,8 @@ public class ResourceServlet extends HttpServletBean {
 	{
 		compressedMimeTypes.add("text/*");
 	}
+
+	private int cacheTimeout = 31556926;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -196,7 +199,9 @@ public class ResourceServlet extends HttpServletBean {
 		response.setContentType(mimeType);
 		response.setHeader(HTTP_CONTENT_LENGTH_HEADER, Long.toString(contentLength));
 		response.setDateHeader(HTTP_LAST_MODIFIED_HEADER, lastModified);
-		configureCaching(response, 31556926);
+		if (cacheTimeout > 0) {
+			configureCaching(response, cacheTimeout);
+		}
 	}
 
 	protected long getLastModified(HttpServletRequest request) {
@@ -410,4 +415,12 @@ public class ResourceServlet extends HttpServletBean {
 	public void setJarPathPrefix(String jarPathPrefix) {
 		this.jarPathPrefix = jarPathPrefix;
 	}
+
+	/**
+	 * Set the number of seconds resources should be cached by the client. Zero disables caching. Default is one year.
+	 */
+	public void setCacheTimeout(int cacheTimeout) {
+		this.cacheTimeout = cacheTimeout;
+	}
+
 }
