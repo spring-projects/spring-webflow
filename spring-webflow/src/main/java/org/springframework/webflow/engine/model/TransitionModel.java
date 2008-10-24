@@ -60,7 +60,8 @@ public class TransitionModel extends AbstractModel {
 			return false;
 		}
 		TransitionModel transition = (TransitionModel) model;
-		return ObjectUtils.nullSafeEquals(getOn(), transition.getOn());
+		return ObjectUtils.nullSafeEquals(getOn(), transition.getOn())
+				&& ObjectUtils.nullSafeEquals(getOnException(), transition.getOnException());
 	}
 
 	public void merge(Model model) {

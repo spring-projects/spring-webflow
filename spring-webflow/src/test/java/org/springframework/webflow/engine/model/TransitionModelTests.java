@@ -24,7 +24,17 @@ public class TransitionModelTests extends TestCase {
 
 	public void testMergeable() {
 		TransitionModel child = new TransitionModel();
-		child.setOn("child");
+		child.setOn("event");
+		TransitionModel parent = new TransitionModel();
+		parent.setOn("event");
+		assertTrue(child.isMergeableWith(parent));
+	}
+
+	public void testMergeableOnException() {
+		TransitionModel child = new TransitionModel();
+		child.setOnException("expception");
+		TransitionModel parent = new TransitionModel();
+		parent.setOnException("exception");
 		assertTrue(child.isMergeableWith(child));
 	}
 
@@ -33,6 +43,14 @@ public class TransitionModelTests extends TestCase {
 		child.setOn("child");
 		TransitionModel parent = new TransitionModel();
 		parent.setOn("parent");
+		assertFalse(child.isMergeableWith(parent));
+	}
+
+	public void testNotMergeableOnException() {
+		TransitionModel child = new TransitionModel();
+		child.setOnException("child");
+		TransitionModel parent = new TransitionModel();
+		parent.setOnException("parent");
 		assertFalse(child.isMergeableWith(parent));
 	}
 

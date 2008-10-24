@@ -149,7 +149,7 @@
 						<para>subflow-state: id</para>
 					</listitem>
 					<listitem>
-						<para>transition: on</para>
+						<para>transition: on and on-exception</para>
 					</listitem>
 					<listitem>
 						<para>view-state: id</para>
