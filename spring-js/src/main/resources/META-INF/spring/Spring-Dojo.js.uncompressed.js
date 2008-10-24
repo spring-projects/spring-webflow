@@ -107,14 +107,17 @@ dojo.declare("Spring.ValidateAllDecoration", [Spring.AbstractValidateAllDecorati
 		dojo.disconnect(this.connection);
 	},
 	
-	handleEvent : function(event, context){
-		event.springValidateAll = Spring.validateAll(); 
-		if (!event.springValidateAll) {
+	handleEvent : function(event, context){ 
+		if (!Spring.validateAll()) {
+			dojo.publish(this.elementId+"/validation", [false]);
 			dojo.stopEvent(event);
-		} else if(dojo.isFunction(context.originalHandler)) {
-			var result = context.originalHandler(event);
-			if (result == false) {
-				dojo.stopEvent(event);
+		} else {
+			dojo.publish(this.elementId+"/validation", [true]);
+			if(dojo.isFunction(context.originalHandler)) {
+				var result = context.originalHandler(event);
+				if (result == false) {
+					dojo.stopEvent(event);
+				}
 			}
 		}
 	}
@@ -122,16 +125,20 @@ dojo.declare("Spring.ValidateAllDecoration", [Spring.AbstractValidateAllDecorati
 
 dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, Spring.DefaultEquals], {
 	constructor : function(config){
+		this.validationSubscription = null;
 		this.connection = null;
+		this.allowed = true;
 		dojo.mixin(this, config);
 	},
 	
 	apply : function() {
+		this.validationSubscription = dojo.subscribe(this.elementId+"/validation", this, "_handleValidation");
 		this.connection = dojo.connect(dojo.byId(this.elementId), this.event, this, "submit");
 		return this;	
 	},
 	
 	cleanup : function(){
+		dojo.unsubscribe(this.validationSubscription);
 		dojo.disconnect(this.connection);
 	},
 	
@@ -142,11 +149,19 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 		if(this.formId == ""){
 			Spring.remoting.getLinkedResource(this.sourceId, this.params, this.popup);
 		} else {
-			if (event.springValidateAll){
+			if (this.allowed){
 				Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
 			}
 		}
 		dojo.stopEvent(event);
+	},
+	
+	_handleValidation : function(success){
+		if (!success) {
+			this.allowed=false;
+		} else {
+			this.allowed=true;
+		}
 	}
 });
 
