@@ -511,10 +511,11 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * Start a new session for this flow in its start state. This boils down to the following:
 	 * <ol>
-	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li> <li>Map
-	 * provided input data into the flow. Typically data will be mapped into flow scope using the registered input
-	 * mapper ({@link #setInputMapper(Mapper)}).</li> <li>Execute all registered start actions (
-	 * {@link #getStartActionList()}).</li> <li>Enter the configured start state ({@link #setStartState(State)})</li>
+	 * <li>Create (setup) all registered flow variables ({@link #addVariable(FlowVariable)}) in flow scope.</li>
+	 * <li>Map provided input data into the flow. Typically data will be mapped into flow scope using the registered
+	 * input mapper ({@link #setInputMapper(Mapper)}).</li>
+	 * <li>Execute all registered start actions ( {@link #getStartActionList()}).</li>
+	 * <li>Enter the configured start state ({@link #setStartState(State)})</li>
 	 * </ol>
 	 * @param context the flow execution control context
 	 * @param input eligible input into the session
@@ -555,7 +556,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 			// try the flow level transition set for a match
 			Transition transition = globalTransitionSet.getTransition(context);
 			if (transition != null) {
-				return transition.execute(currentState, context);
+				return context.execute(transition);
+				// return transition.execute(currentState, context);
 			} else {
 				// no matching global transition => let the original exception
 				// propagate
@@ -568,9 +570,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Inform this flow definition that an execution session of itself has ended. As a result, the flow will do the
 	 * following:
 	 * <ol>
-	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li> <li>Map data available in the flow
-	 * execution control context into provided output map using a registered output mapper (
-	 * {@link #setOutputMapper(Mapper)}).</li>
+	 * <li>Execute all registered end actions ({@link #getEndActionList()}).</li>
+	 * <li>Map data available in the flow execution control context into provided output map using a registered output
+	 * mapper ( {@link #setOutputMapper(Mapper)}).</li>
 	 * </ol>
 	 * @param context the flow execution control context
 	 * @param outcome the logical flow outcome that will be returned by the session, generally the id of the terminating
