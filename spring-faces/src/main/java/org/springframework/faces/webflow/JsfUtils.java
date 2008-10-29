@@ -84,6 +84,6 @@ public class JsfUtils {
 	}
 
 	public static boolean isPortlet(FacesContext context) {
-		return context.getExternalContext().getContext().getClass().getName().contains("Portlet");
+		return context.getExternalContext().getContext().getClass().getName().indexOf("Portlet") != -1;
 	}
 }
