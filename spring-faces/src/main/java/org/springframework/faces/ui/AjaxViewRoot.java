@@ -161,7 +161,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			FacesContext context = FacesContext.getCurrentInstance();
 			String processIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(
 					PROCESS_IDS_PARAM);
-			if (StringUtils.hasText(processIdsParam) && processIdsParam.contains(PROCESS_ALL)) {
+			if (StringUtils.hasText(processIdsParam) && processIdsParam.indexOf(PROCESS_ALL) != -1) {
 				processIds = new String[] { getOriginalViewRoot().getClientId(context) };
 			} else {
 				processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");

@@ -106,7 +106,8 @@ public class FlowDefinitionResourceFactory {
 			try {
 				resource = resourceLoader.getResource(basePath).createRelative(path);
 			} catch (IOException e) {
-				throw new IllegalStateException("The base path cannot be resolved from '" + basePath + "'", e);
+				throw new IllegalStateException("The base path cannot be resolved from '" + basePath + "': "
+						+ e.getMessage());
 			}
 		}
 		if (flowId == null || flowId.length() == 0) {

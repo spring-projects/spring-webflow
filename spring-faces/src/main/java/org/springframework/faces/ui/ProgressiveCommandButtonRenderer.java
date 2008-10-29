@@ -77,7 +77,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 			Boolean ajaxEnabled = (Boolean) component.getAttributes().get("ajaxEnabled");
 			String processIds = (String) component.getAttributes().get("processIds");
 			if (Boolean.TRUE.equals(ajaxEnabled)) {
-				if (StringUtils.hasText(processIds) && !processIds.contains(component.getClientId(context))) {
+				if (StringUtils.hasText(processIds) && processIds.indexOf(component.getClientId(context)) == -1) {
 					processIds = component.getClientId(context) + ", " + processIds;
 				} else if (!StringUtils.hasText(processIds)) {
 					processIds = component.getClientId(context);
