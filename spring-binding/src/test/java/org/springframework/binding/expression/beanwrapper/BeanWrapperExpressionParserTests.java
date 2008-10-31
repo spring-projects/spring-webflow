@@ -18,9 +18,9 @@ package org.springframework.binding.expression.beanwrapper;
 import junit.framework.TestCase;
 
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.expression.ognl.TestBean;
 import org.springframework.binding.expression.support.FluentParserContext;
 
@@ -108,8 +108,9 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		try {
 			e.setValue(bean, "bogus");
 			fail("Should have failed tme");
-		} catch (EvaluationException ex) {
+		} catch (ValueCoercionException ex) {
 			assertTrue(ex.getCause() instanceof TypeMismatchException);
 		}
 	}
+
 }

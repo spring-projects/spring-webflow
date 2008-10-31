@@ -16,6 +16,7 @@
 package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.convert.ConversionExecutionException;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.mapping.Result;
 import org.springframework.core.style.ToStringCreator;
 
@@ -23,6 +24,7 @@ import org.springframework.core.style.ToStringCreator;
  * Indicates a type conversion occurred during a mapping operation.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class TypeConversionError extends Result {
 
@@ -30,7 +32,7 @@ public class TypeConversionError extends Result {
 
 	private Class targetType;
 
-	private ConversionExecutionException exception;
+	private Exception exception;
 
 	/**
 	 * Creates a new type conversion error.
@@ -38,10 +40,18 @@ public class TypeConversionError extends Result {
 	 */
 	public TypeConversionError(ConversionExecutionException exception) {
 		this.exception = exception;
+		this.originalValue = exception.getValue();
+		this.targetType = exception.getTargetClass();
+	}
+
+	public TypeConversionError(ValueCoercionException exception) {
+		this.exception = exception;
+		this.originalValue = exception.getValue();
+		this.targetType = exception.getTargetClass();
 	}
 
 	public Object getOriginalValue() {
-		return exception.getValue();
+		return originalValue;
 	}
 
 	public Object getMappedValue() {
@@ -62,13 +72,13 @@ public class TypeConversionError extends Result {
 	 * Returns the target type of the conversion attempt.
 	 */
 	public Class getTargetClass() {
-		return exception.getTargetClass();
+		return targetType;
 	}
 
 	/**
 	 * Returns the backing type conversion exception that occurred.
 	 */
-	public ConversionExecutionException getException() {
+	public Exception getException() {
 		return exception;
 	}
 

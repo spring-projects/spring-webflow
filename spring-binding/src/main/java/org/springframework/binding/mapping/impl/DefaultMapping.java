@@ -19,6 +19,7 @@ import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.util.Assert;
 
@@ -27,6 +28,7 @@ import org.springframework.util.Assert;
  * a source object to a property on a target object, optionally applying a type conversion during the mapping process.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class DefaultMapping implements Mapping {
 
@@ -132,6 +134,8 @@ public class DefaultMapping implements Mapping {
 		try {
 			targetExpression.setValue(context.getTarget(), targetValue);
 			context.setSuccessResult(sourceValue, targetValue);
+		} catch (ValueCoercionException e) {
+			context.setTypeConversionErrorResult(e);
 		} catch (EvaluationException e) {
 			context.setTargetAccessError(sourceValue, e);
 		}

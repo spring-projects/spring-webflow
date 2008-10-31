@@ -29,15 +29,18 @@ import ognl.TypeConverter;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.InvalidPropertyException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
+import org.springframework.binding.expression.ValueCoercionException;
 
 /**
  * Evaluates a parsed Ognl expression.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 class OgnlExpression implements Expression {
 
@@ -97,9 +100,15 @@ class OgnlExpression implements Expression {
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (OgnlException e) {
-			throw new EvaluationException(context.getClass(), getExpressionString(),
-					"An OgnlException occurred setting the value of expression '" + getExpressionString()
-							+ "' on context [" + context.getClass() + "] to [" + value + "]", e);
+			if (e.getReason() instanceof ConversionExecutionException) {
+				ConversionExecutionException conversionEx = (ConversionExecutionException) e.getReason();
+				throw new ValueCoercionException(context.getClass(), expressionString, value, conversionEx
+						.getTargetClass(), conversionEx);
+			} else {
+				throw new EvaluationException(context.getClass(), getExpressionString(),
+						"An OgnlException occurred setting the value of expression '" + getExpressionString()
+								+ "' on context [" + context.getClass() + "] to [" + value + "]", e.getReason());
+			}
 		}
 	}
 

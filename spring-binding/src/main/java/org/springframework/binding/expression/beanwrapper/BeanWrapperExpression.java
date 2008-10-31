@@ -23,12 +23,14 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
+import org.springframework.binding.expression.ValueCoercionException;
 
 /**
  * An expression that delegates to a {@link BeanWrapperImpl bean wrapper} to evaluate or set a property of a context.
@@ -45,6 +47,7 @@ import org.springframework.binding.expression.PropertyNotFoundException;
  * support method invocation, arithmetic operations, or logic operations.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class BeanWrapperExpression implements Expression {
 
@@ -99,6 +102,8 @@ public class BeanWrapperExpression implements Expression {
 			beanWrapper.setPropertyValue(expression, value);
 		} catch (NotWritablePropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), expression, e);
+		} catch (TypeMismatchException e) {
+			throw new ValueCoercionException(context.getClass(), expression, value, e.getRequiredType(), e);
 		} catch (BeansException e) {
 			throw new EvaluationException(context.getClass(), getExpressionString(),
 					"A BeansException occurred setting the value of expression '" + getExpressionString()

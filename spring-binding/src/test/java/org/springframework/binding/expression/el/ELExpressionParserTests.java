@@ -16,6 +16,7 @@ import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.expression.support.FluentParserContext;
 
 public class ELExpressionParserTests extends TestCase {
@@ -166,8 +167,7 @@ public class ELExpressionParserTests extends TestCase {
 		try {
 			exp.setValue(context, "bogus");
 			fail("Should have failed with coersion");
-		} catch (EvaluationException e) {
-
+		} catch (ValueCoercionException e) {
 		}
 	}
 

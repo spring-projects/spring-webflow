@@ -7,9 +7,7 @@ import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 
-import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -93,12 +91,7 @@ class BindingValueExpression extends ValueExpression {
 		if (expectedType == null) {
 			return value;
 		} else {
-			try {
-				return conversionService.executeConversion(value, expectedType);
-			} catch (ConversionException e) {
-				throw new ELException("Unable to coerce value " + StylerUtils.style(value) + " to expected type ["
-						+ expectedType + "]", e);
-			}
+			return conversionService.executeConversion(value, expectedType);
 		}
 	}
 

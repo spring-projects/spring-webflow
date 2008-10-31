@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.expression.EvaluationException;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
@@ -34,6 +35,7 @@ import org.springframework.binding.mapping.results.TypeConversionError;
 /**
  * Default mapping context implementation.
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class DefaultMappingContext {
 
@@ -114,6 +116,17 @@ public class DefaultMappingContext {
 	 * performed
 	 */
 	public void setTypeConversionErrorResult(ConversionExecutionException exception) {
+		add(new MappingResult(currentMapping, new TypeConversionError(exception)));
+	}
+
+	/**
+	 * Indicates the current mapping ended with a 'type conversion' error. This means the value obtained from the source
+	 * could not be converted to a type that could be assigned to the target expression.
+	 * @param exception the coercion exception that occurred, containing the original source value that could not be
+	 * converted during the mapping attempt, as well as the desired target type to which conversion could not be
+	 * performed
+	 */
+	public void setTypeConversionErrorResult(ValueCoercionException exception) {
 		add(new MappingResult(currentMapping, new TypeConversionError(exception)));
 	}
 

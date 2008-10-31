@@ -17,10 +17,10 @@ package org.springframework.binding.expression.ognl;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.expression.support.FluentParserContext;
 
 public class OgnlExpressionParserTests extends TestCase {
@@ -184,7 +184,8 @@ public class OgnlExpressionParserTests extends TestCase {
 		try {
 			e.setValue(bean, "bogus");
 			fail("Should have failed tme");
-		} catch (EvaluationException ex) {
+		} catch (ValueCoercionException ex) {
 		}
 	}
+
 }
