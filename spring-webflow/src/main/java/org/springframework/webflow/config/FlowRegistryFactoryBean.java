@@ -16,6 +16,7 @@
 package org.springframework.webflow.config;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -167,8 +168,9 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 			for (int i = 0; i < flowLocationPatterns.length; i++) {
 				String pattern = flowLocationPatterns[i];
 				FlowDefinitionResource[] resources;
+				AttributeMap attributes = getFlowAttributes(Collections.EMPTY_SET);
 				try {
-					resources = flowResourceFactory.createResources(pattern);
+					resources = flowResourceFactory.createResources(pattern, attributes);
 				} catch (IOException e) {
 					IllegalStateException ise = new IllegalStateException(
 							"An I/O Exception occurred resolving the flow location pattern '" + pattern + "'");

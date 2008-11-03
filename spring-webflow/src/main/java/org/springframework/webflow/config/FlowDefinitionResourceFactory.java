@@ -119,9 +119,10 @@ public class FlowDefinitionResourceFactory {
 	/**
 	 * Create an array of flow definition resources from the path pattern location provided.
 	 * @param pattern the encoded {@link Resource} path pattern.
+	 * @param attributes the flow definition meta attributes to configure
 	 * @return the flow definition resources
 	 */
-	public FlowDefinitionResource[] createResources(String pattern) throws IOException {
+	public FlowDefinitionResource[] createResources(String pattern, AttributeMap attributes) throws IOException {
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			ResourcePatternResolver resolver = (ResourcePatternResolver) resourceLoader;
 			Resource[] resources;
@@ -137,7 +138,7 @@ public class FlowDefinitionResourceFactory {
 			FlowDefinitionResource[] flowResources = new FlowDefinitionResource[resources.length];
 			for (int i = 0; i < resources.length; i++) {
 				Resource resource = resources[i];
-				flowResources[i] = new FlowDefinitionResource(getFlowId(resource), resource, null);
+				flowResources[i] = new FlowDefinitionResource(getFlowId(resource), resource, attributes);
 			}
 			return flowResources;
 		} else {
