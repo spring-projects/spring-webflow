@@ -25,17 +25,17 @@
         <dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles" rev="2.0.5" conf="optional->runtime"/>
         <dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.core" rev="2.0.5.osgi" conf="optional->runtime"/>
 		<dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.jsp" rev="2.0.5" conf="optional->runtime"/>
-        <dependency org="org.springframework" name="org.springframework.beans" rev="2.5.5.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.5.A" conf="compile->runtime"/>        
-		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.5.A" conf="compile->runtime"/>
-        <dependency org="org.springframework" name="org.springframework.web" rev="2.5.5.A" conf="compile->runtime"/>
-        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.5.A" conf="compile->runtime"/>
+        <dependency org="org.springframework" name="org.springframework.beans" rev="2.5.6" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.6" conf="compile->runtime"/>        
+		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.6" conf="compile->runtime"/>
+        <dependency org="org.springframework" name="org.springframework.web" rev="2.5.6" conf="compile->runtime"/>
+        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.6" conf="compile->runtime"/>
 
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime"/>
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime" />
-		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.5.A" conf="test->runtime" />
+		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.6" conf="test->runtime" />
 		
 	</dependencies>
 

@@ -134,6 +134,6 @@
 		</repository>
 	</repositories>		
 	<properties>
-		<spring.version>2.5.5</spring.version>
+		<spring.version>2.5.6</spring.version>
 	</properties>	
 </project>
