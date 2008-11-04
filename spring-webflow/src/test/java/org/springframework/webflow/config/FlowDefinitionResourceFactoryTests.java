@@ -29,6 +29,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
 public class FlowDefinitionResourceFactoryTests extends TestCase {
 
 	private ResourceLoader resourceLoader;
+
 	private FlowDefinitionResourceFactory factory;
 
 	protected void setUp() throws Exception {

@@ -38,10 +38,13 @@ import org.springframework.webflow.core.collection.AttributeMap;
 public class FlowDefinitionResourceFactory {
 
 	private static final String CLASSPATH_SCHEME = "classpath:";
+
 	private static final String CLASSPATH_STAR_SCHEME = "classpath*:";
+
 	private static final String SLASH = "/";
 
 	private ResourceLoader resourceLoader;
+
 	private String basePath;
 
 	/**
@@ -119,7 +122,7 @@ public class FlowDefinitionResourceFactory {
 	/**
 	 * Create an array of flow definition resources from the path pattern location provided.
 	 * @param pattern the encoded {@link Resource} path pattern.
-	 * @param attributes the flow definition meta attributes to configure
+	 * @param attributes meta attributes to apply to each flow definition resource
 	 * @return the flow definition resources
 	 */
 	public FlowDefinitionResource[] createResources(String pattern, AttributeMap attributes) throws IOException {
@@ -181,12 +184,12 @@ public class FlowDefinitionResourceFactory {
 	 * @return the flow id
 	 */
 	protected String getFlowId(Resource flowResource) {
+		if (basePath == null) {
+			return getFlowIdFromFileName(flowResource);
+		}
 		String basePath = this.basePath;
 		String filePath;
-		if (basePath == null) {
-			// default to the filename
-			return getFlowIdFromFileName(flowResource);
-		} else if (flowResource instanceof ClassPathResource) {
+		if (flowResource instanceof ClassPathResource) {
 			filePath = ((ClassPathResource) flowResource).getPath();
 			// remove classpath scheme
 			if (basePath.startsWith(CLASSPATH_SCHEME)) {
@@ -194,13 +197,13 @@ public class FlowDefinitionResourceFactory {
 			} else if (basePath.startsWith(CLASSPATH_STAR_SCHEME)) {
 				basePath = basePath.substring(CLASSPATH_STAR_SCHEME.length());
 			}
-		} else if (!(flowResource instanceof ContextResource)) {
+		} else if (flowResource instanceof ContextResource) {
+			filePath = ((ContextResource) flowResource).getPathWithinContext();
+		} else {
 			// default to the filename
 			return getFlowIdFromFileName(flowResource);
-		} else {
-			filePath = ((ContextResource) flowResource).getPathWithinContext();
 		}
-
+		// TODO can this logic be simplified?
 		int beginIndex = 0;
 		int endIndex = filePath.length();
 		if (filePath.startsWith(SLASH) || !basePath.startsWith(SLASH)) {
