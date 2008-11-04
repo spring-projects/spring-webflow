@@ -37,8 +37,8 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
 		<!-- JSF 1.2 dependencies -->
-		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.08" conf="provided, jsf12->runtime" />
-		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.08" conf="provided, jsf12->runtime" />
+		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
+		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
     	
 		<!-- JSF 1.1 dependencies -->
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.1.5" conf="jsf11->runtime" />
