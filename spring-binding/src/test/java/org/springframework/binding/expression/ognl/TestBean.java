@@ -61,4 +61,12 @@ public class TestBean {
 		this.date = date;
 	}
 
+	public Exception getException() {
+		throw new IllegalStateException("Test");
+	}
+
+	public void setExceptionProperty(String whatever) {
+		throw new IllegalStateException("Test");
+	}
+
 }

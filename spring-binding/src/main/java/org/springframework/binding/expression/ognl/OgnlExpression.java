@@ -91,7 +91,7 @@ class OgnlExpression implements Expression {
 			} else {
 				throw new EvaluationException(context.getClass(), getExpressionString(),
 						"An OgnlException occurred getting the value for expression '" + getExpressionString()
-								+ "' on context [" + context.getClass() + "]", e.getReason());
+								+ "' on context [" + context.getClass() + "]", causeFor(e));
 			}
 		}
 	}
@@ -109,22 +109,9 @@ class OgnlExpression implements Expression {
 			} else {
 				throw new EvaluationException(context.getClass(), getExpressionString(),
 						"An OgnlException occurred setting the value of expression '" + getExpressionString()
-								+ "' on context [" + context.getClass() + "] to [" + value + "]", e.getReason());
+								+ "' on context [" + context.getClass() + "] to [" + value + "]", causeFor(e));
 			}
 		}
-	}
-
-	private TypeConverter createTypeConverter() {
-		return new TypeConverter() {
-			public Object convertValue(Map context, Object target, Member member, String propertyName, Object value,
-					Class toType) throws ValueCoercionException {
-				try {
-					return conversionService.executeConversion(value, toType);
-				} catch (ConversionException e) {
-					throw new ValueCoercionException(context.getClass(), expressionString, value, toType, e);
-				}
-			}
-		};
 	}
 
 	public Class getValueType(Object context) {
@@ -142,6 +129,36 @@ class OgnlExpression implements Expression {
 
 	public String getExpressionString() {
 		return expressionString;
+	}
+
+	// internal helpers
+
+	private Throwable causeFor(OgnlException e) {
+		if (e.getReason() != null) {
+			if (e.getCause() == null) {
+				try {
+					e.initCause(e.getReason());
+				} catch (IllegalStateException ex) {
+					// we tried
+				}
+			}
+			return e;
+		} else {
+			return e;
+		}
+	}
+
+	private TypeConverter createTypeConverter() {
+		return new TypeConverter() {
+			public Object convertValue(Map context, Object target, Member member, String propertyName, Object value,
+					Class toType) throws ValueCoercionException {
+				try {
+					return conversionService.executeConversion(value, toType);
+				} catch (ConversionException e) {
+					throw new ValueCoercionException(context.getClass(), expressionString, value, toType, e);
+				}
+			}
+		};
 	}
 
 	private Map getVariables(Object context) {

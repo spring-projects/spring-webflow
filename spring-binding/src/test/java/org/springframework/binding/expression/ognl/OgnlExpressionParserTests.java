@@ -17,6 +17,7 @@ package org.springframework.binding.expression.ognl;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
@@ -212,6 +213,26 @@ public class OgnlExpressionParserTests extends TestCase {
 			e.setValue(bean, "bogus");
 			fail("Should have failed tme");
 		} catch (ValueCoercionException ex) {
+		}
+	}
+
+	public void testReasonCauseLinkingGetValue() {
+		String exp = "getException()";
+		Expression e = parser.parseExpression(exp, null);
+		try {
+			e.getValue(bean);
+		} catch (EvaluationException ex) {
+			assertTrue(ex.getCause().getCause() instanceof IllegalStateException);
+		}
+	}
+
+	public void testReasonCauseLinkingSetValue() {
+		String exp = "exceptionProperty";
+		Expression e = parser.parseExpression(exp, null);
+		try {
+			e.setValue(bean, "does not matter");
+		} catch (EvaluationException ex) {
+			assertTrue(ex.getCause().getCause() instanceof IllegalStateException);
 		}
 	}
 
