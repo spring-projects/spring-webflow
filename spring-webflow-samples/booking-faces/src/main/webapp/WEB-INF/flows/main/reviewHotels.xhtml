@@ -20,8 +20,7 @@
 				<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="h" rendered="#{hotels.rowCount > 0}">
 					<h:column>
 						<f:facet name="header">
-							<!-- @TODO - Ajax won't work here until JSF RI fixes bug in UIData.invokeOnComponent - scheduled for 1.2_09 -->
-							<sf:commandLink id="sortByNameLink" ajaxEnabled="false" action="sort" value="Name">
+							<sf:commandLink id="sortByNameLink" action="sort" value="Name" processIds="*">
 								<f:param name="sortBy" value="name" />
 							</sf:commandLink>
 						</f:facet>
@@ -33,8 +32,7 @@
 					</h:column>
 					<h:column>
 						<f:facet name="header">
-							<!-- @TODO - Ajax won't work here until JSF RI fixes bug in UIData.invokeOnComponent - scheduled for 1.2_09 -->
-							<sf:commandLink id="sortByCity" ajaxEnabled="false" action="sort" value="City, State" >
+							<sf:commandLink id="sortByCity" action="sort" value="City, State" processIds="*" >
 								<f:param name="sortBy" value="city" />
 							</sf:commandLink>
 						</f:facet>
