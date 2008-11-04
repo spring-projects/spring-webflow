@@ -19,8 +19,7 @@
     <evaluate expression="interview.moreAnswersNeeded()" />
     <transition on="yes" to="answerQuestions" />
     <transition on="no" to="finish" />
-</action-state>
-]]>
+</action-state>]]>
         </programlisting>		
 		<para>
 			The full example below illustrates a interview flow that uses the action-state above to determine if more answers are needed to complete the interview:
@@ -64,8 +63,7 @@
 		<programlisting language="xml"><![CDATA[
 <decision-state id="moreAnswersNeeded">
     <if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" />
-</decision-state>
-]]>
+</decision-state>]]>
 			</programlisting>
 	</sect1>
 	<sect1 id="action-outcome-events">
@@ -89,16 +87,16 @@
 				</thead>
 				<tbody>
 					<row>
+						<entry>java.lang.String</entry>
+						<entry>the String value</entry>
+					</row>
+					<row>
 						<entry>java.lang.Boolean</entry>
 						<entry>yes (for true), no (for false)</entry>
 					</row>
 					<row>
 						<entry>java.lang.Enum</entry>
 						<entry>the Enum name</entry>
-					</row>
-					<row>
-						<entry>java.lang.String</entry>
-						<entry>the String value</entry>
 					</row>
 					<row>
 						<entry>any other type</entry>
@@ -112,15 +110,102 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <action-state id="moreAnswersNeeded">
-    <evaluate expression="interview.moreAnswersNeeded()"/>
+    <evaluate expression="interview.moreAnswersNeeded()" />
     <transition on="yes" to="answerQuestions" />
     <transition on="no" to="finish" />
-</action-state>
-]]>
+</action-state>]]>
         </programlisting>		
 	</sect1>
+	<sect1 id="action-implementations">
+		<title>Action implementations</title>
+		<para>
+			While writing action code as POJO logic is the most common, there are several other action implementation options.
+			Sometimes you need to write action code that needs access to the flow context.
+			You can always invoke a POJO and pass it the flowRequestContext as an EL variable.
+			Alternatively, you may implement the <code>Action</code> interface or extend from the <code>MultiAction</code> base class.
+			These options provide stronger type safety when you have a natural coupling between your action code and Spring Web Flow APIs.
+			Examples of each of these approaches are shown below.
+		</para>
+		<sect2>
+			<title>Invoking a POJO action</title>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="pojoAction.method(flowRequestContext)" />]]>	
+        	</programlisting>
+			<programlisting language="java"><![CDATA[
+public class PojoAction {
+    public String method(RequestContext context) {
+        ... 
+    }
+}]]>
+			</programlisting>
+		</sect2>
+		<sect2>
+			<title>Invoking a custom Action implementation</title>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="customAction" />]]>	
+        	</programlisting>
+			<programlisting language="java"><![CDATA[
+public class CustomAction implements Action {
+    public Event execute(RequestContext context) {
+        ... 
+    }
+}]]>
+			</programlisting>
+		</sect2>
+		<sect2>
+			<title>Invoking a MultiAction implementation</title>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="multiAction.actionMethod1" />
+]]>	
+        	</programlisting>
+			<programlisting language="java"><![CDATA[
+public class CustomMultiAction extends MultiAction {
+    public Event actionMethod1(RequestContext context) {
+        ... 
+    }
+
+    public Event actionMethod2(RequestContext context) {
+        ... 
+    }
+
+    ...
+}]]>
+			</programlisting>
+		</sect2>
+	</sect1>
+	<sect1 id="action-exceptions">
+		<title>Action exceptions</title>
+		<para>
+			Actions often invoke services that encapsulate complex business logic.
+			These services may throw business exceptions that the action code should handle.
+		</para>
+		<sect2>
+			<title>Handling a business exception with a POJO action</title>
+			<para>
+				The following example invokes an action that catches a business exception, adds a error message to the context, and returns a result event identifier.
+				The result is treated as a flow event which the calling flow can then respond to.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="bookingAction.makeBooking(booking, messageContext)" />]]>	
+        	</programlisting>
+			<programlisting language="java"><![CDATA[
+public class BookingAction {
+   public String makeBooking(Booking booking, MessageContext context) {
+       try {
+           bookingService.make(booking);
+           return "success";
+       } catch (RoomNotAvailableException e) {
+           context.addMessage(builder.error().
+               .defaultText("No room is available at this hotel").build());
+           return "error";
+       }
+   }
+}]]>
+			</programlisting>
+		</sect2>		
+	</sect1>
 	<sect1 id="action-examples">
-		<title>Action execution examples</title>
+		<title>Other Action execution examples</title>
 		<sect2 id="action-on-start">
 			<title>on-start</title>
 			<para>
