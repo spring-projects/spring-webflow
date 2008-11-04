@@ -4,9 +4,34 @@ http://www.springframework.org/webflow
 
 Changes in version 2.0.4 (04.11.2008)
 -------------------------------------
+New Features
+* Handler mappings can be now be automatically resolved from the flow repository (SWF-523)
+* The flow registry can now define a base path under which to lookup flow resources.  When the base path is defined, the default flow id is determined by the directory path from the base path to the flow definition. (SWF-909)
+* Development flag on flow builder services tag allows for development time automatic reloading of flow definitions and message bundles (SWF-846)
+* Added a ValidationContext object to replace MessageContext in validation methods.  The new object provides access to the message context in addition to the user event and the authenticated principal. (SWF-735)
+
+Improvements
+* Upgraded to Dojo 1.2 (SWF-883)
+* Resource servlet is more configurable (SWF-566, SWF-921)
+* Conversion service now supports string-enum conversion (SWF-827, SWF-834, SWF-911)
+* Validate all decorations for Ajax forms are now simpler to define (SWF-853)
+* Dojo date text box now uses a locale specific date format when gracefully degrading (SWF-844)
+* Various improvements to the reference guide documentation
+
 Bug Fixes
-* Fixed bug where a registered ConversionService was not auto-wired with the default ExpressionParser implementation.
-  This prevented user-installed type converters from being applied without explicit configuration.
+* Fixed bug where a registered ConversionService was not auto-wired with the default ExpressionParser implementation. This prevented user-installed type converters from being applied without explicit configuration.
+* Fixed bugs limiting compatibility with IE 6 for Spring Faces and Spring JS (SWF-786, SWF-770)
+* Global transitions can now be merged for flow inheritance (SWF-733)
+* Transitions on-exception will now match exceptions thrown from an OGNL expression. (SWF-780)
+* Child flow definitions are now able to inherit from a flow in the parent flow registry (SWF-815)
+* Fixed issue with EL binding to map properties in Resin (SWF-832)
+* Ajax enabled forms will now be submit using the HTTP method defined on the form tag (SWF-851)
+* If a specific converter is defined for a property, it will always be used even if the source and target types do not match the converter (SWF-896)
+* Ajax request can now render nested Tiles definitions as a fragment (SWF-916)
+* Global transitions now fire the transitionExecuting event for global transitions (SWF-923)
+* Removed unsafe Java 5 API calls to maintain 1.4 compatibility (SWF-926)
+* Type conversion errors in the binding subsystem now resolve properly to the typeMismatch message for the property (SWF-928) 
+* Flow application contexts are now explicitly closed when the flow registry is destroyed (SWF-929)
 
 TODO 
 
