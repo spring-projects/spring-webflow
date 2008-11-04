@@ -7,7 +7,9 @@ import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.util.Assert;
 
 /**
@@ -47,9 +49,10 @@ class BindingValueExpression extends ValueExpression {
 		return targetExpression.getType(context);
 	}
 
-	public Object getValue(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
+	public Object getValue(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException,
+			ValueCoercionException {
 		Object value = targetExpression.getValue(context);
-		return convertValueIfNecessary(value, expectedType);
+		return convertValueIfNecessary(value, expectedType, context);
 	}
 
 	public boolean isReadOnly(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
@@ -57,8 +60,8 @@ class BindingValueExpression extends ValueExpression {
 	}
 
 	public void setValue(ELContext context, Object value) throws NullPointerException, PropertyNotFoundException,
-			PropertyNotWritableException, ELException {
-		value = convertValueIfNecessary(value, targetExpression.getType(context));
+			PropertyNotWritableException, ELException, ValueCoercionException {
+		value = convertValueIfNecessary(value, targetExpression.getType(context), context);
 		targetExpression.setValue(context, value);
 	}
 
@@ -87,11 +90,16 @@ class BindingValueExpression extends ValueExpression {
 		return targetExpression.hashCode();
 	}
 
-	private Object convertValueIfNecessary(Object value, Class expectedType) {
+	private Object convertValueIfNecessary(Object value, Class expectedType, Object context)
+			throws ValueCoercionException {
 		if (expectedType == null) {
 			return value;
 		} else {
-			return conversionService.executeConversion(value, expectedType);
+			try {
+				return conversionService.executeConversion(value, expectedType);
+			} catch (ConversionException e) {
+				throw new ValueCoercionException(context.getClass(), getExpressionString(), value, expectedType, e);
+			}
 		}
 	}
 

@@ -174,6 +174,33 @@ public class OgnlExpressionParserTests extends TestCase {
 		assertEquals(null, e.getValueType(bean));
 	}
 
+	public void testGetValueWithCoersion() {
+		String expressionString = "number";
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(String.class));
+		TestBean context = new TestBean();
+		assertEquals("0", exp.getValue(context));
+	}
+
+	public void testGetValueCoersionError() {
+		String expressionString = "number";
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
+				.expectResult(TestBean.class));
+		TestBean context = new TestBean();
+		try {
+			exp.getValue(context);
+			fail("Should have failed with coersion");
+		} catch (ValueCoercionException e) {
+		}
+	}
+
+	public void testSetValue() {
+		String expressionString = "number";
+		Expression exp = parser.parseExpression(expressionString, null);
+		TestBean context = new TestBean();
+		exp.setValue(context, new Integer(5));
+		assertEquals(5, context.getNumber());
+	}
+
 	public void testSetValueWithCoersion() {
 		Expression e = parser.parseExpression("date", null);
 		e.setValue(bean, "2008-9-15");

@@ -15,16 +15,15 @@
  */
 package org.springframework.binding.expression;
 
-import org.springframework.core.style.StylerUtils;
-
 /**
- * An evaluation exception indicating a expression failed to evaluate because the source value could not be coerced to
+ * An evaluation exception indicating an expression failed to evaluate because the source value could not be coerced to
  * the target class
  * @author Scott Andrews
  */
 public class ValueCoercionException extends EvaluationException {
 
-	private Object value;
+	private transient Object value;
+
 	private Class targetClass;
 
 	/**
@@ -49,14 +48,14 @@ public class ValueCoercionException extends EvaluationException {
 	 * @param cause root cause of the failure
 	 */
 	public ValueCoercionException(Class contextClass, String property, Object value, Class targetClass, Throwable cause) {
-		super(contextClass, property, "value " + StylerUtils.style(value) + " could not be coerced to ["
-				+ targetClass.getName() + "]", cause);
+		super(contextClass, property, "Value [" + value + "] could not be coerced to type [" + targetClass.getName()
+				+ "]", cause);
 		this.value = value;
 		this.targetClass = targetClass;
 	}
 
 	/**
-	 * @return the value that could not be coerced
+	 * @return the value that could not be coerced; this value is a transient field
 	 */
 	public Object getValue() {
 		return value;

@@ -29,7 +29,7 @@ import ognl.TypeConverter;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.InvalidPropertyException;
-import org.springframework.binding.convert.ConversionExecutionException;
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -86,9 +86,13 @@ class OgnlExpression implements Expression {
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (OgnlException e) {
-			throw new EvaluationException(context.getClass(), getExpressionString(),
-					"An OgnlException occurred getting the value for expression '" + getExpressionString()
-							+ "' on context [" + context.getClass() + "]", e);
+			if (e.getReason() instanceof ValueCoercionException) {
+				throw (ValueCoercionException) e.getReason();
+			} else {
+				throw new EvaluationException(context.getClass(), getExpressionString(),
+						"An OgnlException occurred getting the value for expression '" + getExpressionString()
+								+ "' on context [" + context.getClass() + "]", e.getReason());
+			}
 		}
 	}
 
@@ -100,10 +104,8 @@ class OgnlExpression implements Expression {
 		} catch (NoSuchPropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (OgnlException e) {
-			if (e.getReason() instanceof ConversionExecutionException) {
-				ConversionExecutionException conversionEx = (ConversionExecutionException) e.getReason();
-				throw new ValueCoercionException(context.getClass(), expressionString, value, conversionEx
-						.getTargetClass(), conversionEx);
+			if (e.getReason() instanceof ValueCoercionException) {
+				throw (ValueCoercionException) e.getReason();
 			} else {
 				throw new EvaluationException(context.getClass(), getExpressionString(),
 						"An OgnlException occurred setting the value of expression '" + getExpressionString()
@@ -115,8 +117,12 @@ class OgnlExpression implements Expression {
 	private TypeConverter createTypeConverter() {
 		return new TypeConverter() {
 			public Object convertValue(Map context, Object target, Member member, String propertyName, Object value,
-					Class toType) {
-				return conversionService.executeConversion(value, toType);
+					Class toType) throws ValueCoercionException {
+				try {
+					return conversionService.executeConversion(value, toType);
+				} catch (ConversionException e) {
+					throw new ValueCoercionException(context.getClass(), expressionString, value, toType, e);
+				}
 			}
 		};
 	}

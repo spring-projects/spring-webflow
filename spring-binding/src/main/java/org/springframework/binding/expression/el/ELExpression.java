@@ -19,11 +19,9 @@ import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
 
-import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
-import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.util.Assert;
 
 /**
@@ -85,8 +83,6 @@ public class ELExpression implements Expression {
 			}
 		} catch (javax.el.PropertyNotFoundException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
-		} catch (ConversionExecutionException e) {
-			throw new ValueCoercionException(context.getClass(), getExpressionString(), value, e.getTargetClass(), e);
 		} catch (ELException e) {
 			throw new EvaluationException(context.getClass(), getExpressionString(),
 					"An ELException occurred setting the value of expression '" + getExpressionString()
