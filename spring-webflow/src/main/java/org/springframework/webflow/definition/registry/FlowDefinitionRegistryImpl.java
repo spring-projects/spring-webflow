@@ -15,11 +15,15 @@
  */
 package org.springframework.webflow.definition.registry;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -30,7 +34,7 @@ import org.springframework.webflow.definition.FlowDefinition;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
+public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry, DisposableBean {
 
 	private static final Log logger = LogFactory.getLog(FlowDefinitionRegistryImpl.class);
 
@@ -100,6 +104,20 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
 	public void registerFlowDefinition(FlowDefinition definition) {
 		registerFlowDefinition(new StaticFlowDefinitionHolder(definition));
+	}
+
+	// implementing DisposableBean
+
+	public void destroy() throws Exception {
+		Iterator flowDefinitionKeyIt = flowDefinitions.keySet().iterator();
+		while (flowDefinitionKeyIt.hasNext()) {
+			FlowDefinitionHolder holder = this.getFlowDefinitionHolder((String) flowDefinitionKeyIt.next());
+			FlowDefinition flowDefinition = holder.getFlowDefinition();
+			ApplicationContext context = flowDefinition.getApplicationContext();
+			if (context instanceof ConfigurableApplicationContext) {
+				((ConfigurableApplicationContext) context).close();
+			}
+		}
 	}
 
 	// internal helpers

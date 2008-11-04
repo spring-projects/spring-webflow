@@ -333,6 +333,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		} else {
 			flowContext = new GenericApplicationContext();
 		}
+		flowContext.setDisplayName("Flow ApplicationContext [" + getContext().getFlowId() + "]");
 		flowContext.setParent(parent);
 		flowContext.getBeanFactory().registerScope("request", new RequestScope());
 		flowContext.getBeanFactory().registerScope("flash", new FlashScope());

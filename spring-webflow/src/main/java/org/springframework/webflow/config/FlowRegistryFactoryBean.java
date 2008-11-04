@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.factory.BeanClassLoaderAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -54,7 +55,7 @@ import org.springframework.webflow.engine.model.registry.FlowModelHolder;
  * @author Jeremy Grelle
  * @author Scott Andrews
  */
-class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean {
+class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean, DisposableBean {
 
 	private FlowLocation[] flowLocations;
 
@@ -152,6 +153,12 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	public boolean isSingleton() {
 		return true;
+	}
+
+	// implement DisposableBean
+
+	public void destroy() throws Exception {
+		flowRegistry.destroy();
 	}
 
 	private void registerFlowLocations() {
