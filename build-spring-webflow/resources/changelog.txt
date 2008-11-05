@@ -5,21 +5,46 @@ http://www.springframework.org/webflow
 Changes in version 2.0.4 (04.11.2008)
 -------------------------------------
 New Features
-* Handler mappings can be now be automatically resolved from the flow repository (SWF-523)
-* The flow registry can now define a base path under which to lookup flow resources.  When the base path is defined, the default flow id is determined by the directory path from the base path to the flow definition. (SWF-909)
-* Development flag on flow builder services tag allows for development time automatic reloading of flow definitions and message bundles (SWF-846)
-* Added a ValidationContext object to replace MessageContext in validation methods.  The new object provides access to the message context in addition to the user event and the authenticated principal. (SWF-735)
+* Added FlowHandlerMapping for use with FlowHandlerAdapter, simplifying the process of mapping web requests to registered flow definitions.
+  This HandlerMapping strategy maps the path of a request to a registered flow id;
+  for example, a path of '/hotels/booking' would match the flow with id 'hotels/booking'.
+  If no mapping is found, null is returned and the next HandlerMapping in the DispatcherServlet mapping chain will be queried.
+  We recommend use of FlowHandlerMapping and FlowHandlerAdapter over FlowController going forward.
+  See the Spring Travel booking-mvc or booking-faces samples for an example.
+  
+* A flow-registry configuration may now define a base resource path for flow definitions, for example, /WEB-INF.
+  All flow locations are then defined relative to that path, for example /hotels/booking/booking.xml
+  Often used in conjunction with a flow-location-pattern, such as /**/*-flow.xml.
+  When a base path is defined, a flow id is calculated by extracting the directory path to the flow definition;
+  for example, a flow located at /WEB-INF/hotels/booking/booking.xml would be assigned id "hotels/booking" by default. 
+  (SWF-909)
 
+* Added a 'development' flag to the flow-builder-services element allowing switching on a "development mode".
+  In development mode, flow definition and message bundle changes are refreshed automatically. (SWF-846)
+  Development mode is off (false) by default.
+  
+* Added a ValidationContext to pass to validation methods, as an alternative to MessageContext.
+  This new ValidationContext provides access to the MessageContext as well as additional user information.
+  Allows for conditional validation by user event / user principal. (SWF-735)
+
+* Added a "with-dependencies" distribution, allowing Web Flow and its sample applications to be built off-line.
+  This is particularly useful for building Web Flow in corporate environments behind a firewall,
+  where access to the SpringSource Enterprise Bundle Repository may be restricted.
+
+* Added Maven POMs to the sample applications, allowing the samples to also be built using Maven.
+  
 Improvements
+* Upgraded to Spring Framework 2.5.6
 * Upgraded to Dojo 1.2 (SWF-883)
-* Resource servlet is more configurable (SWF-566, SWF-921)
-* Conversion service now supports string-enum conversion (SWF-827, SWF-834, SWF-911)
+* The ResourceServlet is now more configurable (SWF-566, SWF-921)
+* The default ConversionService now supports string-to-Java 5 enum conversion (SWF-827, SWF-834, SWF-911)
 * Validate all decorations for Ajax forms are now simpler to define (SWF-853)
-* Dojo date text box now uses a locale specific date format when gracefully degrading (SWF-844)
-* Various improvements to the reference guide documentation
+* A Dojo date text box now uses a locale specific date format when gracefully degrading (SWF-844)
+* Added numerous improvements to the reference guide documentation
 
 Bug Fixes
-* Fixed bug where a registered ConversionService was not auto-wired with the default ExpressionParser implementation. This prevented user-installed type converters from being applied without explicit configuration.
+* Fixed bug where a registered ConversionService was not auto-wired with the default ExpressionParser implementation.
+  This prevented user-installed type converters from being applied without explicit configuration.
 * Fixed bugs limiting compatibility with IE 6 for Spring Faces and Spring JS (SWF-786, SWF-770)
 * Global transitions can now be merged for flow inheritance (SWF-733)
 * Transitions on-exception will now match exceptions thrown from an OGNL expression. (SWF-780)
@@ -32,8 +57,6 @@ Bug Fixes
 * Removed unsafe Java 5 API calls to maintain 1.4 compatibility (SWF-926)
 * Type conversion errors in the binding subsystem now resolve properly to the typeMismatch message for the property (SWF-928) 
 * Flow application contexts are now explicitly closed when the flow registry is destroyed (SWF-929)
-
-TODO 
 
 Changes in version 2.0.3 (31.07.2008)
 -------------------------------------
