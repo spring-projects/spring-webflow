@@ -24,6 +24,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.TestMultiAction;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -346,6 +347,15 @@ public class FlowTests extends TestCase {
 		} catch (FlowExecutionException ex) {
 			// expected
 		}
+	}
+
+	public void testDestroy() {
+		GenericApplicationContext context = new GenericApplicationContext();
+		context.refresh();
+		flow.setApplicationContext(context);
+		assertTrue(context.isActive());
+		flow.destroy();
+		assertFalse(context.isActive());
 	}
 
 	public TransitionCriteria on(String eventId) {

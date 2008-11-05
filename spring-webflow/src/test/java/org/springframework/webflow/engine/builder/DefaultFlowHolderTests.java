@@ -2,6 +2,7 @@ package org.springframework.webflow.engine.builder;
 
 import junit.framework.TestCase;
 
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -15,7 +16,9 @@ public class DefaultFlowHolderTests extends TestCase {
 	private FlowAssembler assembler;
 
 	protected void setUp() {
-		FlowAssembler assembler = new FlowAssembler(new SimpleFlowBuilder(), new MockFlowBuilderContext("flowId"));
+		MockFlowBuilderContext context = new MockFlowBuilderContext("flowId");
+		context.getFlowBuilderServices().setApplicationContext(new StaticApplicationContext());
+		FlowAssembler assembler = new FlowAssembler(new SimpleFlowBuilder(), context);
 		holder = new DefaultFlowHolder(assembler);
 	}
 
@@ -32,6 +35,15 @@ public class DefaultFlowHolderTests extends TestCase {
 		flow = holder.getFlowDefinition();
 		assertEquals("flowId", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
+	}
+
+	public void testDestroyNotInitialized() {
+		holder.destroy();
+	}
+
+	public void testDestroy() {
+		holder.getFlowDefinition();
+		holder.destroy();
 	}
 
 	public class SimpleFlowBuilder extends AbstractFlowBuilder implements FlowBuilder {

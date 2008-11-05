@@ -15,6 +15,10 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean = new FlowRegistryFactoryBean();
 	}
 
+	public void tearDown() throws Exception {
+		factoryBean.destroy();
+	}
+
 	public void testGetFlowRegistry() throws Exception {
 		HashSet attributes = new HashSet();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));

@@ -29,9 +29,9 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 	private FlowDefinitionRegistryImpl registry = new FlowDefinitionRegistryImpl();
 
-	private FlowDefinition fooFlow;
+	private FooFlow fooFlow;
 
-	private FlowDefinition barFlow;
+	private BarFlow barFlow;
 
 	protected void setUp() {
 		fooFlow = new FooFlow();
@@ -101,8 +101,22 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		assertEquals(barFlow, child.getFlowDefinition("bar"));
 	}
 
+	public void testDestroy() {
+		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
+		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(barFlow));
+		assertEquals(fooFlow, registry.getFlowDefinition("foo"));
+		assertEquals(barFlow, registry.getFlowDefinition("bar"));
+		assertFalse(fooFlow.destroyed);
+		assertFalse(barFlow.destroyed);
+		registry.destroy();
+		assertTrue(fooFlow.destroyed);
+		assertTrue(barFlow.destroyed);
+	}
+
 	private static class FooFlow implements FlowDefinition {
 		private String id = "foo";
+
+		private boolean destroyed;
 
 		public MutableAttributeMap getAttributes() {
 			return null;
@@ -145,6 +159,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		}
 
 		public void destroy() {
+			destroyed = true;
 		}
 
 	}
@@ -152,6 +167,8 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 	private static class BarFlow implements FlowDefinition {
 		private String id = "bar";
 
+		private boolean destroyed;
+
 		public MutableAttributeMap getAttributes() {
 			return null;
 		}
@@ -193,6 +210,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		}
 
 		public void destroy() {
+			destroyed = true;
 		}
 
 	}
