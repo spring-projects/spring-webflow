@@ -61,7 +61,7 @@ Dependencies in [brackets] are optional, and are just necessary for certain func
 
 * org.springframework.js-2.0.4.RELEASE.jar
 - Contents: The Spring JavaScript module, containing Spring's Dojo integration and additional JavaScript functionality.
-- Dependencies: Dojo Toolkit 1.1
+- Dependencies: Dojo Toolkit
 
 * org.springframework.faces-2.0.4.RELEASE.jar
 - Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
