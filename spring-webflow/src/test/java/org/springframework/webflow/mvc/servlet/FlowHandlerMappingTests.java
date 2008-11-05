@@ -130,6 +130,9 @@ public class FlowHandlerMappingTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
+		public void destroy() {
+		}
+
 	}
 
 	public static class CustomFlowHandler implements FlowHandler {

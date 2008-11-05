@@ -53,6 +53,10 @@ class StaticFlowDefinitionHolder implements FlowDefinitionHolder {
 		// nothing to do
 	}
 
+	public void destroy() {
+		flowDefinition.destroy();
+	}
+
 	public boolean equals(Object o) {
 		if (!(o instanceof StaticFlowDefinitionHolder)) {
 			return false;

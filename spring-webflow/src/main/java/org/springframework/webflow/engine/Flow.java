@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -588,6 +589,12 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 			if (results != null && results.hasErrorResults()) {
 				throw new FlowOutputMappingException(getId(), results);
 			}
+		}
+	}
+
+	public void destroy() {
+		if (applicationContext != null && applicationContext instanceof ConfigurableApplicationContext) {
+			((ConfigurableApplicationContext) applicationContext).close();
 		}
 	}
 

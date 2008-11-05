@@ -56,4 +56,11 @@ public interface FlowDefinitionHolder {
 	 */
 	public void refresh() throws FlowDefinitionConstructionException;
 
+	/**
+	 * Indicates that the system is being shutdown and any resources flow resources should be released. After this
+	 * method is called, calls to {@link #getFlowDefinition()} are undefined. Should only be called once. May be a no-op
+	 * if the held flow was never constructed to begin with.
+	 */
+	public void destroy();
+
 }

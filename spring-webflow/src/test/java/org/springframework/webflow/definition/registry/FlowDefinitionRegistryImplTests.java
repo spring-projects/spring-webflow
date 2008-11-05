@@ -143,6 +143,10 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		public boolean inDevelopment() {
 			return false;
 		}
+
+		public void destroy() {
+		}
+
 	}
 
 	private static class BarFlow implements FlowDefinition {
@@ -186,6 +190,9 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 		public boolean inDevelopment() {
 			return false;
+		}
+
+		public void destroy() {
 		}
 
 	}

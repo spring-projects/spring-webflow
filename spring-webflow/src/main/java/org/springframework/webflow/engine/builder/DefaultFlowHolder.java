@@ -42,7 +42,7 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 	private static final Log logger = LogFactory.getLog(DefaultFlowHolder.class);
 
 	/**
-	 * The flow definition assembled by this assembler.
+	 * The flow definition assembled by this assembler, initially null.
 	 */
 	private FlowDefinition flowDefinition;
 
@@ -93,6 +93,12 @@ public class DefaultFlowHolder implements FlowDefinitionHolder {
 
 	public synchronized void refresh() throws FlowDefinitionConstructionException {
 		assembleFlow();
+	}
+
+	public void destroy() {
+		if (flowDefinition != null) {
+			flowDefinition.destroy();
+		}
 	}
 
 	// internal helpers

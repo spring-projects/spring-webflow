@@ -87,4 +87,9 @@ public interface FlowDefinition extends Annotated {
 	 */
 	public boolean inDevelopment();
 
+	/**
+	 * Destroy this flow definition, releasing any resources. After the flow is destroyed it cannot be started again.
+	 */
+	public void destroy();
+
 }
