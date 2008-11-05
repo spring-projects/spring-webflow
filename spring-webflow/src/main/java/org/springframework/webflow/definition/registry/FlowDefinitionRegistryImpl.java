@@ -104,9 +104,10 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	}
 
 	public void destroy() {
-		Iterator it = flowDefinitions.keySet().iterator();
+		Iterator it = flowDefinitions.values().iterator();
 		while (it.hasNext()) {
-			getFlowDefinitionHolder((String) it.next()).destroy();
+			FlowDefinitionHolder holder = (FlowDefinitionHolder) it.next();
+			holder.destroy();
 		}
 	}
 
