@@ -34,6 +34,20 @@ public class EvaluateActionTests extends TestCase {
 		assertEquals("bar", result.getId());
 	}
 
+	public void testEvaluateExpressionEmptyStringResult() throws Exception {
+		EvaluateAction action = new EvaluateAction(new StaticExpression(""), null);
+		MockRequestContext context = new MockRequestContext();
+		Event result = action.execute(context);
+		assertEquals("null", result.getId());
+	}
+
+	public void testEvaluateExpressionNullResult() throws Exception {
+		EvaluateAction action = new EvaluateAction(new StaticExpression(null), null);
+		MockRequestContext context = new MockRequestContext();
+		Event result = action.execute(context);
+		assertEquals("success", result.getId());
+	}
+
 	public void testEvaluateExpressionResultExposer() throws Exception {
 		StaticExpression resultExpression = new StaticExpression("");
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), new ActionResultExposer(

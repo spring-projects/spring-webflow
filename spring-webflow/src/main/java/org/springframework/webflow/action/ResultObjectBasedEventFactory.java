@@ -17,6 +17,7 @@ package org.springframework.webflow.action;
 
 import org.springframework.core.JdkVersion;
 import org.springframework.core.enums.LabeledEnum;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -81,7 +82,13 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			String eventId = EnumUtils.getEnumName(resultObject);
 			return event(source, eventId, getResultAttributeName(), resultObject);
 		} else if (isString(resultObject.getClass())) {
-			return event(source, (String) resultObject);
+			String resultString = (String) resultObject;
+			if (StringUtils.hasText(resultString)) {
+				return event(source, resultString);
+			} else {
+				// treat an empty string as the null event
+				return event(source, getNullEventId());
+			}
 		} else if (isEvent(resultObject.getClass())) {
 			return (Event) resultObject;
 		} else {
