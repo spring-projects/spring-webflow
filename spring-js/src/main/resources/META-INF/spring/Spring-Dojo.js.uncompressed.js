@@ -95,11 +95,15 @@ dojo.declare("Spring.ValidateAllDecoration", [Spring.AbstractValidateAllDecorati
 	
 	apply : function() {
 		var element = dojo.byId(this.elementId);
-		this.originalHandler = element[this.event];
-		var context = this;
-		element[this.event] = function(event){
-			context.handleEvent(event, context);
-		};
+		if (!element) {
+			console.error("Could not apply ValidateAll decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
+		} else {
+			this.originalHandler = element[this.event];
+			var context = this;
+			element[this.event] = function(event){
+				context.handleEvent(event, context);
+			};
+		}
 		return this;
 	},
 	
@@ -132,8 +136,13 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 	},
 	
 	apply : function() {
-		this.validationSubscription = dojo.subscribe(this.elementId+"/validation", this, "_handleValidation");
-		this.connection = dojo.connect(dojo.byId(this.elementId), this.event, this, "submit");
+		var element = dojo.byId(this.elementId);
+		if (!element) {
+			console.error("Could not apply AjaxEvent decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
+		} else {
+			this.validationSubscription = dojo.subscribe(this.elementId+"/validation", this, "_handleValidation");
+			this.connection = dojo.connect(element, this.event, this, "submit");
+		}
 		return this;	
 	},
 	
