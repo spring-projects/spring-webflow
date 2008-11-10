@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.webflow.context.servlet.FileNameBasedFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.executor.FlowExecutor;
 
@@ -41,7 +42,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  */
 public class FlowController implements Controller, ApplicationContextAware, InitializingBean {
 
-	private FlowHandlerAdapter flowHandlerAdapter = new FlowHandlerAdapter();
+	private FlowHandlerAdapter flowHandlerAdapter;
 
 	private Map flowHandlers = new HashMap();
 
@@ -56,7 +57,8 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	 * @see #afterPropertiesSet()
 	 */
 	public FlowController() {
-
+		flowHandlerAdapter = new FlowHandlerAdapter();
+		flowHandlerAdapter.setFlowUrlHandler(new FileNameBasedFlowUrlHandler());
 	}
 
 	/**
@@ -108,8 +110,8 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	 * Set whether redirects sent by this controller should be compatible with HTTP 1.0 clients.
 	 * <p>
 	 * By default, this will enforce a redirect HTTP status code of 302 by delegating to
-	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is
-	 * the correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
+	 * <code>HttpServletResponse.sendRedirect</code>. Setting this to false will send HTTP status code 303, which is the
+	 * correct code for HTTP 1.1 clients, but not understood by HTTP 1.0 clients.
 	 * <p>
 	 * Many HTTP 1.1 clients treat 302 just like 303, not making any difference. However, some clients depend on 303
 	 * when redirecting after a POST request; turn this flag off in such a scenario.
