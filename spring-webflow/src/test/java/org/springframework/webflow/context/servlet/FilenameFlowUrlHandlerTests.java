@@ -19,9 +19,9 @@ import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 
-public class FileNameBasedUrlHandlerTests extends TestCase {
+public class FilenameFlowUrlHandlerTests extends TestCase {
 
-	private DefaultFlowUrlHandler urlHandler = new FileNameBasedFlowUrlHandler();
+	private DefaultFlowUrlHandler urlHandler = new FilenameFlowUrlHandler();
 	private MockHttpServletRequest request = new MockHttpServletRequest();
 
 	public void testGetFlowId() {

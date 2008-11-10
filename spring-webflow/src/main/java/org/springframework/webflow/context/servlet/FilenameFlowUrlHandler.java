@@ -20,13 +20,27 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.mvc.servlet.FlowController;
-import org.springframework.webflow.mvc.servlet.FlowHandler;
 
 /**
+ * A file name based {@link FlowUrlHandler} implementation as an alternative to {@link DefaultFlowUrlHandler}. Treats
+ * the filename of a request without the URL suffix and/or prefix as the flow id. Used by the {@link FlowController}
+ * implementation as a default implementation to preserve compability with Web Flow 2.0.0 applications.
  * 
- * A Web Flow < 2.0.4 compliant {@link FlowUrlHandler} implementation. Will be used by the {@link FlowController}
- * implementation by default. Other custom {@link FlowHandler} implementations should use this implementation to keep
- * the old URL schemes with Web Flow 2.0.4, whereas the last part of the URL is the flow id instead of the whole path.
+ * <p>
+ * The implementation extracts the filename and removes the file extension from the request URL. The results will be
+ * used as the flow Id that must be unique throughout the application.
+ * 
+ * For example the URLs
+ * 
+ * <pre>
+ * 	http://someHost/someApp/someServlet/foo
+ * 	http://someHost/someApp/someServlet/nestedPath/foo
+ * 	http://someHost/someApp/someServlet/nestedPath/foo.html
+ * </pre>
+ * 
+ * will all use the id "foo" as the flow id.
+ * </p>
+ * 
  * 
  * <p>
  * Expects URLs to launch flow to be of this pattern:
@@ -54,18 +68,26 @@ import org.springframework.webflow.mvc.servlet.FlowHandler;
  * </pre>
  * 
  * 
- * <strong>Note:</strong> This class is available only for backwards compability of Web Flow 2.0.4 with older Web Flow
- * 2.0 applications. Consider using the new Web Flow 2.0.4 URL ({@link DefaultFlowUrlHandler}) scheme to avoid flow id
- * clashes inside the application.
+ * <strong>Note:</strong> This class uses only the filename as the flow id that can result in flow id name clashes
+ * throughout the application.
+ * 
+ * <pre>
+ * http://localhost/springtravel/app/hotel/booking
+ * http://localhost/springtravel/app/flight/booking
+ * </pre>
+ * 
+ * would result in the same flow id "booking". Consider using the {@link DefaultFlowUrlHandler} that uses the request
+ * URL prefix as well to avoid these clashes.
+ * 
  * 
  * @author Agim Emruli
  * 
  */
-public class FileNameBasedFlowUrlHandler extends DefaultFlowUrlHandler {
+public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 
 	private UrlPathHelper urlPathHelper;
 
-	public FileNameBasedFlowUrlHandler() {
+	public FilenameFlowUrlHandler() {
 		urlPathHelper = new UrlPathHelper();
 	}
 

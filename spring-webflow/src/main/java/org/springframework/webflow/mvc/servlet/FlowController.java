@@ -28,7 +28,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import org.springframework.webflow.context.servlet.FileNameBasedFlowUrlHandler;
+import org.springframework.webflow.context.servlet.FilenameFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.executor.FlowExecutor;
 
@@ -58,7 +58,7 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	 */
 	public FlowController() {
 		flowHandlerAdapter = new FlowHandlerAdapter();
-		flowHandlerAdapter.setFlowUrlHandler(new FileNameBasedFlowUrlHandler());
+		flowHandlerAdapter.setFlowUrlHandler(new FilenameFlowUrlHandler());
 	}
 
 	/**
