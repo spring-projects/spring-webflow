@@ -23,8 +23,8 @@
 			uses that context for data access during the course of flow execution, and commits changes made to persistent entities at the end.
 			This pattern provides isolation of intermediate edits by only committing changes to the database at the end of flow execution.
 			This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
-			To support saving and restarting the progress of a flow over an extended period of time, a durable store for conversational state must be used.
-			If a save and restart capability is not required, standard HTTP session-based storage of conversational state is sufficient.
+			To support saving and restarting the progress of a flow over an extended period of time, a durable store for flow state must be used.
+			If a save and restart capability is not required, standard HTTP session-based storage of flow state is sufficient.
 			In that case, session expiration or termination before commit could potentially result in changes being lost.
 		</para>
 		<para>
