@@ -30,6 +30,7 @@ DEVELOPERS
          spring-webflow/pom.xml
          spring-webflow/template.mf
          spring-webflow-reference/src/spring-webflow-reference.xml
+         spring-webflow-reference/src/overview.xml
          spring-webflow-samples/*/pom.xml
 		 
   2. From this directory, run:
