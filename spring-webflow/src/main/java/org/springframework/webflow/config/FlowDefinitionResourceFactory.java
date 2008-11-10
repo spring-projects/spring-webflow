@@ -107,6 +107,11 @@ public class FlowDefinitionResourceFactory {
 			resource = resourceLoader.getResource(path);
 		} else {
 			try {
+				String basePath = this.basePath;
+				if (!basePath.endsWith("/")) {
+					// the basePath must end with a slash to create a relative resource
+					basePath = basePath + "/";
+				}
 				resource = resourceLoader.getResource(basePath).createRelative(path);
 			} catch (IOException e) {
 				throw new IllegalStateException("The base path cannot be resolved from '" + basePath + "': "
