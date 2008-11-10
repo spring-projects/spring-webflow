@@ -34,7 +34,15 @@
 		<para>
 			Three phases of flow execution can be secured: flows, states and transitions.
 			In each case the syntax for the secured element is identical.
-		</para>
+			The secured element is located inside the element it is securing.
+			For example, to secure a state the secured element occurs directly inside that state:
+		</para>	
+		<programlisting language="xml"><![CDATA[
+<view-state id="secured-view">
+    <secured attributes="ROLE_USER" />
+    ...
+</view-state>]]>
+		</programlisting>
 		<sect2 id="flow-security-secured-element-attributes">
 			<title>Security attributes</title>
 			<para>
