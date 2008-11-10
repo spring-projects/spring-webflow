@@ -186,23 +186,50 @@ public class CustomMultiAction extends MultiAction {
 				The result is treated as a flow event which the calling flow can then respond to.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="bookingAction.makeBooking(booking, messageContext)" />]]>	
+<evaluate expression="bookingAction.makeBooking(booking, flowRequestContext)" />]]>	
         	</programlisting>
 			<programlisting language="java"><![CDATA[
 public class BookingAction {
-   public String makeBooking(Booking booking, MessageContext context) {
+   public String makeBooking(Booking booking, RequestContext context) {
        try {
-           bookingService.make(booking);
+           BookingConfirmation confirmation = bookingService.make(booking);
+           context.getFlowScope().put("confirmation", confirmation);
            return "success";
        } catch (RoomNotAvailableException e) {
-           context.addMessage(builder.error().
+           context.addMessage(new MessageBuilder().error().
                .defaultText("No room is available at this hotel").build());
            return "error";
        }
    }
 }]]>
 			</programlisting>
-		</sect2>		
+		</sect2>
+		<sect2>
+			<title>Handling a business exception with a MultiAction</title>
+			<para>
+				The following example is functionally equivlant to the last, but implemented as a MultiAction instead of a POJO action.
+				The MultiAction requires its action methods to be of the signature <code>Event ${methodName}(RequestContext)</code>, providing stronger type safety, while a POJO action allows for more freedom.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="bookingAction.makeBooking" />]]>	
+        	</programlisting>
+			<programlisting language="java"><![CDATA[
+public class BookingAction extends MultiAction {
+   public Event makeBooking(RequestContext context) {
+       try {
+           Booking booking = (Booking) context.getFlowScope().get("booking");
+           BookingConfirmation confirmation = bookingService.make(booking);
+           context.getFlowScope().put("confirmation", confirmation);
+           return success();
+       } catch (RoomNotAvailableException e) {
+           context.getMessageContext().addMessage(new MessageBuilder().error().
+               .defaultText("No room is available at this hotel").build());
+           return error();
+       }
+   }
+}]]>
+			</programlisting>
+		</sect2>				
 	</sect1>
 	<sect1 id="action-examples">
 		<title>Other Action execution examples</title>
