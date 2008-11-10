@@ -26,31 +26,28 @@ import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
- * The default flow url handler for Spring Web Flow.
+ * The default FlowUrlHandler implementation for Spring Web Flow.
  * <p>
  * Expects URLs to launch flow to be of this pattern:
+ * </p>
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow id&gt;
+ * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;
  * </pre>
  * 
- * For example:
- * 
- * <pre>
- * http://localhost/springtravel/app/booking
- * </pre>
- * 
+ * As an example, the URL http://localhost/springtravel/app/booking would map to flow "booking", while the URL
+ * http://localhost/springtravel/app/hotels/booking would map to flow "hotels/booking". If the resource path ends in an
+ * extension it will be stripped; for example, /springtravel/app/booking.htm would still map to flow "booking".
+ * <p>
  * Expects URLs to resume flows to be of this pattern:
+ * </p>
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow id&gt;?execution=&lt;flow execution key&gt;
+ * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;?execution=&lt;flow execution key&gt;
  * </pre>
  * 
- * For example:
- * 
- * <pre>
- * http://localhost/springtravel/app/booking?execution=c1v1
- * </pre>
+ * As an example, the URL http://localhost/springtravel/app/hotels/booking?execution=e1s1 would attempt to resume
+ * execution "e1s1" of the "hotels/booking" flow.
  * 
  * @author Keith Donald
  * 
