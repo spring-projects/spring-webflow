@@ -22,12 +22,13 @@ import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.mvc.servlet.FlowController;
 
 /**
- * A file name based {@link FlowUrlHandler} implementation as an alternative to {@link DefaultFlowUrlHandler}. Treats
- * the filename of a request without the URL suffix and/or prefix as the flow id. Used by the {@link FlowController}
- * implementation as a default implementation to preserve compability with Web Flow 2.0.0 applications.
+ * A file name based {@link FlowUrlHandler} implementation that is an alternative to the standard
+ * {@link DefaultFlowUrlHandler}. Treats the filename of a request without the URL suffix and/or prefix as the flow id.
+ * Used by the {@link FlowController} implementation as a default implementation to preserve compability with existing
+ * Web Flow 2 applications.
  * 
  * <p>
- * The implementation extracts the filename and removes the file extension from the request URL. The results will be
+ * This implementation extracts the filename and removes the file extension from the request URL. The results will be
  * used as the flow Id that must be unique throughout the application.
  * 
  * For example the URLs
@@ -38,50 +39,21 @@ import org.springframework.webflow.mvc.servlet.FlowController;
  * 	http://someHost/someApp/someServlet/nestedPath/foo.html
  * </pre>
  * 
- * will all use the id "foo" as the flow id.
+ * will all treat the filename "foo" as the flow id.
  * </p>
  * 
- * 
- * <p>
- * Expects URLs to launch flow to be of this pattern:
- * 
- * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/[somePath]/&lt;flow id&gt;
- * </pre>
- * 
- * For example:
- * 
- * <pre>
- * http://localhost/springtravel/app/booking/booking
- * </pre>
- * 
- * Expects URLs to resume flows to be of this pattern:
- * 
- * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/[somePath]/&lt;flow id&gt;?execution=&lt;flow execution key&gt;
- * </pre>
- * 
- * For example:
- * 
- * <pre>
- * http://localhost/springtravel/app/booking/booking?execution=c1v1
- * </pre>
- * 
- * 
- * <strong>Note:</strong> This class uses only the filename as the flow id that can result in flow id name clashes
- * throughout the application.
+ * <strong>Note:</strong> Because this class only treats a filename as a flow id, clashes can result. For example:
  * 
  * <pre>
  * http://localhost/springtravel/app/hotel/booking
  * http://localhost/springtravel/app/flight/booking
  * </pre>
  * 
- * would result in the same flow id "booking". Consider using the {@link DefaultFlowUrlHandler} that uses the request
- * URL prefix as well to avoid these clashes.
- * 
+ * would both map the same flow id "booking", instead of "hotel/booking" and "flight/booking". This is an limitation of
+ * this implementation. Consider using the standard {@link DefaultFlowUrlHandler} that uses the request URL prefix as
+ * well to avoid these clashes.
  * 
  * @author Agim Emruli
- * 
  */
 public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 
