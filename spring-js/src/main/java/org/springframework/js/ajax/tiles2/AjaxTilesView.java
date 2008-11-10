@@ -111,7 +111,8 @@ public class AjaxTilesView extends TilesView {
 
 	protected String[] getRenderFragments(Map model, HttpServletRequest request, HttpServletResponse response) {
 		String attrName = request.getParameter(FRAGMENTS_PARAM);
-		return StringUtils.commaDelimitedListToStringArray(attrName);
+		String[] renderFragments = StringUtils.commaDelimitedListToStringArray(attrName);
+		return StringUtils.trimArrayElements(renderFragments);
 	}
 
 	private void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext, Map resultMap,
