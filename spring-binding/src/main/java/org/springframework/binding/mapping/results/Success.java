@@ -15,14 +15,13 @@
  */
 package org.springframework.binding.mapping.results;
 
-import org.springframework.binding.mapping.Result;
-import org.springframework.core.style.ToStringCreator;
+import org.springframework.binding.mapping.Mapping;
 
 /**
  * Indicates a successful mapping operation.
  * @author Keith Donald
  */
-public class Success extends Result {
+public class Success extends AbstractMappingResult {
 
 	private Object mappedValue;
 
@@ -33,9 +32,22 @@ public class Success extends Result {
 	 * @param mappedValue the successfully mapped value
 	 * @param originalValue the original value
 	 */
-	public Success(Object mappedValue, Object originalValue) {
+	public Success(Mapping mapping, Object mappedValue, Object originalValue) {
+		super(mapping);
 		this.mappedValue = mappedValue;
 		this.originalValue = originalValue;
+	}
+
+	public String getCode() {
+		return "success";
+	}
+
+	public boolean isError() {
+		return false;
+	}
+
+	public Throwable getErrorCause() {
+		return null;
 	}
 
 	public Object getOriginalValue() {
@@ -46,16 +58,4 @@ public class Success extends Result {
 		return mappedValue;
 	}
 
-	public boolean isError() {
-		return false;
-	}
-
-	public String getErrorCode() {
-		return null;
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("originalValue", originalValue).append("mappedValue", mappedValue)
-				.toString();
-	}
 }

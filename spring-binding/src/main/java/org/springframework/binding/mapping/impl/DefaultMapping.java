@@ -19,7 +19,6 @@ import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.util.Assert;
 
@@ -126,7 +125,7 @@ public class DefaultMapping implements Mapping {
 				try {
 					targetValue = typeConverter.execute(sourceValue);
 				} catch (ConversionExecutionException e) {
-					context.setTypeConversionErrorResult(e);
+					context.setTypeConversionErrorResult(sourceValue, e);
 					return;
 				}
 			}
@@ -134,8 +133,6 @@ public class DefaultMapping implements Mapping {
 		try {
 			targetExpression.setValue(context.getTarget(), targetValue);
 			context.setSuccessResult(sourceValue, targetValue);
-		} catch (ValueCoercionException e) {
-			context.setTypeConversionErrorResult(e);
 		} catch (EvaluationException e) {
 			context.setTargetAccessError(sourceValue, e);
 		}

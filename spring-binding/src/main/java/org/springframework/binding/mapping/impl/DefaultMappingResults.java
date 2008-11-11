@@ -64,7 +64,7 @@ public class DefaultMappingResults implements MappingResults {
 		Iterator it = mappingResults.iterator();
 		while (it.hasNext()) {
 			MappingResult result = (MappingResult) it.next();
-			if (result.getResult().isError()) {
+			if (result.isError()) {
 				return true;
 			}
 		}
@@ -76,7 +76,7 @@ public class DefaultMappingResults implements MappingResults {
 		Iterator it = mappingResults.iterator();
 		while (it.hasNext()) {
 			MappingResult result = (MappingResult) it.next();
-			if (result.getResult().isError()) {
+			if (result.isError()) {
 				errorResults.add(result);
 			}
 		}

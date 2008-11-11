@@ -20,9 +20,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.expression.EvaluationException;
-import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
@@ -96,7 +94,7 @@ public class DefaultMappingContext {
 	 * was performed
 	 */
 	public void setSuccessResult(Object originalValue, Object mappedValue) {
-		add(new MappingResult(currentMapping, new Success(mappedValue, originalValue)));
+		add(new Success(currentMapping, mappedValue, originalValue));
 	}
 
 	/**
@@ -105,29 +103,17 @@ public class DefaultMappingContext {
 	 * @param originalValue the original source value that is empty (null or an empty string, typically)
 	 */
 	public void setRequiredErrorResult(Object originalValue) {
-		add(new MappingResult(currentMapping, new RequiredError(originalValue)));
+		add(new RequiredError(currentMapping, originalValue));
 	}
 
 	/**
 	 * Indicates the current mapping ended with a 'type conversion' error. This means the value obtained from the source
 	 * could not be converted to a type that could be assigned to the target expression.
-	 * @param exception the conversion exception that occurred, containing the original source value that could not be
-	 * converted during the mapping attempt, as well as the desired target type to which conversion could not be
-	 * performed
+	 * @param originalValue the original source value that is empty (null or an empty string, typically)
+	 * @param cause the actual type conversion exception that occurred
 	 */
-	public void setTypeConversionErrorResult(ConversionExecutionException exception) {
-		add(new MappingResult(currentMapping, new TypeConversionError(exception)));
-	}
-
-	/**
-	 * Indicates the current mapping ended with a 'type conversion' error. This means the value obtained from the source
-	 * could not be converted to a type that could be assigned to the target expression.
-	 * @param exception the coercion exception that occurred, containing the original source value that could not be
-	 * converted during the mapping attempt, as well as the desired target type to which conversion could not be
-	 * performed
-	 */
-	public void setTypeConversionErrorResult(ValueCoercionException exception) {
-		add(new MappingResult(currentMapping, new TypeConversionError(exception)));
+	public void setTypeConversionErrorResult(Object originalValue, Exception cause) {
+		add(new TypeConversionError(currentMapping, originalValue, cause));
 	}
 
 	/**
@@ -135,7 +121,7 @@ public class DefaultMappingContext {
 	 * @param error the error that occurred
 	 */
 	public void setSourceAccessError(EvaluationException error) {
-		add(new MappingResult(currentMapping, new SourceAccessError(error)));
+		add(new SourceAccessError(currentMapping, error));
 	}
 
 	/**
@@ -143,7 +129,7 @@ public class DefaultMappingContext {
 	 * @param error the error that occurred
 	 */
 	public void setTargetAccessError(Object originalValue, EvaluationException error) {
-		add(new MappingResult(currentMapping, new TargetAccessError(originalValue, error)));
+		add(new TargetAccessError(currentMapping, originalValue, error));
 	}
 
 	/**

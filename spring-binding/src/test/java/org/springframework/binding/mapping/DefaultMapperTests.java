@@ -11,7 +11,6 @@ import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
-import org.springframework.binding.mapping.results.TypeConversionError;
 
 public class DefaultMapperTests extends TestCase {
 	private DefaultMapper mapper = new DefaultMapper();
@@ -66,8 +65,7 @@ public class DefaultMapperTests extends TestCase {
 		bean1.put("boop", "bogus");
 		TestBean2 bean2 = new TestBean2();
 		MappingResults results = mapper.map(bean1, bean2);
-		assertEquals(TypeConversionError.class, ((MappingResult) results.getErrorResults().get(0)).getResult()
-				.getClass());
+		assertEquals("typeMismatch", ((MappingResult) results.getErrorResults().get(0)).getCode());
 	}
 
 	public static class TestBean {

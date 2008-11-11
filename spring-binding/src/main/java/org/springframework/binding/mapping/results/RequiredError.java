@@ -15,15 +15,14 @@
  */
 package org.springframework.binding.mapping.results;
 
-import org.springframework.binding.mapping.Result;
-import org.springframework.core.style.ToStringCreator;
+import org.springframework.binding.mapping.Mapping;
 
 /**
  * The "required" error result--indicates a required mapping could not be performed because the source value to map was
  * empty.
  * @author Keith Donald
  */
-public class RequiredError extends Result {
+public class RequiredError extends AbstractMappingResult {
 
 	private Object originalValue;
 
@@ -31,8 +30,21 @@ public class RequiredError extends Result {
 	 * Creates a new required error result
 	 * @param originalValue the original source value (empty)
 	 */
-	public RequiredError(Object originalValue) {
+	public RequiredError(Mapping mapping, Object originalValue) {
+		super(mapping);
 		this.originalValue = originalValue;
+	}
+
+	public String getCode() {
+		return "required";
+	}
+
+	public boolean isError() {
+		return true;
+	}
+
+	public Throwable getErrorCause() {
+		return null;
 	}
 
 	public Object getOriginalValue() {
@@ -43,15 +55,4 @@ public class RequiredError extends Result {
 		return null;
 	}
 
-	public boolean isError() {
-		return true;
-	}
-
-	public String getErrorCode() {
-		return "required";
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("originalValue", originalValue).toString();
-	}
 }

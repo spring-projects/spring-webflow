@@ -15,10 +15,7 @@
  */
 package org.springframework.binding.mapping.results;
 
-import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.expression.ValueCoercionException;
-import org.springframework.binding.mapping.Result;
-import org.springframework.core.style.ToStringCreator;
+import org.springframework.binding.mapping.Mapping;
 
 /**
  * Indicates a type conversion occurred during a mapping operation.
@@ -26,28 +23,32 @@ import org.springframework.core.style.ToStringCreator;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class TypeConversionError extends Result {
+public class TypeConversionError extends AbstractMappingResult {
 
 	private Object originalValue;
 
-	private Class targetType;
-
-	private Exception exception;
+	private Exception cause;
 
 	/**
 	 * Creates a new type conversion error.
-	 * @param exception the underlying type conversion exception
+	 * @param cause the underlying type conversion exception
 	 */
-	public TypeConversionError(ConversionExecutionException exception) {
-		this.exception = exception;
-		this.originalValue = exception.getValue();
-		this.targetType = exception.getTargetClass();
+	public TypeConversionError(Mapping mapping, Object originalValue, Exception cause) {
+		super(mapping);
+		this.originalValue = originalValue;
+		this.cause = cause;
 	}
 
-	public TypeConversionError(ValueCoercionException exception) {
-		this.exception = exception;
-		this.originalValue = exception.getValue();
-		this.targetType = exception.getTargetClass();
+	public String getCode() {
+		return "typeMismatch";
+	}
+
+	public boolean isError() {
+		return true;
+	}
+
+	public Throwable getErrorCause() {
+		return cause;
 	}
 
 	public Object getOriginalValue() {
@@ -58,32 +59,4 @@ public class TypeConversionError extends Result {
 		return null;
 	}
 
-	public boolean isError() {
-		return true;
-	}
-
-	public String getErrorCode() {
-		return "typeMismatch";
-	}
-
-	// impl
-
-	/**
-	 * Returns the target type of the conversion attempt.
-	 */
-	public Class getTargetClass() {
-		return targetType;
-	}
-
-	/**
-	 * Returns the backing type conversion exception that occurred.
-	 */
-	public Exception getException() {
-		return exception;
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("originalValue", originalValue).append("targetType", targetType)
-				.append("message", exception.getMessage()).toString();
-	}
 }

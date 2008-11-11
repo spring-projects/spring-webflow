@@ -24,7 +24,6 @@ import org.springframework.binding.message.MessageContext;
  * A context for validation events.
  * 
  * @author Scott Andrews
- * @since 2.0.4
  */
 public interface ValidationContext {
 

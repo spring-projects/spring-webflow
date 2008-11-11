@@ -17,35 +17,47 @@ package org.springframework.binding.mapping.results;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.PropertyNotFoundException;
-import org.springframework.binding.mapping.Result;
-import org.springframework.core.style.ToStringCreator;
+import org.springframework.binding.expression.ValueCoercionException;
+import org.springframework.binding.mapping.Mapping;
 
 /**
  * Indicates an exception occurred accessing the target object to be mapped to. Used to report source
  * {@link PropertyNotFoundException} errors and general {@link EvaluationException} errors.
  * @author Keith Donald
  */
-public class TargetAccessError extends Result {
+public class TargetAccessError extends AbstractMappingResult {
 
 	private Object originalValue;
 
-	private EvaluationException error;
+	private EvaluationException cause;
 
 	/**
 	 * Creates a new target access error.
 	 * @param originalValue the value that was attempted to be mapped
-	 * @param error the underlying evaluation exception that occurred
+	 * @param cause the underlying evaluation exception that occurred
 	 */
-	public TargetAccessError(Object originalValue, EvaluationException error) {
+	public TargetAccessError(Mapping mapping, Object originalValue, EvaluationException cause) {
+		super(mapping);
 		this.originalValue = originalValue;
-		this.error = error;
+		this.cause = cause;
 	}
 
-	/**
-	 * Returns the backing target evaluation exception that occurred.
-	 */
-	public EvaluationException getException() {
-		return error;
+	public String getCode() {
+		if (cause instanceof PropertyNotFoundException) {
+			return "propertyNotFound";
+		} else if (cause instanceof ValueCoercionException) {
+			return "typeMismatch";
+		} else {
+			return "evaluationException";
+		}
+	}
+
+	public boolean isError() {
+		return true;
+	}
+
+	public Throwable getErrorCause() {
+		return cause;
 	}
 
 	public Object getOriginalValue() {
@@ -56,20 +68,4 @@ public class TargetAccessError extends Result {
 		return null;
 	}
 
-	public boolean isError() {
-		return true;
-	}
-
-	public String getErrorCode() {
-		if (error instanceof PropertyNotFoundException) {
-			return "propertyNotFound";
-		} else {
-			return "evaluationException";
-		}
-	}
-
-	public String toString() {
-		return new ToStringCreator(this).append("errorCode", getErrorCode()).append("message", error.getMessage())
-				.toString();
-	}
 }

@@ -122,7 +122,7 @@ public class BindingModel extends AbstractErrors {
 			List results = mappingResults.getResults(new FieldErrorResult(field));
 			if (!results.isEmpty()) {
 				MappingResult fieldError = (MappingResult) results.get(0);
-				return fieldError.getResult().getOriginalValue();
+				return fieldError.getOriginalValue();
 			}
 		}
 		return getFormattedValue(parseFieldExpression(field));

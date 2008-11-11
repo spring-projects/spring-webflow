@@ -393,7 +393,7 @@ public abstract class AbstractMvcView implements View {
 
 	private MessageResolver createMessageResolver(MappingResult error) {
 		String field = error.getMapping().getTargetExpression().getExpressionString();
-		String errorCode = error.getResult().getErrorCode();
+		String errorCode = error.getCode();
 		String propertyErrorCode = new StringBuffer().append(getModelExpression().getExpressionString()).append('.')
 				.append(field).append('.').append(errorCode).toString();
 		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
@@ -418,13 +418,13 @@ public abstract class AbstractMvcView implements View {
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {
 		public boolean test(MappingResult result) {
-			return result.getResult().isError() && "propertyNotFound".equals(result.getResult().getErrorCode());
+			return result.isError() && "propertyNotFound".equals(result.getCode());
 		}
 	}
 
 	private static class MappingError implements MappingResultsCriteria {
 		public boolean test(MappingResult result) {
-			return result.getResult().isError() && !PROPERTY_NOT_FOUND_ERROR.test(result);
+			return result.isError() && !PROPERTY_NOT_FOUND_ERROR.test(result);
 		}
 	}
 
