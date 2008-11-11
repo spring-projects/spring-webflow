@@ -24,6 +24,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -38,8 +39,6 @@ import org.springframework.webflow.core.collection.AttributeMap;
 public class FlowDefinitionResourceFactory {
 
 	private static final String CLASSPATH_SCHEME = "classpath:";
-
-	private static final String CLASSPATH_STAR_SCHEME = "classpath*:";
 
 	private static final String SLASH = "/";
 
@@ -108,9 +107,9 @@ public class FlowDefinitionResourceFactory {
 		} else {
 			try {
 				String basePath = this.basePath;
-				if (!basePath.endsWith("/")) {
+				if (!basePath.endsWith(SLASH)) {
 					// the basePath must end with a slash to create a relative resource
-					basePath = basePath + "/";
+					basePath = basePath + SLASH;
 				}
 				resource = resourceLoader.getResource(basePath).createRelative(path);
 			} catch (IOException e) {
@@ -194,34 +193,35 @@ public class FlowDefinitionResourceFactory {
 		}
 		String basePath = this.basePath;
 		String filePath;
-		if (flowResource instanceof ClassPathResource) {
-			filePath = ((ClassPathResource) flowResource).getPath();
-			// remove classpath scheme
-			if (basePath.startsWith(CLASSPATH_SCHEME)) {
-				basePath = basePath.substring(CLASSPATH_SCHEME.length());
-			} else if (basePath.startsWith(CLASSPATH_STAR_SCHEME)) {
-				basePath = basePath.substring(CLASSPATH_STAR_SCHEME.length());
-			}
-		} else if (flowResource instanceof ContextResource) {
+		if (flowResource instanceof ContextResource) {
 			filePath = ((ContextResource) flowResource).getPathWithinContext();
+		} else if (flowResource instanceof ClassPathResource) {
+			basePath = removeClasspathScheme(basePath);
+			filePath = ((ClassPathResource) flowResource).getPath();
+		} else if (flowResource instanceof FileSystemResource) {
+			basePath = removeClasspathScheme(basePath);
+			filePath = truncateFilePath(((FileSystemResource) flowResource).getPath(), basePath);
+		} else if (flowResource instanceof UrlResource) {
+			basePath = removeClasspathScheme(basePath);
+			try {
+				filePath = truncateFilePath(((UrlResource) flowResource).getURL().getPath(), basePath);
+			} catch (IOException e) {
+				throw new IllegalArgumentException("Unable to obtain path: " + e.getMessage());
+			}
 		} else {
 			// default to the filename
 			return getFlowIdFromFileName(flowResource);
 		}
-		// TODO can this logic be simplified?
+
 		int beginIndex = 0;
 		int endIndex = filePath.length();
-		if (filePath.startsWith(SLASH) || !basePath.startsWith(SLASH)) {
-			if (filePath.startsWith(basePath)) {
-				beginIndex = basePath.length();
-			}
-		} else {
-			if (filePath.startsWith(SLASH + basePath)) {
-				beginIndex = basePath.length() + 1;
-			}
+		if (filePath.startsWith(basePath)) {
+			beginIndex = basePath.length();
+		} else if (filePath.startsWith(SLASH + basePath)) {
+			beginIndex = basePath.length() + 1;
 		}
-		// ignore a leading slash
 		if (filePath.startsWith(SLASH, beginIndex)) {
+			// ignore a leading slash
 			beginIndex++;
 		}
 		if (filePath.lastIndexOf(SLASH) >= beginIndex) {
@@ -236,6 +236,23 @@ public class FlowDefinitionResourceFactory {
 
 	private String getFlowIdFromFileName(Resource flowResource) {
 		return StringUtils.stripFilenameExtension(flowResource.getFilename());
+	}
+
+	private String truncateFilePath(String filePath, String basePath) {
+		int basePathIndex = filePath.lastIndexOf(basePath);
+		if (basePathIndex != -1) {
+			return filePath.substring(basePathIndex);
+		} else {
+			return filePath;
+		}
+	}
+
+	private String removeClasspathScheme(String basePath) {
+		if (basePath.startsWith(CLASSPATH_SCHEME)) {
+			return basePath.substring(CLASSPATH_SCHEME.length());
+		} else {
+			return basePath;
+		}
 	}
 
 }

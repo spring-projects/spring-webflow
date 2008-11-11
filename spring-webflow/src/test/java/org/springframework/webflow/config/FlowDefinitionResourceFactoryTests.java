@@ -15,11 +15,15 @@
  */
 package org.springframework.webflow.config;
 
+import java.net.MalformedURLException;
+
 import junit.framework.TestCase;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.ServletContextResourceLoader;
 
@@ -37,18 +41,30 @@ public class FlowDefinitionResourceFactoryTests extends TestCase {
 		factory = new FlowDefinitionResourceFactory();
 	}
 
-	public void testGetFlowId() {
+	public void testGetFlowIdNoBasePath() {
 		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
 		assertEquals("booking-flow", factory.getFlowId(resource));
 	}
 
 	public void testGetFlowIdCustomBasePath() {
 		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
+		factory.setBasePath("WEB-INF");
+		assertEquals("hotels/booking", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowCustomBasePathTrailingSlash() {
+		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
+		factory.setBasePath("WEB-INF/");
+		assertEquals("hotels/booking", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowIdCustomBasePathLeadingSlash() {
+		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
 		factory.setBasePath("/WEB-INF");
 		assertEquals("hotels/booking", factory.getFlowId(resource));
 	}
 
-	public void testGetFlowIdCustomBasePathTrailingSlash() {
+	public void testGetFlowIdCustomBasePathLeadingAndTrailingSlash() {
 		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
 		factory.setBasePath("/WEB-INF/");
 		assertEquals("hotels/booking", factory.getFlowId(resource));
@@ -60,10 +76,42 @@ public class FlowDefinitionResourceFactoryTests extends TestCase {
 		assertEquals("booking-flow", factory.getFlowId(resource));
 	}
 
+	public void testGetFlowIdBasePathMismatch() {
+		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
+		factory.setBasePath("/foo/bar");
+		assertEquals("WEB-INF/hotels/booking", factory.getFlowId(resource));
+	}
+
 	public void testGetFlowIdClassPathResource() {
 		Resource resource = new ClassPathResource("org/springframework/webflow/sample/sample-flow.xml");
-		factory.setBasePath("classpath:org/springframework/webflow");
+		factory.setBasePath("classpath:org/springframework/webflow/");
 		assertEquals("sample", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowIdFileSystemResource() {
+		Resource resource = new FileSystemResource(
+				"/the/path/on/the/file/system/org/springframework/webflow/sample/sample-flow.xml");
+		factory.setBasePath("classpath:org/springframework/webflow/");
+		assertEquals("sample", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowIdFileSystemResourceNoBasePathMatch() {
+		Resource resource = new FileSystemResource("/the/path/on/the/file/system/sample-flow.xml");
+		factory.setBasePath("classpath:org/springframework/webflow/");
+		assertEquals("the/path/on/the/file/system", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowIdUrlResource() throws MalformedURLException {
+		Resource resource = new UrlResource(
+				"file:/the/path/on/the/file/system/org/springframework/webflow/sample/sample-flow.xml");
+		factory.setBasePath("classpath:org/springframework/webflow/");
+		assertEquals("sample", factory.getFlowId(resource));
+	}
+
+	public void testGetFlowIdUrlResourceNoBasePathMatch() throws MalformedURLException {
+		Resource resource = new UrlResource("file:/the/path/on/the/file/system/sample-flow.xml");
+		factory.setBasePath("classpath:org/springframework/webflow/");
+		assertEquals("the/path/on/the/file/system", factory.getFlowId(resource));
 	}
 
 }
