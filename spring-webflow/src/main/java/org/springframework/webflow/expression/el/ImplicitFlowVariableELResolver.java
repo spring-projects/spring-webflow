@@ -100,7 +100,8 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
-		if (base != null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return false;
 		}
 		if (ImplicitVariables.matches(property)) {
@@ -112,7 +113,8 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	public void setValue(ELContext context, Object base, Object property, Object value) {
-		if (base != null) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
 			return;
 		}
 		if (ImplicitVariables.matches(property)) {

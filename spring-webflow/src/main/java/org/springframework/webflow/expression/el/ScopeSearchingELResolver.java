@@ -25,7 +25,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Custom EL resolver that searches the current request context for variables to resolve. The search algorithm looks in
- * request scope first, then flash scope, then flow scope, then conversation scope.
+ * request scope first, then flash scope, then view scope, then flow scope, then conversation scope.
  * 
  * Suitable for use along side other variable resolvers to support EL binding expressions like "#{bean.property}" where
  * "bean" could be a property in any supported scope.

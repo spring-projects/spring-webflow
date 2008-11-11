@@ -20,7 +20,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class FlowResourceELResolver extends ELResolver {
 
-	private String RESOURCE_BUNDLE_KEY = "resourceBundle";
+	static final String RESOURCE_BUNDLE_KEY = "resourceBundle";
 
 	private RequestContext requestContext;
 
@@ -46,6 +46,10 @@ public class FlowResourceELResolver extends ELResolver {
 	}
 
 	public Class getType(ELContext context, Object base, Object property) {
+		RequestContext requestContext = getRequestContext();
+		if (requestContext == null) {
+			return null;
+		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
 			context.setPropertyResolved(true);
 			return MessageSource.class;
@@ -61,6 +65,10 @@ public class FlowResourceELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) {
+		RequestContext requestContext = getRequestContext();
+		if (requestContext == null) {
+			return null;
+		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
 			context.setPropertyResolved(true);
 			return getMessageSource();
@@ -76,6 +84,10 @@ public class FlowResourceELResolver extends ELResolver {
 	}
 
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
+			return false;
+		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
 			context.setPropertyResolved(true);
 			return true;
@@ -84,6 +96,10 @@ public class FlowResourceELResolver extends ELResolver {
 	}
 
 	public void setValue(ELContext context, Object base, Object property, Object value) {
+		RequestContext requestContext = getRequestContext();
+		if (base != null || requestContext == null) {
+			return;
+		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
 			throw new PropertyNotWritableException("The flow's MessageSource is not writable.");
 		}
