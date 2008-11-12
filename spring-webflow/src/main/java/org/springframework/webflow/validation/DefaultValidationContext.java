@@ -9,6 +9,7 @@ import org.springframework.webflow.execution.RequestContext;
 public class DefaultValidationContext implements ValidationContext {
 
 	private RequestContext requestContext;
+
 	private String eventId;
 
 	public DefaultValidationContext(RequestContext requestContext, String eventId) {
@@ -32,6 +33,10 @@ public class DefaultValidationContext implements ValidationContext {
 
 	public Principal getUserPrincipal() {
 		return requestContext.getExternalContext().getCurrentUser();
+	}
+
+	public Object getUserValue(String field) {
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 }

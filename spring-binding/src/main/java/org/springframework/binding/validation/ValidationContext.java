@@ -21,25 +21,32 @@ import java.security.Principal;
 import org.springframework.binding.message.MessageContext;
 
 /**
- * A context for validation events.
+ * A validator context. Allows for recording validation error messages, as well as validating data entered by the user.
  * 
+ * @author Keith Donald
  * @author Scott Andrews
  */
 public interface ValidationContext {
 
 	/**
-	 * Get the context for recording messages
+	 * The context for recording validation messages
 	 */
 	public MessageContext getMessageContext();
 
 	/**
-	 * Get the current user principal
+	 * The current user.
 	 */
 	public Principal getUserPrincipal();
 
 	/**
-	 * Get the event that triggered validation
+	 * The current user event that triggered validation.
 	 */
 	public String getUserEvent();
 
+	/**
+	 * Obtain the value entered by the current user in a field. This value can then be validated.
+	 * @param field the name of the field
+	 * @return the value the user entered in the field
+	 */
+	public Object getUserValue(String field);
 }

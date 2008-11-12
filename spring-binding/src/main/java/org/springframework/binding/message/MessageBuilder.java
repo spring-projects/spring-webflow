@@ -28,13 +28,13 @@ import org.springframework.core.style.ToStringCreator;
 /**
  * A convenient builder for building {@link MessageResolver} objects programmatically. Often used by model code such as
  * validation logic to conveniently record validation messages. Supports the production of message resolvers that
- * hard-code their message text, as well as message resolvers that retrieve their text from a
- * {@link MessageSource message resource bundle}.
+ * hard-code their message text, as well as message resolvers that retrieve their text from a {@link MessageSource
+ * message resource bundle}.
  * 
  * Usage example:
  * <p>
  * <code>
- * new MessageBuilder().error().source(this).code(&quot;mycode&quot;).arg(arg1).arg(arg2).defaultText(&quot;text&quot;).build();
+ * new MessageBuilder().error().source(&quot;field&quot;).code(&quot;mycode&quot;).arg(arg1).arg(arg2).defaultText(&quot;text&quot;).build();
  * </code>
  * </p>
  * @author Keith Donald
@@ -90,7 +90,7 @@ public class MessageBuilder {
 
 	/**
 	 * Records that the message being built is against the provided source.
-	 * @param source the source generating the message
+	 * @param source the source to associate the message with
 	 * @return this, for fluent API usage
 	 */
 	public MessageBuilder source(Object source) {

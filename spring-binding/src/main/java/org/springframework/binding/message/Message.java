@@ -20,9 +20,10 @@ import java.io.Serializable;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * An object of communication that provides text information from a source. For example, a validation message may inform
- * a web application user a business rule was violated. A messages comes from a source, has text providing the basis for
- * communication, and has severity indicating the priority or intensity of the message for its receiver.
+ * An object of communication that provides text information. For example, a validation message may inform a web
+ * application user a business rule was violated. A message can be associated with a particular source element or
+ * component, has text providing the basis for communication, and has severity indicating the priority or intensity of
+ * the message for its receiver.
  * 
  * @author Keith Donald
  */
@@ -47,7 +48,8 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * Returns the source of this message. The source is the object that sent the message.
+	 * A reference to the source element this message is associated with. This could be a field on a form in UI, or null
+	 * if the message is not associated with a any particular element.
 	 * @return the source
 	 */
 	public Object getSource() {
@@ -55,7 +57,7 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * Returns the message text. The text is the message's communication payload.
+	 * The message text. The text is the message's communication payload.
 	 * @return the message text
 	 */
 	public String getText() {
@@ -63,7 +65,7 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * Returns the severity of this message. The severity indicates the intensity or priority of the communication.
+	 * The severity of this message. The severity indicates the intensity or priority of the communication.
 	 * @return the message severity
 	 */
 	public Severity getSeverity() {
@@ -71,7 +73,8 @@ public class Message implements Serializable {
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("severity", severity).append("text", text).toString();
+		return new ToStringCreator(this).append("source", source).append("severity", severity).append("text", text)
+				.toString();
 	}
 
 }
