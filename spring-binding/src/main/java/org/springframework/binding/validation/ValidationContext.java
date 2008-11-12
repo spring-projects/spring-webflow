@@ -44,9 +44,9 @@ public interface ValidationContext {
 	public String getUserEvent();
 
 	/**
-	 * Obtain the value entered by the current user in a field. This value can then be validated.
-	 * @param field the name of the field
-	 * @return the value the user entered in the field
+	 * Obtain the value entered by the current user in the UI field bound to the property provided.
+	 * @param property the name of a bound property
+	 * @return the value the user entered in the field bound to the property
 	 */
-	public Object getUserValue(String field);
+	public Object getUserValue(String property);
 }

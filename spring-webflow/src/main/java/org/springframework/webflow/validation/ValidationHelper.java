@@ -38,10 +38,15 @@ import org.springframework.webflow.execution.RequestContext;
 public class ValidationHelper {
 
 	private final Object model;
+
 	private final RequestContext requestContext;
+
 	private final String eventId;
+
 	private final String modelName;
+
 	private final ExpressionParser expressionParser;
+
 	private final MappingResults mappingResults;
 
 	/**
@@ -101,7 +106,7 @@ public class ValidationHelper {
 				new Class[] { ValidationContext.class });
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
-					requestContext, eventId) });
+					requestContext, eventId, mappingResults) });
 			validationInvoked = true;
 		} else {
 			validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
@@ -125,7 +130,7 @@ public class ValidationHelper {
 				model.getClass(), ValidationContext.class });
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-					new DefaultValidationContext(requestContext, eventId) });
+					new DefaultValidationContext(requestContext, eventId, mappingResults) });
 			validationInvoked = true;
 		} else {
 			validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
