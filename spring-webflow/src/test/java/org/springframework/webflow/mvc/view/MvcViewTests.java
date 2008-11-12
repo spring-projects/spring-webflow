@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.support.StaticExpression;
+import org.springframework.binding.validation.ValidationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -201,6 +202,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals("1", bindBean.getListProperty().get(0));
 		assertEquals("2", bindBean.getListProperty().get(1));
 		assertEquals("3", bindBean.getListProperty().get(2));
+		assertFalse(bindBean.validationMethodInvoked);
 	}
 
 	public void testResumeEventBindingErrors() throws Exception {
@@ -307,6 +309,54 @@ public class MvcViewTests extends TestCase {
 		assertEquals(true, bindBean.getBooleanProperty());
 	}
 
+	public void testResumeEventModelBindAndValidate() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("stringProperty", "foo");
+		context.putRequestParameter("integerProperty", "5");
+		context.putRequestParameter("dateProperty", "2007-01-01");
+		BindBean bindBean = new ValidatingBindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		assertTrue(bindBean.validationMethodInvoked);
+	}
+
+	public void testResumeEventModelBindAndValidateDefaultValidatorFallback() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("stringProperty", "foo");
+		context.putRequestParameter("integerProperty", "5");
+		context.putRequestParameter("dateProperty", "2007-01-01");
+		BindBean bindBean = new ValidatingBindBeanFallback();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		assertTrue(bindBean.validationMethodInvoked);
+	}
+
 	private class MockMvcView extends AbstractMvcView {
 
 		public MockMvcView(View view, RequestContext context) {
@@ -346,6 +396,7 @@ public class MvcViewTests extends TestCase {
 		private int[] primitiveArrayProperty;
 		private List listProperty;
 		private Map mapProperty;
+		private boolean validationMethodInvoked;
 
 		public BindBean() {
 			Calendar cal = Calendar.getInstance();
@@ -443,6 +494,23 @@ public class MvcViewTests extends TestCase {
 			this.beanProperty = beanProperty;
 		}
 
+	}
+
+	public static class ValidatingBindBean extends BindBean {
+
+		public void validateMockState(ValidationContext context) {
+			super.validationMethodInvoked = true;
+		}
+	}
+
+	public static class ValidatingBindBeanFallback extends BindBean {
+
+		public void validate(ValidationContext context) {
+			assertEquals("submit", context.getUserEvent());
+			assertNull(context.getUserPrincipal());
+			assertEquals("foo", context.getUserValue("stringProperty"));
+			super.validationMethodInvoked = true;
+		}
 	}
 
 	public static class NestedBean {

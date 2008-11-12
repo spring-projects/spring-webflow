@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -82,82 +83,117 @@ public class ValidationHelper {
 	 * Invoke the validators available by convention.
 	 */
 	public void validate() {
-		String validateMethodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
-		validateWithContext(model, validateMethodName);
-		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
-		if (beanFactory != null && StringUtils.hasText(modelName)) {
-			String validatorName = modelName + "Validator";
-			if (beanFactory.containsBean(validatorName)) {
-				Object validator = beanFactory.getBean(validatorName);
-				if (!validateWithModelAndContext(model, validator, validateMethodName)) {
-					validateWithModelAndErrors(model, validator, validateMethodName);
-				}
-			}
+		invokeModelValidationMethod(model);
+		Object validator = getModelValidator();
+		if (validator != null) {
+			invokeModelValidator(model, validator);
 		}
 	}
 
-	/*
-	 * Invoke validate method on the model for the current state passing either a MessageContext or ValidationContext.
-	 * Preference is given to the ValidationContext method.
-	 */
-	private boolean validateWithContext(Object model, String validateMethodName) {
-		boolean validationInvoked = false;
-		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
+	private boolean invokeModelValidationMethod(Object model) {
+		boolean methodInvoked = invokeValidateMethodForCurrentState(model);
+		if (!methodInvoked) {
+			methodInvoked = invokeDefaultValidateMethod(model);
+		}
+		return methodInvoked;
+	}
+
+	private boolean invokeValidateMethodForCurrentState(Object model) {
+		String methodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName,
 				new Class[] { ValidationContext.class });
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
 					requestContext, eventId, mappingResults) });
-			validationInvoked = true;
+			return true;
 		} else {
-			validateMethod = ReflectionUtils.findMethod(model.getClass(), validateMethodName,
+			validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName,
 					new Class[] { MessageContext.class });
 			if (validateMethod != null) {
 				ReflectionUtils
 						.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
-				validationInvoked = true;
+				return true;
 			}
 		}
-		return validationInvoked;
+		return false;
 	}
 
-	/*
-	 * Invoke validate method on a distinct validator providing the model to validate and either a MessageContext or
-	 * ValidationContext. Preference is given to the ValidationContext method.
-	 */
-	private boolean validateWithModelAndContext(Object model, Object validator, String validateMethodName) {
-		boolean validationInvoked = false;
-		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-				model.getClass(), ValidationContext.class });
+	private boolean invokeDefaultValidateMethod(Object model) {
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), "validate",
+				new Class[] { ValidationContext.class });
+		if (validateMethod != null) {
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
+					requestContext, eventId, mappingResults) });
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private Object getModelValidator() {
+		BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
+		if (beanFactory != null && StringUtils.hasText(modelName)) {
+			String validatorName = modelName + "Validator";
+			if (beanFactory.containsBean(validatorName)) {
+				return beanFactory.getBean(validatorName);
+			}
+		}
+		return null;
+	}
+
+	private boolean invokeModelValidator(Object model, Object validator) {
+		if (validator instanceof Validator) {
+			// existing validator, just invoke it
+			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
+					model, expressionParser, mappingResults);
+			((Validator) validator).validate(model, errors);
+			return true;
+		}
+		// try reflection
+		boolean methodInvoked = invokeValidatorValidateMethodForCurrentState(model, validator);
+		if (!methodInvoked) {
+			methodInvoked = invokeValidatorDefaultValidateMethod(model, validator);
+		}
+		return methodInvoked;
+	}
+
+	private boolean invokeValidatorValidateMethodForCurrentState(Object model, Object validator) {
+		String methodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
+		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName,
+				new Class[] { ValidationContext.class });
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
 					new DefaultValidationContext(requestContext, eventId, mappingResults) });
-			validationInvoked = true;
-		} else {
-			validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-					model.getClass(), MessageContext.class });
-			if (validateMethod != null) {
-				ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-						requestContext.getMessageContext() });
-				validationInvoked = true;
-			}
+			return true;
 		}
-		return validationInvoked;
-	}
-
-	/*
-	 * Invoke validate method on a distinct validator providing the model to validate and an Errors object.
-	 */
-	private boolean validateWithModelAndErrors(Object model, Object validator, String validateMethodName) {
-		boolean validationInvoked = false;
-		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), validateMethodName, new Class[] {
-				model.getClass(), Errors.class });
+		// web flow 2.0.3 or < compatibility only
+		validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { model.getClass(),
+				Errors.class });
 		if (validateMethod != null) {
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
-			validationInvoked = true;
+			return true;
 		}
-		return validationInvoked;
+		validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName,
+				new Class[] { MessageContext.class });
+		if (validateMethod != null) {
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
+			return true;
+		}
+		return false;
+	}
+
+	private boolean invokeValidatorDefaultValidateMethod(Object model, Object validator) {
+		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), "validate", new Class[] {
+				model.getClass(), ValidationContext.class });
+		if (validateMethod != null) {
+			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
+					requestContext, eventId, mappingResults) });
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
