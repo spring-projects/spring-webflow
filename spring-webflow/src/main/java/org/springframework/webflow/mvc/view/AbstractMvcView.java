@@ -181,16 +181,15 @@ public abstract class AbstractMvcView implements View {
 		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
 		if (shouldBind(model, transition)) {
 			mappingResults = bind(model);
-			if (hasMappingErrors(mappingResults)) {
+			if (hasErrors(mappingResults)) {
 				viewErrors = true;
 				addErrorMessages(mappingResults);
-			} else {
-				if (shouldValidate(model, transition)) {
-					validate(model);
-					if (requestContext.getMessageContext().hasErrorMessages()) {
-						viewErrors = true;
-					}
-				}
+			}
+		}
+		if (shouldValidate(model, transition)) {
+			validate(model);
+			if (requestContext.getMessageContext().hasErrorMessages()) {
+				viewErrors = true;
 			}
 		}
 	}
@@ -375,7 +374,7 @@ public abstract class AbstractMvcView implements View {
 		mapper.addMapping(mapping);
 	}
 
-	private boolean hasMappingErrors(MappingResults results) {
+	private boolean hasErrors(MappingResults results) {
 		return results.hasErrorResults() && !onlyPropertyNotFoundErrorsPresent(results);
 	}
 
