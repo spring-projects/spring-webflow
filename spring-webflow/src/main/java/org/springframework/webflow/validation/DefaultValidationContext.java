@@ -21,6 +21,7 @@ public class DefaultValidationContext implements ValidationContext {
 	public DefaultValidationContext(RequestContext requestContext, String eventId, MappingResults mappingResults) {
 		this.requestContext = requestContext;
 		this.eventId = eventId;
+		this.mappingResults = mappingResults;
 	}
 
 	public MessageContext getMessageContext() {
@@ -28,13 +29,7 @@ public class DefaultValidationContext implements ValidationContext {
 	}
 
 	public String getUserEvent() {
-		if (eventId != null) {
-			return eventId;
-		} else if (requestContext.getCurrentEvent() != null) {
-			return requestContext.getCurrentEvent().getId();
-		} else {
-			return null;
-		}
+		return eventId;
 	}
 
 	public Principal getUserPrincipal() {
@@ -54,14 +49,14 @@ public class DefaultValidationContext implements ValidationContext {
 
 	private static class PropertyMappingResult implements MappingResultsCriteria {
 
-		private String field;
+		private String property;
 
-		public PropertyMappingResult(String field) {
-			this.field = field;
+		public PropertyMappingResult(String property) {
+			this.property = property;
 		}
 
 		public boolean test(MappingResult result) {
-			if (field.equals(result.getMapping().getTargetExpression().getExpressionString())) {
+			if (property.equals(result.getMapping().getTargetExpression().getExpressionString())) {
 				return true;
 			} else {
 				return false;

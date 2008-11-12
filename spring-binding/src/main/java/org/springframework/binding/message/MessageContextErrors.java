@@ -122,7 +122,7 @@ public class MessageContextErrors extends AbstractErrors {
 	public Object getFieldValue(String field) {
 		// requires boundObject, and expressionParser to work
 		if (mappingResults != null) {
-			List results = mappingResults.getResults(new FieldErrorResult(field));
+			List results = mappingResults.getResults(new PropertyErrorMappingResult(field));
 			if (!results.isEmpty()) {
 				MappingResult fieldError = (MappingResult) results.get(0);
 				return fieldError.getOriginalValue();
@@ -155,16 +155,16 @@ public class MessageContextErrors extends AbstractErrors {
 		}
 	};
 
-	private static class FieldErrorResult implements MappingResultsCriteria {
+	private static class PropertyErrorMappingResult implements MappingResultsCriteria {
 
-		private String field;
+		private String property;
 
-		public FieldErrorResult(String field) {
-			this.field = field;
+		public PropertyErrorMappingResult(String property) {
+			this.property = property;
 		}
 
 		public boolean test(MappingResult result) {
-			if (field.equals(result.getMapping().getTargetExpression().getExpressionString())) {
+			if (result.isError() && property.equals(result.getMapping().getTargetExpression().getExpressionString())) {
 				return true;
 			} else {
 				return false;
