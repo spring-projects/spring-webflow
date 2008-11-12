@@ -43,6 +43,18 @@ public class PortletMvcView extends AbstractMvcView {
 	 */
 	public PortletMvcView(org.springframework.web.servlet.View view, RequestContext context) {
 		super(view, context);
+
+	}
+
+	/*
+	 * Cache {@link MappingResultsHolder} attributes into flow scope so they can be accessed during the RenderRequest
+	 * 
+	 * @see AbstractMvcView#processUserEvent()
+	 */
+	public void processUserEvent() {
+		super.processUserEvent();
+		MappingResultsHolder holder = new MappingResultsHolder(getEventId(), getMappingResults(), getViewErrors());
+		this.getRequestContext().getFlashScope().put(MappingResultsHolder.MAPPING_RESULTS_HOLDER_KEY, holder);
 	}
 
 	protected void doRender(Map model) throws Exception {

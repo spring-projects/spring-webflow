@@ -415,6 +415,32 @@ public abstract class AbstractMvcView implements View {
 		eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
 	}
 
+	// accessors for mapping results
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
+	}
+
+	public MappingResults getMappingResults() {
+		return mappingResults;
+	}
+
+	public void setMappingResults(MappingResults mappingResults) {
+		this.mappingResults = mappingResults;
+	}
+
+	public boolean getViewErrors() {
+		return viewErrors;
+	}
+
+	public void setViewErrors(boolean viewErrors) {
+		this.viewErrors = viewErrors;
+	}
+
 	private static class PropertyNotFoundError implements MappingResultsCriteria {
 		public boolean test(MappingResult result) {
 			return result.isError() && "propertyNotFound".equals(result.getCode());

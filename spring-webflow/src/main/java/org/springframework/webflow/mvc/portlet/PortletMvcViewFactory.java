@@ -29,6 +29,7 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  * Creates Portlet MVC views.
  * 
  * @author Keith Donald
+ * @author Scott Andrews
  */
 public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 
@@ -49,4 +50,22 @@ public class PortletMvcViewFactory extends AbstractMvcViewFactory {
 		return new PortletMvcView(view, context);
 	}
 
+	/*
+	 * Populates attributes from {@link MappingResultsHolder}, if available, into the view.
+	 * 
+	 * @see AbstractMvcViewFactory#getView(RequestContext)
+	 */
+	public org.springframework.webflow.execution.View getView(RequestContext context) {
+		org.springframework.webflow.execution.View view = super.getView(context);
+		if (view instanceof AbstractMvcView
+				&& context.getFlashScope().contains(MappingResultsHolder.MAPPING_RESULTS_HOLDER_KEY)) {
+			AbstractMvcView mvcView = (AbstractMvcView) view;
+			MappingResultsHolder holder = (MappingResultsHolder) context.getFlashScope().get(
+					MappingResultsHolder.MAPPING_RESULTS_HOLDER_KEY);
+			mvcView.setEventId(holder.getEventId());
+			mvcView.setMappingResults(holder.getMappingResults());
+			mvcView.setViewErrors(holder.getViewErrors());
+		}
+		return view;
+	}
 }
