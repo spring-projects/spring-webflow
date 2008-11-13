@@ -174,21 +174,33 @@ public abstract class AbstractMvcView implements View {
 		if (eventId == null) {
 			return;
 		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("User event '" + eventId + "' raised");
+		}
 		Object model = getModelObject();
 		if (model == null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No model to work with; done processing user event");
+			}
 			return;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Obtained model " + model);
 		}
 		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
 		if (shouldBind(model, transition)) {
 			mappingResults = bind(model);
 			if (hasErrors(mappingResults)) {
 				viewErrors = true;
+				if (logger.isDebugEnabled()) {
+					logger.debug("Binding resulted in errors; adding error messages to context");
+				}
 				addErrorMessages(mappingResults);
 			}
 		}
 		if (shouldValidate(model, transition)) {
 			validate(model);
-			if (requestContext.getMessageContext().hasErrorMessages()) {
+			if (!viewErrors & requestContext.getMessageContext().hasErrorMessages()) {
 				viewErrors = true;
 			}
 		}
@@ -309,7 +321,7 @@ public abstract class AbstractMvcView implements View {
 
 	private MappingResults bind(Object model) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Setting up view->model mappings");
+			logger.debug("Binding to model" + model);
 		}
 		DefaultMapper mapper = new DefaultMapper();
 		ParameterMap requestParameters = requestContext.getRequestParameters();
@@ -433,6 +445,9 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private void validate(Object model) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Validating model " + model);
+		}
 		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
 				expressionParser, mappingResults).validate();
 	}
