@@ -49,8 +49,6 @@ public class JsfView implements View {
 
 	private boolean restored;
 
-	private boolean viewErrors;
-
 	/**
 	 * Creates a new JSF view.
 	 * @param viewRoot the view root
@@ -70,6 +68,10 @@ public class JsfView implements View {
 	 */
 	public UIViewRoot getViewRoot() {
 		return this.viewRoot;
+	}
+
+	public void setViewRoot(UIViewRoot viewRoot) {
+		this.viewRoot = viewRoot;
 	}
 
 	/**
@@ -109,13 +111,17 @@ public class JsfView implements View {
 			if (restored && !facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 				facesLifecycle.execute(facesContext);
 			}
+			if (JsfUtils.isPortlet(facesContext)) {
+				requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY,
+						new ViewRootHolder(getViewRoot()));
+			}
 		} finally {
 			facesContext.release();
 		}
 	}
 
 	public boolean hasFlowEvent() {
-		return requestContext.getExternalContext().getRequestMap().contains(EVENT_KEY) && !viewErrors;
+		return requestContext.getExternalContext().getRequestMap().contains(EVENT_KEY);
 	}
 
 	public Event getFlowEvent() {
@@ -131,4 +137,5 @@ public class JsfView implements View {
 	private String getEventId() {
 		return (String) requestContext.getExternalContext().getRequestMap().get(EVENT_KEY);
 	}
+
 }

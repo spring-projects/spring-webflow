@@ -71,6 +71,9 @@ public class FlowViewHandler extends ViewHandler {
 		String resourcePath = viewId;
 		if (JsfUtils.isFlowRequest()) {
 			resourcePath = resolveResourcePath(RequestContextHolder.getRequestContext(), viewId);
+			if (JsfUtils.isPortlet(context)) {
+				return restoreFlowPortletView(context, resourcePath);
+			}
 		}
 		return delegate.restoreView(context, resourcePath);
 	}
@@ -114,6 +117,16 @@ public class FlowViewHandler extends ViewHandler {
 				viewPath = "/" + viewPath;
 			}
 			return viewPath;
+		}
+	}
+
+	private UIViewRoot restoreFlowPortletView(FacesContext facesContext, String resourcePath) {
+		RequestContext context = RequestContextHolder.getRequestContext();
+		ViewRootHolder holder = (ViewRootHolder) context.getFlashScope().get(ViewRootHolder.VIEW_ROOT_HOLDER_KEY);
+		if (holder != null && holder.getViewRoot().getViewId().equals(resourcePath)) {
+			return holder.getViewRoot();
+		} else {
+			return delegate.restoreView(facesContext, resourcePath);
 		}
 	}
 
