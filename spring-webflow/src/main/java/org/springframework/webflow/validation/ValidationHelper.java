@@ -143,6 +143,7 @@ public class ValidationHelper {
 
 	private boolean invokeModelValidator(Object model, Object validator) {
 		if (validator instanceof Validator) {
+			// TODO - fallback to validator last not first
 			// existing validator, just invoke it
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, mappingResults);
@@ -159,8 +160,8 @@ public class ValidationHelper {
 
 	private boolean invokeValidatorValidateMethodForCurrentState(Object model, Object validator) {
 		String methodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
-		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName,
-				new Class[] { ValidationContext.class });
+		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] {
+				model.getClass(), ValidationContext.class });
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
 					new DefaultValidationContext(requestContext, eventId, mappingResults) });
@@ -175,10 +176,11 @@ public class ValidationHelper {
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 			return true;
 		}
-		validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName,
-				new Class[] { MessageContext.class });
+		validateMethod = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { model.getClass(),
+				MessageContext.class });
 		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
+			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+					requestContext.getMessageContext() });
 			return true;
 		}
 		return false;
@@ -188,8 +190,8 @@ public class ValidationHelper {
 		Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), "validate", new Class[] {
 				model.getClass(), ValidationContext.class });
 		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
-					requestContext, eventId, mappingResults) });
+			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
+					new DefaultValidationContext(requestContext, eventId, mappingResults) });
 			return true;
 		} else {
 			return false;
