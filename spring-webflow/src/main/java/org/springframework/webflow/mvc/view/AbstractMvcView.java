@@ -170,7 +170,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public void processUserEvent() {
-		determineEventId(requestContext);
+		eventId = determineEventId(requestContext);
 		if (eventId == null) {
 			return;
 		}
@@ -230,6 +230,46 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected abstract void doRender(Map model) throws Exception;
 
+	/**
+	 * Obtain the user event from the current flow request. The default implementation returns the value of the request
+	 * parameter with name {@link #setEventIdParameterName(String) eventIdParameterName}. Subclasses may override.
+	 * @param context the current flow request context
+	 * @return the user event that occurred
+	 */
+	protected String determineEventId(RequestContext context) {
+		return WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
+	}
+
+	/**
+	 * Determines if model data binding should be invoked given the Transition that matched the current user event being
+	 * processed. Returns true unless the <code>bind</code> attribute of the Transition has been set to false.
+	 * Subclasses may override.
+	 * @param model the model data binding would be performed on
+	 * @param transition the matched transition
+	 * @return true if binding should occur, false if not
+	 */
+	protected boolean shouldBind(Object model, TransitionDefinition transition) {
+		if (transition == null) {
+			return true;
+		}
+		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
+	}
+
+	/**
+	 * Determines if model validation should execute given the Transition that matched the current user event being
+	 * processed. Returns true unless the <code>validate</code> attribute of the Transition has been set to false.
+	 * Subclasses may override.
+	 * @param model the model data binding would be performed on
+	 * @param transition the matched transition
+	 * @return true if binding should occur, false if not
+	 */
+	private boolean shouldValidate(Object model, TransitionDefinition transition) {
+		if (transition == null) {
+			return true;
+		}
+		return transition.getAttributes().getBoolean("validate", Boolean.TRUE).booleanValue();
+	}
+
 	// internal helpers
 
 	private Map flowScopes() {
@@ -265,13 +305,6 @@ public abstract class AbstractMvcView implements View {
 
 	private Expression getModelExpression() {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
-	}
-
-	private boolean shouldBind(Object model, TransitionDefinition transition) {
-		if (transition == null) {
-			return true;
-		}
-		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
 	}
 
 	private MappingResults bind(Object model) {
@@ -399,20 +432,9 @@ public abstract class AbstractMvcView implements View {
 				.defaultText(errorCode + " on " + field).build();
 	}
 
-	private boolean shouldValidate(Object model, TransitionDefinition transition) {
-		if (transition == null) {
-			return true;
-		}
-		return transition.getAttributes().getBoolean("validate", Boolean.TRUE).booleanValue();
-	}
-
 	private void validate(Object model) {
 		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
 				expressionParser, mappingResults).validate();
-	}
-
-	private void determineEventId(RequestContext context) {
-		eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
 	}
 
 	// accessors for mapping results
