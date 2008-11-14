@@ -100,9 +100,11 @@ its parent registry will be queried.
 						<xsd:annotation>
 							<xsd:documentation>
 								<![CDATA[
-The base path where flow definitions are found.  All flow locations must be referenced relative to the base path.  The default 
-flow id is constructed based on the path to the flow minus the base path.  The remaining directory path will be used as the flow 
-id.  If flow definition is found directly on the base path, the file name, without extension, is used as the flow id 
+The base path where flow definitions are found.  When specified, all flow locations are relative to this path.
+Also when specified, by default flows are assigned ids equal to the the path segment between their base path and file name.
+For example, if a flow definition is located at '/WEB-INF/hotels/booking/booking-flow.xml' and the base path is '/WEB-INF', 
+the remaining path to this flow is 'hotels/booking' which then becomes the flow id.
+If a flow definition is found directly on the base path, the file name minus its extension is used as the flow id. 
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
