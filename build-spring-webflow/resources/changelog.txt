@@ -2,21 +2,42 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.5 (11.11.2008)
+Changes in version 2.0.5 (14.11.2008)
 -------------------------------------
 Bug Fixes
 * Fixed compatibility issue introduced in Web Flow 2.0.4 with previous 2.0.x versions related to request -> flow id mapping.
   The existing FlowController now applies the previous behavior of "filename-based" request-> flow mapping (see FilenameFlowUrlHandler); for example /hotels/booking URL -> "booking" flow.
   The new FlowHandlerAdapter used in conjunction with FlowHandlerMapping now applies the new "path-based" request -> flow mapping (see DefaultFlowUrlHandler) ; for example /hotels/booking URL -> "hotels/booking" flow.
   Use of FlowHandlerAdapter with FlowHandlerMapping and the default path-based mapping (DefaultFlowUrlHandler) is recommended (SWF-939).
-* Fixed bug introduced in 2.0.4 that broke rendering of multiple fragments with Tiles (SWF-941).
-* Render 'fragments' request parameter values are now trimmed consistent with the Web Flow render fragments parameter (SWF-947).
-* Fixed bug where POJO action methods returning an empty string resulted in an IllegalArgumentException being thrown (SWF-739).
-* Fixed bug where base-path required a trailing slash in conjunction with flow-location entries (SWF-948).
 
+* Fixed bug introduced in 2.0.4 that broke rendering of multiple view fragments with Tiles (SWF-941).
+
+* Render 'fragments' request parameter values are now trimmed consistent with the Web Flow render fragments parameter (SWF-947).
+
+* Fixed bug in which model validation never ran if there were data binding errors in Spring MVC-based views.
+  This was inconsistent with previous behavior in Spring MVC's SimpleFormController and in Spring Web Flow 1.0.x, and caused usability concerns.
+  Validation always runs after binding now unless suppressed by a transition (validate=false) or the 'validateOnBindingErrors' flow execution attribute (SWF-949).
+
+* Fixed bug where model data binding results were lost after ActionRequest processing in a Portlet environment.
+  This prevented invalid user input values from being rendered correctly when a form re-rendered in the next RenderRequest.
+  Data binding results are now preserved correctly across the Action->Render cycle so all original user input values are preserved (SWF-953).
+
+* Fixed bug that prevented a new flow execution snapshot from being taken when entering the same view-state again in the current request.
+  This lead to undesirable back-button behavior, particularly when a flow was called recursively as a subflow.
+  Now a new snapshot is always taken when entering a ViewState, consistent with Web Flow 1.0.x behavior.
+  When no new snapshot is desired, for example, in the case of processing an Ajax event that does not transition the view, do not leave the current state;
+  rather, simply execute actions to handle the event and use 'render' to request re-rendering of parts of the page.
+  
+* Fixed bug where POJO action methods returning an empty string resulted in an IllegalArgumentException being thrown (SWF-739).
+
+* Fixed bug where base-path required a trailing slash in conjunction with flow-location entries (SWF-948).
+  
 Improvements
 * Added additional console logging to help debug Spring JavaScript decoration behaviors (SWF-937).
-* Improved documentation in the area of flow exception handling and security (SWF-922, SWF-944)
+* Improved documentation in the area of flow exception handling and security (SWF-922, SWF-944).
+* Improved logging in the area of view processing, including view rendering, model binding, and model validation.
+* The model validation invoker will now invoke a default validate(ValidationContext) or validate(Errors) method if present (SWF-666).
+* It is now possible to use a Errors object anywhere you can use a ValidationContext, for compatibility with existing Spring MVC code (SWF-957).
 
 Changes in version 2.0.4 (04.11.2008)
 -------------------------------------
