@@ -167,28 +167,16 @@ public class ViewState extends TransitionableState {
 	}
 
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
-		ViewState originatingViewState = (ViewState) context.getRequestScope().get("webflow.originatingViewState");
-		if (this == originatingViewState) {
-			if (context.getExternalContext().isResponseAllowed()) {
-				if (context.getExternalContext().isAjaxRequest()) {
-					View view = viewFactory.getView(context);
-					render(context, view);
-				} else {
-					context.getExternalContext().requestFlowExecutionRedirect();
+		context.assignFlowExecutionKey();
+		if (context.getExternalContext().isResponseAllowed()) {
+			if (shouldRedirect(context)) {
+				context.getExternalContext().requestFlowExecutionRedirect();
+				if (popup) {
+					context.getExternalContext().requestRedirectInPopup();
 				}
-			}
-		} else {
-			context.assignFlowExecutionKey();
-			if (context.getExternalContext().isResponseAllowed()) {
-				if (shouldRedirect(context)) {
-					context.getExternalContext().requestFlowExecutionRedirect();
-					if (popup) {
-						context.getExternalContext().requestRedirectInPopup();
-					}
-				} else {
-					View view = viewFactory.getView(context);
-					render(context, view);
-				}
+			} else {
+				View view = viewFactory.getView(context);
+				render(context, view);
 			}
 		}
 	}

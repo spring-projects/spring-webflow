@@ -118,28 +118,6 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
-	public void testEnterViewStateReturningToSameOriginatingStateNonAjax() {
-		Flow flow = new Flow("myFlow");
-		StubViewFactory viewFactory = new StubViewFactory();
-		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.getRequestScope().put("webflow.originatingViewState", state);
-		state.enter(context);
-		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
-	}
-
-	public void testEnterViewStateReturningToSameOriginatingStateAjax() {
-		Flow flow = new Flow("myFlow");
-		StubViewFactory viewFactory = new StubViewFactory();
-		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.getMockExternalContext().setAjaxRequest(true);
-		context.getRequestScope().put("webflow.originatingViewState", state);
-		state.enter(context);
-		assertTrue("Render called", context.getFlowScope().contains("renderCalled"));
-	}
-
 	public void testResumeViewStateForRefresh() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
