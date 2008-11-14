@@ -43,6 +43,7 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.util.WebUtils;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
@@ -198,9 +199,10 @@ public abstract class AbstractMvcView implements View {
 				}
 				addErrorMessages(mappingResults);
 			}
-		}
-		if (shouldValidate(model, transition)) {
-			validate(model);
+			if (shouldValidate(model, transition)) {
+				validate(model);
+			}
+
 		}
 		requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
 				new ViewActionStateHolder(eventId, mappingResults));
@@ -300,17 +302,27 @@ public abstract class AbstractMvcView implements View {
 
 	/**
 	 * Determines if model validation should execute given the Transition that matched the current user event being
-	 * processed. Returns true unless the <code>validate</code> attribute of the Transition has been set to false.
+	 * processed. Returns true unless the <code>validate</code> attribute of the Transition has been set to false, or
+	 * model data binding errors occurred and the global <code>validateOnBindingErrors</code> flag is set to false.
 	 * Subclasses may override.
 	 * @param model the model data binding would be performed on
 	 * @param transition the matched transition
 	 * @return true if binding should occur, false if not
 	 */
 	private boolean shouldValidate(Object model, TransitionDefinition transition) {
-		if (transition == null) {
+		Boolean validateAttribute = getValidateAttribute(transition);
+		if (validateAttribute != null) {
+			return validateAttribute.booleanValue();
+		} else {
+			AttributeMap flowExecutionAttributes = requestContext.getFlowExecutionContext().getAttributes();
+			Boolean validateOnBindingErrors = flowExecutionAttributes.getBoolean("validateOnBindingErrors");
+			if (validateOnBindingErrors != null) {
+				if (!validateOnBindingErrors.booleanValue() && mappingResults.hasErrorResults()) {
+					return false;
+				}
+			}
 			return true;
 		}
-		return transition.getAttributes().getBoolean("validate", Boolean.TRUE).booleanValue();
 	}
 
 	// internal helpers
@@ -473,6 +485,14 @@ public abstract class AbstractMvcView implements View {
 				.append(field).append('.').append(errorCode).toString();
 		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
 				.defaultText(errorCode + " on " + field).build();
+	}
+
+	private Boolean getValidateAttribute(TransitionDefinition transition) {
+		if (transition != null) {
+			return transition.getAttributes().getBoolean("validate");
+		} else {
+			return null;
+		}
 	}
 
 	private void validate(Object model) {
