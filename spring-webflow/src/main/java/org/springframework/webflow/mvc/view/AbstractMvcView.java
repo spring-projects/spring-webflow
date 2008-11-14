@@ -202,7 +202,6 @@ public abstract class AbstractMvcView implements View {
 			if (shouldValidate(model, transition)) {
 				validate(model);
 			}
-
 		}
 		requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
 				new ViewActionStateHolder(eventId, mappingResults));
