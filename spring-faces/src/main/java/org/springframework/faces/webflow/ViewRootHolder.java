@@ -24,7 +24,7 @@ import javax.faces.component.UIViewRoot;
  */
 class ViewRootHolder {
 
-	static final String VIEW_ROOT_HOLDER_KEY = "org.springframework.faces.webflow.VIEW_ROOT_HOLDER";
+	static final String VIEW_ROOT_HOLDER_KEY = "flowViewRootHolder";
 
 	private UIViewRoot viewRoot;
 
@@ -34,10 +34,6 @@ class ViewRootHolder {
 
 	public UIViewRoot getViewRoot() {
 		return viewRoot;
-	}
-
-	public void setViewRoot(UIViewRoot viewRoot) {
-		this.viewRoot = viewRoot;
 	}
 
 }
