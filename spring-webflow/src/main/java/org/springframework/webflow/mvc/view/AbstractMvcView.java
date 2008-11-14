@@ -40,6 +40,7 @@ import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -80,8 +81,6 @@ public abstract class AbstractMvcView implements View {
 	private String eventId;
 
 	private MappingResults mappingResults;
-
-	private boolean viewErrors;
 
 	private BinderConfiguration binderConfiguration;
 
@@ -159,6 +158,9 @@ public abstract class AbstractMvcView implements View {
 		}
 		model.put("currentUser", requestContext.getExternalContext().getCurrentUser());
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Rendering MVC [" + view + "] with model map [" + model + "]");
+			}
 			doRender(model);
 		} catch (IOException e) {
 			throw e;
@@ -185,29 +187,27 @@ public abstract class AbstractMvcView implements View {
 			return;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Obtained model " + model);
+			logger.debug("Resolved model " + model);
 		}
 		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
 		if (shouldBind(model, transition)) {
 			mappingResults = bind(model);
 			if (hasErrors(mappingResults)) {
-				viewErrors = true;
 				if (logger.isDebugEnabled()) {
-					logger.debug("Binding resulted in errors; adding error messages to context");
+					logger.debug("Model binding resulted in errors; adding error messages to context");
 				}
 				addErrorMessages(mappingResults);
 			}
 		}
 		if (shouldValidate(model, transition)) {
 			validate(model);
-			if (!viewErrors & requestContext.getMessageContext().hasErrorMessages()) {
-				viewErrors = true;
-			}
 		}
+		requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
+				new ViewActionStateHolder(eventId, mappingResults));
 	}
 
 	public boolean hasFlowEvent() {
-		return eventId != null && !viewErrors;
+		return eventId != null && !requestContext.getMessageContext().hasErrorMessages();
 	}
 
 	public Event getFlowEvent() {
@@ -215,6 +215,10 @@ public abstract class AbstractMvcView implements View {
 			return null;
 		}
 		return new Event(this, eventId, requestContext.getRequestParameters().asAttributeMap());
+	}
+
+	public String toString() {
+		return new ToStringCreator(this).append("view", view).toString();
 	}
 
 	// subclassing hooks
@@ -253,6 +257,14 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	/**
+	 * Returns the id of the user event being processed.
+	 * @return the user event
+	 */
+	protected String getEventId() {
+		return eventId;
+	}
+
+	/**
 	 * Determines if model data binding should be invoked given the Transition that matched the current user event being
 	 * processed. Returns true unless the <code>bind</code> attribute of the Transition has been set to false.
 	 * Subclasses may override.
@@ -265,6 +277,21 @@ public abstract class AbstractMvcView implements View {
 			return true;
 		}
 		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
+	}
+
+	/**
+	 * Returns the results of binding to the view's model, if model binding has occurred.
+	 * @return the binding (mapping) results
+	 */
+	protected MappingResults getMappingResults() {
+		return mappingResults;
+	}
+
+	// package private
+
+	void restoreState(ViewActionStateHolder stateHolder) {
+		eventId = stateHolder.getEventId();
+		mappingResults = stateHolder.getMappingResults();
 	}
 
 	/**
@@ -321,7 +348,7 @@ public abstract class AbstractMvcView implements View {
 
 	private MappingResults bind(Object model) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Binding to model" + model);
+			logger.debug("Binding to model");
 		}
 		DefaultMapper mapper = new DefaultMapper();
 		ParameterMap requestParameters = requestContext.getRequestParameters();
@@ -446,36 +473,10 @@ public abstract class AbstractMvcView implements View {
 
 	private void validate(Object model) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Validating model " + model);
+			logger.debug("Validating model");
 		}
 		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
 				expressionParser, mappingResults).validate();
-	}
-
-	// accessors for mapping results
-
-	public String getEventId() {
-		return eventId;
-	}
-
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
-
-	public MappingResults getMappingResults() {
-		return mappingResults;
-	}
-
-	public void setMappingResults(MappingResults mappingResults) {
-		this.mappingResults = mappingResults;
-	}
-
-	public boolean getViewErrors() {
-		return viewErrors;
-	}
-
-	public void setViewErrors(boolean viewErrors) {
-		this.viewErrors = viewErrors;
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {
@@ -519,4 +520,5 @@ public abstract class AbstractMvcView implements View {
 			return "parameter:'" + parameterName + "'";
 		}
 	}
+
 }

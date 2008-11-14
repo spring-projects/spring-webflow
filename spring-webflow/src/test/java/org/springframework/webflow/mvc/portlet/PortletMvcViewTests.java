@@ -1,11 +1,7 @@
 package org.springframework.webflow.mvc.portlet;
 
-import java.util.Map;
-
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
@@ -17,20 +13,15 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewRendererServlet;
-import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
+import org.springframework.webflow.mvc.view.ViewActionStateHolder;
 import org.springframework.webflow.mvc.view.MvcViewTests.BindBean;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class PortletMvcViewTests extends TestCase {
-
-	private boolean renderCalled;
-
-	private Map model;
 
 	public void testRender() throws Exception {
 		RenderRequest request = new MockRenderRequest();
@@ -48,7 +39,7 @@ public class PortletMvcViewTests extends TestCase {
 		assertNotNull(request.getAttribute(ViewRendererServlet.MODEL_ATTRIBUTE));
 	}
 
-	public void testResumeEventModelBindingFieldMarkerFieldPresent() throws Exception {
+	public void testResumeEvent() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("booleanProperty", "true");
@@ -62,42 +53,15 @@ public class PortletMvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
-		org.springframework.web.servlet.View mvcView = new MockView();
-		AbstractMvcView view = new MockPortletMvcView(mvcView, context);
+		org.springframework.web.servlet.View mvcView = (org.springframework.web.servlet.View) EasyMock
+				.createMock(org.springframework.web.servlet.View.class);
+		AbstractMvcView view = new PortletMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());
-		MappingResultsHolder holder = (MappingResultsHolder) context.getFlashScope().get(
-				MappingResultsHolder.MAPPING_RESULTS_HOLDER_KEY);
+		ViewActionStateHolder holder = (ViewActionStateHolder) context.getFlashScope().get(ViewActionStateHolder.KEY);
 		assertEquals("submit", holder.getEventId());
 		assertNotNull(holder.getMappingResults());
-		assertFalse(holder.getViewErrors());
-	}
-
-	private class MockPortletMvcView extends PortletMvcView {
-
-		public MockPortletMvcView(View view, RequestContext context) {
-			super(view, context);
-		}
-
-		protected void doRender(Map model) throws Exception {
-			getView().render(model, (HttpServletRequest) getRequestContext().getExternalContext().getNativeRequest(),
-					(HttpServletResponse) getRequestContext().getExternalContext().getNativeResponse());
-		}
-
-	}
-
-	private class MockView implements View {
-
-		public String getContentType() {
-			return "text/html";
-		}
-
-		public void render(Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-			renderCalled = true;
-			model = model;
-		}
-
 	}
 
 }

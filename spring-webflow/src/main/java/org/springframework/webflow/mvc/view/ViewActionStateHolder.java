@@ -13,53 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.webflow.mvc.portlet;
+package org.springframework.webflow.mvc.view;
 
 import org.springframework.binding.mapping.MappingResults;
+import org.springframework.core.style.ToStringCreator;
 
 /**
- * Holder class for mapping results to pass them from an ActionRequest to a RenderRequest
+ * Holder class for passing view state through a redirect.
  * 
  * @author Scott Andrews
  */
-class MappingResultsHolder {
+public class ViewActionStateHolder {
 
-	static final String MAPPING_RESULTS_HOLDER_KEY = "org.springframework.webflow.mvc.portlet.MAPPING_RESULTS_HOLDER";
+	public static final String KEY = "webflowViewActionStateHolder";
 
 	private String eventId;
 
 	private MappingResults mappingResults;
 
-	private boolean viewErrors;
-
-	public MappingResultsHolder(String eventId, MappingResults mappingResults, boolean viewErrors) {
+	public ViewActionStateHolder(String eventId, MappingResults mappingResults) {
 		this.eventId = eventId;
 		this.mappingResults = mappingResults;
-		this.viewErrors = viewErrors;
 	}
 
 	public String getEventId() {
 		return eventId;
 	}
 
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
-
 	public MappingResults getMappingResults() {
 		return mappingResults;
 	}
 
-	public void setMappingResults(MappingResults mappingResults) {
-		this.mappingResults = mappingResults;
-	}
-
-	public boolean getViewErrors() {
-		return viewErrors;
-	}
-
-	public void setViewErrors(boolean viewErrors) {
-		this.viewErrors = viewErrors;
+	public String toString() {
+		return new ToStringCreator(this).append("eventId", eventId).append("mappingResults", mappingResults).toString();
 	}
 
 }
