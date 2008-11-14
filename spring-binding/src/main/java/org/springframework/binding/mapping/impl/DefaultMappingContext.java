@@ -144,7 +144,7 @@ public class DefaultMappingContext {
 
 	private void add(MappingResult result) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding " + result);
+			logger.debug("Adding mapping result " + result);
 		}
 		mappingResults.add(result);
 		currentMapping = null;
