@@ -4,16 +4,19 @@
 	<pluginVersion><![CDATA[2.2.0.v200809261800]]></pluginVersion>
 	<configs>
 		<config>
+			<file>src/main/webapp/WEB-INF/flows/booking/booking.xml</file>
+			<name><![CDATA[booking]]></name>
+			<beans-config><![CDATA[1:BeansModel|2:swf-booking-portlet-mvc|4:hotelbooking-portlet]]></beans-config>
+		</config>
+		<config>
 			<file>src/main/webapp/WEB-INF/flows/main/main.xml</file>
 			<name><![CDATA[main]]></name>
+			<beans-config><![CDATA[1:BeansModel|2:swf-booking-portlet-mvc|4:hotelbooking-portlet]]></beans-config>
 		</config>
 		<config>
 			<file>src/main/webapp/WEB-INF/flows/view/view.xml</file>
 			<name><![CDATA[view]]></name>
-		</config>
-		<config>
-			<file>src/main/webapp/WEB-INF/flows/booking/booking.xml</file>
-			<name><![CDATA[booking]]></name>
+			<beans-config><![CDATA[1:BeansModel|2:swf-booking-portlet-mvc|4:hotelbooking-portlet]]></beans-config>
 		</config>
 	</configs>
 </webflow-project-description>
