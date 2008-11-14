@@ -85,7 +85,7 @@ public class FlowResourceELResolver extends ELResolver {
 
 	public boolean isReadOnly(ELContext context, Object base, Object property) {
 		RequestContext requestContext = getRequestContext();
-		if (base != null || requestContext == null) {
+		if (requestContext == null) {
 			return false;
 		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
@@ -100,11 +100,12 @@ public class FlowResourceELResolver extends ELResolver {
 
 	public void setValue(ELContext context, Object base, Object property, Object value) {
 		RequestContext requestContext = getRequestContext();
-		if (base != null || requestContext == null) {
+		if (requestContext == null) {
 			return;
 		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
-			throw new PropertyNotWritableException("The flow's MessageSource is not writable.");
+			throw new PropertyNotWritableException("The '" + RESOURCE_BUNDLE_KEY
+					+ "' implicit variable is not writable.");
 		} else if (base instanceof MessageSource) {
 			throw new PropertyNotWritableException("The flow's MessageSource is not writable.");
 		}
