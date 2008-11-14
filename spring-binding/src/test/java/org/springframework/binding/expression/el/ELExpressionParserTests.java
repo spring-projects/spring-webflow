@@ -132,12 +132,12 @@ public class ELExpressionParserTests extends TestCase {
 		assertEquals("foo2bar", exp.getValue(target));
 	}
 
-	public void testGetValueTypeNullCollectionValue() {
-		String exp = "list[3]";
-		Expression e = parser.parseExpression(exp, null);
-		TestBean target = new TestBean();
-		assertEquals(null, e.getValueType(target));
-	}
+	// public void testGetValueTypeNullCollectionValue() {
+	// String exp = "list[3]";
+	// Expression e = parser.parseExpression(exp, null);
+	// TestBean target = new TestBean();
+	// assertEquals(null, e.getValueType(target));
+	// }
 
 	public void testGetExpressionString() {
 		String expressionString = "maximum";
