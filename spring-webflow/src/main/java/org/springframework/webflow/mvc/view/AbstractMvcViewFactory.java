@@ -91,6 +91,12 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		return mvcView;
 	}
 
+	/**
+	 * Abstract factory method subclasses should implement to return the concrete MVC view implementation.
+	 * @param view the actual resolved view implementation
+	 * @param context the current request context
+	 * @return the mvc view
+	 */
 	protected abstract AbstractMvcView createMvcView(org.springframework.web.servlet.View view, RequestContext context);
 
 }

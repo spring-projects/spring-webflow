@@ -289,6 +289,10 @@ public abstract class AbstractMvcView implements View {
 
 	// package private
 
+	/**
+	 * Restores the internal state of this view from the provided state holder.
+	 * @see AbstractMvcViewFactory#getView(RequestContext)
+	 */
 	void restoreState(ViewActionStateHolder stateHolder) {
 		eventId = stateHolder.getEventId();
 		mappingResults = stateHolder.getMappingResults();
