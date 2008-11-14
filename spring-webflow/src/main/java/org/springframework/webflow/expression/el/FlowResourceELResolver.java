@@ -91,6 +91,9 @@ public class FlowResourceELResolver extends ELResolver {
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
 			context.setPropertyResolved(true);
 			return true;
+		} else if (base instanceof MessageSource) {
+			context.setPropertyResolved(true);
+			return true;
 		}
 		return false;
 	}
@@ -101,6 +104,8 @@ public class FlowResourceELResolver extends ELResolver {
 			return;
 		}
 		if (base == null && RESOURCE_BUNDLE_KEY.equals(property)) {
+			throw new PropertyNotWritableException("The flow's MessageSource is not writable.");
+		} else if (base instanceof MessageSource) {
 			throw new PropertyNotWritableException("The flow's MessageSource is not writable.");
 		}
 	}
