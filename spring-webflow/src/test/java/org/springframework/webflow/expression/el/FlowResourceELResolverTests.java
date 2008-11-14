@@ -81,11 +81,30 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 				null, getBaseVariable()));
 	}
 
+	public void testIsReadOnly_MessageSourceBase() {
+		StaticMessageSource ms = new StaticMessageSource();
+
+		RequestContextHolder.setRequestContext(new MockRequestContext());
+		assertTrue("isReadOnly should return true when the base is a MessageSource", context.getELResolver()
+				.isReadOnly(context, ms, "foo"));
+	}
+
 	public void testSetValue_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 		try {
 			context.getELResolver().setValue(context, null, getBaseVariable(), null);
 			fail("setValue should fail for a base variable of " + getBaseVariable());
+		} catch (PropertyNotWritableException ex) {
+			// expected
+		}
+	}
+
+	public void testSetValue_MessageSourceBase() {
+		StaticMessageSource ms = new StaticMessageSource();
+		RequestContextHolder.setRequestContext(new MockRequestContext());
+		try {
+			context.getELResolver().setValue(context, ms, "foo", null);
+			fail("setValue should fail when the base is a MessageSource");
 		} catch (PropertyNotWritableException ex) {
 			// expected
 		}
