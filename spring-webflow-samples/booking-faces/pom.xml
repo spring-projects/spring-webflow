@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>com.springsource.javax.el</artifactId>
-			<version>2.1.0</version>
+			<version>1.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -196,7 +196,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<spring.version>2.5.6</spring.version>
+		<spring.version>2.5.6.A</spring.version>
 		<jsf.version>1.2.0.09</jsf.version>
 	</properties>
 </project>
