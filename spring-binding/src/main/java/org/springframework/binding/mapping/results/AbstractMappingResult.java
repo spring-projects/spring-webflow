@@ -51,7 +51,8 @@ public abstract class AbstractMappingResult implements MappingResult {
 	public abstract Object getMappedValue();
 
 	public String toString() {
-		ToStringCreator creator = new ToStringCreator(this).append("code", getCode()).append("error", isError());
+		ToStringCreator creator = new ToStringCreator(this).append("mapping", mapping).append("code", getCode())
+				.append("error", isError());
 		if (isError()) {
 			creator.append("errorCause", getErrorCause());
 		}

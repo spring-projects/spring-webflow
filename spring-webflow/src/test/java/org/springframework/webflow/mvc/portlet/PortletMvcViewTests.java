@@ -42,7 +42,7 @@ public class PortletMvcViewTests extends TestCase {
 	public void testResumeEvent() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
-		context.putRequestParameter("booleanProperty", "true");
+		context.putRequestParameter("booleanProperty", "bogus");
 		context.putRequestParameter("_booleanProperty", "whatever");
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);

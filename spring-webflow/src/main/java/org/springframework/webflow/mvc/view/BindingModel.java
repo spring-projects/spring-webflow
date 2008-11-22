@@ -199,7 +199,7 @@ public class BindingModel extends AbstractErrors {
 		}
 
 		public boolean test(MappingResult result) {
-			if (field.equals(result.getMapping().getTargetExpression().getExpressionString())) {
+			if (result.isError() && field.equals(result.getMapping().getTargetExpression().getExpressionString())) {
 				return true;
 			} else {
 				return false;

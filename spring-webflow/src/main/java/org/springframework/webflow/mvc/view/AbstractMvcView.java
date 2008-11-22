@@ -203,8 +203,10 @@ public abstract class AbstractMvcView implements View {
 				validate(model);
 			}
 		}
-		requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
-				new ViewActionStateHolder(eventId, mappingResults));
+		if (mappingResults != null && mappingResults.hasErrorResults()) {
+			requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
+					new ViewActionStateHolder(eventId, mappingResults));
+		}
 	}
 
 	public boolean hasFlowEvent() {
