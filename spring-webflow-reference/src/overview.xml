@@ -30,34 +30,33 @@
 	<sect1 id="system-requirements">
 		<title>What Web Flow requires to run</title>
 		<para>
-			Java 1.4 or higher
+			Java 5.0 or higher
 		</para>
 		<para>
-			Spring 2.5.4 or higher
+			Spring 3.0.0 or higher
 		</para>
 	</sect1>
 	<sect1 id="support">
 		<title>Where to get support</title>
 		<para>
 			Professional from-the-source support on Spring Web Flow is available from
-			<ulink url="http://www.springsource.com">SpringSource</ulink>, the company behind Spring, and
-			<ulink url="http://www.ervacon.com">Ervacon</ulink>, operated by Web Flow project co-founder Erwin Vervaet
+			<ulink url="http://www.springsource.com">SpringSource</ulink>, the company behind Spring.
 		</para>
 	</sect1>
 	<sect1 id="development">
 		<title>Where to follow development</title>
 		<para>
 			You can help make Web Flow best serve the needs of the Spring community by interacting with developers 
-			at the <ulink url="http://forum.springframework.org">Spring Community Forums</ulink>.
+			at the <ulink url="http://forum.springsource.org">Spring Community Forums</ulink>.
 		</para>
 		<para>
-			Report bugs and influence the Web Flow project roadmap using the <ulink url="http://jira.springframework.org">Spring Issue Tracker</ulink>.
+			Report bugs and influence the Web Flow project roadmap using the <ulink url="http://jira.springsource.org">Spring Issue Tracker</ulink>.
 		</para>
 		<para>
-			Subscribe to the <ulink url="http://www.springframework.org">Spring Community Portal</ulink> for the latest Spring news and announcements.
+			Subscribe to the <ulink url="http://www.springsource.org">Spring Community Portal</ulink> for the latest Spring news and announcements.
 		</para>
 		<para>
-			Visit the <ulink url="http://www.springframework.org/webflow">Web Flow Project Home</ulink> for more resources on the project.
+			Visit the <ulink url="http://www.springsource.org/webflow">Web Flow Project Home</ulink> for more resources on the project.
 		</para>
 	</sect1>
 	<sect1 id="jars">
@@ -85,35 +84,12 @@
 </repository>]]>
 			</programlisting>
 			<para>
-				Then declare the following dependencies:			
+				Then declare the following dependency:			
 			</para>
 			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-]]>
-			</programlisting>
-			<para>
-				And if using JavaServerFaces:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
     <version>2.0.6.RELEASE</version>
 </dependency> 
 ]]>
@@ -140,71 +116,19 @@
 </url>]]>
 			</programlisting>
 			<para>
-				Then declare the following dependencies:			
+				Then declare the following dependency:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<dependency org="org.springframework.webflow" name="org.springframework.binding"
-            rev="2.0.6.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js"
-            rev="2.0.6.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.webflow"
-            rev="2.0.6.RELEASE" conf="compile->runtime" />
-]]>
-			</programlisting>
-			<para>
-				And if using JavaServerFaces:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency org="org.springframework.webflow" name="org.springframework.faces"
             rev="2.0.6.RELEASE" conf="compile->runtime" />
 ]]>
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="jars-mvn-central">
-		<title>How to obtain Web Flow artifacts from Maven Central</title>
-		<para>
-			Each jar in the Web Flow distribution is also available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
-		</para>
-		<para>
-			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency>
-]]>
-		</programlisting>
-		<para>
-			And if using JavaServerFaces:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-]]>
-		</programlisting>
-	</sect1>
 	<sect1>
 		<title>How to Obtain Nightly Builds</title>
 		<para>
-			Nightly snapshots of the Web Flow trunk are available at the SpringSource Bundle Repository.
+			Nightly snapshots of the Web Flow trunk are also available at the SpringSource Enterprise Bundle Repository.
 			To access snapshots, add the following repository to your pom:
 		</para>
 		<programlisting language="xml"><![CDATA[
@@ -220,37 +144,14 @@
 			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>3.0.0.CI-###</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>3.0.0.CI-###</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
     <version>3.0.0.CI-###</version>
 </dependency> 
 ]]>
 			</programlisting>
-		<para>
-			And if using JavaServerFaces:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
-    <version>3.0.0.CI-###</version>
-</dependency> 
-]]>
-		</programlisting>
 			<para>
 				Where '###' above represents the build number like 3.0.0.CI-500.
-				Get the latest build number by browsing the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">nightly build area</ulink>.
+				Get the latest build number by browsing the <ulink url="http://static.springsource.org/downloads/nightly/snapshot-download.php?project=SWF">nightly build area</ulink>.
 			</para>
 	</sect1>
 </chapter>

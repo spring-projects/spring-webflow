@@ -5,7 +5,7 @@
 	<artifactId>org.springframework.webflow</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring Web Flow</name>
-	<version>2.0.6.RELEASE</version>
+	<version>3.0.0.M1</version>
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -14,27 +14,27 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
+			<artifactId>org.springframework.beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
+			<artifactId>org.springframework.context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
+			<artifactId>org.springframework.core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
+			<artifactId>org.springframework.web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
+			<artifactId>org.springframework.web.servlet</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
@@ -46,12 +46,6 @@
 			<groupId>org.springframework.webflow</groupId>
 			<artifactId>org.springframework.js</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>backport-util-concurrent</groupId>
-			<artifactId>backport-util-concurrent</artifactId>
-			<version>3.0</version>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
@@ -90,26 +84,20 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ognl</groupId>
-			<artifactId>ognl</artifactId>
-			<version>2.6.9</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
+			<artifactId>org.springframework.orm</artifactId>
 			<version>${spring.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc-portlet</artifactId>
+			<artifactId>org.springframework.webmvc-portlet</artifactId>
 			<version>${spring.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
+			<artifactId>org.springframework.tx</artifactId>
 			<version>${spring.version}</version>
 			<optional>true</optional>
 		</dependency>
@@ -134,6 +122,6 @@
 		</repository>
 	</repositories>		
 	<properties>
-		<spring.version>2.5.6</spring.version>
+		<spring.version>3.0.0.M1</spring.version>
 	</properties>	
 </project>

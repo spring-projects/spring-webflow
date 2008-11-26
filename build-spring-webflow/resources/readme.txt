@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0.6 (December 2008)
+SPRING WEB FLOW 3.0.0.M1 (December 2008)
 ----------------------------------
 http://www.springframework.org/webflow
 
@@ -13,14 +13,14 @@ Good examples of flows include a trip booking process, a loan application proces
 
 Spring Web Flow exists at a higher level of abstraction, providing you a declarative flow definition language for authoring flows.
 Web Flow also integrates as a self-contained flow engine within base web frameworks such as Spring MVC.
-It allows different UI technologies to be integrated, including UI component technologies such as JavaServerFaces.
+It allows different UI technologies to be integrated, such as JSP or JavaServerFaces.
 
 Spring Web Flow lets you capture reusable application UI flow in a declarative, portable, and manageable fashion.
 It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2 requires Java SE 1.4 and Spring Framework 2.5.4 or above to run.
+Spring Web Flow 3 requires Java SE 5.0 and Spring Framework 3.0.0 or above to run.
 
 Java SE 5.0 with Ant 1.7 is required to build.
 
@@ -33,11 +33,8 @@ Release distribution contents:
 "projects" contains all buildable projects, including sample applications
 "projects/build-spring-webflow" is the directory to access to build the Web Flow distribution
 "projects/spring-build" is the master build system used by all Spring projects, including Spring Web Flow
-"projects/spring-binding" contains buildable Spring Data Binding project sources, a utility library used by SWF
-"projects/spring-faces" contains buildable Spring Faces project sources, a library containing SWF's JSF integration
-"projects/spring-js" contains buildable Spring JavaScript project sources, a library containing client-side Ajax and Dojo integration
-"projects/spring-webflow" contains buildable Spring Web Flow project sources
-"projects/spring-webflow-samples" contains buildable Spring Web Flow sample application sources
+"projects/org.springframework.webflow" contains buildable Spring Web Flow project sources
+"projects/spring-webflow-reference" contains the Web Flow reference manual sources
 
 See the readme.txt within the above directories for additional information.
 
@@ -49,31 +46,17 @@ The following jar files are included in the distribution.
 The contents of each jar and its dependencies are noted.
 Dependencies in [brackets] are optional, and are just necessary for certain functionality.
 
-* org.springframework.webflow-2.0.6.RELEASE.jar
+* org.springframework.webflow-3.0.0.M1.jar
 - Contents: The Spring Web Flow system
-- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc-servlet, spring-js
-                [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
+- Dependencies: Commons Logging, org.springframework.core, org.springframework.beans, org.springframework.context, org.springframework.el, org.springframework.web
+                [Log4J, Xerces, XML APIs, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
               
-* org.springframework.binding-2.0.6.RELEASE.jar
-- Contents: The Spring Data Binding framework, a utility library used by Web Flow
-- Dependencies: Commons Logging, spring-beans, spring-core, spring-context
-                [Log4J, OGNL, EL API]
-
-* org.springframework.js-2.0.6.RELEASE.jar
-- Contents: The Spring JavaScript module, containing Spring's Dojo integration and additional JavaScript functionality.
-- Dependencies: Dojo Toolkit
-
-* org.springframework.faces-2.0.6.RELEASE.jar
-- Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
-- Dependencies: spring-webflow, spring-js, JSF API
-                                
 For an exact list of project dependencies, see each project's ivy file at "projects/${project_name}/ivy.xml".
 
 4. GETTING STARTED
 ------------------
 This distribution contains documentation and sample applications demonstrating the features of the Spring Web Flow projects.
 A great way to get started is to review and run the sample applications, supplementing with reference manual material as you go.
-To build deployable .war files for all samples, simply access the projects/build-spring-webflow directory and run ant.
 All projects are directly importable into Eclipse as "Dynamic Web Projects".
 See http://www.springframework.org/webflow-samples for more information.
 
@@ -101,28 +84,8 @@ Then declare the following dependencies:
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.0.6.RELEASE</version>
-</dependency> 
-
-If using JavaServerFaces:
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
-    <version>2.0.6.RELEASE</version>
+    <version>3.0.0.M1</version>
 </dependency> 
 
 To access jars using Ivy, add the following repositories to your Ivy config:
@@ -139,19 +102,13 @@ To access jars using Ivy, add the following repositories to your Ivy config:
 
 Then declare the following dependencies in your ivy.xml:
 
-<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.0.6.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.0.6.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.0.6.RELEASE" conf="compile->runtime" />
-
-If using JavaServerFaces:
-
-<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.0.6.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="3.0.0.M1" conf="compile->runtime" />
 
 Refer to the reference documentation for more coverage on obtaining Web Flow jars using Maven or Ivy.
 	
 6. ADDITIONAL RESOURCES
 -----------------------
-The Spring Web Flow homepage is located at:
+The Spring Web Flow project homepage is located at:
     http://www.springframework.org/webflow
 
 There you will find resources such as a 'Quick Start' guide and a 'Frequently Asked Questions' section.
