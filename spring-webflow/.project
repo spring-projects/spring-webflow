@@ -3,10 +3,6 @@
 	<name>spring-webflow</name>
 	<comment></comment>
 	<projects>
-		<project>build-spring-webflow</project>
-		<project>common-build</project>
-		<project>repository</project>
-		<project>spring-binding</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
