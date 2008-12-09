@@ -87,6 +87,9 @@ public class JsfView implements View {
 	 */
 	public void render() throws IOException {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
+		if (facesContext.getResponseComplete()) {
+			return;
+		}
 		facesContext.setViewRoot(viewRoot);
 		try {
 			JsfUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);

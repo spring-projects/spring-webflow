@@ -99,8 +99,6 @@ public class JsfViewTests extends TestCase {
 
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
 
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
 
@@ -112,8 +110,6 @@ public class JsfViewTests extends TestCase {
 	public final void testRenderException() throws IOException {
 
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
@@ -132,8 +128,6 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testResume_Restored_NoEvent() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
-				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
@@ -163,8 +157,6 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testGetView_Restore_Ajax_NoEvent() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
-				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
@@ -194,8 +186,6 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testGetView_Restore_EventSignaled() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RESPONSE_COMPLETE_KEY))).andStubReturn(
-				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
