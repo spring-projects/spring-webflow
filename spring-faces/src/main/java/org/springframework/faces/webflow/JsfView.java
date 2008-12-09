@@ -111,10 +111,7 @@ public class JsfView implements View {
 			if (restored && !facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 				facesLifecycle.execute(facesContext);
 			}
-			if (JsfUtils.isPortlet(facesContext)) {
-				requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY,
-						new ViewRootHolder(getViewRoot()));
-			}
+			requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY, new ViewRootHolder(getViewRoot()));
 		} finally {
 			facesContext.release();
 		}

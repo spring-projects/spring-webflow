@@ -128,7 +128,7 @@ public class JsfViewTests extends TestCase {
 	}
 
 	/**
-	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 * View already exists in view scope and must be restored and the lifecycle executed, no event signaled
 	 */
 	public final void testResume_Restored_NoEvent() {
 
@@ -136,6 +136,8 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
+		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -156,7 +158,7 @@ public class JsfViewTests extends TestCase {
 	}
 
 	/**
-	 * Ajax Request - View already exists in flash scope and must be restored and the lifecycle executed, no event
+	 * Ajax Request - View already exists in view scope and must be restored and the lifecycle executed, no event
 	 * signaled
 	 */
 	public final void testGetView_Restore_Ajax_NoEvent() {
@@ -165,6 +167,8 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
+		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -186,7 +190,7 @@ public class JsfViewTests extends TestCase {
 	}
 
 	/**
-	 * View already exists in flowscope and must be restored and the lifecycle executed, an event is signaled
+	 * View already exists in view scope and must be restored and the lifecycle executed, an event is signaled
 	 */
 	public final void testGetView_Restore_EventSignaled() {
 
@@ -194,6 +198,8 @@ public class JsfViewTests extends TestCase {
 				Boolean.FALSE);
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
+		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
+				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 

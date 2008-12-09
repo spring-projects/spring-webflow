@@ -116,7 +116,7 @@ public class JsfViewFactoryTests extends TestCase {
 	}
 
 	/**
-	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no event signaled
 	 */
 	public final void testGetView_Restore() {
 
@@ -147,7 +147,7 @@ public class JsfViewFactoryTests extends TestCase {
 	}
 
 	/**
-	 * View already exists in flash scope and must be restored and the lifecycle executed, no event signaled
+	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no event signaled
 	 */
 	public final void testGetView_RestoreWithBindings() {
 
@@ -192,7 +192,7 @@ public class JsfViewFactoryTests extends TestCase {
 	}
 
 	/**
-	 * Ajax Request - View already exists in flash scope and must be restored and the lifecycle executed, no event
+	 * Ajax Request - View already exists in view/flash scope and must be restored and the lifecycle executed, no event
 	 * signaled
 	 */
 	public final void testGetView_Restore_Ajax() {
