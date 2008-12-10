@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tiles.Attribute;
+import org.apache.tiles.AttributeContext;
 import org.apache.tiles.Definition;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
@@ -46,6 +47,7 @@ import org.springframework.web.servlet.view.tiles2.TilesView;
  * </p>
  * 
  * @author Jeremy Grelle
+ * @author David Winterfeldt
  */
 public class AjaxTilesView extends TilesView {
 
@@ -88,7 +90,8 @@ public class AjaxTilesView extends TilesView {
 			Definition compositeDefinition = container.getDefinitionsFactory().getDefinition(getUrl(),
 					tilesRequestContext);
 			Map flattenedAttributeMap = new HashMap();
-			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition);
+			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition, request,
+					response);
 
 			// initialize the session before rendering any fragments. Otherwise views that require the session which has
 			// not otherwise been initialized will fail to render
@@ -115,8 +118,12 @@ public class AjaxTilesView extends TilesView {
 		return StringUtils.trimArrayElements(renderFragments);
 	}
 
-	private void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext, Map resultMap,
-			Definition compositeDefinition) throws Exception {
+	protected void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext,
+			Map resultMap, Definition compositeDefinition, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		if (compositeDefinition.getAttributes() == null || compositeDefinition.getAttributes().size() == 0) {
+			return;
+		}
 		Iterator i = compositeDefinition.getAttributes().keySet().iterator();
 		while (i.hasNext()) {
 			Object key = i.next();
@@ -125,8 +132,17 @@ public class AjaxTilesView extends TilesView {
 					requestContext);
 			resultMap.put(key, attr);
 			if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
-				flattenAttributeMap(container, requestContext, resultMap, nestedDefinition);
+				flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
 			}
+		}
+
+		// Process dynamic attributes
+		AttributeContext attributeContext = container.getAttributeContext(new Object[] { request, response });
+
+		for (i = attributeContext.getAttributeNames(); i.hasNext();) {
+			String key = (String) i.next();
+			Attribute attr = attributeContext.getAttribute(key);
+			resultMap.put(key, attr);
 		}
 	}
 }
