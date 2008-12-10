@@ -76,7 +76,12 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 					return servletPath.substring(1);
 				}
 			} else {
-				return request.getContextPath().substring(1);
+				String contextPath = request.getContextPath();
+				if (StringUtils.hasText(contextPath)) {
+					return request.getContextPath().substring(1);
+				} else {
+					return null;
+				}
 			}
 		}
 	}
@@ -97,10 +102,15 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 			url.append('/');
 			url.append(flowId);
 		} else {
-			if (StringUtils.hasText(request.getServletPath())) {
+			String servletPath = request.getServletPath();
+			if (StringUtils.hasText(servletPath)) {
 				url.append(request.getContextPath());
 				url.append('/');
 				url.append(flowId);
+				int dotIndex = servletPath.lastIndexOf('.');
+				if (dotIndex != -1) {
+					url.append(servletPath.substring(dotIndex));
+				}
 			} else {
 				url.append('/');
 				url.append(flowId);
