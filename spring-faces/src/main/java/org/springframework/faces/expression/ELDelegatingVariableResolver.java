@@ -30,14 +30,15 @@ public abstract class ELDelegatingVariableResolver extends VariableResolver {
 
 	private VariableResolver nextResolver;
 
-	private ELContext elContext;
+	private ELResolver delegate;
 
 	public ELDelegatingVariableResolver(VariableResolver nextResolver, ELResolver delegate) {
 		this.nextResolver = nextResolver;
-		this.elContext = new SimpleELContext(delegate);
+		this.delegate = delegate;
 	}
 
 	public Object resolveVariable(FacesContext facesContext, String name) throws EvaluationException {
+		ELContext elContext = new SimpleELContext(delegate);
 		Object result = elContext.getELResolver().getValue(elContext, null, name);
 		if (elContext.isPropertyResolved()) {
 			return result;

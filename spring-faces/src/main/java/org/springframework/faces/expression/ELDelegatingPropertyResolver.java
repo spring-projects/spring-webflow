@@ -30,14 +30,15 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 
 	private PropertyResolver nextResolver;
 
-	private ELContext elContext;
+	private ELResolver delegate;
 
 	public ELDelegatingPropertyResolver(PropertyResolver nextResolver, ELResolver delegate) {
 		this.nextResolver = nextResolver;
-		this.elContext = new SimpleELContext(delegate);
+		this.delegate = delegate;
 	}
 
 	public Class getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		Class type = elContext.getELResolver().getType(elContext, base, new Integer(index));
 		if (elContext.isPropertyResolved()) {
 			return type;
@@ -47,6 +48,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public Class getType(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		Class type = elContext.getELResolver().getType(elContext, base, property);
 		if (elContext.isPropertyResolved()) {
 			return type;
@@ -56,6 +58,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public Object getValue(Object base, int index) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		Object value = elContext.getELResolver().getValue(elContext, base, new Integer(index));
 		if (elContext.isPropertyResolved()) {
 			return value;
@@ -65,6 +68,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public Object getValue(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		Object value = elContext.getELResolver().getValue(elContext, base, property);
 		if (elContext.isPropertyResolved()) {
 			return value;
@@ -74,6 +78,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public boolean isReadOnly(Object base, int index) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		boolean readOnly = elContext.getELResolver().isReadOnly(elContext, base, new Integer(index));
 		if (elContext.isPropertyResolved()) {
 			return readOnly;
@@ -83,6 +88,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public boolean isReadOnly(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		boolean readOnly = elContext.getELResolver().isReadOnly(elContext, base, property);
 		if (elContext.isPropertyResolved()) {
 			return readOnly;
@@ -92,6 +98,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 	}
 
 	public void setValue(Object base, int index, Object value) throws EvaluationException, PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		elContext.getELResolver().setValue(elContext, base, new Integer(index), value);
 		if (!elContext.isPropertyResolved()) {
 			nextResolver.setValue(base, index, value);
@@ -100,6 +107,7 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 
 	public void setValue(Object base, Object property, Object value) throws EvaluationException,
 			PropertyNotFoundException {
+		ELContext elContext = new SimpleELContext(delegate);
 		elContext.getELResolver().setValue(elContext, base, property, value);
 		if (!elContext.isPropertyResolved()) {
 			nextResolver.setValue(base, property, value);
