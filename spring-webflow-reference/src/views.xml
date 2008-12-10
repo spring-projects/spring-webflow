@@ -346,7 +346,7 @@ public class Booking {
     ...
         
     public void validateEnterBookingDetails(ValidationContext context) {
-        MessageContext messages = context.getMessages();
+        MessageContext messages = context.getMessageContext();
         if (checkinDate.before(today())) {
             messages.addMessage(new MessageBuilder().error().source("checkinDate").
                 defaultText("Check in date must be a future date").build());
