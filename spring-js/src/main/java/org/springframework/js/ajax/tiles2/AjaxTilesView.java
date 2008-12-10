@@ -121,25 +121,24 @@ public class AjaxTilesView extends TilesView {
 	protected void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext,
 			Map resultMap, Definition compositeDefinition, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		if (compositeDefinition.getAttributes() == null || compositeDefinition.getAttributes().size() == 0) {
-			return;
-		}
-		Iterator i = compositeDefinition.getAttributes().keySet().iterator();
-		while (i.hasNext()) {
-			Object key = i.next();
-			Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
-			Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(attr.getValue().toString(),
-					requestContext);
-			resultMap.put(key, attr);
-			if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
-				flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+		if (compositeDefinition.getAttributes() != null && compositeDefinition.getAttributes().size() > 0) {
+			Iterator i = compositeDefinition.getAttributes().keySet().iterator();
+			while (i.hasNext()) {
+				Object key = i.next();
+				Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
+				Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
+						attr.getValue().toString(), requestContext);
+				resultMap.put(key, attr);
+				if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
+					flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+				}
 			}
 		}
 
 		// Process dynamic attributes
 		AttributeContext attributeContext = container.getAttributeContext(new Object[] { request, response });
 
-		for (i = attributeContext.getAttributeNames(); i.hasNext();) {
+		for (Iterator i = attributeContext.getAttributeNames(); i.hasNext();) {
 			String key = (String) i.next();
 			Attribute attr = attributeContext.getAttribute(key);
 			resultMap.put(key, attr);
