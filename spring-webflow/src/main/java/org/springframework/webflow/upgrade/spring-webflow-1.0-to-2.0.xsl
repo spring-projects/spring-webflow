@@ -2,117 +2,126 @@
 <!DOCTYPE webflow-upgrader [
 <!ENTITY stripEl "<xsl:if test='starts-with($stripElParam,$elPrefix)'><xsl:value-of select='substring-after(substring-before($stripElParam,$elSuffix),$elPrefix)'/></xsl:if><xsl:if test='not(starts-with($stripElParam,$elPrefix))'><xsl:value-of select='$stripElParam'/></xsl:if>">
 ]>
-<xsl:stylesheet xmlns:webflow="http://www.springframework.org/schema/webflow" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    
-    <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
-    
-    <xsl:variable name="scopeSuffix">
-        <xsl:text>Scope</xsl:text>
-    </xsl:variable>
-    
-    <xsl:variable name="elPrefix">
-        <xsl:text>${</xsl:text>
-    </xsl:variable>
-    
-    <xsl:variable name="elSuffix">
-        <xsl:text>}</xsl:text>
-    </xsl:variable>
-    
-    <xsl:template match="comment()">
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:comment><xsl:value-of select="."/></xsl:comment>
-    </xsl:template>
-    
-    <xsl:template match="webflow:flow">
-        <xsl:element name="flow" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:attribute name="schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">
+<xsl:stylesheet xmlns:webflow="http://www.springframework.org/schema/webflow"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+
+	<xsl:output method="xml" indent="yes" encoding="UTF-8" />
+
+	<xsl:variable name="scopeSuffix">
+		<xsl:text>Scope</xsl:text>
+	</xsl:variable>
+
+	<xsl:variable name="elPrefix">
+		<xsl:text>${</xsl:text>
+	</xsl:variable>
+
+	<xsl:variable name="elSuffix">
+		<xsl:text>}</xsl:text>
+	</xsl:variable>
+
+	<xsl:template match="comment()">
+		<xsl:text>&#xA;</xsl:text>
+		<xsl:comment>
+			<xsl:value-of select="." />
+		</xsl:comment>
+	</xsl:template>
+
+	<xsl:template match="webflow:flow">
+		<xsl:element name="flow"
+			namespace="http://www.springframework.org/schema/webflow">
+			<xsl:attribute name="schemaLocation"
+				namespace="http://www.w3.org/2001/XMLSchema-instance">
                 <xsl:text>http://www.springframework.org/schema/webflow</xsl:text>
                 <xsl:text> </xsl:text>
                 <xsl:text>http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd</xsl:text>
             </xsl:attribute>
-            <xsl:if test="webflow:start-state">
-                <xsl:attribute name="start-state">
-                    <xsl:value-of select="webflow:start-state/@idref"/>
+			<xsl:if test="webflow:start-state">
+				<xsl:attribute name="start-state">
+                    <xsl:value-of select="webflow:start-state/@idref" />
                 </xsl:attribute>
-            </xsl:if>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:apply-templates select="*|comment()"/>
-        </xsl:element>
-    </xsl:template>
-    
-    <xsl:template match="webflow:action">
-        <xsl:element name="evaluate" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:attribute name="expression">
+			</xsl:if>
+			<xsl:text>&#xA;</xsl:text>
+			<xsl:apply-templates select="*|comment()" />
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="webflow:action">
+		<xsl:element name="evaluate"
+			namespace="http://www.springframework.org/schema/webflow">
+			<xsl:attribute name="expression">
                 <xsl:if test="@bean">
-                    <xsl:value-of select="@bean"/>
+                    <xsl:value-of select="@bean" />
                 </xsl:if>
                 <xsl:if test="@bean and @method">
                     <xsl:text>.</xsl:text>
                 </xsl:if>
                 <xsl:if test="@method">
-                    <xsl:value-of select="@method"/>
+                    <xsl:value-of select="@method" />
                 </xsl:if>
             </xsl:attribute>
-            <xsl:if test="@name">
-                <xsl:element name="attribute" namespace="http://www.springframework.org/schema/webflow">
-                    <xsl:attribute name="name">
+			<xsl:if test="@name">
+				<xsl:element name="attribute"
+					namespace="http://www.springframework.org/schema/webflow">
+					<xsl:attribute name="name">
                         <xsl:text>name</xsl:text>
                     </xsl:attribute>
-                    <xsl:attribute name="value">
+					<xsl:attribute name="value">
                         <xsl:variable name="stripElParam">
-                            <xsl:value-of select="@name"/>
+                            <xsl:value-of select="@name" />
                         </xsl:variable>
                         &stripEl;
                     </xsl:attribute>
-                </xsl:element>
-            </xsl:if>
-            <xsl:apply-templates select="*|comment()"/>
-        </xsl:element>
-    </xsl:template>
-    
-    <xsl:template match="webflow:action-state">
-        <xsl:element name="action-state" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:if test="@id">
-                <xsl:attribute name="id">
-                    <xsl:value-of select="@id"/>
+				</xsl:element>
+			</xsl:if>
+			<xsl:apply-templates select="*|comment()" />
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="webflow:action-state">
+		<xsl:element name="action-state"
+			namespace="http://www.springframework.org/schema/webflow">
+			<xsl:if test="@id">
+				<xsl:attribute name="id">
+                    <xsl:value-of select="@id" />
                 </xsl:attribute>
-            </xsl:if>
-            <xsl:apply-templates select="*|comment()"/>
-        </xsl:element>
-        <xsl:text>&#xA;</xsl:text>
-    </xsl:template>
-    
-    <xsl:template match="webflow:attribute">
-        <xsl:element name="attribute" namespace="http://www.springframework.org/schema/webflow">
-            <xsl:if test="@name">
-                <xsl:attribute name="name">
-                    <xsl:value-of select="@name"/>
+			</xsl:if>
+			<xsl:apply-templates select="*|comment()" />
+		</xsl:element>
+		<xsl:text>&#xA;</xsl:text>
+	</xsl:template>
+
+	<xsl:template match="webflow:attribute">
+		<xsl:element name="attribute"
+			namespace="http://www.springframework.org/schema/webflow">
+			<xsl:if test="@name">
+				<xsl:attribute name="name">
+                    <xsl:value-of select="@name" />
                 </xsl:attribute>
-            </xsl:if>
-            <xsl:if test="@value">
-                <xsl:attribute name="value">
-                    <xsl:value-of select="@value"/>
+			</xsl:if>
+			<xsl:if test="@value">
+				<xsl:attribute name="value">
+                    <xsl:value-of select="@value" />
                 </xsl:attribute>
-            </xsl:if>
-            <xsl:if test="@type">
-                <xsl:attribute name="type">
-                    <xsl:value-of select="@type"/>
+			</xsl:if>
+			<xsl:if test="@type">
+				<xsl:attribute name="type">
+                    <xsl:value-of select="@type" />
                 </xsl:attribute>
-            </xsl:if>
-            <xsl:apply-templates select="*|comment()"/>
-        </xsl:element>
-    </xsl:template>
-    
-    <xsl:template match="webflow:attribute-mapper">
-        <!-- bean attribute handled in subflow-state -->
-        <xsl:apply-templates select="*|comment()"/>
-    </xsl:template>
-    
-    <xsl:template match="webflow:bean-action">
-        <xsl:if test="webflow:method-arguments/webflow:argument/@parameter-type">
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:comment>
-                <xsl:text> WARNING: parameter-type is no longer supported.  Use &lt;set name="temp" value="</xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="*|comment()" />
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="webflow:attribute-mapper">
+		<!-- bean attribute handled in subflow-state -->
+		<xsl:apply-templates select="*|comment()" />
+	</xsl:template>
+
+	<xsl:template match="webflow:bean-action">
+		<xsl:if test="webflow:method-arguments/webflow:argument/@parameter-type">
+			<xsl:text>&#xA;</xsl:text>
+			<xsl:comment>
+				<xsl:text> WARNING: parameter-type is no longer supported.  Use &lt;set name="temp" value="</xsl:text>
                 <xsl:value-of select="webflow:method-arguments/webflow:argument/@expression"/>
                 <xsl:text>" type="</xsl:text>
                 <xsl:value-of select="webflow:method-arguments/webflow:argument/@parameter-type"/>
