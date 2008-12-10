@@ -389,7 +389,7 @@
                 </xsl:attribute>
             </xsl:if>
         </xsl:if>
-        <xsl:if test="(local-name(../..) = 'flow' and local-name(..) = 'output-mapper') or (local-name(../../..) = 'subflow-state' and local-name(..) = 'input-mapper') or (local-name(../../..) = 'end-state' and local-name(..) = 'output-mapper')">
+        <xsl:if test="(local-name(../..) = 'flow' and local-name(..) = 'output-mapper') or (local-name(../../..) = 'subflow-state' and local-name(..) = 'input-mapper') or (local-name(../..) = 'end-state' and local-name(..) = 'output-mapper')">
             <xsl:if test="@target">
                 <xsl:attribute name="name">
                     <xsl:variable name="stripElParam">
