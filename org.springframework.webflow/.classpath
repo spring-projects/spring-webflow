@@ -5,7 +5,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="IVY_CACHE/edu.emory.mathcs.backport/com.springsource.edu.emory.mathcs.backport/3.0.0/com.springsource.edu.emory.mathcs.backport-3.0.0.jar" sourcepath="/IVY_CACHE/edu.emory.mathcs.backport/com.springsource.edu.emory.mathcs.backport/3.0.0/com.springsource.edu.emory.mathcs.backport-sources-3.0.0.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-1.0.0.jar" sourcepath="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-sources-1.0.0.jar"/>
