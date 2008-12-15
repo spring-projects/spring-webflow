@@ -40,6 +40,8 @@ public class FlowDefinitionResourceFactory {
 
 	private static final String CLASSPATH_SCHEME = "classpath:";
 
+	private static final String CLASSPATH_STAR_SCHEME = "classpath*:";
+
 	private static final String SLASH = "/";
 
 	private ResourceLoader resourceLoader;
@@ -250,6 +252,8 @@ public class FlowDefinitionResourceFactory {
 	private String removeClasspathScheme(String basePath) {
 		if (basePath.startsWith(CLASSPATH_SCHEME)) {
 			return basePath.substring(CLASSPATH_SCHEME.length());
+		} else if (basePath.startsWith(CLASSPATH_STAR_SCHEME)) {
+			return basePath.substring(CLASSPATH_STAR_SCHEME.length());
 		} else {
 			return basePath;
 		}

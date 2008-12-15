@@ -88,6 +88,12 @@ public class FlowDefinitionResourceFactoryTests extends TestCase {
 		assertEquals("sample", factory.getFlowId(resource));
 	}
 
+	public void testGetFlowIdClassPathStarResource() {
+		Resource resource = new ClassPathResource("org/springframework/webflow/sample/sample-flow.xml");
+		factory.setBasePath("classpath*:org/springframework/webflow/");
+		assertEquals("sample", factory.getFlowId(resource));
+	}
+
 	public void testGetFlowIdFileSystemResource() {
 		Resource resource = new FileSystemResource(
 				"/the/path/on/the/file/system/org/springframework/webflow/sample/sample-flow.xml");
