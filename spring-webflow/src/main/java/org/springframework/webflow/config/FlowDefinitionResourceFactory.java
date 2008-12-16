@@ -193,18 +193,15 @@ public class FlowDefinitionResourceFactory {
 		if (basePath == null) {
 			return getFlowIdFromFileName(flowResource);
 		}
-		String basePath = this.basePath;
+		String basePath = removeClasspathScheme(this.basePath);
 		String filePath;
 		if (flowResource instanceof ContextResource) {
 			filePath = ((ContextResource) flowResource).getPathWithinContext();
 		} else if (flowResource instanceof ClassPathResource) {
-			basePath = removeClasspathScheme(basePath);
 			filePath = ((ClassPathResource) flowResource).getPath();
 		} else if (flowResource instanceof FileSystemResource) {
-			basePath = removeClasspathScheme(basePath);
 			filePath = truncateFilePath(((FileSystemResource) flowResource).getPath(), basePath);
 		} else if (flowResource instanceof UrlResource) {
-			basePath = removeClasspathScheme(basePath);
 			try {
 				filePath = truncateFilePath(((UrlResource) flowResource).getURL().getPath(), basePath);
 			} catch (IOException e) {
