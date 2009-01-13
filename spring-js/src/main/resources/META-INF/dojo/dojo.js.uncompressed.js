@@ -240,7 +240,7 @@ dojo.global = {
 =====*/
 	dojo.locale = d.config.locale;
 	
-	var rev = "$Rev: 15385 $".match(/\d+/);
+	var rev = "$Rev: 15997 $".match(/\d+/);
 
 	dojo.version = {
 		// summary: 
@@ -255,7 +255,7 @@ dojo.global = {
 		//		Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
 		//	revision: Number
 		//		The SVN rev from which dojo was pulled
-		major: 1, minor: 2, patch: 0, flag: "Spring",
+		major: 0, minor: 0, patch: 0, flag: "dev",
 		revision: rev ? +rev[0] : 999999, //FIXME: use NaN?
 		toString: function(){
 			with(d.version){
@@ -6441,7 +6441,7 @@ dojo.provide("dojo._base.query");
 		if(attr == "style"){
 			return elem.style.cssText || blank;
 		}
-		return elem.getAttribute(attr, 2) || blank;
+		return (caseSensitive ? elem.getAttribute(attr) : elem.getAttribute(attr, 2)) || blank;
 	}
 
 	var attrs = {
@@ -6615,7 +6615,7 @@ dojo.provide("dojo._base.query");
 	var defaultGetter = (d.isIE) ? function(cond){
 		var clc = cond.toLowerCase();
 		return function(elem){
-			return elem[cond]||elem[clc];
+			return (caseSensitive ? elem.getAttribute(cond) : elem[cond]||elem[clc]);
 		}
 	} : function(cond){
 		return function(elem){
@@ -6832,19 +6832,6 @@ dojo.provide("dojo._base.query");
 	// future
 	var getQueryFunc = function(query){
 		// return a cached version if one is available
-		var qcz = query.charAt(0);
-		if(d.doc["querySelectorAll"] && 
-			( (!d.isSafari) || (d.isSafari > 3.1) ) && // see #5832
-			// as per CSS 3, we can't currently start w/ combinator:
-			//		http://www.w3.org/TR/css3-selectors/#w3cselgrammar
-			(">+~".indexOf(qcz) == -1)
-		){
-			return function(root){
-				var r = root.querySelectorAll(query);
-				r.nozip = true; // skip expensive duplication checks and just wrap in a NodeList
-				return r;
-			};
-		}
 		if(_queryFuncCache[query]){ return _queryFuncCache[query]; }
 		if(0 > query.indexOf(",")){
 			// if it's not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
@@ -8994,10 +8981,10 @@ dojo.mixin(dijit,
 			return;
 		}
 
-		if(node.nodeName && node.nodeName.toLowerCase() == "body"){
-			// Ignore focus events on main document <body>.  This is specifically here
-			// so that clicking the up/down arrows of a spinner (which don't get focus)
-			// won't cause that widget to blur.  (IIRC, IE issue)
+		if(node.nodeType == 9){
+			// Ignore focus events on the document itself.  This is here so that
+			// (for example) clicking the up/down arrows of a spinner
+			//  (which don't get focus) won't cause that widget to blur. (FF issue)
 			return;
 		}
 
@@ -10453,7 +10440,7 @@ dojo.mixin(dijit,
 		//		On Firefox 2 and below, "wairole:" is
 		//		prepended to the provided role value.
 
-		var curRole = (theRole = dojo.attr(elem, "role")) ? theRole : "";
+		var curRole = dojo.attr(elem, "role") || "";
 		if (dojo.isFF<3 || !this._XhtmlRoles.test(curRole)){
 			dojo.attr(elem, "role", dojo.isFF<3 ? "wairole:" + role : role);
 		}else{
@@ -12433,8 +12420,11 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated],
 	},
 
 
+	_scroll: true,
 	_onFocus: function(e){
-		dijit.scrollIntoView(this.domNode);
+		if(this._scroll){
+			dijit.scrollIntoView(this.domNode);
+		}
 		this.inherited(arguments);
 	},
 
@@ -12893,7 +12883,7 @@ dojo.declare(
 		postCreate: function(){
 			// setting the value here is needed since value="" in the template causes "undefined"
 			// and setting in the DOM (instead of the JS object) helps with form reset actions
-			this.textbox.setAttribute("value", this.attr('displayedValue'));
+			this.textbox.setAttribute("value", this.textbox.value); // DOM and JS values should be the same
 			this.inherited(arguments);
 
 			/*#5297:if(this.srcNodeRef){
@@ -14058,11 +14048,11 @@ dojo.number._parseInfo = function(/*Object?*/options){
 
 	if(isCurrency){
 		// substitute the currency symbol for the placeholder in the pattern
-		re = re.replace(/(\s*)(\u00a4{1,3})(\s*)/g, function(match, before, target, after){
+		re = re.replace(/([\s\xa0]*)(\u00a4{1,3})([\s\xa0]*)/g, function(match, before, target, after){
 			var prop = ["symbol", "currency", "displayName"][target.length-1];
 			var symbol = dojo.regexp.escapeString(options[prop] || options.currency || "");
-			before = before ? "\\s" : "";
-			after = after ? "\\s" : "";
+			before = before ? "[\\s\\xa0]" : "";
+			after = after ? "[\\s\\xa0]" : "";
 			if(!options.strict){
 				if(before){before += "*";}
 				if(after){after += "*";}
@@ -14339,7 +14329,11 @@ dojo.declare(
 		=====*/
 
 		filter: function(/*Number*/ value){
-			return (value === null)? NaN : this.inherited(arguments); // attr('value', null) should fire onChange(NaN)
+			return (value === null || value === '' || value === undefined)? NaN : this.inherited(arguments); // attr('value', null||''||undefined) should fire onChange(NaN)
+		},
+
+		serialize: function(/*Number*/ value, /*Object?*/options){
+			return (typeof value != "number" || isNaN(value))? '' : this.inherited(arguments);
 		},
 
 		_getValueAttr: function(){
@@ -16263,8 +16257,8 @@ dojo.declare("dojo.dnd.Mover", null, {
 			dojo.connect(d, "onmousemove", this, "onMouseMove"),
 			dojo.connect(d, "onmouseup",   this, "onMouseUp"),
 			// cancel text selection and text dragging
-			dojo.connect(d, "ondragstart",   dojo, "stopEvent"),
-			dojo.connect(d, "onselectstart", dojo, "stopEvent"),
+			dojo.connect(d, "ondragstart",   dojo.stopEvent),
+			dojo.connect(d.body, "onselectstart", dojo.stopEvent),
 			firstEvent
 		];
 		// notify that the move has started
@@ -16395,8 +16389,10 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		// e: Event: mouse event
 		if(this.skip && dojo.dnd.isFormElement(e)){ return; }
 		if(this.delay){
-			this.events.push(dojo.connect(this.handle, "onmousemove", this, "onMouseMove"));
-			this.events.push(dojo.connect(this.handle, "onmouseup", this, "onMouseUp"));
+			this.events.push(
+				dojo.connect(this.handle, "onmousemove", this, "onMouseMove"),
+				dojo.connect(this.handle, "onmouseup", this, "onMouseUp")
+			);
 			this._lastX = e.pageX;
 			this._lastY = e.pageY;
 		}else{
@@ -16416,8 +16412,9 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	onMouseUp: function(e){
 		// summary: event processor for onmouseup, used only for delayed drags
 		// e: Event: mouse event
-		dojo.disconnect(this.events.pop());
-		dojo.disconnect(this.events.pop());
+		for(var i = 0; i < 2; ++i){
+			dojo.disconnect(this.events.pop());
+		}
 		dojo.stopEvent(e);
 	},
 	onSelectStart: function(e){
@@ -18273,6 +18270,9 @@ dojo.declare(
 	//				however big the ContentPane is
 	doLayout: true,
 
+	// whether current content is something the user specified, or just a "Loading..." message
+	_isRealContent: true,
+
 	postMixInProperties: function(){
 		this.inherited(arguments);
 		var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
@@ -18388,13 +18388,14 @@ dojo.declare(
 
 		// clear href so we cant run refresh and clear content
 		// refresh should only work if we downloaded the content
-		if(!this._isDownloaded){
-			this.href = "";
-		}
+		this.href = "";
+
+		// Cancel any in-flight requests (an attr('content') will cancel any in-flight attr('href', ...))
+		this.cancel();
 
 		this._setContent(data || "");
 
-		this._isDownloaded = false; // must be set after _setContent(..), pathadjust in dojox.layout.ContentPane
+		this._isDownloaded = false; // mark that content is from a attr('content') not an attr('href')
 
 		if(this.doLayout != "false" && this.doLayout !== false){
 			this._checkIfSingleChild();
@@ -18404,8 +18405,6 @@ dojo.declare(
 				this._singleChild.resize({w: cb.w, h: cb.h});
 			}
 		}
-
-		this._onLoadHandler();
 	},
 	_getContentAttr: function(){
 		// summary: hook to make attr("content") work
@@ -18500,9 +18499,7 @@ dojo.declare(
 
 	_downloadExternalContent: function(){
 		// display loading message
-		this._setContent(
-			this.onDownloadStart.call(this)
-		);
+		this._setContent(this.onDownloadStart(), true);
 
 		var self = this;
 		var getArgs = {
@@ -18519,10 +18516,10 @@ dojo.declare(
 		hand.addCallback(function(html){
 			try{
 				self._isDownloaded = true;
-				self.attr.call(self, 'content', html); // onload event is called from here
-				self.onDownloadEnd.call(self);
+				self._setContent(html, false); // onload event is called from here
+				self.onDownloadEnd();
 			}catch(err){
-				self._onError.call(self, 'Content', err); // onContentError
+				self._onError('Content', err); // onContentError
 			}
 			delete self._xhrDfd;
 			return html;
@@ -18531,19 +18528,19 @@ dojo.declare(
 		hand.addErrback(function(err){
 			if(!hand.cancelled){
 				// show error message in the pane
-				self._onError.call(self, 'Download', err); // onDownloadError
+				self._onError('Download', err); // onDownloadError
 			}
 			delete self._xhrDfd;
 			return err;
 		});
 	},
 
-	_onLoadHandler: function(){
+	_onLoadHandler: function(data){
 		// summary:
 		//		This is called whenever new content is being loaded
 		this.isLoaded = true;
 		try{
-			this.onLoad.call(this);
+			this.onLoad(data);
 		}catch(e){
 			console.error('Error '+this.widgetId+' running custom onLoad code');
 		}
@@ -18553,10 +18550,8 @@ dojo.declare(
 		// summary:
 		//		This is called whenever the content is being unloaded
 		this.isLoaded = false;
-		this.cancel();
-
 		try{
-			this.onUnload.call(this);
+			this.onUnload();
 		}catch(e){
 			console.error('Error '+this.widgetId+' running custom onUnload code');
 		}
@@ -18566,9 +18561,10 @@ dojo.declare(
 		// summary:
 		//		Destroy all the widgets inside the ContentPane and empty containerNode
 
-		// Make sure we call onUnload
-		// TODO: this shouldn't be called when we are simply destroying a "Loading..." message
-		this._onUnloadHandler();
+		// Make sure we call onUnload (but only when the ContentPane has real content)
+		if(this._isRealContent){
+			this._onUnloadHandler();
+		}
 
 		// dojo.html._ContentSetter keeps track of child widgets, so we should use it to
 		// destroy them.
@@ -18590,12 +18586,16 @@ dojo.declare(
 		}
 	},
 
-	_setContent: function(cont){
+	_setContent: function(cont, isFakeContent){
 		// summary: 
 		//		Insert the content into the container node
 
 		// first get rid of child widgets
 		this.destroyDescendants();
+
+		// mark whether this should be calling the unloadHandler
+		// for the content we are about to set
+		this._isRealContent = !isFakeContent;
 		
 		// dojo.html.set will take care of the rest of the details
 		// we provide an overide for the error handling to ensure the widget gets the errors 
@@ -18633,6 +18633,10 @@ dojo.declare(
 
 		// setter params must be pulled afresh from the ContentPane each time
 		delete this._contentSetterParams;
+		
+		if(!isFakeContent){
+			this._onLoadHandler(cont);
+		}
 	},
 
 	_onError: function(type, err, consoleText){
@@ -18642,7 +18646,7 @@ dojo.declare(
 		if(consoleText){
 			console.error(consoleText, err);
 		}else if(errText){// a empty string won't change current content
-			this._setContent.call(this, errText);
+			this._setContent(errText, true);
 		}
 	},
 
@@ -18658,12 +18662,12 @@ dojo.declare(
 
 
 	// EVENT's, should be overide-able
-	onLoad: function(e){
+	onLoad: function(data){
 		// summary:
 		//		Event hook, is called after everything is loaded and widgetified
 	},
 
-	onUnload: function(e){
+	onUnload: function(){
 		// summary:
 		//		Event hook, is called before old content is cleared
 	},
@@ -19004,9 +19008,14 @@ dojo.declare("dijit.form._FormMixin", null,
 		// TODO: ComboBox might need time to process a recently input value.  This should be async?
 	 	isValid: function(){
 	 		// summary: make sure that every widget that has a validator function returns true
+			this._invalidWidgets = [];
 	 		return dojo.every(this.getDescendants(), function(widget){
-				return widget.disabled || !widget.isValid || widget.isValid();
-	 		});
+				var isValid = widget.disabled || !widget.isValid || widget.isValid();
+				if(!isValid){
+					this._invalidWidgets.push(widget);
+				}
+				return isValid;
+	 		}, this);
 		},
 		
 		
@@ -19016,10 +19025,29 @@ dojo.declare("dijit.form._FormMixin", null,
 			//			state changes on the form as a whole.
 		},
 		
-		_widgetChange: function(){
+		_widgetChange: function(widget){
 			// summary: connected to a widgets onChange function - update our 
 			//			valid state, if needed.
-			var isValid = this.isValid();
+			var isValid = this._lastValidState;
+			if(!widget || this._lastValidState===undefined){
+				// We have passed a null widget, or we haven't been validated
+				// yet - let's re-check all our children
+				// This happens when we connect (or reconnect) our children
+				isValid = this.isValid();
+				if(this._lastValidState===undefined){
+					// Set this so that we don't fire an onValidStateChange 
+					// the first time
+					this._lastValidState = isValid;
+				}
+			}else if(widget.isValid){
+				this._invalidWidgets = dojo.filter(this._invalidWidgets||[], function(w){
+					return (w != widget);
+				}, this);
+				if(!widget.isValid() && !widget.attr("disabled")){
+					this._invalidWidgets.push(widget);
+				}
+				isValid = (this._invalidWidgets.length === 0);
+			}
 			if (isValid !== this._lastValidState){
 				this._lastValidState = isValid;
 				this.onValidStateChange(isValid);
@@ -19038,18 +19066,22 @@ dojo.declare("dijit.form._FormMixin", null,
 			// we connect to validate - so that it better reflects the states
 			// of the widgets - also, we only connect if it has a validate
 			// function (to avoid too many unneeded connections)
-			this._changeConnections = dojo.map(
-				dojo.filter(this.getDescendants(),
-					function(item){ return item.validate; }
-				),
-				function(widget){
-					return _this.connect(widget, "validate", "_widgetChange");
-				}
-			);
+			var conns = this._changeConnections = [];
+			dojo.forEach(dojo.filter(this.getDescendants(),
+				function(item){ return item.validate; }
+			),
+			function(widget){
+				// We are interested in whenever the widget is validated - or
+				// whenever the disabled attribute on that widget is changed
+				conns.push(_this.connect(widget, "validate", 
+									dojo.hitch(_this, "_widgetChange", widget)));
+				conns.push(_this.connect(widget, "_setDisabledAttr", 
+									dojo.hitch(_this, "_widgetChange", widget)));
+			});
 
 			// Call the widget change function to update the valid state, in 
 			// case something is different now.
-			this._widgetChange();
+			this._widgetChange(null);
 		},
 		
 		startup: function(){
@@ -19059,7 +19091,6 @@ dojo.declare("dijit.form._FormMixin", null,
 			//  yet.
 			this._changeConnections = [];
 			this.connectChildren();
-			this._lastValidState = this.isValid();
 		}
 	});
 

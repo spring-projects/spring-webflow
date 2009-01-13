@@ -199,8 +199,12 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		if (!content['ajaxSource']) {
 			content['ajaxSource'] = sourceId;
 		}
-	    
-		dojo.xhrPost({
+		
+		var formNode = dojo.byId(formId);
+		var formMethod = dojo.string.trim(formNode.method);
+		formMethod = formMethod.length > 0 ? formMethod.toUpperCase() : "GET";
+		
+		dojo.xhr(formMethod, {
 			
 			content: content,
 			
@@ -215,7 +219,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 	
 	        // The ERROR function will be called in an error case.
 	        error: this.handleError
-        });	
+        }, formMethod == "POST" ? true : false);	
 
 	},
 	
@@ -253,7 +257,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
 			if (modalView) {
 				//render a popup with the new URL
-				Spring.remoting.renderURLToModalDialog(redirectURL, ioArgs);
+				Spring.remoting.renderURLToModalDialog(redirectURL);
 				return response;
 			}
 			else {
@@ -348,9 +352,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		return response;
 	},
 	
-	renderURLToModalDialog: function(url, ioArgs) {
-		url = url + "&"+dojo.objectToQuery(ioArgs.args.content);
-		
+	renderURLToModalDialog: function(url) {
 		Spring.remoting.getResource(url, {}, true);
 	},
 	
@@ -407,7 +409,7 @@ dojo.declare("Spring.CommandLinkDecoration", [Spring.AbstractCommandLinkDecorati
 		
 		if ((formNode.onsubmit ? !formNode.onsubmit() : false) || !formNode.submit()) {
 			dojo.forEach(addedNodes, function(hiddenNode){
-				formNode.removeChild(hiddenNode);
+				hiddenNode.parentNode.removeChild(hiddenNode);
 			});
 		}
 	}
