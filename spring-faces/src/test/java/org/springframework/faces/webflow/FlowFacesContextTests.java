@@ -12,9 +12,6 @@ import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
-import org.springframework.binding.message.MessageCriteria;
-import org.springframework.binding.message.MessageResolver;
-import org.springframework.binding.message.Severity;
 import org.springframework.webflow.execution.RequestContext;
 
 public class FlowFacesContextTests extends TestCase {
@@ -90,6 +87,24 @@ public class FlowFacesContextTests extends TestCase {
 			iterationCount++;
 		}
 		assertEquals("There should be 5 messages to iterate", 5, iterationCount);
+	}
+
+	public final void testMutableGetMessages() {
+		messageContext = prepopulatedMessageContext;
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		facesContext.addMessage("TESTID", new FacesMessage("summary1"));
+		FacesMessage soruceMessage = (FacesMessage) facesContext.getMessages("TESTID").next();
+		soruceMessage.setSummary("summary2");
+
+		// check that message sticks around even when the facesContext has been torn down and re-created during the
+		// processing of the current request
+		FacesContext newFacesContext = new FlowFacesContext(requestContext, jsf.facesContext());
+		assertSame(FacesContext.getCurrentInstance(), newFacesContext);
+
+		FacesMessage gotMessage = (FacesMessage) newFacesContext.getMessages("TESTID").next();
+		assertEquals("summary2", gotMessage.getSummary());
 	}
 
 	public final void testGetMessagesByClientId_ForComponent() {
@@ -180,46 +195,4 @@ public class FlowFacesContextTests extends TestCase {
 		prepopulatedMessageContext.addMessage(new MessageBuilder().defaultText("Subzero Wins - Fatality").fatal()
 				.build());
 	}
-
-	private class TestGetMessagesContext implements MessageContext {
-
-		Message[] messages;
-
-		TestGetMessagesContext() {
-			messages = new Message[7];
-			messages[0] = new Message("null_summary", "foo", Severity.INFO);
-			messages[1] = new Message("null_detail", "foo", Severity.INFO);
-			messages[2] = new Message("componentId_summary", "bar", Severity.WARNING);
-			messages[3] = new Message("componentId_detail", "bar", Severity.WARNING);
-			messages[4] = new Message("userMessage", "userMessage", Severity.INFO);
-			messages[5] = new Message("null_summary", "baz", Severity.ERROR);
-			messages[6] = new Message("null_detail", "baz", Severity.ERROR);
-		}
-
-		public void addMessage(MessageResolver messageResolver) {
-
-		}
-
-		public Message[] getAllMessages() {
-			return messages;
-		}
-
-		public Message[] getMessagesBySource(Object source) {
-			return new Message[] { messages[1] };
-		}
-
-		public Message[] getMessagesByCriteria(MessageCriteria criteria) {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public boolean hasErrorMessages() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public void clearMessages() {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-	}
-
 }
