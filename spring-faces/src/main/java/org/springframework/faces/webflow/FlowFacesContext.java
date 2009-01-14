@@ -93,6 +93,21 @@ public class FlowFacesContext extends FacesContext {
 		return messageDelegate.getClientIdsWithMessages();
 	}
 
+	public ELContext getELContext() {
+		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext", null);
+		if (delegateMethod != null) {
+			try {
+				ELContext context = (ELContext) delegateMethod.invoke(delegate, null);
+				context.putContext(FacesContext.class, this);
+				return context;
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Return the maximum severity level recorded on any FacesMessages that has been queued, whether or not they are
 	 * associated with any specific UIComponent. If no such messages have been queued, return null.
@@ -141,19 +156,6 @@ public class FlowFacesContext extends FacesContext {
 
 	public Application getApplication() {
 		return delegate.getApplication();
-	}
-
-	public ELContext getELContext() {
-		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext", null);
-		if (delegateMethod != null) {
-			try {
-				return (ELContext) delegateMethod.invoke(delegate, null);
-			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			return null;
-		}
 	}
 
 	public ExternalContext getExternalContext() {

@@ -176,6 +176,12 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(FacesMessage.SEVERITY_FATAL, facesContext.getMaximumSeverity());
 	}
 
+	public final void testGetELContext() {
+
+		assertNotNull(facesContext.getELContext());
+		assertSame(facesContext, facesContext.getELContext().getContext(FacesContext.class));
+	}
+
 	private void setupMessageContext() {
 		prepopulatedMessageContext = new DefaultMessageContext();
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("foo").info()
