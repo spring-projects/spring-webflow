@@ -36,7 +36,7 @@ public interface SelectionAware {
 	 * Sets whether the row pointed to by the model's current index is selected
 	 * @param rowSelected true to select the current row
 	 */
-	public void setSelected(boolean rowSelected);
+	public void setCurrentRowSelected(boolean rowSelected);
 
 	/**
 	 * Sets the list of selected row data objects for the model.

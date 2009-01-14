@@ -64,7 +64,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 			if (valueAccessor != null) {
 				Object value = ReflectionUtils.invokeMethod(valueAccessor, parent);
 				if (value != null && value instanceof SelectionAware) {
-					((SelectionAware) value).setSelected(true);
+					((SelectionAware) value).setCurrentRowSelected(true);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Row selection has been set on the current SelectionAware data model.");
 					}

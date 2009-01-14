@@ -63,7 +63,7 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 		}
 	}
 
-	public void setSelected(boolean rowSelected) {
+	public void setCurrentRowSelected(boolean rowSelected) {
 		if (!isRowAvailable()) {
 			return;
 		}
