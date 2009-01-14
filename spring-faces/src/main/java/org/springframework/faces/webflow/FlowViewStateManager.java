@@ -104,10 +104,9 @@ public class FlowViewStateManager extends StateManager {
 
 	public void writeState(FacesContext context, javax.faces.application.StateManager.SerializedView state)
 			throws IOException {
-		if (!JsfUtils.isFlowRequest()) {
-			delegate.writeState(context, state);
-		}
-		// nothing to do, as saving state to client always returns false
+		// Ensures that javax.faces.ViewState hidden field always gets written - needed for third-party component
+		// compatability
+		delegate.writeState(context, state);
 	}
 
 	public boolean isSavingStateInClient(FacesContext context) {

@@ -1,12 +1,12 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
- * 
+ * Copyright 2004-2008 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,15 @@ import javax.faces.component.UIViewRoot;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ClassUtils;
+import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * @author Manfred Geiler (latest modification by $Author: dennisbyrne $)
- * @version $Revision: 511715 $ $Date: 2007-02-26 05:05:36 +0100 (Mo, 26 Feb 2007) $
+ * Helper class for building and restoring the structure of the JSF component tree.
+ * 
+ * Largely based on MyFaces implementation, with minor changes for Spring Web Flow's state saving strategy.
+ * 
+ * @author Jeremy Grelle
+ * @author Manfred Geiler
  */
 class TreeStructureManager {
 	public Serializable buildTreeStructureToSave(UIViewRoot viewRoot) {
@@ -123,39 +128,48 @@ class TreeStructureManager {
 
 	public static class TreeStructComponent implements Serializable {
 		private static final long serialVersionUID = 5069109074684737231L;
-		private String _componentClass;
-		private String _componentId;
-		private TreeStructComponent[] _children = null; // Array of children
-		private Object[] _facets = null; // Array of Array-tuples with Facetname and TreeStructComponent
+		private String componentClass;
+		private String componentId;
+		private TreeStructComponent[] children = null; // Array of children
+		private Object[] facets = null; // Array of Array-tuples with Facetname and TreeStructComponent
 
 		TreeStructComponent(String componentClass, String componentId) {
-			_componentClass = componentClass;
-			_componentId = componentId;
+			this.componentClass = componentClass;
+			this.componentId = componentId;
 		}
 
 		public String getComponentClass() {
-			return _componentClass;
+			return componentClass;
 		}
 
 		public String getComponentId() {
-			return _componentId;
+			return componentId;
 		}
 
 		void setChildren(TreeStructComponent[] children) {
-			_children = children;
+			this.children = children;
 		}
 
 		TreeStructComponent[] getChildren() {
-			return _children;
+			return children;
 		}
 
 		Object[] getFacets() {
-			return _facets;
+			return facets;
 		}
 
 		void setFacets(Object[] facets) {
-			_facets = facets;
+			this.facets = facets;
 		}
+
+		public String toString() {
+			if (JsfUtils.isFlowRequest()) {
+				return RequestContextHolder.getRequestContext().getFlowExecutionContext().getKey().toString();
+			} else {
+				return super.toString();
+			}
+		}
+
 	}
 
 }
