@@ -12,6 +12,13 @@
 		</component>
 	</tag>
 	<tag>
+		<tag-name>includeScripts</tag-name>
+		<component>
+			<component-type>spring.faces.DojoIncludeScripts</component-type>
+			<renderer-type>spring.faces.DojoScriptRenderer</renderer-type>
+		</component>
+	</tag>
+	<tag>
 		<tag-name>resourceGroup</tag-name>
 		<component>
 			<component-type>spring.faces.ResourceGroup</component-type>
@@ -46,11 +53,20 @@
 			<renderer-type>spring.faces.AjaxEventInterceptorRenderer</renderer-type>
 		</component>
 	</tag>
+	
+	<tag>
+		<tag-name>elementDecoration</tag-name>
+		<component>
+			<component-type>spring.faces.DojoElementDecoration</component-type>
+			<renderer-type>spring.faces.DojoElementDecorationRenderer</renderer-type>
+		</component>
+	</tag>
+	
 	<tag>
 		<tag-name>clientTextValidator</tag-name>
 		<component>
 			<component-type>spring.faces.DojoClientTextValidator</component-type>
-			<renderer-type>spring.faces.DojoDecorationRenderer</renderer-type>
+			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
 		</component>
 	</tag>
 	
@@ -58,7 +74,7 @@
 		<tag-name>clientNumberValidator</tag-name>
 		<component>
 			<component-type>spring.faces.DojoClientNumberValidator</component-type>
-			<renderer-type>spring.faces.DojoDecorationRenderer</renderer-type>
+			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
 		</component>
 	</tag>
 	
@@ -66,7 +82,7 @@
 		<tag-name>clientCurrencyValidator</tag-name>
 		<component>
 			<component-type>spring.faces.DojoClientCurrencyValidator</component-type>
-			<renderer-type>spring.faces.DojoDecorationRenderer</renderer-type>
+			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
 		</component>
 	</tag>
 	
@@ -74,7 +90,7 @@
 		<tag-name>clientDateValidator</tag-name>
 		<component>
 			<component-type>spring.faces.DojoClientDateValidator</component-type>
-			<renderer-type>spring.faces.DojoDecorationRenderer</renderer-type>
+			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
 		</component>
 	</tag>
 	

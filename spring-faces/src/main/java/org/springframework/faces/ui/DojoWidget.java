@@ -16,7 +16,6 @@
 package org.springframework.faces.ui;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -27,7 +26,7 @@ import javax.faces.el.ValueBinding;
  * @author Jeremy Grelle
  * 
  */
-public abstract class DojoDecoration extends UIComponentBase {
+public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 
 	protected static final String[] DOJO_ATTRS = new String[] { "disabled", "intermediateChanges", "tabIndex",
 			"required", "promptMessage", "invalidMessage", "constraints", "regExp", "regExpGen", "propercase",
@@ -167,7 +166,7 @@ public abstract class DojoDecoration extends UIComponentBase {
 
 	protected abstract String[] getDojoAttributes();
 
-	public abstract String getDojoComponentType();
+	public abstract String getWidgetType();
 
 	public Object saveState(FacesContext context) {
 		Object[] values = new Object[11];
@@ -198,11 +197,6 @@ public abstract class DojoDecoration extends UIComponentBase {
 		this.required = (Boolean) values[8];
 		this.tabIndex = (Integer) values[9];
 		this.propercase = (Boolean) values[10];
-	}
-
-	public String getFamily() {
-
-		return "spring.faces.Decoration";
 	}
 
 }

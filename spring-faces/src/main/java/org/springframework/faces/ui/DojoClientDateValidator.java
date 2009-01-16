@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
  * @author Jeremy Grelle
  * 
  */
-public class DojoClientDateValidator extends DojoDecoration {
+public class DojoClientDateValidator extends DojoWidget {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.DateTextBox";
 
@@ -39,9 +39,9 @@ public class DojoClientDateValidator extends DojoDecoration {
 	private String datePattern = null;
 
 	static {
-		DOJO_ATTRS = new String[DojoDecoration.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
-		System.arraycopy(DojoDecoration.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoDecoration.DOJO_ATTRS.length);
-		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoDecoration.DOJO_ATTRS.length,
+		DOJO_ATTRS = new String[DojoWidget.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
+		System.arraycopy(DojoWidget.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoWidget.DOJO_ATTRS.length);
+		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoWidget.DOJO_ATTRS.length,
 				DOJO_ATTRS_INTERNAL.length);
 	}
 
@@ -63,7 +63,7 @@ public class DojoClientDateValidator extends DojoDecoration {
 		return DOJO_ATTRS;
 	}
 
-	public String getDojoComponentType() {
+	public String getWidgetType() {
 		return DOJO_COMPONENT_TYPE;
 	}
 

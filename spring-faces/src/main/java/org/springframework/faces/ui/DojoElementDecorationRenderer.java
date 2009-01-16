@@ -32,26 +32,23 @@ import org.springframework.faces.webflow.JsfUtils;
  * @author Jeremy Grelle
  * 
  */
-public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRenderer {
-
-	private String dojoJsResourceUri = "/dojo/dojo.js";
-
-	private String dijitThemePath = "/dijit/themes/";
-
-	private String dijitTheme = "tundra";
-
-	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
+public class DojoElementDecorationRenderer extends BaseSpringJavascriptDecorationRenderer {
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-			ResourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			if (!context.getViewRoot().getAttributes().containsKey(DojoConstants.CUSTOM_THEME_PATH_SET)
+					&& !context.getViewRoot().getAttributes().containsKey(DojoConstants.CUSTOM_THEME_SET)) {
+				ResourceHelper.renderStyleLink(context, DojoConstants.DIJIT_THEME_PATH
+						+ DojoConstants.DEFAULT_DIJIT_THEME + "/" + DojoConstants.DEFAULT_DIJIT_THEME + ".css");
+			}
 
-			ResourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, DojoConstants.DOJO_JS_RESOURCE_URI);
+
+			ResourceHelper.renderScriptLink(context, DojoConstants.SPRING_DOJO_JS_RESOURCE_URI);
 		}
 	}
 
@@ -59,26 +56,33 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 		ResponseWriter writer = context.getResponseWriter();
 
-		if (component.getChildCount() == 0)
-			throw new FacesException("A Spring Faces advisor expects to have at least one child component.");
-
-		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
-
-		ResourceHelper.renderDojoInclude(context, ((DojoDecoration) component).getDojoComponentType());
+		String selector;
+		if (component.getAttributes().containsKey("selector")) {
+			selector = "\"" + (String) component.getAttributes().get("selector") + "\"";
+		} else {
+			if (component.getChildCount() == 0)
+				throw new FacesException(
+						"A Spring Faces elementDecoration expects either have a specified selector or at least one child component.");
+			selector = "dojo.byId('" + ((UIComponent) component.getChildren().get(0)).getClientId(context) + "')";
+		}
 
 		ResourceHelper.beginScriptBlock(context);
 
 		StringBuffer script = new StringBuffer();
+		script.append("  dojo.addOnLoad(function(){dojo.query(" + selector + ").forEach(function(element){");
 		script.append("  Spring.addDecoration(new Spring.ElementDecoration({  ");
-		script.append("  elementId : '" + advisedChild.getClientId(context) + "',  ");
-		script.append("  widgetType : '" + ((DojoDecoration) component).getDojoComponentType() + "',  ");
+		script.append("  elementId : element,  ");
+		script.append("  widgetType : '" + component.getAttributes().get("widgetType") + "',  ");
+		if (component.getAttributes().containsKey("widgetModule")) {
+			script.append("  widgetModule : '" + component.getAttributes().get("widgetModule") + "',  ");
+		}
 		script.append("  widgetAttrs : { ");
 
 		String dojoAttrs = getDojoAttributesAsString(context, component);
 
 		script.append(dojoAttrs);
 
-		script.append("  }}));");
+		script.append("  }}));})});");
 
 		writer.writeText(script, null);
 
@@ -87,29 +91,10 @@ public class DojoDecorationRenderer extends BaseSpringJavascriptDecorationRender
 
 	protected String getDojoAttributesAsString(FacesContext context, UIComponent component) {
 
-		DojoDecoration advisor = (DojoDecoration) component;
-		StringBuffer attrs = new StringBuffer();
-
-		for (int i = 0; i < advisor.getDojoAttributes().length; i++) {
-
-			String key = advisor.getDojoAttributes()[i];
-			Object value = advisor.getAttributes().get(key);
-
-			if (value != null) {
-
-				if (attrs.length() > 0)
-					attrs.append(", ");
-
-				attrs.append(key + " : ");
-
-				if (value instanceof String) {
-					attrs.append("'" + value + "'");
-				} else {
-					attrs.append(value.toString());
-				}
-
-			}
+		if (component.getAttributes().containsKey("widgetAttrs")) {
+			return (String) component.getAttributes().get("widgetAttrs");
+		} else {
+			return "";
 		}
-		return attrs.toString();
 	}
 }

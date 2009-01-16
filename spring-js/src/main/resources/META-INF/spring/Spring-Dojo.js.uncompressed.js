@@ -27,6 +27,8 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 	constructor : function(config) {
 		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength', 'class', 'title');
 		dojo.mixin(this, config);
+		this.element = dojo.byId(this.elementId);
+		this.elementId = dojo.isString(this.elementId) ? this.elementId : this.elementId.id;
 		if(this.widgetModule == "") {
 			this.widgetModule = this.widgetType;
 		}
@@ -36,15 +38,15 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 		if (dijit.byId(this.elementId)) {
 			dijit.byId(this.elementId).destroyRecursive(false);
 		}
-		var element = dojo.byId(this.elementId);
-		if (!element) {
+		
+		if (!this.element) {
 			console.error("Could not apply " + this.widgetType + " decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
 		}
 		else {
 			var datePattern = this.widgetAttrs['datePattern'];
 			if (datePattern && this.widgetType == 'dijit.form.DateTextBox') {
 				if (!this.widgetAttrs['value']) {
-					this.widgetAttrs['value'] = dojo.date.locale.parse(element.value, {selector : "date", datePattern : datePattern});
+					this.widgetAttrs['value'] = dojo.date.locale.parse(this.element.value, {selector : "date", datePattern : datePattern});
 				}
 				if (!this.widgetAttrs['serialize']) {
 					this.widgetAttrs['serialize'] = function(d, options){
@@ -54,18 +56,18 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 			}
 			for (var copyField in this.copyFields) {
 				copyField = this.copyFields[copyField];
-				if (!this.widgetAttrs[copyField] && element[copyField] &&
-				(typeof element[copyField] != 'number' ||
-				(typeof element[copyField] == 'number' && element[copyField] >= 0))) {
-					this.widgetAttrs[copyField] = element[copyField];
+				if (!this.widgetAttrs[copyField] && this.element[copyField] &&
+				(typeof this.element[copyField] != 'number' ||
+				(typeof this.element[copyField] == 'number' && this.element[copyField] >= 0))) {
+					this.widgetAttrs[copyField] = this.element[copyField];
 				}
 			}
-			if(element['style'] && element['style'].cssText){
-				this.widgetAttrs['style'] = element['style'].cssText;
+			if(this.element['style'] && this.element['style'].cssText){
+				this.widgetAttrs['style'] = this.element['style'].cssText;
 			}
 			dojo.require(this.widgetModule);
 			var widgetConstructor = dojo.eval(this.widgetType);
-			this.widget = new widgetConstructor(this.widgetAttrs, element);
+			this.widget = new widgetConstructor(this.widgetAttrs, this.element);
 			this.widget.startup();
 		}
    		//return this to support method chaining
@@ -136,7 +138,8 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 	},
 	
 	apply : function() {
-		var element = dojo.byId(this.elementId);
+		
+		var element = dijit.byId(this.elementId) ? dijit.byId(this.elementId) : dojo.byId(this.elementId);
 		if (!element) {
 			console.error("Could not apply AjaxEvent decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
 		} else {
@@ -162,7 +165,9 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 				Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
 			}
 		}
-		dojo.stopEvent(event);
+		if (event.cancelable) {
+			dojo.stopEvent(event);
+		}
 	},
 	
 	_handleValidation : function(success){
@@ -314,7 +319,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			//Insert the new DOM nodes and update the Form's action URL
 			newNodes.forEach(function(item){
 				if (item.id != null && item.id != "") {
-					var target = dojo.byId(item.id);
+					var target = dijit.byId(item.id) ? dijit.byId(item.id).domNode : dojo.byId(item.id);
 					if (!target) {
 						console.error("An existing DOM elment with id '" + item.id + "' could not be found for replacement.");
 					} else {

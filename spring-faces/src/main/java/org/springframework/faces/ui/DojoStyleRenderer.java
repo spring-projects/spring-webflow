@@ -31,12 +31,25 @@ import org.springframework.faces.ui.resource.ResourceHelper;
  */
 public class DojoStyleRenderer extends Renderer {
 
-	private static final String dijitThemePath = "/dijit/themes/";
+	private static final String THEME_PATH_ATTR = "themePath";
 
-	private static final String dijitTheme = "tundra";
+	private static final String THEME_ATTR = "theme";
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
-		ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
+		String themePath = DojoConstants.DIJIT_THEME_PATH;
+		String theme = DojoConstants.DEFAULT_DIJIT_THEME;
+
+		if (component.getAttributes().containsKey(THEME_PATH_ATTR)) {
+			themePath = (String) component.getAttributes().get(THEME_PATH_ATTR);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_PATH_SET, Boolean.TRUE);
+		}
+
+		if (component.getAttributes().containsKey(THEME_ATTR)) {
+			theme = (String) component.getAttributes().get(THEME_ATTR);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_SET, Boolean.TRUE);
+		}
+
+		ResourceHelper.renderStyleLink(context, themePath + theme + "/" + theme + ".css");
 	}
 }

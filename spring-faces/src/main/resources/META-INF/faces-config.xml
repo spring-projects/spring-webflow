@@ -41,6 +41,11 @@
   		<component-type>spring.faces.DojoIncludeStyles</component-type>
   		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
   	</component>
+  	
+  	<component>
+  		<component-type>spring.faces.DojoIncludeScripts</component-type>
+  		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
+  	</component>
 	
 	<component>
 		<component-type>spring.faces.ResourceGroup</component-type>
@@ -50,6 +55,11 @@
 	<component>
   		<component-type>spring.faces.Resource</component-type>
   		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
+  	</component>
+  	
+  	<component>
+    	<component-type>spring.faces.DojoElementDecoration</component-type>
+    	<component-class>org.springframework.faces.ui.SpringJavascriptElementDecoration</component-class>
   	</component>
   	
 	<component>
@@ -105,8 +115,14 @@
 		
 		<renderer>
 			<component-family>spring.faces.Decoration</component-family>
-			<renderer-type>spring.faces.DojoDecorationRenderer</renderer-type>
-			<renderer-class>org.springframework.faces.ui.DojoDecorationRenderer</renderer-class>
+			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.DojoWidgetRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.Decoration</component-family>
+			<renderer-type>spring.faces.DojoElementDecorationRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.DojoElementDecorationRenderer</renderer-class>
 		</renderer>
 		
 		<renderer>
@@ -119,6 +135,12 @@
 			<component-family>spring.faces.DynamicComponent</component-family>
 			<renderer-type>spring.faces.DojoStyleRenderer</renderer-type>
 			<renderer-class>org.springframework.faces.ui.DojoStyleRenderer</renderer-class>
+		</renderer>
+		
+		<renderer>
+			<component-family>spring.faces.DynamicComponent</component-family>
+			<renderer-type>spring.faces.DojoScriptRenderer</renderer-type>
+			<renderer-class>org.springframework.faces.ui.DojoScriptRenderer</renderer-class>
 		</renderer>
 		
 		<renderer>

@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  * @author Jeremy Grelle
  * 
  */
-public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
+public class AjaxEventInterceptorRenderer extends DojoElementDecorationRenderer {
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		String event = (String) component.getAttributes().get("event");
@@ -52,13 +52,14 @@ public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 		}
 		String childId = getElementId(context, component);
 		StringBuffer script = new StringBuffer();
+		script.append("dojo.addOnLoad(function(){");
 		script.append("Spring.addDecoration(new Spring.AjaxEventDecoration({");
 		script.append("event:'" + event + "'");
 		script.append(", elementId: '" + childId + "'");
 		script.append(", sourceId: '" + component.getClientId(context) + "'");
 		script.append(", formId : '" + RendererUtils.getFormId(context, component) + "'");
 		script.append(", params: {processIds : '" + processIds + "'");
-		script.append(", ajaxSource : '" + component.getClientId(context) + "'} }));");
+		script.append(", ajaxSource : '" + component.getClientId(context) + "'} }));});");
 
 		writer.writeText(script.toString(), null);
 
@@ -68,7 +69,7 @@ public class AjaxEventInterceptorRenderer extends DojoDecorationRenderer {
 	private String getElementId(FacesContext context, UIComponent component) {
 		if (component.getChildCount() > 0) {
 			UIComponent child = (UIComponent) component.getChildren().get(0);
-			if (!(child instanceof DojoDecoration)) {
+			if (!(child instanceof SpringJavascriptElementDecoration)) {
 				return child.getClientId(context);
 			} else {
 				return getElementId(context, child);

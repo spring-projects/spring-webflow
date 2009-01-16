@@ -25,7 +25,7 @@ import javax.faces.el.ValueBinding;
  * @author Jeremy Grelle
  * 
  */
-public class DojoClientCurrencyValidator extends DojoDecoration {
+public class DojoClientCurrencyValidator extends DojoWidget {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.CurrencyTextBox";
 
@@ -34,9 +34,9 @@ public class DojoClientCurrencyValidator extends DojoDecoration {
 	private static final String[] DOJO_ATTRS;
 
 	static {
-		DOJO_ATTRS = new String[DojoDecoration.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
-		System.arraycopy(DojoDecoration.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoDecoration.DOJO_ATTRS.length);
-		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoDecoration.DOJO_ATTRS.length, DOJO_ATTRS_INTERNAL.length);
+		DOJO_ATTRS = new String[DojoWidget.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
+		System.arraycopy(DojoWidget.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoWidget.DOJO_ATTRS.length);
+		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoWidget.DOJO_ATTRS.length, DOJO_ATTRS_INTERNAL.length);
 	}
 
 	private String currency;
@@ -57,7 +57,7 @@ public class DojoClientCurrencyValidator extends DojoDecoration {
 		return DOJO_ATTRS;
 	}
 
-	public String getDojoComponentType() {
+	public String getWidgetType() {
 		return DOJO_COMPONENT_TYPE;
 	}
 

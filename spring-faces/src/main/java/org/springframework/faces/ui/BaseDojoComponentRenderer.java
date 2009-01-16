@@ -33,23 +33,20 @@ import org.springframework.faces.webflow.JsfUtils;
  */
 public abstract class BaseDojoComponentRenderer extends BaseSpringJavascriptComponentRenderer {
 
-	private String dojoJsResourceUri = "/dojo/dojo.js";
-
-	private String dijitThemePath = "/dijit/themes/";
-
-	private String dijitTheme = "tundra";
-
-	private String springDojoJsResourceUri = "/spring/Spring-Dojo.js";
-
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			ResourceHelper.renderStyleLink(context, dijitThemePath + dijitTheme + "/" + dijitTheme + ".css");
 
-			ResourceHelper.renderScriptLink(context, dojoJsResourceUri);
+			if (!context.getViewRoot().getAttributes().containsKey(DojoConstants.CUSTOM_THEME_PATH_SET)
+					&& !context.getViewRoot().getAttributes().containsKey(DojoConstants.CUSTOM_THEME_SET)) {
+				ResourceHelper.renderStyleLink(context, DojoConstants.DIJIT_THEME_PATH
+						+ DojoConstants.DEFAULT_DIJIT_THEME + "/" + DojoConstants.DEFAULT_DIJIT_THEME + ".css");
+			}
 
-			ResourceHelper.renderScriptLink(context, springDojoJsResourceUri);
+			ResourceHelper.renderScriptLink(context, DojoConstants.DOJO_JS_RESOURCE_URI);
+
+			ResourceHelper.renderScriptLink(context, DojoConstants.SPRING_DOJO_JS_RESOURCE_URI);
 		}
 	}
 

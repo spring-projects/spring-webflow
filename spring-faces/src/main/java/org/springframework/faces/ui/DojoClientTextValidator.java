@@ -22,15 +22,15 @@ package org.springframework.faces.ui;
  * @author Jeremy Grelle
  * 
  */
-public class DojoClientTextValidator extends DojoDecoration {
+public class DojoClientTextValidator extends DojoWidget {
 
 	private static final String DOJO_COMPONENT_TYPE = "dijit.form.ValidationTextBox";
 
 	protected String[] getDojoAttributes() {
-		return DojoDecoration.DOJO_ATTRS;
+		return DojoWidget.DOJO_ATTRS;
 	}
 
-	public String getDojoComponentType() {
+	public String getWidgetType() {
 		return DOJO_COMPONENT_TYPE;
 	}
 
