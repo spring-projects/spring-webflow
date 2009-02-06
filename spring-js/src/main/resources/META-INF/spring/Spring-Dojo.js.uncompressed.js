@@ -262,7 +262,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		if (dojo.isString(redirectURL) && redirectURL.length > 0) {
 			if (modalView) {
 				//render a popup with the new URL
-				Spring.remoting.renderURLToModalDialog(redirectURL);
+				Spring.remoting._renderURLToModalDialog(redirectURL);
 				return response;
 			}
 			else {
@@ -301,21 +301,20 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		}
 		response = response.replace(matchAll, '');
 
-		//Extract the new DOM nodes from the response
-		var tempSpan = dojo.doc.createElement("span");
-		tempSpan.id="ajaxResponse";
-		tempSpan.style.visibility= "hidden";
-		document.body.appendChild(tempSpan);
-		tempSpan.innerHTML=response;
-		var tempContainer = new dojo.NodeList(tempSpan);
-		var newNodes = tempContainer.query("#ajaxResponse > *").orphan();
-		tempContainer.orphan();
-	
-		//For a modal view, just dump the new nodes into a modal dialog
 		if (modalView) {
-			Spring.remoting.renderNodeListToModalDialog(newNodes);
-		}
-		else {
+			//For a modal view, just dump the response into a modal dialog
+			Spring.remoting._renderResponseToModalDialog(response);
+		} else {
+			//Extract the new DOM nodes from the response
+			var tempSpan = dojo.doc.createElement("span");
+			tempSpan.id="ajaxResponse";
+			tempSpan.style.visibility= "hidden";
+			document.body.appendChild(tempSpan);
+			tempSpan.innerHTML=response;
+			var tempContainer = new dojo.NodeList(tempSpan);
+			var newNodes = tempContainer.query("#ajaxResponse > *").orphan();
+			tempContainer.orphan();
+			
 			//Insert the new DOM nodes and update the Form's action URL
 			newNodes.forEach(function(item){
 				if (item.id != null && item.id != "") {
@@ -357,15 +356,15 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 		return response;
 	},
 	
-	renderURLToModalDialog: function(url) {
+	_renderURLToModalDialog: function(url) {
 		Spring.remoting.getResource(url, {}, true);
 	},
 	
-	renderNodeListToModalDialog: function(nodes) {
+	_renderResponseToModalDialog: function(response) {
 		dojo.require("dijit.Dialog");
 		
 		var dialog = new dijit.Dialog({});
-		dialog.setContent(nodes);
+		dialog.setContent(response);
 		dojo.connect(dialog, "hide", dialog, function(){
 			this.destroyRecursive(false);
 		});
