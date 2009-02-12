@@ -90,6 +90,9 @@ public class FlowHandlerMapping extends AbstractHandlerMapping {
 
 	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
 		String flowId = flowUrlHandler.getFlowId(request);
+		if (flowId == null) {
+			return null;
+		}
 		if (getApplicationContext().containsBean(flowId)) {
 			Object handler = getApplicationContext().getBean(flowId);
 			if (handler instanceof FlowHandler) {

@@ -58,7 +58,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setServletPath("/app/foo.htm");
 		request.setRequestURI("/springtravel/app/foo");
 		String url = urlHandler.createFlowDefinitionUrl("app/foo", null, request);
-		assertEquals("/springtravel/app/foo", url);
+		assertEquals("/springtravel/app/foo.htm", url);
 	}
 
 	public void testCreateFlowDefinitionUrlContextPathOnly() {

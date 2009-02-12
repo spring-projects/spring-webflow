@@ -68,6 +68,12 @@ public class FlowHandlerMappingTests extends TestCase {
 		assertNull(chain);
 	}
 
+	public void testGetHandlerNullFlowId() throws Exception {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		HandlerExecutionChain chain = mapping.getHandler(request);
+		assertNull(chain);
+	}
+
 	private static class FlowDefinitionImpl implements FlowDefinition {
 
 		private String flowId = "flow";
