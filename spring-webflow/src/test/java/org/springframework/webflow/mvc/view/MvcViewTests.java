@@ -3,7 +3,6 @@ package org.springframework.webflow.mvc.view;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.converters.StringToDate;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.validation.ValidationContext;
@@ -266,10 +266,10 @@ public class MvcViewTests extends TestCase {
 		assertEquals(null, bindBean.getBeanProperty().getName());
 	}
 
-	public void testResumeEventModelBindingFieldMarker() throws Exception {
+	public void testResumeEventModelBindingCustomConverter() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
-		context.putRequestParameter("_booleanProperty", "whatever");
+		context.putRequestParameter("dateProperty", "01-01-2007");
 		BindBean bindBean = new BindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
@@ -282,8 +282,40 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
-		HashSet allowedBindFields = new HashSet();
-		allowedBindFields.add("booleanProperty");
+		DefaultConversionService conversionService = new DefaultConversionService();
+		StringToDate stringToDate = new StringToDate();
+		stringToDate.setPattern("MM-dd-yyyy");
+		conversionService.addConverter("customDateConverter", stringToDate);
+		view.setConversionService(conversionService);
+		BinderConfiguration binderConfiguration = new BinderConfiguration();
+		binderConfiguration.addBinding(new Binding("dateProperty", "customDateConverter", true));
+		view.setBinderConfiguration(binderConfiguration);
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, 2007);
+		assertEquals(cal.getTime(), bindBean.getDateProperty());
+	}
+
+	public void testResumeEventModelBindingFieldMarker() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("_booleanProperty", "whatever");
+		BindBean bindBean = new BindBean();
+		bindBean.setBooleanProperty(true);
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.processUserEvent();
 		assertEquals(false, bindBean.getBooleanProperty());
 	}

@@ -41,6 +41,7 @@ import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -399,6 +400,8 @@ public abstract class AbstractMvcView implements View {
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		mapping.setRequired(binding.getRequired());
 		if (binding.getConverter() != null) {
+			Assert.notNull(conversionService,
+					"A ConversionService must be configured to use resolve custom converters to use during binding");
 			ConversionExecutor conversionExecutor = conversionService.getConversionExecutor(binding.getConverter(),
 					String.class, target.getValueType(model));
 			mapping.setTypeConverter(conversionExecutor);
