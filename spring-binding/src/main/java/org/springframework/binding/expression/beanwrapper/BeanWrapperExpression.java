@@ -23,6 +23,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -94,11 +95,7 @@ public class BeanWrapperExpression implements Expression {
 	public void setValue(Object context, Object value) {
 		try {
 			BeanWrapperImpl beanWrapper = new BeanWrapperImpl(context);
-			Set converters = conversionService.getConversionExecutors(String.class);
-			for (Iterator it = converters.iterator(); it.hasNext();) {
-				ConversionExecutor converter = (ConversionExecutor) it.next();
-				beanWrapper.registerCustomEditor(converter.getTargetClass(), new PropertyEditorConverter(converter));
-			}
+			registerConvertersAsPropertyEditors(beanWrapper);
 			beanWrapper.setPropertyValue(expression, value);
 		} catch (NotWritablePropertyException e) {
 			throw new PropertyNotFoundException(context.getClass(), expression, e);
@@ -130,6 +127,21 @@ public class BeanWrapperExpression implements Expression {
 
 	public String toString() {
 		return expression;
+	}
+
+	/**
+	 * Adapts the String->Object converters to PropertyEditors for use during a setValue attempt. Excludes any
+	 * String->Enum converter, since BeanWrapper has built in support for Enum conversion.
+	 * @param registry the registry to register converter-to-editor adapters with
+	 */
+	protected void registerConvertersAsPropertyEditors(PropertyEditorRegistry registry) {
+		Set converters = conversionService.getConversionExecutors(String.class);
+		for (Iterator it = converters.iterator(); it.hasNext();) {
+			ConversionExecutor converter = (ConversionExecutor) it.next();
+			if (!converter.getTargetClass().getName().equals("java.lang.Enum")) {
+				registry.registerCustomEditor(converter.getTargetClass(), new PropertyEditorConverter(converter));
+			}
+		}
 	}
 
 	private static class PropertyEditorConverter extends PropertyEditorSupport {
