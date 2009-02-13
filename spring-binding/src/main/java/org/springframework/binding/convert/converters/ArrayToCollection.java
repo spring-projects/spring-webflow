@@ -95,8 +95,13 @@ public class ArrayToCollection implements TwoWayConverter {
 		for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 			Object value = it.next();
 			if (value != null) {
-				ConversionExecutor converter = conversionService.getConversionExecutor(value.getClass(), sourceClass
-						.getComponentType());
+				ConversionExecutor converter;
+				if (elementConverter != null) {
+					converter = elementConverter;
+				} else {
+					converter = conversionService.getConversionExecutor(value.getClass(), sourceClass
+							.getComponentType());
+				}
 				value = converter.execute(value);
 			}
 			Array.set(array, i, value);

@@ -30,8 +30,14 @@ public class ObjectToArray implements Converter {
 
 	private ConversionService conversionService;
 
+	private ConversionExecutor elementConverter;
+
 	public ObjectToArray(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public ObjectToArray(ConversionExecutor elementConverter) {
+		this.elementConverter = elementConverter;
 	}
 
 	public Class getSourceClass() {
@@ -48,7 +54,12 @@ public class ObjectToArray implements Converter {
 		}
 		Class componentType = targetClass.getComponentType();
 		Object array = Array.newInstance(componentType, 1);
-		ConversionExecutor converter = conversionService.getConversionExecutor(source.getClass(), componentType);
+		ConversionExecutor converter;
+		if (elementConverter != null) {
+			converter = elementConverter;
+		} else {
+			converter = conversionService.getConversionExecutor(source.getClass(), componentType);
+		}
 		Array.set(array, 0, converter.execute(source));
 		return array;
 	}

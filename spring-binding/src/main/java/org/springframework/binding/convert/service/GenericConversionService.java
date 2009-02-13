@@ -191,8 +191,11 @@ public class GenericConversionService implements ConversionService {
 				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
 					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
 						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
-								"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
-										+ sourceComponentType + "]; to an array of type [" + targetComponentType + "]");
+								"Custom ConversionExecutor with id '" + id
+										+ "' cannot convert from array storing elements of type ["
+										+ sourceComponentType.getName()
+										+ "]; to an array of storing elements of type ["
+										+ targetComponentType.getName() + "]");
 					}
 					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
 							targetComponentType, converter);
@@ -206,42 +209,82 @@ public class GenericConversionService implements ConversionService {
 				} else {
 					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
 							"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
-									+ sourceComponentType + "]; to an array of type [" + targetComponentType + "]");
+									+ sourceComponentType.getName() + "]; to an array of type ["
+									+ targetComponentType.getName() + "]");
 				}
 			} else if (Collection.class.isAssignableFrom(targetClass)) {
-				// type erasure has prevented us from getting the concrete type, this is best we can do for now
-				Class targetComponentType = converter.getTargetClass();
+				if (!targetClass.isInterface() && Modifier.isAbstract(targetClass.getModifiers())) {
+					throw new IllegalArgumentException("Conversion target class [" + targetClass.getName()
+							+ "] is invalid; cannot convert to abstract collection types--"
+							+ "request an interface or concrete implementation instead");
+				}
 				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
-					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
-						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
-								"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
-										+ sourceComponentType + "]; to collection of type [" + targetComponentType
-										+ "]");
-					}
-					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
-							targetComponentType, converter);
+					// type erasure has prevented us from getting the concrete type, this is best we can do for now
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
+							.getTargetClass(), converter);
 					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
 							elementConverter));
 				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
 						&& converter instanceof TwoWayConverter) {
 					TwoWayConverter twoWay = (TwoWayConverter) converter;
-					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
-							targetComponentType, new ReverseConverter(twoWay));
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
+							.getSourceClass(), new ReverseConverter(twoWay));
 					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
 							elementConverter));
 				} else {
 					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
-							"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
-									+ sourceComponentType + "]; to collection of type [" + targetComponentType + "]");
+							"Custom ConversionExecutor with id '" + id
+									+ "' cannot convert from array storing elements type ["
+									+ sourceComponentType.getName() + "]; to collection");
 				}
 			}
 		}
 		if (targetClass.isArray()) {
+			Class targetComponentType = targetClass.getComponentType();
 			if (Collection.class.isAssignableFrom(sourceClass)) {
 				// type erasure limits us here as well
-				throw new UnsupportedOperationException("Not yet implemented");
+				if (converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+					ConversionExecutor elementConverter = new StaticConversionExecutor(converter.getSourceClass(),
+							targetComponentType, converter);
+					Converter collectionToArray = new ReverseConverter(new ArrayToCollection(elementConverter));
+					return new StaticConversionExecutor(sourceClass, targetClass, collectionToArray);
+				} else if (converter.getSourceClass().isAssignableFrom(targetComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(converter.getTargetClass(),
+							targetComponentType, new ReverseConverter(twoWay));
+					Converter collectionToArray = new ReverseConverter(new ArrayToCollection(elementConverter));
+					return new StaticConversionExecutor(sourceClass, targetClass, collectionToArray);
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id
+									+ "' cannot convert from collection to to an array holding elements of type ["
+									+ targetComponentType.getName() + "]");
+				}
 			} else {
-				throw new UnsupportedOperationException("Not yet implemented");
+				if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
+					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+										+ sourceClass.getName() + "] to array holding elements of type ["
+										+ targetComponentType.getName() + "]");
+					}
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceClass,
+							targetComponentType, converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToArray(elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceClass)
+						&& converter instanceof TwoWayConverter) {
+					if (!converter.getSourceClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+										+ sourceClass.getName() + "] to array holding elements of type ["
+										+ targetComponentType.getName() + "]");
+					}
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceClass,
+							targetComponentType, new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToArray(elementConverter));
+				}
 			}
 		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
