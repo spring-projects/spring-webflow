@@ -39,8 +39,14 @@ public class ObjectToCollection implements Converter {
 
 	private ConversionService conversionService;
 
+	private ConversionExecutor elementConverter;
+
 	public ObjectToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public ObjectToCollection(ConversionExecutor elementConverter) {
+		this.elementConverter = elementConverter;
 	}
 
 	public Class getSourceClass() {
@@ -69,6 +75,7 @@ public class ObjectToCollection implements Converter {
 		return collection;
 	}
 
+	// this code is duplicated in ArrayToCollection and CollectionToCollection
 	private Class getCollectionImplClass(Class targetClass) {
 		if (targetClass.isInterface()) {
 			if (List.class.equals(targetClass)) {
@@ -86,13 +93,17 @@ public class ObjectToCollection implements Converter {
 	}
 
 	private ConversionExecutor getElementConverter(Object source, Class targetClass) {
-		if (JdkVersion.isAtLeastJava15()) {
-			Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
-			if (elementType != null) {
-				Class componentType = source.getClass().getComponentType();
-				return conversionService.getConversionExecutor(componentType, elementType);
+		if (elementConverter != null) {
+			return elementConverter;
+		} else {
+			if (JdkVersion.isAtLeastJava15()) {
+				Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+				if (elementType != null) {
+					Class componentType = source.getClass().getComponentType();
+					return conversionService.getConversionExecutor(componentType, elementType);
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 }

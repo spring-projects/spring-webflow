@@ -50,10 +50,19 @@ public class ArrayToCollection implements TwoWayConverter {
 
 	private ConversionExecutor elementConverter;
 
+	/**
+	 * Creates a new array to collection converter.
+	 * @param conversionService the conversion service to use to lookup the converter to apply to array elements added
+	 * to the target collection
+	 */
 	public ArrayToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Creates a new array to collection converter.
+	 * @param elementConverter A specific converter to use on array elements when adding them to the target collection
+	 */
 	public ArrayToCollection(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;
 	}

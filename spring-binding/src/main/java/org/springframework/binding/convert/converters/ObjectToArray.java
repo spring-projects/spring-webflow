@@ -32,10 +32,19 @@ public class ObjectToArray implements Converter {
 
 	private ConversionExecutor elementConverter;
 
+	/**
+	 * Creates a new object to array converter.
+	 * @param conversionService the conversion service to resolve the converter to use to convert the object added to
+	 * the target array.
+	 */
 	public ObjectToArray(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Creates a new object to array converter.
+	 * @param elementConverter a specific converter to use to convert the object added to the target array.
+	 */
 	public ObjectToArray(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;
 	}

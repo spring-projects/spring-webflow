@@ -36,11 +36,17 @@ public class ArrayToArray implements Converter {
 	/**
 	 * Creates a new array-to-array converter.
 	 * @param conversionService the service to use to lookup conversion executors for individual array elements
+	 * dynamically
 	 */
 	public ArrayToArray(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Creates a new array-to-array converter.
+	 * @param elementConverter a specific conversion executor to use to convert elements in the source array to elements
+	 * in the target array.
+	 */
 	public ArrayToArray(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;
 	}

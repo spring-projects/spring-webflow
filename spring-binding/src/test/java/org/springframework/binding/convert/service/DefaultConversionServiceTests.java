@@ -197,6 +197,16 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("princy2", p[1]);
 	}
 
+	public void testRegisterCustomConverterArrayToArrayBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		try {
+			service.getConversionExecutor("princy", Integer[].class, Principal[].class);
+			fail("Should have failed");
+		} catch (ConversionExecutorNotFoundException e) {
+		}
+	}
+
 	public void testRegisterCustomConverterArrayToList() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -223,6 +233,17 @@ public class DefaultConversionServiceTests extends TestCase {
 		List p = (List) executor.execute(new Principal[] { princy1, princy2 });
 		assertEquals("princy1", p.get(0));
 		assertEquals("princy2", p.get(1));
+	}
+
+	public void testRegisterCustomConverterArrayToListBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		try {
+			service.getConversionExecutor("princy", Integer[].class, List.class);
+			fail("Should have failed");
+		} catch (ConversionExecutorNotFoundException e) {
+
+		}
 	}
 
 	public void testRegisterCustomConverterListToArray() {
@@ -259,6 +280,17 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("princy2", p[1]);
 	}
 
+	public void testRegisterCustomConverterListToArrayBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		try {
+			service.getConversionExecutor("princy", List.class, Integer[].class);
+			fail("Should have failed");
+		} catch (ConversionExecutorNotFoundException e) {
+
+		}
+	}
+
 	public void testRegisterCustomConverterObjectToArray() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -278,6 +310,50 @@ public class DefaultConversionServiceTests extends TestCase {
 		};
 		String[] p = (String[]) executor.execute(princy1);
 		assertEquals("princy1", p[0]);
+	}
+
+	public void testRegisterCustomConverterObjectToArrayBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		try {
+			ConversionExecutor executor = service.getConversionExecutor("princy", Integer.class, Principal[].class);
+			fail("Should have failed");
+		} catch (ConversionExecutorNotFoundException e) {
+
+		}
+	}
+
+	public void testRegisterCustomConverterObjectToList() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", String.class, List.class);
+		List list = (List) executor.execute("princy1");
+		assertEquals("princy1", ((Principal) list.get(0)).getName());
+	}
+
+	public void testRegisterCustomConverterObjectToListBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", Integer.class, List.class);
+		try {
+			List list = (List) executor.execute(new Integer(1));
+			fail("Should have failed");
+		} catch (ConversionExecutionException e) {
+
+		}
+	}
+
+	public void testRegisterCustomConverterObjectToListReverse() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", Principal.class, List.class);
+		final Principal princy1 = new Principal() {
+			public String getName() {
+				return "princy1";
+			}
+		};
+		List list = (List) executor.execute(princy1);
+		assertEquals("princy1", list.get(0));
 	}
 
 	public void testRegisterCustomConverterListToList() {
@@ -312,6 +388,20 @@ public class DefaultConversionServiceTests extends TestCase {
 		List list = (List) executor.execute(princyList);
 		assertEquals("princy1", list.get(0));
 		assertEquals("princy2", list.get(1));
+	}
+
+	public void testRegisterCustomConverterListToListBogus() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
+		List princyList = new ArrayList();
+		princyList.add(new Integer(1));
+		try {
+			List list = (List) executor.execute(princyList);
+			fail("Should have failed");
+		} catch (ConversionExecutionException e) {
+
+		}
 	}
 
 	public void testConversionPrimitive() {

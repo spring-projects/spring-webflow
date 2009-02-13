@@ -14,16 +14,31 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.core.GenericCollectionTypeResolver;
 import org.springframework.core.JdkVersion;
 
+/**
+ * A converter that can convert from one collection type to another.
+ * 
+ * @author Keith Donald
+ */
 public class CollectionToCollection implements Converter {
 
 	private ConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
+	/**
+	 * Creates a new collection-to-collection converter
+	 * @param conversionService the conversion service to use to convert collection elements to add to the target
+	 * collection
+	 */
 	public CollectionToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Creates a new collection-to-collection converter
+	 * @param conversionService a specific converter to use to convert collection elements added to the target
+	 * collection
+	 */
 	public CollectionToCollection(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;
 	}
@@ -55,6 +70,7 @@ public class CollectionToCollection implements Converter {
 		return targetCollection;
 	}
 
+	// this code is duplicated in ArrayToCollection.java and ObjectToCollection too
 	private Class getCollectionImplClass(Class targetClass) {
 		if (targetClass.isInterface()) {
 			if (List.class.equals(targetClass)) {
