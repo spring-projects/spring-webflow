@@ -41,10 +41,19 @@ public class ObjectToCollection implements Converter {
 
 	private ConversionExecutor elementConverter;
 
+	/**
+	 * Creates a new object to collection converter
+	 * @param conversionService the conversion service to lookup the converter to use to convert an object when adding
+	 * it to a target collection
+	 */
 	public ObjectToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Creates a new object to collection converter
+	 * @param elementConverter a specific converter to execute on an object when adding it to a target collection
+	 */
 	public ObjectToCollection(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;
 	}
