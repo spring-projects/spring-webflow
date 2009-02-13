@@ -130,6 +130,7 @@ public class GenericConversionService implements ConversionService {
 		if (targetClass.isAssignableFrom(sourceClass)) {
 			return new StaticConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
+		// special handling for arrays since they are not indexable classes
 		if (sourceClass.isArray()) {
 			if (targetClass.isArray()) {
 				return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(this));
@@ -183,6 +184,66 @@ public class GenericConversionService implements ConversionService {
 		}
 		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
 		targetClass = convertToWrapperClassIfNecessary(targetClass);
+		if (sourceClass.isArray()) {
+			Class sourceComponentType = sourceClass.getComponentType();
+			if (targetClass.isArray()) {
+				Class targetComponentType = targetClass.getComponentType();
+				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
+					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
+										+ sourceComponentType + "]; to an array of type [" + targetComponentType + "]");
+					}
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(elementConverter));
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
+									+ sourceComponentType + "]; to an array of type [" + targetComponentType + "]");
+				}
+			} else if (Collection.class.isAssignableFrom(targetClass)) {
+				// type erasure has prevented us from getting the concrete type, this is best we can do for now
+				Class targetComponentType = converter.getTargetClass();
+				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
+					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
+										+ sourceComponentType + "]; to collection of type [" + targetComponentType
+										+ "]");
+					}
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
+							elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
+							elementConverter));
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id + "' cannot convert from array of type ["
+									+ sourceComponentType + "]; to collection of type [" + targetComponentType + "]");
+				}
+			}
+		}
+		if (targetClass.isArray()) {
+			if (Collection.class.isAssignableFrom(sourceClass)) {
+				// type erasure limits us here as well
+				throw new UnsupportedOperationException("Not yet implemented");
+			} else {
+				throw new UnsupportedOperationException("Not yet implemented");
+			}
+		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
 			if (!converter.getTargetClass().isAssignableFrom(targetClass)) {
 				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,

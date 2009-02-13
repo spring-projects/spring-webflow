@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.binding.convert.converters.CollectionToCollection;
 import org.springframework.binding.convert.converters.NumberToNumber;
 import org.springframework.binding.convert.converters.ObjectToCollection;
 import org.springframework.binding.convert.converters.StringToBigDecimal;
@@ -72,8 +73,9 @@ public class DefaultConversionService extends GenericConversionService {
 		addConverter(new StringToLocale());
 		addConverter(new StringToDate());
 		addConverter(new StringToLabeledEnum());
-		addConverter(new ObjectToCollection(this));
 		addConverter(new NumberToNumber());
+		addConverter(new ObjectToCollection(this));
+		addConverter(new CollectionToCollection(this));
 		if (ClassUtils.isPresent("java.lang.Enum", this.getClass().getClassLoader())) {
 			addConverter(new StringToEnum());
 		}

@@ -31,12 +31,18 @@ public class ArrayToArray implements Converter {
 
 	private ConversionService conversionService;
 
+	private ConversionExecutor elementConverter;
+
 	/**
 	 * Creates a new array-to-array converter.
 	 * @param conversionService the service to use to lookup conversion executors for individual array elements
 	 */
 	public ArrayToArray(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public ArrayToArray(ConversionExecutor elementConverter) {
+		this.elementConverter = elementConverter;
 	}
 
 	public Class getSourceClass() {
@@ -55,12 +61,19 @@ public class ArrayToArray implements Converter {
 		Class targetComponentType = targetClass.getComponentType();
 		int length = Array.getLength(source);
 		Object targetArray = Array.newInstance(targetComponentType, length);
-		ConversionExecutor converter = conversionService
-				.getConversionExecutor(sourceComponentType, targetComponentType);
+		ConversionExecutor converter = getElementConverter(sourceComponentType, targetComponentType);
 		for (int i = 0; i < length; i++) {
 			Object value = Array.get(source, i);
 			Array.set(targetArray, i, converter.execute(value));
 		}
 		return targetArray;
+	}
+
+	private ConversionExecutor getElementConverter(Class sourceComponentType, Class targetComponentType) {
+		if (elementConverter != null) {
+			return elementConverter;
+		} else {
+			return conversionService.getConversionExecutor(sourceComponentType, targetComponentType);
+		}
 	}
 }

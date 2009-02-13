@@ -32,7 +32,7 @@ import org.springframework.core.GenericCollectionTypeResolver;
 import org.springframework.core.JdkVersion;
 
 /**
- * Special one-way converter that converts from a source array to a target collection. Supports the selection of an
+ * Special converter that converts from a source array to a target collection. Supports the selection of an
  * "approximate" collection implementation when a target collection interface such as <code>List.class</code> is
  * specified. Supports type conversion of array elements when a concrete parameterized collection class is provided,
  * such as <code>IntegerList<Integer>.class</code>.
@@ -48,8 +48,14 @@ public class ArrayToCollection implements TwoWayConverter {
 
 	private ConversionService conversionService;
 
+	private ConversionExecutor elementConverter;
+
 	public ArrayToCollection(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public ArrayToCollection(ConversionExecutor elementConverter) {
+		this.elementConverter = elementConverter;
 	}
 
 	public Class getSourceClass() {
@@ -67,7 +73,7 @@ public class ArrayToCollection implements TwoWayConverter {
 		Class collectionImplClass = getCollectionImplClass(targetClass);
 		Constructor constructor = collectionImplClass.getConstructor(null);
 		Collection collection = (Collection) constructor.newInstance(null);
-		ConversionExecutor converter = getElementConverter(source, targetClass);
+		ConversionExecutor converter = getArrayElementConverter(source, targetClass);
 		int length = Array.getLength(source);
 		for (int i = 0; i < length; i++) {
 			Object value = Array.get(source, i);
@@ -114,15 +120,19 @@ public class ArrayToCollection implements TwoWayConverter {
 		}
 	}
 
-	private ConversionExecutor getElementConverter(Object source, Class targetClass) {
-		if (JdkVersion.isAtLeastJava15()) {
-			Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
-			if (elementType != null) {
-				Class componentType = source.getClass().getComponentType();
-				return conversionService.getConversionExecutor(componentType, elementType);
+	private ConversionExecutor getArrayElementConverter(Object source, Class targetClass) {
+		if (elementConverter != null) {
+			return elementConverter;
+		} else {
+			if (JdkVersion.isAtLeastJava15()) {
+				Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+				if (elementType != null) {
+					Class componentType = source.getClass().getComponentType();
+					return conversionService.getConversionExecutor(componentType, elementType);
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 
 }

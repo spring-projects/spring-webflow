@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -168,6 +169,34 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
+	public void testRegisterCustomConverterArrayToArray() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", String[].class, Principal[].class);
+		Principal[] p = (Principal[]) executor.execute(new String[] { "princy1", "princy2" });
+		assertEquals("princy1", p[0].getName());
+		assertEquals("princy2", p[1].getName());
+	}
+
+	public void testRegisterCustomConverterArrayToArrayReverse() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", Principal[].class, String[].class);
+		final Principal princy1 = new Principal() {
+			public String getName() {
+				return "princy1";
+			}
+		};
+		final Principal princy2 = new Principal() {
+			public String getName() {
+				return "princy2";
+			}
+		};
+		String[] p = (String[]) executor.execute(new Principal[] { princy1, princy2 });
+		assertEquals("princy1", p[0]);
+		assertEquals("princy2", p[1]);
+	}
+
 	public void testConversionPrimitive() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, int.class);
@@ -175,7 +204,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(3, three.intValue());
 	}
 
-	public void testArrayConversion() {
+	public void testArrayToArrayConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, Integer[].class);
 		Integer[] result = (Integer[]) executor.execute(new String[] { "1", "2", "3" });
@@ -184,7 +213,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(new Integer(3), result[2]);
 	}
 
-	public void testPrimitiveArrayConversion() {
+	public void testArrayToArrayPrimitiveConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, int[].class);
 		int[] result = (int[]) executor.execute(new String[] { "1", "2", "3" });
@@ -193,7 +222,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(3, result[2]);
 	}
 
-	public void testArrayListConversion() {
+	public void testArrayToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, List.class);
 		List result = (List) executor.execute(new String[] { "1", "2", "3" });
@@ -202,7 +231,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("3", result.get(2));
 	}
 
-	public void testListArrayConversion() {
+	public void testListToArrayConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Collection.class, String[].class);
 		List list = new ArrayList();
@@ -215,7 +244,20 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("3", result[2]);
 	}
 
-	public void testListArrayConversionWithComponentConversion() {
+	public void testSetToListConversion() {
+		DefaultConversionService service = new DefaultConversionService();
+		ConversionExecutor executor = service.getConversionExecutor(Set.class, List.class);
+		Set set = new LinkedHashSet();
+		set.add("1");
+		set.add("2");
+		set.add("3");
+		List result = (List) executor.execute(set);
+		assertEquals("1", result.get(0));
+		assertEquals("2", result.get(1));
+		assertEquals("3", result.get(2));
+	}
+
+	public void testListToArrayConversionWithComponentConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Collection.class, Integer[].class);
 		List list = new ArrayList();
@@ -228,7 +270,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(new Integer(3), result[2]);
 	}
 
-	public void testArrayLinkedListConversion() {
+	public void testArrayToLinkedListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, LinkedList.class);
 		LinkedList result = (LinkedList) executor.execute(new String[] { "1", "2", "3" });
@@ -246,7 +288,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
-	public void testToArrayConversion() {
+	public void testStringToArrayConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, String[].class);
 		String[] result = (String[]) executor.execute("1,2,3");
@@ -254,7 +296,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("1,2,3", result[0]);
 	}
 
-	public void testToListConversion() {
+	public void testStringToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, List.class);
 		List result = (List) executor.execute("1,2,3");
@@ -262,7 +304,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("1,2,3", result.get(0));
 	}
 
-	public void testToArrayConversionWithElementConversion() {
+	public void testStringToArrayConversionWithElementConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer[].class);
 		Integer[] result = (Integer[]) executor.execute("123");
