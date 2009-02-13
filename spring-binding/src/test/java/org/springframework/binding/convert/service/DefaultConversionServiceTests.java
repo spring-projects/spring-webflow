@@ -316,7 +316,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		try {
-			ConversionExecutor executor = service.getConversionExecutor("princy", Integer.class, Principal[].class);
+			service.getConversionExecutor("princy", Integer.class, Principal[].class);
 			fail("Should have failed");
 		} catch (ConversionExecutorNotFoundException e) {
 
@@ -336,7 +336,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Integer.class, List.class);
 		try {
-			List list = (List) executor.execute(new Integer(1));
+			executor.execute(new Integer(1));
 			fail("Should have failed");
 		} catch (ConversionExecutionException e) {
 
@@ -397,7 +397,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		List princyList = new ArrayList();
 		princyList.add(new Integer(1));
 		try {
-			List list = (List) executor.execute(princyList);
+			executor.execute(princyList);
 			fail("Should have failed");
 		} catch (ConversionExecutionException e) {
 

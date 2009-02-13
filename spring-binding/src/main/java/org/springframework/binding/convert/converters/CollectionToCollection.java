@@ -36,8 +36,7 @@ public class CollectionToCollection implements Converter {
 
 	/**
 	 * Creates a new collection-to-collection converter
-	 * @param conversionService a specific converter to use to convert collection elements added to the target
-	 * collection
+	 * @param elementConverter a specific converter to use to convert collection elements added to the target collection
 	 */
 	public CollectionToCollection(ConversionExecutor elementConverter) {
 		this.elementConverter = elementConverter;

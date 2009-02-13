@@ -42,7 +42,6 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals("Hello world fallback!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
 		assertEquals(null, messages[0].getSource());
-		assertTrue(context instanceof StateManageableMessageContext);
 	}
 
 	public void testResolveMessageWithArgs() {
@@ -53,7 +52,6 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals("Hello world Keith!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
 		assertEquals(this, messages[0].getSource());
-		assertTrue(context instanceof StateManageableMessageContext);
 	}
 
 	public void testResolveMessageWithMultipleCodes() {
@@ -64,7 +62,6 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals("Hello world Keith!", messages[0].getText());
 		assertEquals(Severity.ERROR, messages[0].getSeverity());
 		assertEquals(this, messages[0].getSource());
-		assertTrue(context instanceof StateManageableMessageContext);
 	}
 
 	public void testSaveRestoreMessages() {
@@ -73,12 +70,11 @@ public class DefaultMessageContextTests extends TestCase {
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
 		assertEquals(2, context.getMessagesBySource(null).length);
 		assertEquals(1, context.getMessagesBySource(this).length);
-		assertTrue(context instanceof StateManageableMessageContext);
-		StateManageableMessageContext manageable = (StateManageableMessageContext) context;
+		StateManageableMessageContext manageable = context;
 		Serializable messages = manageable.createMessagesMemento();
 		context = new DefaultMessageContext(context.getMessageSource());
 		assertEquals(0, context.getAllMessages().length);
-		manageable = (StateManageableMessageContext) context;
+		manageable = context;
 		manageable.restoreMessages(messages);
 		assertEquals(2, context.getMessagesBySource(null).length);
 		assertEquals(1, context.getMessagesBySource(this).length);
