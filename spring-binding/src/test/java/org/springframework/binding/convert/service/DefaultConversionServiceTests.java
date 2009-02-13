@@ -280,6 +280,40 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("princy1", p[0]);
 	}
 
+	public void testRegisterCustomConverterListToList() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
+		List princyList = new ArrayList();
+		princyList.add("princy1");
+		princyList.add("princy2");
+		List list = (List) executor.execute(princyList);
+		assertEquals("princy1", ((Principal) list.get(0)).getName());
+		assertEquals("princy2", ((Principal) list.get(1)).getName());
+	}
+
+	public void testRegisterCustomConverterListToListReverse() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new CustomTwoWayConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
+		final Principal princy1 = new Principal() {
+			public String getName() {
+				return "princy1";
+			}
+		};
+		final Principal princy2 = new Principal() {
+			public String getName() {
+				return "princy2";
+			}
+		};
+		List princyList = new ArrayList();
+		princyList.add(princy1);
+		princyList.add(princy2);
+		List list = (List) executor.execute(princyList);
+		assertEquals("princy1", list.get(0));
+		assertEquals("princy2", list.get(1));
+	}
+
 	public void testConversionPrimitive() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, int.class);

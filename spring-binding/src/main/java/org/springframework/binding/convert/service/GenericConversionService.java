@@ -26,11 +26,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.binding.convert.ConversionException;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.ArrayToArray;
 import org.springframework.binding.convert.converters.ArrayToCollection;
+import org.springframework.binding.convert.converters.CollectionToCollection;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.converters.ObjectToArray;
 import org.springframework.binding.convert.converters.ReverseConverter;
@@ -287,6 +289,18 @@ public class GenericConversionService implements ConversionService {
 				}
 			}
 		}
+		if (Collection.class.isAssignableFrom(sourceClass) && Collection.class.isAssignableFrom(targetClass)) {
+			ConversionExecutor elementConverter;
+			// type erasure forces us to do runtime checks of list elements
+			if (converter instanceof TwoWayConverter) {
+				elementConverter = new TwoWayCapableConversionExecutor(converter.getSourceClass(), converter
+						.getTargetClass(), (TwoWayConverter) converter);
+			} else {
+				elementConverter = new StaticConversionExecutor(converter.getSourceClass(), converter.getTargetClass(),
+						converter);
+			}
+			return new StaticConversionExecutor(sourceClass, targetClass, new CollectionToCollection(elementConverter));
+		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
 			if (!converter.getTargetClass().isAssignableFrom(targetClass)) {
 				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
@@ -488,4 +502,46 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
+	private static class TwoWayCapableConversionExecutor implements ConversionExecutor {
+
+		private Class sourceClass;
+
+		private Class targetClass;
+
+		private TwoWayConverter converter;
+
+		public TwoWayCapableConversionExecutor(Class sourceClass, Class targetClass, TwoWayConverter converter) {
+			this.sourceClass = sourceClass;
+			this.targetClass = targetClass;
+			this.converter = converter;
+		}
+
+		public Class getSourceClass() {
+			return sourceClass;
+		}
+
+		public Class getTargetClass() {
+			return targetClass;
+		}
+
+		public Object execute(Object source) throws ConversionExecutionException {
+			if (source == null || getSourceClass().isInstance(source)) {
+				try {
+					return converter.convertSourceToTargetClass(source, targetClass);
+				} catch (Exception e) {
+					throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), e);
+				}
+			} else if (getTargetClass().isInstance(source)) {
+				try {
+					return converter.convertTargetToSourceClass(source, sourceClass);
+				} catch (Exception e) {
+					throw new ConversionExecutionException(source, getTargetClass(), getSourceClass(), e);
+				}
+			} else {
+				throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), "Source object "
+						+ source + " to convert is expected to be an instance of [" + getSourceClass().getName()
+						+ "] or [" + getTargetClass().getName() + "]");
+			}
+		}
+	}
 }

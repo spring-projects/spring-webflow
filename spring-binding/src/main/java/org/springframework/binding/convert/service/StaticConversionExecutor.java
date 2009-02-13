@@ -89,7 +89,7 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	public Object execute(Object source) throws ConversionExecutionException {
 		if (source != null && !sourceClass.isInstance(source)) {
 			throw new ConversionExecutionException(source, getSourceClass(), getTargetClass(), "Source object "
-					+ source + " to convert is expected to be an instance of " + getSourceClass());
+					+ source + " to convert is expected to be an instance of [" + getSourceClass().getName() + "]");
 		}
 		try {
 			return converter.convertSourceToTargetClass(source, targetClass);
