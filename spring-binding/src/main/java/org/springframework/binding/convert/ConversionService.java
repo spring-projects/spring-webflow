@@ -37,6 +37,17 @@ public interface ConversionService {
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException;
 
 	/**
+	 * Execute a conversion using the custom converter with the provided id.
+	 * @param converterId the id of the custom converter, which must be registered with this conversion service and
+	 * capable of converting to the target class
+	 * @param source the source to convert from (may be null)
+	 * @param targetClass the target class to convert to
+	 * @return the converted object, an instance of the <code>targetClass</code>
+	 * @throws ConversionException if an exception occurred during the conversion process
+	 */
+	public Object executeConversion(String converterId, Object source, Class targetClass);
+
+	/**
 	 * Return the default conversion executor capable of converting source objects of the specified
 	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
 	 * <p>
@@ -65,8 +76,8 @@ public interface ConversionService {
 
 	/**
 	 * Return all conversion executors capable of converting <i>from</i> the provided <code>sourceClass</code>. For
-	 * example, <code>getConversionExecutor(String.class)</code> would return all converters that convert from String
-	 * to some other Object. Mainly useful for adapting a set of converters to some other environment.
+	 * example, <code>getConversionExecutor(String.class)</code> would return all converters that convert from String to
+	 * some other Object. Mainly useful for adapting a set of converters to some other environment.
 	 * @param sourceClass the source class converting from
 	 * @return the conversion executors that can convert from that source class
 	 */
@@ -78,4 +89,5 @@ public interface ConversionService {
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
 	public Class getClassForAlias(String alias);
+
 }

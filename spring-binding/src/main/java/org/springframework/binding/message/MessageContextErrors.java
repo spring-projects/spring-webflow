@@ -72,20 +72,21 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
-		messageContext.addMessage(new MessageBuilder().error().source(field).code(errorCode).args(errorArgs)
-				.defaultText(defaultMessage).build());
+		messageContext.addMessage(new MessageBuilder().error().source(fixedField(field)).code(errorCode)
+				.args(errorArgs).defaultText(defaultMessage).build());
 	}
 
 	public void addAllErrors(Errors errors) {
 		Iterator it = errors.getAllErrors().iterator();
 		while (it.hasNext()) {
 			ObjectError error = (ObjectError) it.next();
+			MessageBuilder builder = new MessageBuilder().error().codes(error.getCodes()).args(error.getArguments())
+					.defaultText(error.getDefaultMessage());
 			if (error instanceof FieldError) {
 				FieldError fieldError = (FieldError) error;
-				rejectValue(fieldError.getField(), error.getCode(), error.getArguments(), error.getDefaultMessage());
-			} else {
-				reject(error.getCode(), error.getArguments(), error.getDefaultMessage());
+				builder.source(fieldError.getField());
 			}
+			messageContext.addMessage(builder.build());
 		}
 	}
 
@@ -103,7 +104,7 @@ public class MessageContextErrors extends AbstractErrors {
 			Message message = messages[i];
 			errors.add(new ObjectError(objectName, message.getText()));
 		}
-		return errors;
+		return Collections.unmodifiableList(errors);
 	}
 
 	public List getFieldErrors() {
@@ -116,11 +117,12 @@ public class MessageContextErrors extends AbstractErrors {
 			Message message = messages[i];
 			errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
 		}
-		return errors;
+		return Collections.unmodifiableList(errors);
 	}
 
 	public Object getFieldValue(String field) {
-		// requires boundObject, and expressionParser to work
+		field = fixedField(field);
+		// requires boundObject and expressionParser to be set to work
 		if (mappingResults != null) {
 			List results = mappingResults.getResults(new PropertyErrorMappingResult(field));
 			if (!results.isEmpty()) {
@@ -131,13 +133,15 @@ public class MessageContextErrors extends AbstractErrors {
 		return parseFieldExpression(field).getValue(boundObject);
 	}
 
+	// internal helpers
+
 	private Expression parseFieldExpression(String field) {
 		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));
 	}
 
 	private static MessageCriteria GLOBAL_ERROR = new MessageCriteria() {
 		public boolean test(Message message) {
-			if (message.getSource() == null && message.getSeverity().equals(Severity.ERROR)) {
+			if (message.getSeverity() == Severity.ERROR && message.getSource() == null) {
 				return true;
 			} else {
 				return false;
@@ -147,7 +151,7 @@ public class MessageContextErrors extends AbstractErrors {
 
 	private static MessageCriteria FIELD_ERROR = new MessageCriteria() {
 		public boolean test(Message message) {
-			if (message.getSource() != null && message.getSeverity().equals(Severity.ERROR)) {
+			if (message.getSeverity() == Severity.ERROR && message.getSource() instanceof String) {
 				return true;
 			} else {
 				return false;

@@ -48,8 +48,8 @@ public class ValueCoercionException extends EvaluationException {
 	 * @param cause root cause of the failure
 	 */
 	public ValueCoercionException(Class contextClass, String property, Object value, Class targetClass, Throwable cause) {
-		super(contextClass, property, "Value [" + value + "] could not be coerced to type [" + targetClass.getName()
-				+ "]", cause);
+		super(contextClass, property,
+				"Value could not be converted to target class; is a suitable type converter registered?", cause);
 		this.value = value;
 		this.targetClass = targetClass;
 	}

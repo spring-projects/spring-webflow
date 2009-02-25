@@ -386,6 +386,15 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
+	public Object executeConversion(String converterId, Object source, Class targetClass) throws ConversionException {
+		if (source != null) {
+			ConversionExecutor conversionExecutor = getConversionExecutor(converterId, source.getClass(), targetClass);
+			return conversionExecutor.execute(source);
+		} else {
+			return null;
+		}
+	}
+
 	public Class getClassForAlias(String name) throws IllegalArgumentException {
 		Class clazz = (Class) aliasMap.get(name);
 		if (clazz != null) {

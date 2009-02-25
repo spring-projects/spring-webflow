@@ -93,6 +93,10 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
+		public Object executeConversion(String converterId, Object source, Class targetClass) {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
 				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");

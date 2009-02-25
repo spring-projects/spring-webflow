@@ -30,28 +30,26 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
 import org.springframework.webflow.test.MockExternalContext;
 
 /**
- * Base class for integration tests that verify a flow executes as expected. Flow execution tests captured by subclasses
- * should test that a flow responds to all supported transition criteria correctly, transitioning to the correct states
- * and producing the expected results on the occurrence of possible external (user) events.
+ * Base class for tests that verify a flow executes as expected. Flow execution tests authored by subclasses should test
+ * that a flow responds to all supported transition criteria correctly, transitioning to the correct states and
+ * producing the expected results on the occurrence of external events.
  * <p>
- * More specifically, a typical flow execution test case will test:
+ * A typical flow execution test case will test:
  * <ul>
  * <li>That the flow execution starts as expected (see {@link #startFlow(MutableAttributeMap, ExternalContext)}).
- * <li>That given the set of supported state transition criteria, a state executes the appropriate transition when a
- * matching event is signaled (with potential input request parameters, see the {@link #resumeFlow(ExternalContext)}
- * variants). A test case should be coded for each logical event that can occur, where an event drives a possible path
- * through the flow. The goal should be to exercise all possible paths of the flow. Use a test coverage tool like Clover
- * or Emma to assist with measuring your test's effectiveness.
- * <li>That given a transition that leads to an interactive state type (a view state or an end state) that the view
- * selection returned to the client matches what was expected and the current state of the flow matches what is
- * expected.
+ * <li>That a state executes the appropriate transition when an event is signaled. A test case should be authored for
+ * each logical event that can occur, where an event triggers a transition representing a path through the flow. The
+ * goal should be to exercise all state transitions (see the {@link #resumeFlow(ExternalContext)} variants and the
+ * {@link #setCurrentState(String)} for more information).
+ * <li>That given a transition that leads to an interactive state type (such as a view state or an end state), the view
+ * selected matches what was expected and the current state of the flow matches what is expected.
  * </ul>
  * <p>
  * A flow execution test can effectively automate and validate the orchestration required to drive an end-to-end
  * business task that spans several steps involving the user to complete. Such tests are a good way to test your system
  * top-down starting at the web-tier and pushing through all the way to the DB without having to deploy to a servlet or
  * portlet container. In addition, they can be used to effectively test a flow's execution (the web layer) standalone,
- * typically with a mock service layer. Both styles of testing are valuable and supported.
+ * typically with a mock service layer.
  * 
  * @author Keith Donald
  */
@@ -311,14 +309,15 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	}
 
 	/**
-	 * Assert that the entire flow execution has ended; that is, it is no longer active.
+	 * Assert that the flow execution has ended; that is, it is no longer active.
 	 */
 	protected void assertFlowExecutionEnded() {
 		assertTrue("The flow execution is still active but it should have ended", getFlowExecution().hasEnded());
 	}
 
 	/**
-	 * Assert that the entire flow execution has ended; that is, it is no longer active.
+	 * Assert that the flow execution has ended with the outcome specified.
+	 * @param outcome the name of the flow execution outcome
 	 */
 	protected void assertFlowExecutionOutcomeEquals(String outcome) {
 		assertNotNull("There has been no flow execution outcome", flowExecutionOutcome);

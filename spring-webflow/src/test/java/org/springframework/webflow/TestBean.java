@@ -78,4 +78,5 @@ public class TestBean implements Serializable {
 	public int hashCode() {
 		return (datum1.hashCode() + datum2 + (executed ? 1 : 0)) * 29;
 	}
+
 }

@@ -15,12 +15,14 @@
  */
 package org.springframework.webflow.mvc.view;
 
+import java.beans.PropertyEditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
@@ -35,6 +37,7 @@ import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.Severity;
 import org.springframework.util.Assert;
 import org.springframework.validation.AbstractErrors;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -51,7 +54,7 @@ import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
  * 
  * @author Keith Donald
  */
-public class BindingModel extends AbstractErrors {
+public class BindingModel extends AbstractErrors implements BindingResult {
 
 	private String objectName;
 
@@ -110,14 +113,23 @@ public class BindingModel extends AbstractErrors {
 	}
 
 	public List getFieldErrors(String field) {
-		return toErrors(messageContext.getMessagesByCriteria(new FieldErrorMessage(field)));
+		field = fixedField(field);
+		MessageCriteria messageCriteria;
+		if (field.endsWith("*")) {
+			String prefix = field.substring(0, field.length() - 1);
+			messageCriteria = new FieldPrefixErrorMessage(prefix);
+		} else {
+			messageCriteria = new FieldErrorMessage(field);
+		}
+		return toErrors(messageContext.getMessagesByCriteria(messageCriteria));
 	}
 
 	public Class getFieldType(String field) {
-		return parseFieldExpression(field).getValueType(boundObject);
+		return parseFieldExpression(fixedField(field)).getValueType(boundObject);
 	}
 
 	public Object getFieldValue(String field) {
+		field = fixedField(field);
 		if (mappingResults != null) {
 			List results = mappingResults.getResults(new FieldErrorResult(field));
 			if (!results.isEmpty()) {
@@ -131,7 +143,82 @@ public class BindingModel extends AbstractErrors {
 	// not typically used by mvc views, but implemented to be on the safe side
 
 	public List getFieldErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(new FieldErrorMessage()));
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_FIELD_SOURCE));
+	}
+
+	public String getObjectName() {
+		return objectName;
+	}
+
+	// never expected to be called by mvc views
+
+	public void addAllErrors(Errors errors) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	// implementing BindingResult
+
+	public Object getTarget() {
+		return boundObject;
+	}
+
+	public Object getRawFieldValue(String field) {
+		return parseFieldExpression(fixedField(field)).getValue(boundObject);
+	}
+
+	public PropertyEditor findEditor(String field, Class valueType) {
+		if (conversionService != null) {
+			String converterId = null;
+			if (field != null) {
+				field = fixedField(field);
+				if (binderConfiguration != null) {
+					Binding binding = binderConfiguration.getBinding(field);
+					if (binding != null) {
+						converterId = binding.getConverter();
+					}
+				}
+				if (valueType == null) {
+					valueType = parseFieldExpression(field).getValueType(boundObject);
+				}
+			}
+			return new ConversionExecutorPropertyEditor(conversionService, valueType, converterId);
+		} else {
+			return null;
+		}
+	}
+
+	// never expected to be called by mvc views
+
+	public void addError(ObjectError error) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public Map getModel() {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public PropertyEditorRegistry getPropertyEditorRegistry() {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public String[] getSuppressedFields() {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public void recordSuppressedField(String field) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public String[] resolveMessageCodes(String errorCode, String field) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
 	// internal helpers
@@ -187,7 +274,7 @@ public class BindingModel extends AbstractErrors {
 				errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
 			}
 		}
-		return errors;
+		return Collections.unmodifiableList(errors);
 	}
 
 	private static class FieldErrorResult implements MappingResultsCriteria {
@@ -219,39 +306,37 @@ public class BindingModel extends AbstractErrors {
 		}
 	};
 
+	private static final MessageCriteria ERRORS_FIELD_SOURCE = new MessageCriteria() {
+		public boolean test(Message message) {
+			return message.getSeverity() == Severity.ERROR && message.getSource() instanceof String;
+		}
+	};
+
 	private static class FieldErrorMessage implements MessageCriteria {
 		private String field;
 
-		public FieldErrorMessage() {
-		}
-
 		public FieldErrorMessage(String field) {
+			Assert.hasText(field, "The field name is required");
 			this.field = field;
 		}
 
 		public boolean test(Message message) {
-			if (field != null) {
-				return field.equals(message.getSource()) && message.getSeverity() == Severity.ERROR;
-			} else {
-				return message.getSource() != null && message.getSeverity() == Severity.ERROR;
-			}
+			return message.getSeverity() == Severity.ERROR && field.equals(message.getSource());
 		}
 	}
 
-	public String getObjectName() {
-		return objectName;
-	}
+	private static class FieldPrefixErrorMessage implements MessageCriteria {
+		private String fieldPrefix;
 
-	public void addAllErrors(Errors errors) {
-		throw new UnsupportedOperationException("Should not be called during view rendering");
-	}
+		public FieldPrefixErrorMessage(String fieldPrefix) {
+			Assert.hasText(fieldPrefix, "The fieldPrefix is required");
+			this.fieldPrefix = fieldPrefix;
+		}
 
-	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
-		throw new UnsupportedOperationException("Should not be called during view rendering");
-	}
-
-	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
-		throw new UnsupportedOperationException("Should not be called during view rendering");
+		public boolean test(Message message) {
+			return message.getSeverity() == Severity.ERROR && message.getSource() instanceof String
+					&& ((String) message.getSource()).startsWith(fieldPrefix);
+		}
 	}
 
 }

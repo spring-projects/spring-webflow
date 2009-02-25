@@ -11,6 +11,12 @@ Bug Fixes
 * Fixed bug where Web Flow upgrader tool did not properly output end-state 'output' elements (SWF-969)
 * Fixed bug where String to Enum conversions failed to work in conjunction with BeanWrapperExpressionParser, enabled when setting "useSpringBinding" flag on a MvcViewFactoryCreator to true (SWF-1005).
 * Fixed bug where Collection and Array property bindings did not work with custom converters (SWF-984)
+* Fixed bug where form:checkbox and form:checkboxes tags did not apply type conversion properly in views rendered by Web Flows (SWF-986)
+* Fixed bug where Errors nestedPath attribute was not respected in views rendered by Web Flow (SWF-973)
+* Fixed bug where Errors nestedPath attribute was not respected when using Errors API programatically within a Validator called by Web Flow (SWF-973)
+
+Improvements
+* Improved FlowExecution test documentation (SWF-???, SWF-???)
 
 Changes in version 2.0.5 (14.11.2008)
 -------------------------------------

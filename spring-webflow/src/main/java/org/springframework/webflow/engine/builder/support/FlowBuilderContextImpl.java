@@ -127,13 +127,17 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 			this.flowAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 		}
 	}
-	
+
 	/**
 	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
 	 */
 	private class ParentConversionServiceProxy implements ConversionService {
 		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
 			return getFlowBuilderServices().getConversionService().executeConversion(source, targetClass);
+		}
+
+		public Object executeConversion(String converterId, Object source, Class targetClass) {
+			return getFlowBuilderServices().getConversionService().executeConversion(converterId, source, targetClass);
 		}
 
 		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
