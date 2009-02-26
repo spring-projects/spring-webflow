@@ -181,7 +181,7 @@ public class MessageBuilder {
 
 	/**
 	 * Records the fallback text of the message being built. If the message has no codes, this will always be used as
-	 * the text. If the message has codes but none can be resolved, this will alway be used as the text.
+	 * the text. If the message has codes but none can be resolved, this will always be used as the text.
 	 * @param text the default text
 	 * @return this, for fluent API usage
 	 */

@@ -22,14 +22,18 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.style.ToStringCreator;
 
 class DefaultMessageResolver implements MessageResolver, MessageSourceResolvable {
+
 	private Object source;
+
 	private String[] codes;
+
 	private Severity severity;
+
 	private Object[] args;
+
 	private String defaultText;
 
-	public DefaultMessageResolver(Object source, String[] codes, Severity severity, Object[] args,
-			String defaultText) {
+	public DefaultMessageResolver(Object source, String[] codes, Severity severity, Object[] args, String defaultText) {
 		this.source = source;
 		this.codes = codes;
 		this.severity = severity;
@@ -56,7 +60,7 @@ class DefaultMessageResolver implements MessageResolver, MessageSourceResolvable
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("source", source).append("severity", severity).append("codes",
-				codes).append("args", args).append("defaultText", defaultText).toString();
+		return new ToStringCreator(this).append("source", source).append("severity", severity).append("codes", codes)
+				.append("args", args).append("defaultText", defaultText).toString();
 	}
 }

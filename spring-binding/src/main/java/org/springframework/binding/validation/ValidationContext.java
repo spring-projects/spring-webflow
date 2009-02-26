@@ -21,7 +21,7 @@ import java.security.Principal;
 import org.springframework.binding.message.MessageContext;
 
 /**
- * A validator context. Allows for recording validation error messages, as well as validating data entered by the user.
+ * A context for a validator to use to access user data and report validation failures.
  * 
  * @author Keith Donald
  * @author Scott Andrews
@@ -29,7 +29,9 @@ import org.springframework.binding.message.MessageContext;
 public interface ValidationContext {
 
 	/**
-	 * The context for recording validation messages
+	 * A context for adding messages to display to the user directly. The {@link #addFailure(ValidationFailure)}
+	 * operation provides a higher level of abstraction for reporting validation failures. This method provides more
+	 * control over the actual message added.
 	 */
 	public MessageContext getMessageContext();
 
@@ -49,4 +51,17 @@ public interface ValidationContext {
 	 * @return the value the user entered in the field bound to the property
 	 */
 	public Object getUserValue(String property);
+
+	/**
+	 * Add a validation failure to this context. Called by a validator to report failures against the current object
+	 * being validated. Use to report a general failure against the object, or a specific failure against a property on
+	 * the object. The failure code provided is typically mapped to one or message codes that result in a Message being
+	 * added to the {@link MessageContext}.
+	 * @param failure the validation failure
+	 * @see #getMessageContext()
+	 * @see ValidationFailureMessageResolverFactory
+	 * @see PropertyValidationFailure
+	 */
+	public void addFailure(ValidationFailure failure);
+
 }

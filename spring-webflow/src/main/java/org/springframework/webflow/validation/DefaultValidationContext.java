@@ -8,6 +8,7 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.binding.validation.ValidationFailure;
 import org.springframework.webflow.execution.RequestContext;
 
 public class DefaultValidationContext implements ValidationContext {
@@ -45,6 +46,10 @@ public class DefaultValidationContext implements ValidationContext {
 			}
 		}
 		return null;
+	}
+
+	public void addFailure(ValidationFailure failure) {
+		// TODO
 	}
 
 	private static class PropertyMappingResult implements MappingResultsCriteria {

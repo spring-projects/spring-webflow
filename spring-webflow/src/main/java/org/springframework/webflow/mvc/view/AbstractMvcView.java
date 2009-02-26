@@ -184,7 +184,7 @@ public abstract class AbstractMvcView implements View {
 		Object model = getModelObject();
 		if (model == null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("No model to work with; done processing user event");
+				logger.debug("No model to bind to; done processing user event");
 			}
 			return;
 		}
