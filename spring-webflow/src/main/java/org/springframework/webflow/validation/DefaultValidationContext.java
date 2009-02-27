@@ -25,11 +25,6 @@ public class DefaultValidationContext implements ValidationContext {
 		this.mappingResults = mappingResults;
 	}
 
-	public String getModel() {
-		// TODO
-		return null;
-	}
-
 	public String getUserEvent() {
 		return eventId;
 	}
