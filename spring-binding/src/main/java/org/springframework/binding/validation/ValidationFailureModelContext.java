@@ -15,8 +15,8 @@ public class ValidationFailureModelContext {
 	/**
 	 * Creates a new validation model context.
 	 * @param objectName the object name
-	 * @param propertyType the property type
-	 * @param propertyTypeConverter the id of the property type converter
+	 * @param propertyType the property type (may be null)
+	 * @param propertyTypeConverter the id of the property type converter (may be null)
 	 */
 	public ValidationFailureModelContext(String objectName, Class propertyType, String propertyTypeConverter) {
 		this.objectName = objectName;
