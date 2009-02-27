@@ -51,7 +51,7 @@ public class ValidationFailureModelContext {
 	}
 
 	/**
-	 * The invalid user entered value.
+	 * When reporting a property validation failure, the invalid user entered value.
 	 */
 	public Object getInvalidValue() {
 		return invalidValue;
