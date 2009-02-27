@@ -29,9 +29,9 @@ import org.springframework.binding.message.MessageContext;
 public interface ValidationContext {
 
 	/**
-	 * The the name of the object being validated.
+	 * The the name of the model object being validated.
 	 */
-	public String getObjectName();
+	public String getModel();
 
 	/**
 	 * The current user.

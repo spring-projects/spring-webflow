@@ -33,7 +33,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
  */
 public class ValidationFailureBuilder {
 
-	private String propertyName;
+	private String property;
 
 	private String constraint;
 
@@ -45,11 +45,11 @@ public class ValidationFailureBuilder {
 
 	/**
 	 * Sets the property the failure occurred against.
-	 * @param propertyName the property name
+	 * @param property the property name
 	 * @return this, for fluent call chaining
 	 */
-	public ValidationFailureBuilder forProperty(String propertyName) {
-		this.propertyName = propertyName;
+	public ValidationFailureBuilder forProperty(String property) {
+		this.property = property;
 		return this;
 	}
 
@@ -83,8 +83,8 @@ public class ValidationFailureBuilder {
 
 	/**
 	 * Adds a failure message argument.
-	 * @param name the arg name
-	 * @param value the arg value
+	 * @param name the argument name
+	 * @param value the argument value
 	 * @return this, for fluent call chaining
 	 */
 	public ValidationFailureBuilder arg(String name, Object value) {
@@ -98,8 +98,8 @@ public class ValidationFailureBuilder {
 	/**
 	 * Adds a failure message argument whose value is also message source resolvable. Use this when the argument value
 	 * itself needs to be localized.
-	 * @param name the arg name
-	 * @param code the code that will be used to resolve the arg
+	 * @param name the argument name
+	 * @param code the code that will be used to resolve the argument
 	 * @see MessageSourceResolvable
 	 * @return this, for fluent call chaining
 	 */
@@ -115,7 +115,7 @@ public class ValidationFailureBuilder {
 		if (severity == null) {
 			severity = Severity.ERROR;
 		}
-		return new ValidationFailure(propertyName, constraint, severity, args, defaultText);
+		return new ValidationFailure(property, constraint, severity, args, defaultText);
 	}
 
 }

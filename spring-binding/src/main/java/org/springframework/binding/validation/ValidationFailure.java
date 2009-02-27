@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
  */
 public class ValidationFailure {
 
-	private String propertyName;
+	private String property;
 
 	private String constraint;
 
@@ -40,17 +40,16 @@ public class ValidationFailure {
 
 	/**
 	 * Creates a new validation failure
-	 * @param propertyName the property that failed to validate (may be null to indicate a general failure)
+	 * @param property the property that failed to validate (may be null to indicate a general failure)
 	 * @param constraint the name of the validation constraint that failed (required)
 	 * @param severity the severity of the failure (required)
 	 * @param arguments named failure arguments (may be null)
 	 * @param defaultMessage the default message text (may be null)
 	 */
-	public ValidationFailure(String propertyName, String constraint, Severity severity, Map arguments,
-			String defaultMessage) {
+	public ValidationFailure(String property, String constraint, Severity severity, Map arguments, String defaultMessage) {
 		Assert.hasText(constraint, "The constraint is required");
 		Assert.notNull(severity, "The severity is required");
-		this.propertyName = propertyName;
+		this.property = property;
 		this.constraint = constraint;
 		this.severity = severity;
 		this.arguments = arguments;
@@ -61,8 +60,8 @@ public class ValidationFailure {
 	 * The name of the property that failed to validate. May be null to indicate a general failure against the validated
 	 * object.
 	 */
-	public String getPropertyName() {
-		return propertyName;
+	public String getProperty() {
+		return property;
 	}
 
 	/**

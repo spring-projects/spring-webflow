@@ -25,7 +25,7 @@ public class DefaultValidationContext implements ValidationContext {
 		this.mappingResults = mappingResults;
 	}
 
-	public String getObjectName() {
+	public String getModel() {
 		// TODO
 		return null;
 	}

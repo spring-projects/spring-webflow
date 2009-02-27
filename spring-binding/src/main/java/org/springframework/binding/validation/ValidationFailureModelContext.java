@@ -21,40 +21,39 @@ package org.springframework.binding.validation;
  */
 public class ValidationFailureModelContext {
 
-	private String objectName;
-
-	private Class propertyType;
-
-	private String propertyTypeConverter;
+	private String model;
 
 	private Object invalidValue;
 
+	private Class propertyType;
+
+	private String propertyConverter;
+
 	/**
 	 * Creates a new validation model context.
-	 * @param objectName the object name
+	 * @param model the name of the model object that was validated
 	 * @param invalidValue the invalid value the user entered
 	 * @param propertyType the type of the property that failed to validate (may be null)
-	 * @param propertyTypeConverter the id of the custom converter configured to format the property value (may be null)
+	 * @param propertyConverter the id of the custom converter configured to format the property value (may be null)
 	 */
-	public ValidationFailureModelContext(String objectName, Object invalidValue, Class propertyType,
-			String propertyTypeConverter) {
-		this.objectName = objectName;
+	public ValidationFailureModelContext(String model, Object invalidValue, Class propertyType, String propertyConverter) {
+		this.model = model;
 		this.invalidValue = invalidValue;
 		this.propertyType = propertyType;
-		this.propertyTypeConverter = propertyTypeConverter;
+		this.propertyConverter = propertyConverter;
 	}
 
 	/**
-	 * The name of the object being validated.
+	 * The name of the model object that was validated.
 	 */
-	public String getObjectName() {
-		return objectName;
+	public String getModel() {
+		return model;
 	}
 
 	/**
-	 * The user entered value.
+	 * The invalid user entered value.
 	 */
-	public Object getInvalidUserValue() {
+	public Object getInvalidValue() {
 		return invalidValue;
 	}
 
@@ -68,8 +67,8 @@ public class ValidationFailureModelContext {
 	/**
 	 * When reporting a property validation failure, the id of the custom converter used to format the UI display value.
 	 */
-	public String getPropertyTypeConverter() {
-		return propertyTypeConverter;
+	public String getPropertyConverter() {
+		return propertyConverter;
 	}
 
 }

@@ -131,17 +131,17 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 			Map stringArgs = new HashMap();
 			if (!stringArgs.containsKey(LABEL_ARGUMENT)) {
 				String label;
-				if (failure.getPropertyName() != null) {
-					label = appendLabelPrefix().append(CODE_SEPARATOR).append(modelContext.getObjectName()).append(
-							CODE_SEPARATOR).append(failure.getPropertyName()).toString();
+				if (failure.getProperty() != null) {
+					label = appendLabelPrefix().append(CODE_SEPARATOR).append(modelContext.getModel()).append(
+							CODE_SEPARATOR).append(failure.getProperty()).toString();
 				} else {
-					label = appendLabelPrefix().append(CODE_SEPARATOR).append(modelContext.getObjectName()).toString();
+					label = appendLabelPrefix().append(CODE_SEPARATOR).append(modelContext.getModel()).toString();
 				}
 				stringArgs.put(LABEL_ARGUMENT, new DefaultMessageSourceResolvable(new String[] { label }, failure
-						.getPropertyName()));
+						.getProperty()));
 			}
-			if (!stringArgs.containsKey(VALUE_ARGUMENT) && failure.getPropertyName() != null) {
-				stringArgs.put(VALUE_ARGUMENT, modelContext.getInvalidUserValue());
+			if (!stringArgs.containsKey(VALUE_ARGUMENT) && failure.getProperty() != null) {
+				stringArgs.put(VALUE_ARGUMENT, modelContext.getInvalidValue());
 			}
 			if (failure.getArguments() != null) {
 				Iterator it = failure.getArguments().entrySet().iterator();
@@ -149,9 +149,9 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 					Map.Entry entry = (Map.Entry) it.next();
 					Object arg = entry.getValue();
 					if (!(arg instanceof String) && !(arg instanceof MessageSourceResolvable)) {
-						if (modelContext.getPropertyTypeConverter() != null
+						if (modelContext.getPropertyConverter() != null
 								&& arg.getClass().equals(modelContext.getPropertyType())) {
-							arg = conversionService.executeConversion(modelContext.getPropertyTypeConverter(), arg,
+							arg = conversionService.executeConversion(modelContext.getPropertyConverter(), arg,
 									String.class);
 						} else {
 							arg = conversionService.executeConversion(arg, String.class);
@@ -161,15 +161,15 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 				}
 			}
 			text = (String) expression.getValue(new LazyMessageResolvingMap(messageSource, locale, stringArgs));
-			return new Message(failure.getPropertyName(), text, failure.getSeverity());
+			return new Message(failure.getProperty(), text, failure.getSeverity());
 		}
 
 		private String[] buildCodes() {
 			String constraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
 					failure.getConstraint()).toString();
-			if (failure.getPropertyName() != null) {
+			if (failure.getProperty() != null) {
 				String propertyConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-						modelContext.getObjectName()).append(CODE_SEPARATOR).append(failure.getPropertyName()).append(
+						modelContext.getModel()).append(CODE_SEPARATOR).append(failure.getProperty()).append(
 						CODE_SEPARATOR).append(failure.getConstraint()).toString();
 				String typeConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
 						modelContext.getPropertyType().getName()).append(CODE_SEPARATOR)
@@ -177,7 +177,7 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 				return new String[] { propertyConstraintMessageCode, typeConstraintMessageCode, constraintMessageCode };
 			} else {
 				String objectConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-						modelContext.getObjectName()).append(CODE_SEPARATOR).append(failure.getConstraint()).toString();
+						modelContext.getModel()).append(CODE_SEPARATOR).append(failure.getConstraint()).toString();
 				return new String[] { objectConstraintMessageCode, failure.getConstraint() };
 			}
 		}
