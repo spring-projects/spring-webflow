@@ -33,8 +33,8 @@ public class ValidationFailureModelContext {
 	 * Creates a new validation model context.
 	 * @param objectName the object name
 	 * @param invalidValue the invalid value the user entered
-	 * @param propertyType the property type (may be null)
-	 * @param propertyTypeConverter the id of the property type converter (may be null)
+	 * @param propertyType the type of the property that failed to validate (may be null)
+	 * @param propertyTypeConverter the id of the custom converter configured to format the property value (may be null)
 	 */
 	public ValidationFailureModelContext(String objectName, Object invalidValue, Class propertyType,
 			String propertyTypeConverter) {
