@@ -25,8 +25,9 @@ public class DefaultValidationContext implements ValidationContext {
 		this.mappingResults = mappingResults;
 	}
 
-	public MessageContext getMessageContext() {
-		return requestContext.getMessageContext();
+	public String getObjectName() {
+		// TODO
+		return null;
 	}
 
 	public String getUserEvent() {
@@ -50,6 +51,10 @@ public class DefaultValidationContext implements ValidationContext {
 
 	public void addFailure(ValidationFailure failure) {
 		// TODO
+	}
+
+	public MessageContext getMessageContext() {
+		return requestContext.getMessageContext();
 	}
 
 	private static class PropertyMappingResult implements MappingResultsCriteria {

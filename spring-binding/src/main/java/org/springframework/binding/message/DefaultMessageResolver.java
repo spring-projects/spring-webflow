@@ -21,7 +21,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.style.ToStringCreator;
 
-class DefaultMessageResolver implements MessageResolver, MessageSourceResolvable {
+public class DefaultMessageResolver implements MessageResolver, MessageSourceResolvable {
 
 	private Object source;
 
@@ -42,7 +42,17 @@ class DefaultMessageResolver implements MessageResolver, MessageSourceResolvable
 	}
 
 	public Message resolveMessage(MessageSource messageSource, Locale locale) {
-		return new Message(source, messageSource.getMessage(this, locale), severity);
+		return new Message(source, postProcessMessageText(messageSource.getMessage(this, locale)), severity);
+	}
+
+	/**
+	 * Subclasses may override to perform special post-processing of the returned message text; for example, running it
+	 * through an Expression evaluator.
+	 * @param text the resolved message text
+	 * @return the post processeed message text
+	 */
+	protected String postProcessMessageText(String text) {
+		return text;
 	}
 
 	// implementing MessageSourceResolver

@@ -19,8 +19,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.binding.message.Severity;
-import org.springframework.util.StringUtils;
 
+/**
+ * A builder that provides a fluent interface for configuring a Validation failure. Example:
+ * 
+ * <pre>
+ * new ValidationFailureBuilder().forProperty(&quot;foo&quot;).constraint(&quot;required&quot;).build();
+ * </pre>
+ * @author Keith Donald
+ * 
+ */
 public class ValidationFailureBuilder {
 
 	private String propertyName;
@@ -29,44 +37,69 @@ public class ValidationFailureBuilder {
 
 	private Severity severity;
 
-	private Map args = new TreeMap();
+	private Map args;
 
 	private String defaultText;
 
+	/**
+	 * Sets the property the failure occurred against.
+	 * @param propertyName the property name
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailureBuilder forProperty(String propertyName) {
 		this.propertyName = propertyName;
 		return this;
 	}
 
+	/**
+	 * Sets the name of the constraint that failed.
+	 * @param constraint the name of the validation constraint
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailureBuilder constraint(String constraint) {
 		this.constraint = constraint;
 		return this;
 	}
 
+	/**
+	 * Sets the failure to be of warning severity.
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailureBuilder warning() {
 		severity = Severity.WARNING;
 		return this;
 	}
 
+	/**
+	 * Sets the failure to be of error severity.
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailureBuilder error() {
 		severity = Severity.ERROR;
 		return this;
 	}
 
+	/**
+	 * Sets the failure to be of warning severity.
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailureBuilder arg(String name, Object value) {
+		if (args == null) {
+			args = new TreeMap();
+		}
 		args.put(name, value);
 		return this;
 	}
 
+	/**
+	 * Build the ValidationFailure. Called after setting builder properties.
+	 * @return this, for fluent call chaining
+	 */
 	public ValidationFailure build() {
 		if (severity == null) {
 			severity = Severity.ERROR;
 		}
-		if (StringUtils.hasText(propertyName)) {
-			return new PropertyValidationFailure(propertyName, constraint, severity, args, defaultText);
-		} else {
-			return new ValidationFailure(constraint, severity, args, defaultText);
-		}
+		return new ValidationFailure(propertyName, constraint, severity, args, defaultText);
 	}
 
 }

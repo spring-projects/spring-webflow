@@ -29,11 +29,9 @@ import org.springframework.binding.message.MessageContext;
 public interface ValidationContext {
 
 	/**
-	 * A context for adding messages to display to the user directly. The {@link #addFailure(ValidationFailure)}
-	 * operation provides a higher level of abstraction for reporting validation failures. This method provides more
-	 * control over the actual message added.
+	 * The the name of the object being validated.
 	 */
-	public MessageContext getMessageContext();
+	public String getObjectName();
 
 	/**
 	 * The current user.
@@ -60,8 +58,14 @@ public interface ValidationContext {
 	 * @param failure the validation failure
 	 * @see #getMessageContext()
 	 * @see ValidationFailureMessageResolverFactory
-	 * @see PropertyValidationFailure
 	 */
 	public void addFailure(ValidationFailure failure);
+
+	/**
+	 * A context for adding messages to display to the user directly. The {@link #addFailure(ValidationFailure)}
+	 * operation provides a higher level of abstraction for reporting validation failures. This method provides more
+	 * control over the actual message added.
+	 */
+	public MessageContext getMessageContext();
 
 }

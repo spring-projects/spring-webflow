@@ -3,16 +3,19 @@ package org.springframework.binding.validation;
 import java.util.Map;
 
 import org.springframework.binding.message.Severity;
+import org.springframework.util.Assert;
 
 /**
- * A failure that occurred during validation. Each failure has a code that uniquely identifies the validation constraint
- * that was violated; for example "required", or "maxLength". A failure has a severity describing the intensity of the
+ * An indication of a validation failure. A failure is generated when a validation constraint is violated; for example
+ * "required", "maxLength", "invalidFormat", or "range". A failure has a severity describing the intensity of the
  * violation. A failure may have additional arguments that can be used as named parameters in a UI display message. A
  * failure can also have a default message to display if no suitable message can be resolved.
  */
 public class ValidationFailure {
 
-	private String code;
+	private String propertyName;
+
+	private String constraint;
 
 	private Severity severity;
 
@@ -22,23 +25,36 @@ public class ValidationFailure {
 
 	/**
 	 * Creates a new validation failure
-	 * @param code the failure code
-	 * @param severity the severity
-	 * @param arguments named failure arguments
-	 * @param defaultMessage the default message text
+	 * @param propertyName the property that failed to validate (may be null to indicate a general failure)
+	 * @param constraint the name of the validation constraint that failed (required)
+	 * @param severity the severity of the failure (required)
+	 * @param arguments named failure arguments (may be null)
+	 * @param defaultMessage the default message text (may be null)
 	 */
-	public ValidationFailure(String code, Severity severity, Map arguments, String defaultMessage) {
-		this.code = code;
+	public ValidationFailure(String propertyName, String constraint, Severity severity, Map arguments,
+			String defaultMessage) {
+		Assert.hasText(constraint, "The constraint is required");
+		Assert.notNull(severity, "The severity is required");
+		this.propertyName = propertyName;
+		this.constraint = constraint;
 		this.severity = severity;
 		this.arguments = arguments;
 		this.defaultMessage = defaultMessage;
 	}
 
 	/**
-	 * The failure code, uniquely identifying the validation constraint that failed.
+	 * The name of the property that failed to validate. May be null to indicate a general failure against the validated
+	 * object.
 	 */
-	public String getCode() {
-		return code;
+	public String getPropertyName() {
+		return propertyName;
+	}
+
+	/**
+	 * The validation constraint that caused this failure to be reported.
+	 */
+	public String getConstraint() {
+		return constraint;
 	}
 
 	/**
