@@ -23,13 +23,14 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 
 	private DefaultValidationFailureMessageResolverFactory factory;
 
+	ValidationFailureBuilder builder = new ValidationFailureBuilder();
+
 	public void setUp() {
 		factory = new DefaultValidationFailureMessageResolverFactory(parser, conversionService);
 		messageSource.setBasename("org.springframework.binding.validation.messages");
 	}
 
 	public void testResolveMessage() {
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("foo").constraint("required").build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
 				"", String.class, null));
@@ -38,7 +39,6 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 	}
 
 	public void testResolveMessageNoPropertyLabel() {
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("bogus").constraint("required").build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
 				"", String.class, null));
@@ -57,7 +57,6 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 	}
 
 	public void testResolveMessageWithCustomResolvableArg() {
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("checkinDate").constraint("invalidFormat").resolvableArg(
 				"format", "formats.dateFormat").build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
@@ -67,7 +66,6 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 	}
 
 	public void testResolveMessageWithValue() {
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("checkinDate").constraint("invalidFormat2").resolvableArg(
 				"format", "formats.dateFormat").build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
@@ -77,7 +75,6 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 	}
 
 	public void testResolveMessageWithArgDefaultConversion() {
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("amount").constraint("range").arg("min", new Integer(1)).arg(
 				"max", new Integer(100)).build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
@@ -88,7 +85,6 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 
 	public void testResolveMessageWithArgCustomConversion() {
 		conversionService.addConverter("stringToMoney", new StringToMoney());
-		ValidationFailureBuilder builder = new ValidationFailureBuilder();
 		ValidationFailure failure = builder.forProperty("amount").constraint("range").arg("min", new Money(1)).arg(
 				"max", new Money(100)).build();
 		MessageResolver resolver = factory.createMessageResolver(failure, new ValidationFailureModelContext("testBean",
