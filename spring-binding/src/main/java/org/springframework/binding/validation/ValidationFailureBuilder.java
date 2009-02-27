@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.binding.message.Severity;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 /**
  * A builder that provides a fluent interface for configuring a Validation failure. Example:
@@ -80,7 +82,9 @@ public class ValidationFailureBuilder {
 	}
 
 	/**
-	 * Sets the failure to be of warning severity.
+	 * Adds a failure message argument.
+	 * @param name the arg name
+	 * @param value the arg value
 	 * @return this, for fluent call chaining
 	 */
 	public ValidationFailureBuilder arg(String name, Object value) {
@@ -89,6 +93,18 @@ public class ValidationFailureBuilder {
 		}
 		args.put(name, value);
 		return this;
+	}
+
+	/**
+	 * Adds a failure message argument whose value is also message source resolvable. Use this when the argument value
+	 * itself needs to be localized.
+	 * @param name the arg name
+	 * @param code the code that will be used to resolve the arg
+	 * @see MessageSourceResolvable
+	 * @return this, for fluent call chaining
+	 */
+	public ValidationFailureBuilder resolvableArg(String name, String code) {
+		return arg(name, new DefaultMessageSourceResolvable(code));
 	}
 
 	/**

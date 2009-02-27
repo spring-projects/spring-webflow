@@ -12,14 +12,19 @@ public class ValidationFailureModelContext {
 
 	private String propertyTypeConverter;
 
+	private Object invalidValue;
+
 	/**
 	 * Creates a new validation model context.
 	 * @param objectName the object name
+	 * @param invalidValue the invalid value the user entered
 	 * @param propertyType the property type (may be null)
 	 * @param propertyTypeConverter the id of the property type converter (may be null)
 	 */
-	public ValidationFailureModelContext(String objectName, Class propertyType, String propertyTypeConverter) {
+	public ValidationFailureModelContext(String objectName, Object invalidValue, Class propertyType,
+			String propertyTypeConverter) {
 		this.objectName = objectName;
+		this.invalidValue = invalidValue;
 		this.propertyType = propertyType;
 		this.propertyTypeConverter = propertyTypeConverter;
 	}
@@ -29,6 +34,13 @@ public class ValidationFailureModelContext {
 	 */
 	public String getObjectName() {
 		return objectName;
+	}
+
+	/**
+	 * The user entered value.
+	 */
+	public Object getInvalidUserValue() {
+		return invalidValue;
 	}
 
 	/**

@@ -66,6 +66,7 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 			ConversionService conversionService) {
 		Assert.notNull(expressionParser, "The expressionParser is required");
 		this.expressionParser = expressionParser;
+		this.conversionService = conversionService;
 	}
 
 	/**
@@ -92,6 +93,8 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 
 		private static final String LABEL_ARGUMENT = "label";
 
+		private static final String VALUE_ARGUMENT = "value";
+
 		private ValidationFailure failure;
 
 		private ValidationFailureModelContext modelContext;
@@ -116,7 +119,11 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 				} else {
 					label = appendLabelPrefix().append(CODE_SEPARATOR).append(modelContext.getObjectName()).toString();
 				}
-				stringArgs.put(LABEL_ARGUMENT, new DefaultMessageSourceResolvable(label));
+				stringArgs.put(LABEL_ARGUMENT, new DefaultMessageSourceResolvable(new String[] { label }, failure
+						.getPropertyName()));
+			}
+			if (!stringArgs.containsKey(VALUE_ARGUMENT) && failure.getPropertyName() != null) {
+				stringArgs.put(VALUE_ARGUMENT, modelContext.getInvalidUserValue());
 			}
 			if (failure.getArguments() != null) {
 				Iterator it = failure.getArguments().entrySet().iterator();
@@ -140,7 +147,8 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 		}
 
 		private String[] buildCodes() {
-			String constraintMessageCode = appendMessageCodePrefix().append(failure.getConstraint()).toString();
+			String constraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
+					failure.getConstraint()).toString();
 			if (failure.getPropertyName() != null) {
 				String propertyConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
 						modelContext.getObjectName()).append(CODE_SEPARATOR).append(failure.getPropertyName()).append(
