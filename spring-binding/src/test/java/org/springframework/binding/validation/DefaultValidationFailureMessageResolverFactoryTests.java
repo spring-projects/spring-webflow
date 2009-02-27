@@ -23,7 +23,7 @@ public class DefaultValidationFailureMessageResolverFactoryTests extends TestCas
 
 	private DefaultValidationFailureMessageResolverFactory factory;
 
-	ValidationFailureBuilder builder = new ValidationFailureBuilder();
+	private ValidationFailureBuilder builder = new ValidationFailureBuilder();
 
 	public void setUp() {
 		factory = new DefaultValidationFailureMessageResolverFactory(parser, conversionService);
