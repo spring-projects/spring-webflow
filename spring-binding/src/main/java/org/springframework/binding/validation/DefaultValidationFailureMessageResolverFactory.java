@@ -34,20 +34,21 @@ import org.springframework.util.Assert;
 
 /**
  * Maps validation failures to messages resolvable in a {@link MessageSource}. Configurable with an
- * {@link ExpressionParser} to provide support messages that contain #{expressions} for inserting failure arguments.
+ * {@link ExpressionParser} to allow messages containing #{expressions} to be parameterized with failure arguments.
  * Configurable with a {@link ConversionService} to support String-encoding failure arguments.
  * 
  * Employs the following algorithm to map property validation failure to a message:
  * <ol>
- * <li>Try the ${failureMessageCodePrefix}.${objectName}.${propertyName}.${constraint} code; if match, resolve message
+ * <li>Try the ${failureMessageCodePrefix}.${objectName}.${propertyName}.${constraint} code; if matches, resolve message
  * and return.
- * <li>Try the ${failureMessageCodePrefix}.${propertyType}.${constraint} code; if matched, resolve message and return.
- * <li>Try the ${failureMessageCodePrefix}.${constrant} code; if matched, resolve message and return.
+ * <li>Try the ${failureMessageCodePrefix}.${propertyType}.${constraint} code; if matches, resolve message and return.
+ * <li>Try the ${failureMessageCodePrefix}.${constraint} code; if matches, resolve message and return.
  * </ol>
  * 
  * Named message arguments may be denoted by using ${} or #{} expressions. For property validation failures, the value
  * of the "label" argument is automatically mapped to the message with code
- * ${labelMessageCodePrefix}.${objectName}.${propertyName}.
+ * ${labelMessageCodePrefix}.${objectName}.${propertyName}, allowing localization of the property label. Also, the
+ * "value" argument holds a reference to the invalid user-entered value that triggered the failure.
  * 
  * messages.properties example:
  * 
@@ -55,8 +56,10 @@ import org.springframework.util.Assert;
  * validation.booking.checkinDate.required=The Checkin Date is required
  * validation.java.util.Date.required=Dates are required
  * validation.required=#{label} is required
+ * validation.range=#{label} must be between #{min} and #{max} but it was #{value}
  * 
  * label.booking.checkoutDate=Check Out Date
+ * label.booking.amount=Amount
  * </pre>
  * @author Keith Donald
  */
