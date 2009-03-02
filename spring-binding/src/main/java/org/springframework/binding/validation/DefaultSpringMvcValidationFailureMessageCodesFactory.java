@@ -30,18 +30,19 @@ package org.springframework.binding.validation;
 public class DefaultSpringMvcValidationFailureMessageCodesFactory extends ValidationFailureMessageCodesFactory {
 
 	public String[] createMessageCodes(ValidationFailure failure, ValidationFailureModelContext modelContext) {
-		String constraintMessageCode = appendFailureMessageCodePrefix().append(failure.getConstraint()).append(
-				codeSeparator()).toString();
+		String constraintMessageCode = appendFailureMessageCodePrefix().append(codeSeparator()).append(
+				failure.getConstraint()).toString();
 		if (failure.getProperty() != null) {
 			String propertyConstraintMessageCode = appendFailureMessageCodePrefix().append(codeSeparator()).append(
-					failure.getConstraint()).append(modelContext.getModel()).append(codeSeparator()).append(
-					failure.getProperty()).append(codeSeparator()).toString();
+					failure.getConstraint()).append(codeSeparator()).append(modelContext.getModel()).append(
+					codeSeparator()).append(failure.getProperty()).toString();
 			String typeConstraintMessageCode = appendFailureMessageCodePrefix().append(codeSeparator()).append(
-					failure.getConstraint()).append(modelContext.getPropertyType().getName()).toString();
+					failure.getConstraint()).append(codeSeparator()).append(modelContext.getPropertyType().getName())
+					.toString();
 			return new String[] { propertyConstraintMessageCode, typeConstraintMessageCode, constraintMessageCode };
 		} else {
 			String objectConstraintMessageCode = appendFailureMessageCodePrefix().append(codeSeparator()).append(
-					failure.getConstraint()).append(modelContext.getModel()).append(codeSeparator()).toString();
+					failure.getConstraint()).append(codeSeparator()).append(modelContext.getModel()).toString();
 			return new String[] { objectConstraintMessageCode, constraintMessageCode };
 		}
 	}
