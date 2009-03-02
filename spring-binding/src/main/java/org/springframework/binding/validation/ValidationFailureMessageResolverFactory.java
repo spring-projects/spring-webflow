@@ -27,8 +27,6 @@ import org.springframework.binding.message.MessageResolver;
  */
 public interface ValidationFailureMessageResolverFactory {
 
-	public static final char CODE_SEPARATOR = '.';
-
 	/**
 	 * Creates a new MessageResolver that can resolve the failure {@link Message} for the reported ValidationFailure.
 	 * @param failure a validation failure reported by a validator
