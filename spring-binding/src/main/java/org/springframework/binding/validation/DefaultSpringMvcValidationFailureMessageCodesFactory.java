@@ -20,6 +20,11 @@ package org.springframework.binding.validation;
  * ${failureMessageCodePrefix}.${constraint}
  * </pre>
  * 
+ * Notice how the constraint comes after model/property qualifiers in the default algorithm, while the original Spring
+ * MVC algorithm has the constraint come before. The default algorithm is believed to be more object oriented and
+ * generally preferred. The Spring MVC algorithm is supported for backwards compatibility and consistency with existing
+ * Spring MVC web applications.
+ * 
  * @author Keith Donald
  */
 public class DefaultSpringMvcValidationFailureMessageCodesFactory extends ValidationFailureMessageCodesFactory {
