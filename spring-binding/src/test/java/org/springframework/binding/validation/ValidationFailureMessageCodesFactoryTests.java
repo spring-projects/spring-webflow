@@ -7,15 +7,15 @@ public class ValidationFailureMessageCodesFactoryTests extends TestCase {
 
 	public void testCreateGeneralModelFailureMessageCodes() {
 		ValidationFailure failure = new ValidationFailureBuilder().constraint("invalid").build();
-		String[] codes = factory.createMessageCodes(failure, new ValidationFailureModelContext("testBean", null, null,
-				null));
+		String[] codes = factory.createMessageCodes(failure, new TestValidationFailureModelContext("testBean", null,
+				null, null));
 		assertEquals("validation.testBean.invalid", codes[0]);
 		assertEquals("validation.invalid", codes[1]);
 	}
 
 	public void testCreatePropertyFailureMessageCodes() {
 		ValidationFailure failure = new ValidationFailureBuilder().forProperty("foo").constraint("required").build();
-		String[] codes = factory.createMessageCodes(failure, new ValidationFailureModelContext("testBean", null,
+		String[] codes = factory.createMessageCodes(failure, new TestValidationFailureModelContext("testBean", null,
 				String.class, null));
 		assertEquals("validation.testBean.foo.required", codes[0]);
 		assertEquals("validation.java.lang.String.required", codes[1]);

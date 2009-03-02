@@ -34,6 +34,13 @@ public class ValidationFailureMessageCodesFactory {
 		this.failureMessageCodePrefix = failureMessageCodePrefix;
 	}
 
+	/**
+	 * Create the message codes for the validation failure in the provided model context. Subclasses may override to
+	 * customize the failure message code mapping algorithm.
+	 * @param failure the validation failure
+	 * @param modelContext the failure model context
+	 * @return the failure message codes
+	 */
 	public String[] createMessageCodes(ValidationFailure failure, ValidationFailureModelContext modelContext) {
 		String constraintMessageCode = appendFailureMessageCodePrefix().append(codeSeparator()).append(
 				failure.getConstraint()).toString();
