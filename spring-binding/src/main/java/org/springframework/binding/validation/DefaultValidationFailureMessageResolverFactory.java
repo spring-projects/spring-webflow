@@ -39,8 +39,8 @@ import org.springframework.util.Assert;
  * 
  * Employs the following algorithm to map property validation failure to a message:
  * <ol>
- * <li>Try the ${failureMessageCodePrefix}.${objectName}.${propertyName}.${constraint} code; if matches, resolve message
- * and return.
+ * <li>Try the ${failureMessageCodePrefix}.${model}.${property}.${constraint} code; if matches, resolve message and
+ * return.
  * <li>Try the ${failureMessageCodePrefix}.${propertyType}.${constraint} code; if matches, resolve message and return.
  * <li>Try the ${failureMessageCodePrefix}.${constraint} code; if matches, resolve message and return.
  * </ol>
@@ -65,15 +65,15 @@ import org.springframework.util.Assert;
  */
 public class DefaultValidationFailureMessageResolverFactory implements ValidationFailureMessageResolverFactory {
 
-	private static final char CODE_SEPARATOR = '.';
+	protected static final char CODE_SEPARATOR = '.';
 
 	private ExpressionParser expressionParser;
 
 	private ConversionService conversionService;
 
-	private String failureMessageCodePrefix = "validation";
-
 	private String labelMessageCodePrefix = "label";
+
+	private ValidationFailureMessageCodesFactory failureMessageCodesFactory = new ValidationFailureMessageCodesFactory();
 
 	/**
 	 * Creates a new message resolver factory.
@@ -92,7 +92,7 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 	 * @param failureMessageCodePrefix the failure message code prefix
 	 */
 	public void setFailureMessageCodePrefix(String failureMessageCodePrefix) {
-		this.failureMessageCodePrefix = failureMessageCodePrefix;
+		failureMessageCodesFactory.setFailureMessageCodePrefix(failureMessageCodePrefix);
 	}
 
 	/**
@@ -123,8 +123,8 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 		}
 
 		public Message resolveMessage(MessageSource messageSource, Locale locale) {
-			DefaultMessageSourceResolvable resolvable = new DefaultMessageSourceResolvable(buildCodes(), failure
-					.getDefaultMessage());
+			DefaultMessageSourceResolvable resolvable = new DefaultMessageSourceResolvable(failureMessageCodesFactory
+					.createMessageCodes(failure, modelContext), failure.getDefaultMessage());
 			String text = messageSource.getMessage(resolvable, locale);
 			Expression expression = expressionParser.parseExpression(text, new FluentParserContext()
 					.evaluate(Map.class).template());
@@ -162,28 +162,6 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 			}
 			text = (String) expression.getValue(new LazyMessageResolvingMap(messageSource, locale, stringArgs));
 			return new Message(failure.getProperty(), text, failure.getSeverity());
-		}
-
-		private String[] buildCodes() {
-			String constraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-					failure.getConstraint()).toString();
-			if (failure.getProperty() != null) {
-				String propertyConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-						modelContext.getModel()).append(CODE_SEPARATOR).append(failure.getProperty()).append(
-						CODE_SEPARATOR).append(failure.getConstraint()).toString();
-				String typeConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-						modelContext.getPropertyType().getName()).append(CODE_SEPARATOR)
-						.append(failure.getConstraint()).toString();
-				return new String[] { propertyConstraintMessageCode, typeConstraintMessageCode, constraintMessageCode };
-			} else {
-				String objectConstraintMessageCode = appendMessageCodePrefix().append(CODE_SEPARATOR).append(
-						modelContext.getModel()).append(CODE_SEPARATOR).append(failure.getConstraint()).toString();
-				return new String[] { objectConstraintMessageCode, failure.getConstraint() };
-			}
-		}
-
-		private StringBuilder appendMessageCodePrefix() {
-			return new StringBuilder().append(failureMessageCodePrefix);
 		}
 
 		private StringBuilder appendLabelPrefix() {
