@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.validation;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -41,7 +42,27 @@ public class ValidationFailureBuilder {
 
 	private Map args;
 
-	private String defaultText;
+	private String message;
+
+	private Map details;
+
+	/**
+	 * Sets the failure to be of warning severity.
+	 * @return this, for fluent call chaining
+	 */
+	public ValidationFailureBuilder warning() {
+		severity = Severity.WARNING;
+		return this;
+	}
+
+	/**
+	 * Sets the failure to be of error severity. This is the default Severity.
+	 * @return this, for fluent call chaining
+	 */
+	public ValidationFailureBuilder error() {
+		severity = Severity.ERROR;
+		return this;
+	}
 
 	/**
 	 * Sets the property the failure occurred against.
@@ -64,20 +85,38 @@ public class ValidationFailureBuilder {
 	}
 
 	/**
-	 * Sets the failure to be of warning severity.
+	 * Sets an explicit failure message. The value may be a literal string or a resolvable message code.
+	 * @param message the failure message
 	 * @return this, for fluent call chaining
 	 */
-	public ValidationFailureBuilder warning() {
-		severity = Severity.WARNING;
+	public ValidationFailureBuilder message(String message) {
+		this.message = message;
 		return this;
 	}
 
 	/**
-	 * Sets the failure to be of error severity.
+	 * Add a detail to associate with the failure. The value provided serves as both the logical name of the detail and
+	 * the code used to resolve the detail message text.
+	 * @param nameAndValue the value to use as both the logical name of the message and the constraint-relative message
+	 * code; for example, "cause" or "recommendedAction".
 	 * @return this, for fluent call chaining
 	 */
-	public ValidationFailureBuilder error() {
-		severity = Severity.ERROR;
+	public ValidationFailureBuilder detail(String nameAndValue) {
+		return detail(nameAndValue, nameAndValue);
+	}
+
+	/**
+	 * Add a detail to associate with the failure.
+	 * @param name the logical name of the message; for example, "cause" or "recommendedAction"
+	 * @param value the detail value, either a hard coded message string or a constraint-relative message code used to
+	 * resolve the detail message text
+	 * @return this, for fluent call chaining
+	 */
+	public ValidationFailureBuilder detail(String name, String value) {
+		if (details == null) {
+			details = new HashMap();
+		}
+		details.put(name, value);
 		return this;
 	}
 
@@ -108,14 +147,20 @@ public class ValidationFailureBuilder {
 	}
 
 	/**
-	 * Build the ValidationFailure. Called after setting builder properties.
+	 * Build the ValidationFailure. Call after setting builder properties.
+	 * @see #forProperty(String)
+	 * @see #constraint(String)
+	 * @see #message(String)
+	 * @see #detail(String)
+	 * @see #arg(String, Object)
+	 * @see #resolvableArg(String, String)
 	 * @return this, for fluent call chaining
 	 */
 	public ValidationFailure build() {
 		if (severity == null) {
 			severity = Severity.ERROR;
 		}
-		return new ValidationFailure(property, constraint, severity, args, defaultText);
+		return new ValidationFailure(severity, property, constraint, message, details, args);
 	}
 
 }

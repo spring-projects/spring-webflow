@@ -48,6 +48,22 @@ public class DefaultValidationContext implements ValidationContext {
 		return result != null ? result.getOriginalValue() : null;
 	}
 
+	public void setProperty(String property) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public void validate(Object constraint, Object propertyContext) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public void validate(Object constraint) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public void addDefaultFailure() {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
 	public void addFailure(final ValidationFailure failure) {
 		ValidationFailureModelContext modelContext = new ValidationFailureModelContext() {
 			public String getModel() {

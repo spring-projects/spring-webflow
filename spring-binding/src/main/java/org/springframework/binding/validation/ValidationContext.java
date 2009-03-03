@@ -46,10 +46,41 @@ public interface ValidationContext {
 	public Object getUserValue(String property);
 
 	/**
-	 * Add a validation failure to this context. Called by a validator to report failures against the current object
-	 * being validated. Use to report a general failure against the object, or a specific failure against a property on
-	 * the object. The failure code provided is typically mapped to one or message codes that result in a Message being
-	 * added to the {@link MessageContext}.
+	 * Set the property of the model that is about to be validated. This property becomes the "current property"
+	 * associated with this context.
+	 * @param property the name of the property that will be validated
+	 */
+	public void setProperty(String property);
+
+	/**
+	 * Validate the current property using the constraint provided. The value of the current property will be passed
+	 * directly to the constraint for validation. Internally, the constraint may use {@link #addDefaultFailure()} to
+	 * report a default failure, or {@link #addFailure(ValidationFailure)} to report a custom failure.
+	 * @param constraint the validation constraint to invoek
+	 */
+	public void validate(Object constraint);
+
+	/**
+	 * Validate the current property context using the constraint provided. Call this method when additional context
+	 * besides just the property value is required for constraint validation. Internally, the constraint may use
+	 * {@link #addDefaultFailure()} to report a default failure, or {@link #addFailure(ValidationFailure)} to report a
+	 * custom failure.
+	 * @param constraint the validation constraint to invoke
+	 * @param propertyContext the property context object to validate
+	 */
+	public void validate(Object constraint, Object propertyContext);
+
+	/**
+	 * Add the default validation failure for the current context. Called by a validation constraint to report failures
+	 * against the current object being validated.
+	 */
+	public void addDefaultFailure();
+
+	/**
+	 * Add a validation failure to this context. Called by a validation constraint to report failures against the
+	 * current object being validated. Use to report a general failure against the object, or a specific failure against
+	 * a property on the object. The failure code provided is typically mapped to one or message codes that result in a
+	 * Message being added to the {@link MessageContext}.
 	 * @param failure the validation failure
 	 * @see #getMessageContext()
 	 * @see ValidationFailureMessageResolverFactory

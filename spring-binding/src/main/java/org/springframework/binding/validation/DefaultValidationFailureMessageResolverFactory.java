@@ -124,7 +124,7 @@ public class DefaultValidationFailureMessageResolverFactory implements Validatio
 
 		public Message resolveMessage(MessageSource messageSource, Locale locale) {
 			DefaultMessageSourceResolvable resolvable = new DefaultMessageSourceResolvable(failureMessageCodesFactory
-					.createMessageCodes(failure, modelContext), failure.getDefaultMessage());
+					.createMessageCodes(failure, modelContext), failure.getMessage());
 			String text = messageSource.getMessage(resolvable, locale);
 			Expression expression = expressionParser.parseExpression(text, new FluentParserContext()
 					.evaluate(Map.class).template());
