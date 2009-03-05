@@ -35,7 +35,7 @@ public interface ConversionService {
 	 * source to an instance of targetClass
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionExecutorNotFoundException,
+	public <T> T executeConversion(Object source, Class<T> targetClass) throws ConversionExecutorNotFoundException,
 			ConversionException;
 
 	/**
@@ -50,7 +50,7 @@ public interface ConversionService {
 	 * source to an instance of targetClass
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(String converterId, Object source, Class<?> targetClass);
+	public <T> T executeConversion(String converterId, Object source, Class<T> targetClass);
 
 	/**
 	 * Get a ConversionExecutor capable of converting objects from <code>sourceClass</code> to <code>targetClass</code>.
@@ -67,15 +67,15 @@ public interface ConversionService {
 	 * Get a ConversionExecutor that uses a custom converter to capable convert objects from <code>sourceClass</code> to
 	 * <code>targetClass</code>. The returned ConversionExecutor is thread-safe and may safely be cached for use in
 	 * client code.
-	 * @param id the id of the custom converter, which must be registered with this conversion service and capable of
-	 * converting from sourceClass to targetClass (required)
+	 * @param converterId the id of the custom converter, which must be registered with this conversion service and
+	 * capable of converting from sourceClass to targetClass (required)
 	 * @param sourceClass the source class to convert from (required)
 	 * @param targetClass the target class to convert to (required)
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public <S, T> ConversionExecutor<S, T> getConversionExecutor(String id, Class<S> sourceClass, Class<T> targetClass)
-			throws ConversionExecutorNotFoundException;
+	public <S, T> ConversionExecutor<S, T> getConversionExecutor(String converterId, Class<S> sourceClass,
+			Class<T> targetClass) throws ConversionExecutorNotFoundException;
 
 	/**
 	 * Lookup a class by its well-known alias. For example, <code>long</code> for <code>java.lang.Long</code>
