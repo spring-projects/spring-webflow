@@ -22,24 +22,24 @@ package org.springframework.binding.convert;
  * 
  * @author Keith Donald
  */
-public interface ConversionExecutor {
+public interface ConversionExecutor<S, T> {
 
 	/**
 	 * Returns the source class of conversions performed by this executor.
 	 * @return the source class
 	 */
-	public Class getSourceClass();
+	public Class<S> getSourceClass();
 
 	/**
 	 * Returns the target class of conversions performed by this executor.
 	 * @return the target class
 	 */
-	public Class getTargetClass();
+	public Class<T> getTargetClass();
 
 	/**
 	 * Execute the conversion for the provided source object.
 	 * @param source the source object to convert
 	 */
-	public Object execute(Object source) throws ConversionExecutionException;
+	public T execute(S source) throws ConversionExecutionException;
 
 }

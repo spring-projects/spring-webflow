@@ -34,7 +34,7 @@ public interface ConversionService {
 	 * @return the converted object, an instance of the <code>targetClass</code>
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(Object source, Class targetClass) throws ConversionException;
+	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException;
 
 	/**
 	 * Execute a conversion using the custom converter with the provided id.
@@ -45,7 +45,7 @@ public interface ConversionService {
 	 * @return the converted object, an instance of the <code>targetClass</code>
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(String converterId, Object source, Class targetClass);
+	public Object executeConversion(String converterId, Object source, Class<?> targetClass);
 
 	/**
 	 * Return the default conversion executor capable of converting source objects of the specified
@@ -57,7 +57,7 @@ public interface ConversionService {
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+	public <S, T> ConversionExecutor<S, T> getConversionExecutor(Class<S> sourceClass, Class<T> targetClass)
 			throws ConversionExecutorNotFoundException;
 
 	/**
@@ -71,7 +71,7 @@ public interface ConversionService {
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+	public <S, T> ConversionExecutor<S, T> getConversionExecutor(String id, Class<S> sourceClass, Class<T> targetClass)
 			throws ConversionExecutorNotFoundException;
 
 	/**
@@ -81,13 +81,13 @@ public interface ConversionService {
 	 * @param sourceClass the source class converting from
 	 * @return the conversion executors that can convert from that source class
 	 */
-	public Set getConversionExecutors(Class sourceClass);
+	public <S> Set<ConversionExecutor<S, ?>> getConversionExecutors(Class<S> sourceClass);
 
 	/**
 	 * Lookup a class by its well-known alias. For example, <code>long</code> for <code>java.lang.Long</code>
 	 * @param alias the class alias
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
-	public Class getClassForAlias(String alias);
+	public Class<?> getClassForAlias(String alias);
 
 }
