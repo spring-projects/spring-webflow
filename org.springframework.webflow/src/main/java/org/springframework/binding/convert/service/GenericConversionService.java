@@ -31,8 +31,10 @@ import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.ArrayToArray;
 import org.springframework.binding.convert.converters.ArrayToCollection;
+import org.springframework.binding.convert.converters.CollectionToCollection;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.converters.ObjectToArray;
+import org.springframework.binding.convert.converters.ObjectToCollection;
 import org.springframework.binding.convert.converters.ReverseConverter;
 import org.springframework.binding.convert.converters.TwoWayConverter;
 import org.springframework.util.Assert;
@@ -130,6 +132,7 @@ public class GenericConversionService implements ConversionService {
 		if (targetClass.isAssignableFrom(sourceClass)) {
 			return new StaticConversionExecutor(sourceClass, targetClass, new NoOpConverter(sourceClass, targetClass));
 		}
+		// special handling for arrays since they are not indexable classes
 		if (sourceClass.isArray()) {
 			if (targetClass.isArray()) {
 				return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(this));
@@ -183,6 +186,135 @@ public class GenericConversionService implements ConversionService {
 		}
 		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
 		targetClass = convertToWrapperClassIfNecessary(targetClass);
+		if (sourceClass.isArray()) {
+			Class sourceComponentType = sourceClass.getComponentType();
+			if (targetClass.isArray()) {
+				Class targetComponentType = targetClass.getComponentType();
+				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
+					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id
+										+ "' cannot convert from an array storing elements of type ["
+										+ sourceComponentType.getName() + "] to an array of storing elements of type ["
+										+ targetComponentType.getName() + "]");
+					}
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							targetComponentType, new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToArray(elementConverter));
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id
+									+ "' cannot convert from an array storing elements of type ["
+									+ sourceComponentType.getName() + "] to an array storing elements of type ["
+									+ targetComponentType.getName() + "]");
+				}
+			} else if (Collection.class.isAssignableFrom(targetClass)) {
+				if (!targetClass.isInterface() && Modifier.isAbstract(targetClass.getModifiers())) {
+					throw new IllegalArgumentException("Conversion target class [" + targetClass.getName()
+							+ "] is invalid; cannot convert to abstract collection types--"
+							+ "request an interface or concrete implementation instead");
+				}
+				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
+					// type erasure has prevented us from getting the concrete type, this is best we can do for now
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
+							.getTargetClass(), converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
+							elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
+							.getSourceClass(), new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
+							elementConverter));
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id
+									+ "' cannot convert from array an storing elements type ["
+									+ sourceComponentType.getName() + "] to a collection of type ["
+									+ targetClass.getName() + "]");
+				}
+			}
+		}
+		if (targetClass.isArray()) {
+			Class targetComponentType = targetClass.getComponentType();
+			if (Collection.class.isAssignableFrom(sourceClass)) {
+				// type erasure limits us here as well
+				if (converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+					ConversionExecutor elementConverter = new StaticConversionExecutor(converter.getSourceClass(),
+							targetComponentType, converter);
+					Converter collectionToArray = new ReverseConverter(new ArrayToCollection(elementConverter));
+					return new StaticConversionExecutor(sourceClass, targetClass, collectionToArray);
+				} else if (converter.getSourceClass().isAssignableFrom(targetComponentType)
+						&& converter instanceof TwoWayConverter) {
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(converter.getTargetClass(),
+							targetComponentType, new ReverseConverter(twoWay));
+					Converter collectionToArray = new ReverseConverter(new ArrayToCollection(elementConverter));
+					return new StaticConversionExecutor(sourceClass, targetClass, collectionToArray);
+				} else {
+					throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+							"Custom ConversionExecutor with id '" + id + "' cannot convert from collection of type ["
+									+ sourceClass.getName() + "] to an array storing elements of type ["
+									+ targetComponentType.getName() + "]");
+				}
+			} else {
+				if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
+					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+										+ sourceClass.getName() + "] to array holding elements of type ["
+										+ targetComponentType.getName() + "]");
+					}
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceClass,
+							targetComponentType, converter);
+					return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToArray(elementConverter));
+				} else if (converter.getTargetClass().isAssignableFrom(sourceClass)
+						&& converter instanceof TwoWayConverter) {
+					if (!converter.getSourceClass().isAssignableFrom(targetComponentType)) {
+						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
+								"Custom ConversionExecutor with id '" + id + "' cannot convert from sourceClass ["
+										+ sourceClass.getName() + "] to array holding elements of type ["
+										+ targetComponentType.getName() + "]");
+					}
+					TwoWayConverter twoWay = (TwoWayConverter) converter;
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceClass,
+							targetComponentType, new ReverseConverter(twoWay));
+					return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToArray(elementConverter));
+				}
+			}
+		}
+		if (Collection.class.isAssignableFrom(targetClass)) {
+			if (Collection.class.isAssignableFrom(sourceClass)) {
+				ConversionExecutor elementConverter;
+				// type erasure forces us to do runtime checks of list elements
+				if (converter instanceof TwoWayConverter) {
+					elementConverter = new TwoWayCapableConversionExecutor(converter.getSourceClass(), converter
+							.getTargetClass(), (TwoWayConverter) converter);
+				} else {
+					elementConverter = new StaticConversionExecutor(converter.getSourceClass(), converter
+							.getTargetClass(), converter);
+				}
+				return new StaticConversionExecutor(sourceClass, targetClass, new CollectionToCollection(
+						elementConverter));
+			} else {
+				ConversionExecutor elementConverter;
+				// type erasure forces us to do runtime checks of list elements
+				if (converter instanceof TwoWayConverter) {
+					elementConverter = new TwoWayCapableConversionExecutor(sourceClass, converter.getTargetClass(),
+							(TwoWayConverter) converter);
+				} else {
+					elementConverter = new StaticConversionExecutor(sourceClass, converter.getTargetClass(), converter);
+				}
+				return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToCollection(elementConverter));
+			}
+		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {
 			if (!converter.getTargetClass().isAssignableFrom(targetClass)) {
 				throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
@@ -248,6 +380,15 @@ public class GenericConversionService implements ConversionService {
 	public Object executeConversion(Object source, Class targetClass) throws ConversionException {
 		if (source != null) {
 			ConversionExecutor conversionExecutor = getConversionExecutor(source.getClass(), targetClass);
+			return conversionExecutor.execute(source);
+		} else {
+			return null;
+		}
+	}
+
+	public Object executeConversion(String converterId, Object source, Class targetClass) throws ConversionException {
+		if (source != null) {
+			ConversionExecutor conversionExecutor = getConversionExecutor(converterId, source.getClass(), targetClass);
 			return conversionExecutor.execute(source);
 		} else {
 			return null;
@@ -383,5 +524,4 @@ public class GenericConversionService implements ConversionService {
 			return targetType;
 		}
 	}
-
 }
