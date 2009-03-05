@@ -15,43 +15,46 @@
  */
 package org.springframework.binding.convert;
 
-import java.util.Set;
-
 /**
- * A service interface for retrieving type conversion executors. The returned command objects are thread-safe and may be
- * safely cached for use by client code.
- * 
- * Type converters convert from one type to another.
+ * A service interface for type conversion. This is the entry point into the convert system. Call one of the
+ * {@link #executeConversion(Object, Class) executeConversion} operations to perform a thread-safe type conversion using
+ * this system. Call one of the {@link #getConversionExecutor(Class, Class) getConversionExecutor} operations to obtain
+ * a type-safe and thread-safe {@link ConversionExecutor} type-conversion command for later use.
  * 
  * @author Keith Donald
  */
 public interface ConversionService {
 
 	/**
-	 * Execute a conversion of the source object provided to the specified <code>targetClass</code>
+	 * Convert the source object to <code>targetClass</code>
 	 * @param source the source to convert from (may be null)
 	 * @param targetClass the target class to convert to
-	 * @return the converted object, an instance of the <code>targetClass</code>
+	 * @return the converted object, an instance of the <code>targetClass</code>, or <code>null</code> if a null source
+	 * was provided
+	 * @throws ConversionExecutorNotFoundException if no suitable conversion executor could be found to convert the
+	 * source to an instance of targetClass
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException;
+	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionExecutorNotFoundException,
+			ConversionException;
 
 	/**
-	 * Execute a conversion using the custom converter with the provided id.
+	 * Convert the source object to <code>targetClass</code> using a custom converter.
 	 * @param converterId the id of the custom converter, which must be registered with this conversion service and
-	 * capable of converting to the target class
+	 * capable of converting to the targetClass
 	 * @param source the source to convert from (may be null)
 	 * @param targetClass the target class to convert to
-	 * @return the converted object, an instance of the <code>targetClass</code>
+	 * @return the converted object, an instance of the <code>targetClass</code>, or <code>null</code> if a null source
+	 * was provided
+	 * @throws ConversionExecutorNotFoundException if no suitable conversion executor could be found to convert the
+	 * source to an instance of targetClass
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
 	public Object executeConversion(String converterId, Object source, Class<?> targetClass);
 
 	/**
-	 * Return the default conversion executor capable of converting source objects of the specified
-	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
-	 * <p>
-	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
+	 * Get a ConversionExecutor capable of converting objects from <code>sourceClass</code> to <code>targetClass</code>.
+	 * The returned ConversionExecutor is thread-safe and may safely be cached for later use by client code.
 	 * @param sourceClass the source class to convert from (required)
 	 * @param targetClass the target class to convert to (required)
 	 * @return the executor that can execute instance type conversion, never null
@@ -61,11 +64,11 @@ public interface ConversionService {
 			throws ConversionExecutorNotFoundException;
 
 	/**
-	 * Return the custom conversion executor capable of converting source objects of the specified
-	 * <code>sourceClass</code> to instances of the <code>targetClass</code>.
-	 * <p>
-	 * The returned ConversionExecutor is thread-safe and may safely be cached for use in client code.
-	 * @param id the id of the custom conversion executor (required)
+	 * Get a ConversionExecutor that uses a custom converter to capable convert objects from <code>sourceClass</code> to
+	 * <code>targetClass</code>. The returned ConversionExecutor is thread-safe and may safely be cached for use in
+	 * client code.
+	 * @param id the id of the custom converter, which must be registered with this conversion service and capable of
+	 * converting from sourceClass to targetClass (required)
 	 * @param sourceClass the source class to convert from (required)
 	 * @param targetClass the target class to convert to (required)
 	 * @return the executor that can execute instance type conversion, never null
@@ -73,15 +76,6 @@ public interface ConversionService {
 	 */
 	public <S, T> ConversionExecutor<S, T> getConversionExecutor(String id, Class<S> sourceClass, Class<T> targetClass)
 			throws ConversionExecutorNotFoundException;
-
-	/**
-	 * Return all conversion executors capable of converting <i>from</i> the provided <code>sourceClass</code>. For
-	 * example, <code>getConversionExecutor(String.class)</code> would return all converters that convert from String to
-	 * some other Object. Mainly useful for adapting a set of converters to some other environment.
-	 * @param sourceClass the source class converting from
-	 * @return the conversion executors that can convert from that source class
-	 */
-	public <S> Set<ConversionExecutor<S, ?>> getConversionExecutors(Class<S> sourceClass);
 
 	/**
 	 * Lookup a class by its well-known alias. For example, <code>long</code> for <code>java.lang.Long</code>
