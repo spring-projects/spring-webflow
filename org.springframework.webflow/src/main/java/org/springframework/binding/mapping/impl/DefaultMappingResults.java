@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.MappingResultCriteria;
 
 /**
  * Default mapping results implementation.
@@ -83,7 +83,7 @@ public class DefaultMappingResults implements MappingResults {
 		return Collections.unmodifiableList(errorResults);
 	}
 
-	public List getResults(MappingResultsCriteria criteria) {
+	public List getResults(MappingResultCriteria criteria) {
 		List results = new ArrayList();
 		Iterator it = mappingResults.iterator();
 		while (it.hasNext()) {

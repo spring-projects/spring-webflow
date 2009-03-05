@@ -16,7 +16,6 @@
 package org.springframework.binding.mapping.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -36,7 +35,7 @@ public class DefaultMapper implements Mapper {
 
 	private static final Log logger = LogFactory.getLog(DefaultMapper.class);
 
-	private List mappings = new ArrayList();
+	private List<DefaultMapping> mappings = new ArrayList<DefaultMapping>();
 
 	/**
 	 * Add a mapping to this mapper.
@@ -53,7 +52,7 @@ public class DefaultMapper implements Mapper {
 	 * @return the list of mappings
 	 */
 	public Mapping[] getMappings() {
-		return (Mapping[]) mappings.toArray(new Mapping[mappings.size()]);
+		return mappings.toArray(new Mapping[mappings.size()]);
 	}
 
 	public MappingResults map(Object source, Object target) {
@@ -62,10 +61,8 @@ public class DefaultMapper implements Mapper {
 					+ target.getClass().getName() + "]");
 		}
 		DefaultMappingContext context = new DefaultMappingContext(source, target);
-		Iterator it = mappings.iterator();
-		while (it.hasNext()) {
-			DefaultMapping mapping = (DefaultMapping) it.next();
-			mapping.map(context);
+		for (DefaultMapping m : mappings) {
+			m.map(context);
 		}
 		MappingResults results = context.getMappingResults();
 		if (logger.isDebugEnabled()) {

@@ -24,9 +24,8 @@ public interface Mapper {
 
 	/**
 	 * Map state from a source object to a target object.
-	 * @param source the source
-	 * @param target the target
-	 * @return results of the mapping transaction
+	 * @param context the mapping context
+	 * @return results of the mapping trasnsaction
 	 */
-	public MappingResults map(Object source, Object target);
+	MappingResults map(MapperContext context);
 }

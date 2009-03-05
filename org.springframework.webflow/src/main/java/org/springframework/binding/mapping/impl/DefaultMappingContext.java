@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.mapping.Mapping;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
@@ -29,6 +28,7 @@ import org.springframework.binding.mapping.results.SourceAccessError;
 import org.springframework.binding.mapping.results.Success;
 import org.springframework.binding.mapping.results.TargetAccessError;
 import org.springframework.binding.mapping.results.TypeConversionError;
+import org.springframework.expression.EvaluationException;
 
 /**
  * Default mapping context implementation.

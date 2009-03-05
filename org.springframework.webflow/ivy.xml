@@ -20,23 +20,24 @@
 
 	<dependencies>
 		<!--  core dependencies -->
-		<dependency org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime" />
 		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="provided->runtime" />
-		<dependency org="javax.portlet" name="com.springsource.javax.portlet" rev="1.0.0" conf="provided->runtime" />
-		<dependency org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime" />
+		<dependency org="javax.portlet" name="com.springsource.javax.portlet" rev="2.0.0" conf="provided->runtime" />
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet" rev="2.5.0" conf="provided->runtime" />
 		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" conf="provided->runtime"/>
 		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.logging" rev="1.1.1" conf="compile->runtime"/>
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate" rev="3.2.6.ga" conf="optional, test->runtime" />
-		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="provided, test->runtime" />
+		<dependency org="org.junit" name="com.springsource.org.junit" rev="4.5.0" conf="compile, test->runtime" />
 		<dependency org="org.springframework" name="org.springframework.beans" rev="${org.springframework}" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.context" rev="${org.springframework}" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.core" rev="${org.springframework}" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.expression" rev="${org.springframework}" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.orm" rev="${org.springframework}" conf="optional->runtime" />
 		<dependency org="org.springframework" name="org.springframework.transaction" rev="${org.springframework}" conf="optional->runtime" />
 		<dependency org="org.springframework" name="org.springframework.web" rev="${org.springframework}" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web.portlet" rev="${org.springframework}" conf="optional->runtime" />
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="${org.springframework}" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.4.A" conf="optional->runtime" />
+		<dependency org="org.springframework.js" name="org.springframework.js" rev="3.0.0.CI-26" conf="compile->runtime"/>
 
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime" />

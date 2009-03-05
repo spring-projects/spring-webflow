@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.mapping;
 
-import org.springframework.binding.expression.Expression;
+import org.springframework.expression.Expression;
 
 /**
  * Information about a single mapping.
@@ -27,15 +27,15 @@ public interface Mapping {
 	/**
 	 * The source of the mapping.
 	 */
-	public Expression getSourceExpression();
+	Expression getSourceExpression();
 
 	/**
 	 * The target of the mapping.
 	 */
-	public Expression getTargetExpression();
+	Expression getTargetExpression();
 
 	/**
 	 * Whether this is a required mapping.
 	 */
-	public boolean isRequired();
+	boolean isRequired();
 }

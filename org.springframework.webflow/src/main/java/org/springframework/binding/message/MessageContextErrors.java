@@ -25,7 +25,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.MappingResultCriteria;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -155,7 +155,7 @@ public class MessageContextErrors extends AbstractErrors {
 		}
 	};
 
-	private static class PropertyErrorMappingResult implements MappingResultsCriteria {
+	private static class PropertyErrorMappingResult implements MappingResultCriteria {
 
 		private String property;
 

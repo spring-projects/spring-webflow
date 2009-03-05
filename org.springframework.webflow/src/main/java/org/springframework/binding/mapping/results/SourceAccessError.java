@@ -15,9 +15,8 @@
  */
 package org.springframework.binding.mapping.results;
 
-import org.springframework.binding.expression.EvaluationException;
-import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.mapping.Mapping;
+import org.springframework.expression.EvaluationException;
 
 /**
  * Indicates an exception occurred accessing the source object to be mapped. Used to report source

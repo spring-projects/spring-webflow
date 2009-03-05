@@ -17,9 +17,9 @@ package org.springframework.binding.mapping.impl;
 
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.expression.EvaluationException;
-import org.springframework.binding.expression.Expression;
 import org.springframework.binding.mapping.Mapping;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
 import org.springframework.util.Assert;
 
 /**

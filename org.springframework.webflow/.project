@@ -3,7 +3,6 @@
 	<name>org.springframework.webflow</name>
 	<comment></comment>
 	<projects>
-		<project>build-spring-webflow</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

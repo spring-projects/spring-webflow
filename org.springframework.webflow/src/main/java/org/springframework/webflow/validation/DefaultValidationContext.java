@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.MappingResultCriteria;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -47,7 +47,7 @@ public class DefaultValidationContext implements ValidationContext {
 		return null;
 	}
 
-	private static class PropertyMappingResult implements MappingResultsCriteria {
+	private static class PropertyMappingResult implements MappingResultCriteria {
 
 		private String property;
 

@@ -35,7 +35,7 @@ import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.MappingResultCriteria;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.binding.message.MessageBuilder;
@@ -63,9 +63,9 @@ public abstract class AbstractMvcView implements View {
 
 	private static final Log logger = LogFactory.getLog(AbstractMvcView.class);
 
-	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
+	private static final MappingResultCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
 
-	private static final MappingResultsCriteria MAPPING_ERROR = new MappingError();
+	private static final MappingResultCriteria MAPPING_ERROR = new MappingError();
 
 	private org.springframework.web.servlet.View view;
 
@@ -504,13 +504,13 @@ public abstract class AbstractMvcView implements View {
 				expressionParser, mappingResults).validate();
 	}
 
-	private static class PropertyNotFoundError implements MappingResultsCriteria {
+	private static class PropertyNotFoundError implements MappingResultCriteria {
 		public boolean test(MappingResult result) {
 			return result.isError() && "propertyNotFound".equals(result.getCode());
 		}
 	}
 
-	private static class MappingError implements MappingResultsCriteria {
+	private static class MappingError implements MappingResultCriteria {
 		public boolean test(MappingResult result) {
 			return result.isError() && !PROPERTY_NOT_FOUND_ERROR.test(result);
 		}

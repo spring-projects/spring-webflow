@@ -53,6 +53,6 @@ public interface MappingResults {
 	 * Get all results that meet the given result criteria.
 	 * @param criteria the mapping result criteria
 	 */
-	public List getResults(MappingResultsCriteria criteria);
+	public List getResults(MappingResultCriteria criteria);
 
 }

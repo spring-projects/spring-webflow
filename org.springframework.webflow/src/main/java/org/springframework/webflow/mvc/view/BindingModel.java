@@ -28,7 +28,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.binding.mapping.MappingResultCriteria;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageCriteria;
@@ -190,7 +190,7 @@ public class BindingModel extends AbstractErrors {
 		return errors;
 	}
 
-	private static class FieldErrorResult implements MappingResultsCriteria {
+	private static class FieldErrorResult implements MappingResultCriteria {
 
 		private String field;
 
