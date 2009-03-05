@@ -19,7 +19,7 @@ package org.springframework.binding.convert;
  * A service interface for type conversion. This is the entry point into the convert system. Call one of the
  * {@link #executeConversion(Object, Class) executeConversion} operations to perform a thread-safe type conversion using
  * this system. Call one of the {@link #getConversionExecutor(Class, Class) getConversionExecutor} operations to obtain
- * a type-safe and thread-safe {@link ConversionExecutor} type-conversion command for later use.
+ * a thread-safe {@link ConversionExecutor} command for later use.
  * 
  * @author Keith Donald
  */
@@ -50,7 +50,8 @@ public interface ConversionService {
 	 * source to an instance of targetClass
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public <T> T executeConversion(String converterId, Object source, Class<T> targetClass);
+	public <T> T executeConversion(String converterId, Object source, Class<T> targetClass)
+			throws ConversionExecutorNotFoundException, ConversionException;
 
 	/**
 	 * Get a ConversionExecutor capable of converting objects from <code>sourceClass</code> to <code>targetClass</code>.
