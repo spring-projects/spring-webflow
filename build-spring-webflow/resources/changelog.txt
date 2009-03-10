@@ -15,6 +15,8 @@ Bug Fixes
 * Fixed bug where Errors nestedPath attribute was not respected in views rendered by Web Flow (SWF-973)
 * Fixed bug where Errors nestedPath attribute was not respected when using Errors API programatically within a Validator called by Web Flow (SWF-973)
 * Made MessageCodesResolver pluggable on MvcViewFactoryCreator; configure a DefaultMessageCodesResolver to resolve error message codes consistent with default Spring MVC behavior (SWF-977)
+* Made FlowHandlerAdapter#sendRedirect method protected, allowing overriding of web flow system redirect behavior; for example, to redirect to a SSL channel.
+* Made DefaultFlowUrlHandler consistent with Spring MVC RedirectView behavior for URL encoding of flow URL parameters; URL encoding scheme is also now pluggable.
 * Introduced createDefaultFlowHandler hook in FlowHandlerMapping, allowing for customizing the Default FlowHandler implementation application wide (SWF-994)
 
 Improvements

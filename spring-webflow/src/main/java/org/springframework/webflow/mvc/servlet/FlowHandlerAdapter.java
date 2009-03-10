@@ -53,6 +53,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private static final Log logger = LogFactory.getLog(FlowHandlerAdapter.class);
 
+	private static final String REFERER_FLOW_EXECUTION_ATTRIBUTE = "refererExecution";
+
 	private static final String SERVLET_RELATIVE_LOCATION_PREFIX = "servletRelative:";
 
 	private static final String CONTEXT_RELATIVE_LOCATION_PREFIX = "contextRelative:";
@@ -134,6 +136,14 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	}
 
 	/**
+	 * Whether redirect sent by this handler adapter should be compatible with HTTP 1.0 clients.
+	 * @return true if so, false otherwise
+	 */
+	public boolean getRedirectHttp10Compatible() {
+		return redirectHttp10Compatible;
+	}
+
+	/**
 	 * Set whether redirects sent by this handler adapter should be compatible with HTTP 1.0 clients.
 	 * <p>
 	 * By default, this will enforce a redirect HTTP status code of 302 by delegating to
@@ -189,6 +199,10 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		return null;
 	}
 
+	public long getLastModified(HttpServletRequest request, Object handler) {
+		return -1;
+	}
+
 	// subclassing hooks
 
 	/**
@@ -206,7 +220,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	/**
 	 * The default algorithm to determine the id of the flow to launch from the current request. Only called if
 	 * {@link FlowHandler#getFlowId()} returns null. This implementation delegates to the configured
-	 * {@link FlowUrlHandler#getFlowId(HttpServletRequest)}.
+	 * {@link FlowUrlHandler#getFlowId(HttpServletRequest)}. Subclasses may override.
 	 * @param request the current request
 	 */
 	protected String defaultGetFlowId(HttpServletRequest request) {
@@ -216,7 +230,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	/**
 	 * The default algorithm to create the flow execution input map. Only called if
 	 * {@link FlowHandler#createExecutionInputMap(HttpServletRequest)} returns null. This implementation exposes all
-	 * current request parameters as flow execution input attributes.
+	 * current request parameters as flow execution input attributes. Subclasses may override.
 	 * @param request the current request
 	 */
 	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
@@ -243,7 +257,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * The default algorithm for handling a flow execution outcome. Only called if
 	 * {@link FlowHandler#handleExecutionOutcome(FlowExecutionOutcome, HttpServletRequest, HttpServletResponse)} returns
 	 * null. This implementation attempts to start a new execution of the ended flow. Any flow execution output is
-	 * passed as input to the new execution.
+	 * passed as input to the new execution. Subclasses may override.
 	 * @param flowId the id of the ended flow
 	 * @param outcome the flow execution outcome
 	 * @param context ServletExternalContext the completed ServletExternalContext
@@ -268,6 +282,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * {@link FlowHandler#handleException(FlowException, HttpServletRequest, HttpServletResponse)} returns null. This
 	 * implementation rethrows the exception unless it is a {@link NoSuchFlowExecutionException}. If the exception is a
 	 * NoSuchFlowExecutionException, this implementation attempts to start a new execution of the ended or expired flow.
+	 * Subclasses may override.
 	 * @param flowId the id of the ended flow
 	 * @param e the flow exception
 	 * @param request the current request
@@ -285,6 +300,31 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			}
 		} else {
 			throw e;
+		}
+	}
+
+	/**
+	 * Sends a redirect to the requested url using {@link HttpServletResponse#sendRedirect(String)}.Called to actually
+	 * perform flow execution redirects, flow definition redirects, and external redirects. Subclasses may override to
+	 * customize general Web Flow system redirect behavior.
+	 * @param url the url to redirect to
+	 * @param request the current request
+	 * @param response the current response
+	 * @throws IOException an exception occurred
+	 */
+	protected void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		if (ajaxHandler.isAjaxRequest(request, response)) {
+			ajaxHandler.sendAjaxRedirect(url, request, response, false);
+		} else {
+			if (redirectHttp10Compatible) {
+				// Always send status code 302.
+				response.sendRedirect(response.encodeRedirectURL(url));
+			} else {
+				// Correct HTTP status code is 303, in particular for POST requests.
+				response.setStatus(303);
+				response.setHeader("Location", response.encodeRedirectURL(url));
+			}
 		}
 	}
 
@@ -336,7 +376,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		String flowId = context.getFlowRedirectFlowId();
 		MutableAttributeMap input = context.getFlowRedirectFlowInput();
 		if (result.isPaused()) {
-			input.put("refererExecution", result.getPausedKey());
+			input.put(REFERER_FLOW_EXECUTION_ATTRIBUTE, result.getPausedKey());
 		}
 		String url = flowUrlHandler.createFlowDefinitionUrl(flowId, input, request);
 		if (logger.isDebugEnabled()) {
@@ -385,21 +425,6 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		sendRedirect(url.toString(), request, response);
 	}
 
-	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (ajaxHandler.isAjaxRequest(request, response)) {
-			ajaxHandler.sendAjaxRedirect(url, request, response, false);
-		} else {
-			if (redirectHttp10Compatible) {
-				// Always send status code 302.
-				response.sendRedirect(response.encodeRedirectURL(url));
-			} else {
-				// Correct HTTP status code is 303, in particular for POST requests.
-				response.setStatus(303);
-				response.setHeader("Location", response.encodeRedirectURL(url));
-			}
-		}
-	}
-
 	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
 			FlowHandler handler) throws IOException {
 		String location = handler.handleException(e, request, response);
@@ -408,10 +433,6 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		} else {
 			defaultHandleException(getFlowId(handler, request), e, request, response);
 		}
-	}
-
-	public long getLastModified(HttpServletRequest request, Object handler) {
-		return -1;
 	}
 
 	private String getFlowId(FlowHandler handler, HttpServletRequest request) {

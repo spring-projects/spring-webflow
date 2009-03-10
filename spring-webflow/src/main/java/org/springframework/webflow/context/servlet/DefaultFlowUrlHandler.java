@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 
 /**
@@ -50,16 +51,23 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * execution "e1s1" of the "hotels/booking" flow.
  * 
  * @author Keith Donald
- * 
  */
 public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
-	private static final String DEFAULT_URL_ENCODING_SCHEME = "UTF-8";
+	private static final String FLOW_EXECUTION_KEY_PARAMETER = "execution";
 
-	private String urlEncodingScheme = DEFAULT_URL_ENCODING_SCHEME;
+	private String encodingScheme;
+
+	/**
+	 * Set the character encoding scheme for flow urls. Default is the request's encoding scheme (which is ISO-8859-1 if
+	 * not specified otherwise).
+	 */
+	public void setEncodingScheme(String encodingScheme) {
+		this.encodingScheme = encodingScheme;
+	}
 
 	public String getFlowExecutionKey(HttpServletRequest request) {
-		return request.getParameter("execution");
+		return request.getParameter(FLOW_EXECUTION_KEY_PARAMETER);
 	}
 
 	public String getFlowId(HttpServletRequest request) {
@@ -90,7 +98,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		StringBuffer url = new StringBuffer();
 		url.append(request.getRequestURI());
 		url.append('?');
-		appendQueryParameter(url, "execution", flowExecutionKey);
+		appendQueryParameter(url, FLOW_EXECUTION_KEY_PARAMETER, flowExecutionKey, getEncodingScheme(request));
 		return url.toString();
 	}
 
@@ -118,35 +126,49 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		}
 		if (input != null && !input.isEmpty()) {
 			url.append('?');
-			appendQueryParameters(url, input.asMap());
+			appendQueryParameters(url, input.asMap(), getEncodingScheme(request));
 		}
 		return url.toString();
 	}
 
-	private void appendQueryParameters(StringBuffer url, Map parameters) {
+	// internal helpers
+
+	private String getEncodingScheme(HttpServletRequest request) {
+		if (encodingScheme != null) {
+			return encodingScheme;
+		} else {
+			String encodingScheme = request.getCharacterEncoding();
+			if (encodingScheme == null) {
+				encodingScheme = WebUtils.DEFAULT_CHARACTER_ENCODING;
+			}
+			return encodingScheme;
+		}
+	}
+
+	private void appendQueryParameters(StringBuffer url, Map parameters, String encodingScheme) {
 		Iterator entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
 			Map.Entry entry = (Map.Entry) entries.next();
-			appendQueryParameter(url, entry.getKey(), entry.getValue());
+			appendQueryParameter(url, entry.getKey(), entry.getValue(), encodingScheme);
 			if (entries.hasNext()) {
 				url.append('&');
 			}
 		}
 	}
 
-	private void appendQueryParameter(StringBuffer url, Object key, Object value) {
-		String encodedKey = encode(key);
-		String encodedValue = encode(value);
+	private void appendQueryParameter(StringBuffer url, Object key, Object value, String encodingScheme) {
+		String encodedKey = encode(key, encodingScheme);
+		String encodedValue = encode(value, encodingScheme);
 		url.append(encodedKey).append('=').append(encodedValue);
 	}
 
-	private String encode(Object value) {
-		return value != null ? urlEncode(String.valueOf(value)) : "";
+	private String encode(Object value, String encodingScheme) {
+		return value != null ? urlEncode(value.toString(), encodingScheme) : "";
 	}
 
-	private String urlEncode(String value) {
+	private String urlEncode(String value, String encodingScheme) {
 		try {
-			return URLEncoder.encode(String.valueOf(value), urlEncodingScheme);
+			return URLEncoder.encode(value, encodingScheme);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalArgumentException("Cannot url encode " + value);
 		}
