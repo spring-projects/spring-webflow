@@ -108,12 +108,22 @@ public class FlowHandlerMapping extends AbstractHandlerMapping {
 				logger.debug("Mapping request with URI '" + request.getRequestURI() + "' to flow with id '" + flowId
 						+ "'");
 			}
-			return new DefaultFlowHandler(flowId);
+			return createDefaultFlowHandler(flowId);
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("No flow mapping found for request with URI '" + request.getRequestURI() + "'");
 		}
 		return null;
+	}
+
+	/**
+	 * Factory method that returns the default flow handler for the flow with the given id. Subclasses may override to
+	 * return their own custom default FlowHandler.
+	 * @param flowId the id of the flow to handle invocation of
+	 * @return the default flow handler
+	 */
+	protected FlowHandler createDefaultFlowHandler(String flowId) {
+		return new DefaultFlowHandler(flowId);
 	}
 
 	private static class DefaultFlowHandler extends AbstractFlowHandler {
