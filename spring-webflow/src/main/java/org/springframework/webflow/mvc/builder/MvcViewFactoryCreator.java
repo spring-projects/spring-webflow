@@ -25,6 +25,8 @@ import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionP
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.DefaultMessageCodesResolver;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
@@ -34,6 +36,7 @@ import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
 import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
 import org.springframework.webflow.mvc.view.AbstractMvcViewFactory;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
+import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * Returns {@link ViewFactory view factories} that create native Spring MVC-based views. Used by a FlowBuilder to
@@ -66,6 +69,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 
 	private String fieldMarkerPrefix;
 
+	private MessageCodesResolver messageCodesResolver;
+
 	/**
 	 * Create a new Spring MVC View Factory Creator.
 	 * @see #setDefaultViewSuffix(String)
@@ -74,6 +79,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	 * @see #setUseSpringBeanBinding(boolean)
 	 * @see #setFlowViewResolver(FlowViewResolver)
 	 * @see #setViewResolvers(List)
+	 * @see #setMessageCodesResolver(MessageCodesResolver)
 	 */
 	public MvcViewFactoryCreator() {
 
@@ -146,6 +152,16 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.flowViewResolver = new DelegatingFlowViewResolver(viewResolvers);
 	}
 
+	/**
+	 * Sets the message codes resolver strategy to use to resolve bind and validation error message codes. If not set,
+	 * {@link WebFlowMessageCodesResolver} is the default. Plug in a {@link DefaultMessageCodesResolver} to resolve
+	 * message codes consistently between Spring MVC Controllers and Web Flow.
+	 * @param messageCodesResolver the message codes resolver
+	 */
+	public void setMessageCodesResolver(MessageCodesResolver messageCodesResolver) {
+		this.messageCodesResolver = messageCodesResolver;
+	}
+
 	// implementing ApplicationContextAware
 
 	public void setApplicationContext(ApplicationContext applicationContext) {
@@ -172,10 +188,10 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		if (environment == MvcEnvironment.SERVLET) {
 			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
-					binderConfiguration);
+					binderConfiguration, messageCodesResolver);
 		} else if (environment == MvcEnvironment.PORTLET) {
 			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
-					binderConfiguration);
+					binderConfiguration, messageCodesResolver);
 		} else {
 			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
 		}

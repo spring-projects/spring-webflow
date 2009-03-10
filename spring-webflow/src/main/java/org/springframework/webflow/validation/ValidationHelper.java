@@ -54,7 +54,7 @@ public class ValidationHelper {
 
 	private final ExpressionParser expressionParser;
 
-	private final MessageCodesResolver bindingErrorMessageCodesResolver;
+	private final MessageCodesResolver messageCodesResolver;
 
 	private final MappingResults mappingResults;
 
@@ -76,7 +76,7 @@ public class ValidationHelper {
 	 * @param mappingResults object mapping results
 	 */
 	public ValidationHelper(Object model, RequestContext requestContext, String eventId, String modelName,
-			ExpressionParser expressionParser, MessageCodesResolver bindingErrorMessageCodesResolver,
+			ExpressionParser expressionParser, MessageCodesResolver messageCodesResolver,
 			MappingResults mappingResults) {
 		Assert.notNull(model, "The model to validate is required");
 		Assert.notNull(requestContext, "The request context for the validator is required");
@@ -85,7 +85,7 @@ public class ValidationHelper {
 		this.eventId = eventId;
 		this.modelName = modelName;
 		this.expressionParser = expressionParser;
-		this.bindingErrorMessageCodesResolver = bindingErrorMessageCodesResolver;
+		this.messageCodesResolver = messageCodesResolver;
 		this.mappingResults = mappingResults;
 	}
 
@@ -128,7 +128,7 @@ public class ValidationHelper {
 		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, new Class[] { Errors.class });
 		if (validateMethod != null) {
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
+					model, expressionParser, messageCodesResolver, mappingResults);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking current state model validation method '" + methodName + "(Errors)'");
 			}
@@ -157,7 +157,7 @@ public class ValidationHelper {
 				logger.debug("Invoking default model validation method 'validate(Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
+					model, expressionParser, messageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { errors });
 			return true;
 		}
@@ -205,7 +205,7 @@ public class ValidationHelper {
 						+ ClassUtils.getShortName(model.getClass()) + ", Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
+					model, expressionParser, messageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 			return true;
 		}
@@ -227,7 +227,7 @@ public class ValidationHelper {
 				logger.debug("Invoking Spring Validator '" + ClassUtils.getShortName(validator.getClass()) + "'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
+					model, expressionParser, messageCodesResolver, mappingResults);
 			((Validator) validator).validate(model, errors);
 			return true;
 		}
@@ -252,7 +252,7 @@ public class ValidationHelper {
 						+ ".validate(" + ClassUtils.getShortName(model.getClass()) + ", Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
+					model, expressionParser, messageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 			return true;
 		}

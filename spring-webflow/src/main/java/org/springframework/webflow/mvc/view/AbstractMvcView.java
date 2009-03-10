@@ -88,7 +88,7 @@ public abstract class AbstractMvcView implements View {
 
 	private BinderConfiguration binderConfiguration;
 
-	private MessageCodesResolver bindingErrorMessageCodesResolver = new WebFlowMessageCodesResolver();
+	private MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
 	/**
 	 * Creates a new MVC view.
@@ -126,10 +126,10 @@ public abstract class AbstractMvcView implements View {
 
 	/**
 	 * Set the message codes resolver to use to resolve bind and validation failure message codes.
-	 * @param bindingErrorMessageCodesResolver the binding error message code resolver to use
+	 * @param messageCodesResolver the binding error message code resolver to use
 	 */
-	public void setBindingErrorMessageCodesResolver(MessageCodesResolver bindingErrorMessageCodesResolver) {
-		this.bindingErrorMessageCodesResolver = bindingErrorMessageCodesResolver;
+	public void setMessageCodesResolver(MessageCodesResolver messageCodesResolver) {
+		this.messageCodesResolver = messageCodesResolver;
 	}
 
 	/**
@@ -498,7 +498,7 @@ public abstract class AbstractMvcView implements View {
 		String model = getModelExpression().getExpressionString();
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		Class fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
-		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(error.getCode(), model, field,
+		String[] messageCodes = messageCodesResolver.resolveMessageCodes(error.getCode(), model, field,
 				fieldType);
 		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field).defaultText(
 				error.getCode() + " on " + field).build();
@@ -517,7 +517,7 @@ public abstract class AbstractMvcView implements View {
 			logger.debug("Validating model");
 		}
 		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
-				expressionParser, bindingErrorMessageCodesResolver, mappingResults).validate();
+				expressionParser, messageCodesResolver, mappingResults).validate();
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

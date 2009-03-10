@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.servlet;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
@@ -41,8 +42,9 @@ public class ServletMvcViewFactory extends AbstractMvcViewFactory {
 	 * @param binderConfiguration the model binding configuration
 	 */
 	public ServletMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration) {
-		super(viewId, viewResolver, expressionParser, conversionService, binderConfiguration);
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			MessageCodesResolver messageCodesResolver) {
+		super(viewId, viewResolver, expressionParser, conversionService, binderConfiguration, messageCodesResolver);
 	}
 
 	protected AbstractMvcView createMvcView(View view, RequestContext context) {

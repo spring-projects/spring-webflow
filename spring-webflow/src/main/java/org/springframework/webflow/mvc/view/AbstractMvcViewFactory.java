@@ -19,6 +19,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -45,6 +46,8 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 
 	private String fieldMarkerPrefix;
 
+	private MessageCodesResolver messageCodesResolver;
+
 	/**
 	 * Creates a new MVC view factory.
 	 * @param viewId the id of the view as an expression
@@ -54,12 +57,14 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 	 * @param binderConfiguration the model binding configuration
 	 */
 	public AbstractMvcViewFactory(Expression viewId, FlowViewResolver viewResolver, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			MessageCodesResolver messageCodesResolver) {
 		this.viewId = viewId;
 		this.viewResolver = viewResolver;
 		this.expressionParser = expressionParser;
 		this.conversionService = conversionService;
 		this.binderConfiguration = binderConfiguration;
+		this.messageCodesResolver = messageCodesResolver;
 	}
 
 	public void setEventIdParameterName(String eventIdParameterName) {
@@ -77,6 +82,7 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		mvcView.setExpressionParser(expressionParser);
 		mvcView.setConversionService(conversionService);
 		mvcView.setBinderConfiguration(binderConfiguration);
+		mvcView.setMessageCodesResolver(messageCodesResolver);
 		if (StringUtils.hasText(eventIdParameterName)) {
 			mvcView.setEventIdParameterName(eventIdParameterName);
 		}
