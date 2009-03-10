@@ -183,6 +183,26 @@ public class ViewStateTests extends TestCase {
 		state.resume(context);
 		assertTrue(context.getFlowExecutionContext().isActive());
 		assertEquals(1, action.getExecutionCount());
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testResumeViewStateForEventStateNotExitedNonAjaxRedirectEnabled() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		TestAction action = new TestAction();
+		t.setExecutionCriteria(new ActionTransitionCriteria(action));
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.setAlwaysRedirectOnPause(true);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.setAlwaysRedirectOnPause(true);
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertEquals(1, action.getExecutionCount());
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 

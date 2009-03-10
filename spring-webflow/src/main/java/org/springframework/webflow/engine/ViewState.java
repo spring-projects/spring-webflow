@@ -190,13 +190,16 @@ public class ViewState extends TransitionableState {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Event '" + event.getId() + "' returned from view " + view);
 			}
-			context.getRequestScope().put("webflow.originatingViewState", this);
 			boolean stateExited = context.handleEvent(event);
 			if (!stateExited && context.getExternalContext().isResponseAllowed()) {
 				if (context.getExternalContext().isAjaxRequest()) {
 					render(context, view);
 				} else {
-					context.getExternalContext().requestFlowExecutionRedirect();
+					if (shouldRedirect(context)) {
+						context.getExternalContext().requestFlowExecutionRedirect();
+					} else {
+						render(context, view);
+					}
 				}
 			}
 		} else {
