@@ -6,6 +6,7 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import org.springframework.context.support.StaticMessageSource;
+import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MapBindingResult;
 
 public class MessageContextErrorsTests extends TestCase {
@@ -16,7 +17,8 @@ public class MessageContextErrorsTests extends TestCase {
 
 		DefaultMessageContext context = new DefaultMessageContext(messageSource);
 		Object object = new Object();
-		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null,
+				new DefaultMessageCodesResolver(), null);
 		errors.reject("foo");
 		errors.reject("bogus", "baz");
 		errors.reject("bar", new Object[] { "boop" }, null);
@@ -44,7 +46,8 @@ public class MessageContextErrorsTests extends TestCase {
 
 		DefaultMessageContext context = new DefaultMessageContext(messageSource);
 		Object object = new Object();
-		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null,
+				new DefaultMessageCodesResolver(), null);
 		errors.rejectValue("field", "foo");
 		errors.rejectValue("field", "bogus", "baz");
 		errors.rejectValue("field", "bar", new Object[] { "boop" }, null);
@@ -72,7 +75,8 @@ public class MessageContextErrorsTests extends TestCase {
 
 		DefaultMessageContext context = new DefaultMessageContext(messageSource);
 		Object object = new Object();
-		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null, null);
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, null,
+				new DefaultMessageCodesResolver(), null);
 		MapBindingResult result = new MapBindingResult(new HashMap(), "object");
 		result.reject("bar", new Object[] { "boop" }, null);
 		result.rejectValue("field", "bar", new Object[] { "boop" }, null);

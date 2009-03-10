@@ -29,6 +29,7 @@ import org.springframework.binding.mapping.MappingResultsCriteria;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.ObjectError;
 
 /**
@@ -49,31 +50,47 @@ public class MessageContextErrors extends AbstractErrors {
 
 	private MappingResults mappingResults;
 
+	private MessageCodesResolver bindingErrorMessageCodesResolver;
+
 	/**
 	 * Creates a new message context errors adapter.
 	 * @param messageContext the backing message context
 	 * @param objectName the object name
 	 * @param boundObject the model object
 	 * @param expressionParser the expression parser
+	 * @param bindingErrorMessageCodesResolver the message codes resolver
 	 * @param mappingResults object mapping results
 	 */
 	public MessageContextErrors(MessageContext messageContext, String objectName, Object boundObject,
-			ExpressionParser expressionParser, MappingResults mappingResults) {
+			ExpressionParser expressionParser, MessageCodesResolver bindingErrorMessageCodesResolver,
+			MappingResults mappingResults) {
 		this.messageContext = messageContext;
 		this.objectName = objectName;
 		this.boundObject = boundObject;
 		this.expressionParser = expressionParser;
+		this.bindingErrorMessageCodesResolver = bindingErrorMessageCodesResolver;
 		this.mappingResults = mappingResults;
 	}
 
 	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
-		messageContext.addMessage(new MessageBuilder().error().code(errorCode).args(errorArgs).defaultText(
+		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, defaultMessage);
+		messageContext.addMessage(new MessageBuilder().error().codes(messageCodes).args(errorArgs).defaultText(
 				defaultMessage).build());
 	}
 
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
-		messageContext.addMessage(new MessageBuilder().error().source(fixedField(field)).code(errorCode)
-				.args(errorArgs).defaultText(defaultMessage).build());
+		field = fixedField(field);
+		Class fieldType;
+		if (expressionParser != null) {
+			FluentParserContext parserContext = new FluentParserContext().evaluate(boundObject.getClass());
+			fieldType = expressionParser.parseExpression(field, parserContext).getValueType(boundObject);
+		} else {
+			fieldType = null;
+		}
+		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, defaultMessage, field,
+				fieldType);
+		messageContext.addMessage(new MessageBuilder().error().source(field).codes(messageCodes).args(errorArgs)
+				.defaultText(defaultMessage).build());
 	}
 
 	public void addAllErrors(Errors errors) {

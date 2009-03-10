@@ -43,6 +43,7 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -54,6 +55,7 @@ import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.validation.ValidationHelper;
+import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
@@ -85,6 +87,8 @@ public abstract class AbstractMvcView implements View {
 	private MappingResults mappingResults;
 
 	private BinderConfiguration binderConfiguration;
+
+	private MessageCodesResolver bindingErrorMessageCodesResolver = new WebFlowMessageCodesResolver();
 
 	/**
 	 * Creates a new MVC view.
@@ -118,6 +122,14 @@ public abstract class AbstractMvcView implements View {
 	 */
 	public void setBinderConfiguration(BinderConfiguration binderConfiguration) {
 		this.binderConfiguration = binderConfiguration;
+	}
+
+	/**
+	 * Set the message codes resolver to use to resolve bind and validation failure message codes.
+	 * @param bindingErrorMessageCodesResolver the binding error message code resolver to use
+	 */
+	public void setBindingErrorMessageCodesResolver(MessageCodesResolver bindingErrorMessageCodesResolver) {
+		this.bindingErrorMessageCodesResolver = bindingErrorMessageCodesResolver;
 	}
 
 	/**
@@ -483,12 +495,13 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private MessageResolver createMessageResolver(MappingResult error) {
+		String model = getModelExpression().getExpressionString();
 		String field = error.getMapping().getTargetExpression().getExpressionString();
-		String errorCode = error.getCode();
-		String propertyErrorCode = new StringBuffer().append(getModelExpression().getExpressionString()).append('.')
-				.append(field).append('.').append(errorCode).toString();
-		return new MessageBuilder().error().source(field).code(propertyErrorCode).code(errorCode).resolvableArg(field)
-				.defaultText(errorCode + " on " + field).build();
+		Class fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
+		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(error.getCode(), model, field,
+				fieldType);
+		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field).defaultText(
+				error.getCode() + " on " + field).build();
 	}
 
 	private Boolean getValidateAttribute(TransitionDefinition transition) {
@@ -504,7 +517,7 @@ public abstract class AbstractMvcView implements View {
 			logger.debug("Validating model");
 		}
 		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
-				expressionParser, mappingResults).validate();
+				expressionParser, bindingErrorMessageCodesResolver, mappingResults).validate();
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

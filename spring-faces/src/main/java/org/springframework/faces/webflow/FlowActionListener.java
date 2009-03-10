@@ -29,11 +29,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.validation.ValidationHelper;
+import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
@@ -57,6 +59,8 @@ public class FlowActionListener implements ActionListener {
 	private static final String MESSAGES_ID = "messages";
 
 	private ActionListener delegate;
+
+	private MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
 	public FlowActionListener(ActionListener delegate) {
 		this.delegate = delegate;
@@ -152,6 +156,6 @@ public class FlowActionListener implements ActionListener {
 
 	private void validate(RequestContext requestContext, Object model, String eventId) {
 		new ValidationHelper(model, requestContext, eventId, getModelExpression(requestContext).getExpressionString(),
-				null, null).validate();
+				null, messageCodesResolver, null).validate();
 	}
 }

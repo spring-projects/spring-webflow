@@ -31,6 +31,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -53,6 +54,8 @@ public class ValidationHelper {
 
 	private final ExpressionParser expressionParser;
 
+	private final MessageCodesResolver bindingErrorMessageCodesResolver;
+
 	private final MappingResults mappingResults;
 
 	/**
@@ -73,7 +76,8 @@ public class ValidationHelper {
 	 * @param mappingResults object mapping results
 	 */
 	public ValidationHelper(Object model, RequestContext requestContext, String eventId, String modelName,
-			ExpressionParser expressionParser, MappingResults mappingResults) {
+			ExpressionParser expressionParser, MessageCodesResolver bindingErrorMessageCodesResolver,
+			MappingResults mappingResults) {
 		Assert.notNull(model, "The model to validate is required");
 		Assert.notNull(requestContext, "The request context for the validator is required");
 		this.model = model;
@@ -81,6 +85,7 @@ public class ValidationHelper {
 		this.eventId = eventId;
 		this.modelName = modelName;
 		this.expressionParser = expressionParser;
+		this.bindingErrorMessageCodesResolver = bindingErrorMessageCodesResolver;
 		this.mappingResults = mappingResults;
 	}
 
@@ -123,7 +128,7 @@ public class ValidationHelper {
 		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, new Class[] { Errors.class });
 		if (validateMethod != null) {
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, mappingResults);
+					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking current state model validation method '" + methodName + "(Errors)'");
 			}
@@ -152,7 +157,7 @@ public class ValidationHelper {
 				logger.debug("Invoking default model validation method 'validate(Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, mappingResults);
+					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { errors });
 			return true;
 		}
@@ -200,7 +205,7 @@ public class ValidationHelper {
 						+ ClassUtils.getShortName(model.getClass()) + ", Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, mappingResults);
+					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 			return true;
 		}
@@ -222,7 +227,7 @@ public class ValidationHelper {
 				logger.debug("Invoking Spring Validator '" + ClassUtils.getShortName(validator.getClass()) + "'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, mappingResults);
+					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
 			((Validator) validator).validate(model, errors);
 			return true;
 		}
@@ -247,7 +252,7 @@ public class ValidationHelper {
 						+ ".validate(" + ClassUtils.getShortName(model.getClass()) + ", Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, mappingResults);
+					model, expressionParser, bindingErrorMessageCodesResolver, mappingResults);
 			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
 			return true;
 		}
