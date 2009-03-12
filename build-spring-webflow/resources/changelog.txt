@@ -7,7 +7,7 @@ Changes in version 2.0.6 (2009.03.12)
 General
 * Changed Maven artifact ids for the org.springframework.webflow projects to be consistent with other Spring artifacts published to Maven Central (SWF-993).
   This change was made to prevent conflicts when resolving artifacts from both Maven Central and the OSGi-ready SpringSource Bundle Repository.
-  NOTE: this change will require an artifact-id update as well as a version update to your poms that obtain web flow from Maven Central.
+  NOTE: this change will require an artifact-id update as well as a version update to your poms that obtain Spring Web Flow artifacts from Maven Central.
   See the reference documentation for updated instructions on obtaining web flow artifacts from Maven Central.
 
 Bug Fixes
