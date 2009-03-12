@@ -55,14 +55,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>elementDecoration</tag-name>
-		<component>
-			<component-type>spring.faces.DojoElementDecoration</component-type>
-			<renderer-type>spring.faces.DojoElementDecorationRenderer</renderer-type>
-		</component>
-	</tag>
-	
-	<tag>
 		<tag-name>clientTextValidator</tag-name>
 		<component>
 			<component-type>spring.faces.DojoClientTextValidator</component-type>

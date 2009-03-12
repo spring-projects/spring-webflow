@@ -57,11 +57,6 @@
   		<component-class>org.springframework.faces.ui.DynamicComponent</component-class>
   	</component>
   	
-  	<component>
-    	<component-type>spring.faces.DojoElementDecoration</component-type>
-    	<component-class>org.springframework.faces.ui.SpringJavascriptElementDecoration</component-class>
-  	</component>
-  	
 	<component>
     	<component-type>spring.faces.DojoClientTextValidator</component-type>
     	<component-class>org.springframework.faces.ui.DojoClientTextValidator</component-class>
@@ -117,12 +112,6 @@
 			<component-family>spring.faces.Decoration</component-family>
 			<renderer-type>spring.faces.DojoWidgetRenderer</renderer-type>
 			<renderer-class>org.springframework.faces.ui.DojoWidgetRenderer</renderer-class>
-		</renderer>
-		
-		<renderer>
-			<component-family>spring.faces.Decoration</component-family>
-			<renderer-type>spring.faces.DojoElementDecorationRenderer</renderer-type>
-			<renderer-class>org.springframework.faces.ui.DojoElementDecorationRenderer</renderer-class>
 		</renderer>
 		
 		<renderer>

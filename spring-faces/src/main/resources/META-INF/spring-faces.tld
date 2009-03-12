@@ -19,7 +19,46 @@
         <name>includeStyles</name>
         <tag-class></tag-class>
         <body-content>empty</body-content>
+        <attribute>
+            <description>
+                <![CDATA[<p>The dojo theme to include when importing the CSS stylesheets.</p>  
+                <p>This can be either one of the pre-packaged Dojo themes or it can be a completely custom one that follows
+                the necessary Dojo conventions.</p>]]>
+            </description>
+            <name>theme</name>
+            <required>false</required>
+            <deferred-value>
+                <type>java.lang.String</type>
+            </deferred-value>
+        </attribute>
+        <attribute>
+            <description>
+                <![CDATA[<p>The path to the Dojo theme to include when importing the CSS stylesheets.  Defaults to 
+                /dijit/themes/</p>  
+                <p>Note that the theme name will be appended to any specified path.  For example, if you have 
+                a modified version of the Dojo Tundra theme located at the path /customTheme/tundra/, the proper
+                value of the themePath attribute would be "/customTheme/".</p>]]>
+            </description>
+            <name>themePath</name>
+            <required>false</required>
+            <deferred-value>
+                <type>java.lang.String</type>
+            </deferred-value>
+        </attribute>
     </tag>
+    
+    <tag>
+        <description>
+            <![CDATA[<p>Renders the necessary JavaScript file includes for the Spring Faces components.</p>  
+            <p>Use of this tag in the head section of a page that contains the Spring Faces components is recommended 
+            as a browser performance optimization in keeping with the <a href="http://developer.yahoo.com/performance/">
+            Yahoo performance guidelines</a>.  If this tag is not included, the script includes will be rendered 
+            inline with the first instance of a Spring Faces component that requires theme.</p>]]>
+        </description>
+        <name>includeScripts</name>
+        <tag-class></tag-class>
+        <body-content>empty</body-content>
+    </tag>     
 
     <tag>
         <description>
