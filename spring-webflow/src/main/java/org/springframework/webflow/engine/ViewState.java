@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -168,7 +169,7 @@ public class ViewState extends TransitionableState {
 
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
-		if (context.getExternalContext().isResponseAllowed()) {
+		if (canSendResponse(context.getExternalContext())) {
 			if (shouldRedirect(context)) {
 				context.getExternalContext().requestFlowExecutionRedirect();
 				if (popup) {
@@ -191,7 +192,7 @@ public class ViewState extends TransitionableState {
 				logger.debug("Event '" + event.getId() + "' returned from view " + view);
 			}
 			boolean stateExited = context.handleEvent(event);
-			if (!stateExited && context.getExternalContext().isResponseAllowed()) {
+			if (!stateExited && canSendResponse(context.getExternalContext())) {
 				if (context.getExternalContext().isAjaxRequest()) {
 					render(context, view);
 				} else {
@@ -203,7 +204,7 @@ public class ViewState extends TransitionableState {
 				}
 			}
 		} else {
-			if (context.getExternalContext().isResponseAllowed()) {
+			if (canSendResponse(context.getExternalContext())) {
 				render(context, view);
 			}
 		}
@@ -226,6 +227,10 @@ public class ViewState extends TransitionableState {
 			}
 			variable.create(context);
 		}
+	}
+
+	private boolean canSendResponse(ExternalContext context) {
+		return context.isResponseAllowed() && !context.isResponseComplete();
 	}
 
 	private boolean shouldRedirect(RequestControlContext context) {
