@@ -25,6 +25,9 @@ Bug Fixes
 * Made FlowHandlerAdapter#sendRedirect method protected, allowing overriding of web flow system redirect behavior; for example, to redirect to a SSL channel.
 * Made DefaultFlowUrlHandler consistent with Spring MVC RedirectView behavior for URL encoding of flow URL parameters; URL encoding scheme is also now pluggable.
 * Introduced createDefaultFlowHandler hook in FlowHandlerMapping, allowing for customizing the Default FlowHandler implementation application wide (SWF-994)
+* Fixed bug where Hibernate and JPA flow execution listeners performed their commits against the flow-managed PersistenceContext after the flow had ended (SWF-1010).
+  This prevented exceptions such as optimistic locking failures from being handled by the flow.
+  Commit processing is now performed in the sessionEnding listener callback now, which is called before the flow actually terminates.
 
 Improvements
 * Improved FlowExecution test documentation
