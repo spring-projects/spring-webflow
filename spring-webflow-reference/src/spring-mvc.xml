@@ -262,7 +262,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		</programlisting>
 		<para>
 			The MvcViewFactoryCreator is the factory that allows you to configure how the Spring MVC view system is used inside Spring Web Flow.
-			Use it to configure a set of existing ViewResolvers to use, as well as other services such as a custom MessageCodesResolver.
+			Use it to configure existing ViewResolvers to use, as well as other services such as a custom MessageCodesResolver.
 			You may also enable data binding use Spring MVC's native BeanWrapper by setting the <code>useSpringBinding</code> flag to true.
 			This is an alternative to using OGNL or the Unified EL for view-to-model data binding.
 			See the JavaDoc API of this class for more information.
