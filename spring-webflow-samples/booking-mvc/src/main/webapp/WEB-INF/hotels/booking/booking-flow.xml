@@ -14,7 +14,6 @@
 	</on-start>
 	
 	<view-state id="enterBookingDetails" model="booking">
-		<secured attributes="ROLE_SUPERVISOR"/>	
 		<binder>
 			<binding property="checkinDate" converter="shortDate" required="true" />
 			<binding property="checkoutDate" converter="shortDate" required="true" />
@@ -40,7 +39,4 @@
 
 	<end-state id="cancel" />
 
-	<global-transitions>
-		<transition on-exception="org.springframework.security.AccessDeniedException" to="cancel" /> 			
-	</global-transitions>	
 </flow>
