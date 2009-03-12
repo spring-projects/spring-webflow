@@ -127,6 +127,51 @@
     <param-value>.xhtml</param-value>
 </context-param>]]>
         </programlisting>
+		<para>
+			For optimal page-loading performance, the Spring Faces component library includes a few special components:
+			<code>includeStyles</code> and <code>includeScripts</code>.  These components will eagerly load the neccessary
+			CSS stylesheets and JavaScript files at the position they are placed in your JSF view template.  In accordance
+			with the recommendations of the Yahoo Performance Guildlines, these two tags should be placed in the <code>head</code>
+			section of any page that uses the Spring Faces components.  For example:
+		</para>
+		<programlisting language="xml"><![CDATA[ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:c="http://java.sun.com/jstl/core"
+	  xmlns:sf="http://www.springframework.org/tags/faces"
+	  contentType="text/html" encoding="UTF-8">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Spring Faces: Hotel Booking Sample Application</title>
+	
+	<sf:includeStyles />
+	<sf:includeScripts />
+	
+	<ui:insert name="headIncludes"/>
+</head>
+...
+</html>
+</f:view>]]>
+	</programlisting>
+	<para>
+		This shows the opening of a typical Facelets XHTML layout template that uses these components to force the loading of
+		the needed CSS and JavaScript resources at the ideal position.
+	</para>
+	<para>
+		The <code>includeStyles</code> component includes the necessary resources for the Dojo widget theme.  By default, it includes
+		the resources for the "tundra" theme.  An alternate theme may be selected by setting the optional "theme" and "themePath" attributes
+		on the <code>includeStyles</code> component.  For example:
+	</para>
+	<programlisting language="xml"><![CDATA[ 
+<sf:includeStyles themePath="/styles/" theme="foobar"/>
+]]>
+</programlisting>
+	<para>
+		will try to load a CSS stylesheet at "/styles/foobar/foobar.css" using the Spring JavaScript ResourceServlet.
+	</para>
     </sect1>
     <sect1 id="spring-faces-webflow-config">
         <title>Configuring Web Flow to render JSF views</title>
@@ -566,7 +611,7 @@
     <sect1 id="spring-faces-ui-controls">
         <title>Enhancing The User Experience With Rich Web Forms</title>
         <para>
-            JSF and Web Flow combine to provide and extensive server-side validation model for your web application, but
+            JSF and Web Flow combine to provide an extensive server-side validation model for your web application, but
             excessive roundtrips to the server to execute this validation and return error messages can be a tedious
             experience for your users. Spring Faces provides a number of client-side rich validation controls that can
             enhance the user experience by applying simple validations that give immediate feedback. Some simple
