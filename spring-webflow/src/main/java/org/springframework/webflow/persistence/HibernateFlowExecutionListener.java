@@ -51,10 +51,10 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * The general data access pattern implemented here is:
  * <ul>
- * <li> Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
- * <li> Load some objects into this persistence context
- * <li> Perform edits to those objects over a series of requests into the flow
- * <li> On successful flow completion, commit and flush those edits to the database, applying a version check if
+ * <li>Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
+ * <li>Load some objects into this persistence context
+ * <li>Perform edits to those objects over a series of requests into the flow
+ * <li>On successful flow completion, commit and flush those edits to the database, applying a version check if
  * necessary.
  * </ul>
  * 
@@ -132,9 +132,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		}
 	}
 
-	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
+	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output) {
 		if (isPersistenceContext(session.getDefinition())) {
-			final Session hibernateSession = (Session) session.getScope().remove(PERSISTENCE_CONTEXT_ATTRIBUTE);
+			final Session hibernateSession = getHibernateSession(session);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
 			if (Boolean.TRUE.equals(commitStatus)) {
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -148,6 +148,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 			unbind(hibernateSession);
 			hibernateSession.close();
 		}
+	}
+
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
 		if (!session.isRoot()) {
 			FlowSession parent = session.getParent();
 			if (isPersistenceContext(parent.getDefinition())) {

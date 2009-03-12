@@ -68,6 +68,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
+		jpaListener.sessionEnding(context, flowSession, "success", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
@@ -99,6 +100,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		endState.getAttributes().put("commit", Boolean.TRUE);
 		flowSession.setState(endState);
 
+		jpaListener.sessionEnding(context, flowSession, "success", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
@@ -123,7 +125,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
 		endState.getAttributes().put("commit", Boolean.FALSE);
 		flowSession.setState(endState);
-		jpaListener.sessionEnded(context, flowSession, "cancel", null);
+		jpaListener.sessionEnding(context, flowSession, "cancel", null);
+		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
@@ -141,7 +144,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
 		flowSession.setState(endState);
 
-		jpaListener.sessionEnded(context, flowSession, "cancel", null);
+		jpaListener.sessionEnding(context, flowSession, "cancel", null);
+		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have three rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
