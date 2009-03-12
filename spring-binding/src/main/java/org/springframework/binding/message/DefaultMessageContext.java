@@ -18,7 +18,6 @@ package org.springframework.binding.message;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -135,7 +134,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing state manageable message context
 
 	public Serializable createMessagesMemento() {
-		return new HashMap(sourceMessages);
+		return new LinkedHashMap(sourceMessages);
 	}
 
 	public void restoreMessages(Serializable messagesMemento) {
