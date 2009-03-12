@@ -3,6 +3,6 @@
 
 	<property name="doc.type" value="reference"/>
 	<property file="${basedir}/../build.properties"/>
-	<import file="${basedir}/../spring-build/documentation/default.xml"/>
+	<import file="${basedir}/../spring-build/docbook/default.xml"/>
 
 </project>
