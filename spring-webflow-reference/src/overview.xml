@@ -63,8 +63,9 @@
 	<sect1 id="jars">
 		<title>How to obtain Web Flow artifacts from the SpringSource Bundle Repository</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the <ulink url="http://www.springsource.com/repository/">SpringSource Enterprise Bundle Repository</ulink>.
+			Each jar in the Web Flow distribution is available in the <ulink url="http://www.springsource.com/repository">SpringSource Enterprise Bundle Repository</ulink>.
 			These jars may be accessed using Maven or Ivy dependency managers.
+			Each jar obtained from the SpringSource Bundle Repository is OSGi-compatible, including all of the jar's transitive dependencies.
 		</para>
 		<sect2 id="jars-maven">
 			<title>Accessing Web Flow with Maven</title>
@@ -165,6 +166,7 @@
 		<title>How to obtain Web Flow artifacts from Maven Central</title>
 		<para>
 			Each jar in the Web Flow distribution is also available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
+			These jars are indexed under a different artifact id because their transitive dependencies in Maven Central are not OSGi compatible.
 		</para>
 		<para>
 			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
@@ -172,19 +174,19 @@
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
+    <artifactId>spring-binding</artifactId>
     <version>2.0.6.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
+    <artifactId>spring-js</artifactId>
     <version>2.0.6.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.webflow</artifactId>
+    <artifactId>spring-webflow</artifactId>
     <version>2.0.6.RELEASE</version>
 </dependency>
 ]]>
@@ -195,7 +197,7 @@
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
+    <artifactId>spring-faces</artifactId>
     <version>2.0.6.RELEASE</version>
 </dependency> 
 ]]>
