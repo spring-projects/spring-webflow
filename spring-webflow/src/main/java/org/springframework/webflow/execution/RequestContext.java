@@ -58,19 +58,18 @@ import org.springframework.webflow.definition.TransitionDefinition;
 public interface RequestContext {
 
 	/**
-	 * Returns the definition of the flow that is currently executing.
+	 * Returns the definition of the flow that is currently executing. Returns <code>null</code> when the flow execution
+	 * is in the process of starting and has not yet activated its root flow session.
 	 * @return the flow definition for the active session
-	 * @throws IllegalStateException if the flow execution has not been started at all, or if the execution has ended
-	 * and is no longer actively executing
+	 * @throws IllegalStateException if the flow execution has not been started at all or has ended
 	 */
 	public FlowDefinition getActiveFlow() throws IllegalStateException;
 
 	/**
-	 * Returns the current state of the executing flow. May return <code>null</code> if this flow execution is in the
+	 * Returns the current state of the executiong flow. Returns <code>null</code> if this flow execution is in the
 	 * process of starting and has not yet entered its start state.
 	 * @return the current state, or <code>null</code> if in the process of starting
-	 * @throws IllegalStateException if this flow execution has not been started at all, or if this execution has ended
-	 * and is no longer actively executing
+	 * @throws IllegalStateException if this flow execution has not been started at all or has ended
 	 */
 	public StateDefinition getCurrentState() throws IllegalStateException;
 
@@ -78,8 +77,7 @@ public interface RequestContext {
 	 * Returns the transition that would execute on the occurrence of the given event.
 	 * @param eventId the id of the user event
 	 * @return the transition that would trigger, or <code>null</code> if no transition matches
-	 * @throws IllegalStateException if this flow execution has not been started at all, or if this execution has ended
-	 * and is no longer actively executing
+	 * @throws IllegalStateException if this flow execution has not been started at all or has ended
 	 */
 	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException;
 

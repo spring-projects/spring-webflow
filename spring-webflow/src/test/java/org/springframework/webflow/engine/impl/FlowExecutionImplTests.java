@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.impl;
 import junit.framework.TestCase;
 
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
@@ -58,6 +59,13 @@ public class FlowExecutionImplTests extends TestCase {
 		execution.start(null, context);
 		assertTrue(execution.hasStarted());
 		assertFalse(execution.isActive());
+		assertTrue(execution.hasEnded());
+		try {
+			execution.getActiveSession();
+			fail("should have failed");
+		} catch (IllegalStateException e) {
+
+		}
 		assertEquals(1, mockListener.getRequestsSubmittedCount());
 		assertEquals(1, mockListener.getRequestsProcessedCount());
 		assertEquals(1, mockListener.getSessionCreatingCount());
@@ -118,7 +126,14 @@ public class FlowExecutionImplTests extends TestCase {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
 		FlowExecutionListener mockListener = new FlowExecutionListenerAdapter() {
-			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+			public void sessionCreating(RequestContext context, FlowDefinition definition) {
+				assertNull(context.getCurrentState());
+				assertNull(context.getActiveFlow());
+				assertNull(context.getCurrentEvent());
+				assertNull(context.getCurrentTransition());
+				assertNull(context.getActiveFlow());
+				assertNull(context.getFlowExecutionContext().getActiveSession());
+				assertFalse(context.getFlowExecutionContext().isActive());
 				throw new IllegalStateException("Oops");
 			}
 		};

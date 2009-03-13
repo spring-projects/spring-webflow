@@ -84,9 +84,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	private transient Flow flow;
 
 	/**
-	 * A flag indicating if this execution has started.
+	 * A enum tracking the status of this flow execution.
 	 */
-	private boolean started;
+	private FlowExecutionStatus status;
 
 	/**
 	 * The stack of active, currently executing flow sessions. As subflows are spawned, they are pushed onto the stack.
@@ -144,11 +144,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	public FlowExecutionImpl(Flow flow) {
 		Assert.notNull(flow, "The flow definition is required");
 		this.flow = flow;
-		this.listeners = new FlowExecutionListeners();
-		this.attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-		this.flowSessions = new LinkedList();
-		this.conversationScope = new LocalAttributeMap();
-		this.conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap());
+		status = FlowExecutionStatus.NOT_STARTED;
+		listeners = new FlowExecutionListeners();
+		attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+		flowSessions = new LinkedList();
+		conversationScope = new LocalAttributeMap();
+		conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap());
 	}
 
 	public String getCaption() {
@@ -166,7 +167,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public boolean hasStarted() {
-		return started;
+		return status != FlowExecutionStatus.NOT_STARTED;
 	}
 
 	public boolean isActive() {
@@ -174,7 +175,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public boolean hasEnded() {
-		return hasStarted() && !isActive();
+		return status == FlowExecutionStatus.ENDED;
 	}
 
 	public FlowExecutionOutcome getOutcome() {
@@ -182,12 +183,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public FlowSession getActiveSession() {
-		if (!isActive()) {
-			if (started) {
-				throw new IllegalStateException("No active session to access; this flow execution has ended");
-			} else {
-				throw new IllegalStateException("No active session to access; this flow execution has not been started");
-			}
+		if (status == FlowExecutionStatus.NOT_STARTED) {
+			throw new IllegalStateException("No active session to access; this flow execution has not been started");
+		}
+		if (status == FlowExecutionStatus.ENDED) {
+			throw new IllegalStateException("No active session to access; this flow execution has ended");
 		}
 		return getActiveSessionInternal();
 	}
@@ -208,11 +208,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	public void start(MutableAttributeMap input, ExternalContext externalContext) throws FlowExecutionException,
 			IllegalStateException {
-		Assert.state(!started, "This flow has already been started; you cannot call 'start()' more than once");
+		Assert.state(!hasStarted(), "This flow has already been started; you cannot call 'start()' more than once");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Starting in " + externalContext + " with input " + input);
 		}
-		started = true;
+		status = FlowExecutionStatus.STARTING;
 		MessageContext messageContext = createMessageContext(null);
 		RequestControlContext requestContext = createRequestContext(externalContext, messageContext);
 		RequestContextHolder.setRequestContext(requestContext);
@@ -242,13 +242,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public void resume(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
-		if (!isActive()) {
-			if (started) {
-				throw new IllegalStateException("This flow execution cannot be resumed; it has ended");
-			} else {
-				throw new IllegalStateException("This flow execution cannot be resumed; it has not been started");
-			}
-		}
+		Assert.state(status == FlowExecutionStatus.STARTED, "This flow execution cannot be resumed; it is not active");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resuming in " + externalContext);
 		}
@@ -291,11 +285,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	public void setCurrentState(String stateId) {
 		FlowSessionImpl session;
-		if (started) {
-			session = getActiveSessionInternal();
-		} else {
+		if (status == FlowExecutionStatus.NOT_STARTED) {
 			session = activateSession(flow);
-			started = true;
+			status = FlowExecutionStatus.STARTED;
+		} else {
+			session = getActiveSessionInternal();
 		}
 		State state = session.getFlow().getStateInstance(stateId);
 		session.setCurrentState(state);
@@ -341,6 +335,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	void start(Flow flow, MutableAttributeMap input, RequestControlContext context) {
 		listeners.fireSessionCreating(context, flow);
 		FlowSession session = activateSession(flow);
+		if (session.isRoot()) {
+			status = FlowExecutionStatus.STARTED;
+		}
 		if (input == null) {
 			input = new LocalAttributeMap();
 		}
@@ -379,13 +376,17 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	void endActiveFlowSession(String outcome, MutableAttributeMap output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
+		if (session.isRoot()) {
+			status = FlowExecutionStatus.ENDING;
+		}
 		listeners.fireSessionEnding(context, session, outcome, output);
 		session.getFlow().end(context, outcome, output);
 		flowSessions.removeLast();
-		boolean executionEnded = hasEnded();
+		boolean executionEnded = flowSessions.isEmpty();
 		if (executionEnded) {
 			// set the root flow execution outcome for external clients to use
 			this.outcome = new FlowExecutionOutcome(outcome, output);
+			status = FlowExecutionStatus.ENDED;
 		}
 		listeners.fireSessionEnded(context, session, outcome, output);
 		if (!executionEnded) {
@@ -418,6 +419,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	TransitionDefinition getMatchingTransition(String eventId) {
 		FlowSessionImpl session = getActiveSessionInternal();
+		if (session == null) {
+			return null;
+		}
 		TransitionableState currentState = (TransitionableState) session.getState();
 		TransitionDefinition transition = currentState.getTransition(eventId);
 		if (transition == null) {
@@ -509,12 +513,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	// custom serialization (implementation of Externalizable for optimized storage)
 
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		started = in.readBoolean();
+		status = (FlowExecutionStatus) in.readObject();
 		flowSessions = (LinkedList) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeBoolean(started);
+		out.writeObject(status);
 		out.writeObject(flowSessions);
 	}
 

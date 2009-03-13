@@ -66,11 +66,9 @@ public interface FlowExecutionContext {
 	public boolean hasStarted();
 
 	/**
-	 * Is the flow execution active?
-	 * <p>
-	 * All methods on an active flow execution context can be called successfully. If the flow execution is not active,
-	 * a caller cannot access some methods such as {@link #getActiveSession()}.
-	 * @return true if active, false if the flow execution has terminated
+	 * Is the flow execution active? A flow execution is active once it has started and remains active until it has
+	 * ended.
+	 * @return true if active, false if the flow execution has terminated or has not yet started
 	 */
 	public boolean isActive();
 
@@ -91,11 +89,10 @@ public interface FlowExecutionContext {
 
 	/**
 	 * Returns the active flow session of this flow execution. The active flow session is the currently executing
-	 * session -- it may be the "root flow" session, or it may be a subflow session if this flow execution has spawned a
-	 * subflow.
+	 * session. It may be the "root flow" session, or it may be a subflow session if this flow execution has spawned a
+	 * subflow. Returns null of this flow execution is in the process of starting or has ended.
 	 * @return the active flow session
-	 * @throws IllegalStateException if this flow execution has not been started at all or if this execution has ended
-	 * and is no longer actively executing
+	 * @throws IllegalStateException if this flow execution has not been started at all
 	 */
 	public FlowSession getActiveSession() throws IllegalStateException;
 
