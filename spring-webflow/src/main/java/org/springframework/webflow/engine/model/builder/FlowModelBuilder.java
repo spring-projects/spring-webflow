@@ -21,11 +21,10 @@ import org.springframework.webflow.engine.model.FlowModel;
 /**
  * Builder interface used to build a flow model. The process of building a flow model consists of the following steps:
  * <ol>
- * <li> Initialize this builder by calling {@link #init()}.
- * <li> Call {@link #build()} to create the flow model.
- * <li> Call {@link #getFlowModel()} to return the fully-built {@link FlowModel} model.
- * <li> Dispose this builder, releasing any resources allocated during the building process by calling
- * {@link #dispose()}.
+ * <li>Initialize this builder by calling {@link #init()}.
+ * <li>Call {@link #build()} to create the flow model.
+ * <li>Call {@link #getFlowModel()} to return the fully-built {@link FlowModel} model.
+ * <li>Dispose this builder, releasing any resources allocated during the building process by calling {@link #dispose()}.
  * </ol>
  * <p>
  * Implementations should encapsulate flow construction logic, either for a specific kind of flow, for example, an
@@ -77,8 +76,8 @@ public interface FlowModelBuilder {
 	public Resource getFlowModelResource();
 
 	/**
-	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}.
-	 * Always returns false if the flow model is not build from a resource.
+	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}. Always
+	 * returns false if the flow model is not build from a resource.
 	 * @return true if the resource backing the flow model has changed
 	 */
 	public boolean hasFlowModelResourceChanged();

@@ -36,15 +36,11 @@ import org.springframework.webflow.engine.model.registry.FlowModelHolder;
  */
 public class DefaultFlowModelHolder implements FlowModelHolder {
 
-	/**
-	 * The flow model assembled by this assembler.
-	 */
 	private FlowModel flowModel;
 
-	/**
-	 * The flow model builder.
-	 */
 	private FlowModelBuilder flowModelBuilder;
+
+	private boolean assembling;
 
 	/**
 	 * Creates a new refreshable flow model holder that uses the configured assembler (GOF director) to drive flow
@@ -57,6 +53,10 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 	}
 
 	public synchronized FlowModel getFlowModel() {
+		if (assembling) {
+			// must return early assembly result for when a flow calls itself recursively
+			return flowModelBuilder.getFlowModel();
+		}
 		if (flowModel == null) {
 			assembleFlowModel();
 		} else {
@@ -83,11 +83,16 @@ public class DefaultFlowModelHolder implements FlowModelHolder {
 
 	private void assembleFlowModel() throws FlowModelBuilderException {
 		try {
+			assembling = true;
 			flowModelBuilder.init();
 			flowModelBuilder.build();
 			flowModel = flowModelBuilder.getFlowModel();
 		} finally {
-			flowModelBuilder.dispose();
+			try {
+				flowModelBuilder.dispose();
+			} finally {
+				assembling = false;
+			}
 		}
 	}
 
