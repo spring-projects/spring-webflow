@@ -17,10 +17,12 @@ package org.springframework.webflow.engine.impl;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -83,6 +85,27 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(0, mockListener.getFlowNestingLevel());
 	}
 
+	public void testStartAndEndSavedMessages() {
+		Flow flow = new Flow("flow");
+		new EndState(flow, "end");
+		MockFlowExecutionListener mockListener = new MockFlowExecutionListener() {
+			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+				super.sessionStarting(context, session, input);
+				context.getMessageContext().addMessage(new MessageBuilder().source("foo").defaultText("bar").build());
+			}
+		};
+		FlowExecutionListener[] listeners = new FlowExecutionListener[] { mockListener };
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		execution.setListeners(listeners);
+		MockExternalContext context = new MockExternalContext();
+		assertFalse(execution.hasStarted());
+		execution.start(null, context);
+		assertTrue(execution.hasStarted());
+		assertFalse(execution.isActive());
+		assertTrue(execution.hasEnded());
+		assertNotNull(execution.getFlashScope().get("messagesMemento"));
+	}
+
 	public void testStartAndPause() {
 		Flow flow = new Flow("flow");
 		new State(flow, "state") {
@@ -124,6 +147,16 @@ public class FlowExecutionImplTests extends TestCase {
 
 	public void testStartExceptionThrownBeforeFirstSessionCreated() {
 		Flow flow = new Flow("flow");
+		flow.getExceptionHandlerSet().add(new FlowExecutionExceptionHandler() {
+			public boolean canHandle(FlowExecutionException exception) {
+				return true;
+			}
+
+			public void handle(FlowExecutionException exception, RequestControlContext context) {
+				throw new UnsupportedOperationException("Should not be called");
+			}
+
+		});
 		new EndState(flow, "end");
 		FlowExecutionListener mockListener = new FlowExecutionListenerAdapter() {
 			public void sessionCreating(RequestContext context, FlowDefinition definition) {
@@ -167,7 +200,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
-	public void testStartFlowExecutionExceptionThrown() {
+	public void testStartFlowExecutionExceptionThrownByState() {
 		Flow flow = new Flow("flow");
 		final FlowExecutionException e = new FlowExecutionException("flow", "state", "Oops");
 		new State(flow, "state") {
@@ -184,6 +217,41 @@ public class FlowExecutionImplTests extends TestCase {
 		} catch (FlowExecutionException ex) {
 			assertSame(e, ex);
 		}
+	}
+
+	public void testStartExceptionThrownByStateHandledByFlowExceptionHandler() {
+		Flow flow = new Flow("flow");
+		StubFlowExecutionExceptionHandler exceptionHandler = new StubFlowExecutionExceptionHandler();
+		flow.getExceptionHandlerSet().add(exceptionHandler);
+		final FlowExecutionException e = new FlowExecutionException("flow", "state", "Oops");
+		new State(flow, "state") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				throw e;
+			}
+		};
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		MockExternalContext context = new MockExternalContext();
+		assertFalse(execution.hasStarted());
+		execution.start(null, context);
+		assertTrue(exceptionHandler.getHandled());
+	}
+
+	public void testStartExceptionThrownByStateHandledByStateExceptionHandler() {
+		Flow flow = new Flow("flow");
+		flow.getExceptionHandlerSet().add(new StubFlowExecutionExceptionHandler());
+		final FlowExecutionException e = new FlowExecutionException("flow", "state", "Oops");
+		State s = new State(flow, "state") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				throw e;
+			}
+		};
+		StubFlowExecutionExceptionHandler exceptionHandler = new StubFlowExecutionExceptionHandler();
+		s.getExceptionHandlerSet().add(exceptionHandler);
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		MockExternalContext context = new MockExternalContext();
+		assertFalse(execution.hasStarted());
+		execution.start(null, context);
+		assertTrue(exceptionHandler.getHandled());
 	}
 
 	public void testStartCannotCallTwice() {
@@ -342,6 +410,28 @@ public class FlowExecutionImplTests extends TestCase {
 		context = new MockExternalContext();
 		execution.resume(context);
 		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+
+	}
+
+	private static class StubFlowExecutionExceptionHandler implements FlowExecutionExceptionHandler {
+
+		private boolean handled;
+
+		public boolean getHandled() {
+			return handled;
+		}
+
+		public void setHandled(boolean handled) {
+			this.handled = handled;
+		}
+
+		public boolean canHandle(FlowExecutionException exception) {
+			return true;
+		}
+
+		public void handle(FlowExecutionException exception, RequestControlContext context) {
+			handled = true;
+		}
 
 	}
 
