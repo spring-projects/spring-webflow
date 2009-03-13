@@ -35,6 +35,7 @@ Bug Fixes
 Improvements
 * Improved FlowExecution test documentation
 * Improved FlowExecutionExceptionHandler API documentation
+* Added documentation on streaming actions
 
 Changes in version 2.0.5 (14.11.2008)
 -------------------------------------
