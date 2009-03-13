@@ -409,7 +409,7 @@ public interface FlowOutcome {
         <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
     </transition>
     <transition on="creationCancelled" to="reviewBooking" />
-</subfow-state>]]>
+</subflow-state>]]>
 			</programlisting>
 			<para>
 				The above example calls the <code>createGuest</code> flow, then waits for it to return.
@@ -424,7 +424,7 @@ public interface FlowOutcome {
 <subflow-state id="addGuest" subflow="createGuest">
     <input name="booking" />
     <transition to="reviewBooking" />
-</subfow-state>]]>
+</subflow-state>]]>
 				</programlisting>
 			</sect3>
 			<sect3 id="subflow-state-element-output">
@@ -476,7 +476,7 @@ public interface FlowOutcome {
             <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
         </transition>
         <transition on="creationCancelled" to="reviewBooking" />
-    </subfow-state>
+    </subflow-state>
 		
     <end-state id="bookingConfirmed" >
         <output name="bookingId" value="booking.id" />

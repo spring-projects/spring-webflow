@@ -369,6 +369,36 @@ public class BookingAction extends MultiAction {
 				In this example, the flow will transition to <code>showResults</code> when <code>thingTwo</code>
 				completes successfully.
 			</para>
-		</sect2>	
+		</sect2>
+		<sect2 id="streaming-actions">
+			<title>Streaming actions</title>
+			<para>
+				Sometimes an Action needs to stream a custom response back to the client.
+				An example might be a flow that renders a PDF document when handling a print event.
+				This can be achieved by having the action stream the content then record "Response Complete" status on the ExternalContext.
+				The responseComplete flag tells the pausing view-state not to render the response because another object has taken care of it.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<view-state id="reviewItinerary">
+    <transition on="print">
+        <evaluate expression="printBoardingPassAction" />
+    </transition>
+</view-state>]]>
+			</programlisting>
+			<programlisting language="java"><![CDATA[
+public class PrintBoardingPassAction extends AbstractAction {
+    public Event doExecute(RequestContext context) {
+        // stream PDF content here...
+        // - Access HttpServletResponse by calling context.getExternalContext().getNativeResponse();
+        // - Mark response complete by calling context.getExternalContext().recordResponseComplete();
+        return success();
+    }
+}]]>
+			</programlisting>			
+			<para>
+				In this example, when the print event is raised the flow will call the printBoardingPassAction.
+				The action will render the PDF then mark the response as complete.
+			</para>
+		</sect2>			
 	</sect1>
 </chapter>

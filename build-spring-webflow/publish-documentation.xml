@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="publish-documentation">
 
-	<!-- Main targets -->
+<!-- Main targets -->
 	<target name="publish-documentation" depends="publish-documentation.init">
 		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
 				command="mkdir /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}"/>
@@ -19,13 +19,18 @@
 		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
 				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x"/>
 
+		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/faces"
+				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
+			<fileset dir="${package.output.dir}/projects/spring-faces/src/main/java/org/springframework/faces/config">
+				<include name="spring-faces-2.0.xsd" />
+			</fileset>
+		</scp>
 		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/webflow"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/engine/model/builder/xml">
 				<include name="spring-webflow-2.0.xsd" />
 			</fileset>
 		</scp>
-		
 		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/webflow-config"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/config">
@@ -34,7 +39,7 @@
 		</scp>
 	</target>
 
-	<!-- Other targets -->
+<!-- Other targets -->
 	<target name="publish-documentation.init">
 		<fail message="The 'username' property must be set">
 			<condition>

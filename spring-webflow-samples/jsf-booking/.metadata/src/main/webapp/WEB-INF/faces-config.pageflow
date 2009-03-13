@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf12064681529860" configfile="/jsf-booking/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf12064726747627" outlinks="pf120647423764116 pf120647433267418 pf12065417489470 pf12065437582792 pf12065438084374 pf12065438433186 pf12065713044628 pf12065730907119" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="main/reviewHotels.xhtml" id="pf120647423764117" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf120647423764116" path="/main/reviewHotels.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="main/enterSearchCriteria.xhtml" id="pf120647433267419" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf120647433267418 pf12065437582792 pf12065730907119" path="/main/enterSearchCriteria.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="main/reviewHotel.xhtml" id="pf12065417489561" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf12065417489470" path="/main/reviewHotel.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="booking/reviewBooking.xhtml" id="pf12065438084375" referenceLink="//@navigationRule.0/@navigationCase.7/@toViewId|" inlinks="pf12065438084374" path="/booking/reviewBooking.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="booking/enterBookingDetails.xhtml" id="pf12065438433197" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf12065438433186 pf12065713044628" path="/booking/enterBookingDetails.xhtml"/>
+  <links id="pf120647423764116" target="pf120647423764117" source="pf12064726747627" outcome="reviewHotels"/>
+  <links id="pf120647433267418" target="pf120647433267419" source="pf12064726747627" outcome="changeSearch"/>
+  <links id="pf12065417489470" target="pf12065417489561" source="pf12064726747627" outcome="select"/>
+  <links id="pf12065437582792" target="pf120647433267419" source="pf12064726747627" outcome="cancel"/>
+  <links id="pf12065438084374" target="pf12065438084375" source="pf12064726747627" outcome="reviewBooking"/>
+  <links id="pf12065438433186" target="pf12065438433197" source="pf12064726747627" outcome="book"/>
+  <links id="pf12065713044628" target="pf12065438433197" source="pf12064726747627" outcome="revise"/>
+  <links id="pf12065730907119" target="pf120647433267419" source="pf12064726747627" outcome="confirm"/>
+</pageflow:Pageflow>

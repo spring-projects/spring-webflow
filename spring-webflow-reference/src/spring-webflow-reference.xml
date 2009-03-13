@@ -12,17 +12,20 @@
 <!ENTITY flow-inheritance SYSTEM "flow-inheritance.xml">
 <!ENTITY system-setup SYSTEM "system-setup.xml">
 <!ENTITY spring-mvc SYSTEM "spring-mvc.xml">
+<!ENTITY spring-js SYSTEM "spring-js.xml">
+<!ENTITY spring-faces SYSTEM "spring-faces.xml">
 <!ENTITY portlet SYSTEM "portlet.xml">
 <!ENTITY testing SYSTEM "testing.xml">
 <!ENTITY upgrade-guide SYSTEM "upgrade-guide.xml">
+<!ENTITY flow-definition-field-mappings SYSTEM "flow-definition-field-mappings.xml">
 ]>
 
 <book>
 	<bookinfo>
 		<title>Spring Web Flow Reference Guide</title>
 		<productname>Spring Web Flow</productname>
-		<releaseinfo>Version 3.0.0.M1</releaseinfo>
-		<pubdate>December 2008</pubdate>
+		<releaseinfo>Version 2.0.6</releaseinfo>
+		<pubdate>March 2009</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Keith</firstname>
@@ -68,8 +71,11 @@
 	&flow-inheritance;
 	&system-setup;
 	&spring-mvc;
+    &spring-js;
+	&spring-faces;
 	&portlet;
 	&testing;
 	&upgrade-guide;
+	&flow-definition-field-mappings;
 	
 </book>

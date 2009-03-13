@@ -2,7 +2,12 @@
 <project name="build-spring-webflow" default="precommit">
 
 	<path id="bundles">
-		<pathelement location="../org.springframework.webflow"/>
+		<pathelement location="../spring-binding"/>
+		<pathelement location="../spring-js"/>
+		<pathelement location="../spring-webflow"/>
+		<pathelement location="../spring-faces"/>
+		<pathelement location="../spring-webflow-samples/booking-faces"/>
+		<pathelement location="../spring-webflow-samples/booking-mvc"/>
 	</path>
 
 	<property file="${basedir}/../build.properties"/>

@@ -1,0 +1,14 @@
+Bundle-SymbolicName: org.springframework.js
+Bundle-Name: Spring JS
+Bundle-Vendor: SpringSource
+Bundle-ManifestVersion: 2
+Import-Template: 
+ org.springframework.*;version="[2.5.6.A, 3.0.0)",
+ org.apache.commons.logging;version="[1.1.1, 2.0.0)",
+ javax.servlet;version="[2.4.0, 3.0.0)",
+ javax.servlet.http;version="[2.4.0, 3.0.0)",
+ org.apache.tiles;version="[2.0.5, 3.0.0)";resolution:=optional,
+ org.apache.tiles.access;version="[2.0.5, 3.0.0)";resolution:=optional,
+ org.apache.tiles.context;version="[2.0.5.osgi, 3.0.0)";resolution:=optional,
+ org.apache.tiles.definition;version="[2.0.5.osgi, 3.0.0)";resolution:=optional,
+ org.apache.tiles.impl;version="[2.0.5.osgi, 3.0.0)";resolution:=optional
