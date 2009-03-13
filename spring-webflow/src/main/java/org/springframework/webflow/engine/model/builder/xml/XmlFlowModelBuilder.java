@@ -658,7 +658,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 				flowId = parent.substring(0, hashIndex).trim();
 				stateId = parent.substring(hashIndex + 1).trim();
 				try {
-					parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
+					if (StringUtils.hasText(flowId)) {
+						parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
+					} else {
+						parentState = flowModel.getStateById(stateId);
+					}
 					if (parentState == null) {
 						throw new FlowModelBuilderException("Unable to find state '" + stateId + "' in flow '" + flowId
 								+ "'");

@@ -249,9 +249,11 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.
-<p>
-For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;action-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;action-state id="state" parent="#myLocalParentState"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -449,9 +451,11 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.
-<p>
-For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;view-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;view-state id="state" parent="#myLocalParentState"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -662,9 +666,11 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.
-<p>
-For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;decision-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;decision-state id="state" parent="#myLocalParentState"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -779,9 +785,11 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.
-<p>
-For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;subflow-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;subflow-state id="state" parent="#myLocalParentState"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -885,9 +893,11 @@ The unique identifier of this state; must be unique to this flow.
 								<xsd:annotation>
 									<xsd:documentation>
 										<![CDATA[
-Flow identifier to inherit from for this state only.
-<p>
-For example <pre>&lt;state id="state" parent="flowId#stateId"&gt;</pre>
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;end-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;end-state id="state" parent="#myLocalParentState"&gt;</pre>
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>
@@ -1045,7 +1055,7 @@ The starting point of this flow.  If not specified, the start state is the first
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-Marks a flow model as abstract, preventing it from instantiating as a flow definition.
+Marks a flow model as abstract, preventing it from being instantiated as a flow definition.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>
@@ -1054,7 +1064,7 @@ Marks a flow model as abstract, preventing it from instantiating as a flow defin
 				<xsd:annotation>
 					<xsd:documentation>
 						<![CDATA[
-A comma separated list of flow identifier for this flow to inherit from.
+A comma separated list of flows this flow definition should inherit from.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>

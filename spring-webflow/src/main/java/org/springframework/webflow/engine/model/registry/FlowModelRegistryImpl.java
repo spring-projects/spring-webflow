@@ -49,7 +49,6 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException {
 		try {
 			return getFlowModelHolder(id).getFlowModel();
-
 		} catch (NoSuchFlowModelException e) {
 			if (parent != null) {
 				// try parent
