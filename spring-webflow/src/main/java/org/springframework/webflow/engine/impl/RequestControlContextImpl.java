@@ -32,6 +32,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
+import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.View;
 
 /**
@@ -98,11 +99,13 @@ class RequestControlContextImpl implements RequestControlContext {
 	// implementing RequestContext
 
 	public FlowDefinition getActiveFlow() {
-		return flowExecution.getActiveSession().getDefinition();
+		FlowSession session = flowExecution.getActiveSession();
+		return session != null ? session.getDefinition() : null;
 	}
 
 	public StateDefinition getCurrentState() {
-		return flowExecution.getActiveSession().getState();
+		FlowSession session = flowExecution.getActiveSession();
+		return session != null ? session.getState() : null;
 	}
 
 	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException {
@@ -122,11 +125,13 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public MutableAttributeMap getViewScope() throws IllegalStateException {
-		return flowExecution.getActiveSession().getViewScope();
+		FlowSession session = flowExecution.getActiveSession();
+		return session != null ? session.getViewScope() : null;
 	}
 
 	public MutableAttributeMap getFlowScope() {
-		return flowExecution.getActiveSession().getScope();
+		FlowSession session = flowExecution.getActiveSession();
+		return session != null ? session.getScope() : null;
 	}
 
 	public MutableAttributeMap getConversationScope() {

@@ -148,6 +148,8 @@ public class FlowExecutionImplTests extends TestCase {
 		} catch (FlowExecutionException e) {
 			assertEquals(flow.getId(), e.getFlowId());
 			assertNull(e.getStateId());
+			assertTrue(e.getCause() instanceof IllegalStateException);
+			assertTrue(e.getCause().getMessage().equals("Oops"));
 		}
 	}
 

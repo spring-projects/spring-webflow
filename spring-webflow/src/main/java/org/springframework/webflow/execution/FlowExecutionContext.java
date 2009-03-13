@@ -90,9 +90,9 @@ public interface FlowExecutionContext {
 	/**
 	 * Returns the active flow session of this flow execution. The active flow session is the currently executing
 	 * session. It may be the "root flow" session, or it may be a subflow session if this flow execution has spawned a
-	 * subflow. Returns null of this flow execution is in the process of starting or has ended.
+	 * subflow. Returns null of this flow execution is in the process of starting.
 	 * @return the active flow session
-	 * @throws IllegalStateException if this flow execution has not been started at all
+	 * @throws IllegalStateException if this flow execution has not been started at all or has ended
 	 */
 	public FlowSession getActiveSession() throws IllegalStateException;
 

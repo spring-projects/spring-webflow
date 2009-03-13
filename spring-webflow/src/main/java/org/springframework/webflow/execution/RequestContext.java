@@ -106,17 +106,21 @@ public interface RequestContext {
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
 	 * the life of the current view state.</b>
-	 * @return the view scope
+	 * @return the view scope, or null if the flow execution is in the process of starting but has not yet completed
+	 * startup
 	 * @see #inViewState()
-	 * @throws IllegalStateException this flow is not in a view-state
+	 * @throws IllegalStateException if this flow is not in a view-state, or the flow execution has not been started at
+	 * all or has ended
 	 */
 	public MutableAttributeMap getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
 	 * the life of the active flow session.</b>
-	 * @return the flow scope
+	 * @return the flow scope, or null if the the flow execution is in the process of starting but has not yet completed
+	 * startup
 	 * @see FlowSession
+	 * @throws IllegalStateException if the flow execution has not been started at all or has ended
 	 */
 	public MutableAttributeMap getFlowScope();
 

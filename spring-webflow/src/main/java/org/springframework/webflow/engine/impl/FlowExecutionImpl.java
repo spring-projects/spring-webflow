@@ -242,7 +242,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public void resume(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
-		Assert.state(status == FlowExecutionStatus.STARTED, "This flow execution cannot be resumed; it is not active");
+		Assert.state(status == FlowExecutionStatus.STARTED,
+				"This flow execution cannot be resumed; it is not started or has ended");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resuming in " + externalContext);
 		}
@@ -376,6 +377,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	void endActiveFlowSession(String outcome, MutableAttributeMap output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
+		if (session == null) {
+			throw new IllegalArgumentException("Cannot end the active FlowSession when one has not been activated");
+		}
 		if (session.isRoot()) {
 			status = FlowExecutionStatus.ENDING;
 		}
@@ -548,18 +552,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * @return the new flow session
 	 */
 	private FlowSessionImpl activateSession(Flow flow) {
-		FlowSessionImpl session;
-		if (!flowSessions.isEmpty()) {
-			FlowSessionImpl parent = getActiveSessionInternal();
-			session = createFlowSession(flow, parent);
-		} else {
-			session = createFlowSession(flow, null);
-		}
+		FlowSessionImpl parent = getActiveSessionInternal();
+		FlowSessionImpl session = createFlowSession(flow, parent);
 		flowSessions.add(session);
 		return session;
 	}
 
 	private FlowSessionImpl getActiveSessionInternal() {
+		if (flowSessions.isEmpty()) {
+			return null;
+		}
 		return (FlowSessionImpl) flowSessions.getLast();
 	}
 
@@ -645,8 +647,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * Returns the current flow which may or may not yet be active.
 	 */
 	private Flow getCurrentFlow() {
-		if (isActive()) {
-			return getActiveSessionInternal().getFlow();
+		FlowSessionImpl session = getActiveSessionInternal();
+		if (session != null) {
+			return session.getFlow();
 		} else {
 			return flow;
 		}
@@ -654,8 +657,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	private State getCurrentState() {
 		FlowSessionImpl session = getActiveSessionInternal();
-		State currentState = (State) session.getState();
-		return currentState;
+		if (session != null) {
+			return (State) session.getState();
+		} else {
+			return null;
+		}
 	}
 
 }
