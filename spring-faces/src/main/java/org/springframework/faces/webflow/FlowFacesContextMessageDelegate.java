@@ -203,7 +203,9 @@ public class FlowFacesContextMessageDelegate {
 
 		public Object next() {
 			Message next = messages[++currentIndex];
-			if (next.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)) {
+			if (next.getSource() == null) {
+				return null;
+			} else if (next.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)) {
 				return next.getSource().toString().replaceAll(SUMMARY_MESSAGE_KEY, "");
 			} else {
 				return next.getSource().toString();
@@ -253,11 +255,14 @@ public class FlowFacesContextMessageDelegate {
 
 		private Set identifiedMessageSources = new HashSet();
 
+		// From getClientIdsWithMessages docs: If any messages have been queued that were not associated with
+		// any specific client identifier, a null value will be included in the iterated values.
 		public boolean test(Message message) {
-			if (message.getSource() == null || message.getSource().equals("")
-					|| message.getSource().equals(nullSummaryId)
-					|| message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY)) {
+			if (message.getSource() != null && message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY)) {
 				return false;
+			} else if (message.getSource() == null || message.getSource().equals("")
+					|| message.getSource().equals(nullSummaryId)) {
+				return identifiedMessageSources.add(null);
 			}
 			return identifiedMessageSources.add(message.getSource());
 		}

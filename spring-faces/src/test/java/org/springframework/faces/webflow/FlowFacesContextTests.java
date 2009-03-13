@@ -1,6 +1,8 @@
 package org.springframework.faces.webflow;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -86,7 +88,7 @@ public class FlowFacesContextTests extends TestCase {
 			assertNotNull(i.next());
 			iterationCount++;
 		}
-		assertEquals("There should be 5 messages to iterate", 5, iterationCount);
+		assertEquals("There should be 6 messages to iterate", 6, iterationCount);
 	}
 
 	public final void testMutableGetMessages() {
@@ -117,11 +119,11 @@ public class FlowFacesContextTests extends TestCase {
 		while (i.hasNext()) {
 			FacesMessage message = (FacesMessage) i.next();
 			assertNotNull(message);
-			assertEquals("componentId_summary", message.getSummary());
-			assertEquals("componentId_detail", message.getDetail());
+			assertEquals("componentId_summary" + (iterationCount + 1), message.getSummary());
+			assertEquals("componentId_detail" + (iterationCount + 1), message.getDetail());
 			iterationCount++;
 		}
-		assertEquals(1, iterationCount);
+		assertEquals(2, iterationCount);
 	}
 
 	public final void testGetMessagesByClientId_ForUserMessage() {
@@ -159,13 +161,19 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
 		EasyMock.replay(new Object[] { requestContext });
 
+		List expectedOrderedIds = new ArrayList();
+		expectedOrderedIds.add(null);
+		expectedOrderedIds.add("componentId");
+		expectedOrderedIds.add("userMessage");
+
 		int iterationCount = 0;
 		Iterator i = facesContext.getClientIdsWithMessages();
 		while (i.hasNext()) {
-			i.next();
+			String clientId = (String) i.next();
+			assertEquals("Client id not expected", expectedOrderedIds.get(iterationCount), clientId);
 			iterationCount++;
 		}
-		assertEquals(2, iterationCount);
+		assertEquals(3, iterationCount);
 	}
 
 	public final void testGetMaximumSeverity() {
@@ -189,9 +197,13 @@ public class FlowFacesContextTests extends TestCase {
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("foo").info()
 				.build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary").defaultText(
-				"componentId_summary").warning().build());
+				"componentId_summary1").warning().build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail").defaultText(
-				"componentId_detail").warning().build());
+				"componentId_detail1").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary").defaultText(
+				"componentId_summary2").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail").defaultText(
+				"componentId_detail2").warning().build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("userMessage").defaultText("userMessage")
 				.info().build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("baz").error()
