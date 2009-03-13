@@ -167,11 +167,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public boolean hasStarted() {
-		return status != FlowExecutionStatus.NOT_STARTED;
+		return status == FlowExecutionStatus.ACTIVE || status == FlowExecutionStatus.ENDED;
 	}
 
 	public boolean isActive() {
-		return !flowSessions.isEmpty();
+		return status == FlowExecutionStatus.ACTIVE;
 	}
 
 	public boolean hasEnded() {
@@ -183,11 +183,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public FlowSession getActiveSession() {
-		if (status == FlowExecutionStatus.NOT_STARTED) {
-			throw new IllegalStateException("No active session to access; this flow execution has not been started");
-		}
-		if (status == FlowExecutionStatus.ENDED) {
-			throw new IllegalStateException("No active session to access; this flow execution has ended");
+		if (!isActive()) {
+			if (status == FlowExecutionStatus.NOT_STARTED) {
+				throw new IllegalStateException(
+						"No active FlowSession to access; this flow execution has not been started");
+			} else {
+				throw new IllegalStateException("No active FlowSession to access; this flow execution has ended");
+			}
 		}
 		return getActiveSessionInternal();
 	}
@@ -212,7 +214,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Starting in " + externalContext + " with input " + input);
 		}
-		status = FlowExecutionStatus.STARTING;
 		MessageContext messageContext = createMessageContext(null);
 		RequestControlContext requestContext = createRequestContext(externalContext, messageContext);
 		RequestContextHolder.setRequestContext(requestContext);
@@ -224,7 +225,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} catch (Exception e) {
 			handleException(wrap(e), requestContext);
 		} finally {
-			if (!hasEnded()) {
+			if (isActive()) {
 				saveMessages(requestContext);
 				try {
 					listeners.firePaused(requestContext);
@@ -242,8 +243,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public void resume(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
-		Assert.state(status == FlowExecutionStatus.STARTED,
-				"This flow execution cannot be resumed; it is not started or has ended");
+		Assert
+				.state(status == FlowExecutionStatus.ACTIVE,
+						"This FlowExecution cannot be resumed because it is not active; it has either not been started or has ended");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resuming in " + externalContext);
 		}
@@ -260,7 +262,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} catch (Exception e) {
 			handleException(wrap(e), requestContext);
 		} finally {
-			if (!hasEnded()) {
+			if (isActive()) {
 				saveMessages(requestContext);
 				try {
 					listeners.firePaused(requestContext);
@@ -288,7 +290,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		FlowSessionImpl session;
 		if (status == FlowExecutionStatus.NOT_STARTED) {
 			session = activateSession(flow);
-			status = FlowExecutionStatus.STARTED;
+			status = FlowExecutionStatus.ACTIVE;
 		} else {
 			session = getActiveSessionInternal();
 		}
@@ -296,19 +298,33 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		session.setCurrentState(state);
 	}
 
-	private MessageContext createMessageContext(MessageSource messageSource) {
-		StateManageableMessageContext messageContext = new DefaultMessageContext(messageSource);
-		Serializable messagesMemento = (Serializable) getFlashScope().extract("messagesMemento");
-		if (messagesMemento != null) {
-			messageContext.restoreMessages(messagesMemento);
-		}
-		return messageContext;
+	// custom serialization (implementation of Externalizable for optimized storage)
+
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		status = (FlowExecutionStatus) in.readObject();
+		flowSessions = (LinkedList) in.readObject();
 	}
 
-	private void saveMessages(RequestContext context) {
-		StateManageableMessageContext messageContext = (StateManageableMessageContext) context.getMessageContext();
-		Serializable messagesMemento = messageContext.createMessagesMemento();
-		getFlashScope().put("messagesMemento", messagesMemento);
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(status);
+		out.writeObject(flowSessions);
+	}
+
+	public String toString() {
+		if (!isActive()) {
+			if (!hasStarted()) {
+				return "[Not yet started " + getCaption() + "]";
+			} else {
+				return "[Ended " + getCaption() + "]";
+			}
+		} else {
+			if (flow != null) {
+				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
+						.toString();
+			} else {
+				return "[Unhydrated execution of '" + getRootSession().getFlowId() + "']";
+			}
+		}
 	}
 
 	// subclassing hooks
@@ -337,7 +353,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		listeners.fireSessionCreating(context, flow);
 		FlowSession session = activateSession(flow);
 		if (session.isRoot()) {
-			status = FlowExecutionStatus.STARTED;
+			status = FlowExecutionStatus.ACTIVE;
 		}
 		if (input == null) {
 			input = new LocalAttributeMap();
@@ -372,17 +388,11 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	boolean execute(Transition transition, RequestControlContext context) {
 		listeners.fireTransitionExecuting(context, transition);
-		return transition.execute(getCurrentState(), context);
+		return transition.execute((State) getActiveSession().getState(), context);
 	}
 
 	void endActiveFlowSession(String outcome, MutableAttributeMap output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
-		if (session == null) {
-			throw new IllegalArgumentException("Cannot end the active FlowSession when one has not been activated");
-		}
-		if (session.isRoot()) {
-			status = FlowExecutionStatus.ENDING;
-		}
 		listeners.fireSessionEnding(context, session, outcome, output);
 		session.getFlow().end(context, outcome, output);
 		flowSessions.removeLast();
@@ -514,36 +524,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		this.key = key;
 	}
 
-	// custom serialization (implementation of Externalizable for optimized storage)
-
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		status = (FlowExecutionStatus) in.readObject();
-		flowSessions = (LinkedList) in.readObject();
-	}
-
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeObject(status);
-		out.writeObject(flowSessions);
-	}
-
-	public String toString() {
-		if (!isActive()) {
-			if (!hasStarted()) {
-				return "[Not yet started " + getCaption() + "]";
-			} else {
-				return "[Ended " + getCaption() + "]";
-			}
-		} else {
-			if (flow != null) {
-				return new ToStringCreator(this).append("flow", flow.getId()).append("flowSessions", flowSessions)
-						.toString();
-			} else {
-				return "[Unhydrated execution of '" + getRootSession().getFlowId() + "']";
-			}
-		}
-	}
-
 	// internal helpers
+
+	private MessageContext createMessageContext(MessageSource messageSource) {
+		StateManageableMessageContext messageContext = new DefaultMessageContext(messageSource);
+		Serializable messagesMemento = (Serializable) getFlashScope().extract("messagesMemento");
+		if (messagesMemento != null) {
+			messageContext.restoreMessages(messagesMemento);
+		}
+		return messageContext;
+	}
 
 	/**
 	 * Activate a new <code>FlowSession</code> for the flow definition. Creates the new flow session and pushes it onto
@@ -563,6 +553,12 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			return null;
 		}
 		return (FlowSessionImpl) flowSessions.getLast();
+	}
+
+	private void saveMessages(RequestContext context) {
+		StateManageableMessageContext messageContext = (StateManageableMessageContext) context.getMessageContext();
+		Serializable messagesMemento = messageContext.createMessagesMemento();
+		getFlashScope().put("messagesMemento", messagesMemento);
 	}
 
 	private FlowExecutionException wrap(Exception e) {
@@ -596,6 +592,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 				logger.debug("Attempting to handle [" + exception + "]");
 			}
 		}
+		if (!isActive()) {
+			throw exception;
+		}
 		boolean handled = false;
 		try {
 			if (tryStateHandlers(exception, context) || tryFlowHandlers(exception, context)) {
@@ -628,7 +627,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	private boolean tryStateHandlers(FlowExecutionException exception, RequestControlContext context) {
 		if (exception.getStateId() != null) {
-			return getCurrentFlow().getStateInstance(exception.getStateId()).handleException(exception, context);
+			State state = getActiveSessionInternal().getFlow().getStateInstance(exception.getStateId());
+			return state.handleException(exception, context);
 		} else {
 			return false;
 		}
@@ -640,28 +640,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * @return true if the exception was handled
 	 */
 	private boolean tryFlowHandlers(FlowExecutionException exception, RequestControlContext context) {
-		return getCurrentFlow().handleException(exception, context);
-	}
-
-	/**
-	 * Returns the current flow which may or may not yet be active.
-	 */
-	private Flow getCurrentFlow() {
-		FlowSessionImpl session = getActiveSessionInternal();
-		if (session != null) {
-			return session.getFlow();
-		} else {
-			return flow;
-		}
-	}
-
-	private State getCurrentState() {
-		FlowSessionImpl session = getActiveSessionInternal();
-		if (session != null) {
-			return (State) session.getState();
-		} else {
-			return null;
-		}
+		return getActiveSessionInternal().getFlow().handleException(exception, context);
 	}
 
 }

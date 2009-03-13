@@ -127,12 +127,6 @@ public class FlowExecutionImplTests extends TestCase {
 		new EndState(flow, "end");
 		FlowExecutionListener mockListener = new FlowExecutionListenerAdapter() {
 			public void sessionCreating(RequestContext context, FlowDefinition definition) {
-				assertNull(context.getCurrentState());
-				assertNull(context.getActiveFlow());
-				assertNull(context.getCurrentEvent());
-				assertNull(context.getCurrentTransition());
-				assertNull(context.getActiveFlow());
-				assertNull(context.getFlowExecutionContext().getActiveSession());
 				assertFalse(context.getFlowExecutionContext().isActive());
 				throw new IllegalStateException("Oops");
 			}
@@ -149,6 +143,7 @@ public class FlowExecutionImplTests extends TestCase {
 			assertEquals(flow.getId(), e.getFlowId());
 			assertNull(e.getStateId());
 			assertTrue(e.getCause() instanceof IllegalStateException);
+			e.printStackTrace();
 			assertTrue(e.getCause().getMessage().equals("Oops"));
 		}
 	}

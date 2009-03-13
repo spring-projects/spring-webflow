@@ -58,18 +58,19 @@ import org.springframework.webflow.definition.TransitionDefinition;
 public interface RequestContext {
 
 	/**
-	 * Returns the definition of the flow that is currently executing. Returns <code>null</code> when the flow execution
-	 * is in the process of starting and has not yet activated its root flow session.
+	 * Returns the definition of the flow that is currently executing.
 	 * @return the flow definition for the active session
-	 * @throws IllegalStateException if the flow execution has not been started at all or has ended
+	 * @throws IllegalStateException if the flow execution is not active
+	 * @see FlowExecutionContext#isActive()
 	 */
 	public FlowDefinition getActiveFlow() throws IllegalStateException;
 
 	/**
-	 * Returns the current state of the executiong flow. Returns <code>null</code> if this flow execution is in the
-	 * process of starting and has not yet entered its start state.
+	 * Returns the current state of the executing flow. Returns <code>null</code> if the active flow's start state has
+	 * not yet been entered.
 	 * @return the current state, or <code>null</code> if in the process of starting
-	 * @throws IllegalStateException if this flow execution has not been started at all or has ended
+	 * @throws IllegalStateException if this flow execution is not active
+	 * @see FlowExecutionContext#isActive()
 	 */
 	public StateDefinition getCurrentState() throws IllegalStateException;
 
@@ -77,7 +78,8 @@ public interface RequestContext {
 	 * Returns the transition that would execute on the occurrence of the given event.
 	 * @param eventId the id of the user event
 	 * @return the transition that would trigger, or <code>null</code> if no transition matches
-	 * @throws IllegalStateException if this flow execution has not been started at all or has ended
+	 * @throws IllegalStateException if this flow execution is not active
+	 * @see FlowExecutionContext#isActive()
 	 */
 	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException;
 
@@ -106,23 +108,22 @@ public interface RequestContext {
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
 	 * the life of the current view state.</b>
-	 * @return the view scope, or null if the flow execution is in the process of starting but has not yet completed
-	 * startup
+	 * @return the view scope
 	 * @see #inViewState()
-	 * @throws IllegalStateException if this flow is not in a view-state, or the flow execution has not been started at
-	 * all or has ended
+	 * @throws IllegalStateException if this flow is not in a view-state or the flow execution is not active
+	 * @see FlowExecutionContext#isActive()
 	 */
 	public MutableAttributeMap getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
 	 * the life of the active flow session.</b>
-	 * @return the flow scope, or null if the the flow execution is in the process of starting but has not yet completed
-	 * startup
+	 * @return the flow scope
 	 * @see FlowSession
-	 * @throws IllegalStateException if the flow execution has not been started at all or has ended
+	 * @throws IllegalStateException if the flow execution is not active
+	 * @see FlowExecutionContext#isActive()
 	 */
-	public MutableAttributeMap getFlowScope();
+	public MutableAttributeMap getFlowScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable accessor for accessing and/or setting attributes in conversation scope. <b>Conversation scoped
