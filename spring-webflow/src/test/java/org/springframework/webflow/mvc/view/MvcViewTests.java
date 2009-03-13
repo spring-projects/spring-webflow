@@ -33,6 +33,7 @@ import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
+import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 public class MvcViewTests extends TestCase {
 
@@ -222,6 +223,7 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertFalse(view.hasFlowEvent());
 		view.render();
@@ -407,6 +409,7 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertFalse(view.hasFlowEvent());
 		assertTrue(bindBean.validationMethodInvoked);
@@ -431,6 +434,7 @@ public class MvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = new MockView();
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertFalse(view.hasFlowEvent());
 		assertFalse(bindBean.validationMethodInvoked);

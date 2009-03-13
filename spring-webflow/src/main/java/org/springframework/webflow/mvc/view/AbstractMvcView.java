@@ -55,7 +55,6 @@ import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.validation.ValidationHelper;
-import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
@@ -88,7 +87,7 @@ public abstract class AbstractMvcView implements View {
 
 	private BinderConfiguration binderConfiguration;
 
-	private MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
+	private MessageCodesResolver messageCodesResolver;
 
 	/**
 	 * Creates a new MVC view.
@@ -498,8 +497,7 @@ public abstract class AbstractMvcView implements View {
 		String model = getModelExpression().getExpressionString();
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		Class fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
-		String[] messageCodes = messageCodesResolver.resolveMessageCodes(error.getCode(), model, field,
-				fieldType);
+		String[] messageCodes = messageCodesResolver.resolveMessageCodes(error.getCode(), model, field, fieldType);
 		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field).defaultText(
 				error.getCode() + " on " + field).build();
 	}

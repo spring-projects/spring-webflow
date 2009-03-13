@@ -69,7 +69,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 
 	private String fieldMarkerPrefix;
 
-	private MessageCodesResolver messageCodesResolver;
+	private MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
 	/**
 	 * Create a new Spring MVC View Factory Creator.
