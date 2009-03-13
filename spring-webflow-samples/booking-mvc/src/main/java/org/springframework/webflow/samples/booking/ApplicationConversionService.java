@@ -13,7 +13,6 @@ public class ApplicationConversionService extends DefaultConversionService {
 	StringToDate dateConverter = new StringToDate();
 	dateConverter.setPattern("MM-dd-yyyy");
 	addConverter("shortDate", dateConverter);
-	addConverter(new StringToAmenity());
     }
 
 }

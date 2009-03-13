@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -187,12 +186,6 @@ public class Booking implements Serializable {
     }
 
     public void setAmenities(Set<Amenity> amenities) {
-	Iterator<Amenity> it = amenities.iterator();
-	while (it.hasNext()) {
-	    Object a = it.next();
-	    System.out.println(a);
-	    System.out.println(a.getClass());
-	}
 	this.amenities = amenities;
     }
 
