@@ -28,9 +28,13 @@ Bug Fixes
 * Fixed bug where Hibernate and JPA flow execution listeners performed their commits against the flow-managed PersistenceContext after the flow had ended (SWF-1010).
   This prevented exceptions such as optimistic locking failures from being handled by the flow.
   Commit processing is now performed in the sessionEnding listener callback now, which is called before the flow actually terminates.
+* Fixed bug where calling active FlowSession context accessors such as RequestContext.getCurrentState() threw IllegalStateExceptions when the flow execution was starting but the root session was yet not activated.
+  This caused problems when handling AccessDeniedExceptions thrown by the SecurityFlowExecutionListener, which uses the sessionCreated FlowExecutionListener callback to perform a flow security check (SWF-1004)
+  The accessors now return null for active FlowSession context until the root session is activated.  They only throw IllegalStateExceptions if the flow execution has not been started at all or has ended.
 
 Improvements
 * Improved FlowExecution test documentation
+* Improved FlowExecutionExceptionHandler API documentation
 
 Changes in version 2.0.5 (14.11.2008)
 -------------------------------------
