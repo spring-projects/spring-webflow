@@ -60,6 +60,17 @@ public class EndStateTests extends TestCase {
 		assertTrue(action.executeCalled);
 	}
 
+	public void testEnterEndStateWithFinalResponseRendererResponseAlreadyComplete() {
+		Flow flow = new Flow("myFlow");
+		EndState state = new EndState(flow, "end");
+		StubFinalResponseAction action = new StubFinalResponseAction();
+		state.setFinalResponseAction(action);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.getExternalContext().recordResponseComplete();
+		state.enter(context);
+		assertFalse(action.executeCalled);
+	}
+
 	public void testEnterEndStateWithOutputMapper() {
 		Flow flow = new Flow("myFlow") {
 			public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
