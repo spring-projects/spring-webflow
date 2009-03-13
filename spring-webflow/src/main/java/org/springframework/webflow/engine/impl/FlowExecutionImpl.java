@@ -186,9 +186,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (!isActive()) {
 			if (status == FlowExecutionStatus.NOT_STARTED) {
 				throw new IllegalStateException(
-						"No active FlowSession to access; this flow execution has not been started");
+						"No active FlowSession to access; this FlowExecution has not been started");
 			} else {
-				throw new IllegalStateException("No active FlowSession to access; this flow execution has ended");
+				throw new IllegalStateException("No active FlowSession to access; this FlowExecution has ended");
 			}
 		}
 		return getActiveSessionInternal();
@@ -225,8 +225,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} catch (Exception e) {
 			handleException(wrap(e), requestContext);
 		} finally {
+			saveFlashMessages(requestContext);
 			if (isActive()) {
-				saveMessages(requestContext);
 				try {
 					listeners.firePaused(requestContext);
 				} catch (Throwable e) {
@@ -262,8 +262,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		} catch (Exception e) {
 			handleException(wrap(e), requestContext);
 		} finally {
+			saveFlashMessages(requestContext);
 			if (isActive()) {
-				saveMessages(requestContext);
 				try {
 					listeners.firePaused(requestContext);
 				} catch (Throwable e) {
@@ -555,7 +555,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return (FlowSessionImpl) flowSessions.getLast();
 	}
 
-	private void saveMessages(RequestContext context) {
+	private void saveFlashMessages(RequestContext context) {
 		StateManageableMessageContext messageContext = (StateManageableMessageContext) context.getMessageContext();
 		Serializable messagesMemento = messageContext.createMessagesMemento();
 		getFlashScope().put("messagesMemento", messagesMemento);
