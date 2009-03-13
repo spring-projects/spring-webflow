@@ -20,6 +20,7 @@ import org.springframework.webflow.mvc.view.ViewActionStateHolder;
 import org.springframework.webflow.mvc.view.MvcViewTests.BindBean;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
+import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 public class PortletMvcViewTests extends TestCase {
 
@@ -57,6 +58,7 @@ public class PortletMvcViewTests extends TestCase {
 				.createMock(org.springframework.web.servlet.View.class);
 		AbstractMvcView view = new PortletMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());
 		ViewActionStateHolder holder = (ViewActionStateHolder) context.getFlashScope().get(ViewActionStateHolder.KEY);
