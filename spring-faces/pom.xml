@@ -39,17 +39,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>
-			<artifactId>org.springframework.binding</artifactId>
+			<artifactId>spring-binding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>
-			<artifactId>org.springframework.js</artifactId>
+			<artifactId>spring-js</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>
-			<artifactId>org.springframework.webflow</artifactId>
+			<artifactId>spring-webflow</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
