@@ -17,21 +17,21 @@
 		</scp>
 
 		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
-				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x"/>
+				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/spring-webflow-reference/ /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/reference" />
 
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/faces"
+		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/faces"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-faces/src/main/java/org/springframework/faces/config">
 				<include name="spring-faces-2.0.xsd" />
 			</fileset>
 		</scp>
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/webflow"
+		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/webflow"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/engine/model/builder/xml">
 				<include name="spring-webflow-2.0.xsd" />
 			</fileset>
 		</scp>
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schemas/webflow-config"
+		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/webflow-config"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/config">
 				<include name="spring-webflow-config-2.0.xsd" />
