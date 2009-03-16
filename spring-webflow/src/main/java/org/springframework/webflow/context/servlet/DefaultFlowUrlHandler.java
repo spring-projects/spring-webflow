@@ -36,9 +36,16 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;
  * </pre>
  * 
- * As an example, the URL http://localhost/springtravel/app/booking would map to flow "booking", while the URL
- * http://localhost/springtravel/app/hotels/booking would map to flow "hotels/booking". If the resource path ends in an
- * extension it will be stripped; for example, /springtravel/app/booking.htm would still map to flow "booking".
+ * As an example, the URL <code>http://localhost/springtravel/app/booking</code> would map to flow "booking", while the
+ * URL <code>http://localhost/springtravel/app/hotels/booking</code> would map to flow "hotels/booking". In both these
+ * examples, /springtravel is the context path and /app is the servlet path. The flow id is treated as the path info
+ * component of the request URL string.
+ * 
+ * If the path info is null, the servletPath will be used as the flow id. Also, if the servlet path ends in an extension
+ * it will be stripped when calculating the flow id. For example, a URL of
+ * <code>http://localhost/springtravel/hotels/booking.htm</code> would still map to flow id "hotels/booking", assuming a
+ * context path of /springtravel, a servlet path of /hotels/booking.htm (likely mapped with a servlet-mapping of *.htm),
+ * and a path info of null.
  * <p>
  * Expects URLs to resume flows to be of this pattern:
  * </p>
