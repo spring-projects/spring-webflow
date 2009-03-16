@@ -69,7 +69,7 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 		}
 
 		if (!rowSelected) {
-			selections.clear();
+			selections.remove(getRowData());
 		} else if (rowSelected && !selections.contains(getRowData())) {
 			selections.clear();
 			selections.add(getRowData());
