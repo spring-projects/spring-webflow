@@ -1,0 +1,9 @@
+Library-SymbolicName: org.springframework.webflow
+Library-Version: @bundle.version@
+Library-Name: Spring Web Flow
+Import-Bundle: 
+ org.springframework.binding;version="[@bundle.version@, @bundle.version@]",
+ org.springframework.webflow;version="[@bundle.version@, @bundle.version@]",
+ org.springframework.js;version="[@bundle.version@, @bundle.version@]";resolution:="optional", 
+ org.springframework.faces;version="[@bundle.version@, @bundle.version@]";resolution:="optional",
+ com.springsource.org.jboss.el;version="[2.0.0.GA, 2.1.0)";resolution:="optional"

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://ivyrep.jayasoft.org/ivy-doc.xsl"?>
+<ivy-module
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd"
+		version="1.3">
+
+	<info organisation="org.springframework" module="${ant.project.name}">
+		<license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+	</info>
+
+	<configurations>
+		<include file="${spring.build.dir}/common/default-ivy-configurations.xml"/>
+	</configurations>
+
+	<publications>
+		<artifact name="${ant.project.name}" type="library" ext="libd"/>
+	</publications>
+
+	<dependencies>
+		<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="latest.integration" conf="compile->runtime"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="optional->runtime"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="optional->runtime"/>
+		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="optional->runtime"/>
+	</dependencies>
+
+</ivy-module>
