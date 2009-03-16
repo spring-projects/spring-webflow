@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="spring-webflow-library">
+<project name="org.springframework.webflow-library">
 	<property file="${basedir}/../build.properties"/>
-	<import file="${basedir}/../build-spring-webflow/package-library.xml"/>
 	<import file="${basedir}/../spring-build/library/default.xml"/>
 </project>
