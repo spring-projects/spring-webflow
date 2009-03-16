@@ -6,6 +6,7 @@
 		<pathelement location="../spring-js"/>
 		<pathelement location="../spring-webflow"/>
 		<pathelement location="../spring-faces"/>
+		<pathelement location="../spring-webflow-library"/>		
 		<pathelement location="../spring-webflow-samples/booking-faces"/>
 		<pathelement location="../spring-webflow-samples/booking-mvc"/>
 	</path>
