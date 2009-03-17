@@ -1,6 +1,7 @@
 /*
  * spring-webflow-samples
  * ----------------------
+ * getting-started-with-spring-webflow: Starter application template for Spring MVC and Web Flow
  * booking-mvc: Hotel Booking Reference App (Spring MVC + Web Flow + JSP version)
  * booking-faces: Hotel Booking Reference App (Spring MVC + Web Flow + JavaServerFaces version)
  * booking-portlet-mvc: Hotel Booking Reference App (Spring Portlet MVC + Web Flow + JSP version)
