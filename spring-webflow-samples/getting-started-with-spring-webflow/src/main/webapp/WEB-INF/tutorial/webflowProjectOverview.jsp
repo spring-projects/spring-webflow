@@ -38,6 +38,8 @@ Spring Web Flow also provides integration with Spring Security for securing web 
 How Spring Web Flow fits into Spring's layered, a-la-carte "Web Stack" is illustrated below:
 <img src="<c:url value="/resources/images/tutorial/spring-web-stack.png" />" />
 </p>
-<a href="tutorial?execution=${flowExecutionKey}&eventId=next">Next &gt;</a>
+<p>
+	<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>
+</p>
 </body>
 </html>
