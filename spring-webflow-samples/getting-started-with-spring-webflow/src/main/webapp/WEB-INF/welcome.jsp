@@ -5,8 +5,19 @@
 	<title>Getting Started with Spring Web Flow</title>
 </head>
 <body>
-<h1 align="center">
+<h1>
 	Congratulations! You're running Spring!
 </h1>
+<h2>Welcome to the <i>Getting Started with Spring Web Flow</i> tutorial</h2>
+<p>
+	This tutorial provides a guide to getting up and running with Spring Web Flow in 10 minutes.
+	The tutorial itself is implemented as a web flow.
+	Step 1 of the tutorial will provide a brief overview of the Spring Web Flow project.
+	Future steps will guide you through the basics of integrating Web Flow into your own Spring-powered web application.
+	Enjoy!
+</p>
+<p>
+	<a href="tutorial">Begin the tutorial</a>
+</p>
 </body>
 </html>
