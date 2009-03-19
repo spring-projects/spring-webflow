@@ -5,6 +5,9 @@
 	<title>Getting Started with Spring Web Flow: Overview of the Spring Web Flow Project</title>
 </head>
 <body>
+<h1>
+	Overview of the Spring Web Flow Project
+</h1>
 <h2>
 	What is Spring Web Flow?
 </h2>

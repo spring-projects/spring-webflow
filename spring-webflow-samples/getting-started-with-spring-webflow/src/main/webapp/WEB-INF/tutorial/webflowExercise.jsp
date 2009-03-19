@@ -2,9 +2,12 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Getting Started with Spring Web Flow: Creating your first flow</title>
+	<title>Getting Started with Spring Web Flow: Creating Your First Web Flow</title>
 </head>
 <body>
+<h1>
+	Creating Your First Web Flow
+</h1>
 <h2>
 	Do this, do that, test it out.
 </h2>

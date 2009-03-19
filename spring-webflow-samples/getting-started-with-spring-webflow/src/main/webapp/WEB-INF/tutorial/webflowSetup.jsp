@@ -2,9 +2,12 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Getting Started with Spring Web Flow: Setting up Web Flow in a Spring web application</title>
+	<title>Getting Started with Spring Web Flow: Setting up Web Flow in a Spring Web Application</title>
 </head>
 <body>
+<h1>
+	Setting up Web Flow in a Spring Web Application
+</h1>
 <h2>
 	What does the configuration of a typical Spring web application look like?
 </h2>
