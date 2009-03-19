@@ -7,6 +7,8 @@ Changes in version 2.0.7 (2009.03.24)
 Bug Fixes
 * Fixed several issues with WebFlowMessageCodesResolver algorithm, including a JDK 1.4 compatibility issue (SWF-1064)
 * Fixed bug in Spring Faces custom ListDataModel implementations related to row selection tracking (SWF-1066)
+* Fixed bug where subclasses of FacesMessage we do not control could introduce dependencies on JSF-specific services outside of Web Flow's control (SWF-1073)
+  This specifically caused problems with Rich Faces 3.3.0's messages component, which adds a LabeledFacesMessage that requires a FacesContext to be serialized.
 
 Improvements
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
