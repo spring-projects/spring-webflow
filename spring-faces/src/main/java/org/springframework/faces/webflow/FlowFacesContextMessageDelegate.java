@@ -274,6 +274,9 @@ public class FlowFacesContextMessageDelegate {
 	 * uncommon for <tt>FacesMessages</tt> to be changed after they gave been added to a <tt>FacesContext</tt>, for
 	 * example, from a <tt>PhaseListener</tt>.
 	 * <p>
+	 * NOTE: Only {@link javax.faces.application.FacesMessage} instances are directly adapted, any subclasses will be
+	 * converted to the standard FacesMessage implementation. This is to protect against bugs such as SWF-1073.
+	 * 
 	 * For convenience this class also implements the {@link MessageResolver} interface.
 	 */
 	private static class FlowFacesMessageAdapter extends Message implements MessageResolver {
@@ -286,7 +289,20 @@ public class FlowFacesContextMessageDelegate {
 			super(null, null, null);
 			this.source = source;
 			this.key = key;
-			this.facesMessage = message;
+			this.facesMessage = asStandardFacesMessageInstance(message);
+		}
+
+		/**
+		 * Use standard faces message as required to protect against bugs such as SWF-1073.
+		 * 
+		 * @param message {@link javax.faces.application.FacesMessage} or subclass.
+		 * @return {@link javax.faces.application.FacesMessage} instance
+		 */
+		private FacesMessage asStandardFacesMessageInstance(FacesMessage message) {
+			if (FacesMessage.class.equals(message.getClass())) {
+				return message;
+			}
+			return new FacesMessage(message.getSeverity(), message.getSummary(), message.getDetail());
 		}
 
 		public Object getSource() {
