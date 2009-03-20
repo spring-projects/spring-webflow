@@ -9,7 +9,7 @@
 	Where To Go with From Here
 </h1>
 <p>
-	Web flow is an extremely powerful and easy to use controller framework.  This tutorial has just scratched the surface of what you can do with the technology.
+	Spring Web Flow is an extremely powerful and easy to use controller framework.  This tutorial has just scratched the surface of what you can do with the technology.
 	Checkout these additional resources as you continue your Spring Web Flow journey.
 </p>
 <h2>
