@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
 	<title>Getting Started with Spring Web Flow: Setting up Web Flow in a Spring Web Application</title>
 </head>

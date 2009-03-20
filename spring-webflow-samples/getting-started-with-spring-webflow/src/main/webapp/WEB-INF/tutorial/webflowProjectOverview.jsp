@@ -29,7 +29,7 @@ The framework also cares for managing conversational state and preventing duplic
 <p>
 Spring Web Flow builds on the Spring Framework project, which includes the Spring MVC web framework.
 Concretely, Spring Web Flow plugs into Spring MVC as a Controller technology.
-Then, a typical Spring-powered web application is implemented using a mix of annotated Spring MVC @Controllers and web flows.
+A typical Spring-powered web application is implemented using a mix of annotated Spring MVC @Controllers and web flows.
 In general, use @Controllers for implementing simple, single-request user interactions, and web flows for stateful, multi-step user interactions.
 </p>
 <p>
