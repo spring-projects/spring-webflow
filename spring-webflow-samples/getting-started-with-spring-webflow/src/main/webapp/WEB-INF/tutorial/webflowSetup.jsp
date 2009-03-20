@@ -60,9 +60,9 @@
 </pre>
 <p>
 	The example above shows the configuration for a Spring web application spread across three files.
-	app-config.xml configures your components that carry out application-specific controller, business, and data access logic.
-	mvc-config.xml configures the Spring MVC framework infrastructure, including the properties of the DispatcherServlet.
-	webflow-config configures the Spring Web Flow infrastructure, which plugs into Spring MVC.
+	The app-config.xml file configures your components that carry out application-specific controller, business, and data access logic.
+	The mvc-config.xml file configures the Spring MVC framework infrastructure, including the properties of the DispatcherServlet.
+	The webflow-config.xml file configures the Spring Web Flow infrastructure.
 </p>
 <p>
 	We also generally recommend using annotations to configure your application components, and externalized XML to configure infrastructure.
@@ -145,13 +145,7 @@
 	     If no annotation-based path mapping is found, Spring MVC proceeds to the next HandlerMapping (order=2 below). --&gt;
 	&lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"&gt;
 		&lt;property name="order" value="1" /&gt;
-	&lt;/bean&gt;
-	
-	&lt;!-- Maps requests to @Controllers based on controller class name convention; e.g. a request for /hotels or a /hotels sub-resource maps to HotelsController
-	     If no class mapping is found, Spring MVC sends a 404 response and logs a pageNotFound warning. --&gt;
-	&lt;bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"&gt;
-		&lt;property name="order" value="2" /&gt;
-	&lt;/bean&gt;
+	&lt;/bean&gt;	
 </pre>
 <p>
 	Once a request has been mapped to a handler object such as a @Controller of web flow, the DispatcherServlet uses the HandlerAdapter registered for that kind of handler to invoke it.
@@ -168,12 +162,24 @@
 	&lt;/bean&gt;	
 </pre>
 <p>
-	To illustrate the DispatcherServlet pipeline, the following graphic illustrates the sequence when a request is mapped to a web flow:<br>
-	<img src="dispatcher-servlet-flow-handler.png" />
+	To illustrate a typical DispatcherServlet pipeline, the following graphic illustrates the sequence of events that happen in this application when the /tutorial resource is requested, which is handled by the web flow you are interacting with right now:<br>
+	<img src="<c:url value="/resources/images/tutorial/dispatcher-servlet-flow-handler.png" />" />
 </p>
 <p>
-	The following graphic shows the sequence when a request is mapped to a @Controller:<br>
-	<img src="dispatcher-servlet-annotated-controller-handler.png" />
+	In this scenario, the FlowHandlerMapping returned the tutorial flow which was then invoked by the FlowHandlerAdapter.
+</p>
+<p>
+	The following graphic shows the sequence in this application when the /welcome resource is requested, which is handled by the annotated WelcomeController:<br>
+	<img src="<c:url value="/resources/images/tutorial/dispatcher-servlet-annotated-controller-handler.png" />" />
+</p>
+<p>
+	In this scenario, the FlowHandlerMapping returned null because the /welcome resource was not mapped to a web flow.
+	The DefaultAnnotationHandlerMapping was then queried and returned the WelcomeController, which was invoked by the AnnotationMethodHandlerAdapter.
+</p>
+<p>
+	The main point to understand here is there is one-time configuration that enables full customization of the DispatcherServlet processing pipeline.
+	Once this configuration is established, you simply create new controllers and web flows, and they get picked up and hooked into the pipeline automatically.
+	No other configuration is required.
 </p>
 <p>
 	<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>
