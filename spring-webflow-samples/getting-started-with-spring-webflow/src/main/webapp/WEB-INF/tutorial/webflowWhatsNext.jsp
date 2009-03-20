@@ -25,7 +25,7 @@
 <p>
 	<A href="http://www.springsource.org/webflow-samples">Additional samples</a> are available showing Web Flow applied for various use cases.
 	These samples illustrate additional features such as Hibernate, Security, Ajax, and JSF integration.
-	A natural next step from this tutorial is to walk-through these sample applications, supplimenting with reference manual documentation as you go.
+	A natural next step from this tutorial is to walk-through these sample applications, supplementing with reference manual documentation as you go.
 </p>
 <h2>
 	Training

@@ -162,7 +162,7 @@
 	&lt;view-state id="start" model="helloWorldForm"&gt; ...	
 		</pre>
 		<p>
-			Refresh your flow and the checkbox should render checked since the default value for HelloWorldForm.selected is true.
+			Refresh your flow and the checkbox should render checked since the default value for the HelloWorldForm.selected property is true.
 			Uncheck the box and submit and go back in your browser and the unchecked status should be preserved.
 		</p>
 	</li>
