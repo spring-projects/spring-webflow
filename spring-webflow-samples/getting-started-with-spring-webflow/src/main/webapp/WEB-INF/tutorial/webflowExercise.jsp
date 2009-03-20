@@ -188,9 +188,9 @@
 	</li>
 </ol>
 <h3>Finish your helloworld flow</h3>
-<p>
-	<ol>
-		<li>Finish up your flow by adding another button on the start.jsp that ends the flow:</li>
+<ol>
+	<li>
+		Finish up your helloworld flow by adding another button on the start.jsp that ends the flow:
 		<pre>
 	&lt;input type="submit" name="_eventId_finish" value="Finish" /&gt;
 		</pre>
@@ -203,8 +203,8 @@
 	&lt;end-state id="finished" view="externalRedirect:welcome" /&gt;
 		</pre>
 		Click the Finish button and you should be taken back to the application welcome screen.
-	</ol>
+	</li>
+</ol>
 	<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>
-</p>
 </body>
 </html>
