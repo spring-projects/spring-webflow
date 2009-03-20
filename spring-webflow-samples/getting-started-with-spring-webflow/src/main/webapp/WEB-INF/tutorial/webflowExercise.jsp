@@ -125,7 +125,7 @@
 		&lt;h1&gt;
 			Hello world!
 		&lt;/h1&gt;
-		&lt;form:form method="post" modelAttribute="helloWorldForm" &gt;
+		&lt;form:form method="post" modelAttribute="helloWorldForm"&gt;
 			&lt;form:checkbox path="selected" /&gt;
 			&lt;input type="submit" name="_eventId_submit" value="Submit" /&gt;
 		&lt;/form:form&gt;		
