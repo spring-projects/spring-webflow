@@ -34,7 +34,7 @@
 
 	<!-- Enables web flows; responsible for calling the Spring Web Flow system to execute a flow when one is mapped. -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-		<property name="flowExecutor" ref="flowExecutor"/>
+		<property name="flowExecutor" ref="flowExecutor" />
 	</bean>	
 
 	<!-- Note: all Spring MVC request HandlerAdapters above must be explicitly registered now that we are now overriding the defaults to plug-in the FlowHandlerAdapter -->
