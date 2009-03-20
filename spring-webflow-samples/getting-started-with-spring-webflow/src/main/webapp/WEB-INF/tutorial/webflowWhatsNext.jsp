@@ -44,6 +44,13 @@
 	Web Flow, like all Spring projects, depends you the community to be successful!
 </p>
 <h2>
+	Enterprise Support
+</h2>
+<p>
+	SpringSource provides 24x7 support on the Spring projects, including Spring Web Flow, as part of <a href="http://www.springsource.com/products/enterprise">SpringSource Enterprise</a>.
+	This subscription also includes licenses for the SpringSource Tool Suite IDE and SpringSource Application Management Suite.
+</p>
+<h2>
 	Related Projects
 </h2>
 <p>
