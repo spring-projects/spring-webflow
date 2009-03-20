@@ -20,7 +20,7 @@
 		<property name="order" value="1" />
 	</bean>
 	
-	<!-- Maps requests to @Controllers based on controller class name; a request for /hotels or a /hotels sub-resource maps to HotelsController
+	<!-- Maps requests to @Controllers based on controller class name convention; e.g. a request for /hotels or a /hotels sub-resource maps to HotelsController
 	     If no class mapping is found, Spring MVC sends a 404 response and logs a pageNotFound warning. -->
 	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
 		<property name="order" value="2" />

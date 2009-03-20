@@ -49,13 +49,14 @@
 	Inside /WEB-INF/spring, we generally recommend defining a configuration file for your application logic,
 	and separate configuration files for framework infrastructure.  For example:
 </p>
-<pre>
+<pre class="code">
 	/webapp
 		/WEB-INF
 			/spring
 				app-config.xml
 				mvc-config.xml
-				webflow-config.xml		
+				webflow-config.xml
+			web.xml
 </pre>
 <p>
 	The example above shows the configuration for a Spring web application spread across three files.
@@ -63,13 +64,24 @@
 	mvc-config.xml configures the Spring MVC framework infrastructure, including the properties of the DispatcherServlet.
 	webflow-config configures the Spring Web Flow infrastructure, which plugs into Spring MVC.
 </p>
+<p>
+	We also generally recommend using annotations to configure your application components, and externalized XML to configure infrastructure.
+	This is illustrated in app-config.xml by use of the component-scan directive to scan your classpath for application components to deploy:
+</p>
+<pre class="code">
+	&lt;!-- Scans within the base package of the application for @Components to configure as beans --&gt;
+	&lt;context:component-scan base-package="org.springframework.webflow.samples.gettingstarted" /&gt;
+</pre>
+<p>
+	With this technique, your Spring configuration is setup once and you generally never have to update your configuration files again as new components are added to your application.
+</p>
 <h2>
 	How do I plug-in Spring Web Flow?
 </h2>
 <p>
 	In webflow-config.xml, first define a flow-registry to register the flows you have defined in your application:
 </p>
-<pre>
+<pre class="code">
 	&lt;!-- Registers the web flows that can be executed --&gt;	
 	&lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF/"&gt;
 		&lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
@@ -81,14 +93,14 @@
 <p>
 	Then, define a flow-executor that uses this registry to execute your flows:
 </p>
-<pre>
+<pre class="code">
 	&lt;!-- Configures the engine that executes web flows in this application --&gt;
 	&lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" /&gt;
 </pre>
 <p>
 	Finally, in mvc-config.xml plug in adapters to hook the flow-executor into the Spring MVC DispatcherServlet request processing pipeline:
 </p>
-<pre>
+<pre class="code">
 	&lt;!-- Maps requests to flows in the flowRegistry --&gt;
 	&lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
 		&lt;property name="order" value="0" /&gt;
@@ -103,9 +115,66 @@
 <p>
 	We also recommend you turn on development mode while developing so you never have to redeploy your application to test changes:
 </p>
-<pre>
+<pre class="code">
 	&lt;webflow:flow-builder-services id="flowBuilderServices" development="true" /&gt;
 </pre>
+<h2>
+	How do Spring MVC @Controllers and Web Flows co-exist in the same application?
+</h2>
+<p>
+	A typical Spring web application consists of a mix of stateless MVC @Controllers and stateful web flows, which are two distinct types of handlers.
+	When a web request comes in for a resource, the DispatcherServlet figures out which handler should be invoked.
+	This is done by consulting an ordered chain of HandlerMapping objects configured in your mvc-config.xml.
+	Generally, the first HandlerMapping consulted is the FlowHandlerMapping, which determines if the requested resource should be handled by a web flow.
+	If no flow handler is found, the next HandlerMapping in the chain is queried.
+	This is generally the DefaultAnnotationHandlerMapping, which consults explicit @RequestMapping rules defined inside annotated Spring MVC @Controllers.
+</p>
+<p>
+	Setting up the HandlerMapping chain is a one-time configuration step, and makes it easy to plug in different types of handlers and mapping strategies.
+	A typical HandlerMapping chain for Spring web applications looks like:
+</p>
+<pre class="code">
+	&lt;!-- Maps requests to flows in the flowRegistry; for example, a request for resource /hotels/booking maps to a flow with id "hotels/booking"
+		 If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
+	&lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
+		&lt;property name="order" value="0" /&gt;
+		&lt;property name="flowRegistry" ref="flowRegistry" /&gt;
+	&lt;/bean&gt;
+
+	&lt;!-- Maps requests to @Controllers based on @RequestMapping("path") annotation values
+	     If no annotation-based path mapping is found, Spring MVC proceeds to the next HandlerMapping (order=2 below). --&gt;
+	&lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"&gt;
+		&lt;property name="order" value="1" /&gt;
+	&lt;/bean&gt;
+	
+	&lt;!-- Maps requests to @Controllers based on controller class name convention; e.g. a request for /hotels or a /hotels sub-resource maps to HotelsController
+	     If no class mapping is found, Spring MVC sends a 404 response and logs a pageNotFound warning. --&gt;
+	&lt;bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"&gt;
+		&lt;property name="order" value="2" /&gt;
+	&lt;/bean&gt;
+</pre>
+<p>
+	Once a request has been mapped to a handler object such as a @Controller of web flow, the DispatcherServlet uses the HandlerAdapter registered for that kind of handler to invoke it.
+	This decouples the DispatcherServlet from specific handler implementations, which allows Spring MVC to support different controller technologies in an extensible manner.
+	As a one-time configuration step, a typical Spring web application registers HandlerAdapters that know how to invoke @Controllers and web flows when they are mapped:
+</p>
+<pre class="code">
+	&lt;!-- Enables annotated @Controllers; responsible for invoking an annotated POJO @Controller when one is mapped. --&gt;
+	&lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /&gt;
+
+	&lt;!-- Enables web flows; responsible for calling the Spring Web Flow system to execute a flow when one is mapped. --&gt;
+	&lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
+		&lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+	&lt;/bean&gt;	
+</pre>
+<p>
+	To illustrate the DispatcherServlet pipeline, the following graphic illustrates the sequence when a request is mapped to a web flow:<br>
+	<img src="dispatcher-servlet-flow-handler.png" />
+</p>
+<p>
+	The following graphic shows the sequence when a request is mapped to a @Controller:<br>
+	<img src="dispatcher-servlet-annotated-controller-handler.png" />
+</p>
 <p>
 	<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>
 </p>

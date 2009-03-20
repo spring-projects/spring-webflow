@@ -38,7 +38,7 @@ The Spring Faces project uses Spring Web Flow as the controller framework to sup
 Spring Web Flow also provides integration with Spring Security for securing web flows.
 </p>
 <p>
-How Spring Web Flow fits into Spring's layered, a-la-carte "Web Stack" is illustrated below:
+How Spring Web Flow fits into Spring's layered, a-la-carte "Web Stack" is illustrated below:<br>
 <img src="<c:url value="/resources/images/tutorial/spring-web-stack.png" />" />
 </p>
 <p>
