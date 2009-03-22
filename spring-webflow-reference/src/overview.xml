@@ -109,9 +109,9 @@
 			All jars obtained from the SpringSource Bundle Repository are OSGi-ready.
 		</para>
 		<sect2 id="jars-maven">
-			<title>Accessing Web Flow with Maven</title>
+			<title>Accessing Web Flow bundles with Maven</title>
 			<para>
-				To access jars using Maven, add the following repositories to your Maven pom:
+				To access bundles using Maven, add the following repositories to your Maven pom:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <repository>
@@ -162,14 +162,13 @@
 			</programlisting>
 			<para>
 				Note the Web Flow artifacts in the SpringSource Bundle Repository are indexed under different ids because their transitive dependencies are different than the Maven Central artifacts.
-				The difference is the transitive jars such as commons-logging had to be patched with the metadata required to make them OSGi-compatible.
-				This is because the teams that release these jars do not natively publish them with the required OSGi-metadata yet.
+				The difference is the transitive jars such as commons-logging have been patched by SpringSource to add the metadata required to make them OSGi-compatible.
 			</para>
 		</sect2>
 		<sect2 id="jars-ivy">
-			<title>Accessing Web Flow with Ivy</title>
+			<title>Accessing Web Flow bundles with Ivy</title>
 			<para>
-				To access jars using Ivy, add the following repositories to your Ivy config:
+				To access bundles using Ivy, add the following repositories to your Ivy config:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <url name="com.springsource.repository.bundles.release">
@@ -205,6 +204,32 @@
 <dependency org="org.springframework.webflow" name="org.springframework.faces"
             rev="2.0.7.RELEASE" conf="compile->runtime" />
 ]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="webflow-dm-server-lib">
+			<title>Accessing the dm Server Web Flow library</title>
+			<para>
+				A dm Server library for Web Flow is also available if you are deploying to a dm Server environment.
+				Import this library in your MANIFEST.mf to automatically import all Web Flow bundles.
+				To access the library, add the following repository:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<repository>
+    <id>com.springsource.repository.libraries.release</id>
+    <name>SpringSource Enterprise Bundle Repository - SpringSource Library Releases</name>
+    <url>http://repository.springsource.com/maven/libraries/release</url>
+</repository>]]>	
+			</programlisting>
+			<para>
+				And declare the following dependency:
+			</para>	
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>org.springframework.webflow-library</artifactId>
+    <type>libd</type>
+    <version>2.0.7.RELEASE</version>
+</dependency>]]>	
 			</programlisting>
 		</sect2>
 	</sect1>
