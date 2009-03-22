@@ -27,6 +27,9 @@
 	These samples illustrate additional features such as Hibernate, Security, Ajax, JSF, and Portlet integration.
 	A natural next step from this tutorial is to walk-through these sample applications, supplementing with reference manual documentation as you go.
 </p>
+<p>
+	In addition, this getting-started sample provides a solid template for a new Spring web project that uses Web Flow.
+</p>
 <h2>
 	Training
 </h2>
