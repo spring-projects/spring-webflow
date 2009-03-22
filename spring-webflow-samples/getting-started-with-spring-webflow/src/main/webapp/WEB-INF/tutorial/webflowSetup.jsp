@@ -8,6 +8,10 @@
 <h1>
 	Setting up Web Flow in a Spring Web Application
 </h1>
+<p>
+This step covers the one-time configuration step of setting Web Flow up in a Spring web application.
+If you prefer to go right to implementing your first flow, you can <a href="tutorial?execution=${flowExecutionKey}&_eventId=next"">skip</a> this step.
+</p>
 <h2>
 	What does the configuration of a typical Spring web application look like?
 </h2>
@@ -127,7 +131,7 @@
 	This is done by consulting an ordered chain of HandlerMapping objects configured in your mvc-config.xml.
 	Generally, the first HandlerMapping consulted is the FlowHandlerMapping, which determines if the requested resource should be handled by a web flow.
 	If no flow handler is found, the next HandlerMapping in the chain is queried.
-	This is generally the DefaultAnnotationHandlerMapping, which consults explicit @RequestMapping rules defined inside annotated Spring MVC @Controllers.
+	This is generally the DefaultAnnotationHandlerMapping, which consults explicit @RequestMapping rules defined inside annotated Spring MVC Controllers.
 </p>
 <p>
 	Setting up the HandlerMapping chain is a one-time configuration step, and makes it easy to plug in different types of handlers and mapping strategies.
@@ -135,7 +139,7 @@
 </p>
 <pre class="code">
 	&lt;!-- Maps requests to flows in the flowRegistry; for example, a request for resource /hotels/booking maps to a flow with id "hotels/booking"
-		 If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
+	     If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
 	&lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
 		&lt;property name="order" value="0" /&gt;
 		&lt;property name="flowRegistry" ref="flowRegistry" /&gt;

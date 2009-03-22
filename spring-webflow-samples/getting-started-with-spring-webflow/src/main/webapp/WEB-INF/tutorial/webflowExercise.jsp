@@ -22,7 +22,7 @@
 <p>
 	XML is a good format for expressing structure.
 	Since a flow definition primarily captures the navigation structure between your pages, XML is a good fit.
-	XML is not an appropriate for general programming.
+	XML is not appropriate for general programming.
 	This is why your flows should invoke actions written in Java or Groovy to carry out application behaviors.
 </p>
 <h2>
@@ -52,7 +52,7 @@
 <h3>Create your first helloworld flow</h3>
 <ol>
 	<li>
-		Once the application is running, create a new directory for your flow inside /WEB-INF; name the directory helloworld.
+		Once the application is running, create a new directory for your flow inside /src/main/webapp/WEB-INF; name the directory helloworld.
 		Next, right-click on the directory and access New -&gt; Spring Web Flow Definition.
 		Enter the filename helloworld-flow.xml and finish.
 		The flow definition will be generated for you with an initial view-state named start.
@@ -71,7 +71,7 @@
 		</pre>
 	</li>
 	<li>
-		From the Servers view, restart your server, then startup your flow by accessing <a href="http://localhost:8080/app/helloworld">http://localhost:8080/app/helloworld</a>.
+		From the Servers view, restart your server, then startup your flow by accessing <a href="http://localhost:8080/getting-started-with-spring-webflow/app/helloworld">http://localhost:8080/getting-started-with-spring-webflow/app/helloworld</a>.
 		You should see your Hello world! message display.
 		Note you only have to restart your server when you add new flows to the system.  When you change flows, changes will be refreshed automatically.
 	</li>
@@ -114,8 +114,8 @@
 </p>
 <ol>
 	<li>
-		Try implementing a dynamic navigation rule by adding a bound checkbox to your start.jsp.
-		Do this by first replacing the contents of your start.jsp with the following snippet:
+		Try implementing a dynamic navigation rule by first adding a bound checkbox to your start.jsp.
+		Do this by replacing the contents of your start.jsp with the following snippet:
 		<pre>
 	&lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %&gt;
 	&lt;html&gt;
@@ -139,7 +139,7 @@
 	
 	import java.io.Serializable;
 	
-	public class HelloworldForm implements Serializable {
+	public class HelloWorldForm implements Serializable {
 	    private boolean selected = true;
 	    
 	    public boolean isSelected() {
@@ -153,7 +153,7 @@
 		</pre>
 	</li>
 	<li>
-		In your helloworld-flow, declare the HelloWorldForm as a flow variable:
+		At the top of your helloworld-flow, declare the HelloWorldForm as a flow variable:
 		<pre>
 	&lt;var name="helloWorldForm" class="org.springframework.webflow.samples.helloworld.HelloWorldForm" /&gt;
 		</pre>
@@ -167,23 +167,25 @@
 		</p>
 	</li>
 	<li>
-		Add a navigation decision that says if selected goto page2 else goto a new page3:
-		<pre>
-	&lt;view-state id="start"&gt;
-		&lt;transition on="submit" to="isSelected" /&gt;
-	&lt;/view-state&gt;
-	
+		Now insert a decision state that says if the checkbox is selected goto page2, else goto a new page3:
+		<pre>	
 	&lt;decision-state id="isSelected"&gt;
 		&lt;if test="helloWorldForm.selected" then="page2" else="page3" /&gt;
 	&lt;/decision-state&gt;
 
-	...
+	&lt;view-state id="page2"&gt;
+	&lt;/view-state&gt;	
     
 	&lt;view-state id="page3"&gt;
 	&lt;/view-state&gt;	
-
 		</pre>
-		Click the button with the checkbox selected and you should be taken to page2.
+		Be sure to update your start view-state to transition to the isSelected decision state instead of page2 directly:
+		<pre>
+	&lt;view-state id="start"&gt;
+		&lt;transition on="submit" to="isSelected" /&gt;
+	&lt;/view-state&gt;		
+		</pre>
+		Click the Submit button with the checkbox selected and you should be taken to page2.
 		Click the button with the checkbox de-selected and you should be taken to page3 (you'll need to create a JSP or you'll get a 404).
 	</li>
 </ol>
