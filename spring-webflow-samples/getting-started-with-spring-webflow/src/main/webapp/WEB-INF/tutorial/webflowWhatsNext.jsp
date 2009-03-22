@@ -16,7 +16,7 @@
 	Reference Manual
 </h2>
 <p>
-	The <a href="http://www.springsource.org/documentation">Spring Web Flow reference manual</a> is the definitive guide to the Spring Web Flow feature set.
+	The <a href="http://www.springsource.org/documentation#webflow">Spring Web Flow reference manual</a> is the definitive guide to the Spring Web Flow feature set.
 	Use it as an up-to-date flow definition language reference, as well as for documentation on the various configuration options.
 </p>
 <h2>
@@ -24,7 +24,7 @@
 </h2>
 <p>
 	<A href="http://www.springsource.org/webflow-samples">Additional samples</a> are available showing Web Flow applied for various use cases.
-	These samples illustrate additional features such as Hibernate, Security, Ajax, and JSF integration.
+	These samples illustrate additional features such as Hibernate, Security, Ajax, JSF, and Portlet integration.
 	A natural next step from this tutorial is to walk-through these sample applications, supplementing with reference manual documentation as you go.
 </p>
 <h2>
