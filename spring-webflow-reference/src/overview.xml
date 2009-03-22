@@ -33,7 +33,7 @@
 			Java 1.4 or higher
 		</para>
 		<para>
-			Spring 2.5.4 or higher
+			Spring 2.5.6 or higher
 		</para>
 	</sect1>
 	<sect1 id="support">
@@ -60,12 +60,53 @@
 			Visit the <ulink url="http://www.springframework.org/webflow">Web Flow Project Home</ulink> for more resources on the project.
 		</para>
 	</sect1>
-	<sect1 id="jars">
+	<sect1 id="jars-mvn-central">
+		<title>How to obtain Web Flow artifacts from Maven Central</title>
+		<para>
+			Each jar in the Web Flow distribution is available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
+			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
+		</para>
+		<para>
+			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-binding</artifactId>
+    <version>2.0.7.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-js</artifactId>
+    <version>2.0.7.RELEASE</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-webflow</artifactId>
+    <version>2.0.7.RELEASE</version>
+</dependency>
+]]>
+		</programlisting>
+		<para>
+			And if using JavaServerFaces:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-faces</artifactId>
+    <version>2.0.7.RELEASE</version>
+</dependency> 
+]]>
+		</programlisting>
+	</sect1>	
+	<sect1 id="jars-bundle-repository">
 		<title>How to obtain Web Flow artifacts from the SpringSource Bundle Repository</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the <ulink url="http://www.springsource.com/repository">SpringSource Enterprise Bundle Repository</ulink>.
-			These jars may be accessed using Maven or Ivy dependency managers.
-			Each jar obtained from the SpringSource Bundle Repository is OSGi-compatible, including all of the jar's transitive dependencies.
+			Each jar in the Web Flow distribution is also available in the <ulink url="http://www.springsource.com/repository">SpringSource Enterprise Bundle Repository</ulink>.
+			Use this repository when you wish to run Spring Web Flow in an OSGi environment such as the <ulink url="http://www.springsource.com/products/dmserver">SpringSource dm Server</ulink>.
+			All jars obtained from the SpringSource Bundle Repository are OSGi-ready.
 		</para>
 		<sect2 id="jars-maven">
 			<title>Accessing Web Flow with Maven</title>
@@ -119,6 +160,11 @@
 </dependency> 
 ]]>
 			</programlisting>
+			<para>
+				Note the Web Flow artifacts in the SpringSource Bundle Repository are indexed under different ids because their transitive dependencies are different than the Maven Central artifacts.
+				The difference is the transitive jars such as commons-logging had to be patched with the metadata required to make them OSGi-compatible.
+				This is because the teams that release these jars do not natively publish them with the required OSGi-metadata yet.
+			</para>
 		</sect2>
 		<sect2 id="jars-ivy">
 			<title>Accessing Web Flow with Ivy</title>
@@ -161,47 +207,6 @@
 ]]>
 			</programlisting>
 		</sect2>
-	</sect1>
-	<sect1 id="jars-mvn-central">
-		<title>How to obtain Web Flow artifacts from Maven Central</title>
-		<para>
-			Each jar in the Web Flow distribution is also available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
-			These jars are indexed under a different artifact id because their transitive dependencies in Maven Central are not OSGi compatible.
-		</para>
-		<para>
-			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-binding</artifactId>
-    <version>2.0.7.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-js</artifactId>
-    <version>2.0.7.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-webflow</artifactId>
-    <version>2.0.7.RELEASE</version>
-</dependency>
-]]>
-		</programlisting>
-		<para>
-			And if using JavaServerFaces:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-faces</artifactId>
-    <version>2.0.7.RELEASE</version>
-</dependency> 
-]]>
-		</programlisting>
 	</sect1>
 	<sect1>
 		<title>How to Obtain Nightly Builds</title>
