@@ -83,7 +83,13 @@
 		<p>
 			<a href="http://www.springsource.org/spring-security">Spring Security</a> is a comprehensive and portable Java security framework, and Web Flow provides native support for securing flows with this technology.
 		</p>
-	</li>	
+	</li>
+	<li>
+		<h3>Spring BlazeDS Integration</h3>
+		<p>
+			The <a href="http://www.springsource.org/spring-flex">Spring BlazeDS Integration</a> project makes it easy to connect a Flex client to a Spring-powered server using Adobe's BlazeDS and LiveCycle DS technologies.
+		</p>
+	</li>
 </ul>
 <p>
 We sincerely hope you enjoyed this tutorial.  We wish you great success and lots of fun getting results with Spring Web Flow on your development projects!

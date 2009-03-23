@@ -5,6 +5,8 @@
 	<title>Getting Started with Spring Web Flow: Setting up Web Flow in a Spring Web Application</title>
 	<link rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css"/>" type="text/css" />
 	<link rel="stylesheet" href="<c:url value="/resources/styles/tutorial.css"/>" type="text/css" />
+	<link rel="stylesheet" href="<c:url value="/resources/dojox/highlight/resources/highlight.css"/>" type="text/css" />
+	<link rel="stylesheet" href="<c:url value="/resources/dojox/highlight/resources/pygments/ide.css"/>" type="text/css" />
 	<script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/resources/spring/Spring.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js"/>"></script>	
@@ -28,7 +30,8 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		It is responsible for routing web requests to the proper application controllers, such as your Spring MVC @Controllers and web flows.
 		A typical DispatcherServlet declaration is shown below:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- The front controller of this Spring MVC application, responsible for handling all application requests --&gt;
     &lt;servlet&gt;
         &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
@@ -47,6 +50,7 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
         &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
         &lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
+    </code>
 	</pre>
 	<p>
 		This DispatcherServlet is configured to process requests into /app/*.
@@ -61,7 +65,8 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		Inside /WEB-INF/spring, we generally recommend defining a configuration file for your application logic,
 		and separate configuration files for framework infrastructure.  For example:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     /webapp
         /WEB-INF
             /spring
@@ -69,6 +74,7 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
                 mvc-config.xml
                 webflow-config.xml
             web.xml
+    </code>
 	</pre>
 	<p>
 		The example above shows the configuration for a Spring web application spread across three files.
@@ -80,9 +86,11 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		We also generally recommend using annotations to configure your application components, and externalized XML to configure infrastructure.
 		This is illustrated in app-config.xml by use of the component-scan directive to scan your classpath for application components to deploy:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Scans within the base package of the application for @Components to configure as beans --&gt;
     &lt;context:component-scan base-package="org.springframework.webflow.samples.gettingstarted" /&gt;
+    </code>
 	</pre>
 	<p>
 		With this technique, your Spring configuration is setup once and you generally never have to update your configuration files again as new components are added to your application.
@@ -95,11 +103,13 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 	<p>
 		In webflow-config.xml, first define a flow-registry to register the flows you have defined in your application:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Registers the web flows that can be executed --&gt;	
     &lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF/"&gt;
         &lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
     &lt;/webflow:flow-registry&gt;
+    </code>
 	</pre>
 	<p>
 		The example above scans /WEB-INF looking for -flow.xml files and registers them.
@@ -107,14 +117,17 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 	<p>
 		Then, define a flow-executor that uses this registry to execute your flows:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Configures the engine that executes web flows in this application --&gt;
     &lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" /&gt;
+    </code>
 	</pre>
 	<p>
 		Finally, in mvc-config.xml plug in adapters to hook the flow-executor into the Spring MVC DispatcherServlet request processing pipeline:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Maps requests to flows in the flowRegistry --&gt;
     &lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
         &lt;property name="order" value="0" /&gt;
@@ -125,12 +138,15 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
         &lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
         &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
     &lt;/bean&gt;
+    </code>
 	</pre>
 	<p>
 		We also recommend you turn on development mode while developing so you never have to redeploy your application to test changes:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;webflow:flow-builder-services id="flowBuilderServices" development="true" /&gt;
+    </code>
 	</pre>
 </div>
 <div id="question4" class="question">
@@ -149,7 +165,8 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		Setting up the HandlerMapping chain is a one-time configuration step, and makes it easy to plug in different types of handlers and mapping strategies.
 		A typical HandlerMapping chain for Spring web applications looks like:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Maps requests to flows in the flowRegistry; for example, a request for resource /hotels/booking maps to a flow with id "hotels/booking"
          If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
     &lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
@@ -161,21 +178,24 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
          If no annotation-based path mapping is found, Spring MVC proceeds to the next HandlerMapping (order=2 below). --&gt;
     &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"&gt;
         &lt;property name="order" value="1" /&gt;
-    &lt;/bean&gt;	
+    &lt;/bean&gt;
+    </code>
 	</pre>
 	<p>
 		Once a request has been mapped to a handler object such as a @Controller of web flow, the DispatcherServlet uses the HandlerAdapter registered for that kind of handler to invoke it.
 		This decouples the DispatcherServlet from specific handler implementations, which allows Spring MVC to support different controller technologies in an extensible manner.
 		As a one-time configuration step, a typical Spring web application registers HandlerAdapters that know how to invoke @Controllers and web flows when they are mapped:
 	</p>
-	<pre class="code">
+	<pre>
+	<code>
     &lt;!-- Enables annotated @Controllers; responsible for invoking an annotated POJO @Controller when one is mapped. --&gt;
     &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /&gt;
     
     &lt;!-- Enables web flows; responsible for calling the Spring Web Flow system to execute a flow when one is mapped. --&gt;
     &lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
         &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
-    &lt;/bean&gt;	
+    &lt;/bean&gt;
+    </code>	
 	</pre>
 	<p>
 		To illustrate a typical DispatcherServlet pipeline, the following graphic illustrates the sequence of events that happen in this application when the /tutorial resource is requested, which is handled by the web flow you are interacting with right now:<br>
@@ -215,5 +235,10 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 			}
 		}));
 	}).style('display','none');
+
+	dojo.require("dojox.highlight.languages.xml");
+	dojo.addOnLoad(function(){
+	    dojo.query("code").forEach(dojox.highlight.init);
+	});
 </script>
 </html>
