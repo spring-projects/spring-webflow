@@ -68,14 +68,12 @@
 		<li>
 			Go ahead and create a <span class="file">start.jsp</span> in your flow directory and paste in the following:
 			<pre>
-		&lt;html&gt;
-			&lt;head&gt;
-				&lt;title&gt;Hello world!&lt;/title&gt;
-			&lt;/head&gt;
-			&lt;h1&gt;
-				Hello world!
-			&lt;/h1&gt;
-		&lt;/html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Hello world!&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;h1&gt;Hello world!&lt;/h1&gt;
+    &lt;/html&gt;
 			</pre>
 		</li>
 		<li>
@@ -91,29 +89,27 @@
 		<li>
 			Next, try transitioning your flow from one state to another to implement a navigation rule.  In your helloworld flow, add the following transition to your start view-state:
 			<pre>
-		&lt;transition on="submit" to="page2" /&gt;
+    &lt;transition on="submit" to="page2" /&gt;
 			</pre>
 			Then define your page2 view-state:
 			<pre>
-		&lt;view-state id="page2"&gt;
-		&lt;/view-state&gt;
+    &lt;view-state id="page2"&gt;
+    &lt;/view-state&gt;
 			</pre>
 			And the corresponding page2.jsp:
 			<pre>
-		&lt;html&gt;
-			&lt;head&gt;
-				&lt;title&gt;Hello world!&lt;/title&gt;
-			&lt;/head&gt;
-			&lt;h1&gt;
-				This is page 2!
-			&lt;/h1&gt;
-		&lt;/html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Hello world!&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;h1&gt;This is page 2!&lt;/h1&gt;
+    &lt;/html&gt;
 			</pre>
 			Finally, create a button on your <span class="file">start.jsp</span> that raises the submit event to trigger the state transition:
 			<pre>
-		&lt;form method="post"&gt;
-			&lt;input type="submit" name="_eventId_submit" value="Submit" /&gt;
-		&lt;/form&gt;
+    &lt;form method="post"&gt;
+        &lt;input type="submit" name="_eventId_submit" value="Submit" /&gt;
+    &lt;/form&gt;
 			</pre>
 			Click the button and you should be taken to page 2.
 		</li>
@@ -129,49 +125,47 @@
 			Try implementing a dynamic navigation rule by first adding a bound checkbox to your <span class="file">start.jsp</span>.
 			Do this by replacing its contents with the following snippet:
 			<pre>
-		&lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %&gt;
-		&lt;html&gt;
-			&lt;head&gt;
-				&lt;title&gt;Hello world!&lt;/title&gt;
-			&lt;/head&gt;
-			&lt;h1&gt;
-				Hello world!
-			&lt;/h1&gt;
-			&lt;form:form method="post" modelAttribute="helloWorldForm"&gt;
-				&lt;form:checkbox path="selected" /&gt;
-				&lt;input type="submit" name="_eventId_submit" value="Submit" /&gt;
-			&lt;/form:form&gt;		
-		&lt;/html&gt;
+    &lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Hello world!&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;h1&gt;Hello world!&lt;/h1&gt;
+        &lt;form:form method="post" modelAttribute="helloWorldForm"&gt;
+            &lt;form:checkbox path="selected" /&gt;
+            &lt;input type="submit" name="_eventId_submit" value="Submit" /&gt;
+        &lt;/form:form&gt;		
+    &lt;/html&gt;
 			</pre>
 		</li>
 		<li>
 			Next, create a <span class="file">HelloWorldForm</span> class in the <span class="file">org.springframework.webflow.samples.helloworld</span> package with the following code:
 			<pre>
-		package org.springframework.webflow.samples.helloworld;
+    package org.springframework.webflow.samples.helloworld;
 		
-		import java.io.Serializable;
+    import java.io.Serializable;
 		
-		public class HelloWorldForm implements Serializable {
-		    private boolean selected = true;
-		    
-		    public boolean isSelected() {
-		        return selected;
-		    }
-		    
-		    public void setSelected(boolean selected) {
-		        this.selected = selected;
-		    }
-		}
+    public class HelloWorldForm implements Serializable {
+        private boolean selected = true;
+        
+        public boolean isSelected() {
+            return selected;
+        }
+        
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
+    }
 			</pre>
 		</li>
 		<li>
 			At the top of your helloworld-flow, declare the HelloWorldForm as a flow variable:
 			<pre>
-		&lt;var name="helloWorldForm" class="org.springframework.webflow.samples.helloworld.HelloWorldForm" /&gt;
+    &lt;var name="helloWorldForm" class="org.springframework.webflow.samples.helloworld.HelloWorldForm" /&gt;
 			</pre>
 			Then update your start view-state to use this variable as its data model, enabling automatic model binding and validation:
 			<pre>
-		&lt;view-state id="start" model="helloWorldForm"&gt; ...	
+    &lt;view-state id="start" model="helloWorldForm"&gt; ...	
 			</pre>
 			<p>
 				Refresh your flow and the checkbox should render checked since the default value for the HelloWorldForm selected property is true.
@@ -181,21 +175,21 @@
 		<li>
 			Now insert a decision state that says if the checkbox is selected goto page2, else goto a new page3:
 			<pre>	
-		&lt;decision-state id="isSelected"&gt;
-			&lt;if test="helloWorldForm.selected" then="page2" else="page3" /&gt;
-		&lt;/decision-state&gt;
+    &lt;decision-state id="isSelected"&gt;
+        &lt;if test="helloWorldForm.selected" then="page2" else="page3" /&gt;
+    &lt;/decision-state&gt;
 	
-		&lt;view-state id="page2"&gt;
-		&lt;/view-state&gt;	
+    &lt;view-state id="page2"&gt;
+    &lt;/view-state&gt;	
 	    
-		&lt;view-state id="page3"&gt;
-		&lt;/view-state&gt;	
+    &lt;view-state id="page3"&gt;
+    &lt;/view-state&gt;	
 			</pre>
 			Be sure to update your start view-state to transition to the isSelected decision state instead of page2 directly:
 			<pre>
-		&lt;view-state id="start"&gt;
-			&lt;transition on="submit" to="isSelected" /&gt;
-		&lt;/view-state&gt;		
+    &lt;view-state id="start"&gt;
+        &lt;transition on="submit" to="isSelected" /&gt;
+    &lt;/view-state&gt;		
 			</pre>
 			Click the Submit button with the checkbox selected and you should be taken to page2.
 			Click the button with the checkbox de-selected and you should be taken to page3 (you'll need to create a JSP or you'll get a 404).
@@ -208,15 +202,15 @@
 		<li>
 			Finish up your helloworld flow by adding another button on the <span class="file">start.jsp</span> that ends the flow:
 			<pre>
-		&lt;input type="submit" name="_eventId_finish" value="Finish" /&gt;
+    &lt;input type="submit" name="_eventId_finish" value="Finish" /&gt;
 			</pre>
 			In your start view-state, declare the finish transition:
 			<pre>
-		&lt;transition on="finish" to="finished" /&gt;
+    &lt;transition on="finish" to="finished" /&gt;
 			</pre>
 			And finally define the end-state:
 			<pre>
-		&lt;end-state id="finished" view="externalRedirect:welcome" /&gt;
+    &lt;end-state id="finished" view="externalRedirect:welcome" /&gt;
 			</pre>
 			Click the Finish button and you should be taken back to the application welcome screen.
 		</li>

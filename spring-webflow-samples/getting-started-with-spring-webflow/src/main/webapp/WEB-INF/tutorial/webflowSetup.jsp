@@ -29,24 +29,24 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		A typical DispatcherServlet declaration is shown below:
 	</p>
 	<pre class="code">
-		&lt;!-- The front controller of this Spring MVC application, responsible for handling all application requests --&gt;
-		&lt;servlet&gt;
-			&lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
-			&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-			&lt;init-param&gt;
-				&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-				&lt;param-value&gt;
-					/WEB-INF/spring/*.xml
-				&lt;/param-value&gt;
-			&lt;/init-param&gt;
-			&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-		&lt;/servlet&gt;
-			
-		&lt;!-- Map all /app requests to the DispatcherServlet for handling --&gt;
-		&lt;servlet-mapping&gt;
-			&lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
-			&lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;
-		&lt;/servlet-mapping&gt;
+    &lt;!-- The front controller of this Spring MVC application, responsible for handling all application requests --&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+            &lt;param-value&gt;
+                /WEB-INF/spring/*.xml
+            &lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    
+    &lt;!-- Map all /app requests to the DispatcherServlet for handling --&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
 	</pre>
 	<p>
 		This DispatcherServlet is configured to process requests into /app/*.
@@ -62,13 +62,13 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		and separate configuration files for framework infrastructure.  For example:
 	</p>
 	<pre class="code">
-		/webapp
-			/WEB-INF
-				/spring
-					app-config.xml
-					mvc-config.xml
-					webflow-config.xml
-				web.xml
+    /webapp
+        /WEB-INF
+            /spring
+                app-config.xml
+                mvc-config.xml
+                webflow-config.xml
+            web.xml
 	</pre>
 	<p>
 		The example above shows the configuration for a Spring web application spread across three files.
@@ -81,8 +81,8 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		This is illustrated in app-config.xml by use of the component-scan directive to scan your classpath for application components to deploy:
 	</p>
 	<pre class="code">
-		&lt;!-- Scans within the base package of the application for @Components to configure as beans --&gt;
-		&lt;context:component-scan base-package="org.springframework.webflow.samples.gettingstarted" /&gt;
+    &lt;!-- Scans within the base package of the application for @Components to configure as beans --&gt;
+    &lt;context:component-scan base-package="org.springframework.webflow.samples.gettingstarted" /&gt;
 	</pre>
 	<p>
 		With this technique, your Spring configuration is setup once and you generally never have to update your configuration files again as new components are added to your application.
@@ -96,10 +96,10 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		In webflow-config.xml, first define a flow-registry to register the flows you have defined in your application:
 	</p>
 	<pre class="code">
-		&lt;!-- Registers the web flows that can be executed --&gt;	
-		&lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF/"&gt;
-			&lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
-		&lt;/webflow:flow-registry&gt;
+    &lt;!-- Registers the web flows that can be executed --&gt;	
+    &lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF/"&gt;
+        &lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
+    &lt;/webflow:flow-registry&gt;
 	</pre>
 	<p>
 		The example above scans /WEB-INF looking for -flow.xml files and registers them.
@@ -108,29 +108,29 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		Then, define a flow-executor that uses this registry to execute your flows:
 	</p>
 	<pre class="code">
-		&lt;!-- Configures the engine that executes web flows in this application --&gt;
-		&lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" /&gt;
+    &lt;!-- Configures the engine that executes web flows in this application --&gt;
+    &lt;webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" /&gt;
 	</pre>
 	<p>
 		Finally, in mvc-config.xml plug in adapters to hook the flow-executor into the Spring MVC DispatcherServlet request processing pipeline:
 	</p>
 	<pre class="code">
-		&lt;!-- Maps requests to flows in the flowRegistry --&gt;
-		&lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
-			&lt;property name="order" value="0" /&gt;
-			&lt;property name="flowRegistry" ref="flowRegistry" /&gt;
-		&lt;/bean&gt;
-	
-		&lt;!-- Enables Spring Web Flow as a Spring MVC request handler --&gt;
-		&lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
-			&lt;property name="flowExecutor" ref="flowExecutor" /&gt;
-		&lt;/bean&gt;
+    &lt;!-- Maps requests to flows in the flowRegistry --&gt;
+    &lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
+        &lt;property name="order" value="0" /&gt;
+        &lt;property name="flowRegistry" ref="flowRegistry" /&gt;
+    &lt;/bean&gt;
+    
+    &lt;!-- Enables Spring Web Flow as a Spring MVC request handler --&gt;
+        &lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
+        &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+    &lt;/bean&gt;
 	</pre>
 	<p>
 		We also recommend you turn on development mode while developing so you never have to redeploy your application to test changes:
 	</p>
 	<pre class="code">
-		&lt;webflow:flow-builder-services id="flowBuilderServices" development="true" /&gt;
+    &lt;webflow:flow-builder-services id="flowBuilderServices" development="true" /&gt;
 	</pre>
 </div>
 <div id="question4" class="question">
@@ -150,18 +150,18 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		A typical HandlerMapping chain for Spring web applications looks like:
 	</p>
 	<pre class="code">
-		&lt;!-- Maps requests to flows in the flowRegistry; for example, a request for resource /hotels/booking maps to a flow with id "hotels/booking"
-		     If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
-		&lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
-			&lt;property name="order" value="0" /&gt;
-			&lt;property name="flowRegistry" ref="flowRegistry" /&gt;
-		&lt;/bean&gt;
-	
-		&lt;!-- Maps requests to @Controllers based on @RequestMapping("path") annotation values
-		     If no annotation-based path mapping is found, Spring MVC proceeds to the next HandlerMapping (order=2 below). --&gt;
-		&lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"&gt;
-			&lt;property name="order" value="1" /&gt;
-		&lt;/bean&gt;	
+    &lt;!-- Maps requests to flows in the flowRegistry; for example, a request for resource /hotels/booking maps to a flow with id "hotels/booking"
+         If no flow is found with that id, Spring MVC proceeds to the next HandlerMapping (order=1 below). --&gt;
+    &lt;bean id="flowMappings" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping"&gt;
+        &lt;property name="order" value="0" /&gt;
+        &lt;property name="flowRegistry" ref="flowRegistry" /&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- Maps requests to @Controllers based on @RequestMapping("path") annotation values
+         If no annotation-based path mapping is found, Spring MVC proceeds to the next HandlerMapping (order=2 below). --&gt;
+    &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"&gt;
+        &lt;property name="order" value="1" /&gt;
+    &lt;/bean&gt;	
 	</pre>
 	<p>
 		Once a request has been mapped to a handler object such as a @Controller of web flow, the DispatcherServlet uses the HandlerAdapter registered for that kind of handler to invoke it.
@@ -169,13 +169,13 @@ If you prefer to go right to implementing your first flow, you can <a href="tuto
 		As a one-time configuration step, a typical Spring web application registers HandlerAdapters that know how to invoke @Controllers and web flows when they are mapped:
 	</p>
 	<pre class="code">
-		&lt;!-- Enables annotated @Controllers; responsible for invoking an annotated POJO @Controller when one is mapped. --&gt;
-		&lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /&gt;
-	
-		&lt;!-- Enables web flows; responsible for calling the Spring Web Flow system to execute a flow when one is mapped. --&gt;
-		&lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
-			&lt;property name="flowExecutor" ref="flowExecutor" /&gt;
-		&lt;/bean&gt;	
+    &lt;!-- Enables annotated @Controllers; responsible for invoking an annotated POJO @Controller when one is mapped. --&gt;
+    &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /&gt;
+    
+    &lt;!-- Enables web flows; responsible for calling the Spring Web Flow system to execute a flow when one is mapped. --&gt;
+    &lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
+        &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+    &lt;/bean&gt;	
 	</pre>
 	<p>
 		To illustrate a typical DispatcherServlet pipeline, the following graphic illustrates the sequence of events that happen in this application when the /tutorial resource is requested, which is handled by the web flow you are interacting with right now:<br>
