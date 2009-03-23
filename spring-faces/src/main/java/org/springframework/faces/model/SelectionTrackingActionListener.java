@@ -58,7 +58,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 	private void trackSelection(UIComponent component) {
 		// Find parent component with a SelectionAware model if it exists
 		UIComponent currentComponent = component;
-		while (!(currentComponent.getParent() instanceof UIViewRoot)) {
+		while (currentComponent.getParent() != null && !(currentComponent.getParent() instanceof UIViewRoot)) {
 			UIComponent parent = currentComponent.getParent();
 			Method valueAccessor = ReflectionUtils.findMethod(parent.getClass(), "getValue");
 			if (valueAccessor != null) {
