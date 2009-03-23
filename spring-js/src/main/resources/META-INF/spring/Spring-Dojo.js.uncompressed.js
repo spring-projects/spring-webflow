@@ -308,7 +308,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			//Extract the new DOM nodes from the response
 			var tempSpan = dojo.doc.createElement("span");
 			tempSpan.id="ajaxResponse";
-			tempSpan.style.visibility= "hidden";
+			tempSpan.style.display= "none";
 			document.body.appendChild(tempSpan);
 			tempSpan.innerHTML=response;
 			var tempContainer = new dojo.NodeList(tempSpan);
