@@ -1,0 +1,11 @@
+.dijitTitlePane + .dijitTitlePane {
+	padding-top: 1em;
+}
+
+.file {
+	font-family: monospace;
+}
+
+ol li {
+	padding-bottom: 1em;
+}

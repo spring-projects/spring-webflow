@@ -3,8 +3,13 @@
 <html>
 <head>
 	<title>Getting Started with Spring Web Flow: Where To Go From Here</title>
+	<link rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css"/>" type="text/css" />
+	<link rel="stylesheet" href="<c:url value="/resources/styles/tutorial.css"/>" type="text/css" />
+	<script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/resources/spring/Spring.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js"/>"></script>	
 </head>
-<body>
+<body class="tundra">
 <h1>
 	Where To Go with From Here
 </h1>
