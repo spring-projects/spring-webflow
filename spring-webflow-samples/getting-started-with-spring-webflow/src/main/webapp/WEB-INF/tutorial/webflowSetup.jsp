@@ -17,8 +17,13 @@
 	Setting up Web Flow in a Spring Web Application
 </h1>
 <p>
-This step covers the one-time configuration step of setting Web Flow up in a Spring web application.
-If you prefer to go right to implementing your first flow, you can <a href="tutorial?execution=${flowExecutionKey}&_eventId=next"">skip</a> this step.
+This step covers the one-time configuration required to setup Web Flow up in a Spring web application.
+If you prefer to go right to implementing your first flow, you can <a href="tutorial?execution=${flowExecutionKey}&_eventId=next">skip</a> this step.
+</p>
+<p>
+In general, we recommend using a pre-configured project template like the one this tutorial uses as a starting point for your new projects.
+When you do that, you will not have to configure Spring yourself--you simply implement your @Controllers and web flows and off you go.
+This step does provides useful background information on setting up your own Web Flow project template, and understanding how things work behind the scenes.
 </p>
 <div id="question1" class="question">
 	<h2>
