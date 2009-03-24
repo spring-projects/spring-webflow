@@ -478,6 +478,12 @@ public class BookingAction {
    }
 }]]>
 			</programlisting>
+			<note>
+				<para>
+					When there is more than one action defined on a transition, if one returns an error result the remaining actions in the set will <emphasis>not</emphasis> be executed.
+					If you need to ensure one transition action's result cannot impact the execution of another, define a single transition action that invokes a method that encapsulates all the action logic.
+				</para> 
+			</note>
 		</sect2>
 		<sect2 id="event-handlers-global">
 			<title>Global transitions</title>
