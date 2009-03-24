@@ -247,6 +247,16 @@
 		</li>
 	</ol>
 </div>
+<div id="section6" class="section">
+	<h3>Visualize the flow</h3>
+	<ol>
+		<li>
+			In the SpringSource Tool Suite, navigate to your <span class="file">helloworld-flow.xml</span> in the Spring Explorer view, or within the Spring Elements node of the Project Explorer view.
+			Right-click on the file and select Open Graphical Editor.  Your graph should look similar to the visualization below:<br/><br/>
+			<img src="<c:url value="/resources/images/tutorial/helloworld-flow.png"/>"/>
+		</li>
+	</ol>
+</div>
 <div id="commandBar">
 	<p>
 		<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>
