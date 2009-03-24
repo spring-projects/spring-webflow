@@ -6,10 +6,10 @@
 	<link rel="stylesheet" href="<c:url value="/resources/styles/main.css"/>" type="text/css" />	
 </head>
 <body>
+<a href="http://www.springsource.org"><img src="<c:url value="/resources/images/logo.png"/>"/></a>
 <h1>
 	Congratulations! You're running Spring!
 </h1>
-<a href="http://www.springsource.org"><img src="<c:url value="/resources/images/logo.png"/>"/></a>
 <h2>Welcome to the <i>Getting Started with Spring Web Flow</i> tutorial</h2>
 <p>
 	This tutorial provides a guide to getting up and running with Spring Web Flow in 10 minutes.

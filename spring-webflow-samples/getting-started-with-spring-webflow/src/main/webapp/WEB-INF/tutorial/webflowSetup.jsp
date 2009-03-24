@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js"/>"></script>	
 </head>
 <body class="tundra">
+<a href="http://www.springsource.org"><img src="<c:url value="/resources/images/logo.png"/>"/></a>
 <h1>
 	Setting up Web Flow in a Spring Web Application
 </h1>

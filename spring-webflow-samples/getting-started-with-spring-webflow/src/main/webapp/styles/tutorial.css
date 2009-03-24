@@ -1,3 +1,5 @@
+@IMPORT url("main.css");
+
 .dijitTitlePane + .dijitTitlePane {
 	padding-top: 1em;
 }
