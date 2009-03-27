@@ -4,6 +4,10 @@
 	padding-top: 1em;
 }
 
+.dojoTabPane {
+	overflow: auto;
+}
+
 .file {
 	font-family: monospace;
 }

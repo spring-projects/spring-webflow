@@ -16,55 +16,41 @@
 <h1>
 	Creating Your First Web Flow
 </h1>
-<h2>
-	How are flows authored?
-</h2>
-<p>
-	Flow definitions are typically authored in XML documents.
-	A flow is typically packaged in its own directory inside /WEB-INF, and co-located with its dependent resources such as page templates and message resources.
-	For example, the tutorial flow you are using right now lives in the /WEB-INF/tutorial directory along with its JSP page templates.
-</p>
-<h2>
-	Why XML?
-</h2>
-<p>
-	XML is a good format for expressing structure.
-	Since a flow definition primarily captures the navigation structure between your pages, XML is a good fit.
-	XML is not appropriate for general programming.
-	This is why your flows should invoke actions written in Java or Groovy to carry out application behaviors.
-</p>
-<h2>
-	Step-by-step instructions for creating your first flow using the Eclipse-based SpringSource Tool Suite IDE:
-</h2>
 <div id="section1" class="section">
-	<h3>Setup your project</h3>
-	<ol>
-		<li>
-			Download <a href="http://www.springsource.com/products/sts">SpringSource Tool Suite</a> (STS) and the latest <a href="http://www.springsource.org/download#webflow">Spring Web Flow 2.0.x release</a>.
-			After downloading completes, extract both archives to your directory of choice.
-		</li>
-		<li>
-			Open STS and access File -&gt; Import... -&gt; Existing Projects Into Workspace.  Select Browse... and navigate to where you extracted the Spring Web Flow release.
-			Select the <span class="file">spring-webflow-samples/getting-started-with-spring-webflow</span> folder and import the project.
-		</li>
-		<li>
-			After the project import, if you do not already have a servlet container such as Tomcat installed on your workstation you can uses STS to install an embedded Tomcat instance.
-			To do this, select the SpringSource logo on the tool bar, access the Configuration tab, and select Create Server Instance.
-		</li>
-		<li>
-			Next, right-click on the project in your Package Explorer view, and select Run On Server.
-			Select the server runtime you wish to deploy to and finish to deploy the project.
-			You should see the tutorial welcome page appear in the embedded web browser.
-			Alternatively, you can access the application in an external browser such as Firefox at <a href="http://localhost:8080/getting-started-with-spring-webflow">http://localhost:8080/getting-started-with-spring-webflow</a>
-		</li>
-	</ol>
+	<h2>Create your project</h2>
+	<div id="environments">
+		<div id="sts">
+			<ol>
+				<li>
+					Download the Eclipse IDE for Spring Developers, called the <a href="http://www.springsource.com/products/sts">SpringSource Tool Suite</a> (STS).
+					After downloading completes, extract the archive to your directory of choice.
+				</li>
+				<li>
+					Open STS and access File -&gt; New -&gt; Other... -&gt; SpringSource Tool Suite -&gt; Template Project.
+					Select "Web Flow Project" and enter helloworld for your project name.
+					Select the Embedded Apache Tomcat as your project's targeted server runtime.
+					Finish the new project wizard.
+				</li>
+				<li>
+					Next, right-click on your project in your Package Explorer view, and select Run On Server.
+					You should see your application's welcome page appear in the embedded web browser.
+					Alternatively, you can access your application in an external browser such as Firefox at <a href="http://localhost:8080/helloworld">http://localhost:8080/helloworld</a>
+				</li>
+			</ol>
+		</div>
+		<div id="command-line">
+			<ol>
+				<li>TODO</li>
+			</ol>
+		</div>
+	</div>
 </div>
 <div id="section2" class="section">
-	<h3>Create your first helloworld flow</h3>
+	<h2>Create your first helloworld flow</h2>
 	<ol>
 		<li>
-			Once the application is running, create a new directory for your flow inside <span class="file">/src/main/webapp/WEB-INF</span>; name the directory <span class="file">helloworld</span>.
-			Next, right-click on the directory and access New -&gt; Spring Web Flow Definition.
+			Create a new directory for your flow inside <span class="file">/src/main/webapp/WEB-INF</span>; name the directory <span class="file">helloworld</span>.
+			Right-click on the directory and access New -&gt; Spring Web Flow Definition.
 			Enter the filename <span class="file">helloworld-flow.xml</span> and finish.
 			The flow definition will be generated for you with an initial view-state named start.
 		</li>
@@ -89,7 +75,7 @@
 	</ol>
 </div>
 <div id="section3" class="section">
-	<h3>Add a navigation rule</h3>
+	<h2>Add a page navigation rule</h2>
 	<ol>
 		<li>
 			Next, try transitioning your flow from one state to another to implement a navigation rule.  In your helloworld flow, add the following transition to your start view-state:
@@ -129,7 +115,7 @@
 	</ol>
 </div>
 <div id="section4" class="section">
-	<h3>Add a dynamic navigation rule</h3>
+	<h2>Add a dynamic page navigation rule</h2>
 	<p>
 		Web flow excels at implementing dynamic navigation logic that takes a user through different paths based on what they enter or who they are.
 	</p>
@@ -222,7 +208,7 @@
 	</ol>
 </div>
 <div id="section5" class="section">
-	<h3>Finish your helloworld flow</h3>
+	<h2>Finish your helloworld flow</h2>
 	<ol>
 		<li>
 			Finish up your helloworld flow by adding another button on the <span class="file">start.jsp</span> that ends the flow:
@@ -248,10 +234,10 @@
 	</ol>
 </div>
 <div id="section6" class="section">
-	<h3>Visualize the flow</h3>
+	<h2>Visualize the flow</h2>
 	<ol>
 		<li>
-			In the SpringSource Tool Suite, navigate to your <span class="file">helloworld-flow.xml</span> in the Spring Explorer view, or within the Spring Elements node of the Project Explorer view.
+			In your IDE, navigate to your <span class="file">helloworld-flow.xml</span> in the Spring Explorer view, or within the Spring Elements node of the Project Explorer view.
 			Right-click on the file and select Open Graphical Editor.  Your graph should look similar to the visualization below:<br/><br/>
 			<img src="<c:url value="/resources/images/tutorial/helloworld-flow.png"/>"/>
 		</li>
@@ -264,7 +250,35 @@
 </div>
 </body>
 <script type="text/javascript">
-	dojo.query('.section > h3').forEach(function(titleElement){
+	dojo.require("dojox.highlight.languages.xml");
+	dojo.addOnLoad(function(){
+	    dojo.query("code").forEach(dojox.highlight.init);
+	});
+
+    Spring.addDecoration(new Spring.ElementDecoration({
+        elementId : "sts",
+        widgetType : "dijit.layout.ContentPane",
+        widgetAttrs : {
+            title: "SpringSource Tool Suite",
+            selected: "true"
+        }
+    }));
+    Spring.addDecoration(new Spring.ElementDecoration({
+        elementId : "command-line",
+        widgetType : "dijit.layout.ContentPane",
+        widgetAttrs : {
+        	title: "Command line"
+    	}
+    }));
+    Spring.addDecoration(new Spring.ElementDecoration({
+        elementId : "environments",
+        widgetType : "dijit.layout.TabContainer",
+        widgetAttrs : {
+			style: "width: 100%; height: 200px;"
+    	}
+    }));
+
+	dojo.query('.section > h2').forEach(function(titleElement){
 		Spring.addDecoration(new Spring.ElementDecoration({
 			elementId : titleElement.parentNode.id,
 			widgetType : 'dijit.TitlePane',
@@ -274,11 +288,5 @@
 			}
 		}));
 	}).style('display','none');
-
-	dojo.require("dojox.highlight.languages.xml");
-	dojo.addOnLoad(function(){
-	    dojo.query("code").forEach(dojox.highlight.init);
-	});
-	
 </script>
 </html>

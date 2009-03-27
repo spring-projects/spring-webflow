@@ -224,6 +224,27 @@ This step does provides useful background information on setting up your own Web
 		No other configuration is required.
 	</p>
 </div>
+<div id="question5" class="question">
+	<h2>
+		How are flows authored?
+	</h2>
+	<p>
+		Flow definitions are typically authored in XML documents.
+		A flow is typically packaged in its own directory inside /WEB-INF, and co-located with its dependent resources such as page templates and message resources.
+		For example, the tutorial flow you are using right now lives in the /WEB-INF/tutorial directory along with its JSP page templates.
+	</p>
+</div>
+<div id="question6" class="question">
+	<h2>
+		Why XML?
+	</h2>
+	<p>
+		XML is a good format for expressing structure.
+		Since a flow definition primarily captures the navigation structure between your pages, XML is a good fit.
+		XML is not appropriate for general programming.
+		This is why your flows should invoke actions written in Java or Groovy to carry out application behaviors.
+	</p>
+</div>
 <div id="commandBar">
 	<p>
 		<a href="tutorial?execution=${flowExecutionKey}&_eventId=next">Next &gt;</a>

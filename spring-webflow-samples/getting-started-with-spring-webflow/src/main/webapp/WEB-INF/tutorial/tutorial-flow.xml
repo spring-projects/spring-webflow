@@ -4,10 +4,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<view-state id="webflowProjectOverview">
-		<transition on="next" to="webflowSetup" />
-	</view-state>
-
-	<view-state id="webflowSetup">
 		<transition on="next" to="webflowExercise" />
 	</view-state>
 
@@ -18,7 +14,7 @@
 	<view-state id="webflowWhatsNext">
 		<transition on="finish" to="finish" />
 	</view-state>
-	
+
 	<end-state id="finish" view="externalRedirect:welcome" />
 
 </flow>
