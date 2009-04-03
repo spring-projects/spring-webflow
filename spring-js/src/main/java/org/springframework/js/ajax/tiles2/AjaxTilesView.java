@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tiles.Attribute;
 import org.apache.tiles.AttributeContext;
 import org.apache.tiles.Definition;
+import org.apache.tiles.Attribute.AttributeType;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.impl.BasicTilesContainer;
@@ -126,11 +127,14 @@ public class AjaxTilesView extends TilesView {
 			while (i.hasNext()) {
 				Object key = i.next();
 				Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
-				Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
-						attr.getValue().toString(), requestContext);
-				resultMap.put(key, attr);
-				if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
-					flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+				if (AttributeType.DEFINITION.equals(attr.getType()) || AttributeType.TEMPLATE.equals(attr.getType())
+						|| attr.getType() == null) {
+					Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
+							attr.getValue().toString(), requestContext);
+					resultMap.put(key, attr);
+					if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
+						flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+					}
 				}
 			}
 		}
