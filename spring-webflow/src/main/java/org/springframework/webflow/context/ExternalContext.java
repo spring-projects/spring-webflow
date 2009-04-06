@@ -134,11 +134,14 @@ public interface ExternalContext {
 	/**
 	 * Get a writer for writing out a response.
 	 * @return the writer
+	 * @throws IllegalStateException if the response has completed or is not allowed
 	 */
-	public Writer getResponseWriter();
+	public Writer getResponseWriter() throws IllegalStateException;
 
 	/**
-	 * Is a response allowed to be written for this request?
+	 * Is a <i>render</i> response allowed to be written for this request? Always return false after a response has been
+	 * completed. May return false before that to indicate a response is not allowed to be completed. For example, in a
+	 * Portlet environment, render responses are only allowed in render requests.
 	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseAllowed();
@@ -148,8 +151,9 @@ public interface ExternalContext {
 	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
 	 * Calling this method also sets responseComplete status to true.
 	 * @see #isResponseComplete()
+	 * @throws IllegalStateException if the response has completed or is not allowed
 	 */
-	public void requestFlowExecutionRedirect();
+	public void requestFlowExecutionRedirect() throws IllegalStateException;
 
 	/**
 	 * Request that a flow definition redirect be performed by the calling environment. Typically called from within a
@@ -158,25 +162,28 @@ public interface ExternalContext {
 	 * @see #isResponseComplete()
 	 * @param flowId the id of the flow definition to redirect to
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
+	 * @throws IllegalStateException if the response has completed or is not allowed
 	 */
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input);
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException;
 
 	/**
 	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
 	 * method also sets responseComplete status to true.
 	 * @see #isResponseComplete()
 	 * @param location the location of the resource to redirect to
+	 * @throws IllegalStateException if the response has completed or is not allowed
 	 */
-	public void requestExternalRedirect(String location);
+	public void requestExternalRedirect(String location) throws IllegalStateException;
 
 	/**
-	 * Request that the redirect response requested be sent to the client in a manner that causes the client to issue
-	 * the redirect from a popup dialog. Calling this method only has an effect when a redirect has been requested.
+	 * Request that the current redirect requested be sent to the client in a manner that causes the client to issue the
+	 * redirect from a popup dialog. Only call this method after a redirect has been requested.
 	 * @see #requestFlowExecutionRedirect()
 	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
 	 * @see #requestExternalRedirect(String)
+	 * @throws IllegalStateException if a redirect has not been requested
 	 */
-	public void requestRedirectInPopup();
+	public void requestRedirectInPopup() throws IllegalStateException;
 
 	/**
 	 * Called by flow artifacts such as View states and end states to indicate they handled the response, typically by

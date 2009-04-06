@@ -202,17 +202,15 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
-		if (isRenderPhase()) {
-			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
-		} else {
-			throw new IllegalStateException("You can only obtain a flow execution URL in a RenderRequest");
+		if (!isRenderPhase()) {
+			throw new IllegalStateException(
+					"A flow execution action URL can only be obtained in a RenderRequest using a RenderResponse");
 		}
+		return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
 	}
 
-	public Writer getResponseWriter() {
-		if (!isRenderPhase()) {
-			throw new IllegalStateException("You can only access a response Writer in a RenderRequest");
-		}
+	public Writer getResponseWriter() throws IllegalStateException {
+		assertResponseAllowed();
 		try {
 			return ((RenderResponse) response).getWriter();
 		} catch (IOException e) {
@@ -223,7 +221,7 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseAllowed() {
-		return isRenderPhase();
+		return isRenderPhase() && !responseComplete;
 	}
 
 	public boolean isResponseComplete() {
@@ -234,39 +232,32 @@ public class PortletExternalContext implements ExternalContext {
 		responseComplete = true;
 	}
 
-	public void requestFlowExecutionRedirect() {
-		if (isRenderPhase()) {
-			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
-		}
-		assertResponseNotAlreadyCompleted();
+	public void requestFlowExecutionRedirect() throws IllegalStateException {
+		assertRedirectResponseAllowed();
 		flowExecutionRedirectRequested = true;
 		recordResponseComplete();
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
-		if (isRenderPhase()) {
-			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
-		}
-		assertResponseNotAlreadyCompleted();
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
+		assertRedirectResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 		recordResponseComplete();
 	}
 
-	public void requestExternalRedirect(String uri) {
-		if (isRenderPhase()) {
-			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
-		}
-		assertResponseNotAlreadyCompleted();
+	public void requestExternalRedirect(String uri) throws IllegalStateException {
+		assertRedirectResponseAllowed();
 		externalRedirectUrl = uri;
 		recordResponseComplete();
 	}
 
-	public void requestRedirectInPopup() {
-		if (isRenderPhase()) {
-			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
+	public void requestRedirectInPopup() throws IllegalStateException {
+		if (isRedirectRequested()) {
+			redirectInPopup = true;
+		} else {
+			throw new IllegalStateException(
+					"Only call requestRedirectInPopup after a redirect has been requested by calling requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
 		}
-		redirectInPopup = true;
 	}
 
 	public boolean isRedirectRequested() {
@@ -362,10 +353,25 @@ public class PortletExternalContext implements ExternalContext {
 		}
 	}
 
-	private void assertResponseNotAlreadyCompleted() {
+	private void assertResponseAllowed() throws IllegalStateException {
+		if (!isRenderPhase()) {
+			throw new IllegalStateException(
+					"A response is not allowed because the current PortletRequest is not a RenderRequest");
+		}
 		if (responseComplete) {
 			throw new IllegalStateException(
-					"The ExternalContext response has already been completed; this would have been done with a previous call to recordResponseComplete, requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
+					"A response is not allowed because recordResponseComplete() has already been called on this ExternalContext");
+		}
+	}
+
+	private void assertRedirectResponseAllowed() throws IllegalStateException {
+		if (!isActionPhase()) {
+			throw new IllegalStateException(
+					"A redirect is not allowed because the current PortletRequest is not a ActionRequest");
+		}
+		if (responseComplete) {
+			throw new IllegalStateException(
+					"A redirect is not allowed because a response has already been completed on this ExternalContext");
 		}
 	}
 

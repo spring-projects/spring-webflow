@@ -15,13 +15,14 @@
  */
 package org.springframework.webflow.context.portlet;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import junit.framework.TestCase;
 
 import org.springframework.mock.web.portlet.MockActionRequest;
 import org.springframework.mock.web.portlet.MockActionResponse;
 import org.springframework.mock.web.portlet.MockPortletContext;
-import org.springframework.mock.web.portlet.MockPortletRequest;
-import org.springframework.mock.web.portlet.MockPortletResponse;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -33,15 +34,15 @@ public class PortletExternalContextTests extends TestCase {
 
 	private MockPortletContext portletContext;
 
-	private MockPortletRequest request;
+	private MockActionRequest request;
 
-	private MockPortletResponse response;
+	private MockActionResponse response;
 
 	private PortletExternalContext context;
 
-	private MockPortletRequest renderRequest;
+	private MockRenderRequest renderRequest;
 
-	private MockPortletResponse renderResponse;
+	private MockRenderResponse renderResponse;
 
 	private PortletExternalContext renderContext;
 
@@ -83,8 +84,11 @@ public class PortletExternalContextTests extends TestCase {
 	}
 
 	public void testCommitExecutionRedirect() {
+		assertFalse(context.isResponseAllowed());
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.getFlowExecutionRedirectRequested());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
 	}
 
 	public void testCommitExecutionRedirectRenderRequest() {
@@ -97,9 +101,12 @@ public class PortletExternalContextTests extends TestCase {
 	}
 
 	public void testCommitFlowRedirect() {
+		assertFalse(context.isResponseAllowed());
 		context.requestFlowDefinitionRedirect("foo", null);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
 	}
 
 	public void testCommitFlowRedirectRenderRequest() {
@@ -112,9 +119,11 @@ public class PortletExternalContextTests extends TestCase {
 	}
 
 	public void testCommitExternalRedirect() {
+		assertFalse(context.isResponseAllowed());
 		context.requestExternalRedirect("foo");
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testCommitExternalRedirectRenderRequest() {
@@ -127,10 +136,12 @@ public class PortletExternalContextTests extends TestCase {
 	}
 
 	public void testCommitExecutionRedirectPopup() {
+		assertFalse(context.isResponseAllowed());
 		context.requestFlowExecutionRedirect();
 		context.requestRedirectInPopup();
 		assertTrue(context.getFlowExecutionRedirectRequested());
 		assertTrue(context.getRedirectInPopup());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testCommitFlowRedirectPopup() {
@@ -139,6 +150,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.getRedirectInPopup());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testCommitExternalRedirectPopup() {
@@ -147,6 +159,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.getRedirectInPopup());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testExecutionRedirectPopupRenderRequest() {
@@ -168,6 +181,66 @@ public class PortletExternalContextTests extends TestCase {
 
 	public void testIsRenderPhase() {
 		assertFalse(context.isRenderPhase());
+	}
+
+	public void testRecordResponseComplete() {
+		context.recordResponseComplete();
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
+	}
+
+	public void testDoubleCommitResponse() {
+		context.recordResponseComplete();
+		try {
+			context.requestExternalRedirect("foo");
+		} catch (IllegalStateException e) {
+		}
+		try {
+			context.requestFlowExecutionRedirect();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
+		try {
+			context.requestFlowDefinitionRedirect("foo", null);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
+	}
+
+	public void testRedirectInPopup() {
+		assertFalse(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
+		context.requestFlowExecutionRedirect();
+		assertTrue(context.isResponseComplete());
+		context.requestRedirectInPopup();
+		assertTrue(context.getRedirectInPopup());
+		assertFalse(context.isResponseAllowed());
+		assertTrue(context.getRedirectInPopup());
+	}
+
+	public void testRedirectInPopupNoRedirectRequested() {
+		try {
+			context.requestRedirectInPopup();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+	}
+
+	public void testGetResponseWriter() throws IOException {
+		Writer writer = renderContext.getResponseWriter();
+		writer.append('t');
+		assertEquals("t", renderResponse.getContentAsString());
+	}
+
+	public void testGetResponseWriterResponseComplete() throws IOException {
+		context.recordResponseComplete();
+		try {
+			context.getResponseWriter();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
 	}
 
 }

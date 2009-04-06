@@ -15,6 +15,9 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import junit.framework.TestCase;
 
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,7 +39,10 @@ public class ServletExternalContextTests extends TestCase {
 
 	protected void setUp() {
 		servletContext = new MockServletContext();
+		servletContext.setAttribute("aFoo", "bar");
 		request = new MockHttpServletRequest();
+		request.setAttribute("rFoo", "bar");
+		request.getSession(true).setAttribute("sFoo", "bar");
 		response = new MockHttpServletResponse();
 		context = new ServletExternalContext(servletContext, request, response);
 	}
@@ -48,6 +54,18 @@ public class ServletExternalContextTests extends TestCase {
 
 	public void testRequestParameters() {
 		assertTrue(context.getRequestParameterMap().isEmpty());
+	}
+
+	public void testGetAppAttribute() {
+		assertEquals("bar", context.getApplicationMap().get("aFoo"));
+	}
+
+	public void testGetSessionAttribute() {
+		assertEquals("bar", context.getSessionMap().get("sFoo"));
+	}
+
+	public void testGetRequestAttribute() {
+		assertEquals("bar", context.getRequestMap().get("rFoo"));
 	}
 
 	public void testGetNativeObjects() {
@@ -72,18 +90,22 @@ public class ServletExternalContextTests extends TestCase {
 	public void testCommitExecutionRedirect() {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.getFlowExecutionRedirectRequested());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testCommitFlowRedirect() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
+		assertTrue(context.isResponseComplete());
 	}
 
 	public void testCommitExternalRedirect() {
 		context.requestExternalRedirect("foo");
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
 	}
 
 	public void testCommitExecutionRedirectPopup() {
@@ -91,6 +113,8 @@ public class ServletExternalContextTests extends TestCase {
 		context.requestRedirectInPopup();
 		assertTrue(context.getFlowExecutionRedirectRequested());
 		assertTrue(context.getRedirectInPopup());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
 	}
 
 	public void testCommitFlowRedirectPopup() {
@@ -99,6 +123,8 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.getRedirectInPopup());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
 	}
 
 	public void testCommitExternalRedirectPopup() {
@@ -107,10 +133,92 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.getRedirectInPopup());
+		assertFalse(context.isResponseAllowed());
 	}
 
-	public void testResponseAllowed() {
-		assertTrue(context.isResponseAllowed());
+	public void testRecordResponseComplete() {
+		context.recordResponseComplete();
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
+	}
+
+	public void testDoubleCommitResponse() {
+		context.recordResponseComplete();
+		try {
+			context.requestFlowExecutionRedirect();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+		try {
+			context.requestFlowDefinitionRedirect("foo", null);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+		try {
+			context.requestExternalRedirect("foo");
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+	}
+
+	public void testDoubleCommitResponseExecutionRedirectFirst() {
+		context.requestFlowExecutionRedirect();
+		try {
+			context.requestFlowDefinitionRedirect("foo", null);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+	}
+
+	public void testDoubleCommitResponseDefinitionRedirectFirst() {
+		context.requestFlowDefinitionRedirect("foo", null);
+		try {
+			context.requestFlowDefinitionRedirect("foo", null);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+	}
+
+	public void testDoubleCommitResponseExternalRedirectFirst() {
+		context.requestExternalRedirect("foo");
+		try {
+			context.requestFlowDefinitionRedirect("foo", null);
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+		}
+	}
+
+	public void testRedirectInPopup() {
+		context.requestFlowExecutionRedirect();
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
+		context.requestRedirectInPopup();
+		assertTrue(context.getRedirectInPopup());
+	}
+
+	public void testRedirectInPopupNoRedirectRequested() {
+		try {
+			context.requestRedirectInPopup();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
+	}
+
+	public void testGetResponseWriter() throws IOException {
+		Writer writer = context.getResponseWriter();
+		writer.append('t');
+		assertEquals("t", response.getContentAsString());
+	}
+
+	public void testGetResponseWriterResponseComplete() throws IOException {
+		context.recordResponseComplete();
+		try {
+			context.getResponseWriter();
+			fail("Should have failed");
+		} catch (IllegalStateException e) {
+
+		}
 	}
 
 }

@@ -147,42 +147,48 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public Writer getResponseWriter() {
+		assertResponseAllowed();
 		return responseWriter;
 	}
 
 	public boolean isResponseAllowed() {
-		return true;
+		return !responseComplete;
 	}
 
 	public boolean isResponseComplete() {
 		return responseComplete;
 	}
 
-	public void recordResponseComplete() throws IllegalStateException {
+	public void recordResponseComplete() {
 		responseComplete = true;
 	}
 
-	public void requestFlowExecutionRedirect() {
-		assertResponseNotAlreadyCompleted();
+	public void requestFlowExecutionRedirect() throws IllegalStateException {
+		assertResponseAllowed();
 		flowExecutionRedirectRequested = true;
 		recordResponseComplete();
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
-		assertResponseNotAlreadyCompleted();
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
+		assertResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 		recordResponseComplete();
 	}
 
-	public void requestExternalRedirect(String uri) {
-		assertResponseNotAlreadyCompleted();
+	public void requestExternalRedirect(String uri) throws IllegalStateException {
+		assertResponseAllowed();
 		externalRedirectUrl = uri;
 		recordResponseComplete();
 	}
 
-	public void requestRedirectInPopup() {
-		redirectInPopup = true;
+	public void requestRedirectInPopup() throws IllegalStateException {
+		if (isRedirectRequested()) {
+			redirectInPopup = true;
+		} else {
+			throw new IllegalStateException(
+					"Only call requestRedirectInPopup after a redirect has been requested by calling requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
+		}
 	}
 
 	public boolean isRedirectRequested() {
@@ -400,10 +406,22 @@ public class MockExternalContext implements ExternalContext {
 		return redirectInPopup;
 	}
 
-	private void assertResponseNotAlreadyCompleted() {
-		if (responseComplete) {
+	private void assertResponseAllowed() throws IllegalStateException {
+		if (!isResponseAllowed()) {
+			if (getFlowExecutionRedirectRequested()) {
+				throw new IllegalStateException(
+						"A response is not allowed because a redirect has already been requested on this ExternalContext");
+			}
+			if (getFlowDefinitionRedirectRequested()) {
+				throw new IllegalStateException(
+						"A response is not allowed because a flowRedirect has already been requested on this ExternalContext");
+			}
+			if (getExternalRedirectRequested()) {
+				throw new IllegalStateException(
+						"A response is not allowed because an externalRedirect has already been requested on this ExternalContext");
+			}
 			throw new IllegalStateException(
-					"The ExternalContext response has already been completed; this would have been done with a previous call to recordResponseComplete, requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
+					"A response is not allowed because one has already been completed on this ExternalContext");
 		}
 	}
 
