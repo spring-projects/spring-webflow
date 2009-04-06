@@ -146,19 +146,25 @@ public interface ExternalContext {
 	/**
 	 * Request that a flow execution redirect be performed by the calling environment. Typically called from within a
 	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
+	 * Calling this method also sets responseComplete status to true.
+	 * @see #isResponseComplete()
 	 */
 	public void requestFlowExecutionRedirect();
 
 	/**
 	 * Request that a flow definition redirect be performed by the calling environment. Typically called from within a
 	 * flow execution end state to request starting a new, independent execution of a flow in a chain-like manner.
+	 * Calling this method also sets responseComplete status to true.
+	 * @see #isResponseComplete()
 	 * @param flowId the id of the flow definition to redirect to
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
 	 */
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input);
 
 	/**
-	 * Request a redirect to an arbitrary resource location. May not be supported in some environments.
+	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
+	 * method also sets responseComplete status to true.
+	 * @see #isResponseComplete()
 	 * @param location the location of the resource to redirect to
 	 */
 	public void requestExternalRedirect(String location);
@@ -184,5 +190,16 @@ public interface ExternalContext {
 	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseComplete();
+
+	/**
+	 * Returns true if the response has been completed with a request to redirect the caller to another resource.
+	 * Supported redirects are flow execution redirects, flow definition redirects, and external redirects.
+	 * @return true if a redirect response has been completed
+	 * @see #isResponseComplete()
+	 * @see #requestFlowExecutionRedirect()
+	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
+	 * @see #requestExternalRedirect(String)
+	 */
+	public boolean isRedirectRequested();
 
 }

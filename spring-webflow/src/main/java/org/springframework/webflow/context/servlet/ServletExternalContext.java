@@ -80,7 +80,7 @@ public class ServletExternalContext implements ExternalContext {
 	 * A flag indicating if the flow committed the response. Set to true by requesting an execution redirect, definition
 	 * redirect, external redirect, or by calling {@link ExternalContext#recordResponseComplete()}
 	 */
-	private boolean responseCommitted;
+	private boolean responseComplete;
 
 	/**
 	 * A flag indicating if a flow execution redirect has been requested.
@@ -220,28 +220,36 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseComplete() {
-		return responseCommitted;
+		return responseComplete;
 	}
 
 	public void recordResponseComplete() {
-		responseCommitted = true;
+		responseComplete = true;
 	}
 
 	public void requestFlowExecutionRedirect() {
 		flowExecutionRedirectRequested = true;
+		recordResponseComplete();
 	}
 
 	public void requestExternalRedirect(String location) {
 		externalRedirectUrl = location;
+		recordResponseComplete();
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
+		recordResponseComplete();
 	}
 
 	public void requestRedirectInPopup() {
 		redirectInPopup = true;
+	}
+
+	public boolean isRedirectRequested() {
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 	// implementation specific methods

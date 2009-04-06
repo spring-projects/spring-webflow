@@ -63,7 +63,7 @@ public class MockExternalContext implements ExternalContext {
 
 	private boolean ajaxRequest;
 
-	private boolean responseCommitted;
+	private boolean responseCompleted;
 
 	private boolean flowExecutionRedirectRequested;
 
@@ -155,28 +155,36 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseComplete() {
-		return responseCommitted;
+		return responseCompleted;
 	}
 
 	public void recordResponseComplete() throws IllegalStateException {
-		responseCommitted = true;
+		responseCompleted = true;
 	}
 
 	public void requestFlowExecutionRedirect() {
 		flowExecutionRedirectRequested = true;
+		recordResponseComplete();
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
+		recordResponseComplete();
 	}
 
 	public void requestExternalRedirect(String uri) {
 		externalRedirectUrl = uri;
+		recordResponseComplete();
 	}
 
 	public void requestRedirectInPopup() {
 		redirectInPopup = true;
+	}
+
+	public boolean isRedirectRequested() {
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 	/**
