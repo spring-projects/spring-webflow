@@ -170,18 +170,16 @@ public class ViewState extends TransitionableState {
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		context.assignFlowExecutionKey();
 		ExternalContext externalContext = context.getExternalContext();
-		if (externalContext.isResponseAllowed()) {
-			if (externalContext.isResponseComplete()) {
-				if (!externalContext.isRedirectRequested()) {
-					clearFlash(context);
+		if (externalContext.isResponseComplete()) {
+			clearFlashIfRenderResponse(context);
+		} else {
+			if (shouldRedirect(context)) {
+				context.getExternalContext().requestFlowExecutionRedirect();
+				if (popup) {
+					context.getExternalContext().requestRedirectInPopup();
 				}
 			} else {
-				if (shouldRedirect(context)) {
-					context.getExternalContext().requestFlowExecutionRedirect();
-					if (popup) {
-						context.getExternalContext().requestRedirectInPopup();
-					}
-				} else {
+				if (externalContext.isResponseAllowed()) {
 					View view = viewFactory.getView(context);
 					render(context, view);
 				}
@@ -201,34 +199,26 @@ public class ViewState extends TransitionableState {
 			boolean stateExited = context.handleEvent(event);
 			if (!stateExited) {
 				ExternalContext externalContext = context.getExternalContext();
-				if (externalContext.isResponseAllowed()) {
-					if (externalContext.isResponseComplete()) {
-						if (!externalContext.isRedirectRequested()) {
-							clearFlash(context);
-						}
+				if (externalContext.isResponseComplete()) {
+					clearFlashIfRenderResponse(context);
+				} else {
+					if (externalContext.isAjaxRequest()) {
+						renderIfAllowed(context, view);
 					} else {
-						if (externalContext.isAjaxRequest()) {
-							render(context, view);
+						if (shouldRedirect(context)) {
+							externalContext.requestFlowExecutionRedirect();
 						} else {
-							if (shouldRedirect(context)) {
-								externalContext.requestFlowExecutionRedirect();
-							} else {
-								render(context, view);
-							}
+							renderIfAllowed(context, view);
 						}
 					}
 				}
 			}
 		} else {
 			ExternalContext externalContext = context.getExternalContext();
-			if (externalContext.isResponseAllowed()) {
-				if (externalContext.isResponseComplete()) {
-					if (!externalContext.isRedirectRequested()) {
-						clearFlash(context);
-					}
-				} else {
-					render(context, view);
-				}
+			if (externalContext.isResponseComplete()) {
+				clearFlashIfRenderResponse(context);
+			} else {
+				renderIfAllowed(context, view);
 			}
 		}
 	}
@@ -260,6 +250,12 @@ public class ViewState extends TransitionableState {
 		}
 	}
 
+	private void renderIfAllowed(RequestControlContext context, View view) throws ViewRenderingException {
+		if (context.getExternalContext().isResponseAllowed()) {
+			render(context, view);
+		}
+	}
+
 	private void render(RequestControlContext context, View view) throws ViewRenderingException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Rendering + " + view);
@@ -278,7 +274,13 @@ public class ViewState extends TransitionableState {
 		context.viewRendered(view);
 	}
 
-	private void clearFlash(RequestControlContext context) {
+	private void clearFlashIfRenderResponse(RequestContext context) {
+		if (context.getExternalContext().isResponseAllowed() && !context.getExternalContext().isRedirectRequested()) {
+			clearFlash(context);
+		}
+	}
+
+	private void clearFlash(RequestContext context) {
 		context.getFlashScope().clear();
 		context.getMessageContext().clearMessages();
 	}

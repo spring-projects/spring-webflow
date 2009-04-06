@@ -18,7 +18,6 @@ package org.springframework.webflow.engine;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ActionExecutor;
@@ -97,7 +96,7 @@ public class EndState extends State {
 		FlowSession activeSession = context.getFlowExecutionContext().getActiveSession();
 		if (activeSession.isRoot()) {
 			// entire flow execution is ending; issue the final response
-			if (finalResponseAction != null && canSendResponse(context.getExternalContext())) {
+			if (finalResponseAction != null && !context.getExternalContext().isResponseComplete()) {
 				ActionExecutor.execute(finalResponseAction, context);
 				context.getExternalContext().recordResponseComplete();
 			}
@@ -122,10 +121,6 @@ public class EndState extends State {
 			}
 		}
 		return output;
-	}
-
-	private boolean canSendResponse(ExternalContext context) {
-		return context.isResponseAllowed() && !context.isResponseComplete();
 	}
 
 	protected void appendToString(ToStringCreator creator) {
