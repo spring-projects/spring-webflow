@@ -238,6 +238,7 @@ public class PortletExternalContext implements ExternalContext {
 		if (isRenderPhase()) {
 			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
 		}
+		assertResponseNotAlreadyCompleted();
 		flowExecutionRedirectRequested = true;
 		recordResponseComplete();
 	}
@@ -246,6 +247,7 @@ public class PortletExternalContext implements ExternalContext {
 		if (isRenderPhase()) {
 			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
 		}
+		assertResponseNotAlreadyCompleted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 		recordResponseComplete();
@@ -255,6 +257,7 @@ public class PortletExternalContext implements ExternalContext {
 		if (isRenderPhase()) {
 			throw new IllegalStateException("Redirects are not allowed durring the portlet render phase");
 		}
+		assertResponseNotAlreadyCompleted();
 		externalRedirectUrl = uri;
 		recordResponseComplete();
 	}
@@ -356,6 +359,13 @@ public class PortletExternalContext implements ExternalContext {
 			requestPhase = RENDER_PHASE;
 		} else {
 			throw new IllegalArgumentException("Unknown portlet phase, expected: action or render");
+		}
+	}
+
+	private void assertResponseNotAlreadyCompleted() {
+		if (responseComplete) {
+			throw new IllegalStateException(
+					"The ExternalContext response has already been completed; this would have been done with a previous call to recordResponseComplete, requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
 		}
 	}
 

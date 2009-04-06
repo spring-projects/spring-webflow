@@ -228,16 +228,19 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public void requestFlowExecutionRedirect() {
+		assertResponseNotAlreadyCompleted();
 		flowExecutionRedirectRequested = true;
 		recordResponseComplete();
 	}
 
 	public void requestExternalRedirect(String location) {
+		assertResponseNotAlreadyCompleted();
 		externalRedirectUrl = location;
 		recordResponseComplete();
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) {
+		assertResponseNotAlreadyCompleted();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 		recordResponseComplete();
@@ -347,6 +350,13 @@ public class ServletExternalContext implements ExternalContext {
 		this.sessionMap = new LocalSharedAttributeMap(new HttpSessionMap(request));
 		this.applicationMap = new LocalSharedAttributeMap(new HttpServletContextMap(context));
 		this.flowUrlHandler = flowUrlHandler;
+	}
+
+	private void assertResponseNotAlreadyCompleted() {
+		if (responseComplete) {
+			throw new IllegalStateException(
+					"The ExternalContext response has already been completed; this would have been done with a previous call to recordResponseComplete, requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
+		}
 	}
 
 }
