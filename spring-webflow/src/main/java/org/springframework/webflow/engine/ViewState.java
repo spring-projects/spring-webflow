@@ -171,7 +171,7 @@ public class ViewState extends TransitionableState {
 		context.assignFlowExecutionKey();
 		ExternalContext externalContext = context.getExternalContext();
 		if (externalContext.isResponseComplete()) {
-			clearFlashIfRenderResponse(context);
+			clearFlashIfNotRedirecting(context);
 		} else {
 			if (shouldRedirect(context)) {
 				context.getExternalContext().requestFlowExecutionRedirect();
@@ -182,6 +182,8 @@ public class ViewState extends TransitionableState {
 				if (externalContext.isResponseAllowed()) {
 					View view = viewFactory.getView(context);
 					render(context, view);
+				} else {
+					externalContext.recordResponseComplete();
 				}
 			}
 		}
@@ -200,7 +202,7 @@ public class ViewState extends TransitionableState {
 			if (!stateExited) {
 				ExternalContext externalContext = context.getExternalContext();
 				if (externalContext.isResponseComplete()) {
-					clearFlashIfRenderResponse(context);
+					clearFlashIfNotRedirecting(context);
 				} else {
 					if (externalContext.isAjaxRequest()) {
 						renderIfAllowed(context, view);
@@ -216,7 +218,7 @@ public class ViewState extends TransitionableState {
 		} else {
 			ExternalContext externalContext = context.getExternalContext();
 			if (externalContext.isResponseComplete()) {
-				clearFlashIfRenderResponse(context);
+				clearFlashIfNotRedirecting(context);
 			} else {
 				renderIfAllowed(context, view);
 			}
@@ -251,8 +253,11 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void renderIfAllowed(RequestControlContext context, View view) throws ViewRenderingException {
-		if (context.getExternalContext().isResponseAllowed()) {
+		ExternalContext externalContext = context.getExternalContext();
+		if (externalContext.isResponseAllowed()) {
 			render(context, view);
+		} else {
+			externalContext.recordResponseComplete();
 		}
 	}
 
@@ -274,8 +279,8 @@ public class ViewState extends TransitionableState {
 		context.viewRendered(view);
 	}
 
-	private void clearFlashIfRenderResponse(RequestContext context) {
-		if (context.getExternalContext().isResponseAllowed() && !context.getExternalContext().isRedirectRequested()) {
+	private void clearFlashIfNotRedirecting(RequestContext context) {
+		if (!context.getExternalContext().isRedirectResponseComplete()) {
 			clearFlash(context);
 		}
 	}

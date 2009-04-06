@@ -207,6 +207,6 @@ public interface ExternalContext {
 	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
 	 * @see #requestExternalRedirect(String)
 	 */
-	public boolean isRedirectRequested();
+	public boolean isRedirectResponseComplete();
 
 }

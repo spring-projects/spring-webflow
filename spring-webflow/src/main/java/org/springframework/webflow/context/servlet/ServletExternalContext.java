@@ -248,7 +248,7 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public void requestRedirectInPopup() throws IllegalStateException {
-		if (isRedirectRequested()) {
+		if (isRedirectResponseComplete()) {
 			redirectInPopup = true;
 		} else {
 			throw new IllegalStateException(
@@ -256,7 +256,7 @@ public class ServletExternalContext implements ExternalContext {
 		}
 	}
 
-	public boolean isRedirectRequested() {
+	public boolean isRedirectResponseComplete() {
 		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
 				|| getExternalRedirectRequested();
 	}
