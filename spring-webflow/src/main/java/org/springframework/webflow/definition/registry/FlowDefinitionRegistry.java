@@ -41,10 +41,19 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	public String[] getFlowDefinitionIds();
 
 	/**
-	 * Returns this registry'es parent registry.
+	 * Returns this registry's parent registry.
 	 * @return the parent flow definition registry, or null if no parent is set
 	 */
 	public FlowDefinitionRegistry getParent();
+
+	/**
+	 * Does this registry contain a flow with the given id? More specifically, is {@link #getFlowDefinition(String)}
+	 * able to obtain a flow definition instance for the given id? Will ask the parent registry if the flow cannot be
+	 * found in this instance.
+	 * @param flowId the id of the flow to query
+	 * @return whether a flow definition with the given id is registered
+	 */
+	public boolean containsFlowDefinition(String flowId);
 
 	/**
 	 * Sets this registry's parent registry. When asked by a client to locate a flow definition this registry will query
@@ -66,7 +75,5 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 * @param definition the actual flow definition
 	 */
 	public void registerFlowDefinition(FlowDefinition definition);
-
-	public boolean containsFlowDefinition(String flowId);
 
 }

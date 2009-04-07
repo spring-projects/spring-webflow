@@ -67,6 +67,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 	public void testRegisterFlow() {
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
+		assertTrue(registry.containsFlowDefinition("foo"));
 		assertEquals(fooFlow, registry.getFlowDefinition("foo"));
 	}
 
@@ -87,6 +88,8 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 	public void testRegisterMultipleFlows() {
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
 		registry.registerFlowDefinition(new StaticFlowDefinitionHolder(barFlow));
+		assertTrue(registry.containsFlowDefinition("foo"));
+		assertTrue(registry.containsFlowDefinition("bar"));
 		assertEquals(fooFlow, registry.getFlowDefinition("foo"));
 		assertEquals(barFlow, registry.getFlowDefinition("bar"));
 	}
@@ -97,6 +100,8 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 		child.setParent(registry);
 		FooFlow fooFlow = new FooFlow();
 		child.registerFlowDefinition(new StaticFlowDefinitionHolder(fooFlow));
+		assertTrue(child.containsFlowDefinition("foo"));
+		assertTrue(child.containsFlowDefinition("bar"));
 		assertSame(fooFlow, child.getFlowDefinition("foo"));
 		assertEquals(barFlow, child.getFlowDefinition("bar"));
 	}

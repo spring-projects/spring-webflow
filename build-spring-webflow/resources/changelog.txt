@@ -10,6 +10,7 @@ Bug Fixes
 * Fixed bug where subclasses of FacesMessage we do not control could introduce dependencies on JSF-specific services outside of Web Flow's control (SWF-1073)
   This specifically caused problems with Rich Faces 3.3.0's messages component, which adds a LabeledFacesMessage that requires a FacesContext to be serialized.
 * Fixed bug where a FlowExecution's flashScope and MessageContext were not cleared when a user had already completed a render response (SWF-1089).
+* Fixed bug where FlowHandlerMapping was not querying parent flow registries when determining if a flow should handle the current request (SWF-1095).
 
 Improvements
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
