@@ -38,8 +38,6 @@ import org.springframework.webflow.execution.View;
  */
 public class MockRequestControlContext extends MockRequestContext implements RequestControlContext {
 
-	private boolean alwaysRedirectOnPause;
-
 	/**
 	 * Creates a new mock request control context.
 	 */
@@ -120,13 +118,15 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	}
 
 	public boolean getRedirectOnPause() {
-		return alwaysRedirectOnPause;
+		Boolean redirectOnPause = getMockFlowExecutionContext().getAttributes().getBoolean("alwaysRedirectOnPause");
+		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
 
 	// implementation specific accessors for testing
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {
-		this.alwaysRedirectOnPause = alwaysRedirectOnPause;
+		getMockFlowExecutionContext().getAttributeMap().put("alwaysRedirectOnPause",
+				Boolean.valueOf(alwaysRedirectOnPause));
 	}
 
 }

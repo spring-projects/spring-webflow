@@ -178,6 +178,7 @@ public class MvcViewTests extends TestCase {
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.processUserEvent();
 		assertTrue(view.hasFlowEvent());
+		assertFalse(context.getFlashScope().contains(ViewActionStateHolder.KEY));
 		assertEquals("submit", view.getFlowEvent().getId());
 		assertEquals("foo", bindBean.getStringProperty());
 		assertEquals(new Integer(5), bindBean.getIntegerProperty());
@@ -224,8 +225,74 @@ public class MvcViewTests extends TestCase {
 		AbstractMvcView view = new MockMvcView(mvcView, context);
 		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
 		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
+		context.setAlwaysRedirectOnPause(true);
 		view.processUserEvent();
 		assertFalse(view.hasFlowEvent());
+		assertTrue(context.getFlashScope().contains(ViewActionStateHolder.KEY));
+		assertTrue(context.getExternalContext().isResponseCompleteFlowExecutionRedirect());
+		view.render();
+		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
+		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
+		assertNotNull(bm);
+		assertEquals("bogus 1", bm.getFieldValue("integerProperty"));
+		assertEquals("bogus 2", bm.getFieldValue("dateProperty"));
+	}
+
+	public void testResumeEventBindingErrorsNoRedirectAllowed() throws Exception {
+		MockRequestControlContext context = new MockRequestControlContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("integerProperty", "bogus 1");
+		context.putRequestParameter("dateProperty", "bogus 2");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
+		view.processUserEvent();
+		assertTrue(context.getFlashScope().contains(ViewActionStateHolder.KEY));
+		assertFalse(view.hasFlowEvent());
+		assertFalse(context.getExternalContext().isResponseComplete());
+		assertFalse(context.getExternalContext().isResponseCompleteFlowExecutionRedirect());
+		view.render();
+		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
+		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
+		assertNotNull(bm);
+		assertEquals("bogus 1", bm.getFieldValue("integerProperty"));
+		assertEquals("bogus 2", bm.getFieldValue("dateProperty"));
+	}
+
+	public void testResumeEventBindingErrorsNoRedirectAjaxRequest() throws Exception {
+		MockRequestControlContext context = new MockRequestControlContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("integerProperty", "bogus 1");
+		context.putRequestParameter("dateProperty", "bogus 2");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
+		context.getMockExternalContext().setAjaxRequest(true);
+		view.processUserEvent();
+		assertFalse(view.hasFlowEvent());
+		assertFalse(context.getExternalContext().isResponseComplete());
+		assertFalse(context.getExternalContext().isResponseCompleteFlowExecutionRedirect());
+		assertTrue(context.getFlashScope().contains(ViewActionStateHolder.KEY));
 		view.render();
 		assertEquals(context.getFlowScope().get("bindBean"), model.get("bindBean"));
 		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");

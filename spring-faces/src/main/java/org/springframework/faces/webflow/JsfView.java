@@ -104,7 +104,7 @@ public class JsfView implements View {
 	}
 
 	/*
-	 * Executes postback-processing portions of the standard JSF lifecyle including APPLY_REQUEST_VALUES through
+	 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
 	 * INVOKE_APPLICATION.
 	 */
 	public void processUserEvent() {

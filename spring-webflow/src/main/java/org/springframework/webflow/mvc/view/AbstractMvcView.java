@@ -45,6 +45,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.util.WebUtils;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -215,9 +216,18 @@ public abstract class AbstractMvcView implements View {
 				validate(model);
 			}
 		}
-		if (mappingResults != null && mappingResults.hasErrorResults()) {
+		if (mappingResults != null && hasErrors(mappingResults)) {
 			requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
 					new ViewActionStateHolder(eventId, mappingResults));
+			ExternalContext context = requestContext.getExternalContext();
+			if (!context.isAjaxRequest()) {
+				Boolean redirectOnPause = requestContext.getFlowExecutionContext().getAttributes().getBoolean(
+						"alwaysRedirectOnPause");
+				boolean redirectAllowed = redirectOnPause != null ? redirectOnPause.booleanValue() : false;
+				if (redirectAllowed) {
+					requestContext.getExternalContext().requestFlowExecutionRedirect();
+				}
+			}
 		}
 	}
 
