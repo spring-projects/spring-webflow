@@ -169,6 +169,10 @@ public class MockExternalContext implements ExternalContext {
 		responseComplete = true;
 	}
 
+	public boolean isResponseCompleteFlowExecutionRedirect() {
+		return flowExecutionRedirectRequested;
+	}
+
 	public void requestFlowExecutionRedirect() throws IllegalStateException {
 		assertResponseAllowed();
 		flowExecutionRedirectRequested = true;
@@ -189,17 +193,12 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public void requestRedirectInPopup() throws IllegalStateException {
-		if (isRedirectResponseComplete()) {
+		if (isRedirectRequested()) {
 			redirectInPopup = true;
 		} else {
 			throw new IllegalStateException(
 					"Only call requestRedirectInPopup after a redirect has been requested by calling requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
 		}
-	}
-
-	public boolean isRedirectResponseComplete() {
-		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
-				|| getExternalRedirectRequested();
 	}
 
 	/**
@@ -420,6 +419,8 @@ public class MockExternalContext implements ExternalContext {
 		return redirectInPopup;
 	}
 
+	// internal helpers
+
 	private void assertResponseAllowed() throws IllegalStateException {
 		if (!isResponseAllowed()) {
 			if (getFlowExecutionRedirectRequested()) {
@@ -437,6 +438,11 @@ public class MockExternalContext implements ExternalContext {
 			throw new IllegalStateException(
 					"A response is not allowed because one has already been completed on this ExternalContext");
 		}
+	}
+
+	public boolean isRedirectRequested() {
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 	private class MockPrincipal implements Principal {

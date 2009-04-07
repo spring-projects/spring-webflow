@@ -232,6 +232,10 @@ public class PortletExternalContext implements ExternalContext {
 		responseComplete = true;
 	}
 
+	public boolean isResponseCompleteFlowExecutionRedirect() {
+		return flowExecutionRedirectRequested;
+	}
+
 	public void requestFlowExecutionRedirect() throws IllegalStateException {
 		assertRedirectResponseAllowed();
 		flowExecutionRedirectRequested = true;
@@ -252,17 +256,12 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public void requestRedirectInPopup() throws IllegalStateException {
-		if (isRedirectResponseComplete()) {
+		if (isRedirectRequested()) {
 			redirectInPopup = true;
 		} else {
 			throw new IllegalStateException(
 					"Only call requestRedirectInPopup after a redirect has been requested by calling requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
 		}
-	}
-
-	public boolean isRedirectResponseComplete() {
-		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
-				|| getExternalRedirectRequested();
 	}
 
 	// implementation specific methods
@@ -373,6 +372,11 @@ public class PortletExternalContext implements ExternalContext {
 			throw new IllegalStateException(
 					"A redirect is not allowed because a response has already been completed on this ExternalContext");
 		}
+	}
+
+	private boolean isRedirectRequested() {
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 }

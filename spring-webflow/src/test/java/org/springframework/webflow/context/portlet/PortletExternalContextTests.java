@@ -88,6 +88,7 @@ public class PortletExternalContextTests extends TestCase {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.getFlowExecutionRedirectRequested());
 		assertTrue(context.isResponseComplete());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 		assertFalse(context.isResponseAllowed());
 	}
 
@@ -106,6 +107,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 		assertFalse(context.isResponseAllowed());
 	}
 
@@ -124,6 +126,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getExternalRedirectRequested());
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitExternalRedirectRenderRequest() {
@@ -142,6 +145,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowExecutionRedirectRequested());
 		assertTrue(context.getRedirectInPopup());
 		assertTrue(context.isResponseComplete());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitFlowRedirectPopup() {
@@ -151,6 +155,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.getRedirectInPopup());
 		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitExternalRedirectPopup() {
@@ -160,6 +165,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.getRedirectInPopup());
 		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testExecutionRedirectPopupRenderRequest() {
@@ -214,6 +220,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseAllowed());
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.isResponseComplete());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 		context.requestRedirectInPopup();
 		assertTrue(context.getRedirectInPopup());
 		assertFalse(context.isResponseAllowed());

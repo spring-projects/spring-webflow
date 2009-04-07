@@ -228,6 +228,10 @@ public class ServletExternalContext implements ExternalContext {
 		responseComplete = true;
 	}
 
+	public boolean isResponseCompleteFlowExecutionRedirect() {
+		return flowExecutionRedirectRequested;
+	}
+
 	public void requestFlowExecutionRedirect() throws IllegalStateException {
 		assertResponseAllowed();
 		flowExecutionRedirectRequested = true;
@@ -248,17 +252,12 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public void requestRedirectInPopup() throws IllegalStateException {
-		if (isRedirectResponseComplete()) {
+		if (isRedirectRequested()) {
 			redirectInPopup = true;
 		} else {
 			throw new IllegalStateException(
 					"Only call requestRedirectInPopup after a redirect has been requested by calling requestFlowExecutionRedirect, requestFlowDefinitionRedirect, or requestExternalRedirect");
 		}
-	}
-
-	public boolean isRedirectResponseComplete() {
-		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
-				|| getExternalRedirectRequested();
 	}
 
 	// implementation specific methods
@@ -375,6 +374,11 @@ public class ServletExternalContext implements ExternalContext {
 			throw new IllegalStateException(
 					"A response is not allowed because one has already been completed on this ExternalContext");
 		}
+	}
+
+	private boolean isRedirectRequested() {
+		return getFlowExecutionRedirectRequested() || getFlowDefinitionRedirectRequested()
+				|| getExternalRedirectRequested();
 	}
 
 }

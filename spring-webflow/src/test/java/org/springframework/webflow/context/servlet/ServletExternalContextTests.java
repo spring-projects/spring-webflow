@@ -91,6 +91,7 @@ public class ServletExternalContextTests extends TestCase {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.getFlowExecutionRedirectRequested());
 		assertTrue(context.isResponseComplete());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitFlowRedirect() {
@@ -98,6 +99,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitExternalRedirect() {
@@ -106,6 +108,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals("foo", context.getExternalRedirectUrl());
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseAllowed());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitExecutionRedirectPopup() {
@@ -115,6 +118,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.getRedirectInPopup());
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseAllowed());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testCommitFlowRedirectPopup() {
@@ -140,6 +144,7 @@ public class ServletExternalContextTests extends TestCase {
 		context.recordResponseComplete();
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseAllowed());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
 	public void testDoubleCommitResponse() {
@@ -191,6 +196,7 @@ public class ServletExternalContextTests extends TestCase {
 	public void testRedirectInPopup() {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.isResponseComplete());
+		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 		assertFalse(context.isResponseAllowed());
 		context.requestRedirectInPopup();
 		assertTrue(context.getRedirectInPopup());

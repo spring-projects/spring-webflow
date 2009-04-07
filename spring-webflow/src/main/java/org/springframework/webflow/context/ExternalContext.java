@@ -151,7 +151,7 @@ public interface ExternalContext {
 	 * flow execution to request a refresh operation, usually to support "refresh after event processing" behavior.
 	 * Calling this method also sets responseComplete status to true.
 	 * @see #isResponseComplete()
-	 * @throws IllegalStateException if the response has completed or is not allowed
+	 * @throws IllegalStateException if the response has completed
 	 */
 	public void requestFlowExecutionRedirect() throws IllegalStateException;
 
@@ -162,7 +162,7 @@ public interface ExternalContext {
 	 * @see #isResponseComplete()
 	 * @param flowId the id of the flow definition to redirect to
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
-	 * @throws IllegalStateException if the response has completed or is not allowed
+	 * @throws IllegalStateException if the response has completed
 	 */
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException;
 
@@ -171,7 +171,7 @@ public interface ExternalContext {
 	 * method also sets responseComplete status to true.
 	 * @see #isResponseComplete()
 	 * @param location the location of the resource to redirect to
-	 * @throws IllegalStateException if the response has completed or is not allowed
+	 * @throws IllegalStateException if the response has completed
 	 */
 	public void requestExternalRedirect(String location) throws IllegalStateException;
 
@@ -193,20 +193,26 @@ public interface ExternalContext {
 	public void recordResponseComplete();
 
 	/**
-	 * Has the response been completed via a call to {@link #recordResponseComplete()}?
+	 * Has the response been completed? Response complete status can be achieved by:
+	 * <ul>
+	 * <li>Writing out the response and calling {@link #recordResponseComplete()}, or
+	 * <li>Calling one of the redirect request methods
+	 * </ul>
+	 * @see #getResponseWriter()
+	 * @see #recordResponseComplete()
+	 * @see #requestFlowExecutionRedirect()
+	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
+	 * @see #requestExternalRedirect(String)
 	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseComplete();
 
 	/**
-	 * Returns true if the response has been completed with a request to redirect the caller to another resource.
-	 * Supported redirects are flow execution redirects, flow definition redirects, and external redirects.
+	 * Returns true if the response has been completed with flow execution redirect request.
 	 * @return true if a redirect response has been completed
 	 * @see #isResponseComplete()
 	 * @see #requestFlowExecutionRedirect()
-	 * @see #requestFlowDefinitionRedirect(String, MutableAttributeMap)
-	 * @see #requestExternalRedirect(String)
 	 */
-	public boolean isRedirectResponseComplete();
+	public boolean isResponseCompleteFlowExecutionRedirect();
 
 }

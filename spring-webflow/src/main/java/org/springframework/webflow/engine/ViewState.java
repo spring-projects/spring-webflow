@@ -280,7 +280,7 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void clearFlashIfNotRedirecting(RequestContext context) {
-		if (!context.getExternalContext().isRedirectResponseComplete()) {
+		if (!context.getExternalContext().isResponseCompleteFlowExecutionRedirect()) {
 			clearFlash(context);
 		}
 	}
