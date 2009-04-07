@@ -63,6 +63,8 @@ public class MockExternalContext implements ExternalContext {
 
 	private boolean ajaxRequest;
 
+	private Boolean responseAllowed;
+
 	private boolean responseComplete;
 
 	private boolean flowExecutionRedirectRequested;
@@ -152,7 +154,11 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseAllowed() {
-		return !responseComplete;
+		if (responseAllowed != null) {
+			return responseAllowed.booleanValue();
+		} else {
+			return !responseComplete;
+		}
 	}
 
 	public boolean isResponseComplete() {
@@ -345,6 +351,14 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public void setAjaxRequest(boolean ajaxRequest) {
 		this.ajaxRequest = ajaxRequest;
+	}
+
+	/**
+	 * Set the response allows flag to a value for testing.
+	 * @param responseAllowed true or false
+	 */
+	public void setResponseAllowed(boolean responseAllowed) {
+		this.responseAllowed = Boolean.valueOf(responseAllowed);
 	}
 
 	/**

@@ -32,14 +32,53 @@ import org.springframework.webflow.test.MockRequestControlContext;
  */
 public class ViewStateTests extends TestCase {
 
-	public void testEnterViewStateDefaultBehavior() {
+	public void testEnterViewStateRenderResponse() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testEnterViewStateRenderNotAllowed() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.getMockExternalContext().setResponseAllowed(false);
+		state.enter(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testEnterViewStateResponseAlreadyComplete() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.getExternalContext().recordResponseComplete();
+		context.getFlashScope().put("foo", "bar");
+		state.enter(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+		assertFalse(context.getFlashScope().contains("foo"));
+	}
+
+	public void testEnterViewStateRedirectResponseAlreadyComplete() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.getExternalContext().requestFlowExecutionRedirect();
+		context.getFlashScope().put("foo", "bar");
+		state.enter(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
 	public void testEnterViewStateWithVariables() {
@@ -58,6 +97,7 @@ public class ViewStateTests extends TestCase {
 		state.enter(context);
 		assertEquals("bar", context.getViewScope().getString("foo"));
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
@@ -107,41 +147,32 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
-	public void testEnterViewStateWithPopup() {
-		Flow flow = new Flow("myFlow");
-		StubViewFactory viewFactory = new StubViewFactory();
-		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setPopup(true);
-		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.setAlwaysRedirectOnPause(true);
-		state.enter(context);
-		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
-	}
-
-	public void testEnterViewStateResponseComplete() {
-		Flow flow = new Flow("myFlow");
-		StubViewFactory viewFactory = new StubViewFactory();
-		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		MockRequestControlContext context = new MockRequestControlContext(flow);
-		context.setAlwaysRedirectOnPause(true);
-		context.getExternalContext().recordResponseComplete();
-		state.enter(context);
-		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
-		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
-	}
-
 	public void testResumeViewStateForRefresh() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
-		new EndState(flow, "finish");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		state.resume(context);
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testResumeViewStateForRefreshResponseNotAllowed() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		assertTrue("Render called", context.getFlowScope().contains("renderCalled"));
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.getMockExternalContext().setResponseAllowed(false);
+		context.getFlowScope().remove("renderCalled");
+		state.resume(context);
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
@@ -155,10 +186,12 @@ public class ViewStateTests extends TestCase {
 		state.enter(context);
 		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.getFlowScope().remove("renderCalled");
+		context.getFlashScope().put("foo", "bar");
 		context.getExternalContext().recordResponseComplete();
 		state.resume(context);
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
 	public void testResumeViewStateRestoreVariables() {
@@ -183,17 +216,19 @@ public class ViewStateTests extends TestCase {
 		assertEquals("Restored", ((TestBean) context.getViewScope().get("foo")).datum1);
 	}
 
-	public void testResumeViewStateForEventWithTransition() {
+	public void testResumeViewStateForEventWithTransitionStateExited() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
 		state.getTransitionSet().add(new Transition(on("submit"), to("finish")));
-		new EndState(flow, "finish");
+		EndState end = new EndState(flow, "finish");
+		end.setFinalResponseAction(new TestAction());
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.putRequestParameter("_eventId", "submit");
 		state.resume(context);
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
 
@@ -213,7 +248,27 @@ public class ViewStateTests extends TestCase {
 		state.resume(context);
 		assertTrue(context.getFlowExecutionContext().isActive());
 		assertEquals(1, action.getExecutionCount());
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testResumeViewStateForEventStateNotExitedNonAjaxResponseNotAllowed() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.getFlowScope().remove("renderCalled");
+		context.putRequestParameter("_eventId", "submit");
+		context.getMockExternalContext().setResponseAllowed(false);
+		state.resume(context);
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
@@ -255,7 +310,32 @@ public class ViewStateTests extends TestCase {
 		state.resume(context);
 		assertTrue(context.getFlowExecutionContext().isActive());
 		assertEquals(1, action.getExecutionCount());
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertTrue("Render not called", context.getFlowScope().contains("renderCalled"));
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testResumeViewStateForEventStateNotExitedAjaxResponseNotAllowed() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		TestAction action = new TestAction();
+		t.setExecutionCriteria(new ActionTransitionCriteria(action));
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.getMockExternalContext().setAjaxRequest(true);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.putRequestParameter("_eventId", "submit");
+		context.getMockExternalContext().setAjaxRequest(true);
+		context.getMockExternalContext().setResponseAllowed(false);
+		context.getFlowScope().remove("renderCalled");
+		state.resume(context);
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertEquals(1, action.getExecutionCount());
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
@@ -279,11 +359,14 @@ public class ViewStateTests extends TestCase {
 		context.getFlowScope().remove("renderCalled");
 		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.putRequestParameter("_eventId", "submit");
+		context.getFlashScope().put("Foo", "bar");
 		state.resume(context);
 		assertTrue(context.getFlowExecutionContext().isActive());
 		assertEquals(1, action.getExecutionCount());
+		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse("Render called", context.getFlowScope().contains("renderCalled"));
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
 	public void testResumeViewStateForEventDestroyVariables() {
