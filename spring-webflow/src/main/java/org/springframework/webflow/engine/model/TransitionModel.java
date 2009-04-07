@@ -69,7 +69,7 @@ public class TransitionModel extends AbstractModel {
 		setOnException(merge(getOnException(), transition.getOnException()));
 		setTo(merge(getTo(), transition.getTo()));
 		setBind(merge(getBind(), transition.getBind()));
-		setBind(merge(getValidate(), transition.getValidate()));
+		setValidate(merge(getValidate(), transition.getValidate()));
 		setHistory(merge(getHistory(), transition.getHistory()));
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
