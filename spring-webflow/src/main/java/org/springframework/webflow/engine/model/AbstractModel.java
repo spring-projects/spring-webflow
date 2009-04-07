@@ -90,7 +90,11 @@ public abstract class AbstractModel implements Model {
 	 */
 	protected LinkedList merge(LinkedList child, LinkedList parent, boolean addAtEnd) {
 		if (child == null) {
-			return parent;
+			if (parent == null) {
+				return null;
+			} else {
+				return new LinkedList(parent);
+			}
 		} else if (parent == null) {
 			return child;
 		} else {
