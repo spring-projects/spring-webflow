@@ -2,16 +2,19 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.7 (2009.03.24)
+Changes in version 2.0.7 (2009.04.09)
 -------------------------------------
 Bug Fixes
 * Fixed several issues with WebFlowMessageCodesResolver algorithm, including a JDK 1.4 compatibility issue (SWF-1064)
 * Fixed bug in Spring Faces custom ListDataModel implementations related to row selection tracking (SWF-1066)
 * Fixed bug where subclasses of FacesMessage we do not control could introduce dependencies on JSF-specific services outside of Web Flow's control (SWF-1073)
   This specifically caused problems with Rich Faces 3.3.0's messages component, which adds a LabeledFacesMessage that requires a FacesContext to be serialized.
+* Fixed bug where a FlowExecution's flashScope and MessageContext were not cleared when a user had already completed a render response (SWF-1089).
 
 Improvements
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
+* Strengthened contract for response-related methods in ExternalContext.  Specifically, calling any of the requestRedirect methods also now completes the response.
+  If you attempt to complete a response more than once against an ExternalContext, an IllegalStateException is thrown.
 
 Changes in version 2.0.6 (2009.03.12)
 -------------------------------------
