@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.0.7 ()
+SPRING WEB FLOW 2.0.7 (April 2009)
 ----------------------------------
 http://www.springframework.org/webflow
 
