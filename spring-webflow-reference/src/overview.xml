@@ -236,16 +236,70 @@
 	<sect1>
 		<title>How to Obtain Nightly Builds</title>
 		<para>
-			Nightly snapshots of the Web Flow trunk are available at the SpringSource Bundle Repository.
-			To access snapshots, add the following repository to your pom:
+			Nightly snapshots of Web Flow development branches are available using Maven, and can distribution zips can also be downloaded directly.
+			If using Maven, you may obtain snapshots from the SpringSource-managed Maven Central-compatible repository or the SpringSource Enterprise Bundle Repository.
+			Use the <ulink url="http://s3browse.com/explore/maven.springsource.org/snapshot">Maven Central-compatible snapshot repository</ulink> when your project obtains its other open source dependencies from Maven Central.
+			Use the <ulink url="http://s3browse.com/explore/repository.springsource.com/maven/bundles/snapshot/org/springframework/webflow">bundle snapshot repository</ulink> when you wish to run Web Flow in an OSGi environment.
 		</para>
-		<programlisting language="xml"><![CDATA[
+		<sect2>
+			<title>Obtaining snapshots from Maven-central compatible repository</title>
+			<para>
+				Add the following repository your pom:
+			</para>			
+			<programlisting language="xml"><![CDATA[
+<repository>
+    <id>org.springsource.maven.snapshot</id>
+    <name>SpringSource Maven Central-compatible Snapshot Repository</name>
+    <url>http://maven.springsource.org/snapshot</url>
+</repository>]]>
+			</programlisting>
+			<para>
+				Then declare the following dependencies:			
+			</para>
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-binding</artifactId>
+    <version>x.y.z-SNAPSHOT</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-js</artifactId>
+    <version>x.y.z-SNAPSHOT</version>
+</dependency> 
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-webflow</artifactId>
+    <version>x.y.z-SNAPSHOT</version>
+</dependency> 
+]]>
+			</programlisting>
+			<para>
+				And if using JavaServerFaces:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-faces</artifactId>
+    <version>x.y.z-SNAPSHOT</version>
+</dependency> 
+]]>
+			</programlisting>
+		</sect2>
+		<sect2>
+			<title>Obtaining snapshots from the SpringSource Enterprise Bundle Repository</title>
+			<para>
+				Add the following repository your pom:
+			</para>			
+			<programlisting language="xml"><![CDATA[
 <repository>
     <id>com.springsource.repository.bundles.snapshot</id>
-    <name>SpringSource Enterprise Bundle Repository - Nightly Snapshots</name>
+    <name>SpringSource Enterprise Bundle Snapshot Repository</name>
     <url>http://repository.springsource.com/maven/bundles/snapshot</url>
-</repository>]]>
-		</programlisting>
+</repository>]]>>]]>
+			</programlisting>
 			<para>
 				Then declare the following dependencies:			
 			</para>
@@ -253,36 +307,39 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>3.0.0.CI-###</version>
+    <version>x.y.z-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>3.0.0.CI-###</version>
+    <version>x.y.z-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>3.0.0.CI-###</version>
+    <version>x.y.z-SNAPSHOT</version>
 </dependency> 
 ]]>
 			</programlisting>
-		<para>
-			And if using JavaServerFaces:
-		</para>
-		<programlisting language="xml"><![CDATA[
+			<para>
+				And if using JavaServerFaces:
+			</para>
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>3.0.0.CI-###</version>
+    <version>x.y.z-SNAPSHOT</version>
 </dependency> 
 ]]>
-		</programlisting>
-			<para>
-				Where '###' above represents the build number like 3.0.0.CI-500.
-				Get the latest build number by browsing the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">nightly build area</ulink>.
-			</para>
+			</programlisting>
+		</sect2>
+		<sect2>
+			<title>Obtaining snapshot distribution archives</title>
+		</sect2>
+		<para>
+			Get the snapshot with the most recent CI build number at the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
+		</para>
 	</sect1>
 </chapter>
