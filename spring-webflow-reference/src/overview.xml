@@ -61,7 +61,7 @@
 		</para>
 	</sect1>
 	<sect1 id="jars-mvn-central">
-		<title>How to obtain Web Flow artifacts from Maven Central</title>
+		<title>How to access Web Flow artifacts from Maven Central</title>
 		<para>
 			Each jar in the Web Flow distribution is available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
 			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
@@ -102,7 +102,7 @@
 		</programlisting>
 	</sect1>	
 	<sect1 id="jars-bundle-repository">
-		<title>How to obtain Web Flow artifacts from the SpringSource Bundle Repository</title>
+		<title>How to access Web Flow artifacts from the SpringSource Bundle Repository</title>
 		<para>
 			Each jar in the Web Flow distribution is also available in the <ulink url="http://www.springsource.com/repository">SpringSource Enterprise Bundle Repository</ulink>.
 			Use this repository when you wish to run Spring Web Flow in an OSGi environment such as the <ulink url="http://www.springsource.com/products/dmserver">SpringSource dm Server</ulink>.
@@ -146,8 +146,7 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
     <version>2.0.7.RELEASE</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
@@ -157,8 +156,7 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
     <version>2.0.7.RELEASE</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 			<para>
 				Note the Web Flow artifacts in the SpringSource Bundle Repository are indexed under different ids because their transitive dependencies are different than the Maven Central artifacts.
@@ -194,16 +192,14 @@
 <dependency org="org.springframework.webflow" name="org.springframework.js"
             rev="2.0.7.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.webflow"
-            rev="2.0.7.RELEASE" conf="compile->runtime" />
-]]>
+            rev="2.0.7.RELEASE" conf="compile->runtime" />]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <dependency org="org.springframework.webflow" name="org.springframework.faces"
-            rev="2.0.7.RELEASE" conf="compile->runtime" />
-]]>
+            rev="2.0.7.RELEASE" conf="compile->runtime" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="webflow-dm-server-lib">
@@ -234,15 +230,18 @@
 		</sect2>
 	</sect1>
 	<sect1>
-		<title>How to Obtain Nightly Builds</title>
+		<title>How to access nightly builds</title>
 		<para>
-			Nightly snapshots of Web Flow development branches are available using Maven, and can distribution zips can also be downloaded directly.
-			If using Maven, you may obtain snapshots from the SpringSource-managed Maven Central-compatible repository or the SpringSource Enterprise Bundle Repository.
-			Use the <ulink url="http://s3browse.com/explore/maven.springsource.org/snapshot">Maven Central-compatible snapshot repository</ulink> when your project obtains its other open source dependencies from Maven Central.
-			Use the <ulink url="http://s3browse.com/explore/repository.springsource.com/maven/bundles/snapshot/org/springframework/webflow">bundle snapshot repository</ulink> when you wish to run Web Flow in an OSGi environment.
+			Nightly snapshots of Web Flow development branches are available using Maven, and distribution zips are also available for download.
+			These snapshot builds are useful for testing out fixes you depend on in advance of the next release, and provide a convenient way for you to provide feedback about whether a fix meets your needs.
+		</para>
+		<para>
+			If using Maven, you may obtain snapshots from either the SpringSource-managed Maven Central-compatible repository or the SpringSource Enterprise Bundle Repository.
+			Use the <ulink url="http://s3browse.com/explore/maven.springframework.org/snapshot/org/springframework/webflow">Maven Central-compatible snapshot repository</ulink> when your project obtains its other open source dependencies from Maven Central.
+			Use the <ulink url="http://s3browse.com/explore/repository.springsource.com/maven/bundles/snapshot/org/springframework/webflow">Spring Source Enterprise Bundle Snapshot Repository</ulink> when you wish to run Web Flow in an OSGi environment.
 		</para>
 		<sect2>
-			<title>Obtaining snapshots from Maven-central compatible repository</title>
+			<title>Accessing snapshots from the Maven-central compatible repository</title>
 			<para>
 				Add the following repository your pom:
 			</para>			
@@ -273,8 +272,7 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
     <version>x.y.z-SNAPSHOT</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
@@ -284,12 +282,11 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-faces</artifactId>
     <version>x.y.z-SNAPSHOT</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 		</sect2>
 		<sect2>
-			<title>Obtaining snapshots from the SpringSource Enterprise Bundle Repository</title>
+			<title>Accessing snapshots from the SpringSource Enterprise Bundle Repository</title>
 			<para>
 				Add the following repository your pom:
 			</para>			
@@ -298,7 +295,7 @@
     <id>com.springsource.repository.bundles.snapshot</id>
     <name>SpringSource Enterprise Bundle Snapshot Repository</name>
     <url>http://repository.springsource.com/maven/bundles/snapshot</url>
-</repository>]]>>]]>
+</repository>]]>
 			</programlisting>
 			<para>
 				Then declare the following dependencies:			
@@ -320,8 +317,7 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
     <version>x.y.z-SNAPSHOT</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 			<para>
 				And if using JavaServerFaces:
@@ -331,15 +327,14 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
     <version>x.y.z-SNAPSHOT</version>
-</dependency> 
-]]>
+</dependency>]]>
 			</programlisting>
 		</sect2>
 		<sect2>
-			<title>Obtaining snapshot distribution archives</title>
+			<title>Accessing snapshot distribution archives</title>
 		</sect2>
 		<para>
-			Get the snapshot with the most recent CI build number at the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
+			Get the snapshot zip with the most recent CI build number from the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
 		</para>
 	</sect1>
 </chapter>
