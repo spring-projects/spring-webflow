@@ -19,6 +19,7 @@ Improvements
 * Strengthened contract for response-related methods in ExternalContext.  Specifically, calling any of the requestRedirect methods also now completes the response.
   If you attempt to complete a response more than once against an ExternalContext, an IllegalStateException is thrown.
 * Documented how to obtain Web Flow development branch snapshots using Maven, for both Maven Central compatible usage and SpringSource Enterprise Bundle Repository usage.
+* Updated OSGi Manifest imports to allow Web Flow 2.0.7 to work with Spring Framework 3.0.x in a OSGi environment
 
 Changes in version 2.0.6 (2009.03.12)
 -------------------------------------
