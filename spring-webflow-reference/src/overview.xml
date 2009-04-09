@@ -249,7 +249,7 @@
 <repository>
     <id>org.springsource.maven.snapshot</id>
     <name>SpringSource Maven Central-compatible Snapshot Repository</name>
-    <url>http://maven.springsource.org/snapshot</url>
+    <url>http://maven.springframework.org/snapshot</url>
 </repository>]]>
 			</programlisting>
 			<para>
@@ -259,19 +259,19 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-binding</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-js</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
 			<para>
@@ -281,7 +281,7 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-faces</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
 		</sect2>
@@ -304,19 +304,19 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
 			<para>
@@ -326,7 +326,7 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>x.y.z-SNAPSHOT</version>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
 		</sect2>
