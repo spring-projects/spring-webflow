@@ -13,6 +13,7 @@ Bug Fixes
 * Fixed bug where FlowHandlerMapping was not querying parent flow registries when determining if a flow should handle the current request (SWF-1095).
 * Fixed bug where flow was not redirecting after ViewState bind/validation error when not an Ajax request and redirectOnPause was set to true (SWF-1096).
 * Fixed bug where parent Model list could be shared by child in flow definition inheritance algorithm (SWF-1094).
+* Fixed bug where AjaxTilesView was not checking the AttributeType to determine potentially renderable Tiles Attributes (SWF-1092).
 
 Improvements
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
