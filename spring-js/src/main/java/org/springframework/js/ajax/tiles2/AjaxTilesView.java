@@ -30,6 +30,7 @@ import org.apache.tiles.Definition;
 import org.apache.tiles.Attribute.AttributeType;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.definition.DefinitionsFactoryException;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
@@ -73,8 +74,10 @@ public class AjaxTilesView extends TilesView {
 			String[] attrNames = getRenderFragments(model, request, response);
 			if (attrNames.length == 0) {
 				logger.warn("An Ajax request was detected, but no fragments were specified to be re-rendered.  "
-						+ "Falling back to full page render.");
+						+ "Falling back to full page render.  This can cause unpredictable results when processing "
+						+ "the ajax response on the client.");
 				super.renderMergedOutputModel(model, request, response);
+				return;
 			}
 
 			BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(servletContext);
@@ -127,13 +130,17 @@ public class AjaxTilesView extends TilesView {
 			while (i.hasNext()) {
 				Object key = i.next();
 				Attribute attr = (Attribute) compositeDefinition.getAttributes().get(key);
-				if (AttributeType.DEFINITION.equals(attr.getType()) || AttributeType.TEMPLATE.equals(attr.getType())
-						|| attr.getType() == null) {
-					Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
-							attr.getValue().toString(), requestContext);
+				AttributeType attrType = attr.getType() != null ? attr.getType() : detectType(container,
+						requestContext, attr);
+				if (AttributeType.DEFINITION.equals(attrType) || AttributeType.TEMPLATE.equals(attrType)) {
 					resultMap.put(key, attr);
-					if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
-						flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+					if (AttributeType.DEFINITION.equals(attrType)) {
+						Definition nestedDefinition = container.getDefinitionsFactory().getDefinition(
+								attr.getValue().toString(), requestContext);
+						if (nestedDefinition != null && nestedDefinition != compositeDefinition) {
+							flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request,
+									response);
+						}
 					}
 				}
 			}
@@ -147,5 +154,19 @@ public class AjaxTilesView extends TilesView {
 			Attribute attr = attributeContext.getAttribute(key);
 			resultMap.put(key, attr);
 		}
+	}
+
+	private AttributeType detectType(BasicTilesContainer container, TilesRequestContext requestContext, Attribute attr)
+			throws DefinitionsFactoryException {
+		if (attr.getValue() instanceof String) {
+			if (container.getDefinitionsFactory().getDefinition(attr.getValue().toString(), requestContext) != null) {
+				return AttributeType.DEFINITION;
+			} else if (attr.getValue().toString().startsWith("/")) {
+				return AttributeType.TEMPLATE;
+			} else {
+				return AttributeType.STRING;
+			}
+		}
+		return AttributeType.OBJECT;
 	}
 }

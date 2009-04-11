@@ -36,6 +36,8 @@
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime" />
 		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.6.A" conf="test->runtime" />
+		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.digester" rev="1.8.0" conf="test->runtime"/>
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test->runtime"/>
 		
 	</dependencies>
 
