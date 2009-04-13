@@ -97,24 +97,27 @@ public class JsfView implements View {
 		return requestContext.getRequestParameters().size() > 1;
 	}
 
+	/*
+	 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
+	 * INVOKE_APPLICATION.
+	 */
 	public void processUserEvent() {
-		/*
-		 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
-		 * INVOKE_APPLICATION.
-		 */
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		try {
-			// TODO - render response / response complete check
-			facesLifecycle.execute(facesContext);
+			// Must respect these flags in case user set them during RESTORE_VIEW phase
+			if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
+				facesLifecycle.execute(facesContext);
+			}
 		} finally {
 			facesContext.release();
 		}
 	}
 
 	public Object getUserEventState() {
-		// TODO - return view root holder
-		return null;
+		// Set the temporary UIViewRoot state in Flash for the redirect, regardless of whether the lifecycle
+		// executed or not (i.e., it's still necessary when starting a flow and rendering a new view instance)
+		return new ViewRootHolder(getViewRoot());
 	}
 
 	public boolean hasFlowEvent() {
@@ -134,5 +137,4 @@ public class JsfView implements View {
 	private String getEventId() {
 		return (String) requestContext.getExternalContext().getRequestMap().get(EVENT_KEY);
 	}
-
 }

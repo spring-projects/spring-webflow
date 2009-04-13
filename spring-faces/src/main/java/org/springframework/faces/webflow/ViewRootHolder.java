@@ -24,8 +24,6 @@ import javax.faces.component.UIViewRoot;
  */
 class ViewRootHolder {
 
-	static final String VIEW_ROOT_HOLDER_KEY = "flowViewRootHolder";
-
 	private UIViewRoot viewRoot;
 
 	public ViewRootHolder(UIViewRoot viewRoot) {

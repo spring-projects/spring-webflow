@@ -28,6 +28,7 @@ import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
 
 /**
  * Simple delegating {@link ViewHandler} implementation that provides JSF Form's with the correct FlowExecution URL,
@@ -120,7 +121,7 @@ public class FlowViewHandler extends ViewHandler {
 
 	private UIViewRoot restoreFlowView(FacesContext facesContext, String resourcePath) {
 		RequestContext context = RequestContextHolder.getRequestContext();
-		ViewRootHolder holder = (ViewRootHolder) context.getFlashScope().get(ViewRootHolder.VIEW_ROOT_HOLDER_KEY);
+		ViewRootHolder holder = (ViewRootHolder) context.getFlashScope().get(View.USER_EVENT_STATE_ATTRIBUTE);
 		if (holder != null && holder.getViewRoot().getViewId().equals(resourcePath)) {
 			return holder.getViewRoot();
 		} else {

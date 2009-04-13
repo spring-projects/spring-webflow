@@ -24,6 +24,7 @@ import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
+import org.springframework.webflow.test.MockParameterMap;
 
 public class JsfViewTests extends TestCase {
 
@@ -126,12 +127,10 @@ public class JsfViewTests extends TestCase {
 	/**
 	 * View already exists in view scope and must be restored and the lifecycle executed, no event signaled
 	 */
-	public final void testResume_Restored_NoEvent() {
+	public final void testProcessUserEvent_Restored_NoEvent() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
-		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -154,12 +153,10 @@ public class JsfViewTests extends TestCase {
 	 * Ajax Request - View already exists in view scope and must be restored and the lifecycle executed, no event
 	 * signaled
 	 */
-	public final void testGetView_Restore_Ajax_NoEvent() {
+	public final void testProcessUserEvent_Restored_Ajax_NoEvent() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
-		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -182,12 +179,10 @@ public class JsfViewTests extends TestCase {
 	/**
 	 * View already exists in view scope and must be restored and the lifecycle executed, an event is signaled
 	 */
-	public final void testGetView_Restore_EventSignaled() {
+	public final void testProcessUserEvent_Restored_EventSignaled() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				Boolean.FALSE);
-		EasyMock.expect(flashScope.put(EasyMock.matches(ViewRootHolder.VIEW_ROOT_HOLDER_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -205,6 +200,33 @@ public class JsfViewTests extends TestCase {
 		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
 		assertEquals("Event should be " + event, event, restoredView.getFlowEvent().getId());
 		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
+	}
+
+	public final void testUserEventQueued_GETRefresh() {
+
+		MockParameterMap requestParameterMap = new MockParameterMap();
+		requestParameterMap.put("execution", "e1s1");
+
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(requestParameterMap);
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+
+		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
+
+		assertFalse("No user ever should be queued", createdView.userEventQueued());
+	}
+
+	public final void testUserEventQueued_FormSubmitted() {
+
+		MockParameterMap requestParameterMap = new MockParameterMap();
+		requestParameterMap.put("execution", "e1s1");
+		requestParameterMap.put("javax.faces.ViewState", "e1s1");
+
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(requestParameterMap);
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+
+		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
+
+		assertTrue("User event should be queued", createdView.userEventQueued());
 	}
 
 	private class ExceptionalViewHandler extends MockViewHandler {
