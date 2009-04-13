@@ -143,7 +143,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
 
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
-		restoredView.setRestored(true);
 
 		restoredView.processUserEvent();
 
@@ -173,7 +172,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
 
 		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, context);
-		restoredView.setRestored(true);
 
 		restoredView.processUserEvent();
 
@@ -201,7 +199,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
 
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
-		restoredView.setRestored(true);
 
 		restoredView.processUserEvent();
 

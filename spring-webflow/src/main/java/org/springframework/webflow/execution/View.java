@@ -18,7 +18,7 @@ package org.springframework.webflow.execution;
 import java.io.IOException;
 
 /**
- * Allows the client to participate in flow execution. Encapsulates behavior to send the client an appropriate response
+ * Allows a client to participate in flow execution. Encapsulates behavior to send the client an appropriate response
  * and handle the resulting event once the client responds.
  * 
  * @author Keith Donald
@@ -38,20 +38,29 @@ public interface View {
 	public void render() throws IOException;
 
 	/**
-	 * Execute the view resume lifecycle. This typically results in a view model binding and validation.
+	 * True if there is a user event queued this view should process.
+	 * @return true if a user event is queued, false if not
+	 */
+	public boolean userEventQueued();
+
+	/**
+	 * Process the queued user event. Should only be called when {@link #userEventQueued()} returns true. After calling
+	 * this method, a flow event may be queued that should be raised in the Web Flow system.
+	 * @see #hasFlowEvent()
 	 */
 	public void processUserEvent();
 
 	/**
-	 * Returns true if an event occurred the flow system should handle.
+	 * True if a call to {@link #processUserEvent()} raised a flow event the current state should handle. Call
+	 * {@link #getFlowEvent()} to access the Event.
 	 * @return true if yes, false otherwise
 	 */
 	public boolean hasFlowEvent();
 
 	/**
-	 * Get the user event the flow should handle. Returns an event object when {@link #hasFlowEvent()} returns
-	 * true. Returns null otherwise
-	 * @return the event, or null if there is no event for the flow system to handle
+	 * Get the flow event the current state should handle. Returns an Event object when {@link #hasFlowEvent()} returns
+	 * true. Returns <code>null</code> otherwise.
+	 * @return the event, or <code>null</code> if there is no event for the flow system to handle
 	 */
 	public Event getFlowEvent();
 

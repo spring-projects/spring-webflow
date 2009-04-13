@@ -69,8 +69,12 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			}
 		}
 
-		public void processUserEvent() {
+		public boolean userEventQueued() {
 			determineEventId(requestContext);
+			return eventId != null;
+		}
+
+		public void processUserEvent() {
 		}
 
 		public boolean hasFlowEvent() {

@@ -47,8 +47,6 @@ public class JsfView implements View {
 
 	private String viewId;
 
-	private boolean restored;
-
 	/**
 	 * Creates a new JSF view.
 	 * @param viewRoot the view root
@@ -74,14 +72,6 @@ public class JsfView implements View {
 		this.viewRoot = viewRoot;
 	}
 
-	/**
-	 * Sets whether or not the view root for this view was restored from storage or is new.
-	 * @param restored true or false
-	 */
-	public void setRestored(boolean restored) {
-		this.restored = restored;
-	}
-
 	/*
 	 * Performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
@@ -103,6 +93,10 @@ public class JsfView implements View {
 		}
 	}
 
+	public boolean userEventQueued() {
+		return requestContext.getRequestParameters().size() > 1;
+	}
+
 	/*
 	 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
 	 * INVOKE_APPLICATION.
@@ -111,10 +105,11 @@ public class JsfView implements View {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		try {
-			if (restored && !facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
-				facesLifecycle.execute(facesContext);
+			facesLifecycle.execute(facesContext);
+			if (!hasFlowEvent()) {
+				requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY,
+						new ViewRootHolder(getViewRoot()));
 			}
-			requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY, new ViewRootHolder(getViewRoot()));
 		} finally {
 			facesContext.release();
 		}

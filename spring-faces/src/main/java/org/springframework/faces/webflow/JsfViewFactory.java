@@ -88,7 +88,6 @@ public class JsfViewFactory implements ViewFactory {
 				viewRoot.setLocale(context.getExternalContext().getLocale());
 				processTree(facesContext, viewRoot);
 				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
-				view.setRestored(true);
 			} else {
 				if (context.inViewState()) {
 					UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
@@ -99,7 +98,6 @@ public class JsfViewFactory implements ViewFactory {
 						facesContext.setViewRoot(viewRoot);
 						processTree(facesContext, viewRoot);
 						view = createJsfView(viewRoot, lifecycle, context);
-						view.setRestored(true);
 					} else {
 						if (logger.isDebugEnabled()) {
 							logger.debug("Creating UIViewRoot from '" + viewName + "'");
@@ -107,7 +105,6 @@ public class JsfViewFactory implements ViewFactory {
 						viewRoot = viewHandler.createView(facesContext, viewName);
 						facesContext.setViewRoot(viewRoot);
 						view = createJsfView(viewRoot, lifecycle, context);
-						view.setRestored(false);
 					}
 				} else {
 					if (logger.isDebugEnabled()) {
@@ -117,7 +114,6 @@ public class JsfViewFactory implements ViewFactory {
 					viewRoot.setTransient(true);
 					facesContext.setViewRoot(viewRoot);
 					view = createJsfView(viewRoot, lifecycle, context);
-					view.setRestored(false);
 				}
 			}
 			if (!facesContext.getRenderResponse()) {

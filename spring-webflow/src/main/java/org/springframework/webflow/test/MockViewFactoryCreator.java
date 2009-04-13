@@ -95,6 +95,10 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return viewId;
 		}
 
+		public boolean userEventQueued() {
+			return hasFlowEvent();
+		}
+
 		public void processUserEvent() {
 			// TODO - implement me as appropriate for a test environment
 		}

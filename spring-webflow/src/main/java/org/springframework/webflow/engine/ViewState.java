@@ -192,13 +192,16 @@ public class ViewState extends TransitionableState {
 	public void resume(RequestControlContext context) {
 		restoreVariables(context);
 		View view = viewFactory.getView(context);
-		view.processUserEvent();
-		if (view.hasFlowEvent()) {
-			Event event = view.getFlowEvent();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Event '" + event.getId() + "' returned from view " + view);
+		if (view.userEventQueued()) {
+			view.processUserEvent();
+			boolean stateExited = false;
+			if (view.hasFlowEvent()) {
+				Event event = view.getFlowEvent();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Event '" + event.getId() + "' returned from view " + view);
+				}
+				stateExited = context.handleEvent(event);
 			}
-			boolean stateExited = context.handleEvent(event);
 			if (!stateExited) {
 				ExternalContext externalContext = context.getExternalContext();
 				if (externalContext.isResponseComplete()) {
@@ -216,12 +219,7 @@ public class ViewState extends TransitionableState {
 				}
 			}
 		} else {
-			ExternalContext externalContext = context.getExternalContext();
-			if (externalContext.isResponseComplete()) {
-				clearFlashIfNotRedirecting(context);
-			} else {
-				renderIfAllowed(context, view);
-			}
+			renderIfAllowed(context, view);
 		}
 	}
 
