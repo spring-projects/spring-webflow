@@ -226,6 +226,9 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public boolean getRedirectOnPause() {
+		if (!getExternalContext().isResponseAllowed()) {
+			return true;
+		}
 		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
