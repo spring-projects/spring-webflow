@@ -111,6 +111,10 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return new Event(this, context.getRequestParameters().get("_eventId"));
 		}
 
+		public Object getUserEventState() {
+			return null;
+		}
+
 		public void render() throws IOException {
 			context.getExternalContext().getResponseWriter().write(viewId);
 		}

@@ -174,20 +174,17 @@ public class MockExternalContext implements ExternalContext {
 	}
 
 	public void requestFlowExecutionRedirect() throws IllegalStateException {
-		assertResponseAllowed();
 		flowExecutionRedirectRequested = true;
 		recordResponseComplete();
 	}
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
-		assertResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
 		flowDefinitionRedirectFlowInput = input;
 		recordResponseComplete();
 	}
 
 	public void requestExternalRedirect(String uri) throws IllegalStateException {
-		assertResponseAllowed();
 		externalRedirectUrl = uri;
 		recordResponseComplete();
 	}
@@ -435,8 +432,7 @@ public class MockExternalContext implements ExternalContext {
 				throw new IllegalStateException(
 						"A response is not allowed because an externalRedirect has already been requested on this ExternalContext");
 			}
-			throw new IllegalStateException(
-					"A response is not allowed because one has already been completed on this ExternalContext");
+			throw new IllegalStateException("A response is not allowed");
 		}
 	}
 

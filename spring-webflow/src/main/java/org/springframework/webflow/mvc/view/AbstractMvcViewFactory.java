@@ -90,7 +90,7 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 			mvcView.setFieldMarkerPrefix(fieldMarkerPrefix);
 		}
 		ViewActionStateHolder stateHolder = (ViewActionStateHolder) context.getFlashScope().get(
-				ViewActionStateHolder.KEY);
+				View.USER_EVENT_STATE_ATTRIBUTE);
 		if (stateHolder != null) {
 			mvcView.restoreState(stateHolder);
 		}

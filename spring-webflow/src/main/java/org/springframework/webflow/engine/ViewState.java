@@ -179,12 +179,8 @@ public class ViewState extends TransitionableState {
 					context.getExternalContext().requestRedirectInPopup();
 				}
 			} else {
-				if (externalContext.isResponseAllowed()) {
-					View view = viewFactory.getView(context);
-					render(context, view);
-				} else {
-					externalContext.recordResponseComplete();
-				}
+				View view = viewFactory.getView(context);
+				render(context, view);
 			}
 		}
 	}
@@ -193,33 +189,48 @@ public class ViewState extends TransitionableState {
 		restoreVariables(context);
 		View view = viewFactory.getView(context);
 		if (view.userEventQueued()) {
-			view.processUserEvent();
-			boolean stateExited = false;
-			if (view.hasFlowEvent()) {
-				Event event = view.getFlowEvent();
-				if (logger.isDebugEnabled()) {
-					logger.debug("Event '" + event.getId() + "' returned from view " + view);
-				}
-				stateExited = context.handleEvent(event);
-			}
+			boolean stateExited = handleEvent(view, context);
 			if (!stateExited) {
 				ExternalContext externalContext = context.getExternalContext();
 				if (externalContext.isResponseComplete()) {
 					clearFlashIfNotRedirecting(context);
 				} else {
 					if (externalContext.isAjaxRequest()) {
-						renderIfAllowed(context, view);
+						render(context, view);
 					} else {
 						if (shouldRedirect(context)) {
+							context.getFlashScope().put(View.USER_EVENT_STATE_ATTRIBUTE, view.getUserEventState());
 							externalContext.requestFlowExecutionRedirect();
 						} else {
-							renderIfAllowed(context, view);
+							render(context, view);
 						}
 					}
 				}
 			}
 		} else {
-			renderIfAllowed(context, view);
+			refresh(view, context);
+		}
+	}
+
+	private boolean handleEvent(View view, RequestControlContext context) {
+		view.processUserEvent();
+		if (view.hasFlowEvent()) {
+			Event event = view.getFlowEvent();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Event '" + event.getId() + "' returned from view " + view);
+			}
+			return context.handleEvent(event);
+		} else {
+			return false;
+		}
+	}
+
+	private void refresh(View view, RequestControlContext context) {
+		ExternalContext externalContext = context.getExternalContext();
+		if (externalContext.isResponseComplete()) {
+			clearFlash(context);
+		} else {
+			render(context, view);
 		}
 	}
 
@@ -247,15 +258,6 @@ public class ViewState extends TransitionableState {
 			return redirect.booleanValue();
 		} else {
 			return context.getRedirectOnPause();
-		}
-	}
-
-	private void renderIfAllowed(RequestControlContext context, View view) throws ViewRenderingException {
-		ExternalContext externalContext = context.getExternalContext();
-		if (externalContext.isResponseAllowed()) {
-			render(context, view);
-		} else {
-			externalContext.recordResponseComplete();
 		}
 	}
 

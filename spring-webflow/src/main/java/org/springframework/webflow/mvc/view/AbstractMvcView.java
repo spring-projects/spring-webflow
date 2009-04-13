@@ -89,6 +89,8 @@ public abstract class AbstractMvcView implements View {
 
 	private MessageCodesResolver messageCodesResolver;
 
+	private boolean userEventProcessed;
+
 	/**
 	 * Creates a new MVC view.
 	 * @param view the Spring MVC view to render
@@ -185,52 +187,56 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public boolean userEventQueued() {
-		eventId = determineEventId(requestContext);
-		return eventId != null;
+		return getEventId() != null;
 	}
 
 	public void processUserEvent() {
-		if (logger.isDebugEnabled()) {
-			logger.debug("User event '" + eventId + "' raised");
-		}
-		Object model = getModelObject();
-		if (model == null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("No model to bind to; done processing user event");
-			}
+		String eventId = getEventId();
+		if (eventId == null) {
 			return;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("Resolved model " + model);
+			logger.debug("Processing user event '" + eventId + "'");
 		}
-		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
-		if (shouldBind(model, transition)) {
-			mappingResults = bind(model);
-			if (hasErrors(mappingResults)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Model binding resulted in errors; adding error messages to context");
+		Object model = getModelObject();
+		if (model != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Resolved model " + model);
+			}
+			TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
+			if (shouldBind(model, transition)) {
+				mappingResults = bind(model);
+				if (hasErrors(mappingResults)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Model binding resulted in errors; adding error messages to context");
+					}
+					addErrorMessages(mappingResults);
 				}
-				addErrorMessages(mappingResults);
+				if (shouldValidate(model, transition)) {
+					validate(model);
+				}
 			}
-			if (shouldValidate(model, transition)) {
-				validate(model);
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No model to bind to; done processing user event");
 			}
 		}
-		if (mappingResults != null && hasErrors(mappingResults)) {
-			requestContext.getFlashScope().put(ViewActionStateHolder.KEY,
-					new ViewActionStateHolder(eventId, mappingResults));
-		}
+		userEventProcessed = true;
 	}
 
 	public boolean hasFlowEvent() {
-		return eventId != null && !requestContext.getMessageContext().hasErrorMessages();
+		return userEventProcessed && !requestContext.getMessageContext().hasErrorMessages();
 	}
 
 	public Event getFlowEvent() {
 		if (!hasFlowEvent()) {
 			return null;
 		}
-		return new Event(this, eventId, requestContext.getRequestParameters().asAttributeMap());
+		return new Event(this, getEventId(), requestContext.getRequestParameters().asAttributeMap());
+	}
+
+	public Object getUserEventState() {
+		return new ViewActionStateHolder(eventId, mappingResults);
 	}
 
 	public String toString() {
@@ -263,21 +269,14 @@ public abstract class AbstractMvcView implements View {
 	protected abstract void doRender(Map model) throws Exception;
 
 	/**
-	 * Obtain the user event from the current flow request. The default implementation returns the value of the request
-	 * parameter with name {@link #setEventIdParameterName(String) eventIdParameterName}. Subclasses may override.
-	 * @param context the current flow request context
-	 * @return the user event that occurred
-	 */
-	protected String determineEventId(RequestContext context) {
-		return WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
-	}
-
-	/**
 	 * Returns the id of the user event being processed.
 	 * @return the user event
 	 */
 	protected String getEventId() {
-		return eventId;
+		if (eventId == null) {
+			eventId = determineEventId(requestContext);
+		}
+		return this.eventId;
 	}
 
 	/**
@@ -301,6 +300,16 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected MappingResults getMappingResults() {
 		return mappingResults;
+	}
+
+	/**
+	 * Obtain the user event from the current flow request. The default implementation returns the value of the request
+	 * parameter with name {@link #setEventIdParameterName(String) eventIdParameterName}. Subclasses may override.
+	 * @param context the current flow request context
+	 * @return the user event that occurred
+	 */
+	protected String determineEventId(RequestContext context) {
+		return WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
 	}
 
 	// package private

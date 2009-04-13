@@ -118,6 +118,9 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	}
 
 	public boolean getRedirectOnPause() {
+		if (!getExternalContext().isResponseAllowed()) {
+			return true;
+		}
 		Boolean redirectOnPause = getMockFlowExecutionContext().getAttributes().getBoolean("alwaysRedirectOnPause");
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}

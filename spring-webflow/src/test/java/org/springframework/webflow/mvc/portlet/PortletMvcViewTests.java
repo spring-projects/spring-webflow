@@ -16,7 +16,6 @@ import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.web.servlet.ViewRendererServlet;
 import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
-import org.springframework.webflow.mvc.view.ViewActionStateHolder;
 import org.springframework.webflow.mvc.view.MvcViewTests.BindBean;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
@@ -61,9 +60,6 @@ public class PortletMvcViewTests extends TestCase {
 		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());
-		ViewActionStateHolder holder = (ViewActionStateHolder) context.getFlashScope().get(ViewActionStateHolder.KEY);
-		assertEquals("submit", holder.getEventId());
-		assertNotNull(holder.getMappingResults());
 	}
 
 }

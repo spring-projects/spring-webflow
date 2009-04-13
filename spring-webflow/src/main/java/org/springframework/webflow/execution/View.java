@@ -32,6 +32,11 @@ public interface View {
 	public static final String RENDER_FRAGMENTS_ATTRIBUTE = "flowRenderFragments";
 
 	/**
+	 * Well-known attribute name for storing the results of processing a user event
+	 */
+	public static final String USER_EVENT_STATE_ATTRIBUTE = "viewUserEventState";
+
+	/**
 	 * Render this view's content.
 	 * @throws IOException if an IO Exception occured rendering the view
 	 */
@@ -45,7 +50,7 @@ public interface View {
 
 	/**
 	 * Process the queued user event. Should only be called when {@link #userEventQueued()} returns true. After calling
-	 * this method, a flow event may be queued that should be raised in the Web Flow system.
+	 * this method, a flow event may be raised that should be handled in the Web Flow system.
 	 * @see #hasFlowEvent()
 	 */
 	public void processUserEvent();
@@ -63,5 +68,13 @@ public interface View {
 	 * @return the event, or <code>null</code> if there is no event for the flow system to handle
 	 */
 	public Event getFlowEvent();
+
+	/**
+	 * A memento holding the results of processing a user event. Used to allow transient view state such as binding and
+	 * validation errors to survive a flow execution redirect.
+	 * @return the user event state object, or null if no event state needs managing
+	 * @see #processUserEvent()
+	 */
+	public Object getUserEventState();
 
 }

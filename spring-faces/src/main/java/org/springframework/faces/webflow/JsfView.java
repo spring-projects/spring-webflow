@@ -97,22 +97,24 @@ public class JsfView implements View {
 		return requestContext.getRequestParameters().size() > 1;
 	}
 
-	/*
-	 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
-	 * INVOKE_APPLICATION.
-	 */
 	public void processUserEvent() {
+		/*
+		 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
+		 * INVOKE_APPLICATION.
+		 */
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
 		facesContext.setViewRoot(viewRoot);
 		try {
+			// TODO - render response / response complete check
 			facesLifecycle.execute(facesContext);
-			if (!hasFlowEvent()) {
-				requestContext.getFlashScope().put(ViewRootHolder.VIEW_ROOT_HOLDER_KEY,
-						new ViewRootHolder(getViewRoot()));
-			}
 		} finally {
 			facesContext.release();
 		}
+	}
+
+	public Object getUserEventState() {
+		// TODO - return view root holder
+		return null;
 	}
 
 	public boolean hasFlowEvent() {

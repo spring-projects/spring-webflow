@@ -58,6 +58,8 @@ public class ActionExecutingViewFactory implements ViewFactory {
 
 		private String eventId;
 
+		private boolean userEventProcessed;
+
 		private ActionExecutingView(Action action, RequestContext requestContext) {
 			this.action = action;
 			this.requestContext = requestContext;
@@ -70,15 +72,15 @@ public class ActionExecutingViewFactory implements ViewFactory {
 		}
 
 		public boolean userEventQueued() {
-			determineEventId(requestContext);
-			return eventId != null;
+			return getEventId() != null;
 		}
 
 		public void processUserEvent() {
+			userEventProcessed = true;
 		}
 
 		public boolean hasFlowEvent() {
-			return eventId != null;
+			return userEventProcessed && getEventId() != null;
 		}
 
 		public Event getFlowEvent() {
@@ -88,8 +90,19 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			return new Event(this, eventId);
 		}
 
-		private void determineEventId(RequestContext context) {
-			eventId = WebUtils.findParameterValue(context.getRequestParameters().asMap(), "_eventId");
+		public Object getUserEventState() {
+			return null;
+		}
+
+		private String getEventId() {
+			if (eventId == null) {
+				eventId = determineEventId(requestContext);
+			}
+			return this.eventId;
+		}
+
+		protected String determineEventId(RequestContext context) {
+			return WebUtils.findParameterValue(context.getRequestParameters().asMap(), "_eventId");
 		}
 	}
 }

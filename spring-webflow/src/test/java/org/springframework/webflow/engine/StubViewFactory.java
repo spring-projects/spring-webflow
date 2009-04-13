@@ -45,6 +45,10 @@ public class StubViewFactory implements ViewFactory {
 
 		}
 
+		public Object getUserEventState() {
+			return null;
+		}
+
 		public boolean hasFlowEvent() {
 			return context.getExternalContext().getRequestParameterMap().contains("_eventId");
 		}
@@ -52,5 +56,6 @@ public class StubViewFactory implements ViewFactory {
 		public Event getFlowEvent() {
 			return new Event(this, context.getExternalContext().getRequestParameterMap().get("_eventId"));
 		}
+
 	}
 }
