@@ -52,7 +52,7 @@ public class OutputModel extends AbstractMappingModel {
 	}
 
 	public Model createCopy() {
-		InputModel copy = new InputModel(getName(), getValue());
+		OutputModel copy = new OutputModel(getName(), getValue());
 		super.fillCopy(copy);
 		return copy;
 	}

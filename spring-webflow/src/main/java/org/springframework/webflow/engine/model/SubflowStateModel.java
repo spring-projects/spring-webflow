@@ -68,7 +68,7 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	}
 
 	public Model createCopy() {
-		final SubflowStateModel copy = new SubflowStateModel(getId(), subflow);
+		SubflowStateModel copy = new SubflowStateModel(getId(), subflow);
 		super.fillCopy(copy);
 		copy.setSubflowAttributeMapper(subflowAttributeMapper);
 		copy.setInputs(copyList(inputs));
