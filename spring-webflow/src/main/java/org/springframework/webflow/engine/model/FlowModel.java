@@ -35,8 +35,7 @@ import org.springframework.util.StringUtils;
  * <li>Instantiate a set of instance variables when started. (See {@link VarModel})
  * <li>Map input provided by callers that start it (See {@link InputModel})
  * <li>Return output to callers that end it. (See {@link OutputModel})
- * <li>Execute actions at start time and end time. (See {@link EvaluateModel}, {@link RenderModel} and
- * {@link SetModel})
+ * <li>Execute actions at start time and end time. (See {@link EvaluateModel}, {@link RenderModel} and {@link SetModel})
  * <li>Define transitions shared by all states. (See {@link TransitionModel})
  * <li>Handle exceptions thrown by during flow execution. (See {@link ExceptionHandlerModel})
  * <li>Import one or more local bean definition files defining custom flow artifacts (such as actions, exception
@@ -107,6 +106,31 @@ public class FlowModel extends AbstractModel {
 		setOnEndActions(merge(getOnEndActions(), flow.getOnEndActions(), false));
 		setExceptionHandlers(merge(getExceptionHandlers(), flow.getExceptionHandlers()));
 		setBeanImports(merge(getBeanImports(), flow.getBeanImports()));
+	}
+
+	public Model createCopy() {
+		FlowModel copy = new FlowModel();
+		copy.setAbstract(abztract);
+		copy.setParent(parent);
+		copy.setStartStateId(startStateId);
+		copy.setAttributes(copyList(attributes));
+		copy.setSecured((SecuredModel) copy(secured));
+		if (secured != null) {
+			copy.setSecured((SecuredModel) secured.createCopy());
+		}
+		if (persistenceContext != null) {
+			copy.setPersistenceContext((PersistenceContextModel) persistenceContext.createCopy());
+		}
+		copy.setVars(copyList(vars));
+		copy.setInputs(copyList(inputs));
+		copy.setOutputs(copyList(outputs));
+		copy.setOnStartActions(copyList(onStartActions));
+		copy.setStates(copyList(states));
+		copy.setGlobalTransitions(copyList(globalTransitions));
+		copy.setOnEndActions(copyList(onEndActions));
+		copy.setExceptionHandlers(copyList(exceptionHandlers));
+		copy.setBeanImports(copyList(beanImports));
+		return copy;
 	}
 
 	/**

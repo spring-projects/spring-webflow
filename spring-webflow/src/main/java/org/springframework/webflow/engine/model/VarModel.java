@@ -55,7 +55,11 @@ public class VarModel extends AbstractModel {
 		setClassName(merge(getClassName(), var.getClassName()));
 	}
 
-	/**
+    public Model createCopy() {
+        return new VarModel(name, className);
+    }
+
+    /**
 	 * @return the name
 	 */
 	public String getName() {

@@ -29,6 +29,12 @@ public class RenderModel extends AbstractActionModel {
 
 	private String fragments;
 
+	public Model createCopy() {
+		RenderModel copy = new RenderModel(fragments);
+		super.fillCopy(copy);
+		return copy;
+	}
+
 	/**
 	 * Create a render action model
 	 * @param fragments the fragments to render

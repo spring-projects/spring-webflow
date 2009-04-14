@@ -57,6 +57,12 @@ public class AttributeModel extends AbstractModel {
 		setType(merge(getType(), attribute.getType()));
 	}
 
+	public Model createCopy() {
+		AttributeModel copy = new AttributeModel(name, value);
+		copy.setType(type);
+		return copy;
+	}
+
 	/**
 	 * @return the name
 	 */

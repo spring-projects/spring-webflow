@@ -58,6 +58,12 @@ public class SecuredModel extends AbstractModel {
 		setMatch(merge(getMatch(), secured.getMatch()));
 	}
 
+	public Model createCopy() {
+		SecuredModel copy = new SecuredModel(attributes);
+		copy.setMatch(match);
+		return copy;
+	}
+
 	/**
 	 * @return the attributes
 	 */

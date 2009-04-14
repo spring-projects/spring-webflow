@@ -56,6 +56,14 @@ public class DecisionStateModel extends AbstractStateModel {
 		setOnExitActions(merge(getOnExitActions(), state.getOnExitActions(), false));
 	}
 
+	public Model createCopy() {
+		DecisionStateModel copy = new DecisionStateModel(getId());
+		super.fillCopy(copy);
+		copy.setIfs(copyList(ifs));
+		copy.setOnExitActions(copyList(onExitActions));
+		return copy;
+	}
+
 	/**
 	 * @return the ifs
 	 */

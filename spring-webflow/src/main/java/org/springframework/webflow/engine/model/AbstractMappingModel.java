@@ -32,6 +32,14 @@ public abstract class AbstractMappingModel extends AbstractModel {
 
 	private String required;
 
+	protected AbstractMappingModel fillCopy(AbstractMappingModel copy) {
+		copy.setName(name);
+		copy.setValue(value);
+		copy.setType(type);
+		copy.setRequired(required);
+		return copy;
+	}
+
 	/**
 	 * @return the name
 	 */

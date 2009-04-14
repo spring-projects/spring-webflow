@@ -59,6 +59,12 @@ public class IfModel extends AbstractModel {
 		setElse(merge(getElse(), conditional.getElse()));
 	}
 
+	public Model createCopy() {
+		IfModel copy = new IfModel(test, then);
+		copy.setElse(elze);
+		return copy;
+	}
+
 	/**
 	 * @return the test
 	 */

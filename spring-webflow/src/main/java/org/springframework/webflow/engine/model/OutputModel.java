@@ -51,4 +51,10 @@ public class OutputModel extends AbstractMappingModel {
 		setRequired(merge(getRequired(), output.getRequired()));
 	}
 
+	public Model createCopy() {
+		InputModel copy = new InputModel(getName(), getValue());
+		super.fillCopy(copy);
+		return copy;
+	}
+
 }

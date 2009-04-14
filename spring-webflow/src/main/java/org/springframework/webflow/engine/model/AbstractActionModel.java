@@ -42,6 +42,10 @@ public abstract class AbstractActionModel extends AbstractModel {
 		// not mergeable
 	}
 
+    protected void fillCopy(final AbstractActionModel copy) {
+        copy.setOutputs(copyList(attributes));
+    }
+
 	/**
 	 * @return the attributes
 	 */

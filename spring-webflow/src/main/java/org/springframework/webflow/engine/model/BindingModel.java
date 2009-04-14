@@ -56,7 +56,11 @@ public class BindingModel extends AbstractModel {
 		setRequired(merge(getRequired(), binding.getRequired()));
 	}
 
-	public String getProperty() {
+    public Model createCopy() {
+        return new BindingModel(property, converter, required);
+    }
+
+    public String getProperty() {
 		return property;
 	}
 

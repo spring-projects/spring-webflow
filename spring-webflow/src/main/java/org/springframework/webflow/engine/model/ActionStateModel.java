@@ -55,6 +55,13 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 		setActions(merge(getActions(), state.getActions(), false));
 	}
 
+	public Model createCopy() {
+		ActionStateModel copy = new ActionStateModel(getId());
+		super.fillCopy(copy);
+		copy.setActions(copyList(actions));
+		return copy;
+	}
+
 	/**
 	 * @return the actions
 	 */

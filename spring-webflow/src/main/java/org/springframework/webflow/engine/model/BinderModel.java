@@ -42,4 +42,9 @@ public class BinderModel extends AbstractModel {
 		setBindings(merge(getBindings(), binder.getBindings()));
 	}
 
+	public Model createCopy() {
+		BinderModel copy = new BinderModel();
+		copy.setBindings(copyList(bindings));
+		return copy;
+	}
 }

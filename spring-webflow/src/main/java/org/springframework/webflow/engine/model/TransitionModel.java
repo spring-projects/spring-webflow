@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.engine.model;
 
-import java.util.LinkedList;
-
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.LinkedList;
 
 /**
  * Model support for transitions.

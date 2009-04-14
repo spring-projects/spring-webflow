@@ -59,7 +59,11 @@ public abstract class AbstractModel implements Model {
 	 */
 	protected Model merge(Model child, Model parent) {
 		if (child == null) {
-			return parent;
+			if (parent == null) {
+				return null;
+			} else {
+				return parent.createCopy();
+			}
 		} else if (parent == null) {
 			return child;
 		} else {
@@ -93,7 +97,7 @@ public abstract class AbstractModel implements Model {
 			if (parent == null) {
 				return null;
 			} else {
-				return new LinkedList(parent);
+				return copyList(parent);
 			}
 		} else if (parent == null) {
 			return child;
@@ -114,14 +118,33 @@ public abstract class AbstractModel implements Model {
 				}
 				if (!matchFound) {
 					if (addAtEnd) {
-						child.addLast(parentElement);
+						child.addLast(parentElement.createCopy());
 					} else {
-						child.addFirst(parentElement);
+						child.addFirst(parentElement.createCopy());
 					}
 				}
 			}
 			return child;
 		}
+	}
+
+	protected Model copy(Model model) {
+		if (model == null) {
+			return null;
+		}
+		return model.createCopy();
+	}
+
+	protected LinkedList copyList(LinkedList list) {
+		if (list == null) {
+			return null;
+		}
+		LinkedList copy = new LinkedList();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Model model = (Model) it.next();
+			copy.add(model.createCopy());
+		}
+		return copy;
 	}
 
 }

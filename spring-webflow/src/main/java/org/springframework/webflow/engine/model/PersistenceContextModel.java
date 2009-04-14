@@ -42,4 +42,9 @@ public class PersistenceContextModel extends AbstractModel {
 
 	}
 
+    public Model createCopy() {
+        return new PersistenceContextModel();
+    }
+
+
 }

@@ -60,6 +60,15 @@ public class EndStateModel extends AbstractStateModel {
 		setOutputs(merge(getOutputs(), state.getOutputs(), false));
 	}
 
+	public Model createCopy() {
+		EndStateModel copy = new EndStateModel(getId());
+		super.fillCopy(copy);
+		copy.setView(view);
+		copy.setCommit(commit);
+		copy.setOutputs(outputs);
+		return copy;
+	}
+
 	/**
 	 * @return the view
 	 */

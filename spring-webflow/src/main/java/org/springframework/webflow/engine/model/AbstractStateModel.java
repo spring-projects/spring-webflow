@@ -38,6 +38,15 @@ public abstract class AbstractStateModel extends AbstractModel {
 
 	private LinkedList exceptionHandlers;
 
+	protected void fillCopy(AbstractStateModel copy) {
+		copy.setId(id);
+		copy.setParent(parent);
+		copy.setAttributes(copyList(attributes));
+		copy.setSecured((SecuredModel) copy(secured));
+		copy.setOnEntryActions(copyList(onEntryActions));
+		copy.setExceptionHandlers(copyList(exceptionHandlers));
+	}
+
 	/**
 	 * @return the id
 	 */

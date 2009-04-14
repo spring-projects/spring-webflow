@@ -40,6 +40,14 @@ public class EvaluateModel extends AbstractActionModel {
 		setExpression(expression);
 	}
 
+	public Model createCopy() {
+		EvaluateModel copy = new EvaluateModel(expression);
+		super.fillCopy(copy);
+		copy.setResult(result);
+		copy.setResultType(resultType);
+		return copy;
+	}
+
 	/**
 	 * @return the expression
 	 */

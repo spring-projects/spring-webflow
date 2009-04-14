@@ -43,7 +43,11 @@ public class ExceptionHandlerModel extends AbstractModel {
 	public void merge(Model model) {
 	}
 
-	public String getBean() {
+    public Model createCopy() {
+        return new ExceptionHandlerModel(bean);
+    }
+
+    public String getBean() {
 		return bean;
 	}
 

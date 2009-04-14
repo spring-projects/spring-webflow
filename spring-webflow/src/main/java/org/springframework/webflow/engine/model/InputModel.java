@@ -51,4 +51,9 @@ public class InputModel extends AbstractMappingModel {
 		setRequired(merge(getRequired(), input.getRequired()));
 	}
 
+	public Model createCopy() {
+		InputModel copy = new InputModel(getName(), getValue());
+		super.fillCopy(copy);
+		return copy;
+	}
 }

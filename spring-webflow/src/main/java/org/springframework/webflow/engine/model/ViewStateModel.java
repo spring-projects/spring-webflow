@@ -75,6 +75,23 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
 	}
 
+	public Model createCopy() {
+		ViewStateModel copy = new ViewStateModel(getId());
+		super.fillCopy(copy);
+		copy.setView(view);
+		copy.setRedirect(redirect);
+		copy.setPopup(popup);
+		copy.setModel(model);
+		copy.setVars(copyList(vars));
+		if (binder != null) {
+			copy.setBinder((BinderModel) binder.createCopy());
+		} else {
+			copy.setBinder(null);
+		}
+		copy.setOnRenderActions(copyList(onRenderActions));
+		return copy;
+	}
+
 	/**
 	 * @return the view
 	 */
