@@ -115,8 +115,7 @@ public class JsfView implements View {
 	}
 
 	public Object getUserEventState() {
-		// Set the temporary UIViewRoot state in Flash for the redirect, regardless of whether the lifecycle
-		// executed or not (i.e., it's still necessary when starting a flow and rendering a new view instance)
+		// Set the temporary UIViewRoot state so that it will be available across the redirect
 		return new ViewRootHolder(getViewRoot());
 	}
 

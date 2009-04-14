@@ -212,7 +212,7 @@ public class JsfViewTests extends TestCase {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
 
-		assertFalse("No user ever should be queued", createdView.userEventQueued());
+		assertFalse("No user event should be queued", createdView.userEventQueued());
 	}
 
 	public final void testUserEventQueued_FormSubmitted() {
