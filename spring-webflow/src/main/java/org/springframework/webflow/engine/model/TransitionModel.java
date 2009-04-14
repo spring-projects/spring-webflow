@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.LinkedList;
 
 /**
  * Model support for transitions.
@@ -74,6 +74,20 @@ public class TransitionModel extends AbstractModel {
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
 		setActions(merge(getActions(), transition.getActions(), false));
+	}
+
+	public Model createCopy() {
+		TransitionModel copy = new TransitionModel();
+		copy.setOn(on);
+		copy.setOnException(onException);
+		copy.setTo(to);
+		copy.setBind(bind);
+		copy.setValidate(validate);
+		copy.setHistory(history);
+		copy.setAttributes(copyList(attributes));
+		copy.setSecured((SecuredModel) copy(secured));
+		copy.setActions(copyList(actions));
+		return copy;
 	}
 
 	/**

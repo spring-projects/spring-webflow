@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.LinkedList;
 
 /**
  * Model support for subflow states.
@@ -40,7 +40,7 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	 * @param subflow the identifier of the flow to launch as a subflow
 	 */
 	public SubflowStateModel(String id, String subflow) {
-		setId(id);
+		super(id);
 		setSubflow(subflow);
 	}
 
@@ -67,14 +67,14 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 		setOutputs(merge(getOutputs(), state.getOutputs()));
 	}
 
-    public Model createCopy() {
-        final SubflowStateModel copy = new SubflowStateModel(getId(), subflow);
-        super.fillCopy(copy);
-        copy.setSubflowAttributeMapper(subflowAttributeMapper);
-        copy.setInputs(copyList(inputs));
-        copy.setOutputs(copyList(outputs));
-        return copy;
-    }
+	public Model createCopy() {
+		final SubflowStateModel copy = new SubflowStateModel(getId(), subflow);
+		super.fillCopy(copy);
+		copy.setSubflowAttributeMapper(subflowAttributeMapper);
+		copy.setInputs(copyList(inputs));
+		copy.setOutputs(copyList(outputs));
+		return copy;
+	}
 
 	/**
 	 * @return the subflow

@@ -115,12 +115,7 @@ public class FlowModel extends AbstractModel {
 		copy.setStartStateId(startStateId);
 		copy.setAttributes(copyList(attributes));
 		copy.setSecured((SecuredModel) copy(secured));
-		if (secured != null) {
-			copy.setSecured((SecuredModel) secured.createCopy());
-		}
-		if (persistenceContext != null) {
-			copy.setPersistenceContext((PersistenceContextModel) persistenceContext.createCopy());
-		}
+		copy.setPersistenceContext((PersistenceContextModel) copy(persistenceContext));
 		copy.setVars(copyList(vars));
 		copy.setInputs(copyList(inputs));
 		copy.setOutputs(copyList(outputs));

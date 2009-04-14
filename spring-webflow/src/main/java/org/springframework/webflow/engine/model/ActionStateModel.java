@@ -32,7 +32,7 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 	 * @param id the state identifier
 	 */
 	public ActionStateModel(String id) {
-		setId(id);
+		super(id);
 	}
 
 	public boolean isMergeableWith(Model model) {

@@ -46,7 +46,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	 * @param id the identifier of the state
 	 */
 	public ViewStateModel(String id) {
-		setId(id);
+		super(id);
 	}
 
 	public boolean isMergeableWith(Model model) {
@@ -83,11 +83,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		copy.setPopup(popup);
 		copy.setModel(model);
 		copy.setVars(copyList(vars));
-		if (binder != null) {
-			copy.setBinder((BinderModel) binder.createCopy());
-		} else {
-			copy.setBinder(null);
-		}
+		copy.setBinder((BinderModel) copy(binder));
 		copy.setOnRenderActions(copyList(onRenderActions));
 		return copy;
 	}

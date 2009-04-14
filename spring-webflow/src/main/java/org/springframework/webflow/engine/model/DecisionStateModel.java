@@ -34,7 +34,7 @@ public class DecisionStateModel extends AbstractStateModel {
 	 * @param id the state identifier
 	 */
 	public DecisionStateModel(String id) {
-		setId(id);
+		super(id);
 	}
 
 	public boolean isMergeableWith(Model model) {

@@ -28,6 +28,10 @@ public abstract class AbstractTransitionableStateModel extends AbstractStateMode
 
 	private LinkedList onExitActions;
 
+	public AbstractTransitionableStateModel(String id) {
+		super(id);
+	}
+
 	protected void fillCopy(final AbstractTransitionableStateModel copy) {
 		super.fillCopy(copy);
 		copy.setTransitions(copyList(transitions));

@@ -37,7 +37,7 @@ public class EndStateModel extends AbstractStateModel {
 	 * @param id the state identifier
 	 */
 	public EndStateModel(String id) {
-		setId(id);
+		super(id);
 	}
 
 	public boolean isMergeableWith(Model model) {
