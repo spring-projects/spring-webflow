@@ -45,7 +45,7 @@ import org.springframework.webflow.execution.FlowExecution;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements Externalizable {
+public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot implements Externalizable {
 
 	private byte[] flowExecutionData;
 
