@@ -14,8 +14,8 @@ import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoun
 public interface FlowExecutionSnapshotGroup {
 
 	/**
-	 * Returns the snapshot with the provided <code>id</code>, or <code>null</code> if no such snapshot exists with
-	 * that id.
+	 * Returns the snapshot with the provided <code>id</code>, or <code>null</code> if no such snapshot exists with that
+	 * id.
 	 * @param snapshotId the snapshot id
 	 * @return the continuation
 	 * @throws SnapshotNotFoundException if the id does not match a continuation in this group
@@ -53,5 +53,11 @@ public interface FlowExecutionSnapshotGroup {
 	 * Returns the count of snapshots in this group.
 	 */
 	public int getSnapshotCount();
+
+	/**
+	 * Gets the next snapshot id for new snapshot to add to this group.
+	 * @return the next snapshot id
+	 */
+	public Serializable nextSnapshotId();
 
 }

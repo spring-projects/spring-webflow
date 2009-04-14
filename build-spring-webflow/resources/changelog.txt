@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.7 (2009.04.09)
+Changes in version 2.0.7 (2009.04.16)
 -------------------------------------
 Bug Fixes
 * Fixed several issues with WebFlowMessageCodesResolver algorithm, including a JDK 1.4 compatibility issue (SWF-1064)
@@ -15,6 +15,7 @@ Bug Fixes
 * Fixed bug where parent Model list could be shared by child in flow definition inheritance algorithm (SWF-1094).
 * Fixed bug where AjaxTilesView was not checking the AttributeType to determine potentially renderable Tiles Attributes (SWF-1092).
 * Made FlowExecutionSnapshotGroup public for serialization reasons
+* Fixed bug where a flow execution snapshot id was not always incremented, which could lead to collisions between multiple windows sharing the same execution (SWF-1098).
 
 Improvements
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)

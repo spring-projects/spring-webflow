@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.execution.repository.impl;
 
+import java.io.Serializable;
+
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.execution.FlowExecution;
@@ -34,16 +36,16 @@ import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoun
  * <p>
  * This repository is responsible for:
  * <ul>
- * <li>Beginning a new {@link Conversation} when a {@link FlowExecution} is assigned a persistent key. Each
- * conversation is assigned a unique conversation id which forms one part of the flow execution key.
- * <li>Taking {@link FlowExecutionSnapshot execution snapshots} to persist flow execution state. A snapshot is a copy
- * of the execution created at a point in time <i>that can be restored and continued</i>. Snapshotting supports users
- * going back in their browser to continue their flow execution from a previoius point.
+ * <li>Beginning a new {@link Conversation} when a {@link FlowExecution} is assigned a persistent key. Each conversation
+ * is assigned a unique conversation id which forms one part of the flow execution key.
+ * <li>Taking {@link FlowExecutionSnapshot execution snapshots} to persist flow execution state. A snapshot is a copy of
+ * the execution created at a point in time <i>that can be restored and continued</i>. Snapshotting supports users going
+ * back in their browser to continue their flow execution from a previoius point.
  * <li>Ending conversations when flow executions end.
  * </ul>
  * <p>
- * This repository implementation also provides support for <i>execution invalidation after completion</i>, where once
- * a logical flow execution completes, it and all of its snapshots are removed. This cleans up memory and prevents the
+ * This repository implementation also provides support for <i>execution invalidation after completion</i>, where once a
+ * logical flow execution completes, it and all of its snapshots are removed. This cleans up memory and prevents the
  * possibility of duplicate submission after completion.
  * 
  * @author Keith Donald
@@ -86,6 +88,12 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 	 */
 	public void setMaxSnapshots(int maxSnapshots) {
 		this.maxSnapshots = maxSnapshots;
+	}
+
+	// supporting flow execution key factory impl
+
+	protected Serializable nextSnapshotId(Serializable executionId) {
+		return getSnapshotGroup(getConversation(executionId)).nextSnapshotId();
 	}
 
 	// implementing flow execution repository

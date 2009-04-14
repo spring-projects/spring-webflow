@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.springframework.core.JdkVersion;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
@@ -43,9 +44,14 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	private LinkedList snapshotIds = new LinkedList();
 
 	/**
-	 * The maximum number of snapshots allowed in this group.
+	 * The maximum number of snapshots allowed in this group. -1 indicates no max limit.
 	 */
 	private int maxSnapshots = -1;
+
+	/**
+	 * The snapshot id sequence ensuring unique snapshot ids within this group; snapshot ids start at 1.
+	 */
+	private int snapshotIdSequence = 1;
 
 	/**
 	 * Returns the maximum number of snapshots allowed in this group.
@@ -101,6 +107,17 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 
 	public int getSnapshotCount() {
 		return snapshotIds.size();
+	}
+
+	public Serializable nextSnapshotId() {
+		Integer nextSnapshotId;
+		if (JdkVersion.isAtLeastJava15()) {
+			nextSnapshotId = Integer.valueOf(snapshotIdSequence);
+		} else {
+			nextSnapshotId = new Integer(snapshotIdSequence);
+		}
+		snapshotIdSequence++;
+		return nextSnapshotId;
 	}
 
 	/**

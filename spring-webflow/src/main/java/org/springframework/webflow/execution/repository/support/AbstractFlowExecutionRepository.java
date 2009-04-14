@@ -19,7 +19,6 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.conversation.Conversation;
@@ -56,8 +55,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	 * Logger, usable in subclasses
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
-
-	private static final Integer ONE = new Integer(1);
 
 	private ConversationManager conversationManager;
 
@@ -97,11 +94,17 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	// implementing flow execution key factory
 
 	public FlowExecutionKey getKey(FlowExecution execution) {
-		if (execution.getKey() == null) {
+		CompositeFlowExecutionKey key = (CompositeFlowExecutionKey) execution.getKey();
+		if (key == null) {
 			Conversation conversation = beginConversation(execution);
-			return new CompositeFlowExecutionKey(conversation.getId(), ONE);
+			ConversationId executionId = conversation.getId();
+			return new CompositeFlowExecutionKey(executionId, nextSnapshotId(executionId));
 		} else {
-			return getNextKey(execution);
+			if (alwaysGenerateNewNextKey) {
+				return new CompositeFlowExecutionKey(key.getExecutionId(), nextSnapshotId(key.getExecutionId()));
+			} else {
+				return execution.getKey();
+			}
 		}
 	}
 
@@ -122,12 +125,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		return new ConversationBackedFlowExecutionLock(getConversation(key));
 	}
 
-	// abstract repository methods to be overridden by subclasses
-
-	public abstract FlowExecution getFlowExecution(FlowExecutionKey key) throws FlowExecutionRepositoryException;
-
-	public abstract void putFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
-
 	public void removeFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException {
 		assertKeySet(flowExecution);
 		if (logger.isDebugEnabled()) {
@@ -136,11 +133,24 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		endConversation(flowExecution);
 	}
 
+	// abstract repository methods to be overridden by subclasses
+
+	/**
+	 * The next snapshot id to use for a {@link FlowExecution} instance. Called when {@link #getKey(FlowExecution)
+	 * getting a flow execution key}.
+	 * @return the id of the flow execution
+	 */
+	protected abstract Serializable nextSnapshotId(Serializable executionId);
+
+	public abstract FlowExecution getFlowExecution(FlowExecutionKey key) throws FlowExecutionRepositoryException;
+
+	public abstract void putFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
+
 	// hooks for use in subclasses
 
 	/**
-	 * Factory method that maps a new flow execution to a descriptive
-	 * {@link ConversationParameters conversation parameters} object.
+	 * Factory method that maps a new flow execution to a descriptive {@link ConversationParameters conversation
+	 * parameters} object.
 	 * @param flowExecution the new flow execution
 	 * @return the conversation parameters object to pass to the conversation manager when the conversation is started
 	 */
@@ -150,33 +160,27 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 	}
 
 	/**
-	 * Gets the next key to assign to the flow execution.
-	 * @param execution
-	 * @return the next flow execution
-	 */
-	protected FlowExecutionKey getNextKey(FlowExecution execution) {
-		if (alwaysGenerateNewNextKey) {
-			CompositeFlowExecutionKey currentKey = (CompositeFlowExecutionKey) execution.getKey();
-			Integer currentSnapshotId = (Integer) currentKey.getSnapshotId();
-			return new CompositeFlowExecutionKey(currentKey.getExecutionId(), nextSnapshotId(currentSnapshotId));
-		} else {
-			return execution.getKey();
-		}
-	}
-
-	/**
-	 * Returns the conversation governing the execution of the {@link FlowExecution} with the provided key.
+	 * Returns the conversation governing the {@link FlowExecution} with the provided key.
 	 * @param key the flow execution key
 	 * @return the governing conversation
 	 * @throws NoSuchFlowExecutionException when the conversation for identified flow execution cannot be found
 	 */
 	protected Conversation getConversation(FlowExecutionKey key) throws NoSuchFlowExecutionException {
 		try {
-			ConversationId conversationId = (ConversationId) ((CompositeFlowExecutionKey) key).getExecutionId();
-			return conversationManager.getConversation(conversationId);
+			return getConversation(((CompositeFlowExecutionKey) key).getExecutionId());
 		} catch (NoSuchConversationException e) {
 			throw new NoSuchFlowExecutionException(key, e);
 		}
+	}
+
+	/**
+	 * Returns the conversation governing the logical flow execution with the given execution id.
+	 * @param executionId the flow execution id
+	 * @return the governing conversation
+	 * @throws NoSuchConversationException when the conversation for identified flow execution cannot be found
+	 */
+	protected Conversation getConversation(Serializable executionId) throws NoSuchConversationException {
+		return conversationManager.getConversation((ConversationId) executionId);
 	}
 
 	/**
@@ -198,14 +202,6 @@ public abstract class AbstractFlowExecutionRepository implements FlowExecutionRe
 		ConversationParameters parameters = createConversationParameters(execution);
 		Conversation conversation = conversationManager.beginConversation(parameters);
 		return conversation;
-	}
-
-	private Integer nextSnapshotId(Integer currentSnapshotId) {
-		if (JdkVersion.isAtLeastJava15()) {
-			return Integer.valueOf(currentSnapshotId.intValue() + 1);
-		} else {
-			return new Integer(currentSnapshotId.intValue() + 1);
-		}
 	}
 
 	private ConversationId parseExecutionId(String encodedId, String encodedKey)
