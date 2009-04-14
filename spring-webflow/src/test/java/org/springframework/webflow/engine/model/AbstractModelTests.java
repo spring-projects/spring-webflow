@@ -78,10 +78,10 @@ public class AbstractModelTests extends TestCase {
 		AbstractModel obj = new PersistenceContextModel();
 		LinkedList child = null;
 		LinkedList parent = new LinkedList();
-		parent.add("2");
+		parent.add(new SecuredModel("2"));
 		LinkedList result = obj.merge(child, parent);
 		assertEquals(1, result.size());
-		assertEquals("2", result.get(0));
+		assertEquals("2", ((SecuredModel) result.get(0)).getAttributes());
 	}
 
 	public void testListMergeNulls() {
