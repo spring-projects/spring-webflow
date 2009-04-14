@@ -87,10 +87,9 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 		}
 	}
 
-	public void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot)
-			throws SnapshotNotFoundException {
+	public void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot) {
 		if (!snapshots.containsKey(snapshotId)) {
-			throw new SnapshotNotFoundException(snapshotId);
+			return;
 		}
 		snapshots.put(snapshotId, snapshot);
 	}

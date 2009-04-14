@@ -30,22 +30,20 @@ public interface FlowExecutionSnapshotGroup {
 	public void addSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
 
 	/**
-	 * Update the snapshot with the given id.
+	 * Update the snapshot with the given id. Does nothing if no snapshot has been added with the id provided.
 	 * @param snapshotId the snapshot id
 	 * @param snapshot the new snapshot
-	 * @throws SnapshotNotFoundException if there was no previous snapshot to update
 	 */
-	public void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot)
-			throws SnapshotNotFoundException;
+	public void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
 
 	/**
-	 * Remove the snapshot with the given id.
+	 * Remove the snapshot with the given id. Does nothing if no snapshot has been added with the id provided.
 	 * @param snapshotId the continuation id
 	 */
 	public void removeSnapshot(Serializable snapshotId);
 
 	/**
-	 * Remove all snapshots in this group.
+	 * Remove all snapshots in this group. Does nothing if no snapshots have been added to this group.
 	 */
 	public void removeAllSnapshots();
 

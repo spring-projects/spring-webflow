@@ -132,17 +132,27 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 
 	public void updateFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
+		if (key == null) {
+			return;
+		}
 		Conversation conversation = getConversation(key);
 		getSnapshotGroup(conversation).updateSnapshot(getSnapshotId(key), snapshot(execution));
 	}
 
 	public void removeFlowExecutionSnapshot(FlowExecution execution) {
 		FlowExecutionKey key = execution.getKey();
+		if (key == null) {
+			return;
+		}
 		Conversation conversation = getConversation(key);
 		getSnapshotGroup(conversation).removeSnapshot(getSnapshotId(key));
 	}
 
 	public void removeAllFlowExecutionSnapshots(FlowExecution execution) {
+		FlowExecutionKey key = execution.getKey();
+		if (key == null) {
+			return;
+		}
 		Conversation conversation = getConversation(execution.getKey());
 		getSnapshotGroup(conversation).removeAllSnapshots();
 	}
