@@ -17,6 +17,8 @@ package org.springframework.webflow.execution;
 
 import java.io.IOException;
 
+import org.springframework.webflow.engine.ViewState;
+
 /**
  * Allows a client to participate in flow execution. Encapsulates behavior to send the client an appropriate response
  * and handle the resulting event once the client responds.
@@ -76,5 +78,12 @@ public interface View {
 	 * @see #processUserEvent()
 	 */
 	public Object getUserEventState();
+
+	/**
+	 * Saves any state associated with this view out to view scope. Called when exiting a {@link ViewState} to allow for
+	 * any changes applied after postback processing to be captured and reflected when going back. Can be a no-op for
+	 * views that store no view state.
+	 */
+	public void saveState();
 
 }

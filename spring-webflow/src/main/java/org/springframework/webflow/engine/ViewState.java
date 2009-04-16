@@ -182,6 +182,7 @@ public class ViewState extends TransitionableState {
 				}
 			} else {
 				View view = viewFactory.getView(context);
+				context.setCurrentView(view);
 				render(context, view);
 			}
 		}
@@ -190,6 +191,7 @@ public class ViewState extends TransitionableState {
 	public void resume(RequestControlContext context) {
 		restoreVariables(context);
 		View view = viewFactory.getView(context);
+		context.setCurrentView(view);
 		if (view.userEventQueued()) {
 			boolean stateExited = handleEvent(view, context);
 			if (!stateExited) {
@@ -244,6 +246,7 @@ public class ViewState extends TransitionableState {
 		super.exit(context);
 		updateHistory(context);
 		destroyVariables(context);
+		context.setCurrentView(null);
 	}
 
 	// internal helpers
@@ -306,6 +309,10 @@ public class ViewState extends TransitionableState {
 		TransitionDefinition transition = context.getCurrentTransition();
 		History history = (History) transition.getAttributes().get("history");
 		if (history == null || history == History.PRESERVE) {
+			View currentView = context.getCurrentView();
+			if (currentView != null) {
+				currentView.saveState();
+			}
 			context.updateCurrentFlowExecutionSnapshot();
 		} else if (history == History.DISCARD) {
 			context.removeCurrentFlowExecutionSnapshot();

@@ -95,12 +95,20 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return viewId;
 		}
 
+		public void render() throws IOException {
+			context.getExternalContext().getResponseWriter().write(viewId);
+		}
+
 		public boolean userEventQueued() {
 			return hasFlowEvent();
 		}
 
 		public void processUserEvent() {
 			// TODO - implement me as appropriate for a test environment
+		}
+
+		public Object getUserEventState() {
+			return null;
 		}
 
 		public boolean hasFlowEvent() {
@@ -111,12 +119,8 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			return new Event(this, context.getRequestParameters().get("_eventId"));
 		}
 
-		public Object getUserEventState() {
-			return null;
-		}
+		public void saveState() {
 
-		public void render() throws IOException {
-			context.getExternalContext().getResponseWriter().write(viewId);
 		}
 
 		public String toString() {

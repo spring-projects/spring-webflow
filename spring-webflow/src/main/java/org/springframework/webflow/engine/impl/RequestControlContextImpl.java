@@ -82,6 +82,11 @@ class RequestControlContextImpl implements RequestControlContext {
 	private Transition currentTransition;
 
 	/**
+	 * The current view associated with this request context; initially null.
+	 */
+	private View currentView;
+
+	/**
 	 * Create a new request context.
 	 * @param flowExecution the owning flow execution
 	 * @param externalContext the external context that originated the flow execution request
@@ -157,6 +162,10 @@ class RequestControlContextImpl implements RequestControlContext {
 		return currentTransition;
 	}
 
+	public View getCurrentView() {
+		return currentView;
+	}
+
 	public MutableAttributeMap getAttributes() {
 		return attributes;
 	}
@@ -182,6 +191,10 @@ class RequestControlContextImpl implements RequestControlContext {
 
 	public FlowExecutionKey assignFlowExecutionKey() {
 		return flowExecution.assignKey();
+	}
+
+	public void setCurrentView(View currentView) {
+		this.currentView = currentView;
 	}
 
 	public void viewRendering(View view) {

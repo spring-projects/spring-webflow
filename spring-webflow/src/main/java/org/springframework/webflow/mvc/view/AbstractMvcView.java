@@ -224,6 +224,10 @@ public abstract class AbstractMvcView implements View {
 		userEventProcessed = true;
 	}
 
+	public Object getUserEventState() {
+		return new ViewActionStateHolder(eventId, userEventProcessed, mappingResults);
+	}
+
 	public boolean hasFlowEvent() {
 		return userEventProcessed && !requestContext.getMessageContext().hasErrorMessages();
 	}
@@ -235,8 +239,8 @@ public abstract class AbstractMvcView implements View {
 		return new Event(this, getEventId(), requestContext.getRequestParameters().asAttributeMap());
 	}
 
-	public Object getUserEventState() {
-		return new ViewActionStateHolder(eventId, userEventProcessed, mappingResults);
+	public void saveState() {
+
 	}
 
 	public String toString() {

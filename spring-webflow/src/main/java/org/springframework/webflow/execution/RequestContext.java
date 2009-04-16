@@ -186,6 +186,14 @@ public interface RequestContext {
 	public TransitionDefinition getCurrentTransition();
 
 	/**
+	 * Returns the current view in use; if not null, the view returned is about to be rendered, is rendering, is
+	 * processing a user event, or has finished user event processing and the current ViewState is exiting due to a
+	 * state transition. Returns <code>null</code> if the flow is not in a view state.
+	 * @return the current view, or <code>null</code> if the flow is not in a view state
+	 */
+	public View getCurrentView();
+
+	/**
 	 * Returns a context map for accessing attributes about the state of the current request. These attributes may be
 	 * used to influence flow execution behavior.
 	 * @return the current attributes of this request, or empty if none are set

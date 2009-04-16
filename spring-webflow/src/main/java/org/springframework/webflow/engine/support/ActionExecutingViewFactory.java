@@ -79,6 +79,10 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			userEventProcessed = true;
 		}
 
+		public Object getUserEventState() {
+			return null;
+		}
+
 		public boolean hasFlowEvent() {
 			return userEventProcessed && getEventId() != null;
 		}
@@ -90,8 +94,8 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			return new Event(this, eventId);
 		}
 
-		public Object getUserEventState() {
-			return null;
+		public void saveState() {
+
 		}
 
 		private String getEventId() {

@@ -33,10 +33,11 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.View;
 
 /**
- * Mock implementation of the <code>RequestContext</code> interface to facilitate standalone flow artifact (e.g.
- * action) unit tests.
+ * Mock implementation of the <code>RequestContext</code> interface to facilitate standalone flow artifact (e.g. action)
+ * unit tests.
  * 
  * @see org.springframework.webflow.execution.RequestContext
  * @see org.springframework.webflow.execution.Action
@@ -59,6 +60,8 @@ public class MockRequestContext implements RequestContext {
 	private Event currentEvent;
 
 	private Transition currentTransition;
+
+	private View currentView;
 
 	/**
 	 * Convenience constructor that creates a new mock request context with the following defaults:
@@ -176,6 +179,10 @@ public class MockRequestContext implements RequestContext {
 		return currentTransition;
 	}
 
+	public View getCurrentView() {
+		return currentView;
+	}
+
 	public MutableAttributeMap getAttributes() {
 		return attributes;
 	}
@@ -238,6 +245,14 @@ public class MockRequestContext implements RequestContext {
 	 */
 	public void setCurrentTransition(Transition transition) {
 		this.currentTransition = transition;
+	}
+
+	/**
+	 * Set the current view in this request context.
+	 * @param currentView the current view
+	 */
+	public void setCurrentView(View currentView) {
+		this.currentView = currentView;
 	}
 
 	/**

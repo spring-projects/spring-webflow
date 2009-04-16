@@ -60,13 +60,19 @@ public interface RequestControlContext extends RequestContext {
 	public FlowExecutionKey assignFlowExecutionKey();
 
 	/**
-	 * Called when a view is about to be rendered in the current view state.
+	 * Sets the current view.
+	 * @param view the current view, or null to mark the current view as <code>null</code>
+	 */
+	public void setCurrentView(View view);
+
+	/**
+	 * Called when the current view is about to be rendered in the current view state.
 	 * @param view the view to be rendered
 	 */
 	public void viewRendering(View view);
 
 	/**
-	 * Called when a view has completed rendering in the current view state.
+	 * Called when the current view has completed rendering in the current view state.
 	 * @param view the view that rendered
 	 */
 	public void viewRendered(View view);

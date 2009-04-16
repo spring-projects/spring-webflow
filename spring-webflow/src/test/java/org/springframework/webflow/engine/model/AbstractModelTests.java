@@ -52,6 +52,12 @@ public class AbstractModelTests extends TestCase {
 		assertEquals(null, obj.merge(child, parent));
 	}
 
+	public void testMergeModel() {
+		AttributeModel child = new AttributeModel("foo", "bar");
+		AttributeModel parent = new AttributeModel("foo", "baz");
+
+	}
+
 	public void testListMerge() {
 		AbstractModel obj = new PersistenceContextModel();
 		LinkedList child = new LinkedList();

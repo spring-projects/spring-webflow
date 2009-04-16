@@ -59,5 +59,9 @@ public class StubViewFactory implements ViewFactory {
 			return new Event(this, context.getExternalContext().getRequestParameterMap().get("_eventId"));
 		}
 
+		public void saveState() {
+
+		}
+
 	}
 }
