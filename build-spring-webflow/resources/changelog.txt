@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.7 (2009.04.16)
+Changes in version 2.0.7 (2009.04.17)
 -------------------------------------
 Bug Fixes
 * Fixed several issues with WebFlowMessageCodesResolver algorithm, including a JDK 1.4 compatibility issue (SWF-1064)
@@ -23,6 +23,8 @@ Bug Fixes
 Improvements
 * Added userEventQueued and getUserEventState methods to View SPI, which simplified ViewState and View object interaction.
   Custom View implementations will need to be updated to implement these new operations.  See View's API JavaDocs and ViewState's doEnter and resume implementations.
+* Added saveState method to View SPI, allowing stateful views to save out their component state to support going back after exiting a ViewState with history preserved.
+  Required by Spring Faces for stateful JSF views.
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
 * Strengthened contract for response-related methods in ExternalContext.  Specifically, calling any of the requestRedirect methods also now completes the response.
   If you attempt to complete a response more than once against an ExternalContext, an IllegalStateException is thrown.
