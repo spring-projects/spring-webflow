@@ -135,4 +135,18 @@ public class AbstractModelTests extends TestCase {
 		LinkedList result = obj.merge(child, parent);
 		assertEquals(null, result);
 	}
+
+	public void testCopyModel() {
+		AttributeModel model = new AttributeModel("foo", "bar");
+		FlowModel m = new FlowModel();
+		AttributeModel copy = (AttributeModel) m.copy(model);
+		assertEquals("foo", copy.getName());
+		assertEquals("bar", copy.getValue());
+	}
+
+	public void testCopyModelNull() {
+		FlowModel m = new FlowModel();
+		AttributeModel copy = (AttributeModel) m.copy(null);
+		assertNull(copy);
+	}
 }
