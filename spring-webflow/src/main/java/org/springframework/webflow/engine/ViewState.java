@@ -171,7 +171,9 @@ public class ViewState extends TransitionableState {
 		context.assignFlowExecutionKey();
 		ExternalContext externalContext = context.getExternalContext();
 		if (externalContext.isResponseComplete()) {
-			clearFlashIfNotRedirecting(context);
+			if (!externalContext.isResponseCompleteFlowExecutionRedirect()) {
+				clearFlash(context);
+			}
 		} else {
 			if (shouldRedirect(context)) {
 				context.getExternalContext().requestFlowExecutionRedirect();
@@ -193,7 +195,11 @@ public class ViewState extends TransitionableState {
 			if (!stateExited) {
 				ExternalContext externalContext = context.getExternalContext();
 				if (externalContext.isResponseComplete()) {
-					clearFlashIfNotRedirecting(context);
+					if (externalContext.isResponseCompleteFlowExecutionRedirect()) {
+						context.getFlashScope().put(View.USER_EVENT_STATE_ATTRIBUTE, view.getUserEventState());
+					} else {
+						clearFlash(context);
+					}
 				} else {
 					if (externalContext.isAjaxRequest()) {
 						render(context, view);
@@ -277,12 +283,6 @@ public class ViewState extends TransitionableState {
 		clearFlash(context);
 		context.getExternalContext().recordResponseComplete();
 		context.viewRendered(view);
-	}
-
-	private void clearFlashIfNotRedirecting(RequestContext context) {
-		if (!context.getExternalContext().isResponseCompleteFlowExecutionRedirect()) {
-			clearFlash(context);
-		}
 	}
 
 	private void clearFlash(RequestContext context) {

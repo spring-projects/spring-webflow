@@ -22,6 +22,8 @@ import org.springframework.webflow.execution.ViewFactory;
 
 public class StubViewFactory implements ViewFactory {
 
+	public static Object USER_EVENT_STATE = new Object();
+
 	public View getView(RequestContext context) {
 		return new NullView(context);
 	}
@@ -46,7 +48,7 @@ public class StubViewFactory implements ViewFactory {
 		}
 
 		public Object getUserEventState() {
-			return null;
+			return USER_EVENT_STATE;
 		}
 
 		public boolean hasFlowEvent() {
