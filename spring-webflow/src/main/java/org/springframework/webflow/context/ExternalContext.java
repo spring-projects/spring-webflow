@@ -94,7 +94,7 @@ public interface ExternalContext {
 
 	/**
 	 * Get a flow execution URL for the execution with the provided key. Typically used by response writers that write
-	 * out references to the flow execution to support postback on a subsequent request.
+	 * out references to the flow execution to support postback on a subsequent request. The URL returned is encoded.
 	 * @param flowId the flow definition id
 	 * @param flowExecutionKey the flow execution key
 	 * @return the flow execution URL

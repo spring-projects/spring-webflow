@@ -77,7 +77,6 @@ public class FlowHandlerAdapterTests extends TestCase {
 				}
 			}
 		};
-
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 		context = new ServletExternalContext(servletContext, request, response, flowHandlerAdapter.getFlowUrlHandler());
@@ -114,6 +113,28 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.replay(new Object[] { flowExecutor });
 		flowHandlerAdapter.handle(request, response, flowHandler);
 		assertEquals("/springtravel/app/foo?bar=baz", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testLaunchFlowRequestEndsAfterProcessingAjaxRequest() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/whatever");
+		request.setRequestURI("/springtravel/app/whatever");
+		request.setMethod("GET");
+		Map parameters = new HashMap();
+		request.setParameters(parameters);
+		context.setAjaxRequest(true);
+		flowExecutor.launchExecution("foo", flowInput, context);
+		LocalAttributeMap output = new LocalAttributeMap();
+		output.put("bar", "baz");
+		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
+		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(new Object[] { flowExecutor });
+		request.addHeader("Accept", "text/html;type=ajax");
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		assertEquals("/springtravel/app/foo?bar=baz", response.getHeader("Spring-Redirect-URL"));
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
@@ -409,6 +430,24 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.replay(new Object[] { flowExecutor });
 		flowHandlerAdapter.handle(request, response, flowHandler);
 		assertEquals("/springtravel/app/foo", response.getRedirectedUrl());
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testDefaultHandleNoSuchFlowExecutionExceptionAjaxRequest() throws Exception {
+		request.setContextPath("/springtravel");
+		request.setServletPath("/app");
+		request.setPathInfo("/foo");
+		request.setRequestURI("/springtravel/app/foo");
+		request.setMethod("GET");
+		request.addParameter("execution", "12345");
+		flowExecutor.resumeExecution("12345", context);
+		FlowException flowException = new NoSuchFlowExecutionException(new MockFlowExecutionKey("12345"), null);
+		EasyMock.expectLastCall().andThrow(flowException);
+		EasyMock.replay(new Object[] { flowExecutor });
+		context.setAjaxRequest(true);
+		request.addHeader("Accept", "text/html;type=ajax");
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		assertEquals("/springtravel/app/foo", response.getHeader("Spring-Redirect-URL"));
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 

@@ -202,7 +202,7 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
-		return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, request);
+		return response.encodeURL(flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, request));
 	}
 
 	public Writer getResponseWriter() throws IllegalStateException {

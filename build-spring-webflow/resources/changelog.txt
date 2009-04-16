@@ -17,6 +17,8 @@ Bug Fixes
 * Made FlowExecutionSnapshotGroup public for serialization reasons
 * Fixed bug where a flow execution snapshot id was not always incremented, which could lead to collisions between multiple windows sharing the same execution (SWF-1098).
 * Fixed bug where updating ViewState history could result in exceptions if no flow execution key was assigned or no snapshot had been taken (SWF-1099).
+* Fixed bug where ExternalContext.getFlowExecutionUrl method was not encoding execution URL for rendering by views
+* Fixed bugs where FlowHandlerAdapter was not encoding flow definition URLs in its default flow outcome and exception handler routines
 
 Improvements
 * Added userEventQueued and getUserEventState methods to View SPI, which simplified ViewState and View object interaction.

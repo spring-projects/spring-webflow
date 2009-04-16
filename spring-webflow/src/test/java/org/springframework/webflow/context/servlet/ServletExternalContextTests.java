@@ -74,6 +74,12 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals(response, context.getNativeResponse());
 	}
 
+	public void testGetExecutionUrl() {
+		request.setRequestURI("/foo");
+		String url = context.getFlowExecutionUrl("foo", "e1s1");
+		assertEquals("/foo?execution=e1s1", url);
+	}
+
 	public void testNotAnAjaxRequest() {
 		assertFalse(context.isAjaxRequest());
 	}

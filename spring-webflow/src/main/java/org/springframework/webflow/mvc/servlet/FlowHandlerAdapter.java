@@ -273,7 +273,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				logger.debug("Ended flow '" + flowId + "' did not commit a response; "
 						+ "attempting to start a new flow execution as a default outcome handler");
 			}
-			response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request));
+			String flowUrl = flowUrlHandler.createFlowDefinitionUrl(flowId, outcome.getOutput(), request);
+			sendRedirect(flowUrl, request, response);
 		}
 	}
 
@@ -296,7 +297,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 					logger.debug("Restarting a new execution of previously ended flow '" + flowId + "'");
 				}
 				// by default, attempt to restart the flow
-				response.sendRedirect(flowUrlHandler.createFlowDefinitionUrl(flowId, null, request));
+				String flowUrl = flowUrlHandler.createFlowDefinitionUrl(flowId, null, request);
+				sendRedirect(flowUrl, request, response);
 			}
 		} else {
 			throw e;
