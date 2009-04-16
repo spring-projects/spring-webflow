@@ -19,7 +19,7 @@ import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 
 /**
- * Holder class for passing view state through a redirect.
+ * Holder class for passing Spring MVC view action state through a redirect.
  * 
  * @author Scott Andrews
  */
@@ -29,15 +29,22 @@ public class ViewActionStateHolder {
 
 	private String eventId;
 
+	private boolean userEventProcessed;
+
 	private MappingResults mappingResults;
 
-	public ViewActionStateHolder(String eventId, MappingResults mappingResults) {
+	public ViewActionStateHolder(String eventId, boolean userEventProcessed, MappingResults mappingResults) {
 		this.eventId = eventId;
+		this.userEventProcessed = userEventProcessed;
 		this.mappingResults = mappingResults;
 	}
 
 	public String getEventId() {
 		return eventId;
+	}
+
+	public boolean getUserEventProcessed() {
+		return userEventProcessed;
 	}
 
 	public MappingResults getMappingResults() {

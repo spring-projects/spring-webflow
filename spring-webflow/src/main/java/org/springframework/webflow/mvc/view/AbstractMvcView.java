@@ -187,7 +187,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public boolean userEventQueued() {
-		return getEventId() != null;
+		return !userEventProcessed && getEventId() != null;
 	}
 
 	public void processUserEvent() {
@@ -236,7 +236,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public Object getUserEventState() {
-		return new ViewActionStateHolder(eventId, mappingResults);
+		return new ViewActionStateHolder(eventId, userEventProcessed, mappingResults);
 	}
 
 	public String toString() {
@@ -320,6 +320,7 @@ public abstract class AbstractMvcView implements View {
 	 */
 	void restoreState(ViewActionStateHolder stateHolder) {
 		eventId = stateHolder.getEventId();
+		userEventProcessed = stateHolder.getUserEventProcessed();
 		mappingResults = stateHolder.getMappingResults();
 	}
 
