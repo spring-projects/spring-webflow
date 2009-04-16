@@ -72,7 +72,7 @@ public class JsfView implements View {
 		this.viewRoot = viewRoot;
 	}
 
-	/*
+	/**
 	 * Performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() throws IOException {
@@ -97,7 +97,7 @@ public class JsfView implements View {
 		return requestContext.getRequestParameters().size() > 1;
 	}
 
-	/*
+	/**
 	 * Executes postback-processing portions of the standard JSF lifecycle including APPLY_REQUEST_VALUES through
 	 * INVOKE_APPLICATION.
 	 */
@@ -109,6 +109,20 @@ public class JsfView implements View {
 			if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 				facesLifecycle.execute(facesContext);
 			}
+		} finally {
+			facesContext.release();
+		}
+	}
+
+	/**
+	 * Updates the component state stored in View scope so that it remains in sync with the updated flow execution
+	 * snapshot
+	 */
+	public void saveState() {
+		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
+		facesContext.setViewRoot(viewRoot);
+		try {
+			facesContext.getApplication().getStateManager().saveView(facesContext);
 		} finally {
 			facesContext.release();
 		}

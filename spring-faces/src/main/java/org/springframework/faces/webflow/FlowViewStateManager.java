@@ -16,7 +16,6 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import javax.faces.application.StateManager;
 import javax.faces.component.UIViewRoot;
@@ -24,7 +23,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.style.ToStringCreator;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -75,8 +73,8 @@ public class FlowViewStateManager extends StateManager {
 			return;
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
-		viewRoot.processRestoreState(context, view.componentState);
+		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
+		viewRoot.processRestoreState(context, view.getComponentState());
 		logger.debug("UIViewRoot component state restored");
 	}
 
@@ -85,19 +83,19 @@ public class FlowViewStateManager extends StateManager {
 			return super.restoreTreeStructure(context, viewId, renderKitId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		SerializedView view = (SerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
-		if (view == null || !view.viewId.equals(viewId)) {
+		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
+		if (view == null || !view.getViewId().equals(viewId)) {
 			logger.debug("No matching view in view scope");
 			return null;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Restoring view root with id '" + viewId + "' from view scope");
 		}
-		if (view.treeStructure == null) {
+		if (view.getTreeStructure() == null) {
 			logger.debug("Tree structure is null indicating transient UIViewRoot; returning null");
 			return null;
 		}
-		UIViewRoot viewRoot = new TreeStructureManager().restoreTreeStructure(view.treeStructure);
+		UIViewRoot viewRoot = new TreeStructureManager().restoreTreeStructure(view.getTreeStructure());
 		logger.debug("UIViewRoot structure restored");
 		return viewRoot;
 	}
@@ -127,8 +125,9 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveSerializedView(context);
 		}
-		SerializedView view = (SerializedView) saveView(context);
-		return new javax.faces.application.StateManager.SerializedView(view.treeStructure, view.componentState);
+		FlowSerializedView view = (FlowSerializedView) saveView(context);
+		return new javax.faces.application.StateManager.SerializedView(view.getTreeStructure(), view
+				.getComponentState());
 	}
 
 	/**
@@ -145,8 +144,8 @@ public class FlowViewStateManager extends StateManager {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
 		}
-		SerializedView view = new SerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
-				getComponentStateToSave(context));
+		FlowSerializedView view = new FlowSerializedView(context.getViewRoot().getViewId(),
+				getTreeStructureToSave(context), getComponentStateToSave(context));
 		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
 		return view;
 	}
@@ -161,23 +160,4 @@ public class FlowViewStateManager extends StateManager {
 		}
 		return viewRoot;
 	}
-
-	private static class SerializedView implements Serializable {
-		private Object treeStructure;
-
-		private Object componentState;
-
-		private String viewId;
-
-		public SerializedView(String viewId, Object treeStructure, Object componentState) {
-			this.viewId = viewId;
-			this.treeStructure = treeStructure;
-			this.componentState = componentState;
-		}
-
-		public String toString() {
-			return new ToStringCreator(this).append("viewId", viewId).toString();
-		}
-	}
-
 }
