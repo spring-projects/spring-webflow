@@ -165,9 +165,7 @@ dojo.declare("Spring.AjaxEventDecoration", [Spring.AbstractAjaxEventDecoration, 
 				Spring.remoting.submitForm(this.sourceId, this.formId, this.params);
 			}
 		}
-		if (event.cancelable) {
-			dojo.stopEvent(event);
-		}
+		dojo.stopEvent(event);
 	},
 	
 	_handleValidation : function(success){
