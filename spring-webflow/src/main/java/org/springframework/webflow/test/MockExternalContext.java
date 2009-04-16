@@ -432,7 +432,12 @@ public class MockExternalContext implements ExternalContext {
 				throw new IllegalStateException(
 						"A response is not allowed because an externalRedirect has already been requested on this ExternalContext");
 			}
-			throw new IllegalStateException("A response is not allowed");
+			if (responseComplete) {
+				throw new IllegalStateException(
+						"A response is not allowed because one has already been completed on this ExternalContext");
+			} else {
+				throw new IllegalStateException("A response is not allowed");
+			}
 		}
 	}
 

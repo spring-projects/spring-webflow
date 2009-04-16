@@ -19,6 +19,8 @@ Bug Fixes
 * Fixed bug where updating ViewState history could result in exceptions if no flow execution key was assigned or no snapshot had been taken (SWF-1099).
 
 Improvements
+* Added userEventQueued and getUserEventState methods to View SPI, which simplified ViewState and View object interaction.
+  Custom View implementations will need to be updated to implement these new operations.  See View's API JavaDocs and ViewState's doEnter and resume implementations.
 * Added org.springframework.webflow dm Server library definition for use in a dm Server deployment environment (SWF-1067)
 * Strengthened contract for response-related methods in ExternalContext.  Specifically, calling any of the requestRedirect methods also now completes the response.
   If you attempt to complete a response more than once against an ExternalContext, an IllegalStateException is thrown.
