@@ -122,7 +122,7 @@ public class DefaultFlowExecutionRepository extends AbstractSnapshottingFlowExec
 		FlowExecutionSnapshotGroup snapshotGroup = getSnapshotGroup(conversation);
 		FlowExecutionSnapshot snapshot = snapshot(flowExecution);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding new snapshot to group with id " + getSnapshotId(key));
+			logger.debug("Adding snapshot to group with id " + getSnapshotId(key));
 		}
 		snapshotGroup.addSnapshot(getSnapshotId(key), snapshot);
 		putConversationScope(flowExecution, conversation);
