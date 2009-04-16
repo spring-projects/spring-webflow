@@ -533,20 +533,20 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		EvaluateModel evaluate = new EvaluateModel(element.getAttribute("expression"));
 		evaluate.setResult(element.getAttribute("result"));
 		evaluate.setResultType(element.getAttribute("result-type"));
-		evaluate.addAttributes(parseAttributes(element));
+		evaluate.setAttributes(parseAttributes(element));
 		return evaluate;
 	}
 
 	private RenderModel parseRender(Element element) {
 		RenderModel render = new RenderModel(element.getAttribute("fragments"));
-		render.addAttributes(parseAttributes(element));
+		render.setAttributes(parseAttributes(element));
 		return render;
 	}
 
 	private SetModel parseSet(Element element) {
 		SetModel set = new SetModel(element.getAttribute("name"), element.getAttribute("value"));
 		set.setType(element.getAttribute("type"));
-		set.addAttributes(parseAttributes(element));
+		set.setAttributes(parseAttributes(element));
 		return set;
 	}
 

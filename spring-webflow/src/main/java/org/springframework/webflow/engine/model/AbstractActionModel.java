@@ -43,7 +43,7 @@ public abstract class AbstractActionModel extends AbstractModel {
 	}
 
 	protected void fillCopy(AbstractActionModel copy) {
-		copy.setOutputs(copyList(attributes));
+		copy.setAttributes(copyList(attributes));
 	}
 
 	/**
@@ -56,21 +56,8 @@ public abstract class AbstractActionModel extends AbstractModel {
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setOutputs(LinkedList attributes) {
+	public void setAttributes(LinkedList attributes) {
 		this.attributes = attributes;
-	}
-
-	/**
-	 * @param attributes the attributes to add
-	 */
-	public void addAttributes(LinkedList attributes) {
-		if (attributes == null || attributes.isEmpty()) {
-			return;
-		}
-		if (this.attributes == null) {
-			this.attributes = new LinkedList();
-		}
-		this.attributes.addAll(attributes);
 	}
 
 }
