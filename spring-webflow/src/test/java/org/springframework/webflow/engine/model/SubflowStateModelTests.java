@@ -39,10 +39,11 @@ public class SubflowStateModelTests extends TestCase {
 	}
 
 	public void testMerge() {
-		SubflowStateModel child = new SubflowStateModel("child", "flow");
+		SubflowStateModel child = new SubflowStateModel("child", null);
 		SubflowStateModel parent = new SubflowStateModel("child", "flow");
 		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
+		assertEquals("flow", child.getSubflow());
 		assertNotNull(child.getSecured());
 	}
 

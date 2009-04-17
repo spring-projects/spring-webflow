@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 import junit.framework.TestCase;
 
 /**
@@ -42,8 +44,14 @@ public class DecisionStateModelTests extends TestCase {
 		DecisionStateModel child = new DecisionStateModel("child");
 		DecisionStateModel parent = new DecisionStateModel("child");
 		parent.setSecured(new SecuredModel("secured"));
+
+		LinkedList ifs = new LinkedList();
+		ifs.add(new IfModel("test", "foo"));
+		parent.setIfs(ifs);
+
 		child.merge(parent);
 		assertNotNull(child.getSecured());
+		assertNotNull("test", ((IfModel) child.getIfs().get(0)).getTest());
 	}
 
 }

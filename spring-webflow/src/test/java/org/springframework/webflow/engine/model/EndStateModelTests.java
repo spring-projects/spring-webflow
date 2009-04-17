@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 import junit.framework.TestCase;
 
 /**
@@ -42,8 +44,14 @@ public class EndStateModelTests extends TestCase {
 		EndStateModel child = new EndStateModel("child");
 		EndStateModel parent = new EndStateModel("child");
 		parent.setCommit("true");
+		parent.setView("view");
+
+		LinkedList outputs = new LinkedList();
+		outputs.add(new OutputModel("foo", "bar"));
+		parent.setOutputs(outputs);
+
 		child.merge(parent);
 		assertEquals("true", child.getCommit());
+		assertEquals("bar", ((OutputModel) child.getOutputs().get(0)).getValue());
 	}
-
 }

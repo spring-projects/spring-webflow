@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine.model;
 
+import java.util.LinkedList;
+
 import junit.framework.TestCase;
 
 /**
@@ -40,10 +42,18 @@ public class ActionStateModelTests extends TestCase {
 
 	public void testMerge() {
 		ActionStateModel child = new ActionStateModel("child");
-		ActionStateModel parent = new ActionStateModel("child");
+		ActionStateModel parent = new ActionStateModel("parent");
+
+		LinkedList actions = new LinkedList();
+		EvaluateModel eval = new EvaluateModel("foo.bar");
+		actions.add(eval);
+		parent.setActions(actions);
+
 		parent.setSecured(new SecuredModel("secured"));
 		child.merge(parent);
+
 		assertNotNull(child.getSecured());
+		assertEquals("foo.bar", ((EvaluateModel) child.getActions().get(0)).getExpression());
 	}
 
 }
