@@ -24,6 +24,7 @@ import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -120,7 +121,11 @@ public class JsfView implements View {
 	 */
 	public void saveState() {
 		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
-		facesContext.setViewRoot(viewRoot);
+		if (viewRoot instanceof AjaxViewRoot) {
+			facesContext.setViewRoot(((AjaxViewRoot) viewRoot).getOriginalViewRoot());
+		} else {
+			facesContext.setViewRoot(viewRoot);
+		}
 		try {
 			facesContext.getApplication().getStateManager().saveView(facesContext);
 		} finally {

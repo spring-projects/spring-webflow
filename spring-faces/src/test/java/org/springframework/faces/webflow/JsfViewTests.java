@@ -65,7 +65,7 @@ public class JsfViewTests extends TestCase {
 
 		jsfMock.setUp();
 		jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
-		jsfMock.application().setStateManager(new TestStateManager());
+		jsfMock.facesContext().getApplication().setStateManager(new TestStateManager());
 		jsfMock.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
 
 		UIViewRoot viewToRender = new UIViewRoot();
@@ -94,6 +94,17 @@ public class JsfViewTests extends TestCase {
 
 	protected void tearDown() throws Exception {
 		jsfMock.tearDown();
+	}
+
+	public final void testSaveState() {
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		view.saveState();
+	}
+
+	public final void testSaveState_AjaxViewRoot() {
+		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		view.setViewRoot(new AjaxViewRoot(view.getViewRoot()));
+		view.saveState();
 	}
 
 	public final void testRender() throws IOException {

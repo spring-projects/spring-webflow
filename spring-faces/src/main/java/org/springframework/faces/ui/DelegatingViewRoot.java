@@ -46,7 +46,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 		this.original = original;
 	}
 
-	protected UIViewRoot getOriginalViewRoot() {
+	public UIViewRoot getOriginalViewRoot() {
 		return original;
 	}
 
