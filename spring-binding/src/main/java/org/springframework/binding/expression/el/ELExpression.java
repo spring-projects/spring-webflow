@@ -58,8 +58,8 @@ public class ELExpression implements Expression {
 					return null;
 				} else {
 					throw new EvaluationException(context.getClass(), getExpressionString(), "The expression '"
-							+ getExpressionString() + "' did not resolve... is the base variable ''"
-							+ getBaseVariable() + "' spelled correctly?");
+							+ getExpressionString() + "' did not resolve... is the base variable '" + getBaseVariable()
+							+ "' spelled correctly?");
 				}
 			}
 			return result;
