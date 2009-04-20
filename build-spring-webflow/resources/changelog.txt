@@ -2,6 +2,9 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.0.8 ()
+-------------------------------------
+
 Changes in version 2.0.7 (2009.04.17)
 -------------------------------------
 Bug Fixes
