@@ -180,7 +180,7 @@
 				Use <code>currentEvent</code> to access attributes of the current <code>Event</code>:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="booking.guests.add(currentEvent.guest)" />]]>
+<evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="el-variable-currentUser">
