@@ -127,7 +127,7 @@ public class JsfView implements View {
 			facesContext.setViewRoot(viewRoot);
 		}
 		try {
-			facesContext.getApplication().getStateManager().saveView(facesContext);
+			facesContext.getApplication().getStateManager().saveSerializedView(facesContext);
 		} finally {
 			facesContext.release();
 		}
