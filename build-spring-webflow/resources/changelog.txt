@@ -1,9 +1,10 @@
 SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
-
 Changes in version 2.0.8 ()
 -------------------------------------
+Bug Fixes
+* Fixed incompatability with JSF 1.1 in JsfView by calling ViewStateManager.saveSerializedView instead of ViewStateManager.saveView (SWF-1112)
 
 Changes in version 2.0.7 (2009.04.17)
 -------------------------------------
