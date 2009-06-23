@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<view-state id="enterCriteria" view="searchCriteria">
+		<on-render>
+			<evaluate expression="formAction.setupForm" />
+		</on-render>
+		<transition on="search" to="displayResults">
+			<evaluate expression="formAction.bindAndValidate" />
+		</transition>
+	</view-state>
+
+	<view-state id="displayResults" view="searchResults">
+		<on-render>
+			<evaluate expression="phonebook.search(searchCriteria)" result="flowScope.results" />
+		</on-render>
+		<transition on="newSearch" to="enterCriteria"/>
+		<transition on="select" to="browseDetails"/>
+	</view-state>
+
+	<subflow-state id="browseDetails" subflow="detail-flow">
+		<input name="id" value="requestParameters.id" type="long" required="true"/>
+		<transition on="finish" to="displayResults"/>
+	</subflow-state>
+
+	<bean-import resource="search-flow-beans.xml"/>
+	
+</flow>

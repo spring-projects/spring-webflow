@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.0.5.v200805032123]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+		<config>src/main/webapp/WEB-INF/config/application-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/hotelbooking-portlet-config.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name><![CDATA[hotelbooking-portlet]]></name>
+			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/config/application-config.xml</config>
+				<config>src/main/webapp/WEB-INF/config/hotelbooking-portlet-config.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

@@ -1,0 +1,23 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<input name="foo" value="flowScope.foo"/>
+	<input name="foo" value="flowScope.bar"/>
+	<input name="number" type="integer" value="flowScope.baz"/>
+	<input name="required" value="flowScope.boop" required="true"/>
+
+	<end-state id="end">
+		<output name="foo" value="flowScope.foo" />
+	</end-state>
+
+	<end-state id="notReached">
+		<output name="notReached" value="flowScope.foo"/>
+	</end-state>
+
+	<output name="differentName" value="flowScope.bar"/>
+	<output name="number" type="integer" value="flowScope.baz" />
+	<output name="required" type="integer" value="flowScope.baz" required="true"/>
+	<output name="literal" value="'a literal'"/>
+	
+</flow>

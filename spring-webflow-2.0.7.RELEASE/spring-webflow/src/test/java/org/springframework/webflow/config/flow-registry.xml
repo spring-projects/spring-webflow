@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+
+	<webflow:flow-registry id="flowRegistry" parent="parentRegistry">
+		<webflow:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
+			<webflow:flow-definition-attributes>
+				<webflow:attribute name="foo" value="bar" />
+				<webflow:attribute name="bar" value="2" type="integer" />
+			</webflow:flow-definition-attributes>
+		</webflow:flow-location>
+		<webflow:flow-location path="/some/path/that/is/bogus.xml" />
+		<webflow:flow-location-pattern value="org/springframework/webflow/config/flows/*.xml"/>
+		<webflow:flow-builder class="org.springframework.webflow.config.FooFlowBuilder" />
+		<webflow:flow-builder id="foo2" class="org.springframework.webflow.config.FooFlowBuilder" />
+		<webflow:flow-builder id="foo3" class="org.springframework.webflow.config.FooFlowBuilder">
+			<webflow:flow-definition-attributes>
+				<webflow:attribute name="foo" value="bar" />
+				<webflow:attribute name="bar" value="2" type="integer" />
+			</webflow:flow-definition-attributes>
+		</webflow:flow-builder>
+	</webflow:flow-registry>
+	
+	<webflow:flow-registry id="parentRegistry">
+		<webflow:flow-location id="parentFlow" path="org/springframework/webflow/config/flow.xml" />
+	</webflow:flow-registry>
+	
+</beans>

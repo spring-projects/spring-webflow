@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<persistence-context/>
+
+	<on-start>
+		<evaluate expression="loadTestBean" />
+	</on-start>
+	
+	<view-state id="view">
+		<transition on="view2" to="view2"/>
+		<transition on="subflow" to="subflow"/>
+		<transition on="notmanaged" to="notmanaged"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="finish" to="finish"/>
+	</view-state>
+	
+	<subflow-state id="subflow" subflow="foo">
+		<transition on="finish" to="view2">
+			<evaluate expression="loadTestBean" />
+		</transition>
+	</subflow-state>
+
+	<subflow-state id="notmanaged" subflow="notmanaged">
+		<transition on="finish" to="view2">
+			<evaluate expression="loadTestBean" />
+		</transition>
+	</subflow-state>
+
+	
+	<view-state id="view2">
+		<transition on="finish" to="finish"/>
+	</view-state>
+	
+	<end-state id="finish" commit="true"/>
+	<end-state id="cancel"/>
+		
+</flow>

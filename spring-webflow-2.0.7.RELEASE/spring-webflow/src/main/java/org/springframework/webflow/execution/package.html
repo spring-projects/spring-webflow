@@ -1,0 +1,33 @@
+<html>
+<body>
+<p>
+Core, stable abstractions for representing runtime executions of flow definitions.
+</p>
+<p>
+The central concept defined by this package is the
+{@link org.springframework.webflow.execution.FlowExecution} interface, which represents
+a single instance of a top-level flow definition.
+</p>
+<p>
+The following classes and interfaces are of particular interest:
+</p>
+<ul>
+<li>
+{@link org.springframework.webflow.execution.FlowExecutionFactory} - An abstract 
+factory for creating new flow executions.
+</li>
+<li>
+{@link org.springframework.webflow.execution.repository.FlowExecutionRepository} - A DAO 
+for persisting and restoring existing flow executions.
+</li>
+<li>
+{@link org.springframework.webflow.execution.FlowExecutionListener} - An observer
+interface to be implemented by objects that are interested in flow execution
+lifecycle events.
+</li>
+</ul>
+<p>
+This package depends on the definition package.
+</p>
+</body>
+</html>

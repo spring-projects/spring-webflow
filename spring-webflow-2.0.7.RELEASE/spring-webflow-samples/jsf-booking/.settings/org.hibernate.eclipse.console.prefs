@@ -1,0 +1,5 @@
+#Thu Aug 09 13:12:30 EDT 2007
+default.configuration=jsf-booking
+eclipse.preferences.version=1
+hibernate3.enabled=true
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true

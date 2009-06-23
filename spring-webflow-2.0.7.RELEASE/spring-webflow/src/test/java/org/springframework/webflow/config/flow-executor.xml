@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/webflow-config
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+		<webflow:flow-execution-repository max-executions="1" max-execution-snapshots="2"/>
+		<webflow:flow-execution-attributes>
+			<webflow:always-redirect-on-pause value="false"/>
+			<webflow:attribute name="foo" value="bar"/>		
+			<webflow:attribute name="bar" value="2" type="integer"/>
+		</webflow:flow-execution-attributes>
+		<webflow:flow-execution-listeners>
+			<webflow:listener ref="listener" criteria="*"/>
+		</webflow:flow-execution-listeners>
+	</webflow:flow-executor>
+	
+	<bean id="listener" class="org.springframework.webflow.config.FlowExecutorBeanDefinitionParserTests$ConfigurationListener" />
+	
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location path="org/springframework/webflow/config/flow.xml" />
+	</webflow:flow-registry>
+
+	<webflow:flow-executor id="flowExecutorSimpleRepo" flow-registry="flowRegistry">
+		<webflow:flow-execution-repository max-execution-snapshots="0"/>
+	</webflow:flow-executor>
+	
+</beans>

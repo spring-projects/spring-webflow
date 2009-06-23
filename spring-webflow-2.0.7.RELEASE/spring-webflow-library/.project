@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>spring-webflow-library</name>
+	<comment></comment>
+	<projects>
+		<project>spring-binding</project>
+		<project>spring-webflow</project>
+		<project>spring-js</project>
+		<project>spring-faces</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

@@ -1,0 +1,1584 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.springframework.org/schema/webflow"
+	elementFormDefault="qualified"
+	version="2.0.3">
+
+	<xsd:annotation>
+		<xsd:documentation>
+			<![CDATA[
+Spring Web Flow Schema
+Authors: Keith Donald, Erwin Vervaet, Scott Andrews
+<br>
+This schema defines Spring Web Flow's XML-based flow definition language.
+<br>
+The root "flow" element in this document defines exactly one flow definition.
+A flow definition is a blueprint for a carrying out a conversation with a single user.
+<br>
+A flow is composed of one or more states that form the steps of the flow.
+Each state executes a behavior when entered. What behavior is executed is a
+function of the state's type. Core state types include view states,
+action states, subflow states, decision states, and end states.
+<br>
+A flow definition has exactly one start state.
+Events that occur within states drive state transitions.
+]]>
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+	<!-- Top level element -->
+	<xsd:element name="flow">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Defines exactly one flow definition.
+A flow is composed of one or more states that define the steps of a conversation.
+One of those steps is the start state, which defines the conversation's starting point.
+<br>
+A flow may also exhibit the following characteristics:
+<ul>
+<li>Be annotated with attributes that define descriptive properties that may affect flow execution.
+(See the &lt;attribute/&gt; element)
+
+<li>Be secured
+(See the &lt;secured/&gt; element)
+
+<li>Be a persistence context for managing persistent objects during the course of flow execution.
+(See the &lt;persistence-context/&gt; element)
+
+<li>Instantiate a set of instance variables when started.
+(See the &lt;var/&gt; element)
+
+<li>Map input provided by callers that start it
+(See the &lt;input/&gt; element)
+
+<li>Return output to callers that end it.
+(See the &lt;output/&gt; element)
+
+<li>Execute actions at start time and end time.
+(See the &lt;on-start/&gt; and &lt;on-end/&gt; elements)
+
+<li>Define transitions shared by all states.
+(See the &lt;global-transitions/&gt; element)
+
+<li>Handle exceptions thrown by during flow execution.
+(See the &lt;exception-handler/&gt; element)
+
+<li>Import one or more local bean definition files defining custom flow artifacts
+(such as actions, exception handlers, view factories, transition criteria, etc).
+(See the &lt;bean-import/&gt; element)
+</ul>
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+A meta attribute describing or otherwise annotating this flow definition.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="secured" type="secured" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Secures this flow.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="persistence-context" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Allocates a persistence context when this flow starts.  The persistence context is closed when the flow ends.
+If the flow ends by reaching a "commit" end-state, changes made to managed persistent entities
+during the course of flow execution are flushed to the database in a transaction.
+<br>
+The persistence context can be referenced from within this flow by the "entityManager" variable.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="var" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+A flow instance variable.  Flow variables are created when this flow starts.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="name" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+The name of this variable.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+						<xsd:attribute name="class" type="type" use="required">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+The name of this variable's implementation class.  The class name may be an alias (e.g 'int') or the
+fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a concrete class.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="input" type="input" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Maps a single input attribute provided by the caller into this flow.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="on-start" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Actions to execute when this flow starts.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="action-state">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+A state where one or more actions are executed.
+This state type is typically used to invoke application code.
+An action state is a transitionable state.
+A transition out of this state is driven by the result of action execution.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence minOccurs="0">
+								<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A meta attribute describing or otherwise annotating this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="secured" type="secured" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Secures this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-entry" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state is entered.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
+								<xsd:element name="transition" type="transition" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-exit" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state exits.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Handles exceptions that occur within this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="id" type="xsd:ID" use="required">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The unique identifier of this state; must be unique to this flow.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="parent" type="stateParent">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;action-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;action-state id="state" parent="#myLocalParentState"&gt;</pre>
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="view-state">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+A state where the user participates.
+When a view state is entered, this flow pauses and control goes to the user.
+After some think time, the user resumes this flow at the view-state by signaling an event.
+<br>
+Once paused, a view-state may be 'refreshed' by the user.
+A refresh causes the response to be reissued and then returns control back to the user.
+<br>
+A view state may be configured with one or more render-actions using the 'on-render' element.
+Render actions are executed immediately before the view is rendered.
+<br>
+A view state is a transitionable state.
+A view state transition is triggered by a user event.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An attribute describing or otherwise annotating this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="secured" type="secured" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Secures this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="var" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A view instance variable.  View variables are created when this state is entered and destroyed when this state exits.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:attribute name="name" type="xsd:string" use="required">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The name of this variable.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+										<xsd:attribute name="class" type="type" use="required">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The name of this variable's implementation class.  The class name may be an alias (e.g 'int') or the
+fully-qualified class name (e.g. 'java.lang.Integer').  The class must be a concrete class.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="binder" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Configures the process of binding UI elements such as form fields to model properties.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>							
+									<xsd:complexType>
+										<xsd:sequence>								
+											<xsd:element name="binding" minOccurs="1" maxOccurs="unbounded">
+												<xsd:annotation>
+													<xsd:documentation>
+														<![CDATA[
+Defines a view model binding.  A binding connects a UI element in this view to a model property.
+]]>
+													</xsd:documentation>
+												</xsd:annotation>
+												<xsd:complexType>
+													<xsd:attribute name="property" type="xsd:string" use="required">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
+The name of the model property to bind to.
+]]>
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+													<xsd:attribute name="converter" type="xsd:string">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
+The name of a custom converter to use to format the property for display in the UI.
+]]>
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+													<xsd:attribute name="required" type="xsd:boolean">
+														<xsd:annotation>
+															<xsd:documentation>
+																<![CDATA[
+Indicates if this binding is required.  A required binding generates an error when setting a null or empty value.
+A binding that is not required allows null and empty values to be bound.
+]]>
+															</xsd:documentation>
+														</xsd:annotation>
+													</xsd:attribute>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="on-entry" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state is entered.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="on-render" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute immediately before view rendering.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="transition" type="viewTransition" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-exit" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state exits.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Handles exceptions that occur within this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="id" type="xsd:ID" use="required">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The unique identifier of this state; must be unique to this flow.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="parent" type="stateParent">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;view-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;view-state id="state" parent="#myLocalParentState"&gt;</pre>
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="view" type="viewFactory">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The name of the view to render.  Is typically a flow-relative path to a view template:
+<pre>
+    priceForm.jsp
+</pre>
+Can also be an evaluatable expression:
+<pre>
+	${flowScope.myViewExpression}
+</pre>
+The externalRedirect: prefix may be used to redirect to an external location, typically to interface with an external system or controller.
+External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+The supported formats for an encoded externalRedirect expression are:
+<pre>
+	externalRedirect:<servlet relative path>
+	externalRedirect:contextRelative:<context relative path>
+	externalRedirect:serverRelative:<server relative path>
+	externalRedirect:<fully qualified http:// or https:// URL>
+</pre>
+For example:
+<pre>
+	externalRedirect:/hotels/index
+	externalRedirect:http://someOtherSystem?orderId=${order.id}&callbackUrl=${flowExecutionUrl}
+</pre>
+The flowRedirect: prefix may be used to redirect to another flow:
+<pre>
+	flowRedirect:myOtherFlow?someData=${flowScope.data}
+</pre>
+For exotic usages, you may plug in a custom ViewFactory bean you define:
+<pre>
+	${myCustomViewFactory}
+</pre>
+When this attribute is not specified, the view to render will be determined by convention.
+The default convention is to treat the id of this view state as the view identifier.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="redirect" type="xsd:boolean">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+Requests this view-state send a flow execution redirect before rendering.  Default is false.			
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="popup" type="xsd:boolean">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+Displays the view in a popup dialog.  Default is false.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="model" type="expression">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The model object this view is bound to.  Typically used as the source of form field values or other data input controls.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="decision-state">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Evaluates one or more expressions to decide what state to transition to next.
+Intended to be used as an idempotent 'navigation' or 'routing' state.
+<br>
+A decision state is a transitionable state.
+A decision state transition can be triggered by evaluating a boolean expression against the flow execution request context.
+To define transition expressions, use the 'if' element.
+<br>
+Examples:
+<br>
+A simple boolean expression test, using the convenient 'if' element:
+<pre>
+    &lt;decision-state id="requiresShipping"&gt;
+	    &lt;if test="sale.requiresShipping" then="enterShippingDetails" else="processSale"/&gt;
+    &lt;/decision-state&gt;
+</pre>
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An attribute describing or otherwise annotating this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="secured" type="secured" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Secures this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-entry" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state is entered.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="if" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Defines a boolean expression to evaluate a target state to transition to if that expression evaluates to true.
+Optionally, this element may define an 'else' attribute to define a state to transition to if the expression evaluates to false.
+<br>
+The form is:
+<pre>
+	&lt;if test="criteriaExpression" then="trueStateId" else="falseStateId"/&gt;
+</pre>
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:attribute name="test" type="expression" use="required">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The boolean expression to test.
+For example:
+<pre>
+	&lt;if test="sale.requiresShipping" then="enterShippingDetails"/&gt;
+</pre>
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+										<xsd:attribute name="then" type="targetStateResolver" use="required">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The state to transition to if the boolean expression evaluates to true.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+										<xsd:attribute name="else" type="targetStateResolver">
+											<xsd:annotation>
+												<xsd:documentation>
+													<![CDATA[
+The state to transition to if the boolean expression evaluates to false.
+]]>
+												</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="on-exit" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state exits.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Handles exceptions that occur within this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="id" type="xsd:ID" use="required">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The unique identifier of this state; must be unique to this flow.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="parent" type="stateParent">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;decision-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;decision-state id="state" parent="#myLocalParentState"&gt;</pre>
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="subflow-state">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Starts another flow as a subflow when entered.
+When the subflow ends, this state is expected to respond to its result by executing a transition.
+<br>
+A subflow state is a transitionable state.
+A transition is triggered by the subflow outcome that was reached.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence minOccurs="0" >
+								<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An attribute describing or otherwise annotating this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="secured" type="secured" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Secures this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-entry" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state is entered.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="input" type="input" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An input to pass the subflow.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="output" type="output" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An output from the subflow to process.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>							
+								<xsd:element name="transition" type="transition" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+A path from this state to another state triggered by an event.
+Transitions may execute one or more actions.  All transition actions must execute successfully for the transition itself to complete.
+If no transition target is specified, the transition acts as a simple event handler and does not change the state of the flow.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-exit" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state exits.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Handles exceptions that occur within this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="id" type="xsd:ID" use="required">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The unique identifier of this state; must be unique to this flow.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="parent" type="stateParent">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;subflow-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;subflow-state id="state" parent="#myLocalParentState"&gt;</pre>
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="subflow" type="flowId">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The subflow to start.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="subflow-attribute-mapper" type="beanName">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+For exotic usage scenarios, a custom SubflowAttributeMapper bean to use to map data to the subflow.
+Use this attribute or the input/output sub-elements, not both.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="end-state">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+A state that terminates this flow when entered.  Defines a flow outcome.
+<br>
+An end state is not transitionable; there are never transitions out of an end state.
+When an end-state is entered, an instance of this flow is terminated.
+<br>
+When this flow terminates, if it was the "root" flow the entire execution is terminated.
+If this flow was a subflow, its parent flow resumes.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An attribute describing this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="secured" type="secured" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Secures this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="on-entry" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Actions to execute when this state is entered.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="output" type="output" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+An output attribute to return when this flow ends by reaching this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>
+											<![CDATA[
+Handles exceptions that occur in this state.
+]]>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="id" type="xsd:ID" use="required">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The unique identifier of this state; must be unique to this flow.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="parent" type="stateParent">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The parent state this state should inherit from.
+Specify the value in the form [flowId]#<stateId>.
+If inheriting from a state defined in another flow, the flowId prefix is required.
+If inheriting from a state defined in this flow, the flowId should not be specified.
+For example, <pre>&lt;end-state id="state" parent="myParentFlow#myParentState"&gt;</pre> or <pre>&lt;end-state id="state" parent="#myLocalParentState"&gt;</pre>
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="view" type="viewFactory">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+The name of a view to render as a final flow response.
+Is often not specified when the caller handles this flow outcome and cares for the response.
+When specified, the value can be a flow-relative path to a view template:
+<pre>
+    priceForm.jsp
+</pre>
+It can also be an evaluatable expression:
+<pre>
+	${flowScope.myViewExpression}
+</pre>
+The externalRedirect: prefix may be used to request a redirect to an external location, typically to interface with an external system or controller.
+External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+The supported formats for an encoded externalRedirect expression are:
+<pre>
+	externalRedirect:<servlet relative path>
+	externalRedirect:contextRelative:<context relative path>
+	externalRedirect:serverRelative:<server relative path>
+	externalRedirect:<fully qualified http:// or https:// URL>
+</pre>
+For example:
+<pre>
+	externalRedirect:/hotels/index
+	externalRedirect:http://someOtherSystem?orderId=${order.id}
+</pre>
+The flowRedirect: prefix may be used to redirect to another flow:
+<pre>
+	flowRedirect:myOtherFlow?someData=${flowScope.data}
+</pre>
+For exotic usages, you may plug in a custom ViewFactory bean you define:
+<pre>
+	${myCustomViewFactory}
+</pre>
+<br>
+When this attribute is not specified, no final response will be issued.
+In this case, the caller is expected to handle this flow outcome.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="commit" type="xsd:string">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+Marks this end-state a "commit state".  If true, any changes made to managed entities attached to the flow's persistence context
+will be flushed in a system transaction when this state is reached.  If false, no flush will occur. This attribute has no effect
+if the flow is not a persistence-context.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:element name="global-transitions" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Transitions shared by all states and eligible for execution if no transition associated with the current state matches.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="transition" type="viewTransition" maxOccurs="unbounded">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+A global transition defines a path through the flow that can be taken from all states.
+A global transition may execute one or more actions before executing.
+All transition actions must execute successfully for the transition itself to execute.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="on-end" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Actions to execute when this flow ends.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:group ref="actionTypes" maxOccurs="unbounded" />
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="output" type="output" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+								<![CDATA[
+Output to return when this flow ends.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="exception-handler" type="exception-handler" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Handles exceptions that occur during flow execution. Exception handlers may be attached at the state or flow level.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="bean-import" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Imports user-defined beans defined at a resource location.
+These beans become part of the flow's bean factory and are resolvable using flow expressions.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attribute name="resource" type="resource" use="required">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+The relative resource path to the bean definition file to import.  Imported bean definitions 
+are then referenceable by this flow.  The resource path is relative to this document.
+<br>
+For example:
+<pre>
+    &lt;bean-import resource="orderitem-flow-beans.xml"/&gt;
+</pre>       
+... would look for 'orderitem-flow-beans.xml' in the same directory as this document.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="start-state" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The starting point of this flow.  If not specified, the start state is the first state defined in this document.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="abstract" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Marks a flow model as abstract, preventing it from being instantiated as a flow definition.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="parent" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+A comma separated list of flows this flow definition should inherit from.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Reusable types -->
+	
+	<xsd:simpleType name="type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="expression">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="template">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="viewFactory">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="transitionCriteria">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="targetStateResolver">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="flowId">
+		<xsd:restriction base="template"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="beanName">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="resource">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="stateParent">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value=".*#.*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:group name="actionTypes">
+		<xsd:choice>
+			<xsd:element name="evaluate">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Evaluates an expression against the flow request context.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="expression" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The expression to evaluate.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="result" type="expression" use="optional">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Where to assign the expression evaluation result.  If not specified, the result will not be assigned.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="result-type" type="type" use="optional">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The type of result expected to be returned from evaluating the expresion.
+If specified and the result is not compatible with the expected type, a type conversion will be attempted. 
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="render">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Requests that the next view render a fragment of content.
+Multiple fragments may be specified using a comma delimiter.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="fragments" type="xsd:string" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The fragments of the next view to render.  Multiple fragments may be specified by using the comma delimiter.
+Each fragment is a template expression.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>			
+			<xsd:element name="set">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Sets an attribute value in a scope.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+An attribute for the action.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="name" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Where to set the value.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="value" type="expression" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The value to be set.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="type">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The expected value type. If the actual value type does not match the expected, a type conversion will be attempted.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:complexType name="input">
+		<xsd:attribute name="name" type="expression" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of the input attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="expression">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The value of the input attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="type">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The expected value type.  If the actual value type is not compatible with the expected type, a type conversion will be attempted.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="required" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+Whether or not this input is required.
+If marked required and the value evaluates to null an error will be reported.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="output">
+		<xsd:attribute name="name" type="expression" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of the output attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="expression">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The value of the output attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="type">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The expected value type.  If the actual value type is not compatible with the expected type, a type conversion will be attempted.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="required" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+Whether or not this output is required.
+If marked required and the value evaluates to null an error will be reported.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="attribute">
+		<xsd:sequence>
+			<xsd:element name="value" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The value of this attribute, defined as an element to support free-text values.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType mixed="true">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of this attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="type">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The type of attribute.  The attribute value is converted from string to an instance of this type automatically.
+The type string may be an type alias (e.g 'int') or a fully-qualified Java Class (e.g. 'java.lang.Integer').
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The value of this attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="transition">
+		<xsd:sequence>
+			<xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+An attribute describing this transition.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="secured" type="secured" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Secures this transition.
+<br>
+<b>Note:</b> Cannot be used in conjunction with an exception based transition.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="actionTypes" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+		<xsd:attribute name="on" type="transitionCriteria">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The criteria that determines when this transition should execute.
+The most basic value is a static event id:
+<pre>
+	&lt;transition on="submit" to="state"/&gt;
+</pre>
+... which reads "on the occurrence of the 'submit' event, transition to 'state'"
+<br>
+Sophisticated transitional expressions are also supported when enclosed in a delimited expression:
+<pre>
+	&lt;transition on="${currentEvent.id == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
+</pre>
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="on-exception" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+Triggers execution of this transition when a particular exception occurs.
+<br>
+The value of this attribute must be a fully-qualified java.lang.Exception class name (e.g. example.booking.ItineraryExpiredException).
+Superclasses of the configured exception class match by default.  Use this attribute or the 'on' attribute, not both.
+<br>
+<b>Note:</b> Cannot be used in conjunction with a secured element.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="to" type="targetStateResolver" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The target state to transition to.
+<br>
+The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic expression (e.g. to="${flowScope.previousViewState}").
+If no value is specified, this transition acts as a simple event handler and will not change the state of the flow.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="viewTransition">
+		<xsd:complexContent>
+			<xsd:extension base="transition">
+				<xsd:attribute name="bind" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates whether model binding should occur before this transition executes. Defaults to true.
+							]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="validate" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Indicates whether model validation should occur before this transition executes. Defaults to true.
+							]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="history">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+Sets the state history policy for this transition.  The default is 'preserve', which allows back-tracking to the current state after this transition executes.
+'discard' prevents back-tracking to the state, and 'invalidate' prevents back-tracking to the state as well as any previously entered view-state.
+]]>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="preserve">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, preserve state history to allow back-tracking to the current view-state.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+							<xsd:enumeration value="discard">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, discard state history to prevent back-tracking to the current view-state.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+							<xsd:enumeration value="invalidate">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+When executing this transition, invalidate all state history to prevent back-tracking to previously entered view-states.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:enumeration>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>				
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="exception-handler">
+		<xsd:attribute name="bean" type="beanName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The bean id of the custom exception handler.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="secured">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Secures this flow definition element.
+The current user invoking this element must have the required security attributes otherwise access to the element will be denied.
+<br>
+Note: This element configures a meta-attribute.
+For the attribute to be enforced, the flow execution must be observed by a SecurityFlowExecutionListener.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="attributes" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The comma separated list of security attributes.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="match" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The method for matching the attributes.  Accepted values are 'any' and 'all'.  Default is 'any'.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="any">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Matching any of the attributes grants access.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="all">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Matching all of the attributes grants access.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+
+</xsd:schema>

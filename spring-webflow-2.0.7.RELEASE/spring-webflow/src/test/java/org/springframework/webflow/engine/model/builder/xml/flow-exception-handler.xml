@@ -1,0 +1,27 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<view-state id="state1">
+		<exception-handler bean="foo2"/>
+	</view-state>
+
+	<action-state id="state2">
+		<exception-handler bean="foo3"/>
+	</action-state>
+
+	<subflow-state id="state3">
+		<exception-handler bean="foo4"/>
+	</subflow-state>
+
+	<decision-state id="state4">
+		<exception-handler bean="foo5"/>
+	</decision-state>
+	
+	<end-state id="state5">
+		<exception-handler bean="foo6"/>
+	</end-state>
+
+	<exception-handler bean="foo1"/>
+	
+</flow>

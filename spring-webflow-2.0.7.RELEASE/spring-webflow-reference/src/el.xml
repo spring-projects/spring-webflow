@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="el">
+	<title>Expression Language (EL)</title>
+	<sect1 id="el-introduction">
+		<title>Introduction</title>
+		<para>
+			Web Flow uses EL to access its data model and invoke actions.
+			This chapter will familiarize you with the EL syntax, and special EL variables you can reference from your flow definition.
+		</para>
+	</sect1>
+	<sect1 id="el-language-choices">
+		<title>Supported EL implementations</title>
+		<sect2 id="el-unified-el">
+			<title>Unified EL</title>
+			<para>
+				Web Flow attempts to use the <ulink url="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</ulink> by default. 
+				<code>jboss-el</code> is currently the default EL implementation.
+				When found in your classpath along with the <code>el-api</code>, it will be used automatically.
+				You can find the JBoss EL jar in the <ulink url="http://www.springsource.com/repository/app/bundle/detail?name=com.springsource.org.jboss.el">SpringSource Bundle Repository</ulink>.
+				<note>
+					The <code>el-api</code> dependency is typically <emphasis>provided</emphasis> by your web container.  Tomcat 6 includes it, for example.
+				</note>
+			</para>
+		</sect2>
+		<sect2 id="el-ognl">
+			<title>OGNL</title>
+			<para>
+				<ulink url="http://www.ognl.org">OGNL</ulink> is the other EL supported by Web Flow 2.
+				OGNL is the EL most familiar to Web Flow version 1.0 users.
+				To use ognl, simply include <code>ognl</code> in your classpath instead of <code>jboss-el</code>.
+				Please refer to the <ulink url="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</ulink> for specifics on its EL syntax.
+			</para>
+		</sect2>
+	</sect1>
+	<sect1 id="el-portability">
+		<title>EL portability</title>
+		<para>
+			In general, you will find the Unified EL and OGNL have a very similar syntax.
+			For basic variable resolution, property access, and method invocation the syntax is identical.
+			We recommend adhering to Unified EL syntax whenever possible, and only relying on proprietary EL features when needed.
+		</para>
+	</sect1>
+	<sect1 id="el-usage">
+		<title>EL usage</title>
+		<para>
+			EL is used for many things within a flow, including:
+		</para>
+		<orderedlist>
+			<listitem><para>Accessing data provided by the client, such as flow input attributes and request parameters.</para></listitem>
+			<listitem><para>Accessing internal data structures such as <code>flowScope.</code></para></listitem>
+			<listitem><para>Invoking methods on Spring beans.</para></listitem>
+			<listitem><para>Resolving constructs such as state transition criteria, subflow ids, and view names.</para></listitem>
+		</orderedlist>
+		<para>
+			Views rendered by flows typically access flow data structures using EL as well.
+		</para>
+		<sect2 id="el-types">
+			<title>Expression types</title>
+			<para>
+				There are basically two types of expressions in Web Flow.
+			</para>
+			<sect3 id="el-types-eval">
+				<title>Standard eval expressions</title>
+				<para>
+					The first, and most common, type of expression, is the standard <emphasis>eval expression</emphasis>.
+					Such expressions are dynamically evaluated by the EL and should not be enclosed in delimiters like <code>${}</code> or <code>#{}</code>.
+					For example:
+				</para>
+				<programlisting language="xml"><![CDATA[
+<evaluate expression="searchCriteria.nextPage()" />]]>
+				</programlisting>
+				<para>
+					The expression above is a standard expression that invokes the <code>nextPage</code> method on the <code>searchCriteria</code> variable when evaluated.
+					Attempting to enclose this expression in special eval delimiters like <code>${}</code> or <code>#{}</code> will result in an <code>IllegalArgumentException</code>.
+					<note>
+						We view use of special eval delimiters as redundant in this context, as the only acceptable value for the <code>expression</code> attribute is a single eval expression string.
+					</note>
+				</para>	
+			</sect3>
+			<sect3 id="el-types-template">
+				<title>Template expressions</title>			
+				<para>
+					The second type of expression is a "template" expression.
+					Such expressions allow a mixing of literal text with one or more eval blocks.
+					Each eval block is explictly delimited with the <code>${}</code> delimiters.
+					For example:
+				</para>
+				<programlisting language="xml"><![CDATA[
+<view-state id="error" view="error-${externalContext.locale}.xhtml" />]]>
+				</programlisting>
+				<para>
+					The expression above is a template expression.
+					The result of evaluation will be a string that concatenates the literal text <code>error-</code> with the result of evaluating <code>externalContext.locale</code>.
+					As you can see, explicit delimiters are necessary here to demarcate eval blocks within the template.
+				</para>
+			</sect3>
+			<para>
+				See the Web Flow XML schema for a complete listing of the XML attributes that accept standard expressions and template expressions.
+			</para>
+		</sect2>
+	</sect1>
+	<sect1 id="el-variables">
+		<title>Special EL variables</title>
+		<para>
+			There are several implicit variables you may reference from within a flow.
+			These variables are discussed in this section.
+		</para>
+		<sect2 id="el-variable-flowScope">
+			<title>flowScope</title>
+			<para>
+				Use <code>flowScope</code> to assign a flow variable.
+				Flow scope gets allocated when a flow starts and destroyed when the flow ends.  With the default 
+                implementation, any objects stored in flow scope need to be Serializable.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-viewScope">
+			<title>viewScope</title>
+			<para>
+				Use <code>viewScope</code> to assign a view variable.
+				View scope gets allocated when a <code>view-state</code> enters and destroyed when the state exits.
+				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.  With the 
+                default implementation, any objects stored in view scope need to be Serializable.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<on-render>
+    <evaluate expression="searchService.findHotels(searchCriteria)" result="viewScope.hotels"
+              result-type="dataModel" />
+</on-render>]]>
+			</programlisting>
+		</sect2>			
+		<sect2 id="el-variable-requestScope">
+			<title>requestScope</title>
+			<para>
+				Use <code>requestScope</code> to assign a request variable.
+				Request scope gets allocated when a flow is called and destroyed when the flow returns.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-flashScope">
+			<title>flashScope</title>
+			<para>
+				Use <code>flashScope</code> to assign a flash variable.
+				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the 
+                flow ends.  With the default implementation, any objects stored in flash scope need to be Serializable.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<set name="flashScope.statusMessage" value="'Booking confirmed'" />]]>				
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-conversationScope">
+			<title>conversationScope</title>
+			<para>
+				Use <code>conversationScope</code> to assign a conversation variable.
+				Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
+				Conversation scope is shared by a top-level flow and all of its subflows.  With the default 
+                implementation, conversation scoped objects are stored in the HTTP session and should generally be 
+                Serializable to account for typical session replication.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-requestParameters">
+			<title>requestParameters</title>
+			<para>
+				Use <code>requestParameters</code> to access a client request parameter:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-currentEvent">
+			<title>currentEvent</title>
+			<para>
+				Use <code>currentEvent</code> to access attributes of the current <code>Event</code>:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="booking.guests.add(currentEvent.guest)" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-currentUser">
+			<title>currentUser</title>
+			<para>
+				Use <code>currentUser</code> to access the authenticated <code>Principal</code>:
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+          result="flowScope.booking" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-messageContext">
+			<title>messageContext</title>
+			<para>
+				Use <code>messageContext</code> to access a context for retrieving and creating flow execution messages, including error and success messages.
+				See the <code>MessageContext</code> Javadocs for more information.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="bookingValidator.validate(booking, messageContext)" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-resourceBundle">
+			<title>resourceBundle</title>
+			<para>
+				Use <code>resourceBundle</code> to access a message resource.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<set name="flashScope.successMessage" value="resourceBundle.successMessage" />]]>
+			</programlisting>
+		</sect2>
+		<sect2 id="el-variable-requestContext">
+			<title>flowRequestContext</title>
+			<para>
+				Use <code>flowRequestContext</code> to access the <code>RequestContext</code> API, which is a representation of the current flow request.
+				See the API Javadocs for more information.
+			</para>
+		</sect2>		
+		<sect2 id="el-variable-flowExecutionContext">
+			<title>flowExecutionContext</title>
+			<para>
+				Use <code>flowExecutionContext</code> to access the <code>FlowExecutionContext</code> API, which is a representation of the current flow state.
+				See the API Javadocs for more information.
+			</para>
+		</sect2>		
+		<sect2 id="el-variable-flowExecutionUrl">
+			<title>flowExecutionUrl</title>
+			<para>
+				Use <code>flowExecutionUrl</code> to access the context-relative URI for the current flow execution view-state.
+			</para>
+		</sect2>		
+		<sect2 id="el-variable-externalContext">
+			<title>externalContext</title>
+			<para>
+				Use <code>externalContext</code> to access the client environment, including user session attributes.
+				See the <code>ExternalContext</code> API JavaDocs for more information.
+			</para>
+			<programlisting language="xml"><![CDATA[
+<evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)" 
+          result="viewScope.hotels" />]]>
+			</programlisting>
+		</sect2>
+	</sect1>
+	<sect1 id="el-scope-searching">
+		<title>Scope searching algorithm</title>
+		<para>
+			When assigning a variable in one of the flow scopes, referencing that scope is required.
+			For example:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
+		</programlisting>
+		<para>
+			When simply accessing a variable in one of the scopes, referencing the scope is optional.
+			For example:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<evaluate expression="entityManager.persist(booking)" />]]>
+		</programlisting>
+		<para>
+			If no scope is specified, like in the use of <code>booking</code> above, a scope searching algorithm will be employed.
+			The algorithm will look in request, flash, view, flow, and conversation scope for the variable.
+			If no such variable is found, an <code>EvaluationException</code> will be thrown.
+		</para>
+	</sect1>
+</chapter>
