@@ -1,6 +1,12 @@
 package org.springframework.webflow.mvc.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -287,6 +293,79 @@ public class MvcViewTests extends TestCase {
 		assertNotNull(bm);
 		assertEquals("bogus 1", bm.getFieldValue("integerProperty"));
 		assertEquals("bogus 2", bm.getFieldValue("dateProperty"));
+	}
+
+	public void testResumeEventBindingErrorsRedirectToReplicatedSessionAfterPost() throws Exception {
+		MockRequestControlContext context = new MockRequestControlContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("integerProperty", "bogus 1");
+		context.putRequestParameter("dateProperty", "bogus 2");
+		BindBean bindBean = new BindBean();
+		StaticExpression modelObject = new StaticExpression(bindBean);
+		modelObject.setExpressionString("bindBean");
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getFlowScope().put("bindBean", bindBean);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
+		context.setAlwaysRedirectOnPause(true);
+		assertTrue(view.userEventQueued());
+		view.processUserEvent();
+		assertFalse(view.userEventQueued());
+		assertFalse(view.hasFlowEvent());
+		Object viewActionState = view.getUserEventState();
+		assertNotNull(viewActionState);
+
+		viewActionState = saveAndRestoreViewActionState(viewActionState);
+
+		MockRequestControlContext context2 = new MockRequestControlContext();
+		context2.getFlashScope().put(org.springframework.webflow.execution.View.USER_EVENT_STATE_ATTRIBUTE,
+				viewActionState);
+		BindBean bindBean2 = new BindBean();
+		StaticExpression modelObject2 = new StaticExpression(bindBean2);
+		modelObject2.setExpressionString("bindBean");
+		context2.getCurrentState().getAttributes().put("model", modelObject);
+		context2.getFlowScope().put("bindBean", bindBean);
+		context2.getMockExternalContext().setNativeContext(new MockServletContext());
+		context2.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context2.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context2.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		AbstractMvcView view2 = new MockMvcView(mvcView, context2);
+		view2.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view2.setMessageCodesResolver(new WebFlowMessageCodesResolver());
+		view2.restoreState((ViewActionStateHolder) viewActionState);
+		assertFalse(view2.userEventQueued());
+		view2.render();
+		assertEquals(context2.getFlowScope().get("bindBean"), model.get("bindBean"));
+		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
+		assertNotNull(bm);
+		assertEquals(new Integer(3), bm.getFieldValue("integerProperty"));
+		assertEquals(new SimpleDateFormat("MM-dd-yyyy").parse("01-01-2008"), bm.getFieldValue("dateProperty"));
+	}
+
+	private Object saveAndRestoreViewActionState(Object viewActionState) throws Exception {
+		File tempFile = new File("serializable.tmp");
+
+		FileOutputStream fos = new FileOutputStream(tempFile);
+		ObjectOutputStream objOut = new ObjectOutputStream(fos);
+		objOut.writeObject(viewActionState);
+		objOut.close();
+
+		FileInputStream fis = new FileInputStream(tempFile);
+		ObjectInputStream objIn = new ObjectInputStream(fis);
+		Object restoredState = objIn.readObject();
+		objIn.close();
+
+		tempFile.delete();
+
+		assertNotSame(viewActionState, restoredState);
+
+		return restoredState;
 	}
 
 	public void testResumeEventModelBindingAllowedFields() throws Exception {
