@@ -11,13 +11,10 @@
 	<!-- Executes flows: the entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor">
 		<webflow:flow-execution-listeners>
-			<webflow:listener ref="sessionReplicationTestListener"/>
 			<webflow:listener ref="jpaFlowExecutionListener" />
 			<webflow:listener ref="securityFlowExecutionListener" />
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
-	
-	<bean id="sessionReplicationTestListener" class="com.macys.checkout.SessionReplicationTestListener" />
 	
 	<!-- The registry of executable flow definitions -->
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF">
