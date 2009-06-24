@@ -122,7 +122,7 @@ public class FlowViewHandler extends ViewHandler {
 	private UIViewRoot restoreFlowView(FacesContext facesContext, String resourcePath) {
 		RequestContext context = RequestContextHolder.getRequestContext();
 		ViewRootHolder holder = (ViewRootHolder) context.getFlashScope().get(View.USER_EVENT_STATE_ATTRIBUTE);
-		if (holder != null && holder.getViewRoot().getViewId().equals(resourcePath)) {
+		if (holder != null && holder.getViewRoot() != null && holder.getViewRoot().getViewId().equals(resourcePath)) {
 			return holder.getViewRoot();
 		} else {
 			return delegate.restoreView(facesContext, resourcePath);

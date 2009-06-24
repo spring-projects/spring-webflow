@@ -15,6 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
+import java.io.Serializable;
+
 import javax.faces.component.UIViewRoot;
 
 /**
@@ -22,9 +24,9 @@ import javax.faces.component.UIViewRoot;
  * 
  * @author Scott Andrews
  */
-class ViewRootHolder {
+class ViewRootHolder implements Serializable {
 
-	private UIViewRoot viewRoot;
+	private transient UIViewRoot viewRoot;
 
 	public ViewRootHolder(UIViewRoot viewRoot) {
 		this.viewRoot = viewRoot;

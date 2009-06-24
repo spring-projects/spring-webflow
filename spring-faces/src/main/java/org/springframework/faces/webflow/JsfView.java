@@ -16,6 +16,7 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -133,7 +134,7 @@ public class JsfView implements View {
 		}
 	}
 
-	public Object getUserEventState() {
+	public Serializable getUserEventState() {
 		// Set the temporary UIViewRoot state so that it will be available across the redirect
 		return new ViewRootHolder(getViewRoot());
 	}
