@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine;
 
+import java.io.Serializable;
+
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -22,7 +24,8 @@ import org.springframework.webflow.execution.ViewFactory;
 
 public class StubViewFactory implements ViewFactory {
 
-	public static Object USER_EVENT_STATE = new Object();
+	public static Serializable USER_EVENT_STATE = new Serializable() {
+	};
 
 	public View getView(RequestContext context) {
 		return new NullView(context);
@@ -47,7 +50,7 @@ public class StubViewFactory implements ViewFactory {
 
 		}
 
-		public Object getUserEventState() {
+		public Serializable getUserEventState() {
 			return USER_EVENT_STATE;
 		}
 

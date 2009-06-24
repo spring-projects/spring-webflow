@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.mvc.view;
 
+import java.io.Serializable;
+
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.core.style.ToStringCreator;
 
@@ -23,7 +25,7 @@ import org.springframework.core.style.ToStringCreator;
  * 
  * @author Scott Andrews
  */
-public class ViewActionStateHolder {
+public class ViewActionStateHolder implements Serializable {
 
 	public static final String KEY = "webflowViewActionStateHolder";
 
@@ -31,7 +33,7 @@ public class ViewActionStateHolder {
 
 	private boolean userEventProcessed;
 
-	private MappingResults mappingResults;
+	private transient MappingResults mappingResults;
 
 	public ViewActionStateHolder(String eventId, boolean userEventProcessed, MappingResults mappingResults) {
 		this.eventId = eventId;

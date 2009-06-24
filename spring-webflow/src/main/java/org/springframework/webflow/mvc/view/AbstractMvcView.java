@@ -16,6 +16,7 @@
 package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -224,7 +225,7 @@ public abstract class AbstractMvcView implements View {
 		userEventProcessed = true;
 	}
 
-	public Object getUserEventState() {
+	public Serializable getUserEventState() {
 		return new ViewActionStateHolder(eventId, userEventProcessed, mappingResults);
 	}
 

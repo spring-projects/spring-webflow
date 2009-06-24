@@ -16,6 +16,7 @@
 package org.springframework.webflow.execution;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.springframework.webflow.engine.ViewState;
 
@@ -24,6 +25,7 @@ import org.springframework.webflow.engine.ViewState;
  * and handle the resulting event once the client responds.
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  * @see ViewFactory
  */
 public interface View {
@@ -74,10 +76,10 @@ public interface View {
 	/**
 	 * A memento holding the results of processing a user event. Used to allow transient view state such as binding and
 	 * validation errors to survive a flow execution redirect.
-	 * @return the user event state object, or null if no event state needs managing
+	 * @return the serializable user event state object, or null if no event state needs managing
 	 * @see #processUserEvent()
 	 */
-	public Object getUserEventState();
+	public Serializable getUserEventState();
 
 	/**
 	 * Saves any state associated with this view out to view scope. Called when exiting a {@link ViewState} to allow for

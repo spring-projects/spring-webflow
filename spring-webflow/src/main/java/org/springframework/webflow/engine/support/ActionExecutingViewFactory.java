@@ -15,6 +15,8 @@
  */
 package org.springframework.webflow.engine.support;
 
+import java.io.Serializable;
+
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ActionExecutor;
@@ -79,7 +81,7 @@ public class ActionExecutingViewFactory implements ViewFactory {
 			userEventProcessed = true;
 		}
 
-		public Object getUserEventState() {
+		public Serializable getUserEventState() {
 			return null;
 		}
 

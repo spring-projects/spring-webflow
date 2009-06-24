@@ -16,6 +16,7 @@
 package org.springframework.webflow.test;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
@@ -107,7 +108,7 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 			// TODO - implement me as appropriate for a test environment
 		}
 
-		public Object getUserEventState() {
+		public Serializable getUserEventState() {
 			return null;
 		}
 
