@@ -63,7 +63,7 @@ public class StubViewFactory implements ViewFactory {
 		}
 
 		public void saveState() {
-
+			context.getFlowScope().put("saveStateCalled", Boolean.TRUE);
 		}
 
 	}

@@ -215,7 +215,7 @@ public class ViewStateTests extends TestCase {
 		assertEquals("Restored", ((TestBean) context.getViewScope().get("foo")).datum1);
 	}
 
-	public void testResumeViewStateForEventWithTransitionStateExited() {
+	public void testResumeViewStateForEventWithTransitionFlowEnded() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
@@ -231,6 +231,42 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getExternalContext().isResponseComplete());
 		assertFalse(context.getFlowExecutionContext().isActive());
 		assertTrue(testAction.isExecuted());
+	}
+
+	public void testResumeViewStateForEventWithTransitionStateExited() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.getTransitionSet().add(new Transition(on("submit"), to("next")));
+		ViewState next = new ViewState(flow, "next", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.setAlwaysRedirectOnPause(true);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertSame(next, context.getCurrentState());
+		assertTrue(context.getFlowScope().contains("saveStateCalled"));
+	}
+
+	public void testResumeViewStateForEventWithTransitionStateExitedNoRedirect() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.getTransitionSet().add(new Transition(on("submit"), to("next")));
+		ViewState next = new ViewState(flow, "next", viewFactory);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		context.setAlwaysRedirectOnPause(false);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getExternalContext().isResponseComplete());
+		assertTrue(context.getFlowExecutionContext().isActive());
+		assertSame(next, context.getCurrentState());
+		assertFalse(context.getFlowScope().contains("saveStateCalled"));
 	}
 
 	public void testResumeViewStateForEventStateNotExitedNonAjax() {

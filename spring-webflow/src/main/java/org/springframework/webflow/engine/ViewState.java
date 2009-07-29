@@ -310,7 +310,7 @@ public class ViewState extends TransitionableState {
 		History history = (History) transition.getAttributes().get("history");
 		if (history == null || history == History.PRESERVE) {
 			View currentView = context.getCurrentView();
-			if (currentView != null) {
+			if (currentView != null && shouldRedirect(context)) {
 				currentView.saveState();
 			}
 			context.updateCurrentFlowExecutionSnapshot();
