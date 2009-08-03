@@ -321,7 +321,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 */
 	protected void assertFlowExecutionOutcomeEquals(String outcome) {
 		assertNotNull("There has been no flow execution outcome", flowExecutionOutcome);
-		assertEquals("The flow execution outcome is wrong", flowExecutionOutcome.getId(), outcome);
+		assertEquals("The flow execution outcome is wrong", outcome, flowExecutionOutcome.getId());
 	}
 
 	/**
