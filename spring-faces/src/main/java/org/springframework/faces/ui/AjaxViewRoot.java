@@ -49,6 +49,7 @@ import org.springframework.webflow.execution.View;
  * </p>
  * 
  * @author Jeremy Grelle
+ * @author Nazaret Kazarian
  */
 public class AjaxViewRoot extends DelegatingViewRoot {
 
@@ -73,12 +74,17 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	public AjaxViewRoot(UIViewRoot original) {
 		super(original);
 		renderIdsExpr = FacesContext.getCurrentInstance().getApplication().createValueBinding(RENDER_IDS_EXPRESSION);
-		original.setId(createUniqueId());
+		if (!StringUtils.hasText(original.getId())) {
+			original.setId(createUniqueId());
+		}
 		swapChildren(original, this);
-		setId(original.getId() + "_ajax");
 	}
 
 	// implementing view root
+
+	public String getId() {
+		return getOriginalViewRoot().getId() + "_ajax";
+	}
 
 	public void queueEvent(FacesEvent event) {
 		Assert.notNull(event, "Cannot queue a null event.");
