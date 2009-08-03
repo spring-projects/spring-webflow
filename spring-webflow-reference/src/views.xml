@@ -493,8 +493,8 @@ public class BookingAction {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <global-transitions>
-    <transition on="login" to="login">
-    <transition on="logout" to="logout">
+    <transition on="login" to="login" />
+    <transition on="logout" to="logout" />
 </global-transitions>]]>
 			</programlisting>
 		</sect2>	
