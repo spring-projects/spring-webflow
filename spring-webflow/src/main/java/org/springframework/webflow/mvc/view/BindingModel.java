@@ -53,6 +53,7 @@ import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
  * @see AbstractMvcView
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class BindingModel extends AbstractErrors implements BindingResult {
 
@@ -189,7 +190,11 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 					valueType = parseFieldExpression(field).getValueType(boundObject);
 				}
 			}
-			return new ConversionExecutorPropertyEditor(conversionService, valueType, converterId);
+			if (valueType != null) {
+				return new ConversionExecutorPropertyEditor(conversionService, valueType, converterId);
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}

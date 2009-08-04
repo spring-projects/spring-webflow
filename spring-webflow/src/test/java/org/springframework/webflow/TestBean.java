@@ -17,6 +17,8 @@ package org.springframework.webflow;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Simple test bean used by some test cases. Note that this bean has value semantics.
@@ -30,6 +32,8 @@ public class TestBean implements Serializable {
 	private Date datum3;
 
 	public boolean executed;
+
+	public Map emptyMap;
 
 	public void execute() {
 		this.executed = true;
@@ -45,6 +49,14 @@ public class TestBean implements Serializable {
 
 	public Date getDatum3() {
 		return datum3;
+	}
+
+	public Map getEmptyMap() {
+		if (emptyMap == null) {
+			emptyMap = new HashMap();
+			emptyMap.put("foo", null);
+		}
+		return emptyMap;
 	}
 
 	public void setDatum3(Date datum3) {

@@ -21,9 +21,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
 
-public class BindingModelTests extends TestCase {
+public abstract class AbstractBindingModelTests extends TestCase {
 
 	BindingModel model;
 	DefaultMessageContext messages;
@@ -35,9 +34,11 @@ public class BindingModelTests extends TestCase {
 		testBean = new TestBean();
 		messages = new DefaultMessageContext();
 		conversionService = new DefaultConversionService();
-		expressionParser = DefaultExpressionParserFactory.getExpressionParser();
+		expressionParser = getExpressionParser();
 		model = new BindingModel("testBean", testBean, expressionParser, conversionService, messages);
 	}
+
+	protected abstract ExpressionParser getExpressionParser();
 
 	public void testInitialState() {
 		assertEquals(0, model.getErrorCount());
@@ -66,8 +67,7 @@ public class BindingModelTests extends TestCase {
 	}
 
 	public void testGetFieldValueNonStringNoConversionService() {
-		model = new BindingModel("testBean", testBean, DefaultExpressionParserFactory.getExpressionParser(), null,
-				messages);
+		model = new BindingModel("testBean", testBean, getExpressionParser(), null, messages);
 		testBean.datum2 = 3;
 		assertEquals(new Integer(3), model.getFieldValue("datum2"));
 	}
