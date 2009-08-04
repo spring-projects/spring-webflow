@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 
 /**
  * Unit tests for {@link ServletExternalContext}.
@@ -106,6 +107,17 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
+		assertNotNull(context.getFlowRedirectFlowInput());
+	}
+
+	public void testCommitFlowRedirectWithInput() {
+		LocalAttributeMap input = new LocalAttributeMap();
+		context.requestFlowDefinitionRedirect("foo", input);
+		assertTrue(context.getFlowDefinitionRedirectRequested());
+		assertEquals("foo", context.getFlowRedirectFlowId());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
+		assertSame(input, context.getFlowRedirectFlowInput());
 	}
 
 	public void testCommitExternalRedirect() {

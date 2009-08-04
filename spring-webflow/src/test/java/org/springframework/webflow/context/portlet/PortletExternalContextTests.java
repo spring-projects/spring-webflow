@@ -26,6 +26,7 @@ import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
 
 /**
  * Unit tests for {@link ServletExternalContext}.
@@ -109,6 +110,19 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 		assertFalse(context.isResponseAllowed());
+		assertNotNull(context.getFlowRedirectFlowInput());
+	}
+
+	public void testCommitFlowRedirectWithInput() {
+		assertFalse(context.isResponseAllowed());
+		LocalAttributeMap input = new LocalAttributeMap();
+		context.requestFlowDefinitionRedirect("foo", input);
+		assertTrue(context.getFlowDefinitionRedirectRequested());
+		assertEquals("foo", context.getFlowRedirectFlowId());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
+		assertFalse(context.isResponseAllowed());
+		assertSame(input, context.getFlowRedirectFlowInput());
 	}
 
 	public void testCommitFlowRedirectRenderRequest() {

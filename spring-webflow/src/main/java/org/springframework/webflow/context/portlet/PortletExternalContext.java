@@ -245,7 +245,7 @@ public class PortletExternalContext implements ExternalContext {
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
 		assertRedirectResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = input;
+		flowDefinitionRedirectFlowInput = input != null ? input : new LocalAttributeMap();
 		recordResponseComplete();
 	}
 
