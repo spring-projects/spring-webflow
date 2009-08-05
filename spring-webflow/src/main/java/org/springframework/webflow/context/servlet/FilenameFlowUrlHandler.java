@@ -17,14 +17,16 @@ package org.springframework.webflow.context.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.mvc.servlet.FlowController;
 
 /**
  * A file name based {@link FlowUrlHandler} implementation that is an alternative to the standard
  * {@link DefaultFlowUrlHandler}. Treats the filename of a request without the URL suffix and/or prefix as the flow id.
- * Used by the {@link FlowController} implementation as a default implementation to preserve compability with existing
+ * Used by the {@link FlowController} implementation as a default implementation to preserve compatibility with existing
  * Web Flow 2 applications.
  * 
  * <p>
@@ -54,6 +56,8 @@ import org.springframework.webflow.mvc.servlet.FlowController;
  * well to avoid these clashes.
  * 
  * @author Agim Emruli
+ * @author Jeremy Grelle
+ * @author Nazaret Kazarian
  */
 public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 
@@ -65,5 +69,64 @@ public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 
 	public String getFlowId(HttpServletRequest request) {
 		return WebUtils.extractFilenameFromUrlPath(urlPathHelper.getLookupPathForRequest(request));
+	}
+
+	/**
+	 * The flow definition URL for the given flowId will be inferred from the URL of the current request, re-using the
+	 * same path and file extension.
+	 * 
+	 * <p>
+	 * Example - given a request originating at:
+	 * 
+	 * <pre>
+	 * http://someHost/someApp/someServlet/nestedPath/foo.html
+	 * </pre>
+	 * 
+	 * and a request for the flow id "bar", the new flow definition URL would be:
+	 * 
+	 * <pre>
+	 * http://someHost/someApp/someServlet/nestedPath/bar.html
+	 * </pre>
+	 */
+	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
+		StringBuffer url = new StringBuffer();
+		String pathInfo = request.getPathInfo();
+		if (pathInfo != null) {
+			url.append(request.getContextPath());
+			url.append(request.getServletPath());
+			// include the pathInfo part up until the filename
+			url.append(pathInfo.substring(0, pathInfo.lastIndexOf("/") + 1));
+			url.append(flowId);
+			int dotIndex = pathInfo.lastIndexOf('.');
+			if (dotIndex != -1) {
+				url.append(pathInfo.substring(dotIndex));
+			}
+		} else {
+			String servletPath = request.getServletPath();
+			if (StringUtils.hasText(servletPath)) {
+				url.append(request.getContextPath());
+				// include the servletPath part up to the filename
+				int slashIndex = servletPath.lastIndexOf("/");
+				if (slashIndex != -1) {
+					url.append(servletPath.substring(0, slashIndex));
+				}
+				url.append('/');
+				url.append(flowId);
+				int dotIndex = servletPath.lastIndexOf('.');
+				if (dotIndex != -1) {
+					url.append(servletPath.substring(dotIndex));
+				}
+			} else {
+				// Leaving this for now, as DefaultFlowUrlHandler does the same thing,
+				// but this should probably be an error case in the future.
+				url.append('/');
+				url.append(flowId);
+			}
+		}
+		if (input != null && !input.isEmpty()) {
+			url.append('?');
+			appendQueryParameters(url, input.asMap(), getEncodingScheme(request));
+		}
+		return url.toString();
 	}
 }

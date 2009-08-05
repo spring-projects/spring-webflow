@@ -58,6 +58,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * execution "e1s1" of the "hotels/booking" flow.
  * 
  * @author Keith Donald
+ * @author Jeremy Grelle
  */
 public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
@@ -109,6 +110,23 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
+	/**
+	 * The flow definition URL for the given flow id will be built by appending the flow id to the base app context and
+	 * servlet paths.
+	 * 
+	 * <p>
+	 * Example - given a request originating at:
+	 * 
+	 * <pre>
+	 * http://someHost/someApp/someServlet/nestedPath/foo
+	 * </pre>
+	 * 
+	 * and a request for the flow id "nestedPath/bar", the new flow definition URL would be:
+	 * 
+	 * <pre>
+	 * http://someHost/someApp/someServlet/nestedPath/bar
+	 * </pre>
+	 */
 	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
 		if (request.getPathInfo() != null) {
@@ -138,9 +156,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
-	// internal helpers
-
-	private String getEncodingScheme(HttpServletRequest request) {
+	protected String getEncodingScheme(HttpServletRequest request) {
 		if (encodingScheme != null) {
 			return encodingScheme;
 		} else {
@@ -152,7 +168,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		}
 	}
 
-	private void appendQueryParameters(StringBuffer url, Map parameters, String encodingScheme) {
+	protected void appendQueryParameters(StringBuffer url, Map parameters, String encodingScheme) {
 		Iterator entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
 			Map.Entry entry = (Map.Entry) entries.next();
@@ -162,6 +178,8 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 			}
 		}
 	}
+
+	// internal helpers
 
 	private void appendQueryParameter(StringBuffer url, Object key, Object value, String encodingScheme) {
 		String encodedKey = encode(key, encodingScheme);
