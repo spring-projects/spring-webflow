@@ -164,6 +164,16 @@
             Ajax request should not differ from a standard browser request, thus no special knowledge of an Ajax request
             is needed directly in the code and the same hanlder can be used for both styles of request.
         </para>
+        <sect2 id="custom-ajax-handler">
+        	<title>Providing a Library-Specific AjaxHandler</title>
+        	<para>
+        		The key interface for integrating various Ajax libraries with the Ajax-aware behavior of Web Flow (such as not redirecting for a 
+        		partial page update) is <code>org.springframework.js.AjaxHandler</code>.  A <code>SpringJavascriptAjaxHandler</code> is configured by default that is able to 
+        		detect an Ajax request submitted via the Spring JS client-side API and can respond appropriately in the case where a redirect is required.  In 
+        		order to integrate a different Ajax library (be it a pure JavaScript library, or a higher-level abstraction such as an Ajax-capable JSF 
+        		component library), a custom <code>AjaxHandler</code> can be injected into the <code>FlowHandlerAdapter</code> or <code>FlowController</code>.      
+        	</para>
+        </sect2>
         <sect2 id="spring-js-ajax-mvc">
             <title>Handling Ajax Requests with Spring MVC Controllers</title>
             <para>

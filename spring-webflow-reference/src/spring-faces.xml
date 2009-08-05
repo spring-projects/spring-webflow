@@ -797,6 +797,11 @@
                 when used in conjunction with the Spring Faces integration layer.
             </para>
             <para>
+            	NOTE - An <code>AjaxHandler</code> implementation for Trinidad is not currently provided out-of-the-box with 
+            	Spring Faces.  In order to fully integrate with Trinidad's PPR functionality, a custom implementation should be 
+            	provided.  An community-provided partial example can be found here: <ulink url="http://jira.springsource.org/browse/SWF-1160">SWF-1160</ulink>
+            </para>
+            <para>
                 Typical Trinidad + Spring Faces configuration is as follows in web.xml (in addition to the typical
                 Spring Faces configuration):
             </para>
