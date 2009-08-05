@@ -96,7 +96,11 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		return requestContext.getRequestParameters().size() > 1;
+		if (JsfUtils.isAtLeastJsf12()) {
+			return requestContext.getRequestParameters().contains("javax.faces.ViewState");
+		} else {
+			return requestContext.getRequestParameters().size() > 1;
+		}
 	}
 
 	/**
