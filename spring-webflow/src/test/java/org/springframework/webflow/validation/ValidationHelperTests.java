@@ -163,7 +163,23 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
+				new DefaultMessageCodesResolver(), null);
+		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
+		requestContext.setCurrentState(state1);
+		helper.validate();
+		assertTrue(validator.state1Invoked);
+		assertTrue(validator.fallbackInvoked);
+	}
+
+	public void testStateAndFallbackValidatorInvokedForSubclass() {
+		ModelValidator validator = new ModelValidator();
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
+		requestContext.getRootFlow().setApplicationContext(applicationContext);
+
+		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
@@ -179,7 +195,23 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
+				new DefaultMessageCodesResolver(), null);
+		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		requestContext.setCurrentState(state1);
+		helper.validate();
+		assertFalse(validator.state1Invoked);
+		assertTrue(validator.fallbackInvoked);
+	}
+
+	public void testFallbackValidatorInvokedForSubclass() {
+		ModelValidator validator = new ModelValidator();
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
+		requestContext.getRootFlow().setApplicationContext(applicationContext);
+
+		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
@@ -195,7 +227,23 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
+				new DefaultMessageCodesResolver(), null);
+		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
+		requestContext.setCurrentState(state1);
+		helper.validate();
+		assertTrue(validator.state1Invoked);
+		assertTrue(validator.fallbackInvoked);
+	}
+
+	public void testStateAndFallbackLegacyValidatorInvokedForSubclass() {
+		LegacyModelValidator validator = new LegacyModelValidator();
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
+		requestContext.getRootFlow().setApplicationContext(applicationContext);
+
+		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
@@ -211,7 +259,7 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
@@ -227,7 +275,23 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
+				new DefaultMessageCodesResolver(), null);
+		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
+		requestContext.setCurrentState(state1);
+		helper.validate();
+		assertTrue(validator.state1Invoked);
+		assertTrue(validator.fallbackInvoked);
+	}
+
+	public void testStateAndFallbackErrorsValidatorInvokedForSubclass() {
+		ErrorsModelValidator validator = new ErrorsModelValidator();
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
+		requestContext.getRootFlow().setApplicationContext(applicationContext);
+
+		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
@@ -243,7 +307,23 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
 		requestContext.getRootFlow().setApplicationContext(applicationContext);
 
-		Object model = new Object();
+		Model model = new Model();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
+				new DefaultMessageCodesResolver(), null);
+		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		requestContext.setCurrentState(state1);
+		helper.validate();
+		assertFalse(validator.state1Invoked);
+		assertTrue(validator.fallbackInvoked);
+	}
+
+	public void testFallbackErrorsValidatorInvokedForSubclass() {
+		ErrorsModelValidator validator = new ErrorsModelValidator();
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.getBeanFactory().registerSingleton("modelValidator", validator);
+		requestContext.getRootFlow().setApplicationContext(applicationContext);
+
+		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
 				new DefaultMessageCodesResolver(), null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
@@ -266,6 +346,9 @@ public class ValidationHelperTests extends TestCase {
 		}
 	}
 
+	public static class ExtendedModel extends Model {
+	}
+
 	public static class ErrorsModel {
 		private boolean state1Invoked;
 		private boolean fallbackInvoked;
@@ -283,7 +366,7 @@ public class ValidationHelperTests extends TestCase {
 		private boolean state1Invoked;
 		private boolean fallbackInvoked;
 
-		public void validateState1(Object object, Errors errors) {
+		public void validateState1(Model model, Errors errors) {
 			state1Invoked = true;
 		}
 
@@ -300,11 +383,11 @@ public class ValidationHelperTests extends TestCase {
 		private boolean state1Invoked;
 		private boolean fallbackInvoked;
 
-		public void validateState1(Object object, ValidationContext context) {
+		public void validateState1(Model model, ValidationContext context) {
 			state1Invoked = true;
 		}
 
-		public void validate(Object object, ValidationContext context) {
+		public void validate(Model model, ValidationContext context) {
 			fallbackInvoked = true;
 		}
 	}
@@ -313,11 +396,11 @@ public class ValidationHelperTests extends TestCase {
 		private boolean state1Invoked;
 		private boolean fallbackInvoked;
 
-		public void validateState1(Object object, Errors context) {
+		public void validateState1(Model model, Errors context) {
 			state1Invoked = true;
 		}
 
-		public void validate(Object object, Errors context) {
+		public void validate(Model model, Errors context) {
 			fallbackInvoked = true;
 		}
 	}

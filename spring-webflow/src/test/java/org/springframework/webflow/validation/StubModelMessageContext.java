@@ -19,7 +19,7 @@ import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 
 /**
- * Support class for {@link ValidationHelperTest}
+ * Support class for {@link ValidationHelperTests}
  */
 public class StubModelMessageContext {
 
