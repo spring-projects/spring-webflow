@@ -36,16 +36,16 @@
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate.ejb" rev="3.3.1.ga" conf="compile->runtime"/>
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="compile->runtime"/>
 		<dependency org="org.ognl" name="com.springsource.org.ognl" rev="2.6.9" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.aop" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.beans" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context.support" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.jdbc" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.orm" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.6.A" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.6.A" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.aop" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.beans" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context.support" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.jdbc" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.orm" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.6.SEC01" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.6.SEC01" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.4.A" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="2.0.4.A" conf="compile->runtime"/>
  		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
@@ -54,7 +54,7 @@
 		<!-- test-time only dependencies -->
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.6.A" conf="test->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.test" rev="2.5.6.SEC01" conf="test->runtime"/>
 		
 	</dependencies>
 
