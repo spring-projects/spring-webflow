@@ -381,7 +381,11 @@ public abstract class AbstractMvcView implements View {
 	private Object getModelObject() {
 		Expression model = getModelExpression();
 		if (model != null) {
-			return model.getValue(requestContext);
+			try {
+				return model.getValue(requestContext);
+			} catch (EvaluationException e) {
+				return null;
+			}
 		} else {
 			return null;
 		}
