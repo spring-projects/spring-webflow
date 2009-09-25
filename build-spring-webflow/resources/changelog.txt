@@ -1,6 +1,12 @@
 SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
+
+Changes in version 2.0.9 ()
+-------------------------------------
+* ViewState now ignores case where 'model' expression fails to evaluate (SWF-1176)
+
+
 Changes in version 2.0.8 (2009.08.06)
 -------------------------------------
 Bug Fixes
