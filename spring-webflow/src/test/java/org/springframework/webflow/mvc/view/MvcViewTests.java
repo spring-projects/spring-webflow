@@ -19,6 +19,8 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.convert.converters.StringToDate;
 import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.expression.EvaluationException;
+import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -242,6 +244,49 @@ public class MvcViewTests extends TestCase {
 		assertNotNull(bm);
 		assertEquals("bogus 1", bm.getFieldValue("integerProperty"));
 		assertEquals("bogus 2", bm.getFieldValue("dateProperty"));
+	}
+
+	public void testResumeEventNoModelInScope() throws Exception {
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		context.putRequestParameter("stringProperty", "foo");
+		context.putRequestParameter("integerProperty", "5");
+		context.putRequestParameter("dateProperty", "2007-01-01");
+		context.putRequestParameter("beanProperty.name", "foo");
+		context.putRequestParameter("multipartFile", new MockMultipartFile("foo", new byte[0]));
+		context.putRequestParameter("stringArrayProperty", new String[] { "foo", "bar", "baz" });
+		context.putRequestParameter("integerArrayProperty", new String[] { "1", "2", "3" });
+		context.putRequestParameter("primitiveArrayProperty", new String[] { "1", "2", "3" });
+		context.putRequestParameter("listProperty", new String[] { "1", "2", "3" });
+		Expression modelObject = new Expression() {
+			public String getExpressionString() {
+				return "foo";
+			}
+
+			public Object getValue(Object context) throws EvaluationException {
+				throw new EvaluationException(Object.class, "foo", "Model expression failed to evaluate");
+			}
+
+			public Class getValueType(Object context) throws EvaluationException {
+				return Object.class;
+			}
+
+			public void setValue(Object context, Object value) throws EvaluationException {
+				throw new IllegalStateException("Should not be called");
+			}
+		};
+		context.getCurrentState().getAttributes().put("model", modelObject);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.processUserEvent();
+		assertTrue(view.hasFlowEvent());
+		assertFalse(context.getFlashScope().contains(ViewActionStateHolder.KEY));
+		assertEquals("submit", view.getFlowEvent().getId());
 	}
 
 	public void testResumeEventBindingErrorsRedirectAfterPost() throws Exception {
