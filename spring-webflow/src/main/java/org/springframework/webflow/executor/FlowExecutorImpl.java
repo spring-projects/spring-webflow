@@ -139,7 +139,13 @@ public class FlowExecutorImpl implements FlowExecutor {
 			FlowExecution flowExecution = executionFactory.createFlowExecution(flowDefinition);
 			flowExecution.start(input, context);
 			if (!flowExecution.hasEnded()) {
-				executionRepository.putFlowExecution(flowExecution);
+				FlowExecutionLock lock = executionRepository.getLock(flowExecution.getKey());
+				lock.lock();
+				try {
+					executionRepository.putFlowExecution(flowExecution);
+				} finally {
+					lock.unlock();
+				}
 				return createPausedResult(flowExecution);
 			} else {
 				return createEndResult(flowExecution);

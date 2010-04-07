@@ -53,11 +53,19 @@ public class FlowExecutorImplTests extends TestCase {
 		execution.hasEnded();
 		EasyMock.expectLastCall().andReturn(Boolean.FALSE);
 
+		MockFlowExecutionKey flowExecutionKey = new MockFlowExecutionKey("12345");
+		EasyMock.expect(execution.getKey()).andReturn(flowExecutionKey);
+		EasyMock.expect(repository.getLock(flowExecutionKey)).andReturn(lock);
+
+		lock.lock();
+
 		repository.putFlowExecution(execution);
+
+		lock.unlock();
 
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");
-		EasyMock.expect(execution.getKey()).andReturn(new MockFlowExecutionKey("12345"));
+		EasyMock.expect(execution.getKey()).andReturn(flowExecutionKey);
 
 		replayMocks();
 
