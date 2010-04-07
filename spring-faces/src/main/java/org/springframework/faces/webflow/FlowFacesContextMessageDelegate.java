@@ -1,5 +1,8 @@
 package org.springframework.faces.webflow;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -271,7 +274,7 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * Adapter class to convert a {@link FacesMessage} to a Spring {@link Message}. This adapter is required to allow
 	 * <tt>FacesMessages</tt> to be registered with spring while still retaining their mutable nature. It is not
-	 * uncommon for <tt>FacesMessages</tt> to be changed after they gave been added to a <tt>FacesContext</tt>, for
+	 * uncommon for <tt>FacesMessages</tt> to be changed after they have been added to a <tt>FacesContext</tt>, for
 	 * example, from a <tt>PhaseListener</tt>.
 	 * <p>
 	 * NOTE: Only {@link javax.faces.application.FacesMessage} instances are directly adapted, any subclasses will be
@@ -282,14 +285,38 @@ public class FlowFacesContextMessageDelegate {
 	private static class FlowFacesMessageAdapter extends Message implements MessageResolver {
 
 		private String key;
-		private FacesMessage facesMessage;
 		private String source;
+		private transient FacesMessage facesMessage;
 
 		public FlowFacesMessageAdapter(String source, String key, FacesMessage message) {
 			super(null, null, null);
 			this.source = source;
 			this.key = key;
 			this.facesMessage = asStandardFacesMessageInstance(message);
+		}
+
+		// Custom serialization to work around myfaces bug MYFACES-1347
+
+		private void writeObject(ObjectOutputStream oos) throws IOException {
+			oos.defaultWriteObject();
+			oos.writeObject(facesMessage.getSummary());
+			oos.writeObject(facesMessage.getDetail());
+			oos.writeInt(facesMessage.getSeverity().getOrdinal());
+		}
+
+		private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+			ois.defaultReadObject();
+			String summary = (String) ois.readObject();
+			String detail = (String) ois.readObject();
+			int severityOrdinal = ois.readInt();
+			FacesMessage.Severity severity = FacesMessage.SEVERITY_INFO;
+			for (Iterator iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
+				FacesMessage.Severity value = (FacesMessage.Severity) iterator.next();
+				if (value.getOrdinal() == severityOrdinal) {
+					severity = value;
+				}
+			}
+			facesMessage = new FacesMessage(severity, summary, detail);
 		}
 
 		/**

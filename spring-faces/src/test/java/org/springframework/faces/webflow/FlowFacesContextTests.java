@@ -1,5 +1,10 @@
 package org.springframework.faces.webflow;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -174,6 +179,41 @@ public class FlowFacesContextTests extends TestCase {
 			iterationCount++;
 		}
 		assertEquals(3, iterationCount);
+	}
+
+	public final void testMessagesAreSerializable() throws Exception {
+		DefaultMessageContext messageContext = new DefaultMessageContext();
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		facesContext.addMessage("TESTID", new FacesMessage("summary1"));
+		FacesMessage sourceMessage = (FacesMessage) facesContext.getMessages("TESTID").next();
+		sourceMessage.setSummary("summary2");
+		sourceMessage.setSeverity(FacesMessage.SEVERITY_FATAL);
+
+		Serializable mementoWrite = messageContext.createMessagesMemento();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(mementoWrite);
+		oos.flush();
+		byte[] byteArray = bos.toByteArray();
+		oos.close();
+
+		ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+		ObjectInputStream ois = new ObjectInputStream(bis);
+		Serializable mementoRead = (Serializable) ois.readObject();
+		ois.close();
+
+		messageContext.restoreMessages(mementoRead);
+		EasyMock.reset(new Object[] { requestContext });
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		FacesContext newFacesContext = new FlowFacesContext(requestContext, jsf.facesContext());
+		assertSame(FacesContext.getCurrentInstance(), newFacesContext);
+		FacesMessage gotMessage = (FacesMessage) newFacesContext.getMessages("TESTID").next();
+		assertEquals("summary2", gotMessage.getSummary());
+		assertEquals(FacesMessage.SEVERITY_FATAL, gotMessage.getSeverity());
 	}
 
 	public final void testGetMaximumSeverity() {
