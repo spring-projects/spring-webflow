@@ -20,10 +20,9 @@ Import-Template:
  ognl;version="[2.6.9, 3.0.0)";resolution:=optional,
  junit.framework;resolution:=optional;version="[3.8.2, 4.0.0)",
  org.hibernate;resolution:=optional;version="[3.2.6.ga, 4.0.0)",
- org.hibernate.classic;resolution:=optional;version="[3.2.6.ga, 4.0.0)"
-Unversioned-Imports: 
- org.w3c.dom,
- org.xml.sax,
- javax.xml.parsers,
- javax.xml.transform,
- javax.xml.transform.stream
+ org.hibernate.classic;resolution:=optional;version="[3.2.6.ga, 4.0.0)",
+ org.w3c.dom;version="0",
+ org.xml.sax;version="0",
+ javax.xml.parsers;version="0",
+ javax.xml.transform;version="0",
+ javax.xml.transform.stream;version="0"

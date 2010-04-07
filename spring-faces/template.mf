@@ -15,6 +15,5 @@ Import-Template:
  javax.servlet.http;version="[2.4.0, 3.0.0)",
  javax.faces.*;version="[1.2.0, 2.0.0)",
  org.ajax4jsf.*;version="[1.1.1, 2.0.0)";resolution:=optional,
- com.sun.facelets.*;version="[1.1.0, 2.0.0)";resolution:=optional
-Unversioned-Imports: 
- org.w3c.dom
+ com.sun.facelets.*;version="[1.1.0, 2.0.0)";resolution:=optional,
+ org.w3c.dom;version="0"
