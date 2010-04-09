@@ -312,7 +312,11 @@ public class GenericConversionService implements ConversionService {
 				} else {
 					elementConverter = new StaticConversionExecutor(sourceClass, converter.getTargetClass(), converter);
 				}
-				return new StaticConversionExecutor(sourceClass, targetClass, new ObjectToCollection(elementConverter));
+				if (!Collection.class.isAssignableFrom(converter.getTargetClass())) {
+					elementConverter = new StaticConversionExecutor(sourceClass, targetClass, new ObjectToCollection(
+							elementConverter));
+				}
+				return elementConverter;
 			}
 		}
 		if (converter.getSourceClass().isAssignableFrom(sourceClass)) {

@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import junit.framework.TestCase;
 
@@ -37,6 +38,7 @@ import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.converters.FormattedStringToNumber;
 import org.springframework.binding.convert.converters.StringToBoolean;
+import org.springframework.binding.convert.converters.StringToObject;
 import org.springframework.binding.convert.converters.TwoWayConverter;
 import org.springframework.binding.format.DefaultNumberFormatFactory;
 
@@ -331,6 +333,15 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("princy1", ((Principal) list.get(0)).getName());
 	}
 
+	public void testRegisterCustomConverterCsvStringToList() {
+		DefaultConversionService service = new DefaultConversionService();
+		service.addConverter("princy", new PrincipalCsvStringToListConverter());
+		ConversionExecutor executor = service.getConversionExecutor("princy", String.class, List.class);
+		List list = (List) executor.execute("princy1,princy2");
+		assertEquals("princy1", ((Principal) list.get(0)).getName());
+		assertEquals("princy2", ((Principal) list.get(1)).getName());
+	}
+
 	public void testRegisterCustomConverterObjectToListBogus() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -576,6 +587,32 @@ public class DefaultConversionServiceTests extends TestCase {
 
 		public Class getTargetClass() {
 			return String.class;
+		}
+
+	}
+
+	private static class PrincipalCsvStringToListConverter extends StringToObject {
+
+		public PrincipalCsvStringToListConverter() {
+			super(List.class);
+		}
+
+		protected Object toObject(String string, Class targetClass) throws Exception {
+			List principals = new ArrayList();
+			StringTokenizer tokenizer = new StringTokenizer(string, ",");
+			while (tokenizer.hasMoreTokens()) {
+				final String name = tokenizer.nextToken();
+				principals.add(new Principal() {
+					public String getName() {
+						return name;
+					}
+				});
+			}
+			return principals;
+		}
+
+		protected String toString(Object object) throws Exception {
+			throw new UnsupportedOperationException("No implemented");
 		}
 
 	}
