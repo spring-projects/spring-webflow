@@ -2,10 +2,13 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.0.9 ()
+Changes in version 2.0.9 (2010.04.12)
 -------------------------------------
 * ViewState now ignores case where 'model' expression fails to evaluate (SWF-1176)
-
+* Added calls to lock/unlock the coversation when a flow execution is launched (SWF-1213)
+* Added serialization methods to FlowFacesMessageAdapter as workaround for issue in MyFaces (SWF-1187)
+* Prevented the wrapping of a converter with ObjectToCollection in cases where the targetClass of the converter is already a collection (SWF-1229)
+* Upgraded to Dojo 1.2.4 containing security fixes.
 
 Changes in version 2.0.8 (2009.08.06)
 -------------------------------------
