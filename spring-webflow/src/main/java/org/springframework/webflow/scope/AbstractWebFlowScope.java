@@ -63,11 +63,15 @@ public abstract class AbstractWebFlowScope implements Scope {
 	protected abstract MutableAttributeMap getScope() throws IllegalStateException;
 
 	/**
-	 * Always returns <code>null</code> as most Spring Web Flow scopes do not have obvious conversation ids.
-	 * Subclasses should override this method where conversation ids can be intelligently returned.
+	 * Always returns <code>null</code> as most Spring Web Flow scopes do not have obvious conversation ids. Subclasses
+	 * should override this method where conversation ids can be intelligently returned.
 	 * @return always returns <code>null</code>
 	 */
 	public String getConversationId() {
+		return null;
+	}
+
+	public Object resolveContextualObject(String key) {
 		return null;
 	}
 

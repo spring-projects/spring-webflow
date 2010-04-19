@@ -6,10 +6,13 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.tiles.Attribute;
+import org.apache.tiles.AttributeContext;
 import org.apache.tiles.Definition;
-import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.context.TilesRequestContextFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
+import org.apache.tiles.servlet.context.ServletTilesRequestContextFactory;
+import org.apache.tiles.servlet.context.ServletUtil;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -36,6 +39,7 @@ public class AjaxTilesViewTests extends TestCase {
 		tc.setDefinitions(new String[] { "tiles-definitions.xml" });
 		tc.setValidateDefinitions(true);
 		tc.setServletContext(servletContext);
+		tc.setUseMutableTilesContainer(true);
 		tc.afterPropertiesSet();
 
 		ajaxTilesView = new AjaxTilesView();
@@ -52,6 +56,7 @@ public class AjaxTilesViewTests extends TestCase {
 	public void testFullPageRendering() throws Exception {
 		setupStaticWebApplicationContext();
 		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
@@ -60,6 +65,7 @@ public class AjaxTilesViewTests extends TestCase {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
 		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
@@ -69,6 +75,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
 		request.addParameter("fragments", "searchResults");
 		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
 		assertEquals("/WEB-INF/searchResults.jsp", response.getIncludedUrl());
 	}
@@ -78,21 +85,46 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
 		request.addParameter("fragments", "body");
 		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
 		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrl());
 	}
 
+	public void testRenderFragment_CascadedAttribute() throws Exception {
+		setupStaticWebApplicationContext();
+		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
+		request.addParameter("fragments", "searchNavigation");
+		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
+		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrl());
+	}
+
+	public void testRenderFragment_DynamicAttribute() throws Exception {
+		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
+		Object[] requestItems = new Object[] { request, response };
+		AttributeContext attributeContext = container.startContext(requestItems);
+		attributeContext.putAttribute("body", new Attribute("/WEB-INF/dynamicTemplate.jsp"));
+		Map resultMap = new HashMap();
+		ajaxTilesView.addRuntimeAttributes(container, resultMap, request, response);
+		assertNotNull(resultMap.get("body"));
+		assertEquals("/WEB-INF/dynamicTemplate.jsp", resultMap.get("body").toString());
+		container.endContext(requestItems);
+	}
+
 	public void testFlattenAttributeMap() throws Exception {
-		BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(servletContext);
-		TilesRequestContext tilesRequestContext = container.getContextFactory().createRequestContext(
-				container.getApplicationContext(), new Object[] { request, response });
+		TilesRequestContextFactory tilesRequestContextFactory = new ServletTilesRequestContextFactory();
+		tilesRequestContextFactory.init(new HashMap());
+		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
+		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(container
+				.getApplicationContext(), new Object[] { request, response });
 		Definition compositeDefinition = container.getDefinitionsFactory().getDefinition("search", tilesRequestContext);
 		Map resultMap = new HashMap();
 		ajaxTilesView.flattenAttributeMap(container, tilesRequestContext, resultMap, compositeDefinition, request,
 				response);
 		assertNotNull(resultMap.get("body"));
 		assertNotNull(resultMap.get("searchForm"));
-		assertEquals("/WEB-INF/searchForm.jsp", ((Attribute) resultMap.get("searchForm")).getValue());
+		assertEquals("/WEB-INF/searchForm.jsp", resultMap.get("searchForm").toString());
 		assertNotNull(resultMap.get("searchResults"));
 	}
 

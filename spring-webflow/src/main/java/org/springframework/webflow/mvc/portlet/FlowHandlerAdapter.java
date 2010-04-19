@@ -21,12 +21,16 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -149,6 +153,15 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		} catch (FlowException e) {
 			request.getPortletSession().setAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE, e);
 		}
+	}
+
+	public void handleEvent(EventRequest request, EventResponse response, Object handler) throws Exception {
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	public ModelAndView handleResource(ResourceRequest request, ResourceResponse response, Object handler)
+			throws Exception {
+		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	// subclassing hooks

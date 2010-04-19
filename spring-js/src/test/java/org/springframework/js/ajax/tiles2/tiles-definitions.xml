@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
-        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
 <tiles-definitions>
 
     <definition name="layout" template="/WEB-INF/layout.jsp"/>
 
     <definition name="search" extends="layout">
-    	<put-attribute name="searchForm" value="Substituted Value" type="string"/>
+    	<put-attribute name="searchForm" value="Substituted Value" type="string" />
         <put-attribute name="body" value="search.body" />
+        <put-attribute name="searchNavigation" value="/WEB-INF/searchNavigation.jsp" cascade="true" />
     </definition>
 
     <definition name="search.body" template="/WEB-INF/search.jsp">

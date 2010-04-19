@@ -67,12 +67,16 @@ public class PortletRequestMapTests extends TestCase {
 
 	public void testGetAttributeNames() {
 		request.setAttribute("Some key", "Some value");
-		request.removeAttribute("javax.servlet.context.tempdir");
 		// perform test
 		Iterator names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String) names.next();
-		assertEquals("Some key", name);
+		while (names.hasNext()) {
+			String name = (String) names.next();
+			if ("Some key".equals(name)) {
+				return;
+			}
+		}
+		fail("Expected to find: 'Some key'");
 	}
 }

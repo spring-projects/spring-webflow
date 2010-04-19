@@ -30,9 +30,7 @@
 		<property name="definitions">
 			<list>
 				<value>/WEB-INF/layouts/layouts.xml</value>
-				<value>/WEB-INF/views.xml</value>
-				<value>/WEB-INF/hotels/views.xml</value>
-				<value>/WEB-INF/hotels/booking/views.xml</value>
+				<value>/WEB-INF/**/views.xml</value>
 			</list>
 		</property>
 	</bean>
