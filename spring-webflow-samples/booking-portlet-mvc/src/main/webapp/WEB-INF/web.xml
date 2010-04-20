@@ -51,7 +51,7 @@
 	<!-- Generated Portlet Wrapper Servlet for Apache Pluto deployment -->
 	<servlet>
 		<servlet-name>swf-booking-mvc</servlet-name>
-		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+		<servlet-class>org.apache.pluto.container.driver.PortletServlet</servlet-class>
 		<init-param>
 			<param-name>portlet-name</param-name>
 			<param-value>swf-booking-mvc</param-value>

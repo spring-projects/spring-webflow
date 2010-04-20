@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
+<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet_2_0"%>
 
 <h2>Welcome to Spring Travel</h2>
 <p>

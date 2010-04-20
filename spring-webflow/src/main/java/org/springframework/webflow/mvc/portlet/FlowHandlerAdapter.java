@@ -25,6 +25,7 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -156,12 +157,20 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 	}
 
 	public void handleEvent(EventRequest request, EventResponse response, Object handler) throws Exception {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		// keep render params
+		response.setRenderParameters(request);
 	}
 
 	public ModelAndView handleResource(ResourceRequest request, ResourceResponse response, Object handler)
 			throws Exception {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		// equivalent to Portlet 2.0 GenericPortlet
+		if (request.getResourceID() != null) {
+			PortletRequestDispatcher rd = this.getPortletContext().getRequestDispatcher(request.getResourceID());
+			if (rd != null) {
+				rd.forward(request, response);
+			}
+		}
+		return null;
 	}
 
 	// subclassing hooks
