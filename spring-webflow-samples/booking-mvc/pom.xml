@@ -129,13 +129,18 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
-			<artifactId>org.springframework.security</artifactId>
-			<version>2.0.4.A</version>
+			<artifactId>org.springframework.security.core</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.config</artifactId>
+			<version>3.0.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>org.springframework.security.taglibs</artifactId>
-			<version>2.0.4.A</version>
+			<version>3.0.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>

@@ -16,18 +16,18 @@
 package org.springframework.webflow.security;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.security.AccessDecisionManager;
-import org.springframework.security.Authentication;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.SecurityConfig;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.vote.AbstractAccessDecisionManager;
-import org.springframework.security.vote.AffirmativeBased;
-import org.springframework.security.vote.RoleVoter;
-import org.springframework.security.vote.UnanimousBased;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.vote.AbstractAccessDecisionManager;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -90,9 +90,9 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 */
 	protected void decide(SecurityRule rule, Object object) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		ConfigAttributeDefinition config = new ConfigAttributeDefinition(getConfigAttributes(rule));
+		Collection configAttributes = getConfigAttributes(rule);
 		if (accessDecisionManager != null) {
-			accessDecisionManager.decide(authentication, object, config);
+			accessDecisionManager.decide(authentication, object, configAttributes);
 		} else {
 			AbstractAccessDecisionManager abstractAccessDecisionManager;
 			List voters = new ArrayList();
@@ -105,7 +105,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 				throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
 			}
 			abstractAccessDecisionManager.setDecisionVoters(voters);
-			abstractAccessDecisionManager.decide(authentication, object, config);
+			abstractAccessDecisionManager.decide(authentication, object, configAttributes);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * @param rule the rule to convert
 	 * @return list of ConfigAttributes for Spring Security
 	 */
-	protected List getConfigAttributes(SecurityRule rule) {
+	protected Collection getConfigAttributes(SecurityRule rule) {
 		List configAttributes = new ArrayList();
 		Iterator attributeIt = rule.getAttributes().iterator();
 		while (attributeIt.hasNext()) {

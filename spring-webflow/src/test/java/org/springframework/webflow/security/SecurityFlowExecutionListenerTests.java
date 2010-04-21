@@ -5,14 +5,14 @@ import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.springframework.security.AccessDeniedException;
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;

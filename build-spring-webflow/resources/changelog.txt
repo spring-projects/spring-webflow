@@ -2,10 +2,19 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.1.0 ()
+-------------------------------------
+* Upgraded to Spring Framework 3.0.2.RELEASE, Portlet API 2.0.1, and Tiles 2.1.2 (SWF-1226)
+* Upgraded to Spring Security 3.0.2.RELEASE (SWF-1182)
+* Added support for cascaded attributes in AjaxTilesView (SWF-1053)
+
 Changes in version 2.0.9 ()
 -------------------------------------
 * ViewState now ignores case where 'model' expression fails to evaluate (SWF-1176)
-
+* Added calls to lock/unlock the coversation when a flow execution is launched (SWF-1213)
+* Added serialization methods to FlowFacesMessageAdapter as workaround for issue in MyFaces (SWF-1187)
+* Prevented the wrapping of a converter with ObjectToCollection in cases where the targetClass of the converter is already a collection (SWF-1229)
+* Upgraded to Dojo 1.2.4 containing security fixes.
 
 Changes in version 2.0.8 (2009.08.06)
 -------------------------------------
