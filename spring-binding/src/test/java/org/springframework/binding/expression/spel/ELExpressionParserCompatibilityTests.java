@@ -1,34 +1,57 @@
-package org.springframework.binding.expression.el;
-
-import java.util.Iterator;
-
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.FunctionMapper;
-import javax.el.VariableMapper;
+/*
+ * Copyright 2004-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.binding.expression.spel;
 
 import junit.framework.TestCase;
 
-import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
-import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ValueCoercionException;
+import org.springframework.binding.expression.el.ELExpressionParser;
+import org.springframework.binding.expression.el.ELExpressionParserTests;
+import org.springframework.binding.expression.el.TestBean;
 import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.expression.AccessException;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.PropertyAccessor;
+import org.springframework.expression.TypedValue;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-public class ELExpressionParserTests extends TestCase {
+/**
+ * <p>
+ * Test cases to verify that {@link SpringELExpressionParser} matches to the functionality of {@link ELExpressionParser}
+ * as demonstrated in {@link ELExpressionParserTests}.
+ * </p>
+ * 
+ * @author Rossen Stoyanchev
+ */
+public class ELExpressionParserCompatibilityTests extends TestCase {
 
-	private ELExpressionParser parser = new ELExpressionParser(new ExpressionFactoryImpl());
+	private SpringELExpressionParser parser = new SpringELExpressionParser(new SpelExpressionParser());
 
-	public void setUp() {
-		parser.putContextFactory(TestBean.class, new TestELContextFactory());
+	protected void setUp() throws Exception {
+		parser.addPropertyAccessor(new SpecialPropertyAccessor());
 	}
 
 	public void testParseSimpleEvalExpressionNoParserContext() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, null);
-		assertEquals(new Long(7), exp.getValue(null));
+		assertEquals(new Integer(7), exp.getValue(null)); // Unified EL returns Long
 	}
 
 	public void testParseNullExpressionString() {
@@ -50,17 +73,16 @@ public class ELExpressionParserTests extends TestCase {
 		String expressionString = "";
 		try {
 			parser.parseExpression(expressionString, null);
-			fail("Should have failed");
-		} catch (ParserException e) {
+			fail("should have thrown iae");
+		} catch (IllegalArgumentException e) {
 
 		}
 	}
 
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "3 + 4";
-		Expression exp = parser
-				.parseExpression(expressionString, new FluentParserContext().expectResult(Integer.class));
-		assertEquals(new Integer(7), exp.getValue(null));
+		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
+		assertEquals(new Long(7), exp.getValue(null));
 	}
 
 	public void testParseBeanEvalExpressionNoParserContext() {
@@ -71,8 +93,9 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseEvalExpressionWithContextTypeCoersion() {
 		String expressionString = "maximum";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
-		assertEquals(new Long(2), exp.getValue(new TestBean()));
+		Expression exp = parser
+				.parseExpression(expressionString, new FluentParserContext().expectResult(Integer.class));
+		assertEquals(new Integer(2), exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
@@ -107,35 +130,12 @@ public class ELExpressionParserTests extends TestCase {
 	}
 
 	public void testParseTemplateExpressionWithVariables() {
-		String expressionString = "#{value}#{max}";
+		String expressionString = "#{value}#{#max}";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
 				new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
-		assertEquals("foo2", exp.getValue(target));
+		assertEquals("foo2", exp.getValue(target)); // TODO:
 	}
-
-	public void testVariablesWithCoersion() {
-		Expression exp = parser.parseExpression("max", new FluentParserContext().variable(new ExpressionVariable("max",
-				"maximum", new FluentParserContext().expectResult(Long.class))));
-		TestBean target = new TestBean();
-		assertEquals(new Long(2), exp.getValue(target));
-	}
-
-	public void testTemplateNestedVariables() {
-		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template().variable(
-						new ExpressionVariable("var", "'bar'")))));
-		TestBean target = new TestBean();
-		assertEquals("foo2bar", exp.getValue(target));
-	}
-
-	// public void testGetValueTypeNullCollectionValue() {
-	// String exp = "list[3]";
-	// Expression e = parser.parseExpression(exp, null);
-	// TestBean target = new TestBean();
-	// assertEquals(null, e.getValueType(target));
-	// }
 
 	public void testGetExpressionString() {
 		String expressionString = "maximum";
@@ -196,50 +196,27 @@ public class ELExpressionParserTests extends TestCase {
 		}
 	}
 
-	private static class TestELContextFactory implements ELContextFactory {
-		public ELContext getELContext(final Object target) {
-			return new ELContext() {
-				public ELResolver getELResolver() {
-					return new ELResolver() {
-						public Class getCommonPropertyType(ELContext arg0, Object arg1) {
-							return Object.class;
-						}
+	private final class SpecialPropertyAccessor implements PropertyAccessor {
+		public void write(EvaluationContext context, Object target, String name, Object newValue)
+				throws AccessException {
+		}
 
-						public Iterator getFeatureDescriptors(ELContext arg0, Object arg1) {
-							return null;
-						}
+		public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+			return new TypedValue("Custom resolver resolved this special property!", TypeDescriptor
+					.valueOf(String.class));
+		}
 
-						public Class getType(ELContext arg0, Object arg1, Object arg2) {
-							return String.class;
-						}
+		public Class[] getSpecificTargetClasses() {
+			return null;
+		}
 
-						public Object getValue(ELContext arg0, Object arg1, Object arg2) {
-							if (arg1 == null && arg2.equals("specialProperty")) {
-								arg0.setPropertyResolved(true);
-								return "Custom resolver resolved this special property!";
-							} else {
-								return null;
-							}
-						}
+		public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+			return false;
+		}
 
-						public boolean isReadOnly(ELContext arg0, Object arg1, Object arg2) {
-							return true;
-						}
-
-						public void setValue(ELContext arg0, Object arg1, Object arg2, Object arg3) {
-							throw new UnsupportedOperationException("Not supported");
-						}
-					};
-				}
-
-				public FunctionMapper getFunctionMapper() {
-					return null;
-				}
-
-				public VariableMapper getVariableMapper() {
-					return null;
-				}
-			};
+		public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+			return "specialProperty".equals(name);
 		}
 	}
+
 }
