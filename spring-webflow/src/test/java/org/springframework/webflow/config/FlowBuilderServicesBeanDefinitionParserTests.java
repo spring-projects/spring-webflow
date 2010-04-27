@@ -12,12 +12,12 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
@@ -32,7 +32,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 	public void testFlowBuilderServicesDefaultConfig() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesDefault");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof DefaultConversionService);
 		assertFalse(builderServices.getDevelopment());
@@ -41,7 +41,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 	public void testFlowBuilderServicesAllCustomized() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesAllCustom");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getDevelopment());
@@ -51,8 +51,8 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesConversionServiceCustom");
 		assertNotNull(builderServices);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
-		assertTrue(((WebFlowELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
+		assertNotNull(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService());
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertFalse(builderServices.getDevelopment());
 	}

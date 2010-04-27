@@ -24,6 +24,7 @@ import org.springframework.binding.expression.support.AbstractGetValueExpression
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.MockTransitionCriteria;
@@ -31,7 +32,7 @@ import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 import org.springframework.webflow.test.MockFlowExecutionContext;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -79,7 +80,7 @@ public class EndStateTests extends TestCase {
 		};
 		EndState state = new EndState(flow, "end");
 		DefaultMapper mapper = new DefaultMapper();
-		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("flowScope.x", new FluentParserContext().evaluate(RequestContext.class));
 		Expression y = parser.parseExpression("y", new FluentParserContext().evaluate(MutableAttributeMap.class));
 		mapper.addMapping(new DefaultMapping(x, y));

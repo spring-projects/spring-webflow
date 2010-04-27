@@ -20,7 +20,11 @@
 	<faces:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService"/>
 	
-	<bean id="customExpressionParser" class="org.springframework.webflow.expression.DefaultExpressionParserFactory" factory-method="getExpressionParser"/>
+	<bean id="customExpressionParser" class="org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser">
+		<constructor-arg>
+			<bean class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
+		</constructor-arg>
+	</bean>
 	
 	<bean id="customViewFactoryCreator" class="org.springframework.faces.config.FacesFlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
 	

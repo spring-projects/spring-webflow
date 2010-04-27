@@ -43,7 +43,8 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 
 	// --------------------------- Full qualified class names ----------------------- //
 	private static final String DEFAULT_CONVERSION_SERVICE_CLASS_NAME = "org.springframework.binding.convert.service.DefaultConversionService";
-	private static final String DEFAULT_EXPRESSION_PARSER_FACTORY_CLASS_NAME = "org.springframework.webflow.expression.DefaultExpressionParserFactory";
+	private static final String WEB_FLOW_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser";
+	private static final String SPRING_EL_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.expression.spel.standard.SpelExpressionParser";
 	private static final String FLOW_BUILDER_SERVICES_CLASS_NAME = "org.springframework.webflow.engine.builder.support.FlowBuilderServices";
 	private static final String FLOW_REGISTRY_FACTORY_BEAN_CLASS_NAME = "org.springframework.webflow.config.FlowRegistryFactoryBean";
 	private static final String MVC_VIEW_FACTORY_CREATOR_CLASS_NAME = "org.springframework.webflow.mvc.builder.MvcViewFactoryCreator";
@@ -151,11 +152,15 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			String conversionService = registerInfrastructureComponent(element, context, conversionServiceBuilder);
 			flowBuilderServicesBuilder.addPropertyReference("conversionService", conversionService);
 
-			BeanDefinitionBuilder expressionParserBuilder = BeanDefinitionBuilder
-					.genericBeanDefinition(DEFAULT_EXPRESSION_PARSER_FACTORY_CLASS_NAME);
-			expressionParserBuilder.setFactoryMethod("getExpressionParser");
-			expressionParserBuilder.addConstructorArgReference(conversionService);
-			String expressionParser = registerInfrastructureComponent(element, context, expressionParserBuilder);
+			BeanDefinitionBuilder springElExpressionParserBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(SPRING_EL_EXPRESSION_PARSER_CLASS_NAME);
+			BeanDefinitionBuilder webFlowElExpressionParserBuilder = BeanDefinitionBuilder
+					.genericBeanDefinition(WEB_FLOW_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME);
+			webFlowElExpressionParserBuilder
+					.addConstructorArgValue(springElExpressionParserBuilder.getBeanDefinition());
+
+			String expressionParser = registerInfrastructureComponent(element, context,
+					webFlowElExpressionParserBuilder);
 			flowBuilderServicesBuilder.addPropertyReference("expressionParser", expressionParser);
 
 			BeanDefinitionBuilder viewFactoryCreatorBuilder = BeanDefinitionBuilder

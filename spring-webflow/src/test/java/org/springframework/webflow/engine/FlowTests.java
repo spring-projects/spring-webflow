@@ -25,6 +25,7 @@ import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.TestMultiAction;
 import org.springframework.webflow.core.collection.AttributeMap;
@@ -37,7 +38,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -209,7 +210,7 @@ public class FlowTests extends TestCase {
 
 	public void testStartWithMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
-		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
 		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
 				.evaluate(RequestContext.class));
@@ -224,7 +225,7 @@ public class FlowTests extends TestCase {
 
 	public void testStartWithMapperButNoInput() {
 		DefaultMapper attributeMapper = new DefaultMapper();
-		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
 		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
 				.evaluate(RequestContext.class));
@@ -314,7 +315,7 @@ public class FlowTests extends TestCase {
 
 	public void testEndWithOutputMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
-		ExpressionParser parser = DefaultExpressionParserFactory.getExpressionParser();
+		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("flowScope.attr", new FluentParserContext()
 				.evaluate(RequestContext.class));
 		Expression y = parser.parseExpression("attr", new FluentParserContext().evaluate(MutableAttributeMap.class));

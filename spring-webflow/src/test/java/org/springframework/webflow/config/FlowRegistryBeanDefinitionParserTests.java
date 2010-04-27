@@ -6,13 +6,13 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 
 public class FlowRegistryBeanDefinitionParserTests extends TestCase {
@@ -63,7 +63,7 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 		while (i.hasNext()) {
 			FlowBuilderServices builderServices = (FlowBuilderServices) i.next();
 			assertNotNull(builderServices);
-			assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+			assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 			assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 			assertTrue(builderServices.getConversionService() instanceof DefaultConversionService);
 			assertFalse(builderServices.getDevelopment());

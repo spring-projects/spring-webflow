@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.springframework.binding.expression.support.StaticExpression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -14,7 +15,7 @@ import org.springframework.mock.web.portlet.MockPortletContext;
 import org.springframework.mock.web.portlet.MockRenderRequest;
 import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.web.servlet.ViewRendererServlet;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 import org.springframework.webflow.mvc.view.MvcViewTests.BindBean;
 import org.springframework.webflow.test.MockFlowExecutionKey;
@@ -56,7 +57,7 @@ public class PortletMvcViewTests extends TestCase {
 		org.springframework.web.servlet.View mvcView = (org.springframework.web.servlet.View) EasyMock
 				.createMock(org.springframework.web.servlet.View.class);
 		AbstractMvcView view = new PortletMvcView(mvcView, context);
-		view.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		view.setExpressionParser(new WebFlowSpringELExpressionParser(new SpelExpressionParser()));
 		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());
 		view.processUserEvent();
 		assertEquals(true, bindBean.getBooleanProperty());

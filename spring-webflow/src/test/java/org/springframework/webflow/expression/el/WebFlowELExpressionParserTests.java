@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.webflow.TestBean;
@@ -24,8 +24,7 @@ import org.springframework.webflow.test.MockRequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 public class WebFlowELExpressionParserTests extends TestCase {
-	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(DefaultExpressionFactoryUtils
-			.createExpressionFactory());
+	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
 	public void testResolveMap() {
 		LocalAttributeMap map = new LocalAttributeMap();

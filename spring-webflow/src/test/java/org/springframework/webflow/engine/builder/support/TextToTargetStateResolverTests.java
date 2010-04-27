@@ -40,7 +40,7 @@ public class TextToTargetStateResolverTests extends TestCase {
 	}
 
 	public void testDynamic() throws Exception {
-		String expression = "${flowScope.lastState}";
+		String expression = "#{flowScope.lastState}";
 		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
 				TargetStateResolver.class);
 		MockRequestContext context = new MockRequestContext();

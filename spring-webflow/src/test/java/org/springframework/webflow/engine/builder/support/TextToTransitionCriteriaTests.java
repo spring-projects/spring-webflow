@@ -62,7 +62,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testTrueEvaluation() throws Exception {
-		String expression = "${flowScope.foo == 'bar'}";
+		String expression = "#{flowScope.foo == 'bar'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
@@ -70,7 +70,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testFalseEvaluation() throws Exception {
-		String expression = "${flowScope.foo != 'bar'}";
+		String expression = "#{flowScope.foo != 'bar'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
@@ -78,7 +78,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testNonStringEvaluation() throws Exception {
-		String expression = "${3 + 4}";
+		String expression = "#{3 + 4}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		MockRequestContext ctx = getRequestContext();
@@ -87,7 +87,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testCurrenEventEval() throws Exception {
-		String expression = "${currentEvent == 'submit'}";
+		String expression = "#{currentEvent.id == 'submit'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		MockRequestContext ctx = getRequestContext();

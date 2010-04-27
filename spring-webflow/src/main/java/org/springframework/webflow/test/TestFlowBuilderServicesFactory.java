@@ -2,8 +2,9 @@ package org.springframework.webflow.test;
 
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
-import org.springframework.webflow.expression.DefaultExpressionParserFactory;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 
 /**
  * Factory that encapsulates configuration of default flow builder services for a test environment.
@@ -17,7 +18,7 @@ public class TestFlowBuilderServicesFactory {
 		FlowBuilderServices services = new FlowBuilderServices();
 		services.setViewFactoryCreator(new MockViewFactoryCreator());
 		services.setConversionService(new DefaultConversionService());
-		services.setExpressionParser(DefaultExpressionParserFactory.getExpressionParser());
+		services.setExpressionParser(new WebFlowSpringELExpressionParser(new SpelExpressionParser()));
 		services.setApplicationContext(createTestApplicationContext());
 		return services;
 	}

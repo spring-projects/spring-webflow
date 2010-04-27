@@ -7,14 +7,14 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.el.DefaultExpressionFactoryUtils;
-import org.springframework.binding.expression.el.ELExpressionParser;
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 public class DefaultMapperTests extends TestCase {
 	private DefaultMapper mapper = new DefaultMapper();
-	private ExpressionParser parser = new ELExpressionParser(DefaultExpressionFactoryUtils.createExpressionFactory());
+	private ExpressionParser parser = new SpringELExpressionParser(new SpelExpressionParser());
 
 	public void testMapping() {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("foo", null), parser.parseExpression("bar",

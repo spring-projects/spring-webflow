@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
+import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelMessage;
@@ -76,6 +77,9 @@ public class SpringELExpression implements Expression {
 			updateEvaluationContext(rootObject);
 			return expression.getValue(evaluationContext, expectedType);
 		} catch (SpelEvaluationException e) {
+			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
+				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
+			}
 			if (e.getMessageCode().equals(SpelMessage.TYPE_CONVERSION_ERROR)) {
 				throw new ValueCoercionException(rootObject.getClass(), getExpressionString(), null, expectedType, e);
 			}
@@ -86,8 +90,17 @@ public class SpringELExpression implements Expression {
 	}
 
 	public Class getValueType(Object rootObject) throws EvaluationException {
-		evaluationContext.setRootObject(rootObject);
-		return expression.getValueType(evaluationContext);
+		try {
+			evaluationContext.setRootObject(rootObject);
+			return expression.getValueType(evaluationContext);
+		} catch (SpelEvaluationException e) {
+			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
+				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
+			}
+			throw new EvaluationException(rootObject.getClass(), getExpressionString(),
+					"An ELException occurred getting the value type for expression '" + getExpressionString()
+							+ "' on context [" + rootObject.getClass() + "]", e);
+		}
 	}
 
 	public void setValue(Object rootObject, Object value) throws EvaluationException {
@@ -95,6 +108,9 @@ public class SpringELExpression implements Expression {
 			updateEvaluationContext(rootObject);
 			expression.setValue(evaluationContext, value);
 		} catch (SpelEvaluationException e) {
+			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_WRITABLE)) {
+				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
+			}
 			if (e.getMessageCode().equals(SpelMessage.EXCEPTION_DURING_PROPERTY_WRITE)) {
 				throw new ValueCoercionException(rootObject.getClass(), getExpressionString(), value, expectedType, e);
 			}

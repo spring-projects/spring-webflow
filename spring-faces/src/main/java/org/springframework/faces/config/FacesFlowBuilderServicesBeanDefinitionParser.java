@@ -16,7 +16,6 @@
 package org.springframework.faces.config;
 
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.parsing.CompositeComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -36,12 +35,11 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		BeanDefinitionParser {
 
 	// --------------------------- Full qualified class names ----------------------- //
-	private static final String DEFAULT_EXPRESSION_FACTORY_UTILS_CLASS_NAME = "org.springframework.binding.expression.el.DefaultExpressionFactoryUtils";
 	private static final String FACES_CONVERSION_SERVICE_CLASS_NAME = "org.springframework.faces.model.converter.FacesConversionService";
 	private static final String FLOW_BUILDER_SERVICES_CLASS_NAME = "org.springframework.webflow.engine.builder.support.FlowBuilderServices";
 	private static final String JSF_VIEW_FACTORY_CREATOR_CLASS_NAME = "org.springframework.faces.webflow.JsfViewFactoryCreator";
-	private static final String JSF_MANAGED_BEAN_AWARE_E_L_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser";
-	private static final String WEBFLOW_EL_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.webflow.expression.el.WebFlowELExpressionParser";
+	private static final String FACES_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.faces.webflow.FacesSpringELExpressionParser";
+	private static final String WEBFLOW_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME = "org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser";
 
 	// --------------------------- XML Config Attributes ----------------------- //
 	private static final String CONVERSION_SERVICE_ATTR = "conversion-service";
@@ -106,27 +104,25 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	private void parseExpressionParser(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder,
 			boolean enableManagedBeans) {
 
-		String conversionService = getConversionService(definitionBuilder);
+		// String conversionService = getConversionService(definitionBuilder);
 		String expressionParser = element.getAttribute(EXPRESSION_PARSER_ATTR);
 
 		if (!StringUtils.hasText(expressionParser)) {
 
-			BeanDefinitionBuilder expressionFactoryBuilder = BeanDefinitionBuilder
-					.genericBeanDefinition(DEFAULT_EXPRESSION_FACTORY_UTILS_CLASS_NAME);
-			expressionFactoryBuilder.setFactoryMethod("createExpressionFactory");
+			BeanDefinitionBuilder spelExpressionParser = BeanDefinitionBuilder
+					.genericBeanDefinition("org.springframework.expression.spel.standard.SpelExpressionParser");
 
 			BeanDefinitionBuilder expressionParserBuilder;
 
 			if (enableManagedBeans) {
 				expressionParserBuilder = BeanDefinitionBuilder
-						.genericBeanDefinition(JSF_MANAGED_BEAN_AWARE_E_L_EXPRESSION_PARSER_CLASS_NAME);
+						.genericBeanDefinition(FACES_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME);
 			} else {
 				expressionParserBuilder = BeanDefinitionBuilder
-						.genericBeanDefinition(WEBFLOW_EL_EXPRESSION_PARSER_CLASS_NAME);
+						.genericBeanDefinition(WEBFLOW_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME);
 			}
 
-			expressionParserBuilder.addConstructorArgValue(expressionFactoryBuilder.getBeanDefinition());
-			expressionParserBuilder.addPropertyReference(CONVERSION_SERVICE_PROPERTY, conversionService);
+			expressionParserBuilder.addConstructorArgValue(spelExpressionParser.getBeanDefinition());
 			expressionParser = registerInfrastructureComponent(element, context, expressionParserBuilder);
 
 		} else if (enableManagedBeans) {
@@ -145,19 +141,12 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		}
 	}
 
-	private String getConversionService(BeanDefinitionBuilder definitionBuilder) {
-		RuntimeBeanReference conversionServiceReference = (RuntimeBeanReference) definitionBuilder.getBeanDefinition()
-				.getPropertyValues().getPropertyValue(CONVERSION_SERVICE_PROPERTY).getValue();
-		return conversionServiceReference.getBeanName();
-	}
-
 	private String registerInfrastructureComponent(Element element, ParserContext context,
 			BeanDefinitionBuilder componentBuilder) {
 		String beanName = context.getReaderContext().generateBeanName(componentBuilder.getRawBeanDefinition());
 		componentBuilder.getRawBeanDefinition().setSource(context.extractSource(element));
 		componentBuilder.getRawBeanDefinition().setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-		context.registerBeanComponent(new BeanComponentDefinition(componentBuilder.getBeanDefinition(),
-				beanName));
+		context.registerBeanComponent(new BeanComponentDefinition(componentBuilder.getBeanDefinition(), beanName));
 		return beanName;
 	}
 }

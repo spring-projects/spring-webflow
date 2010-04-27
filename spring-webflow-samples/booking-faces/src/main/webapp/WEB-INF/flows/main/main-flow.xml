@@ -7,7 +7,7 @@
 	
 	<view-state id="enterSearchCriteria">
 		<on-render>
-			<evaluate expression="bookingService.findBookings(currentUser.name)" result="viewScope.bookings" result-type="dataModel" />
+			<evaluate expression="bookingService.findBookings(currentUser!=null?currentUser.name:null)" result="viewScope.bookings" result-type="dataModel" />
 		</on-render>
 		<transition on="search" to="reviewHotels">
 			<evaluate expression="searchCriteria.resetPage()" />

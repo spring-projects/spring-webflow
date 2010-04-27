@@ -101,7 +101,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
 		String expressionString = "specialProperty";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().evaluate(TestBean.class));
-		assertEquals("Custom resolver resolved this special property!", exp.getValue(new TestBean()));
+		assertEquals("Custom resolver resolved this special property!", exp.getValue(null));
 	}
 
 	public void testParseBeanEvalExpressionInvalidELVariable() {

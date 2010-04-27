@@ -11,16 +11,17 @@ import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.faces.model.converter.FacesConversionService;
+import org.springframework.faces.webflow.FacesSpringELExpressionParser;
 import org.springframework.faces.webflow.JSFMockHelper;
-import org.springframework.faces.webflow.JsfManagedBeanAwareELExpressionParser;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 
 public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
@@ -40,7 +41,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	public void testConfigureDefaults() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesDefault");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
 		assertFalse(builderServices.getDevelopment());
@@ -49,7 +50,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	public void testEnableManagedBeans() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesLegacy");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof JsfManagedBeanAwareELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof FacesSpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
 		assertFalse(builderServices.getDevelopment());
@@ -58,7 +59,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	public void testFlowBuilderServicesAllCustomized() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesAllCustom");
 		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
+		assertTrue(builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getDevelopment());
@@ -68,8 +69,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesConversionServiceCustom");
 		assertNotNull(builderServices);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowELExpressionParser);
-		assertTrue(((WebFlowELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
+		assertNotNull(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService());
 		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
 		assertFalse(builderServices.getDevelopment());
 	}

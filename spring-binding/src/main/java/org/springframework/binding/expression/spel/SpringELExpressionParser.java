@@ -16,6 +16,7 @@
 package org.springframework.binding.expression.spel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.NullParserContext;
+import org.springframework.context.expression.MapAccessor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
@@ -33,6 +35,9 @@ import org.springframework.expression.TypeConverter;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.expression.spel.support.StandardTypeConverter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.util.Assert;
 
 /**
@@ -47,16 +52,34 @@ public class SpringELExpressionParser implements ExpressionParser {
 
 	private SpelExpressionParser expressionParser;
 
-	private TypeConverter typeConverter = new StandardTypeConverter();
+	private ConversionService conversionService;
 
 	private List propertyAccessors = new ArrayList();
 
 	public SpringELExpressionParser(SpelExpressionParser expressionParser) {
 		this.expressionParser = expressionParser;
+		this.propertyAccessors.add(new MapAccessor());
+	}
+
+	public ConversionService getConversionService() {
+		ensureConversionServiceInitialized();
+		return conversionService;
 	}
 
 	public void setConversionService(ConversionService conversionService) {
-		typeConverter = new StandardTypeConverter(conversionService);
+		this.conversionService = conversionService;
+	}
+
+	private void ensureConversionServiceInitialized() {
+		if (this.conversionService == null) {
+			FormattingConversionServiceFactoryBean factoryBean = new FormattingConversionServiceFactoryBean() {
+				protected void installFormatters(FormatterRegistry registry) {
+					registry.addFormatterForFieldType(Date.class, new DateFormatter());
+				}
+			};
+			factoryBean.afterPropertiesSet();
+			this.conversionService = factoryBean.getObject();
+		}
 	}
 
 	public void addPropertyAccessor(PropertyAccessor propertyAccessor) {
@@ -67,11 +90,15 @@ public class SpringELExpressionParser implements ExpressionParser {
 		Assert.hasText(expressionString, "The expression string to parse is required and must not be empty");
 		parserContext = (parserContext == null) ? NullParserContext.INSTANCE : parserContext;
 		StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
-		evaluationContext.setTypeConverter(typeConverter);
+		evaluationContext.setTypeConverter(getTypeConverter());
 		evaluationContext.getPropertyAccessors().addAll(propertyAccessors);
 		Map spelExpressionVariables = parseSpelExpressionVariables(parserContext.getExpressionVariables());
 		return new SpringELExpression(parseSpelExpression(expressionString, parserContext), spelExpressionVariables,
 				parserContext.getExpectedEvaluationResultType(), evaluationContext);
+	}
+
+	private TypeConverter getTypeConverter() {
+		return (conversionService != null) ? new StandardTypeConverter(conversionService) : new StandardTypeConverter();
 	}
 
 	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext parserContext) {
