@@ -7,4 +7,10 @@
 	<property file="${basedir}/../../build.properties"/>
 	<import file="${basedir}/../../spring-build/war/default.xml"/>
 
+    <target name="publish"/>
+
+	<target name="publish-maven-central"/>
+
+	<target name="install-maven-central"/>
+
 </project>
