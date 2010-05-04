@@ -22,8 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.PropertyEditorRegistry;
-import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -35,6 +36,7 @@ import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.Severity;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.Assert;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.BindingResult;
@@ -42,7 +44,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
-import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 
 /**
  * Makes the properties of the "model" object available to Spring views during rendering. Also makes data binding (aka
@@ -126,7 +127,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 	}
 
 	public Class getFieldType(String field) {
-		return parseFieldExpression(fixedField(field)).getValueType(boundObject);
+		return parseFieldExpression(fixedField(field), false).getValueType(boundObject);
 	}
 
 	public Object getFieldValue(String field) {
@@ -138,7 +139,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 				return fieldError.getOriginalValue();
 			}
 		}
-		return getFormattedValue(parseFieldExpression(field));
+		return getFormattedValue(field);
 	}
 
 	// not typically used by mvc views, but implemented to be on the safe side
@@ -172,32 +173,14 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 	}
 
 	public Object getRawFieldValue(String field) {
-		return parseFieldExpression(fixedField(field)).getValue(boundObject);
+		return parseFieldExpression(fixedField(field), false).getValue(boundObject);
 	}
 
 	public PropertyEditor findEditor(String field, Class valueType) {
-		if (conversionService != null) {
-			String converterId = null;
-			if (field != null) {
-				field = fixedField(field);
-				if (binderConfiguration != null) {
-					Binding binding = binderConfiguration.getBinding(field);
-					if (binding != null) {
-						converterId = binding.getConverter();
-					}
-				}
-				if (valueType == null) {
-					valueType = parseFieldExpression(field).getValueType(boundObject);
-				}
-			}
-			if (valueType != null) {
-				return new ConversionExecutorPropertyEditor(conversionService, valueType, converterId);
-			} else {
-				return null;
-			}
-		} else {
-			return null;
+		if (field != null) {
+			field = fixedField(field);
 		}
+		return findSpringConvertingPropertyEditor(field, valueType);
 	}
 
 	// never expected to be called by mvc views
@@ -228,39 +211,69 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 
 	// internal helpers
 
-	private Expression parseFieldExpression(String field) {
-		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));
-	}
-
-	private Object getFormattedValue(Expression fieldExpression) {
-		ConversionExecutor converter = getConverter(fieldExpression);
-		if (converter != null) {
-			return converter.execute(fieldExpression.getValue(boundObject));
-		} else {
-			return fieldExpression.getValue(boundObject);
+	private Expression parseFieldExpression(String field, boolean useResultTypeHint) {
+		FluentParserContext parserContext = new FluentParserContext().evaluate(boundObject.getClass());
+		if (useResultTypeHint) {
+			parserContext.expectResult(String.class);
 		}
+		return expressionParser.parseExpression(field, parserContext);
 	}
 
-	private ConversionExecutor getConverter(Expression fieldExpression) {
-		if (conversionService != null) {
-			Class valueType = fieldExpression.getValueType(boundObject);
-			// special handling for array, collection, map types
-			// necessary as getFieldValue is called by form tags for non-formattable properties, too
-			// TODO - investigate how to improve this in Spring MVC
-			if (valueType == null || valueType.isArray() || Collection.class.isAssignableFrom(valueType)
-					|| Map.class.isAssignableFrom(valueType)) {
-				return null;
-			}
-			if (binderConfiguration != null) {
-				Binding binding = binderConfiguration.getBinding(fieldExpression.getExpressionString());
-				if (binding != null) {
-					String converterId = binding.getConverter();
-					if (converterId != null) {
-						return conversionService.getConversionExecutor(converterId, valueType, String.class);
-					}
+	private Object getFormattedValue(String field) {
+		Expression fieldExpression = parseFieldExpression(field, true);
+		Class valueType = fieldExpression.getValueType(boundObject);
+		if (isCustomConverterConfigured(field) || avoidConversion(valueType)) {
+			fieldExpression = parseFieldExpression(fieldExpression.getExpressionString(), false);
+		}
+		Object value = fieldExpression.getValue(boundObject);
+		if ((value instanceof String) == false) {
+			if (avoidConversion(valueType) == false) {
+				PropertyEditor editor = findSpringConvertingPropertyEditor(field, valueType);
+				if (editor != null) {
+					editor.setValue(value);
+					value = editor.getAsText();
 				}
 			}
-			return conversionService.getConversionExecutor(valueType, String.class);
+		}
+		return value;
+	}
+
+	private boolean isCustomConverterConfigured(String field) {
+		if (binderConfiguration == null) {
+			return false;
+		}
+		return (binderConfiguration.getConverterId(field) != null);
+	}
+
+	private boolean avoidConversion(Class valueType) {
+		// special handling for array, collection, map types
+		// necessary as getFieldValue is called by form tags for non-formattable properties, too
+		// TODO - investigate how to improve this in Spring MVC
+		if (valueType == null || valueType.isArray() || Collection.class.isAssignableFrom(valueType)
+				|| Map.class.isAssignableFrom(valueType)) {
+			return true;
+		}
+		return false;
+	}
+
+	private PropertyEditor findSpringConvertingPropertyEditor(String field, Class valueType) {
+		if (conversionService != null) {
+			String converterId = null;
+			if (field != null) {
+				if (binderConfiguration != null) {
+					converterId = binderConfiguration.getConverterId(field);
+				}
+				if (valueType == null) {
+					valueType = parseFieldExpression(field, false).getValueType(boundObject);
+				}
+			}
+			if (valueType != null) {
+				BeanWrapper accessor = PropertyAccessorFactory.forBeanPropertyAccess(boundObject);
+				TypeDescriptor typeDescriptor = accessor.getPropertyTypeDescriptor(field);
+				return new ConvertingPropertyEditorAdapter(conversionService, converterId, typeDescriptor);
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}

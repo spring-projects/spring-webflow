@@ -15,8 +15,8 @@
 	
 	<view-state id="enterBookingDetails" model="booking">
 		<binder>
-			<binding property="checkinDate" converter="shortDate" required="true" />
-			<binding property="checkoutDate" converter="shortDate" required="true" />
+			<binding property="checkinDate" required="true" />
+			<binding property="checkoutDate" required="true" />
 			<binding property="beds" required="true" />
 			<binding property="smoking" required="true" />
 			<binding property="creditCard" required="true" />

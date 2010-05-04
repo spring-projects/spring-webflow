@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,14 +18,13 @@ import junit.framework.TestCase;
 
 import org.springframework.binding.convert.converters.StringToDate;
 import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.format.datetime.DateFormatter;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -393,8 +391,8 @@ public class MvcViewTests extends TestCase {
 		assertEquals(context2.getFlowScope().get("bindBean"), model.get("bindBean"));
 		BindingModel bm = (BindingModel) model.get(BindingResult.MODEL_KEY_PREFIX + "bindBean");
 		assertNotNull(bm);
-		assertEquals(new Integer(3), bm.getFieldValue("integerProperty"));
-		assertEquals(new SimpleDateFormat("MM-dd-yyyy").parse("01-01-2008"), bm.getFieldValue("dateProperty"));
+		assertEquals("3", bm.getFieldValue("integerProperty"));
+		assertEquals("2008-01-01", bm.getFieldValue("dateProperty"));
 	}
 
 	private Object saveAndRestoreViewActionState(Object viewActionState) throws Exception {
@@ -630,11 +628,12 @@ public class MvcViewTests extends TestCase {
 	}
 
 	private SpringELExpressionParser createExpressionParser() {
-		SpringELExpressionParser expressionParser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
-		FormattingConversionService conversionService = (FormattingConversionService) expressionParser
-				.getConversionService();
-		conversionService.addFormatterForFieldType(Date.class, new DateFormatter("yyyy-MM-dd"));
-		return expressionParser;
+		StringToDate c = new StringToDate();
+		c.setPattern("yyyy-MM-dd");
+		SpringELExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
+		GenericConversionService cs = (GenericConversionService) parser.getConversionService();
+		cs.addConverter(c);
+		return parser;
 	}
 
 	private class MockMvcView extends AbstractMvcView {

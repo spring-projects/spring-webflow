@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
@@ -31,6 +32,11 @@ public class FacesSpringELExpressionParser extends WebFlowSpringELExpressionPars
 
 	public FacesSpringELExpressionParser(SpelExpressionParser expressionParser) {
 		super(expressionParser);
+		addPropertyAccessor(new JsfManagedBeanPropertyAccessor());
+	}
+
+	public FacesSpringELExpressionParser(SpelExpressionParser expressionParser, ConversionService conversionService) {
+		super(expressionParser, conversionService);
 		addPropertyAccessor(new JsfManagedBeanPropertyAccessor());
 	}
 

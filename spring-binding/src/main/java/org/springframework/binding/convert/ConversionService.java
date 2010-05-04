@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.convert;
 
-import java.util.Set;
 
 /**
  * A service interface for retrieving type conversion executors. The returned command objects are thread-safe and may be
@@ -75,19 +74,17 @@ public interface ConversionService {
 			throws ConversionExecutorNotFoundException;
 
 	/**
-	 * Return all conversion executors capable of converting <i>from</i> the provided <code>sourceClass</code>. For
-	 * example, <code>getConversionExecutor(String.class)</code> would return all converters that convert from String to
-	 * some other Object. Mainly useful for adapting a set of converters to some other environment.
-	 * @param sourceClass the source class converting from
-	 * @return the conversion executors that can convert from that source class
-	 */
-	public Set getConversionExecutors(Class sourceClass);
-
-	/**
 	 * Lookup a class by its well-known alias. For example, <code>long</code> for <code>java.lang.Long</code>
 	 * @param alias the class alias
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
 	public Class getClassForAlias(String alias);
+
+	/**
+	 * Return the underlying Spring ConversionService.
+	 * 
+	 * @return the conversion service
+	 */
+	public org.springframework.core.convert.ConversionService getDelegateConversionService();
 
 }

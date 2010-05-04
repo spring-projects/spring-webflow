@@ -52,7 +52,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertNotNull(builderServices);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
-		assertNotNull(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService());
+		assertTrue(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertFalse(builderServices.getDevelopment());
 	}
@@ -95,6 +95,10 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		}
 
 		public Class getClassForAlias(String alias) throws ConversionExecutionException {
+			throw new UnsupportedOperationException("Auto-generated method stub");
+		}
+
+		public org.springframework.core.convert.ConversionService getDelegateConversionService() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

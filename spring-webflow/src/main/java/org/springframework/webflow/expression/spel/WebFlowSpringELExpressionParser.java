@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.expression.spel;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
@@ -28,6 +29,15 @@ public class WebFlowSpringELExpressionParser extends SpringELExpressionParser {
 
 	public WebFlowSpringELExpressionParser(SpelExpressionParser expressionParser) {
 		super(expressionParser);
+		addDefaultPropertyAccessors();
+	}
+
+	public WebFlowSpringELExpressionParser(SpelExpressionParser expressionParser, ConversionService conversionService) {
+		super(expressionParser, conversionService);
+		addDefaultPropertyAccessors();
+	}
+
+	private void addDefaultPropertyAccessors() {
 		addPropertyAccessor(new MessageSourcePropertyAccessor());
 		addPropertyAccessor(new FlowVariablePropertyAccessor());
 		addPropertyAccessor(new MapAdaptablePropertyAccessor());

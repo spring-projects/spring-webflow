@@ -44,6 +44,12 @@
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>1.6</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<!-- Where the el-api is located -->

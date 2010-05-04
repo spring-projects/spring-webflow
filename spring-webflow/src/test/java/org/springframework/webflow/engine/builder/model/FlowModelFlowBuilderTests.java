@@ -20,6 +20,7 @@ import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.EndStateModel;
+import org.springframework.webflow.engine.model.EvaluateModel;
 import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.InputModel;
@@ -27,6 +28,7 @@ import org.springframework.webflow.engine.model.Model;
 import org.springframework.webflow.engine.model.OutputModel;
 import org.springframework.webflow.engine.model.PersistenceContextModel;
 import org.springframework.webflow.engine.model.SecuredModel;
+import org.springframework.webflow.engine.model.SetModel;
 import org.springframework.webflow.engine.model.TransitionModel;
 import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
@@ -36,6 +38,7 @@ import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilderT
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.engine.support.ActionExecutingViewFactory;
+import org.springframework.webflow.execution.AnnotatedAction;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -43,6 +46,7 @@ import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.security.SecurityRule;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
+import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowModelFlowBuilderTests extends TestCase {
 	private FlowModel model;
@@ -304,6 +308,77 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(builder, context);
 		Flow flow = assembler.assembleFlow();
 		assertEquals(1, flow.getExceptionHandlerSet().size());
+	}
+
+	public void testSetActionWithResultType() throws Exception {
+		SetModel setModel = new SetModel("flowScope.stringArray", "intArray");
+		setModel.setType("java.lang.String[]");
+		model.setOnStartActions(singleList(setModel));
+		model.setStates(singleList(new ViewStateModel("view")));
+		Flow flow = getFlow(model);
+		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
+		MockRequestContext context = new MockRequestContext(flow);
+		context.getFlowScope().put("intArray", new int[] { 1, 2 });
+		action.execute(context);
+		String[] expected = (String[]) context.getFlowScope().get("stringArray");
+		assertEquals("1", expected[0]);
+		assertEquals("2", expected[1]);
+	}
+
+	public void testSetActionWithImplicitTypeConversion() throws Exception {
+		SetModel setModel = new SetModel("testBean.stringArray", "intArray");
+		model.setOnStartActions(singleList(setModel));
+		ViewStateModel state = new ViewStateModel("view");
+		model.setStates(singleList(state));
+		Flow flow = getFlow(model);
+		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
+		MockRequestContext context = new MockRequestContext(flow);
+		context.getFlowScope().put("testBean", new TestBean());
+		context.getFlowScope().put("intArray", new int[] { 1, 2 });
+		action.execute(context);
+		TestBean expected = (TestBean) context.getFlowScope().get("testBean");
+		assertEquals("1", expected.stringArray[0]);
+		assertEquals("2", expected.stringArray[1]);
+	}
+
+	public void testEvaluateActionWithResultType() throws Exception {
+		EvaluateModel evaluateModel = new EvaluateModel("testBean.getIntegers()");
+		evaluateModel.setResult("flowScope.stringArray");
+		evaluateModel.setResultType("java.lang.String[]");
+		model.setOnStartActions(singleList(evaluateModel));
+		model.setStates(singleList(new ViewStateModel("view")));
+		Flow flow = getFlow(model);
+		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
+		MockRequestContext context = new MockRequestContext(flow);
+		context.getFlowScope().put("testBean", new TestBean());
+		action.execute(context);
+		String[] expected = (String[]) context.getFlowScope().get("stringArray");
+		assertEquals("1", expected[0]);
+		assertEquals("2", expected[1]);
+	}
+
+	public void testEvaluateActionWithELExpression() throws Exception {
+		EvaluateModel evaluateModel = new EvaluateModel("testBean.getIntegers()");
+		evaluateModel.setResult("flowScope.stringArray");
+		evaluateModel.setResultType("java.lang.String[]");
+		model.setOnStartActions(singleList(evaluateModel));
+		model.setStates(singleList(new ViewStateModel("view")));
+		Flow flow = getFlow(model);
+		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
+		MockRequestContext context = new MockRequestContext(flow);
+		context.getFlowScope().put("testBean", new TestBean());
+		action.execute(context);
+		String[] expected = (String[]) context.getFlowScope().get("stringArray");
+		assertEquals("1", expected[0]);
+		assertEquals("2", expected[1]);
+	}
+
+	private static class TestBean {
+		public String[] stringArray;
+
+		public int[] getIntegers() {
+			return new int[] { 1, 2 };
+		}
 	}
 
 	private Flow getFlow(FlowModel model) {

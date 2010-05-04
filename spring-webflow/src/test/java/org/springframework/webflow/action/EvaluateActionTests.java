@@ -50,8 +50,7 @@ public class EvaluateActionTests extends TestCase {
 
 	public void testEvaluateExpressionResultExposer() throws Exception {
 		StaticExpression resultExpression = new StaticExpression("");
-		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), new ActionResultExposer(
-				resultExpression, null, null));
+		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), resultExpression);
 		MockRequestContext context = new MockRequestContext();
 		Event result = action.execute(context);
 		assertEquals("bar", result.getId());

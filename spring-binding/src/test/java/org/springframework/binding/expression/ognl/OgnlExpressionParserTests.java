@@ -17,6 +17,8 @@ package org.springframework.binding.expression.ognl;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.convert.converters.StringToDate;
+import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
@@ -203,6 +205,10 @@ public class OgnlExpressionParserTests extends TestCase {
 	}
 
 	public void testSetValueWithCoersion() {
+		GenericConversionService cs = (GenericConversionService) parser.getConversionService();
+		StringToDate converter = new StringToDate();
+		converter.setPattern("yyyy-MM-dd");
+		cs.addConverter(converter);
 		Expression e = parser.parseExpression("date", null);
 		e.setValue(bean, "2008-9-15");
 	}

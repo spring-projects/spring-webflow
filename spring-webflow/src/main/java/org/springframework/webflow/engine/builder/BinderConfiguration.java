@@ -51,6 +51,22 @@ public class BinderConfiguration {
 	}
 
 	/**
+	 * Gets the converterId for the binding with the specified name. Returns null if either a binding or a converterId
+	 * for the given name is not found.
+	 * 
+	 * @param name the name of the binding.
+	 * @return the binding
+	 */
+	public String getConverterId(String name) {
+		Binding binding = getBinding(name);
+		if (binding != null) {
+			return binding.getConverter();
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * A binding that provides the information needed to connect an element of the view to a property of the model.
 	 * 
 	 * @author Keith Donald

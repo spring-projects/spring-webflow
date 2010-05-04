@@ -16,6 +16,7 @@
 package org.springframework.webflow.config;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.parsing.CompositeComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -88,6 +89,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 					.genericBeanDefinition(WEB_FLOW_SPRING_EL_EXPRESSION_PARSER_CLASS_NAME);
 			webFlowElExpressionParserBuilder
 					.addConstructorArgValue(springElExpressionParserBuilder.getBeanDefinition());
+			webFlowElExpressionParserBuilder.addConstructorArgReference(getConversionService(definitionBuilder));
 			expressionParser = registerInfrastructureComponent(element, context, webFlowElExpressionParserBuilder);
 		}
 		definitionBuilder.addPropertyReference(EXPRESSION_PARSER_PROPERTY, expressionParser);
@@ -108,6 +110,12 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		if (StringUtils.hasText(development)) {
 			definitionBuilder.addPropertyValue(DEVELOPMENT_PROPERTY, development);
 		}
+	}
+
+	private String getConversionService(BeanDefinitionBuilder definitionBuilder) {
+		RuntimeBeanReference conversionServiceReference = (RuntimeBeanReference) definitionBuilder.getBeanDefinition()
+				.getPropertyValues().getPropertyValue(CONVERSION_SERVICE_PROPERTY).getValue();
+		return conversionServiceReference.getBeanName();
 	}
 
 	private String registerInfrastructureComponent(Element element, ParserContext context,

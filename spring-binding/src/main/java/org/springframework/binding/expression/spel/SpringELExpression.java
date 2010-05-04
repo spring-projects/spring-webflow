@@ -149,4 +149,8 @@ public class SpringELExpression implements Expression {
 		return variableValues;
 	}
 
+	public String toString() {
+		return getExpressionString();
+	}
+
 }

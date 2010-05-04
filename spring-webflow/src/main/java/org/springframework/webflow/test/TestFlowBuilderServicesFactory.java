@@ -1,5 +1,6 @@
 package org.springframework.webflow.test;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -15,10 +16,15 @@ public class TestFlowBuilderServicesFactory {
 	}
 
 	public static FlowBuilderServices getServices() {
-		FlowBuilderServices services = new FlowBuilderServices();
+		FlowBuilderServices services = new FlowBuilderServices() {
+			// The SpEL parser must use the currently configured conversion service.
+			public void setConversionService(ConversionService conversionService) {
+				super.setConversionService(conversionService);
+				setExpressionParser(new WebFlowSpringELExpressionParser(new SpelExpressionParser(), conversionService));
+			}
+		};
 		services.setViewFactoryCreator(new MockViewFactoryCreator());
 		services.setConversionService(new DefaultConversionService());
-		services.setExpressionParser(new WebFlowSpringELExpressionParser(new SpelExpressionParser()));
 		services.setApplicationContext(createTestApplicationContext());
 		return services;
 	}
@@ -28,4 +34,5 @@ public class TestFlowBuilderServicesFactory {
 		context.refresh();
 		return context;
 	}
+
 }

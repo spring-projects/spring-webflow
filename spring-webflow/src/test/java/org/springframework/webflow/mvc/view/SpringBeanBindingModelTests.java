@@ -16,4 +16,13 @@ public class SpringBeanBindingModelTests extends AbstractBindingModelTests {
 		PropertyEditor editor = model.findEditor("emptyMap['foo']", null);
 		assertNull(editor);
 	}
+
+	// BeanWrapper-based EL does not accept result type hints.
+	// Hence it requires a conversion service.
+	public void testGetFieldValueNonStringNoConversionService() {
+		model = new BindingModel("testBean", testBean, getExpressionParser(), null, messages);
+		testBean.datum2 = 3;
+		assertEquals(new Integer(3), model.getFieldValue("datum2"));
+	}
+
 }

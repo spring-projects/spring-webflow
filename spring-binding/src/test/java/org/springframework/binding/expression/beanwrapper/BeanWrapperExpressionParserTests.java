@@ -18,6 +18,8 @@ package org.springframework.binding.expression.beanwrapper;
 import junit.framework.TestCase;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.binding.convert.converters.StringToDate;
+import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ValueCoercionException;
@@ -99,6 +101,10 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 	}
 
 	public void testSetValueWithCoersion() {
+		GenericConversionService cs = (GenericConversionService) parser.getConversionService();
+		StringToDate converter = new StringToDate();
+		converter.setPattern("yyyy-MM-dd");
+		cs.addConverter(converter);
 		Expression e = parser.parseExpression("date", null);
 		e.setValue(bean, "2008-9-15");
 	}

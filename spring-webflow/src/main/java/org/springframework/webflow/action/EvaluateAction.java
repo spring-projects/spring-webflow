@@ -30,7 +30,6 @@ import org.springframework.webflow.execution.RequestContext;
  * {@link Event}.
  * 
  * @see Expression
- * @see ActionResultExposer
  * @see ResultEventFactory
  * 
  * @author Keith Donald
@@ -44,9 +43,9 @@ public class EvaluateAction extends AbstractAction {
 	private Expression expression;
 
 	/**
-	 * The helper that will expose the expression evaluation result. Optional.
+	 * The expression to evaluate to set the result of the action. Optional.
 	 */
-	private ActionResultExposer evaluationResultExposer;
+	private Expression resultExpression;
 
 	/**
 	 * The selector for the factory that will create the action result event callers can respond to.
@@ -56,10 +55,10 @@ public class EvaluateAction extends AbstractAction {
 	/**
 	 * Create a new evaluate action.
 	 * @param expression the expression to evaluate (required)
-	 * @param evaluationResultExposer the strategy for how the expression result will be exposed to the flow (optional)
+	 * @param resultExpression the expression to evaluate the result (optional)
 	 */
-	public EvaluateAction(Expression expression, ActionResultExposer evaluationResultExposer) {
-		init(expression, evaluationResultExposer, null);
+	public EvaluateAction(Expression expression, Expression resultExpression) {
+		init(expression, resultExpression, null);
 	}
 
 	/**
@@ -68,9 +67,8 @@ public class EvaluateAction extends AbstractAction {
 	 * @param evaluationResultExposer the strategy for how the expression result will be exposed to the flow (optional)
 	 * @param resultEventFactory the factory that will map the evaluation result to a Web Flow event (optional)
 	 */
-	public EvaluateAction(Expression expression, ActionResultExposer evaluationResultExposer,
-			ResultEventFactory resultEventFactory) {
-		init(expression, evaluationResultExposer, resultEventFactory);
+	public EvaluateAction(Expression expression, Expression resultExpression, ResultEventFactory resultEventFactory) {
+		init(expression, resultExpression, resultEventFactory);
 	}
 
 	protected Event doExecute(RequestContext context) throws Exception {
@@ -78,25 +76,24 @@ public class EvaluateAction extends AbstractAction {
 		if (result instanceof Action) {
 			return ActionExecutor.execute((Action) result, context);
 		} else {
-			if (evaluationResultExposer != null) {
-				evaluationResultExposer.exposeResult(result, context);
+			if (resultExpression != null) {
+				resultExpression.setValue(context, result);
 			}
 			return resultEventFactory.createResultEvent(this, result, context);
 		}
 	}
 
 	public String toString() {
-		return new ToStringCreator(this).append("expression", expression).append("resultExposer",
-				evaluationResultExposer).toString();
+		return new ToStringCreator(this).append("expression", expression).append("resultExpression", resultExpression)
+				.toString();
 	}
 
 	// internal helpers
 
-	private void init(Expression expression, ActionResultExposer evaluationResultExposer,
-			ResultEventFactory resultEventFactory) {
+	private void init(Expression expression, Expression resultExpression, ResultEventFactory resultEventFactory) {
 		Assert.notNull(expression, "The expression this action should evaluate is required");
 		this.expression = expression;
-		this.evaluationResultExposer = evaluationResultExposer;
+		this.resultExpression = resultExpression;
 		this.resultEventFactory = resultEventFactory != null ? resultEventFactory : new DefaultResultEventFactory();
 	}
 

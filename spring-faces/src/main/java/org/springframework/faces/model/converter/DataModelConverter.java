@@ -33,7 +33,7 @@ import org.springframework.util.ClassUtils;
 public class DataModelConverter implements Converter {
 
 	public Class getSourceClass() {
-		return Object.class;
+		return List.class;
 	}
 
 	public Class getTargetClass() {

@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * A Hotel Booking made by a User.
  */
@@ -27,8 +29,10 @@ public class Booking implements Serializable {
 
     private Hotel hotel;
 
+    @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date checkinDate;
 
+    @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date checkoutDate;
 
     private String creditCard;

@@ -48,7 +48,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestScope;
 import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.webflow.action.ActionResultExposer;
 import org.springframework.webflow.action.EvaluateAction;
 import org.springframework.webflow.action.ExternalRedirectAction;
 import org.springframework.webflow.action.FlowDefinitionRedirectAction;
@@ -342,7 +341,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
 		Resource flowResource = flowModelHolder.getFlowModelResource();
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
-		if (JdkVersion.isAtLeastJava15()) {
+		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		}
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
@@ -852,25 +851,18 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private Action parseEvaluateAction(EvaluateModel evaluate) {
-		String expressionString = evaluate.getExpression();
-		Expression expression = getLocalContext().getExpressionParser().parseExpression(expressionString,
-				new FluentParserContext().evaluate(RequestContext.class));
-		return new EvaluateAction(expression, parseEvaluationActionResultExposer(evaluate));
-	}
-
-	private ActionResultExposer parseEvaluationActionResultExposer(EvaluateModel evaluate) {
-		if (StringUtils.hasText(evaluate.getResult())) {
-			Expression resultExpression = getLocalContext().getExpressionParser().parseExpression(evaluate.getResult(),
-					new FluentParserContext().evaluate(RequestContext.class));
-			Class expectedResultType = null;
-			if (StringUtils.hasText(evaluate.getResultType())) {
-				expectedResultType = toClass(evaluate.getResultType());
-			}
-			return new ActionResultExposer(resultExpression, expectedResultType, getLocalContext()
-					.getConversionService());
-		} else {
-			return null;
+		FluentParserContext evaluateExpressionParserContext = new FluentParserContext().evaluate(RequestContext.class);
+		if (StringUtils.hasText(evaluate.getResultType())) {
+			evaluateExpressionParserContext.expectResult(toClass(evaluate.getResultType()));
 		}
+		Expression evaluateExpression = getLocalContext().getExpressionParser().parseExpression(
+				evaluate.getExpression(), evaluateExpressionParserContext);
+		Expression resultExpression = null;
+		if (StringUtils.hasText(evaluate.getResult())) {
+			resultExpression = getLocalContext().getExpressionParser().parseExpression(evaluate.getResult(),
+					new FluentParserContext().evaluate(RequestContext.class));
+		}
+		return new EvaluateAction(evaluateExpression, resultExpression);
 	}
 
 	private Action parseRenderAction(RenderModel render) {
@@ -889,13 +881,13 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Action parseSetAction(SetModel set) {
 		Expression nameExpression = getLocalContext().getExpressionParser().parseExpression(set.getName(),
 				new FluentParserContext().evaluate(RequestContext.class));
-		Expression valueExpression = getLocalContext().getExpressionParser().parseExpression(set.getValue(),
-				new FluentParserContext().evaluate(RequestContext.class));
-		Class expectedType = null;
+		FluentParserContext valueParserContext = new FluentParserContext().evaluate(RequestContext.class);
 		if (StringUtils.hasText(set.getType())) {
-			expectedType = toClass(set.getType());
+			valueParserContext.expectResult(toClass(set.getType()));
 		}
-		return new SetAction(nameExpression, valueExpression, expectedType, getLocalContext().getConversionService());
+		Expression valueExpression = getLocalContext().getExpressionParser().parseExpression(set.getValue(),
+				valueParserContext);
+		return new SetAction(nameExpression, valueExpression);
 	}
 
 	private MutableAttributeMap parseMetaAttributes(List attributeModels) {

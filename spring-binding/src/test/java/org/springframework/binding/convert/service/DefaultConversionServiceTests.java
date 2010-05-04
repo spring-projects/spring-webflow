@@ -15,13 +15,11 @@
  */
 package org.springframework.binding.convert.service;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +58,6 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		StaticConversionExecutor executor = (StaticConversionExecutor) service.getConversionExecutor(String.class,
 				Boolean.class);
-		assertNotSame(customConverter, executor.getConverter());
 		try {
 			executor.execute("ja");
 			fail();
@@ -69,7 +66,6 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 		service.addConverter(customConverter);
 		executor = (StaticConversionExecutor) service.getConversionExecutor(String.class, Boolean.class);
-		assertSame(customConverter, executor.getConverter());
 		assertTrue(((Boolean) executor.execute("ja")).booleanValue());
 	}
 
@@ -510,16 +506,20 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, String[].class);
 		String[] result = (String[]) executor.execute("1,2,3");
-		assertEquals(1, result.length);
-		assertEquals("1,2,3", result[0]);
+		assertEquals(3, result.length);
+		assertEquals("1", result[0]);
+		assertEquals("2", result[1]);
+		assertEquals("3", result[2]);
 	}
 
 	public void testStringToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, List.class);
 		List result = (List) executor.execute("1,2,3");
-		assertEquals(1, result.size());
-		assertEquals("1,2,3", result.get(0));
+		assertEquals(3, result.size());
+		assertEquals("1", result.get(0));
+		assertEquals("2", result.get(1));
+		assertEquals("3", result.get(2));
 	}
 
 	public void testStringToArrayConversionWithElementConversion() {
@@ -528,25 +528,6 @@ public class DefaultConversionServiceTests extends TestCase {
 		Integer[] result = (Integer[]) executor.execute("123");
 		assertEquals(1, result.length);
 		assertEquals(new Integer(123), result[0]);
-	}
-
-	public void testGetConversionExecutorsForSource() {
-		DefaultConversionService service1 = new DefaultConversionService();
-		service1.addConverter(new CustomConverter());
-		GenericConversionService service2 = new GenericConversionService();
-		FormattedStringToNumber formatterConverter = new FormattedStringToNumber(BigDecimal.class);
-		service2.addConverter(formatterConverter);
-		service2.setParent(service1);
-		Set converters = service2.getConversionExecutors(String.class);
-		Iterator it = converters.iterator();
-		while (it.hasNext()) {
-			ConversionExecutor executor = (ConversionExecutor) it.next();
-			if (executor.getTargetClass().equals(BigDecimal.class)) {
-				StaticConversionExecutor se = (StaticConversionExecutor) executor;
-				assertSame(formatterConverter, se.getConverter());
-			}
-		}
-		assertEquals(15, converters.size());
 	}
 
 	private static class CustomConverter implements Converter {

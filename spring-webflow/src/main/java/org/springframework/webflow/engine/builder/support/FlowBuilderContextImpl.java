@@ -15,8 +15,6 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import java.util.Set;
-
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -113,7 +111,8 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * @return the flow builder conversion service
 	 */
 	protected ConversionService createConversionService() {
-		GenericConversionService service = new GenericConversionService();
+		GenericConversionService service = new GenericConversionService(getFlowBuilderServices().getConversionService()
+				.getDelegateConversionService());
 		service.addConverter(new TextToTransitionCriteria(this));
 		service.addConverter(new TextToTargetStateResolver(this));
 		service.setParent(new ParentConversionServiceProxy());
@@ -145,10 +144,6 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 
-		public Set getConversionExecutors(Class sourceClass) {
-			return getFlowBuilderServices().getConversionService().getConversionExecutors(sourceClass);
-		}
-
 		public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
 				throws ConversionExecutorNotFoundException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(id, sourceClass, targetClass);
@@ -156,6 +151,10 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 		public Class getClassForAlias(String name) {
 			return getFlowBuilderServices().getConversionService().getClassForAlias(name);
+		}
+
+		public org.springframework.core.convert.ConversionService getDelegateConversionService() {
+			return getFlowBuilderServices().getConversionService().getDelegateConversionService();
 		}
 
 	}

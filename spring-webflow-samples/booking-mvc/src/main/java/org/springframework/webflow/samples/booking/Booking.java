@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * A Hotel Booking made by a User.
@@ -32,8 +33,10 @@ public class Booking implements Serializable {
 
     private Hotel hotel;
 
+    @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date checkinDate;
 
+    @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date checkoutDate;
 
     private String creditCard;
@@ -73,7 +76,7 @@ public class Booking implements Serializable {
 	if (checkinDate == null || checkoutDate == null) {
 	    return 0;
 	} else {
-	    return (int) (checkoutDate.getTime() - checkinDate.getTime()) / 1000 / 60 / 60 / 24;
+	    return (int) ((checkoutDate.getTime() - checkinDate.getTime()) / 1000 / 60 / 60 / 24);
 	}
     }
 

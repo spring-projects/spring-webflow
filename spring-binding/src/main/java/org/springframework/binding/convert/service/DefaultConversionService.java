@@ -20,25 +20,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
-import org.springframework.binding.convert.converters.CollectionToCollection;
-import org.springframework.binding.convert.converters.NumberToNumber;
-import org.springframework.binding.convert.converters.ObjectToCollection;
-import org.springframework.binding.convert.converters.StringToBigDecimal;
-import org.springframework.binding.convert.converters.StringToBigInteger;
-import org.springframework.binding.convert.converters.StringToBoolean;
-import org.springframework.binding.convert.converters.StringToByte;
-import org.springframework.binding.convert.converters.StringToCharacter;
-import org.springframework.binding.convert.converters.StringToDate;
-import org.springframework.binding.convert.converters.StringToDouble;
-import org.springframework.binding.convert.converters.StringToEnum;
-import org.springframework.binding.convert.converters.StringToFloat;
-import org.springframework.binding.convert.converters.StringToInteger;
-import org.springframework.binding.convert.converters.StringToLabeledEnum;
-import org.springframework.binding.convert.converters.StringToLocale;
-import org.springframework.binding.convert.converters.StringToLong;
-import org.springframework.binding.convert.converters.StringToShort;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.enums.LabeledEnum;
-import org.springframework.util.ClassUtils;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -57,28 +40,25 @@ public class DefaultConversionService extends GenericConversionService {
 	}
 
 	/**
+	 * Creates a new default conversion service with an instance of a Spring ConversionService.
+	 * 
+	 * @param delegateConversionService the Spring conversion service
+	 */
+	public DefaultConversionService(ConversionService delegateConversionService) {
+		super(delegateConversionService);
+		addDefaultConverters();
+		addDefaultAliases();
+	}
+
+	/**
 	 * Add all default converters to the conversion service.
+	 * 
+	 * Note: Staring with Spring Web Flow 2.1, this method does not register any Spring Binding converters. All type
+	 * conversion is driven through Spring's type conversion instead.
+	 * 
+	 * @see GenericConversionService
 	 */
 	protected void addDefaultConverters() {
-		addConverter(new StringToByte());
-		addConverter(new StringToBoolean());
-		addConverter(new StringToCharacter());
-		addConverter(new StringToShort());
-		addConverter(new StringToInteger());
-		addConverter(new StringToLong());
-		addConverter(new StringToFloat());
-		addConverter(new StringToDouble());
-		addConverter(new StringToBigInteger());
-		addConverter(new StringToBigDecimal());
-		addConverter(new StringToLocale());
-		addConverter(new StringToDate());
-		addConverter(new StringToLabeledEnum());
-		addConverter(new NumberToNumber());
-		addConverter(new ObjectToCollection(this));
-		addConverter(new CollectionToCollection(this));
-		if (ClassUtils.isPresent("java.lang.Enum", this.getClass().getClassLoader())) {
-			addConverter(new StringToEnum());
-		}
 	}
 
 	protected void addDefaultAliases() {
