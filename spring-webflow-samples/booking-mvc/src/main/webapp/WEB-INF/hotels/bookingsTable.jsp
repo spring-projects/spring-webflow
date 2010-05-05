@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div id="bookings" "class="section">
 <security:authorize ifAllGranted="ROLE_USER">
@@ -34,14 +36,12 @@
 				<td>${booking.checkoutDate}</td>
 				<td>${booking.id}</td>
 				<td>
-					<a id="cancelLink_${booking.id}" href="deleteBooking?id=${booking.id}">Cancel</a>
-					<script type="text/javascript">
-						Spring.addDecoration(new Spring.AjaxEventDecoration({
-							elementId:"cancelLink_${booking.id}",
-							event:"onclick",
-							params: {fragments:"bookingsTable"}
-						}));
-					</script>
+					<spring:url var="bookingUrl" value="/spring/bookings/{id}">
+						<spring:param name="id" value="${booking.id}"/>
+					</spring:url>
+					<form:form action="${bookingUrl}" method="delete">
+						<button type="submit">Cancel</button>
+					</form:form>
 				</td>
 			</tr>
 			</c:forEach>

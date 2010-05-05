@@ -1,8 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%@ page import="org.springframework.security.web.authentication.AbstractProcessingFilter" %>
-<%@ page import="org.springframework.security.web.authentication.AuthenticationProcessingFilter" %>
+<%@ page import="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter" %>
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 
 <h1>Login Required</h1>
@@ -11,7 +10,7 @@
 	<c:if test="${not empty param.login_error}">
 		<div class="errors">
 			Your login attempt was not successful, try again.<br /><br />
-			Reason: <%= ((AuthenticationException) session.getAttribute(AbstractProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
+			Reason: <%= ((AuthenticationException) session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
 		</div>
 	</c:if>
 	<p>Valid username/passwords are:</p>
@@ -29,7 +28,7 @@
 			<div class="field">
 				<div class="label"><label for="j_username">User:</label></div>
 				<div class="output">
-					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
+					<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
 					<script type="text/javascript">
 						Spring.addDecoration(new Spring.ElementDecoration({
 							elementId : "j_username",

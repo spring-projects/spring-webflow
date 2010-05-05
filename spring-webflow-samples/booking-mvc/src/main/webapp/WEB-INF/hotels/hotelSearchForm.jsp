@@ -1,6 +1,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 
-<form:form modelAttribute="searchCriteria" action="search" method="get">
+<c:url var="hotelsUrl" value="/spring/hotels"/>
+<form:form modelAttribute="searchCriteria" action="${hotelsUrl}" method="get">
 <div class="section">
     <span class="errors">
     	<form:errors path="*"/>

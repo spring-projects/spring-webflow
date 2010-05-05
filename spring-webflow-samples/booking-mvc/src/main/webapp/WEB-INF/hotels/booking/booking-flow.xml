@@ -35,7 +35,7 @@
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
-	<end-state id="bookingConfirmed" commit="true" view="externalRedirect:servletRelative:/hotels/index" />
+	<end-state id="bookingConfirmed" commit="true" />
 
 	<end-state id="cancel" />
 

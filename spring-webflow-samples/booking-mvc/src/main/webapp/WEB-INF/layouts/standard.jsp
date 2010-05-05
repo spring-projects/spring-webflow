@@ -48,8 +48,6 @@
 			<a href="http://www.thespringexperience.com">
 				<img src="<c:url value="/resources/images/tse.gif"/>" alt="The Spring Experience" />
 			</a>
-			<p>
-			</p>
 		</div>
 		<div id="main">
 			<tiles:insertAttribute name="body" />

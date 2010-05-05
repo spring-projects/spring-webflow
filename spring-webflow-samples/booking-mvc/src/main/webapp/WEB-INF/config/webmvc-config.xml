@@ -5,20 +5,19 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
+	<!-- Enables controllers mapped with @RequestMapping annotations, formatting annotations @NumberFormat @DateTimeFormat, and JSR 303 style validation -->
+	<mvc:annotation-driven/>
+
+	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking". -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-		<property name="order" value="0" />
+		<property name="order" value="-1"/>
 		<property name="flowRegistry" ref="flowRegistry" />
 	</bean>
 
-	<!-- Maps request paths to @Controller classes; e.g. a path of /hotels looks for a controller named HotelsController -->
-	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
-		<property name="order" value="1" />
-		<property name="defaultHandler">
-			<!-- If no @Controller match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro" -->	
-			<bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-		</property>
-	</bean>
+	<!-- Map paths directly to view names without controller processing. Use the view-name attribute if necessary: by convention the view name equals the path without the leading slash -->
+	<mvc:view-controller path="/intro" />
+	<mvc:view-controller path="/login" />
+	<mvc:view-controller path="/logoutSuccess" />
 
 	<!-- Resolves logical view names returned by Controllers to Tiles; a view name to resolve is treated as the name of a tiles definition -->
 	<bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
@@ -35,12 +34,6 @@
 		</property>
 	</bean>
 	
-	<!-- Dispatches requests mapped to POJO @Controllers implementations -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-
-	<!-- Dispatches requests mapped to org.springframework.web.servlet.mvc.Controller implementations -->
-	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-
 	<!-- Dispatches requests mapped to flows to FlowHandler implementations -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor"/>

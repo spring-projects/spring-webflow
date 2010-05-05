@@ -11,7 +11,7 @@
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">
 		<security:form-login login-page="/spring/login" login-processing-url="/spring/loginProcess" 
-			default-target-url="/spring/hotels/index" authentication-failure-url="/spring/login?login_error=1" />
+			default-target-url="/spring/hotels/search" authentication-failure-url="/spring/login?login_error=1" />
 		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
 	</security:http>
 	

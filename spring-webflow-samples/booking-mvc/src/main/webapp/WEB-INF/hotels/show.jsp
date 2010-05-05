@@ -7,7 +7,7 @@
 </div>
 
 <div class="section">
-	<form:form id="hotel" modelAttribute="hotel" action="booking" method="post">
+	<form:form id="hotel" modelAttribute="hotel" action="booking" method="get">
 	<fieldset>
 		<div class="field">
 			<div class="label">Name:</div>
