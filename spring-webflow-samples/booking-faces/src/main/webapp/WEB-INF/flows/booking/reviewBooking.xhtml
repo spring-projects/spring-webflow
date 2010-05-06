@@ -7,70 +7,73 @@
 				template="/WEB-INF/layouts/standard.xhtml">
 
 <ui:define name="content">
-
-<div class="section">
-	<h1>Confirm Hotel Booking</h1> 
-</div>
-
-<div class="section">
-	<h:form id="confirm">
-	<fieldset>
-		<div class="field">
-			<div class="label">Name:</div>
-			<div class="output">#{booking.hotel.name}</div>
-		</div>
-		<div class="field">
-			<div class="label">Address:</div>
-			<div class="output">#{booking.hotel.address}</div>
-		</div>
-		<div class="field">
-			<div class="label">City, State:</div>
-			<div class="output">#{booking.hotel.city}, #{booking.hotel.state}</div>
-		</div>
-		<div class="field">
-			<div class="label">Zip:</div>
-			<div class="output">#{booking.hotel.zip}</div>
-		</div>
-		<div class="field">
-			<div class="label">Country:</div>
-			<div class="output">#{booking.hotel.country}</div>
-		</div>
-        <div class="field">
-            <div class="label">Total payment:</div>
-            <div class="output">
-                <h:outputText value="#{booking.total}">
-                    <f:convertNumber type="currency" currencySymbol="$"/>
-                </h:outputText>
-            </div>
-        </div>
-		<div class="field">
-			<div class="label">Check In Date:</div>
-			<div class="output">
-				<h:outputText value="#{booking.checkinDate}">
-					<f:convertDateTime dateStyle="short"/>
-				</h:outputText>
-			</div>
-		</div>
-		<div class="field">
-			<div class="label">Check Out Date:</div>
-			<div class="output">
-				<h:outputText value="#{booking.checkoutDate}">
-					<f:convertDateTime dateStyle="short"/>
-				</h:outputText>
-			</div>
-		</div>
-		<div class="field">
-			<div class="label">Credit Card #:</div>
-			<div class="output">#{booking.creditCard}</div>
-		</div>
-		<div class="buttonGroup">
-			<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
-    		<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
-    		<h:commandButton id="cancel" value="Cancel" action="cancel"/>
-		</div>
-	</fieldset>
-	</h:form>
-</div>
-
+	<div class="span-5">
+		<h3>${booking.hotel.name}</h3>
+		<address>
+			${booking.hotel.address}
+			<br/>
+			${booking.hotel.city}, ${booking.hotel.state}, ${booking.hotel.zip}
+			<br/>
+			${booking.hotel.country}
+		</address>
+	</div>
+	<div class="span-12 last">
+		<h:form id="confirm">
+			<fieldset>
+				<legend>Confirm Booking Details</legend>
+				<div>
+					<div class="span-3">Check In:</div>
+					<div class="span-8 last">
+						<p>
+							<h:outputText value="#{booking.checkinDate}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+						</p>
+					</div>
+				</div>
+				<div>
+					<div class="span-3">Check Out:</div>
+					<div class="span-8 last">
+						<p>
+							<h:outputText value="#{booking.checkoutDate}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+						</p>
+					</div>
+				</div>
+		        <div>
+		            <div class="span-3">Nights:</div>
+		            <div class="span-8 last">
+		                <p>
+			                <h:outputText value="#{booking.nights}"/>
+		                </p>
+		            </div>
+		        </div>
+		        <div>
+		            <div class="span-3">Total payment:</div>
+		            <div class="span-8 last">
+						<p>
+			                <h:outputText value="#{booking.total}">
+			                    <f:convertNumber type="currency" currencySymbol="$"/>
+			                </h:outputText>
+						</p>
+		            </div>
+		        </div>
+				<div>
+					<div class="span-3">Credit Card:</div>
+					<div class="span-8 last">
+						<p>
+							#{booking.creditCard}
+						</p>
+					</div>
+				</div>
+				<div>
+					<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
+		    		<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
+		    		<h:commandButton id="cancel" value="Cancel" action="cancel"/>
+				</div>
+			</fieldset>
+		</h:form>
+	</div>
 </ui:define>
 </ui:composition>

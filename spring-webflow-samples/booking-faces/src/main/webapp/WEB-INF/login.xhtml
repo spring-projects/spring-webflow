@@ -6,16 +6,7 @@
 
 <ui:define name="content">
 
-<h1>Login Required</h1>
-
-<div class="section">
-	<c:if test="${not empty param.login_error}">
-		<div class="errors">
-			Your login attempt was not successful, try again.<br />
-			Reason: #{sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
-		</div>
-	</c:if>
-	<br/>
+<div class="span-5">
 	<p>Valid username/passwords are:</p>
 	<ul>
 		<li>keith/melbourne</li>
@@ -25,34 +16,37 @@
 	</ul>
 </div>
 
-<div class="section">
+<div class="span-10 append-2 last">
+	<c:if test="${not empty param.login_error}">
+		<div class="errors">
+			Your login attempt was not successful, try again.<br />
+			Reason: #{sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+		</div>
+	</c:if>
 	<form name="f" action="${request.contextPath}/spring/loginProcess" method="post">
 		<fieldset>
-			<div class="field">
-				<div class="label">User:</div>
-				<div class="output">
+			<legend>Login Information</legend>
+				<p>
+					User:
+					<br />
 					<c:if test="${not empty param.login_error}">
 						<c:set var="username" value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"/>
 					</c:if>
 					<input type="text" name="j_username" value="#{username}"/>
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">Password:</div>
-				<div class="output">
-					<input type="password" name="j_password" />
-				</div>
-			</div>
-			<div class="field">
-				<div class="label">Don't ask for my password for two weeks:</div>
-				<div class="output">
+				</p>
+				<p>
+					Password:
+					<br />
+					<input type="password" name="j_password" />				
+				</p>
+				<p>
 					<input type="checkbox" name="_spring_security_remember_me"/> 
-				</div>
-			</div>
+					Don't ask for my password for two weeks:
+				</p>
+				<p>
+					<input name="submit" type="submit" value="Login" />
+				</p>
 		</fieldset>
-		<div class="buttonGroup">
-			<input name="submit" type="submit" value="Login" />
-		</div>
 	</form>
 </div>
 

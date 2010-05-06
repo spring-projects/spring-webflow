@@ -9,34 +9,26 @@
 <ui:define name="content">
 
 	<ui:fragment id="hotelSearchFragment">
-		<div id="hotelSearch" class="section">
+		<div id="hotelSearch">
+			<h2>Search Hotels</h2>
 		    <span class="errors">
 		       <h:messages globalOnly="true" />
 		    </span>
-			<h2>Search Hotels</h2>
-			<h:form id="mainForm">
+			<h:form id="mainForm" styleClass="inline">
 				<fieldset>
-					<div class="field">
-						<div class="label">
-							<h:outputLabel for="searchString">Search String:</h:outputLabel>
-						</div>
-						<div class="input">
-							<sf:clientTextValidator promptMessage="Search hotels by name, address, city, or zip.">
-								<h:inputText id="searchString" value="#{searchCriteria.searchString}" />
-							</sf:clientTextValidator>
-						</div>
+					<div class="span-8">
+						<h:outputLabel for="searchString">Search String: </h:outputLabel>
+						<sf:clientTextValidator promptMessage="Search hotels by name, address, city, or zip.">
+							<h:inputText id="searchString" value="#{searchCriteria.searchString}" />
+						</sf:clientTextValidator>
 					</div>
-					<div class="field">
-						<div class="label">
-						   	<h:outputLabel for="pageSize">Maximum results:</h:outputLabel>
-						</div>
-						<div class="input">
-							<h:selectOneMenu id="pageSize" value="#{searchCriteria.pageSize}">
-								<f:selectItems value="#{referenceData.pageSizeOptions}" />
-							</h:selectOneMenu>
-				   		</div>
+					<div class="span-6">
+					   	<h:outputLabel for="pageSize">Maximum Results: </h:outputLabel>
+						<h:selectOneMenu id="pageSize" value="#{searchCriteria.pageSize}">
+							<f:selectItems value="#{referenceData.pageSizeOptions}" />
+						</h:selectOneMenu>
 					</div>
-					<div class="buttonGroup">
+					<div class="span-3 last">
 						<sf:commandButton id="findHotels" value="Find Hotels" processIds="*" action="search" />
 					</div>
 			    </fieldset>
@@ -44,12 +36,12 @@
 		</div>
 	</ui:fragment>
 
-	<ui:fragment id="bookingsFragment">
-		<div id="bookingsSection" class="section">
-			<h:form id="bookingsForm">
-				<h2>Current Hotel Bookings</h2>				
-				<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount == 0}"/>
-				<h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" rendered="#{bookings.rowCount > 0}">
+	<ui:fragment id="bookingsFragment" rendered="#{currentUser!=null}">
+		<div id="bookingsSection">
+			<h2>Current Hotel Bookings</h2>
+			<h:outputText value="No Bookings Found" rendered="#{bookings.rowCount==0}"/>
+			<h:form id="bookingsForm" rendered="#{bookings.rowCount > 0}">
+				<h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking">
 					<h:column>
 						<f:facet name="header">Name</f:facet>
 						#{booking.hotel.name}

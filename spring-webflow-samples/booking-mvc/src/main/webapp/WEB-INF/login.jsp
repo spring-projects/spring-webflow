@@ -28,33 +28,33 @@
 				<label for="j_username">User:</label>
 				<br />
 				<input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
-				<script type="text/javascript">
-					Spring.addDecoration(new Spring.ElementDecoration({
-						elementId : "j_username",
-						widgetType : "dijit.form.ValidationTextBox",
-						widgetAttrs : { promptMessage : "Your username", required : true }}));
-				</script>
 			</p>
+			<script type="text/javascript">
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId : "j_username",
+					widgetType : "dijit.form.ValidationTextBox",
+					widgetAttrs : { required : true }}));
+			</script>
 			<p>
 				<label for="j_password">Password:</label>
 				<br />
 				<input type="password" name="j_password" id="j_password" />
-				<script type="text/javascript">
-					Spring.addDecoration(new Spring.ElementDecoration({
-						elementId : "j_password",
-						widgetType : "dijit.form.ValidationTextBox",
-						widgetAttrs : { promptMessage : "Your password", required : true}}));
-				</script>
 			</p>
+			<script type="text/javascript">
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId : "j_password",
+					widgetType : "dijit.form.ValidationTextBox",
+					widgetAttrs : { required : true}}));
+			</script>
 			<p>
 				<input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
 				<label for="remember_me">Don't ask for my password for two weeks:</label>
-				<script type="text/javascript">
-					Spring.addDecoration(new Spring.ElementDecoration({
-						elementId : "remember_me",
-						widgetType : "dijit.form.CheckBox"}));
-				</script>
 			</p>
+			<script type="text/javascript">
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId : "remember_me",
+					widgetType : "dijit.form.CheckBox"}));
+			</script>
 			<p>
 				<button id="submit" type="submit">Login</button>
 				<script type="text/javascript">

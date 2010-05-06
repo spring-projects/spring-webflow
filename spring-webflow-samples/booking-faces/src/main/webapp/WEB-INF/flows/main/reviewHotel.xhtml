@@ -8,49 +8,28 @@
 
 <ui:define name="content">
 
-<div class="section">
-	<h2>View Hotel</h2>
+	<h1>${hotel.name}</h1>
+	<address>
+		${hotel.address}
+		<br />
+		${hotel.city}
+		<br />
+		${hotel.state} ${hotel.zip}
+		<br />
+		${hotel.country}
+	</address>
 	<h:form id="hotel">
-		<fieldset>
-			<div class="field">
-				<div class="label">Name:</div>
-				<div class="output">#{hotel.name}</div>
-			</div>
-			<div class="field">
-				<div class="label">Address:</div>
-				<div class="output">#{hotel.address}</div>
-			</div>
-			<div class="field">
-				<div class="label">City:</div>
-				<div class="output">#{hotel.city}</div>
-			</div>
-			<div class="field">
-				<div class="label">State:</div>
-				<div class="output">#{hotel.state}</div>
-			</div>
-			<div class="field">
-				<div class="label">Zip:</div>
-				<div class="output">#{hotel.zip}</div>
-			</div>
-			<div class="field">
-				<div class="label">Country:</div>
-				<div class="output">#{hotel.country}</div>
-			</div>
-		    <div class="field">
-		        <div class="label">Nightly rate:</div>
-		        <div class="output">
-		            <h:outputText value="#{hotel.price}">
-		                <f:convertNumber type="currency" currencySymbol="$"/>
-		            </h:outputText>
-		        </div>
-		    </div>
-			<div class="buttonGroup">
-				<h:commandButton id="book" action="book" value="Book Hotel"/>&#160;
-				<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
-			</div>
-		</fieldset>
+	    <p>
+	        Nightly Rate:&#160;
+            <h:outputText value="#{hotel.price}">
+                <f:convertNumber type="currency" currencySymbol="$"/>
+            </h:outputText>
+	    </p>
+		<div>
+			<h:commandButton id="book" action="book" value="Book Hotel"/>&#160;&#160;
+			<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
+		</div>
 	</h:form>
-</div>
 
 </ui:define>
 </ui:composition>

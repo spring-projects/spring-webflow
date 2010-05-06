@@ -50,7 +50,7 @@ public class Booking implements Serializable {
 
     private int beds;
 
-    private Amenity amenities;
+    private Amenity[] amenities;
 
     public Booking() {
     }
@@ -182,11 +182,11 @@ public class Booking implements Serializable {
     }
 
     @Transient
-    public Amenity getAmenities() {
+    public Amenity[] getAmenities() {
 	return amenities;
     }
 
-    public void setAmenities(Amenity amenities) {
+    public void setAmenities(Amenity[] amenities) {
 	this.amenities = amenities;
     }
 

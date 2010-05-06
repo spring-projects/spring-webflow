@@ -9,56 +9,58 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
-	
 	<sf:includeStyles/>
-	<sf:resourceGroup>
-		<sf:resource path="/css-framework/css/tools.css"/>
-		<sf:resource path="/css-framework/css/typo.css"/>
-		<sf:resource path="/css-framework/css/forms.css"/>
-		<sf:resource path="/css-framework/css/layout-navtop-localleft.css"/>
-		<sf:resource path="/css-framework/css/layout.css"/>
-	</sf:resourceGroup>
-	<sf:resource path="/styles/booking.css"/>
+	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/screen.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/print.css" type="text/css" media="print" />
+	<!--[if lt IE 8]>
+	        <link rel="stylesheet" href="<c:url value="/blueprint/ie.css" />" type="text/css" media="screen, projection" />
+	<![endif]-->
+	<link rel="stylesheet" href="${request.contextPath}/styles/booking.css" type="text/css" media="screen" />
 	<ui:insert name="headIncludes"/>
 </head>
-<body class="tundra spring">
-<div id="page">
-	<div id="header" class="clearfix spring">
-		<div id="welcome">
-			<div class="left">Spring Travel: A Spring Faces Reference Application</div>
-			<div class="right">
+<body class="tundra">
+<div id="page" class="container">
+	<div id="header">
+		<div id="topbar">
+			<p>
 				<c:if test="${not empty currentUser.name}">
 	            	Welcome, ${currentUser.name} | <a href="${request.contextPath}/spring/logout">Logout</a>
 				</c:if>
 				<c:if test="${empty currentUser.name}">
 	            	<a href="${request.contextPath}/spring/login">Login</a>
 				</c:if>
-			</div>
-		</div>
-		<div id="branding" class="spring">
-			<a href="#{request.contextPath}"><img src="${request.contextPath}/resources/images/header.jpg" alt="Spring Travel"/></a>
-		</div>
-	</div>
-	<div id="content" class="clearfix spring">
-		<div id="local" class="spring">
-			<a href="http://www.thespringexperience.com">
-				<img src="${request.contextPath}/resources/images/diplomat.jpg" alt="generic hotel" />
-			</a>
-			<a href="http://www.thespringexperience.com">
-				<img src="${request.contextPath}/resources/images/tse.gif" alt="The Spring Experience" />
-			</a>
-			<p>
 			</p>
 		</div>
-		<div id="main">
+		<div id="logo">
+			<p>
+				<a href="#{request.contextPath}"><img src="${request.contextPath}/resources/images/header.jpg" alt="Spring Travel"/></a>
+			</p>
+		</div>
+	</div>
+	<div id="content">
+		<div id="local" class="span-6">
+			<p>
+				<a href="http://www.thespringexperience.com">
+					<img src="${request.contextPath}/resources/images/diplomat.jpg" alt="generic hotel" />
+				</a>
+			</p>
+			<p>
+				<a href="http://www.thespringexperience.com">
+					<img src="${request.contextPath}/resources/images/springone2gx.jpeg" alt="SpringOne 2GX" />
+				</a>
+			</p>
+		</div>
+		<div id="main" class="span-18 last">
 			<ui:insert name="content"/>
 		</div>
 	</div>
-	<div id="footer" class="clearfix spring">
-		<a href="http://www.springframework.org"><img src="${request.contextPath}/resources/images/powered-by-spring.png" alt="Powered by Spring" /></a>
+	<hr />
+	<div id="footer">
+		<a href="http://www.springframework.org">
+			<img src="${request.contextPath}/resources/images/powered-by-spring.png" alt="Powered by Spring" />
+		</a>
 	</div>
 </div>
-
 </body>
 </html>
 </f:view>

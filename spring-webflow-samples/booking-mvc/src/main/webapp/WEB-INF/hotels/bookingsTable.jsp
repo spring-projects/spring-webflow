@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div id="bookings" "class="section">
+<div id="bookings">
 <security:authorize ifAllGranted="ROLE_USER">
 	<h2>Current Hotel Bookings</h2>
 
