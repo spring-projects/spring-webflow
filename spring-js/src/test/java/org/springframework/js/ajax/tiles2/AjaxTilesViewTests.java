@@ -77,7 +77,7 @@ public class AjaxTilesViewTests extends TestCase {
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
-		assertEquals("/WEB-INF/searchResults.jsp", response.getIncludedUrl());
+		assertEquals("/WEB-INF/searchResults.jsp", response.getForwardedUrl());
 	}
 
 	public void testRenderFragment_Definition() throws Exception {
@@ -87,7 +87,7 @@ public class AjaxTilesViewTests extends TestCase {
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
-		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrl());
+		assertEquals("/WEB-INF/search.jsp", response.getForwardedUrl());
 	}
 
 	public void testRenderFragment_CascadedAttribute() throws Exception {
@@ -97,7 +97,7 @@ public class AjaxTilesViewTests extends TestCase {
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
-		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrl());
+		assertEquals("/WEB-INF/searchNavigation.jsp", response.getForwardedUrl());
 	}
 
 	public void testRenderFragment_DynamicAttribute() throws Exception {

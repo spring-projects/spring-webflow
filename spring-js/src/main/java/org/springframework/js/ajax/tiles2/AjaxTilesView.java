@@ -113,8 +113,8 @@ public class AjaxTilesView extends TilesView {
 
 			// initialize the session before rendering any fragments. Otherwise views that require the session which has
 			// not otherwise been initialized will fail to render
-			request.getSession();
-			response.flushBuffer();
+			// request.getSession();
+			// response.flushBuffer();
 
 			for (int i = 0; i < fragmentsToRender.length; i++) {
 				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(fragmentsToRender[i]);
