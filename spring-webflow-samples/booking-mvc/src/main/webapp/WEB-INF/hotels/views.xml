@@ -8,7 +8,7 @@
 	<definition name="hotels/search" extends="standardLayout">
 		<put-attribute name="body">
 			<definition template="/WEB-INF/hotels/search.jsp">
-				<put-attribute name="hotelSearchForm" value="/WEB-INF/hotels/hotelSearchForm.jsp" />
+				<put-attribute name="searchForm" value="/WEB-INF/hotels/searchForm.jsp" />
 				<put-attribute name="bookingsTable" value="/WEB-INF/hotels/bookingsTable.jsp" />
 			</definition>
 		</put-attribute>

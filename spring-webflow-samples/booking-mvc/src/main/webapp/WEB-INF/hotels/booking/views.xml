@@ -6,12 +6,7 @@
 <tiles-definitions>
 	
 	<definition name="enterBookingDetails" extends="standardLayout">
-		<put-attribute name="body">
-			<definition template="/WEB-INF/hotels/booking/enterBookingDetails.jsp">
-				<put-attribute name="messages" value="/WEB-INF/hotels/booking/messages.jsp" />
-		        <put-attribute name="bookingForm" value="/WEB-INF/hotels/booking/bookingForm.jsp" />
-			</definition>
-		</put-attribute>
+		<put-attribute name="body" value="/WEB-INF/hotels/booking/enterBookingDetails.jsp"/>
 	</definition>
 	
 	<definition name="reviewBooking" extends="standardLayout">

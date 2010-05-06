@@ -2,60 +2,59 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div class="section">
-	<h2>Confirm Hotel Booking</h2>
-</div>
+<div id="bookingForm">
+	<div class="span-5">
+		<h3>${booking.hotel.name}</h3>
+		
+		<address>
+			${booking.hotel.address}
+			<br/>
+			${booking.hotel.city}, ${booking.hotel.state}, ${booking.hotel.zip}
+			<br/>
+			${booking.hotel.country}
+		</address>
+	</div>
+	<div class="span-12 last">
+		<form:form id="confirm" modelAttribute="booking">
+		<fieldset>
+			<legend>Confirm Booking Details</legend>
+			<div>
+				<div class="span-3">Check In:</div>
+				<div class="span-8 last">
+					<p><spring:bind path="checkinDate">${status.value}</spring:bind></p>
+				</div>
+			</div>
+			<div>
+				<div class="span-3">Checkout:</div>
+				<div class="span-8 last">
+					<p><spring:bind path="checkoutDate">${status.value}</spring:bind></p>
+				</div>
+			</div>
+	        <div>
+	            <div class="span-3">Number of Nights:</div>
+	            <div class="span-8 last">
+	            	<p><spring:bind path="nights">${status.value}</spring:bind></p>
+	            </div>
+	        </div>
+	        <div>
+	            <div class="span-3">Total Payment:</div>
+	            <div class="span-8 last">
+	            	<p><spring:bind path="total">${status.value}</spring:bind></p>
+	            </div>
+	        </div>
+			<div>
+				<div class="span-3">Credit Card #:</div>
+				<div class="span-8 last">
+					<p>${booking.creditCard}</p>
+				</div>
+			</div>
+			<div>
+				<button type="submit" name="_eventId_confirm">Confirm</button>
+				<button type="submit" name="_eventId_revise">Revise</button>
+				<button type="submit" name="_eventId_cancel">Cancel</button>
+			</div>
+		</fieldset>
+		</form:form>
+	</div>
 
-<div class="section">
-	<form:form id="confirm" modelAttribute="booking">
-	<fieldset>
-		<div class="field">
-			<div class="label">Name:</div>
-			<div class="output">${booking.hotel.name}</div>
-		</div>
-		<div class="field">
-			<div class="label">Address:</div>
-			<div class="output">${booking.hotel.address}</div>
-		</div>
-		<div class="field">
-			<div class="label">City, State:</div>
-			<div class="output">${booking.hotel.city}, ${booking.hotel.state}</div>
-		</div>
-		<div class="field">
-			<div class="label">Zip:</div>
-			<div class="output">${booking.hotel.zip}</div>
-		</div>
-		<div class="field">
-			<div class="label">Country:</div>
-			<div class="output">${booking.hotel.country}</div>
-		</div>
-        <div class="field">
-            <div class="label">Total payment:</div>
-            <div class="output">
-            	<spring:bind path="total">${status.value}</spring:bind>
-            </div>
-        </div>
-		<div class="field">
-			<div class="label">Check In Date:</div>
-			<div class="output">
-				<spring:bind path="checkinDate">${status.value}</spring:bind>
-			</div>
-		</div>
-		<div class="field">
-			<div class="label">Check Out Date:</div>
-			<div class="output">
-				<spring:bind path="checkoutDate">${status.value}</spring:bind>
-			</div>
-		</div>
-		<div class="field">
-			<div class="label">Credit Card #:</div>
-			<div class="output">${booking.creditCard}</div>
-		</div>
-		<div class="buttonGroup">
-			<input type="submit" name="_eventId_confirm" value="Confim"/>&#160;
-			<input type="submit" name="_eventId_revise" value="Revise"/>&#160;
-			<input type="submit" name="_eventId_cancel" value="Cancel"/>&#160;
-		</div>
-	</fieldset>
-	</form:form>
 </div>
