@@ -5,12 +5,6 @@
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 
 <div class="span-5">
-	<c:if test="${not empty param.login_error}">
-		<div class="errors">
-			Your login attempt was not successful, try again.<br /><br />
-			Reason: <%= ((AuthenticationException) session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
-		</div>
-	</c:if>
 	<p>Valid username/passwords are:</p>
 	<ul>
 		<li>keith/melbourne</li>
@@ -21,6 +15,12 @@
 </div>
 
 <div class="span-10 append-2 last">
+	<c:if test="${not empty param.login_error}">
+		<div class="error">
+			Your login attempt was not successful, try again.<br /><br />
+			Reason: <%= ((AuthenticationException) session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
+		</div>
+	</c:if>
 	<form name="f" action="<c:url value="/spring/loginProcess" />" method="post">
 		<fieldset>
 			<legend>Login Information</legend>
