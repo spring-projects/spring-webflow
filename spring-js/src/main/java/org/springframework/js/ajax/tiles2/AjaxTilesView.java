@@ -111,10 +111,11 @@ public class AjaxTilesView extends TilesView {
 					response);
 			addRuntimeAttributes(container, flattenedAttributeMap, request, response);
 
-			// initialize the session before rendering any fragments. Otherwise views that require the session which has
-			// not otherwise been initialized will fail to render
-			// request.getSession();
-			// response.flushBuffer();
+			if (fragmentsToRender.length > 1) {
+				// When rendering more than one fragment, flush the buffer in order to commit the response.
+				// With the response committed, Tiles does an include rather than forward.
+				response.flushBuffer();
+			}
 
 			for (int i = 0; i < fragmentsToRender.length; i++) {
 				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(fragmentsToRender[i]);

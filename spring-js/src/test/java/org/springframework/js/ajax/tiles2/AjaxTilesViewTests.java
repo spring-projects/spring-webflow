@@ -1,6 +1,8 @@
 package org.springframework.js.ajax.tiles2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -26,14 +28,14 @@ public class AjaxTilesViewTests extends TestCase {
 	private AjaxTilesView ajaxTilesView;
 
 	private MockHttpServletRequest request;
-	private MockHttpServletResponse response;
+	private MultipleIncludeUrlMockHttpServletResponse response;
 	private MockServletContext servletContext;
 
 	protected void setUp() throws Exception {
 
 		servletContext = new MockServletContext("/org/springframework/js/ajax/tiles2/");
 		request = new MockHttpServletRequest(servletContext);
-		response = new MockHttpServletResponse();
+		response = new MultipleIncludeUrlMockHttpServletResponse();
 
 		TilesConfigurer tc = new TilesConfigurer();
 		tc.setDefinitions(new String[] { "tiles-definitions.xml" });
@@ -112,6 +114,18 @@ public class AjaxTilesViewTests extends TestCase {
 		container.endContext(requestItems);
 	}
 
+	public void testRenderFragment_Multiple() throws Exception {
+		setupStaticWebApplicationContext();
+		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
+		request.addParameter("fragments", "body,searchNavigation");
+		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
+		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		assertTrue("Multiple fragments should result in include, not forward", response.getIncludedUrls().size() == 2);
+		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrls().get(0));
+		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrls().get(1));
+	}
+
 	public void testFlattenAttributeMap() throws Exception {
 		TilesRequestContextFactory tilesRequestContextFactory = new ServletTilesRequestContextFactory();
 		tilesRequestContextFactory.init(new HashMap());
@@ -135,5 +149,19 @@ public class AjaxTilesViewTests extends TestCase {
 		assertEquals("f1", fragments[0]);
 		assertEquals("f2", fragments[1]);
 		assertEquals("f3", fragments[2]);
+	}
+
+	// Remove this class when no longer needed (http://jira.springframework.org/browse/SPR-7188)
+	private class MultipleIncludeUrlMockHttpServletResponse extends MockHttpServletResponse {
+		List includedUrls = new ArrayList();
+
+		public void setIncludedUrl(String includedUrl) {
+			super.setIncludedUrl(includedUrl);
+			includedUrls.add(includedUrl);
+		}
+
+		public List getIncludedUrls() {
+			return includedUrls;
+		}
 	}
 }
