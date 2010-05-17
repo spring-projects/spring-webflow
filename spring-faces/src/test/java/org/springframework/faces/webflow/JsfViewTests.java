@@ -14,8 +14,8 @@ import javax.faces.lifecycle.Lifecycle;
 
 import junit.framework.TestCase;
 
-import org.apache.shale.test.mock.MockResponseWriter;
-import org.apache.shale.test.mock.MockStateManager;
+import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockStateManager;
 import org.easymock.EasyMock;
 import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -130,7 +130,7 @@ public class JsfViewTests extends TestCase {
 
 		try {
 			view.render();
-		} catch (FacesException ex) {
+		} catch (Exception ex) {
 			assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 		}
 	}

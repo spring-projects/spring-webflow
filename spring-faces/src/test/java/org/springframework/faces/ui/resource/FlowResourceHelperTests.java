@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.springframework.faces.webflow.JSFMockHelper;
 
 public class FlowResourceHelperTests extends TestCase {

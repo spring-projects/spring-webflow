@@ -10,7 +10,7 @@ import javax.faces.render.RenderKitFactory;
 
 import junit.framework.TestCase;
 
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.MockViewHandler;
 import org.springframework.util.StringUtils;

@@ -23,8 +23,8 @@
 		<!-- core dependencies -->
 		<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="compile->runtime"/>
 		<dependency	org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime"/>
-		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="compile->runtime" />
-		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="compile->runtime" />
+		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="compile->runtime" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="compile->runtime" />
 		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="compile->runtime"/>
 		<dependency	org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime"/>
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.1.2" conf="compile->runtime"/>

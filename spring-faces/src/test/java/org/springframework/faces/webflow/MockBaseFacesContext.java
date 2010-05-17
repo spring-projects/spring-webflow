@@ -1,14 +1,16 @@
 package org.springframework.faces.webflow;
 
+import java.util.Map;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.ExternalContext;
 import javax.faces.lifecycle.Lifecycle;
 
-import org.apache.shale.test.mock.MockFacesContext12;
+import org.apache.myfaces.test.mock.MockFacesContext20;
 
-public class MockBaseFacesContext extends MockFacesContext12 {
+public class MockBaseFacesContext extends MockFacesContext20 {
 
 	private Application application;
 
@@ -22,6 +24,10 @@ public class MockBaseFacesContext extends MockFacesContext12 {
 
 	public MockBaseFacesContext(ExternalContext externalContext, Lifecycle lifecycle) {
 		super(externalContext, lifecycle);
+	}
+
+	public Map getAttributes() {
+		return super.getAttributes();
 	}
 
 	public Application getApplication() {

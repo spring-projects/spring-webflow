@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+	<include file="${spring.build.dir}/common/ivysettings.xml"/>
+
+	<settings defaultResolver="extended-external-lookup" defaultLatestStrategy="latest-lexico"/>
+
+	<resolvers>
+		<chain name="extended-external-lookup">
+			<resolver ref="external-lookup"/>
+			<url name="java-net-maven2" m2compatible="true">
+				<artifact pattern="http://download.java.net/maven/2/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+			</url>
+			<ibiblio name="maven2" m2compatible="true"/>
+		</chain>
+	</resolvers>
+
+</ivysettings>

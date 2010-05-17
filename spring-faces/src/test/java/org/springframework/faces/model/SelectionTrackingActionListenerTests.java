@@ -12,13 +12,19 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
+import junit.framework.TestCase;
+
+import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.facelets.component.UIRepeat;
 
-import junit.framework.TestCase;
-
 public class SelectionTrackingActionListenerTests extends TestCase {
+
+	/**
+	 * JSF Mock Helper
+	 */
+	private JSFMockHelper jsfMockHelper = new JSFMockHelper();
 
 	/**
 	 * The JSF view to simulate
@@ -40,13 +46,18 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	 */
 	private ActionListener selectionTrackingListener = new SelectionTrackingActionListener(delegateListener);
 
-	public void setUp() {
+	public void setUp() throws Exception {
+		jsfMockHelper.setUp();
 		viewToTest = new UIViewRoot();
 		List rows = new ArrayList();
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
 		dataModel = new OneSelectionTrackingListDataModel(rows);
+	}
+
+	protected void tearDown() throws Exception {
+		jsfMockHelper.tearDown();
 	}
 
 	public void testProcessActionWithUIData() {

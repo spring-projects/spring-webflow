@@ -71,7 +71,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#createUniqueId()
 	 */
 	public String createUniqueId() {
-		return original.createUniqueId();
+		return (original != null) ? original.createUniqueId() : null;
 	}
 
 	/**
@@ -409,7 +409,10 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setId(java.lang.String)
 	 */
 	public void setId(String id) {
-		original.setId(id);
+		// Test for null to deal with JSF setId on constructor
+		if (original != null) {
+			original.setId(id);
+		}
 	}
 
 	/**

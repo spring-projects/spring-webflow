@@ -48,4 +48,8 @@ public class FlowApplicationFactory extends ApplicationFactory {
 		delegate.setApplication(application);
 	}
 
+	public ApplicationFactory getWrapped() {
+		return delegate;
+	}
+
 }

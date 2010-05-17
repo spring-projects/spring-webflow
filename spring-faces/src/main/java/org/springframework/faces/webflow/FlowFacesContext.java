@@ -17,17 +17,23 @@ package org.springframework.faces.webflow;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.el.ELContext;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ProjectStage;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.context.PartialViewContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 
@@ -197,6 +203,64 @@ public class FlowFacesContext extends FacesContext {
 
 	protected FacesContext getDelegate() {
 		return delegate;
+	}
+
+	// --------------- JSF 2.0 Pass-through delegate methods ------------------//
+
+	public Map getAttributes() {
+		return delegate.getAttributes();
+	}
+
+	public PartialViewContext getPartialViewContext() {
+		return delegate.getPartialViewContext();
+	}
+
+	public List getMessageList() {
+		return delegate.getMessageList();
+	}
+
+	public List getMessageList(String clientId) {
+		return delegate.getMessageList(clientId);
+	}
+
+	public boolean isPostback() {
+		return delegate.isPostback();
+	}
+
+	public PhaseId getCurrentPhaseId() {
+		return delegate.getCurrentPhaseId();
+	}
+
+	public void setCurrentPhaseId(PhaseId currentPhaseId) {
+		delegate.setCurrentPhaseId(currentPhaseId);
+	}
+
+	public ExceptionHandler getExceptionHandler() {
+		return delegate.getExceptionHandler();
+	}
+
+	public boolean isProcessingEvents() {
+		return delegate.isProcessingEvents();
+	}
+
+	public boolean isProjectStage(ProjectStage stage) {
+		return delegate.isProjectStage(stage);
+	}
+
+	public boolean isValidationFailed() {
+		return delegate.isValidationFailed();
+	}
+
+	public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+		delegate.setExceptionHandler(exceptionHandler);
+	}
+
+	public void setProcessingEvents(boolean processingEvents) {
+		delegate.setProcessingEvents(processingEvents);
+	}
+
+	public void validationFailed() {
+		delegate.validationFailed();
 	}
 
 	// ------------------ Private helper methods ----------------------//

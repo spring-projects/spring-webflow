@@ -46,7 +46,7 @@
 		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.2.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.config" rev="3.0.2.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.web" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->jsf12"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->jsf20"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 

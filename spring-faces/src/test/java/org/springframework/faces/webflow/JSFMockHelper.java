@@ -1,30 +1,37 @@
 package org.springframework.faces.webflow;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockApplication;
-import org.apache.shale.test.mock.MockExternalContext;
-import org.apache.shale.test.mock.MockHttpServletRequest;
-import org.apache.shale.test.mock.MockHttpServletResponse;
-import org.apache.shale.test.mock.MockHttpSession;
-import org.apache.shale.test.mock.MockLifecycle;
-import org.apache.shale.test.mock.MockLifecycleFactory;
-import org.apache.shale.test.mock.MockRenderKit;
-import org.apache.shale.test.mock.MockServletConfig;
-import org.apache.shale.test.mock.MockServletContext;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockApplicationFactory;
+import org.apache.myfaces.test.mock.MockExternalContext;
+import org.apache.myfaces.test.mock.MockHttpServletRequest;
+import org.apache.myfaces.test.mock.MockHttpServletResponse;
+import org.apache.myfaces.test.mock.MockHttpSession;
+import org.apache.myfaces.test.mock.MockPartialViewContextFactory;
+import org.apache.myfaces.test.mock.MockRenderKit;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockServletConfig;
+import org.apache.myfaces.test.mock.MockServletContext;
+import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
+import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
 
 /**
  * Helper for using the mock JSF environment provided by shale-test inside unit tests that do not extend
  * {@link AbstractJsfTestCase}
- * @author Jeremy Grelle
  * 
+ * @author Jeremy Grelle
+ * @author Phil Webb
  */
 public class JSFMockHelper {
 
@@ -88,17 +95,21 @@ public class JSFMockHelper {
 
 	private static class JSFMock extends AbstractJsfTestCase {
 
+		private ClassLoader threadContextClassLoader;
+
 		public JSFMock() {
 			super("JSFMock");
 		}
 
-		FacesContextFactory facesContextFactory;
 		FacesContext facesContext;
+		FacesContextFactory facesContextFactory;
 
 		public void setUp() throws Exception {
 
-			// Thread.currentThread().setContextClassLoader(
-			// new URLClassLoader(new URL[0], this.getClass().getClassLoader()));
+			// Set up a new thread context class loader
+			threadContextClassLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(
+					new URLClassLoader(new URL[0], this.getClass().getClassLoader()));
 
 			// Set up Servlet API Objects
 			servletContext = new MockServletContext();
@@ -110,20 +121,12 @@ public class JSFMockHelper {
 			response = new MockHttpServletResponse();
 
 			// Set up JSF API Objects
-			FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY,
-					"org.apache.shale.test.mock.MockApplicationFactory");
-			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
-					"org.springframework.faces.webflow.MockBaseFacesContextFactory");
-			/*
-			 * FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
-			 * "org.apache.shale.test.mock.MockFacesContextFactory");
-			 */
-			FactoryFinder
-					.setFactory(FactoryFinder.LIFECYCLE_FACTORY, "org.apache.shale.test.mock.MockLifecycleFactory");
-			FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY,
-					"org.apache.shale.test.mock.MockRenderKitFactory");
-
-			application = new MockApplication();
+			FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, MockApplicationFactory.class.getName());
+			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY, MockBaseFacesContextFactory.class.getName());
+			FactoryFinder.setFactory(FactoryFinder.LIFECYCLE_FACTORY, MockLifecycleFactory.class.getName());
+			FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY, MockRenderKitFactory.class.getName());
+			FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY, MockPartialViewContextFactory.class
+					.getName());
 			externalContext = new MockExternalContext(servletContext, request, response);
 			lifecycleFactory = (MockLifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 			lifecycle = (MockLifecycle) lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
@@ -134,6 +137,9 @@ public class JSFMockHelper {
 			root.setViewId("/viewId");
 			root.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
 			facesContext.setViewRoot(root);
+			ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder
+					.getFactory(FactoryFinder.APPLICATION_FACTORY);
+			application = (org.apache.myfaces.test.mock.MockApplication) applicationFactory.getApplication();
 			RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder
 					.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
 			renderKit = new MockRenderKit();
@@ -157,9 +163,11 @@ public class JSFMockHelper {
 			session = null;
 			FactoryFinder.releaseFactories();
 
+			Thread.currentThread().setContextClassLoader(threadContextClassLoader);
+			threadContextClassLoader = null;
 		}
 
-		public MockApplication application() {
+		public org.apache.myfaces.test.mock.MockApplication application() {
 			return application;
 		}
 

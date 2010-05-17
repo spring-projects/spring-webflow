@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
+import org.springframework.faces.ui.AjaxJsf2ViewRoot;
 import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
@@ -136,7 +137,8 @@ public class JsfViewFactory implements ViewFactory {
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
 		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
-			return new JsfView(new AjaxViewRoot(root), lifecycle, context);
+			AjaxViewRoot viewRoot = (JsfVersion.isAtLeastJsf20()) ? new AjaxJsf2ViewRoot(root) : new AjaxViewRoot(root);
+			return new JsfView(viewRoot, lifecycle, context);
 		} else {
 			return new JsfView(root, lifecycle, context);
 		}

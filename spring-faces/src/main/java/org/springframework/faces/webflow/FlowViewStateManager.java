@@ -156,6 +156,7 @@ public class FlowViewStateManager extends StateManager {
 		}
 		UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
 		if (viewRoot != null) {
+			context.setViewRoot(viewRoot);
 			restoreComponentState(context, viewRoot, renderKitId);
 		}
 		return viewRoot;

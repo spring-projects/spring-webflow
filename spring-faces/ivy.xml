@@ -11,6 +11,7 @@
 
 	<configurations>
 		<include file="${spring.build.dir}/common/default-ivy-configurations.xml"/>
+		<conf name="jsf20" visibility="public"/>
 		<conf name="jsf12" visibility="public"/>
 		<conf name="jsf11" visibility="public"/>
 	</configurations>
@@ -37,6 +38,10 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
+		<!-- JSF 2.0 dependencies -->
+		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="provided,jsf20->runtime(*)" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="provided,jsf20->runtime(*)" />
+
 		<!-- JSF 1.2 dependencies -->
 		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
 		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
@@ -48,6 +53,7 @@
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime" />
 		<dependency org="org.apache.shale" name="com.springsource.org.apache.shale.test" rev="1.0.4" conf="test->runtime" />
+		<dependency org="org.apache.myfaces.test" name="myfaces-test20" rev="1.0.0-beta" conf="test->default" />
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime" />
 		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="test->runtime"/>
