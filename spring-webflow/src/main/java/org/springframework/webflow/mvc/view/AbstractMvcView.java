@@ -308,6 +308,30 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	/**
+	 * Returns the binding configuration that defines how to connect properties of the model to UI elements.
+	 * @return an instance of {@link BinderConfiguration} or null.
+	 */
+	protected BinderConfiguration getBinderConfiguration() {
+		return binderConfiguration;
+	}
+
+	/**
+	 * Returns the EL parser to be used for data binding purposes.
+	 * @return an instance of {@link ExpressionParser}.
+	 */
+	protected ExpressionParser getExpressionParser() {
+		return expressionParser;
+	}
+
+	/**
+	 * Returns the prefix that can be used for parameters that mark potentially empty fields.
+	 * @return the prefix value.
+	 */
+	protected String getFieldMarkerPrefix() {
+		return fieldMarkerPrefix;
+	}
+
+	/**
 	 * Obtain the user event from the current flow request. The default implementation returns the value of the request
 	 * parameter with name {@link #setEventIdParameterName(String) eventIdParameterName}. Subclasses may override.
 	 * @param context the current flow request context
@@ -315,6 +339,158 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected String determineEventId(RequestContext context) {
 		return WebUtils.findParameterValue(context.getRequestParameters().asMap(), eventIdParameterName);
+	}
+
+	/**
+	 * <p>
+	 * Causes the model to be populated from information contained in request parameters.
+	 * </p>
+	 * <p>
+	 * If a view has binding configuration then only model fields specified in the binding configuration will be
+	 * considered. In the absence of binding configuration all request parameters will be used to update matching fields
+	 * on the model.
+	 * </p>
+	 * 
+	 * @param model the model to be updated
+	 * @return an instance of MappingResults with information about the results of the binding.
+	 */
+	protected MappingResults bind(Object model) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Binding to model");
+		}
+		DefaultMapper mapper = new DefaultMapper();
+		ParameterMap requestParameters = requestContext.getRequestParameters();
+		if (binderConfiguration != null) {
+			addModelBindings(mapper, requestParameters.asMap().keySet(), model);
+		} else {
+			addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
+		}
+		return mapper.map(requestParameters, model);
+	}
+
+	/**
+	 * <p>
+	 * Adds a {@link DefaultMapping} for every configured view {@link Binding} for which there is an incoming request
+	 * parameter. If there is no matching incoming request parameter, a special mapping is created that will set the
+	 * target field on the model to an empty value (typically null).
+	 * </p>
+	 * 
+	 * @param mapper the mapper to which mappings will be added
+	 * @param parameterNames the request parameters
+	 * @param model the model
+	 */
+	protected void addModelBindings(DefaultMapper mapper, Set parameterNames, Object model) {
+		Iterator it = binderConfiguration.getBindings().iterator();
+		while (it.hasNext()) {
+			Binding binding = (Binding) it.next();
+			String parameterName = binding.getProperty();
+			if (parameterNames.contains(parameterName)) {
+				addMapping(mapper, binding, model);
+			} else {
+				if (fieldMarkerPrefix != null && parameterNames.contains(fieldMarkerPrefix + parameterName)) {
+					addEmptyValueMapping(mapper, parameterName, model);
+				}
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Creates and adds a {@link DefaultMapping} for the given {@link Binding}. Information such as the model field
+	 * name, if the field is required, and whether type conversion is needed will be passed on from the binding to the
+	 * mapping.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> with Spring 3 type conversion and formatting now in use in Web Flow, it is no longer necessary to
+	 * use named converters on binding elements. The preferred approach is to register Spring 3 formatters. Named
+	 * converters are supported for backwards compatibility only and will not result in use of the Spring 3 type
+	 * conversion system at runtime.
+	 * </p>
+	 * 
+	 * @param mapper the mapper to add the mapping to
+	 * @param binding the binding element
+	 * @param model the model
+	 */
+	protected void addMapping(DefaultMapper mapper, Binding binding, Object model) {
+		Expression source = new RequestParameterExpression(binding.getProperty());
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);
+		DefaultMapping mapping = new DefaultMapping(source, target);
+		mapping.setRequired(binding.getRequired());
+		if (binding.getConverter() != null) {
+			Assert.notNull(conversionService,
+					"A ConversionService must be configured to use resolve custom converters to use during binding");
+			ConversionExecutor conversionExecutor = conversionService.getConversionExecutor(binding.getConverter(),
+					String.class, target.getValueType(model));
+			mapping.setTypeConverter(conversionExecutor);
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding mapping for parameter '" + binding.getProperty() + "'");
+		}
+		mapper.addMapping(mapping);
+	}
+
+	/**
+	 * Add a {@link DefaultMapping} instance for all incoming request parameters except those having a special field
+	 * marker prefix. This method is used when binding configuration was not specified on the view.
+	 * 
+	 * @param mapper the mapper to add mappings to
+	 * @param parameterNames the request parameter names
+	 * @param model the model
+	 */
+	protected void addDefaultMappings(DefaultMapper mapper, Set parameterNames, Object model) {
+		for (Iterator it = parameterNames.iterator(); it.hasNext();) {
+			String parameterName = (String) it.next();
+			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
+				String field = parameterName.substring(fieldMarkerPrefix.length());
+				if (!parameterNames.contains(field)) {
+					addEmptyValueMapping(mapper, field, model);
+				}
+			} else {
+				addDefaultMapping(mapper, parameterName, model);
+			}
+		}
+	}
+
+	/**
+	 * Adds a special {@link DefaultMapping} that results in setting the target field on the model to an empty value
+	 * (typically null).
+	 * 
+	 * @param mapper the mapper to add the mapping to
+	 * @param field the field for which a mapping is to be added
+	 * @param model the model
+	 */
+	protected void addEmptyValueMapping(DefaultMapper mapper, String field, Object model) {
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(field, parserContext);
+		try {
+			Class propertyType = target.getValueType(model);
+			Expression source = new StaticExpression(getEmptyValue(propertyType));
+			DefaultMapping mapping = new DefaultMapping(source, target);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Adding empty value mapping for parameter '" + field + "'");
+			}
+			mapper.addMapping(mapping);
+		} catch (EvaluationException e) {
+		}
+	}
+
+	/**
+	 * Adds a {@link DefaultMapping} between the given request parameter name and a matching model field.
+	 * 
+	 * @param mapper the mapper to add the mapping to
+	 * @param parameter the request parameter name
+	 * @param model the model
+	 */
+	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
+		Expression source = new RequestParameterExpression(parameter);
+		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		Expression target = expressionParser.parseExpression(parameter, parserContext);
+		DefaultMapping mapping = new DefaultMapping(source, target);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding default mapping for parameter '" + parameter + "'");
+		}
+		mapper.addMapping(mapping);
 	}
 
 	// package private
@@ -395,84 +571,6 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
-	private MappingResults bind(Object model) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Binding to model");
-		}
-		DefaultMapper mapper = new DefaultMapper();
-		ParameterMap requestParameters = requestContext.getRequestParameters();
-		if (binderConfiguration != null) {
-			addModelBindings(mapper, requestParameters.asMap().keySet(), model);
-		} else {
-			addDefaultMappings(mapper, requestParameters.asMap().keySet(), model);
-		}
-		return mapper.map(requestParameters, model);
-	}
-
-	private void addModelBindings(DefaultMapper mapper, Set parameterNames, Object model) {
-		Iterator it = binderConfiguration.getBindings().iterator();
-		while (it.hasNext()) {
-			Binding binding = (Binding) it.next();
-			String parameterName = binding.getProperty();
-			if (parameterNames.contains(parameterName)) {
-				addMapping(mapper, binding, model);
-			} else {
-				if (fieldMarkerPrefix != null && parameterNames.contains(fieldMarkerPrefix + parameterName)) {
-					addEmptyValueMapping(mapper, parameterName, model);
-				}
-			}
-		}
-	}
-
-	private void addMapping(DefaultMapper mapper, Binding binding, Object model) {
-		Expression source = new RequestParameterExpression(binding.getProperty());
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);
-		DefaultMapping mapping = new DefaultMapping(source, target);
-		mapping.setRequired(binding.getRequired());
-		if (binding.getConverter() != null) {
-			Assert.notNull(conversionService,
-					"A ConversionService must be configured to use resolve custom converters to use during binding");
-			ConversionExecutor conversionExecutor = conversionService.getConversionExecutor(binding.getConverter(),
-					String.class, target.getValueType(model));
-			mapping.setTypeConverter(conversionExecutor);
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Adding mapping for parameter '" + binding.getProperty() + "'");
-		}
-		mapper.addMapping(mapping);
-	}
-
-	private void addDefaultMappings(DefaultMapper mapper, Set parameterNames, Object model) {
-		for (Iterator it = parameterNames.iterator(); it.hasNext();) {
-			String parameterName = (String) it.next();
-			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
-				String field = parameterName.substring(fieldMarkerPrefix.length());
-				if (!parameterNames.contains(field)) {
-					addEmptyValueMapping(mapper, field, model);
-				}
-			} else {
-				addDefaultMapping(mapper, parameterName, model);
-			}
-		}
-	}
-
-	private void addEmptyValueMapping(DefaultMapper mapper, String field, Object model) {
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		Expression target = expressionParser.parseExpression(field, parserContext);
-		try {
-			Class propertyType = target.getValueType(model);
-			Expression source = new StaticExpression(getEmptyValue(propertyType));
-			DefaultMapping mapping = new DefaultMapping(source, target);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Adding empty value mapping for parameter '" + field + "'");
-			}
-			mapper.addMapping(mapping);
-		} catch (EvaluationException e) {
-
-		}
-	}
-
 	private Object getEmptyValue(Class fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
@@ -484,17 +582,6 @@ public abstract class AbstractMvcView implements View {
 			// Default value: try null.
 			return null;
 		}
-	}
-
-	private void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
-		Expression source = new RequestParameterExpression(parameter);
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		Expression target = expressionParser.parseExpression(parameter, parserContext);
-		DefaultMapping mapping = new DefaultMapping(source, target);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Adding default mapping for parameter '" + parameter + "'");
-		}
-		mapper.addMapping(mapping);
 	}
 
 	private boolean hasErrors(MappingResults results) {

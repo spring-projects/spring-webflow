@@ -184,7 +184,11 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		return viewFactory;
 	}
 
-	private AbstractMvcViewFactory createMvcViewFactory(Expression viewId, ExpressionParser expressionParser,
+	/**
+	 * Creates a concrete instance of an AbstractMvcViewFactory according to the runtime environment (Servlet or
+	 * Portlet).
+	 */
+	protected AbstractMvcViewFactory createMvcViewFactory(Expression viewId, ExpressionParser expressionParser,
 			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		if (environment == MvcEnvironment.SERVLET) {
 			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
