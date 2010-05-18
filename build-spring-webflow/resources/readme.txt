@@ -1,5 +1,5 @@
-SPRING WEB FLOW 2.1.0 ()
-----------------------------------
+SPRING WEB FLOW 2.1.0
+----------------------
 http://www.springframework.org/webflow
 
 1. INTRODUCTION
@@ -20,9 +20,9 @@ It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2 requires Java SE 1.4 and Spring Framework 2.5.4 or above to run.
+Spring Web Flow 2.1 requires Java SE 1.5 and Spring Framework 3.0.0 or above to run.
 
-Java SE 5.0 with Ant 1.7 is required to build.
+Java SE 5.0 with Ant 1.7 is also required to build.
 
 Release distribution contents:
 
@@ -51,12 +51,12 @@ Dependencies in [brackets] are optional, and are just necessary for certain func
 
 * org.springframework.webflow-2.1.0.RELEASE.jar
 - Contents: The Spring Web Flow system
-- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-binding, spring-web, spring-webmvc-servlet, spring-js
+- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-expression, spring-binding, spring-web, spring-webmvc-servlet, spring-js
                 [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
               
 * org.springframework.binding-2.1.0.RELEASE.jar
 - Contents: The Spring Data Binding framework, a utility library used by Web Flow
-- Dependencies: Commons Logging, spring-beans, spring-core, spring-context
+- Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-expression
                 [Log4J, OGNL, EL API]
 
 * org.springframework.js-2.1.0.RELEASE.jar
