@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
@@ -35,13 +36,20 @@ import org.springframework.webflow.execution.View;
  * including the current FlowExecutionKey, so that postbacks may be properly intercepted and handled by Web Flow.
  * 
  * @author Jeremy Grelle
+ * 
+ * @see Jsf2FlowViewHandler
  */
 public class FlowViewHandler extends ViewHandler {
 
 	private ViewHandler delegate;
 
 	public FlowViewHandler(ViewHandler delegate) {
+		Assert.notNull(delegate, "The delegate ViewHandler instance must not be null!");
 		this.delegate = delegate;
+	}
+
+	protected ViewHandler getDelegate() {
+		return delegate;
 	}
 
 	public String getActionURL(FacesContext context, String viewId) {
@@ -93,6 +101,14 @@ public class FlowViewHandler extends ViewHandler {
 
 	public void writeState(FacesContext context) throws IOException {
 		delegate.writeState(context);
+	}
+
+	public String deriveViewId(FacesContext context, String rawViewId) {
+		if (JsfUtils.isFlowRequest()) {
+			return resolveResourcePath(RequestContextHolder.getRequestContext(), rawViewId);
+		} else {
+			return getDelegate().deriveViewId(context, rawViewId);
+		}
 	}
 
 	// --------------------- Private Helpers ------------------------------//

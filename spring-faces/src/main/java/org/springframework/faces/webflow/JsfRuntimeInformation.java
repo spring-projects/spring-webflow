@@ -17,44 +17,38 @@ package org.springframework.faces.webflow;
 
 import javax.faces.context.FacesContext;
 
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Internal helper class to find the version of JSF in use at runtime.
+ * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
  * 
  * @author Phil Webb
  */
-public class JsfVersion {
+public class JsfRuntimeInformation {
 
-	/**
-	 * JSF Version 1.1
-	 */
+	/** JSF Version 1.1 */
 	public static final int JSF_11 = 0;
 
-	/**
-	 * JSF Version 1.2
-	 */
+	/** JSF Version 1.2 */
 	public static final int JSF_12 = 1;
 
-	/**
-	 * JSF Version 2.0
-	 */
+	/** JSF Version 2.0 */
 	public static final int JSF_20 = 2;
 
 	private static final int jsfVersion;
 
+	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet",
+			JsfUtils.class.getClassLoader());
+
 	static {
 		if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
-			jsfVersion = JsfVersion.JSF_20;
+			jsfVersion = JSF_20;
 		} else if (ReflectionUtils.findMethod(FacesContext.class, "getELContext") != null) {
-			jsfVersion = JsfVersion.JSF_12;
+			jsfVersion = JSF_12;
 		} else {
-			jsfVersion = JsfVersion.JSF_11;
+			jsfVersion = JSF_11;
 		}
-	}
-
-	public static int getJsfVersion() {
-		return jsfVersion;
 	}
 
 	public static boolean isAtLeastJsf20() {
@@ -63,6 +57,14 @@ public class JsfVersion {
 
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
+	}
+
+	protected static boolean isMyFacesPresent() {
+		return myFacesPresent;
+	}
+
+	public static boolean isPortletRequest(FacesContext context) {
+		return context.getExternalContext().getContext().getClass().getName().indexOf("Portlet") != -1;
 	}
 
 }

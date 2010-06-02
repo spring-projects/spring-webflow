@@ -8,16 +8,18 @@ import javax.faces.component.UIColumn;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIData;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
 import junit.framework.TestCase;
 
+import org.apache.myfaces.test.mock.MockFacesContext;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 
-import com.sun.facelets.component.UIRepeat;
+import com.sun.faces.facelets.component.UIRepeat;
 
 public class SelectionTrackingActionListenerTests extends TestCase {
 
@@ -92,10 +94,11 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		uiRepeat.getChildren().add(commandButton);
 		viewToTest.getChildren().add(uiRepeat);
 
-		Method indexMutator = ReflectionUtils.findMethod(UIRepeat.class, "setIndex", new Class[] { int.class });
+		Method indexMutator = ReflectionUtils.findMethod(UIRepeat.class, "setIndex", new Class[] { FacesContext.class,
+				int.class });
 		indexMutator.setAccessible(true);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new Integer(1) });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), new Integer(1) });
 
 		ActionEvent event = new ActionEvent(commandButton);
 
@@ -105,7 +108,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		assertSame(dataModel.getSelectedRow(), dataModel.getRowData());
 		assertTrue(delegateListener.processedEvent);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new Integer(2) });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), new Integer(2) });
 		assertFalse(dataModel.isCurrentRowSelected());
 		assertTrue(dataModel.getSelectedRow() != dataModel.getRowData());
 	}

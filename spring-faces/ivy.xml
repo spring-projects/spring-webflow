@@ -11,9 +11,12 @@
 
 	<configurations>
 		<include file="${spring.build.dir}/common/default-ivy-configurations.xml"/>
-		<conf name="jsf20" visibility="public"/>
-		<conf name="jsf12" visibility="public"/>
+		<conf name="mojarra20" visibility="public"/>
+		<conf name="myfaces20" visibility="public"/>
+		<conf name="mojarra12" visibility="public"/>
+		<conf name="myfaces12" visibility="public"/>
 		<conf name="jsf11" visibility="public"/>
+		<conf name="myfacesPortlet20" visibility="public"/>
 	</configurations>
 
 	<publications>
@@ -38,18 +41,35 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
-		<!-- JSF 2.0 dependencies -->
-		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="provided,jsf20->runtime(*)" />
-		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="provided,jsf20->runtime(*)" />
+		<!-- JSF 2.0 Mojarra dependencies (no ivy configuration: downloaded from maven repository) -->
+		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="provided, mojarra20->runtime(*)" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="provided, mojarra20->runtime(*)" />
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test, mojarra20->runtime"/>
 
-		<!-- JSF 1.2 dependencies -->
-		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
-		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="provided, jsf12->runtime" />
+		<!-- JSF 2.0 MyFaces dependencies (no ivy configuration: downloaded from maven repository) -->
+   		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="2.0.1-SNAPSHOT" conf="provided, myfaces20->runtime(*)" />
+   		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="2.0.1-SNAPSHOT" conf="provided, myfaces20->runtime(*)" />
+   		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.discovery" rev="0.4.0" conf="provided, myfaces20->runtime(*)" />
+		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.digester" rev="1.8.0" conf="provided, myfaces20->runtime(*)" />
+		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.codec" rev="1.3.0" conf="provided, myfaces20->runtime(*)" />
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test, mojarra20->runtime"/>
+
+		<!-- JSF 1.2 Mojarra dependencies -->
+		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="provided, mojarra12->runtime" />
+		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="provided, mojarra12->runtime" />
     	
-		<!-- JSF 1.1 dependencies -->
+		<!-- JSF 1.2 MyFaces dependencies -->
+		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.2.2" conf="myfaces12->runtime" />
+		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces" rev="1.2.2" conf="myfaces12->runtime" />
+
+		<!-- JSF 1.1 MyFaces dependencies -->
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.1.5" conf="jsf11->runtime" />
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces" rev="1.1.5" conf="jsf11->runtime" />
-    	
+
+		<!--  MyFaces JSF-Portlet Bridge for Portlet 2.0 and JSF 1.2 (no ivy configuration: downloaded via maven) -->    	
+		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-api" rev="2.0.0-alpha-2" conf="provided, myfacesPortlet20->runtime(*)" />
+		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-impl" rev="2.0.0-alpha-2" conf="provided, myfacesPortlet20->runtime(*)" />
+
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime" />
 		<dependency org="org.apache.shale" name="com.springsource.org.apache.shale.test" rev="1.0.4" conf="test->runtime" />

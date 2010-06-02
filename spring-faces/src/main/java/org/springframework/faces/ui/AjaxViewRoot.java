@@ -194,9 +194,18 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private void swapChildren(UIViewRoot source, UIViewRoot target) {
 		target.getChildren().addAll(source.getChildren());
-		Iterator i = target.getChildren().iterator();
-		while (i.hasNext()) {
-			UIComponent child = (UIComponent) i.next();
+		// Create a new list because the children of ViewRoot can change while we're iterating.
+		// For example:
+		// 1. child is an outputScript component with target="head"
+		// 2. child.setParent() fires PostAddToViewEvent
+		// 3. MyFaces HtmlScriptRenderer processes the event
+		// 3.1. creates javax.faces.Panel for "head"
+		// 3.2. adds outputScript to it
+		// 3.3. the parent of outputScript is changed from ViewRoot to "head" Panel component
+		// 4. outputScript is therefore no longer a child of ViewRoot
+		List children = new ArrayList(target.getChildren());
+		for (int i = 0; i < children.size(); i++) {
+			UIComponent child = (UIComponent) children.get(i);
 			child.setParent(target);
 		}
 	}

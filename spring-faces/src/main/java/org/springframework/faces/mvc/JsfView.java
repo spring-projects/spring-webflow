@@ -15,11 +15,12 @@
  */
 package org.springframework.faces.mvc;
 
-import java.io.IOException;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
+
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
@@ -62,7 +63,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-		if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
+		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
 			viewHandler.initView(facesContext);
 		}
 
@@ -78,12 +79,8 @@ public class JsfView extends AbstractUrlBasedView {
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
 		try {
-			JsfUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
-			logger.debug("Asking view handler to render view");
-			facesContext.getApplication().getViewHandler().renderView(facesContext, viewRoot);
-			JsfUtils.notifyAfterListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
-		} catch (IOException e) {
-			throw new FacesException("An I/O error occurred during view rendering", e);
+			logger.debug("Asking faces lifecycle to render");
+			facesLifecycle.render(facesContext);
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();

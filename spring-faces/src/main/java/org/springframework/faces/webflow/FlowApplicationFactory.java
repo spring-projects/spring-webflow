@@ -15,33 +15,38 @@
  */
 package org.springframework.faces.webflow;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
+
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.application.StateManager;
+
+import org.springframework.util.Assert;
 
 /**
- * Custom {@link ApplicationFactory} that ensures the FlowViewStateManager is the first {@link StateManager} in the
- * chain so that Web Flow may manage JSF component state when a flow is active.
+ * Custom {@link ApplicationFactory} that ensures the FlowApplication is the first {@link Application} in the chain,
+ * which in turn guarantees the install order for other JSF components.
+ * 
+ * @see FlowApplication
  * 
  * @author Jeremy Grelle
- * 
  */
 public class FlowApplicationFactory extends ApplicationFactory {
 
 	private ApplicationFactory delegate;
 
 	public FlowApplicationFactory(ApplicationFactory delegate) {
+		Assert.notNull(delegate, "The delegate ApplicationFactory instance must not be null!");
 		this.delegate = delegate;
 	}
 
 	public Application getApplication() {
-		Application app = delegate.getApplication();
-		// Ensure that FlowViewStateManager is first in the chain
-		if (app.getStateManager() != null && !(app.getStateManager() instanceof FlowViewStateManager)) {
-			FlowViewStateManager sm = new FlowViewStateManager(app.getStateManager());
-			app.setStateManager(sm);
+		Application delegateApplication = delegate.getApplication();
+		if (delegateApplication != null && (!(delegateApplication instanceof FlowApplication))) {
+			Application flowApplication = (isAtLeastJsf20()) ? new Jsf2FlowApplication(delegateApplication)
+					: new FlowApplication(delegateApplication);
+			setApplication(flowApplication);
 		}
-		return app;
+		return delegate.getApplication();
 	}
 
 	public void setApplication(Application application) {

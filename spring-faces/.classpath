@@ -8,7 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-1.1.14.jar" sourcepath="IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-sources-1.1.14.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-impl/2.0.2/jsf-impl-2.0.2.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-impl/2.0.2/jsf-impl-2.0.2-sources.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-api/2.0/jsf-api-2.0.jar" sourcepath="/IVY_CACHE/javax.faces/jsf-api/2.0/jsf-api-2.0-sources.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-1.0.0.jar" sourcepath="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-sources-1.0.0.jar"/>

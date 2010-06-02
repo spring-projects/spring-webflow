@@ -15,6 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
+
 import java.util.Iterator;
 
 import javax.faces.application.ViewHandler;
@@ -32,8 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.faces.ui.AjaxJsf2ViewRoot;
 import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.faces.ui.Jsf2AjaxViewRoot;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -70,13 +74,16 @@ public class JsfViewFactory implements ViewFactory {
 	public View getView(RequestContext context) {
 		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
 		try {
+			if (isAtLeastJsf20()) {
+				facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
+			}
 			if (!facesContext.getRenderResponse()) {
 				// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
 				// this won't be true when this method is called after a transition from one view-state to another
 				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 			}
 			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-			if (JsfUtils.isAtLeastJsf12() && !JsfUtils.isPortlet(facesContext)) {
+			if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
 				viewHandler.initView(facesContext);
 			}
 			JsfView view;
@@ -137,7 +144,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
 		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
-			AjaxViewRoot viewRoot = (JsfVersion.isAtLeastJsf20()) ? new AjaxJsf2ViewRoot(root) : new AjaxViewRoot(root);
+			AjaxViewRoot viewRoot = (isAtLeastJsf20()) ? new Jsf2AjaxViewRoot(root) : new AjaxViewRoot(root);
 			return new JsfView(viewRoot, lifecycle, context);
 		} else {
 			return new JsfView(root, lifecycle, context);

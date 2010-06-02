@@ -10,6 +10,9 @@
 			<url name="java-net-maven2" m2compatible="true">
 				<artifact pattern="http://download.java.net/maven/2/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
 			</url>
+			<url name="apache-maven2-snapshot" m2compatible="true">
+				<artifact pattern="http://people.apache.org/repo/m2-snapshot-repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+			</url>
 			<ibiblio name="maven2" m2compatible="true"/>
 		</chain>
 	</resolvers>

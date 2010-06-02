@@ -31,8 +31,6 @@ import javax.faces.event.ComponentSystemEventListener;
 import javax.faces.event.PhaseId;
 import javax.faces.event.SystemEventListener;
 
-import org.springframework.faces.webflow.JsfVersion;
-
 /**
  * <p>
  * A subclass of AjaxViewRoot for use with JSF 2.0.
@@ -46,13 +44,10 @@ import org.springframework.faces.webflow.JsfVersion;
  * 
  * @author Phil Webb
  */
-public class AjaxJsf2ViewRoot extends AjaxViewRoot {
+public class Jsf2AjaxViewRoot extends AjaxViewRoot {
 
-	public AjaxJsf2ViewRoot(UIViewRoot original) {
+	public Jsf2AjaxViewRoot(UIViewRoot original) {
 		super(original);
-		if (JsfVersion.isAtLeastJsf20()) {
-			setId(createUniqueId());
-		}
 	}
 
 	public void addClientBehavior(String eventName, ClientBehavior behavior) {

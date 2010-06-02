@@ -15,12 +15,13 @@
  */
 package org.springframework.faces.webflow;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
+
 import java.io.IOException;
 import java.io.Serializable;
 
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.commons.logging.Log;
@@ -84,10 +85,8 @@ public class JsfView implements View {
 		}
 		facesContext.setViewRoot(viewRoot);
 		try {
-			JsfUtils.notifyBeforeListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
-			logger.debug("Asking view handler to render view");
-			facesContext.getApplication().getViewHandler().renderView(facesContext, viewRoot);
-			JsfUtils.notifyAfterListeners(PhaseId.RENDER_RESPONSE, facesLifecycle, facesContext);
+			logger.debug("Asking faces lifecycle to render");
+			facesLifecycle.render(facesContext);
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
@@ -96,7 +95,7 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		if (JsfUtils.isAtLeastJsf12()) {
+		if (isAtLeastJsf12()) {
 			return requestContext.getRequestParameters().contains("javax.faces.ViewState");
 		} else {
 			return requestContext.getRequestParameters().size() > 1;

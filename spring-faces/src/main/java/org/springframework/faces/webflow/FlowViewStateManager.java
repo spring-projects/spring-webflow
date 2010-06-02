@@ -103,8 +103,19 @@ public class FlowViewStateManager extends StateManager {
 	public void writeState(FacesContext context, javax.faces.application.StateManager.SerializedView state)
 			throws IOException {
 		// Ensures that javax.faces.ViewState hidden field always gets written - needed for third-party component
-		// compatability
+		// compatibility
 		delegate.writeState(context, state);
+	}
+
+	public void writeState(FacesContext context, Object state) throws IOException {
+		if (state instanceof Object[]) {
+			delegate.writeState(context, state); // MyFaces
+		} else if (state instanceof FlowSerializedView) { // Mojarra
+			FlowSerializedView view = (FlowSerializedView) state;
+			delegate.writeState(context, new Object[] { view.getTreeStructure(), view.getComponentState() });
+		} else {
+			super.writeState(context, state);
+		}
 	}
 
 	public boolean isSavingStateInClient(FacesContext context) {
@@ -161,4 +172,5 @@ public class FlowViewStateManager extends StateManager {
 		}
 		return viewRoot;
 	}
+
 }

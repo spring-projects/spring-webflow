@@ -29,6 +29,7 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -229,6 +230,20 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 
 	private static class ConfigurableObjectInputStream extends ObjectInputStream {
 
+		/* Temporary workaround for SPR-???? */
+		private static final HashMap PRIMITIVE_CLASSES = new HashMap(8, 1.0F);
+		static {
+			PRIMITIVE_CLASSES.put("boolean", boolean.class);
+			PRIMITIVE_CLASSES.put("byte", byte.class);
+			PRIMITIVE_CLASSES.put("char", char.class);
+			PRIMITIVE_CLASSES.put("short", short.class);
+			PRIMITIVE_CLASSES.put("int", int.class);
+			PRIMITIVE_CLASSES.put("long", long.class);
+			PRIMITIVE_CLASSES.put("float", float.class);
+			PRIMITIVE_CLASSES.put("double", double.class);
+			PRIMITIVE_CLASSES.put("void", void.class);
+		}
+
 		private final ClassLoader classLoader;
 
 		public ConfigurableObjectInputStream(InputStream in, ClassLoader classLoader) throws IOException {
@@ -237,7 +252,16 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 		}
 
 		protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-			return ClassUtils.forName(desc.getName(), classLoader);
+			String name = desc.getName();
+			try {
+				return ClassUtils.forName(desc.getName(), classLoader);
+			} catch (ClassNotFoundException ex) {
+				Class rtn = (Class) PRIMITIVE_CLASSES.get(name);
+				if (rtn == null) {
+					throw ex;
+				}
+				return rtn;
+			}
 		}
 
 		protected Class resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException {

@@ -15,6 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
+
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
@@ -62,6 +64,9 @@ public class FlowLifecycle extends Lifecycle {
 		for (int p = PhaseId.APPLY_REQUEST_VALUES.getOrdinal(); p <= PhaseId.INVOKE_APPLICATION.getOrdinal(); p++) {
 			PhaseId phaseId = (PhaseId) PhaseId.VALUES.get(p);
 			if (!skipPhase(context, phaseId)) {
+				if (isAtLeastJsf20()) {
+					context.setCurrentPhaseId(phaseId);
+				}
 				invokePhase(context, phaseId);
 			}
 		}
