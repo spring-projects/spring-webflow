@@ -1,90 +1,18 @@
-<?xml version="1.0"?>
-<!DOCTYPE faces-config PUBLIC
-  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
-
-<faces-config>
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+        version="2.0">
 
 	<application>
 		<variable-resolver>org.springframework.web.jsf.SpringBeanVariableResolver</variable-resolver>
-		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
 	</application>
-	
-	<managed-bean>
-		<managed-bean-name>searchController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.SearchController</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-		<managed-property>
-			<property-name>bookingService</property-name>
-			<value>#{bookingService}</value>
-		</managed-property>
-	</managed-bean>
-	
-	<managed-bean>
-		<managed-bean-name>hotelController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.HotelController</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-		<managed-property>
-			<property-name>bookingService</property-name>
-			<value>#{bookingService}</value>
-		</managed-property>
-		<managed-property>
-			<property-name>hotelId</property-name>
-			<value>#{param.id}</value>
-		</managed-property>
-	</managed-bean>
 
-	<managed-bean>
-		<managed-bean-name>bookingController</managed-bean-name>
-		<managed-bean-class>org.springframework.webflow.samples.booking.jsf.BookingController</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-		<managed-property>
-			<property-name>bookingService</property-name>
-			<value>#{bookingService}</value>
-		</managed-property>
-		<managed-property>
-			<property-name>hotelId</property-name>
-			<value>#{hotelController.hotelId}</value>
-		</managed-property>
-		<managed-property>
-			<property-name>booking</property-name>
-			<value>#{booking}</value>
-		</managed-property>
-	</managed-bean>
-
-	<navigation-rule>
-		<from-view-id>/main/enterSearchCriteria.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>reviewHotels</from-outcome>
-			<to-view-id>/main/reviewHotels.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
-		
-	<navigation-rule>
-		<from-view-id>/main/reviewHotels.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>changeSearch</from-outcome>
-			<to-view-id>/main/enterSearchCriteria.xhtml</to-view-id>
-		</navigation-case>
-		<navigation-case>
-			<from-outcome>select</from-outcome>
-			<to-view-id>/main/reviewHotel.xhtml</to-view-id>
-		</navigation-case>
-	 </navigation-rule>
-	 
 	<navigation-rule>	
 		<from-view-id>/main/reviewHotel.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>book</from-outcome>
 			<to-view-id>/booking/enterBookingDetails.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
-	
-	<navigation-rule>
-		<from-view-id>/booking/enterBookingDetails.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>reviewBooking</from-outcome>
-			<to-view-id>/booking/reviewBooking.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	

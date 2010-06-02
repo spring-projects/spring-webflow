@@ -3,21 +3,29 @@ package org.springframework.webflow.samples.booking.jsf;
 import java.util.Calendar;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import org.springframework.webflow.samples.booking.Booking;
 import org.springframework.webflow.samples.booking.BookingService;
 import org.springframework.webflow.samples.booking.Hotel;
 
+@ManagedBean
+@RequestScoped
 public class BookingController {
 
+    @ManagedProperty("#{bookingService}")
     private BookingService bookingService;
 
+    @ManagedProperty("#{hotelController.hotelId}")
     private Long hotelId;
 
-    private Hotel hotel = new Hotel();
-
+    @ManagedProperty("#{booking}")
     private Booking booking;
+
+    private Hotel hotel = new Hotel();
 
     private boolean initialized = false;
 

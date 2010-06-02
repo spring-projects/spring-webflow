@@ -21,13 +21,12 @@
 
 	<dependencies>
 		<!-- core dependencies -->
-		<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="compile->runtime"/>
 		<dependency	org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime"/>
-		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="compile->runtime" />
-		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="compile->runtime" />
+		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="compile->runtime(*)" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="compile->runtime(*)" />
 		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="compile->runtime"/>
 		<dependency	org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime"/>
-		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.1.2" conf="compile->runtime"/>
+		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="compile->runtime"/>
 		<dependency org="javax.transaction" name="com.springsource.javax.transaction" rev="1.1.0" conf="compile->runtime"/>		
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="compile->runtime"/>
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate" rev="3.2.6.ga" conf="compile->runtime"/>

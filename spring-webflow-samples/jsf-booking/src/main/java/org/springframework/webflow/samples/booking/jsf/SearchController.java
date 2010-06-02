@@ -2,6 +2,9 @@ package org.springframework.webflow.samples.booking.jsf;
 
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -10,6 +13,8 @@ import org.springframework.webflow.samples.booking.Booking;
 import org.springframework.webflow.samples.booking.BookingService;
 import org.springframework.webflow.samples.booking.SearchCriteria;
 
+@ManagedBean
+@RequestScoped
 public class SearchController {
 
     private SearchCriteria searchCriteria;
@@ -18,6 +23,7 @@ public class SearchController {
 
     private DataModel hotels;
 
+    @ManagedProperty("#{bookingService}")
     private BookingService bookingService;
 
     public void setBookingService(BookingService bookingService) {

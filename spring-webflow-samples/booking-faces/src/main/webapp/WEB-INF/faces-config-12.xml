@@ -3,9 +3,15 @@
   "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
+<!-- 
+	
+	For use in a JSF 1.2 runtime environment. 
+	Swap this file out with faces-config.xml if testing with JSF 1.2 (see ivy.xml).
+	
+	-->
+
 <faces-config>
 	<application>
-		<!-- Enables Facelets -->
-		<view-handler>org.springframework.webflow.samples.PortletFaceletViewHandler</view-handler>  
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>  
 	</application>
 </faces-config>

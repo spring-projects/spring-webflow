@@ -20,8 +20,8 @@
 	
 	<!-- Enables special Facelets debug output during development -->
   	<context-param>
-        <param-name>facelets.DEVELOPMENT</param-name>
-   		<param-value>true</param-value>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+   		<param-value>Development</param-value>
   	</context-param>
   	
   	<!-- Causes Facelets to refresh templates during development -->
@@ -29,7 +29,13 @@
   		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
   		<param-value>1</param-value>
   	</context-param>
-    
+  	
+  	<!-- Disables partial state saving -->
+  	<context-param>
+  		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+  		<param-value>false</param-value>
+  	</context-param>
+
     <!-- Enforce UTF-8 Character Encoding -->
     <filter>
         <filter-name>charEncodingFilter</filter-name>
@@ -59,17 +65,6 @@
       <filter-name>springSecurityFilterChain</filter-name>
       <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-	<!-- Sun JSF initialization listener. -->
-	<listener>
-		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-	</listener>
-	
-	<!-- Appache MyFaces JSF initialization listener --><!-- 
-	<listener>
-		<listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
-	</listener>	
-	-->
 
 	<!-- Loads the Spring web application context -->
 	<listener>
