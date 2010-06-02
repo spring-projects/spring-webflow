@@ -32,7 +32,7 @@ public class JsfUtils {
 
 	public static void notifyAfterListeners(PhaseId phaseId, Lifecycle lifecycle, FacesContext context) {
 		PhaseEvent afterPhaseEvent = new PhaseEvent(context, phaseId, lifecycle);
-		for (int i = 0; i < lifecycle.getPhaseListeners().length; i++) {
+		for (int i = (lifecycle.getPhaseListeners().length - 1); i >= 0; i--) {
 			PhaseListener listener = lifecycle.getPhaseListeners()[i];
 			if (listener.getPhaseId() == phaseId || listener.getPhaseId() == PhaseId.ANY_PHASE) {
 				listener.afterPhase(afterPhaseEvent);
@@ -66,11 +66,4 @@ public class JsfUtils {
 		}
 	}
 
-	public static boolean isAtLeastJsf12() {
-		return JsfVersion.isAtLeastJsf12();
-	}
-
-	public static boolean isPortlet(FacesContext context) {
-		return context.getExternalContext().getContext().getClass().getName().indexOf("Portlet") != -1;
-	}
 }
