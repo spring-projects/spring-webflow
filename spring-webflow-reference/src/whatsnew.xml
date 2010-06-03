@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="whatsnew">
+	<title>What's New In Spring Web Flow 2.1</title>
+	<sect1 id="whatsnew-versions">
+		<title>Version Upgrades</title>
+		<sect2>
+			<title>Spring Version Changes</title>
+			<para>
+				Spring Web Flow 2.1 is built on Spring 3 that in turn requires Java 5. 
+			</para>
+		</sect2>
+		<sect2>
+			<title>Spring Security Version Changes</title>
+			<para>
+				Spring Web Flow 2.1 is built on Spring Security 3.
+				Due to package changes in Spring Security this release is not backwards compatible with prior versions of Spring Security.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Tiles Version Changes</title>
+			<para>
+				Spring Web Flow 2.1 is built on Spring 3, which in turn requires Tiles 2.1.2 (or higher).
+				Due to incompatible API changes in Tiles 2.1.2 this release is not backwards compatible with prior versions of Tiles.
+			</para>
+		</sect2>
+		<sect2>
+			<title>JSF Version Changes</title>
+			<para>
+				Spring Web Flow 2.1 provides initial support for JSF 2 and aims to maintains backwards compatibility with JSF 1.2 while JSF 1.1 will no longer be officially targeted.
+			</para>
+			<para>
+				Initial support for JSF 2 means the ability use Mojarra or Apache MyFaces JSF 2 dependencies along with the Faceletes implementation officially bundled with JSF 2 jars.
+				That means any separate Facelets libraries such as <code>com.sun.facelets</code> (the one containing <code>com.sun.facelets.FaceletViewHandler</code>) can be removed from the project dependencies.
+				Please see the <code>booking-faces</code> Web Flow sample, which is configured to run with Mojarra 2.0.
+				The <code>ivy.xml</code> included in the sample has configuration and notes on how to recompile for Mojarra 1.2 or with Apache MyFaces.  
+				The recommended version of Apache MyFaces 2 to use is 2.0.1.SNAPSHOT due to <ulink url="https://issues.apache.org/jira/browse/MYFACES-2686">MYFACES-2686</ulink>.
+			</para>
+			<para>
+				Partial state saving is a new feature that is enabled by default in JSF 2.
+				This feature is not yet supported in Spring Web Flow and must be disabled through a servlet configuration parameter as is shown the <code>booking-faces</code> sample.  
+			</para>
+			<para>
+				In version 2.1 Spring Web Flow doesn't explicitly target any JSF 2 features.
+				Some features such as composite components, JSR 303 validation, and others may work while others such as the new Ajax support probably won't.
+				The goal of this release is to be an intermediate step with more meaningful JSF 2 support to follow in subsequent releases.
+			</para>
+			<para>
+				What this does is it allows applications to begin the migration to JSF 2 (if they wish to do so) and the Web Flow to team to work and test effectively in a JSF 2 environment.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Portlet Version Changes</title>
+			<para>
+				Spring Web Flow 2.1 is built on Spring 3, which in turn requires Portlet API 2.0.
+				There are no significant changes in Web Flow relating to this upgrade.
+				The programming model for Spring Portlet MVC applications is  mostly backwards compatible with applications running on Portlet API 1.0.
+				The implications of this change are mostly with regards to runtime version requirements.
+			</para>
+			<para>
+				The <code>booking-portlet-mvc</code> sample has been tested with Apache Pluto 2.0.1 with a nightly build update due to <ulink url="https://issues.apache.org/jira/browse/PLUTO-591">PLUTO-591</ulink>.
+				Apache Pluto 2.0.2 or higher will give you that fix.
+			</para>
+			<para>
+				The <code>booking-portlet-faces</code> sample unfortunately has not been tested successfully with the combination of JSF 1.2, Portlet 2.0, and Facelets.
+				See the readme in the sample for more information.
+			</para>
+		</sect2>
+	</sect1>
+	<sect1 id="whatsnew-spring3">
+		<title>Spring 3 Changes</title>
+		<sect2>
+			<title>Spring EL</title>
+			<para>
+				The Spring Expression language is now the default implementation used in Spring Web Flow.
+				Existing applications can still choose to plug in the Unified EL or OGNL if they wish to do so.
+				Spring EL however is the recommended approach.
+				It offers advantages such as close integration with the Spring 3 Type Conversion and Formatting system and is also used in other Spring projects. 
+				For more information see the <link linkend="el">Expression Language (EL)</link> chapter.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Spring 3 Type Conversion</title>
+			<para>
+				Spring Web Flow now uses the new Spring 3 type conversion and formatting mechanism that includes use of formatting annotations such as <code>NumberFormat</code> and <code>DateTimeFormat</code>.
+				The Spring 3 type conversion was influenced by the existing mechanism used in Spring Web Flow.
+				Hence Web Flow users should find this to be a logical step forward.
+			</para>
+			<para>
+				Existing applications can continue to use the custom converters they currently have.
+				With the new approach however, they can now use a single mechanism across Spring MVC controllers and flow definitions.
+				For more information see the <link linkend="view-type-conversion">Performing Type Conversion</link> chapter.
+			</para>
+		</sect2>
+	</sect1>	
+	<sect1 id="whatsnew-tiles">
+		<title>Tiles Updates</title>
+		<sect2>
+			<para>
+				Spring Web Flow 2.1 provides support for Tiles 2.1.2.
+				It has contains important features that can help reduce Tiles related configuration.
+				This includes wildcard support when listing Tiles definition files or when defining Tiles definitions, anonymous and cascaded nested definitions among others.
+				See <ulink url="http://tiles.apache.org/2.1/framework/whats-new.html">What's new in Tiles 2.1</ulink> for more details.  				
+			</para>
+		</sect2>
+	</sect1>	
+</chapter>
