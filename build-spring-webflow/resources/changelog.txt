@@ -2,6 +2,13 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.1.0 RC1 (June 3, 2010)
+-------------------------------------------
+* Update documentation for all Web Flow 2.1 related changes.
+* More changes towards providing initial support for JSF 2.
+* JSF 2 related sample updates.
+* Add ivy configurations allowing booking-faces to be recompiled with Mojarra and MyFaces 2 and 1.2.
+
 Changes in version 2.1.0 M2 (May 18, 2010)
 -------------------------------------------
 * Add support for running with JSF 2.0 (SWF-1194)
