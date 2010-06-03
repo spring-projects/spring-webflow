@@ -197,8 +197,10 @@
 				<title>conversion-service</title>
 				<para>
 					Use the <code>conversion-service</code> attribute to customize the <code>ConversionService</code> used by the Web Flow system.
-					Converters are used to convert from one type to another when required during flow execution.
-					The default ConversionService registers converters for your basic object types such as numbers, classes, and enums.
+					Type conversion is used to convert from one type to another when required during flow execution such as when processing request parameters, invoking actions, and so on.
+					Many common object types such as numbers, classes, and enums are supported.
+					However you'll probably need to provide your own type conversion and formatting logic for custom data types.
+					Please read the <link linkend="view-type-conversion">Performing Type Conversion</link> section for important information on how to provide custom type conversion logic.
 				</para>
 			</sect3>
 			<sect3 id="builder-service-expression-parser">

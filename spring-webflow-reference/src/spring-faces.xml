@@ -4,59 +4,48 @@
     <sect1 id="spring-faces-introduction">
         <title>Introduction</title>
         <para>
-            Spring Faces is Spring's JSF integration module that simplifies using JSF with Spring. It lets you use the
+            Spring Web Flow provides an integration that simplifies using JSF with Spring. It lets you use the
             JSF UI Component Model with Spring MVC and Spring Web Flow controllers.
         </para>
         <para>
-            Spring Faces also includes a small Facelets component library that provides Ajax and client-side validation
-            capabilities. This component library builds on Spring Javascript, a Javascript abstraction framework that
-            integrates Dojo as the underlying UI toolkit.
+            A small Facelets component library that provides Ajax and client-side validation capabilities is also shipped with Web Flow. 
         </para>
     </sect1>
     <sect1 id="spring-faces-integration">
-        <title>Spring-centric Integration Approach</title>
+        <title>JSF Integration For Spring Developers</title>
         <para>
-            Spring Faces combines the strengths of JSF, its UI component model, with the strengths of Spring, its
-            controller and configuration model. This brings you all the strengths of JSF without any of the weaknesses.
+            Spring Web Flow complements the strengths of JSF, its component model, and provides more sophisticated state management and navigation. 
+            In addition you have the ability to use Spring MVC @Controller or flow definitions as controllers in the web layer. 
         </para>
         <para>
-            Spring Faces provides a powerful supplement to a number of the standard JSF facilities, including:
+            JSF applications using Spring Web Flow applications gain benefits in the following areas:
             <orderedlist>
-                <listitem>managed bean facility</listitem>
-                <listitem>scope management</listitem>
-                <listitem>event handling</listitem>
-                <listitem>navigation rules</listitem>
-                <listitem>easy modularization and packaging of views</listitem>
-                <listitem>cleaner URLs</listitem>
-                <listitem>model-level validation</listitem>
-                <listitem>client-side validation and UI enhancement</listitem>
-                <listitem>Ajax partial page updates and full navigation</listitem>
-                <listitem>progressive enhancement and graceful degradation</listitem>
+                <listitem>Managed bean facility</listitem>
+                <listitem>Scope management</listitem>
+                <listitem>Event handling</listitem>
+                <listitem>Navigation</listitem>
+                <listitem>Modularization and packaging of views</listitem>
+                <listitem>Cleaner URLs</listitem>
+                <listitem>Model-level validation</listitem>
+                <listitem>Progressivy-enhancement sytle client-side validation</listitem>
+                <listitem>Progressive-enhancement style Ajax requests with partial page updates</listitem>
             </orderedlist>
 
-            Using these features will significantly reduce the amount of configuration required in faces-config.xml
-            while providing a cleaner separation between the view and controller layer and better modularization of your
-            application's functional responsibilities. These use of these features are outlined in the sections to
-            follow. As the majority of these features build on the flow definition language of Spring Web Flow, it is
-            assumed that you have an understanding of the foundations presented in
-            <link linkend="defining-flows">Defining Flows</link>
-            .
+            Using these features significantly reduce the amount of configuration required in faces-config.xml.
+            They provide a cleaner separation between the view and controller layers along with better modularization of application functionals. 
+            These features are detailed in the sections to follow. 
+            The majority of these features build on the flow definition language of Spring Web Flow.
+            Therefore it is assumed that you have an understanding of the foundations presented in <link linkend="defining-flows">Defining Flows</link>.
         </para>
     </sect1>
     <sect1 id="spring-faces-config-web.xml">
         <title>Configuring web.xml</title>
         <para>
-            The first step to using Spring Faces is to route requests to the
-            <code>DispatcherServlet</code>
-            in the
-            <code>web.xml</code>
-            file. In this example, we map all URLs that begin with
-            <code>/spring/</code>
-            to the servlet. The servlet needs to be configured. An
-            <code>init-param</code>
-            is used in the servlet to pass the
-            <code>contextConfigLocation</code>
-            . This is the location of the Spring configuration for your application.
+            The first step is to route requests to the <code>DispatcherServlet</code> in the <code>web.xml</code> file. 
+            In this example, we map all URLs that begin with <code>/spring/</code> to the servlet. 
+            The servlet needs to be configured. 
+            An <code>init-param</code> is used in the servlet to pass the <code>contextConfigLocation</code>. 
+            This is the location of the Spring configuration for your web application.
         </para>
         <programlisting language="xml"><![CDATA[
 <servlet>
@@ -79,8 +68,7 @@
             <code>FacesServlet</code>
             must be configured in
             <code>web.xml</code>
-            as it normally would even though you generally will not need to route requests through it at all when using
-            Spring Faces.
+            as it normally would even though you generally will not need to route requests through it at all when using JSF with Spring Web Flow.
         </para>
         <programlisting language="xml"><![CDATA[
 <!-- Just here so the JSF implementation can initialize, *not* used at runtime -->
@@ -97,9 +85,8 @@
 </servlet-mapping>]]>
         </programlisting>
         <para>
-            When using the Spring Faces components, you also need to configure the Spring JavaScript
-            <code>ResourceServlet</code>
-            so that CSS and JavaScript resources may be output correctly by the components. This servlet must be mapped
+            When using the Spring Faces components, you also need to configure a servlet for serving
+            CSS and JavaScript resources. This servlet must be mapped
             to /resources/* in order for the URL's rendered by the components to function correctly.
         </para>
         <programlisting language="xml"><![CDATA[
@@ -128,8 +115,8 @@
 </context-param>]]>
         </programlisting>
 		<para>
-			For optimal page-loading performance, the Spring Faces component library includes a few special components:
-			<code>includeStyles</code> and <code>includeScripts</code>.  These components will eagerly load the neccessary
+			For optimal page-loading performance use the Spring Faces components
+			<code>includeStyles</code> and <code>includeScripts</code>.  These components will eagerly load the necessary
 			CSS stylesheets and JavaScript files at the position they are placed in your JSF view template.  In accordance
 			with the recommendations of the Yahoo Performance Guildlines, these two tags should be placed in the <code>head</code>
 			section of any page that uses the Spring Faces components.  For example:
@@ -145,7 +132,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Spring Faces: Hotel Booking Sample Application</title>
+	<title>Hotel Booking Sample Application</title>
 	
 	<sf:includeStyles />
 	<sf:includeScripts />
@@ -179,8 +166,8 @@
             The next step is to configure Web Flow to render JSF views. To do this, in your Spring Web Flow
             configuration include the
             <code>faces</code>
-            namespace and link in the faces
-            <code>flow-builder-services</code>
+            namespace and link in the 
+            <code>flow-builder-services</code> element from the faces custom namespace.
             :
         </para>
         <programlisting language="xml"><![CDATA[
@@ -212,7 +199,6 @@
         </programlisting>
         <para>
         	The <code>faces:flow-builder-services</code> tag also configures several other defaults appropriate for a JSF environment.
-        	Specifically, the Unified EL is configured as the default Expression Language.
         </para>
         <para>
             See the swf-booking-faces reference application in the distribution for a complete working example.
@@ -221,11 +207,10 @@
     <sect1 id="spring-faces-config">
         <title>Configuring faces-config.xml</title>
         <para>
-            The only configuration needed in
+            If using JSF 1.2 you need to provide the below configuration in 
             <code>faces-config.xml</code>
-            is specific to the use of Facelets. If you are using JSP and not using the Spring Faces components, you do
-            not need to add anything specific to Spring Faces to your
-            <code>faces-config.xml</code>
+            in order to use Facelets. If you are using JSP and not using the Spring Faces components, you do
+            not need to add anything to your <code>faces-config.xml</code>
         </para>
         <programlisting language="xml"><![CDATA[
 <faces-config>
@@ -235,29 +220,49 @@
     </application>
 </faces-config>]]>
         </programlisting>
+        <para>
+            If using JSF 2.0 then your faces-config.xml should use the faces-config schema version 2.0.
+            Also you should remove the FaceletViewHandler shown above if it is present as Facelets are now the default rendering technology in JSF 2.
+        </para>
+        <programlisting language="xml"><![CDATA[
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+        version="2.0">
+
+    <application></application>
+    
+</faces-config>]]>
+        </programlisting>
     </sect1>
     <sect1 id="spring-faces-managed-beans">
         <title>Replacing the JSF Managed Bean Facility</title>
         <para>
-            Spring Faces allows you to completely replace the JSF managed bean facility with a combination of
-            flow-managed variables and Spring managed beans. It gives you a good deal more control over the lifecycle of
+            When JSF with Spring Web Flow you can completely replace the JSF managed bean facility with a combination of
+            Web Flow managed variables and Spring managed beans. It gives you a good deal more control over the lifecycle of
             your managed objects with well-defined hooks for initialization and execution of your domain model.
             Additionally, since you are presumably already using Spring for your business layer, it reduces the
             conceptual overhead of having to maintain two different managed bean models.
         </para>
         <para>
             In doing pure JSF development, you will quickly find that request scope is not long-lived enough for storing
-            conversational model objects that drive complex event-driven views. The only available option is to begin
+            conversational model objects that drive complex event-driven views. In JSF 1.2 the only available option is to begin
             putting things into session scope, with the extra burden of needing to clean the objects up before
             progressing to another view or functional area of the application. What is really needed is a managed scope
-            that is somewhere between request and session scope. Fortunately web flow provides such extended facilities.
+            that is somewhere between request and session scope. 
+        </para>
+        <para>
+      		JSF 2 provides flash and view scopes that can be accessed programmatically via UIViewRoot.getViewMap().      
+            Spring Web Flow provides access to flash, view, flow, and conversation scopes.
+            These scopes are seamlessly integrated through JSF variable resolvers and work the same in JSF 1.2 and in JSF 2.0 applications.
         </para>
         <sect2 id="spring-faces-flow-variables">
             <title>Using Flow Variables</title>
             <para>
                 The easiest and most natural way to declare and manage the model is through the use of
-                <link linkend="flow-variables">flow variables</link>
-                . You can declare these variables at the beginning of the flow:
+                <link linkend="flow-variables">flow variables</link>. 
+                You can declare these variables at the beginning of the flow:
             </para>
             <programlisting language="xml"><![CDATA[
 <var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/>]]>
@@ -314,7 +319,7 @@
                 database) is quite common, but JSF by itself does not provide any convenient hooks for such
                 initialization. The flow definition language provides a natural facility for this through its
                 <link linkend="flow-actions">Actions</link>
-                . Spring Faces provides some extra conveniences for converting the outcome of an action into a
+                . Spring Web Flow provides some extra conveniences for converting the outcome of an action into a
                 JSF-specific data structure. For example:
             </para>
             <programlisting language="xml"><![CDATA[ 
@@ -477,7 +482,7 @@
         <sect2 id="spring-faces-model-validation">
             <title>Performing Model Validation</title>
             <para>
-                JSF provides useful facilities for validating input at field-level before changes are applied to the
+                JSF 1.2 provides useful facilities for validating input at field-level before changes are applied to the
                 model, but when you need to then perform more complex validation at the model-level after the updates
                 have been applied, you are generally left with having to add more custom code to your JSF action methods
                 in the managed bean. Validation of this sort is something that is generally a responsibility of the
@@ -485,7 +490,7 @@
                 introducing an undesirable dependency on the JSF API in your domain layer.
             </para>
             <para>
-                With Spring Faces, you can utilize the generic and low-level
+                With Web Flow, you can utilize the generic and low-level
                 <code>MessageContext</code>
                 in your business code and any messages added there will then be available to the
                 <code>FacesContext</code>
@@ -518,21 +523,17 @@
         <sect2 id="spring-faces-ajax-events">
             <title>Handling Ajax Events</title>
             <para>
-                Spring Faces provides some special
-                <code>UICommand</code>
-                components that go beyond the standard JSF components by adding the ability to do Ajax-based partial
+                The Spring Faces 
+                <code>UICommand</code> 
+                components have the ability to do Ajax-based partial
                 view updates. These components degrade gracefully so that the flow will still be fully functional by
                 falling back to full page refreshes if a user with a less capable browser views the page.
-                <note>
-                    Though the core JSF support in Spring Faces is JSF 1.1-compatible, the Spring Faces 
-                    Ajax components require JSF 1.2.
-                </note>
             </para>
             <para>
                 Revisiting the earlier example with the paged table, you can change the "More Results" link to use an
                 Ajax request by replacing the standard
                 <code>commandButton</code>
-                with the Spring Faces version (note that the Spring Faces command components use Ajax by default, but
+                with the Spring Faces component version (note that the Spring Faces command components use Ajax by default, but
                 they can alternately be forced to use a normal form submit by setting ajaxEnabled="false" on the
                 component):
             </para>
@@ -582,7 +583,7 @@
                 Faces tag library docs for full details.
             </para>
             <para>
-                An additional built-in feature when using the Spring Faces Ajax components is the ability to have the
+                An additional built-in feature when using the Spring Faces Ajax-enabled components is the ability to have the
                 response rendered inside a rich modal popup widget by setting
                 <code>popup="true"</code>
                 on a
@@ -613,7 +614,7 @@
         <para>
             JSF and Web Flow combine to provide an extensive server-side validation model for your web application, but
             excessive roundtrips to the server to execute this validation and return error messages can be a tedious
-            experience for your users. Spring Faces provides a number of client-side rich validation controls that can
+            experience for your users. The Spring Faces component library provides a number of client-side rich validation controls that can
             enhance the user experience by applying simple validations that give immediate feedback. Some simple
             examples are illustrated below. See the Spring Faces taglib docs for a complete tag reference.
         </para>
@@ -698,10 +699,10 @@
     <sect1 id="spring-faces-component-libraries">
         <title>Third-Party Component Library Integration</title>
         <para>
-            Spring Faces strives to be compatible with any third-party JSF component library. By honoring all of the
+            The Spring Web Flow JSF integration strives to be compatible with any third-party JSF component library. By honoring all of the
             standard semantics of the JSF specification within the SWF-driven JSF lifecycle, third-party libraries in
             general should "just work". The main thing to remember is that configuration in web.xml will change slightly
-            since Spring Faces requests are not routed through the standard FacesServlet. Typically, anything that is
+            since Web Flow requests are not routed through the standard FacesServlet. Typically, anything that is
             traditionally mapped to the FacesServlet should be mapped to the Spring DispatcherServlet instead. (You can
             also map to both if for example you are migrating a legacy JSF application page-by-page.) In some cases, a
             deeper level of integration can be achieved by configuring special flow services that are "aware" of a
@@ -710,8 +711,8 @@
         <sect2 id="spring-faces-with-richfaces">
             <title>Rich Faces Integration</title>
             <para>
-                To use the Rich Faces component library with Spring Faces, the following filter configuration is needed
-                in web.xml (in addition to the typical Spring Faces configuration):
+                To use the Rich Faces component library with Spring Web Flow, the following filter configuration is needed
+                in web.xml (in addition to the other typical configuration already shown):
             </para>
             <programlisting language="xml"><![CDATA[ 
 <filter> 
@@ -791,19 +792,18 @@
         <sect2 id="spring-faces-with-trinidad">
             <title>Apache MyFaces Trinidad Integration</title>
             <para>
-                The Apache MyFaces Trinidad library has been tested with the Spring Faces integration and proven to fit
+                The Apache MyFaces Trinidad library has been tested with the Spring Web Flow's JSF integration and proven to fit
                 in nicely. Deeper integration to allow the Trinidad components and Spring Faces components to play
                 well together has not yet been attempted, but Trinidad provides a pretty thorough solution on its own
-                when used in conjunction with the Spring Faces integration layer.
+                when used in conjunction with the Spring Web Flow JSF integration.
             </para>
             <para>
-            	NOTE - An <code>AjaxHandler</code> implementation for Trinidad is not currently provided out-of-the-box with 
-            	Spring Faces.  In order to fully integrate with Trinidad's PPR functionality, a custom implementation should be 
+            	NOTE: An <code>AjaxHandler</code> implementation for Trinidad is not currently provided out-of-the-box. 
+            	In order to fully integrate with Trinidad's PPR functionality, a custom implementation should be 
             	provided.  An community-provided partial example can be found here: <ulink url="http://jira.springsource.org/browse/SWF-1160">SWF-1160</ulink>
             </para>
             <para>
-                Typical Trinidad + Spring Faces configuration is as follows in web.xml (in addition to the typical
-                Spring Faces configuration):
+                Typical configuration when using Trinidad with Web Flow is as follows in web.xml (in addition what has already been shown):
             </para>
             <programlisting language="xml"><![CDATA[
 <context-param>

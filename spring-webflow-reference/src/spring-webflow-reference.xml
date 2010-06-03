@@ -3,6 +3,7 @@
      "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd"
 [
 <!ENTITY overview SYSTEM "overview.xml">
+<!ENTITY whatsnew SYSTEM "whatsnew.xml">
 <!ENTITY defining-flows SYSTEM "defining-flows.xml">
 <!ENTITY el SYSTEM "el.xml">
 <!ENTITY views SYSTEM "views.xml">
@@ -63,6 +64,7 @@
 	<toc />
 	
 	&overview;
+	&whatsnew;
 	&defining-flows;
 	&el;
 	&views;

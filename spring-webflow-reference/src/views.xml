@@ -169,67 +169,191 @@
 	<sect1 id="view-type-conversion">
 		<title>Performing type conversion</title>
 		<para>
-			When a model binding occurs during view postback, the binding system will attempt to convert the input value to the type of the target model property if necessary.
-			Default Converters are registered for common types such as Numbers, primitives, enums, and Dates and are applied automatically.
-			Users also have the ability to register their own converters for user-defined types, and to override the default Converters.
+			When request parameters are used to populate the model (commonly referred to as data binding), type conversion is required to parse String-based request parameter values before setting target model properties.
+			Default type conversion is available for many common Java types such as numbers, primitives, enums, and Dates.
+			Users also have the ability to register their own type conversion logic for user-defined types, and to override the default Converters.
 		</para>
-		<sect2 id="converter-impl">
-			<title>Implementing a Converter</title>
+		<sect2 id="converter-options">
+			<title>Type Conversion Options</title>
 			<para>
-				To implement your own Converter, implement the <code>org.springframework.binding.convert.converters.TwoWayConverter</code> interface.
-				A convenient <code>StringToObject</code> base class has been provided to simplify the implementation of this interface for converters
-				that convert from a user input String to a user-defined Object and back.  Simply extend from this class and override these two methods:
-			</para>
-			<programlisting language="java">
-protected abstract Object toObject(String string, Class targetClass) throws Exception;
-
-protected abstract String toString(Object object) throws Exception;			
-			</programlisting>
-			<para>
-				<code>toObject(String, Class)</code> should convert from the input string to your object's type, and <code>toString(Object)</code> should do the reverse.
-			</para>
-			<para>
-				The following example shows a Converter that converts from String to a MonetaryAmount for working with currency values:
-			</para>
-			<programlisting language="java">
-public class StringToMonetaryAmount extends StringToObject {
-
-   public StringToMonetaryAmount() {
-       super(MonetaryAmount.class);
-   }
-
-   @Override
-   protected Object toObject(String string, Class targetClass) {
-       return MonetaryAmount.valueOf(string);
-   }
-
-   @Override
-   protected String toString(Object object) {
-       MonetaryAmount amount = (MonetaryAmount) object;
-       return amount.toString();
-   }
-}			
-			</programlisting>
-			<para>
-				Review the pre-built converters in the <code>org.springframework.binding.convert.converters</code> package to see more examples of Converter implementations.
+				Starting with version 2.1 Spring Web Flow uses the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">type conversion</ulink> and <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#format">formatting</ulink> system introduced in Spring 3 for nearly all type conversion needs.
+				Previously Web Flow applications used a type conversion mechanism that was different from the one in Spring MVC, which relied on the <code>java.beans.PropertyEditor</code> abstraction.    
+				Spring 3 offers a modern type conversion alternative to PropertyEditors that was actually influenced by Web Flow's own type conversion system.
+				Hence Web Flow users should find it natural to work with the new Spring 3 type conversion.
+				Another obvious and very important benefit of this change is that a single type conversion mechanism can now be used across Spring MVC And Spring Web Flow.  
 			</para>
 		</sect2>
-		<sect2 id="converter-registration">
-			<title>Registering a Converter</title>
+		<sect2 id="converter-upgrade-to-spring-3">
+			<title>Upgrading to Spring 3 Type Conversion And Formatting</title>
 			<para>
-				To install your own Converter or override any of the default Converters, extend from <code>org.springframework.binding.convert.service.DefaultConversionService</code> and override the <code>addDefaultConverters()</code> method.				
-				Use the <code>addConverter(Converter)</code> method to register the primary Converter to use to convert between two types, such as a <code>String</code> and a <code>MonetaryAmount</code>.
-				Optionally use the <code>addConverter(String, Converter)</code> method to register alternate converters for the same type pair; for example, to support formatting a <code>java.util.Date</code> as a String in several different ways.
+				What does this practically mean for existing applications?
+				Existing applications are likely registering their own converters of type <code>org.springframework.binding.convert.converters.Converter</code> through a sub-class of <code>DefaultConversionService</code> available in Spring Binding.
+				Those converters can continue to be registered as before.
+				They will be adapted as Spring 3 <code>GenericConverter</code> types and registered with a Spring 3 <code>org.springframework.core.convert.ConversionService</code> instance.  
+				In other words existing converters will be invoked through Spring's type conversion service.
 			</para>
 			<para>
-				Each alternate Converter is indexed by a unique <code>converterId</code> that can be referenced when configuring a model binding.
-				When no converter id is referenced explicitly by a binding, the primary Converter between the two types is always used.
+				The only exception to this rule are named converters, which can be referenced from a <code>binding</code> element in a <code>view-state</code>:
+				<programlisting language="java"><![CDATA[
+public class ApplicationConversionService extends DefaultConversionService {	
+    public ApplicationConversionService() {
+        addDefaultConverters();
+        addDefaultAliases();
+        addConverter("customConverter", new CustomConverter());		
+    }
+}]]>
+				</programlisting>
+				<programlisting language="xml"><![CDATA[
+<view-state id="enterBookingDetails" model="booking">
+    <binder>
+        <binding property="checkinDate" required="true" converter="customConverter" />
+    </binder>
+</view-state>]]>
+				</programlisting>
+				Named converters are not supported and cannot be used with the type conversion service available in Spring 3.
+				Therefore such converters will not be adapted and will continue to work as before, i.e. will not involve the Spring 3 type conversion.
+				However, this mechanism is deprecated and applications are encouraged to favor Spring 3 type conversion and formatting features.
+			</para>
+			<para>					
+				Also note that the existing Spring Binding <code>DefaultConversionService</code> no longer registers any default converters.
+				Instead Web Flow now relies on the default type converters and formatters in Spring 3.
 			</para>
 			<para>
-				The ConversionService is the object Web Flow consults at runtime to lookup conversion executors to convert from one type to another.
-				There is generally one ConversionService per application.
-				See the <link linkend="builder-service-conversion">System Setup</link> section for documentation on how to configure an extended ConversionService implementation that registers custom Converters to apply application-wide.
-				Also consult the Convert API documentation for more information.
+				In summary the Spring 3 type conversion and formatting is now used almost exclusively in Web Flow.
+				Although existing applications will work without any changes, we encourage moving towards unifying the type conversion needs of Spring MVC and Spring Web Flow parts of applications.
+			</para>
+		</sect2>
+		<sect2 id="converter-configuration">
+			<title>Configuring Type Conversion and Formatting</title>
+			<para>
+				In Spring MVC an instance of a <code>FormattingConversionService</code> is created automatically through the custom MVC namespace:
+				<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<mvc:annotation-driven/>
+]]>
+				</programlisting>
+				Internally that is done with the help of <code>FormattingConversionServiceFactoryBean</code>, which registers a default set of converters and formatters.
+				You can customize the conversion service instance used in Spring MVC through the <code>conversion-service</code> attribute:
+				<programlisting language="xml"><![CDATA[
+<mvc:annotation-driven conversion-service="applicationConversionService" />]]>
+				</programlisting>
+			</para>
+			<para>
+				In Web Flow an instance of a Spring Binding <code>DefaultConversionService</code> is created automatically, which does not register any converters.
+				Instead it delegates to a <code>FormattingConversionService</code> instance for all type conversion needs.
+				By default this is not the same <code>FormattingConversionService</code> instance as the one used in Spring 3.
+				However that won't make a practical difference until you start registering your own formatters.
+			</para>
+			<para>
+				The <code>DefaultConversionService</code> used in Web Flow can be customized through the flow-builder-services element:
+				<programlisting language="xml"><![CDATA[
+<webflow:flow-builder-services id="flowBuilderServices" conversion-service="defaultConversionService" />]]>
+				</programlisting>
+			</para>
+			<para>
+				Connecting the dots in order to register your own formatters for use in both Spring MVC and in Spring Web Flow you can do the following.
+				Create a class to register your custom formatters:
+				<programlisting language="java"><![CDATA[
+public class ApplicationConversionServiceFactoryBean extends FormattingConversionServiceFactoryBean {
+
+    @Override
+    protected void installFormatters(FormatterRegistry registry) {
+        // ...
+    }
+	
+}				
+]]>
+				</programlisting>
+				Configure it for use in Spring MVC:
+				<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <mvc:annotation-driven conversion-service="applicationConversionService" />
+	
+    <!-- 
+    	Alternatively if you prefer annotations for DI:
+    	  1. Add @Component to the factory bean.
+    	  2. Add a component-scan element (from the context custom namespace) here.
+    	  3. Remove XML bean declaration below.
+      -->
+
+    <bean id="applicationConversionService" class="somepackage.ApplicationConversionServiceFactoryBean">
+	
+]]>
+				</programlisting>
+				Connection the Web Flow <code>DefaultConversionService</code> to the same "applicationConversionService" bean used in Spring MVC:
+				<programlisting language="xml"><![CDATA[
+    <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" ... />
+    	
+    <webflow:flow-builder-services id="flowBuilderServices" conversion-service="defaultConversionService" ... />
+    	
+    <bean id="defaultConversionService" class="org.springframework.binding.convert.service.DefaultConversionService">
+    	<constructor-arg ref="applicationConversionSevice"/>
+    </bean>]]>
+				</programlisting>
+				Of course it is also possible to mix and match.
+				Register new Spring 3 <code>Formatter</code> types through the "applicationConversionService".
+				Register existing Spring Binding <code>Converter</code> types through the "defaultConversionService".
+			</para>
+		</sect2>
+		<sect2 id="converter-working-with">
+			<title>Working With Spring 3 Type Conversion And Formatting</title>
+			<para>
+				An important concept to understand is the difference between type converters and formatters.
+			</para>
+			<para>	
+				Type converters in Spring 3, provided in <code>org.springframework.core</code>, are for general-purpose type conversion between any two object types.
+				In addition to the most simple <code>Converter</code> type, two other interfaces are <code>ConverterFactory</code> and <code>GenericConverter</code>.
+			</para>
+			<para>	
+				Formatters in Spring 3, provided in <code>org.springframework.context</code>, have the more specialized purpose of representing Objects as Strings.
+				The <code>Formatter</code> interface extends the <code>Printer</code> and <code>Parser</code> interfaces for converting an Object to a String and turning a String into an Object.
+			</para>
+			<para>	
+				Web developers will find the <code>Formatter</code> interface most relevant because it fits the needs of web applications for type conversion.
+				<note>
+					An important point to be made is that Object-to-Object conversion is a generalization of the more specific Object-to-String conversion.
+					In fact in the end <code>Formatters</code> are reigstered as <code>GenericConverter</code> types with Spring's <code>GenericConversionService</code> making them equal to any other converter.
+				</note>
+			</para>
+		</sect2>
+		<sect2 id="converter-formatting-annotations">
+			<title>Formatting Annotations</title>
+			<para>
+				One of the best features of the new type conversion is the ability to use annotations for a better control over formatting in a concise manner.
+				Annotations can be placed on model attributes and on arguments of @Controller methods that are mapped to requests.
+				Out of the box Spring provides two annotations <code>NumberFormat</code> and <code>DateTimeFormat</code> but you can create your own and have them registered along with the associated formatting logic.
+				You can see examples of the <code>DateTimeFormat</code> annotation in the <ulink url="https://src.springframework.org/svn/spring-samples/travel">Spring Travel</ulink> and in the <ulink url="https://src.springframework.org/svn/spring-samples/petcare">Petcare</ulink> along with other samples in the <ulink url="https://src.springframework.org/svn/spring-samples">Spring Samples</ulink> repository.
+			</para>
+		</sect2>
+		<sect2 id="converter-dates">
+			<title>Working With Dates</title>
+			<para>
+				The <code>DateTimeFormat</code> annotation implies use of <ulink url="http://joda-time.sourceforge.net/">Joda Time</ulink>.
+				If that is present on the classpath the use of this annotation is enabled automatically.
+				By default neither Spring MVC nor Web Flow register any other date formatters or converters.
+				Therefore it is important for applications to register a custom formatter to specify the default way for printing and parsing dates.
+				The <code>DateTimeFormat</code> annotation on the other hand provides more fine-grained control where it is necessary to deviate from the default.
+			</para>
+			<para>	
+				For more information on working with Spring 3 type conversion and formatting please refer to the relevant sections of the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/index.html">Spring documentation</ulink>.
 			</para>
 		</sect2>
 	</sect1>

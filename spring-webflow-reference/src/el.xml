@@ -4,66 +4,32 @@
 	<sect1 id="el-introduction">
 		<title>Introduction</title>
 		<para>
-			Web Flow uses EL to access its data model and invoke actions.
-			This chapter will familiarize you with the EL syntax, and special EL variables you can reference from your flow definition.
+			Web Flow uses EL to access its data model and to invoke actions.
+			This chapter will familiarize you with EL syntax, configuration, and special EL variables you can reference from your flow definition.
 		</para>
-	</sect1>
-	<sect1 id="el-language-choices">
-		<title>Supported EL implementations</title>
-		<sect2 id="el-unified-el">
-			<title>Unified EL</title>
-			<para>
-				Web Flow attempts to use the <ulink url="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</ulink> by default. 
-				<code>jboss-el</code> is currently the default EL implementation.
-				When found in your classpath along with the <code>el-api</code>, it will be used automatically.
-				You can find the JBoss EL jar in the <ulink url="http://www.springsource.com/repository/app/bundle/detail?name=com.springsource.org.jboss.el">SpringSource Bundle Repository</ulink>.
-				<note>
-					The <code>el-api</code> dependency is typically <emphasis>provided</emphasis> by your web container.  Tomcat 6 includes it, for example.
-				</note>
-			</para>
-		</sect2>
-		<sect2 id="el-ognl">
-			<title>OGNL</title>
-			<para>
-				<ulink url="http://www.ognl.org">OGNL</ulink> is the other EL supported by Web Flow 2.
-				OGNL is the EL most familiar to Web Flow version 1.0 users.
-				To use ognl, simply include <code>ognl</code> in your classpath instead of <code>jboss-el</code>.
-				Please refer to the <ulink url="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</ulink> for specifics on its EL syntax.
-			</para>
-		</sect2>
-	</sect1>
-	<sect1 id="el-portability">
-		<title>EL portability</title>
 		<para>
-			In general, you will find the Unified EL and OGNL have a very similar syntax.
-			For basic variable resolution, property access, and method invocation the syntax is identical.
-			We recommend adhering to Unified EL syntax whenever possible, and only relying on proprietary EL features when needed.
-		</para>
-	</sect1>
-	<sect1 id="el-usage">
-		<title>EL usage</title>
-		<para>
-			EL is used for many things within a flow, including:
+			EL is used for many things within a flow including:
 		</para>
 		<orderedlist>
-			<listitem><para>Accessing data provided by the client, such as flow input attributes and request parameters.</para></listitem>
-			<listitem><para>Accessing internal data structures such as <code>flowScope.</code></para></listitem>
-			<listitem><para>Invoking methods on Spring beans.</para></listitem>
-			<listitem><para>Resolving constructs such as state transition criteria, subflow ids, and view names.</para></listitem>
-		</orderedlist>
-		<para>
-			Views rendered by flows typically access flow data structures using EL as well.
-		</para>
+			<listitem><para>Access client data such as declaring flow inputs or referencing request parameters.</para></listitem>
+			<listitem><para>Access data in Web Flow's <code>RequestContext</code> such as <code>flowScope</code> or <code>currentEvent</code>.</para></listitem>
+			<listitem><para>Invoke methods on Spring-managed objects through actions.</para></listitem>
+			<listitem><para>Resolve expressions such as state transition criteria, subflow ids, and view names.</para></listitem>
+ 		</orderedlist>
+ 		<para>
+ 			EL is also used to bind form parameters to model objects and reversely to render formatted form fields from the properties of a model object.
+ 			That however does not apply when using Web Flow with JSF in which case the standard JSF component lifecyle applies.
+ 		</para>
 		<sect2 id="el-types">
 			<title>Expression types</title>
 			<para>
-				There are basically two types of expressions in Web Flow.
+				An important concept to understand is there are two types of expressions in Web Flow: standard expressions and template expressions.
 			</para>
 			<sect3 id="el-types-eval">
-				<title>Standard eval expressions</title>
+				<title>Standard Expressions</title>
 				<para>
-					The first, and most common, type of expression, is the standard <emphasis>eval expression</emphasis>.
-					Such expressions are dynamically evaluated by the EL and should not be enclosed in delimiters like <code>${}</code> or <code>#{}</code>.
+					The first and most common type of expression is the <emphasis>standard expression</emphasis>.
+					Such expressions are evaluated directly by the EL and need not be enclosed in delimiters like <code>#{}</code>.
 					For example:
 				</para>
 				<programlisting language="xml"><![CDATA[
@@ -71,39 +37,150 @@
 				</programlisting>
 				<para>
 					The expression above is a standard expression that invokes the <code>nextPage</code> method on the <code>searchCriteria</code> variable when evaluated.
-					Attempting to enclose this expression in special eval delimiters like <code>${}</code> or <code>#{}</code> will result in an <code>IllegalArgumentException</code>.
-					<note>
-						We view use of special eval delimiters as redundant in this context, as the only acceptable value for the <code>expression</code> attribute is a single eval expression string.
-					</note>
+					If you attempt to enclose this expression in a special delimiter like <code>#{}</code> you will get an <code>IllegalArgumentException</code>.
+					In this context the delimiter is seen as redundant.
+					The only acceptable value for the <code>expression</code> attribute is an single expression string.
 				</para>	
 			</sect3>
 			<sect3 id="el-types-template">
 				<title>Template expressions</title>			
 				<para>
-					The second type of expression is a "template" expression.
-					Such expressions allow a mixing of literal text with one or more eval blocks.
-					Each eval block is explictly delimited with the <code>${}</code> delimiters.
+					The second type of expression is a <emphasis>template expression</emphasis>.
+					A template expression allows mixing of literal text with one or more standard expressions.
+					Each standard expression block is explicitly surrounded with the <code>#{}</code> delimiters.
 					For example:
 				</para>
 				<programlisting language="xml"><![CDATA[
-<view-state id="error" view="error-${externalContext.locale}.xhtml" />]]>
+<view-state id="error" view="error-#{externalContext.locale}.xhtml" />]]>
 				</programlisting>
 				<para>
 					The expression above is a template expression.
-					The result of evaluation will be a string that concatenates the literal text <code>error-</code> with the result of evaluating <code>externalContext.locale</code>.
-					As you can see, explicit delimiters are necessary here to demarcate eval blocks within the template.
+					The result of evaluation will be a string that concatenates literal text such as <code>error-</code> and <code>.xhtml</code> with the result of evaluating <code>externalContext.locale</code>.
+					As you can see, explicit delimiters are necessary here to demarcate standard expression blocks within the template.
 				</para>
+				<note>
+					See the Web Flow XML schema for a complete listing of those XML attributes that accept standard expressions and those that accept template expressions.
+					You can also use F2 in Eclipse (or equivalent shortcut in other IDEs) to access available documentation when typing out specific flow definition attributes.
+				</note>
 			</sect3>
+		</sect2>
+	</sect1>
+	<sect1 id="el-language-choices">
+		<title>EL Implementations</title>
+		<sect2 id="el-spring-el">
+			<title>Spring EL</title>
 			<para>
-				See the Web Flow XML schema for a complete listing of the XML attributes that accept standard expressions and template expressions.
+				Starting with version 2.1 Web Flow uses the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html">Spring Expression Language</ulink> (Spring EL).
+				Spring EL was created to provide is a single, well-supported expression language for use across all the products in the Spring portfolio.
+				It is distributed as a separate jar <code>org.springframework.expression</code> in the Spring Framework.
+				Existing applications will need to remove dependencies on <code>org.jboss.el</code> or <code>org.ognl</code> and use <code>org.springframework.expression</code> instead.
+				See the section below on EL Portability for other notes on upgrading.
 			</para>
 		</sect2>
+		<sect2 id="el-unified-el">
+			<title>Unified EL</title>
+			<para>
+				In Web Flow 2.0 <ulink url="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</ulink> was the default expression language with <code>jboss-el</code> as the implementation.
+				Use of Unified EL also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis> by your web container. 
+				Tomcat 6 includes it, for example.
+				Spring EL is the default and recommended expression language to use. 
+				However it is possible to replace it with Unified EL if you wish to do so.
+				You need the following Spring configuration to plug in the <code>WebFlowELExpressionParser</code> to the <code>flow-builder-services</code>:
+				<programlisting language="xml"><![CDATA[
+<webflow:flow-builder-services expression-parser="expressionParser"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
+	<constructor-arg>
+		<bean class="org.jboss.el.ExpressionFactoryImpl" />
+	</constructor-arg>
+</bean>]]>
+                </programlisting>
+			</para>
+		</sect2>
+		<sect2 id="el-ognl">
+			<title>OGNL</title>
+			<para>
+				<ulink url="http://www.ognl.org">OGNL</ulink> is the third supported expression language.
+				OGNL is the EL most familiar to Web Flow version 1.0 users.
+				Please refer to the <ulink url="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</ulink> for specifics on its EL syntax.
+				If you wish to use OGNL this is the Spring configuration necessary to plug it in: 
+				<programlisting language="xml"><![CDATA[
+<webflow:flow-builder-services expression-parser="expressionParser"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>]]>
+                </programlisting>
+			</para>
+		</sect2>
+	</sect1>
+	<sect1 id="el-portability">
+		<title>EL portability</title>
+		<para>
+			In general, you will find Spring EL, Unified EL and OGNL to have a very similar syntax.
+		</para>
+		<para>
+			Note however there are some advantages to Spring EL.
+			For example Spring EL is closely integrated with the type conversion of Spring 3 and that allows you to take full advantage of its features.
+			Specifically the automatic detection of generic types as well as the use of formatting annotations is currently supported with Spring EL only.
+		</para>
+		<para>
+			There are some minor changes to keep in mind when upgrading to Spring EL from Unified EL or OGNL as follows:
+			<orderedlist>
+				<listitem><para>Expressions deliniated with <code>${}</code> in flow definitions must be changed to <code>#{}</code>.</para></listitem>
+				<listitem><para>Expressions testing the current event <code>#{currentEvent == 'submit'}</code> must be changed to <code>#{currentEvent.id == 'submit'}</code>.</para></listitem>
+				<listitem>
+					<para>
+						Resolving properties such as <code>#{currentUser.name}</code> may cause NullPointerException without any checks such as <code>#{currentUser != null ? currentUser.name : null}</code>.
+						A much better alternative though is the safe navigation operator <code>#{currentUser?.name}</code>.
+					</para>
+				</listitem>
+			</orderedlist>
+			For more information on Spring EL syntax please refer to the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html#expressions-language-ref">Language Reference</ulink> section in the Spring Documentation.
+		</para>
 	</sect1>
 	<sect1 id="el-variables">
 		<title>Special EL variables</title>
 		<para>
 			There are several implicit variables you may reference from within a flow.
 			These variables are discussed in this section.
+		</para>
+		<para>
+			Keep in mind this general rule.
+			Variables referring to data scopes (flowScope, viewScope, requestScope, etc.) should only be used when assigning a new variable to one of the scopes.
+		</para>
+		<para>
+			For example when assigning the result of the call to <code>bookingService.findHotels(searchCriteria)</code> to a new variable called "hotels" you must prefix it with a scope variable in order to let Web Flow know where you want it stored: 
+			<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" ... >
+
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
+
+	<view-state id="reviewHotels">
+		<on-render>
+			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+		</on-render>
+	</view-state>
+	
+</flow>]]>
+			</programlisting>
+			However when setting an existing variable such as "searchCriteria" in the example below, you reference the variable directly without prefixing it with any scope variables:
+			<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" ... >
+
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
+
+	<view-state id="reviewHotels">
+		<transition on="sort">
+			<set name="searchCriteria.sortBy" value="requestParameters.sortBy" />
+		</transition>
+	</view-state>
+
+</flow>]]>
+			</programlisting>
+		</para>
+		<para>
+			The following is the list of implicit variables you can reference within a flow definition:
 		</para>
 		<sect2 id="el-variable-flowScope">
 			<title>flowScope</title>
@@ -247,7 +324,7 @@
 	<sect1 id="el-scope-searching">
 		<title>Scope searching algorithm</title>
 		<para>
-			When assigning a variable in one of the flow scopes, referencing that scope is required.
+			As mentioned earlier in this section when assigning a variable in one of the flow scopes, referencing that scope is required.
 			For example:
 		</para>
 		<programlisting language="xml"><![CDATA[
@@ -261,7 +338,7 @@
 <evaluate expression="entityManager.persist(booking)" />]]>
 		</programlisting>
 		<para>
-			If no scope is specified, like in the use of <code>booking</code> above, a scope searching algorithm will be employed.
+			When no scope is specified, like in the use of <code>booking</code> above, a scope searching algorithm is used.
 			The algorithm will look in request, flash, view, flow, and conversation scope for the variable.
 			If no such variable is found, an <code>EvaluationException</code> will be thrown.
 		</para>

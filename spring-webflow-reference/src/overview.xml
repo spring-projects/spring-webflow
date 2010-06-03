@@ -30,10 +30,10 @@
 	<sect1 id="system-requirements">
 		<title>What Web Flow requires to run</title>
 		<para>
-			Java 1.4 or higher
+			Java 1.5 or higher
 		</para>
 		<para>
-			Spring 2.5.6 or higher
+			Spring 3.0 or higher
 		</para>
 	</sect1>
 	<sect1 id="support">

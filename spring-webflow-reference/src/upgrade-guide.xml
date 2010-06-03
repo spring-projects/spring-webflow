@@ -82,7 +82,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			<para>
 				EL expressions are used heavily throughout the flow definition language.
 				Many of the attributes that appear to be plain text are actually interpreted as EL.
-				The standard EL delimiters (either ${} or #{}) are not necessary and will often cause an exception if they are included. 
+				The standard EL delimiters (either ${} or #{} in Web Flow 2.0 or just #{} in Web Flow 2.1) are not necessary and will often cause an exception if they are included. 
 			</para>
 			<para>
 				EL delimiters should be removed where necessary by the updater tool.
@@ -234,11 +234,12 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-el-v-ognl">
-			<title>OGNL vs EL</title>
+			<title>OGNL vs Spring EL</title>
 			<para>
 				Web Flow 1 used OGNL exclusively for expressions within the flow definitions.
 				Web Flow 2 adds support for Unified EL.
-				United EL is used when it is available, OGNL will continue to be used when a Unified EL implementation is not available.
+				Web Flow 2.1 uses Spring EL by default.
+				United EL and OGNL can still be plugged in.
 				Please see the <link linkend="el">Expression Language</link> chapter for details.
 			</para>
 		</sect2>
@@ -252,9 +253,9 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-jsf">
-			<title>Spring Faces</title>
+			<title>JSF</title>
 			<para>
-				Web Flow 2 offers significantly improved integration with JavaServerFaces.
+				Web Flow 2 offers significantly improved integration with JSF.
 				Please see the <link linkend="spring-faces">JSF Integration</link> chapter for details.
 			</para>
 		</sect2>
