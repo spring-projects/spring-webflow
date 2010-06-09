@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="views">
 	<title>Rendering views</title>
 	<sect1 id="views-introduction">
@@ -329,8 +331,10 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 			<para>	
 				Web developers will find the <code>Formatter</code> interface most relevant because it fits the needs of web applications for type conversion.
 				<note>
-					An important point to be made is that Object-to-Object conversion is a generalization of the more specific Object-to-String conversion.
-					In fact in the end <code>Formatters</code> are reigstered as <code>GenericConverter</code> types with Spring's <code>GenericConversionService</code> making them equal to any other converter.
+					<para>
+						An important point to be made is that Object-to-Object conversion is a generalization of the more specific Object-to-String conversion.
+						In fact in the end <code>Formatters</code> are reigstered as <code>GenericConverter</code> types with Spring's <code>GenericConversionService</code> making them equal to any other converter.
+					</para>
 				</note>
 			</para>
 		</sect2>
@@ -454,7 +458,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 				The second is to implement an external <code>Validator</code>.
 				Both ways provide you with a <code>ValidationContext</code> to record error messages and access information about the current user.
 			</para>
-			<sect3 id="view-validation=programmatic-validate-method">
+			<sect3 id="view-validation-programmatic-validate-method">
 				<title>Implementing a model validate method</title>
 				<para>
 					Defining validation logic in your model object is the simplest way to validate its state.
@@ -462,8 +466,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 					Web Flow conventions have you structure model validation logic by view-state, allowing you to easily validate the subset of model properties that are editable on that view.
 					To do this, simply create a public method with the name <code>validate${state}</code>, where <code>${state}</code> is the id of your view-state where you want validation to run.
 					For example:
-				</para>
-				<programlisting language="java"><![CDATA[
+					<programlisting language="java"><![CDATA[
 public class Booking {
     private Date checkinDate;
     private Date checkoutDate;
@@ -481,23 +484,24 @@ public class Booking {
     }
 }
 ]]>
-				</programlisting>
+					</programlisting>
+				</para>
 				<para>
 					In the example above, when a transition is triggered in a <code>enterBookingDetails</code> view-state that is editing a <code>Booking</code> model,
 					Web Flow will invoke the <code>validateEnterBookingDetails(ValidationContext)</code> method automatically unless validation has been suppressed for that transition.
 					An example of such a view-state is shown below:
-				</para>
-				<programlisting language="xml"><![CDATA[
+					<programlisting language="xml"><![CDATA[
 <view-state id="enterBookingDetails" model="booking">
     <transition on="proceed" to="reviewBooking">
 </view-state>]]>
-				</programlisting>
+					</programlisting>
+				</para>
 				<para>
 					Any number of validation methods are defined.  Generally, a flow edits a model over a series of views.  In that case, a validate method would be defined 
 					for each view-state where validation needs to run.
 				</para>
 			</sect3>
-			<sect3 id="view-validation=programmatic-validator">
+			<sect3 id="view-validation-programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
 					The second way is to define a separate object, called a <emphasis>Validator</emphasis>, which validates your model object.
@@ -532,6 +536,38 @@ public class BookingValidator {
 					Validators must be registered as Spring beans employing the naming convention <code>${model}Validator</code> to be detected and invoked automatically.
 					In the example above, Spring 2.5 classpath-scanning would detect the <code>@Component</code> and automatically register it as a bean with the name <code>bookingValidator</code>.
 					Then, anytime the <code>booking</code> model needs to be validated, this <code>bookingValidator</code> instance would be invoked for you.
+				</para>
+			</sect3>
+			<sect3 id="default-validate-method">
+				<title>Default validate method</title>
+				<para>
+					Within a <emphasis>Validator</emphasis> class, it is also possible to define a method called <code>validate</code> that does not refer to any specific view-state.
+				</para>
+				<programlisting language="java"><![CDATA[
+@Component
+public class BookingValidator {
+    public void validate(Booking booking, ValidationContext context) {
+        //...
+    }	
+}]]>
+				</programlisting>
+				<para>
+					In the upper code sample, the method <code>validate</code> will be called every time a Model of type <code>Booking</code> is being called (unless validation has been suppressed for that transition).
+					If needed, the default method can also be called in addition to an existing state-specific method. Consider the following example:
+				</para>
+				<programlisting language="java"><![CDATA[
+@Component
+public class BookingValidator {
+    public void validate(Booking booking, ValidationContext context) {
+        //...
+    }
+	public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
+		//...
+    }
+}]]>
+				</programlisting>
+				<para>
+					In the upper code sample, the method <code>validateEnterBookingDetails</code> will be called first. After that, the default <code>validate</code> method will be called.
 				</para>
 			</sect3>
 		</sect2>

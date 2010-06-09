@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="whatsnew">
 	<title>What's New In Spring Web Flow 2.1</title>
 	<sect1 id="whatsnew-versions">
@@ -76,7 +77,7 @@
 				Existing applications can still choose to plug in the Unified EL or OGNL if they wish to do so.
 				Spring EL however is the recommended approach.
 				It offers advantages such as close integration with the Spring 3 Type Conversion and Formatting system and is also used in other Spring projects. 
-				For more information see the <link linkend="el">Expression Language (EL)</link> chapter.
+				For more information see <xref linkend="el"/>.
 			</para>
 		</sect2>
 		<sect2>
@@ -89,19 +90,17 @@
 			<para>
 				Existing applications can continue to use the custom converters they currently have.
 				With the new approach however, they can now use a single mechanism across Spring MVC controllers and flow definitions.
-				For more information see the <link linkend="view-type-conversion">Performing Type Conversion</link> chapter.
+				For more information see <xref linkend="view-type-conversion"/>.
 			</para>
 		</sect2>
 	</sect1>	
 	<sect1 id="whatsnew-tiles">
 		<title>Tiles Updates</title>
-		<sect2>
 			<para>
 				Spring Web Flow 2.1 provides support for Tiles 2.1.2.
 				It has contains important features that can help reduce Tiles related configuration.
 				This includes wildcard support when listing Tiles definition files or when defining Tiles definitions, anonymous and cascaded nested definitions among others.
 				See <ulink url="http://tiles.apache.org/2.1/framework/whats-new.html">What's new in Tiles 2.1</ulink> for more details.  				
 			</para>
-		</sect2>
 	</sect1>	
 </chapter>

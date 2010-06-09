@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="flow-inheritance">
 	<title>Flow Inheritance</title>
 	<sect1 id="flow-inheritance-introduction">
@@ -84,9 +86,11 @@
 			They will not be modified as part of the merge process.
 		</para>
 		<note>
-			Paths to external resources in the parent flow should be absolute.
-			Relative paths will break when the two flows are merged unless the parent and child flow are in the same directory.
-			Once merged, all relative paths in the parent flow will become relative to the child flow.
+			<para>
+				Paths to external resources in the parent flow should be absolute.
+				Relative paths will break when the two flows are merged unless the parent and child flow are in the same directory.
+				Once merged, all relative paths in the parent flow will become relative to the child flow.
+			</para>
 		</note>
 		<sect2 id="flow-inheritance-algorithm-mergeable">
 			<title>Mergeable Elements</title>

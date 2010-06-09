@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<preface id="preface">
-	<title>Preface</title>
-	<para>
-		Many web applications require the same sequence of steps to execute in different contexts.
-		Often these sequences are merely components of a larger task the user is trying to accomplish.
-		Such a reusable sequence is called a flow.
-	</para>
-	<para>
-		Consider a typical shopping cart application.
-		User registration, login, and cart checkout are all examples of flows that can be invoked from several places in this type of application.
-	</para>
-	<para>
-		Spring Web Flow is the module of Spring for implementing flows.
-		The Web Flow engine plugs into the Spring Web MVC platform and provides declarative flow definition language.
-		This reference guide shows you how to use and extend Spring Web Flow.
-	</para>
-</preface>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
 <chapter id="introduction">
 	<title>Introduction</title>
@@ -332,9 +317,9 @@
 		</sect2>
 		<sect2>
 			<title>Accessing snapshot distribution archives</title>
+			<para>
+				Get the snapshot zip with the most recent CI build number from the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
+			</para>
 		</sect2>
-		<para>
-			Get the snapshot zip with the most recent CI build number from the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
-		</para>
 	</sect1>
 </chapter>

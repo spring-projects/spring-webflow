@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="upgrade-guide">
 	<title>Upgrading from 1.0</title>
 	<sect1 id="upgrade-guide-introduction">
@@ -68,7 +70,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 						All spring beans can be resolved via EL. 
 					</para>
 				</sect4>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-var=scope">
+				<sect4 id="upgrade-guide-definition-language-tool-warnings-var-scope">
 					<title>var scope is no longer supported</title>
 					<para>
 						The var element will place all variable into flow scope.
@@ -240,7 +242,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				Web Flow 2 adds support for Unified EL.
 				Web Flow 2.1 uses Spring EL by default.
 				United EL and OGNL can still be plugged in.
-				Please see the <link linkend="el">Expression Language</link> chapter for details.
+				Please see <xref linkend="el"/> for details.
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-flash-scope">
@@ -256,7 +258,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			<title>JSF</title>
 			<para>
 				Web Flow 2 offers significantly improved integration with JSF.
-				Please see the <link linkend="spring-faces">JSF Integration</link> chapter for details.
+				Please see <xref linkend="spring-faces"/> for details.
 			</para>
 		</sect2>
 		<sect2 id="upgrade-guide-webflow-concepts-redirects">

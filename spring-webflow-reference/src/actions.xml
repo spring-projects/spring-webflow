@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="actions">
 	<title>Executing actions</title>
 	<sect1 id="actions-introduction">
@@ -348,7 +350,7 @@ public class BookingAction extends MultiAction {
 </subfow-state>]]>
 			</programlisting>
 		</sect2>					
-		<sect2 id="named actions">
+		<sect2 id="named-actions">
 			<title>Named actions</title>
 			<para>
 				The following example shows how to execute a chain of actions in an action-state.

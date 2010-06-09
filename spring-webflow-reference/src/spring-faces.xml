@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="spring-faces">
     <title>JSF Integration</title>
     <sect1 id="spring-faces-introduction">
@@ -20,22 +22,22 @@
         <para>
             JSF applications using Spring Web Flow applications gain benefits in the following areas:
             <orderedlist>
-                <listitem>Managed bean facility</listitem>
-                <listitem>Scope management</listitem>
-                <listitem>Event handling</listitem>
-                <listitem>Navigation</listitem>
-                <listitem>Modularization and packaging of views</listitem>
-                <listitem>Cleaner URLs</listitem>
-                <listitem>Model-level validation</listitem>
-                <listitem>Progressivy-enhancement sytle client-side validation</listitem>
-                <listitem>Progressive-enhancement style Ajax requests with partial page updates</listitem>
+                <listitem><para>Managed bean facility</para></listitem>
+                <listitem><para>Scope management</para></listitem>
+                <listitem><para>Event handling</para></listitem>
+                <listitem><para>Navigation</para></listitem>
+                <listitem><para>Modularization and packaging of views</para></listitem>
+                <listitem><para>Cleaner URLs</para></listitem>
+                <listitem><para>Model-level validation</para></listitem>
+                <listitem><para>Progressivy-enhancement sytle client-side validation</para></listitem>
+                <listitem><para>Progressive-enhancement style Ajax requests with partial page updates</para></listitem>
             </orderedlist>
 
             Using these features significantly reduce the amount of configuration required in faces-config.xml.
             They provide a cleaner separation between the view and controller layers along with better modularization of application functionals. 
             These features are detailed in the sections to follow. 
             The majority of these features build on the flow definition language of Spring Web Flow.
-            Therefore it is assumed that you have an understanding of the foundations presented in <link linkend="defining-flows">Defining Flows</link>.
+            Therefore it is assumed that you have an understanding of the foundations presented in <xref linkend="defining-flows"/>.
         </para>
     </sect1>
     <sect1 id="spring-faces-config-web.xml">

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="el">
 	<title>Expression Language (EL)</title>
 	<sect1 id="el-introduction">
@@ -59,8 +61,10 @@
 					As you can see, explicit delimiters are necessary here to demarcate standard expression blocks within the template.
 				</para>
 				<note>
-					See the Web Flow XML schema for a complete listing of those XML attributes that accept standard expressions and those that accept template expressions.
-					You can also use F2 in Eclipse (or equivalent shortcut in other IDEs) to access available documentation when typing out specific flow definition attributes.
+					<para>
+						See the Web Flow XML schema for a complete listing of those XML attributes that accept standard expressions and those that accept template expressions.
+						You can also use F2 in Eclipse (or equivalent shortcut in other IDEs) to access available documentation when typing out specific flow definition attributes.
+					</para>
 				</note>
 			</sect3>
 		</sect2>

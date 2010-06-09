@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="system-setup">
 	<title>System Setup</title>
 	<sect1 id="system-setup-introduction">
@@ -52,10 +54,10 @@
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" />]]>
 			</programlisting>
+			<para>
+				See the Spring MVC and Spring Faces sections of this guide on how to integrate the Web Flow system with the MVC and JSF environment, respectively.
+			</para>
 		</sect2>
-		<para>
-			See the Spring MVC and Spring Faces sections of this guide on how to integrate the Web Flow system with the MVC and JSF environment, respectively.
-		</para>
 	</sect1>
 	<sect1 id="flow-registry">
 		<title>flow-registry options</title>
@@ -200,7 +202,7 @@
 					Type conversion is used to convert from one type to another when required during flow execution such as when processing request parameters, invoking actions, and so on.
 					Many common object types such as numbers, classes, and enums are supported.
 					However you'll probably need to provide your own type conversion and formatting logic for custom data types.
-					Please read the <link linkend="view-type-conversion">Performing Type Conversion</link> section for important information on how to provide custom type conversion logic.
+					Please read <xref linkend="view-type-conversion"/> for important information on how to provide custom type conversion logic.
 				</para>
 			</sect3>
 			<sect3 id="builder-service-expression-parser">
@@ -216,11 +218,11 @@
 					Use the <code>view-factory-creator</code> attribute to customize the <code>ViewFactoryCreator</code> used by the Web Flow system.
 					The default ViewFactoryCreator produces Spring MVC ViewFactories capable of rendering JSP, Velocity, and Freemarker views.
 				</para>
+				<para>
+					The configurable settings are <code>development</code>.
+					These settings are global configuration attributes that can be applied during the flow construction process.
+				</para>
 			</sect3>
-			<para>
-				The configurable settings are <code>development</code>.
-				These settings are global configuration attributes that can be applied during the flow construction process.
-			</para>
 			<sect3 id="builder-development">
 				<title>development</title>
 				<para>

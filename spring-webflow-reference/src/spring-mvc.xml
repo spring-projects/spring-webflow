@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="spring-mvc">
 	<title>Spring MVC Integration</title>
 	<sect1 id="spring-mvc-introduction">
@@ -313,15 +315,15 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 			<programlisting language="xml"><![CDATA[
 <a href="${flowExecutionUrl}&_eventId=cancel">Cancel</a>]]>		
 			</programlisting>
+			<para>
+				Firing an event results in a HTTP request being sent back to the server.
+				On the server-side, the flow handles decoding the event from within its current view-state.
+				How this decoding process works is specific to the view implementation.
+				Recall a Spring MVC view implementation simply looks for a request parameter named <code>_eventId</code>.
+				If no <code>_eventId</code> parameter is found, the view will look for a parameter that
+				starts with <code>_eventId_</code> and will use the remaining substring as the event id.
+				If neither cases exist, no flow event is triggered.
+			</para>
 		</sect2>
-		<para>
-			Firing an event results in a HTTP request being sent back to the server.
-			On the server-side, the flow handles decoding the event from within its current view-state.
-			How this decoding process works is specific to the view implementation.
-			Recall a Spring MVC view implementation simply looks for a request parameter named <code>_eventId</code>.
-			If no <code>_eventId</code> parameter is found, the view will look for a parameter that
-			starts with <code>_eventId_</code> and will use the remaining substring as the event id.
-			If neither cases exist, no flow event is triggered.
-		</para>
 	</sect1>
 </chapter>
