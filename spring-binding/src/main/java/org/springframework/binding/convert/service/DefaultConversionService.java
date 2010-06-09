@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.enums.LabeledEnum;
 
 /**
  * Default, local implementation of a conversion service. Will automatically register <i>from string</i> converters for
@@ -75,7 +74,6 @@ public class DefaultConversionService extends GenericConversionService {
 		addAlias("bigDecimal", BigDecimal.class);
 		addAlias("locale", Locale.class);
 		addAlias("date", Date.class);
-		addAlias("labeledEnum", LabeledEnum.class);
 	}
 
 }

@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.execution;
 
-import org.springframework.core.enums.StaticLabeledEnum;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 
@@ -29,17 +28,17 @@ import org.springframework.webflow.definition.FlowDefinition;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-public abstract class ScopeType extends StaticLabeledEnum {
+public enum ScopeType {
 
 	/**
 	 * The "request" scope type. Attributes placed in request scope exist for the life of the current request into the
 	 * flow execution. When the request ends any attributes in request scope go out of scope.
 	 */
-	public static final ScopeType REQUEST = new ScopeType(0, "Request") {
+	REQUEST() {
 		public MutableAttributeMap getScope(RequestContext context) {
 			return context.getRequestScope();
 		}
-	};
+	},
 
 	/**
 	 * The "flash" scope type. Attributes placed in flash scope exist through the life of the current request <i>and
@@ -47,11 +46,11 @@ public abstract class ScopeType extends StaticLabeledEnum {
 	 * <p>
 	 * Flash scope is typically used to store messages that should be preserved until after the next view renders.
 	 */
-	public static final ScopeType FLASH = new ScopeType(1, "Flash") {
+	FLASH() {
 		public MutableAttributeMap getScope(RequestContext context) {
 			return context.getFlashScope();
 		}
-	};
+	},
 
 	/**
 	 * The "view" scope type. Attributes placed in view scope exist through the life of the current view state <i>and
@@ -59,39 +58,33 @@ public abstract class ScopeType extends StaticLabeledEnum {
 	 * <p>
 	 * View scope is typically used to store view model objects manipulated over a series of Ajax requests.
 	 */
-	public static final ScopeType VIEW = new ScopeType(1, "View") {
+	VIEW() {
 		public MutableAttributeMap getScope(RequestContext context) {
 			return context.getViewScope();
 		}
-	};
+	},
+
 	/**
 	 * The "flow" scope type. Attributes placed in flow scope exist through the life of an executing flow session,
 	 * representing an instance a single {@link FlowDefinition flow definition}. When the flow session ends any data in
 	 * flow scope goes out of scope.
 	 */
-	public static final ScopeType FLOW = new ScopeType(2, "Flow") {
+	FLOW() {
 		public MutableAttributeMap getScope(RequestContext context) {
 			return context.getFlowScope();
 		}
-	};
+	},
 
 	/**
 	 * The "conversation" scope type. Attributes placed in conversation scope are shared by all flow sessions started
 	 * within a flow execution and live for the life of the entire flow execution (representing a single logical user
 	 * conversation). When the governing execution ends, any data in conversation scope goes out of scope.
 	 */
-	public static final ScopeType CONVERSATION = new ScopeType(3, "Conversation") {
+	CONVERSATION() {
 		public MutableAttributeMap getScope(RequestContext context) {
 			return context.getConversationScope();
 		}
 	};
-
-	/**
-	 * Private constructor because this is a typesafe enum!
-	 */
-	private ScopeType(int code, String label) {
-		super(code, label);
-	}
 
 	public Class getType() {
 		// force ScopeType as type
@@ -104,4 +97,5 @@ public abstract class ScopeType extends StaticLabeledEnum {
 	 * @return the scope map of this type for that request, allowing attributes to be accessed and set
 	 */
 	public abstract MutableAttributeMap getScope(RequestContext context);
+
 }

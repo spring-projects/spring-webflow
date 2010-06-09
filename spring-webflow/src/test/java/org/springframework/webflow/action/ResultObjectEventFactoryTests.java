@@ -17,7 +17,6 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
-import org.springframework.core.enums.StaticLabeledEnum;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -58,7 +57,7 @@ public class ResultObjectEventFactoryTests extends TestCase {
 
 	public void testLabeledEnumResult() {
 		Event result = factory.createResultEvent(this, MyEnum.FOO, context);
-		assertEquals("foo", result.getId());
+		assertEquals("FOO", result.getId());
 	}
 
 	public void testOtherResult() {
@@ -66,12 +65,8 @@ public class ResultObjectEventFactoryTests extends TestCase {
 		assertEquals("hello", result.getId());
 	}
 
-	private static class MyEnum extends StaticLabeledEnum {
-		public static final MyEnum FOO = new MyEnum();
-
-		private MyEnum() {
-			super(1, "foo");
-		}
+	private static enum MyEnum {
+		FOO;
 	}
 
 }

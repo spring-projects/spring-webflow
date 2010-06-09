@@ -16,7 +16,6 @@
 package org.springframework.webflow.mvc.builder;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.enums.StaticLabeledEnum;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.portlet.context.ConfigurablePortletApplicationContext;
@@ -26,21 +25,17 @@ import org.springframework.web.portlet.context.ConfigurablePortletApplicationCon
  * 
  * @author Keith Donald
  */
-public class MvcEnvironment extends StaticLabeledEnum {
+public enum MvcEnvironment {
 
 	/**
 	 * Spring Web Servlet MVC.
 	 */
-	public static final MvcEnvironment SERVLET = new MvcEnvironment(0, "servlet");
+	SERVLET,
 
 	/**
 	 * Spring Web Portlet MVC.
 	 */
-	public static final MvcEnvironment PORTLET = new MvcEnvironment(1, "portlet");
-
-	private MvcEnvironment(int code, String label) {
-		super(code, label);
-	}
+	PORTLET;
 
 	/**
 	 * Calculates the web environment from the state of the provided application context.

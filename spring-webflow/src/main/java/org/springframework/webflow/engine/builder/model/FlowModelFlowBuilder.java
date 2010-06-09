@@ -816,7 +816,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			attributes.put("validate", fromStringTo(Boolean.class).execute(transition.getValidate()));
 		}
 		if (StringUtils.hasText(transition.getHistory())) {
-			attributes.put("history", fromStringTo(History.class).execute(transition.getHistory()));
+			attributes.put("history", fromStringTo(History.class).execute(transition.getHistory().toUpperCase()));
 		}
 		parseAndPutSecured(transition.getSecured(), attributes);
 		return getLocalContext().getFlowArtifactFactory().createTransition(stateResolver, matchingCriteria,

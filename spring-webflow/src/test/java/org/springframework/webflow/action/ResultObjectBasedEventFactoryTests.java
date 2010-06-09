@@ -19,7 +19,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.springframework.core.enums.StaticLabeledEnum;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -50,17 +49,8 @@ public class ResultObjectBasedEventFactoryTests extends TestCase {
 		assertSame(MyLabeledEnum.A, event.getAttributes().get("result"));
 	}
 
-	public static class MyLabeledEnum extends StaticLabeledEnum {
-		public static final MyLabeledEnum A = new MyLabeledEnum(0, "A");
-		public static final MyLabeledEnum B = new MyLabeledEnum(0, "B");
-
-		private MyLabeledEnum(int code, String label) {
-			super(code, label);
-		}
-
-		public String toString() {
-			return "MyLabeledEnum " + getLabel();
-		}
+	public static enum MyLabeledEnum {
+		A, B;
 	}
 
 	/*

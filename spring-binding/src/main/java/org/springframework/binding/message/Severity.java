@@ -15,8 +15,6 @@
  */
 package org.springframework.binding.message;
 
-import org.springframework.core.enums.StaticLabeledEnum;
-
 /**
  * Enum exposing supported message severities.
  * 
@@ -24,30 +22,27 @@ import org.springframework.core.enums.StaticLabeledEnum;
  * @author Jeremy Grelle
  * @see Message
  */
-public class Severity extends StaticLabeledEnum {
+public enum Severity {
 
 	/**
 	 * The "Informational" severity. Used to indicate a successful operation or result.
 	 */
-	public static final Severity INFO = new Severity(0, "Info");
+	INFO,
 
 	/**
 	 * The "Warning" severity. Used to indicate there is a minor problem, or to inform the message receiver of possible
 	 * misuse, or to indicate a problem may arise in the future.
 	 */
-	public static final Severity WARNING = new Severity(1, "Warning");
+	WARNING,
 
 	/**
 	 * The "Error" severity. Used to indicate a significant problem like a business rule violation.
 	 */
-	public static final Severity ERROR = new Severity(2, "Error");
+	ERROR,
 
 	/**
 	 * The "Fatal" severity. Used to indicate a fatal problem like a system error.
 	 */
-	public static final Severity FATAL = new Severity(3, "Fatal");
+	FATAL
 
-	private Severity(int code, String label) {
-		super(code, label);
-	}
 }
