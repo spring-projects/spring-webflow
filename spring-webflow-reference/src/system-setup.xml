@@ -90,9 +90,9 @@
 			</para>
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml">
-    <flow-definition-attributes>
-        <attribute name="caption" value="Books a hotel" />
-    </flow-definition-attributes>
+    <webflow:flow-definition-attributes>
+        <webflow:attribute name="caption" value="Books a hotel" />
+    </webflow:flow-definition-attributes>
 </webflow:flow-location>]]>
 			</programlisting>
 		</sect2>
@@ -243,16 +243,16 @@
 				Use the <code>flow-execution-listeners</code> element to register listeners that observe the lifecycle of flow executions:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<flow-execution-listeners>
-    <listener ref="securityListener"/>
-    <listener ref="persistenceListener"/>
-</flow-execution-listeners>]]>
+<webflow:flow-execution-listeners>
+    <webflow:listener ref="securityListener"/>
+    <webflow:listener ref="persistenceListener"/>
+</webflow:flow-execution-listeners>]]>
 			</programlisting>
 			<para>
 				You may also configure a listener to observe only certain flows:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<listener ref="securityListener" criteria="securedFlow1,securedFlow2"/>]]>
+<webflow:listener ref="securityListener" criteria="securedFlow1,securedFlow2"/>]]>
 			</programlisting>
 		</sect2>
 		<sect2 id="tuning-flow-execution-repository">
@@ -261,12 +261,20 @@
 				Use the <code>flow-execution-repository</code> element to tune flow execution persistence settings:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<flow-execution-repository max-executions="5" max-execution-snapshots="30" />]]>
+<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+    <webflow:flow-execution-repository max-executions="5" max-execution-snapshots="30" />
+</webflow:flow-executor>]]>
 			</programlisting>
 			<sect3 id="repository-max-executions">
 				<title>max-executions</title>
 				<para>
 					Tune the <code>max-executions</code> attribute to place a cap on the number of flow executions that can be created per user session.
+					When the maximum number of executions is exceeded, the oldest execution is removed.
+					<note>
+						<para>
+							The <code>max-executions</code> attribute is per user session, i.e. it works across instances of any flow definition. 
+						</para>
+					</note>
 				</para>
 			</sect3>
 			<sect3 id="repository-max-snapshots">
@@ -274,6 +282,13 @@
 				<para>
 					Tune the <code>max-execution-snapshots</code> attribute to place a cap on the number of history snapshots that can be taken per flow execution.
 					To disable snapshotting, set this value to 0.  To enable an unlimited number of snapshots, set this value to -1. 
+					<note>
+						<para>
+							History snapshots enable browser back button support.
+							When snapshotting is disabled pressing the browser back button will not work.
+							It will result in using an execution key that points to a snapshot that has not be recorded.
+						</para>
+					</note>
 				</para>
 			</sect3>
 		</sect2>

@@ -541,7 +541,7 @@ public class BookingValidator {
 			<sect3 id="default-validate-method">
 				<title>Default validate method</title>
 				<para>
-					Within a <emphasis>Validator</emphasis> class, it is also possible to define a method called <code>validate</code> that does not refer to any specific view-state.
+					A <emphasis>Validator</emphasis> class can also define a method called <code>validate</code> not associated (by convention) with any specific view-state.
 				</para>
 				<programlisting language="java"><![CDATA[
 @Component
@@ -552,8 +552,8 @@ public class BookingValidator {
 }]]>
 				</programlisting>
 				<para>
-					In the upper code sample, the method <code>validate</code> will be called every time a Model of type <code>Booking</code> is being called (unless validation has been suppressed for that transition).
-					If needed, the default method can also be called in addition to an existing state-specific method. Consider the following example:
+					In the above code sample the method <code>validate</code> will be called every time a Model of type <code>Booking</code> is validated (unless validation has been suppressed for that transition).
+					If needed the default method can also be called in addition to an existing state-specific method. Consider the following example:
 				</para>
 				<programlisting language="java"><![CDATA[
 @Component
@@ -561,13 +561,14 @@ public class BookingValidator {
     public void validate(Booking booking, ValidationContext context) {
         //...
     }
-	public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
-		//...
+    public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
+        //...
     }
 }]]>
 				</programlisting>
 				<para>
-					In the upper code sample, the method <code>validateEnterBookingDetails</code> will be called first. After that, the default <code>validate</code> method will be called.
+					In above code sample the method <code>validateEnterBookingDetails</code> will be called first. 
+					The default <code>validate</code> method will be called next.
 				</para>
 			</sect3>
 		</sect2>
