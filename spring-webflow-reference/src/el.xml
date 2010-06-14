@@ -94,10 +94,23 @@
 <webflow:flow-builder-services expression-parser="expressionParser"/>
 
 <bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
-	<constructor-arg>
-		<bean class="org.jboss.el.ExpressionFactoryImpl" />
-	</constructor-arg>
+    <constructor-arg>
+        <bean class="org.jboss.el.ExpressionFactoryImpl" />
+    </constructor-arg>
 </bean>]]>
+                </programlisting>
+                Note that if your application is registering custom converters it's important to ensure the WebFlowELExpressionParser is configured with the conversion service that has those custom converters.
+				<programlisting language="xml"><![CDATA[
+<webflow:flow-builder-services expression-parser="expressionParser" conversion-service="conversionService"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
+    <constructor-arg>
+        <bean class="org.jboss.el.ExpressionFactoryImpl" />
+    </constructor-arg>
+    <property name="conversionService" ref="conversionService"/>
+</bean>
+
+<bean id="conversionService" class="somepackage.ApplicationConversionService"/>]]>
                 </programlisting>
 			</para>
 		</sect2>
@@ -112,6 +125,16 @@
 <webflow:flow-builder-services expression-parser="expressionParser"/>
 
 <bean id="expressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>]]>
+                </programlisting>
+                Note that if your application is registering custom converters it's important to ensure the WebFlowOgnlExpressionParser is configured with the conversion service that has those custom converters.
+				<programlisting language="xml"><![CDATA[
+<webflow:flow-builder-services expression-parser="expressionParser" conversion-service="conversionService"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser">
+    <property name="conversionService" ref="conversionService"/>
+</bean>
+
+<bean id="conversionService" class="somepackage.ApplicationConversionService"/>]]>
                 </programlisting>
 			</para>
 		</sect2>
