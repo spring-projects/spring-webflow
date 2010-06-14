@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.JdkVersion;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
@@ -35,6 +37,8 @@ import org.springframework.webflow.conversation.NoSuchConversationException;
  * @author Erwin Vervaet
  */
 class ConversationContainer implements Serializable {
+
+	private static final Log logger = LogFactory.getLog(ConversationContainer.class);
 
 	/**
 	 * Maximum number of conversations in this container. -1 for unlimited.
@@ -95,6 +99,11 @@ class ConversationContainer implements Serializable {
 		conversation.putAttribute("description", parameters.getDescription());
 		conversations.add(conversation);
 		if (maxExceeded()) {
+			if (logger.isDebugEnabled()) {
+				logger
+						.debug("The maximum number of flow executions has been exceeded for the current user. Removing the oldest conversation with id: "
+								+ ((Conversation) conversations.get(0)).getId());
+			}
 			// end oldest conversation
 			((Conversation) conversations.get(0)).end();
 		}
