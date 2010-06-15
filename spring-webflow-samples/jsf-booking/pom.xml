@@ -8,19 +8,14 @@
 	<version>2.1.0.BUILD-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
-			<groupId>com.sun.facelets</groupId>
-			<artifactId>com.springsource.com.sun.facelets</artifactId>
-			<version>1.1.14</version>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
-			<artifactId>com.springsource.com.sun.faces</artifactId>
-			<version>${jsf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.faces</groupId>
-			<artifactId>com.springsource.javax.faces</artifactId>
-			<version>${jsf.version}</version>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -30,7 +25,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>com.springsource.javax.servlet.jsp.jstl</artifactId>
-			<version>1.1.2</version>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -150,6 +145,11 @@
 			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/external</url>
 		</repository>
+		<repository>
+			<id>java.net.release</id>
+			<name>Repository for Projects On Hosted on java.net</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
 	</repositories>
 	<build>
 		<finalName>jsf-booking</finalName>
@@ -166,6 +166,5 @@
 	</build>
 	<properties>
 		<spring.version>3.0.2.RELEASE</spring.version>
-		<jsf.version>1.2.0.09</jsf.version>
 	</properties>
 </project>

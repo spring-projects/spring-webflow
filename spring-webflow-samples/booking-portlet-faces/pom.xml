@@ -128,14 +128,24 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.faces</groupId>
-			<artifactId>com.springsource.javax.faces</artifactId>
-			<version>${jsf.version}</version>
+			<groupId>org.apache.myfaces</groupId>
+			<artifactId>com.springsource.org.apache.myfaces.javax.faces</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>com.springsource.com.sun.faces</artifactId>
-			<version>${jsf.version}</version>
+			<groupId>org.apache.myfaces</groupId>
+			<artifactId>com.springsource.org.apache.myfaces</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.portlet-bridge</groupId>
+			<artifactId>portlet-bridge-api</artifactId>
+			<version>2.0.0-alpha-2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.portlet-bridge</groupId>
+			<artifactId>portlet-bridge-impl</artifactId>
+			<version>2.0.0-alpha-2</version>
 		</dependency>
 		<!-- Build time only dependencies -->
 		<dependency>
