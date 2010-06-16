@@ -26,17 +26,17 @@
 		<dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.core" rev="2.1.2.osgi" conf="optional->runtime"/>
 		<dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.jsp" rev="2.1.2" conf="optional->runtime"/>
 		<dependency org="org.apache.tiles" name="com.springsource.org.apache.tiles.servlet" rev="2.1.2" conf="optional->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.2.RELEASE" conf="compile->runtime"/>        
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.2.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.3.RELEASE" conf="compile->runtime"/>        
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.3.RELEASE" conf="compile->runtime"/>
 
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime"/>
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime" />
-		<dependency org="org.springframework" name="org.springframework.test" rev="3.0.2.RELEASE" conf="test->runtime" />
+		<dependency org="org.springframework" name="org.springframework.test" rev="3.0.3.RELEASE" conf="test->runtime" />
 		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.digester" rev="1.8.0" conf="test->runtime"/>
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test->runtime"/>
 		

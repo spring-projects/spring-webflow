@@ -206,7 +206,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<spring.version>3.0.2.RELEASE</spring.version>
+		<spring.version>3.0.3.RELEASE</spring.version>
 		<jsf.version>1.2.0.09</jsf.version>
 	</properties>
 </project>

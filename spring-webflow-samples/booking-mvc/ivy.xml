@@ -37,17 +37,17 @@
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate.ejb" rev="3.3.1.ga" conf="compile->runtime"/>
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="compile->runtime"/>
 		<dependency org="org.joda" name="com.springsource.org.joda.time" rev="1.6.0" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.aop" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context.support" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.orm" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.2.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.2.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.aop" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context.support" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.orm" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.3.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.3.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.2.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.config" rev="3.0.2.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="3.0.2.RELEASE" conf="compile->runtime"/>
@@ -57,7 +57,7 @@
 		<!-- test-time only dependencies -->
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.test" rev="3.0.2.RELEASE" conf="test->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.test" rev="3.0.3.RELEASE" conf="test->runtime"/>
 		
 	</dependencies>
 

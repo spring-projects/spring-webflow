@@ -1,8 +1,6 @@
 package org.springframework.js.ajax.tiles2;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -28,14 +26,14 @@ public class AjaxTilesViewTests extends TestCase {
 	private AjaxTilesView ajaxTilesView;
 
 	private MockHttpServletRequest request;
-	private MultipleIncludeUrlMockHttpServletResponse response;
+	private MockHttpServletResponse response;
 	private MockServletContext servletContext;
 
 	protected void setUp() throws Exception {
 
 		servletContext = new MockServletContext("/org/springframework/js/ajax/tiles2/");
 		request = new MockHttpServletRequest(servletContext);
-		response = new MultipleIncludeUrlMockHttpServletResponse();
+		response = new MockHttpServletResponse();
 
 		TilesConfigurer tc = new TilesConfigurer();
 		tc.setDefinitions(new String[] { "tiles-definitions.xml" });
@@ -151,17 +149,4 @@ public class AjaxTilesViewTests extends TestCase {
 		assertEquals("f3", fragments[2]);
 	}
 
-	// Remove this class when no longer needed (http://jira.springframework.org/browse/SPR-7188)
-	private class MultipleIncludeUrlMockHttpServletResponse extends MockHttpServletResponse {
-		List includedUrls = new ArrayList();
-
-		public void setIncludedUrl(String includedUrl) {
-			super.setIncludedUrl(includedUrl);
-			includedUrls.add(includedUrl);
-		}
-
-		public List getIncludedUrls() {
-			return includedUrls;
-		}
-	}
 }
