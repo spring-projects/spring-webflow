@@ -2,6 +2,11 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.1.0.RELEASE (June 17, 2010)
+------------------------------------------------
+* Upgrade to Spring 3.0.3
+* Fix version of JSF in pom.xml of samples to 2.0
+
 Changes in version 2.1.0 RC1 (June 3, 2010)
 -------------------------------------------
 * Update documentation for all Web Flow 2.1 related changes.
