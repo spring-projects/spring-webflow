@@ -41,12 +41,12 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
-		<!-- JSF 2.0 Mojarra dependencies (no ivy configuration: downloaded from maven repository) -->
+		<!-- JSF 2.0 Mojarra dependencies -->
 		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="provided, mojarra20->runtime(*)" />
 		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="provided, mojarra20->runtime(*)" />
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test, mojarra20->runtime"/>
 
-		<!-- JSF 2.0 MyFaces dependencies (no ivy configuration: downloaded from maven repository) -->
+		<!-- JSF 2.0 MyFaces dependencies -->
    		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="2.0.1-SNAPSHOT" conf="provided, myfaces20->runtime(*)" />
    		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="2.0.1-SNAPSHOT" conf="provided, myfaces20->runtime(*)" />
    		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.discovery" rev="0.4.0" conf="provided, myfaces20->runtime(*)" />
@@ -66,7 +66,7 @@
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.1.5" conf="jsf11->runtime" />
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces" rev="1.1.5" conf="jsf11->runtime" />
 
-		<!--  MyFaces JSF-Portlet Bridge for Portlet 2.0 and JSF 1.2 (no ivy configuration: downloaded via maven) -->    	
+		<!--  MyFaces JSF-Portlet Bridge for Portlet 2.0 and JSF 1.2 -->    	
 		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-api" rev="2.0.0-alpha-2" conf="provided, myfacesPortlet20->runtime(*)" />
 		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-impl" rev="2.0.0-alpha-2" conf="provided, myfacesPortlet20->runtime(*)" />
 

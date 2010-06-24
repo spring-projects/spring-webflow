@@ -20,7 +20,13 @@ import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJ
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
+import javax.el.ELContextListener;
+import javax.el.ELException;
+import javax.el.ELResolver;
+import javax.el.ExpressionFactory;
+import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
@@ -81,6 +87,10 @@ public class FlowApplication extends Application {
 		return delegate;
 	}
 
+	public ELContextListener[] getELContextListeners() {
+		return getDelegate().getELContextListeners();
+	}
+
 	/**
 	 * Inserts {@link FlowViewStateManager} in front of the given StateManager (if not already done).
 	 */
@@ -117,6 +127,14 @@ public class FlowApplication extends Application {
 		delegate.addConverter(targetClass, converterClass);
 	}
 
+	public void addELContextListener(ELContextListener listener) {
+		getDelegate().addELContextListener(listener);
+	}
+
+	public void addELResolver(ELResolver resolver) {
+		getDelegate().addELResolver(resolver);
+	}
+
 	public void addValidator(String validatorId, String validatorClass) {
 		delegate.addValidator(validatorId, validatorClass);
 	}
@@ -128,6 +146,11 @@ public class FlowApplication extends Application {
 	public UIComponent createComponent(ValueBinding componentBinding, FacesContext context, String componentType)
 			throws FacesException {
 		return delegate.createComponent(componentBinding, context, componentType);
+	}
+
+	public UIComponent createComponent(ValueExpression componentExpression, FacesContext context, String componentType)
+			throws FacesException {
+		return getDelegate().createComponent(componentExpression, context, componentType);
 	}
 
 	public Converter createConverter(String converterId) {
@@ -148,6 +171,11 @@ public class FlowApplication extends Application {
 
 	public ValueBinding createValueBinding(String ref) throws ReferenceSyntaxException {
 		return delegate.createValueBinding(ref);
+	}
+
+	public <T> T evaluateExpressionGet(FacesContext context, String expression, Class<? extends T> expectedType)
+			throws ELException {
+		return getDelegate().evaluateExpressionGet(context, expression, expectedType);
 	}
 
 	public ActionListener getActionListener() {
@@ -174,6 +202,14 @@ public class FlowApplication extends Application {
 		return delegate.getDefaultRenderKitId();
 	}
 
+	public ELResolver getELResolver() {
+		return getDelegate().getELResolver();
+	}
+
+	public ExpressionFactory getExpressionFactory() {
+		return getDelegate().getExpressionFactory();
+	}
+
 	public String getMessageBundle() {
 		return delegate.getMessageBundle();
 	}
@@ -184,6 +220,10 @@ public class FlowApplication extends Application {
 
 	public PropertyResolver getPropertyResolver() {
 		return delegate.getPropertyResolver();
+	}
+
+	public ResourceBundle getResourceBundle(FacesContext ctx, String name) {
+		return getDelegate().getResourceBundle(ctx, name);
 	}
 
 	public StateManager getStateManager() {
@@ -204,6 +244,10 @@ public class FlowApplication extends Application {
 
 	public ViewHandler getViewHandler() {
 		return delegate.getViewHandler();
+	}
+
+	public void removeELContextListener(ELContextListener listener) {
+		getDelegate().removeELContextListener(listener);
 	}
 
 	public void setActionListener(ActionListener listener) {

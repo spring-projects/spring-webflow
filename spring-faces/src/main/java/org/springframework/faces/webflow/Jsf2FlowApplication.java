@@ -17,12 +17,7 @@ package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-import javax.el.ELContextListener;
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -57,14 +52,6 @@ public class Jsf2FlowApplication extends FlowApplication {
 		getDelegate().addDefaultValidatorId(validatorId);
 	}
 
-	public void addELContextListener(ELContextListener listener) {
-		getDelegate().addELContextListener(listener);
-	}
-
-	public void addELResolver(ELResolver resolver) {
-		getDelegate().addELResolver(resolver);
-	}
-
 	public Behavior createBehavior(String behaviorId) throws FacesException {
 		return getDelegate().createBehavior(behaviorId);
 	}
@@ -82,16 +69,6 @@ public class Jsf2FlowApplication extends FlowApplication {
 		return getDelegate().createComponent(componentExpression, context, componentType, rendererType);
 	}
 
-	public UIComponent createComponent(ValueExpression componentExpression, FacesContext context, String componentType)
-			throws FacesException {
-		return getDelegate().createComponent(componentExpression, context, componentType);
-	}
-
-	public <T> T evaluateExpressionGet(FacesContext context, String expression, Class<? extends T> expectedType)
-			throws ELException {
-		return getDelegate().evaluateExpressionGet(context, expression, expectedType);
-	}
-
 	public Iterator<String> getBehaviorIds() {
 		return getDelegate().getBehaviorIds();
 	}
@@ -100,24 +77,8 @@ public class Jsf2FlowApplication extends FlowApplication {
 		return getDelegate().getDefaultValidatorInfo();
 	}
 
-	public ELContextListener[] getELContextListeners() {
-		return getDelegate().getELContextListeners();
-	}
-
-	public ELResolver getELResolver() {
-		return getDelegate().getELResolver();
-	}
-
-	public ExpressionFactory getExpressionFactory() {
-		return getDelegate().getExpressionFactory();
-	}
-
 	public ProjectStage getProjectStage() {
 		return getDelegate().getProjectStage();
-	}
-
-	public ResourceBundle getResourceBundle(FacesContext ctx, String name) {
-		return getDelegate().getResourceBundle(ctx, name);
 	}
 
 	public ResourceHandler getResourceHandler() {
@@ -131,10 +92,6 @@ public class Jsf2FlowApplication extends FlowApplication {
 
 	public void publishEvent(FacesContext context, Class<? extends SystemEvent> systemEventClass, Object source) {
 		getDelegate().publishEvent(context, systemEventClass, source);
-	}
-
-	public void removeELContextListener(ELContextListener listener) {
-		getDelegate().removeELContextListener(listener);
 	}
 
 	public void setResourceHandler(ResourceHandler resourceHandler) {
