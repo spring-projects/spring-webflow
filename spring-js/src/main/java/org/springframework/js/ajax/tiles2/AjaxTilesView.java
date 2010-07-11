@@ -112,9 +112,7 @@ public class AjaxTilesView extends TilesView {
 			addRuntimeAttributes(container, flattenedAttributeMap, request, response);
 
 			if (fragmentsToRender.length > 1) {
-				// When rendering more than one fragment, flush the buffer in order to commit the response.
-				// With the response committed, Tiles does an include rather than forward.
-				response.flushBuffer();
+				request.setAttribute(ServletUtil.FORCE_INCLUDE_ATTRIBUTE_NAME, true);
 			}
 
 			for (int i = 0; i < fragmentsToRender.length; i++) {
