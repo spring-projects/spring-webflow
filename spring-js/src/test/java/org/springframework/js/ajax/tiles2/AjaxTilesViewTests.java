@@ -3,6 +3,7 @@ package org.springframework.js.ajax.tiles2;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.tiles.Attribute;
@@ -11,6 +12,7 @@ import org.apache.tiles.Definition;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.context.TilesRequestContextFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
+import org.apache.tiles.preparer.ViewPreparer;
 import org.apache.tiles.servlet.context.ServletTilesRequestContextFactory;
 import org.apache.tiles.servlet.context.ServletUtil;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
@@ -100,6 +102,24 @@ public class AjaxTilesViewTests extends TestCase {
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getForwardedUrl());
 	}
 
+	public void testRenderFragment_InheritCascadedAttribute() throws Exception {
+		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
+		ServletTilesRequestContextFactory tilesRequestContextFactory = new ServletTilesRequestContextFactory();
+		tilesRequestContextFactory.init(new HashMap());
+		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(container
+				.getApplicationContext(), new Object[] { request, response });
+		Definition definition = container.getDefinitionsFactory().getDefinition("search.body", tilesRequestContext);
+		definition.setPreparer("org.springframework.js.ajax.tiles2.AjaxTilesViewTests$AttributeTestingPreparer");
+
+		setupStaticWebApplicationContext();
+		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
+		request.addParameter("fragments", "body");
+		ajaxTilesView.setUrl("search");
+		ajaxTilesView.afterPropertiesSet();
+		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		assertTrue(AttributeTestingPreparer.invoked);
+	}
+
 	public void testRenderFragment_DynamicAttribute() throws Exception {
 		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
 		Object[] requestItems = new Object[] { request, response };
@@ -147,6 +167,15 @@ public class AjaxTilesViewTests extends TestCase {
 		assertEquals("f1", fragments[0]);
 		assertEquals("f2", fragments[1]);
 		assertEquals("f3", fragments[2]);
+	}
+
+	public static class AttributeTestingPreparer implements ViewPreparer {
+		public static boolean invoked;
+
+		public void execute(TilesRequestContext tilesContext, AttributeContext attributeContext) {
+			invoked = true;
+			Assert.assertTrue(attributeContext.getAttribute("searchNavigation") != null);
+		}
 	}
 
 }

@@ -124,7 +124,9 @@ public class AjaxTilesView extends TilesView {
 					throw new ServletException("No tiles attribute with a name of '" + fragmentsToRender[i]
 							+ "' could be found for the current view: " + this);
 				} else {
-					container.render(attributeToRender, new Object[] { request, response });
+					container.startContext(request, response).inheritCascadedAttributes(compositeDefinition);
+					container.render(attributeToRender, request, response);
+					container.endContext(request, response);
 				}
 			}
 		} else {
