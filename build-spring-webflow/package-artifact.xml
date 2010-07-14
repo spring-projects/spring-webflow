@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-artifact" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<target name="javadoc-all" depends="ivy.init, resolve.compile, src.init" if="src.exists"
+			description="Creates javadoc documentation for all classes.">
+		<java-doc input.dir="${main.java.dir}" output.dir="${javadoc-all.output.dir}" classpath.id="compile.classpath"
+				access="private"/>
+		<antcall target="jsdoc-api"/>
+	</target>
+	
+	<target name="javadoc-api" depends="ivy.init, resolve.compile, src.init" if="src.exists"
+			description="Creates javadoc documentation for all classes.">
+		<java-doc input.dir="${main.java.dir}" output.dir="${javadoc-api.output.dir}" classpath.id="compile.classpath"
+				access="protected" exclude.package.names="${javadoc.exclude.package.names}"/>
+		<antcall target="jsdoc-api"/>
+	</target>
+
+	<target name="jar" depends="ivy.init, resolve.compile, compile.init, jar.init"
+			description="Creates a JAR file containing the output of a compilation of the source tree.">
+
+		<delete quiet="true" file="${ivy.output.file}"/>
+		<mkdir dir="${ivy.output.dir}"/>
+		<delete quiet="true" file="${jar.output.file}"/>
+		<mkdir dir="${jar.output.dir}"/>
+		<delete quiet="true" file="${source-jar.output.file}"/>
+		<mkdir dir="${source-jar.output.dir}"/>
+		
+		<compile classpath.id="compile.classpath" input.dir="${main.java.dir}" output.dir="${main.output.dir}"
+				resources.dir="${main.resources.dir}"/>
+				
+		<antcall target="minify-spring-js" inheritAll="false"/>
+		
+		<unzip src="${basedir}/../build-spring-webflow/dojo-build/dojo-build.zip" 
+			dest="${main.output.dir}/META-INF"/>
+
+		<jar destfile="${jar.output.file}" basedir="${main.output.dir}" index="true" filesetmanifest="merge">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2"/>
+				<attribute name="Bundle-Version" value="${bundle.version}"/>
+				<attribute name="Implementation-Title" value="${implementation.title}"/>
+				<attribute name="Implementation-Version" value="${implementation.version}"/>
+			</manifest>
+		</jar>
+		<antcall target="bundlor"/>
+		<jar destfile="${source-jar.output.file}" basedir="${main.java.dir}" index="true"/>
+		<ivy:publish resolver="integration" pubdate="${timestamp}" status="${release.type}">
+			<artifacts pattern="${jar.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${source-jar.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${ivy.output.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+
+	</target>
+	
+	<target name="minify-spring-js">
+
+		<ivy:cachepath resolveId="shrinksafe.path" pathid="shrinksafe.path" 
+			organisation="org.dojotoolkit"
+			module="com.springsource.org.dojotoolkit.shrinksafe"
+			revision="1.3.2"
+			conf="runtime" type="jar" inline="true"
+			log="download-only"/>
+
+		<macrodef name="compress">
+			<attribute name="file"/>
+			<sequential>
+				<copy file="${main.output.dir}@{file}" tofile="${main.output.dir}@{file}.uncompressed.js" />
+				<java classname="org.dojotoolkit.shrinksafe.Main" output="${main.output.dir}@{file}.TMP.js">
+					<classpath refid="shrinksafe.path"/>
+					<arg value="${main.output.dir}@{file}"/>
+				</java>
+				<move file="${main.output.dir}@{file}.TMP.js" toFile="${main.output.dir}@{file}">
+					<filterchain>
+						<filterreader classname="org.apache.tools.ant.filters.StripLineBreaks"/>
+					</filterchain>
+					<filterchain>
+						<concatfilter prepend="${basedir}/../build-spring-webflow/resources/javascript-copyright.txt"/>
+					</filterchain>
+				</move>
+				<delete file="${main.output.dir}@{file}.TMP.js" />
+			</sequential>
+		</macrodef>
+
+		<compress file="/META-INF/spring/Spring.js"/>
+		<compress file="/META-INF/spring/Spring-Dojo.js"/>
+
+	</target>
+	
+	<target name="jsdoc-api" description="Creates JavaScript API documentation.">
+        <!-- TODO -->
+	</target>
+
+</project>
+
