@@ -59,8 +59,8 @@
 		<dependency org="com.sun.faces" name="com.springsource.com.sun.faces" rev="1.2.0.09" conf="provided, mojarra12->runtime" />
     	
 		<!-- JSF 1.2 MyFaces dependencies -->
-		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.2.2" conf="myfaces12->runtime" />
-		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces" rev="1.2.2" conf="myfaces12->runtime" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="1.2.9" conf="myfaces12->runtime(*)" />
+		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="1.2.9" conf="myfaces12->runtime(*)" />
 
 		<!-- JSF 1.1 MyFaces dependencies -->
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.1.5" conf="jsf11->runtime" />
