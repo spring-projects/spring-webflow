@@ -44,7 +44,7 @@
 		<zip destfile="${target.dir}/dojo-build.zip" basedir="${build.dir}"/>
 
 		<copy file="${target.dir}/dojo-build.zip" 
-			toFile="${basedir}/../../../build-spring-webflow/dojo-build/dojo-build.zip" />
+			toFile="${basedir}/../../../spring-js/dojo-build/dojo-build.zip" />
 
 	</target>
 	

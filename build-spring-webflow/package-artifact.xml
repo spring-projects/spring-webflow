@@ -30,7 +30,7 @@
 				
 		<antcall target="minify-spring-js" inheritAll="false"/>
 		
-		<unzip src="${basedir}/../build-spring-webflow/dojo-build/dojo-build.zip" 
+		<unzip src="${basedir}/../spring-js/dojo-build/dojo-build.zip" 
 			dest="${main.output.dir}/META-INF"/>
 
 		<jar destfile="${jar.output.file}" basedir="${main.output.dir}" index="true" filesetmanifest="merge">
