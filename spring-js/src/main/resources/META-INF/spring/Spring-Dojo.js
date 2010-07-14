@@ -25,6 +25,7 @@ dojo.declare("Spring.DefaultEquals", null, {
 
 dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spring.DefaultEquals], {
 	constructor : function(config) {
+		this.widgetAttrs = {};
 		this.copyFields = new Array('name', 'value', 'type', 'checked', 'selected', 'readOnly', 'disabled', 'alt', 'maxLength', 'class', 'title');
 		dojo.mixin(this, config);
 		this.element = dojo.byId(this.elementId);
