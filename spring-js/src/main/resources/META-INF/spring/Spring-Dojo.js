@@ -298,7 +298,8 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 				extractedScriptNodes.push(script);
 			}
 		}
-		response = response.replace(matchAll, '');
+		// Remove scripts but don't remove scripts entirely (see SWF-1358) 
+		response = response.replace(matchAll, '<script> // Original script removed to avoid re-execution </script>');
 
 		if (modalView) {
 			//For a modal view, just dump the response into a modal dialog
