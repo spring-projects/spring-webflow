@@ -2,6 +2,15 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.1.0.RELEASE (July 19, 2010)
+------------------------------------------------
+* Extract JSF 2 methods from FlowApplication into Jsf2FlowApplication (SWF-1261).
+* Fix handling of cascaded attributes in AjaxTilesView (SWF-1053).
+* Document DataModel implementations (SWF-1358)
+* Remove Dojo files from svn and replace with script to put together custom Dojo build (SWF-1362).
+* Remove compressed Spring.js and Spring-Dojo.js files from svn and compress during the build (SWF-1363).
+* Minor JavaScript fixes (SWF-1268, SWF-1358).
+
 Changes in version 2.1.0.RELEASE (June 17, 2010)
 ------------------------------------------------
 * Upgrade to Spring 3.0.3
