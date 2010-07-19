@@ -353,9 +353,13 @@
     </h:column>
 </h:dataTable>]]>
             </programlisting>
+        </sect2>
+        <sect2 id="faces-data-model-implementations">
+            <title>Data Model Implementations</title>
             <para>
-                The custom DataModel provides some extra conveniences such as being serializable for storage beyond
-                request scope and access to the currently selected row in EL expressions. For example, on postback from
+                In the example above result-type="dataModel" results in the wrapping of List&lt;Booking&gt; with custom <classname>DataModel</classname> type.
+                The custom <classname>DataModel</classname> provides extra conveniences such as being serializable for storage beyond
+                request scope as well as access to the currently selected row in EL expressions. For example, on postback from
                 a view where the action event was fired by a component within a DataTable, you can take action on the
                 selected row's model instance:
             </para>
@@ -364,6 +368,17 @@
     <evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" />            
 </transition>]]>
             </programlisting>
+            <para>
+            	Spring Web Flow provides two custom DataModel types: <classname>OneSelectionTrackingListDataModel</classname> and <classname>ManySelectionTrackingListDataModel</classname>.
+            	As the names indicate they keep track of one or multiple selected rows.
+            	This is done with the help of a <classname>SelectionTrackingActionListener</classname> listener, which responds to JSF action events and invokes the appopriate methods on the <classname>SelectinAware</classname> data models to record the currently clicked row.
+           	</para>
+           	<para>
+            	To understand how this is configured, keep in mind the <classname>FacesConversionService</classname> registers a <classname>DataModelConverter</classname> against the alias "dataModel" on startup.
+            	When result-type="dataModel" is used in a flow definition it causes the <classname>DataModelConverter</classname> to be used.
+            	The converter then wraps the given List with an instance of <classname>OneSelectionTrackingListDataModel</classname>.
+            	To use the <classname>ManySelectionTrackingListDataModel</classname> you will need to register your own custom converter.
+            </para>
         </sect2>
     </sect1>
     <sect1 id="spring-faces-event-handling">
