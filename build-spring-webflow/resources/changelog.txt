@@ -2,6 +2,10 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.2.0.RELEASE ()
+-----------------------------------
+
+
 Changes in version 2.1.0.RELEASE (July 19, 2010)
 ------------------------------------------------
 * Extract JSF 2 methods from FlowApplication into Jsf2FlowApplication (SWF-1261).
@@ -39,8 +43,8 @@ Changes in version 2.1.0 M1 (May 7, 2010)
 * Integrate Spring type conversion and formatting (SWF-1234)
 * Update samples as reference apps for Web Flow on Spring 3 (SWF-1219)
 
-Changes in version 2.0.9 ()
--------------------------------------
+Changes in version 2.0.9 (Apr 14, 2010)
+---------------------------------------
 * ViewState now ignores case where 'model' expression fails to evaluate (SWF-1176)
 * Added calls to lock/unlock the coversation when a flow execution is launched (SWF-1213)
 * Added serialization methods to FlowFacesMessageAdapter as workaround for issue in MyFaces (SWF-1187)

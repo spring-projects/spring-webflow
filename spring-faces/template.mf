@@ -3,11 +3,11 @@ Bundle-Name: Spring Faces
 Bundle-Vendor: SpringSource
 Bundle-ManifestVersion: 2
 Import-Package: 
- org.springframework.webflow.engine.builder.support;version="[2.1.0, 2.1.1)"
+ org.springframework.webflow.engine.builder.support;version="[2.2.0, 2.3.0)"
 Import-Template: 
- org.springframework.binding.*;version="[2.1.0, 2.1.1)",
- org.springframework.js.*;version="[2.1.0, 2.1.1)",
- org.springframework.webflow.*;version="[2.1.0, 2.1.1)",
+ org.springframework.binding.*;version="[2.2.0, 2.3.0)",
+ org.springframework.js.*;version="[2.2.0, 2.3.0)",
+ org.springframework.webflow.*;version="[2.2.0, 2.3.0)",
  org.springframework.*;version="[3.0.3.RELEASE, 3.1.0)",
  org.apache.commons.logging;version="[1.1.1, 2.0.0)",
  javax.el;version="[1.0.0, 2.0.0)",
