@@ -2,7 +2,7 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.1.0.RELEASE (July 19, 2010)
+Changes in version 2.1.1.RELEASE (July 19, 2010)
 ------------------------------------------------
 * Extract JSF 2 methods from FlowApplication into Jsf2FlowApplication (SWF-1261).
 * Fix handling of cascaded attributes in AjaxTilesView (SWF-1053).
