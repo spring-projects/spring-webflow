@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- Maps JSF 2 resource requests to an instance of org.springframework.faces.webflow.FacesJsfResourceRequestHandler  -->
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="0"/>
+		<property name="mappings">
+			<value>
+				/javax.faces.resource/**=jsfResourceHandler
+			</value>
+		</property>
+	</bean>
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="order" value="1"/>
 		<property name="flowRegistry" ref="flowRegistry" />
 		<property name="defaultHandler">
 			<!-- If no flow match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro" -->	
@@ -28,5 +37,11 @@
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor" />
 	</bean>
+
+	<!-- Dispatches requests mapped to org.springframework.web.HttpRequestHandler implementations -->	
+	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+
+	<!-- Delegates to the JSF ResourceHandler to serve web application resources such as images, .css and .js files. -->	
+	<bean id="jsfResourceHandler" class="org.springframework.faces.webflow.FacesJsfResourceRequestHandler"/>
 				
 </beans>
