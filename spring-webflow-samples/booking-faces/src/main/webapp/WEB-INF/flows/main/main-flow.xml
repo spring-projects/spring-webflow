@@ -24,20 +24,17 @@
 		</on-render>
         <transition on="sort">
             <set name="searchCriteria.sortBy" value="requestParameters.sortBy" />
-            <render fragments="hotels:searchResultsFragment" />
         </transition>
 		<transition on="previous">
 			<evaluate expression="searchCriteria.previousPage()" />
-			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="next">
 			<evaluate expression="searchCriteria.nextPage()" />
-			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="select" to="reviewHotel">
 			<set name="flowScope.hotel" value="hotels.selectedRow" />
 		</transition>
-		<transition on="changeSearch" to="changeSearchCriteria" />
+		<transition on="changeSearch" to="enterSearchCriteria" />
 	</view-state>
 	
 	<view-state id="reviewHotel">
@@ -50,15 +47,6 @@
 		<transition on="bookingConfirmed" to="finish" />
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>
-
-	<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
-		<on-entry>
-			<render fragments="hotelSearchFragment" />
-		</on-entry>
-		<transition on="search" to="reviewHotels">
-			<evaluate expression="searchCriteria.resetPage()"/>
-		</transition>
-	</view-state>
 			
 	<end-state id="finish" />
 	

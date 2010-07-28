@@ -17,47 +17,39 @@ package org.springframework.faces.richfaces;
 
 import java.io.IOException;
 
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ajax4jsf.context.AjaxContext;
-import org.springframework.faces.webflow.FlowLifecycle;
+import org.springframework.faces.webflow.FacesContextHelper;
+import org.springframework.js.ajax.AbstractAjaxHandler;
 import org.springframework.js.ajax.AjaxHandler;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
-import org.springframework.util.Assert;
-import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
  * Ajax handler that works with Rich Faces, allowing support for Web Flow Ajax features with the Rich Faces toolkit.
  * 
+ * @see AbstractAjaxHandler
+ * 
  * @author Jeremy Grelle
  */
-public class RichFacesAjaxHandler extends WebApplicationObjectSupport implements AjaxHandler {
+public class RichFacesAjaxHandler extends AbstractAjaxHandler implements AjaxHandler {
 
-	private AjaxHandler delegate = new SpringJavascriptAjaxHandler();
-
-	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response) {
-		if (isRichFacesAjaxRequest(request, response)) {
-			return true;
-		} else {
-			return delegate.isAjaxRequest(request, response);
-		}
+	/**
+	 * Create a RichFacesAjaxHandler that is not part of a chain of AjaxHandler's.
+	 */
+	public RichFacesAjaxHandler() {
+		this(null);
 	}
 
-	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
-			boolean popup) throws IOException {
-		if (isRichFacesAjaxRequest(request, response)) {
-			response.sendRedirect(response.encodeRedirectURL(targetUrl));
-		} else {
-			delegate.sendAjaxRedirect(targetUrl, request, response, popup);
-		}
+	/**
+	 * Create a RichFacesAjaxHandler as part of a chain of AjaxHandler's.
+	 */
+	public RichFacesAjaxHandler(AbstractAjaxHandler delegate) {
+		super(delegate);
 	}
 
-	protected boolean isRichFacesAjaxRequest(HttpServletRequest request, HttpServletResponse response) {
+	protected boolean isAjaxRequestInternal(HttpServletRequest request, HttpServletResponse response) {
 		FacesContextHelper helper = new FacesContextHelper();
 		try {
 			FacesContext facesContext = helper.getFacesContext(getServletContext(), request, response);
@@ -68,33 +60,13 @@ public class RichFacesAjaxHandler extends WebApplicationObjectSupport implements
 				return false;
 			}
 		} finally {
-			helper.cleanup();
+			helper.releaseIfNecessary();
 		}
 	}
 
-	private static class FacesContextHelper {
-
-		private boolean created = false;
-
-		protected FacesContext getFacesContext(ServletContext context, HttpServletRequest request,
-				HttpServletResponse response) {
-			if (FacesContext.getCurrentInstance() != null) {
-				return FacesContext.getCurrentInstance();
-			} else {
-				FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
-						.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-				FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context, request, response,
-						FlowLifecycle.newInstance());
-				Assert.notNull(defaultFacesContext, "Creation of the default FacesContext failed.");
-				created = true;
-				return defaultFacesContext;
-			}
-		}
-
-		protected void cleanup() {
-			if (created) {
-				FacesContext.getCurrentInstance().release();
-			}
-		}
+	protected void sendAjaxRedirectInternal(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+			boolean popup) throws IOException {
+		response.sendRedirect(response.encodeRedirectURL(targetUrl));
 	}
+
 }

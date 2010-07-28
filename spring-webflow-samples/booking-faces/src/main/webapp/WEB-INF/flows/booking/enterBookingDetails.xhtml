@@ -3,11 +3,9 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:sf="http://www.springframework.org/tags/faces"
 				template="/WEB-INF/layouts/standard.xhtml">
 
 <ui:define name="content">
-
 	<div class="span-5">
 		<h3>${booking.hotel.name}</h3>
 		<address>
@@ -18,12 +16,8 @@
 			${booking.hotel.country}
 		</address>
 	</div>
-	<div class="span-12">
-		<ui:fragment id="messages">
-			<div id="messagesInsertionPoint">
-				<h:messages errorClass="error" layout="table"/>
-			</div>
-		</ui:fragment>
+	<h:panelGroup id="bookingsFragment" styleClass="span-12" layout="block">
+		<h:messages errorClass="error" layout="table"/>
 		<h:form id="bookingForm">
 			<fieldset>
 				<legend>Book Hotel</legend>
@@ -45,11 +39,9 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<sf:clientDateValidator required="true">
-					        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
-				                	<f:convertDateTime pattern="MM-dd-yyyy" timeZone="EST"/>
-				                </h:inputText>
-			               	</sf:clientDateValidator>
+				        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
+			                	<f:convertDateTime pattern="MM-dd-yyyy" timeZone="EST"/>
+			                </h:inputText>
 		               	</p>
 					</div>
 				</div>
@@ -59,11 +51,9 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<sf:clientDateValidator required="true">
-								<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
-									<f:convertDateTime pattern="MM-dd-yyyy" timeZone="EST"/>
-								</h:inputText>
-							</sf:clientDateValidator>
+							<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
+								<f:convertDateTime pattern="MM-dd-yyyy" timeZone="EST"/>
+							</h:inputText>
 						</p>
 					</div>
 				</div>
@@ -116,9 +106,7 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<sf:clientTextValidator required="true" regExp="[0-9]{16}" invalidMessage="A 16-digit credit card number is required.">
-								<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
-							</sf:clientTextValidator>
+							<h:inputText id="creditCard" value="#{booking.creditCard}"/>
 						</p>
 					</div>
 				</div>
@@ -128,9 +116,7 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<sf:clientTextValidator required="true">
-								<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
-							</sf:clientTextValidator>
+							<h:inputText id="creditCardName" value="#{booking.creditCardName}"/>
 						</p>
 					</div>
 				</div>
@@ -150,14 +136,13 @@
 					</div>
 				</div>
 				<div>
-					<sf:validateAllOnClick>
-						<sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/>&#160;
-					</sf:validateAllOnClick>
-					<sf:commandButton id="cancel" value="Cancel" action="cancel"/>
+					<h:commandButton id="proceed" action="proceed" value="Proceed">
+						<f:ajax render=":bookingsFragment" execute="@form" />
+					</h:commandButton>&#160;
+					<h:commandButton id="cancel" value="Cancel" action="cancel" immediate="true" />
 				</div>		
 			</fieldset>
 		</h:form>
-	</div>
-	
+	</h:panelGroup>
 </ui:define>
 </ui:composition>

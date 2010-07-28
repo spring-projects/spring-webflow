@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.FactoryFinder;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.ExceptionHandler;
@@ -28,20 +29,32 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.context.PartialViewContext;
+import javax.faces.context.PartialViewContextFactory;
 import javax.faces.event.PhaseId;
 
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Extends FlowFacesContext in order to provide JSF 2 delegation method. This is necessary because some of the methods
- * use JSF 2 specific types as input or output parameters.
+ * Extends FlowFacesContext in order to provide JSF 2 delegation method.
  * 
  * @author Rossen Stoyanchev
  */
 public class Jsf2FlowFacesContext extends FlowFacesContext {
 
+	/*
+	 * This partialViewContext duplicates the one FacesContextImpl because the constructor of FacesContextImpl calls
+	 * getPartialViewContext(), which causes it to be instantiated with an instance of FacesContextImpl. This leads to
+	 * issues with adding and showing validation messages during Ajax requests because the FlowFacesContext is
+	 * effectively bypassed.
+	 */
+	private PartialViewContext partialViewContext;
+
 	public Jsf2FlowFacesContext(RequestContext context, FacesContext delegate) {
 		super(context, delegate);
+
+		PartialViewContextFactory f = (PartialViewContextFactory) FactoryFinder
+				.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
+		partialViewContext = f.getPartialViewContext(this);
 	}
 
 	public ExternalContext getExternalContext() {
@@ -55,15 +68,22 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 	}
 
 	public PartialViewContext getPartialViewContext() {
-		return getDelegate().getPartialViewContext();
+		return partialViewContext;
 	}
 
+	/**
+	 * Returns a List for all Messages in the current MessageContext that does translation to FacesMessages.
+	 */
 	public List<FacesMessage> getMessageList() {
-		return getDelegate().getMessageList();
+		return getMessageDelegate().getMessageList();
 	}
 
+	/**
+	 * Returns a List for all Messages with the given clientId in the current MessageContext that does translation to
+	 * FacesMessages.
+	 */
 	public List<FacesMessage> getMessageList(String clientId) {
-		return getDelegate().getMessageList(clientId);
+		return getMessageDelegate().getMessageList(clientId);
 	}
 
 	public boolean isPostback() {

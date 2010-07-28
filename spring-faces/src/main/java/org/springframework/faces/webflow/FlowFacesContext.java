@@ -81,16 +81,16 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	/**
-	 * Translates a FacesMessage to an SWF Message and adds it to the current MessageContext
+	 * Translates a FacesMessage to a Spring Web Flow message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		messageDelegate.addMessage(clientId, message);
+		messageDelegate.addToFlowMessageContext(clientId, message);
 	}
 
 	/**
 	 * Returns an Iterator for all component clientId's for which messages have been added.
 	 */
-	public Iterator getClientIdsWithMessages() {
+	public Iterator<String> getClientIdsWithMessages() {
 		return messageDelegate.getClientIdsWithMessages();
 	}
 
@@ -120,7 +120,7 @@ public class FlowFacesContext extends FacesContext {
 	/**
 	 * Returns an Iterator for all Messages in the current MessageContext that does translation to FacesMessages.
 	 */
-	public Iterator getMessages() {
+	public Iterator<FacesMessage> getMessages() {
 		return messageDelegate.getMessages();
 	}
 
@@ -128,7 +128,7 @@ public class FlowFacesContext extends FacesContext {
 	 * Returns an Iterator for all Messages with the given clientId in the current MessageContext that does translation
 	 * to FacesMessages.
 	 */
-	public Iterator getMessages(String clientId) {
+	public Iterator<FacesMessage> getMessages(String clientId) {
 		return messageDelegate.getMessages(clientId);
 	}
 
@@ -198,6 +198,10 @@ public class FlowFacesContext extends FacesContext {
 
 	protected FacesContext getDelegate() {
 		return delegate;
+	}
+
+	protected FlowFacesContextMessageDelegate getMessageDelegate() {
+		return messageDelegate;
 	}
 
 	protected class FlowExternalContext extends ExternalContextWrapper {

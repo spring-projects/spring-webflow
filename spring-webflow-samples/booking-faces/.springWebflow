@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <webflow-project-description>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.2.1.v200811281800]]></pluginVersion>
+	<pluginVersion><![CDATA[2.3.3.201005082200-CI-R3771-B737]]></pluginVersion>
 	<configs>
 		<config>
 			<file>src/main/webapp/WEB-INF/flows/booking/booking-flow.xml</file>
@@ -10,8 +10,7 @@
 		</config>
 		<config>
 			<file>src/main/webapp/WEB-INF/flows/main/main-flow.xml</file>
-			<name><![CDATA[main]]></name>
-			<beans-config><![CDATA[1:BeansModel|2:swf-booking-faces|3:src/main/webapp/WEB-INF/config/web-application-config.xml]]></beans-config>
+			<name><![CDATA[main-flow]]></name>
 		</config>
 	</configs>
 </webflow-project-description>

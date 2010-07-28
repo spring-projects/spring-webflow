@@ -3,60 +3,60 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-	  			xmlns:sf="http://www.springframework.org/tags/faces"
 				template="/WEB-INF/layouts/standard.xhtml">
 
 <ui:define name="content">
 
-<h:form id="hotels">
+<h:form id="hotelResults">
 	<div>
 		<h2>Hotel Results</h2>
 		<p>
-			<sf:commandLink value="Change Search" action="changeSearch"/>
+			<h:commandLink value="Change Search" action="changeSearch"/>
 		</p>
-		<ui:fragment id="searchResultsFragment">
-			<div id="searchResults">
-				<h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
-				<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="h" rendered="#{hotels.rowCount > 0}">
-					<h:column>
-						<f:facet name="header">
-							<sf:commandLink id="sortByNameLink" action="sort" value="Name" processIds="*">
-								<f:param name="sortBy" value="name" />
-							</sf:commandLink>
-						</f:facet>
-						#{h.name}
-					</h:column>
-					<h:column>
-						<f:facet name="header">Address</f:facet>
-						#{h.address}
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<sf:commandLink id="sortByCity" action="sort" value="City, State" processIds="*" >
-								<f:param name="sortBy" value="city" />
-							</sf:commandLink>
-						</f:facet>
-						#{h.city}, #{h.state}, #{h.country}
-					</h:column> 
-					<h:column>
-						<f:facet name="header">Zip</f:facet>
-						#{h.zip}
-					</h:column>
-					<h:column>
-						<f:facet name="header">Action</f:facet>
-						<sf:commandLink id="viewHotelLink" value="View Hotel" action="select"/>
-					</h:column>
-				</h:dataTable>
-				<div class="buttonGroup">
-					<div class="span-3">
-						<sf:commandLink id="previousPageLink" value="Previous results" action="previous" rendered="#{searchCriteria.page > 0}"/>
-					</div>
-					<div class="span-15 last">
-						<sf:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}"/>
-					</div>
-				</div>
+		<div id="searchResults">
+			<h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
+			<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="h" rendered="#{hotels.rowCount > 0}">
+				<h:column>
+					<f:facet name="header">
+						<h:commandLink id="sortByNameLink" action="sort" value="Name">
+							<f:param name="sortBy" value="name" />
+							<f:ajax render="hotels" />
+						</h:commandLink>
+					</f:facet>
+					#{h.name}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Address</f:facet>
+					#{h.address}
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:commandLink id="sortByCity" action="sort" value="City, State">
+							<f:param name="sortBy" value="city" />
+							<f:ajax render="hotels" />
+						</h:commandLink>
+					</f:facet>
+					#{h.city}, #{h.state}, #{h.country}
+				</h:column> 
+				<h:column>
+					<f:facet name="header">Zip</f:facet>
+					#{h.zip}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Action</f:facet>
+					<h:commandLink id="viewHotelLink" value="View Hotel" action="select"/>
+				</h:column>
+			</h:dataTable>
+			<div class="buttonGroup">
+				<h:commandLink id="previousPageLink" value="Previous Results" action="previous" rendered="#{searchCriteria.page > 0}">
+					<f:ajax render="@form" />
+				</h:commandLink>
+				&nbsp;
+				<h:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}">
+					<f:ajax render="@form" />
+				</h:commandLink>
 			</div>
-		</ui:fragment>
+		</div>
 	</div>
 </h:form>
 </ui:define>

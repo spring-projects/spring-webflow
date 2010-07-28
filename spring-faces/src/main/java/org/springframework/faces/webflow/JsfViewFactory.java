@@ -17,6 +17,7 @@ package org.springframework.faces.webflow;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isLessThanJsf20;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Iterator;
@@ -37,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.faces.ui.AjaxViewRoot;
-import org.springframework.faces.ui.Jsf2AjaxViewRoot;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -143,12 +143,10 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
-			AjaxViewRoot viewRoot = (isAtLeastJsf20()) ? new Jsf2AjaxViewRoot(root) : new AjaxViewRoot(root);
-			return new JsfView(viewRoot, lifecycle, context);
-		} else {
-			return new JsfView(root, lifecycle, context);
+		if (isLessThanJsf20() && isSpringJavascriptAjaxRequest(context.getExternalContext())) {
+			root = new AjaxViewRoot(root);
 		}
+		return new JsfView(root, lifecycle, context);
 	}
 
 	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {

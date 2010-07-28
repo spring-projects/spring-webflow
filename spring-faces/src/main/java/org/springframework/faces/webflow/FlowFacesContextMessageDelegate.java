@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,7 +64,7 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * @see FlowFacesContext#addMessage(String, FacesMessage)
 	 */
-	public void addMessage(String clientId, FacesMessage message) {
+	public void addToFlowMessageContext(String clientId, FacesMessage message) {
 		String source = null;
 		if (StringUtils.hasText(clientId)) {
 			source = clientId;
@@ -75,7 +76,7 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * @see FlowFacesContext#getClientIdsWithMessages
 	 */
-	public Iterator getClientIdsWithMessages() {
+	public Iterator<String> getClientIdsWithMessages() {
 		return new ClientIdIterator();
 	}
 
@@ -102,18 +103,60 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * @see FlowFacesContext#getMessages()
 	 */
-	public Iterator getMessages() {
+	public Iterator<FacesMessage> getMessages() {
 		return new FacesMessageIterator();
 	}
 
 	/**
 	 * @see FlowFacesContext#getMessages(String)
 	 */
-	public Iterator getMessages(String clientId) {
+	public Iterator<FacesMessage> getMessages(String clientId) {
 		return new FacesMessageIterator(clientId);
 	}
 
+	/**
+	 * @see Jsf2FlowFacesContext#getMessageList()
+	 */
+	public List<FacesMessage> getMessageList() {
+		return getMessageList(null);
+	}
+
+	/**
+	 * @see Jsf2FlowFacesContext#getMessageList(String)
+	 */
+	public List<FacesMessage> getMessageList(String clientId) {
+		List<FacesMessage> messages = getFacesMessages(clientId);
+		if (null == messages) {
+			return Collections.unmodifiableList(Collections.<FacesMessage> emptyList());
+		} else {
+			return Collections.unmodifiableList(messages);
+		}
+	}
+
 	// ------------------ Private helper methods ----------------------//
+
+	private List<FacesMessage> getFacesMessages() {
+		return getFacesMessages(null);
+	}
+
+	private List<FacesMessage> getFacesMessages(String clientId) {
+		List<FacesMessage> translatedMessages = new ArrayList<FacesMessage>();
+
+		Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(
+				new MatchBySuffixCriteria(clientId, SUMMARY_MESSAGE_KEY));
+		Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(
+				new MatchBySuffixCriteria(clientId, DETAIL_MESSAGE_KEY));
+		for (int i = 0; i < summaryMessages.length; i++) {
+			translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
+		}
+
+		Message[] userMessages = context.getMessageContext().getMessagesByCriteria(new UserMessageCriteria(clientId));
+		for (int z = 0; z < userMessages.length; z++) {
+			translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
+		}
+
+		return translatedMessages;
+	}
 
 	private FacesMessage toFacesMessage(Message summaryMessage, Message detailMessage) {
 
@@ -137,49 +180,25 @@ public class FlowFacesContextMessageDelegate {
 		}
 	}
 
-	private class FacesMessageIterator implements Iterator {
+	private class FacesMessageIterator implements Iterator<FacesMessage> {
 
-		private Object[] messages;
+		private FacesMessage[] messages;
 
 		private int currentIndex = -1;
 
 		protected FacesMessageIterator() {
-			Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(new SummaryMessageCriteria());
-			Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(new DetailMessageCriteria());
-			Message[] userMessages = context.getMessageContext().getMessagesByCriteria(new UserMessageCriteria());
-
-			List translatedMessages = new ArrayList();
-			for (int i = 0; i < summaryMessages.length; i++) {
-				translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
-			}
-			for (int z = 0; z < userMessages.length; z++) {
-				translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
-			}
-
-			this.messages = translatedMessages.toArray();
+			this.messages = getFacesMessages().toArray(new FacesMessage[] {});
 		}
 
 		protected FacesMessageIterator(String clientId) {
-			Message[] summaryMessages = context.getMessageContext().getMessagesBySource(clientId + SUMMARY_MESSAGE_KEY);
-			Message[] detailMessages = context.getMessageContext().getMessagesBySource(clientId + DETAIL_MESSAGE_KEY);
-			Message[] userMessages = context.getMessageContext().getMessagesBySource(clientId);
-
-			List translatedMessages = new ArrayList();
-			for (int i = 0; i < summaryMessages.length; i++) {
-				translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
-			}
-			for (int z = 0; z < userMessages.length; z++) {
-				translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
-			}
-
-			this.messages = translatedMessages.toArray();
+			this.messages = getFacesMessages(clientId).toArray(new FacesMessage[] {});
 		}
 
 		public boolean hasNext() {
 			return messages.length > currentIndex + 1;
 		}
 
-		public Object next() {
+		public FacesMessage next() {
 			currentIndex++;
 			return messages[currentIndex];
 		}
@@ -190,7 +209,7 @@ public class FlowFacesContextMessageDelegate {
 
 	}
 
-	private class ClientIdIterator implements Iterator {
+	private class ClientIdIterator implements Iterator<String> {
 
 		private Message[] messages;
 
@@ -204,7 +223,7 @@ public class FlowFacesContextMessageDelegate {
 			return messages.length > currentIndex + 1;
 		}
 
-		public Object next() {
+		public String next() {
 			Message next = messages[++currentIndex];
 			if (next.getSource() == null) {
 				return null;
@@ -221,34 +240,46 @@ public class FlowFacesContextMessageDelegate {
 
 	}
 
-	private class SummaryMessageCriteria implements MessageCriteria {
+	private class MatchBySuffixCriteria implements MessageCriteria {
 
-		public boolean test(Message message) {
-			if (message.getSource() == null) {
-				return false;
-			}
-			return message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY);
+		private String clientId;
+		private String suffix;
+
+		public MatchBySuffixCriteria(String clientId, String suffix) {
+			this.clientId = clientId;
+			this.suffix = suffix;
 		}
-	}
-
-	private class DetailMessageCriteria implements MessageCriteria {
 
 		public boolean test(Message message) {
-			if (message.getSource() == null) {
-				return false;
+			boolean result = false;
+			if (message.getSource() != null) {
+				if (clientId != null) {
+					result = message.getSource().toString().equals(clientId + suffix);
+				} else {
+					result = message.getSource().toString().endsWith(suffix);
+				}
 			}
-			return message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
+			return result;
 		}
 	}
 
 	private class UserMessageCriteria implements MessageCriteria {
 
+		private String clientId;
+
+		public UserMessageCriteria(String clientId) {
+			this.clientId = clientId;
+		}
+
 		public boolean test(Message message) {
-			if (message.getSource() == null) {
-				return true;
+			boolean result = false;
+			if (clientId != null) {
+				result = new MatchBySuffixCriteria(clientId, "").test(message);
+			} else {
+				result = (!new MatchBySuffixCriteria(clientId, SUMMARY_MESSAGE_KEY).test(message))
+						&& (!new MatchBySuffixCriteria(clientId, DETAIL_MESSAGE_KEY).test(message));
 			}
-			return !message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)
-					&& !message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
+			return result;
 		}
 	}
 
@@ -256,7 +287,7 @@ public class FlowFacesContextMessageDelegate {
 
 		String nullSummaryId = null + SUMMARY_MESSAGE_KEY;
 
-		private Set identifiedMessageSources = new HashSet();
+		private Set<String> identifiedMessageSources = new HashSet<String>();
 
 		// From getClientIdsWithMessages docs: If any messages have been queued that were not associated with
 		// any specific client identifier, a null value will be included in the iterated values.
@@ -267,7 +298,7 @@ public class FlowFacesContextMessageDelegate {
 					|| message.getSource().equals(nullSummaryId)) {
 				return identifiedMessageSources.add(null);
 			}
-			return identifiedMessageSources.add(message.getSource());
+			return identifiedMessageSources.add((String) message.getSource());
 		}
 	}
 

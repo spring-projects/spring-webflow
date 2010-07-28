@@ -17,7 +17,7 @@ input[type=submit] {
 	color: #fff;
 	background: #fff url(../images/btn.bg.gif) 0 0 repeat-x;
 	border-style: none;
-	margin:0.4em 0;
+	margin:0.4em 0.4em 0.4em 0;
 	height: 1.8em;
 }
 

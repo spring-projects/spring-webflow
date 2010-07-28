@@ -9,7 +9,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.myfaces.test.mock.MockExternalContext;
+import org.apache.myfaces.test.mock.MockExternalContext20;
 
 public class MockBaseFacesContextFactory extends FacesContextFactory {
 
@@ -21,7 +21,7 @@ public class MockBaseFacesContextFactory extends FacesContextFactory {
 			return FacesContext.getCurrentInstance();
 		} else {
 
-			ExternalContext ext = new MockExternalContext((ServletContext) context, (HttpServletRequest) request,
+			ExternalContext ext = new MockExternalContext20((ServletContext) context, (HttpServletRequest) request,
 					(HttpServletResponse) response);
 
 			return new MockBaseFacesContext(ext, lifecycle);

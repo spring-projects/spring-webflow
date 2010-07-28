@@ -25,10 +25,12 @@ import org.springframework.util.StringUtils;
 /**
  * Ajax handler for Spring Javascript (Spring.js).
  * 
+ * @see AbstractAjaxHandler
+ * 
  * @author Jeremy Grelle
  * @author Keith Donald
  */
-public class SpringJavascriptAjaxHandler implements AjaxHandler {
+public class SpringJavascriptAjaxHandler extends AbstractAjaxHandler {
 
 	/**
 	 * The response header to be set on an Ajax redirect
@@ -50,7 +52,21 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 	 */
 	public static final String AJAX_SOURCE_PARAM = "ajaxSource";
 
-	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response) {
+	/**
+	 * Create a SpringJavascriptAjaxHandler that is not part of a chain of AjaxHandler's.
+	 */
+	public SpringJavascriptAjaxHandler() {
+		this(null);
+	}
+
+	/**
+	 * Create a SpringJavascriptAjaxHandler as part of a chain of AjaxHandler's.
+	 */
+	public SpringJavascriptAjaxHandler(AbstractAjaxHandler delegate) {
+		super(delegate);
+	}
+
+	protected boolean isAjaxRequestInternal(HttpServletRequest request, HttpServletResponse response) {
 		String acceptHeader = request.getHeader("Accept");
 		String ajaxParam = request.getParameter(AJAX_SOURCE_PARAM);
 		if (AJAX_ACCEPT_CONTENT_TYPE.equals(acceptHeader) || StringUtils.hasText(ajaxParam)) {
@@ -60,7 +76,7 @@ public class SpringJavascriptAjaxHandler implements AjaxHandler {
 		}
 	}
 
-	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+	protected void sendAjaxRedirectInternal(String targetUrl, HttpServletRequest request, HttpServletResponse response,
 			boolean popup) throws IOException {
 		if (popup) {
 			response.setHeader(POPUP_VIEW_HEADER, "true");

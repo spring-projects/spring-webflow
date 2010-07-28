@@ -36,6 +36,9 @@
 	<!-- Dispatches requests mapped to flows to FlowHandler implementations -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor" />
+		<property name="ajaxHandler">
+			<bean class="org.springframework.faces.webflow.JsfAjaxHandler"/>
+		</property>
 	</bean>
 
 	<!-- Dispatches requests mapped to org.springframework.web.HttpRequestHandler implementations -->	

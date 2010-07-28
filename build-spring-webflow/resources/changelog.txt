@@ -4,9 +4,11 @@ http://www.springframework.org/webflow
 
 Changes in version 2.2.0.RELEASE ()
 -----------------------------------
+* Add support for handling JSF 2 resource requests (SWF-1366)
+* Add support for JSF 2 Ajax requests (SWF-1367)
 
 
-Changes in version 2.1.0.RELEASE (July 19, 2010)
+Changes in version 2.1.1.RELEASE (July 19, 2010)
 ------------------------------------------------
 * Extract JSF 2 methods from FlowApplication into Jsf2FlowApplication (SWF-1261).
 * Fix handling of cascaded attributes in AjaxTilesView (SWF-1053).

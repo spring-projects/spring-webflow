@@ -41,6 +41,10 @@ public class FlowSerializedView implements Serializable {
 		return this.componentState;
 	}
 
+	public Object[] asTreeStructAndCompStateArray() {
+		return new Object[] { this.treeStructure, this.componentState };
+	}
+
 	public String toString() {
 		return new ToStringCreator(this).append("viewId", viewId).toString();
 	}

@@ -112,7 +112,7 @@ public class FlowViewStateManager extends StateManager {
 			delegate.writeState(context, state); // MyFaces
 		} else if (state instanceof FlowSerializedView) { // Mojarra
 			FlowSerializedView view = (FlowSerializedView) state;
-			delegate.writeState(context, new Object[] { view.getTreeStructure(), view.getComponentState() });
+			delegate.writeState(context, view.asTreeStructAndCompStateArray());
 		} else {
 			super.writeState(context, state);
 		}
@@ -171,6 +171,24 @@ public class FlowViewStateManager extends StateManager {
 			restoreComponentState(context, viewRoot, renderKitId);
 		}
 		return viewRoot;
+	}
+
+	@Override
+	public String getViewState(FacesContext context) {
+		/*
+		 * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. It is
+		 * overridden to convert FlowSerializedView to an array containing tree structure and component state. The
+		 * ResponseStateManager.getViewState() calls the ServerSideStateHelper, which expects the array.
+		 */
+		Object state = saveView(context);
+		if (state != null) {
+			if (state instanceof FlowSerializedView) {
+				FlowSerializedView view = (FlowSerializedView) state;
+				state = view.asTreeStructAndCompStateArray();
+			}
+			return context.getRenderKit().getResponseStateManager().getViewState(context, state);
+		}
+		return null;
 	}
 
 }

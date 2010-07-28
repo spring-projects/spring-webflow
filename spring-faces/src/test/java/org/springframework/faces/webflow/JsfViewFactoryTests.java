@@ -22,7 +22,6 @@ import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
-import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -218,7 +217,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
-		assertTrue("An AjaxViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof AjaxViewRoot);
+		assertTrue("An ViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof UIViewRoot);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 	}

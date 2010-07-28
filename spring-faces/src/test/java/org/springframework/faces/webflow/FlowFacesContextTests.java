@@ -153,12 +153,8 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
 		EasyMock.replay(new Object[] { requestContext });
 
-		int iterationCount = 0;
 		Iterator i = facesContext.getMessages("unknown");
-		while (i.hasNext()) {
-			iterationCount++;
-		}
-		assertEquals(0, iterationCount);
+		assertFalse(i.hasNext());
 	}
 
 	public final void testGetClientIdsWithMessages() {

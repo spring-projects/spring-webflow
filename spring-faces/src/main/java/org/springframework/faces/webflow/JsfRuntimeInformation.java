@@ -59,6 +59,10 @@ public class JsfRuntimeInformation {
 		return jsfVersion >= JSF_12;
 	}
 
+	public static boolean isLessThanJsf20() {
+		return jsfVersion < JSF_20;
+	}
+
 	protected static boolean isMyFacesPresent() {
 		return myFacesPresent;
 	}

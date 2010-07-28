@@ -30,8 +30,10 @@
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate" rev="3.2.6.ga" conf="compile->runtime"/>
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate.annotations" rev="3.3.0.ga" conf="compile->runtime"/>
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate.ejb" rev="3.3.1.ga" conf="compile->runtime"/>
+		<dependency org="org.hibernate" name="com.springsource.org.hibernate.validator" rev="4.1.0.GA" />
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="compile->runtime"/>
 		<dependency org="org.joda" name="com.springsource.org.joda.time" rev="1.6.0" conf="compile->runtime"/>
+		<dependency org="org.slf4j" name="com.springsource.slf4j.log4j" rev="1.5.6" />
 		<dependency org="org.springframework" name="org.springframework.aop" rev="3.0.3.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.3.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.3.RELEASE" conf="compile->runtime"/>
