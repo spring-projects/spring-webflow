@@ -32,6 +32,8 @@ import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextFactory;
 import javax.faces.event.PhaseId;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -40,6 +42,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Rossen Stoyanchev
  */
 public class Jsf2FlowFacesContext extends FlowFacesContext {
+
+	private ExternalContext externalContext;
 
 	/*
 	 * This partialViewContext duplicates the one FacesContextImpl because the constructor of FacesContextImpl calls
@@ -52,13 +56,15 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 	public Jsf2FlowFacesContext(RequestContext context, FacesContext delegate) {
 		super(context, delegate);
 
+		this.externalContext = new Jsf2FlowExternalContext(getDelegate().getExternalContext());
+
 		PartialViewContextFactory f = (PartialViewContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
-		partialViewContext = f.getPartialViewContext(this);
+		this.partialViewContext = f.getPartialViewContext(this);
 	}
 
 	public ExternalContext getExternalContext() {
-		return new Jsf2FlowExternalContext(getDelegate().getExternalContext());
+		return externalContext;
 	}
 
 	// --------------- JSF 2.0 Pass-through delegate methods ------------------//
@@ -128,8 +134,15 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 	protected class Jsf2FlowExternalContext extends FlowExternalContext {
 
+		Log logger = LogFactory.getLog(FlowExternalContext.class);
+
 		public Jsf2FlowExternalContext(ExternalContext delegate) {
 			super(delegate);
+		}
+
+		public void responseSendError(int statusCode, String message) throws IOException {
+			logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
+			delegate.responseSendError(statusCode, message);
 		}
 
 		// --------------- JSF 2.0 Pass-through delegate methods ------------------//
@@ -208,10 +221,6 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 		public void responseReset() {
 			delegate.responseReset();
-		}
-
-		public void responseSendError(int statusCode, String message) throws IOException {
-			delegate.responseSendError(statusCode, message);
 		}
 
 		public void setResponseStatus(int statusCode) {

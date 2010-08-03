@@ -16,6 +16,7 @@
 package org.springframework.faces.webflow;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isLessThanJsf20;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -79,7 +80,7 @@ public class JsfView implements View {
 	 * Performs the standard duties of the JSF RENDER_RESPONSE phase.
 	 */
 	public void render() throws IOException {
-		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		if (facesContext.getResponseComplete()) {
 			return;
 		}
@@ -90,7 +91,6 @@ public class JsfView implements View {
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
-			facesContext.release();
 		}
 	}
 
@@ -107,15 +107,11 @@ public class JsfView implements View {
 	 * INVOKE_APPLICATION.
 	 */
 	public void processUserEvent() {
-		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		facesContext.setViewRoot(viewRoot);
-		try {
-			// Must respect these flags in case user set them during RESTORE_VIEW phase
-			if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
-				facesLifecycle.execute(facesContext);
-			}
-		} finally {
-			facesContext.release();
+		// Must respect these flags in case user set them during RESTORE_VIEW phase
+		if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
+			facesLifecycle.execute(facesContext);
 		}
 	}
 
@@ -124,22 +120,26 @@ public class JsfView implements View {
 	 * snapshot
 	 */
 	public void saveState() {
-		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, facesLifecycle);
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		if (viewRoot instanceof AjaxViewRoot) {
 			facesContext.setViewRoot(((AjaxViewRoot) viewRoot).getOriginalViewRoot());
 		} else {
 			facesContext.setViewRoot(viewRoot);
 		}
-		try {
-			facesContext.getApplication().getStateManager().saveSerializedView(facesContext);
-		} finally {
-			facesContext.release();
-		}
+		facesContext.getApplication().getStateManager().saveSerializedView(facesContext);
 	}
 
 	public Serializable getUserEventState() {
-		// Set the temporary UIViewRoot state so that it will be available across the redirect
-		return new ViewRootHolder(getViewRoot());
+		if (isLessThanJsf20()) {
+			// Set the temporary UIViewRoot state so that it will be available across the redirect
+			return new ViewRootHolder(getViewRoot());
+		} else {
+			// In JSF 2 the partial state saving algorithm attaches a system event listener to the UIViewRoot with
+			// a reference to the FacesContext instance. The FacesContext instance is released at end of each request.
+			// Hence, keeping the UIViewRoot across the redirect is not feasible.
+			logger.debug("User event state requested but not saved.");
+			return null;
+		}
 	}
 
 	public boolean hasFlowEvent() {

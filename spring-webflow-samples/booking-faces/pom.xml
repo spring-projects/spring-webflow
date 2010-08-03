@@ -154,12 +154,6 @@
 		</dependency>
 		<!-- build time only dependencies -->
 		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>com.springsource.javax.el</artifactId>
-			<version>1.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>com.springsource.javax.servlet</artifactId>
 			<version>2.4.0</version>

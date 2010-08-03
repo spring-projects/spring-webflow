@@ -8,8 +8,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-impl/2.0.2/jsf-impl-2.0.2.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-impl/2.0.2/jsf-impl-2.0.2-sources.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.faces/jsf-api/2.0/jsf-api-2.0.jar" sourcepath="/IVY_CACHE/javax.faces/jsf-api/2.0/jsf-api-2.0-sources.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-impl/2.0.3/jsf-impl-2.0.3.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-impl/2.0.3/jsf-impl-2.0.3-sources.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-api/2.0.3/jsf-api-2.0.3.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-api/2.0.3/jsf-api-2.0.3-sources.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-1.0.0.jar" sourcepath="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-sources-1.0.0.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/com.springsource.javax.servlet/2.4.0/com.springsource.javax.servlet-2.4.0.jar" sourcepath="/IVY_CACHE/javax.servlet/com.springsource.javax.servlet/2.4.0/com.springsource.javax.servlet-sources-2.4.0.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-1.1.1.jar" sourcepath="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-sources-1.1.1.jar"/>

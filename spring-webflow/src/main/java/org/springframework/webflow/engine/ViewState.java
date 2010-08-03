@@ -62,6 +62,12 @@ public class ViewState extends TransitionableState {
 	private Boolean redirect;
 
 	/**
+	 * Whether or not a redirect should occur when the state is not exited (e.g. invalid form submission, a transition
+	 * without a "to" attribute).
+	 */
+	private Boolean redirectInSameState = Boolean.FALSE;
+
+	/**
 	 * Whether or not the view should render as a popup.
 	 */
 	private boolean popup;
@@ -122,7 +128,7 @@ public class ViewState extends TransitionableState {
 	 * Returns whether this view state should request a flow execution redirect when entered.
 	 */
 	public boolean getRedirect() {
-		return redirect.booleanValue();
+		return (redirect != null) ? redirect.booleanValue() : false;
 	}
 
 	/**
@@ -131,6 +137,22 @@ public class ViewState extends TransitionableState {
 	 */
 	public void setRedirect(Boolean redirect) {
 		this.redirect = redirect;
+	}
+
+	/**
+	 * Returns whether this view state should request a flow execution redirect when the state hasn't been exited.
+	 */
+	public boolean getRedirectInSameState() {
+		return (redirectInSameState != null) ? redirectInSameState.booleanValue() : false;
+	}
+
+	/**
+	 * Sets whether this view state should requests a flow execution redirect when entered when processing is done but
+	 * the state hasn't been exited (e.g. invalid form submissions).
+	 * @param redirectInSameState the redirect flag
+	 */
+	public void setRedirectInSameState(Boolean redirectInSameState) {
+		this.redirectInSameState = redirectInSameState;
 	}
 
 	/**
@@ -206,7 +228,7 @@ public class ViewState extends TransitionableState {
 					if (externalContext.isAjaxRequest()) {
 						render(context, view);
 					} else {
-						if (shouldRedirect(context)) {
+						if (shouldRedirectInSameState(context)) {
 							context.getFlashScope().put(View.USER_EVENT_STATE_ATTRIBUTE, view.getUserEventState());
 							externalContext.requestFlowExecutionRedirect();
 						} else {
@@ -267,6 +289,14 @@ public class ViewState extends TransitionableState {
 			return redirect.booleanValue();
 		} else {
 			return context.getRedirectOnPause();
+		}
+	}
+
+	private boolean shouldRedirectInSameState(RequestControlContext context) {
+		if (redirectInSameState != null) {
+			return redirectInSameState.booleanValue();
+		} else {
+			return shouldRedirect(context);
 		}
 	}
 

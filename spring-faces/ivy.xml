@@ -42,8 +42,8 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
 		<!-- JSF 2.0 Mojarra dependencies -->
-		<dependency org="javax.faces" name="jsf-api" rev="2.0" conf="provided, mojarra20->runtime(*)" />
-		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.2" conf="provided, mojarra20->runtime(*)" />
+		<dependency org="com.sun.faces" name="jsf-api" rev="2.0.3" conf="provided, mojarra20->runtime(*)" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.3" conf="provided, mojarra20->runtime(*)" />
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="test, mojarra20->runtime"/>
 
 		<!-- JSF 2.0 MyFaces dependencies -->

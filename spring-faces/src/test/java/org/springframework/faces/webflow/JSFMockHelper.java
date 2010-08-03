@@ -1,5 +1,6 @@
 package org.springframework.faces.webflow;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -19,8 +20,10 @@ import org.apache.myfaces.test.mock.MockHttpServletRequest;
 import org.apache.myfaces.test.mock.MockHttpServletResponse;
 import org.apache.myfaces.test.mock.MockHttpSession;
 import org.apache.myfaces.test.mock.MockPartialViewContextFactory;
+import org.apache.myfaces.test.mock.MockPrintWriter;
 import org.apache.myfaces.test.mock.MockRenderKit;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.apache.myfaces.test.mock.MockServletConfig;
 import org.apache.myfaces.test.mock.MockServletContext;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
@@ -43,6 +46,10 @@ public class JSFMockHelper {
 
 	public MockServletConfig config() {
 		return mock.config();
+	}
+
+	public String contentAsString() throws IOException {
+		return mock.contentAsString();
 	}
 
 	public MockExternalContext externalContext() {
@@ -132,6 +139,8 @@ public class JSFMockHelper {
 			facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 			facesContext = facesContextFactory.getFacesContext(servletContext, request, response, lifecycle);
 			externalContext = (MockExternalContext) facesContext.getExternalContext();
+			facesContext.setResponseWriter(new MockResponseWriter(response.getWriter()));
+
 			UIViewRoot root = new UIViewRoot();
 			root.setViewId("/viewId");
 			root.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
@@ -172,6 +181,11 @@ public class JSFMockHelper {
 
 		public MockServletConfig config() {
 			return config;
+		}
+
+		public String contentAsString() throws IOException {
+			MockPrintWriter writer = (MockPrintWriter) response.getWriter();
+			return new String(writer.content());
 		}
 
 		public MockExternalContext externalContext() {

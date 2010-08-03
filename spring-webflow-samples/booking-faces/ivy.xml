@@ -21,7 +21,6 @@
 
 	<dependencies>
 		<!-- core dependencies -->
-		<dependency	org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime"/>
 		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="compile->runtime"/>
 		<dependency	org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime"/>
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="compile->runtime"/>
@@ -49,21 +48,8 @@
 		<dependency org="org.springframework.security" name="org.springframework.security.web" rev="3.0.2.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
-
-		<!-- Mojarra 2.0 (use in conjunction with JSF 2 version of faces-config.xml) -->
 		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->mojarra20"/>
-		
-		<!-- 
-			Switching to Mojarra 1.2:
-				1. Uncomment the below dependencies and comment out the mojarra20 dependency above.
-				2. Update the contents of faces-config.xml with the one from faces-config-12.xml.
-				3. Run 'ant clean jar' from the command line.
-				4. Refresh the project in Eclipse.
-				
-			<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->mojarra12"/>
-			<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="compile->runtime" />
-		-->
-		 
+
 		<!-- test-time only dependencies -->
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="test->runtime"/>

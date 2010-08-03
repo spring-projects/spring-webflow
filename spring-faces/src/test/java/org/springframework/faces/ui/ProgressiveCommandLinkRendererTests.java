@@ -1,13 +1,10 @@
 package org.springframework.faces.ui;
 
-import java.io.StringWriter;
-
 import javax.faces.component.UIForm;
 import javax.faces.component.UIParameter;
 
 import junit.framework.TestCase;
 
-import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.springframework.faces.webflow.JSFMockHelper;
 
 public class ProgressiveCommandLinkRendererTests extends TestCase {
@@ -16,15 +13,11 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 
 	ProgressiveCommandLinkRenderer renderer = new ProgressiveCommandLinkRenderer();
 
-	StringWriter output = new StringWriter();
-
 	public void setUp() throws Exception {
 		jsf.setUp();
-		jsf.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
 	}
 
 	public void tearDown() throws Exception {
-		System.out.println(output);
 		jsf.tearDown();
 	}
 
@@ -47,7 +40,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 
 		jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, output.toString());
+		assertEquals(expected, jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxEnabled_WithParams() throws Exception {
@@ -78,7 +71,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 
 		jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, output.toString());
+		assertEquals(expected, jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxDisabled_NoParams() throws Exception {
@@ -100,7 +93,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 
 		jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, output.toString());
+		assertEquals(expected, jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxDisabled_WithParams() throws Exception {
@@ -132,6 +125,6 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 
 		jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, output.toString());
+		assertEquals(expected, jsf.contentAsString());
 	}
 }

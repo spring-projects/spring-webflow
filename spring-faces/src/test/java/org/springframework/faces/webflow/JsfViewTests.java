@@ -115,8 +115,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
 
 		view.render();
-
-		assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 	}
 
 	public final void testRenderException() throws IOException {
@@ -131,7 +129,6 @@ public class JsfViewTests extends TestCase {
 		try {
 			view.render();
 		} catch (Exception ex) {
-			assertNull("The FacesContext was not released", FacesContext.getCurrentInstance());
 		}
 	}
 

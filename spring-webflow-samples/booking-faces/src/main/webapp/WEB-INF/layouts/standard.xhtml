@@ -4,13 +4,15 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
 	  xmlns:c="http://java.sun.com/jsp/jstl/core"
-	  xmlns:sf="http://www.springframework.org/tags/faces"
 	  contentType="text/html" encoding="UTF-8">
 <html>
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Spring Faces: Hotel Booking Sample Application</title>
-	<sf:includeStyles/>
+	<!-- 
+		Note on serving resources: 
+		In Spring 3.0.4 the below resources (css and images) will be served by Spring MVC's ResourceHttpRequestHandler.
+	-->
 	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/screen.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/print.css" type="text/css" media="print" />
 	<!--[if lt IE 8]>
@@ -19,7 +21,7 @@
 	<link rel="stylesheet" href="${request.contextPath}/styles/booking.css" type="text/css" media="screen" />
 	<ui:insert name="headIncludes"/>
 </h:head>
-<body class="tundra">
+<body>
 <div id="page" class="container">
 	<div id="header">
 		<div id="topbar">
@@ -34,7 +36,7 @@
 		</div>
 		<div id="logo">
 			<p>
-				<a href="#{request.contextPath}"><img src="${request.contextPath}/resources/images/header.jpg" alt="Spring Travel"/></a>
+				<a href="#{request.contextPath}"><img src="${request.contextPath}/images/header.jpg" alt="Spring Travel"/></a>
 			</p>
 		</div>
 	</div>
@@ -42,12 +44,12 @@
 		<div id="local" class="span-6">
 			<p>
 				<a href="http://www.thespringexperience.com">
-					<img src="${request.contextPath}/resources/images/diplomat.jpg" alt="generic hotel" />
+					<img src="${request.contextPath}/images/diplomat.jpg" alt="generic hotel" />
 				</a>
 			</p>
 			<p>
 				<a href="http://www.thespringexperience.com">
-					<img src="${request.contextPath}/resources/images/springone2gx.jpeg" alt="SpringOne 2GX" />
+					<img src="${request.contextPath}/images/springone2gx.jpeg" alt="SpringOne 2GX" />
 				</a>
 			</p>
 		</div>
@@ -58,7 +60,7 @@
 	<hr />
 	<div id="footer">
 		<a href="http://www.springframework.org">
-			<img src="${request.contextPath}/resources/images/powered-by-spring.png" alt="Powered by Spring" />
+			<img src="${request.contextPath}/images/powered-by-spring.png" alt="Powered by Spring" />
 		</a>
 	</div>
 </div>

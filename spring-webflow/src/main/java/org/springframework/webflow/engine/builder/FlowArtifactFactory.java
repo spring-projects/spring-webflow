@@ -36,8 +36,8 @@ import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.ViewFactory;
 
 /**
- * A factory for core web flow elements such as {@link Flow flows}, {@link State states}, and
- * {@link Transition transitions}.
+ * A factory for core web flow elements such as {@link Flow flows}, {@link State states}, and {@link Transition
+ * transitions}.
  * <p>
  * This factory encapsulates the construction of each Flow implementation as well as each core artifact type. Subclasses
  * may customize how the core elements are created.
@@ -86,6 +86,7 @@ public class FlowArtifactFactory {
 		ViewState viewState = new ViewState(flow, id, viewFactory);
 		viewState.addVariables(variables);
 		viewState.setRedirect(redirect);
+		viewState.setRedirectInSameState(Boolean.FALSE);
 		viewState.setPopup(popup);
 		viewState.getRenderActionList().addAll(renderActions);
 		configureCommonProperties(viewState, entryActions, transitions, exceptionHandlers, exitActions, attributes);

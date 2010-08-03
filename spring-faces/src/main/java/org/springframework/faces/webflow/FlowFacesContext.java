@@ -58,6 +58,8 @@ public class FlowFacesContext extends FacesContext {
 
 	private FlowFacesContextMessageDelegate messageDelegate;
 
+	private ExternalContext externalContext;
+
 	/**
 	 * The base FacesContext delegate
 	 */
@@ -77,6 +79,7 @@ public class FlowFacesContext extends FacesContext {
 		this.context = context;
 		this.delegate = delegate;
 		this.messageDelegate = new FlowFacesContextMessageDelegate(context);
+		this.externalContext = new FlowExternalContext(delegate.getExternalContext());
 		setCurrentInstance(this);
 	}
 
@@ -160,7 +163,7 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public ExternalContext getExternalContext() {
-		return new FlowExternalContext(delegate.getExternalContext());
+		return externalContext;
 	}
 
 	public RenderKit getRenderKit() {

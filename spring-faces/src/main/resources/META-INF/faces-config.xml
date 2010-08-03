@@ -88,6 +88,7 @@
 
 	<render-kit>
 		<render-kit-id>HTML_BASIC</render-kit-id>
+		<render-kit-class>org.springframework.faces.webflow.FlowRenderKit</render-kit-class>
 		
 		<renderer>
 			<component-family>javax.faces.Command</component-family>

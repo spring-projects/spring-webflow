@@ -17,7 +17,6 @@ package org.springframework.faces.webflow;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isLessThanJsf20;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Iterator;
@@ -72,65 +71,61 @@ public class JsfViewFactory implements ViewFactory {
 	 * be rendered in the case of an executing transition.
 	 */
 	public View getView(RequestContext context) {
-		FacesContext facesContext = FlowFacesContext.newInstance(context, lifecycle);
-		try {
-			if (isAtLeastJsf20()) {
-				facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		if (isAtLeastJsf20()) {
+			facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
+		}
+		if (!facesContext.getRenderResponse()) {
+			// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
+			// this won't be true when this method is called after a transition from one view-state to another
+			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+		}
+		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
+			viewHandler.initView(facesContext);
+		}
+		JsfView view;
+		String viewName = (String) viewIdExpression.getValue(context);
+		if (viewAlreadySet(facesContext, viewName)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Existing view root found with id '" + facesContext.getViewRoot().getId() + "'");
 			}
-			if (!facesContext.getRenderResponse()) {
-				// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
-				// this won't be true when this method is called after a transition from one view-state to another
-				JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
-			}
-			ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-			if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
-				viewHandler.initView(facesContext);
-			}
-			JsfView view;
-			String viewName = (String) viewIdExpression.getValue(context);
-			if (viewAlreadySet(facesContext, viewName)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Existing view root found with id '" + facesContext.getViewRoot().getId() + "'");
-				}
-				UIViewRoot viewRoot = facesContext.getViewRoot();
-				viewRoot.setLocale(context.getExternalContext().getLocale());
-				processTree(facesContext, viewRoot);
-				view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
-			} else {
-				if (context.inViewState()) {
-					UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
-					if (viewRoot != null) {
-						if (logger.isDebugEnabled()) {
-							logger.debug("UIViewRoot restored for '" + viewName + "'");
-						}
-						facesContext.setViewRoot(viewRoot);
-						processTree(facesContext, viewRoot);
-						view = createJsfView(viewRoot, lifecycle, context);
-					} else {
-						if (logger.isDebugEnabled()) {
-							logger.debug("Creating UIViewRoot from '" + viewName + "'");
-						}
-						viewRoot = viewHandler.createView(facesContext, viewName);
-						facesContext.setViewRoot(viewRoot);
-						view = createJsfView(viewRoot, lifecycle, context);
+			UIViewRoot viewRoot = facesContext.getViewRoot();
+			viewRoot.setLocale(context.getExternalContext().getLocale());
+			processTree(facesContext, viewRoot);
+			view = createJsfView(facesContext.getViewRoot(), lifecycle, context);
+		} else {
+			if (context.inViewState()) {
+				UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+				if (viewRoot != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("UIViewRoot restored for '" + viewName + "'");
 					}
+					facesContext.setViewRoot(viewRoot);
+					processTree(facesContext, viewRoot);
+					view = createJsfView(viewRoot, lifecycle, context);
 				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Creating transient UIViewRoot from '" + viewName + "'");
+						logger.debug("Creating UIViewRoot from '" + viewName + "'");
 					}
-					UIViewRoot viewRoot = viewHandler.createView(facesContext, viewName);
-					viewRoot.setTransient(true);
+					viewRoot = viewHandler.createView(facesContext, viewName);
 					facesContext.setViewRoot(viewRoot);
 					view = createJsfView(viewRoot, lifecycle, context);
 				}
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Creating transient UIViewRoot from '" + viewName + "'");
+				}
+				UIViewRoot viewRoot = viewHandler.createView(facesContext, viewName);
+				viewRoot.setTransient(true);
+				facesContext.setViewRoot(viewRoot);
+				view = createJsfView(viewRoot, lifecycle, context);
 			}
-			if (!facesContext.getRenderResponse()) {
-				JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
-			}
-			return view;
-		} finally {
-			facesContext.release();
 		}
+		if (!facesContext.getRenderResponse()) {
+			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+		}
+		return view;
 	}
 
 	private boolean viewAlreadySet(FacesContext facesContext, String viewName) {
@@ -143,7 +138,7 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		if (isLessThanJsf20() && isSpringJavascriptAjaxRequest(context.getExternalContext())) {
+		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
 			root = new AjaxViewRoot(root);
 		}
 		return new JsfView(root, lifecycle, context);

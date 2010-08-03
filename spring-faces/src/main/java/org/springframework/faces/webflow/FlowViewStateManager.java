@@ -15,6 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
+
 import java.io.IOException;
 
 import javax.faces.application.StateManager;
@@ -35,7 +37,7 @@ public class FlowViewStateManager extends StateManager {
 
 	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);
 
-	private static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
+	protected static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
 
 	private StateManager delegate;
 
@@ -136,49 +138,78 @@ public class FlowViewStateManager extends StateManager {
 		if (!JsfUtils.isFlowRequest()) {
 			return delegate.saveSerializedView(context);
 		}
-		FlowSerializedView view = (FlowSerializedView) saveView(context);
-		return new javax.faces.application.StateManager.SerializedView(view.getTreeStructure(), view
-				.getComponentState());
+		Object state = saveView(context);
+		if (state instanceof FlowSerializedView) {
+			FlowSerializedView serializedState = (FlowSerializedView) state;
+			return new javax.faces.application.StateManager.SerializedView(serializedState.getTreeStructure(),
+					serializedState.getComponentState());
+		} else {
+			Object[] serializedState = (Object[]) state;
+			return new javax.faces.application.StateManager.SerializedView(serializedState[0], serializedState[1]);
+		}
 	}
 
 	/**
-	 * JSF 1.2 version of state saving
+	 * <p>
+	 * JSF 1.2 (or higher) version of state saving.
+	 * </p>
+	 * 
+	 * <p>
+	 * In JSF 2 where a partial state saving algorithm is used, this method merely delegates to the next
+	 * ViewStateManager. Thus partial state saving is handled by the JSF 2 runtime. However, a
+	 * {@link FlowViewResponseStateManager} plugged in via {@link FlowRenderKit} will ensure the state is saved in a Web
+	 * Flow view-scoped variable.
+	 * </p>
 	 */
 	public Object saveView(FacesContext context) {
 		if (context.getViewRoot().isTransient()) {
 			return null;
 		}
-		if (!JsfUtils.isFlowRequest()) {
+		if ((!JsfUtils.isFlowRequest()) || isAtLeastJsf20()) {
 			return delegate.saveView(context);
+		} else {
+			RequestContext requestContext = RequestContextHolder.getRequestContext();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
+			}
+			FlowSerializedView view = new FlowSerializedView(context.getViewRoot().getViewId(),
+					getTreeStructureToSave(context), getComponentStateToSave(context));
+			requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
+			return view;
 		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
-		}
-		FlowSerializedView view = new FlowSerializedView(context.getViewRoot().getViewId(),
-				getTreeStructureToSave(context), getComponentStateToSave(context));
-		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
-		return view;
 	}
 
+	/**
+	 * <p>
+	 * In JSF 2 where a partial state saving algorithm is used, this method merely delegates to the next
+	 * ViewStateManager. Thus partial state saving is handled by the JSF 2 runtime. However, a
+	 * {@link FlowViewResponseStateManager} plugged in via {@link FlowRenderKit} will ensure the state is saved in a Web
+	 * Flow view-scoped variable.
+	 * </p>
+	 */
 	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
-		if (!JsfUtils.isFlowRequest()) {
+		if ((!JsfUtils.isFlowRequest()) || isAtLeastJsf20()) {
 			return delegate.restoreView(context, viewId, renderKitId);
+		} else {
+			UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
+			if (viewRoot != null) {
+				context.setViewRoot(viewRoot);
+				restoreComponentState(context, viewRoot, renderKitId);
+			}
+			return viewRoot;
 		}
-		UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
-		if (viewRoot != null) {
-			context.setViewRoot(viewRoot);
-			restoreComponentState(context, viewRoot, renderKitId);
-		}
-		return viewRoot;
 	}
 
 	@Override
 	public String getViewState(FacesContext context) {
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.getViewState(context);
+		}
 		/*
-		 * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. It is
-		 * overridden to convert FlowSerializedView to an array containing tree structure and component state. The
-		 * ResponseStateManager.getViewState() calls the ServerSideStateHelper, which expects the array.
+		 * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. We
+		 * overridde it to convert FlowSerializedView state to an array before calling the
+		 * ResponseStateManager.getViewState(), which in turn calls the ServerSideStateHelper and expects state to be an
+		 * array.
 		 */
 		Object state = saveView(context);
 		if (state != null) {
