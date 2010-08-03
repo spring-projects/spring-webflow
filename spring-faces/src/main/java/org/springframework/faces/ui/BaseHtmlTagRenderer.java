@@ -59,7 +59,7 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	 */
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.startElement(getRenderedTagName(null), component);
+		writer.startElement(getRenderedTagName(component), component);
 		writeAttributes(context, component);
 	}
 
@@ -95,7 +95,7 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	 */
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
-		writer.endElement(getRenderedTagName(null));
+		writer.endElement(getRenderedTagName(component));
 	}
 
 	/**
