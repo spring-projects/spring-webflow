@@ -297,6 +297,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setRedirectInSameState(Boolean.TRUE);
 		Transition t = new Transition(on("submit"), null);
 		state.getTransitionSet().add(t);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -319,6 +320,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setRedirectInSameState(Boolean.TRUE);
 		Transition t = new Transition(on("submit"), null);
 		TestAction action = new TestAction();
 		t.setExecutionCriteria(new ActionTransitionCriteria(action));
