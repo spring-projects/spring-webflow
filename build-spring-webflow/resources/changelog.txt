@@ -2,11 +2,12 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.2.0.RELEASE ()
------------------------------------
+Changes in version 2.2.0.M1 (August 5, 2010)
+--------------------------------------------
 * Add support for handling JSF 2 resource requests (SWF-1366)
 * Add support for JSF 2 Ajax requests (SWF-1367)
-
+* Add support for partial state saving in JSF 2 (SWF-1365)
+* Fix issue with disabled attribute in Spring Faces commandLink/commandButton components (SWF-1313)
 
 Changes in version 2.1.1.RELEASE (July 19, 2010)
 ------------------------------------------------
