@@ -106,7 +106,9 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<h:inputText id="creditCard" value="#{booking.creditCard}"/>
+							<h:inputText id="creditCard" value="#{booking.creditCard}">
+								<f:validateRegex pattern="[0-9]{16}" />
+							</h:inputText>
 						</p>
 					</div>
 				</div>
@@ -116,7 +118,9 @@
 					</div>
 					<div class="span-7 last">
 						<p>
-							<h:inputText id="creditCardName" value="#{booking.creditCardName}"/>
+							<h:inputText id="creditCardName" value="#{booking.creditCardName}">
+								<f:validateLength minimum="3" /> 
+							</h:inputText>
 						</p>
 					</div>
 				</div>
