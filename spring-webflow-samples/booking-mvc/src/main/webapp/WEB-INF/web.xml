@@ -12,6 +12,11 @@
 		</param-value>
 	</context-param>
 
+	<!-- Loads the Spring web application context -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
 	<!-- Enables use of HTTP methods PUT and DELETE -->
 	<filter>
 		<filter-name>httpMethodFilter</filter-name>
@@ -20,7 +25,7 @@
 
 	<filter-mapping>
 		<filter-name>httpMethodFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
 	</filter-mapping>
 
 	<!-- Enables Spring Security -->
@@ -31,27 +36,9 @@
 
     <filter-mapping>
       <filter-name>springSecurityFilterChain</filter-name>
-      <url-pattern>/*</url-pattern>
+      <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
     </filter-mapping>
-	
-	<!-- Loads the Spring web application context -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
 
-  	<!-- Serves static resource content from .jar files such as spring-faces.jar -->
-	<servlet>
-		<servlet-name>Resources Servlet</servlet-name>
-		<servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
-		
-	<!-- Map all /resources requests to the Resource Servlet for handling -->
-	<servlet-mapping>
-		<servlet-name>Resources Servlet</servlet-name>
-		<url-pattern>/resources/*</url-pattern>
-	</servlet-mapping>
-	
 	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
 	<servlet>
 		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
@@ -66,11 +53,7 @@
 	<!-- Map all *.spring requests to the DispatcherServlet for handling -->
 	<servlet-mapping>
 		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-		<url-pattern>/spring/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
 
 </web-app>

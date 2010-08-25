@@ -8,6 +8,13 @@
 	<!-- Enables controllers mapped with @RequestMapping annotations, formatting annotations @NumberFormat @DateTimeFormat, and JSR 303 style validation -->
 	<mvc:annotation-driven/>
 
+	<mvc:resources location="classpath:/META-INF/dojo/" mapping="/resources/dojo/**" />
+	<mvc:resources location="classpath:/META-INF/dijit/" mapping="/resources/dijit/**" />
+	<mvc:resources location="classpath:/META-INF/spring/" mapping="/resources/spring/**" />
+	<mvc:resources location="/" mapping="/resources/**" />
+
+	<mvc:default-servlet-handler />
+    
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking". -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
 		<property name="order" value="-1"/>
@@ -15,7 +22,7 @@
 	</bean>
 
 	<!-- Map paths directly to view names without controller processing. Use the view-name attribute if necessary: by convention the view name equals the path without the leading slash -->
-	<mvc:view-controller path="/intro" />
+	<mvc:view-controller path="/" view-name="intro" />
 	<mvc:view-controller path="/login" />
 	<mvc:view-controller path="/logoutSuccess" />
 

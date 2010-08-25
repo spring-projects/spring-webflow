@@ -6,11 +6,7 @@
 	<!-- Maps JSF 2 resource requests to an instance of org.springframework.faces.webflow.FacesJsfResourceRequestHandler  -->
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order" value="0"/>
-		<property name="mappings">
-			<value>
-				/javax.faces.resource/**=jsfResourceHandler
-			</value>
-		</property>
+		<property name="mappings" value="/javax.faces.resource/**=jsfResourceHandler"/>
 	</bean>
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->

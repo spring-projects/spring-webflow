@@ -26,10 +26,10 @@
 					<c:if test="${pageContext.request.userPrincipal != null}">
 						Welcome, ${pageContext.request.userPrincipal.name} |
 					</c:if>
-					<a href="<c:url value="/spring/logout" />">Logout</a>
+					<a href="<c:url value="/logout" />">Logout</a>
 				</security:authorize>
 				<security:authorize ifAllGranted="ROLE_ANONYMOUS">
-					<a href="<c:url value="/spring/login" />">Login</a>
+					<a href="<c:url value="/login" />">Login</a>
 				</security:authorize>
 			</p>
 		</div>

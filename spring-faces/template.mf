@@ -8,7 +8,7 @@ Import-Template:
  org.springframework.binding.*;version="[2.2.0, 2.3.0)",
  org.springframework.js.*;version="[2.2.0, 2.3.0)",
  org.springframework.webflow.*;version="[2.2.0, 2.3.0)",
- org.springframework.*;version="[3.0.3.RELEASE, 3.1.0)",
+ org.springframework.*;version="[3.0.4.RELEASE, 3.1.0)",
  org.apache.commons.logging;version="[1.1.1, 2.0.0)",
  javax.el;version="[1.0.0, 2.0.0)",
  javax.servlet;version="[2.4.0, 3.0.0)",

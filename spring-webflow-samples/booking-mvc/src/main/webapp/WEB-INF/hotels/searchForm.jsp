@@ -3,7 +3,7 @@
 
 <h1>Search Hotels</h1>
 
-<c:url var="hotelsUrl" value="/spring/hotels"/>
+<c:url var="hotelsUrl" value="/hotels"/>
 <form:form modelAttribute="searchCriteria" action="${hotelsUrl}" method="get" cssClass="inline">
     <span class="errors span-18">
     	<form:errors path="*"/>

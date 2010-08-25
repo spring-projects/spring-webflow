@@ -59,6 +59,6 @@
 		</repository>
 	</repositories>	
 	<properties>
-		<spring.version>3.0.3.RELEASE</spring.version>
+		<spring.version>3.0.4.RELEASE</spring.version>
 	</properties>	
 </project>

@@ -21,7 +21,7 @@
 			Reason: <%= ((AuthenticationException) session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage() %>
 		</div>
 	</c:if>
-	<form name="f" action="<c:url value="/spring/loginProcess" />" method="post">
+	<form name="f" action="<c:url value="/loginProcess" />" method="post">
 		<fieldset>
 			<legend>Login Information</legend>
 			<p>

@@ -36,7 +36,7 @@
 				<td>${booking.checkoutDate}</td>
 				<td>${booking.id}</td>
 				<td>
-					<spring:url var="bookingUrl" value="/spring/bookings/{id}">
+					<spring:url var="bookingUrl" value="/bookings/{id}">
 						<spring:param name="id" value="${booking.id}"/>
 					</spring:url>
 					<form:form action="${bookingUrl}" method="delete">
