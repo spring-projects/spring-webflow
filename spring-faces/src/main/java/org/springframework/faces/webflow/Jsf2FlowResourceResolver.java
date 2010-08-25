@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.faces.FacesException;
+import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-import com.sun.facelets.impl.DefaultResourceResolver;
-import com.sun.facelets.impl.ResourceResolver;
+import com.sun.faces.facelets.impl.DefaultResourceResolver;
 
 /**
  * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
@@ -38,10 +38,8 @@ import com.sun.facelets.impl.ResourceResolver;
  * 	&lt;param-value&gt;org.springframework.faces.webflow.FlowResourceResolver&lt;/param-value&gt; 
  * &lt;/context-param&gt;
  * </pre>
- * 
- * @see Jsf2FlowResourceResolver
  */
-public class FlowResourceResolver implements ResourceResolver {
+public class Jsf2FlowResourceResolver extends ResourceResolver {
 
 	ResourceResolver delegateResolver = new DefaultResourceResolver();
 
