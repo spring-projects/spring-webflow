@@ -72,20 +72,22 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	public void writeState(FacesContext facesContext, Object state) throws IOException {
 		if (!JsfUtils.isFlowRequest()) {
 			delegate.writeState(facesContext, state);
-		}
-		FlowSerializedView view = null;
-		if (state instanceof FlowSerializedView) {
-			view = (FlowSerializedView) state;
 		} else {
-			Object[] serializedState = (Object[]) state;
-			view = new FlowSerializedView(facesContext.getViewRoot().getViewId(), serializedState[0], serializedState[1]);
-		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, view);
+			FlowSerializedView view = null;
+			if (state instanceof FlowSerializedView) {
+				view = (FlowSerializedView) state;
+			} else {
+				Object[] serializedState = (Object[]) state;
+				view = new FlowSerializedView(facesContext.getViewRoot().getViewId(), serializedState[0],
+						serializedState[1]);
+			}
+			RequestContext requestContext = RequestContextHolder.getRequestContext();
+			requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, view);
 
-		ResponseWriter writer = facesContext.getResponseWriter();
-		writeViewStateField(facesContext, writer);
-		writeRenderKitIdField(facesContext, writer);
+			ResponseWriter writer = facesContext.getResponseWriter();
+			writeViewStateField(facesContext, writer);
+			writeRenderKitIdField(facesContext, writer);
+		}
 	}
 
 	/**
