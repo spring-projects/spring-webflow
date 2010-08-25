@@ -17,7 +17,7 @@
 		</scp>
 
 		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
-				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.1.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.1.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/spring-webflow-reference/ /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/reference" />
+				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.2.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.2.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/spring-webflow-reference/ /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/reference" />
 
 		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/faces"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
