@@ -9,18 +9,24 @@
 			<resolver ref="external-lookup"/>
             <!-- Maven central -->
 			<ibiblio name="maven2" m2compatible="true"/>
-            <!-- Repository for Mojarra 2.x -->
-			<url name="java-net-maven2" m2compatible="true">
-				<artifact pattern="http://download.java.net/maven/2/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
-			</url>
-            <!-- Repository for PrimeFaces -->
-			<url name="primefaces-maven2" m2compatible="true">
-				<artifact pattern="http://repository.prime.com.tr/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
-			</url>
-            <!-- Repository for MyFaces Core 2.0.1-SNAPSHOT -->
-			<url name="apache-maven2-snapshot" m2compatible="true">
-				<artifact pattern="http://people.apache.org/repo/m2-snapshot-repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
-			</url>
+            <!-- Mojarra 2.x -->
+            <ibiblio name="java-net"
+                     m2compatible="true"
+                     usepoms="true"
+                     pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+                     root="http://download.java.net/maven/2"/>
+            <!-- PrimeFaces -->
+            <ibiblio name="primefaces"
+                     m2compatible="true"
+                     usepoms="true"
+                     pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+                     root="http://repository.prime.com.tr"/>
+            <!-- MyFaces Core 2.0.1-SNAPSHOT -->
+            <ibiblio name="apache-maven2-snapshot"
+                     m2compatible="true"
+                     usepoms="true"
+                     pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+                     root="http://people.apache.org/repo/m2-snapshot-repository"/>
 		</chain>
 	</resolvers>
 
