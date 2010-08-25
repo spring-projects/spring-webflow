@@ -312,7 +312,7 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 			document.body.appendChild(tempSpan);
 			tempSpan.innerHTML=response;
 			var tempContainer = new dojo.NodeList(tempSpan);
-			var newNodes = tempContainer.query("#ajaxResponse > *").orphan();
+			var newNodes = tempContainer.query(">").orphan();
 			tempContainer.orphan();
 			
 			//Insert the new DOM nodes and update the Form's action URL
