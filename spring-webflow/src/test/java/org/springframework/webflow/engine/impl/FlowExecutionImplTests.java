@@ -254,6 +254,41 @@ public class FlowExecutionImplTests extends TestCase {
 		assertTrue(exceptionHandler.getHandled());
 	}
 
+	public void testExceptionHandledByNestedExceptionHandler() {
+		Flow flow = new Flow("flow");
+		ExceptionThrowingExceptionHandler exceptionHandler = new ExceptionThrowingExceptionHandler(true);
+		flow.getExceptionHandlerSet().add(exceptionHandler);
+		new State(flow, "state") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				throw new FlowExecutionException("flow", "state", "Oops");
+			}
+		};
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		MockExternalContext context = new MockExternalContext();
+		assertFalse(execution.hasStarted());
+		execution.start(null, context);
+		assertEquals(2, exceptionHandler.getHandleCount());
+	}
+
+	public void testExceptionHandledAvoidEndlessRecursion() {
+		Flow flow = new Flow("flow");
+		ExceptionThrowingExceptionHandler exceptionHandler = new ExceptionThrowingExceptionHandler(false);
+		flow.getExceptionHandlerSet().add(exceptionHandler);
+		new State(flow, "state") {
+			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
+				throw new FlowExecutionException("flow", "state", "Oops");
+			}
+		};
+		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
+		MockExternalContext context = new MockExternalContext();
+		try {
+			execution.start(null, context);
+			fail("Should have aborted exception handling after 5 tries");
+		} catch (FlowExecutionException e) {
+			assertEquals(5, exceptionHandler.handleCount);
+		}
+	}
+
 	public void testStartCannotCallTwice() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
@@ -431,6 +466,34 @@ public class FlowExecutionImplTests extends TestCase {
 
 		public void handle(FlowExecutionException exception, RequestControlContext context) {
 			handled = true;
+		}
+
+	}
+
+	private static class ExceptionThrowingExceptionHandler implements FlowExecutionExceptionHandler {
+
+		private boolean throwOnlyOnce = true;
+		private int handleCount;
+
+		public ExceptionThrowingExceptionHandler(boolean throwOnlyOnce) {
+			this.throwOnlyOnce = throwOnlyOnce;
+		}
+
+		public int getHandleCount() {
+			return handleCount;
+		}
+
+		public boolean canHandle(FlowExecutionException exception) {
+			return true;
+		}
+
+		public void handle(FlowExecutionException exception, RequestControlContext context) {
+			this.handleCount++;
+			if (throwOnlyOnce && "nested exception".equals(exception.getMessage())) {
+				// No more exceptions
+			} else {
+				throw new FlowExecutionException(exception.getFlowId(), exception.getStateId(), "nested exception");
+			}
 		}
 
 	}
