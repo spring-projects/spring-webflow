@@ -26,6 +26,7 @@ import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.MappingResultsCriteria;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -81,7 +82,7 @@ public class MessageContextErrors extends AbstractErrors {
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
 		field = fixedField(field);
 		Class fieldType;
-		if (expressionParser != null) {
+		if (StringUtils.hasLength(field) && (expressionParser != null)) {
 			FluentParserContext parserContext = new FluentParserContext().evaluate(boundObject.getClass());
 			fieldType = expressionParser.parseExpression(field, parserContext).getValueType(boundObject);
 		} else {

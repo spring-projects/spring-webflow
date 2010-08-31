@@ -5,7 +5,9 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.StaticMessageSource;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MapBindingResult;
 
@@ -64,6 +66,23 @@ public class MessageContextErrorsTests extends TestCase {
 
 		msg = context.getAllMessages()[2];
 		assertEquals("field", msg.getSource());
+		assertEquals("boop", msg.getText());
+		assertEquals(Severity.ERROR, msg.getSeverity());
+	}
+
+	public void testGlobalError() {
+		StaticMessageSource messageSource = new StaticMessageSource();
+		messageSource.addMessage("foo", Locale.getDefault(), "bar");
+		messageSource.addMessage("bar", Locale.getDefault(), "{0}");
+
+		DefaultMessageContext context = new DefaultMessageContext(messageSource);
+		Object object = new Object();
+		SpringELExpressionParser expressionParser = new SpringELExpressionParser(new SpelExpressionParser());
+		MessageContextErrors errors = new MessageContextErrors(context, "object", object, expressionParser,
+				new DefaultMessageCodesResolver(), null);
+		errors.rejectValue(null, "bar", new Object[] { "boop" }, null);
+		Message msg = context.getAllMessages()[0];
+		assertEquals("", msg.getSource());
 		assertEquals("boop", msg.getText());
 		assertEquals(Severity.ERROR, msg.getSeverity());
 	}
