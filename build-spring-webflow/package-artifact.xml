@@ -31,7 +31,7 @@
 		<antcall target="minify-spring-js" inheritAll="false"/>
 		
 		<unzip src="${basedir}/../spring-js/dojo-build/dojo-build.zip" 
-			dest="${main.output.dir}/META-INF"/>
+			dest="${main.output.dir}/META-INF/web-resources"/>
 
 		<jar destfile="${jar.output.file}" basedir="${main.output.dir}" index="true" filesetmanifest="merge">
 			<manifest>
@@ -80,8 +80,8 @@
 			</sequential>
 		</macrodef>
 
-		<compress file="/META-INF/spring/Spring.js"/>
-		<compress file="/META-INF/spring/Spring-Dojo.js"/>
+		<compress file="/META-INF/web-resources/spring/Spring.js"/>
+		<compress file="/META-INF/web-resources/spring/Spring-Dojo.js"/>
 
 	</target>
 	

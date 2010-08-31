@@ -65,6 +65,8 @@ public class ResourceServlet extends HttpServletBean {
 
 	private String jarPathPrefix = "META-INF";
 
+	private String springJsJarPathPrefix = "META-INF/web-resources";
+
 	private boolean gzipEnabled = true;
 
 	private Set allowedResourcePaths = new HashSet();
@@ -254,22 +256,10 @@ public class ResourceServlet extends HttpServletBean {
 			}
 			URL resource = getServletContext().getResource(localResourcePath);
 			if (resource == null) {
-				String jarResourcePath = jarPathPrefix + localResourcePath;
-				if (!isAllowed(jarResourcePath)) {
-					if (log.isWarnEnabled()) {
-						log
-								.warn("An attempt to access a protected resource at " + jarResourcePath
-										+ " was disallowed.");
-					}
-					return null;
-				}
-				if (jarResourcePath.startsWith("/")) {
-					jarResourcePath = jarResourcePath.substring(1);
-				}
-				if (log.isDebugEnabled()) {
-					log.debug("Searching classpath for resource: " + jarResourcePath);
-				}
-				resource = ClassUtils.getDefaultClassLoader().getResource(jarResourcePath);
+				resource = getJarResource(springJsJarPathPrefix, localResourcePath);
+			}
+			if (resource == null) {
+				resource = getJarResource(jarPathPrefix, localResourcePath);
 			}
 			if (resource == null) {
 				if (resources.length > 1) {
@@ -281,6 +271,23 @@ public class ResourceServlet extends HttpServletBean {
 			}
 		}
 		return resources;
+	}
+
+	private URL getJarResource(String jarPrefix, String resourcePath) {
+		String jarResourcePath = jarPrefix + resourcePath;
+		if (!isAllowed(jarResourcePath)) {
+			if (log.isWarnEnabled()) {
+				log.warn("An attempt to access a protected resource at " + jarResourcePath + " was disallowed.");
+			}
+			return null;
+		}
+		if (jarResourcePath.startsWith("/")) {
+			jarResourcePath = jarResourcePath.substring(1);
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Searching classpath for resource: " + jarResourcePath);
+		}
+		return ClassUtils.getDefaultClassLoader().getResource(jarResourcePath);
 	}
 
 	private boolean isAllowed(String resourcePath) {
