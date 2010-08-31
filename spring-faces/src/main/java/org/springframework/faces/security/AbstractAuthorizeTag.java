@@ -180,7 +180,9 @@ public abstract class AbstractAuthorizeTag {
 			accessExpression = handler.getExpressionParser().parseExpression(getAccess());
 
 		} catch (ParseException e) {
-			throw new IOException(e);
+			IOException ioException = new IOException();
+			ioException.initCause(e);
+			throw ioException;
 		}
 
 		FilterInvocation f = new FilterInvocation(getRequest(), getResponse(), new FilterChain() {
