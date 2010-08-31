@@ -37,6 +37,8 @@
 		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.4.RELEASE" conf="compile->runtime" />
 		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.4.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.4.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.2.RELEASE" conf="optional->runtime" />
+		<dependency org="org.springframework.security" name="org.springframework.security.web" rev="3.0.2.RELEASE" conf="optional->runtime" />
 		<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
