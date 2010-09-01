@@ -159,6 +159,23 @@
 			<version>2.4.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<!--
+			JAXB is needed when running on Java 5. In this environment these dependencies have to be added 
+			(unless xml	configuration is explicitly disabled via Configuration.ignoreXmlConfiguration) 
+			On Java 6 jaxb is part of the runtime environment.
+		-->
+        <dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>com.springsource.javax.xml.bind</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>com.sun.xml</groupId>
+			<artifactId>com.springsource.com.sun.xml.bind</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>		
 		<!-- test time dependencies -->
 		<dependency>
 			<groupId>org.easymock</groupId>

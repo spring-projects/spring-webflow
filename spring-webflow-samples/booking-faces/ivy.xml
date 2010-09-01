@@ -21,6 +21,8 @@
 
 	<dependencies>
 		<!-- core dependencies -->
+		<dependency org="javax.xml.bind" name="com.springsource.javax.xml.bind" rev="2.2.0" conf="compile->runtime" />
+		<dependency org="com.sun.xml" name="com.springsource.com.sun.xml.bind" rev="2.2.0" conf="compile->runtime" />
 		<dependency org="javax.persistence" name="com.springsource.javax.persistence" rev="1.0.0" conf="compile->runtime"/>
 		<dependency	org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime"/>
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" conf="compile->runtime"/>
