@@ -270,25 +270,6 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(2, exceptionHandler.getHandleCount());
 	}
 
-	public void testExceptionHandledAvoidEndlessRecursion() {
-		Flow flow = new Flow("flow");
-		ExceptionThrowingExceptionHandler exceptionHandler = new ExceptionThrowingExceptionHandler(false);
-		flow.getExceptionHandlerSet().add(exceptionHandler);
-		new State(flow, "state") {
-			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
-				throw new FlowExecutionException("flow", "state", "Oops");
-			}
-		};
-		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
-		MockExternalContext context = new MockExternalContext();
-		try {
-			execution.start(null, context);
-			fail("Should have aborted exception handling after 5 tries");
-		} catch (FlowExecutionException e) {
-			assertEquals(5, exceptionHandler.handleCount);
-		}
-	}
-
 	public void testStartCannotCallTwice() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");

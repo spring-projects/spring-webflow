@@ -581,28 +581,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * @param context the request control context the exception occurred in
 	 * @throws FlowExecutionException re-throws the exception if it was not handled at the state or flow level
 	 */
-	private void handleException(FlowExecutionException exception, RequestControlContext context)
-			throws FlowExecutionException {
-		handleException(exception, context, 1);
-	}
-
-	/**
-	 * This is an overloaded method for {@link #handleException(FlowExecutionException, RequestControlContext)} adding a
-	 * handleExceptionCount argument that can be used to prevent infinite recursion.
-	 * 
-	 * @param exception the exception that occurred
-	 * @param context the request control context the exception occurred in
-	 * @param handleExceptionCount the number of recursive attempts made at exception handling
-	 */
-	private void handleException(FlowExecutionException exception, RequestControlContext context,
-			int handleExceptionCount) {
+	private void handleException(FlowExecutionException exception, RequestControlContext context) {
 		listeners.fireExceptionThrown(context, exception);
-		if (handleExceptionCount > 5) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Exception not handled after 5 tries, aborting exception handling of [" + exception + "]");
-			}
-			throw exception;
-		}
 		if (logger.isDebugEnabled()) {
 			if (exception.getCause() != null) {
 				logger.debug("Attempting to handle [" + exception + "] with root cause [" + getRootCause(exception)
@@ -621,7 +601,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			}
 		} catch (FlowExecutionException newException) {
 			// exception handling itself resulted in a new FlowExecutionException, try to handle it
-			handleException(newException, context, handleExceptionCount + 1);
+			handleException(newException, context);
 			handled = true;
 		}
 		if (!handled) {
