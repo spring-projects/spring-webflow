@@ -396,13 +396,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			sendServletRelativeRedirect(location.substring(SERVLET_RELATIVE_LOCATION_PREFIX.length()), request,
 					response);
 		} else if (location.startsWith(CONTEXT_RELATIVE_LOCATION_PREFIX)) {
-			StringBuffer url = new StringBuffer(request.getContextPath());
-			String contextRelativeUrl = location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length());
-			if (!contextRelativeUrl.startsWith("/")) {
-				url.append('/');
-			}
-			url.append(contextRelativeUrl);
-			sendRedirect(url.toString(), request, response);
+			sendContextRelativeRedirect(location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length()), request,
+					response);
 		} else if (location.startsWith(SERVER_RELATIVE_LOCATION_PREFIX)) {
 			String url = location.substring(SERVER_RELATIVE_LOCATION_PREFIX.length());
 			if (!url.startsWith("/")) {
@@ -412,8 +407,35 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		} else if (location.startsWith("http://") || location.startsWith("https://")) {
 			sendRedirect(location, request, response);
 		} else {
-			sendServletRelativeRedirect(location, request, response);
+			if (isRedirectServletRelative(request)) {
+				sendServletRelativeRedirect(location, request, response);
+			} else {
+				sendContextRelativeRedirect(location, request, response);
+			}
 		}
+	}
+
+	/**
+	 * Returns true if the servlet path should automatically be prepended to an external redirect URL for which a prefix
+	 * such as "contextRelative: was not specified. This answer depends on how the MVC Dispatcher Servlet is mapped: (1)
+	 * default servlet, (2) prefix, (3) extension, (4) exact match. In (1), (3), and (4) it doesn't make sense to
+	 * prepend the servlet path, which contains the entire URL after the context path.
+	 * 
+	 * Because there is no simple way to get the servlet mapping, this method is implemented to return True if path info
+	 * is not null. Also see SWF-1385.
+	 */
+	private boolean isRedirectServletRelative(HttpServletRequest request) {
+		return (request.getPathInfo() != null);
+	}
+
+	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		StringBuffer url = new StringBuffer(request.getContextPath());
+		if (!location.startsWith("/")) {
+			url.append('/');
+		}
+		url.append(location);
+		sendRedirect(url.toString(), request, response);
 	}
 
 	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
