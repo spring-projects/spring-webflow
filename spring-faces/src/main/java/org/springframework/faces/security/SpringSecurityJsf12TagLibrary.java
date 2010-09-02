@@ -18,28 +18,28 @@ package org.springframework.faces.security;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import com.sun.faces.facelets.tag.AbstractTagLibrary;
+import com.sun.facelets.tag.AbstractTagLibrary;
 
 /**
  * Registers a tag handler for the &lt;authorize&gt; tag and several EL functions that can be used on any component that
- * accepts EL expressions in its attributes. For details on the EL functions see {@link FaceletsAuthorizeTagUtils}.
+ * accepts EL expressions in its attributes. For details on the EL functions see {@link Jsf12FaceletsAuthorizeTagUtils}.
  * 
  * @author Rossen Stoyanchev
  * @since 2.2.0
- * @see FaceletsAuthorizeTagHandler
- * @see FaceletsAuthorizeTagUtils
+ * @see Jsf12FaceletsAuthorizeTagHandler
+ * @see Jsf12FaceletsAuthorizeTagUtils
  */
-public class SpringSecurityTagLibrary extends AbstractTagLibrary {
+public class SpringSecurityJsf12TagLibrary extends AbstractTagLibrary {
 
 	public static final String NAMESPACE = "http://www.springframework.org/security/tags";
 
-	public SpringSecurityTagLibrary() {
+	public SpringSecurityJsf12TagLibrary() {
 		super(NAMESPACE);
 
-		this.addTagHandler("authorize", FaceletsAuthorizeTagHandler.class);
+		this.addTagHandler("authorize", Jsf12FaceletsAuthorizeTagHandler.class);
 
 		try {
-			Method[] methods = FaceletsAuthorizeTagUtils.class.getMethods();
+			Method[] methods = Jsf12FaceletsAuthorizeTagUtils.class.getMethods();
 			for (int i = 0; i < methods.length; i++) {
 				if (Modifier.isStatic(methods[i].getModifiers())) {
 					this.addFunction(methods[i].getName(), methods[i]);
