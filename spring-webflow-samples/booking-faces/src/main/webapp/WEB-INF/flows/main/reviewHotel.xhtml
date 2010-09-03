@@ -28,12 +28,12 @@
 		${hotel.country}
 	</address>
 	<h:form id="hotel">
-	    <p>
+	    <div>
 	        Nightly Rate:&#160;
             <h:outputText value="#{hotel.price}">
                 <f:convertNumber type="currency" currencySymbol="$"/>
             </h:outputText>
-	    </p>
+	    </div>
 		<div>
 			<p:commandButton id="book" action="book" value="Book Hotel" ajax="false" />
 			<p:commandButton id="cancel" action="cancel" value="Back to Search"/>

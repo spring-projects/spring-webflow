@@ -14,10 +14,17 @@
 	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/screen.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="${request.contextPath}/styles/blueprint/print.css" type="text/css" media="print" />
 	<!--[if lt IE 8]>
-	        <link rel="stylesheet" href="<c:url value="/blueprint/ie.css" />" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="<c:url value="/blueprint/ie.css" />" type="text/css" media="screen, projection" />
 	<![endif]-->
 	<link rel="stylesheet" href="${request.contextPath}/styles/le-frog/jquery-ui-1.8.2.custom.css" type="text/css" media="screen" />
 	<ui:insert name="headIncludes"/>
+	<style>
+	<!--
+		div.ui-datatable > table {
+			margin-bottom: 0;
+		}
+	-->
+	</style>
 </h:head>
 <h:body>
 <div class="container">
