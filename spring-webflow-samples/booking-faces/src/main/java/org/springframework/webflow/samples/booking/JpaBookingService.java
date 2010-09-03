@@ -1,5 +1,6 @@
 package org.springframework.webflow.samples.booking;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,9 @@ import org.springframework.util.StringUtils;
  */
 @Service("bookingService")
 @Repository
-public class JpaBookingService implements BookingService {
+public class JpaBookingService implements BookingService, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private EntityManager em;
 
@@ -39,13 +42,25 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<Hotel> findHotels(SearchCriteria criteria) {
+    public List<Hotel> findHotels(SearchCriteria criteria, int firstResult, String orderBy, boolean ascending) {
 	String pattern = getSearchPattern(criteria);
+	orderBy = (orderBy != null) ? orderBy : "name";
+	String orderDirection = (ascending) ? " ASC" : " DESC";
 	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
-			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern + " order by h."
-			+ criteria.getSortBy()).setMaxResults(criteria.getPageSize()).setFirstResult(
-		criteria.getPage() * criteria.getPageSize()).getResultList();
+		"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern order by h." + orderBy
+			+ orderDirection).setParameter("pattern", pattern).setMaxResults(criteria.getPageSize())
+		.setFirstResult(firstResult).getResultList();
+    }
+
+    @Transactional(readOnly = true)
+    public int getNumberOfHotels(SearchCriteria criteria) {
+	String pattern = getSearchPattern(criteria);
+	Long count = (Long) em.createQuery(
+		"select count(h.id) from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern").setParameter("pattern",
+		pattern).getSingleResult();
+	return count.intValue();
     }
 
     @Transactional(readOnly = true)
@@ -75,9 +90,9 @@ public class JpaBookingService implements BookingService {
 
     private String getSearchPattern(SearchCriteria criteria) {
 	if (StringUtils.hasText(criteria.getSearchString())) {
-	    return "'%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	    return "%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%";
 	} else {
-	    return "'%'";
+	    return "%";
 	}
     }
 

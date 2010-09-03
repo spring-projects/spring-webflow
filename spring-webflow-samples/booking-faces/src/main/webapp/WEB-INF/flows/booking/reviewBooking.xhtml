@@ -3,8 +3,14 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:p="http://primefaces.prime.com.tr/ui"
 				template="/WEB-INF/layouts/standard.xhtml">
-
+<ui:define name="notes">
+	<p>
+		Note that the command button actions raise events (e.g. "revise") instead of specifying method expressions.
+		The events result in transitions on the server side (see reviewBooking state in <strong>booking-flow.xml</strong>).
+	</p>
+</ui:define>
 <ui:define name="content">
 	<div class="span-5">
 		<h3>${booking.hotel.name}</h3>
@@ -17,9 +23,8 @@
 		</address>
 	</div>
 	<div class="span-12 last">
-		<h:form id="confirm">
-			<fieldset>
-				<legend>Confirm Booking Details</legend>
+		<h:form>
+			<p:fieldset legend="Confirm Booking Details">
 				<div>
 					<div class="span-3">Check In:</div>
 					<div class="span-8 last">
@@ -67,11 +72,11 @@
 					</div>
 				</div>
 				<div>
-					<h:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
-		    		<h:commandButton id="revise" value="Revise" action="revise"/>&#160;
-		    		<h:commandButton id="cancel" value="Cancel" action="cancel" />
+					<p:commandButton id="confirm" value="Confirm" action="confirm"/>&#160;
+		    		<p:commandButton id="revise" value="Revise" action="revise"/>&#160;
+		    		<p:commandButton id="cancel" value="Cancel" action="cancel" />
 				</div>
-			</fieldset>
+			</p:fieldset>
 		</h:form>
 	</div>
 </ui:define>

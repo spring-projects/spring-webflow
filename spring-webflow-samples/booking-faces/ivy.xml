@@ -51,6 +51,7 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="latest.integration" conf="compile->mojarra20"/>
+		<dependency org="org.primefaces" name="primefaces" rev="2.2.M1-SNAPSHOT" changing="true" conf="compile->default"/>
 
 		<!-- test-time only dependencies -->
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />

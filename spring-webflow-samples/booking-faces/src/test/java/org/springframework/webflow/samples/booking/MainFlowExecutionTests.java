@@ -8,7 +8,6 @@ import javax.faces.model.DataModel;
 import org.easymock.EasyMock;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.MappingResults;
-import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
@@ -62,20 +61,13 @@ public class MainFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	criteria.setSearchString("Jameson");
 	getFlowScope().put("searchCriteria", criteria);
 
-	List<Hotel> hotels = new ArrayList<Hotel>();
-	hotels.add(new Hotel());
-	EasyMock.expect(bookingService.findHotels(criteria)).andReturn(hotels);
-	EasyMock.replay(bookingService);
-
 	MockExternalContext context = new MockExternalContext();
 	context.setEventId("search");
 	resumeFlow(context);
 
-	EasyMock.verify(bookingService);
-
 	assertCurrentStateEquals("reviewHotels");
 	assertResponseWrittenEquals("reviewHotels", context);
-	assertTrue(getRequiredViewAttribute("hotels") instanceof DataModel);
+	assertTrue(getRequiredViewAttribute("hotels") instanceof HotelLazyDataModel);
     }
 
     public void testSelectHotel() {
@@ -86,8 +78,8 @@ public class MainFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	hotel.setId(1L);
 	hotel.setName("Jameson Inn");
 	hotels.add(hotel);
-	OneSelectionTrackingListDataModel dataModel = new OneSelectionTrackingListDataModel(hotels);
-	dataModel.select(hotel);
+	HotelLazyDataModel dataModel = new HotelLazyDataModel(null, null);
+	dataModel.setSelected(hotel);
 	getViewScope().put("hotels", dataModel);
 
 	MockExternalContext context = new MockExternalContext();

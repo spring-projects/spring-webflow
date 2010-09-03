@@ -18,9 +18,12 @@ public interface BookingService {
     /**
      * Find hotels available for booking by some criteria.
      * @param criteria the search criteria
+     * @param firstResult the index of the first result to return
+     * @param sortBy the field to sort by
+     * @param ascending true if the sorting should be in ascending order, false for descending
      * @return a list of hotels meeting the criteria
      */
-    public List<Hotel> findHotels(SearchCriteria criteria);
+    public List<Hotel> findHotels(SearchCriteria criteria, int firstResult, String sortBy, boolean ascending);
 
     /**
      * Find hotels by their identifier.
@@ -42,5 +45,12 @@ public interface BookingService {
      * @param id the booking id
      */
     public void cancelBooking(Booking booking);
+
+    /**
+     * Return the total number of hotels for the given criteria.
+     * @param criteria the criteria to use
+     * @return the number of matching hotels
+     */
+    int getNumberOfHotels(SearchCriteria criteria);
 
 }

@@ -9,10 +9,11 @@
            http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
 	<!-- Configure Spring Security -->
-	<security:http auto-config="true">
+	<security:http auto-config="true" use-expressions="true">
 		<security:form-login login-page="/spring/login" login-processing-url="/spring/loginProcess" 
 			default-target-url="/spring/main" authentication-failure-url="/spring/login?login_error=1" />
 		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
+		<security:intercept-url pattern="/secure" method="POST" access="hasRole('ROLE_SUPERVISOR')"/>
 	</security:http>
     
 	<!--

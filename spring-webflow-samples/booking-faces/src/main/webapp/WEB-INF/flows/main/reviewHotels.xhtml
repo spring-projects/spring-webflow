@@ -3,61 +3,50 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:p="http://primefaces.prime.com.tr/ui"
 				template="/WEB-INF/layouts/standard.xhtml">
-
+<ui:define name="notes">
+	<p>
+		This page uses the PrimeFaces data table backed by a lazily loaded DataModel (see <strong>HotelLazyDataModel.java</strong>).
+		Page navigation is Ajax-based and uses JSF 2 partial rendering.
+		The name and city columns support forward and reverse sorting. 
+	</p>
+	<p>
+		The DataModel is created and stored in view scope when the view is first entered (see <strong>main-flow.xml</strong>). 
+		When the user makes a selection, the selection is stored in a flow-scoped "hotel" variable before transitioning to the detail page. 
+	</p>
+</ui:define>
 <ui:define name="content">
-
-<h:form id="hotelResults">
-	<div>
-		<h2>Hotel Results</h2>
-		<p>
-			<h:commandLink value="Change Search" action="changeSearch"/>
-		</p>
-		<div id="searchResults">
-			<h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/>
-			<h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="h" rendered="#{hotels.rowCount > 0}">
-				<h:column>
-					<f:facet name="header">
-						<h:commandLink id="sortByNameLink" action="sort" value="Name">
-							<f:param name="sortBy" value="name" />
-							<f:ajax render="hotels" />
-						</h:commandLink>
-					</f:facet>
-					#{h.name}
-				</h:column>
-				<h:column>
-					<f:facet name="header">Address</f:facet>
-					#{h.address}
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:commandLink id="sortByCity" action="sort" value="City, State">
-							<f:param name="sortBy" value="city" />
-							<f:ajax render="hotels" />
-						</h:commandLink>
-					</f:facet>
-					#{h.city}, #{h.state}, #{h.country}
-				</h:column> 
-				<h:column>
-					<f:facet name="header">Zip</f:facet>
-					#{h.zip}
-				</h:column>
-				<h:column>
-					<f:facet name="header">Action</f:facet>
-					<h:commandLink id="viewHotelLink" value="View Hotel" action="select"/>
-				</h:column>
-			</h:dataTable>
-			<div class="buttonGroup">
-				<h:commandLink id="previousPageLink" value="Previous Results" action="previous" rendered="#{searchCriteria.page > 0}">
-					<f:ajax render="@form" />
-				</h:commandLink>
-				&nbsp;
-				<h:commandLink id="nextPageLink" value="More Results" action="next" rendered="#{not empty hotels and hotels.rowCount == searchCriteria.pageSize}">
-					<f:ajax render="@form" />
-				</h:commandLink>
-			</div>
-		</div>
-	</div>
+<h:form>
+	<p:dataTable id="hotels" var="h" value="#{hotels}" paginator="true" dynamic="true" lazy="true" 
+			rows="#{searchCriteria.pageSize}" page="#{searchCrtieria.currentPage}">
+        <f:facet name="header">
+        	Hotel Search Results<br/>
+        	<p:commandLink value="Modify or start search again" action="changeSearch" styleClass="alt" />
+        </f:facet>
+		<p:column sortBy="#{h.name}">
+			<f:facet name="header">Name</f:facet>
+			#{h.name}
+		</p:column>
+		<p:column>
+			<f:facet name="header">Address</f:facet>
+			#{h.address}
+		</p:column>
+		<p:column sortBy="#{h.city}">
+			<f:facet name="header">City, State</f:facet>
+			#{h.city}, #{h.state}, #{h.country}
+		</p:column> 
+		<p:column>
+			<f:facet name="header">Zip</f:facet>
+			#{h.zip}
+		</p:column>
+		<p:column>
+			<f:facet name="header">Action</f:facet>
+			<p:commandButton id="viewHotelLink" value="View" action="select" image="ui-icon-search">
+				<f:setPropertyActionListener value="#{h}" target="#{hotels.selected}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
 </h:form>
 </ui:define>
 </ui:composition>

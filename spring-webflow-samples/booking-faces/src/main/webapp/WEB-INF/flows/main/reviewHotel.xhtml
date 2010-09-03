@@ -3,10 +3,20 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:p="http://primefaces.prime.com.tr/ui"
 				template="/WEB-INF/layouts/standard.xhtml">
-
+<ui:define name="notes">
+	<p>
+		Clicking "Book" will launch the booking sub-flow (see the subflow state in <strong>main-flow.xml</strong>).
+	</p>
+	<p>
+		The booking flow is protected with Spring Security (see the secured attribute in <strong>booking-flow.xml</strong>).
+	</p>
+	<p>
+		Clicking "Back to Search" will take you to the stateful search results. 
+	</p>
+</ui:define>
 <ui:define name="content">
-
 	<h1>${hotel.name}</h1>
 	<address>
 		${hotel.address}
@@ -25,10 +35,9 @@
             </h:outputText>
 	    </p>
 		<div>
-			<h:commandButton id="book" action="book" value="Book Hotel"/>&#160;&#160;
-			<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
+			<p:commandButton id="book" action="book" value="Book Hotel" ajax="false" />
+			<p:commandButton id="cancel" action="cancel" value="Back to Search"/>
 		</div>
 	</h:form>
-
 </ui:define>
 </ui:composition>
