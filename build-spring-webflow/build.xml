@@ -3,6 +3,7 @@
 
 	<path id="bundles">
 		<pathelement location="../spring-binding"/>
+		<pathelement location="../spring-js-resources"/>
 		<pathelement location="../spring-js"/>
 		<pathelement location="../spring-webflow"/>
 		<pathelement location="../spring-faces"/>

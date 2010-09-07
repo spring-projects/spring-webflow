@@ -31,6 +31,7 @@
 		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.4.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.4.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.4.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework.webflow" name="org.springframework.js.resources" rev="latest.integration" conf="compile->runtime"/>
 
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime"/>
